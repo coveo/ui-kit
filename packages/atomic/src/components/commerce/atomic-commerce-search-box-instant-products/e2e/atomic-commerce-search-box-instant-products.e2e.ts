@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-test.describe('default', () => {
+test.describe('atomic-commerce-search-box-instant-products', () => {
   test.beforeEach(async ({instantProduct, searchBox}) => {
     await instantProduct.load();
     await searchBox.hydrated.waitFor();
@@ -20,7 +20,7 @@ test.describe('default', () => {
     }
   });
 
-  test('should be clickable anywhere on the instant result component', async ({
+  test('should be clickable anywhere on the instant product component', async ({
     instantProduct,
     page,
   }) => {
@@ -57,7 +57,7 @@ test.describe('default', () => {
     });
   });
 
-  test.describe('when clicking on "See All Results"', () => {
+  test.describe('when clicking on "See All Products"', () => {
     test.beforeEach(async ({instantProduct, searchBox}) => {
       await instantProduct.load();
       await searchBox.hydrated.waitFor();

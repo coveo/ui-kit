@@ -2,19 +2,18 @@ import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fi
 import '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildProductListing, buildSearch} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
+import {html} from 'lit';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {buildFakeSort} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/sort-subcontroller';
-import '@vitest/browser/matchers.d.ts';
-import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
-import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {AtomicCommerceSortDropdown} from './atomic-commerce-sort-dropdown';
 import './atomic-commerce-sort-dropdown';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
-describe('AtomicCommerceSortDropdown', () => {
+describe('atomic-commerce-sort-dropdown', () => {
   const mockedSort = vi.fn();
 
   beforeEach(() => {

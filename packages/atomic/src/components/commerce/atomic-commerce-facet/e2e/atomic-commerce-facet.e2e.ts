@@ -1,12 +1,12 @@
 /* eslint-disable @cspell/spellchecker */
 import {expect, test} from './fixture';
 
-test.describe('default', () => {
+test.describe('atomic-commerce-facet', () => {
   test.beforeEach(async ({facet}) => {
     await facet.load();
   });
 
-  test('should be A11y compliant', async ({facet, makeAxeBuilder}) => {
+  test('should be accessible', async ({facet, makeAxeBuilder}) => {
     await facet.hydrated.waitFor({state: 'attached'});
     const accessibilityResults = await makeAxeBuilder().analyze();
     expect(accessibilityResults.violations).toEqual([]);

@@ -2,6 +2,10 @@ import {buildInstantProducts} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import type {
+  SearchBoxSuggestionElement,
+  SearchBoxSuggestions,
+} from '@/src/components/common/suggestions/suggestions-types';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {
@@ -9,16 +13,12 @@ import {
   renderInAtomicCommerceSearchBox,
 } from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-search-box-fixture';
 import {buildFakeInstantProducts} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/instant-products-controller';
-import type {
-  SearchBoxSuggestionElement,
-  SearchBoxSuggestions,
-} from '../../common/suggestions/suggestions-common';
 import {AtomicCommerceSearchBoxInstantProducts} from './atomic-commerce-search-box-instant-products';
 import './atomic-commerce-search-box-instant-products';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
-describe('AtomicCommerceSearchBoxInstantProducts', () => {
+describe('atomic-commerce-search-box-instant-products', () => {
   beforeEach(() => {
     vi.mocked(buildInstantProducts).mockReturnValue(buildFakeInstantProducts());
   });
@@ -215,7 +215,7 @@ describe('AtomicCommerceSearchBoxInstantProducts', () => {
           expect(items[0]).toEqual(
             expect.objectContaining({
               part: 'instant-results-item',
-              ariaLabel: ', instant result',
+              ariaLabel: ', instant product',
               key: 'instant-result-12345',
             })
           );
@@ -225,7 +225,7 @@ describe('AtomicCommerceSearchBoxInstantProducts', () => {
           expect(items[items.length - 1]).toEqual(
             expect.objectContaining({
               part: 'instant-results-show-all',
-              ariaLabel: 'See all results',
+              ariaLabel: 'See all products',
               key: 'instant-results-show-all-button',
             })
           );
@@ -273,7 +273,7 @@ describe('AtomicCommerceSearchBoxInstantProducts', () => {
               (
                 items[items.length - 1].content as HTMLElement
               ).textContent?.trim()
-            ).toBe('See all results');
+            ).toBe('See all products');
           });
         });
       });

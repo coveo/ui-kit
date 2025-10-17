@@ -1,42 +1,17 @@
-import {
-  createSelector,
-  type ThunkDispatch,
-  type UnknownAction,
-} from '@reduxjs/toolkit';
-import {
-  defaultNodeJSNavigatorContextProvider,
-  type NavigatorContext,
-} from '../../app/navigator-context-provider.js';
-import {selectAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-query-selectors.js';
-import {fromAnalyticsStateToAnalyticsParams} from '../../features/configuration/analytics-params.js';
-import {selectContext} from '../../features/context/context-selector.js';
+import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
+import {selectAnswerApiQueryParams} from '../../features/generated-answer/answer-api-selectors.js';
 import {
   setAnswerContentFormat,
+  setAnswerId,
   setCannotAnswer,
   updateCitations,
   updateMessage,
 } from '../../features/generated-answer/generated-answer-actions.js';
 import {logGeneratedAnswerStreamEnd} from '../../features/generated-answer/generated-answer-analytics-actions.js';
-import {selectFieldsToIncludeInCitation} from '../../features/generated-answer/generated-answer-selectors.js';
-import {maximumNumberOfResultsFromIndex} from '../../features/pagination/pagination-constants.js';
-import {selectPipeline} from '../../features/pipeline/select-pipeline.js';
-import {selectQuery} from '../../features/query/query-selectors.js';
-import {
-  initialSearchMappings,
-  mapFacetRequest,
-} from '../../features/search/search-mappings.js';
-import {selectSearchActionCause} from '../../features/search/search-selectors.js';
-import {selectSearchHub} from '../../features/search-hub/search-hub-selectors.js';
-import {selectStaticFilterExpressions} from '../../features/static-filter-set/static-filter-set-selectors.js';
-import {
-  selectActiveTab,
-  selectActiveTabExpression,
-} from '../../features/tab-set/tab-set-selectors.js';
-import {getFacets} from '../../utils/facet-utils.js';
+import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
 import type {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
-import type {SearchRequest} from '../search/search/search-request.js';
 import {answerSlice} from './answer-slice.js';
 import type {GeneratedAnswerStream} from './generated-answer-stream.js';
 import type {StreamAnswerAPIState} from './stream-answer-api-state.js';
@@ -102,14 +77,18 @@ const handleError = (
   draft: GeneratedAnswerStream,
   message: Required<MessageType>
 ) => {
+  const errorMessage = message.errorMessage || 'Unknown error occurred';
+
   draft.error = {
-    message: message.errorMessage,
+    message: errorMessage,
     code: message.code!,
   };
   draft.isStreaming = false;
   draft.isLoading = false;
   // Throwing an error here breaks the client and prevents the error from reaching the state.
-  console.error(`${message.errorMessage} - code ${message.code}`);
+  console.error(
+    `Generated answer error: ${errorMessage} (code: ${message.code})`
+  );
 };
 
 export const updateCacheWithEvent = (
@@ -154,10 +133,26 @@ export const updateCacheWithEvent = (
   }
 };
 
+export const buildAnswerEndpoint = (
+  platformEndpoint: string,
+  organizationId: string,
+  answerConfigurationId: string,
+  insightId?: string
+): string => {
+  if (!platformEndpoint || !organizationId || !answerConfigurationId) {
+    throw new Error('Missing required parameters for answer endpoint');
+  }
+  const basePath = `/rest/organizations/${organizationId}`;
+  const prefix = insightId
+    ? `insight/v1/configs/${insightId}/answer`
+    : `answer/v1/configs`;
+  return `${platformEndpoint}${basePath}/${prefix}/${answerConfigurationId}/generate`;
+};
+
 export const answerApi = answerSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
-    getAnswer: builder.query<GeneratedAnswerStream, Partial<SearchRequest>>({
+    getAnswer: builder.query<GeneratedAnswerStream, AnswerApiQueryParams>({
       queryFn: () => ({
         data: {
           contentFormat: undefined,
@@ -195,202 +190,57 @@ export const answerApi = answerSlice.injectEndpoints({
           organizationId,
           environment
         );
-        const insightGenerateEndpoint = `${platformEndpoint}/rest/organizations/${organizationId}/insight/v1/configs/${insightConfiguration?.insightId}/answer/${generatedAnswer.answerConfigurationId}/generate`;
-        const generateEndpoint = `${platformEndpoint}/rest/organizations/${organizationId}/answer/v1/configs/${generatedAnswer.answerConfigurationId}/generate`;
-        await fetchEventSource(
-          insightConfiguration ? insightGenerateEndpoint : generateEndpoint,
-          {
-            method: 'POST',
-            body: JSON.stringify(args),
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-              'Accept-Encoding': '*',
-            },
-            fetch,
-            onopen: async (res) => {
-              const answerId = res.headers.get('x-answer-id');
-              if (answerId) {
-                updateCachedData((draft) => {
-                  draft.answerId = answerId;
-                });
-              }
-            },
-            onmessage: (event) => {
-              updateCachedData((draft) => {
-                updateCacheWithEvent(event, draft, dispatch);
-              });
-            },
-            onerror: (error) => {
-              throw error;
-            },
-            onclose: () => {
-              updateCachedData((draft) => {
-                dispatch(setCannotAnswer(!draft.generated));
-              });
-            },
-          }
+        const answerEndpoint = buildAnswerEndpoint(
+          platformEndpoint,
+          organizationId,
+          generatedAnswer.answerConfigurationId!,
+          insightConfiguration?.insightId
         );
+
+        await fetchEventSource(answerEndpoint, {
+          method: 'POST',
+          body: JSON.stringify(args),
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Accept-Encoding': '*',
+          },
+          fetch,
+          onopen: async (res) => {
+            const answerId = res.headers.get('x-answer-id');
+            if (answerId) {
+              updateCachedData((draft) => {
+                draft.answerId = answerId;
+                dispatch(setAnswerId(answerId));
+              });
+            }
+          },
+          onmessage: (event) => {
+            updateCachedData((draft) => {
+              updateCacheWithEvent(event, draft, dispatch);
+            });
+          },
+          onerror: (error) => {
+            throw error;
+          },
+          onclose: () => {
+            updateCachedData((draft) => {
+              dispatch(setCannotAnswer(!draft.generated));
+            });
+          },
+        });
       },
     }),
   }),
 });
 
-export const selectAnswerTriggerParams = createSelector(
-  (state) => selectQuery(state)?.q,
-  (state) => state.search.requestId,
-  (state) => state.generatedAnswer.cannotAnswer,
-  (state) => state.configuration.analytics.analyticsMode,
-  (state) => state.search.searchAction?.actionCause,
-  (q, requestId, cannotAnswer, analyticsMode, actionCause) => ({
-    q,
-    requestId,
-    cannotAnswer,
-    analyticsMode,
-    actionCause,
-  })
-);
-
-let generateFacetParams: Record<string, ReturnType<typeof getFacets>> = {};
-
-const getGeneratedFacetParams = (q: string, state: StreamAnswerAPIState) => ({
-  ...generateFacetParams,
-  [q]: getFacets(state)
-    ?.map((facetRequest) =>
-      mapFacetRequest(facetRequest, initialSearchMappings())
-    )
-    .sort((a, b) =>
-      a.facetId > b.facetId ? 1 : b.facetId > a.facetId ? -1 : 0
-    ),
-});
-
-const getNumberOfResultsWithinIndexLimit = (state: StreamAnswerAPIState) => {
-  if (!state.pagination) {
-    return undefined;
-  }
-
-  const isOverIndexLimit =
-    state.pagination.firstResult + state.pagination.numberOfResults >
-    maximumNumberOfResultsFromIndex;
-
-  if (isOverIndexLimit) {
-    return maximumNumberOfResultsFromIndex - state.pagination.firstResult;
-  }
-  return state.pagination.numberOfResults;
+export const fetchAnswer = (fetchAnswerParams: AnswerApiQueryParams) => {
+  return answerApi.endpoints.getAnswer.initiate(fetchAnswerParams);
 };
 
-const buildAdvancedSearchQueryParams = (state: StreamAnswerAPIState) => {
-  const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
-  const mergedCq = mergeAdvancedCQParams(state);
-
-  return {
-    ...advancedSearchQueryParams,
-    ...(mergedCq && {cq: mergedCq}),
-  };
+// Select answer state from RTK endpoint state
+export const selectAnswer = (state: StreamAnswerAPIState) => {
+  const params = selectAnswerApiQueryParams(state);
+  return answerApi.endpoints.getAnswer.select(params)(state);
 };
-
-const mergeAdvancedCQParams = (state: StreamAnswerAPIState) => {
-  const activeTabExpression = selectActiveTabExpression(state.tabSet);
-  const filterExpressions = selectStaticFilterExpressions(state);
-  const {cq} = selectAdvancedSearchQueries(state);
-
-  return [activeTabExpression, ...filterExpressions, cq]
-    .filter((expression) => !!expression)
-    .join(' AND ');
-};
-
-export const constructAnswerQueryParams = (
-  state: StreamAnswerAPIState,
-  usage: 'fetch' | 'select',
-  navigatorContext: NavigatorContext
-) => {
-  const q = selectQuery(state)?.q;
-
-  const {aq, cq, dq, lq} = buildAdvancedSearchQueryParams(state);
-
-  const context = selectContext(state);
-
-  // For 'select' usage, exclude volatile analytics fields to match serializeQueryArgs behavior
-  const analyticsParams =
-    usage === 'select'
-      ? {}
-      : fromAnalyticsStateToAnalyticsParams(
-          state.configuration.analytics,
-          navigatorContext,
-          {actionCause: selectSearchActionCause(state)}
-        );
-
-  const searchHub = selectSearchHub(state);
-  const pipeline = selectPipeline(state);
-  const citationsFieldToInclude = selectFieldsToIncludeInCitation(state) ?? [];
-
-  if (q && usage === 'fetch') {
-    generateFacetParams = getGeneratedFacetParams(q, state);
-  }
-
-  return {
-    q,
-    ...(aq && {aq}),
-    ...(cq && {cq}),
-    ...(dq && {dq}),
-    ...(lq && {lq}),
-    ...(state.query && {enableQuerySyntax: state.query.enableQuerySyntax}),
-    ...(context?.contextValues && {
-      context: context.contextValues,
-    }),
-    pipelineRuleParameters: {
-      mlGenerativeQuestionAnswering: {
-        responseFormat: state.generatedAnswer.responseFormat,
-        citationsFieldToInclude,
-      },
-    },
-    ...(searchHub?.length && {searchHub}),
-    ...(pipeline?.length && {pipeline}),
-    ...(generateFacetParams[q!]?.length && {
-      facets: generateFacetParams[q!],
-    }),
-    ...(state.fields && {fieldsToInclude: state.fields.fieldsToInclude}),
-    ...(state.didYouMean && {
-      queryCorrection: {
-        enabled:
-          state.didYouMean.enableDidYouMean &&
-          state.didYouMean.queryCorrectionMode === 'next',
-        options: {
-          automaticallyCorrect: state.didYouMean.automaticallyCorrectQuery
-            ? ('whenNoResults' as const)
-            : ('never' as const),
-        },
-      },
-      enableDidYouMean:
-        state.didYouMean.enableDidYouMean &&
-        state.didYouMean.queryCorrectionMode === 'legacy',
-    }),
-    ...(state.pagination && {
-      numberOfResults: getNumberOfResultsWithinIndexLimit(state),
-      firstResult: state.pagination.firstResult,
-    }),
-    tab: selectActiveTab(state.tabSet),
-    ...analyticsParams,
-  };
-};
-
-export const fetchAnswer = (
-  state: StreamAnswerAPIState,
-  navigatorContext: NavigatorContext
-) =>
-  answerApi.endpoints.getAnswer.initiate(
-    constructAnswerQueryParams(state, 'fetch', navigatorContext)
-  );
-
-export const selectAnswer = (
-  state: StreamAnswerAPIState,
-  navigatorContext?: NavigatorContext
-) =>
-  answerApi.endpoints.getAnswer.select(
-    constructAnswerQueryParams(
-      state,
-      'select',
-      navigatorContext || defaultNodeJSNavigatorContextProvider()
-    )
-  )(state);

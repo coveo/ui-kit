@@ -19,28 +19,32 @@ import {
 } from '@coveo/headless/commerce';
 import {type CSSResultGroup, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
+import {renderBreadcrumbButton} from '@/src/components/common/breadbox/breadcrumb-button';
+import {renderBreadcrumbClearAll} from '@/src/components/common/breadbox/breadcrumb-clear-all';
+import {renderBreadcrumbContainer} from '@/src/components/common/breadbox/breadcrumb-container';
+import {renderBreadcrumbContent} from '@/src/components/common/breadbox/breadcrumb-content';
+import {renderBreadcrumbShowLess} from '@/src/components/common/breadbox/breadcrumb-show-less';
+import {renderBreadcrumbShowMore} from '@/src/components/common/breadbox/breadcrumb-show-more';
+import type {Breadcrumb as BreadboxBreadcrumb} from '@/src/components/common/breadbox/breadcrumb-types';
+import {formatHumanReadable} from '@/src/components/common/facets/numeric-facet/formatter';
+import {
+  defaultCurrencyFormatter,
+  defaultNumberFormatter,
+} from '@/src/components/common/formats/format-common';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {FocusTargetController} from '@/src/utils/accessibility-utils';
+import {
+  AriaLiveRegionController,
+  FocusTargetController,
+} from '@/src/utils/accessibility-utils';
 import {parseDate} from '@/src/utils/date-utils';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
-import {renderBreadcrumbButton} from '../../common/breadbox/breadcrumb-button';
-import {renderBreadcrumbClearAll} from '../../common/breadbox/breadcrumb-clear-all';
-import {renderBreadcrumbContainer} from '../../common/breadbox/breadcrumb-container';
-import {renderBreadcrumbContent} from '../../common/breadbox/breadcrumb-content';
-import {renderBreadcrumbShowLess} from '../../common/breadbox/breadcrumb-show-less';
-import {renderBreadcrumbShowMore} from '../../common/breadbox/breadcrumb-show-more';
-import type {Breadcrumb as BreadboxBreadcrumb} from '../../common/breadbox/breadcrumb-types';
-import {formatHumanReadable} from '../../common/facets/numeric-facet/formatter';
-import {
-  defaultCurrencyFormatter,
-  defaultNumberFormatter,
-} from '../../common/formats/format-common';
-import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import styles from './atomic-commerce-breadbox.tw.css';
 
 type AnyFacetValue =
@@ -99,6 +103,12 @@ export class AtomicCommerceBreadbox
   @state() private isCollapsed = true;
   @state() private showMoreText = '';
 
+  private breadboxAriaMessage = new AriaLiveRegionController(
+    this,
+    'breadbox',
+    true
+  );
+
   /**
    * This prop allows you to control the display depth
    * of the path by specifying the number of parent or ancestor
@@ -115,8 +125,23 @@ export class AtomicCommerceBreadbox
    */
   @property({type: Number, attribute: 'path-limit'}) pathLimit = 3;
 
+  constructor() {
+    super();
+
+    new ValidatePropsController(
+      this,
+      () => ({pathLimit: this.pathLimit}),
+      new Schema({
+        pathLimit: new NumberValue({
+          default: 3,
+          min: 1,
+          required: false,
+        }),
+      })
+    );
+  }
+
   public initialize() {
-    this.validateProps();
     if (this.bindings.interfaceElement.type === 'product-listing') {
       this.searchOrListing = buildProductListing(this.bindings.engine);
     } else {
@@ -144,24 +169,8 @@ export class AtomicCommerceBreadbox
     );
   }
 
-  updated(changedProperties: Map<string, unknown>) {
-    super.updated(changedProperties);
-    if (changedProperties.has('pathLimit')) {
-      this.validateProps();
-    }
+  updated() {
     this.adaptBreadcrumbs();
-  }
-
-  private validateProps() {
-    new Schema({
-      pathLimit: new NumberValue({
-        default: 3,
-        min: 1,
-        required: false,
-      }),
-    }).validate({
-      pathLimit: this.pathLimit,
-    });
   }
 
   public disconnectedCallback() {
@@ -353,6 +362,7 @@ export class AtomicCommerceBreadbox
               await this.breadcrumbShowMoreFocus.setTarget(ref);
             }
           },
+          ariaController: this.breadboxAriaMessage,
         },
       })(
         html`${renderBreadcrumbContent({

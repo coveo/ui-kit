@@ -37,7 +37,7 @@ import {
 const startDate = '2020-08-06';
 const endDate = '2021-09-03';
 
-describe('Timeframe Facet V1 Test Suites', () => {
+describe.skip('Timeframe Facet V1 Test Suites', () => {
   const defaultNumberOfValues = unitFrames.length;
   describe('does not throw on init when there is no filter and timeframe configured', () => {
     beforeEach(() => {

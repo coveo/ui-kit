@@ -23,7 +23,7 @@ import './atomic-commerce-pager';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
-describe('AtomicCommercePager', () => {
+describe('atomic-commerce-pager', () => {
   const locators = {
     page1: page.getByLabelText('Page 1'),
     page2: page.getByLabelText('Page 2'),
@@ -80,11 +80,13 @@ describe('AtomicCommercePager', () => {
 
     const {element} =
       await renderInAtomicCommerceInterface<AtomicCommercePager>({
-        template: html`<atomic-commerce-pager
-          number-of-pages=${ifDefined(numberOfPages)}
-          previous-button-icon=${ifDefined(previousButtonIcon)}
-          next-button-icon=${ifDefined(nextButtonIcon)}
-        ></atomic-commerce-pager>`,
+        template: html`
+          <atomic-commerce-pager
+            number-of-pages=${ifDefined(numberOfPages)}
+            previous-button-icon=${ifDefined(previousButtonIcon)}
+            next-button-icon=${ifDefined(nextButtonIcon)}
+          ></atomic-commerce-pager>
+        `,
         selector: 'atomic-commerce-pager',
         bindings: (bindings) => {
           bindings.interfaceElement.type = interfaceType ?? 'product-listing';
@@ -329,4 +331,80 @@ describe('AtomicCommercePager', () => {
     await expect.element(parts.previousButtonIcon!).toBeInTheDocument();
     await expect.element(parts.nextButtonIcon!).toBeInTheDocument();
   }, 1e60);
+
+  test('should use keyed directive for page buttons', async () => {
+    await renderPager();
+
+    await expect.element(locators.page1).toHaveAttribute('value', '1');
+    await expect.element(locators.page2).toHaveAttribute('value', '2');
+    await expect.element(locators.page3).toHaveAttribute('value', '3');
+  });
+
+  describe('accessibility and focus', () => {
+    let element: AtomicCommercePager;
+
+    beforeEach(async () => {
+      element = await renderPager({state: {page: 2, totalPages: 10}});
+    });
+
+    const retrieveButtons = () => {
+      return Array.from(
+        element.shadowRoot?.querySelectorAll<HTMLInputElement>(
+          'input[type="radio"]'
+        ) || []
+      );
+    };
+
+    const expectFocusOnButton = async (
+      button: Element,
+      expectedFocusButton: Element
+    ) => {
+      await expect.element(button).toBe(expectedFocusButton);
+    };
+
+    test('should focus on previous button when navigating backward from first page button', async () => {
+      const buttons = retrieveButtons();
+
+      const [firstPageButton, lastPageButton] = [
+        buttons[0],
+        buttons[buttons.length - 1],
+      ];
+
+      await element['handleFocus'](buttons, firstPageButton, lastPageButton);
+
+      await expectFocusOnButton(
+        locators.previous.element(),
+        document.activeElement?.shadowRoot?.activeElement
+      );
+    });
+
+    test('should focus on next button when navigating forward from last page button', async () => {
+      const buttons = retrieveButtons();
+
+      const [firstPageButton, lastPageButton] = [
+        buttons[0],
+        buttons[buttons.length - 1],
+      ];
+
+      await element['handleFocus'](buttons, lastPageButton, firstPageButton);
+
+      await expectFocusOnButton(
+        locators.next.element(),
+        document.activeElement?.shadowRoot?.activeElement
+      );
+    });
+
+    test('should focus on next page button when navigating between page buttons', async () => {
+      const buttons = retrieveButtons();
+
+      const [currentButton, nextButton] = buttons;
+
+      await element['handleFocus'](buttons, currentButton, nextButton);
+
+      await expectFocusOnButton(
+        locators.page2.element(),
+        document.activeElement?.shadowRoot?.activeElement
+      );
+    });
+  });
 });

@@ -16,7 +16,7 @@ import {
   FoldedItemListContext,
   FoldedItemListStateContext,
 } from '../../../common/item-list/item-list-decorators';
-import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
+import {ResultTemplateProvider} from '../../../common/item-list/result-template-provider';
 import {
   ChildTemplatesContext,
   ChildTemplatesContextEvent,
@@ -47,7 +47,7 @@ export class AtomicResultChildren
 {
   @InitializeBindings() public bindings!: InsightBindings;
   @ChildTemplatesContext()
-  public itemTemplateProvider?: ItemTemplateProvider;
+  public itemTemplateProvider?: ResultTemplateProvider;
   @FoldedItemListContext()
   private foldedResultList!: InsightFoldedResultList;
   @ItemContext({folded: true, parentName: 'atomic-insight-result'})
@@ -103,7 +103,7 @@ export class AtomicResultChildren
       return;
     }
 
-    this.itemTemplateProvider = new ItemTemplateProvider({
+    this.itemTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: false,
       templateElements: childrenTemplates,
       getResultTemplateRegistered: () => this.resultTemplateRegistered,

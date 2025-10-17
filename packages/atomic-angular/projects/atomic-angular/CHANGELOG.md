@@ -1,3 +1,46 @@
+## <small>3.7.11 (2025-10-15)</small>
+
+* chore(atomic insight): migrate atomic-insight-interface (#5889) ([5aaf044](https://github.com/coveo/ui-kit/commits/5aaf044)), closes [#5889](https://github.com/coveo/ui-kit/issues/5889)
+* chore(atomic): migrate atomic-search-box-instant-results (#6104) ([34aebcb](https://github.com/coveo/ui-kit/commits/34aebcb)), closes [#6104](https://github.com/coveo/ui-kit/issues/6104)
+* chore(atomic): migrate atomic-search-box-query-suggestions (#6071) ([8ec8876](https://github.com/coveo/ui-kit/commits/8ec8876)), closes [#6071](https://github.com/coveo/ui-kit/issues/6071)
+
+
+
+## <small>3.7.9 (2025-10-08)</small>
+
+* chore(atomic): migrate atomic-relevance-inspector (#6089) ([af85860](https://github.com/coveo/ui-kit/commits/af85860)), closes [#6089](https://github.com/coveo/ui-kit/issues/6089)
+* chore(atomic): migrate atomic-search-box-recent-queries (#6080) ([a9fe081](https://github.com/coveo/ui-kit/commits/a9fe081)), closes [#6080](https://github.com/coveo/ui-kit/issues/6080)
+* chore(atomic): migrate atomic-search-interface (#5990) ([feafe1d](https://github.com/coveo/ui-kit/commits/feafe1d)), closes [#5990](https://github.com/coveo/ui-kit/issues/5990)
+* chore (atomic): migrated atomic-pager to lit (#6084) ([c894ef6](https://github.com/coveo/ui-kit/commits/c894ef6)), closes [#6084](https://github.com/coveo/ui-kit/issues/6084)
+
+
+
+## <small>3.7.8 (2025-10-01)</small>
+
+* chore(atomic commerce): deprecate language property and add updateLocale method on atomic-commerce-i ([fb9007a](https://github.com/coveo/ui-kit/commits/fb9007a)), closes [#6054](https://github.com/coveo/ui-kit/issues/6054)
+* chore(atomic): extract layout/breakpoint logic to reactive controllers (#6074) ([7b8cb1a](https://github.com/coveo/ui-kit/commits/7b8cb1a)), closes [#6074](https://github.com/coveo/ui-kit/issues/6074)
+* fix(atomic angular): ensure lit attribute converters get called (#6082) ([167d030](https://github.com/coveo/ui-kit/commits/167d030)), closes [#6082](https://github.com/coveo/ui-kit/issues/6082)
+
+
+
+## <small>3.7.7 (2025-09-24)</small>
+
+* chore(query summary): migrate atomic-query-summary (#6025) ([25218e2](https://github.com/coveo/ui-kit/commits/25218e2)), closes [#6025](https://github.com/coveo/ui-kit/issues/6025)
+
+
+
+## <small>3.7.6 (2025-09-18)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([a3fb13e](https://github.com/coveo/ui-kit/commits/a3fb13e))
+
+
+
+## <small>3.7.4 (2025-09-17)</small>
+
+* chore(atomic commerce): rework atomic-commerce-search-interface unit tests (#6036) ([79e7bcb](https://github.com/coveo/ui-kit/commits/79e7bcb)), closes [#6036](https://github.com/coveo/ui-kit/issues/6036)
+
+
+
 ## <small>3.7.2 (2025-08-28)</small>
 
 * chore: migrate to storybook9 (#5916) ([b26bff1](https://github.com/coveo/ui-kit/commits/b26bff1)), closes [#5916](https://github.com/coveo/ui-kit/issues/5916)

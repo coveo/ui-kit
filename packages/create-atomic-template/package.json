@@ -7,12 +7,12 @@
     "lint": "prettier --check . && eslint ."
   },
   "dependencies": {
-    "@coveo/atomic": "3.33.3",
-    "@coveo/headless": "3.29.2",
+    "@coveo/atomic": "3.35.5",
+    "@coveo/headless": "3.32.0",
     "@stencil/core": "4.20.0"
   },
   "devDependencies": {
-    "@coveo/create-atomic-rollup-plugin": "1.2.0",
+    "@coveo/create-atomic-rollup-plugin": "1.2.1",
     "@rollup/plugin-replace": "5.0.2",
     "esbuild": "0.25.8",
     "gts": "3.1.1",

@@ -28,7 +28,7 @@ test.describe('AtomicTabManager', () => {
   });
 
   test.describe('when viewport is large enough to display all tabs', () => {
-    test('should be A11y compliant', async ({makeAxeBuilder}) => {
+    test('should be accessible', async ({makeAxeBuilder}) => {
       const accessibilityResults = await makeAxeBuilder().analyze();
       expect(accessibilityResults.violations).toEqual([]);
     });
@@ -253,7 +253,7 @@ test.describe('AtomicTabManager', () => {
       await page.setViewportSize({width: 300, height: 1000});
     });
 
-    test('should be A11y compliant', async ({makeAxeBuilder}) => {
+    test('should be accessible', async ({makeAxeBuilder}) => {
       const accessibilityResults = await makeAxeBuilder().analyze();
       expect(accessibilityResults.violations).toEqual([]);
     });

@@ -40,6 +40,9 @@ jobs:
     name: 'Run Playwright e2e tests on Quantic'
     needs: e2e-quantic-setup
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.54.1-noble
+      options: --user 1001
     strategy:
       fail-fast: false
       matrix:
@@ -53,11 +56,10 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-quantic-playwright
+      - uses: ./.github/actions/playwright-quantic
         with:
           shardIndex: ${{ matrix.shardIndex }}
           shardTotal: ${{ matrix.shardTotal }}
-          testsToRun: ${{ needs.prepare-playwright-atomic.outputs.testsToRun }}
   merge-quantic-playwright-reports:
     name: 'Merge Playwright reports'
     environment: PR Artifacts

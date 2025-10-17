@@ -7,7 +7,7 @@
     "build:angular": "ng build",
     "dev": "npm run build:assets && npm run dev:angular",
     "dev:angular": "ng serve --host=0.0.0.0 --prebundle=false",
-    "build:assets": "ncp ../../../packages/atomic-angular/projects/atomic-angular/dist/assets src/assets && ncp ../../../packages/atomic-angular/projects/atomic-angular/dist/lang src/lang"
+    "build:assets": "node ../../../utils/ci/copy-files.mjs ../../../packages/atomic-angular/projects/atomic-angular/dist/assets src/assets ../../../packages/atomic-angular/projects/atomic-angular/dist/lang src/lang"
   },
   "private": true,
   "dependencies": {
@@ -18,10 +18,9 @@
     "@angular/platform-browser": "19.2.2",
     "@angular/platform-browser-dynamic": "19.2.2",
     "@angular/router": "19.2.2",
-    "@coveo/atomic-angular": "3.7.3",
+    "@coveo/atomic-angular": "3.7.13",
     "rxjs": "7.8.2",
     "zone.js": "0.15.1",
-    "ncp": "2.0.0",
     "tslib": "2.8.1"
   },
   "devDependencies": {

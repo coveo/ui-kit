@@ -1,12 +1,12 @@
 import {html, render} from 'lit';
 import {fireEvent, within} from 'storybook/test';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {createRipple} from '@/src/utils/ripple';
+import {createRipple} from '@/src/utils/ripple-utils';
 import {type RadioButtonProps, renderRadioButton} from './radio-button';
 
-vi.mock('../../utils/ripple');
+vi.mock('@/src/utils/ripple-utils', {spy: true});
 
-describe('radioButton', () => {
+describe('#renderRadioButton', () => {
   let container: HTMLElement;
 
   beforeEach(() => {
@@ -70,7 +70,8 @@ describe('radioButton', () => {
     render(
       html`${renderRadioButton({props: {...props, text: 'radio-1'}})}
       ${renderRadioButton({props: {...props, text: 'radio-2'}})}
-      ${renderRadioButton({props: {...props, text: 'radio-3'}})}`,
+      ${renderRadioButton({props: {...props, text: 'radio-3'}})}
+      ${renderRadioButton({props: {...props, text: 'radio-4'}})}`,
       container
     );
 
@@ -85,6 +86,12 @@ describe('radioButton', () => {
     await expect(getRadio(2)).toBeInTheDocument();
 
     keyDown(inputs[2], {key: 'ArrowRight'});
+    await expect(getRadio(3)).toBeInTheDocument();
+
+    keyDown(inputs[2], {key: 'Tab'});
+    await expect(getRadio(4)).toBeInTheDocument();
+
+    keyDown(inputs[2], {key: 'Tab', shiftKey: true});
     await expect(getRadio(3)).toBeInTheDocument();
   });
 

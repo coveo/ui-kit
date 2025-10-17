@@ -1,13 +1,16 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import {encodeForDomAttribute} from '../../../utils/string-utils.js';
-import {SearchBoxSuggestionElement} from './suggestions-common.js';
+import {SearchBoxSuggestionElement} from './suggestions-types.js';
 
 interface Suggestion {
   highlightedValue: string;
   rawValue: string;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const getPartialSearchBoxSuggestionElement = (
   suggestion: Suggestion,
   i18n: i18n
@@ -23,6 +26,9 @@ export const getPartialSearchBoxSuggestionElement = (
   };
 };
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const QuerySuggestionContainer: FunctionalComponent = (_, children) => {
   return (
     <div part="query-suggestion-content" class="flex items-center">
@@ -36,6 +42,9 @@ interface QuerySuggestionIconProps {
   hasSuggestion: boolean;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const QuerySuggestionIcon: FunctionalComponent<
   QuerySuggestionIconProps
 > = ({icon, hasSuggestion}) => {
@@ -57,6 +66,9 @@ interface QuerySuggestionTextProps {
   hasQuery: boolean;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const QuerySuggestionText: FunctionalComponent<
   QuerySuggestionTextProps
 > = ({suggestion, hasQuery}) => {

@@ -1,13 +1,13 @@
-import {describe, expect, it, vi} from 'vitest';
-import './atomic-product-children';
 import type {ChildProduct} from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
+import {describe, expect, it, vi} from 'vitest';
+import type {AtomicProduct} from '@/src/components/commerce/atomic-product/atomic-product';
 import {closest} from '@/src/utils/dom-utils';
 import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-product-fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
-import type {AtomicProduct} from '../atomic-product/atomic-product';
 import {AtomicProductChildren} from './atomic-product-children';
+import './atomic-product-children';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 vi.mock('@/src/utils/dom-utils', {spy: true});

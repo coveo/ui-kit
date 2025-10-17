@@ -3,9 +3,10 @@ import {describe, expect, it, type Mock, type MockInstance, vi} from 'vitest';
 import {buildCommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {getSampleCommerceEngineConfiguration} from '../../../app/commerce-engine/commerce-engine-configuration.js';
 import {buildLogger} from '../../../app/logger.js';
+import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockCommerceEngine} from '../../../test/mock-engine-v2.js';
-import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
+import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {
   defineMockCommerceController,
   defineMockRecommendationDefinition,
@@ -16,12 +17,14 @@ import {defineSearchBox} from '../controllers/search-box/headless-search-box.ssr
 import type {
   CommonBuildConfig,
   ListingBuildConfig,
+  RecommendationBuildConfig,
   SearchBuildConfig,
   SSRCommerceEngineOptions,
   StandaloneBuildConfig,
 } from '../types/build.js';
 import {SolutionType} from '../types/controller-constants.js';
 import {wireControllerParams} from '../utils/controller-wiring.js';
+import * as augmentCommerceEngineOptions from '../utils/engine-wiring.js';
 import {buildFactory} from './build-factory.js';
 
 vi.mock('../utils/controller-wiring.js');
@@ -29,20 +32,10 @@ vi.mock('../../../app/logger.js');
 vi.mock('../../../app/commerce-engine/commerce-engine.js');
 
 describe('buildFactory', () => {
+  let mockNavigatorContext: NavigatorContext;
+  let mockBuildOptions: Partial<CommonBuildConfig>;
   const mockWireControllerParams = vi.mocked(wireControllerParams);
   const mockBuildCommerceEngine = vi.mocked(buildCommerceEngine);
-  const mockBuildOptions = {
-    context: {
-      country: 'US',
-      currency: 'USD' as CurrencyCodeISO4217,
-      recommendations: [],
-      language: 'en-US',
-      view: {url: 'http://example.com'},
-    },
-    searchParams: {
-      query: 'query',
-    },
-  };
 
   const mockLogger = {
     warn: vi.fn(),
@@ -52,7 +45,6 @@ describe('buildFactory', () => {
   let mockDispatch: MockInstance;
   const mockEngineOptions: SSRCommerceEngineOptions = {
     configuration: getSampleCommerceEngineConfiguration(),
-    navigatorContextProvider: buildMockNavigatorContextProvider(),
   };
 
   const mockEmptyDefinition = {};
@@ -60,6 +52,18 @@ describe('buildFactory', () => {
   beforeEach(() => {
     mockDispatch = vi.fn();
     vi.resetAllMocks();
+
+    mockNavigatorContext = buildMockNavigatorContext();
+
+    mockBuildOptions = {
+      navigatorContext: mockNavigatorContext,
+      context: {
+        country: 'US',
+        currency: 'USD' as CurrencyCodeISO4217,
+        language: 'en-US',
+        view: {url: 'http://example.com'},
+      },
+    };
 
     mockBuildCommerceEngine.mockReturnValue({
       ...buildMockCommerceEngine(buildMockCommerceState()),
@@ -81,6 +85,7 @@ describe('buildFactory', () => {
 
     const factory = buildFactory(definition, mockEngineOptions);
     await factory(SolutionType.listing)({
+      navigatorContext: mockNavigatorContext,
       context: {
         country: 'CA',
         currency: 'USD',
@@ -103,6 +108,7 @@ describe('buildFactory', () => {
         language: 'en',
         view: {url: 'https://example.com'},
       },
+      navigatorContext: mockNavigatorContext,
     });
   });
 
@@ -119,6 +125,7 @@ describe('buildFactory', () => {
     const factory = buildFactory(definition, mockEngineOptions);
 
     await factory(SolutionType.listing)({
+      navigatorContext: mockNavigatorContext,
       context: {
         country: 'CA',
         currency: 'USD',
@@ -131,16 +138,11 @@ describe('buildFactory', () => {
     expect(mockDispatch).toHaveBeenCalledWith({type: 'search-action'});
   });
 
-  it('should not warn if navigatorContextProvider is present', async () => {
-    const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
-    const build = factory(SolutionType.listing);
-
-    await build(mockBuildOptions as ListingBuildConfig);
-
-    expect(mockLogger.warn).not.toHaveBeenCalled();
-  });
-
-  it('should warn if navigatorContextProvider is missing', async () => {
+  it('should  call #augmentCommerceEngineOptions with the correct params', async () => {
+    const mockedAugmentCommerceEngineOptions = vi.spyOn(
+      augmentCommerceEngineOptions,
+      'augmentCommerceEngineOptions'
+    );
     const factory = buildFactory(mockEmptyDefinition, {
       configuration: getSampleCommerceEngineConfiguration(),
     });
@@ -148,8 +150,19 @@ describe('buildFactory', () => {
 
     await build(mockBuildOptions as ListingBuildConfig);
 
-    expect(mockLogger.warn).toHaveBeenCalledWith(
-      expect.stringContaining('Missing navigator context in server-side code')
+    expect(mockedAugmentCommerceEngineOptions).toHaveBeenCalledExactlyOnceWith(
+      {configuration: getSampleCommerceEngineConfiguration()},
+      {
+        context: {
+          country: 'US',
+          currency: 'USD',
+          language: 'en-US',
+          view: {
+            url: 'http://example.com',
+          },
+        },
+        navigatorContext: mockNavigatorContext,
+      }
     );
   });
 
@@ -240,33 +253,6 @@ describe('buildFactory', () => {
       expect(controllers.searchBox).toBeUndefined();
     });
 
-    it('should return static state from build result without the listing controller', async () => {
-      const factory = buildFactory(
-        {
-          products: defineProductList({listing: false}),
-          searchBox: defineSearchBox(),
-          cart: defineCart(),
-        },
-        mockEngineOptions
-      );
-      await factory(SolutionType.listing)({
-        ...(mockBuildOptions as ListingBuildConfig),
-        controllers: {cart: {initialState: {items: []}}},
-      });
-
-      const {controllers} = await factory(SolutionType.listing)({
-        ...(mockBuildOptions as ListingBuildConfig),
-        controllers: {cart: {initialState: {items: []}}},
-      });
-
-      expect(Object.keys(controllers)).toHaveLength(1);
-      expect(controllers.cart).not.toBeUndefined();
-      // @ts-expect-error Products is disabled for listing
-      expect(controllers.products).toBeUndefined();
-      // @ts-expect-error SearchBox is not a listing controller
-      expect(controllers.searchBox).toBeUndefined();
-    });
-
     it('should always add a single middleware', async () => {
       const factory = buildFactory(
         {
@@ -311,7 +297,9 @@ describe('buildFactory', () => {
     it('should build an SSRCommerceEngine with recommendation solution type', async () => {
       const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
       const build = factory(SolutionType.recommendation);
-      const result = await build(mockBuildOptions);
+      const result = await build(
+        mockBuildOptions as RecommendationBuildConfig<{}>
+      );
 
       expect(result.engine).toBeDefined();
       expect(result.controllers).toBeDefined();
@@ -321,7 +309,7 @@ describe('buildFactory', () => {
       await build({
         ...mockBuildOptions,
         recommendations: [],
-      });
+      } as RecommendationBuildConfig<{}>);
       expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(
         0
       );
@@ -331,7 +319,7 @@ describe('buildFactory', () => {
       await build({
         ...mockBuildOptions,
         recommendations: ['rec1', 'rec2'],
-      });
+      } as RecommendationBuildConfig<{}>);
       expect(mockBuildCommerceEngine.mock.calls[0][0].middlewares).toHaveLength(
         2
       );

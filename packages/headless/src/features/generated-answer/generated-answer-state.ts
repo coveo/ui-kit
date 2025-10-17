@@ -1,4 +1,5 @@
 import type {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
+import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import type {
   GeneratedContentFormat,
   GeneratedResponseFormat,
@@ -90,6 +91,12 @@ export interface GeneratedAnswerState {
    * The answer configuration unique identifier.
    */
   answerConfigurationId?: string;
+  /**
+   * The query parameters used for the answer API request cache key
+   */
+  answerApiQueryParams?: AnswerApiQueryParams;
+  /** The unique identifier of the answer returned by the Answer API. */
+  answerId?: string;
 }
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
@@ -111,5 +118,7 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     isAnswerGenerated: false,
     expanded: false,
     cannotAnswer: false,
+    answerApiQueryParams: undefined,
+    answerId: undefined,
   };
 }

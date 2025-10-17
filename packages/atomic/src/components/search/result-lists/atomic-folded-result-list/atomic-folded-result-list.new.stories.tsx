@@ -2,6 +2,7 @@
 
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {bypass, HttpResponse, http} from 'msw';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
@@ -148,7 +149,6 @@ const meta: Meta = {
   },
   args,
   argTypes,
-
   afterEach,
 };
 
@@ -161,11 +161,11 @@ export const Default: Story = {
   },
 };
 
-const preprocessRequestNoChildrenResult = (response: any) => {
-  const parsed = JSON.parse(response.body as string);
+const preprocessRequestNoChildrenResult = (request: any) => {
+  const parsed = JSON.parse(request.body as string);
   parsed.aq = '@foldingcollection==("atlcontinentantarctica")';
-  response.body = JSON.stringify(parsed);
-  return response;
+  request.body = JSON.stringify(parsed);
+  return request;
 };
 
 const {afterEach: noResultChildrenPlay} = wrapInSearchInterface({
@@ -176,6 +176,56 @@ export const WithNoResultChildren: Story = {
   name: 'With no result children',
   args: {
     'default-slot': SLOTS_DEFAULT,
+  },
+  afterEach: noResultChildrenPlay,
+};
+
+export const WithFewResultChildren: Story = {
+  name: 'With result children',
+  args: {
+    'default-slot': SLOTS_DEFAULT,
+  },
+  parameters: {
+    msw: {
+      handlers: [
+        http.post('**/search/v2', async ({request}) => {
+          const response = await fetch(bypass(request));
+          const body = await response.json();
+
+          // Modify the first result to have result children
+          if (body.results?.[0]) {
+            body.results[0].totalNumberOfChildResults = 1;
+          }
+
+          return HttpResponse.json(body);
+        }),
+      ],
+    },
+  },
+  afterEach,
+};
+
+export const WithMoreResultsAvailableAndNoChildren: Story = {
+  name: 'With more results available and no children',
+  args: {
+    'default-slot': SLOTS_DEFAULT,
+  },
+  parameters: {
+    msw: {
+      handlers: [
+        http.post('**/search/v2', async ({request}) => {
+          const response = await fetch(bypass(request));
+          const body = await response.json();
+
+          // Modify the first result to have no results available
+          if (body.results?.[0]) {
+            body.results[0].totalNumberOfChildResults = 10;
+          }
+
+          return HttpResponse.json(body);
+        }),
+      ],
+    },
   },
   afterEach: noResultChildrenPlay,
 };

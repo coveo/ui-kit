@@ -2,17 +2,18 @@ import type {
   ProductTemplate,
   ProductTemplateCondition,
 } from '@coveo/headless/commerce';
+import {ProductTemplatesHelpers} from '@coveo/headless/commerce';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {ProductTemplateController} from '@/src/components/common/product-template/product-template-controller';
+import {makeMatchConditions} from '@/src/components/common/template-controller/template-utils';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
 import {mapProperty} from '@/src/utils/props-utils';
-import {makeMatchConditions} from '../../common/product-template/product-template-common';
-import {ProductTemplateController} from '../../common/product-template/product-template-controller';
 import '../atomic-product/atomic-product';
 
 /**
- * * A product template determines the format of the query results, depending on the conditions that are defined for each template.
+ * * A product template determines the format of the products, depending on the conditions that are defined for each template.
  *
  * A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
  *
@@ -42,9 +43,9 @@ export class AtomicProductTemplate
   conditions: ProductTemplateCondition[] = [];
 
   /**
-   * The field and values that define which result items the condition must be applied to.
-   * For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`:
-   * `must-match-filetype="lithiummessage,YouTubePlaylist"`
+   * The field and values that define which products the condition must be applied to.
+   * For example, a template with the following attribute only applies to products whose `ec_brand` is `Barca` or `Acme`:
+   * `must-match-ec_brand="Barca,Acme"`
    * @type {Record<string, string[]>}
    * @default {}
    */
@@ -52,9 +53,9 @@ export class AtomicProductTemplate
   mustMatch!: Record<string, string[]>;
 
   /**
-   * The field and values that define which result items the condition must not be applied to.
-   * For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`:
-   * `must-not-match-filetype="lithiummessage"`
+   * The field and values that define which products the condition must not be applied to.
+   * For example, a template with the following attribute only applies to products whose `ec_brand` is not `Barca`:
+   * `must-not-match-ec_brand="Barca"`
    * @type {Record<string, string[]>}
    * @default {}
    */
@@ -80,7 +81,8 @@ export class AtomicProductTemplate
     super.connectedCallback();
     this.productTemplateController.matchConditions = makeMatchConditions(
       this.mustMatch,
-      this.mustNotMatch
+      this.mustNotMatch,
+      ProductTemplatesHelpers
     );
   }
 

@@ -4,15 +4,14 @@ import type {
   ControllerStaticStateMap,
   ControllersPropsMap,
 } from '../../common/types/controllers.js';
+import type {EngineStaticState} from '../../common/types/engine.js';
 import type {BuildConfig} from './build.js';
 import type {SolutionType} from './controller-constants.js';
 import type {
   CommerceEngineDefinitionControllersPropsOption,
   ControllerDefinitionsMap,
   FilteredBakedInControllers,
-  OptionsTuple,
 } from './controller-definitions.js';
-import type {EngineStaticState} from './engine.js';
 
 /**
  * Executes only the initial search for a given configuration, then returns a resumable snapshot of engine state along with the state of the controllers.
@@ -26,14 +25,12 @@ export type FetchStaticState<
   TControllersDefinitionsMap extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 > = (
-  ...params: OptionsTuple<
-    BuildConfig<TControllersDefinitionsMap, TSolutionType> &
-      CommerceEngineDefinitionControllersPropsOption<
-        TControllersDefinitionsMap,
-        TControllersProps,
-        TSolutionType
-      >
-  >
+  params: BuildConfig<TControllersDefinitionsMap, TSolutionType> &
+    CommerceEngineDefinitionControllersPropsOption<
+      TControllersDefinitionsMap,
+      TControllersProps,
+      TSolutionType
+    >
 ) => Promise<
   EngineStaticState<
     TSearchAction,

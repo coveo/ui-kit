@@ -2,24 +2,27 @@ import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {createRef} from 'lit/directives/ref.js';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
-import {createRipple} from '@/src/utils/ripple';
+import {renderCheckbox} from '@/src/components/common/checkbox';
+import type {FacetValuePropsBase} from '@/src/components/common/facets/facet-common';
+import {renderFacetValueExclude} from '@/src/components/common/facets/facet-value-exclude/facet-value-exclude';
+import {renderTriStateCheckbox} from '@/src/components/common/triStateCheckbox';
+import {createRipple} from '@/src/utils/ripple-utils';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {renderCheckbox} from '../../checkbox';
-import {renderTriStateCheckbox} from '../../triStateCheckbox';
-import type {FacetValuePropsBase} from '../facet-common';
-import {renderFacetValueExclude} from '../facet-value-exclude/facet-value-exclude';
 import {
   renderFacetValueCheckbox,
   type TriStateFacetValueProps,
 } from './facet-value-checkbox';
 
-vi.mock('../../triStateCheckbox', {spy: true});
-vi.mock('../../checkbox', {spy: true});
-vi.mock('../facet-value-exclude/facet-value-exclude', {spy: true});
-vi.mock('@/src/utils/ripple', {spy: true});
+vi.mock('@/src/components/common/triStateCheckbox', {spy: true});
+vi.mock('@/src/components/common/checkbox', {spy: true});
+vi.mock(
+  '@/src/components/common/facets/facet-value-exclude/facet-value-exclude',
+  {spy: true}
+);
+vi.mock('@/src/utils/ripple-utils', {spy: true});
 
-describe('renderFacetValueCheckbox', () => {
+describe('#renderFacetValueCheckbox', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
   beforeAll(async () => {

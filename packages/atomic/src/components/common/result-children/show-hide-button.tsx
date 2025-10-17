@@ -10,6 +10,9 @@ interface ShowHideButtonProps {
   collapseResults: string;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const ShowHideButton: FunctionalComponent<ShowHideButtonProps> = ({
   moreResultsAvailable,
   loadFullCollection,

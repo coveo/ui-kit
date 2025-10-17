@@ -1,0 +1,26 @@
+{
+  "name": "@samples/headless-ssr-commerce-nextjs-v4",
+  "description": "Examples of @coveo/headless-react/ssr-commerce-next utils using Next.js app router",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "prod": "next start",
+    "lint": "next lint",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@coveo/headless-react": "2.6.6",
+    "next": "15.2.4",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.16.5",
+    "@types/react": "19.1.1",
+    "@types/react-dom": "19.1.2",
+    "@playwright/test": "1.54.1",
+    "typescript": "5.8.3"
+  }
+}

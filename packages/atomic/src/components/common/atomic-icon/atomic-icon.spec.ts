@@ -1,17 +1,13 @@
 import {page} from '@vitest/browser/context';
-import * as assetPathUtils from '@/src/utils/asset-path-utils';
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import '@vitest/browser/matchers.d.ts';
 import DOMPurify from 'dompurify';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
-import './atomic-icon';
+import * as assetPathUtils from '@/src/utils/asset-path-utils';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {AtomicIcon} from './atomic-icon';
+import './atomic-icon';
 
-vi.mock('@/src/utils/asset-path-utils', () => ({
-  parseAssetURL: vi.fn(),
-}));
-
+vi.mock('@/src/utils/asset-path-utils', {spy: true});
 vi.mock('@/src/mixins/bindings-mixin', () => ({
   InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
     return class extends superClass {
@@ -29,7 +25,7 @@ vi.mock('@/src/mixins/bindings-mixin', () => ({
   }),
 }));
 
-describe('AtomicIcon', () => {
+describe('atomic-icon', () => {
   let fetchMock: MockInstance;
   let parseAssetURLMock: MockInstance;
   let sanitizeMock: MockInstance;

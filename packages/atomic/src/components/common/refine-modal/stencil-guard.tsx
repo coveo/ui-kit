@@ -5,6 +5,10 @@ interface RefineToggleGuardProps {
   firstRequestExecuted: boolean;
   hasItems: boolean;
 }
+
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const RefineToggleGuard: FunctionalComponent<RefineToggleGuardProps> = (
   {hasError, firstRequestExecuted, hasItems},
   children

@@ -5,26 +5,25 @@ import {
   type Product,
 } from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
-import {renderInAtomicCommerceRecommendationInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-recommendation-interface-fixture.js';
-import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product.js';
-import {buildFakeRecommendations} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/recommendations-controller.js';
-import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller.js';
-import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
-import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {
   ItemDisplayBasicLayout,
   ItemDisplayDensity,
   ItemDisplayImageSize,
-} from '../../common/layout/display-options.js';
-import './atomic-commerce-recommendation-list';
+} from '@/src/components/common/layout/display-options.js';
+import {renderInAtomicCommerceRecommendationInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-recommendation-interface-fixture.js';
+import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product.js';
+import {buildFakeRecommendations} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/recommendations-controller.js';
+import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller.js';
+import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
 import {AtomicCommerceRecommendationList} from './atomic-commerce-recommendation-list';
+import './atomic-commerce-recommendation-list';
 
 vi.mock('@/src/components/common/interface/store', {spy: true});
 vi.mock('@coveo/headless/commerce', {spy: true});
 
-describe('AtomicCommerceRecommendationList', () => {
+describe('atomic-commerce-recommendation-list', () => {
   const interactiveProduct = vi.fn();
   const promoteChildToParent = vi.fn();
   const summary = vi.fn();

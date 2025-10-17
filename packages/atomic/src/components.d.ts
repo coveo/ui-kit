@@ -5,50 +5,40 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchStatus } from "@coveo/headless";
 import { AtomicInterface } from "./utils/initialization-utils";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
-import { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
-import { i18n } from "i18next";
-import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
+import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
+import { i18n } from "i18next";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
-import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { SearchStore } from "./components/search/atomic-search-interface/store";
 import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
-import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
-import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
-import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-common";
-export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
+export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchStatus } from "@coveo/headless";
 export { AtomicInterface } from "./utils/initialization-utils";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
-export { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
-export { i18n } from "i18next";
-export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
+export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
+export { i18n } from "i18next";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
-export { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { SearchStore } from "./components/search/atomic-search-interface/store";
 export { RedirectionPayload } from "./components/common/search-box/redirection-payload";
-export { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
-export { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
-export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-export { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-common";
+export { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
 export namespace Components {
     /**
      * An automatic facet is a special type of facet generated by the automatic facets feature.
@@ -719,61 +709,6 @@ export namespace Components {
         "clickCallback": () => void;
         "tooltip": string;
     }
-    interface AtomicInsightInterface {
-        /**
-          * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...]. When using a nonce, the first import of Atomic should be to import & call the `setNonce` function with the generated nonce value.
-          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
-         */
-        "CspNonce"?: string;
-        /**
-          * Whether analytics should be enabled.
-         */
-        "analytics": boolean;
-        /**
-          * The service insight interface headless engine.
-         */
-        "engine"?: InsightEngine;
-        /**
-          * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
-         */
-        "executeFirstSearch": () => Promise<void>;
-        /**
-          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-insight-interface fields-to-include='["fieldA", "fieldB"]'></atomic-insight-interface> ```
-         */
-        "fieldsToInclude": string[] | string;
-        /**
-          * The service insight interface i18next instance.
-         */
-        "i18n": i18n;
-        /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
-         */
-        "iconAssetsPath": string;
-        /**
-          * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `environment` (defaults to `prod`), and `renewAccessToken`.
-         */
-        "initialize": (options: InsightInitializationOptions) => Promise<void>;
-        /**
-          * Initializes the connection with an already preconfigured headless insight engine.
-         */
-        "initializeWithInsightEngine": (engine: InsightEngine) => Promise<void>;
-        /**
-          * The service insight interface language.
-         */
-        "language": string;
-        /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
-         */
-        "languageAssetsPath": string;
-        /**
-          * The severity level of the messages to log in the console.
-         */
-        "logLevel"?: InsightLogLevel;
-        /**
-          * The number of results per page. By default, this is set to `5`.
-         */
-        "resultsPerPage": number;
-    }
     interface AtomicInsightLayout {
         /**
           * Whether the interface should be shown in widget format.
@@ -1319,24 +1254,6 @@ export namespace Components {
     interface AtomicLoadMoreResults {
     }
     /**
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interfaceElement and the body, allowing further customization.
-     */
-    interface AtomicModal {
-        /**
-          * Whether to display the open and close animations over the entire page or the atomic-modal only.
-         */
-        "boundary": 'page' | 'element';
-        "close": () => void;
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
-         */
-        "container"?: HTMLElement;
-        "fullscreen": boolean;
-        "isOpen": boolean;
-        "scope"?: HTMLElement;
-        "source"?: HTMLElement;
-    }
-    /**
      * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
      */
     interface AtomicNoResults {
@@ -1446,23 +1363,6 @@ export namespace Components {
         "start": number;
     }
     /**
-     * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
-     */
-    interface AtomicPager {
-        /**
-          * The SVG icon to use to display the Next button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "nextButtonIcon": string;
-        /**
-          * Specifies how many page buttons to display in the pager.
-         */
-        "numberOfPages": number;
-        /**
-          * The SVG icon to use to display the Previous button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "previousButtonIcon": string;
-    }
-    /**
      * The `atomic-popover` component displays any facet as a popover menu.
      */
     interface AtomicPopover {
@@ -1471,11 +1371,6 @@ export namespace Components {
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
      */
     interface AtomicQueryError {
-    }
-    /**
-     * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
-     */
-    interface AtomicQuerySummary {
     }
     /**
      * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
@@ -1864,16 +1759,6 @@ export namespace Components {
           * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
          */
         "collapseFacetsAfter": number;
-    }
-    /**
-     * The `atomic-relevance-inspector` component is used internally to offer insight on search page relevance, as well as information to help troubleshoot issues during development.
-     */
-    interface AtomicRelevanceInspector {
-        /**
-          * The Atomic interface bindings, namely the headless search engine and i18n instances.
-         */
-        "bindings": Bindings;
-        "open": boolean;
     }
     /**
      * The `atomic-result` component is used internally by the `atomic-result-list` component.
@@ -2411,146 +2296,6 @@ export namespace Components {
         "suggestionTimeout": number;
     }
     /**
-     * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
-     * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
-     * This component is not supported on mobile.
-     */
-    interface AtomicSearchBoxInstantResults {
-        /**
-          * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.  By default, or if an empty string is returned, `result.title` is used.
-         */
-        "ariaLabelGenerator"?: AriaLabelGenerator;
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density": ItemDisplayDensity;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * The maximum number of results to show.
-         */
-        "maxResultsPerQuery": number;
-        /**
-          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-          * @param resultRenderingFunction
-         */
-        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
-    }
-    /**
-     * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
-     */
-    interface AtomicSearchBoxQuerySuggestions {
-        /**
-          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "icon"?: string;
-        /**
-          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
-         */
-        "maxWithQuery"?: number;
-        /**
-          * The maximum number of suggestions that will be displayed initially when the input field is empty.
-         */
-        "maxWithoutQuery"?: number;
-    }
-    /**
-     * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
-     */
-    interface AtomicSearchBoxRecentQueries {
-        /**
-          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "icon"?: string;
-        /**
-          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
-         */
-        "maxWithQuery": number;
-        /**
-          * The maximum number of suggestions that will be displayed initially when the input field is empty.
-         */
-        "maxWithoutQuery"?: number;
-    }
-    /**
-     * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
-     */
-    interface AtomicSearchInterface {
-        /**
-          * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
-          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
-         */
-        "CspNonce"?: string;
-        /**
-          * Whether analytics should be enabled.
-         */
-        "analytics": boolean;
-        /**
-          * Whether the relevance inspector shortcut should be enabled for this interface.  The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.  The relevance inspector allows to troubleshoot and debug queries.
-         */
-        "enableRelevanceInspector": boolean;
-        /**
-          * The search interface headless engine.
-         */
-        "engine"?: SearchEngine;
-        /**
-          * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
-         */
-        "executeFirstSearch": () => Promise<void>;
-        /**
-          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-search-interface fields-to-include='["fieldA", "fieldB"]'></atomic-search-interface> ```
-         */
-        "fieldsToInclude": string[] | string;
-        /**
-          * The search interface i18next instance.
-         */
-        "i18n": i18n;
-        /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
-         */
-        "iconAssetsPath": string;
-        /**
-          * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `environment` (defaults to `prod`), and `renewAccessToken`.
-         */
-        "initialize": (options: InitializationOptions) => Promise<void>;
-        /**
-          * Initializes the connection with an already preconfigured [headless search engine](https://docs.coveo.com/en/headless/latest/reference/modules/Search.html, as opposed to the `initialize` method, which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
-         */
-        "initializeWithSearchEngine": (engine: SearchEngine) => Promise<void>;
-        /**
-          * The search interface language.
-         */
-        "language": string;
-        /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
-         */
-        "languageAssetsPath": string;
-        /**
-          * The severity level of the messages to log in the console.
-         */
-        "logLevel"?: LogLevel;
-        /**
-          * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
-         */
-        "pipeline"?: string;
-        /**
-          * Whether the state should be reflected in the URL parameters.
-         */
-        "reflectStateInUrl": boolean;
-        /**
-          * The CSS selector for the container where the interface will scroll back to.
-         */
-        "scrollContainer": string;
-        /**
-          * The search interface [search hub](https://docs.coveo.com/en/1342/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine, the search hub should instead be configured in the target engine.
-         */
-        "searchHub"?: string;
-        /**
-          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
-         */
-        "timezone"?: string;
-    }
-    /**
      * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
      */
     interface AtomicSegmentedFacet {
@@ -2962,21 +2707,9 @@ export interface AtomicIpxModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicIpxModalElement;
 }
-export interface AtomicModalCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicModalElement;
-}
-export interface AtomicPagerCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicPagerElement;
-}
 export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicQuickviewModalElement;
-}
-export interface AtomicRelevanceInspectorCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicRelevanceInspectorElement;
 }
 export interface AtomicSearchBoxCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -3259,12 +2992,6 @@ declare global {
     var HTMLAtomicInsightHistoryToggleElement: {
         prototype: HTMLAtomicInsightHistoryToggleElement;
         new (): HTMLAtomicInsightHistoryToggleElement;
-    };
-    interface HTMLAtomicInsightInterfaceElement extends Components.AtomicInsightInterface, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightInterfaceElement: {
-        prototype: HTMLAtomicInsightInterfaceElement;
-        new (): HTMLAtomicInsightInterfaceElement;
     };
     interface HTMLAtomicInsightLayoutElement extends Components.AtomicInsightLayout, HTMLStencilElement {
     }
@@ -3609,26 +3336,6 @@ declare global {
         prototype: HTMLAtomicLoadMoreResultsElement;
         new (): HTMLAtomicLoadMoreResultsElement;
     };
-    interface HTMLAtomicModalElementEventMap {
-        "animationEnded": never;
-    }
-    /**
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interfaceElement and the body, allowing further customization.
-     */
-    interface HTMLAtomicModalElement extends Components.AtomicModal, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicModalElementEventMap>(type: K, listener: (this: HTMLAtomicModalElement, ev: AtomicModalCustomEvent<HTMLAtomicModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicModalElementEventMap>(type: K, listener: (this: HTMLAtomicModalElement, ev: AtomicModalCustomEvent<HTMLAtomicModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicModalElement: {
-        prototype: HTMLAtomicModalElement;
-        new (): HTMLAtomicModalElement;
-    };
     /**
      * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
      */
@@ -3666,26 +3373,6 @@ declare global {
         prototype: HTMLAtomicNumericRangeElement;
         new (): HTMLAtomicNumericRangeElement;
     };
-    interface HTMLAtomicPagerElementEventMap {
-        "atomic/scrollToTop": any;
-    }
-    /**
-     * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
-     */
-    interface HTMLAtomicPagerElement extends Components.AtomicPager, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicPagerElementEventMap>(type: K, listener: (this: HTMLAtomicPagerElement, ev: AtomicPagerCustomEvent<HTMLAtomicPagerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicPagerElementEventMap>(type: K, listener: (this: HTMLAtomicPagerElement, ev: AtomicPagerCustomEvent<HTMLAtomicPagerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicPagerElement: {
-        prototype: HTMLAtomicPagerElement;
-        new (): HTMLAtomicPagerElement;
-    };
     /**
      * The `atomic-popover` component displays any facet as a popover menu.
      */
@@ -3703,15 +3390,6 @@ declare global {
     var HTMLAtomicQueryErrorElement: {
         prototype: HTMLAtomicQueryErrorElement;
         new (): HTMLAtomicQueryErrorElement;
-    };
-    /**
-     * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
-     */
-    interface HTMLAtomicQuerySummaryElement extends Components.AtomicQuerySummary, HTMLStencilElement {
-    }
-    var HTMLAtomicQuerySummaryElement: {
-        prototype: HTMLAtomicQuerySummaryElement;
-        new (): HTMLAtomicQuerySummaryElement;
     };
     /**
      * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
@@ -3837,26 +3515,6 @@ declare global {
     var HTMLAtomicRefineToggleElement: {
         prototype: HTMLAtomicRefineToggleElement;
         new (): HTMLAtomicRefineToggleElement;
-    };
-    interface HTMLAtomicRelevanceInspectorElementEventMap {
-        "atomic/relevanceInspector/close": any;
-    }
-    /**
-     * The `atomic-relevance-inspector` component is used internally to offer insight on search page relevance, as well as information to help troubleshoot issues during development.
-     */
-    interface HTMLAtomicRelevanceInspectorElement extends Components.AtomicRelevanceInspector, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicRelevanceInspectorElementEventMap>(type: K, listener: (this: HTMLAtomicRelevanceInspectorElement, ev: AtomicRelevanceInspectorCustomEvent<HTMLAtomicRelevanceInspectorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicRelevanceInspectorElementEventMap>(type: K, listener: (this: HTMLAtomicRelevanceInspectorElement, ev: AtomicRelevanceInspectorCustomEvent<HTMLAtomicRelevanceInspectorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicRelevanceInspectorElement: {
-        prototype: HTMLAtomicRelevanceInspectorElement;
-        new (): HTMLAtomicRelevanceInspectorElement;
     };
     /**
      * The `atomic-result` component is used internally by the `atomic-result-list` component.
@@ -4240,44 +3898,6 @@ declare global {
         new (): HTMLAtomicSearchBoxElement;
     };
     /**
-     * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
-     * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
-     * This component is not supported on mobile.
-     */
-    interface HTMLAtomicSearchBoxInstantResultsElement extends Components.AtomicSearchBoxInstantResults, HTMLStencilElement {
-    }
-    var HTMLAtomicSearchBoxInstantResultsElement: {
-        prototype: HTMLAtomicSearchBoxInstantResultsElement;
-        new (): HTMLAtomicSearchBoxInstantResultsElement;
-    };
-    /**
-     * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
-     */
-    interface HTMLAtomicSearchBoxQuerySuggestionsElement extends Components.AtomicSearchBoxQuerySuggestions, HTMLStencilElement {
-    }
-    var HTMLAtomicSearchBoxQuerySuggestionsElement: {
-        prototype: HTMLAtomicSearchBoxQuerySuggestionsElement;
-        new (): HTMLAtomicSearchBoxQuerySuggestionsElement;
-    };
-    /**
-     * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
-     */
-    interface HTMLAtomicSearchBoxRecentQueriesElement extends Components.AtomicSearchBoxRecentQueries, HTMLStencilElement {
-    }
-    var HTMLAtomicSearchBoxRecentQueriesElement: {
-        prototype: HTMLAtomicSearchBoxRecentQueriesElement;
-        new (): HTMLAtomicSearchBoxRecentQueriesElement;
-    };
-    /**
-     * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
-     */
-    interface HTMLAtomicSearchInterfaceElement extends Components.AtomicSearchInterface, HTMLStencilElement {
-    }
-    var HTMLAtomicSearchInterfaceElement: {
-        prototype: HTMLAtomicSearchInterfaceElement;
-        new (): HTMLAtomicSearchInterfaceElement;
-    };
-    /**
      * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
      */
     interface HTMLAtomicSegmentedFacetElement extends Components.AtomicSegmentedFacet, HTMLStencilElement {
@@ -4579,7 +4199,6 @@ declare global {
         "atomic-insight-full-search-button": HTMLAtomicInsightFullSearchButtonElement;
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
         "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
-        "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
         "atomic-insight-layout": HTMLAtomicInsightLayoutElement;
         "atomic-insight-no-results": HTMLAtomicInsightNoResultsElement;
         "atomic-insight-numeric-facet": HTMLAtomicInsightNumericFacetElement;
@@ -4620,15 +4239,12 @@ declare global {
         "atomic-ipx-tab": HTMLAtomicIpxTabElement;
         "atomic-ipx-tabs": HTMLAtomicIpxTabsElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
-        "atomic-modal": HTMLAtomicModalElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-notifications": HTMLAtomicNotificationsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
-        "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
-        "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-quickview": HTMLAtomicQuickviewElement;
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
@@ -4640,7 +4256,6 @@ declare global {
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
-        "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
         "atomic-result-badge": HTMLAtomicResultBadgeElement;
         "atomic-result-children": HTMLAtomicResultChildrenElement;
@@ -4672,10 +4287,6 @@ declare global {
         "atomic-result-text": HTMLAtomicResultTextElement;
         "atomic-result-timespan": HTMLAtomicResultTimespanElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
-        "atomic-search-box-instant-results": HTMLAtomicSearchBoxInstantResultsElement;
-        "atomic-search-box-query-suggestions": HTMLAtomicSearchBoxQuerySuggestionsElement;
-        "atomic-search-box-recent-queries": HTMLAtomicSearchBoxRecentQueriesElement;
-        "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
         "atomic-segmented-facet-scrollable": HTMLAtomicSegmentedFacetScrollableElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
@@ -5363,49 +4974,6 @@ declare namespace LocalJSX {
         "clickCallback"?: () => void;
         "tooltip"?: string;
     }
-    interface AtomicInsightInterface {
-        /**
-          * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...]. When using a nonce, the first import of Atomic should be to import & call the `setNonce` function with the generated nonce value.
-          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
-         */
-        "CspNonce"?: string;
-        /**
-          * Whether analytics should be enabled.
-         */
-        "analytics"?: boolean;
-        /**
-          * The service insight interface headless engine.
-         */
-        "engine"?: InsightEngine;
-        /**
-          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-insight-interface fields-to-include='["fieldA", "fieldB"]'></atomic-insight-interface> ```
-         */
-        "fieldsToInclude"?: string[] | string;
-        /**
-          * The service insight interface i18next instance.
-         */
-        "i18n"?: i18n;
-        /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
-         */
-        "iconAssetsPath"?: string;
-        /**
-          * The service insight interface language.
-         */
-        "language"?: string;
-        /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
-         */
-        "languageAssetsPath"?: string;
-        /**
-          * The severity level of the messages to log in the console.
-         */
-        "logLevel"?: InsightLogLevel;
-        /**
-          * The number of results per page. By default, this is set to `5`.
-         */
-        "resultsPerPage"?: number;
-    }
     interface AtomicInsightLayout {
         /**
           * Whether the interface should be shown in widget format.
@@ -5925,25 +5493,6 @@ declare namespace LocalJSX {
     interface AtomicLoadMoreResults {
     }
     /**
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interfaceElement and the body, allowing further customization.
-     */
-    interface AtomicModal {
-        /**
-          * Whether to display the open and close animations over the entire page or the atomic-modal only.
-         */
-        "boundary"?: 'page' | 'element';
-        "close"?: () => void;
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
-         */
-        "container"?: HTMLElement;
-        "fullscreen"?: boolean;
-        "isOpen"?: boolean;
-        "onAnimationEnded"?: (event: AtomicModalCustomEvent<never>) => void;
-        "scope"?: HTMLElement;
-        "source"?: HTMLElement;
-    }
-    /**
      * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
      */
     interface AtomicNoResults {
@@ -6053,24 +5602,6 @@ declare namespace LocalJSX {
         "start": number;
     }
     /**
-     * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
-     */
-    interface AtomicPager {
-        /**
-          * The SVG icon to use to display the Next button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "nextButtonIcon"?: string;
-        /**
-          * Specifies how many page buttons to display in the pager.
-         */
-        "numberOfPages"?: number;
-        "onAtomic/scrollToTop"?: (event: AtomicPagerCustomEvent<any>) => void;
-        /**
-          * The SVG icon to use to display the Previous button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "previousButtonIcon"?: string;
-    }
-    /**
      * The `atomic-popover` component displays any facet as a popover menu.
      */
     interface AtomicPopover {
@@ -6079,11 +5610,6 @@ declare namespace LocalJSX {
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
      */
     interface AtomicQueryError {
-    }
-    /**
-     * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
-     */
-    interface AtomicQuerySummary {
     }
     /**
      * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
@@ -6444,17 +5970,6 @@ declare namespace LocalJSX {
           * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
          */
         "collapseFacetsAfter"?: number;
-    }
-    /**
-     * The `atomic-relevance-inspector` component is used internally to offer insight on search page relevance, as well as information to help troubleshoot issues during development.
-     */
-    interface AtomicRelevanceInspector {
-        /**
-          * The Atomic interface bindings, namely the headless search engine and i18n instances.
-         */
-        "bindings": Bindings;
-        "onAtomic/relevanceInspector/close"?: (event: AtomicRelevanceInspectorCustomEvent<any>) => void;
-        "open"?: boolean;
     }
     /**
      * The `atomic-result` component is used internally by the `atomic-result-list` component.
@@ -6983,129 +6498,6 @@ declare namespace LocalJSX {
         "suggestionTimeout"?: number;
     }
     /**
-     * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
-     * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
-     * This component is not supported on mobile.
-     */
-    interface AtomicSearchBoxInstantResults {
-        /**
-          * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.  By default, or if an empty string is returned, `result.title` is used.
-         */
-        "ariaLabelGenerator"?: AriaLabelGenerator;
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density"?: ItemDisplayDensity;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * The maximum number of results to show.
-         */
-        "maxResultsPerQuery"?: number;
-    }
-    /**
-     * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
-     */
-    interface AtomicSearchBoxQuerySuggestions {
-        /**
-          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "icon"?: string;
-        /**
-          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
-         */
-        "maxWithQuery"?: number;
-        /**
-          * The maximum number of suggestions that will be displayed initially when the input field is empty.
-         */
-        "maxWithoutQuery"?: number;
-    }
-    /**
-     * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
-     */
-    interface AtomicSearchBoxRecentQueries {
-        /**
-          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "icon"?: string;
-        /**
-          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
-         */
-        "maxWithQuery"?: number;
-        /**
-          * The maximum number of suggestions that will be displayed initially when the input field is empty.
-         */
-        "maxWithoutQuery"?: number;
-    }
-    /**
-     * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
-     */
-    interface AtomicSearchInterface {
-        /**
-          * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
-          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
-         */
-        "CspNonce"?: string;
-        /**
-          * Whether analytics should be enabled.
-         */
-        "analytics"?: boolean;
-        /**
-          * Whether the relevance inspector shortcut should be enabled for this interface.  The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.  The relevance inspector allows to troubleshoot and debug queries.
-         */
-        "enableRelevanceInspector"?: boolean;
-        /**
-          * The search interface headless engine.
-         */
-        "engine"?: SearchEngine;
-        /**
-          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-search-interface fields-to-include='["fieldA", "fieldB"]'></atomic-search-interface> ```
-         */
-        "fieldsToInclude"?: string[] | string;
-        /**
-          * The search interface i18next instance.
-         */
-        "i18n"?: i18n;
-        /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
-         */
-        "iconAssetsPath"?: string;
-        /**
-          * The search interface language.
-         */
-        "language"?: string;
-        /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
-         */
-        "languageAssetsPath"?: string;
-        /**
-          * The severity level of the messages to log in the console.
-         */
-        "logLevel"?: LogLevel;
-        /**
-          * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
-         */
-        "pipeline"?: string;
-        /**
-          * Whether the state should be reflected in the URL parameters.
-         */
-        "reflectStateInUrl"?: boolean;
-        /**
-          * The CSS selector for the container where the interface will scroll back to.
-         */
-        "scrollContainer"?: string;
-        /**
-          * The search interface [search hub](https://docs.coveo.com/en/1342/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine, the search hub should instead be configured in the target engine.
-         */
-        "searchHub"?: string;
-        /**
-          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
-         */
-        "timezone"?: string;
-    }
-    /**
      * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
      */
     interface AtomicSegmentedFacet {
@@ -7518,7 +6910,6 @@ declare namespace LocalJSX {
         "atomic-insight-full-search-button": AtomicInsightFullSearchButton;
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
         "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
-        "atomic-insight-interface": AtomicInsightInterface;
         "atomic-insight-layout": AtomicInsightLayout;
         "atomic-insight-no-results": AtomicInsightNoResults;
         "atomic-insight-numeric-facet": AtomicInsightNumericFacet;
@@ -7559,15 +6950,12 @@ declare namespace LocalJSX {
         "atomic-ipx-tab": AtomicIpxTab;
         "atomic-ipx-tabs": AtomicIpxTabs;
         "atomic-load-more-results": AtomicLoadMoreResults;
-        "atomic-modal": AtomicModal;
         "atomic-no-results": AtomicNoResults;
         "atomic-notifications": AtomicNotifications;
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-numeric-range": AtomicNumericRange;
-        "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
         "atomic-query-error": AtomicQueryError;
-        "atomic-query-summary": AtomicQuerySummary;
         "atomic-quickview": AtomicQuickview;
         "atomic-quickview-modal": AtomicQuickviewModal;
         "atomic-rating-facet": AtomicRatingFacet;
@@ -7579,7 +6967,6 @@ declare namespace LocalJSX {
         "atomic-recs-result-template": AtomicRecsResultTemplate;
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
-        "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
         "atomic-result-badge": AtomicResultBadge;
         "atomic-result-children": AtomicResultChildren;
@@ -7611,10 +6998,6 @@ declare namespace LocalJSX {
         "atomic-result-text": AtomicResultText;
         "atomic-result-timespan": AtomicResultTimespan;
         "atomic-search-box": AtomicSearchBox;
-        "atomic-search-box-instant-results": AtomicSearchBoxInstantResults;
-        "atomic-search-box-query-suggestions": AtomicSearchBoxQuerySuggestions;
-        "atomic-search-box-recent-queries": AtomicSearchBoxRecentQueries;
-        "atomic-search-interface": AtomicSearchInterface;
         "atomic-segmented-facet": AtomicSegmentedFacet;
         "atomic-segmented-facet-scrollable": AtomicSegmentedFacetScrollable;
         "atomic-smart-snippet": AtomicSmartSnippet;
@@ -7748,7 +7131,6 @@ declare module "@stencil/core" {
             "atomic-insight-full-search-button": LocalJSX.AtomicInsightFullSearchButton & JSXBase.HTMLAttributes<HTMLAtomicInsightFullSearchButtonElement>;
             "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
             "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
-            "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;
             "atomic-insight-layout": LocalJSX.AtomicInsightLayout & JSXBase.HTMLAttributes<HTMLAtomicInsightLayoutElement>;
             "atomic-insight-no-results": LocalJSX.AtomicInsightNoResults & JSXBase.HTMLAttributes<HTMLAtomicInsightNoResultsElement>;
             "atomic-insight-numeric-facet": LocalJSX.AtomicInsightNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightNumericFacetElement>;
@@ -7815,10 +7197,6 @@ declare module "@stencil/core" {
              */
             "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;
             /**
-             * When the modal is opened, the class `atomic-modal-opened` is added to the interfaceElement and the body, allowing further customization.
-             */
-            "atomic-modal": LocalJSX.AtomicModal & JSXBase.HTMLAttributes<HTMLAtomicModalElement>;
-            /**
              * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
              */
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
@@ -7836,10 +7214,6 @@ declare module "@stencil/core" {
              */
             "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;
             /**
-             * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
-             */
-            "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
-            /**
              * The `atomic-popover` component displays any facet as a popover menu.
              */
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
@@ -7847,10 +7221,6 @@ declare module "@stencil/core" {
              * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
              */
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
-            /**
-             * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
-             */
-            "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             /**
              * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
              * about a result.
@@ -7909,10 +7279,6 @@ declare module "@stencil/core" {
              * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
              */
             "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
-            /**
-             * The `atomic-relevance-inspector` component is used internally to offer insight on search page relevance, as well as information to help troubleshoot issues during development.
-             */
-            "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             /**
              * The `atomic-result` component is used internally by the `atomic-result-list` component.
              */
@@ -8128,24 +7494,6 @@ declare module "@stencil/core" {
              * The `atomic-search-box` component creates a search box with built-in support for suggestions.
              */
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
-            /**
-             * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
-             * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
-             * This component is not supported on mobile.
-             */
-            "atomic-search-box-instant-results": LocalJSX.AtomicSearchBoxInstantResults & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxInstantResultsElement>;
-            /**
-             * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
-             */
-            "atomic-search-box-query-suggestions": LocalJSX.AtomicSearchBoxQuerySuggestions & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxQuerySuggestionsElement>;
-            /**
-             * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
-             */
-            "atomic-search-box-recent-queries": LocalJSX.AtomicSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxRecentQueriesElement>;
-            /**
-             * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
-             */
-            "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             /**
              * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
              */

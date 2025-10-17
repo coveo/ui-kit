@@ -1,6 +1,6 @@
-import {expect, setRecentQueries, setSuggestions, test} from './fixture';
+import {expect, test} from './fixture';
 
-test.describe('AtomicCommerceSearchBox', () => {
+test.describe('atomic-commerce-search-box', () => {
   test.describe('default', () => {
     test.beforeEach(async ({searchBox}) => {
       await searchBox.load({args: {suggestionTimeout: 5000}});
@@ -10,15 +10,15 @@ test.describe('AtomicCommerceSearchBox', () => {
       await expect(searchBox.submitButton).toBeEnabled();
     });
 
-    test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {
+    test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
       await searchBox.hydrated.waitFor();
       const accessibilityResults = await makeAxeBuilder().analyze();
       expect(accessibilityResults.violations).toEqual([]);
     });
 
     test.describe('when suggestions are available', () => {
-      test.beforeEach(async ({searchBox, page}) => {
-        await setSuggestions(page, 4);
+      test.beforeEach(async ({searchBox}) => {
+        await searchBox.load({story: 'with-suggestions'});
         await searchBox.searchInput.waitFor({state: 'visible'});
         await searchBox.searchInput.click();
       });
@@ -94,8 +94,8 @@ test.describe('AtomicCommerceSearchBox', () => {
     });
 
     test.describe('when no suggestions are available', () => {
-      test.beforeEach(async ({searchBox, page}) => {
-        await setSuggestions(page, 0);
+      test.beforeEach(async ({searchBox}) => {
+        await searchBox.load({story: 'with-no-suggestions'});
         await searchBox.searchInput.click();
       });
 
@@ -112,8 +112,7 @@ test.describe('AtomicCommerceSearchBox', () => {
 
     test.describe('when recent queries are available', () => {
       test.beforeEach(async ({searchBox, page}) => {
-        await setRecentQueries(page, 4);
-        await setSuggestions(page, 4);
+        await searchBox.load({story: 'with-suggestions-and-recent-queries'});
         // We reload to ensure we load the recent queries from local storage
         await page.reload();
         await searchBox.hydrated.waitFor();
@@ -175,7 +174,7 @@ test.describe('AtomicCommerceSearchBox', () => {
           await expect(searchBox.clearButton).not.toBeVisible();
         });
 
-        test('should clear searchbox when clicking the clear button', async ({
+        test('should clear search-box when clicking the clear button', async ({
           searchBox,
         }) => {
           await searchBox.clearButton.click();
@@ -184,7 +183,7 @@ test.describe('AtomicCommerceSearchBox', () => {
         });
       });
 
-      test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {
+      test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
         await searchBox.hydrated.waitFor();
         const accessibilityResults = await makeAxeBuilder().analyze();
         expect(accessibilityResults.violations).toEqual([]);
@@ -206,7 +205,7 @@ test.describe('AtomicCommerceSearchBox', () => {
     });
   });
 
-  test.describe('with instant results & query suggestions', () => {
+  test.describe('with instant products & query suggestions', () => {
     test.beforeEach(async ({searchBox}) => {
       await searchBox.load({
         args: {suggestionTimeout: 5000},
@@ -258,11 +257,11 @@ test.describe('AtomicCommerceSearchBox', () => {
 
       test('should display instant results', async ({searchBox}) => {
         await expect(
-          searchBox.instantResult({listSide: 'Right'}).first()
+          searchBox.instantProduct({listSide: 'Right'}).first()
         ).toBeVisible();
       });
 
-      test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {
+      test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
         await searchBox.hydrated.waitFor();
         const accessibilityResults = await makeAxeBuilder().analyze();
         expect(accessibilityResults.violations).toEqual([]);
@@ -294,7 +293,7 @@ test.describe('AtomicCommerceSearchBox', () => {
       }) => {
         await searchBox.searchInput.click();
         await searchBox.searchInput.fill('a');
-        await searchBox.instantResult({listSide: 'Right'}).first().hover();
+        await searchBox.instantProduct({listSide: 'Right'}).first().hover();
         await searchBox.searchInput.press('Enter');
         await expect(searchBox.searchInput).toHaveValue('a');
       });
@@ -329,7 +328,7 @@ test.describe('AtomicCommerceSearchBox', () => {
         await expect(searchBox.searchSuggestions().first()).not.toBeVisible();
       });
 
-      test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {
+      test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
         await searchBox.hydrated.waitFor();
         const accessibilityResults = await makeAxeBuilder().analyze();
         expect(accessibilityResults.violations).toEqual([]);
@@ -382,7 +381,7 @@ test.describe('AtomicCommerceSearchBox', () => {
         await expect(searchBox.searchSuggestions().first()).not.toBeVisible();
       });
 
-      test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {
+      test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
         await searchBox.hydrated.waitFor();
         const accessibilityResults = await makeAxeBuilder().analyze();
         expect(accessibilityResults.violations).toEqual([]);

@@ -1,5 +1,8 @@
 import {FunctionalComponent, h} from '@stencil/core';
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const RefineModalBody: FunctionalComponent = (_, children) => {
   return (
     <aside

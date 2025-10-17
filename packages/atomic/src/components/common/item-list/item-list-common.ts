@@ -3,7 +3,7 @@ import {
   getFirstFocusableDescendant,
 } from '@/src/utils/accessibility-utils';
 import {defer, once} from '@/src/utils/utils';
-import {updateBreakpoints} from '../../../utils/replace-breakpoint';
+import {updateBreakpoints} from '../../../utils/replace-breakpoint-utils';
 import type {CommerceStore} from '../../commerce/atomic-commerce-interface/store';
 import type {CommerceRecommendationStore} from '../../commerce/atomic-commerce-recommendation-interface/store';
 import type {InsightStore} from '../../insight/atomic-insight-interface/store';

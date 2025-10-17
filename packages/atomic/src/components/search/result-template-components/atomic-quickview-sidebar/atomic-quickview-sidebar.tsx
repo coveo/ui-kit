@@ -5,7 +5,7 @@ import ArrowDown from '../../../../images/arrow-bottom-rounded.svg';
 import ArrowUp from '../../../../images/arrow-top-rounded.svg';
 import MinimizeIcon from '../../../../images/menu.svg';
 import Remove from '../../../../images/remove.svg';
-import {IconButton} from '../../../common/iconButton';
+import {IconButton} from '../../../common/stencil-iconButton';
 import {StencilCheckbox} from '../../../common/stencil-checkbox';
 import {FieldsetGroup} from '../../../common/stencil-fieldset-group';
 import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
@@ -13,7 +13,7 @@ import {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word
 
 const identifierKeywordsSection = 'coveo-quickview-sidebar-keywords';
 
-export interface QuickviewSidebarProps {
+interface QuickviewSidebarProps {
   words: Record<string, QuickviewWordHighlight>;
   i18n: i18n;
   highlightKeywords: HighlightKeywords;

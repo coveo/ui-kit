@@ -3,6 +3,8 @@ import {SearchObject} from '../../../../../../playwright/page-object/searchObjec
 import {
   searchRequestRegex,
   insightSearchRequestRegex,
+  rgaGenerateRequestRegex,
+  insightRgaGenerateRequestRegex,
 } from '../../../../../../playwright/utils/requests';
 import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
 import {useCaseEnum} from '../../../../../../playwright/utils/useCase';
@@ -10,6 +12,7 @@ import {GeneratedAnswerObject} from './pageObject';
 import genQaData from './data';
 import type {GenQaData} from './data';
 import {AnalyticsModeEnum} from '../../../../../../playwright/utils/analyticsMode';
+import {BaseFacetObject} from '../../../../../../playwright/page-object/baseFacetObject';
 
 const MACHINE_LEARNING_API_URL = '**/machinelearning/streaming';
 const ANSWER_API_URL = '**/answer/v1/configs/**/generate';
@@ -30,6 +33,8 @@ type QuanticGeneratedAnswerE2ESearchFixtures = {
   generatedAnswer: GeneratedAnswerObject;
   search: SearchObject;
   options: Partial<GeneratedAnswerOptions>;
+  withFacets: boolean;
+  baseFacet: BaseFacetObject;
 };
 
 type QuanticGeneratedAnswerE2EInsightFixtures =
@@ -37,52 +42,72 @@ type QuanticGeneratedAnswerE2EInsightFixtures =
     insightSetup: InsightSetupObject;
   };
 
-const exampleQuery = 'exampleQuery';
+export const exampleQuery = 'test';
 
-export const testSearch =
-  quanticBase.extend<QuanticGeneratedAnswerE2ESearchFixtures>({
-    pageUrl,
-    genQaData,
-    options: {},
-    analyticsMode: AnalyticsModeEnum.legacy,
-    search: async ({page}, use) => {
-      await use(new SearchObject(page, searchRequestRegex));
+export const testSearch = quanticBase.extend<QuanticGeneratedAnswerE2ESearchFixtures>({
+  pageUrl,
+  genQaData,
+  options: {},
+  analyticsMode: AnalyticsModeEnum.legacy,
+  withFacets: false,
+  search: async ({page}, use) => {
+    await use(new SearchObject(page, searchRequestRegex));
+  },
+  baseFacet: async ({page}, use) => {
+    await use(new BaseFacetObject(page, searchRequestRegex));
+  },
+  generatedAnswer: async (
+    {
+      page,
+      options,
+      configuration,
+      search,
+      genQaData: data,
+      analytics,
+      withFacets,
     },
-    generatedAnswer: async (
-      {page, options, configuration, search, genQaData: data, analytics},
-      use
-    ) => {
-      const generatedAnswerObject = new GeneratedAnswerObject(
-        page,
-        data.streamId,
-        analytics,
-        !!options.answerConfigurationId
-      );
+    use
+  ) => {
+    const generatedAnswerObject = new GeneratedAnswerObject(
+      page,
+      data.streamId,
+      analytics,
+      !!options.answerConfigurationId,
+      rgaGenerateRequestRegex,
+      withFacets,
+    );
 
-      const streamingUrl = options.answerConfigurationId
-        ? ANSWER_API_URL
-        : `${MACHINE_LEARNING_API_URL}/${data.streamId}`;
-      await generatedAnswerObject.mockStreamResponse(
-        streamingUrl,
-        data.streams,
-        data.streamId
-      );
+    const streamingUrl = options.answerConfigurationId
+      ? ANSWER_API_URL
+      : `${MACHINE_LEARNING_API_URL}/${data.streamId}`;
+    await generatedAnswerObject.mockStreamResponse(
+      streamingUrl,
+      data.streams,
+      data.streamId
+    );
 
-      await page.goto(pageUrl);
-      await configuration.configure(options);
-      await search.waitForSearchResponse();
+    await page.goto(pageUrl);
+    if (withFacets) {
+      await generatedAnswerObject.clickAddFacetsButton();
+    }
+    await configuration.configure(options);
+    await search.waitForSearchResponse();
 
       generatedAnswerObject.streamEndAnalyticRequestPromise =
         generatedAnswerObject.waitForStreamEndAnalytics();
+      if (options.answerConfigurationId) {
+        generatedAnswerObject.generateRequestPromise =
+          generatedAnswerObject.waitForGenerateRequest();
+      }
 
-      await search.fillSearchInput(exampleQuery);
-      await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
-      await search.performSearch();
-      await search.waitForSearchResponse();
+    await search.fillSearchInput(exampleQuery);
+    await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
+    await search.performSearch();
+    await search.waitForSearchResponse();
 
-      await use(generatedAnswerObject);
-    },
-  });
+    await use(generatedAnswerObject);
+  },
+});
 
 export const testInsight =
   quanticBase.extend<QuanticGeneratedAnswerE2EInsightFixtures>({
@@ -90,8 +115,12 @@ export const testInsight =
     genQaData,
     options: {},
     analyticsMode: AnalyticsModeEnum.legacy,
+    withFacets: false,
     search: async ({page}, use) => {
       await use(new SearchObject(page, insightSearchRequestRegex));
+    },
+    baseFacet: async ({page}, use) => {
+      await use(new BaseFacetObject(page, insightSearchRequestRegex));
     },
     insightSetup: async ({page}, use) => {
       await use(new InsightSetupObject(page));
@@ -105,6 +134,7 @@ export const testInsight =
         insightSetup,
         genQaData: data,
         analytics,
+        withFacets,
       },
       use
     ) => {
@@ -112,7 +142,9 @@ export const testInsight =
         page,
         data.streamId,
         analytics,
-        !!options.answerConfigurationId
+        !!options.answerConfigurationId,
+        insightRgaGenerateRequestRegex,
+        withFacets
       );
 
       const streamingUrl = options.answerConfigurationId
@@ -125,6 +157,9 @@ export const testInsight =
       );
 
       await page.goto(pageUrl);
+      if (withFacets) {
+        await generatedAnswerObject.clickAddFacetsButton();
+      }
       configuration.configure({...options, useCase: useCaseEnum.insight});
 
       await insightSetup.waitForInsightInterfaceInitialization();
@@ -134,6 +169,10 @@ export const testInsight =
       await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
       generatedAnswerObject.streamEndAnalyticRequestPromise =
         generatedAnswerObject.waitForStreamEndAnalytics();
+      if (options.answerConfigurationId) {
+        generatedAnswerObject.generateRequestPromise =
+          generatedAnswerObject.waitForGenerateRequest();
+      }
 
       await search.fillSearchInput(exampleQuery);
       await search.performSearch();

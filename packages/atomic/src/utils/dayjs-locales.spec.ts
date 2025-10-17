@@ -15,7 +15,7 @@ vi.mock('dayjs', () => ({
   default: {locale: vi.fn()},
 }));
 
-vi.mock('../generated/dayjs-locales-data', () => {
+vi.mock('@/src/generated/dayjs-locales-data', () => {
   const mockLocales = {
     en: vi.fn(() => Promise.resolve()),
     fr: vi.fn(() => Promise.resolve()),
@@ -45,7 +45,6 @@ describe('#loadDayjsLocale', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     Object.values(mockLocales).forEach((fn) => fn.mockReset?.());
-    vi.clearAllMocks();
     console.warn = vi.fn();
   });
 

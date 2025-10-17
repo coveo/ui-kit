@@ -31,13 +31,14 @@ vi.mock('@/src/utils/date-utils', () => {
   return {parseDate};
 });
 
-describe('AtomicCommerceBreadbox', () => {
+describe('atomic-commerce-breadbox', () => {
   const mockedEngine = buildFakeCommerceEngine();
   let mockedBreadcrumbManager: BreadcrumbManager;
   const mockedDeselectAll = vi.fn();
 
   beforeEach(() => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
   });
 
   interface RenderBreadboxOptions {
@@ -137,20 +138,29 @@ describe('AtomicCommerceBreadbox', () => {
     expect(element.breadcrumbManager).toBe(mockedBreadcrumbManager);
   });
 
-  it('should throw when pathLimit is lower than 1', async () => {
-    await expect(() =>
-      renderBreadbox({interfaceElementType: 'product-listing', pathLimit: 0})
-    ).rejects.toThrowError(/pathLimit: minimum value of 1 not respected/i);
-  });
-
-  it('should throw when pathLimit is valid but gets changed to lower than 1', async () => {
+  it('should set error when pathLimit is initially lower than 1', async () => {
     const {element} = await renderBreadbox({
       interfaceElementType: 'product-listing',
-      pathLimit: 3,
+      pathLimit: 0,
     });
 
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(
+      /pathLimit: minimum value of 1 not respected/i
+    );
+  });
+
+  it('should set error when valid pathLimit is updated to a value lower than 1', async () => {
+    const {element} = await renderBreadbox();
+
+    expect(element.error).toBeUndefined();
+
     element.pathLimit = 0;
-    await expect(element.updateComplete).rejects.toThrowError(
+
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(
       /pathLimit: minimum value of 1 not respected/i
     );
   });

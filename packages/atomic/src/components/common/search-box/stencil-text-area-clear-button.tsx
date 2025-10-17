@@ -8,6 +8,9 @@ interface Props extends Partial<StencilButtonProps> {
   inputRef: HTMLInputElement | HTMLTextAreaElement | null;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const TextAreaClearButton: FunctionalComponent<Props> = ({
   inputRef,
   bindings,
@@ -26,7 +29,7 @@ export const TextAreaClearButton: FunctionalComponent<Props> = ({
         onClick?.();
         inputRef?.focus();
       }}
-      ariaLabel={bindings.i18n.t('clear')}
+      ariaLabel={bindings.i18n.t('clear-searchbox')}
       {...defaultButtonProps}
     >
       <atomic-icon

@@ -1,15 +1,10 @@
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {InvalidControllerDefinition} from '../../common/errors.js';
 import type {
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
 } from '../../common/types/controller-inference.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
-import type {
-  HasKey,
-  HasRequiredKeys,
-  OptionsTuple,
-} from '../../common/types/utilities.js';
+import type {HasKey, HasRequiredKeys} from '../../common/types/utilities.js';
 import type {CartDefinition} from '../controllers/cart/headless-cart.ssr.js';
 import type {ContextDefinition} from '../controllers/context/headless-context.ssr.js';
 import type {ParameterManagerDefinition} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
@@ -20,7 +15,6 @@ import {
 } from './controller-constants.js';
 import type {
   ListingAndStandaloneController,
-  ListingOnlyController,
   NonRecommendationController,
   RecommendationOnlyController,
   SearchAndListingController,
@@ -32,7 +26,6 @@ import type {HasSolutionType} from './utilities.js';
 
 export type {
   HydratedState,
-  OptionsTuple,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
 };
@@ -88,7 +81,7 @@ export interface ControllerDefinitionsMap<TController extends Controller> {
 }
 
 type BakedInControllerDefinitions = {
-  parameterManager: ParameterManagerDefinition<{listing: true; search: true}>;
+  parameterManager: ParameterManagerDefinition;
   context: ContextDefinition;
   cart: CartDefinition;
 };
@@ -176,41 +169,14 @@ type DefaultControllerProps<
     : never]: TControllersPropsMap[I];
 };
 
-export interface ControllerDefinitionOption {
-  /**
-   * Whether the controller will be used in a product listing context.
-   * @defaultValue true
-   */
-  listing?: boolean;
-  /**
-   * Whether the controller will be used in a search page context.
-   * @defaultValue true
-   */
-  search?: boolean;
-}
-
 export type SearchOnlyControllerDefinitionWithoutProps<
   TController extends Controller,
 > = ControllerDefinitionWithoutProps<TController> & SearchOnlyController;
-
-type SearchOnlyControllerDefinitionWithProps<
-  TController extends Controller,
-  TProps,
-> = ControllerDefinitionWithProps<TController, TProps> & SearchOnlyController;
 
 export type ListingAndStandaloneControllerWithoutProps<
   TController extends Controller,
 > = ControllerDefinitionWithoutProps<TController> &
   ListingAndStandaloneController;
-
-type ListingOnlyControllerDefinitionWithoutProps<
-  TController extends Controller,
-> = ControllerDefinitionWithoutProps<TController> & ListingOnlyController;
-
-type ListingOnlyControllerDefinitionWithProps<
-  TController extends Controller,
-  TProps,
-> = ControllerDefinitionWithProps<TController, TProps> & ListingOnlyController;
 
 export type RecommendationOnlyControllerDefinitionWithProps<
   TController extends Controller,
@@ -231,35 +197,8 @@ export type SearchAndListingControllerDefinitionWithoutProps<
   TController extends Controller,
 > = ControllerDefinitionWithoutProps<TController> & SearchAndListingController;
 
-type SearchAndListingControllerDefinitionWithProps<
+export type SearchAndListingControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
 > = ControllerDefinitionWithProps<TController, TProps> &
   SearchAndListingController;
-
-export type SubControllerDefinitionWithoutProps<
-  TController extends Controller,
-  TDefinition extends ControllerDefinitionOption | undefined,
-> = TDefinition extends {listing?: true; search?: true} | undefined
-  ? SearchAndListingControllerDefinitionWithoutProps<TController>
-  : TDefinition extends {listing?: true; search?: false}
-    ? ListingOnlyControllerDefinitionWithoutProps<TController>
-    : TDefinition extends {listing?: false; search?: true}
-      ? SearchOnlyControllerDefinitionWithoutProps<TController>
-      : TDefinition extends {listing: false; search: false}
-        ? InvalidControllerDefinition
-        : never;
-
-export type SubControllerDefinitionWithProps<
-  TController extends Controller,
-  TDefinition extends ControllerDefinitionOption | undefined,
-  TProps,
-> = TDefinition extends {listing?: true; search?: true} | undefined
-  ? SearchAndListingControllerDefinitionWithProps<TController, TProps>
-  : TDefinition extends {listing?: true; search?: false}
-    ? ListingOnlyControllerDefinitionWithProps<TController, TProps>
-    : TDefinition extends {listing?: false; search?: true}
-      ? SearchOnlyControllerDefinitionWithProps<TController, TProps>
-      : TDefinition extends {listing: false; search: false}
-        ? InvalidControllerDefinition
-        : never;

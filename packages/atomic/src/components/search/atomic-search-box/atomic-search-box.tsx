@@ -31,7 +31,7 @@ import {
   StandaloneSearchBoxData,
   StorageItems,
 } from '../../../utils/local-storage-utils';
-import {updateBreakpoints} from '../../../utils/replace-breakpoint';
+import {updateBreakpoints} from '../../../utils/replace-breakpoint-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {
   isFocusingOut,
@@ -45,12 +45,15 @@ import {SearchTextArea} from '../../common/search-box/stencil-search-text-area';
 import {SubmitButton} from '../../common/search-box/stencil-submit-button';
 import {SuggestionManager} from '../../common/suggestions/stencil-suggestion-manager';
 import {
+  elementHasQuery,
+} from '../../common/suggestions/suggestions-utils';
+import type {
   SearchBoxSuggestionElement,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
-  elementHasQuery,
-} from '../../common/suggestions/suggestions-common';
+} from '../../common/suggestions/suggestions-types';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import { getDefaultSlotFromHost } from '@/src/utils/slot-utils';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -616,6 +619,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
         ),
       onKeyDown: (e: KeyboardEvent) => this.onKeyDown(e),
       onClear: () => {
+        this.announceClearSearchBoxToScreenReader()
         this.searchBox.clear();
         this.suggestionManager.clearSuggestions();
       },
@@ -686,6 +690,10 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     }
   }
 
+  private announceClearSearchBoxToScreenReader() {
+    this.suggestionsAriaMessage = this.bindings.i18n.t("search-box-cleared")
+  }
+
   private announceNewSuggestionsToScreenReader() {
     const elsLength =
       this.suggestionManager.allSuggestionElements.filter(
@@ -702,6 +710,19 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
           }
         )
       : this.bindings.i18n.t('query-suggestions-unavailable');
+  }
+
+  private renderSlotContent() {
+    const hasDefaultSlot = !!getDefaultSlotFromHost(this.host);
+
+    if (hasDefaultSlot) {
+      return <slot></slot>;
+    }
+
+    return [
+      <atomic-search-box-recent-queries></atomic-search-box-recent-queries>,
+      <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>,
+    ];
   }
 
   public render() {
@@ -740,12 +761,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
             />
             {this.renderSuggestions()}
           </SearchBoxWrapper>,
-          !this.suggestionManager.suggestions.length && (
-            <slot>
-              <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
-              <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
-            </slot>
-          ),
+          this.renderSlotContent(),
         ]}
       </Host>
     );

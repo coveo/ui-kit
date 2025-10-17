@@ -24,7 +24,7 @@
 .citation__title {
   font-weight: var(--lwc-fontWeightRegular, 400);
   color: var(--lwc-colorTextPlaceholder, #747474);
-  font-size: 13px;
+  font-size: var(--slds-g-font-size-base, 13px);
 }
 
 .citation__tooltip-text {

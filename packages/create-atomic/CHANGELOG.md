@@ -1,3 +1,15 @@
+## <small>1.41.3 (2025-10-08)</small>
+
+* chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)
+
+
+
+## <small>1.41.2 (2025-09-17)</small>
+
+* chore: deduplicate dependencies in create-atomic-* (#6029) ([ba54e8e](https://github.com/coveo/ui-kit/commits/ba54e8e)), closes [#6029](https://github.com/coveo/ui-kit/issues/6029)
+
+
+
 ## <small>1.41.1 (2025-08-27)</small>
 
 * fix(cli): fix plop choice type to simple list (#5968) ([b0a1ace](https://github.com/coveo/ui-kit/commits/b0a1ace)), closes [#5968](https://github.com/coveo/ui-kit/issues/5968)

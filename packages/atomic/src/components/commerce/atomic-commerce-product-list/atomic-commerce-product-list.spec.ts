@@ -8,24 +8,25 @@ import {
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import type {
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+  ItemDisplayLayout,
+} from '@/src/components/common/layout/display-options';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
 import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common';
-import type {
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-  ItemDisplayLayout,
-} from '../../common/layout/display-options';
-import './atomic-commerce-product-list';
 import {AtomicCommerceProductList} from './atomic-commerce-product-list';
+import './atomic-commerce-product-list';
 
+vi.mock('@/src/components/common/item-list/table-layout', {spy: true});
 vi.mock('@/src/components/common/interface/store', {spy: true});
 vi.mock('@coveo/headless/commerce', {spy: true});
 
-describe('AtomicCommerceProductList', () => {
+describe('atomic-commerce-product-list', () => {
   const interactiveProduct = vi.fn();
   const promoteChildToParent = vi.fn();
   const summary = vi.fn();
@@ -201,6 +202,7 @@ describe('AtomicCommerceProductList', () => {
     let element: any;
 
     beforeEach(async () => {
+      vi.spyOn(console, 'warn').mockImplementation(() => {});
       element = await setupElement();
       element.isEveryProductReady = true;
     });
@@ -404,6 +406,24 @@ describe('AtomicCommerceProductList', () => {
     {display: 'grid'},
     {display: 'list'},
   ])('when #display is $display', ({display}) => {
+    it('should not set the renderingFunction on the atomic product itself', async () => {
+      const element = await setupElement({display});
+
+      const mockRenderingFunction = vi.fn();
+
+      element.setRenderFunction(mockRenderingFunction);
+
+      element.requestUpdate();
+      await element.updateComplete;
+
+      const atomicProductElement =
+        element.shadowRoot?.querySelector('atomic-product');
+
+      expect(atomicProductElement?.renderingFunction).toBe(
+        mockRenderingFunction
+      );
+    });
+
     it('should render correct # of atomic-result-placeholder when app is not loaded', async () => {
       const element = await setupElement({
         isAppLoaded: false,
@@ -547,6 +567,22 @@ describe('AtomicCommerceProductList', () => {
   });
 
   describe("when #display is 'table'", () => {
+    it('should not set the renderingFunction on the atomic product itself', async () => {
+      const element = await setupElement({display: 'table'});
+
+      const mockRenderingFunction = vi.fn();
+
+      element.setRenderFunction(mockRenderingFunction);
+
+      element.requestUpdate();
+      await element.updateComplete;
+
+      const atomicProductElement =
+        element.shadowRoot?.querySelector('atomic-product');
+
+      expect(atomicProductElement?.renderingFunction).toBeUndefined();
+    });
+
     it('should render 1 atomic-result-table-placeholder when app is not loaded', async () => {
       const element = await setupElement({
         display: 'table',
@@ -1190,26 +1226,6 @@ describe('AtomicCommerceProductList', () => {
 
         expect(atomicProductElement?.[0].product).toBe(mockProduct1);
         expect(atomicProductElement?.[1].product).toBe(mockProduct2);
-      });
-
-      it('should pass correct #renderingFunction', async () => {
-        const element = await setupElement({display});
-        display === 'table' && (await setupTableTemplate(element));
-
-        const mockRenderingFunction = vi.fn();
-
-        element.setRenderFunction(mockRenderingFunction);
-
-        // Must trigger update to get render function.
-        element.requestUpdate();
-        await element.updateComplete;
-
-        const atomicProductElement =
-          element.shadowRoot?.querySelector('atomic-product');
-
-        expect(atomicProductElement?.renderingFunction).toBe(
-          mockRenderingFunction
-        );
       });
 
       it('should pass correct #store', async () => {

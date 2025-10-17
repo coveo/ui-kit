@@ -1,4 +1,5 @@
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client.js';
+import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import {buildMockCitation} from '../../test/mock-citation.js';
 import {
   closeGeneratedAnswerFeedbackModal,
@@ -10,7 +11,9 @@ import {
   registerFieldsToIncludeInCitations,
   resetAnswer,
   sendGeneratedAnswerFeedback,
+  setAnswerApiQueryParams,
   setAnswerContentFormat,
+  setAnswerId,
   setCannotAnswer,
   setIsAnswerGenerated,
   setIsEnabled,
@@ -532,6 +535,36 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.cannotAnswer).toEqual(false);
+    });
+  });
+
+  it('#setAnswerApiQueryParams should set the answerApiQueryParams to the new value in the state', () => {
+    const newAnswerApiQueryParams: AnswerApiQueryParams = {
+      q: 'example query',
+      fieldsToInclude: ['foo', 'bar'],
+    };
+    const finalState = generatedAnswerReducer(
+      {
+        ...getGeneratedAnswerInitialState(),
+        answerApiQueryParams: {
+          q: 'example query',
+          fieldsToInclude: ['foo', 'bar'],
+        },
+      },
+      setAnswerApiQueryParams(newAnswerApiQueryParams)
+    );
+
+    expect(finalState.answerApiQueryParams).toEqual(newAnswerApiQueryParams);
+  });
+
+  describe('#setAnswerId', () => {
+    it('should set answerId to the new value when given a new value', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, answerId: 'old-id'},
+        setAnswerId('new-id')
+      );
+
+      expect(finalState.answerId).toEqual('new-id');
     });
   });
 });

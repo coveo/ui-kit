@@ -1,121 +1,85 @@
-import {
-  buildResultsPerPage,
-  buildSearchStatus,
-  type ResultsPerPage,
-  type SearchStatus,
-} from '@coveo/headless';
+import {buildResultsPerPage, buildSearchStatus} from '@coveo/headless';
 import {html} from 'lit';
-import {describe, expect, it, vi} from 'vitest';
+import {ifDefined} from 'lit/directives/if-defined.js';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture.js';
-import './atomic-results-per-page';
+import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
+import {buildFakeResultsPerPage} from '@/vitest-utils/testing-helpers/fixtures/headless/search/results-per-page-controller';
+import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
 import type {AtomicResultsPerPage} from './atomic-results-per-page';
+import './atomic-results-per-page';
 
 vi.mock('@coveo/headless', {spy: true});
+vi.mock('@/src/mixins/bindings-mixin', () => ({
+  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
+    return class extends superClass {
+      // biome-ignore lint/complexity/noUselessConstructor: <mocking the mixin for testing>
+      constructor(...args: unknown[]) {
+        super(...args);
+      }
+    };
+  }),
+}));
 
 describe('atomic-results-per-page', () => {
-  const renderComponent = async (
-    options: {choicesDisplayed?: string; initialChoice?: number} = {}
-  ) => {
-    const mockSearchStatus = {
-      state: {
-        hasError: false,
-        hasResults: true,
-        isLoading: false,
-        firstSearchExecuted: true,
-      },
-      subscribe: vi.fn(),
-    };
+  const mockedEngine = buildFakeSearchEngine();
+  beforeEach(async () => {
+    console.error = vi.fn();
+  });
 
-    const mockResultsPerPage = {
-      state: {
-        numberOfResults: options.initialChoice || 10,
-      },
-      subscribe: vi.fn(),
-      set: vi.fn(),
-      isSetTo: vi.fn().mockReturnValue(true),
+  const renderResultsPerPage = async ({
+    props = {},
+  }: {
+    props?: {
+      choicesDisplayed?: string;
+      initialChoice?: number;
     };
-
-    // Set up mocks BEFORE creating the component
-    vi.mocked(buildSearchStatus).mockReturnValue(
-      mockSearchStatus as SearchStatus
-    );
+  } = {}) => {
+    vi.mocked(buildSearchStatus).mockReturnValue(buildFakeSearchStatus());
     vi.mocked(buildResultsPerPage).mockReturnValue(
-      mockResultsPerPage as ResultsPerPage
+      buildFakeResultsPerPage({
+        numberOfResults: props.initialChoice ?? 10,
+      })
     );
 
-    const {atomicInterface} =
-      await renderInAtomicSearchInterface<AtomicResultsPerPage>({
-        template: html`<atomic-results-per-page
-        choices-displayed=${options.choicesDisplayed || '10,25,50,100'}
-        initial-choice=${options.initialChoice || 10}
+    const {element} = await renderInAtomicSearchInterface<AtomicResultsPerPage>(
+      {
+        template: html`<atomic-results-per-page choices-displayed=${ifDefined(props.choicesDisplayed)}
+          initial-choice=${ifDefined(props.initialChoice)}
       ></atomic-results-per-page>`,
-        bindings: {
-          engine: {
-            subscribe: vi.fn(),
-            logger: {
-              error: vi.fn(),
-              warn: vi.fn(),
-              info: vi.fn(),
-              debug: vi.fn(),
-            },
-            // biome-ignore lint/suspicious/noExplicitAny: test mock
-          } as any,
-          i18n: {
-            t: vi.fn((key: string) =>
-              key === 'results-per-page' ? 'Results per page' : key
-            ),
-            language: 'en',
-            on: vi.fn(),
-            off: vi.fn(),
-            // biome-ignore lint/suspicious/noExplicitAny: test mock
-          } as any,
-          store: {
-            state: {
-              loadingFlags: [],
-            },
-            onChange: vi.fn(),
-            // biome-ignore lint/suspicious/noExplicitAny: test mock
-          } as any,
+        selector: 'atomic-results-per-page',
+        bindings: (bindings) => {
+          bindings.engine = mockedEngine;
+          return bindings;
         },
-      });
-
-    // Get the element and set state before it renders
-    const element =
-      atomicInterface.shadowRoot!.querySelector<AtomicResultsPerPage>(
-        'atomic-results-per-page'
-      )!;
-
-    // Ensure the component has the expected state for testing
-    // This must be done immediately after component creation but before rendering
-    // biome-ignore lint/suspicious/noExplicitAny: test mock assignment
-    (element as any).searchStatusState = mockSearchStatus.state;
-    element.resultPerPageState = mockResultsPerPage.state;
-
-    // Now trigger the component's update lifecycle
-    await element.updateComplete;
+      }
+    );
 
     return {
       element,
-      mockSearchStatus,
-      mockResultsPerPage,
+      get radioButtons() {
+        return element.shadowRoot?.querySelectorAll('input[type="radio"]');
+      },
+      parts: (element: AtomicResultsPerPage) => {
+        const qs = (part: string) =>
+          element?.shadowRoot?.querySelector(`[part="${part}"]`);
+        return {
+          buttons: qs('buttons'),
+        };
+      },
     };
   };
 
   it('should render correctly with radio buttons container', async () => {
-    const {element} = await renderComponent();
+    const {element, parts} = await renderResultsPerPage({});
 
-    const buttonsContainer =
-      element.shadowRoot?.querySelector('[part="buttons"]');
-    expect(buttonsContainer).toBeDefined();
-    expect(buttonsContainer?.getAttribute('role')).toBe('radiogroup');
+    expect(parts(element).buttons).toBeDefined();
+    expect(parts(element).buttons?.getAttribute('role')).toBe('radiogroup');
   });
 
   it('should render default choices as radio buttons', async () => {
-    const {element} = await renderComponent();
+    const {radioButtons} = await renderResultsPerPage();
 
-    const radioButtons = element.shadowRoot?.querySelectorAll(
-      'input[type="radio"]'
-    );
     expect(radioButtons).toHaveLength(4); // Default: 10,25,50,100
 
     const values = Array.from(radioButtons || []).map(
@@ -125,14 +89,14 @@ describe('atomic-results-per-page', () => {
   });
 
   it('should build search status controller', async () => {
-    const {element} = await renderComponent();
+    const {element} = await renderResultsPerPage();
 
     expect(buildSearchStatus).toHaveBeenCalledWith(element.bindings.engine);
     expect(element.searchStatus).toBeDefined();
   });
 
   it('should build results per page controller', async () => {
-    const {element} = await renderComponent();
+    const {element} = await renderResultsPerPage();
 
     expect(buildResultsPerPage).toHaveBeenCalledWith(element.bindings.engine, {
       initialState: {numberOfResults: 10},
@@ -141,14 +105,15 @@ describe('atomic-results-per-page', () => {
   });
 
   it('should render custom choices as radio buttons with correct values', async () => {
-    const {element} = await renderComponent({
-      choicesDisplayed: '5,15,30',
-      initialChoice: 5,
+    const choicesDisplayed = '5,15,30';
+    const initialChoice = 5;
+    const {radioButtons} = await renderResultsPerPage({
+      props: {
+        choicesDisplayed,
+        initialChoice,
+      },
     });
 
-    const radioButtons = element.shadowRoot?.querySelectorAll(
-      'input[type="radio"]'
-    );
     expect(radioButtons).toHaveLength(3);
 
     const values = Array.from(radioButtons || []).map(
@@ -158,14 +123,13 @@ describe('atomic-results-per-page', () => {
   });
 
   it('should mark correct radio button as checked based on initial choice', async () => {
-    const {element} = await renderComponent({
-      choicesDisplayed: '10,25,50',
-      initialChoice: 25,
+    const {radioButtons} = await renderResultsPerPage({
+      props: {
+        choicesDisplayed: '10,25,50',
+        initialChoice: 25,
+      },
     });
 
-    const radioButtons = element.shadowRoot?.querySelectorAll(
-      'input[type="radio"]'
-    );
     const checkedButton = Array.from(radioButtons || []).find(
       (button) => (button as HTMLInputElement).checked
     );
@@ -175,11 +139,8 @@ describe('atomic-results-per-page', () => {
   });
 
   it('should have correct radio button group name for all buttons', async () => {
-    const {element} = await renderComponent();
+    const {radioButtons} = await renderResultsPerPage();
 
-    const radioButtons = element.shadowRoot?.querySelectorAll(
-      'input[type="radio"]'
-    );
     const groupNames = Array.from(radioButtons || []).map(
       (button) => (button as HTMLInputElement).name
     );
@@ -190,14 +151,12 @@ describe('atomic-results-per-page', () => {
   });
 
   it('should render radio buttons with correct part attributes', async () => {
-    const {element} = await renderComponent({
-      choicesDisplayed: '10,25',
-      initialChoice: 25,
+    const {radioButtons} = await renderResultsPerPage({
+      props: {
+        choicesDisplayed: '10,25',
+        initialChoice: 25,
+      },
     });
-
-    const radioButtons = element.shadowRoot?.querySelectorAll(
-      'input[type="radio"]'
-    );
 
     const button10 = Array.from(radioButtons || []).find(
       (button) => (button as HTMLInputElement).value === '10'
@@ -212,7 +171,7 @@ describe('atomic-results-per-page', () => {
 
   describe('when search has error', () => {
     it('should not render when search status has error', async () => {
-      const {element} = await renderComponent();
+      const {element} = await renderResultsPerPage();
 
       // Update the bound state to simulate error condition
       // biome-ignore lint/suspicious/noExplicitAny: test mock assignment
@@ -234,7 +193,7 @@ describe('atomic-results-per-page', () => {
 
   describe('when no results available', () => {
     it('should not render when search has no results', async () => {
-      const {element} = await renderComponent();
+      const {element} = await renderResultsPerPage();
 
       // Update the bound state to simulate no results condition
       // biome-ignore lint/suspicious/noExplicitAny: test mock assignment

@@ -1,6 +1,6 @@
 import {FunctionalComponent, h} from '@stencil/core';
 
-export interface SwitchProps {
+interface SwitchProps {
   checked?: boolean;
   onToggle?(checked: boolean): void;
   ariaLabel?: string;
@@ -10,6 +10,9 @@ export interface SwitchProps {
   withToggle?: boolean;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const Switch: FunctionalComponent<SwitchProps> = (props) => {
   const attributes = {
     onClick: () => props.onToggle?.(!props.checked),

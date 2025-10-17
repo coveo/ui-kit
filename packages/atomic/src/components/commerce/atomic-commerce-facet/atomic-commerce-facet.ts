@@ -51,10 +51,10 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
  * @part clear-button - The button that resets the actively selected facet values.
  * @part clear-button-icon - The clear button icon.
  *
- * @part search-wrapper - The search box wrapper.
- * @part search-input - The search box input.
- * @part search-icon - The search box submit button.
- * @part search-clear-button - The button to clear the search box of input.
+ * @part search-wrapper - The facet search box wrapper.
+ * @part search-input - The facet search box input.
+ * @part search-icon - The facet search box submit button.
+ * @part search-clear-button - The button to clear the facet search box of input.
  * @part more-matches - The label indicating there are more matches for the current facet search query.
  * @part no-matches - The label indicating there are no matches for the current facet search query.
  * @part matches-query - The highlighted query inside the matches labels.
@@ -69,8 +69,8 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  * @part value-checkbox-icon - The facet value checkbox icon, available when display is 'checkbox'.
  *
- * @part show-more - The show more results button.
- * @part show-less - The show less results button.
+ * @part show-more - The show more values button.
+ * @part show-less - The show less values button.
  * @part show-more-less-icon - The icons of the show more & show less buttons.
  */
 @customElement('atomic-commerce-facet')

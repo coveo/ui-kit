@@ -8,7 +8,7 @@ const fixtures = {
   insight: testInsight,
 };
 
-const exampleAnswerConfigurationId = '3bb64276-0d26-4afc-be08-b0a8f2295de4';
+const exampleAnswerConfigurationId = 'fc581be0-6e61-4039-ab26-a3f2f52f308f';
 
 useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
@@ -47,6 +47,20 @@ useCaseTestCases.forEach((useCase) => {
               }) => {
                 await generatedAnswer.streamEndAnalyticRequestPromise;
               });
+
+              if (config.options.answerConfigurationId) {
+                test('should send searchboxSubmit as the action cause in the analytics payload of the generate request', async ({
+                  generatedAnswer,
+                }) => {
+                  await generatedAnswer.streamEndAnalyticRequestPromise;
+                  const generateRequest =
+                    await generatedAnswer.generateRequestPromise;
+                  const generateRequestBody = generateRequest.postDataJSON();
+                  expect(generateRequestBody.analytics.actionCause).toBe(
+                    'searchboxSubmit'
+                  );
+                });
+              }
             });
 
             test.describe('when providing positive feedback', () => {
@@ -87,6 +101,53 @@ useCaseTestCases.forEach((useCase) => {
 
                 await generatedAnswer.clickSubmitFeedbackButton();
                 await feedbackRequestPromise;
+              });
+
+              test('should keep sending RGA analytics events after submitting feedback', async ({
+                generatedAnswer,
+              }) => {
+                await generatedAnswer.streamEndAnalyticRequestPromise;
+                const likeAnalyticRequestPromise =
+                  generatedAnswer.waitForLikeGeneratedAnswerAnalytics();
+                await generatedAnswer.clickLikeButton();
+                await likeAnalyticRequestPromise;
+
+                const exampleDocumentUrl = 'https://www.coveo.com/';
+                const exampleDetails = 'example details...';
+                await generatedAnswer.fillFeedbackForm({
+                  correctTopic: 'Yes',
+                  hallucinationFree: 'Yes',
+                  documented: 'Not sure',
+                  readable: 'Yes',
+                });
+                await generatedAnswer.typeInFeedbackDocumentUrlInput(
+                  exampleDocumentUrl
+                );
+                await generatedAnswer.typeInFeedbackDetailsInput(
+                  exampleDetails
+                );
+
+                const feedbackRequestPromise =
+                  generatedAnswer.waitForFeedbackSubmitRequest({
+                    correctTopic: 'yes',
+                    hallucinationFree: 'yes',
+                    documented: 'unknown',
+                    readable: 'yes',
+                    documentUrl: exampleDocumentUrl,
+                    details: exampleDetails,
+                    helpful: true,
+                  });
+
+                await generatedAnswer.clickSubmitFeedbackButton();
+                await feedbackRequestPromise;
+
+                await generatedAnswer.clickCompleteFeedbackButton();
+
+                // Click the copy to clipboard button and ensure the analytic is sent.
+                const copyToClipboardAnalyticRequestPromise =
+                  generatedAnswer.waitForCopyToClipboardAnalytics();
+                await generatedAnswer.clickCopyToClipboardButton();
+                await copyToClipboardAnalyticRequestPromise;
               });
             });
 
@@ -220,7 +281,6 @@ useCaseTestCases.forEach((useCase) => {
               test('should display the answer as collapsed', async ({
                 generatedAnswer,
               }) => {
-                await generatedAnswer.streamEndAnalyticRequestPromise;
                 const expectedShowMoreLabel = 'Show more';
                 await generatedAnswer.streamEndAnalyticRequestPromise;
 
@@ -232,6 +292,43 @@ useCaseTestCases.forEach((useCase) => {
                 expect(showMoreButtonLabel).toEqual(expectedShowMoreLabel);
               });
             });
+
+            if (config.options.answerConfigurationId) {
+              test.describe('when selecting a timeframe facet after the answer is generated', () => {
+                test.use({
+                  options: {
+                    ...config.options,
+                  },
+                  withFacets: true,
+                });
+
+                test('should trigger a new generate call to the answer API', async ({
+                  generatedAnswer,
+                  baseFacet,
+                }) => {
+                  await generatedAnswer.streamEndAnalyticRequestPromise;
+
+                  const generateRequestPromise =
+                    generatedAnswer.waitForGenerateRequest();
+
+                  const streamEndAnalyticRequestPromise =
+                    generatedAnswer.waitForStreamEndAnalytics();
+
+                  const searchResponsePromise =
+                    baseFacet.waitForSearchResponse();
+
+                  await generatedAnswer.clickFirstTimeframeFacetLink();
+
+                  const generateRequest = await generateRequestPromise;
+                  const generateRequestBody = generateRequest.postDataJSON();
+                  expect(generateRequestBody.analytics.actionCause).toBe(
+                    'facetSelect'
+                  );
+                  await streamEndAnalyticRequestPromise;
+                  await searchResponsePromise;
+                });
+              });
+            }
           });
         }
       });

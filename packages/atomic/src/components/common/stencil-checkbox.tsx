@@ -2,7 +2,7 @@ import {FunctionalComponent, h} from '@stencil/core';
 import Tick from '../../images/checkbox.svg';
 
 /**
- * @deprecated Should only be used for Stencil components; for Lit components, use the CheckboxProps interface from the checkbox.ts file
+ * @deprecated should only be used for Stencil components.
  */
 export interface StencilCheckboxProps {
   checked: boolean;
@@ -20,7 +20,7 @@ export interface StencilCheckboxProps {
 }
 
 /**
- * @deprecated Should only be used for Stencil components; for Lit components, use the Checkbox function from the checkbox.ts file
+ * @deprecated should only be used for Stencil components.
  */
 export const StencilCheckbox: FunctionalComponent<StencilCheckboxProps> = (
   props

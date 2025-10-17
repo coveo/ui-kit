@@ -16,9 +16,9 @@ import {
   AriaLiveRegion,
   FocusTargetController,
 } from '../../../utils/stencil-accessibility-utils';
-import {IconButton} from '../../common/iconButton';
+import {IconButton} from '../../common/stencil-iconButton';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
-import {ResultContext} from '../../search/result-template-components/result-template-decorators';
+import {ResultContext} from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
 
 /**
  * @internal

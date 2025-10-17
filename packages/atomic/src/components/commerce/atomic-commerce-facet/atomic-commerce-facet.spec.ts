@@ -18,7 +18,7 @@ import './atomic-commerce-facet';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
-describe('AtomicCommerceFacet', () => {
+describe('atomic-commerce-facet', () => {
   let mockedSummary: Summary;
   let mockedFacet: RegularFacet;
   let mockedConsoleError: MockInstance;
@@ -494,7 +494,7 @@ describe('AtomicCommerceFacet', () => {
     expect(mockedFacet.facetSearch.search).toHaveBeenCalled();
   });
 
-  it('should call facetSearch.showMoreResults when there are more results available and the "more matches for x" button is clicked', async () => {
+  it('should call facetSearch.showMoreResults when there are more facet search results available and the "more matches for x" button is clicked', async () => {
     mockedFacet = buildFakeRegularFacet({
       state: {
         facetSearch: {
@@ -530,7 +530,7 @@ describe('AtomicCommerceFacet', () => {
     expect(mockedFacet.facetSearch.showMoreResults).toHaveBeenCalled();
   });
 
-  it('should render facet search parts when there are search results', async () => {
+  it('should render facet search parts when there are facet search results', async () => {
     mockedFacet = buildFakeRegularFacet({
       state: {
         facetSearch: {
@@ -585,7 +585,7 @@ describe('AtomicCommerceFacet', () => {
       .toBeVisible();
   });
 
-  it('should render proper part when there are no search results', async () => {
+  it('should render proper part when there are no facet search results', async () => {
     mockedFacet = buildFakeRegularFacet({
       state: {
         facetSearch: {

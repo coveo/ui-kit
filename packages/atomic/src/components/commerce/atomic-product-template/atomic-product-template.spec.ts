@@ -2,14 +2,17 @@ import type {Product} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
+import {makeMatchConditions} from '@/src/components/common/template-controller/template-utils';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {sanitizeHtml} from '@/vitest-utils/testing-helpers/testing-utils/sanitize-html';
-import {makeMatchConditions} from '../../common/product-template/product-template-common';
 import {AtomicProductTemplate} from './atomic-product-template';
+import './atomic-product-template';
 
-vi.mock('../../common/product-template/product-template-common', {spy: true});
+vi.mock('@/src/components/common/template-controller/template-utils', {
+  spy: true,
+});
 
-describe('AtomicProductTemplate', () => {
+describe('atomic-product-template', () => {
   type AtomicProductTemplateProps = Pick<
     AtomicProductTemplate,
     'conditions' | 'mustMatch' | 'mustNotMatch'
@@ -64,7 +67,8 @@ describe('AtomicProductTemplate', () => {
       });
       expect(mockMakeMatchConditions).toHaveBeenCalledWith(
         {foo: ['bar']},
-        {baz: ['qux']}
+        {baz: ['qux']},
+        expect.any(Object)
       );
     });
   });

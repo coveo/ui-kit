@@ -21,9 +21,9 @@ function initializeBindings<
         instance.bindings = bindings;
 
         const updateLanguage = () => instance.requestUpdate();
-        instance.bindings.i18n.on('languageChanged', updateLanguage);
+        instance.bindings?.i18n?.on('languageChanged', updateLanguage);
         const unsubscribeLanguage = () =>
-          instance.bindings?.i18n.off('languageChanged', updateLanguage);
+          instance.bindings?.i18n?.off('languageChanged', updateLanguage);
         resolve(unsubscribeLanguage);
 
         instance.initialize?.();

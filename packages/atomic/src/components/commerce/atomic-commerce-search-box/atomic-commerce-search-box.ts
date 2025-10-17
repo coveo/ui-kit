@@ -27,7 +27,8 @@ import {
   type StandaloneSearchBoxData,
   StorageItems,
 } from '@/src/utils/local-storage-utils';
-import {updateBreakpoints} from '@/src/utils/replace-breakpoint';
+import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
+import {getDefaultSlotFromHost} from '@/src/utils/slot-utils';
 import {
   isFocusingOut,
   once,
@@ -39,12 +40,12 @@ import {renderSearchBoxWrapper} from '../../common/search-box/search-box-wrapper
 import {renderSearchBoxTextArea} from '../../common/search-box/search-text-area';
 import {renderSubmitButton} from '../../common/search-box/submit-button';
 import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
-import {
-  elementHasQuery,
-  type SearchBoxSuggestionElement,
-  type SearchBoxSuggestionsBindings,
-  type SearchBoxSuggestionsEvent,
-} from '../../common/suggestions/suggestions-common';
+import type {
+  SearchBoxSuggestionElement,
+  SearchBoxSuggestionsBindings,
+  SearchBoxSuggestionsEvent,
+} from '../../common/suggestions/suggestions-types';
+import {elementHasQuery} from '../../common/suggestions/suggestions-utils';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import type {SelectChildProductEventArgs} from '../atomic-product-children/select-child-product-event';
 import '../atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products';
@@ -52,7 +53,7 @@ import '../atomic-commerce-search-box-query-suggestions/atomic-commerce-search-b
 import '../atomic-commerce-search-box-recent-queries/atomic-commerce-search-box-recent-queries';
 
 /**
- * The `atomic-commerce-search-box` component enables users to perform product searches with built-in query suggestions and optional redirection to a search results page.
+ * The `atomic-commerce-search-box` component enables users to perform product searches with built-in query suggestions and optional redirection to a search page.
  *
  * @slot default - The default slot where you can add child components to the search box.
  *
@@ -89,8 +90,8 @@ import '../atomic-commerce-search-box-recent-queries/atomic-commerce-search-box-
  * @part recent-query-title - The "recent searches" text of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
  * @part recent-query-clear - The "clear" text of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
  *
- * @part instant-results-item - An instant result rendered by an `atomic-commerce-search-box-instant-products` component.
- * @part instant-results-show-all - The clickable suggestion to show all items for the current instant results search rendered by an `atomic-commerce-search-box-instant-products` component.
+ * @part instant-results-item - An instant product rendered by an `atomic-commerce-search-box-instant-products` component.
+ * @part instant-results-show-all - The clickable suggestion to show all items for the current instant product search rendered by an `atomic-commerce-search-box-instant-products` component.
  * @part instant-results-show-all-button - The button inside the clickable suggestion from the `atomic-commerce-search-box-instant-products` component.
  *
  * @event redirect - Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
@@ -193,7 +194,7 @@ export class AtomicCommerceSearchBox
 
   /**
    * Whether to clear all active query filters when the end user submits a new query from the search box.
-   * Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
+   * Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no products.
    */
   @property({
     type: Boolean,
@@ -205,13 +206,6 @@ export class AtomicCommerceSearchBox
 
   connectedCallback() {
     super.connectedCallback();
-
-    if (this.children.length === 0) {
-      this.replaceChildren(
-        document.createElement('atomic-commerce-search-box-recent-queries'),
-        document.createElement('atomic-commerce-search-box-query-suggestions')
-      );
-    }
 
     this.addEventListener(
       'atomic/searchBoxSuggestion/register',
@@ -579,6 +573,7 @@ export class AtomicCommerceSearchBox
           this.searchBox.clear();
           this.suggestionManager.clearSuggestions();
           this.triggerTextAreaChange('');
+          this.announceClearSearchBoxToScreenReader();
         },
         popup: {
           id: `${this.id}-popup`,
@@ -702,6 +697,17 @@ export class AtomicCommerceSearchBox
     `;
   }
 
+  private renderSlotContent() {
+    const hasDefaultSlot = !!getDefaultSlotFromHost(this);
+
+    if (hasDefaultSlot) {
+      return html`<slot></slot>`;
+    }
+
+    return html`<atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+      <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>`;
+  }
+
   @bindingGuard()
   @errorGuard()
   render() {
@@ -726,19 +732,25 @@ export class AtomicCommerceSearchBox
         },
       })(
         html`${this.renderTextBox()}
-        ${renderSubmitButton({
-          props: {
-            i18n: this.bindings.i18n,
-            disabled: this.isSearchDisabledForEndUser,
-            onClick: () => {
-              this.searchBox.submit();
-              this.suggestionManager.clearSuggestions();
-            },
+      ${renderSubmitButton({
+        props: {
+          i18n: this.bindings.i18n,
+          disabled: this.isSearchDisabledForEndUser,
+          onClick: () => {
+            this.searchBox.submit();
+            this.suggestionManager.clearSuggestions();
           },
-        })}
-        ${this.renderSuggestions()}`
+        },
+      })}
+      ${this.renderSuggestions()}`
       )}
+      ${this.renderSlotContent()}
     `;
+  }
+
+  private announceClearSearchBoxToScreenReader() {
+    this.searchBoxAriaMessage.message =
+      this.bindings.i18n.t('search-box-cleared');
   }
 }
 

@@ -9,7 +9,7 @@ test.describe('default', () => {
     await expect(searchBox.submitButton).toBeEnabled();
   });
 
-  test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {
+  test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
     await searchBox.hydrated.waitFor();
     const accessibilityResults = await makeAxeBuilder().analyze();
     expect(accessibilityResults.violations).toEqual([]);
@@ -25,7 +25,7 @@ test.describe('default', () => {
       await expect(searchBox.searchSuggestions().first()).toBeVisible();
     });
 
-    test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {
+    test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
       await searchBox.hydrated.waitFor();
       const accessibilityResults = await makeAxeBuilder().analyze();
       expect(accessibilityResults.violations).toEqual([]);
@@ -102,7 +102,7 @@ test.describe('with instant results & query suggestions', () => {
       ).toBeVisible();
     });
 
-    test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {
+    test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
       await searchBox.hydrated.waitFor();
       const accessibilityResults = await makeAxeBuilder().analyze();
       expect(accessibilityResults.violations).toEqual([]);
@@ -186,7 +186,7 @@ test.describe('with disable-search=true and minimum-query-length=1', () => {
       await expect(searchBox.searchSuggestions().first()).not.toBeVisible();
     });
 
-    test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {
+    test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
       await searchBox.hydrated.waitFor();
       const accessibilityResults = await makeAxeBuilder().analyze();
       expect(accessibilityResults.violations).toEqual([]);
@@ -217,6 +217,7 @@ test.describe('with minimum-query-length=4', () => {
     await searchBox.load({
       args: {minimumQueryLength: 4, suggestionTimeout: 5000},
     });
+    await searchBox.hydrated.waitFor();
   });
 
   const testCases = () => {
@@ -228,7 +229,7 @@ test.describe('with minimum-query-length=4', () => {
       await expect(searchBox.searchSuggestions().first()).not.toBeVisible();
     });
 
-    test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {
+    test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
       await searchBox.hydrated.waitFor();
       const accessibilityResults = await makeAxeBuilder().analyze();
       expect(accessibilityResults.violations).toEqual([]);

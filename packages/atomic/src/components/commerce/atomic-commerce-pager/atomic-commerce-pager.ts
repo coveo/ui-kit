@@ -7,8 +7,9 @@ import {
   type ProductListing,
   type Search,
 } from '@coveo/headless/commerce';
-import {html, LitElement} from 'lit';
+import {html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {keyed} from 'lit/directives/keyed.js';
 import {when} from 'lit/directives/when.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -16,6 +17,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
@@ -31,7 +33,7 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
 import {getCurrentPagesRange} from './commerce-pager-utils';
 
 /**
- * The `atomic-commerce-pager` component enables users to navigate through paginated product results.
+ * The `atomic-commerce-pager` component enables users to navigate through paginated products.
  *
  * @part buttons - The list of all buttons rendered by the component.
  * @part page-buttons - The list of all page buttons.
@@ -51,6 +53,12 @@ export class AtomicCommercePager
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
+  private static propsSchema = new Schema({
+    numberOfPages: new NumberValue({min: 0}),
+  });
+
+  private radioGroupName = randomID('atomic-commerce-pager-');
+
   @state()
   bindings!: CommerceBindings;
   @state() error!: Error;
@@ -89,8 +97,12 @@ export class AtomicCommercePager
   public pager!: Pagination;
   public listingOrSearch!: ProductListing | Search;
 
+  private previousButton!: FocusTargetController;
+  private nextButton!: FocusTargetController;
+
   public initialize() {
     this.validateProps();
+    this.initFocusTargets();
     if (this.bindings.interfaceElement.type === 'product-listing') {
       this.listingOrSearch = buildProductListing(this.bindings.engine);
     } else {
@@ -102,15 +114,11 @@ export class AtomicCommercePager
     });
   }
 
-  private validateProps() {
-    new Schema({
-      numberOfPages: new NumberValue({min: 0}),
-    }).validate({
-      numberOfPages: this.numberOfPages,
-    });
+  willUpdate(changedProperties: PropertyValues) {
+    if (changedProperties.has('numberOfPages')) {
+      this.validateProps();
+    }
   }
-
-  private radioGroupName = randomID('atomic-commerce-pager-');
 
   @bindingGuard()
   @errorGuard()
@@ -120,63 +128,111 @@ export class AtomicCommercePager
       this.numberOfPages,
       this.pagerState.totalPages - 1
     );
-    return html`${when(
-      this.pagerState.totalPages > 1 && this.isAppLoaded,
-      () =>
-        html`${renderPagerNavigation({
-          props: {
-            i18n: this.bindings.i18n,
-          },
-        })(html`
-        ${renderPagerPreviousButton({
-          props: {
-            icon: this.previousButtonIcon,
-            disabled: this.pagerState.page === 0,
-            i18n: this.bindings.i18n,
-            onClick: async () => {
-              this.pager.previousPage();
-              await this.focusOnFirstResultAndScrollToTop();
+
+    return html`
+      ${when(
+        this.pagerState.totalPages > 1 && this.isAppLoaded,
+        () => html`
+          ${renderPagerNavigation({
+            props: {
+              i18n: this.bindings.i18n,
             },
-          },
-        })}
-        ${renderPageButtons({
-          props: {
-            i18n: this.bindings.i18n,
-          },
-        })(
-          html`${pagesRange.map((pageNumber) =>
-            renderPagerPageButton({
+          })(html`
+            ${renderPagerPreviousButton({
               props: {
-                isSelected: pageNumber === this.pagerState.page,
-                ariaLabel: this.bindings.i18n.t('page-number', {
-                  pageNumber: pageNumber + 1,
-                }),
-                onChecked: async () => {
-                  this.pager.selectPage(pageNumber);
+                icon: this.previousButtonIcon,
+                disabled: this.pagerState.page === 0,
+                i18n: this.bindings.i18n,
+                onClick: async () => {
+                  this.pager.previousPage();
                   await this.focusOnFirstResultAndScrollToTop();
                 },
-                page: pageNumber,
-                groupName: this.radioGroupName,
-                text: (pageNumber + 1).toLocaleString(
-                  this.bindings.i18n.language
-                ),
+                ref: (el) => this.previousButton.setTarget(el as HTMLElement),
               },
-            })
-          )}`
-        )}
-        ${renderPagerNextButton({
-          props: {
-            icon: this.nextButtonIcon,
-            disabled: this.pagerState.page + 1 >= this.pagerState.totalPages,
-            i18n: this.bindings.i18n,
-            onClick: async () => {
-              this.pager.nextPage();
-              await this.focusOnFirstResultAndScrollToTop();
-            },
-          },
-        })}
-      `)}`
-    )}`;
+            })}
+            ${renderPageButtons({
+              props: {
+                i18n: this.bindings.i18n,
+              },
+            })(html`
+              ${pagesRange.map((pageNumber, index) =>
+                keyed(
+                  `page-${pageNumber}-${index}`,
+                  renderPagerPageButton({
+                    props: {
+                      isSelected: pageNumber === this.pagerState.page,
+                      ariaLabel: this.bindings.i18n.t('page-number', {
+                        pageNumber: pageNumber + 1,
+                      }),
+                      onChecked: async () => {
+                        this.pager.selectPage(pageNumber);
+                        await this.focusOnFirstResultAndScrollToTop();
+                      },
+                      page: pageNumber,
+                      groupName: this.radioGroupName,
+                      text: (pageNumber + 1).toLocaleString(
+                        this.bindings.i18n.language
+                      ),
+                      onFocusCallback: this.handleFocus,
+                    },
+                  })
+                )
+              )}
+            `)}
+            ${renderPagerNextButton({
+              props: {
+                icon: this.nextButtonIcon,
+                disabled:
+                  this.pagerState.page + 1 >= this.pagerState.totalPages,
+                i18n: this.bindings.i18n,
+                onClick: async () => {
+                  this.pager.nextPage();
+                  await this.focusOnFirstResultAndScrollToTop();
+                },
+                ref: (el) => this.nextButton.setTarget(el as HTMLElement),
+              },
+            })}
+          `)}
+        `
+      )}
+    `;
+  }
+
+  private initFocusTargets() {
+    if (!this.previousButton) {
+      this.previousButton = new FocusTargetController(this, this.bindings);
+    }
+    if (!this.nextButton) {
+      this.nextButton = new FocusTargetController(this, this.bindings);
+    }
+  }
+
+  private handleFocus = async (
+    elements: HTMLInputElement[],
+    currentFocus: HTMLInputElement,
+    newFocus: HTMLInputElement
+  ) => {
+    const currentIndex = elements.indexOf(currentFocus);
+    const newIndex = elements.indexOf(newFocus);
+
+    if (currentIndex === elements.length - 1 && newIndex === 0) {
+      await this.nextButton.focus();
+    } else if (currentIndex === 0 && newIndex === elements.length - 1) {
+      await this.previousButton.focus();
+    } else {
+      newFocus.focus();
+    }
+  };
+
+  private validateProps() {
+    try {
+      AtomicCommercePager.propsSchema.validate({
+        numberOfPages: this.numberOfPages,
+      });
+    } catch (error) {
+      this.error = error as Error;
+      return;
+    }
   }
 
   private async focusOnFirstResultAndScrollToTop() {

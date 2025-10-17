@@ -7,6 +7,7 @@ import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {SafeStorage, StorageItems} from '@/src/utils/local-storage-utils';
 import {once} from '@/src/utils/utils';
 import Clock from '../../../images/clock.svg';
@@ -16,12 +17,12 @@ import {
   renderRecentQuery,
   renderRecentQueryClear,
 } from '../../common/suggestions/recent-queries';
-import {
-  dispatchSearchBoxSuggestionsEvent,
-  type SearchBoxSuggestionElement,
-  type SearchBoxSuggestions,
-  type SearchBoxSuggestionsBindings,
-} from '../../common/suggestions/suggestions-common';
+import {dispatchSearchBoxSuggestionsEvent} from '../../common/suggestions/suggestions-events';
+import type {
+  SearchBoxSuggestionElement,
+  SearchBoxSuggestions,
+  SearchBoxSuggestionsBindings,
+} from '../../common/suggestions/suggestions-types';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
@@ -57,6 +58,12 @@ export class AtomicCommerceSearchBoxRecentQueries
    */
   @property({type: Number, attribute: 'max-without-query', reflect: true})
   public maxWithoutQuery?: number;
+
+  private searchBoxAriaMessage = new AriaLiveRegionController(
+    this,
+    'recent-search-cleared',
+    true
+  );
 
   connectedCallback() {
     super.connectedCallback();
@@ -147,6 +154,9 @@ export class AtomicCommerceSearchBoxRecentQueries
       onSelect: () => {
         this.recentQueriesList.clear();
         this.bindings.triggerSuggestions();
+        this.searchBoxAriaMessage.message = this.bindings.i18n.t(
+          'recent-search-cleared'
+        );
       },
     };
   }
