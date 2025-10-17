@@ -1,15 +1,18 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {SearchApiHarness} from '@/storybook-utils/api/search';
+import {MockSearchApi} from '@/storybook-utils/api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInRecommendationInterface} from '@/storybook-utils/search/recs-interface-wrapper';
 
-const searchApiHarness = new SearchApiHarness();
+const mockedSearchApi = new MockSearchApi();
 
-searchApiHarness.searchEndpointHandler.baseResponse.results.length = 30;
-searchApiHarness.searchEndpointHandler.baseResponse.totalCount = 30;
-searchApiHarness.searchEndpointHandler.baseResponse.totalCountFiltered = 30;
+mockedSearchApi.searchEndpoint.modifyBaseResponse((response) => ({
+  ...response,
+  results: response.results.slice(0, 30),
+  totalCount: 30,
+  totalCountFiltered: 30,
+}));
 
 const {decorator, play} = wrapInRecommendationInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -29,11 +32,11 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...searchApiHarness.handlers],
+      handlers: [...mockedSearchApi.handlers],
     },
   },
   beforeEach: () => {
-    searchApiHarness.searchEndpointHandler.flushQueuedResponses();
+    mockedSearchApi.searchEndpoint.flushQueuedResponses();
   },
   args,
   argTypes,
@@ -128,13 +131,12 @@ export const RecsAsCarousel: Story = {
 export const NotEnoughRecsForCarousel: Story = {
   name: 'Not enough recommendations for carousel',
   beforeEach: () => {
-    searchApiHarness.searchEndpointHandler.enqueueNextResponses({
-      ...searchApiHarness.searchEndpointHandler.baseResponse,
-      results:
-        searchApiHarness.searchEndpointHandler.baseResponse.results.slice(0, 3),
+    mockedSearchApi.searchEndpoint.enqueueNextResponse((response) => ({
+      ...response,
+      results: response.results.slice(0, 3),
       totalCount: 3,
       totalCountFiltered: 3,
-    });
+    }));
   },
   play,
 };
@@ -142,12 +144,12 @@ export const NotEnoughRecsForCarousel: Story = {
 export const NoRecommendations: Story = {
   name: 'No recommendations',
   beforeEach: async () => {
-    searchApiHarness.searchEndpointHandler.enqueueNextResponses({
-      ...searchApiHarness.searchEndpointHandler.baseResponse,
+    mockedSearchApi.searchEndpoint.enqueueNextResponse((response) => ({
+      ...response,
       totalCount: 0,
       totalCountFiltered: 0,
       results: [],
-    });
+    }));
   },
   play,
 };

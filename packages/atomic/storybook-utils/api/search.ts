@@ -1,28 +1,58 @@
 import {type HttpHandler, HttpResponse, http} from 'msw';
-export class SearchApiHarness {
-  readonly searchEndpointHandler;
-  readonly querySuggestionHandler;
-  readonly handlers: HttpHandler[];
+
+type HttpMethod = 'GET' | 'POST';
+abstract class MockApi {
+  abstract get handlers(): HttpHandler[];
+}
+
+export class MockSearchApi implements MockApi {
+  readonly searchEndpoint;
+  readonly querySuggestEndpoint;
+
   constructor(basePath: string = 'https://:orgId.org.coveo.com') {
-    this.searchEndpointHandler = new EndpointHarness(baseSearchResponse);
-    this.querySuggestionHandler = new EndpointHarness(baseQuerySuggestResponse);
-    this.handlers = [
-      http.post(`${basePath}/rest/search/v2`, () =>
-        this.searchEndpointHandler.getNextResponse()
-      ),
-      http.post(`${basePath}/rest/search/v2/querySuggest`, () =>
-        this.querySuggestionHandler.getNextResponse()
-      ),
+    this.searchEndpoint = new EndpointHarness(
+      'POST',
+      `${basePath}/rest/search/v2`,
+      baseSearchResponse
+    );
+    this.querySuggestEndpoint = new EndpointHarness(
+      'POST',
+      `${basePath}/rest/search/v2/querySuggest`,
+      baseQuerySuggestResponse
+    );
+  }
+
+  get handlers(): HttpHandler[] {
+    return [
+      this.searchEndpoint.generateHandler(),
+      this.querySuggestEndpoint.generateHandler(),
     ];
   }
 }
 
 class EndpointHarness<TResponse extends {}> {
-  private nextResponses: TResponse[] = [];
-  constructor(public baseResponse: TResponse) {}
+  private nextResponses: ((response: TResponse) => TResponse)[] = [];
+  private baseResponse: Readonly<TResponse>;
+  private initialBaseResponse: Readonly<TResponse>;
+  constructor(
+    private method: HttpMethod,
+    private path: string,
+    initialBaseResponse: TResponse
+  ) {
+    this.initialBaseResponse = Object.freeze(initialBaseResponse);
+    this.baseResponse = Object.freeze(structuredClone(initialBaseResponse));
+  }
 
-  enqueueNextResponses(...responses: TResponse[]) {
-    this.nextResponses.push(...responses);
+  modifyBaseResponse(modifier: (base: TResponse) => TResponse) {
+    this.baseResponse = Object.freeze(modifier(this.baseResponse));
+  }
+
+  resetBaseResponse() {
+    this.modifyBaseResponse(() => this.initialBaseResponse);
+  }
+
+  enqueueNextResponse(responseMiddleware: (response: TResponse) => TResponse) {
+    this.nextResponses.push(responseMiddleware);
   }
 
   flushQueuedResponses() {
@@ -30,7 +60,16 @@ class EndpointHarness<TResponse extends {}> {
   }
 
   getNextResponse(): HttpResponse<TResponse> {
-    return HttpResponse.json(this.nextResponses.shift() ?? this.baseResponse);
+    return HttpResponse.json(
+      this.nextResponses.shift()?.(this.baseResponse) ?? this.baseResponse
+    );
+  }
+
+  generateHandler() {
+    return http[this.method.toLowerCase() as Lowercase<HttpMethod>]<TResponse>(
+      this.path,
+      () => this.getNextResponse()
+    );
   }
 }
 

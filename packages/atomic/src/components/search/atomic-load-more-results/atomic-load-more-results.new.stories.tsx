@@ -1,11 +1,11 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
-import {SearchApiHarness} from '@/storybook-utils/api/search';
+import {MockSearchApi} from '@/storybook-utils/api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const searchApiHarness = new SearchApiHarness();
+const searchApiHarness = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -32,30 +32,19 @@ const meta: Meta = {
   args,
   argTypes,
   beforeEach: () => {
-    searchApiHarness.searchEndpointHandler.flushQueuedResponses();
-    searchApiHarness.searchEndpointHandler.enqueueNextResponses(
-      {
-        ...searchApiHarness.searchEndpointHandler.baseResponse,
-        results:
-          searchApiHarness.searchEndpointHandler.baseResponse.results.slice(
-            0,
-            40
-          ),
-      },
-      {
-        ...searchApiHarness.searchEndpointHandler.baseResponse,
-        results:
-          searchApiHarness.searchEndpointHandler.baseResponse.results.slice(
-            40,
-            80
-          ),
-      },
-      {
-        ...searchApiHarness.searchEndpointHandler.baseResponse,
-        results:
-          searchApiHarness.searchEndpointHandler.baseResponse.results.slice(80),
-      }
-    );
+    searchApiHarness.searchEndpoint.flushQueuedResponses();
+    searchApiHarness.searchEndpoint.enqueueNextResponse((response) => ({
+      ...response,
+      results: response.results.slice(0, 40),
+    }));
+    searchApiHarness.searchEndpoint.enqueueNextResponse((response) => ({
+      ...response,
+      results: response.results.slice(40, 80),
+    }));
+    searchApiHarness.searchEndpoint.enqueueNextResponse((response) => ({
+      ...response,
+      results: response.results.slice(80),
+    }));
   },
   play,
 };
