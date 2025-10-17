@@ -8,7 +8,7 @@ import {baseSearchResponse} from '@/storybook-utils/api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, afterEach} = wrapInSearchInterface();
+const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-did-you-mean',
   {excludeCategories: ['methods']}
@@ -33,7 +33,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach,
+  play,
 };
 
 export default meta;

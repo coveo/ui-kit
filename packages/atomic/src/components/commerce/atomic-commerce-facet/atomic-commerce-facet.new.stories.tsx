@@ -8,7 +8,7 @@ import {
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
-const {afterEach, decorator} = wrapInCommerceInterface({
+const {play, decorator} = wrapInCommerceInterface({
   includeCodeRoot: false,
 });
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -42,8 +42,8 @@ export const Default: Story = {
       </div>`;
     },
   ],
-  afterEach: async (context) => {
-    await afterEach(context);
+  play: async (context) => {
+    await play(context);
     await hideFacetTypesHook('atomic-commerce-facet', context);
   },
 };

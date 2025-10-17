@@ -6,14 +6,13 @@ import {userEvent} from 'storybook/test';
 import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator: searchInterfaceDecorator, afterEach: searchInterfacePlay} =
-  wrapInSearchInterface({
-    accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-    organizationId: 'searchuisamples',
-    search: {
-      searchHub: 'MainSearch',
-    },
-  });
+const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
+  accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+  organizationId: 'searchuisamples',
+  search: {
+    searchHub: 'MainSearch',
+  },
+});
 
 const searchBoxDecorator = (story: () => unknown) =>
   html`<atomic-search-box>
@@ -42,12 +41,11 @@ const meta: Meta = {
   argTypes,
 
   play: async (context) => {
+    await play(context);
     const canvas = within(context.canvasElement);
     const searchBox = await canvas.findAllByShadowPlaceholderText('Search');
     await userEvent.click(searchBox[0]);
   },
-
-  afterEach: searchInterfacePlay,
 };
 
 export default meta;
