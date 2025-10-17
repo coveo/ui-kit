@@ -43,7 +43,5 @@ Object.entries(sanitizedComponents.schemas).forEach(([schemaName, schema]) => {
   ajv.addSchema(schema as AnySchema, `#/components/schemas/${schemaName}`);
 });
 
-// Get the RestQueryResponse schema
-const responseSchema = sanitizedComponents.schemas.RestQueryResponse;
-
-export const validateSearchApiResponse = ajv.compile(responseSchema);
+export const getSchemaValidator = (schemaName: string) =>
+  ajv.compile(sanitizedComponents.schemas[schemaName]);

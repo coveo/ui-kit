@@ -1,3 +1,5 @@
+import {getSchemaValidator} from './open-api-schema.js';
+
 const getNthResult = (n: number) => ({
   title: `Sample Result ${n}`,
   excerpt: 'This is a sample result excerpt for testing.',
@@ -57,3 +59,5 @@ export const baseResponse = {
     relatedQuestions: [],
   },
 };
+
+export const validateResponse = getSchemaValidator('RestQueryResponse');

@@ -1,7 +1,10 @@
 import type {HttpHandler} from 'msw';
 import {EndpointHarness, type MockApi} from '../_base.js';
 import {baseResponse as baseQuerySuggestResponse} from './querySuggest-response.js';
-import {baseResponse as baseSearchResponse} from './search-response.js';
+import {
+  baseResponse as baseSearchResponse,
+  validateResponse as validateSearchResponse,
+} from './search-response.js';
 
 export class MockSearchApi implements MockApi {
   readonly searchEndpoint;
@@ -11,7 +14,8 @@ export class MockSearchApi implements MockApi {
     this.searchEndpoint = new EndpointHarness(
       'POST',
       `${basePath}/rest/search/v2`,
-      baseSearchResponse
+      baseSearchResponse,
+      validateSearchResponse
     );
     this.querySuggestEndpoint = new EndpointHarness(
       'POST',
