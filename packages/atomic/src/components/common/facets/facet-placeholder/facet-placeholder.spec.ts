@@ -17,7 +17,6 @@ describe('#renderFacetPlaceholder', () => {
       return element.querySelector('[part="placeholder"] > div:first-child');
     },
     get valuesContainer() {
-      // The values container has class 'mt-7' and contains facet value divs
       return element.querySelector('[part="placeholder"] > div.mt-7');
     },
     get facetValues() {
@@ -188,7 +187,6 @@ describe('#renderFacetPlaceholder', () => {
     });
 
     it('should render correctly when toggling between collapsed states', async () => {
-      // First render as expanded
       const expandedElement = await renderComponent({
         numberOfValues: 3,
         isCollapsed: false,
@@ -196,7 +194,6 @@ describe('#renderFacetPlaceholder', () => {
       const expandedValues = locators(expandedElement).facetValues;
       expect(expandedValues).toHaveLength(3);
 
-      // Then render as collapsed
       const collapsedElement = await renderComponent({
         numberOfValues: 3,
         isCollapsed: true,
