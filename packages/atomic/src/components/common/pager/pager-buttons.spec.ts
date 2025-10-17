@@ -1,6 +1,6 @@
 import type {i18n as I18n} from 'i18next';
 import {html, render} from 'lit';
-import {afterEach, beforeEach, describe, expect, test} from 'vitest';
+import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
@@ -22,12 +22,14 @@ describe('pagerButtons', () => {
       document.body.appendChild(container);
 
       render(
-        html`${renderPagerPreviousButton({
-          props: {
-            i18n,
-            icon: ArrowLeftIcon,
-          },
-        })}`,
+        html`
+          ${renderPagerPreviousButton({
+            props: {
+              i18n,
+              icon: ArrowLeftIcon,
+            },
+          })}
+        `,
         container
       );
     });
@@ -55,12 +57,14 @@ describe('pagerButtons', () => {
       container = document.createElement('div');
       document.body.appendChild(container);
       render(
-        html`${renderPagerNextButton({
-          props: {
-            i18n,
-            icon: ArrowRightIcon,
-          },
-        })}`,
+        html`
+          ${renderPagerNextButton({
+            props: {
+              i18n,
+              icon: ArrowRightIcon,
+            },
+          })}
+        `,
         container
       );
     });
@@ -95,14 +99,16 @@ describe('pagerButtons', () => {
 
     test('should render the button with the correct attributes', () => {
       render(
-        html`${renderPagerPageButton({
-          props: {
-            groupName: 'pager',
-            page: 1,
-            isSelected: false,
-            text: '1',
-          },
-        })}`,
+        html`
+          ${renderPagerPageButton({
+            props: {
+              groupName: 'pager',
+              page: 1,
+              isSelected: false,
+              text: '1',
+            },
+          })}
+        `,
         container
       );
 
@@ -115,14 +121,16 @@ describe('pagerButtons', () => {
 
     test('should render with the correct attributes when not selected', () => {
       render(
-        html`${renderPagerPageButton({
-          props: {
-            groupName: 'pager',
-            page: 1,
-            isSelected: false,
-            text: '1',
-          },
-        })}`,
+        html`
+          ${renderPagerPageButton({
+            props: {
+              groupName: 'pager',
+              page: 1,
+              isSelected: false,
+              text: '1',
+            },
+          })}
+        `,
         container
       );
 
@@ -133,14 +141,16 @@ describe('pagerButtons', () => {
 
     test('should render with the correct attributes when selected', () => {
       render(
-        html`${renderPagerPageButton({
-          props: {
-            groupName: 'pager',
-            page: 1,
-            isSelected: true,
-            text: '1',
-          },
-        })}`,
+        html`
+          ${renderPagerPageButton({
+            props: {
+              groupName: 'pager',
+              page: 1,
+              isSelected: true,
+              text: '1',
+            },
+          })}
+        `,
         container
       );
 
@@ -156,18 +166,25 @@ describe('pagerButtons', () => {
       container = document.createElement('div');
       document.body.appendChild(container);
       render(
-        html`${renderPageButtons({
-          props: {
-            i18n,
-          },
-        })(
-          html`${renderPagerPageButton({
-            props: {groupName: 'pager', page: 1, isSelected: true, text: '1'},
-          })}
-          ${renderPagerPageButton({
-            props: {groupName: 'pager', page: 2, isSelected: false, text: '2'},
-          })}`
-        )}`,
+        html`
+          ${renderPageButtons({
+            props: {
+              i18n,
+            },
+          })(html`
+            ${renderPagerPageButton({
+              props: {groupName: 'pager', page: 1, isSelected: true, text: '1'},
+            })}
+            ${renderPagerPageButton({
+              props: {
+                groupName: 'pager',
+                page: 2,
+                isSelected: false,
+                text: '2',
+              },
+            })}
+          `)}
+        `,
         container
       );
     });
@@ -186,6 +203,118 @@ describe('pagerButtons', () => {
     test('should render the list of children', () => {
       const inputs = container.querySelectorAll('input');
       expect(inputs).toHaveLength(2);
+    });
+  });
+
+  describe('accessibility', () => {
+    beforeEach(async () => {
+      i18n = await createTestI18n();
+      container = document.createElement('div');
+      document.body.appendChild(container);
+    });
+
+    test('should render with aria-roledescription set to link', () => {
+      render(
+        html`
+          ${renderPagerPageButton({
+            props: {
+              groupName: 'pager',
+              page: 1,
+              isSelected: false,
+              text: '1',
+            },
+          })}
+        `,
+        container
+      );
+
+      const input = container.querySelector('input');
+      expect(input).toHaveAttribute('aria-roledescription', 'link');
+    });
+
+    test('should change focus target when input is tab', async () => {
+      const onFocusCallback = vi.fn().mockResolvedValue(undefined);
+
+      render(
+        html`
+          ${renderPagerPageButton({
+            props: {
+              groupName: 'pager',
+              page: 1,
+              isSelected: false,
+              text: '1',
+              onFocusCallback,
+            },
+          })}${renderPagerPageButton({
+            props: {
+              groupName: 'pager',
+              page: 2,
+              isSelected: false,
+              text: '2',
+              onFocusCallback,
+            },
+          })}
+        `,
+        container
+      );
+
+      const elements = Array.from(container.querySelectorAll('[type="radio"]'));
+      elements[0].dispatchEvent(
+        new KeyboardEvent('keydown', {key: 'Tab', bubbles: true})
+      );
+
+      await vi.waitFor(() => {
+        expect(onFocusCallback).toHaveBeenCalledTimes(1);
+        expect(onFocusCallback).toHaveBeenCalledWith(
+          elements,
+          elements[0],
+          elements[1]
+        );
+      });
+    });
+    test('should change focus target when input is shift + tab', async () => {
+      const onFocusCallback = vi.fn().mockResolvedValue(undefined);
+
+      render(
+        html`
+          ${renderPagerPageButton({
+            props: {
+              groupName: 'pager',
+              page: 1,
+              isSelected: false,
+              text: '1',
+              onFocusCallback,
+            },
+          })}${renderPagerPageButton({
+            props: {
+              groupName: 'pager',
+              page: 2,
+              isSelected: false,
+              text: '2',
+              onFocusCallback,
+            },
+          })}
+        `,
+        container
+      );
+
+      const elements = Array.from(container.querySelectorAll('[type="radio"]'));
+      elements[1].dispatchEvent(
+        new KeyboardEvent('keydown', {
+          key: 'Tab',
+          bubbles: true,
+          shiftKey: true,
+        })
+      );
+
+      await vi.waitFor(() => {
+        expect(onFocusCallback).toHaveBeenCalledTimes(1);
+        expect(onFocusCallback).toHaveBeenCalledWith(
+          elements,
+          elements[1],
+          elements[0]
+        );
+      });
     });
   });
 });

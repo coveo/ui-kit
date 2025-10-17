@@ -2,7 +2,6 @@ import {expect, test} from './fixture';
 
 test.describe('atomic-commerce-no-products', () => {
   test.beforeEach(async ({noProducts}) => {
-    await noProducts.noProducts();
     await noProducts.load();
     await noProducts.hydrated.waitFor();
   });
