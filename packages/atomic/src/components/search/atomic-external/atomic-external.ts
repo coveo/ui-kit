@@ -57,11 +57,11 @@ export class AtomicExternal extends ChildrenUpdateCompleteMixin(LitElement) {
       'atomic/scrollToTop',
       this.handleScrollToTop as EventListener
     );
-    this.#interface.addEventListener(
+    this.#interface?.addEventListener(
       'atomic/parentReady',
       this.handleParentReady as EventListener
     );
-    if (isParentReady(this.#interface)) {
+    if (isParentReady(this.#interface!)) {
       markParentAsReady(this);
     }
   }
@@ -76,7 +76,7 @@ export class AtomicExternal extends ChildrenUpdateCompleteMixin(LitElement) {
       'atomic/scrollToTop',
       this.handleScrollToTop as EventListener
     );
-    this.#interface.removeEventListener(
+    this.#interface?.removeEventListener(
       'atomic/parentReady',
       this.handleParentReady as EventListener
     );
@@ -85,7 +85,7 @@ export class AtomicExternal extends ChildrenUpdateCompleteMixin(LitElement) {
   private handleInitialization = (event: InitializeEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    this.#interface.dispatchEvent(
+    this.#interface?.dispatchEvent(
       buildCustomEvent(initializeEventName, event.detail)
     );
   };
@@ -93,20 +93,20 @@ export class AtomicExternal extends ChildrenUpdateCompleteMixin(LitElement) {
   private handleScrollToTop = (event: CustomEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    this.#interface.dispatchEvent(
+    this.#interface?.dispatchEvent(
       buildCustomEvent('atomic/scrollToTop', event.detail)
     );
   };
 
   private handleParentReady = (event: Event) => {
     if (event.target === this.boundInterface) {
-      this.bindings = this.#interface.bindings as AnyBindings;
+      this.bindings = this.#interface?.bindings as AnyBindings;
 
       markParentAsReady(this);
     }
   };
 
-  get #interface(): AtomicInterface {
+  get #interface(): AtomicInterface | undefined {
     if (!this.boundInterface) {
       this.boundInterface = document.querySelector(this.selector) ?? undefined;
       if (!this.boundInterface) {
@@ -114,6 +114,7 @@ export class AtomicExternal extends ChildrenUpdateCompleteMixin(LitElement) {
           `Cannot find interface element with selector "${this.selector}"`
         );
         this.error = error;
+        return undefined;
       }
     }
 

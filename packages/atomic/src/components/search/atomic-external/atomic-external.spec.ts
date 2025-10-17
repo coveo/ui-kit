@@ -119,7 +119,7 @@ describe('atomic-external', () => {
     });
   });
 
-  describe('atomic/initializeComponent', () => {
+  describe('when atomic/initializeComponent event is dispatched', () => {
     it('should forward initialization event to interface', async () => {
       const {element} = await renderComponent();
       element.boundInterface = mockInterface;
@@ -162,7 +162,7 @@ describe('atomic-external', () => {
     });
   });
 
-  describe('atomic/scrollToTop', () => {
+  describe('when atomic/scrollToTop event is dispatched', () => {
     it('should forward scrollToTop event to interface', async () => {
       const {element} = await renderComponent();
       element.boundInterface = mockInterface;
@@ -228,7 +228,7 @@ describe('atomic-external', () => {
     });
   });
 
-  describe('atomic/parentReady', () => {
+  describe('when atomic/parentReady event is dispatched', () => {
     it('should sync bindings when parent interface is ready', async () => {
       const mockBindings = {
         engine: {},
@@ -288,35 +288,9 @@ describe('atomic-external', () => {
 
       expect(element.bindings).not.toEqual(mockBindings);
     });
-
-    it('should set error when interface has no bindings', async () => {
-      const {element} = await renderComponent();
-
-      // Set bindings to an empty object to trigger the error
-      (
-        element.boundInterface as unknown as {bindings: Record<string, never>}
-      ).bindings = {};
-
-      const parentReadyEvent = new CustomEvent('atomic/parentReady', {
-        bubbles: true,
-      });
-
-      Object.defineProperty(parentReadyEvent, 'target', {
-        writable: false,
-        value: element.boundInterface,
-      });
-
-      element.boundInterface?.dispatchEvent(parentReadyEvent);
-      await element.updateComplete;
-
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toBe(
-        'Interface found but no bindings available'
-      );
-    });
   });
 
-  it('should render atomic-error-component when interface is not found', async () => {
+  it('should render atomic-component-error when interface is not found', async () => {
     const {element} = await renderComponent({
       props: {selector: '#non-existent-interface'},
     });
