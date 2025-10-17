@@ -11,7 +11,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator, afterEach} = wrapInSearchInterface({
+const {decorator, play} = wrapInSearchInterface({
   preprocessRequest: (r) => {
     const parsed = JSON.parse(r.body as string);
     parsed.aq = '@filetype==("YouTubeVideo")';
@@ -34,7 +34,7 @@ const meta: Meta = {
   },
   argTypes,
 
-  afterEach,
+  play,
   args: {
     ...args,
     'number-of-values': 8,
@@ -77,10 +77,10 @@ export const WithDependsOn: Story = {
     'with-input': 'integer',
     'depends-on-filetype': 'YouTubeVideo',
   },
-  afterEach: async (context) => {
+  play: async (context) => {
     const {canvasElement, step} = context;
     const canvas = within(canvasElement);
-    await afterEach(context);
+    await play(context);
     await step('Select YouTubeVideo in filetype facet', async () => {
       const button = await canvas.findByShadowLabelText(
         'Inclusion filter on YouTubeVideo',
