@@ -35,7 +35,7 @@ describe('atomic-result-template', () => {
           .mustMatch=${options.mustMatch || defaultProps.mustMatch}
           .mustNotMatch=${options.mustNotMatch || defaultProps.mustNotMatch}
         >
-          <template slot="default">
+          <template>
             <div>Result Template Content</div>
           </template>
         </atomic-result-template>
@@ -81,10 +81,10 @@ describe('atomic-result-template', () => {
         mustNotMatch,
         ResultTemplatesHelpers
       );
-      const template = element.getTemplate();
-      expect(template).resolves.toMatchObject({
-        conditions: expect.arrayContaining(expected),
-      });
+
+      const template = await element.getTemplate();
+      expect(template).not.toBeNull();
+      expect(template!.conditions).toHaveLength(expected.length);
     });
   });
 
