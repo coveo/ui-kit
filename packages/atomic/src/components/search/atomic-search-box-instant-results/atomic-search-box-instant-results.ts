@@ -9,7 +9,7 @@ import {html, LitElement, nothing, render} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
-import {ItemTemplateProvider} from '@/src/components/common/item-list/item-template-provider';
+import {ResultTemplateProvider} from '@/src/components/common/item-list/result-template-provider';
 import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
@@ -56,7 +56,7 @@ export class AtomicSearchBoxInstantResults
   public bindings!: SearchBoxSuggestionsBindings<SearchBox, Bindings>;
   private itemRenderingFunction: ItemRenderingFunction;
   private results: Result[] = [];
-  private itemTemplateProvider!: ItemTemplateProvider;
+  private itemTemplateProvider!: ResultTemplateProvider;
   private instantResults!: InstantResults;
   private display: ItemDisplayLayout = 'list';
 
@@ -223,7 +223,7 @@ export class AtomicSearchBoxInstantResults
       },
     });
 
-    this.itemTemplateProvider = new ItemTemplateProvider({
+    this.itemTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
         this.querySelectorAll('atomic-result-template')

@@ -50,34 +50,29 @@ export class UserActionsTimelinePageObject extends BasePageObject<'atomic-insigh
     page: Page,
     userActions: Array<{name: string; value: string; time: number}>
   ) {
-    await page.route('**/user/actions', async (route) => {
-      const body = {value: userActions};
+    // Navigate to the story with MSW configured for user actions
+    const currentUrl = page.url();
+    const baseUrl = currentUrl.split('?')[0];
 
-      await route.fulfill({
-        body: JSON.stringify(body),
-        status: 200,
-        headers: {
-          'content-type': 'text/html',
-        },
-      });
-    });
+    // Determine which story to navigate to based on the number of actions
+    let storyId: string;
+    if (userActions.length === 0) {
+      storyId = 'atomic-insight-user-actions-timeline--default'; // Default story handles empty state
+    } else if (userActions.length > 5) {
+      storyId = 'atomic-insight-user-actions-timeline--with-many-user-actions';
+    } else {
+      storyId = 'atomic-insight-user-actions-timeline--with-user-actions';
+    }
+
+    await page.goto(`${baseUrl}?id=${storyId}`);
   }
 
   async mockUserActionsError(page: Page) {
-    await page.route('**/user/actions', async (route) => {
-      const body = {
-        message: 'Access is denied.',
-        errorCode: 'ACCESS_DENIED',
-        requestID: '1486603b-db83-4dc2-9580-5f8e81c8e00c',
-      };
-
-      await route.fulfill({
-        body: JSON.stringify(body),
-        status: 403,
-        headers: {
-          'content-type': 'text/html',
-        },
-      });
-    });
+    // Navigate to the story with MSW configured for user actions error
+    const currentUrl = page.url();
+    const baseUrl = currentUrl.split('?')[0];
+    await page.goto(
+      `${baseUrl}?id=atomic-insight-user-actions-timeline--with-user-actions-error`
+    );
   }
 }
