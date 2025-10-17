@@ -24,7 +24,7 @@ import {
   FoldedItemListContext,
   FoldedItemListStateContext,
 } from '../../../common/item-list/item-list-decorators';
-import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
+import {ResultTemplateProvider} from '../../../common/item-list/result-template-provider';
 import {
   ChildTemplatesContext,
   ChildTemplatesContextEvent,
@@ -60,7 +60,7 @@ const componentTag = 'atomic-result-children';
 export class AtomicResultChildren implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   @ChildTemplatesContext()
-  public itemTemplateProvider?: ItemTemplateProvider;
+  public itemTemplateProvider?: ResultTemplateProvider;
   @FoldedItemListContext()
   private foldedResultList!: FoldedResultList;
   @ResultContext({folded: true})
@@ -116,7 +116,7 @@ export class AtomicResultChildren implements InitializableComponent {
       return;
     }
 
-    this.itemTemplateProvider = new ItemTemplateProvider({
+    this.itemTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: false,
       templateElements: childrenTemplates,
       getResultTemplateRegistered: () => this.resultTemplateRegistered,
