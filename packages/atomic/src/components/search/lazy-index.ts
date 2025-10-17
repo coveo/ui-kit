@@ -5,6 +5,42 @@ export default {
     await import('./atomic-query-summary/atomic-query-summary.js'),
   'atomic-relevance-inspector': async () =>
     await import('./atomic-relevance-inspector/atomic-relevance-inspector.js'),
+  'atomic-result-section-actions': async () =>
+    await import(
+      './atomic-result-section-actions/atomic-result-section-actions.js'
+    ),
+  'atomic-result-section-badges': async () =>
+    await import(
+      './atomic-result-section-badges/atomic-result-section-badges.js'
+    ),
+  'atomic-result-section-bottom-metadata': async () =>
+    await import(
+      './atomic-result-section-bottom-metadata/atomic-result-section-bottom-metadata.js'
+    ),
+  'atomic-result-section-children': async () =>
+    await import(
+      './atomic-result-section-children/atomic-result-section-children.js'
+    ),
+  'atomic-result-section-emphasized': async () =>
+    await import(
+      './atomic-result-section-emphasized/atomic-result-section-emphasized.js'
+    ),
+  'atomic-result-section-excerpt': async () =>
+    await import(
+      './atomic-result-section-excerpt/atomic-result-section-excerpt.js'
+    ),
+  'atomic-result-section-title': async () =>
+    await import(
+      './atomic-result-section-title/atomic-result-section-title.js'
+    ),
+  'atomic-result-section-title-metadata': async () =>
+    await import(
+      './atomic-result-section-title-metadata/atomic-result-section-title-metadata.js'
+    ),
+  'atomic-result-section-visual': async () =>
+    await import(
+      './atomic-result-section-visual/atomic-result-section-visual.js'
+    ),
   'atomic-results-per-page': async () =>
     await import('./atomic-results-per-page/atomic-results-per-page.js'),
   'atomic-search-box-instant-results': async () =>

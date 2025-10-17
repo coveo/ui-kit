@@ -8,10 +8,12 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 
 const {decorator: searchInterfaceDecorator, afterEach: searchInterfacePlay} =
   wrapInSearchInterface({
-    accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-    organizationId: 'searchuisamples',
-    search: {
-      searchHub: 'MainSearch',
+    config: {
+      accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+      organizationId: 'searchuisamples',
+      search: {
+        searchHub: 'MainSearch',
+      },
     },
   });
 

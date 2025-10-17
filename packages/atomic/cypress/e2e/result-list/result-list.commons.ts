@@ -74,14 +74,14 @@ export default (
         let firstResultHtml: string;
 
         componentSelectors.firstResult().then((element) => {
-          firstResultHtml = element[0].innerHTML;
+          firstResultHtml = element[0];
         });
 
         PagerSelectors.buttonNext().click();
         cy.wait(500);
 
         componentSelectors.firstResult().should((element) => {
-          const secondResultHtml = element[0].innerHTML;
+          const secondResultHtml = element[0];
           expect(secondResultHtml).not.to.equal(firstResultHtml);
         });
       });
@@ -94,7 +94,7 @@ export default (
         return generateComponentHTML('div', {
           id: lineHeightSelector.slice(1),
           style:
-            'background-color: red; width: var(--line-height, 0); height: var(--line-height, 0);',
+            'background-color: red; width: calc(1.125rem* 1.5); height: calc(1.125rem* 1.5);',
         });
       }
 

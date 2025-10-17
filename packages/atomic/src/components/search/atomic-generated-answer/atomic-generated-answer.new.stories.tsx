@@ -30,10 +30,12 @@ const layoutDecorator: Decorator = (story) => html`
 `;
 
 const {decorator, afterEach} = wrapInSearchInterface({
-  accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-  organizationId: 'searchuisamples',
-  search: {
-    pipeline: 'genqatest',
+  config: {
+    accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+    organizationId: 'searchuisamples',
+    search: {
+      pipeline: 'genqatest',
+    },
   },
 });
 
