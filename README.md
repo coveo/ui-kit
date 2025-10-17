@@ -8,6 +8,7 @@
 - [Bueno](packages/bueno): A simple schema validator.
 - [Auth](packages/auth): Functions to help authenticate with the Coveo platform.
 - [Headless React Samples](packages/samples/headless-react): Various code samples using Headless inside a React application.
+- Dummy
 
 ## Install
 
