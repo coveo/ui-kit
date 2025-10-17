@@ -18,8 +18,8 @@
     "@coveo/headless": "3.32.0"
   },
   "devDependencies": {
-    "typescript": "5.8.3",
-    "@types/node": "22.16.5",
+    "typescript": "5.9.3",
+    "@types/node": "22.18.9",
     "@types/react": "19.1.1",
     "@types/react-dom": "19.1.2"
   }
