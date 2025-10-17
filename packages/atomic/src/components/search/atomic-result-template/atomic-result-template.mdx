@@ -14,7 +14,8 @@ import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/ato
 >
 
 This component defines the UI display of your search results. 
-It can be used inside `atomic-result-list`, `atomic-folded-result-list`, or `atomic-search-box-instant-results`, and it must have a `<template>` as its child.
+A `template` element must be the child of an `atomic-result-template`. Furthermore, an `atomic-result-list`, `atomic-folded-result-list`, or `atomic-search-box-instant-results` must be the parent of each `atomic-result-template`.
+ * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
 
 Example using the `atomic-result-list`:
 ```html
@@ -81,7 +82,7 @@ Example using the `atomic-result-list`:
 
 ## Template Conditions
 
-You can use conditions to display different templates based on result properties:
+You can use conditions to display different templates based on result properties. **The order of declaration matters**: the first template whose conditions are met will be applied. If a default template (without conditions) is declared first, it will apply to all results, even if other templates with conditions are declared later.
 
 ```html
 <atomic-result-list>
