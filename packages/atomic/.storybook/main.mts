@@ -14,7 +14,6 @@ const virtualOpenApiModules: PluginImpl = () => {
     resolveId(id) {
       console.log('resolveId', id);
       if (id.startsWith('virtual:open-api-coveo')) {
-        console.log('resolveId', id);
         return id;
       }
       return null;
@@ -25,25 +24,12 @@ const virtualOpenApiModules: PluginImpl = () => {
           'virtual:open-api-coveo',
           'https://platform.cloud.coveo.com/api-docs'
         );
-        console.log('load', id);
         if (virtualModules.has(id)) {
           return virtualModules.get(id);
         }
-
-        try {
-          console.log(`Fetching OpenAPI spec from ${id}`);
-          const response = await fetch(url);
-          if (!response.ok) {
-            throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
-          }
-          const content = await response.json();
-          const moduleContent = `export default ${JSON.stringify(content, null, 2)};`;
-          virtualModules.set(id, moduleContent);
-          return moduleContent;
-        } catch (error) {
-          console.error(`Error fetching OpenAPI spec from ${url}:`, error);
-          throw error;
-        }
+        const moduleContent = `export default await (await fetch("${url}")).json();`;
+        virtualModules.set(id, moduleContent);
+        return moduleContent;
       }
       return null;
     },
