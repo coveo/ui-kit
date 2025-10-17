@@ -1,5 +1,7 @@
 // Auto-generated file
 export default {
+  'atomic-external': async () =>
+    await import('./atomic-external/atomic-external.js'),
   'atomic-pager': async () => await import('./atomic-pager/atomic-pager.js'),
   'atomic-query-summary': async () =>
     await import('./atomic-query-summary/atomic-query-summary.js'),
