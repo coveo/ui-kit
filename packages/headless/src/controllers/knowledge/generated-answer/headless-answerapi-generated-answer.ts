@@ -186,6 +186,7 @@ export function buildAnswerApiGeneratedAnswer(
       engine.dispatch(resetAnswer());
     },
     async sendFeedback(feedback) {
+      engine.dispatch(analyticsClient.logGeneratedAnswerFeedback(feedback));
       const args = parseEvaluationArguments({
         query: getState().query.q,
         feedback,
