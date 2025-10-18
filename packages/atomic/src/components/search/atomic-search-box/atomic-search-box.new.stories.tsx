@@ -7,7 +7,7 @@ import {
   wrapInSearchInterface,
 } from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, afterEach} = wrapInSearchInterface(
+const {decorator, play} = wrapInSearchInterface(
   {
     accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
     organizationId: 'fashioncoveodemocomgzh7iep8',
@@ -37,7 +37,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach,
+  play,
 };
 
 export default meta;
@@ -433,8 +433,8 @@ export const InPage: Story = {
         </atomic-layout-section>
       </atomic-search-layout>`,
   ],
-  afterEach: async (context) => {
-    await afterEach(context);
+  play: async (context) => {
+    await play(context);
     await playExecuteFirstSearch(context);
   },
 };

@@ -9,7 +9,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator, afterEach} = wrapInSearchInterface({
+const {decorator, play} = wrapInSearchInterface({
   search: {
     // eslint-disable-next-line @cspell/spellchecker
     pipeline: 'genqatest',
@@ -59,7 +59,7 @@ const meta: Meta = {
   },
   argTypes,
 
-  afterEach,
+  play,
   args: {
     ...args,
     'default-slot': `

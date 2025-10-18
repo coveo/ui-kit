@@ -4,7 +4,7 @@ import {HttpResponse, http} from 'msw';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
-const {decorator, afterEach} = wrapInCommerceInterface({
+const {decorator, play} = wrapInCommerceInterface({
   engineConfig: {organizationId: 'invalid-organization-id'},
 });
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -27,7 +27,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach,
+  play,
 };
 
 export default meta;
@@ -54,5 +54,5 @@ export const With418Error: Story = {
       ],
     },
   },
-  afterEach,
+  play,
 };
