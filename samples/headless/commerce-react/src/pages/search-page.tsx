@@ -66,7 +66,6 @@ export default function Search(props: ISearchProps) {
     };
   }, [searchController]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <>
   useEffect(() => {
     /**
      * It is important to call the `Context` controller's `setView` method with the current URL when a page is loaded,

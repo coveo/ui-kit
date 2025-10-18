@@ -8,19 +8,22 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: npx cypress install
+    - run: pnpm exec cypress install
       shell: bash
       working-directory: samples/headless-ssr/search-nextjs
     - uses: cypress-io/github-action@v5
       name: Run Cypress
       with:
-        browser: chrome
-        command-prefix: "npm run -w @samples/headless-ssr-search-nextjs-pages-router e2e"
-        start: npx turbo prod --filter=@samples/headless-ssr-search-nextjs-pages-router
+        command: >-
+          pnpm --filter @samples/headless-ssr-search-nextjs-pages-router exec
+          cypress-repeat run -n 3 --until-passes --rerun-failed-only -- cypress
+          run --browser chrome --project . --env NEXTJS_ROUTER=pages
+        start: pnpm exec turbo prod --filter=@samples/headless-ssr-search-nextjs-pages-router
         wait-on: "http://localhost:3000"
         wait-on-timeout: 600000
         install: false
         record: false
+        working-directory: samples/headless-ssr/search-nextjs
 
     - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       if: failure()

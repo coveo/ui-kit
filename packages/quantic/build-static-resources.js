@@ -2,7 +2,8 @@ const fs = require('fs/promises');
 const path = require('path');
 
 const STATIC_RESOURCES_PATH = './force-app/main/default/staticresources';
-const SOLUTION_EXAMPLES_STATIC_RESOURCES_PATH = './force-app/solutionExamples/main/staticresources';
+const SOLUTION_EXAMPLES_STATIC_RESOURCES_PATH =
+  './force-app/solutionExamples/main/staticresources';
 const TEMP_DIR = '.tmp/quantic-compiled';
 
 function resolveLibraryPath(packageName, relativePath) {
@@ -32,7 +33,7 @@ const LIBRARY_CONFIG = {
     directories: [`${SOLUTION_EXAMPLES_STATIC_RESOURCES_PATH}/coveoua`],
     files: [
       {
-        src: path.resolve(path.dirname(require.resolve('coveo.analytics')), '../dist/coveoua.js'),
+        src: resolveLibraryPath('coveo.analytics', '../dist/coveoua.js'),
         dest: `${SOLUTION_EXAMPLES_STATIC_RESOURCES_PATH}/coveoua/coveoua.js`,
       },
     ],
@@ -146,21 +147,32 @@ async function fixCoveoUA() {
   // https://developer.salesforce.com/docs/component-library/tools/locker-service-viewer
   const problemText = 'globalThis';
   const solutionText = 'window';
-  const coveoUAFilePath = path.join(SOLUTION_EXAMPLES_STATIC_RESOURCES_PATH, 'coveoua', 'coveoua.js');
-  
+  const coveoUAFilePath = path.join(
+    SOLUTION_EXAMPLES_STATIC_RESOURCES_PATH,
+    'coveoua',
+    'coveoua.js'
+  );
+
   try {
     const coveoUAContent = await fs.readFile(coveoUAFilePath, 'utf8');
-    const fixedCoveoUAContent = coveoUAContent.replace(new RegExp(problemText, 'g'), solutionText);
-    
+    const fixedCoveoUAContent = coveoUAContent.replace(
+      new RegExp(problemText, 'g'),
+      solutionText
+    );
+
     // Only write if changes were made
     if (coveoUAContent !== fixedCoveoUAContent) {
       await fs.writeFile(coveoUAFilePath, fixedCoveoUAContent, 'utf8');
-      console.info(`Fixed Coveo UA: replaced "${problemText}" with "${solutionText}"`);
+      console.info(
+        `Fixed Coveo UA: replaced "${problemText}" with "${solutionText}"`
+      );
     } else {
       console.info('Coveo UA: no fixes needed');
     }
   } catch (error) {
-    console.error(`Failed to fix Coveo UA script: ${coveoUAFilePath}\nError: ${error.message}`);
+    console.error(
+      `Failed to fix Coveo UA script: ${coveoUAFilePath}\nError: ${error.message}`
+    );
     process.exit(1);
   }
 }

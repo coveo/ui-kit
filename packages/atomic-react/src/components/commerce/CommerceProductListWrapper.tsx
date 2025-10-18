@@ -5,8 +5,7 @@ import type {
   ItemDisplayLayout,
 } from '@coveo/atomic/loader';
 import type {Product} from '@coveo/headless/commerce';
-// biome-ignore lint/style/useImportType: <React is needed>
-import React, {useEffect, useRef} from 'react';
+import React, {type JSX, useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
 import {

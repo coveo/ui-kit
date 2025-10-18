@@ -10,16 +10,16 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@coveo/headless-react": "2.6.6",
-    "next": "15.2.4",
-    "react": "19.1.1",
-    "react-dom": "19.1.1"
+    "@coveo/headless-react": "workspace:*",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@types/node": "22.16.5",
-    "@types/react": "19.1.1",
-    "@types/react-dom": "19.1.2",
-    "@playwright/test": "1.54.1",
-    "typescript": "5.8.3"
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@playwright/test": "catalog:",
+    "typescript": "catalog:"
   }
 }

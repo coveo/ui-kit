@@ -1,7 +1,8 @@
 import {readFileSync} from 'node:fs';
 import path, {dirname, resolve} from 'node:path';
 import tailwindcss from '@tailwindcss/vite';
-import {defineConfig} from 'vitest/config';
+import {configDefaults, defineConfig} from 'vitest/config';
+import packageJsonHeadless from '../headless/package.json' with {type: 'json'};
 import packageJson from './package.json' with {type: 'json'};
 
 const port = 63315;
@@ -26,7 +27,7 @@ export default defineConfig({
   define: {
     'import.meta.env.RESOURCE_URL': `"${resourceUrl}"`,
     __ATOMIC_VERSION__: `"${packageJson.version}"`,
-    __HEADLESS_VERSION__: `"${packageJson.dependencies['@coveo/headless']}"`,
+    __HEADLESS_VERSION__: `"${packageJsonHeadless.version}"`,
     'process.env': {},
   },
   server: {
@@ -96,6 +97,7 @@ export default defineConfig({
     css: true,
     include: ['src/**/*.spec.ts', 'scripts/stencil-proxy.spec.mjs'],
     exclude: [
+      ...configDefaults.exclude,
       'src/**/initialization-utils.spec.ts',
       'src/**/search-layout.spec.ts',
     ],

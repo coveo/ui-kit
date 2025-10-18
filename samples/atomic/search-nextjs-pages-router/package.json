@@ -4,26 +4,27 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@coveo/atomic": "3.35.5",
-    "@coveo/atomic-react": "3.3.18",
-    "@coveo/headless": "3.32.0",
-    "next": "15.2.4",
-    "react": "19.1.1",
-    "react-dom": "19.1.1"
+    "@coveo/atomic": "workspace:*",
+    "@coveo/atomic-react": "workspace:*",
+    "@coveo/headless": "workspace:*",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@types/node": "22.16.5",
-    "@types/react": "19.1.1",
-    "@types/react-dom": "19.1.2",
-    "cypress": "13.7.3",
-    "typescript": "5.8.3"
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "cypress": "catalog:",
+    "cypress-repeat": "catalog:",
+    "typescript": "catalog:"
   },
   "scripts": {
-    "build": "npm run build:next && npm run build:ts-esm && npm run build:ts-cjs",
-    "build:next": "npm run-script -w=@coveo/ci if-not-cdn -- \"npx next build\"",
-    "build:ts-esm": "npm run-script -w=@coveo/ci if-not-cdn -- \"tsc --noEmit\"",
-    "build:ts-cjs": "npm run-script -w=@coveo/ci if-not-cdn -- \"tsc --module commonjs --noEmit\"",
-    "dev": "npm run build:assets && npm run dev:nextjs",
+    "build": "pnpm run build:next && pnpm run build:ts-esm && pnpm run build:ts-cjs",
+    "build:next": "pnpm --filter @coveo/ci if-not-cdn -- \"npx next build\"",
+    "build:ts-esm": "pnpm --filter @coveo/ci if-not-cdn -- \"tsc --noEmit\"",
+    "build:ts-cjs": "pnpm --filter @coveo/ci if-not-cdn -- \"tsc --module commonjs --noEmit\"",
+    "dev": "pnpm run build:assets && pnpm run dev:nextjs",
     "dev:nextjs": "next dev",
     "build:assets": "node ../../../utils/ci/copy-files.mjs ../../../packages/atomic-react/dist/assets public/assets ../../../packages/atomic-react/dist/lang public/lang",
     "e2e:watch": "cypress open --browser chrome --e2e",

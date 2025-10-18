@@ -12,8 +12,7 @@
     "outDir": "dist/atomic/components",
     "paths": {
       "@/*": ["./*"]
-    },
-    "typeRoots": ["node_modules/@types", "src/types"]
+    }
   },
   "files": [
     "src/components/index.ts",

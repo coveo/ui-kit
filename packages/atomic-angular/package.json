@@ -5,7 +5,7 @@
     "ng": "ng",
     "dev": "ng serve",
     "gen:lit": "node ./scripts/build-lit.mjs",
-    "build": "npm run build:bundles && npm run build:assets",
+    "build": "pnpm run build:bundles && pnpm run build:assets",
     "build:bundles": "ng build",
     "build:assets": "node ../../utils/ci/copy-files.mjs ../atomic/dist/atomic/assets projects/atomic-angular/dist/assets ../atomic/dist/atomic/lang projects/atomic-angular/dist/lang",
     "release:phase3": "node ./scripts/publish-npm.mjs",
@@ -13,20 +13,20 @@
   },
   "private": true,
   "dependencies": {
-    "@coveo/atomic": "3.35.5",
+    "@coveo/atomic": "workspace:*",
     "rxjs": "7.8.2"
   },
   "peerDependencies": {
-    "@coveo/headless": "3.32.0"
+    "@coveo/headless": "workspace:*"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "19.2.3",
     "@angular/cli": "19.2.3",
     "@angular/compiler-cli": "19.2.2",
-    "@types/node": "22.16.5",
-    "@coveo/headless": "3.32.0",
+    "@types/node": "catalog:",
+    "@coveo/headless": "workspace:*",
     "ng-packagr": "19.2.0",
-    "typescript": "5.8.3",
+    "typescript": "catalog:",
     "tslib": "2.8.1"
   },
   "engines": {
