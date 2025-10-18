@@ -24,16 +24,7 @@ sanitizedComponents.schemas.RestQueryParentResult = {
   anyOf: [
     ...(sanitizedComponents.schemas.RestQueryParentResult as any).allOf,
     {
-      nullable: true,
-      not: {
-        anyOf: [
-          {type: 'string'},
-          {type: 'number'},
-          {type: 'boolean'},
-          {type: 'object'},
-          {type: 'array', items: {}},
-        ],
-      },
+      type: 'null',
     },
   ],
 };
