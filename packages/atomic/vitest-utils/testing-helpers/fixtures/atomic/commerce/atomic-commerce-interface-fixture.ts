@@ -9,8 +9,8 @@ import type {
   CommerceBindings,
 } from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
 import type {CommerceStore} from '@/src/components/commerce/atomic-commerce-interface/store.js';
+import {bindingsContext} from '@/src/components/common/context/bindings-context.js';
 import type {BaseAtomicInterface} from '@/src/components/common/interface/interface-controller.js';
-import {bindingsContext} from '@/src/components/context/bindings-context.js';
 import {
   type InitializeEvent,
   markParentAsReady,
