@@ -123,7 +123,6 @@ const serviceHandlers = [
                 `event: message\ndata: ${JSON.stringify(message)}\nretry: 10000\n\n`
               )
             );
-            console.log('message', message);
           }
           controller.close();
         },
