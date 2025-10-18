@@ -81,6 +81,7 @@
           </div>
           <template if:true={shouldDisplaySuggestions}>
             <c-quantic-search-box-suggestions-list
+              engine-id={engineId}
               onquantic__selection={handleSelection}
               suggestions={suggestions}
               query={inputValue}
