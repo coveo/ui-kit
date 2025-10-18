@@ -1,5 +1,5 @@
-import {type HttpHandler, HttpResponse, http} from 'msw';
 import type {ValidateFunction} from 'ajv';
+import {type HttpHandler, HttpResponse, http} from 'msw';
 export abstract class MockApi {
   abstract get handlers(): HttpHandler[];
 }
@@ -45,8 +45,10 @@ export class EndpointHarness<TResponse extends {}> {
   validateResponse<TResponse extends {}>(
     responseCandidate: TResponse
   ): true | never {
-    if(!this.schemaValidator) {
-      console.warn(`No schema validator provided for endpoint [${this.method} ${this.path}]. Skipping validation.`);
+    if (!this.schemaValidator) {
+      console.warn(
+        `No schema validator provided for endpoint [${this.method} ${this.path}]. Skipping validation.`
+      );
       return true;
     }
     const isValid = this.schemaValidator(responseCandidate);
