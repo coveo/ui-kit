@@ -18,6 +18,8 @@ import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpf
 import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
 import tryAgain from '@salesforce/label/c.quantic_TryAgain';
 import whyGeneratedAnswerWasNotHelpful from '@salesforce/label/c.quantic_WhyGeneratedAnswerWasNotHelpful';
+import noGeneratedAnswer from '@salesforce/label/c.quantic_NoGeneratedAnswer';
+
 import FeedbackModalQna from 'c/quanticFeedbackModalQna';
 import {
   registerComponentForInit,
@@ -151,6 +153,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     showMore,
     showLess,
     loading,
+    noGeneratedAnswer
   };
 
   /** @type {GeneratedAnswer} */
@@ -613,10 +616,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get isLoading() {
     return this.state?.isLoading;
-  }
-
-  get isAutomaticAnswerGeneration() {
-    return this.state?.answerGenerationMode === 'automatic';
   }
 
   get isManualAnswerGeneration() {
