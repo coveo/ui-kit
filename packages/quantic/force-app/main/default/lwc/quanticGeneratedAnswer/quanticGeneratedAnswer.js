@@ -153,7 +153,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     showMore,
     showLess,
     loading,
-    noGeneratedAnswer
+    noGeneratedAnswer,
   };
 
   /** @type {GeneratedAnswer} */
