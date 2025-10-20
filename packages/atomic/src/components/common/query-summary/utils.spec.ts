@@ -61,7 +61,7 @@ describe('#getQuerySummaryI18nParameters', () => {
     const {parameters} = await setup({isLoading: false});
 
     expect(parameters.ariaLiveMessage).toBe(
-      'Search results loaded. Results 1-10 of 50 for query'
+      'Results loaded Results 1-10 of 50 for query'
     );
   });
 
