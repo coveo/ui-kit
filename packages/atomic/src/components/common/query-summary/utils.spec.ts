@@ -146,7 +146,7 @@ describe('#getProductQuerySummaryI18nParameters', () => {
     const {parameters} = await setup({isLoading: false});
 
     expect(parameters.ariaLiveMessage).toBe(
-      'Search results loaded. Products 1-10 of 50 for query'
+      'Results loaded Products 1-10 of 50 for query'
     );
   });
 
