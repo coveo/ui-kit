@@ -38,15 +38,21 @@ export class AtomicResultChildrenTemplate
   conditions: ResultTemplateCondition[] = [];
 
   /**
-   * Verifies whether the specified fields match the specified values.
+   * The field and values that define which child results the condition must be applied to.
+   * For example, a template with the following attribute only applies to child results whose `sourcetype` is `YouTube` or `Salesforce`:
+   * `must-match-sourcetype="YouTube,Salesforce"`
    * @type {Record<string, string[]>}
+   * @default {}
    */
   @mapProperty({splitValues: true, attributePrefix: 'must-match'})
   mustMatch!: Record<string, string[]>;
 
   /**
-   * Verifies whether the specified fields do not match the specified values.
+   * The field and values that define which child results the condition must not be applied to.
+   * For example, a template with the following attribute only applies to child results whose `sourcetype` is not `YouTube`:
+   * `must-not-match-sourcetype="YouTube"`
    * @type {Record<string, string[]>}
+   * @default {}
    */
   @mapProperty({splitValues: true, attributePrefix: 'must-not-match'})
   mustNotMatch!: Record<string, string[]>;
