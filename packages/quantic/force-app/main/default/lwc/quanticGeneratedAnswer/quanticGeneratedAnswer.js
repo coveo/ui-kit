@@ -622,14 +622,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this.state?.answerGenerationMode === 'manual';
   }
 
-  get shouldDisplayCustomNoAnswerMessage() {
-    return (
-      this.state?.cannotAnswer &&
-      this.searchStatusState?.hasResults &&
-      this.hasCustomNoAnswerMessage
-    );
-  }
-
   /**
    * Sets the component in the initialization error state.
    */

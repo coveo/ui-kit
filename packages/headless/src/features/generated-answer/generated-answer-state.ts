@@ -97,7 +97,7 @@ export interface GeneratedAnswerState {
   answerApiQueryParams?: AnswerApiQueryParams;
   /** The unique identifier of the answer returned by the Answer API. */
   answerId?: string;
-  /** The unique identifier of the answer returned by the Answer API. */
+  /** The current mode of answer generation. */
   answerGenerationMode: 'automatic' | 'manual';
 }
 

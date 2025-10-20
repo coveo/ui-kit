@@ -32,12 +32,10 @@ export interface GeneratedAnswerActionCreators {
   resetAnswer(): PayloadAction;
 
   /**
-   * Generates a new answer using the Answer API.
+   * Sets the answer generation mode.
    *
-   * This action requires an answer configuration ID to be set in the engine configuration.
-   * When present, it will use the Answer API service for enhanced answer generation.
-   *
-   * @returns A dispatchable action.
+   * This action updates the engine state to indicate whether answer generation
+   * should occur automatically or manually.
    */
   setAnswerGenerationMode(mode: 'automatic' | 'manual'): void;
 }
