@@ -109,9 +109,42 @@ describe('attached results', () => {
 
         expect(controller.isAttached(payload)).toBe(true);
       });
+
+      it('#isAttached should return true when caseId and uriHash match but permanentId is undefined', () => {
+        const mockAttachedResult = createMockAttachedResult({
+          caseId: testCaseId,
+          permanentId: undefined,
+          uriHash: testUriHash,
+        });
+        engine.state.attachedResults!.results.push(mockAttachedResult);
+
+        expect(controller.isAttached(payload)).toBe(true);
+      });
     });
 
     describe('when the result is not attached', () => {
+      it('#isAttached should return false when caseId does not match but permanentId matches', () => {
+        const mockAttachedResult = createMockAttachedResult({
+          caseId: 'differentCaseId',
+          permanentId: testPermanentId,
+          uriHash: undefined,
+        });
+        engine.state.attachedResults!.results.push(mockAttachedResult);
+
+        expect(controller.isAttached(payload)).toBe(false);
+      });
+
+      it('#isAttached should return false when caseId does not match but uriHash matches', () => {
+        const mockAttachedResult = createMockAttachedResult({
+          caseId: 'differentCaseId',
+          permanentId: undefined,
+          uriHash: testUriHash,
+        });
+        engine.state.attachedResults!.results.push(mockAttachedResult);
+
+        expect(controller.isAttached(payload)).toBe(false);
+      });
+
       it('#isAttached should return false', () => {
         ['foo', 'bar'].forEach((permId) => {
           const mockAttachedResult = createMockAttachedResult({
