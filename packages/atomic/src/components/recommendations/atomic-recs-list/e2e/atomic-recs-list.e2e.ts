@@ -85,11 +85,13 @@ test.describe('with a carousel', () => {
   });
 });
 
-test.describe('when there are no enough recommendations for multiple pages', () => {
-  test.beforeEach(async ({recsList, page}) => {
-    await recsList.nRecommendations(3);
-    await recsList.load({story: 'recs-as-carousel'});
-    await page.waitForLoadState('networkidle');
+test.describe('when there are not enough recommendations for multiple pages', () => {
+  test.beforeEach(async ({recsList}) => {
+    await recsList.load({story: 'not-enough-recs-for-carousel'});
+  });
+
+  test('should have recommendations', async ({recsList}) => {
+    await expect(recsList.recommendation.first()).toBeVisible();
   });
 
   test('should not display forward and backward buttons', async ({
@@ -123,8 +125,7 @@ test('with no recommendations returned by the API, should render placeholders', 
   recsList,
   page,
 }) => {
-  await recsList.noRecommendations();
-  await recsList.load({story: 'default'});
+  await recsList.load({story: 'no-recommendation'});
   await recsList.hydrated.waitFor();
 
   await page.waitForLoadState('networkidle');

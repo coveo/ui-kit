@@ -1,3 +1,16 @@
+## <small>3.31.3 (2025-10-15)</small>
+
+* chore(quantic): salesforce cli version updated (#6164) ([be6ce9c](https://github.com/coveo/ui-kit/commits/be6ce9c)), closes [#6164](https://github.com/coveo/ui-kit/issues/6164)
+
+
+
+## <small>3.31.2 (2025-10-15)</small>
+
+* feat(quantic): contextual CRGA added to example insight panel (#6131) ([e19cc0d](https://github.com/coveo/ui-kit/commits/e19cc0d)), closes [#6131](https://github.com/coveo/ui-kit/issues/6131)
+* fix(headless): fix analytics not logged after submitting a feedback (#6091) ([836ecb8](https://github.com/coveo/ui-kit/commits/836ecb8)), closes [#6091](https://github.com/coveo/ui-kit/issues/6091)
+
+
+
 ## <small>3.30.5 (2025-10-08)</small>
 
 * chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)

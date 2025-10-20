@@ -24,7 +24,7 @@ import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholde
 import {createAppLoadedListener} from '../../../common/interface/store';
 import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
 import {ItemListGuard} from '../../../common/item-list/item-list-guard';
-import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
+import {ResultTemplateProvider} from '../../../common/item-list/result-template-provider';
 import {DisplayGrid} from '../../../common/item-list/stencil-display-grid';
 import {
   DisplayTableData,
@@ -75,7 +75,7 @@ export class AtomicResultList implements InitializableComponent {
   private loadingFlag = randomID('firstResultLoaded-');
   private itemRenderingFunction: ItemRenderingFunction;
   private nextNewResultTarget?: FocusTargetController;
-  private itemTemplateProvider!: ItemTemplateProvider;
+  private itemTemplateProvider!: ResultTemplateProvider;
   private resultListCommon!: ItemListCommon;
 
   @Element() public host!: HTMLDivElement;
@@ -167,7 +167,7 @@ export class AtomicResultList implements InitializableComponent {
     this.tabManager = buildTabManager(this.bindings.engine);
     this.resultList = buildResultList(this.bindings.engine);
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
-    this.itemTemplateProvider = new ItemTemplateProvider({
+    this.itemTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
         this.host.querySelectorAll('atomic-result-template')

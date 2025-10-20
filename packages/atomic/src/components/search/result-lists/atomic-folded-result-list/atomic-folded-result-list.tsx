@@ -37,7 +37,7 @@ import {extractUnfoldedItem} from '../../../common/item-list/unfolded-item';
 import {createAppLoadedListener} from '../../../common/interface/store';
 import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
 import {ItemListGuard} from '../../../common/item-list/item-list-guard';
-import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
+import {ResultTemplateProvider} from '../../../common/item-list/result-template-provider';
 import {DisplayWrapper} from '../../../common/item-list/stencil-display-wrapper';
 import {
   ItemListCommon,
@@ -69,7 +69,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
   public resultsPerPage!: ResultsPerPage;
   private resultRenderingFunction: ItemRenderingFunction;
   private loadingFlag = randomID('firstResultLoaded-');
-  private itemTemplateProvider!: ItemTemplateProvider;
+  private itemTemplateProvider!: ResultTemplateProvider;
   private nextNewResultTarget?: FocusTargetController;
   private itemListCommon!: ItemListCommon;
   private display: ItemDisplayLayout = 'list';
@@ -195,7 +195,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
       this.error = e as Error;
     }
 
-    this.itemTemplateProvider = new ItemTemplateProvider({
+    this.itemTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
         this.host.querySelectorAll('atomic-result-template')
