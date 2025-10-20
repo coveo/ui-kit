@@ -127,7 +127,7 @@ const preprocessRequest = (response: any) => {
   return response;
 };
 
-const {decorator, afterEach} = wrapInSearchInterface({
+const {decorator, play} = wrapInSearchInterface({
   preprocessRequest,
 });
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -149,7 +149,7 @@ const meta: Meta = {
   },
   args,
   argTypes,
-  afterEach,
+  play,
 };
 
 export default meta;
@@ -168,7 +168,7 @@ const preprocessRequestNoChildrenResult = (request: any) => {
   return request;
 };
 
-const {afterEach: noResultChildrenPlay} = wrapInSearchInterface({
+const {play: noResultChildrenPlay} = wrapInSearchInterface({
   preprocessRequest: preprocessRequestNoChildrenResult,
 });
 
@@ -177,7 +177,7 @@ export const WithNoResultChildren: Story = {
   args: {
     'default-slot': SLOTS_DEFAULT,
   },
-  afterEach: noResultChildrenPlay,
+  play: noResultChildrenPlay,
 };
 
 export const WithFewResultChildren: Story = {
@@ -202,7 +202,7 @@ export const WithFewResultChildren: Story = {
       ],
     },
   },
-  afterEach,
+  play,
 };
 
 export const WithMoreResultsAvailableAndNoChildren: Story = {
@@ -227,5 +227,5 @@ export const WithMoreResultsAvailableAndNoChildren: Story = {
       ],
     },
   },
-  afterEach: noResultChildrenPlay,
+  play: noResultChildrenPlay,
 };

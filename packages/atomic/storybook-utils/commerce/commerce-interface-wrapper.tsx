@@ -20,14 +20,14 @@ export const wrapInCommerceInterface = ({
   includeCodeRoot?: boolean;
 } = {}): {
   decorator: Decorator;
-  afterEach: (context: StoryContext) => Promise<void>;
+  play: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
     <atomic-commerce-interface ${spreadProps(includeCodeRoot?{id:"code-root"}:{})} type="${type}">
       ${story()}
     </atomic-commerce-interface>
   `,
-  afterEach: async ({ canvasElement }) => {
+  play: async ({ canvasElement }) => {
     await customElements.whenDefined('atomic-commerce-interface');
     const commerceInterface = canvasElement.querySelector<AtomicCommerceInterface>('atomic-commerce-interface')!;
     await commerceInterface!.initialize({

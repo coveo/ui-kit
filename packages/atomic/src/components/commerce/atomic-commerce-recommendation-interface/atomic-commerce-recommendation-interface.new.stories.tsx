@@ -71,7 +71,7 @@ const meta: Meta = {
       },
     },
   },
-  afterEach: async (context) => {
+  play: async (context) => {
     await initializeCommerceRecommendationInterface(context.canvasElement);
   },
 };
@@ -137,7 +137,7 @@ export const WithRecommendationList: Story = {
   args: {
     'default-slot': recommendationList,
   },
-  afterEach: async ({canvasElement}) => {
+  play: async ({canvasElement}) => {
     const recsInterface = canvasElement.querySelector(
       'atomic-commerce-recommendation-interface'
     );

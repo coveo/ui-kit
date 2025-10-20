@@ -12,7 +12,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator, afterEach: preprocessedPlayed} = wrapInCommerceInterface({
+const {decorator, play: preprocessedPlayed} = wrapInCommerceInterface({
   skipFirstRequest: true,
   engineConfig: {
     preprocessRequest: (r) => {
@@ -39,7 +39,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach: preprocessedPlayed,
+  play: preprocessedPlayed,
 };
 
 export default meta;
@@ -60,7 +60,7 @@ export const Default: Story = {
         </atomic-layout-section>
       </atomic-commerce-layout>`,
   ],
-  afterEach: async (context) => {
+  play: async (context) => {
     await preprocessedPlayed(context);
     await executeFirstRequestHook(context);
   },
