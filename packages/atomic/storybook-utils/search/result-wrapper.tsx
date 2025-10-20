@@ -3,6 +3,7 @@ import {Decorator} from '@storybook/web-components-vite';
 import {html, render} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import type * as _ from '../../src/components.js';
+import {when} from 'lit/directives/when.js';
 
 interface Request extends RequestInit {
   url: string;
@@ -21,7 +22,8 @@ const preprocessRequestForOneResult = (r: Request) => {
 };
 
 export const wrapInResult = (
-  engineConfig?: Partial<SearchEngineConfiguration>
+  engineConfig?: Partial<SearchEngineConfiguration>,
+  alsoWrapOutsideOfResultList = true
 ): {
   decorator: Decorator;
   engineConfig: Partial<SearchEngineConfiguration>;
@@ -56,7 +58,7 @@ export const wrapInResult = (
           margin: auto;
         }
       </style>
-      <div style="hidden">${unsafeHTML(tempResultTemplate.innerHTML)}</div>
+      ${when(alsoWrapOutsideOfResultList, () => html`<div style="hidden">${unsafeHTML(tempResultTemplate.innerHTML)}</div>`)}
     `;
   },
   engineConfig: {
