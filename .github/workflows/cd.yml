@@ -47,6 +47,8 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
+        with:
+          load-cache: false
       - name: Generate a token
         id: generate-token
         uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2
@@ -62,7 +64,6 @@ jobs:
           DEBUG: ${{ inputs.debug && '@coveo/semantic-monorepo-tools:*' || '' }}
           GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Call ui-kit-cd
         run: node ./scripts/deploy/trigger-ui-kit-cd.mjs
         env:
@@ -75,8 +76,7 @@ jobs:
     permissions:
       contents: read
       discussions: write
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
