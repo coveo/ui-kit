@@ -5,4 +5,8 @@ export class AtomicResultNumberPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-result-number');
   }
+
+  get formattedValue() {
+    return this.hydrated.first();
+  }
 }

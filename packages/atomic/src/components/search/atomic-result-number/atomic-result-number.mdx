@@ -6,7 +6,7 @@ import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/ato
 
 <AtomicDocTemplate
   stories={AtomicResultNumberStories}
-  githubPath="search/result-template-components/atomic-result-number/atomic-result-number.ts"
+  githubPath="search/atomic-result-number/atomic-result-number.ts"
   tagName="atomic-result-number"
   className="AtomicResultNumber"
 >
@@ -21,7 +21,9 @@ This component is used within `atomic-result-template` components inside the res
     <atomic-layout-section section="main">
       <atomic-result-list>
         <atomic-result-template>
-          <atomic-result-number field="size"></atomic-result-number>
+          <template>
+            <atomic-result-number field="size"></atomic-result-number>
+          </template>
         </atomic-result-template>
       </atomic-result-list>
     </atomic-layout-section>

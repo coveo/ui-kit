@@ -9,14 +9,16 @@ import {
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 
 /**
- * The `atomic-result-number` component renders the value of a number result field.
+ * The `atomic-result-number` component renders the value of a numeric result field.
  *
- * @slot default - The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
+ * @slot default - You can embed an `atomic-format-number`, `atomic-format-currency`, or `atomic-format-unit` into this component to format its value.
  */
 @customElement('atomic-result-number')
 @bindings()
@@ -25,9 +27,9 @@ export class AtomicResultNumber
   implements InitializableComponent<Bindings>
 {
   /**
-   * The field that the component should use.
-   * The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first.
-   * Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
+   * The name of the numeric result field whose value to display.
+   * The component looks for this field in the `Result` object, then in `Result.raw` if not found.
+   * This field must be present in the `fieldsToInclude` property of the `atomic-search-interface` component.
    */
   @property({reflect: true}) field!: string;
 
@@ -35,7 +37,6 @@ export class AtomicResultNumber
   @state() public error!: Error;
 
   @state() private formatter: NumberFormatter = defaultNumberFormatter;
-  @state() private valueToDisplay: string | null = null;
 
   private resultContext = createResultContextController(this);
   private get result(): Result {
@@ -69,16 +70,15 @@ export class AtomicResultNumber
 
   public initialize() {}
 
-  willUpdate() {
-    this.updateValueToDisplay();
-
-    if (this.valueToDisplay === null) {
-      this.remove();
-    }
-  }
-
+  @bindingGuard()
+  @errorGuard()
   render() {
-    return html`${this.valueToDisplay}`;
+    const valueToDisplay = this.getValueToDisplay();
+    if (valueToDisplay === null) {
+      this.remove();
+      return html``;
+    }
+    return html`${valueToDisplay}`;
   }
 
   private handleNumberFormat = (event: Event) => {
@@ -96,14 +96,15 @@ export class AtomicResultNumber
     if (value === null) {
       return null;
     }
+
     const valueAsNumber = parseFloat(`${value}`);
     if (Number.isNaN(valueAsNumber)) {
-      this.error = new Error(
+      throw new Error(
         `Could not parse "${value}" from field "${this.field}" as a number.`
       );
-      return null;
+    } else {
+      return valueAsNumber;
     }
-    return valueAsNumber;
   }
 
   private formatValue(value: number): string {
@@ -115,10 +116,15 @@ export class AtomicResultNumber
     }
   }
 
-  private updateValueToDisplay() {
-    const value = this.parseValue();
-    if (value !== null) {
-      this.valueToDisplay = this.formatValue(value);
+  private getValueToDisplay(): string | null | undefined {
+    try {
+      const value = this.parseValue();
+      if (value === null) {
+        return null;
+      }
+      return this.formatValue(value);
+    } catch (error) {
+      this.error = error as Error;
     }
   }
 }
