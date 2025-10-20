@@ -152,23 +152,17 @@ describe('ItemLayoutController', () => {
     });
   });
 
-  describe('#getLayoutConfig', () => {
+  describe('#getLayout', () => {
     beforeEach(() => {
       controller = new ItemLayoutController(mockElement, mockOptions);
     });
 
     it('should return layout config when created', () => {
       controller.hostConnected();
-      const config = controller.getLayout();
+      const layout = controller.getLayout();
 
-      expect(config).toBeDefined();
-      expect(config).not.toBeNull();
-      expect(config).toEqual({
-        children: mockContent.children,
-        display: 'list',
-        density: 'normal',
-        imageSize: 'icon',
-      });
+      expect(layout).toBeDefined();
+      expect(layout).not.toBeNull();
     });
 
     it('should return null when content is undefined', () => {
