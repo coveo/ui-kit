@@ -175,15 +175,11 @@ export const Default: Story = {
       source: {
         code: `<atomic-folded-result-list image-size="small" display="grid">
   <atomic-result-template>
-    <template>
-      <!-- parent template content -->
-    </template>
+${PARENT_TEMPLATE_EXAMPLE}
   </atomic-result-template>
-  <atomic-result-children image-size="icon">
+  <atomic-result-children image-size="image">
     <atomic-result-children-template>
-      <template>
-        <!-- child template content -->
-      </template>
+${CHILD_TEMPLATE_EXAMPLE}
     </atomic-result-children-template>
   </atomic-result-children>
 </atomic-folded-result-list>`,
