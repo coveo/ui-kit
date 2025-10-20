@@ -3,6 +3,13 @@ import {
   type ItemSectionTagName,
 } from './item-layout-sections';
 
+export interface ItemLayoutConfig {
+  children: HTMLCollection;
+  display: ItemDisplayLayout;
+  density: ItemDisplayDensity;
+  imageSize: ItemDisplayImageSize;
+}
+
 export type ItemDisplayBasicLayout = 'list' | 'grid';
 export type ItemDisplayLayout = ItemDisplayBasicLayout | 'table';
 export type ItemDisplayDensity = 'comfortable' | 'normal' | 'compact';
@@ -76,56 +83,43 @@ export function getItemDisplayClasses(
   return classes;
 }
 
-/**
- * @deprecated Use only for Stencil components. For Lit components, use `getItemLayoutClasses` with `ItemLayoutConfig` from `packages/atomic/src/components/common/layout/item-layout-utils.ts` instead.
- */
-export class ItemLayout {
-  private children: HTMLCollection;
-  private density: ItemDisplayDensity;
-  private imageSize: ItemDisplayImageSize;
-  private display: ItemDisplayLayout;
+function getSection(
+  children: HTMLCollection,
+  section: ItemSectionTagName
+): Element | undefined {
+  return Array.from(children).find(
+    (element) => element.tagName.toLowerCase() === section
+  );
+}
 
-  constructor(
-    children: HTMLCollection,
-    display: ItemDisplayLayout,
-    density: ItemDisplayDensity,
-    imageSize: ItemDisplayImageSize
+function getImageSizeFromSections(
+  children: HTMLCollection
+): ItemDisplayImageSize | undefined {
+  const imageSize = getSection(
+    children,
+    'atomic-result-section-visual'
+  )?.getAttribute('image-size');
+  if (!imageSize) {
+    return undefined;
+  }
+  return imageSize as ItemDisplayImageSize;
+}
+
+export function getItemLayoutClasses(
+  config: ItemLayoutConfig,
+  HTMLContent?: string
+): string[] {
+  const classes = getItemDisplayClasses(
+    config.display,
+    config.density,
+    getImageSizeFromSections(config.children) ?? config.imageSize
+  );
+  if (
+    HTMLContent
+      ? containsSections(HTMLContent)
+      : containsSections(config.children)
   ) {
-    this.children = children;
-    this.display = display;
-    this.density = density;
-    this.imageSize = imageSize;
+    classes.push('with-sections');
   }
-
-  private getImageSizeFromSections() {
-    const imageSize = this.getSection(
-      'atomic-result-section-visual'
-    )?.getAttribute('image-size');
-    if (!imageSize) {
-      return undefined;
-    }
-    return imageSize as ItemDisplayImageSize;
-  }
-
-  private getSection(section: ItemSectionTagName) {
-    return Array.from(this.children).find(
-      (element) => element.tagName.toLowerCase() === section
-    );
-  }
-
-  public getClasses(HTMLContent?: string) {
-    const classes = getItemDisplayClasses(
-      this.display,
-      this.density,
-      this.getImageSizeFromSections() ?? this.imageSize
-    );
-    if (
-      HTMLContent
-        ? containsSections(HTMLContent)
-        : containsSections(this.children)
-    ) {
-      classes.push('with-sections');
-    }
-    return classes;
-  }
+  return classes;
 }
