@@ -14,7 +14,7 @@
 			"type": "shell",
 			"problemMatcher": [],
 			"label": "reinstall dependencies",
-			"command": "rimraf **/node_modules && npm run setup",
+			"command": "rimraf **/node_modules && pnpm run setup",
 			"dependsOn": [
 				"discard package-lock.json changes"
 			]
@@ -29,7 +29,7 @@
 			"type": "shell",
 			"problemMatcher": [],
 			"label": "build",
-			"command": "npm run build"
+			"command": "pnpm run build"
 		}
 	]
 }

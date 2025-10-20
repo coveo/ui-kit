@@ -86,5 +86,5 @@ example:
 
 ## Generating The Reference Documentation JSON
 
-Run `npm run build:doc` to generate the parsed JSON.
-The script runs automatically as part of `npm run build` to catch potential errors in pull request checks.
+Run `pnpm run build:doc` to generate the parsed JSON.
+The script runs automatically as part of `pnpm run build` to catch potential errors in pull request checks.

@@ -31,31 +31,31 @@ Once you have cloned the repo, follow the instructions in the top-level [README.
 To start the project in development mode, run:
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 To build the library for production, run:
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 To run the unit tests, run:
 
 ```bash
-npm test
+pnpm test
 ```
 
 To run the unit tests and watch, run:
 
 ```bash
-npm run test:watch
+pnpm run test:watch
 ```
 
 To use @coveo/headless locally, you have to build the package by running:
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 ### Redux

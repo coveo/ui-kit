@@ -3,7 +3,7 @@ import {Octokit} from 'octokit';
 import {commitChanges, setupGit} from './common/git.mjs';
 
 if (!process.env.INIT_CWD) {
-  throw new Error('Should be called using npm run-script');
+  throw new Error('Should be called using pnpm run');
 }
 process.chdir(process.env.INIT_CWD);
 
