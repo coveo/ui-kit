@@ -11,7 +11,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator, afterEach} = wrapInCommerceInterface({
+const {decorator, play} = wrapInCommerceInterface({
   skipFirstRequest: false,
   engineConfig: {
     preprocessRequest: (request) => {
@@ -23,11 +23,11 @@ const {decorator, afterEach} = wrapInCommerceInterface({
   },
 });
 
-const {afterEach: afterEachNoFirstQuery} = wrapInCommerceInterface({
+const {play: playNoFirstQuery} = wrapInCommerceInterface({
   skipFirstRequest: true,
 });
 
-const {afterEach: afterEachNoProducts} = wrapInCommerceInterface({
+const {play: playNoProducts} = wrapInCommerceInterface({
   skipFirstRequest: false,
   engineConfig: {
     preprocessRequest: (request) => {
@@ -60,7 +60,7 @@ const meta: Meta = {
   },
   argTypes,
 
-  afterEach,
+  play,
 };
 
 export default meta;
@@ -114,8 +114,8 @@ export const GridDisplayWithTemplate: Story = {
 
 export const GridDisplayBeforeQuery: Story = {
   name: 'Using grid display before query',
-  afterEach: async (context) => {
-    await afterEachNoFirstQuery(context);
+  play: async (context) => {
+    await playNoFirstQuery(context);
   },
 };
 
@@ -175,8 +175,8 @@ export const ListDisplayBeforeQuery: Story = {
   args: {
     display: 'list',
   },
-  afterEach: async (context) => {
-    await afterEachNoFirstQuery(context);
+  play: async (context) => {
+    await playNoFirstQuery(context);
   },
 };
 
@@ -209,8 +209,8 @@ export const TableDisplayBeforeQuery: Story = {
   args: {
     display: 'table',
   },
-  afterEach: async (context) => {
-    await afterEachNoFirstQuery(context);
+  play: async (context) => {
+    await playNoFirstQuery(context);
   },
 };
 
@@ -218,8 +218,8 @@ export const NoProducts: Story = {
   tags: ['!dev'],
   name: 'No products',
   decorators: [(story) => story()],
-  afterEach: async (context) => {
-    await afterEachNoProducts(context);
+  play: async (context) => {
+    await playNoProducts(context);
     await executeFirstRequestHook(context);
   },
 };

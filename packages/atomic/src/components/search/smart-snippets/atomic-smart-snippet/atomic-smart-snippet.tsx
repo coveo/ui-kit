@@ -23,7 +23,7 @@ import {
 } from '../../../../utils/initialization-utils';
 import {ArrayProp} from '../../../../utils/props-utils';
 import {shouldDisplayOnCurrentTab} from '../../../../utils/tab-utils';
-import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
+import {getAttributesFromLinkSlotContent} from '../../../common/item-link/attributes-slot';
 import {Hidden} from '../../../common/stencil-hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
@@ -229,7 +229,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
           <SmartSnippetFooter i18n={this.bindings.i18n}>
             {source && (
               <atomic-smart-snippet-source
-                anchorAttributes={getAttributesFromLinkSlot(
+                anchorAttributes={getAttributesFromLinkSlotContent(
                   this.host,
                   'source-anchor-attributes'
                 )}

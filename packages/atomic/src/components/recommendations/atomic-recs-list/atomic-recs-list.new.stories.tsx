@@ -6,7 +6,7 @@ import {baseSearchResponse} from '@/storybook-utils/api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInRecommendationInterface} from '@/storybook-utils/search/recs-interface-wrapper';
 
-const {decorator, afterEach} = wrapInRecommendationInterface();
+const {decorator, play} = wrapInRecommendationInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-recs-list',
   {excludeCategories: ['methods']}
@@ -41,16 +41,16 @@ export const Default: Story = {
         </style>
         ${story()}`,
   ],
-  afterEach,
+  play,
 };
 
-const {afterEach: afterEachNoFirstQuery} = wrapInRecommendationInterface({
+const {play: playNoFirstQuery} = wrapInRecommendationInterface({
   skipFirstQuery: true,
 });
 
 export const RecsBeforeQuery: Story = {
   tags: ['test'],
-  afterEach: afterEachNoFirstQuery,
+  play: playNoFirstQuery,
 };
 
 export const RecsWithFullTemplate: Story = {
@@ -85,7 +85,7 @@ export const RecsWithFullTemplate: Story = {
             </template>
           </atomic-recs-result-template>`,
   },
-  afterEach,
+  play,
 };
 
 export const RecsOpeningInNewTab: Story = {
@@ -104,14 +104,14 @@ export const RecsOpeningInNewTab: Story = {
             </template>
           </atomic-recs-result-template>`,
   },
-  afterEach,
+  play,
 };
 
 export const RecsAsCarousel: Story = {
   args: {
     'number-of-recommendations-per-page': 4,
   },
-  afterEach,
+  play,
 };
 
 export const NotEnoughRecsForCarousel: Story = {
@@ -129,7 +129,7 @@ export const NotEnoughRecsForCarousel: Story = {
       ],
     },
   },
-  afterEach,
+  play,
 };
 
 export const NoRecommendations: Story = {
@@ -148,5 +148,5 @@ export const NoRecommendations: Story = {
       ],
     },
   },
-  afterEach,
+  play,
 };

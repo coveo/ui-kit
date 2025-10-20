@@ -10,7 +10,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 
 const {decorator: resultDecorator, engineConfig} = wrapInResult();
-const {decorator: searchInterfaceDecorator, afterEach} =
+const {decorator: searchInterfaceDecorator, play} =
   wrapInSearchInterface(engineConfig);
 
 const meta: Meta = {
@@ -28,7 +28,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach,
+  play,
 };
 
 export default meta;
