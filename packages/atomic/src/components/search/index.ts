@@ -2,6 +2,7 @@
 export {AtomicPager} from './atomic-pager/atomic-pager.js';
 export {AtomicQuerySummary} from './atomic-query-summary/atomic-query-summary.js';
 export {AtomicRelevanceInspector} from './atomic-relevance-inspector/atomic-relevance-inspector.js';
+export {AtomicResultNumber} from './atomic-result-number/atomic-result-number.js';
 export {AtomicResultsPerPage} from './atomic-results-per-page/atomic-results-per-page.js';
 export {AtomicSearchBoxInstantResults} from './atomic-search-box-instant-results/atomic-search-box-instant-results.js';
 export {AtomicSearchBoxQuerySuggestions} from './atomic-search-box-query-suggestions/atomic-search-box-query-suggestions.js';
