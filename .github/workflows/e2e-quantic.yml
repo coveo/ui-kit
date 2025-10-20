@@ -100,7 +100,7 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
       - run: |
-          npx --no-install ts-node scripts/build/delete-org.ts --scratch-org-def-path=./config/lws-disabled-scratch-def.json
-          npx --no-install ts-node scripts/build/delete-org.ts --scratch-org-def-path=./config/lws-enabled-scratch-def.json
+          pnpm exec ts-node scripts/build/delete-org.ts --scratch-org-def-path=./config/lws-disabled-scratch-def.json
+          pnpm exec ts-node scripts/build/delete-org.ts --scratch-org-def-path=./config/lws-enabled-scratch-def.json
         shell: bash
         working-directory: ./packages/quantic

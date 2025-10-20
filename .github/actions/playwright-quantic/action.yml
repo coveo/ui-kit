@@ -16,7 +16,7 @@ runs:
         path: packages/quantic/.env
         merge-multiple: true
     - name: Run Playwright Tests
-      run: npx playwright test --shard=${{ inputs.shardIndex }}/${{ inputs.shardTotal }}
+      run: pnpm exec playwright test --shard=${{ inputs.shardIndex }}/${{ inputs.shardTotal }}
       shell: bash
       working-directory: ./packages/quantic
     - name: Upload blob report to GitHub Actions Artifacts
