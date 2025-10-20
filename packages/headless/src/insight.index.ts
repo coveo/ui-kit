@@ -57,6 +57,7 @@ export type {
   AttachedResults,
   AttachedResultsOptions,
   AttachedResultsProps,
+  AttachedResultsState,
 } from './controllers/insight/attached-results/headless-attached-results.js';
 export {buildAttachedResults} from './controllers/insight/attached-results/headless-attached-results.js';
 export type {

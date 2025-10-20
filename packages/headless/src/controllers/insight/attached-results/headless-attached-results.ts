@@ -37,6 +37,17 @@ export interface AttachedResultsOptions {
   caseId: string;
 }
 
+export interface AttachedResultsState {
+  /**
+   * The list of attached results for the specified case.
+   */
+  results: AttachedResult[];
+  /**
+   * Whether the attached results are currently being loaded.
+   */
+  loading: boolean;
+}
+
 /**
  * The AttachedResults controller manages all attached results for a given case.
  * It provides a unified API to attach/detach results, check attachment status,
@@ -47,8 +58,8 @@ export interface AttachedResultsOptions {
  */
 export interface AttachedResults extends Controller {
   /**
-   * Check if a specific result is attached to this record.
-   * @param result - The result to check if attached, with SearchAPI fields
+   * Check if a specific result is attached to this case.
+   * @param result - The result to check if attached, with SearchAPI fields such as permanentId or uriHash.
    * @returns A boolean indicating if the result is attached.
    */
   isAttached(result: Result): boolean;
@@ -64,9 +75,9 @@ export interface AttachedResults extends Controller {
   detach(result: Result): void;
   /**
    * The state of the `AttachedResults` controller.
-   * Returns all attached results for this record.
+   * Returns all attached results for this case.
    */
-  state: {results: AttachedResult[]};
+  state: AttachedResultsState;
 }
 
 /**
@@ -126,6 +137,7 @@ export function buildAttachedResults(
     get state() {
       return {
         results: getAttachedResultsForRecord(),
+        loading: engine.state.attachedResults.loading,
       };
     },
 

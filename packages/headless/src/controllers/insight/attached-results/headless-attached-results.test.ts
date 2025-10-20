@@ -9,7 +9,6 @@ import {
 } from '../../../features/attached-results/attached-results-analytics-actions.js';
 import {attachedResultsReducer} from '../../../features/attached-results/attached-results-slice.js';
 import {buildAttachedResultFromSearchResult} from '../../../features/attached-results/attached-results-utils.js';
-import type {InsightAppState} from '../../../state/insight-app-state.js';
 import {createMockAttachedResult} from '../../../test/mock-attached-results.js';
 import {
   buildMockInsightEngine,
@@ -33,30 +32,30 @@ vi.mock(
 
 vi.mock('../../../features/attached-results/attached-results-actions');
 
-describe('insight attach to case', () => {
+describe('attached results', () => {
   let engine: MockedInsightEngine;
-  let defaultOptions: AttachedResultsOptions;
-  let state: InsightAppState;
   let controller: AttachedResults;
+  const testCaseId = '12345';
+  const testPermanentId = 'testPermanentId';
+  const testUriHash = 'testUriHash';
 
   const payload = buildMockResult({
     raw: {
-      permanentid: 'testPermanentId',
-      urihash: 'testUriHash',
+      permanentid: testPermanentId,
+      urihash: testUriHash,
     },
   });
 
-  function initAttachedResults(options = defaultOptions) {
+  const exampleOptions: AttachedResultsOptions = {
+    caseId: testCaseId,
+  };
+
+  function initAttachedResults(options = exampleOptions) {
     engine = buildMockInsightEngine(buildMockInsightState());
-    engine.state = state;
     controller = buildAttachedResults(engine, {options});
   }
 
   beforeEach(() => {
-    state = buildMockInsightState();
-    defaultOptions = {
-      caseId: 'defaultCaseId',
-    };
     initAttachedResults();
   });
 
@@ -87,16 +86,6 @@ describe('insight attach to case', () => {
     });
 
     describe('when the result is attached', () => {
-      const testPermanentId = 'testPermanentId';
-      const testCaseId = '12345';
-
-      beforeEach(() => {
-        defaultOptions = {
-          caseId: testCaseId,
-        };
-        initAttachedResults({...defaultOptions});
-      });
-
       it('#isAttached should return true', () => {
         const mockAttachedResult = createMockAttachedResult({
           caseId: testCaseId,
@@ -123,15 +112,6 @@ describe('insight attach to case', () => {
     });
 
     describe('when the result is not attached', () => {
-      const testCaseId = '12345';
-
-      beforeEach(() => {
-        defaultOptions = {
-          caseId: testCaseId,
-        };
-        initAttachedResults({...defaultOptions});
-      });
-
       it('#isAttached should return false', () => {
         ['foo', 'bar'].forEach((permId) => {
           const mockAttachedResult = createMockAttachedResult({
@@ -148,9 +128,6 @@ describe('insight attach to case', () => {
   });
 
   describe('#attach', () => {
-    const testPermanentId = 'testPermanentId';
-    const testUriHash = 'testUriHash';
-    const testCaseId = '12345';
     const testResult = buildMockResult({
       clickUri: 'foo.bar',
       title: 'test result',
@@ -158,13 +135,6 @@ describe('insight attach to case', () => {
         permanentid: testPermanentId,
         urihash: testUriHash,
       },
-    });
-
-    beforeEach(() => {
-      defaultOptions = {
-        caseId: testCaseId,
-      };
-      initAttachedResults({...defaultOptions});
     });
 
     it('calling #attach should trigger the #attachResult action with the correct payload', () => {
@@ -187,9 +157,6 @@ describe('insight attach to case', () => {
   });
 
   describe('#detach', () => {
-    const testPermanentId = 'testPermanentId';
-    const testUriHash = 'testUriHash';
-    const testCaseId = '12345';
     const testResult = buildMockResult({
       clickUri: 'foo.bar',
       title: 'test result',
@@ -197,13 +164,6 @@ describe('insight attach to case', () => {
         permanentid: testPermanentId,
         urihash: testUriHash,
       },
-    });
-
-    beforeEach(() => {
-      defaultOptions = {
-        caseId: testCaseId,
-      };
-      initAttachedResults({...defaultOptions});
     });
 
     it('calling #detach should trigger the #detachResult with the correct payload', () => {
