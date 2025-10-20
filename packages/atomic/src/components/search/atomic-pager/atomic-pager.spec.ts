@@ -266,7 +266,7 @@ describe('atomic-pager', () => {
     let focusSpy: MockInstance;
     let eventSpy: MockInstance;
     let nextSpy: MockInstance;
-    let announcePageLoaded: MockInstance;
+    let announcePageLoadedSpy: MockInstance;
     let element: AtomicPager;
 
     beforeEach(async () => {
@@ -279,7 +279,7 @@ describe('atomic-pager', () => {
       );
       eventSpy = vi.spyOn(element, 'dispatchEvent');
       nextSpy = vi.spyOn(element.pager, 'nextPage');
-      announcePageLoaded = vi.spyOn(element, 'announcePageLoaded');
+      announcePageLoadedSpy = vi.spyOn(element, 'announcePageLoaded');
 
       await locators.next.click();
     });
@@ -299,7 +299,7 @@ describe('atomic-pager', () => {
     });
 
     it('should announce page loaded with correct page number', async () => {
-      expect(announcePageLoaded).toHaveBeenCalledOnce();
+      expect(announcePageLoadedSpy).toHaveBeenCalledOnce();
     });
   });
 
