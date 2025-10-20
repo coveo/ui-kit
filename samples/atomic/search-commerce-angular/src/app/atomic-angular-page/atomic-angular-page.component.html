@@ -1,8 +1,3 @@
-<atomic-external selector="atomic-search-interface">
-  <atomic-search-box></atomic-search-box>
-  <atomic-query-summary></atomic-query-summary>
- <atomic-facet field="source"></atomic-facet>
-</atomic-external>
 <atomic-search-interface
   #searchInterface
   searchHub="MainSearch"
@@ -63,6 +58,7 @@
   </div>
   <atomic-facet-manager>
     <atomic-category-facet field="ec_category" label="Category" withSearch="true"></atomic-category-facet>
+    <atomic-facet field="ec_brand" label="Brand"></atomic-facet>
     <atomic-numeric-facet field="cat_review_count" label="Amount of reviews" displayValuesAs="link">
       <atomic-numeric-range start="0" end="150" label="Few"></atomic-numeric-range>
       <atomic-numeric-range start="150" end="650" label="A moderate amount"></atomic-numeric-range>
@@ -85,6 +81,7 @@
     <atomic-rating-facet field="ec_rating" label="Rating" numberOfIntervals="5"></atomic-rating-facet>
     <atomic-rating-range-facet field="ec_rating" label="Rating range" numberOfIntervals="5" facetId="ec_rating_range">
     </atomic-rating-range-facet>
+    <atomic-facet field="source"></atomic-facet>
   </atomic-facet-manager>
 
   <atomic-breadbox></atomic-breadbox>

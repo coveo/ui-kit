@@ -1,4 +1,3 @@
-import {AtomicExternal} from '@coveo/atomic-react';
 import {
   AtomicCommerceFacets,
   AtomicCommerceInterface,
@@ -40,43 +39,37 @@ export const CommerceSearchPage = () => {
   );
 
   return (
-    <>
-      <AtomicExternal selector="atomic-commerce-interface">
-        <AtomicCommerceSearchBox></AtomicCommerceSearchBox>
-      </AtomicExternal>
-
-      <AtomicCommerceInterface engine={engine} type="search">
-        <AtomicCommerceLayout>
-          <AtomicLayoutSection section="search">
-            <AtomicCommerceSearchBox>
-              <AtomicCommerceSearchBoxRecentQueries></AtomicCommerceSearchBoxRecentQueries>
-              <AtomicCommerceSearchBoxQuerySuggestions></AtomicCommerceSearchBoxQuerySuggestions>
-              <AtomicCommerceSearchBoxInstantProducts image-size="small"></AtomicCommerceSearchBoxInstantProducts>
-            </AtomicCommerceSearchBox>
+    <AtomicCommerceInterface engine={engine} type="search">
+      <AtomicCommerceLayout>
+        <AtomicLayoutSection section="search">
+          <AtomicCommerceSearchBox>
+            <AtomicCommerceSearchBoxRecentQueries></AtomicCommerceSearchBoxRecentQueries>
+            <AtomicCommerceSearchBoxQuerySuggestions></AtomicCommerceSearchBoxQuerySuggestions>
+            <AtomicCommerceSearchBoxInstantProducts image-size="small"></AtomicCommerceSearchBoxInstantProducts>
+          </AtomicCommerceSearchBox>
+        </AtomicLayoutSection>
+        <AtomicLayoutSection section="facets">
+          <AtomicCommerceFacets />
+        </AtomicLayoutSection>
+        <AtomicLayoutSection section="main">
+          <AtomicLayoutSection section="status">
+            <AtomicCommerceQuerySummary />
+            <AtomicCommerceSortDropdown />
           </AtomicLayoutSection>
-          <AtomicLayoutSection section="facets">
-            <AtomicCommerceFacets />
+          <AtomicLayoutSection section="products">
+            <AtomicCommerceProductList
+              display="grid"
+              density="compact"
+              image-size="small"
+              template={MyTemplate}
+            />
           </AtomicLayoutSection>
-          <AtomicLayoutSection section="main">
-            <AtomicLayoutSection section="status">
-              <AtomicCommerceQuerySummary />
-              <AtomicCommerceSortDropdown />
-            </AtomicLayoutSection>
-            <AtomicLayoutSection section="products">
-              <AtomicCommerceProductList
-                display="grid"
-                density="compact"
-                image-size="small"
-                template={MyTemplate}
-              />
-            </AtomicLayoutSection>
-            <AtomicLayoutSection section="pagination">
-              <AtomicCommerceLoadMoreProducts />
-            </AtomicLayoutSection>
+          <AtomicLayoutSection section="pagination">
+            <AtomicCommerceLoadMoreProducts />
           </AtomicLayoutSection>
-        </AtomicCommerceLayout>
-      </AtomicCommerceInterface>
-    </>
+        </AtomicLayoutSection>
+      </AtomicCommerceLayout>
+    </AtomicCommerceInterface>
   );
 };
 
