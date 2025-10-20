@@ -55,7 +55,6 @@ export const AtomicResultLink = /*@__PURE__*/createReactComponent<JSX.AtomicResu
 export const AtomicResultList = /*@__PURE__*/createReactComponent<JSX.AtomicResultList, HTMLAtomicResultListElement>('atomic-result-list');
 export const AtomicResultLocalizedText = /*@__PURE__*/createReactComponent<JSX.AtomicResultLocalizedText, HTMLAtomicResultLocalizedTextElement>('atomic-result-localized-text');
 export const AtomicResultMultiValueText = /*@__PURE__*/createReactComponent<JSX.AtomicResultMultiValueText, HTMLAtomicResultMultiValueTextElement>('atomic-result-multi-value-text');
-export const AtomicResultNumber = /*@__PURE__*/createReactComponent<JSX.AtomicResultNumber, HTMLAtomicResultNumberElement>('atomic-result-number');
 export const AtomicResultPrintableUri = /*@__PURE__*/createReactComponent<JSX.AtomicResultPrintableUri, HTMLAtomicResultPrintableUriElement>('atomic-result-printable-uri');
 export const AtomicResultRating = /*@__PURE__*/createReactComponent<JSX.AtomicResultRating, HTMLAtomicResultRatingElement>('atomic-result-rating');
 export const AtomicResultSectionActions = /*@__PURE__*/createReactComponent<JSX.AtomicResultSectionActions, HTMLAtomicResultSectionActionsElement>('atomic-result-section-actions');
