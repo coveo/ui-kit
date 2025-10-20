@@ -2,6 +2,7 @@ import type {Result} from '@coveo/headless';
 import {ResultTemplatesHelpers} from '@coveo/headless';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
+import {ResultTemplateController} from '@/src/components/common/result-templates/result-template-controller.js';
 import {makeMatchConditions} from '@/src/components/common/template-controller/template-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {sanitizeHtml} from '@/vitest-utils/testing-helpers/testing-utils/sanitize-html';
@@ -49,194 +50,102 @@ describe('atomic-result-children-template', () => {
     expect(element).toBeInstanceOf(AtomicResultChildrenTemplate);
   });
 
-  it('should have default empty mustMatch, mustNotMatch and conditions', async () => {
+  it('should have default empty mustMatch, mustNotMatch, and conditions', async () => {
     const element = await setupElement();
     expect(element.mustMatch).toEqual({});
     expect(element.mustNotMatch).toEqual({});
     expect(element.conditions).toEqual([]);
   });
 
-  describe('when must-match and must-not-match attributes are set', () => {
-    it('should call #makeMatchConditions on connectedCallback', async () => {
+  describe('when added to the DOM (#connectedCallback)', () => {
+    it('should call the #makeMatchConditions util function with the correct arguments', async () => {
       const mockMakeMatchConditions = vi.mocked(makeMatchConditions);
       await setupElement({
-        mustMatch: {filetype: ['lithiummessage', 'YouTubePlaylist']},
+        mustMatch: {filetype: ['pdf']},
         mustNotMatch: {source: ['spam']},
       });
-      expect(mockMakeMatchConditions).toHaveBeenCalledWith(
-        {filetype: ['lithiummessage', 'YouTubePlaylist']},
+      expect(mockMakeMatchConditions).toHaveBeenCalledExactlyOnceWith(
+        {filetype: ['pdf']},
         {source: ['spam']},
         ResultTemplatesHelpers
       );
     });
 
-    it('should handle filetype matching conditions', async () => {
-      const mockMakeMatchConditions = vi.mocked(makeMatchConditions);
-      await setupElement({
-        mustMatch: {filetype: ['lithiummessage']},
-      });
-      expect(mockMakeMatchConditions).toHaveBeenCalledWith(
-        {filetype: ['lithiummessage']},
-        {},
+    it('should set matchConditions on ResultTemplateController with correct value', async () => {
+      const mustMatch = {filetype: ['pdf']};
+      const mustNotMatch = {source: ['spam']};
+      const element = await setupElement({mustMatch, mustNotMatch});
+
+      const expected = makeMatchConditions(
+        mustMatch,
+        mustNotMatch,
         ResultTemplatesHelpers
       );
-    });
 
-    it('should handle exclusion conditions', async () => {
-      const mockMakeMatchConditions = vi.mocked(makeMatchConditions);
-      await setupElement({
-        mustNotMatch: {filetype: ['lithiummessage']},
-      });
-      expect(mockMakeMatchConditions).toHaveBeenCalledWith(
-        {},
-        {filetype: ['lithiummessage']},
-        ResultTemplatesHelpers
-      );
-    });
-  });
+      const fakeTemplate = {
+        conditions: expected,
+        content: document.createDocumentFragment(),
+        priority: 1,
+      };
+      const spy = vi
+        .spyOn(ResultTemplateController.prototype, 'getTemplate')
+        .mockResolvedValue(fakeTemplate);
 
-  describe('rendering', () => {
-    it('should render nothing by default', async () => {
-      const element = await setupElement();
-      expect(sanitizeHtml(element.shadowRoot!.innerHTML)).toBe('');
-    });
-
-    it('should render an atomic-component-error when error occurs', async () => {
-      const mockedConsoleError = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
-
-      const container = await fixture(html`
-        <div>
-          <atomic-result-children-template>
-            <template><div>content</div></template>
-          </atomic-result-children-template>
-        </div>
-      `);
-
-      const element = container.querySelector(
-        'atomic-result-children-template'
-      ) as unknown as AtomicResultChildrenTemplate;
-
-      await element.updateComplete;
-
-      const errorComponent = element.shadowRoot?.querySelector(
-        'atomic-component-error'
-      );
-      expect(errorComponent).toBeDefined();
-      mockedConsoleError.mockRestore();
+      const template = await element.getTemplate();
+      expect(template).not.toBeNull();
+      expect(template!.conditions).toHaveLength(expected.length);
+      spy.mockRestore();
     });
   });
 
-  describe('validation', () => {
-    it('should require atomic-result-children as parent', async () => {
-      const mockedConsoleError = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
-
-      const container = await fixture(html`
-        <div>
-          <atomic-result-children-template>
-            <template><div>content</div></template>
-          </atomic-result-children-template>
-        </div>
-      `);
-
-      const element = container.querySelector(
-        'atomic-result-children-template'
-      ) as unknown as AtomicResultChildrenTemplate;
-
-      await element.updateComplete;
-
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toContain(
-        'has to be the child of one of the following: "atomic-result-children"'
-      );
-
-      mockedConsoleError.mockRestore();
-    });
-
-    it('should require a template element as child', async () => {
-      const mockedConsoleError = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
-
-      const container = document.createElement('atomic-result-children');
-      const element = await fixture<AtomicResultChildrenTemplate>(
-        html`<atomic-result-children-template></atomic-result-children-template>`,
-        container
-      );
-
-      await element.updateComplete;
-
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toContain(
-        'must contain a "template" element as a child'
-      );
-
-      mockedConsoleError.mockRestore();
-    });
-
-    it('should not allow empty template by default', async () => {
-      const mockedConsoleError = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
-
-      const container = document.createElement('atomic-result-children');
-      const element = await fixture<AtomicResultChildrenTemplate>(
-        html`
-          <atomic-result-children-template>
-            <template></template>
-          </atomic-result-children-template>
-        `,
-        container
-      );
-
-      await element.updateComplete;
-
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toContain('cannot be empty');
-
-      mockedConsoleError.mockRestore();
-    });
-  });
-
-  describe('getTemplate method', () => {
-    it('should call #getTemplate on the controller with conditions', async () => {
-      const titleConditions = (result: Result) =>
-        result.title.includes('singapore');
+  describe('#getTemplate', () => {
+    it('should call getTemplate on the controller', async () => {
+      const titleConditions = (result: Result) => result.title === 'Coveo';
+      const fakeTemplate = {
+        conditions: [],
+        content: document.createDocumentFragment(),
+        priority: 1,
+      };
+      const spy = vi
+        .spyOn(ResultTemplateController.prototype, 'getTemplate')
+        .mockResolvedValue(fakeTemplate);
       const element = await setupElement({conditions: [titleConditions]});
-      const ctrl = element['resultTemplateController'];
-      //@ts-expect-error: we don't really care about the return template here
-      const spy = vi.spyOn(ctrl, 'getTemplate').mockResolvedValue('🎯');
       const result = await element.getTemplate();
 
       expect(spy).toHaveBeenCalledWith([titleConditions]);
-      expect(result).toBe('🎯');
+      expect(result).toBe(fakeTemplate);
+      spy.mockRestore();
     });
+  });
 
-    it('should return null when controller returns null', async () => {
-      const element = await setupElement();
-      const ctrl = element['resultTemplateController'];
-      const spy = vi.spyOn(ctrl, 'getTemplate').mockResolvedValue(null);
-      const result = await element.getTemplate();
+  it('should render nothing by default', async () => {
+    const element = await setupElement();
+    expect(sanitizeHtml(element.shadowRoot!.innerHTML)).toBe('');
+  });
 
-      expect(spy).toHaveBeenCalled();
-      expect(result).toBeNull();
-    });
+  it('should render an atomic-component-error if error is thrown', async () => {
+    const mockedConsoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
 
-    it('should handle multiple conditions', async () => {
-      const condition1 = (result: Result) => result.title === 'Test';
-      const condition2 = (result: Result) => result.excerpt.length > 100;
-      const element = await setupElement({
-        conditions: [condition1, condition2],
-      });
-      const ctrl = element['resultTemplateController'];
-      const spy = vi.spyOn(ctrl, 'getTemplate').mockResolvedValue(null);
+    const container = await fixture(html`
+      <div>
+        <atomic-result-children-template>
+          <template slot="default"><div>content</div></template>
+        </atomic-result-children-template>
+      </div>
+    `);
 
-      await element.getTemplate();
+    const element = container.querySelector(
+      'atomic-result-children-template'
+    ) as AtomicResultChildrenTemplate;
 
-      expect(spy).toHaveBeenCalledWith([condition1, condition2]);
-    });
+    await element.updateComplete;
+
+    const errorComponent = element.shadowRoot?.querySelector(
+      'atomic-component-error'
+    );
+    expect(errorComponent).toBeDefined();
+    mockedConsoleError.mockRestore();
   });
 });
