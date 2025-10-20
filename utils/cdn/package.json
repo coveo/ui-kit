@@ -10,5 +10,11 @@
   },
   "engines": {
     "node": ">=22.14.0"
+  },
+  "dependencies": {
+    "local-web-server": "catalog:"
+  },
+  "devDependencies": {
+    "@coveo/bueno": "workspace:*"
   }
 }
