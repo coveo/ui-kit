@@ -14,7 +14,8 @@ import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/ato
 >
 
 This component defines the UI display of your products. 
-It can be used inside `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-search-box-instant-products`, and it must have a `<template>` as its child.
+A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
+* **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
 
 Example using the `atomic-commerce-product-list`:
 ```html
