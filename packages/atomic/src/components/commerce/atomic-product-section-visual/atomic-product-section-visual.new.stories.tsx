@@ -10,18 +10,17 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator: commerceInterfaceDecorator, afterEach} =
-  wrapInCommerceInterface({
-    engineConfig: {
-      preprocessRequest: (request) => {
-        const parsed = JSON.parse(request.body as string);
-        parsed.perPage = 1;
-        request.body = JSON.stringify(parsed);
-        return request;
-      },
+const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
+  engineConfig: {
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.perPage = 1;
+      request.body = JSON.stringify(parsed);
+      return request;
     },
-    includeCodeRoot: false,
-  });
+  },
+  includeCodeRoot: false,
+});
 const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
   'grid',
   false
@@ -52,7 +51,7 @@ export const Default: Story = {
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  afterEach,
+  play,
   args: {
     'default-slot': `<img src="https://images.barca.group/Sports/mj/Clothing/Pants/67_Men_Gray_Elastane/cb1a7d3c9ac3_bottom_left.webp" alt="Product Image" class="w-full h-auto rounded-lg">`,
   },

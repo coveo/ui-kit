@@ -29,7 +29,7 @@ const layoutDecorator: Decorator = (story) => html`
   </atomic-search-layout>
 `;
 
-const {decorator, afterEach} = wrapInSearchInterface({
+const {decorator, play} = wrapInSearchInterface({
   accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
   organizationId: 'searchuisamples',
   search: {
@@ -58,8 +58,8 @@ const meta: Meta = {
   },
   argTypes,
 
-  afterEach: async (storyContext) => {
-    await afterEach(storyContext);
+  play: async (storyContext) => {
+    await play(storyContext);
     const canvas = within(storyContext.canvasElement);
     const searchBox = await canvas.findAllByShadowPlaceholderText('Search');
     await storyContext.userEvent.type(

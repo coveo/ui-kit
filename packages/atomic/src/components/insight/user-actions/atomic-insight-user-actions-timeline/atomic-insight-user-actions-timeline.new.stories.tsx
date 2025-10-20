@@ -5,7 +5,7 @@ import {exampleUserActions} from '@/storybook-utils/api/contextApi';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 
-const {decorator, afterEach} = wrapInInsightInterface();
+const {decorator, play} = wrapInInsightInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-insight-user-actions-timeline',
   {excludeCategories: ['methods']}
@@ -30,7 +30,7 @@ const meta: Meta = {
     'ticket-creation-date-time': encodeURIComponent('2024-08-30'),
   },
   argTypes,
-  afterEach,
+  play,
 };
 
 export default meta;
@@ -46,7 +46,7 @@ export const Default: Story = {
       ],
     },
   },
-  afterEach,
+  play,
 };
 
 export const WithNoUserActions: Story = {
@@ -60,7 +60,7 @@ export const WithNoUserActions: Story = {
       ],
     },
   },
-  afterEach,
+  play,
 };
 
 export const WithUserActionsError: Story = {
@@ -81,5 +81,5 @@ export const WithUserActionsError: Story = {
       ],
     },
   },
-  afterEach,
+  play,
 };

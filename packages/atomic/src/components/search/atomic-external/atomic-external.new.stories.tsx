@@ -61,7 +61,7 @@ const meta: Meta = {
       </div>
     </div>
   `,
-  afterEach: async () => {
+  play: async () => {
     await customElements.whenDefined('atomic-search-interface');
 
     const searchInterface1 = document.querySelector(
