@@ -11,6 +11,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
 import {mapProperty} from '@/src/utils/props-utils';
 import '../atomic-product/atomic-product';
+import {arrayConverter} from '@/src/converters/array-converter';
 
 /**
  * A product template determines the format of the products, depending on the conditions that are defined for each template.
@@ -36,7 +37,7 @@ export class AtomicProductTemplate
    * For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`:
    * `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
    */
-  @property({attribute: false, type: Array})
+  @property({attribute: false, type: Array, converter: arrayConverter})
   conditions: ProductTemplateCondition[] = [];
 
   /**
