@@ -78,12 +78,12 @@ catalogs:
     puppeteer:
       specifier: 24.15.0
       version: 24.15.0
-    rollup-plugin-html:
-      specifier: 0.2.1
-      version: 0.2.1
     rollup-plugin-node-polyfills:
       specifier: 0.2.1
       version: 0.2.1
+    rollup-plugin-string:
+      specifier: 3.0.0
+      version: 3.0.0
     typedoc:
       specifier: 0.28.13
       version: 0.28.13
@@ -396,9 +396,6 @@ importers:
       rollup-plugin-copy:
         specifier: 3.5.0
         version: 3.5.0
-      rollup-plugin-html:
-        specifier: 'catalog:'
-        version: 0.2.1
       shadow-dom-testing-library:
         specifier: 1.12.0
         version: 1.12.0(@testing-library/dom@10.4.1)
@@ -634,9 +631,9 @@ importers:
       puppeteer:
         specifier: 'catalog:'
         version: 24.15.0(typescript@5.8.3)
-      rollup-plugin-html:
+      rollup-plugin-string:
         specifier: 'catalog:'
-        version: 0.2.1
+        version: 3.0.0
 
   packages/create-atomic-component/template/src/components/sample-component:
     dependencies:
@@ -671,9 +668,9 @@ importers:
       puppeteer:
         specifier: 'catalog:'
         version: 24.15.0(typescript@5.8.3)
-      rollup-plugin-html:
+      rollup-plugin-string:
         specifier: 'catalog:'
-        version: 0.2.1
+        version: 3.0.0
 
   packages/create-atomic-result-component:
     dependencies:
@@ -711,9 +708,9 @@ importers:
       jest-cli:
         specifier: 'catalog:'
         version: 29.7.0(@types/node@24.7.2)(ts-node@10.9.2(@types/node@24.7.2)(typescript@5.8.3))
-      rollup-plugin-html:
+      rollup-plugin-string:
         specifier: 'catalog:'
-        version: 0.2.1
+        version: 3.0.0
 
   packages/create-atomic-rollup-plugin:
     devDependencies:
@@ -754,12 +751,12 @@ importers:
       rollup-plugin-dotenv:
         specifier: 0.5.1
         version: 0.5.1(rollup@4.46.2)
-      rollup-plugin-html:
-        specifier: 'catalog:'
-        version: 0.2.1
       rollup-plugin-node-polyfills:
         specifier: 'catalog:'
         version: 0.2.1
+      rollup-plugin-string:
+        specifier: 'catalog:'
+        version: 3.0.0
 
   packages/documentation:
     devDependencies:
@@ -1171,12 +1168,12 @@ importers:
       cypress-repeat:
         specifier: 'catalog:'
         version: 2.3.9(cypress@13.7.3)
-      rollup-plugin-html:
-        specifier: 'catalog:'
-        version: 0.2.1
       rollup-plugin-node-polyfills:
         specifier: 'catalog:'
         version: 0.2.1
+      rollup-plugin-string:
+        specifier: 'catalog:'
+        version: 3.0.0
 
   samples/atomic/search-vuejs:
     dependencies:
@@ -8242,9 +8239,6 @@ packages:
   estree-toolkit@1.7.13:
     resolution: {integrity: sha512-/fLCEcVBUgAtMkGXZHplPVyUv7wiSfsCGubBdM16n1iYCidPfyk1Kk1U0wAxLZADuA3z8k87DfVYXlBmHJeekg==}
 
-  estree-walker@0.2.1:
-    resolution: {integrity: sha512-6/I1dwNKk0N9iGOU3ydzAAurz4NPo/ttxZNCqgIVbWFvWyzWBSNonRrJ5CpjDuyBfmM7ENN7WCzUi9aT/UPXXQ==}
-
   estree-walker@0.6.1:
     resolution: {integrity: sha512-SqmZANLWS0mnatqbSfRP5g8OXZC12Fgg1IwNtLsyHDzJizORW4khDfjPqJZsemPWBB2uqykUah5YpQ6epsqC/w==}
 
@@ -12198,9 +12192,6 @@ packages:
     peerDependencies:
       rollup: ^1.20.0 || ^2.0.0 || ^3.0.0 || ^4.0.0
 
-  rollup-plugin-html@0.2.1:
-    resolution: {integrity: sha512-qnyToGUAjjG69+M+KitUsHnfnLjpjtZdO3nIP0LN50KG/r6zEoBq/pfneAwWkxY/z13zM5aFFXSBY6+6M7bvUw==}
-
   rollup-plugin-inject@3.0.2:
     resolution: {integrity: sha512-ptg9PQwzs3orn4jkgXJ74bfs5vYz1NCZlSQMBUA0wKcGp5i5pA1AO3fOUEte8enhGUC+iapTCzEWw2jEFFUO/w==}
     deprecated: This package has been deprecated and is no longer maintained. Please use @rollup/plugin-inject.
@@ -12213,8 +12204,8 @@ packages:
     peerDependencies:
       rollup: ^1.20.0 || ^2.0.0 || ^3.0.0 || ^4.0.0
 
-  rollup-pluginutils@1.5.2:
-    resolution: {integrity: sha512-SjdWWWO/CUoMpDy8RUbZ/pSpG68YHmhk5ROKNIoi2En9bJ8bTt3IhYi254RWiTclQmL7Awmrq+rZFOhZkJAHmQ==}
+  rollup-plugin-string@3.0.0:
+    resolution: {integrity: sha512-vqyzgn9QefAgeKi+Y4A7jETeIAU1zQmS6VotH6bzm/zmUQEnYkpIGRaOBPY41oiWYV4JyBoGAaBjYMYuv+6wVw==}
 
   rollup-pluginutils@2.8.2:
     resolution: {integrity: sha512-EEp9NhnUkwY8aif6bxgovPHMoMoNr2FulJziTndpt5H9RdwC47GSGuII9XxpSdzVGM0GWrNPHV6ie1LTNJPaLQ==}
@@ -21917,8 +21908,6 @@ snapshots:
       '@types/estree': 1.0.8
       '@types/estree-jsx': 1.0.5
 
-  estree-walker@0.2.1: {}
-
   estree-walker@0.6.1: {}
 
   estree-walker@2.0.2: {}
@@ -26880,11 +26869,6 @@ snapshots:
       dotenv: 16.6.1
       rollup: 4.46.2
 
-  rollup-plugin-html@0.2.1:
-    dependencies:
-      html-minifier: html-minifier-terser@7.2.0
-      rollup-pluginutils: 1.5.2
-
   rollup-plugin-inject@3.0.2:
     dependencies:
       estree-walker: 0.6.1
@@ -26900,10 +26884,9 @@ snapshots:
       '@rollup/plugin-inject': 5.0.5(rollup@4.46.2)
       rollup: 4.46.2
 
-  rollup-pluginutils@1.5.2:
+  rollup-plugin-string@3.0.0:
     dependencies:
-      estree-walker: 0.2.1
-      minimatch: 3.1.2
+      rollup-pluginutils: 2.8.2
 
   rollup-pluginutils@2.8.2:
     dependencies:
@@ -27817,7 +27800,7 @@ snapshots:
       jest-worker: 27.5.1
       schema-utils: 4.3.3
       serialize-javascript: 6.0.2
-      terser: 5.39.0
+      terser: 5.44.0
       webpack: 5.98.0(esbuild@0.25.8)
     optionalDependencies:
       esbuild: 0.25.8

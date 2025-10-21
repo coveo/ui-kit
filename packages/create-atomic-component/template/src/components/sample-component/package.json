@@ -34,7 +34,7 @@
     "jest": "catalog:",
     "jest-cli": "catalog:",
     "puppeteer": "catalog:",
-    "rollup-plugin-html": "catalog:",
+    "rollup-plugin-string": "catalog:",
     "@coveo/create-atomic-rollup-plugin": "catalog:"
   },
   "keywords": [

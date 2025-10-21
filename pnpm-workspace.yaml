@@ -55,7 +55,7 @@ catalog:
   puppeteer: 24.15.0
   react: 19.2.0
   react-dom: 19.2.0
-  rollup-plugin-html: 0.2.1
+  rollup-plugin-string: 3.0.0
   rollup-plugin-node-polyfills: 0.2.1
   typedoc: 0.28.13
   typescript: 5.8.3
