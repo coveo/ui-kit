@@ -6,7 +6,7 @@ import {userEvent} from 'storybook/test';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 
-const {decorator, afterEach} = wrapInCommerceInterface({
+const {decorator, play} = wrapInCommerceInterface({
   includeCodeRoot: false,
 });
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -45,8 +45,8 @@ const meta: Meta = {
       },
     },
   },
-  afterEach: async (context) => {
-    await afterEach(context);
+  play: async (context) => {
+    await play(context);
     const canvas = within(
       context.canvasElement.querySelector('atomic-commerce-refine-toggle')!
     );
