@@ -9,10 +9,12 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 
 const {decorator, play} = wrapInSearchInterface({
-  search: {
-    preprocessSearchResponseMiddleware: (res) => {
-      res.body.results = [];
-      return res;
+  config: {
+    search: {
+      preprocessSearchResponseMiddleware: (res) => {
+        res.body.results = [];
+        return res;
+      },
     },
   },
 });
