@@ -35,7 +35,7 @@ When instructions conflict, apply this precedence order:
 
 ## Code Review & Quality
 
-**Flag risky patterns:**
+**Flag risky patterns in the chat:**
 - Untested assumptions (accessing properties without null checks)
 - Missing error handling for async operations or external dependencies
 - Race conditions (unguarded state mutations in callbacks)
