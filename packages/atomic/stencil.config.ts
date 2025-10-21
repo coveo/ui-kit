@@ -7,7 +7,6 @@ import {postcss} from '@stencil-community/postcss';
 import tailwindcss from '@tailwindcss/postcss';
 import postcssNested from 'postcss-nested';
 import type {PluginImpl} from 'rollup';
-import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
 import {generateExternalPackageMappings} from './scripts/externalPackageMappings.mjs';
 import {generateAngularModuleDefinition as angularModule} from './stencil-plugin/atomic-angular-module';
@@ -161,12 +160,7 @@ export const config: Config = {
     replace(),
   ],
   rollupPlugins: {
-    before: [
-      html({
-        include: 'src/templates/**/*.html',
-      }),
-      externalizeDependenciesPlugin(),
-    ],
+    before: [externalizeDependenciesPlugin()],
   },
   extras: {
     enableImportInjection: true,

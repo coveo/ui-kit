@@ -1,7 +1,8 @@
 import {spawnSync} from 'node:child_process';
 import type {Config} from '@stencil/core';
-import html from 'rollup-plugin-html';
 import nodePolyfills from 'rollup-plugin-node-polyfills';
+// @ts-ignore
+import {string as html} from 'rollup-plugin-string';
 
 // https://stenciljs.com/docs/config
 
@@ -38,6 +39,7 @@ export const config: Config = {
       html({
         include: 'src/components/**/*.html',
       }),
+
       coveoResolve(),
     ],
     after: [nodePolyfills()],

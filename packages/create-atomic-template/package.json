@@ -18,7 +18,7 @@
     "gts": "3.1.1",
     "prettier": "catalog:",
     "rollup-plugin-dotenv": "0.5.1",
-    "rollup-plugin-html": "catalog:",
+    "rollup-plugin-string": "catalog:",
     "rollup-plugin-node-polyfills": "catalog:"
   }
 }
