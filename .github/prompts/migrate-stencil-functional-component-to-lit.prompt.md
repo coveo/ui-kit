@@ -9,20 +9,18 @@ Migrate an existing Atomic Stencil functional component to Lit while preserving 
 
 **Context:** All commands run from `packages/atomic` directory.
 
-## Migration Strategy
-
 Follow [Atomic component instructions](../instructions/atomic.instructions.md) for structure and conventions.
 
 ### Core Pattern
 
-**Preserve-and-replace approach:**
-1. Rename original file with `stencil-` prefix (e.g., `render-helper.ts` → `stencil-render-helper.ts`)
-2. Create new Lit version with original filename
-3. Update imports: Stencil components use prefixed version, Lit components use new version
+**Parallel file approach:**
+1. Keep original Stencil file completely untouched (preserve filename)
+2. Create Lit version as new file alongside original (use `.ts` if original is `.tsx`)
+3. **DO NOT update any imports** - Lit version exists as unused code for future components
 
 ## Type Signatures and Patterns
 
-**Import functional component types from:**
+**Import types:**
 ```typescript
 import type {
   FunctionalComponent,
@@ -33,20 +31,9 @@ import type {
 } from '@/src/utils/functional-component-utils';
 ```
 
-**Available type patterns:**
-
-- `FunctionalComponentNoProps` - No props, no children
-- `FunctionalComponent<Props>` - Has props, no children
-- `FunctionalComponentWithChildrenNoProps` - No props, has children
-- `FunctionalComponentWithChildren<Props>` - Has props, has children
-- `FunctionalComponentWithOptionalChildren<Props>` - Has props, optional children
-
-**Basic functional component (no children):**
+**Basic component (no children):**
 ```typescript
-interface Props {
-  title: string;
-  isActive: boolean;
-}
+interface Props { title: string; isActive: boolean; }
 
 export const renderButton: FunctionalComponent<Props> = ({props}) => {
   return html`<button class="btn ${props.isActive ? 'bg-primary' : 'bg-secondary'}">
@@ -55,170 +42,114 @@ export const renderButton: FunctionalComponent<Props> = ({props}) => {
 };
 ```
 
-**Functional component with children (returns a function that accepts children):**
+**Component with children (returns function accepting children):**
 ```typescript
 export const renderContainer: FunctionalComponentWithChildren<Props> =
-  ({props}) =>
-  (children) => {
-    return html`<div class="container">${children}</div>`;
-  };
+  ({props}) => (children) => html`<div class="container">${children}</div>`;
 
-// Calling pattern - note the double invocation:
-renderContainer({props: {...}})(html`<span>Child content</span>`)
-
-// Or when passing nothing:
-renderContainer({props: {...}})(nothing)
+// Usage: renderContainer({props: {...}})(html`<span>Child</span>`)
 ```
 
-**Key differences from Stencil:**
-- Destructure `{props}` not individual properties
-- Use `html` template literals not JSX
-- Event handlers: `@click=${handler}` not `onClick={handler}`
-- Conditional render: return `nothing` (import from `lit`) not `null`
+**Key changes from Stencil:**
+- Props: `({props})` not `({title, isActive})`
+- Children: `({props}) => (children) => ...` not `(props, children) => ...`
+- Events: `@click=${handler}` not `onClick={handler}`
+- Templates: `html` template literals not JSX
 
-## Common Patterns
+## Lit Directives
 
-**List rendering:**
+**Import from `lit/directives/[name].js`:**
 ```typescript
-export const renderList: FunctionalComponent<Props> = ({props}) => html`
-  ${props.items.map((item) => html`<li>${item}</li>`)}
-`;
-```
-
-**Conditional rendering:**
-```typescript
+import {when} from 'lit/directives/when.js';
+import {ifDefined} from 'lit/directives/if-defined.js';
+import {ref, type RefOrCallback} from 'lit/directives/ref.js';
 import {nothing} from 'lit';
-
-export const renderConditional: FunctionalComponent<Props> = ({props}) =>
-  props.condition ? html`<div>${props.content}</div>` : nothing;
 ```
 
-**Event handling:**
+### `ifDefined` - Wrap all optional attributes
 ```typescript
-export const renderClickable: FunctionalComponent<Props> = ({props}) => {
-  return html`<button @click=${props.onClick}>${props.label}</button>`;
-};
+html`<input type=${ifDefined(props.type)} id=${ifDefined(props.id)} />`
 ```
 
-**Tailwind class application:**
+### `when` - Conditional rendering
 ```typescript
-html`<div
-  class="${props.isHighlighted
-    ? 'border-primary bg-primary-50'
-    : 'border-gray-200 bg-white'} rounded-lg border p-4"
-></div>`;
+${when(props.condition, () => html`<div>True</div>`)}
+${when(props.show, () => html`<div>A</div>`, () => html`<div>B</div>`)}
 ```
 
-## Critical Corrections
-
-**❌ Wrong type import:**
+### `ref` - Forward element references
 ```typescript
-import {FunctionalComponent} from '@stencil/core';
-// or
-import {FunctionalComponent} from '@/src/functional-components/types';
+html`<input ${props.ref ? ref(props.ref) : nothing} />`
 ```
 
-**✅ Correct type import:**
+## Tailwind Classes
+
+**Use `tw` + `multiClassMap` for conditional classes:**
 ```typescript
-import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import {multiClassMap, tw} from '@/src/directives/multi-class-map';
+
+const classNames = tw({
+  'rounded-lg border p-4': true,
+  'border-primary bg-primary-50': props.isHighlighted,
+  'border-neutral-dark bg-white': !props.isHighlighted,
+  [props.class ?? '']: Boolean(props.class),
+});
+
+return html`<div class=${multiClassMap(classNames)}>Content</div>`;
 ```
 
-**❌ Wrong destructuring:**
+## Naming Conventions
+
+**Files:** Keep original Stencil file (`facet-placeholder.tsx`), create Lit version with `.ts` extension (`facet-placeholder.ts`). Both coexist; imports reference original until consumers migrate.
+
+**Functions:** Use `render<ComponentName>` pattern with PascalCase after prefix.
 ```typescript
-export const render = ({title, isActive}: Props) => html`...`;
+// ✅ Correct
+export const renderButton: FunctionalComponent<Props> = ...
+export const renderFacetPlaceholder: FunctionalComponentNoProps = ...
+
+// ❌ Wrong
+export const Button = ... // missing prefix
+export const renderbutton = ... // lowercase after 'render'
 ```
-
-**✅ Correct destructuring:**
-```typescript
-export const render: FunctionalComponent<Props> = ({props}) => html`...${props.title}...`;
-```
-
-**❌ Children as second parameter:**
-```typescript
-export const render = (props, children) => html`<div>${children}</div>`;
-```
-
-**✅ Children as returned function:**
-```typescript
-export const render: FunctionalComponentWithChildren<Props> =
-  ({props}) => (children) => html`<div>${children}</div>`;
-```
-
-## Import Update Process
-
-1. **Find all usages** across packages:
-   ```bash
-   # Direct imports from the file
-   grep -rE "from ['\"].*functionName['\"]" packages/
-   
-   # Usage of the function (may be imported from barrel/index)
-   grep -rE "\\brenderFunctionName\\(" packages/
-   ```
-
-2. **Update systematically:**
-   - Stencil components → import from `stencil-prefixed-file`
-   - Lit components → import from new file
-
-3. **Verify no broken imports** remain before finishing
 
 ## Execution Constraints
 
-**Do not (unless explicitly requested):**
-- Build the Atomic package
-- Run or generate tests
-- Fix linting issues
-- Modify test files
-- Check compilation until related components migrated
-
-**Focus exclusively on:**
-- Functional component migration
-- Type definition updates
-- Import statement updates
-- Style migration to Tailwind
+**Skip unless requested:** Building, testing, linting, compilation checks (until consumers migrate)
+**Focus on:** Component migration, type/import updates, Tailwind styling
 
 ## Migration Checklist
 
-**Phase 1: Analyze & Prepare**
-- [ ] Analyze existing component (signature, children handling, dependencies, usage)
-- [ ] Identify correct `FunctionalComponent*` type based on props/children
+**Use `manage_todo_list` tool:** Write todos from items below, mark ONE in-progress before working, mark completed immediately after.
 
-**Phase 2: Migrate File**
-- [ ] Rename original file with `stencil-` prefix
-- [ ] Create new Lit version with original filename
+**Phase 1: Analyze**
+- [ ] Analyze existing component (signature, children, dependencies)
+- [ ] Identify correct `FunctionalComponent*` type
+
+**Phase 2: Migrate**
+- [ ] Keep original Stencil file untouched
+- [ ] Create new `.ts` file with `render<ComponentName>` function
 - [ ] Import correct type from `@/src/utils/functional-component-utils`
-- [ ] Update signature: use `{props}` destructuring, not direct props
-- [ ] Convert JSX → `html` template literals
-- [ ] Convert event syntax: `@click` not `onClick`
-- [ ] Apply Tailwind classes instead of CSS
-- [ ] Convert imports: use `@/src/...` path aliases for external files, `./...` only for same-directory
+- [ ] Use `({props})` destructuring, `html` templates, `@event` syntax
+- [ ] Apply directives: `ifDefined`, `when`, `ref`
+- [ ] Use `tw`/`multiClassMap` for classes
+- [ ] Use `@/src/...` imports for external files
 
-**Phase 3: Update Imports**
-- [ ] Search ALL imports across ALL packages (use provided grep commands)
-- [ ] Update Stencil component imports → prefixed versions
-- [ ] Update Lit component imports → new versions
-- [ ] Verify no broken imports remain
+**Phase 3: Validate Equivalence**
+- [ ] Verify props, children handling, conditionals, events, structure, styling match original
+- [ ] Document intentional differences
 
-Ask for the functional component file path if not provided, then execute migration systematically.
+**Phase 4: Verify Isolation**
+- [ ] Original file exists with original name
+- [ ] New Lit version not imported anywhere (dead code)
+- [ ] Generate execution summary (mandatory final todo)
 
-## Post-Execution: Generate Summary
+Ask for file path if not provided, then execute systematically.
 
-After completing migration, generate execution summary:
+## Post-Execution Summary
 
-**1. Create summary file:**
-- **Location:** `.github/prompts/.executions/migrate-stencil-functional-component-to-lit-[YYYY-MM-DD-HHmmss].prompt-execution.md`
-- **Structure:** Follow `.github/prompts/.executions/TEMPLATE.prompt-execution.md`
-- **Purpose:** Structured feedback for prompt optimization
+**Mandatory final todo:** Generate `.github/prompts/.executions/migrate-stencil-functional-component-to-lit-[YYYY-MM-DD-HHmmss].prompt-execution.md` following `TEMPLATE.prompt-execution.md`.
 
-**2. Include in summary:**
-- Which similar migrated component was used as reference (if any)
-- Issues with type signature selection or pattern matching
-- Ambiguities in prompt instructions that required interpretation
-- Time-consuming operations (searching imports, updating files)
-- Missing instructions or unclear migration requirements
-- Concrete suggestions for prompt improvements
+**Include:** Reference components used, type selection issues, ambiguous instructions, time-consuming operations, missing guidance, concrete improvement suggestions.
 
-**3. Inform user** about summary location and next steps (switch to "Prompt Engineer" chatmode for optimization)
-
-**4. Mark complete** only after file created and user informed.
-
-```
+**Inform user** of summary location and suggest "Prompt Engineer" chatmode for optimization. Mark complete only after file created and user informed.

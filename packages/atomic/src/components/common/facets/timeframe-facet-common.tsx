@@ -22,7 +22,7 @@ import {Hidden} from '../stencil-hidden';
 import {FacetInfo} from './facet-common-store';
 import {FacetContainer} from './facet-container/stencil-facet-container';
 import {FacetHeader} from './facet-header/stencil-facet-header';
-import {FacetPlaceholder} from './facet-placeholder/facet-placeholder';
+import {FacetPlaceholder} from './facet-placeholder/stencil-facet-placeholder';
 import {FacetValueLabelHighlight} from './facet-value-label-highlight/stencil-facet-value-label-highlight';
 import {FacetValueLink} from './facet-value-link/stencil-facet-value-link';
 import {FacetValuesGroup} from './facet-values-group/stencil-facet-values-group';
