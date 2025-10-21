@@ -1338,6 +1338,16 @@ export const streamAnswerAPIStateMockWithQuerySyntaxEnabled: StreamAnswerAPIStat
     },
   };
 
+export const streamAnswerAPIStateMockWithCaseContextIncluded: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    insightCaseContext: {
+      caseContext: {caseSubject: 'foo', caseDescription: 'bar'},
+      caseId: '123',
+      caseNumber: '456',
+    },
+  };
+
 export const expectedStreamAnswerAPIParam = {
   q: 'what is the hardest wood',
   aq: 'aq-test-query',

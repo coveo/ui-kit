@@ -6,7 +6,7 @@ import {
   wrapInSearchInterface,
 } from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, afterEach} = wrapInSearchInterface({}, true);
+const {decorator, play} = wrapInSearchInterface({}, true);
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-category-facet',
   {excludeCategories: ['methods']}
@@ -25,8 +25,8 @@ const meta: Meta = {
     },
   },
   argTypes,
-  afterEach: async (context) => {
-    await afterEach(context);
+  play: async (context) => {
+    await play(context);
     await playExecuteFirstSearch(context);
   },
   args: {
@@ -60,8 +60,8 @@ export const LowFacetValues: Story = {
 export const WithCustomAllCategoriesLabelById: Story = {
   name: 'With custom all categories label, using facetId',
   tags: ['!dev'],
-  afterEach: async (context) => {
-    await afterEach(context);
+  play: async (context) => {
+    await play(context);
     const searchInterface =
       context.canvasElement.querySelector<HTMLAtomicSearchInterfaceElement>(
         'atomic-search-interface'
@@ -84,8 +84,8 @@ export const WithCustomAllCategoriesLabelById: Story = {
 export const WithCustomAllCategoriesLabelByField: Story = {
   tags: ['!dev'],
   name: 'With custom all categories label, using field',
-  afterEach: async (context) => {
-    await afterEach(context);
+  play: async (context) => {
+    await play(context);
     const searchInterface =
       context.canvasElement.querySelector<HTMLAtomicSearchInterfaceElement>(
         'atomic-search-interface'
@@ -107,8 +107,8 @@ export const WithCustomAllCategoriesLabelByField: Story = {
 export const WithCustomAllCategoriesLabelWithIdAndFieldCompeting: Story = {
   tags: ['!dev'],
   name: 'With custom all categories label, using field',
-  afterEach: async (context) => {
-    await afterEach(context);
+  play: async (context) => {
+    await play(context);
     const searchInterface =
       context.canvasElement.querySelector<HTMLAtomicSearchInterfaceElement>(
         'atomic-search-interface'

@@ -1,3 +1,26 @@
+## <small>3.35.5 (2025-10-16)</small>
+
+* chore: setup MSW with Storybook and replace playwright network mocking (#6000) ([010586c](https://github.com/coveo/ui-kit/commits/010586c)), closes [#6000](https://github.com/coveo/ui-kit/issues/6000)
+
+
+
+## <small>3.35.3 (2025-10-15)</small>
+
+* fix(atomic-react): fix table layout (#6146) ([2cdc290](https://github.com/coveo/ui-kit/commits/2cdc290)), closes [#6146](https://github.com/coveo/ui-kit/issues/6146)
+* chore (atomic): migrate ResultTemplateCommon (#6103) ([775960b](https://github.com/coveo/ui-kit/commits/775960b)), closes [#6103](https://github.com/coveo/ui-kit/issues/6103)
+* chore: use docker for faster playwright setup (#6139) ([59cab65](https://github.com/coveo/ui-kit/commits/59cab65)), closes [#6139](https://github.com/coveo/ui-kit/issues/6139)
+* chore(atomic insight): migrate atomic-insight-interface (#5889) ([5aaf044](https://github.com/coveo/ui-kit/commits/5aaf044)), closes [#5889](https://github.com/coveo/ui-kit/issues/5889)
+* chore(atomic): mark Stencil functional components as deprecated (#6127) ([fdc0931](https://github.com/coveo/ui-kit/commits/fdc0931)), closes [#6127](https://github.com/coveo/ui-kit/issues/6127)
+* chore(atomic): migrate atomic-search-box-instant-results (#6104) ([34aebcb](https://github.com/coveo/ui-kit/commits/34aebcb)), closes [#6104](https://github.com/coveo/ui-kit/issues/6104)
+* chore(atomic): migrate atomic-search-box-query-suggestions (#6071) ([8ec8876](https://github.com/coveo/ui-kit/commits/8ec8876)), closes [#6071](https://github.com/coveo/ui-kit/issues/6071)
+* chore(atomic): migrate result-template-decorators to reactive controllers (#6096) ([036092d](https://github.com/coveo/ui-kit/commits/036092d)), closes [#6096](https://github.com/coveo/ui-kit/issues/6096)
+* chore(atomic): spy on mocks when possible (#6122) ([8de2d0d](https://github.com/coveo/ui-kit/commits/8de2d0d)), closes [#6122](https://github.com/coveo/ui-kit/issues/6122)
+* feat(atomic): accessibility updates (LENS-3760) (#6117) ([5ef4bf9](https://github.com/coveo/ui-kit/commits/5ef4bf9)), closes [#6117](https://github.com/coveo/ui-kit/issues/6117)
+* feat(atomic): add per-facet customization of the all categories button (#6111) ([045ac16](https://github.com/coveo/ui-kit/commits/045ac16)), closes [#6111](https://github.com/coveo/ui-kit/issues/6111)
+* feat(atomic): set atomic version in analytics configuration when initializing interface with search  ([b3e1736](https://github.com/coveo/ui-kit/commits/b3e1736)), closes [#6115](https://github.com/coveo/ui-kit/issues/6115)
+
+
+
 ## 3.34.0 (2025-10-08)
 
 * chore: more cleanup of dependencies in multiples packages (#6119) ([ff6c837](https://github.com/coveo/ui-kit/commits/ff6c837)), closes [#6119](https://github.com/coveo/ui-kit/issues/6119)

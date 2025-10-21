@@ -3,7 +3,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
-const {decorator, afterEach} = wrapInCommerceInterface({
+const {decorator, play} = wrapInCommerceInterface({
   skipFirstRequest: false,
 });
 
@@ -27,7 +27,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach,
+  play,
 };
 
 export default meta;

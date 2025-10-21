@@ -29,7 +29,7 @@ const meta: Meta = {
       handles: events,
     },
   },
-  afterEach: async (context) => {
+  play: async (context) => {
     await initializeSearchInterface(context.canvasElement);
     const searchInterface = context.canvasElement.querySelector(
       'atomic-search-interface'
@@ -82,7 +82,7 @@ export const Default: Story = {};
 
 export const SearchBeforeInit: Story = {
   tags: ['!dev'],
-  afterEach: async (context) => {
+  play: async (context) => {
     const searchInterface = context.canvasElement.querySelector(
       'atomic-search-interface'
     );

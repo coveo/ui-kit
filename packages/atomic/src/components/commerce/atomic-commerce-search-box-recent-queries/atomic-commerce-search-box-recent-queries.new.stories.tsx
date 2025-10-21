@@ -6,10 +6,8 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {wrapInCommerceSearchBox} from '@/storybook-utils/commerce/commerce-search-box-wrapper';
 import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 
-const {
-  decorator: commerceInterfaceDecorator,
-  afterEach: commerceInterfacePlay,
-} = wrapInCommerceInterface({includeCodeRoot: false});
+const {decorator: commerceInterfaceDecorator, play: commerceInterfacePlay} =
+  wrapInCommerceInterface({includeCodeRoot: false});
 const {decorator: commerceSearchBoxDecorator} = wrapInCommerceSearchBox();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-search-box-recent-queries',
@@ -31,7 +29,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach: async (context) => {
+  play: async (context) => {
     await commerceInterfacePlay(context);
     const canvas = within(context.canvasElement);
     const searchBox = await canvas.findAllByShadowPlaceholderText('Search');

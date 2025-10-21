@@ -1,4 +1,4 @@
-import {expect, setRecentQueries, setSuggestions, test} from './fixture';
+import {expect, test} from './fixture';
 
 test.describe('atomic-commerce-search-box', () => {
   test.describe('default', () => {
@@ -17,8 +17,8 @@ test.describe('atomic-commerce-search-box', () => {
     });
 
     test.describe('when suggestions are available', () => {
-      test.beforeEach(async ({searchBox, page}) => {
-        await setSuggestions(page, 4);
+      test.beforeEach(async ({searchBox}) => {
+        await searchBox.load({story: 'with-suggestions'});
         await searchBox.searchInput.waitFor({state: 'visible'});
         await searchBox.searchInput.click();
       });
@@ -94,8 +94,8 @@ test.describe('atomic-commerce-search-box', () => {
     });
 
     test.describe('when no suggestions are available', () => {
-      test.beforeEach(async ({searchBox, page}) => {
-        await setSuggestions(page, 0);
+      test.beforeEach(async ({searchBox}) => {
+        await searchBox.load({story: 'with-no-suggestions'});
         await searchBox.searchInput.click();
       });
 
@@ -112,8 +112,7 @@ test.describe('atomic-commerce-search-box', () => {
 
     test.describe('when recent queries are available', () => {
       test.beforeEach(async ({searchBox, page}) => {
-        await setRecentQueries(page, 4);
-        await setSuggestions(page, 4);
+        await searchBox.load({story: 'with-suggestions-and-recent-queries'});
         // We reload to ensure we load the recent queries from local storage
         await page.reload();
         await searchBox.hydrated.waitFor();

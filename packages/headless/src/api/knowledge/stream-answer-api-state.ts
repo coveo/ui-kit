@@ -3,6 +3,7 @@ import type {
   ConfigurationSection,
   GeneratedAnswerSection,
   GetAnswerQuerySection,
+  InsightCaseContextSection,
   InsightConfigurationSection,
   TabSection,
 } from '../../state/state-sections.js';
@@ -15,4 +16,5 @@ export type StreamAnswerAPIState = {
   Partial<SearchAppState> &
   Partial<InsightConfigurationSection> &
   GeneratedAnswerSection &
-  Partial<TabSection>;
+  Partial<TabSection> &
+  Partial<InsightCaseContextSection>;
