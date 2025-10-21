@@ -10,31 +10,15 @@ import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/ato
   tagName="atomic-breadbox"
   className="AtomicBreadbox"
 >
-# UX notes
 
-## Introduction
+Include breadcrumbs in a search page when you want users to navigate the content using facets.
+For eaxmple, on an ecommerce website breadcrumbs help the users keep track of the selected filters and being able to confirm and adjust filtering encourages browsing.
 
-The _Breadbox_ component helps the information seeker keep track of the navigational state of the currently active facet values, located in a single place on the search page.
-In most cases, these are on the top of a page between the search bar and the results.
-Each facet value that’s displayed in the breadcrumbs will appear as individual pill styled buttons.
-Clearing the breadcrumbs is possible individually or all-at-once.
-By default, having the field name displayed before the field value helps to clarify which facet the value is from. However, in the case where there are two or less facets, you can remove the field name through the `breadcrumb-label` shadow part.
 
-## User Experience and Best Practices
+## UX Best Practices
 
-### Usage Notes
-
-* Include breadcrumbs in a search page when you want users to navigate the content using facets.
-* When a page has more than two facet types, we recommended that breadcrumbs should include the facet title, helping the user distinguish the source of each breadcrumb.
-
-### Guidelines
-
-We display the field name to help clarify which facet the breadcrumb value associated with.
-However, in the case where there are two or less facets, you can remove the field name through the CSS shadow part, `breadcrumb-label`.
-
-## Use Cases and Examples
-
-On an ecommerce website, breadcrumbs help the users keep track of the selected filters during their browsing experience. Being able to confirm and adjust filtering encourages browsing.
+- **Field names provide context for the selected value**: displaying the field name next to the selected value clarifis which facet the breadcrumb value associated with.
+In the case where there are two or less facets, remove the field name through the CSS shadow part `breadcrumb-label` if the context is clear.
 
 </AtomicDocTemplate>
 
