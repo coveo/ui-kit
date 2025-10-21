@@ -14,11 +14,8 @@ import '../atomic-product/atomic-product';
 import {arrayConverter} from '@/src/converters/array-converter';
 
 /**
- * * A product template determines the format of the products, depending on the conditions that are defined for each template.
+ * A product template determines the format of the products, depending on the conditions that are defined for each template.
  *
- * A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
- *
- * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
  * @MapProp name: mustMatch;attr: must-match;docs: The field and values that must be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
  * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that must not be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
  * @slot default - The default slot where to insert the template element.
