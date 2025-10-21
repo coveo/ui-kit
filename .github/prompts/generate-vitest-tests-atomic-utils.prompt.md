@@ -84,58 +84,72 @@ vi.mock('external-library', () => ({
 }));
 ```
 
+**Mock cleanup:** Automatic via `restoreMocks: true` in `vitest.config.js`. Only add explicit cleanup when:
+- Using fake timers (`vi.useFakeTimers()` requires `vi.useRealTimers()` in `afterEach`)
+- Mocking browser APIs that need restoration (navigator, window properties)
+
+```typescript
+// Only needed for timers or browser API mocks
+afterEach(() => {
+  vi.useRealTimers(); // Required when using vi.useFakeTimers()
+});
+```
+
 ### 3. Create Test Suite Structure
 
-Follow the established naming conventions:
+Follow the established naming conventions from `.github/instructions/tests-atomic.instructions.md`:
 
-- **Main describe**: Use `'utils'` for utility files (not the filename)
+- **Top-level describe**: Use the module file name without extension (e.g., `'device-utils'`, `'compare-utils'`)
 - **Function describes**: Use `'#functionName'` for each exported function
-- **Condition describes**: Use `'when [condition]'` sparingly, only for complex scenarios
+- **Condition describes**: Use `'when [condition]'` or `'#methodName'` sparingly for complex scenarios
 - **Test cases**: Always start with `'should'`
 - **Prefer flatter structure** over deeply nested describes
+
+**Example:**
+```typescript
+describe('device-utils', () => {
+  describe('#isIOS', () => {
+    it('should return true for iPad user agent', () => {
+      // ...
+    });
+  });
+});
+```
 
 ### 4. Write Comprehensive Test Cases
 
 #### A. Pure Functions (No Side Effects)
 
 ```typescript
-describe('utility-file-name', () => {
-  describe('#pureFunctionName', () => {
-    it('should return expected result for valid input', () => {
-      const result = pureFunctionName('validInput');
-      expect(result).toBe('expectedOutput');
+describe('compare-utils', () => {
+  describe('#deepEqual', () => {
+    it('should return true for identical primitives', () => {
+      expect(deepEqual(1, 1)).toBe(true);
+      expect(deepEqual('hello', 'hello')).toBe(true);
     });
 
-    it('should handle empty input', () => {
-      const result = pureFunctionName('');
-      expect(result).toBe('defaultValue');
+    it('should return false for different primitives', () => {
+      expect(deepEqual(1, 2)).toBe(false);
+      expect(deepEqual('hello', 'world')).toBe(false);
+    });
+
+    it('should handle nested arrays correctly', () => {
+      expect(deepEqual([[1, 2]], [[1, 2]])).toBe(true);
+      expect(deepEqual([[1, 2]], [[1, 3]])).toBe(false);
     });
 
     it('should throw error when input is invalid', () => {
-      expect(() => pureFunctionName(null)).toThrow('Invalid input');
-    });
-
-    describe('when input has special characters', () => {
-      it('should escape special characters', () => {
-        const result = pureFunctionName('input<script>');
-        expect(result).toBe('input&lt;script&gt;');
-      });
-
-      it('should preserve unicode characters', () => {
-        const result = pureFunctionName('café');
-        expect(result).toBe('café');
-      });
+      expect(() => deepEqual(null, undefined)).not.toThrow();
     });
   });
 });
 ```
 
-#### B. Functions with Side Effects
+#### B. Functions with Side Effects and Timers
 
 ```typescript
-describe('#functionWithSideEffects', () => {
+describe('promise-utils', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
     vi.useFakeTimers();
   });
 
@@ -143,69 +157,86 @@ describe('#functionWithSideEffects', () => {
     vi.useRealTimers();
   });
 
-  it('should perform side effect correctly', () => {
-    const mockElement = document.createElement('div');
-    functionWithSideEffects(mockElement);
+  describe('#promiseTimeout', () => {
+    it('should resolve when promise completes before timeout', async () => {
+      const result = promiseTimeout(Promise.resolve('success'), 1000);
+      await expect(result).resolves.toBeUndefined();
+    });
 
-    expect(mockElement.classList.contains('expected-class')).toBe(true);
-  });
+    it('should reject when promise exceeds timeout', async () => {
+      const slowPromise = new Promise((resolve) => 
+        setTimeout(() => resolve('late'), 2000)
+      );
+      const result = promiseTimeout(slowPromise, 1000);
 
-  it('should handle missing element gracefully', () => {
-    expect(() => functionWithSideEffects(null)).not.toThrow();
-  });
+      vi.advanceTimersByTime(1000);
+      await expect(result).rejects.toThrow('Promise timed out.');
+    });
 
-  describe('when timing is involved', () => {
-    it('should debounce calls correctly', () => {
-      const callback = vi.fn();
-      const debouncedFn = functionWithSideEffects(callback, 100);
+    it('should handle multiple concurrent timeouts', async () => {
+      const p1 = promiseTimeout(Promise.resolve('fast'), 1000);
+      const p2 = new Promise((resolve) => setTimeout(() => resolve('slow'), 2000));
+      const p2Timeout = promiseTimeout(p2, 1000);
 
-      debouncedFn();
-      debouncedFn();
-      debouncedFn();
-
-      expect(callback).not.toHaveBeenCalled();
-
-      vi.advanceTimersByTime(100);
-      expect(callback).toHaveBeenCalledTimes(1);
+      await expect(p1).resolves.toBeUndefined();
+      
+      vi.advanceTimersByTime(1000);
+      await expect(p2Timeout).rejects.toThrow('Promise timed out.');
     });
   });
 });
 ```
 
-#### C. Async Functions
+#### C. Browser API Mocking
 
 ```typescript
-describe('#asyncUtilFunction', () => {
-  it('should resolve with expected value', async () => {
-    const result = await asyncUtilFunction('input');
-    expect(result).toBe('expected');
+describe('device-utils', () => {
+  let originalUserAgent: string;
+  let originalMaxTouchPoints: number;
+
+  beforeEach(() => {
+    originalUserAgent = navigator.userAgent;
+    originalMaxTouchPoints = navigator.maxTouchPoints;
   });
 
-  it('should reject with error when input is invalid', async () => {
-    await expect(asyncUtilFunction(null)).rejects.toThrow('Invalid input');
+  afterEach(() => {
+    Object.defineProperty(navigator, 'userAgent', {
+      writable: true,
+      value: originalUserAgent,
+    });
+    Object.defineProperty(navigator, 'maxTouchPoints', {
+      writable: true,
+      value: originalMaxTouchPoints,
+    });
   });
 
-  it('should handle network errors gracefully', async () => {
-    vi.mocked(fetch).mockRejectedValueOnce(new Error('Network error'));
-
-    await expect(asyncUtilFunction('input')).rejects.toThrow('Network error');
-  });
-
-  describe('when using fake timers', () => {
-    beforeEach(() => {
-      vi.useFakeTimers();
+  describe('#isIOS', () => {
+    it('should return true for iPad user agent', () => {
+      Object.defineProperty(navigator, 'userAgent', {
+        writable: true,
+        value: 'Mozilla/5.0 (iPad; CPU OS 14_7_1 like Mac OS X)',
+      });
+      expect(isIOS()).toBe(true);
     });
 
-    afterEach(() => {
-      vi.useRealTimers();
+    it('should return true for Macintosh with touch screen', () => {
+      Object.defineProperty(navigator, 'userAgent', {
+        writable: true,
+        value: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+      });
+      Object.defineProperty(navigator, 'maxTouchPoints', {
+        writable: true,
+        value: 5,
+      });
+      expect(isIOS()).toBe(true);
     });
 
-    it('should timeout after specified duration', async () => {
-      const promise = asyncUtilFunction('slow-input');
-
-      vi.advanceTimersByTime(5000);
-
-      await expect(promise).rejects.toThrow('Timeout');
+    it('should return false for Android user agent', () => {
+      Object.defineProperty(navigator, 'userAgent', {
+        writable: true,
+        value: 'Mozilla/5.0 (Linux; Android 10)',
+      });
+      expect(isIOS()).toBe(false);
     });
   });
 });
@@ -214,34 +245,40 @@ describe('#asyncUtilFunction', () => {
 #### D. Functions with i18n Dependencies
 
 ```typescript
-describe('#functionWithI18n', () => {
+describe('i18n-utils', () => {
   let i18n: I18n;
 
-  beforeEach(async () => {
-    i18n = await createTestI18n();
+  beforeAll(async () => {
+    i18n = await createTestI18n(); // From vitest-utils/testing-helpers
   });
 
-  it('should use i18n correctly', () => {
-    const result = functionWithI18n('translation-key', i18n);
-    expect(result).toContain('Translated Text');
-  });
+  describe('#formatWithI18n', () => {
+    it('should use i18n correctly', () => {
+      const result = formatWithI18n('translation-key', i18n);
+      expect(result).toContain('Translated Text');
+    });
 
-  it('should fallback to key when translation is missing', () => {
-    const result = functionWithI18n('missing-key', i18n);
-    expect(result).toBe('missing-key');
-  });
+    it('should handle interpolation values', () => {
+      const result = formatWithI18n('greeting', i18n, {name: 'John'});
+      expect(result).toBe('Hello, John!');
+    });
 
-  it('should handle interpolation values', () => {
-    const result = functionWithI18n('greeting', i18n, {name: 'John'});
-    expect(result).toBe('Hello, John!');
+    it('should fallback to key when translation is missing', () => {
+      const result = formatWithI18n('missing-key', i18n);
+      expect(result).toBe('missing-key');
+    });
   });
 });
 ```
 
+**Note:** Use `beforeAll` for i18n setup (not `beforeEach`) to avoid repeated initialization overhead.
+
+#### E. Class-based Utilities
+
 #### E. Class-based Utilities
 
 ```typescript
-describe('#UtilityClassName', () => {
+describe('UtilityClassName', () => {
   let instance: UtilityClassName;
 
   beforeEach(() => {
@@ -268,31 +305,21 @@ describe('#UtilityClassName', () => {
     it('should maintain internal state correctly', () => {
       instance.publicMethod('input1');
       instance.publicMethod('input2');
-
       expect(instance.getState()).toEqual(['input1', 'input2']);
-    });
-
-    describe('when method is called multiple times', () => {
-      beforeEach(() => {
-        instance.publicMethod('setup');
-      });
-
-      it('should handle repeated calls', () => {
-        const result = instance.publicMethod('repeat');
-        expect(result).toBe('expected-repeat');
-      });
     });
   });
 });
 ```
 
+**For additional patterns**, see existing test files in `packages/atomic/src/utils/*.spec.ts`.
+
 ## Common Patterns and Best Practices
 
 ### Test Organization
 
-- **Single `describe` block** per spec file with utility file name
-- **Use `#functionName`** for individual function test groups
-- **Nest conditions** with `'when [condition]'` describes
+- **Top-level describe** matches utility module name (e.g., `'device-utils'`, `'compare-utils'`)
+- **Function describes** use `'#functionName'` pattern for each exported function
+- **Nest conditions** with `'when [condition]'` describes only for complex scenarios
 - **Group related tests** logically together
 - **Test edge cases** thoroughly
 
@@ -300,9 +327,9 @@ describe('#UtilityClassName', () => {
 
 - **Mock external dependencies** that are not part of the test scope
 - **Use `vi.fn()`** for function mocks
-- **Mock timers** when testing debounce/throttle functions
-- **Mock DOM APIs** when utilities interact with browser APIs
-- **Clear mocks** in `beforeEach` to avoid test interference
+- **Mock timers** when testing debounce/throttle functions with `vi.useFakeTimers()` / `vi.useRealTimers()`
+- **Mock browser APIs** when utilities interact with navigator, window, etc. (restore in `afterEach`)
+- **Avoid unnecessary cleanup** - `restoreMocks: true` handles most cases automatically
 
 ### Data Testing Patterns
 
@@ -314,9 +341,9 @@ describe('#UtilityClassName', () => {
 ### Async Testing
 
 - **Use `async/await`** for promise-based functions
-- **Test both success and failure** scenarios
+- **Test both success and failure** scenarios  
 - **Mock async dependencies** appropriately
-- **Use fake timers** for timeout testing
+- **Use fake timers** for timeout testing with `vi.useFakeTimers()` and `vi.advanceTimersByTime()`
 
 ## Common Pitfalls and Corrections
 
@@ -385,106 +412,15 @@ it('should convert camelCase to kebab-case', () => {
 - **Use fake timers** for time-dependent functions
 - **Keep tests fast** - avoid unnecessary delays or real DOM manipulation
 
-## Validation Checklist
+## Verification
 
-Before submitting your tests, verify:
+Before completing, ensure:
 
-- [ ] **All exported functions are tested** with comprehensive coverage
-- [ ] **Error cases are handled** with appropriate expect statements
-- [ ] **Edge cases are covered** including null, undefined, empty values
-- [ ] **Async functions use proper async/await** patterns
-- [ ] **Mocks are used appropriately** and cleared between tests
-- [ ] **Test descriptions are clear** and behavior-focused
-- [ ] **File follows naming conventions** - same name as utility file with `.spec.ts`
-- [ ] **Imports are organized** and include all necessary Vitest functions
-- [ ] **Tests can run independently** without order dependencies
-- [ ] **Code coverage is comprehensive** for all branches and conditions
-
-## Usage Examples
-
-### Simple Formatter Utility
-
-```typescript
-describe('format-utils', () => {
-  describe('#formatCurrency', () => {
-    it('should format number as USD currency', () => {
-      const result = formatCurrency(123.45, 'USD');
-      expect(result).toBe('$123.45');
-    });
-
-    it('should handle zero values', () => {
-      const result = formatCurrency(0, 'USD');
-      expect(result).toBe('$0.00');
-    });
-
-    it('should throw error for invalid currency code', () => {
-      expect(() => formatCurrency(100, 'INVALID')).toThrow('Invalid currency');
-    });
-  });
-});
-```
-
-### Validation Utility
-
-```typescript
-describe('validation-utils', () => {
-  describe('#isValidEmail', () => {
-    it('should return true for valid email addresses', () => {
-      expect(isValidEmail('user@example.com')).toBe(true);
-      expect(isValidEmail('test.email+tag@domain.co.uk')).toBe(true);
-    });
-
-    it('should return false for invalid email addresses', () => {
-      expect(isValidEmail('invalid-email')).toBe(false);
-      expect(isValidEmail('user@')).toBe(false);
-      expect(isValidEmail('@domain.com')).toBe(false);
-    });
-
-    it('should return false for non-string inputs', () => {
-      expect(isValidEmail(null)).toBe(false);
-      expect(isValidEmail(undefined)).toBe(false);
-      expect(isValidEmail(123)).toBe(false);
-    });
-  });
-});
-```
-
-### Debounce Utility
-
-```typescript
-describe('debounce-utils', () => {
-  describe('#buildDebouncedQueue', () => {
-    let queue: DebouncedQueue;
-
-    beforeEach(() => {
-      vi.useFakeTimers();
-      queue = buildDebouncedQueue({delay: 100});
-    });
-
-    afterEach(() => {
-      vi.useRealTimers();
-      queue.clear();
-    });
-
-    it('should execute first action immediately', () => {
-      const action = vi.fn();
-      queue.enqueue(action);
-      expect(action).toHaveBeenCalledTimes(1);
-    });
-
-    it('should debounce subsequent actions', () => {
-      const action = vi.fn();
-      queue.enqueue(() => {}); // First action
-      queue.enqueue(action); // Should be debounced
-
-      expect(action).not.toHaveBeenCalled();
-
-      vi.advanceTimersByTime(100);
-      expect(action).toHaveBeenCalledTimes(1);
-    });
-  });
-});
-```
+1. **Top-level describe matches module name** (e.g., `describe('device-utils')`)
+2. **Function tests use `#functionName`** pattern (e.g., `describe('#isIOS')`)
+3. **Mock cleanup** only present when using fake timers or browser API mocks
+4. **Tests pass** when run with `npx vitest ./src/utils/<file>.spec.ts --run`
+5. **All exported functions are tested** with main functionality and key edge cases covered
 
 ## Running Tests
 
@@ -506,74 +442,31 @@ npx vitest --config vitest.config.ts ./src/utils/your-utility.spec.ts
 - **Mock external dependencies** but not the utility functions themselves
 - **Test both happy path and error cases** for comprehensive coverage
 - **Use descriptive test names** that explain the expected behavior
-- **Group related tests** using nested `describe` blocks
-- **Clean up side effects** in `beforeEach` rather than `afterEach`
-- **Follow established patterns** from existing utility test files
+- **Group related tests** using nested `describe` blocks when appropriate
+- **Follow established patterns** from existing utility test files in `packages/atomic/src/utils/*.spec.ts`
 - **Consider performance** - mock expensive operations to keep tests fast
 
 The goal is to create a comprehensive test suite that validates the utility functions work correctly across all scenarios while maintaining the high quality standards of the UI Kit project.
 
-## Preferred Test Structure and Style
+## Post-Execution: Generate Summary
 
-### Test Organization Patterns
+After completing test generation, generate execution summary:
 
-Based on existing codebase patterns, follow these structural preferences:
+**1. Create summary file:**
+- **Location:** `.github/prompts/.executions/generate-vitest-tests-atomic-utils-[YYYY-MM-DD-HHmmss].prompt-execution.md`
+- **Structure:** Follow `.github/prompts/.executions/TEMPLATE.prompt-execution.md`
+- **Purpose:** Structured feedback for prompt optimization
 
-- **Main describe block**: Use `'utils'` for utility files instead of the filename
-- **Function grouping**: Use `describe('#functionName')` but avoid excessive nesting
-- **Condition grouping**: Only use `describe('when...')` for truly complex scenarios with multiple related tests
-- **Prefer flatter structure** over deeply nested describes
+**2. Include in summary:**
+- Which similar utility tests were used as reference (if any)
+- Issues with understanding utility function patterns or edge cases
+- Ambiguities in prompt instructions that required interpretation
+- Time-consuming operations (excessive file reads, searches)
+- Missing instructions or unclear testing requirements
+- Concrete suggestions for prompt improvements
 
-### Import and Mocking Patterns
+**3. Inform user** about summary location and next steps (switch to "Prompt Engineer" chatmode for optimization)
 
-Follow the existing patterns in the codebase:
+**4. Mark complete** only after file created and user informed.
 
-```typescript
-// Preferred import style
-import {utilFunction} from '@/src/utils/utils';
-import {vi, describe, it, expect, beforeEach, afterEach} from 'vitest';
-
-// Preferred mocking style - use {spy: true} when possible
-vi.mock('@/src/utils/utils', {spy: true});
-vi.mock('@coveo/headless/commerce');
-
-// Mock cleanup in afterEach
-afterEach(() => {
-  vi.restoreAllMocks();
-});
-```
-
-### Assertion Preferences
-
-- **Use snapshots** for complex objects or return values where appropriate
-- **Focus on behavior** rather than implementation details
-- **Test essential functionality** first, then key edge cases
-- **Avoid over-mocking** - only mock what's necessary for the test
-
-### Example Structure
-
-```typescript
-describe('utils', () => {
-  describe('#functionName', () => {
-    let consoleErrorSpy: MockInstance;
-
-    beforeEach(() => {
-      consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    });
-
-    afterEach(() => {
-      vi.restoreAllMocks();
-    });
-
-    it('should handle main functionality', () => {
-      const result = functionName(input);
-      expect(result).toMatchSnapshot(); // Use snapshots for complex outputs
-    });
-
-    it('should handle edge case when condition occurs', () => {
-      const result = functionName(edgeCaseInput);
-      expect(result).toBe(expectedValue);
-    });
-  });
-});
-```
+````
