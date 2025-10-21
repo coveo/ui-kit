@@ -633,7 +633,11 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     if (this.hasInitializationError) {
       return errorTemplate;
     }
-    if (this.isLoading && this.isManualAnswerGeneration) {
+    if (
+      this.isLoading &&
+      this.isManualAnswerGeneration &&
+      !this.state?.cannotAnswer
+    ) {
       return loadingTemplate;
     }
     if (this.hasRetryableError) {
