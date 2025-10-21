@@ -1006,7 +1006,6 @@ describe('c-quantic-generated-answer', () => {
         });
 
         describe('when cannotAnswer is true in the state', () => {
-          const exampleAnswerContentFormat = 'text/markdown';
           beforeEach(() => {
             generatedAnswerState = {
               ...initialGeneratedAnswerState,
@@ -1029,7 +1028,7 @@ describe('c-quantic-generated-answer', () => {
             generatedAnswerState = initialGeneratedAnswerState;
           });
 
-          it.only('should display the cannot answer message and not display the loading state even when isLoading is true', async () => {
+          it('should display the cannot answer message and not display the loading state even when isLoading is true', async () => {
             const element = createTestComponent();
             await flushPromises();
 
