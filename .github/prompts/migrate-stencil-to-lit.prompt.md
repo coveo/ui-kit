@@ -354,22 +354,22 @@ html`<div>${shouldShow ? html`<span>Content</span>` : nothing}</div>`;
 
 - [ ] **Step 0:** Find and analyze similar migrated component in other use cases for pattern reference
 - [ ] **Step 1:** Migrate functional components/utils with stencil- prefixing
-- [ ] **Step 1:** Update ALL imports across ALL use cases (commerce, search, headless, etc.) when renaming utilities
-- [ ] **Step 1:** Verify no broken imports remain in any package using global search
-- [ ] **Step 2:** Generate new Lit component structure using generate-component.mjs
-- [ ] **Step 3:** Migrate main component from .tsx to .ts
-- [ ] **Step 3:** Convert PostCSS styles to Tailwind CSS
-- [ ] **Step 3:** Verify correct InitializableComponent import and implementation
-- [ ] **Step 3:** Add @bindings() decorator and bindings state property
-- [ ] **Step 3:** Add global HTMLElementTagNameMap declaration (duplicate declaration errors expected until Stencil removal)
-- [ ] **Step 3:** Use `type` imports for type-only imports (e.g., `import type {Bindings}` or `import {type QueryError}`)
-- [ ] **Step 3:** Include CSS @reference if using custom Tailwind utilities; omit styles import if CSS only has @reference
-- [ ] **Step 3:** Ensure functional component methods start with 'render' prefix
-- [ ] **Step 3:** Use correct functional component pattern (double invocation with children)
-- [ ] **Step 3:** Use correct bindStateToController import from decorators
-- [ ] **Step 3:** Use Lit reactive controllers instead of Stencil context providers
-- [ ] **Step 3:** Use Lit's `nothing` directive for conditional rendering (not `null`/`undefined`)
-- [ ] **Step 3:** Verify path aliases: run `grep -E "from '\.\./|from \"\.\\./" atomic-{name}.ts` → expect zero matches
+- [ ] **Step 2:** Update ALL imports across ALL use cases (commerce, search, headless, etc.) when renaming utilities
+- [ ] **Step 3:** Verify no broken imports remain in any package using global search
+- [ ] **Step 4:** Generate new Lit component structure using generate-component.mjs
+- [ ] **Step 5:** Migrate main component from .tsx to .ts
+- [ ] **Step 6:** Convert PostCSS styles to Tailwind CSS
+- [ ] **Step 7:** Verify correct InitializableComponent import and implementation
+- [ ] **Step 8:** Add @bindings() decorator and bindings state property
+- [ ] **Step 9:** Add global HTMLElementTagNameMap declaration (duplicate declaration errors expected until Stencil removal)
+- [ ] **Step 10:** Use `type` imports for type-only imports (e.g., `import type {Bindings}` or `import {type QueryError}`)
+- [ ] **Step 11:** Include CSS @reference if using custom Tailwind utilities; omit styles import if CSS only has @reference
+- [ ] **Step 12:** Ensure functional component methods start with 'render' prefix
+- [ ] **Step 13:** Use correct functional component pattern (double invocation with children)
+- [ ] **Step 14:** Use correct bindStateToController import from decorators
+- [ ] **Step 15:** Use Lit reactive controllers instead of Stencil context providers
+- [ ] **Step 16:** Use Lit's `nothing` directive for conditional rendering (not `null`/`undefined`)
+- [ ] **Step 17:** Verify path aliases: run `grep -E "from '\.\./|from \"\.\\./" atomic-{name}.ts` → expect zero matches
 
 ## Important Notes
 
