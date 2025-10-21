@@ -1004,6 +1004,58 @@ describe('c-quantic-generated-answer', () => {
           expect(loadingSpinner).not.toBeNull();
           expect(generatedAnswerCard).toBeNull();
         });
+
+        describe('when cannotAnswer is true in the state', () => {
+          const exampleAnswerContentFormat = 'text/markdown';
+          beforeEach(() => {
+            generatedAnswerState = {
+              ...initialGeneratedAnswerState,
+              isStreaming: false,
+              answer: '',
+              answerContentFormat: exampleAnswerContentFormat,
+              answerGenerationMode: 'manual',
+              isLoading: true,
+              cannotAnswer: true,
+            };
+            searchStatusState = {
+              ...initialSearchStatusState,
+              hasResults: true,
+            };
+            mockSuccessfulHeadlessInitialization();
+            prepareHeadlessState();
+          });
+
+          afterAll(() => {
+            generatedAnswerState = initialGeneratedAnswerState;
+          });
+
+          it.only('should display the cannot answer message and not display the loading state even when isLoading is true', async () => {
+            const element = createTestComponent();
+            await flushPromises();
+
+            const loadingSpinner = element.shadowRoot.querySelector(
+              selectors.loadingSpinner
+            );
+            const generatedAnswerCard = element.shadowRoot.querySelector(
+              selectors.generatedAnswerCard
+            );
+            const generatedAnswerCardNoAnswer =
+              element.shadowRoot.querySelector(
+                selectors.generatedAnswerNoAnswerCard
+              );
+            const generatedAnswerCardNoAnswerMessage =
+              element.shadowRoot.querySelector(
+                selectors.generatedAnswerNoAnswerMessage
+              );
+
+            expect(loadingSpinner).toBeNull();
+            expect(generatedAnswerCard).toBeNull();
+            expect(generatedAnswerCardNoAnswer).not.toBeNull();
+            expect(generatedAnswerCardNoAnswerMessage.textContent).toBe(
+              'No generated answer available.'
+            );
+          });
+        });
       });
 
       describe('when the answer cannot be generated after a query is executed', () => {
