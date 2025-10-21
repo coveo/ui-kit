@@ -12,7 +12,7 @@ import {
   SafeStorage,
   StorageItems,
 } from '../../../utils/local-storage-utils';
-import {getNamedSlotFromHost} from '../../../utils/slot-utils';
+import {getNamedSlotContent} from '../../../utils/slot-utils';
 import {AnyBindings} from '../interface/bindings';
 import {Heading} from '../stencil-heading';
 import {Switch} from '../switch';
@@ -149,8 +149,7 @@ export class GeneratedAnswerCommon {
   }
 
   private get hasCustomNoAnswerMessage() {
-    const slot = getNamedSlotFromHost(this.props.host, 'no-answer-message');
-    return !!slot;
+    return getNamedSlotContent(this.props.host, 'no-answer-message').length > 0;
   }
 
   private async copyToClipboard(answer: string) {
