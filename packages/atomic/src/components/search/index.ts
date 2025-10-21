@@ -11,6 +11,7 @@ export {AtomicResultSectionExcerpt} from './atomic-result-section-excerpt/atomic
 export {AtomicResultSectionTitle} from './atomic-result-section-title/atomic-result-section-title.js';
 export {AtomicResultSectionTitleMetadata} from './atomic-result-section-title-metadata/atomic-result-section-title-metadata.js';
 export {AtomicResultSectionVisual} from './atomic-result-section-visual/atomic-result-section-visual.js';
+export {AtomicResultTemplate} from './atomic-result-template/atomic-result-template.js';
 export {AtomicResultsPerPage} from './atomic-results-per-page/atomic-results-per-page.js';
 export {AtomicSearchBoxInstantResults} from './atomic-search-box-instant-results/atomic-search-box-instant-results.js';
 export {AtomicSearchBoxQuerySuggestions} from './atomic-search-box-query-suggestions/atomic-search-box-query-suggestions.js';
