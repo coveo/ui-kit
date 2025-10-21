@@ -30,7 +30,7 @@ const meta: Meta = {
   },
   decorators: [(story) => html`<div id="code-root">${story()}</div>`],
 
-  afterEach: async (context) => {
+  play: async (context) => {
     await initializeCommerceInterface(context.canvasElement);
     const searchInterface = context.canvasElement.querySelector(
       'atomic-commerce-interface'
@@ -83,7 +83,7 @@ export const Default: Story = {};
 
 export const SearchBeforeInit: Story = {
   tags: ['!dev'],
-  afterEach: async (context) => {
+  play: async (context) => {
     const commerceInterface = context.canvasElement.querySelector(
       'atomic-commerce-interface'
     );

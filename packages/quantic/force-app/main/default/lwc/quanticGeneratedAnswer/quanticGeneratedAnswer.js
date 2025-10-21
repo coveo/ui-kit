@@ -10,6 +10,7 @@ import generatingAnswer from '@salesforce/label/c.quantic_GeneratingAnswer';
 import harmful from '@salesforce/label/c.quantic_Harmful';
 import inaccurate from '@salesforce/label/c.quantic_Inaccurate';
 import irrelevant from '@salesforce/label/c.quantic_Irrelevant';
+import loading from '@salesforce/label/c.quantic_Loading';
 import other from '@salesforce/label/c.quantic_Other';
 import outOfDate from '@salesforce/label/c.quantic_OutOfDate';
 import rgaDisclaimer from '@salesforce/label/c.quantic_RGADisclaimer';
@@ -17,6 +18,7 @@ import thisAnswerWasHelpful from '@salesforce/label/c.quantic_ThisAnswerWasHelpf
 import thisAnswerWasNotHelpful from '@salesforce/label/c.quantic_ThisAnswerWasNotHelpful';
 import tryAgain from '@salesforce/label/c.quantic_TryAgain';
 import whyGeneratedAnswerWasNotHelpful from '@salesforce/label/c.quantic_WhyGeneratedAnswerWasNotHelpful';
+import noGeneratedAnswer from '@salesforce/label/c.quantic_NoGeneratedAnswer';
 import FeedbackModalQna from 'c/quanticFeedbackModalQna';
 import {
   registerComponentForInit,
@@ -29,6 +31,8 @@ import {LightningElement, api} from 'lwc';
 import errorTemplate from './templates/errorTemplate.html';
 // @ts-ignore
 import generatedAnswerTemplate from './templates/generatedAnswer.html';
+// @ts-ignore
+import loadingTemplate from './templates/loading.html';
 // @ts-ignore
 import retryPromptTemplate from './templates/retryPrompt.html';
 
@@ -147,6 +151,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     rgaDisclaimer,
     showMore,
     showLess,
+    loading,
+    noGeneratedAnswer,
   };
 
   /** @type {GeneratedAnswer} */
@@ -603,12 +609,16 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return !!slot?.assignedNodes()?.length;
   }
 
-  get shouldDisplayCustomNoAnswerMessage() {
-    return (
-      this.state?.cannotAnswer &&
-      this.searchStatusState?.hasResults &&
-      this.hasCustomNoAnswerMessage
-    );
+  get cannotAnswer() {
+    return this.state?.cannotAnswer && this.searchStatusState?.hasResults;
+  }
+
+  get isLoading() {
+    return this.state?.isLoading;
+  }
+
+  get isManualAnswerGeneration() {
+    return this.state?.answerGenerationMode === 'manual';
   }
 
   /**
@@ -621,6 +631,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   render() {
     if (this.hasInitializationError) {
       return errorTemplate;
+    }
+    if (
+      this.isLoading &&
+      this.isManualAnswerGeneration &&
+      !this.state?.cannotAnswer
+    ) {
+      return loadingTemplate;
     }
     if (this.hasRetryableError) {
       return retryPromptTemplate;

@@ -40,6 +40,13 @@ jest.mock('c/quanticUtils', () => ({
     format: jest.fn(),
   },
 }));
+jest.mock(
+  '@salesforce/label/c.quantic_NoGeneratedAnswer',
+  () => ({default: 'No generated answer available.'}),
+  {
+    virtual: true,
+  }
+);
 
 /** @type {Object} */
 const defaultOptions = {
@@ -79,7 +86,10 @@ const selectors = {
   generatedAnswerDisclaimer: '[data-testid="generated-answer__disclaimer"]',
   generatedAnswerNoAnswerCard:
     '[data-testid="generated-answer__no-answer-card"]',
+  generatedAnswerNoAnswerMessage:
+    '[data-testid="generated-answer__no-answer-message"]',
   generatedAnswerCitations: 'c-quantic-source-citations',
+  loadingSpinner: 'lightning-spinner',
 };
 
 const initialSearchStatusState = {
@@ -831,6 +841,316 @@ describe('c-quantic-generated-answer', () => {
             selectors.generatedAnswerNoAnswerCard
           );
           expect(generatedAnswerCardNoAnswer).toBeNull();
+        });
+      });
+    });
+
+    describe('automatic answer generation', () => {
+      describe('when the answer is loading', () => {
+        const exampleAnswerContentFormat = 'text/markdown';
+        beforeEach(() => {
+          generatedAnswerState = {
+            ...initialGeneratedAnswerState,
+            isStreaming: false,
+            answer: '',
+            answerContentFormat: exampleAnswerContentFormat,
+            answerGenerationMode: 'automatic',
+            isLoading: true,
+          };
+          mockSuccessfulHeadlessInitialization();
+          prepareHeadlessState();
+        });
+
+        afterAll(() => {
+          generatedAnswerState = initialGeneratedAnswerState;
+        });
+
+        it('should not display the loading state', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+
+          const loadingSpinner = element.shadowRoot.querySelector(
+            selectors.loadingSpinner
+          );
+          const generatedAnswerCard = element.shadowRoot.querySelector(
+            selectors.generatedAnswerCard
+          );
+          expect(loadingSpinner).toBeNull();
+          expect(generatedAnswerCard).toBeNull();
+        });
+      });
+
+      describe('when the answer cannot be generated after a query is executed', () => {
+        const exampleAnswerContentFormat = 'text/markdown';
+        beforeEach(() => {
+          generatedAnswerState = {
+            ...initialGeneratedAnswerState,
+            isStreaming: false,
+            isLoading: false,
+            answer: '',
+            answerContentFormat: exampleAnswerContentFormat,
+            answerGenerationMode: 'automatic',
+            cannotAnswer: true,
+          };
+          searchStatusState = {
+            ...initialSearchStatusState,
+            hasResults: true,
+          };
+          mockSuccessfulHeadlessInitialization();
+          prepareHeadlessState();
+        });
+
+        afterAll(() => {
+          generatedAnswerState = initialGeneratedAnswerState;
+        });
+
+        describe('when no custom error message slot is provided', () => {
+          it('should not display the cannot answer message', async () => {
+            const element = createTestComponent();
+            await flushPromises();
+
+            const generatedAnswerCardNoAnswer =
+              element.shadowRoot.querySelector(
+                selectors.generatedAnswerNoAnswerCard
+              );
+            const generatedAnswerCard = element.shadowRoot.querySelector(
+              selectors.generatedAnswerCard
+            );
+            expect(generatedAnswerCard).toBeNull();
+            expect(generatedAnswerCardNoAnswer).toBeNull();
+          });
+        });
+
+        describe('when a custom error message slot is provided', () => {
+          it('should display the cannot answer message', async () => {
+            const element = createTestComponent(
+              defaultOptions,
+              exampleAssignedElements
+            );
+            await flushPromises();
+
+            const generatedAnswerCardNoAnswer =
+              element.shadowRoot.querySelector(
+                selectors.generatedAnswerNoAnswerCard
+              );
+            const generatedAnswerCard = element.shadowRoot.querySelector(
+              selectors.generatedAnswerCard
+            );
+            expect(generatedAnswerCard).toBeNull();
+            expect(generatedAnswerCardNoAnswer).not.toBeNull();
+          });
+        });
+
+        describe('when no results are returned', () => {
+          beforeEach(() => {
+            searchStatusState = {
+              ...initialSearchStatusState,
+              hasResults: false,
+            };
+          });
+
+          it('should not display the generated answer or the no generated answer card', async () => {
+            const element = createTestComponent(
+              defaultOptions,
+              exampleAssignedElements
+            );
+            await flushPromises();
+
+            const generatedAnswerCard = element.shadowRoot.querySelector(
+              selectors.generatedAnswerCard
+            );
+            expect(generatedAnswerCard).toBeNull();
+
+            const generatedAnswerCardNoAnswer =
+              element.shadowRoot.querySelector(
+                selectors.generatedAnswerNoAnswerCard
+              );
+            expect(generatedAnswerCardNoAnswer).toBeNull();
+          });
+        });
+      });
+    });
+
+    describe('manual answer generation', () => {
+      describe('when the answer is loading', () => {
+        const exampleAnswerContentFormat = 'text/markdown';
+        beforeEach(() => {
+          generatedAnswerState = {
+            ...initialGeneratedAnswerState,
+            isStreaming: false,
+            answer: '',
+            answerContentFormat: exampleAnswerContentFormat,
+            answerGenerationMode: 'manual',
+            isLoading: true,
+          };
+          mockSuccessfulHeadlessInitialization();
+          prepareHeadlessState();
+        });
+
+        afterAll(() => {
+          generatedAnswerState = initialGeneratedAnswerState;
+        });
+
+        it('should display the loading state', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+
+          const loadingSpinner = element.shadowRoot.querySelector(
+            selectors.loadingSpinner
+          );
+          const generatedAnswerCard = element.shadowRoot.querySelector(
+            selectors.generatedAnswerCard
+          );
+          expect(loadingSpinner).not.toBeNull();
+          expect(generatedAnswerCard).toBeNull();
+        });
+
+        describe('when cannotAnswer is true in the state', () => {
+          beforeEach(() => {
+            generatedAnswerState = {
+              ...initialGeneratedAnswerState,
+              isStreaming: false,
+              answer: '',
+              answerContentFormat: exampleAnswerContentFormat,
+              answerGenerationMode: 'manual',
+              isLoading: true,
+              cannotAnswer: true,
+            };
+            searchStatusState = {
+              ...initialSearchStatusState,
+              hasResults: true,
+            };
+            mockSuccessfulHeadlessInitialization();
+            prepareHeadlessState();
+          });
+
+          afterAll(() => {
+            generatedAnswerState = initialGeneratedAnswerState;
+          });
+
+          it('should display the cannot answer message and not display the loading state even when isLoading is true', async () => {
+            const element = createTestComponent();
+            await flushPromises();
+
+            const loadingSpinner = element.shadowRoot.querySelector(
+              selectors.loadingSpinner
+            );
+            const generatedAnswerCard = element.shadowRoot.querySelector(
+              selectors.generatedAnswerCard
+            );
+            const generatedAnswerCardNoAnswer =
+              element.shadowRoot.querySelector(
+                selectors.generatedAnswerNoAnswerCard
+              );
+            const generatedAnswerCardNoAnswerMessage =
+              element.shadowRoot.querySelector(
+                selectors.generatedAnswerNoAnswerMessage
+              );
+
+            expect(loadingSpinner).toBeNull();
+            expect(generatedAnswerCard).toBeNull();
+            expect(generatedAnswerCardNoAnswer).not.toBeNull();
+            expect(generatedAnswerCardNoAnswerMessage.textContent).toBe(
+              'No generated answer available.'
+            );
+          });
+        });
+      });
+
+      describe('when the answer cannot be generated after a query is executed', () => {
+        const exampleAnswerContentFormat = 'text/markdown';
+        beforeEach(() => {
+          generatedAnswerState = {
+            ...initialGeneratedAnswerState,
+            isStreaming: false,
+            isLoading: false,
+            answer: '',
+            answerContentFormat: exampleAnswerContentFormat,
+            answerGenerationMode: 'manual',
+            cannotAnswer: true,
+          };
+          searchStatusState = {
+            ...initialSearchStatusState,
+            hasResults: true,
+          };
+          mockSuccessfulHeadlessInitialization();
+          prepareHeadlessState();
+        });
+
+        afterAll(() => {
+          generatedAnswerState = initialGeneratedAnswerState;
+        });
+
+        describe('when no custom error message slot is provided', () => {
+          it('should display the default cannot answer message', async () => {
+            const element = createTestComponent();
+            await flushPromises();
+
+            const generatedAnswerCardNoAnswer =
+              element.shadowRoot.querySelector(
+                selectors.generatedAnswerNoAnswerCard
+              );
+            const generatedAnswerCardNoAnswerMessage =
+              element.shadowRoot.querySelector(
+                selectors.generatedAnswerNoAnswerMessage
+              );
+            const generatedAnswerCard = element.shadowRoot.querySelector(
+              selectors.generatedAnswerCard
+            );
+            expect(generatedAnswerCard).toBeNull();
+            expect(generatedAnswerCardNoAnswer).not.toBeNull();
+            expect(generatedAnswerCardNoAnswerMessage.textContent).toBe(
+              'No generated answer available.'
+            );
+          });
+        });
+
+        describe('when a custom error message slot is provided', () => {
+          it('should properly display the cannot answer message', async () => {
+            const element = createTestComponent(
+              defaultOptions,
+              exampleAssignedElements
+            );
+            await flushPromises();
+
+            const generatedAnswerCardNoAnswer =
+              element.shadowRoot.querySelector(
+                selectors.generatedAnswerNoAnswerCard
+              );
+            const generatedAnswerCard = element.shadowRoot.querySelector(
+              selectors.generatedAnswerCard
+            );
+            expect(generatedAnswerCard).toBeNull();
+            expect(generatedAnswerCardNoAnswer).not.toBeNull();
+          });
+        });
+
+        describe('when no results are returned', () => {
+          beforeEach(() => {
+            searchStatusState = {
+              ...initialSearchStatusState,
+              hasResults: false,
+            };
+          });
+
+          it('should not display the generated answer or the no generated answer card', async () => {
+            const element = createTestComponent(
+              defaultOptions,
+              exampleAssignedElements
+            );
+            await flushPromises();
+
+            const generatedAnswerCard = element.shadowRoot.querySelector(
+              selectors.generatedAnswerCard
+            );
+            expect(generatedAnswerCard).toBeNull();
+
+            const generatedAnswerCardNoAnswer =
+              element.shadowRoot.querySelector(
+                selectors.generatedAnswerNoAnswerCard
+              );
+            expect(generatedAnswerCardNoAnswer).toBeNull();
+          });
         });
       });
     });
