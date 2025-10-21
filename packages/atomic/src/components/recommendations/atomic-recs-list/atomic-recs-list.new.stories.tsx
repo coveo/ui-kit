@@ -1,10 +1,12 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {HttpResponse, http} from 'msw';
+import {baseSearchResponse} from '@/storybook-utils/api/search';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInRecommendationInterface} from '@/storybook-utils/search/recs-interface-wrapper';
 
-const {decorator, afterEach} = wrapInRecommendationInterface();
+const {decorator, play} = wrapInRecommendationInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-recs-list',
   {excludeCategories: ['methods']}
@@ -39,16 +41,16 @@ export const Default: Story = {
         </style>
         ${story()}`,
   ],
-  afterEach,
+  play,
 };
 
-const {afterEach: afterEachNoFirstQuery} = wrapInRecommendationInterface({
+const {play: playNoFirstQuery} = wrapInRecommendationInterface({
   skipFirstQuery: true,
 });
 
 export const RecsBeforeQuery: Story = {
   tags: ['test'],
-  afterEach: afterEachNoFirstQuery,
+  play: playNoFirstQuery,
 };
 
 export const RecsWithFullTemplate: Story = {
@@ -83,7 +85,7 @@ export const RecsWithFullTemplate: Story = {
             </template>
           </atomic-recs-result-template>`,
   },
-  afterEach,
+  play,
 };
 
 export const RecsOpeningInNewTab: Story = {
@@ -102,12 +104,49 @@ export const RecsOpeningInNewTab: Story = {
             </template>
           </atomic-recs-result-template>`,
   },
-  afterEach,
+  play,
 };
 
 export const RecsAsCarousel: Story = {
   args: {
     'number-of-recommendations-per-page': 4,
   },
-  afterEach,
+  play,
+};
+
+export const NotEnoughRecsForCarousel: Story = {
+  name: 'Not enough recommendations for carousel',
+  parameters: {
+    msw: {
+      handlers: [
+        http.post('**/search/v2', () => {
+          return HttpResponse.json({
+            ...baseSearchResponse,
+            totalCount: 3,
+            totalCountFiltered: 3,
+          });
+        }),
+      ],
+    },
+  },
+  play,
+};
+
+export const NoRecommendations: Story = {
+  name: 'No recommendations',
+  parameters: {
+    msw: {
+      handlers: [
+        http.post('**/search/v2', () => {
+          return HttpResponse.json({
+            ...baseSearchResponse,
+            totalCount: 0,
+            totalCountFiltered: 0,
+            results: [],
+          });
+        }),
+      ],
+    },
+  },
+  play,
 };

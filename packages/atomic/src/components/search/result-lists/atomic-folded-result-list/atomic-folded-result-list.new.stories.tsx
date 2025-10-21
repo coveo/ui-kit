@@ -2,6 +2,7 @@
 
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {bypass, HttpResponse, http} from 'msw';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
@@ -51,9 +52,7 @@ const SLOTS_DEFAULT = `
     </atomic-result-section-bottom-metadata>
     <atomic-result-section-children>
       <atomic-result-children image-size="icon">
-        <!-- CHILD -->
         <atomic-result-children-template>
-          <!-- CHILD TEMPLATE -->
           <template>
             <atomic-result-section-visual>
               <atomic-result-image class="icon" fallback="https://picsum.photos/350"></atomic-result-image>
@@ -126,8 +125,8 @@ const preprocessRequest = (response: any) => {
   return response;
 };
 
-const {decorator, afterEach} = wrapInSearchInterface({
-  preprocessRequest,
+const {decorator, play} = wrapInSearchInterface({
+  config: {preprocessRequest},
 });
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-folded-result-list',
@@ -148,8 +147,7 @@ const meta: Meta = {
   },
   args,
   argTypes,
-
-  afterEach,
+  play,
 };
 
 export default meta;
@@ -161,15 +159,17 @@ export const Default: Story = {
   },
 };
 
-const preprocessRequestNoChildrenResult = (response: any) => {
-  const parsed = JSON.parse(response.body as string);
+const preprocessRequestNoChildrenResult = (request: any) => {
+  const parsed = JSON.parse(request.body as string);
   parsed.aq = '@foldingcollection==("atlcontinentantarctica")';
-  response.body = JSON.stringify(parsed);
-  return response;
+  request.body = JSON.stringify(parsed);
+  return request;
 };
 
-const {afterEach: noResultChildrenPlay} = wrapInSearchInterface({
-  preprocessRequest: preprocessRequestNoChildrenResult,
+const {play: noResultChildrenPlay} = wrapInSearchInterface({
+  config: {
+    preprocessRequest: preprocessRequestNoChildrenResult,
+  },
 });
 
 export const WithNoResultChildren: Story = {
@@ -177,5 +177,55 @@ export const WithNoResultChildren: Story = {
   args: {
     'default-slot': SLOTS_DEFAULT,
   },
-  afterEach: noResultChildrenPlay,
+  play: noResultChildrenPlay,
+};
+
+export const WithFewResultChildren: Story = {
+  name: 'With result children',
+  args: {
+    'default-slot': SLOTS_DEFAULT,
+  },
+  parameters: {
+    msw: {
+      handlers: [
+        http.post('**/search/v2', async ({request}) => {
+          const response = await fetch(bypass(request));
+          const body = await response.json();
+
+          // Modify the first result to have result children
+          if (body.results?.[0]) {
+            body.results[0].totalNumberOfChildResults = 1;
+          }
+
+          return HttpResponse.json(body);
+        }),
+      ],
+    },
+  },
+  play,
+};
+
+export const WithMoreResultsAvailableAndNoChildren: Story = {
+  name: 'With more results available and no children',
+  args: {
+    'default-slot': SLOTS_DEFAULT,
+  },
+  parameters: {
+    msw: {
+      handlers: [
+        http.post('**/search/v2', async ({request}) => {
+          const response = await fetch(bypass(request));
+          const body = await response.json();
+
+          // Modify the first result to have no results available
+          if (body.results?.[0]) {
+            body.results[0].totalNumberOfChildResults = 10;
+          }
+
+          return HttpResponse.json(body);
+        }),
+      ],
+    },
+  },
+  play: noResultChildrenPlay,
 };

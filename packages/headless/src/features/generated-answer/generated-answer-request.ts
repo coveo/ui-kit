@@ -9,6 +9,7 @@ import type {
   AuthenticationParam,
   AutomaticFacetsParams,
 } from '../../api/search/search-api-params.js';
+import type {CaseContextParam} from '../../api/service/insight/query/query-request.js';
 import type {NavigatorContext} from '../../app/navigator-context-provider.js';
 import {selectAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-query-selectors.js';
 import {fromAnalyticsStateToAnalyticsParams} from '../../features/configuration/analytics-params.js';
@@ -53,9 +54,10 @@ type StateNeededByGeneratedAnswerStream = ConfigurationSection &
 
 export interface AnswerApiQueryParams
   extends Omit<
-    SearchRequest,
-    keyof (BaseParam & AuthenticationParam & AutomaticFacetsParams)
-  > {}
+      SearchRequest,
+      keyof (BaseParam & AuthenticationParam & AutomaticFacetsParams)
+    >,
+    CaseContextParam {}
 
 export const buildStreamingRequest = async (
   state: StateNeededByGeneratedAnswerStream
@@ -153,6 +155,9 @@ export const constructAnswerAPIQueryParams = (
     sortCriteria,
     ...(facetOptions && {facetOptions}),
     ...analyticsParams,
+    ...(state.insightCaseContext?.caseContext && {
+      caseContext: state.insightCaseContext?.caseContext,
+    }),
   };
 };
 

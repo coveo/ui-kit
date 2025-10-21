@@ -1,6 +1,6 @@
-import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {beforeEach, describe, expect, it} from 'vitest';
 import type {LightDOMWithSlots} from '@/src/mixins/slots-for-no-shadow-dom-mixin';
-import {getDefaultSlotFromHost, getNamedSlotFromHost} from './slot-utils';
+import {getDefaultSlotContent, getNamedSlotContent} from './slot-utils';
 
 class MockLightDOMElement extends HTMLElement implements LightDOMWithSlots {
   slotContent: {[name: string]: ChildNode[] | undefined} = {};
@@ -10,12 +10,6 @@ class MockLightDOMElement extends HTMLElement implements LightDOMWithSlots {
   }
 }
 customElements.define('mock-light-dom-element', MockLightDOMElement);
-
-let consoleWarnSpy: MockInstance;
-
-beforeEach(() => {
-  consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-});
 
 describe('#getNamedSlotFromHost', () => {
   describe('when host uses Light DOM with slotContent property', () => {
@@ -34,32 +28,33 @@ describe('#getNamedSlotFromHost', () => {
         'test-slot': [textNode, comment, element],
       };
 
-      const result = getNamedSlotFromHost(host, 'test-slot');
+      const result = getNamedSlotContent(host, 'test-slot');
 
-      expect(result).toBe(element);
+      expect(result).toHaveLength(1);
+      expect(result[0]).toBe(element);
     });
 
-    it('should return undefined when slot does not exist', () => {
+    it('should return empty array when slot does not exist', () => {
       host.slotContent = {
         'other-slot': [document.createElement('div')],
       };
 
-      const result = getNamedSlotFromHost(host, 'test-slot');
+      const result = getNamedSlotContent(host, 'test-slot');
 
-      expect(result).toBeUndefined();
+      expect(result).toHaveLength(0);
     });
 
-    it('should return undefined when slot exists but is empty', () => {
+    it('should return empty array when slot exists but is empty', () => {
       host.slotContent = {
         'test-slot': [],
       };
 
-      const result = getNamedSlotFromHost(host, 'test-slot');
+      const result = getNamedSlotContent(host, 'test-slot');
 
-      expect(result).toBeUndefined();
+      expect(result).toHaveLength(0);
     });
 
-    it('should return undefined when slot exists but contains no Elements', () => {
+    it('should return empty array when slot exists but contains no Elements', () => {
       const textNode = document.createTextNode('text');
       const comment = document.createComment('comment');
 
@@ -67,12 +62,12 @@ describe('#getNamedSlotFromHost', () => {
         'test-slot': [textNode, comment],
       };
 
-      const result = getNamedSlotFromHost(host, 'test-slot');
+      const result = getNamedSlotContent(host, 'test-slot');
 
-      expect(result).toBeUndefined();
+      expect(result).toHaveLength(0);
     });
 
-    it('should return first Element when multiple Elements exist', () => {
+    it('should return all Elements', () => {
       const element1 = document.createElement('div');
       const element2 = document.createElement('span');
 
@@ -80,9 +75,9 @@ describe('#getNamedSlotFromHost', () => {
         'test-slot': [element1, element2],
       };
 
-      const result = getNamedSlotFromHost(host, 'test-slot');
+      const result = getNamedSlotContent(host, 'test-slot');
 
-      expect(result).toBe(element1);
+      expect(result).toHaveLength(2);
     });
 
     it('should handle null slotContent gracefully', () => {
@@ -90,9 +85,9 @@ describe('#getNamedSlotFromHost', () => {
         'test-slot': undefined,
       };
 
-      const result = getNamedSlotFromHost(host, 'test-slot');
+      const result = getNamedSlotContent(host, 'test-slot');
 
-      expect(result).toBeUndefined();
+      expect(result).toHaveLength(0);
     });
   });
 
@@ -108,28 +103,28 @@ describe('#getNamedSlotFromHost', () => {
       childElement.setAttribute('slot', 'test-slot');
       host.appendChild(childElement);
 
-      const result = getNamedSlotFromHost(host, 'test-slot');
+      const result = getNamedSlotContent(host, 'test-slot');
 
-      expect(result).toBe(childElement);
+      expect(result).toEqual([childElement]);
     });
 
-    it('should return undefined when no children have matching slot attribute', () => {
+    it('should return empty array when no children have matching slot attribute', () => {
       const childElement = document.createElement('span');
       childElement.setAttribute('slot', 'other-slot');
       host.appendChild(childElement);
 
-      const result = getNamedSlotFromHost(host, 'test-slot');
+      const result = getNamedSlotContent(host, 'test-slot');
 
-      expect(result).toBeUndefined();
+      expect(result).toHaveLength(0);
     });
 
-    it('should return undefined when no children exist', () => {
-      const result = getNamedSlotFromHost(host, 'test-slot');
+    it('should return empty array when no children exist', () => {
+      const result = getNamedSlotContent(host, 'test-slot');
 
-      expect(result).toBeUndefined();
+      expect(result).toHaveLength(0);
     });
 
-    it('should return first element when multiple elements have same slot attribute', () => {
+    it('should return all elements that have same slot attribute', () => {
       const element1 = document.createElement('div');
       const element2 = document.createElement('span');
       element1.setAttribute('slot', 'test-slot');
@@ -137,26 +132,9 @@ describe('#getNamedSlotFromHost', () => {
       host.appendChild(element1);
       host.appendChild(element2);
 
-      const result = getNamedSlotFromHost(host, 'test-slot');
+      const result = getNamedSlotContent(host, 'test-slot');
 
-      expect(result).toBe(element1);
-    });
-
-    it('should warn when multiple elements have same slot attribute', () => {
-      const element1 = document.createElement('div');
-      const element2 = document.createElement('span');
-      element1.setAttribute('slot', 'test-slot');
-      element2.setAttribute('slot', 'test-slot');
-      host.appendChild(element1);
-      host.appendChild(element2);
-
-      getNamedSlotFromHost(host, 'test-slot');
-
-      expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        'Element should only have 1 slot named "test-slot".',
-        host
-      );
+      expect(result).toEqual([element1, element2]);
     });
 
     it('should ignore children without slot attribute when looking for named slot', () => {
@@ -166,14 +144,14 @@ describe('#getNamedSlotFromHost', () => {
       host.appendChild(unslottedElement);
       host.appendChild(slottedElement);
 
-      const result = getNamedSlotFromHost(host, 'test-slot');
+      const result = getNamedSlotContent(host, 'test-slot');
 
-      expect(result).toBe(slottedElement);
+      expect(result).toEqual([slottedElement]);
     });
   });
 });
 
-describe('#getDefaultSlotFromHost', () => {
+describe('#getDefaultSlotContent', () => {
   let host: HTMLElement;
 
   beforeEach(() => {
@@ -188,9 +166,9 @@ describe('#getDefaultSlotFromHost', () => {
     host.appendChild(defaultChild);
     host.appendChild(namedChild);
 
-    const result = getDefaultSlotFromHost(host);
+    const result = getDefaultSlotContent(host);
 
-    expect(result).toBe(defaultChild);
+    expect(result).toEqual([defaultChild]);
   });
 
   it('should return child element with empty slot attribute', () => {
@@ -198,9 +176,9 @@ describe('#getDefaultSlotFromHost', () => {
     defaultChild.setAttribute('slot', '');
     host.appendChild(defaultChild);
 
-    const result = getDefaultSlotFromHost(host);
+    const result = getDefaultSlotContent(host);
 
-    expect(result).toBe(defaultChild);
+    expect(result).toEqual([defaultChild]);
   });
 
   it('should return undefined when no default slot children exist', () => {
@@ -208,40 +186,25 @@ describe('#getDefaultSlotFromHost', () => {
     namedChild.setAttribute('slot', 'named-slot');
     host.appendChild(namedChild);
 
-    const result = getDefaultSlotFromHost(host);
+    const result = getDefaultSlotContent(host);
 
-    expect(result).toBeUndefined();
+    expect(result).toHaveLength(0);
   });
 
   it('should return undefined when no children exist', () => {
-    const result = getDefaultSlotFromHost(host);
+    const result = getDefaultSlotContent(host);
 
-    expect(result).toBeUndefined();
+    expect(result).toHaveLength(0);
   });
 
-  it('should return first element when multiple default slot elements exist', () => {
+  it('should return all elements when multiple default slot elements exist', () => {
     const element1 = document.createElement('div');
     const element2 = document.createElement('span');
     host.appendChild(element1);
     host.appendChild(element2);
 
-    const result = getDefaultSlotFromHost(host);
+    const result = getDefaultSlotContent(host);
 
-    expect(result).toBe(element1);
-  });
-
-  it('should warn when multiple default slot elements exist', () => {
-    const element1 = document.createElement('div');
-    const element2 = document.createElement('span');
-    host.appendChild(element1);
-    host.appendChild(element2);
-
-    getDefaultSlotFromHost(host);
-
-    expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      'Element should only have 1 default slot.',
-      host
-    );
+    expect(result).toEqual([element1, element2]);
   });
 });

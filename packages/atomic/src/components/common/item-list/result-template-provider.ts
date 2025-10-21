@@ -10,7 +10,7 @@ import {
   type TemplateProviderProps,
 } from '../template-provider/template-provider';
 
-export class ItemTemplateProvider extends TemplateProvider<Result> {
+export class ResultTemplateProvider extends TemplateProvider<Result> {
   constructor(
     props: TemplateProviderProps<Result> & {bindings: AnyBindings},
     private gridCellLinkTarget?: ItemTarget

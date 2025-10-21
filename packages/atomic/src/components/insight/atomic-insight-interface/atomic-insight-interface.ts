@@ -20,6 +20,7 @@ import {
   InterfaceController,
 } from '@/src/components/common/interface/interface-controller';
 import {bindingsContext} from '@/src/components/context/bindings-context';
+import {arrayConverter} from '@/src/converters/array-converter.js';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
@@ -138,8 +139,12 @@ export class AtomicInsightInterface
    * <atomic-insight-interface fields-to-include='["fieldA", "fieldB"]'></atomic-insight-interface>
    * ```
    */
-  @property({type: Array, attribute: 'fields-to-include'})
-  public fieldsToInclude: string[] | string = [];
+  @property({
+    type: Array,
+    attribute: 'fields-to-include',
+    converter: arrayConverter,
+  })
+  public fieldsToInclude: string[] = [];
 
   /**
    * The number of results per page. By default, this is set to `5`.

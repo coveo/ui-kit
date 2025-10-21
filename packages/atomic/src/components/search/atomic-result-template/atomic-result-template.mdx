@@ -85,7 +85,9 @@ Example using the `atomic-result-list`:
 
 You can use conditions to display different templates based on result properties. You can specify as many `must-match-*` and `must-not-match-*` attributes as you want on a template, each targeting a different field. Each attribute can accept multiple comma-separated values.
 
-**All conditions must be met (logical AND)** for the template to apply to a result.
+**Comma represents OR:** Within a single attribute, comma-separated values represent a logical OR. For example, `must-match-sourcetype="YouTube,Salesforce"` means the sourcetype must be YouTube OR Salesforce.
+
+**Multiple attributes represent AND:** All conditions from different attributes must be met (logical AND) for the template to apply to a result.
 
 If you set both `must-match-*` and `must-not-match-*` for the same field and there is any overlap in values, the template will be ignored (it will never match any result).
 
