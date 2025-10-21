@@ -6,7 +6,7 @@ import {parameters} from '@/storybook-utils/common/search-box-suggestions-parame
 import {wrapInSearchBox} from '@/storybook-utils/search/search-box-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator: searchInterfaceDecorator, afterEach: searchInterfacePlay} =
+const {decorator: searchInterfaceDecorator, play: searchInterfacePlay} =
   wrapInSearchInterface({}, false, false);
 const {decorator: searchBoxDecorator} = wrapInSearchBox();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -29,7 +29,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach: async (context) => {
+  play: async (context) => {
     await searchInterfacePlay(context);
     const canvas = within(context.canvasElement);
     const searchBox = await canvas.findAllByShadowPlaceholderText('Search');

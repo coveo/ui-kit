@@ -14,18 +14,17 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-product-multi-value-text',
   {excludeCategories: ['methods']}
 );
-const {decorator: commerceInterfaceDecorator, afterEach} =
-  wrapInCommerceInterface({
-    engineConfig: {
-      preprocessRequest: (request) => {
-        const parsed = JSON.parse(request.body as string);
-        parsed.perPage = 1;
-        request.body = JSON.stringify(parsed);
-        return request;
-      },
+const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
+  engineConfig: {
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.perPage = 1;
+      request.body = JSON.stringify(parsed);
+      return request;
     },
-    includeCodeRoot: false,
-  });
+  },
+  includeCodeRoot: false,
+});
 
 const meta: Meta = {
   component: 'atomic-product-multi-value-text',
@@ -45,7 +44,7 @@ const meta: Meta = {
     commerceProductListDecorator,
     commerceInterfaceDecorator,
   ],
-  afterEach,
+  play,
   args: {
     ...args,
     field: 'cat_available_sizes',

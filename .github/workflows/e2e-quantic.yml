@@ -40,6 +40,9 @@ jobs:
     name: 'Run Playwright e2e tests on Quantic'
     needs: e2e-quantic-setup
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.54.1-noble
+      options: --user 1001
     strategy:
       fail-fast: false
       matrix:

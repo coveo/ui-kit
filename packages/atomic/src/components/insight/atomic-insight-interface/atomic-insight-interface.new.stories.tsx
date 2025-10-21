@@ -6,7 +6,7 @@ import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 
-const {decorator, afterEach} = wrapInInsightInterface();
+const {decorator, play} = wrapInInsightInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-insight-interface',
   {excludeCategories: ['methods']}
@@ -27,7 +27,7 @@ const meta: Meta = {
   },
   args,
   argTypes,
-  afterEach,
+  play,
 };
 
 export default meta;
@@ -828,7 +828,7 @@ export const Default: Story = {
         </atomic-layout-section>
       </atomic-insight-layout>`,
   ],
-  afterEach: async (context) => {
-    await afterEach(context);
+  play: async (context) => {
+    await play(context);
   },
 };
