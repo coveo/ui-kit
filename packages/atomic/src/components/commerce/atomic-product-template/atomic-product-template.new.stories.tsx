@@ -84,7 +84,7 @@ export default meta;
 
 const {
   decorator: commerceInterfaceDecorator,
-  afterEach: initializeCommerceInterface,
+  play: initializeCommerceInterface,
 } = wrapInCommerceInterface({
   skipFirstRequest: false,
   engineConfig: {
@@ -103,12 +103,12 @@ const {decorator: commerceProductListDecorator} =
 export const InAProductList: Story = {
   name: 'In a product list',
   decorators: [commerceProductListDecorator, commerceInterfaceDecorator],
-  afterEach: initializeCommerceInterface,
+  play: initializeCommerceInterface,
 };
 
 const {
   decorator: commerceRecommendationInterfaceDecorator,
-  afterEach: initializeCommerceRecommendationInterface,
+  play: initializeCommerceRecommendationInterface,
 } = wrapInCommerceRecommendationInterface();
 const {decorator: commerceRecommendationListDecorator} =
   wrapInCommerceRecommendationList();
@@ -120,7 +120,7 @@ export const InARecommendationList: Story = {
     commerceRecommendationInterfaceDecorator,
   ],
 
-  afterEach: initializeCommerceRecommendationInterface,
+  play: initializeCommerceRecommendationInterface,
 };
 
 const {decorator: commerceSearchBoxInstantsProductsDecorator} =
@@ -133,7 +133,7 @@ export const InASearchBoxInstantProducts: Story = {
     commerceInterfaceDecorator,
   ],
   parameters: searchBoxParameters,
-  afterEach: async (context) => {
+  play: async (context) => {
     await initializeCommerceInterface(context);
     const {canvasElement, step} = context;
     const canvas = within(canvasElement);

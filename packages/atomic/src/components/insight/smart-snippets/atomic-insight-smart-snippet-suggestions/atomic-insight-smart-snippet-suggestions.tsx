@@ -1,4 +1,4 @@
-import {getAttributesFromLinkSlot} from '@/src/components/common/item-link/attributes-slot';
+import {getAttributesFromLinkSlotContent} from '@/src/components/common/item-link/attributes-slot';
 import {Hidden} from '@/src/components/common/stencil-hidden';
 import {randomID} from '@/src/utils/utils';
 import {
@@ -162,7 +162,7 @@ export class AtomicInsightSmartSnippetSuggestions
     return (
       <SmartSnippetSuggestionsFooter i18n={this.bindings.i18n}>
         <atomic-smart-snippet-source
-          anchorAttributes={getAttributesFromLinkSlot(
+          anchorAttributes={getAttributesFromLinkSlotContent(
             this.host,
             'source-anchor-attributes'
           )}

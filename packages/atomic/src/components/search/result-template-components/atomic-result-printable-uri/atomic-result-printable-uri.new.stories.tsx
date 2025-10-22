@@ -10,8 +10,9 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 
 const {decorator: resultDecorator, engineConfig} = wrapInResult();
-const {decorator: searchInterfaceDecorator, afterEach} =
-  wrapInSearchInterface(engineConfig);
+const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
+  config: engineConfig,
+});
 
 const meta: Meta = {
   component: 'atomic-result-printable-uri',
@@ -28,7 +29,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach,
+  play,
 };
 
 export default meta;

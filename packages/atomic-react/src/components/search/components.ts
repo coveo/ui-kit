@@ -1,11 +1,22 @@
 import {
   AtomicAriaLive as LitAtomicAriaLive,
   AtomicComponentError as LitAtomicComponentError,
+  AtomicExternal as LitAtomicExternal,
+  AtomicFacet as LitAtomicFacet,
   AtomicIcon as LitAtomicIcon,
   AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicPager as LitAtomicPager,
   AtomicQuerySummary as LitAtomicQuerySummary,
+  AtomicResultSectionActions as LitAtomicResultSectionActions,
+  AtomicResultSectionBadges as LitAtomicResultSectionBadges,
+  AtomicResultSectionBottomMetadata as LitAtomicResultSectionBottomMetadata,
+  AtomicResultSectionChildren as LitAtomicResultSectionChildren,
+  AtomicResultSectionEmphasized as LitAtomicResultSectionEmphasized,
+  AtomicResultSectionExcerpt as LitAtomicResultSectionExcerpt,
+  AtomicResultSectionTitle as LitAtomicResultSectionTitle,
+  AtomicResultSectionTitleMetadata as LitAtomicResultSectionTitleMetadata,
+  AtomicResultSectionVisual as LitAtomicResultSectionVisual,
   AtomicResultsPerPage as LitAtomicResultsPerPage,
   AtomicSearchBoxInstantResults as LitAtomicSearchBoxInstantResults,
   AtomicSearchBoxQuerySuggestions as LitAtomicSearchBoxQuerySuggestions,
@@ -26,6 +37,18 @@ export const AtomicComponentError = createComponent({
   tagName: 'atomic-component-error',
   react: React,
   elementClass: LitAtomicComponentError,
+});
+
+export const AtomicExternal = createComponent({
+  tagName: 'atomic-external',
+  react: React,
+  elementClass: LitAtomicExternal,
+});
+
+export const AtomicFacet = createComponent({
+  tagName: 'atomic-facet',
+  react: React,
+  elementClass: LitAtomicFacet,
 });
 
 export const AtomicIcon = createComponent({
@@ -56,6 +79,60 @@ export const AtomicQuerySummary = createComponent({
   tagName: 'atomic-query-summary',
   react: React,
   elementClass: LitAtomicQuerySummary,
+});
+
+export const AtomicResultSectionActions = createComponent({
+  tagName: 'atomic-result-section-actions',
+  react: React,
+  elementClass: LitAtomicResultSectionActions,
+});
+
+export const AtomicResultSectionBadges = createComponent({
+  tagName: 'atomic-result-section-badges',
+  react: React,
+  elementClass: LitAtomicResultSectionBadges,
+});
+
+export const AtomicResultSectionBottomMetadata = createComponent({
+  tagName: 'atomic-result-section-bottom-metadata',
+  react: React,
+  elementClass: LitAtomicResultSectionBottomMetadata,
+});
+
+export const AtomicResultSectionChildren = createComponent({
+  tagName: 'atomic-result-section-children',
+  react: React,
+  elementClass: LitAtomicResultSectionChildren,
+});
+
+export const AtomicResultSectionEmphasized = createComponent({
+  tagName: 'atomic-result-section-emphasized',
+  react: React,
+  elementClass: LitAtomicResultSectionEmphasized,
+});
+
+export const AtomicResultSectionExcerpt = createComponent({
+  tagName: 'atomic-result-section-excerpt',
+  react: React,
+  elementClass: LitAtomicResultSectionExcerpt,
+});
+
+export const AtomicResultSectionTitle = createComponent({
+  tagName: 'atomic-result-section-title',
+  react: React,
+  elementClass: LitAtomicResultSectionTitle,
+});
+
+export const AtomicResultSectionTitleMetadata = createComponent({
+  tagName: 'atomic-result-section-title-metadata',
+  react: React,
+  elementClass: LitAtomicResultSectionTitleMetadata,
+});
+
+export const AtomicResultSectionVisual = createComponent({
+  tagName: 'atomic-result-section-visual',
+  react: React,
+  elementClass: LitAtomicResultSectionVisual,
 });
 
 export const AtomicResultsPerPage = createComponent({

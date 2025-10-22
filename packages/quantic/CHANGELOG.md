@@ -1,3 +1,10 @@
+## 3.32.0 (2025-10-22)
+
+* feat(quantic): ux improvements for quantic generated answer (#6186) ([a417c3f](https://github.com/coveo/ui-kit/commits/a417c3f)), closes [#6186](https://github.com/coveo/ui-kit/issues/6186)
+* fix(quantic): quantic e2e tests fixed (#6187) ([55be436](https://github.com/coveo/ui-kit/commits/55be436)), closes [#6187](https://github.com/coveo/ui-kit/issues/6187)
+
+
+
 ## <small>3.31.3 (2025-10-15)</small>
 
 * chore(quantic): salesforce cli version updated (#6164) ([be6ce9c](https://github.com/coveo/ui-kit/commits/be6ce9c)), closes [#6164](https://github.com/coveo/ui-kit/issues/6164)
