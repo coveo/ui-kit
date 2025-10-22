@@ -679,6 +679,9 @@ export namespace Components {
     interface AtomicInsightFullSearchButton {
         "tooltip": string;
     }
+    interface AtomicInsightGenerateAnswerButton {
+        "tooltip": string;
+    }
     interface AtomicInsightGeneratedAnswer {
         "answerConfigurationId"?: string;
         /**
@@ -2887,6 +2890,12 @@ declare global {
         prototype: HTMLAtomicInsightFullSearchButtonElement;
         new (): HTMLAtomicInsightFullSearchButtonElement;
     };
+    interface HTMLAtomicInsightGenerateAnswerButtonElement extends Components.AtomicInsightGenerateAnswerButton, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightGenerateAnswerButtonElement: {
+        prototype: HTMLAtomicInsightGenerateAnswerButtonElement;
+        new (): HTMLAtomicInsightGenerateAnswerButtonElement;
+    };
     interface HTMLAtomicInsightGeneratedAnswerElement extends Components.AtomicInsightGeneratedAnswer, HTMLStencilElement {
     }
     var HTMLAtomicInsightGeneratedAnswerElement: {
@@ -3977,6 +3986,7 @@ declare global {
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
         "atomic-insight-full-search-button": HTMLAtomicInsightFullSearchButtonElement;
+        "atomic-insight-generate-answer-button": HTMLAtomicInsightGenerateAnswerButtonElement;
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
         "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
         "atomic-insight-layout": HTMLAtomicInsightLayoutElement;
@@ -4713,6 +4723,9 @@ declare namespace LocalJSX {
         "parentField"?: string;
     }
     interface AtomicInsightFullSearchButton {
+        "tooltip"?: string;
+    }
+    interface AtomicInsightGenerateAnswerButton {
         "tooltip"?: string;
     }
     interface AtomicInsightGeneratedAnswer {
@@ -6585,6 +6598,7 @@ declare namespace LocalJSX {
         "atomic-insight-facet": AtomicInsightFacet;
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
         "atomic-insight-full-search-button": AtomicInsightFullSearchButton;
+        "atomic-insight-generate-answer-button": AtomicInsightGenerateAnswerButton;
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
         "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
         "atomic-insight-layout": AtomicInsightLayout;
@@ -6797,6 +6811,7 @@ declare module "@stencil/core" {
             "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
             "atomic-insight-full-search-button": LocalJSX.AtomicInsightFullSearchButton & JSXBase.HTMLAttributes<HTMLAtomicInsightFullSearchButtonElement>;
+            "atomic-insight-generate-answer-button": LocalJSX.AtomicInsightGenerateAnswerButton & JSXBase.HTMLAttributes<HTMLAtomicInsightGenerateAnswerButtonElement>;
             "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
             "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
             "atomic-insight-layout": LocalJSX.AtomicInsightLayout & JSXBase.HTMLAttributes<HTMLAtomicInsightLayoutElement>;
