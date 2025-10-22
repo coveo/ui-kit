@@ -24,7 +24,6 @@ export const AtomicFormatNumber = /*@__PURE__*/createReactComponent<JSX.AtomicFo
 export const AtomicFormatUnit = /*@__PURE__*/createReactComponent<JSX.AtomicFormatUnit, HTMLAtomicFormatUnitElement>('atomic-format-unit');
 export const AtomicGeneratedAnswer = /*@__PURE__*/createReactComponent<JSX.AtomicGeneratedAnswer, HTMLAtomicGeneratedAnswerElement>('atomic-generated-answer');
 export const AtomicGeneratedAnswerFeedbackModal = /*@__PURE__*/createReactComponent<JSX.AtomicGeneratedAnswerFeedbackModal, HTMLAtomicGeneratedAnswerFeedbackModalElement>('atomic-generated-answer-feedback-modal');
-export const AtomicHtml = /*@__PURE__*/createReactComponent<JSX.AtomicHtml, HTMLAtomicHtmlElement>('atomic-html');
 export const AtomicInsightUserActionsTimeline = /*@__PURE__*/createReactComponent<JSX.AtomicInsightUserActionsTimeline, HTMLAtomicInsightUserActionsTimelineElement>('atomic-insight-user-actions-timeline');
 export const AtomicInsightUserActionsToggle = /*@__PURE__*/createReactComponent<JSX.AtomicInsightUserActionsToggle, HTMLAtomicInsightUserActionsToggleElement>('atomic-insight-user-actions-toggle');
 export const AtomicLoadMoreResults = /*@__PURE__*/createReactComponent<JSX.AtomicLoadMoreResults, HTMLAtomicLoadMoreResultsElement>('atomic-load-more-results');
