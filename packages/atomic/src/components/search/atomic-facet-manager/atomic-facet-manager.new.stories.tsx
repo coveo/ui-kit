@@ -4,7 +4,7 @@ import {html} from 'lit/static-html.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, afterEach} = wrapInSearchInterface();
+const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-facet-manager',
   {excludeCategories: ['methods']}
@@ -26,7 +26,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach,
+  play,
   globals: {
     default: {
       control: false,

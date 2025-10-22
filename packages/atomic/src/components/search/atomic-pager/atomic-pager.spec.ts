@@ -13,6 +13,7 @@ import {buildFakePager} from '@/vitest-utils/testing-helpers/fixtures/headless/s
 import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
 import type {AtomicPager} from './atomic-pager';
 import './atomic-pager';
+import type {AtomicCommercePager} from '@/src/components';
 
 vi.mock('@coveo/headless', {spy: true});
 vi.mock('@/src/mixins/bindings-mixin', () => ({
@@ -75,11 +76,13 @@ describe('atomic-pager', () => {
     );
 
     const {element} = await renderInAtomicSearchInterface<AtomicPager>({
-      template: html`<atomic-pager
-        number-of-pages=${ifDefined(props.numberOfPages)}
-        previous-button-icon=${ifDefined(props.previousButtonIcon)}
-        next-button-icon=${ifDefined(props.nextButtonIcon)}
-      ></atomic-pager>`,
+      template: html`
+        <atomic-pager
+          number-of-pages=${ifDefined(props.numberOfPages)}
+          previous-button-icon=${ifDefined(props.previousButtonIcon)}
+          next-button-icon=${ifDefined(props.nextButtonIcon)}
+        ></atomic-pager>
+      `,
       selector: 'atomic-pager',
       bindings: (bindings) => {
         bindings.store.onChange = vi.fn();
@@ -477,5 +480,73 @@ describe('atomic-pager', () => {
     await expect.element(locators.page3).toHaveAttribute('value', '3');
     await expect.element(locators.page4).toHaveAttribute('value', '4');
     await expect.element(locators.page5).toHaveAttribute('value', '5');
+  });
+
+  describe('accessibility', () => {
+    let element: AtomicCommercePager;
+
+    beforeEach(async () => {
+      element = await renderPager({state: {page: 2, totalPages: 10}});
+    });
+
+    const retrieveButtons = () => {
+      return Array.from(
+        element.shadowRoot?.querySelectorAll<HTMLInputElement>(
+          'input[type="radio"]'
+        ) || []
+      );
+    };
+
+    const expectFocusOnButton = async (
+      button: Element,
+      expectedFocusButton: Element
+    ) => {
+      await expect.element(button).toBe(expectedFocusButton);
+    };
+
+    it('should focus on previous button when navigating backward from first page button', async () => {
+      const buttons = retrieveButtons();
+
+      const [firstPageButton, lastPageButton] = [
+        buttons[0],
+        buttons[buttons.length - 1],
+      ];
+
+      await element['handleFocus'](buttons, firstPageButton, lastPageButton);
+
+      await expectFocusOnButton(
+        locators.previous.element(),
+        document.activeElement?.shadowRoot?.activeElement
+      );
+    });
+
+    it('should focus on next button when navigating forward from last page button', async () => {
+      const buttons = retrieveButtons();
+
+      const [firstPageButton, lastPageButton] = [
+        buttons[0],
+        buttons[buttons.length - 1],
+      ];
+
+      await element['handleFocus'](buttons, lastPageButton, firstPageButton);
+
+      await expectFocusOnButton(
+        locators.next.element(),
+        document.activeElement?.shadowRoot?.activeElement
+      );
+    });
+
+    it('should focus on next page button when navigating between page buttons', async () => {
+      const buttons = retrieveButtons();
+
+      const [currentButton, nextButton] = buttons;
+
+      await element['handleFocus'](buttons, currentButton, nextButton);
+
+      await expectFocusOnButton(
+        locators.page2.element(),
+        document.activeElement?.shadowRoot?.activeElement
+      );
+    });
   });
 });
