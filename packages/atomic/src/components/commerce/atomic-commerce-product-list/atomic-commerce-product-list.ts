@@ -11,11 +11,11 @@ import {
   type Summary,
 } from '@coveo/headless/commerce';
 import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
-import {customElement, property, state} from 'lit/decorators';
-import {keyed} from 'lit/directives/keyed';
-import {map} from 'lit/directives/map';
-import {ref} from 'lit/directives/ref';
-import {when} from 'lit/directives/when';
+import {customElement, property, state} from 'lit/decorators.js';
+import {keyed} from 'lit/directives/keyed.js';
+import {map} from 'lit/directives/map.js';
+import {ref} from 'lit/directives/ref.js';
+import {when} from 'lit/directives/when.js';
 import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
 import type {SelectChildProductEventArgs} from '@/src/components/commerce/atomic-product-children/select-child-product-event';
 import {ProductTemplateProvider} from '@/src/components/commerce/product-list/product-template-provider';
