@@ -1,7 +1,7 @@
 import {
   AtomicAriaLive as LitAtomicAriaLive,
   AtomicComponentError as LitAtomicComponentError,
-  AtomicHtml as LitAtomicHtml,
+  AtomicFacet as LitAtomicFacet,
   AtomicIcon as LitAtomicIcon,
   AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicLayoutSection as LitAtomicLayoutSection,
@@ -38,10 +38,10 @@ export const AtomicComponentError = createComponent({
   elementClass: LitAtomicComponentError,
 });
 
-export const AtomicHtml = createComponent({
-  tagName: 'atomic-html',
+export const AtomicFacet = createComponent({
+  tagName: 'atomic-facet',
   react: React,
-  elementClass: LitAtomicHtml,
+  elementClass: LitAtomicFacet,
 });
 
 export const AtomicIcon = createComponent({
