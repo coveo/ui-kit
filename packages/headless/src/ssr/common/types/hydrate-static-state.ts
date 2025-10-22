@@ -39,7 +39,9 @@ export type HydrateStaticState<
     >
   ): Promise<HydratedState<TEngine, TControllers>>;
 
-  // TODO: KIT-4610: Remove this type
+  /**
+   * @deprecated Use the hydrateStaticState() method instead
+   */
   fromBuildResult: FromBuildResult<
     TEngine,
     TControllers,
