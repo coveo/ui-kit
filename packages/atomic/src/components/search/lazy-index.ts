@@ -42,6 +42,8 @@ export default {
     await import(
       './atomic-result-section-visual/atomic-result-section-visual.js'
     ),
+  'atomic-result-template': async () =>
+    await import('./atomic-result-template/atomic-result-template.js'),
   'atomic-results-per-page': async () =>
     await import('./atomic-results-per-page/atomic-results-per-page.js'),
   'atomic-search-box-instant-results': async () =>
