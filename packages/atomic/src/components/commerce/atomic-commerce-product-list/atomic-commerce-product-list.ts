@@ -11,23 +11,23 @@ import {
   type Summary,
 } from '@coveo/headless/commerce';
 import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
-import {keyed} from 'lit/directives/keyed.js';
-import {map} from 'lit/directives/map.js';
-import {ref} from 'lit/directives/ref.js';
-import {when} from 'lit/directives/when.js';
-import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
-import type {SelectChildProductEventArgs} from '@/src/components/commerce/atomic-product-children/select-child-product-event.js';
-import {ProductTemplateProvider} from '@/src/components/commerce/product-list/product-template-provider.js';
-import {renderItemPlaceholders} from '@/src/components/common/atomic-result-placeholder/item-placeholders.js';
-import {createAppLoadedListener} from '@/src/components/common/interface/store.js';
-import {renderDisplayWrapper} from '@/src/components/common/item-list/display-wrapper.js';
-import {renderGridLayout} from '@/src/components/common/item-list/grid-layout.js';
-import {renderItemList} from '@/src/components/common/item-list/item-list.js';
+import {customElement, property, state} from 'lit/decorators';
+import {keyed} from 'lit/directives/keyed';
+import {map} from 'lit/directives/map';
+import {ref} from 'lit/directives/ref';
+import {when} from 'lit/directives/when';
+import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
+import type {SelectChildProductEventArgs} from '@/src/components/commerce/atomic-product-children/select-child-product-event';
+import {ProductTemplateProvider} from '@/src/components/commerce/product-list/product-template-provider';
+import {renderItemPlaceholders} from '@/src/components/common/atomic-result-placeholder/item-placeholders';
+import {createAppLoadedListener} from '@/src/components/common/interface/store';
+import {renderDisplayWrapper} from '@/src/components/common/item-list/display-wrapper';
+import {renderGridLayout} from '@/src/components/common/item-list/grid-layout';
+import {renderItemList} from '@/src/components/common/item-list/item-list';
 import {
   ItemListCommon,
   type ItemRenderingFunction,
-} from '@/src/components/common/item-list/item-list-common.js';
+} from '@/src/components/common/item-list/item-list-common';
 import gridDisplayStyles from '@/src/components/common/item-list/styles/grid-display.tw.css';
 import listDisplayStyles from '@/src/components/common/item-list/styles/list-display.tw.css';
 import placeholderStyles from '@/src/components/common/item-list/styles/placeholders.tw.css';
@@ -36,22 +36,22 @@ import {
   renderTableData,
   renderTableLayout,
   renderTableRow,
-} from '@/src/components/common/item-list/table-layout.js';
+} from '@/src/components/common/item-list/table-layout';
 import {
   getItemListDisplayClasses,
   type ItemDisplayDensity,
   type ItemDisplayImageSize,
   type ItemDisplayLayout,
-} from '@/src/components/common/layout/display-options.js';
-import {bindStateToController} from '@/src/decorators/bind-state.js';
-import {bindingGuard} from '@/src/decorators/binding-guard.js';
-import {bindings} from '@/src/decorators/bindings.js';
-import {errorGuard} from '@/src/decorators/error-guard.js';
-import type {InitializableComponent} from '@/src/decorators/types.js';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin.js';
-import {FocusTargetController} from '@/src/utils/accessibility-utils.js';
-import {randomID} from '@/src/utils/utils.js';
+} from '@/src/components/common/layout/display-options';
+import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
+import {FocusTargetController} from '@/src/utils/accessibility-utils';
+import {randomID} from '@/src/utils/utils';
 
 /**
  * The `atomic-commerce-product-list` component is responsible for displaying products.
