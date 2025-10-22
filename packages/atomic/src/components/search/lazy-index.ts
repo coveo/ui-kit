@@ -1,7 +1,7 @@
 // Auto-generated file
 export default {
-  'atomic-html': async () => await import('./atomic-html/atomic-html.js'),
   'atomic-facet': async () => await import('./atomic-facet/atomic-facet.js'),
+  'atomic-html': async () => await import('./atomic-html/atomic-html.js'),
   'atomic-pager': async () => await import('./atomic-pager/atomic-pager.js'),
   'atomic-query-summary': async () =>
     await import('./atomic-query-summary/atomic-query-summary.js'),
