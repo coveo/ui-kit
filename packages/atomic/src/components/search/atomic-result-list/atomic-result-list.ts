@@ -17,15 +17,15 @@ import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
 import {ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
-import {renderItemPlaceholders} from '@/src/components/common/atomic-result-placeholder/item-placeholders.js';
+import {renderItemPlaceholders} from '@/src/components/common/atomic-result-placeholder/item-placeholders';
 import {createAppLoadedListener} from '@/src/components/common/interface/store';
-import {renderDisplayWrapper} from '@/src/components/common/item-list/display-wrapper.js';
-import {renderGridLayout} from '@/src/components/common/item-list/grid-layout.js';
+import {renderDisplayWrapper} from '@/src/components/common/item-list/display-wrapper';
+import {renderGridLayout} from '@/src/components/common/item-list/grid-layout';
 import {renderItemList} from '@/src/components/common/item-list/item-list';
 import {
   ItemListCommon,
   type ItemRenderingFunction,
-} from '@/src/components/common/item-list/item-list-common.js';
+} from '@/src/components/common/item-list/item-list-common';
 import {ResultTemplateProvider} from '@/src/components/common/item-list/result-template-provider';
 import gridDisplayStyles from '@/src/components/common/item-list/styles/grid-display.tw.css';
 import listDisplayStyles from '@/src/components/common/item-list/styles/list-display.tw.css';
@@ -35,7 +35,7 @@ import {
   renderTableData,
   renderTableLayout,
   renderTableRow,
-} from '@/src/components/common/item-list/table-layout.js';
+} from '@/src/components/common/item-list/table-layout';
 import {
   getItemListDisplayClasses,
   type ItemDisplayDensity,
@@ -43,18 +43,18 @@ import {
   type ItemDisplayLayout,
 } from '@/src/components/common/layout/display-options';
 import {renderTabWrapper} from '@/src/components/common/tabs/tab-wrapper';
-import '@/src/components/search/atomic-result/atomic-result';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {arrayConverter} from '@/src/converters/array-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
-import {bindingGuard} from '@/src/decorators/binding-guard.js';
-import {bindings} from '@/src/decorators/bindings.js';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin.js';
-import {FocusTargetController} from '@/src/utils/accessibility-utils.js';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
+import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
+import '../atomic-result/atomic-result';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -103,7 +103,7 @@ export class AtomicResultList
   @state()
   error!: Error;
   @state()
-  private isAppLoaded = true;
+  private isAppLoaded = false;
   @state()
   private isEveryResultReady = false;
   @state()
@@ -388,15 +388,12 @@ export class AtomicResultList
         props: {
           item: {
             ...result,
-            title: result.title,
+            title: result.title ?? '',
           },
           selectorForItem: 'atomic-result',
           setRef: (element) => {
-            element &&
-              this.resultListCommon.setNewResultRef(
-                element as HTMLElement,
-                index
-              );
+            element instanceof HTMLElement &&
+              this.resultListCommon.setNewResultRef(element, index);
           },
         },
       })(
@@ -470,11 +467,8 @@ export class AtomicResultList
                 key: this.getResultId(result),
                 rowIndex: index,
                 setRef: (element) => {
-                  element &&
-                    this.resultListCommon.setNewResultRef(
-                      element as HTMLElement,
-                      index
-                    );
+                  element instanceof HTMLElement &&
+                    this.resultListCommon.setNewResultRef(element, index);
                 },
               },
             })(
