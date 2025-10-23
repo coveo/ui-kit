@@ -6,7 +6,7 @@ import suggestionFound from '@salesforce/label/c.quantic_SuggestionFound';
 import suggestionFound_plural from '@salesforce/label/c.quantic_SuggestionFound_Plural';
 import suggestionsNotFound from '@salesforce/label/c.quantic_SuggestionNotFound';
 import {getHeadlessBundle} from 'c/quanticHeadlessLoader';
-import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
+import {AriaLiveRegion, I18nUtils, RecentQueryUtils} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
 const optionCSSClass =
@@ -29,12 +29,6 @@ const optionCSSClass =
  * <c-quantic-search-box-suggestions-list suggestions={suggestions} onquantic__selection={handleSuggestionSelection}></c-quantic-search-box-suggestions-list>
  */
 export default class QuanticSearchBoxSuggestionsList extends LightningElement {
-  /**
-   * The ID of the engine instance the component registers to.
-   * @api
-   * @type {string}
-   */
-  @api engineId;
   /**
    * The query suggestions to display.
    * @api
@@ -309,7 +303,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     if (!this.query) {
       this._recentQueriesThatStartWithCurrentQuery =
         this.recentQueries?.map((recentQuery) => ({
-          value: this.formatRecentQuery(recentQuery, ''),
+          value: RecentQueryUtils.formatRecentQuery(recentQuery, ''),
           rawValue: recentQuery,
           isRecentQuery: true,
         })) || [];
@@ -322,7 +316,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
               recentQuery.toLowerCase().startsWith(this.query?.toLowerCase())
           )
           .map((recentQuery) => ({
-            value: this.formatRecentQuery(recentQuery, this.query),
+            value: RecentQueryUtils.formatRecentQuery(recentQuery, this.query),
             rawValue: recentQuery,
             isRecentQuery: true,
           })) || [];
@@ -343,21 +337,5 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     return `slds-dropdown slds-dropdown_length-10 slds-dropdown_fluid quantic-suggestions-list ${
       this.allOptions?.length ? '' : 'slds-hidden'
     }`;
-  }
-
-  formatRecentQuery(recentQuery, query) {
-    const headless = getHeadlessBundle(this.engineId);
-    const highlightedValue = headless.HighlightUtils.highlightString({
-      content: recentQuery,
-      openingDelimiter: '<b>',
-      closingDelimiter: '</b>',
-      highlights: [
-        {
-          offset: query.length,
-          length: recentQuery.length - query.length,
-        },
-      ],
-    });
-    return highlightedValue;
   }
 }

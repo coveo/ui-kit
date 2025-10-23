@@ -5,10 +5,10 @@ export class RecentQueryUtils {
    * @param {String} recentQuery
    * @param {String} query
    * @returns {String}
-   * @deprecated
    */
   static formatRecentQuery(recentQuery, query) {
-    const highlightedValue = CoveoHeadless.HighlightUtils.highlightString({
+    const headlessBundle = Object.values(window.coveoHeadless)[0].bundle;
+    const highlightedValue = headlessBundle.HighlightUtils.highlightString({
       content: recentQuery,
       openingDelimiter: '<b>',
       closingDelimiter: '</b>',
