@@ -12,7 +12,7 @@ import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
-} from '@/src/components/common/layout/display-options';
+} from '@/src/components/common/layout/item-layout-utils';
 import {
   getPartialInstantItemElement,
   getPartialInstantItemShowAllElement,
