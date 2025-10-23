@@ -1,81 +1,54 @@
 import {
-  containsSections,
-  type ItemSectionTagName,
-} from './item-layout-sections';
+  getItemDisplayClasses as getItemDisplayClassesImport,
+  getItemLayoutClasses,
+  getItemListDisplayClasses as getItemListDisplayClassesImport,
+  type ItemDisplayBasicLayout as ItemDisplayBasicLayoutImport,
+  type ItemDisplayDensity as ItemDisplayDensityImport,
+  type ItemDisplayImageSize as ItemDisplayImageSizeImport,
+  type ItemDisplayLayout as ItemDisplayLayoutImport,
+  type ItemTarget as ItemTargetImport,
+} from './item-layout-utils';
 
-export type ItemDisplayBasicLayout = 'list' | 'grid';
-export type ItemDisplayLayout = ItemDisplayBasicLayout | 'table';
-export type ItemDisplayDensity = 'comfortable' | 'normal' | 'compact';
-export type ItemDisplayImageSize = 'large' | 'small' | 'icon' | 'none';
-export type ItemTarget = '_self' | '_blank' | '_parent' | '_top';
+/**
+ * @deprecated Use only for Stencil components. For Lit components, import from `item-layout-utils.ts` instead.
+ */
+export type ItemDisplayBasicLayout = ItemDisplayBasicLayoutImport;
 
-function getDisplayClass(display: ItemDisplayLayout) {
-  switch (display) {
-    case 'grid':
-      return 'display-grid';
-    case 'table':
-      return 'display-table';
-    default:
-      return 'display-list';
-  }
-}
+/**
+ * @deprecated Use only for Stencil components. For Lit components, import from `item-layout-utils.ts` instead.
+ */
+export type ItemDisplayDensity = ItemDisplayDensityImport;
 
-function getDensityClass(density: ItemDisplayDensity) {
-  switch (density) {
-    case 'comfortable':
-      return 'density-comfortable';
-    case 'compact':
-      return 'density-compact';
-    default:
-      return 'density-normal';
-  }
-}
+/**
+ * @deprecated Use only for Stencil components. For Lit components, import from `item-layout-utils.ts` instead.
+ */
+export type ItemDisplayImageSize = ItemDisplayImageSizeImport;
 
-function getImageClass(image: ItemDisplayImageSize) {
-  switch (image) {
-    case 'large':
-      return 'image-large';
-    case 'small':
-      return 'image-small';
-    case 'none':
-      return 'image-none';
-    default:
-      return 'image-icon';
-  }
-}
+/**
+ * @deprecated Use only for Stencil components. For Lit components, import from `item-layout-utils.ts` instead.
+ */
+export type ItemDisplayLayout = ItemDisplayLayoutImport;
 
-export function getItemListDisplayClasses(
-  display: ItemDisplayLayout,
-  density: ItemDisplayDensity,
-  image: ItemDisplayImageSize,
-  isLoading: boolean,
-  isAppLoading: boolean
-) {
-  const classes = getItemDisplayClasses(display, density, image);
+/**
+ * @deprecated Use only for Stencil components. For Lit components, import from `item-layout-utils.ts` instead.
+ */
+export type ItemTarget = ItemTargetImport;
 
-  if (isLoading) {
-    classes.push('loading');
-  }
+/**
+ * @deprecated Use only for Stencil components. For Lit components, import from `item-layout-utils.ts` instead.
+ */
+export const getItemDisplayClasses: typeof getItemDisplayClassesImport =
+  getItemDisplayClassesImport;
 
-  if (isAppLoading) {
-    classes.push('placeholder');
-  }
-  return classes.join(' ');
-}
+/**
+ * @deprecated Use only for Stencil components. For Lit components, import from `item-layout-utils.ts` instead.
+ */
+export const getItemListDisplayClasses: typeof getItemListDisplayClassesImport =
+  getItemListDisplayClassesImport;
 
-export function getItemDisplayClasses(
-  display: ItemDisplayLayout,
-  density: ItemDisplayDensity,
-  image: ItemDisplayImageSize
-) {
-  const classes = [
-    getDisplayClass(display),
-    getDensityClass(density),
-    getImageClass(image),
-  ];
-  return classes;
-}
-
+/**
+ * @deprecated Use only for Stencil components. For Lit components, use `getItemLayoutClasses` with `ItemLayoutConfig` from `packages/atomic/src/components/common/layout/item-layout-utils.ts` instead.
+ */
 export class ItemLayout {
   private children: HTMLCollection;
   private density: ItemDisplayDensity;
@@ -94,35 +67,15 @@ export class ItemLayout {
     this.imageSize = imageSize;
   }
 
-  private getImageSizeFromSections() {
-    const imageSize = this.getSection(
-      'atomic-result-section-visual'
-    )?.getAttribute('image-size');
-    if (!imageSize) {
-      return undefined;
-    }
-    return imageSize as ItemDisplayImageSize;
-  }
-
-  private getSection(section: ItemSectionTagName) {
-    return Array.from(this.children).find(
-      (element) => element.tagName.toLowerCase() === section
-    );
-  }
-
   public getClasses(HTMLContent?: string) {
-    const classes = getItemDisplayClasses(
-      this.display,
-      this.density,
-      this.getImageSizeFromSections() ?? this.imageSize
-    );
-    if (
+    return getItemLayoutClasses(
+      {
+        children: this.children,
+        display: this.display,
+        density: this.density,
+        imageSize: this.imageSize,
+      },
       HTMLContent
-        ? containsSections(HTMLContent)
-        : containsSections(this.children)
-    ) {
-      classes.push('with-sections');
-    }
-    return classes;
+    );
   }
 }

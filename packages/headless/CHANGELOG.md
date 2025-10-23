@@ -1,3 +1,9 @@
+## 3.33.0 (2025-10-22)
+
+* feat(quantic): ux improvements for quantic generated answer (#6186) ([a417c3f](https://github.com/coveo/ui-kit/commits/a417c3f)), closes [#6186](https://github.com/coveo/ui-kit/issues/6186)
+
+
+
 ## 3.32.0 (2025-10-15)
 
 * feat(headless): Include caseContext parameter in CRGA AnswerAPI to match SAPI behavior (#6145) ([13a3e28](https://github.com/coveo/ui-kit/commits/13a3e28)), closes [#6145](https://github.com/coveo/ui-kit/issues/6145)

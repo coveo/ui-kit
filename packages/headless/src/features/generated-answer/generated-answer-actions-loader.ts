@@ -1,6 +1,10 @@
 import type {PayloadAction} from '@reduxjs/toolkit';
 import type {CoreEngine} from '../../app/engine.js';
-import {generateAnswer, resetAnswer} from './generated-answer-actions.js';
+import {
+  generateAnswer,
+  resetAnswer,
+  setAnswerGenerationMode,
+} from './generated-answer-actions.js';
 import {generatedAnswerReducer as generatedAnswer} from './generated-answer-slice.js';
 
 /**
@@ -26,6 +30,14 @@ export interface GeneratedAnswerActionCreators {
    * @returns A dispatchable action.
    */
   resetAnswer(): PayloadAction;
+
+  /**
+   * Sets the answer generation mode.
+   *
+   * This action updates the engine state to indicate whether answer generation
+   * should occur automatically or manually.
+   */
+  setAnswerGenerationMode(mode: 'automatic' | 'manual'): void;
 }
 
 /**
@@ -45,5 +57,6 @@ export function loadGeneratedAnswerActions(
   return {
     generateAnswer,
     resetAnswer,
+    setAnswerGenerationMode,
   };
 }

@@ -97,6 +97,8 @@ export interface GeneratedAnswerState {
   answerApiQueryParams?: AnswerApiQueryParams;
   /** The unique identifier of the answer returned by the Answer API. */
   answerId?: string;
+  /** The current mode of answer generation. */
+  answerGenerationMode: 'automatic' | 'manual';
 }
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
@@ -120,5 +122,6 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     cannotAnswer: false,
     answerApiQueryParams: undefined,
     answerId: undefined,
+    answerGenerationMode: 'automatic',
   };
 }

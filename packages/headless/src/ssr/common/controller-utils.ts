@@ -77,7 +77,6 @@ export function createStaticState<TSearchAction extends UnknownAction>({
   };
 }
 
-// TODO: KIT-4610: no longer needed along with build()
 export function composeFunction<
   TParameters extends Array<unknown>,
   TReturn,

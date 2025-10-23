@@ -7,10 +7,12 @@ import {parameters} from '@/storybook-utils/common/search-box-suggestions-parame
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
-  accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-  organizationId: 'searchuisamples',
-  search: {
-    searchHub: 'MainSearch',
+  config: {
+    accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+    organizationId: 'searchuisamples',
+    search: {
+      searchHub: 'MainSearch',
+    },
   },
 });
 

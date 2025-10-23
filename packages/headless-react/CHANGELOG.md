@@ -1,3 +1,9 @@
+## <small>2.6.7 (2025-10-22)</small>
+
+* docs(headless-react): update sample links in README files to use the correct path (#6086) ([17e5c58](https://github.com/coveo/ui-kit/commits/17e5c58)), closes [#6086](https://github.com/coveo/ui-kit/issues/6086)
+
+
+
 ## <small>2.6.2 (2025-10-08)</small>
 
 * chore(deps) update typedoc  (#6124) ([657371a](https://github.com/coveo/ui-kit/commits/657371a)), closes [#6124](https://github.com/coveo/ui-kit/issues/6124)

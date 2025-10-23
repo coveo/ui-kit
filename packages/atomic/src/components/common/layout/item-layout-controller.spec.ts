@@ -1,23 +1,19 @@
 import {LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import * as displayOptions from './display-options';
 import {
   ItemLayoutController,
   type ItemLayoutHost,
   type ItemLayoutOptions,
 } from './item-layout-controller';
+import * as ItemLayoutUtils from './item-layout-utils';
 
-vi.mock('./display-options');
+vi.mock('./item-layout-utils', () => ({
+  getItemLayoutClasses: vi.fn(),
+}));
 
-const mockGetClasses = vi.fn();
-const MockedItemLayout = vi.mocked(displayOptions.ItemLayout);
-
-MockedItemLayout.mockImplementation(
-  () =>
-    ({
-      getClasses: mockGetClasses,
-    }) as unknown as displayOptions.ItemLayout
+const mockGetItemLayoutClasses = vi.mocked(
+  ItemLayoutUtils.getItemLayoutClasses
 );
 
 @customElement('test-item-element')
@@ -53,18 +49,11 @@ describe('ItemLayoutController', () => {
       itemClasses: vi.fn().mockReturnValue('custom-class extra-class'),
     };
 
-    mockGetClasses.mockReturnValue([
+    mockGetItemLayoutClasses.mockReturnValue([
       'display-list',
       'density-normal',
       'image-icon',
     ]);
-
-    MockedItemLayout.mockImplementation(
-      () =>
-        ({
-          getClasses: mockGetClasses,
-        }) as unknown as displayOptions.ItemLayout
-    );
 
     Object.defineProperty(mockElement, 'shadowRoot', {
       value: {
@@ -92,15 +81,16 @@ describe('ItemLayoutController', () => {
       controller = new ItemLayoutController(mockElement, mockOptions);
     });
 
-    it('should create layout with correct parameters when content is provided', () => {
+    it('should create layout config with correct parameters when content is provided', () => {
       controller.hostConnected();
 
-      expect(MockedItemLayout).toHaveBeenCalledWith(
-        mockContent.children,
-        'list',
-        'normal',
-        'icon'
-      );
+      const config = controller.getLayout();
+      expect(config).toEqual({
+        children: mockContent.children,
+        display: 'list',
+        density: 'normal',
+        imageSize: 'icon',
+      });
     });
 
     it('should handle undefined content gracefully', () => {
@@ -167,7 +157,7 @@ describe('ItemLayoutController', () => {
       controller = new ItemLayoutController(mockElement, mockOptions);
     });
 
-    it('should return layout instance when created', () => {
+    it('should return layout config when created', () => {
       controller.hostConnected();
       const layout = controller.getLayout();
 
@@ -202,13 +192,21 @@ describe('ItemLayoutController', () => {
       ]);
     });
 
-    it('should pass additional content to layout.getClasses', () => {
+    it('should pass additional content to getItemLayoutClasses', () => {
       const additionalContent =
         '<atomic-result-section-visual></atomic-result-section-visual>';
 
       controller.getCombinedClasses(additionalContent);
 
-      expect(mockGetClasses).toHaveBeenCalledWith(additionalContent);
+      expect(mockGetItemLayoutClasses).toHaveBeenCalledWith(
+        expect.objectContaining({
+          children: mockContent.children,
+          display: 'list',
+          density: 'normal',
+          imageSize: 'icon',
+        }),
+        additionalContent
+      );
     });
 
     it('should filter out empty item classes', () => {
@@ -291,7 +289,7 @@ describe('ItemLayoutController', () => {
 
     it('should not apply classes when classes array is empty', () => {
       vi.mocked(mockOptions.itemClasses).mockReturnValue('');
-      mockGetClasses.mockReturnValue([]);
+      mockGetItemLayoutClasses.mockReturnValue([]);
 
       controller.applyLayoutClassesToElement(testElement);
 

@@ -1,4 +1,4 @@
-import {getAttributesFromLinkSlot} from '@/src/components/common/item-link/attributes-slot';
+import {getAttributesFromLinkSlotContent} from '@/src/components/common/item-link/attributes-slot';
 import {
   getQuestionPart,
   SmartSnippetSuggestionsAnswerAndSourceWrapper,
@@ -193,7 +193,7 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
     return (
       <SmartSnippetSuggestionsFooter i18n={this.bindings.i18n}>
         <atomic-smart-snippet-source
-          anchorAttributes={getAttributesFromLinkSlot(
+          anchorAttributes={getAttributesFromLinkSlotContent(
             this.host,
             'source-anchor-attributes'
           )}

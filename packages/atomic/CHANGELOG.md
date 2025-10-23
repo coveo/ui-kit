@@ -1,3 +1,18 @@
+## 3.36.0 (2025-10-22)
+
+* chore: enable MSW in dev (#6175) ([da90479](https://github.com/coveo/ui-kit/commits/da90479)), closes [#6175](https://github.com/coveo/ui-kit/issues/6175)
+* chore(atomic): add custom lit converter for arrays (#6171) ([59d448c](https://github.com/coveo/ui-kit/commits/59d448c)), closes [#6171](https://github.com/coveo/ui-kit/issues/6171)
+* chore(atomic): add mockConsole testing util (#6132) ([29d2a31](https://github.com/coveo/ui-kit/commits/29d2a31)), closes [#6132](https://github.com/coveo/ui-kit/issues/6132)
+* chore(atomic): allow multiple default and named slots (#6107) ([568c441](https://github.com/coveo/ui-kit/commits/568c441)), closes [#6107](https://github.com/coveo/ui-kit/issues/6107)
+* chore(atomic): migrate atomic-result-section-* (#6113) ([d9eb32d](https://github.com/coveo/ui-kit/commits/d9eb32d)), closes [#6113](https://github.com/coveo/ui-kit/issues/6113)
+* chore(atomic): migrate tab guard (#6197) ([1bc5f19](https://github.com/coveo/ui-kit/commits/1bc5f19)), closes [#6197](https://github.com/coveo/ui-kit/issues/6197)
+* chore(atomic): rename ItemTemplateProvider (#6172) ([fc08bfc](https://github.com/coveo/ui-kit/commits/fc08bfc)), closes [#6172](https://github.com/coveo/ui-kit/issues/6172)
+* chore(storybook): do use play over systematic afterEach (#6176) ([7224e9c](https://github.com/coveo/ui-kit/commits/7224e9c)), closes [#6176](https://github.com/coveo/ui-kit/issues/6176)
+* chore (atomic): migrated atomic-result-template to lit (#6159) ([4b6574d](https://github.com/coveo/ui-kit/commits/4b6574d)), closes [#6159](https://github.com/coveo/ui-kit/issues/6159)
+* feat(atomic): accessibility updates (LENS-3856) (#6160) ([7135cf5](https://github.com/coveo/ui-kit/commits/7135cf5)), closes [#6160](https://github.com/coveo/ui-kit/issues/6160)
+
+
+
 ## <small>3.35.5 (2025-10-16)</small>
 
 * chore: setup MSW with Storybook and replace playwright network mocking (#6000) ([010586c](https://github.com/coveo/ui-kit/commits/010586c)), closes [#6000](https://github.com/coveo/ui-kit/issues/6000)

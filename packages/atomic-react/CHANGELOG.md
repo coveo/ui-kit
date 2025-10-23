@@ -1,3 +1,9 @@
+## <small>3.3.19 (2025-10-22)</small>
+
+* chore(atomic): migrate atomic-result-section-* (#6113) ([d9eb32d](https://github.com/coveo/ui-kit/commits/d9eb32d)), closes [#6113](https://github.com/coveo/ui-kit/issues/6113)
+
+
+
 ## <small>3.3.16 (2025-10-15)</small>
 
 * fix(atomic-react): fix table layout (#6146) ([2cdc290](https://github.com/coveo/ui-kit/commits/2cdc290)), closes [#6146](https://github.com/coveo/ui-kit/issues/6146)

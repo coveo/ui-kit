@@ -36,8 +36,9 @@ const {decorator: resultDecorator, engineConfig} = wrapInResult({
     return request;
   },
 });
-const {decorator: searchInterfaceDecorator, play} =
-  wrapInSearchInterface(engineConfig);
+const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
+  config: engineConfig,
+});
 
 export const OutsideResultTemplate: Story = {
   name: 'Not inside a result template',

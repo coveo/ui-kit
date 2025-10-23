@@ -7,16 +7,16 @@ import {
   wrapInSearchInterface,
 } from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, play} = wrapInSearchInterface(
-  {
+const {decorator, play} = wrapInSearchInterface({
+  config: {
     accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
     organizationId: 'fashioncoveodemocomgzh7iep8',
     search: {
       searchHub: 'MainSearch',
     },
   },
-  true
-);
+  skipFirstSearch: true,
+});
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-search-box',
   {excludeCategories: ['methods']}

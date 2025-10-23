@@ -79,6 +79,19 @@ export const setAnswerId = createAction(
   (payload: string) => validatePayload(payload, requiredNonEmptyString)
 );
 
+export const setAnswerGenerationMode = createAction(
+  'generatedAnswer/setAnswerGenerationMode',
+  (payload: 'automatic' | 'manual') =>
+    validatePayload(
+      payload,
+      new StringValue<'automatic' | 'manual'>({
+        constrainTo: ['automatic', 'manual'],
+        required: false,
+        default: 'automatic',
+      })
+    )
+);
+
 export const setIsEnabled = createAction(
   'generatedAnswer/setIsEnabled',
   (payload: boolean) => validatePayload(payload, booleanValue)
@@ -314,9 +327,8 @@ export const streamAnswer = createAsyncThunk<
  * instead of the regular search pipeline.
  *
  * Flow:
- * 1. Reset any existing answer state.
+ * 1. Construct the Answer API query parameters based on the current state.
  * 2. Fetch a new answer from the Answer API using the provided configuration.
- * 3. Update the search action metadata.
  */
 export const generateAnswer = createAsyncThunk<
   void,

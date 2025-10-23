@@ -8,7 +8,7 @@ interface FacetSearchState {
 }
 
 /**
- * Meant to be used inside the `componentShouldUpdate` lifecycle method.
+ * Meant to be used inside the `shouldUpdate` lifecycle method.
  * It prevents updating the facet between two matchless facet searches.
  * It also prevents updating the facet until the first search has loaded.
  */

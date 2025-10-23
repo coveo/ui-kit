@@ -20,8 +20,8 @@ useCaseTestCases.forEach((useCase) => {
         facet,
       }) => {
         const selectedIndex = 0;
-        const expectedStartDate = 'past-2-week';
-        const expectedEndDate = 'now';
+        const expectedStartDate = 'now';
+        const expectedEndDate = 'next-1-year';
         const expectedFacetData = {
           facetId: exampleField,
           facetField: exampleField,
@@ -64,8 +64,8 @@ useCaseTestCases.forEach((useCase) => {
         facet,
       }) => {
         const selectedIndex = 0;
-        const expectedStartDate = 'past-2-week';
-        const expectedEndDate = 'now';
+        const expectedStartDate = 'now';
+        const expectedEndDate = 'next-1-year';
         const expectedFacetData = {
           facetId: exampleField,
           facetField: exampleField,
@@ -137,6 +137,7 @@ useCaseTestCases.forEach((useCase) => {
       test.describe('with a selected value in the URL', () => {
         const selectedIndex = 0;
         const date = new Date();
+        date.setFullYear(date.getFullYear() + 20);
         const todayDate = date.toISOString().slice(0, 10);
         date.setDate(date.getDate() - 1);
         const yesterdayDate = date.toISOString().slice(0, 10);

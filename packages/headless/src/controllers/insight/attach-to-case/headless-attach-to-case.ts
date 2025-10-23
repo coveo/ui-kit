@@ -46,6 +46,7 @@ export interface AttachToCaseOptions {
  *
  * @group Controllers
  * @category AttachToCase
+ * @deprecated Use `buildAttachedResults` instead. // TODO: SFINT-6395 - This controller will be removed in ui-kit v4.
  */
 export interface AttachToCase extends Controller {
   /**
@@ -74,6 +75,7 @@ export interface AttachToCase extends Controller {
  *
  * @group Controllers
  * @category AttachToCase
+ * @deprecated Use `buildAttachedResults` instead. // TODO: SFINT-6395 - This controller will be removed in ui-kit v4.
  */
 export function buildAttachToCase(
   engine: InsightEngine,

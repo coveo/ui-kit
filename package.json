@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.68",
+  "version": "3.0.69",
   "scripts": {
     "postinstall": "husky install && patch-package",
     "reset:install": "git checkout origin/main package-lock.json && npm i",

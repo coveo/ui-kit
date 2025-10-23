@@ -9,21 +9,23 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 
 const {decorator, play} = wrapInSearchInterface({
-  search: {
-    preprocessSearchResponseMiddleware: (response) => {
-      response.body.triggers = [
-        {
-          type: 'notify',
-          content:
-            'This is a demo notification. It contains text that may span over a different number of lines depending on your screen width. Notifications are returned by the Coveo Search API.',
-        },
-        {
-          type: 'notify',
-          content:
-            'This is a different notification. Any amount of notifications can be returned by the Coveo Search API.',
-        },
-      ];
-      return response;
+  config: {
+    search: {
+      preprocessSearchResponseMiddleware: (response) => {
+        response.body.triggers = [
+          {
+            type: 'notify',
+            content:
+              'This is a demo notification. It contains text that may span over a different number of lines depending on your screen width. Notifications are returned by the Coveo Search API.',
+          },
+          {
+            type: 'notify',
+            content:
+              'This is a different notification. Any amount of notifications can be returned by the Coveo Search API.',
+          },
+        ];
+        return response;
+      },
     },
   },
 });

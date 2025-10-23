@@ -21,8 +21,9 @@ const {decorator: resultDecorator, engineConfig} = wrapInResult({
   },
 });
 
-const {decorator: searchInterfaceDecorator, play} =
-  wrapInSearchInterface(engineConfig);
+const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
+  config: engineConfig,
+});
 
 const meta: Meta = {
   component: 'atomic-format-currency',

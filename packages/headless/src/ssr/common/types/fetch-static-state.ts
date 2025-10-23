@@ -33,6 +33,9 @@ export type FetchStaticState<
     >
   ): Promise<EngineStaticState<TSearchAction, TControllersStaticState>>;
 
+  /**
+   * @deprecated Use the fetchStaticState() method instead
+   */
   fromBuildResult: FromBuildResult<
     TEngine,
     TControllers,

@@ -888,4 +888,8 @@
     <label>Ressources pertinentes pour ce cas</label>
     <name>quantic_InsightRelatedToThisCase</name>
   </customLabels>
+  <customLabels>
+    <label>Aucune réponse générée disponible.</label>
+    <name>quantic_NoGeneratedAnswer</name>
+  </customLabels>
 </Translations>

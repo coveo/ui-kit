@@ -4,12 +4,14 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const {decorator, play} = wrapInSearchInterface({
-  search: {
-    preprocessSearchResponseMiddleware: (r) => {
-      const [result] = r.body.results;
-      result.title = 'Manage the Coveo In-Product Experiences (IPX)';
-      result.clickUri = 'https://docs.coveo.com/en/3160';
-      return r;
+  config: {
+    search: {
+      preprocessSearchResponseMiddleware: (r) => {
+        const [result] = r.body.results;
+        result.title = 'Manage the Coveo In-Product Experiences (IPX)';
+        result.clickUri = 'https://docs.coveo.com/en/3160';
+        return r;
+      },
     },
   },
 });
