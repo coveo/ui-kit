@@ -76,6 +76,10 @@ export class PlatformClient {
           shouldRetry && logger.info('Platform retrying request');
           return shouldRetry;
         },
+        jitter: 'full',
+        numOfAttempts: 3,
+        startingDelay: 500,
+        timeMultiple: 2,
       });
       switch (response.status) {
         case 419:
