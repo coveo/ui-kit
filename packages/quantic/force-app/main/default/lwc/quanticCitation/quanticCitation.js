@@ -14,7 +14,7 @@ const supportedFileTypesForTextFragment = ['html', 'SalesforceItem'];
  * @fires CustomEvent#quantic__citationhover
  * @category Internal
  * @example
- * <c-quantic-citation citation={citation} interactive-citation={interactiveCitation} onclick={handleClick} onquantic__citationhover={handleHover}></c-quantic-citation>
+ * <c-quantic-citation citation={citation} interactive-citation={interactiveCitation} icon-name="utility:attach" onclick={handleClick} onquantic__citationhover={handleHover} onquantic__citationattach={handleCitationAttach}></c-quantic-citation>
  */
 export default class QuanticCitation extends NavigationMixin(LightningElement) {
   /**
@@ -36,6 +36,12 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
    * @default false
    */
   @api disableCitationAnchoring = false;
+  /**
+   * Icon name to display next to the citation. If not provided, no icon is shown.
+   * @api
+   * @type {string}
+   */
+  @api iconName;
 
   /** @type {Object} */
   timeout;
@@ -57,8 +63,6 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   isHoveringCitation = false;
   /** @type {boolean} */
   isHoveringTooltip = false;
-  /** @type {boolean} */
-  isCitationDocumentAttached = false;
 
   connectedCallback() {
     const fileType = this.citation?.fields?.filetype;
@@ -154,7 +158,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
 
     this.tooltipIsDisplayed = false;
     this.shouldShowTooltipAfterDelay = false;
-    // this.tooltipComponent.hideTooltip();
+    this.tooltipComponent.hideTooltip();
   }
 
   /**
@@ -177,10 +181,6 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
     }
   }
 
-  handleCitationDocumentClick() {
-    this.isCitationDocumentAttached = !this.isCitationDocumentAttached;
-    console.log(this.isCitationDocumentAttached ? 'detach clicked!' : 'attach clicked!');
-  }
 
   navigateToSalesforceRecord(event) {
     event.stopPropagation();
@@ -251,7 +251,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       : (this.clickUri ?? this.citation?.uri);
   }
 
-  get isCitationAttached() {
-    return this.isCitationDocumentAttached;
+  get shouldShowIcon() {
+    return !!this.iconName;
   }
 }

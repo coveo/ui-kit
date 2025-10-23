@@ -12,6 +12,13 @@
       onmouseleave={handleMouseLeave}
       onclick={handleClick}
     >
+      <template lwc:if={shouldShowIcon}>
+        <lightning-icon
+          icon-name={iconName}
+          size="xx-small"
+          class="slds-m-right_xx-small"
+        ></lightning-icon>
+      </template>
       <p
         class="citation__title slds-m-left_x-small slds-truncate slds-has-flexi-truncate"
       >
@@ -47,28 +54,9 @@
         >
           {text}
         </div>
-        <template lwc:if={isCitationAttached}>
-          <lightning-button
-            onclick={handleCitationDocumentClick}
-            variant="base"
-            icon-name="utility:detach"
-            icon-position="left"
-            label="Detach document"
-            size="x-small"
-            class="slds-var-m-top_xx-small"
-          ></lightning-button>
-        </template>
-        <template lwc:else>
-          <lightning-button
-            onclick={handleCitationDocumentClick}
-            variant="base"
-            icon-name="utility:attach"
-            icon-position="left"
-            label="Attach document"
-            size="x-small"
-            class="slds-var-m-top_xx-small"
-          ></lightning-button>
-        </template>
+        <div class="citation__tooltip-actions slds-var-p-vertical_x-small">
+          <slot name="actions"></slot>
+        </div>
       </div>
     </c-quantic-tooltip>
   </li>
