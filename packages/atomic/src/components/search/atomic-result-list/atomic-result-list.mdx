@@ -1,0 +1,69 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicResultListStories from './atomic-result-list.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicResultListStories} />
+
+<AtomicDocTemplate
+  stories={AtomicResultListStories}
+  githubPath="search/atomic-result-list/atomic-result-list.ts"
+  tagName="atomic-result-list"
+  className="AtomicResultList"
+>
+
+This component is typically placed within the `results` section of the layout.
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+      <atomic-layout-section section="results">
+        <atomic-result-list></atomic-result-list>
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+The components supports three `display` modes:
+
+- `list` (default)
+- `grid`
+- `table`
+
+When [displaying results as a list or grid](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/list-or-grid/), the component applies a basic template by default. You can also [define custom templates](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/#defining-a-result-template).
+
+```html
+<atomic-result-list>
+  <atomic-result-template>
+    <template>
+      <!-- ... -->
+    </template>
+  </atomic-result-template>
+</atomic-result-list>
+```
+
+When [displaying results as a table](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/table/), there is no default template. You must define a template that includes at least one `atomic-table-element` component, which serve as columns.
+
+```html
+<atomic-result-list display="table">
+  <atomic-result-template>
+    <template>
+      <atomic-table-element label="Result">
+        <atomic-result-link></atomic-result-link>
+      </atomic-table-element>
+      <atomic-table-element label="ID">
+        <atomic-result-text field="permanentid"></atomic-result-text>
+      </atomic-table-element>
+      <atomic-table-element label="Price">
+        <atomic-result-price></atomic-result-price>
+      </atomic-table-element>
+    </template>
+  </atomic-result-template>
+</atomic-result-list>
+```
+</AtomicDocTemplate>
