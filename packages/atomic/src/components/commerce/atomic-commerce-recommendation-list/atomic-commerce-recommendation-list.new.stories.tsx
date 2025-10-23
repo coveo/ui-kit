@@ -5,7 +5,7 @@ import {baseRecommendationsResponse} from '@/storybook-utils/api/commerce';
 import {wrapInCommerceRecommendationInterface} from '@/storybook-utils/commerce/commerce-recommendation-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
-const {decorator, afterEach} = wrapInCommerceRecommendationInterface({});
+const {decorator, play} = wrapInCommerceRecommendationInterface({});
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-recommendation-list',
   {excludeCategories: ['methods']}
@@ -44,7 +44,7 @@ const meta: Meta = {
   title: 'Commerce/Recommendation List',
   id: 'atomic-commerce-recommendation-list',
   render: (args) => template(args),
-  afterEach,
+  play,
   decorators: [decorator],
   parameters: {
     ...parameters,

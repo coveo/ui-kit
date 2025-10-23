@@ -8,19 +8,20 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator, afterEach} = wrapInSearchInterface({
-  search: {
-    preprocessSearchResponseMiddleware: (r) => {
-      const [result] = r.body.results;
-      result.title = 'Manage the Coveo In-Product Experiences (IPX)';
-      result.clickUri = 'https://docs.coveo.com/en/3160';
-      r.body.questionAnswer = {
-        documentId: {
-          contentIdKey: 'permanentid',
-          contentIdValue: result.raw.permanentid!,
-        },
-        question: 'Creating an In-Product Experience (IPX)',
-        answerSnippet: `
+const {decorator, play} = wrapInSearchInterface({
+  config: {
+    search: {
+      preprocessSearchResponseMiddleware: (r) => {
+        const [result] = r.body.results;
+        result.title = 'Manage the Coveo In-Product Experiences (IPX)';
+        result.clickUri = 'https://docs.coveo.com/en/3160';
+        r.body.questionAnswer = {
+          documentId: {
+            contentIdKey: 'permanentid',
+            contentIdValue: result.raw.permanentid!,
+          },
+          question: 'Creating an In-Product Experience (IPX)',
+          answerSnippet: `
           <ol>
             <li>On the <a href="https://platform.cloud.coveo.com/admin/#/orgid/search/in-app-widgets/">In-Product Experiences</a> page, click Add <b>In-Product Experience</b>.</li>
             <li>In the Configuration tab, fill the Basic settings section.</li>
@@ -33,10 +34,11 @@ const {decorator, afterEach} = wrapInSearchInterface({
             You're now ready to <a href="https://docs.coveo.com/en/3160/build-a-search-ui/manage-coveo-in-product-experiences-ipx#embed-your-ipx-interface-in-sites-and-applications">embed your IPX interface</a>. However, we recommend that you <a href="https://docs.coveo.com/en/3160/build-a-search-ui/manage-coveo-in-product-experiences-ipx#configuring-query-pipelines-for-an-ipx-interface-recommended">configure query pipelines for your IPX interface</a> before.
           </p>
         `,
-        relatedQuestions: [],
-        score: 1337,
-      };
-      return r;
+          relatedQuestions: [],
+          score: 1337,
+        };
+        return r;
+      },
     },
   },
 });
@@ -56,7 +58,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach,
+  play,
 };
 
 export default meta;

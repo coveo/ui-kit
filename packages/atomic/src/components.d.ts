@@ -2092,137 +2092,12 @@ export namespace Components {
         "maxValueInIndex": number;
     }
     /**
-     * This section allows the information seeker to perform an action on an item without having to view its details.
-     * For example, in Commerce you can add an item to the cart directly or add it to a wish list to view at a later time.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
-    interface AtomicResultSectionActions {
-    }
-    /**
-     * This section provides badges that highlight special features of the item.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
-    interface AtomicResultSectionBadges {
-    }
-    /**
-     * This section displays additional descriptive information about the item.
-     * Behavior:
-     * * Has a maximum height of two lines.
-     * ** We recommend that you use `atomic-result-fields-list` to ensure that the fields in this section don’t overflow.
-     * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     * * Has a font weight.
-     */
-    interface AtomicResultSectionBottomMetadata {
-    }
-    /**
-     * This section displays the folded results, available when using the <atomic-result-children> component.
-     * Behavior:
-     * * Shows children at the bottom of the result, indented and wrapped in a border.
-     */
-    interface AtomicResultSectionChildren {
-    }
-    /**
-     * This section displays the field that's important for its search criteria.
-     * For example, in Commerce, a product's cost is often more important than the title itself.
-     * Behavior:
-     * * Has a very large font size.
-     * * Is the second closest element beneath the title section.
-     */
-    interface AtomicResultSectionEmphasized {
-    }
-    /**
-     * This section contains an informative summary of the item's content.
-     * Behavior:
-     * * Has a fixed height of one to three lines, depending on the layout and density.
-     * * Ellipses overflowing text.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface AtomicResultSectionExcerpt {
-    }
-    /**
-     * This section identifies the item by its name, and its main use is to make the result list scannable.
-     * This is usually the page title.
-     * Behavior:
-     * * Has a fixed height of two lines on grid layouts.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface AtomicResultSectionTitle {
-    }
-    /**
-     * This section surfaces some fields that are directly related to the title of the item.
-     * For example, in Commerce, this could be the item's rating, which is tied to the nature of the product itself,
-     * rather than to the product's description.
-     * Behavior:
-     * * Has a very small font size.
-     * * Is the closest element beneath the title section.
-     */
-    interface AtomicResultSectionTitleMetadata {
-    }
-    /**
-     * This section provides visual information about the item.
-     * For example, in Commerce, an image is a great shorthand for a product category.
-     * An icon can quickly show the item type, or an avatar can help identify to whom it is related.
-     * Behavior:
-     * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
-     * ** When the image size is set to `icon`, this section stays very small.
-     * ** You should ensure that elements inside of it take the available space.
-     * * Always has a 1:1 aspect ratio.
-     */
-    interface AtomicResultSectionVisual {
-        /**
-          * How large or small the visual section of results using this template should be.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-    }
-    /**
      * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultTablePlaceholder {
         "density": ItemDisplayDensity;
         "imageSize": ItemDisplayImageSize;
         "rows": number;
-    }
-    /**
-     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface AtomicResultTemplate {
-        /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
-         */
-        "conditions": ResultTemplateCondition[];
-        /**
-          * Gets the appropriate result template based on conditions applied.
-         */
-        "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
-        /**
-          * Verifies whether the specified fields match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustMatch": Record<
-    string,
-    string[]
-  >;
-        /**
-          * Verifies whether the specified fields do not match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustNotMatch": Record<
-    string,
-    string[]
-  >;
     }
     /**
      * The `atomic-result-text` component renders the value of a string result field.
@@ -3714,132 +3589,6 @@ declare global {
         new (): HTMLAtomicResultRatingElement;
     };
     /**
-     * This section allows the information seeker to perform an action on an item without having to view its details.
-     * For example, in Commerce you can add an item to the cart directly or add it to a wish list to view at a later time.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
-    interface HTMLAtomicResultSectionActionsElement extends Components.AtomicResultSectionActions, HTMLStencilElement {
-    }
-    var HTMLAtomicResultSectionActionsElement: {
-        prototype: HTMLAtomicResultSectionActionsElement;
-        new (): HTMLAtomicResultSectionActionsElement;
-    };
-    /**
-     * This section provides badges that highlight special features of the item.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
-    interface HTMLAtomicResultSectionBadgesElement extends Components.AtomicResultSectionBadges, HTMLStencilElement {
-    }
-    var HTMLAtomicResultSectionBadgesElement: {
-        prototype: HTMLAtomicResultSectionBadgesElement;
-        new (): HTMLAtomicResultSectionBadgesElement;
-    };
-    /**
-     * This section displays additional descriptive information about the item.
-     * Behavior:
-     * * Has a maximum height of two lines.
-     * ** We recommend that you use `atomic-result-fields-list` to ensure that the fields in this section don’t overflow.
-     * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     * * Has a font weight.
-     */
-    interface HTMLAtomicResultSectionBottomMetadataElement extends Components.AtomicResultSectionBottomMetadata, HTMLStencilElement {
-    }
-    var HTMLAtomicResultSectionBottomMetadataElement: {
-        prototype: HTMLAtomicResultSectionBottomMetadataElement;
-        new (): HTMLAtomicResultSectionBottomMetadataElement;
-    };
-    /**
-     * This section displays the folded results, available when using the <atomic-result-children> component.
-     * Behavior:
-     * * Shows children at the bottom of the result, indented and wrapped in a border.
-     */
-    interface HTMLAtomicResultSectionChildrenElement extends Components.AtomicResultSectionChildren, HTMLStencilElement {
-    }
-    var HTMLAtomicResultSectionChildrenElement: {
-        prototype: HTMLAtomicResultSectionChildrenElement;
-        new (): HTMLAtomicResultSectionChildrenElement;
-    };
-    /**
-     * This section displays the field that's important for its search criteria.
-     * For example, in Commerce, a product's cost is often more important than the title itself.
-     * Behavior:
-     * * Has a very large font size.
-     * * Is the second closest element beneath the title section.
-     */
-    interface HTMLAtomicResultSectionEmphasizedElement extends Components.AtomicResultSectionEmphasized, HTMLStencilElement {
-    }
-    var HTMLAtomicResultSectionEmphasizedElement: {
-        prototype: HTMLAtomicResultSectionEmphasizedElement;
-        new (): HTMLAtomicResultSectionEmphasizedElement;
-    };
-    /**
-     * This section contains an informative summary of the item's content.
-     * Behavior:
-     * * Has a fixed height of one to three lines, depending on the layout and density.
-     * * Ellipses overflowing text.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface HTMLAtomicResultSectionExcerptElement extends Components.AtomicResultSectionExcerpt, HTMLStencilElement {
-    }
-    var HTMLAtomicResultSectionExcerptElement: {
-        prototype: HTMLAtomicResultSectionExcerptElement;
-        new (): HTMLAtomicResultSectionExcerptElement;
-    };
-    /**
-     * This section identifies the item by its name, and its main use is to make the result list scannable.
-     * This is usually the page title.
-     * Behavior:
-     * * Has a fixed height of two lines on grid layouts.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface HTMLAtomicResultSectionTitleElement extends Components.AtomicResultSectionTitle, HTMLStencilElement {
-    }
-    var HTMLAtomicResultSectionTitleElement: {
-        prototype: HTMLAtomicResultSectionTitleElement;
-        new (): HTMLAtomicResultSectionTitleElement;
-    };
-    /**
-     * This section surfaces some fields that are directly related to the title of the item.
-     * For example, in Commerce, this could be the item's rating, which is tied to the nature of the product itself,
-     * rather than to the product's description.
-     * Behavior:
-     * * Has a very small font size.
-     * * Is the closest element beneath the title section.
-     */
-    interface HTMLAtomicResultSectionTitleMetadataElement extends Components.AtomicResultSectionTitleMetadata, HTMLStencilElement {
-    }
-    var HTMLAtomicResultSectionTitleMetadataElement: {
-        prototype: HTMLAtomicResultSectionTitleMetadataElement;
-        new (): HTMLAtomicResultSectionTitleMetadataElement;
-    };
-    /**
-     * This section provides visual information about the item.
-     * For example, in Commerce, an image is a great shorthand for a product category.
-     * An icon can quickly show the item type, or an avatar can help identify to whom it is related.
-     * Behavior:
-     * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
-     * ** When the image size is set to `icon`, this section stays very small.
-     * ** You should ensure that elements inside of it take the available space.
-     * * Always has a 1:1 aspect ratio.
-     */
-    interface HTMLAtomicResultSectionVisualElement extends Components.AtomicResultSectionVisual, HTMLStencilElement {
-    }
-    var HTMLAtomicResultSectionVisualElement: {
-        prototype: HTMLAtomicResultSectionVisualElement;
-        new (): HTMLAtomicResultSectionVisualElement;
-    };
-    /**
      * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface HTMLAtomicResultTablePlaceholderElement extends Components.AtomicResultTablePlaceholder, HTMLStencilElement {
@@ -3847,17 +3596,6 @@ declare global {
     var HTMLAtomicResultTablePlaceholderElement: {
         prototype: HTMLAtomicResultTablePlaceholderElement;
         new (): HTMLAtomicResultTablePlaceholderElement;
-    };
-    /**
-     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface HTMLAtomicResultTemplateElement extends Components.AtomicResultTemplate, HTMLStencilElement {
-    }
-    var HTMLAtomicResultTemplateElement: {
-        prototype: HTMLAtomicResultTemplateElement;
-        new (): HTMLAtomicResultTemplateElement;
     };
     /**
      * The `atomic-result-text` component renders the value of a string result field.
@@ -4273,17 +4011,7 @@ declare global {
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-rating": HTMLAtomicResultRatingElement;
-        "atomic-result-section-actions": HTMLAtomicResultSectionActionsElement;
-        "atomic-result-section-badges": HTMLAtomicResultSectionBadgesElement;
-        "atomic-result-section-bottom-metadata": HTMLAtomicResultSectionBottomMetadataElement;
-        "atomic-result-section-children": HTMLAtomicResultSectionChildrenElement;
-        "atomic-result-section-emphasized": HTMLAtomicResultSectionEmphasizedElement;
-        "atomic-result-section-excerpt": HTMLAtomicResultSectionExcerptElement;
-        "atomic-result-section-title": HTMLAtomicResultSectionTitleElement;
-        "atomic-result-section-title-metadata": HTMLAtomicResultSectionTitleMetadataElement;
-        "atomic-result-section-visual": HTMLAtomicResultSectionVisualElement;
         "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
-        "atomic-result-template": HTMLAtomicResultTemplateElement;
         "atomic-result-text": HTMLAtomicResultTextElement;
         "atomic-result-timespan": HTMLAtomicResultTimespanElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
@@ -6294,133 +6022,12 @@ declare namespace LocalJSX {
         "maxValueInIndex"?: number;
     }
     /**
-     * This section allows the information seeker to perform an action on an item without having to view its details.
-     * For example, in Commerce you can add an item to the cart directly or add it to a wish list to view at a later time.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
-    interface AtomicResultSectionActions {
-    }
-    /**
-     * This section provides badges that highlight special features of the item.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
-    interface AtomicResultSectionBadges {
-    }
-    /**
-     * This section displays additional descriptive information about the item.
-     * Behavior:
-     * * Has a maximum height of two lines.
-     * ** We recommend that you use `atomic-result-fields-list` to ensure that the fields in this section don’t overflow.
-     * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     * * Has a font weight.
-     */
-    interface AtomicResultSectionBottomMetadata {
-    }
-    /**
-     * This section displays the folded results, available when using the <atomic-result-children> component.
-     * Behavior:
-     * * Shows children at the bottom of the result, indented and wrapped in a border.
-     */
-    interface AtomicResultSectionChildren {
-    }
-    /**
-     * This section displays the field that's important for its search criteria.
-     * For example, in Commerce, a product's cost is often more important than the title itself.
-     * Behavior:
-     * * Has a very large font size.
-     * * Is the second closest element beneath the title section.
-     */
-    interface AtomicResultSectionEmphasized {
-    }
-    /**
-     * This section contains an informative summary of the item's content.
-     * Behavior:
-     * * Has a fixed height of one to three lines, depending on the layout and density.
-     * * Ellipses overflowing text.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface AtomicResultSectionExcerpt {
-    }
-    /**
-     * This section identifies the item by its name, and its main use is to make the result list scannable.
-     * This is usually the page title.
-     * Behavior:
-     * * Has a fixed height of two lines on grid layouts.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface AtomicResultSectionTitle {
-    }
-    /**
-     * This section surfaces some fields that are directly related to the title of the item.
-     * For example, in Commerce, this could be the item's rating, which is tied to the nature of the product itself,
-     * rather than to the product's description.
-     * Behavior:
-     * * Has a very small font size.
-     * * Is the closest element beneath the title section.
-     */
-    interface AtomicResultSectionTitleMetadata {
-    }
-    /**
-     * This section provides visual information about the item.
-     * For example, in Commerce, an image is a great shorthand for a product category.
-     * An icon can quickly show the item type, or an avatar can help identify to whom it is related.
-     * Behavior:
-     * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
-     * ** When the image size is set to `icon`, this section stays very small.
-     * ** You should ensure that elements inside of it take the available space.
-     * * Always has a 1:1 aspect ratio.
-     */
-    interface AtomicResultSectionVisual {
-        /**
-          * How large or small the visual section of results using this template should be.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-    }
-    /**
      * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultTablePlaceholder {
         "density": ItemDisplayDensity;
         "imageSize": ItemDisplayImageSize;
         "rows": number;
-    }
-    /**
-     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface AtomicResultTemplate {
-        /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
-         */
-        "conditions"?: ResultTemplateCondition[];
-        /**
-          * Verifies whether the specified fields match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustMatch"?: Record<
-    string,
-    string[]
-  >;
-        /**
-          * Verifies whether the specified fields do not match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustNotMatch"?: Record<
-    string,
-    string[]
-  >;
     }
     /**
      * The `atomic-result-text` component renders the value of a string result field.
@@ -6984,17 +6591,7 @@ declare namespace LocalJSX {
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-rating": AtomicResultRating;
-        "atomic-result-section-actions": AtomicResultSectionActions;
-        "atomic-result-section-badges": AtomicResultSectionBadges;
-        "atomic-result-section-bottom-metadata": AtomicResultSectionBottomMetadata;
-        "atomic-result-section-children": AtomicResultSectionChildren;
-        "atomic-result-section-emphasized": AtomicResultSectionEmphasized;
-        "atomic-result-section-excerpt": AtomicResultSectionExcerpt;
-        "atomic-result-section-title": AtomicResultSectionTitle;
-        "atomic-result-section-title-metadata": AtomicResultSectionTitleMetadata;
-        "atomic-result-section-visual": AtomicResultSectionVisual;
         "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
-        "atomic-result-template": AtomicResultTemplate;
         "atomic-result-text": AtomicResultText;
         "atomic-result-timespan": AtomicResultTimespan;
         "atomic-search-box": AtomicSearchBox;
@@ -7392,96 +6989,9 @@ declare module "@stencil/core" {
              */
             "atomic-result-rating": LocalJSX.AtomicResultRating & JSXBase.HTMLAttributes<HTMLAtomicResultRatingElement>;
             /**
-             * This section allows the information seeker to perform an action on an item without having to view its details.
-             * For example, in Commerce you can add an item to the cart directly or add it to a wish list to view at a later time.
-             * Behavior:
-             * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-             * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-             * * Is a wrapping flexbox with a gap.
-             * * May appear over, next to, or beneath the visual section.
-             */
-            "atomic-result-section-actions": LocalJSX.AtomicResultSectionActions & JSXBase.HTMLAttributes<HTMLAtomicResultSectionActionsElement>;
-            /**
-             * This section provides badges that highlight special features of the item.
-             * Behavior:
-             * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-             * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-             * * Is a wrapping flexbox with a gap.
-             * * May appear over, next to, or beneath the visual section.
-             */
-            "atomic-result-section-badges": LocalJSX.AtomicResultSectionBadges & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBadgesElement>;
-            /**
-             * This section displays additional descriptive information about the item.
-             * Behavior:
-             * * Has a maximum height of two lines.
-             * ** We recommend that you use `atomic-result-fields-list` to ensure that the fields in this section don’t overflow.
-             * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
-             * * Has a defined CSS `color` property for text.
-             * * Has a font weight.
-             */
-            "atomic-result-section-bottom-metadata": LocalJSX.AtomicResultSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBottomMetadataElement>;
-            /**
-             * This section displays the folded results, available when using the <atomic-result-children> component.
-             * Behavior:
-             * * Shows children at the bottom of the result, indented and wrapped in a border.
-             */
-            "atomic-result-section-children": LocalJSX.AtomicResultSectionChildren & JSXBase.HTMLAttributes<HTMLAtomicResultSectionChildrenElement>;
-            /**
-             * This section displays the field that's important for its search criteria.
-             * For example, in Commerce, a product's cost is often more important than the title itself.
-             * Behavior:
-             * * Has a very large font size.
-             * * Is the second closest element beneath the title section.
-             */
-            "atomic-result-section-emphasized": LocalJSX.AtomicResultSectionEmphasized & JSXBase.HTMLAttributes<HTMLAtomicResultSectionEmphasizedElement>;
-            /**
-             * This section contains an informative summary of the item's content.
-             * Behavior:
-             * * Has a fixed height of one to three lines, depending on the layout and density.
-             * * Ellipses overflowing text.
-             * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-             * * Has a defined CSS `color` property for text.
-             */
-            "atomic-result-section-excerpt": LocalJSX.AtomicResultSectionExcerpt & JSXBase.HTMLAttributes<HTMLAtomicResultSectionExcerptElement>;
-            /**
-             * This section identifies the item by its name, and its main use is to make the result list scannable.
-             * This is usually the page title.
-             * Behavior:
-             * * Has a fixed height of two lines on grid layouts.
-             * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-             * * Has a defined CSS `color` property for text.
-             */
-            "atomic-result-section-title": LocalJSX.AtomicResultSectionTitle & JSXBase.HTMLAttributes<HTMLAtomicResultSectionTitleElement>;
-            /**
-             * This section surfaces some fields that are directly related to the title of the item.
-             * For example, in Commerce, this could be the item's rating, which is tied to the nature of the product itself,
-             * rather than to the product's description.
-             * Behavior:
-             * * Has a very small font size.
-             * * Is the closest element beneath the title section.
-             */
-            "atomic-result-section-title-metadata": LocalJSX.AtomicResultSectionTitleMetadata & JSXBase.HTMLAttributes<HTMLAtomicResultSectionTitleMetadataElement>;
-            /**
-             * This section provides visual information about the item.
-             * For example, in Commerce, an image is a great shorthand for a product category.
-             * An icon can quickly show the item type, or an avatar can help identify to whom it is related.
-             * Behavior:
-             * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
-             * ** When the image size is set to `icon`, this section stays very small.
-             * ** You should ensure that elements inside of it take the available space.
-             * * Always has a 1:1 aspect ratio.
-             */
-            "atomic-result-section-visual": LocalJSX.AtomicResultSectionVisual & JSXBase.HTMLAttributes<HTMLAtomicResultSectionVisualElement>;
-            /**
              * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
-            /**
-             * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-             * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-             * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-             */
-            "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
             /**
              * The `atomic-result-text` component renders the value of a string result field.
              */

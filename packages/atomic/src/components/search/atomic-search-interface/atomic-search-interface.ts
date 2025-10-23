@@ -53,6 +53,7 @@ import {createSearchStore, type SearchStore} from './store';
 // TODO - Remove once all components that use atomic-modal have been migrated.
 import '@/src/components/common/atomic-modal/atomic-modal';
 import {augmentAnalyticsConfigWithAtomicVersion} from '@/src/components/common/interface/analytics-config';
+import {arrayConverter} from '@/src/converters/array-converter';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
@@ -119,18 +120,7 @@ export class AtomicSearchInterface
   @property({
     type: Array,
     attribute: 'fields-to-include',
-    converter: {
-      fromAttribute: (value: string | null) => {
-        if (!value) return [];
-        try {
-          const parsed = JSON.parse(value);
-          return Array.isArray(parsed) ? parsed : [];
-        } catch {
-          return [];
-        }
-      },
-      toAttribute: (value: string[]) => JSON.stringify(value),
-    },
+    converter: arrayConverter,
   })
   public fieldsToInclude: string[] = [];
 

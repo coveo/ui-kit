@@ -11,10 +11,8 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {
-  decorator: commerceInterfaceDecorator,
-  afterEach: commerceInterfacePlay,
-} = wrapInCommerceInterface({includeCodeRoot: false});
+const {decorator: commerceInterfaceDecorator, play: commerceInterfacePlay} =
+  wrapInCommerceInterface({includeCodeRoot: false});
 const {decorator: commerceSearchBoxDecorator} = wrapInCommerceSearchBox();
 const meta: Meta = {
   component: 'atomic-commerce-search-box-query-suggestions',
@@ -31,7 +29,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach: async (context) => {
+  play: async (context) => {
     await commerceInterfacePlay(context);
     const canvas = within(context.canvasElement);
     const searchBox = await canvas.findAllByShadowPlaceholderText('Search');

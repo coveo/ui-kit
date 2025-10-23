@@ -21,8 +21,9 @@ const {decorator: resultDecorator, engineConfig} = wrapInResult({
   },
 });
 
-const {decorator: searchInterfaceDecorator, afterEach} =
-  wrapInSearchInterface(engineConfig);
+const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
+  config: engineConfig,
+});
 
 const meta: Meta = {
   component: 'atomic-format-unit',
@@ -39,7 +40,7 @@ const meta: Meta = {
   },
   argTypes,
 
-  afterEach,
+  play,
   args: {...args, unit: 'byte'},
 };
 

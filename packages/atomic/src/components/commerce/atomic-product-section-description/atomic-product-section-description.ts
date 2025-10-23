@@ -10,8 +10,6 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
  * * Ellipses overflowing text.
  * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
  * * Has a defined CSS `color` property for text.
- *
- * @slot default - The description to display.
  */
 @customElement('atomic-product-section-description')
 export class AtomicProductSectionDescription extends ItemSectionMixin(
