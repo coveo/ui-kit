@@ -5,7 +5,7 @@ runs:
   steps:
     - name: Complementary setup
       run: |
-        pnpm install
+        pnpm install --frozen-lockfile
         pnpm exec turbo build --filter=@coveo/atomic
       shell: bash
     - name: Run tests
