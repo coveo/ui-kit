@@ -1,7 +1,7 @@
 import {
   ItemDisplayDensity,
   ItemDisplayLayout,
-} from '../../../src/components/common/layout/display-options';
+} from '../../../src/components/common/layout/item-layout-utils';
 import {ResultDisplayImageSize} from './result-template-assertions';
 
 interface WithAnySectionnableResultListOptions {
