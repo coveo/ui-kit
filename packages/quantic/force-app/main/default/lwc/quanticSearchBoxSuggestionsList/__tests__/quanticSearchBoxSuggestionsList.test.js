@@ -131,10 +131,6 @@ const buildMixedOptions = (suggestions, recentQueries) => {
   ];
 };
 
-const functionsMocks = {
-  highlightString: jest.fn((payload) => payload.content),
-};
-
 const createTestComponent = buildCreateTestComponent(
   QuanticSearchBoxSuggestionsList,
   'c-quantic-search-box-suggestions-list',

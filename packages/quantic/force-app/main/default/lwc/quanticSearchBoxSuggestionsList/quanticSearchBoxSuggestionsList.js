@@ -5,7 +5,6 @@ import recentQueryAriaLabel from '@salesforce/label/c.quantic_RecentQueryAriaLab
 import suggestionFound from '@salesforce/label/c.quantic_SuggestionFound';
 import suggestionFound_plural from '@salesforce/label/c.quantic_SuggestionFound_Plural';
 import suggestionsNotFound from '@salesforce/label/c.quantic_SuggestionNotFound';
-import {getHeadlessBundle} from 'c/quanticHeadlessLoader';
 import {AriaLiveRegion, I18nUtils, RecentQueryUtils} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
