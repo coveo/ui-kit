@@ -7,8 +7,6 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
  *
  * Behavior:
  * * Shows children at the bottom of the product, indented and wrapped in a border.
- *
- * @slot default - The child products to display.
  */
 @customElement('atomic-product-section-children')
 export class AtomicProductSectionChildren extends ItemSectionMixin(

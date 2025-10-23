@@ -13,6 +13,7 @@ import {
   sendGeneratedAnswerFeedback,
   setAnswerApiQueryParams,
   setAnswerContentFormat,
+  setAnswerGenerationMode,
   setAnswerId,
   setCannotAnswer,
   setIsAnswerGenerated,
@@ -565,6 +566,17 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.answerId).toEqual('new-id');
+    });
+  });
+
+  describe('#setAnswerGenerationMode', () => {
+    it('should set answerGenerationMode to the new value', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, answerGenerationMode: 'automatic'},
+        setAnswerGenerationMode('manual')
+      );
+
+      expect(finalState.answerGenerationMode).toEqual('manual');
     });
   });
 });
