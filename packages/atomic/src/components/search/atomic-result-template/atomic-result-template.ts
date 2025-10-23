@@ -9,6 +9,7 @@ import {mapProperty} from '@/src/utils/props-utils';
 import '@/src/components/common/atomic-component-error/atomic-component-error';
 import '@/src/components/search/atomic-result/atomic-result';
 import {errorGuard} from '@/src/decorators/error-guard';
+import '@/src/components/search/atomic-result/atomic-result';
 import type {LitElementWithError} from '@/src/decorators/types';
 
 /**
