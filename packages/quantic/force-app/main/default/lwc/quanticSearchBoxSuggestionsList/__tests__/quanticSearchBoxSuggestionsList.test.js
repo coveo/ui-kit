@@ -1,7 +1,6 @@
 /* eslint-disable no-import-assign */
 import QuanticSearchBoxSuggestionsList from 'c/quanticSearchBoxSuggestionsList';
 import {cleanup, buildCreateTestComponent, flushPromises} from 'c/testUtils';
-import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 
 const labels = {
   clear: 'Clear',
@@ -75,6 +74,18 @@ jest.mock('c/quanticUtils', () => {
         return count === 1 ? baseName : `${baseName}_plural`;
       }),
     },
+    RecentQueryUtils: {
+      formatRecentQuery: jest.fn((query, currentQuery) => {
+        if (!currentQuery) return query;
+        const lowerQuery = query.toLowerCase();
+        const lowerCurrentQuery = currentQuery.toLowerCase();
+        const index = lowerQuery.indexOf(lowerCurrentQuery);
+        if (index === 0) {
+          return `<strong>${query.substring(0, currentQuery.length)}</strong>${query.substring(currentQuery.length)}`;
+        }
+        return query;
+      }),
+    },
     __ariaDispatchMessageMock: ariaDispatchMessageMock,
   };
 });
@@ -124,17 +135,6 @@ const functionsMocks = {
   highlightString: jest.fn((payload) => payload.content),
 };
 
-function prepareHeadlessBundle() {
-  // @ts-ignore
-  mockHeadlessLoader.getHeadlessBundle = () => {
-    return {
-      HighlightUtils: {
-        highlightString: functionsMocks.highlightString,
-      },
-    };
-  };
-}
-
 const createTestComponent = buildCreateTestComponent(
   QuanticSearchBoxSuggestionsList,
   'c-quantic-search-box-suggestions-list',
@@ -144,10 +144,6 @@ const createTestComponent = buildCreateTestComponent(
 describe('c-quantic-search-box-suggestions-list', () => {
   afterEach(() => {
     cleanup();
-  });
-
-  beforeEach(() => {
-    prepareHeadlessBundle();
   });
 
   describe('suggestion list rendering', () => {
@@ -354,7 +350,22 @@ describe('c-quantic-search-box-suggestions-list', () => {
       expect(clearButton.textContent).toContain(labels.recentQueries);
       const recentQueryOption = options.item(1);
       expect(recentQueryOption.querySelector(selectors.richText).value).toEqual(
-        'test recent query'
+        expect.stringContaining('<strong>test</strong> recent query')
+      );
+    });
+
+    it('should bold the current query in recent queries', async () => {
+      const element = createTestComponent({
+        recentQueries: mockRecentQueries,
+        query: 'test',
+      });
+      await flushPromises();
+
+      const options = element.shadowRoot.querySelectorAll(selectors.option);
+      // Skip the first option (clear button)
+      const recentQueryOption = options.item(1);
+      expect(recentQueryOption.querySelector(selectors.richText).value).toEqual(
+        expect.stringContaining('<strong>test</strong>')
       );
     });
   });
