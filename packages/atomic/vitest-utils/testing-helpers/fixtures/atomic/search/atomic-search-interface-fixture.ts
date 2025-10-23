@@ -82,6 +82,8 @@ export const defaultBindings = {
   } as Partial<SearchStore> as SearchStore,
   engine: {
     subscribe: genericSubscribe,
+    addReducers: vi.fn(),
+    dispatch: vi.fn(),
   } as Partial<SearchEngine> as SearchEngine,
 } as const;
 
