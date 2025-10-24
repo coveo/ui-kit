@@ -11,7 +11,7 @@ import type {
   ItemDisplayBasicLayout,
   ItemDisplayDensity,
   ItemDisplayImageSize,
-} from '@/src/components/common/layout/display-options.js';
+} from '@/src/components/common/layout/item-layout-utils.js';
 import {renderInAtomicCommerceRecommendationInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-recommendation-interface-fixture.js';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product.js';
 import {buildFakeRecommendations} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/recommendations-controller.js';

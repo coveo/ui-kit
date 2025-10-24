@@ -1,6 +1,7 @@
 import type {Middleware, UnknownAction} from '@reduxjs/toolkit';
+import type {Mock} from 'vitest';
 import type {SearchResponseSuccess} from '../../../api/search/search/search-response.js';
-import type {LoggerOptions} from '../../../app/logger.js';
+import {buildLogger, type LoggerOptions} from '../../../app/logger.js';
 import {getSampleSearchEngineConfiguration} from '../../../app/search-engine/search-engine.js';
 import {
   buildController,
@@ -23,6 +24,8 @@ import {
   type SearchEngineDefinition,
   type SSRSearchEngine,
 } from './search-engine.ssr.js';
+
+vi.mock('../../../app/logger.js');
 
 interface CustomEngineStateReader<TState extends {}> extends Controller {
   state: TState;
@@ -108,6 +111,7 @@ describe('SSR', () => {
     type AnyState = StaticState | HydratedState | BuildResult;
 
     const defaultNumberOfResults = 12;
+    let mockedLoggerWarn: Mock;
     let engineDefinition: SearchEngineDefinition<{
       engineStateReader: ReturnType<typeof defineCustomEngineStateReader>;
       resultList: ReturnType<typeof defineResultList>;
@@ -121,6 +125,14 @@ describe('SSR', () => {
     }
 
     beforeEach(() => {
+      mockedLoggerWarn = vi.fn();
+      vi.mocked(buildLogger).mockReturnValue({
+        warn: mockedLoggerWarn,
+        error: vi.fn(),
+        debug: vi.fn(),
+        info: vi.fn(),
+      } as unknown as ReturnType<typeof buildLogger>);
+
       engineDefinition = defineSearchEngine({
         configuration: {
           ...getSampleSearchEngineConfiguration(),
@@ -166,8 +178,10 @@ describe('SSR', () => {
         'augmentPreprocessRequestWithForwardedFor'
       );
 
-      const fetchStaticState = engineDefinition.fetchStaticState;
-      await fetchStaticState();
+      engineDefinition.setNavigatorContextProvider(
+        mockNavigatorContextProvider
+      );
+      await engineDefinition.fetchStaticState();
       expect(spy).toHaveBeenCalledWith({
         loggerOptions: {level: 'warn'},
         navigatorContextProvider: mockNavigatorContextProvider,
@@ -175,6 +189,44 @@ describe('SSR', () => {
       });
 
       spy.mockRestore();
+    });
+
+    describe('when forwardedFor is not set in navigator context provider', () => {
+      it('should log a warning', async () => {
+        const navigatorContextProviderWithoutForwardedFor =
+          buildMockNavigatorContextProvider({
+            forwardedFor: undefined,
+          });
+
+        engineDefinition.setNavigatorContextProvider(
+          navigatorContextProviderWithoutForwardedFor
+        );
+        await engineDefinition.fetchStaticState();
+
+        expect(mockedLoggerWarn).toHaveBeenCalledWith(
+          "[WARNING] Unable to set x-forwarded-for header. Make sure to set the 'forwardedFor' property in the navigator context provider."
+        );
+
+        mockedLoggerWarn.mockRestore();
+      });
+    });
+
+    describe('when forwardedFor is set in navigator context provider', () => {
+      it('should not log a warning', async () => {
+        const navigatorContextProviderWithForwardedFor =
+          buildMockNavigatorContextProvider({
+            forwardedFor: '127.0.0.1',
+          });
+
+        engineDefinition.setNavigatorContextProvider(
+          navigatorContextProviderWithForwardedFor
+        );
+        await engineDefinition.fetchStaticState();
+
+        expect(mockedLoggerWarn).not.toHaveBeenCalled();
+
+        mockedLoggerWarn.mockRestore();
+      });
     });
 
     describe('with a static state', () => {

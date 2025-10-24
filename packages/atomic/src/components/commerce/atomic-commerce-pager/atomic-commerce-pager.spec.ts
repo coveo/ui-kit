@@ -10,6 +10,7 @@ import {
   beforeEach,
   describe,
   expect,
+  it,
   type MockInstance,
   test,
   vi,
@@ -185,6 +186,7 @@ describe('atomic-commerce-pager', () => {
     let focusSpy: MockInstance;
     let eventSpy: MockInstance;
     let previousSpy: MockInstance;
+    let announcePageLoaded: MockInstance;
 
     beforeEach(async () => {
       const element = await renderPager({state: {page: 2}});
@@ -194,6 +196,7 @@ describe('atomic-commerce-pager', () => {
       );
       eventSpy = vi.spyOn(element, 'dispatchEvent');
       previousSpy = vi.spyOn(element.pager, 'previousPage');
+      announcePageLoaded = vi.spyOn(element, 'announcePageLoaded');
 
       await locators.previous.click();
     });
@@ -211,12 +214,17 @@ describe('atomic-commerce-pager', () => {
     test('should call #pager.previousPage', async () => {
       expect(previousSpy).toHaveBeenCalled();
     });
+
+    it('should announce page loaded with correct page number', async () => {
+      expect(announcePageLoaded).toHaveBeenCalledOnce();
+    });
   });
 
   describe('when clicking on the next button', () => {
     let focusSpy: MockInstance;
     let eventSpy: MockInstance;
     let nextSpy: MockInstance;
+    let announcePageLoadedSpy: MockInstance;
 
     beforeEach(async () => {
       const element = await renderPager({state: {page: 2}});
@@ -226,6 +234,7 @@ describe('atomic-commerce-pager', () => {
       );
       eventSpy = vi.spyOn(element, 'dispatchEvent');
       nextSpy = vi.spyOn(element.pager, 'nextPage');
+      announcePageLoadedSpy = vi.spyOn(element, 'announcePageLoaded');
 
       await locators.next.click();
     });
@@ -242,6 +251,10 @@ describe('atomic-commerce-pager', () => {
 
     test('should call #pager.nextPage', async () => {
       expect(nextSpy).toHaveBeenCalled();
+    });
+
+    it('should announce page loaded with correct page number', async () => {
+      expect(announcePageLoadedSpy).toHaveBeenCalledOnce();
     });
   });
 

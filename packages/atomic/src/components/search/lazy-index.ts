@@ -8,6 +8,7 @@ export default {
     await import('./atomic-query-summary/atomic-query-summary.js'),
   'atomic-relevance-inspector': async () =>
     await import('./atomic-relevance-inspector/atomic-relevance-inspector.js'),
+  'atomic-result': async () => await import('./atomic-result/atomic-result.js'),
   'atomic-result-section-actions': async () =>
     await import(
       './atomic-result-section-actions/atomic-result-section-actions.js'
