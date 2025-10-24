@@ -1,4 +1,4 @@
-import {NumberValue, Schema, StringValue} from '@coveo/bueno';
+import {ArrayValue, NumberValue, Schema, StringValue} from '@coveo/bueno';
 import {
   buildInteractiveResult,
   buildResultList,
@@ -55,6 +55,7 @@ import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
 import '../atomic-result/atomic-result';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -175,6 +176,40 @@ export class AtomicResultList
   @property({reflect: true, attribute: 'number-of-placeholders', type: Number})
   numberOfPlaceholders = 24;
 
+  constructor() {
+    super();
+
+    new ValidatePropsController(
+      this,
+      () => ({
+        density: this.density,
+        display: this.display,
+        imageSize: this.imageSize,
+        numberOfPlaceholders: this.numberOfPlaceholders,
+        tabsIncluded: this.tabsIncluded,
+        tabsExcluded: this.tabsExcluded,
+      }),
+      new Schema({
+        density: new StringValue({
+          constrainTo: ['normal', 'comfortable', 'compact'],
+        }),
+        display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
+        imageSize: new StringValue({
+          constrainTo: ['small', 'large', 'icon', 'none'],
+        }),
+        numberOfPlaceholders: new NumberValue({min: 0}),
+        tabsIncluded: new ArrayValue({
+          each: new StringValue({}),
+          required: false,
+        }),
+        tabsExcluded: new ArrayValue({
+          each: new StringValue({}),
+          required: false,
+        }),
+      })
+    );
+  }
+
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
    * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
@@ -190,7 +225,6 @@ export class AtomicResultList
   }
 
   public initialize() {
-    this.validateProps();
     if (this.innerHTML.includes('<atomic-result-children')) {
       console.warn(
         'Folded results will not render any children for the "atomic-result-list". Please use "atomic-folded-result-list" instead.'
@@ -320,24 +354,6 @@ export class AtomicResultList
         )}`
       )
     )}`;
-  }
-
-  private validateProps() {
-    new Schema({
-      density: new StringValue({
-        constrainTo: ['normal', 'comfortable', 'compact'],
-      }),
-      display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
-      imageSize: new StringValue({
-        constrainTo: ['small', 'large', 'icon', 'none'],
-      }),
-      numberOfPlaceholders: new NumberValue({min: 0}),
-    }).validate({
-      density: this.density,
-      display: this.display,
-      imageSize: this.imageSize,
-      numberOfPlaceholders: this.numberOfPlaceholders,
-    });
   }
 
   private initResultTemplateProvider() {
