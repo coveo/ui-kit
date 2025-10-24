@@ -74,101 +74,86 @@ describe('atomic-result-list', () => {
     expect(element).toBeInstanceOf(AtomicResultList);
   });
 
-  it('should set error when #density is invalid', async () => {
-    const element = await setupElement();
+  it.each<{
+    prop: 'density' | 'display' | 'imageSize' | 'numberOfPlaceholders';
+    invalidValue: string | number;
+  }>([
+    {
+      prop: 'density',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'display',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'imageSize',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'numberOfPlaceholders',
+      invalidValue: -1,
+    },
+  ])(
+    'should set error when #$prop is invalid',
+    async ({prop, invalidValue}) => {
+      const element = await setupElement();
 
-    expect(element.error).toBeUndefined();
+      expect(element.error).toBeUndefined();
 
-    element.density = 'invalid' as ItemDisplayDensity;
-    await element.updateComplete;
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
 
-    expect(element.error).toBeDefined();
-    expect(element.error.message).toMatch(/density/i);
-  });
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+    }
+  );
 
-  it('should set error when valid #density is updated to an invalid value', async () => {
-    const element = await setupElement({density: 'normal'});
+  it.each<{
+    prop: 'density' | 'display' | 'imageSize' | 'numberOfPlaceholders';
+    validValue:
+      | ItemDisplayDensity
+      | ItemDisplayLayout
+      | ItemDisplayImageSize
+      | number;
+    invalidValue: string | number;
+  }>([
+    {
+      prop: 'density',
+      validValue: 'normal',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'display',
+      validValue: 'list',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'imageSize',
+      validValue: 'small',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'numberOfPlaceholders',
+      validValue: 10,
+      invalidValue: -1,
+    },
+  ])(
+    'should set error when valid #$prop is updated to an invalid value',
+    async ({prop, validValue, invalidValue}) => {
+      const element = await setupElement({[prop]: validValue});
 
-    expect(element.error).toBeUndefined();
+      expect(element.error).toBeUndefined();
 
-    element.density = 'invalid' as ItemDisplayDensity;
-    await element.updateComplete;
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
 
-    expect(element.error).toBeDefined();
-    expect(element.error.message).toMatch(/density/i);
-  });
-
-  it('should set error when #display is invalid', async () => {
-    const element = await setupElement();
-
-    expect(element.error).toBeUndefined();
-
-    element.display = 'invalid' as ItemDisplayLayout;
-    await element.updateComplete;
-
-    expect(element.error).toBeDefined();
-    expect(element.error.message).toMatch(/display/i);
-  });
-
-  it('should set error when valid #display is updated to an invalid value', async () => {
-    const element = await setupElement({display: 'list'});
-
-    expect(element.error).toBeUndefined();
-
-    element.display = 'invalid' as ItemDisplayLayout;
-    await element.updateComplete;
-
-    expect(element.error).toBeDefined();
-    expect(element.error.message).toMatch(/display/i);
-  });
-
-  it('should set error when #imageSize is invalid', async () => {
-    const element = await setupElement();
-
-    expect(element.error).toBeUndefined();
-
-    element.imageSize = 'invalid' as ItemDisplayImageSize;
-    await element.updateComplete;
-
-    expect(element.error).toBeDefined();
-    expect(element.error.message).toMatch(/imageSize/i);
-  });
-
-  it('should set error when valid #imageSize is updated to an invalid value', async () => {
-    const element = await setupElement({imageSize: 'small'});
-
-    expect(element.error).toBeUndefined();
-
-    element.imageSize = 'invalid' as ItemDisplayImageSize;
-    await element.updateComplete;
-
-    expect(element.error).toBeDefined();
-    expect(element.error.message).toMatch(/imageSize/i);
-  });
-
-  it('should set error when #numberOfPlaceholders is invalid', async () => {
-    const element = await setupElement();
-
-    expect(element.error).toBeUndefined();
-
-    element.numberOfPlaceholders = -1;
-    await element.updateComplete;
-
-    expect(element.error).toBeDefined();
-    expect(element.error.message).toMatch(/numberOfPlaceholders/i);
-  });
-
-  it('should set error when valid #numberOfPlaceholders is updated to an invalid value', async () => {
-    const element = await setupElement({numberOfPlaceholders: 10});
-
-    expect(element.error).toBeUndefined();
-
-    element.numberOfPlaceholders = -1;
-    await element.updateComplete;
-
-    expect(element.error).toBeDefined();
-    expect(element.error.message).toMatch(/numberOfPlaceholders/i);
-  });
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+    }
+  );
 
   describe('#updated', () => {
     // biome-ignore lint/suspicious/noExplicitAny: <accessing private properties in tests>
