@@ -53,6 +53,12 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   salesforceRecordUrl;
   /** @type {boolean} */
   isHrefWithTextFragment = false;
+  /** @type {boolean} */
+  isHoveringCitation = false;
+  /** @type {boolean} */
+  isHoveringTooltip = false;
+  /** @type {boolean} */
+  isCitationDocumentAttached = false;
 
   connectedCallback() {
     const fileType = this.citation?.fields?.filetype;
@@ -98,14 +104,47 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   }
 
   handleMouseLeave() {
+    this.isHoveringCitation = false;
+
+    // Add a small delay to allow moving to tooltip
     clearTimeout(this.timeout);
+    // eslint-disable-next-line @lwc/lwc/no-async-operation
+    this.timeout = setTimeout(() => {
+      // Only hide if not hovering either element
+      if (!this.isHoveringCitation && !this.isHoveringTooltip) {
+        this.hideTooltipAndDispatchEvent();
+      }
+    }, 100); // Small delay to prevent flickering
+  }
+
+  // New methods for tooltip hover handling
+  handleTooltipMouseEnter() {
+    this.isHoveringTooltip = true;
+    clearTimeout(this.timeout);
+  }
+
+  handleTooltipMouseLeave() {
+    this.isHoveringTooltip = false;
+
+    // Add delay to allow moving back to citation
+    clearTimeout(this.timeout);
+    // eslint-disable-next-line @lwc/lwc/no-async-operation
+    this.timeout = setTimeout(() => {
+      if (!this.isHoveringCitation && !this.isHoveringTooltip) {
+        this.hideTooltipAndDispatchEvent();
+      }
+    }, 100);
+  }
+
+  // Extract the hide logic to avoid duplication
+  hideTooltipAndDispatchEvent() {
     if (this.tooltipIsDisplayed) {
       const tooltipDisplayDuration = Date.now() - this.hoverStartTimestamp;
       if (tooltipDisplayDuration >= minimumTooltipDisplayDurationMs) {
         this.dispatchEvent(
           new CustomEvent('quantic__citationhover', {
             detail: {
-              citationHoverTimeMs: Date.now() - this.hoverStartTimestamp,
+              citationHoverTimeMs: tooltipDisplayDuration,
             },
             bubbles: true,
           })
@@ -115,7 +154,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
 
     this.tooltipIsDisplayed = false;
     this.shouldShowTooltipAfterDelay = false;
-    this.tooltipComponent.hideTooltip();
+    // this.tooltipComponent.hideTooltip();
   }
 
   /**
@@ -136,6 +175,11 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       event.preventDefault();
       this.navigateToSalesforceRecord(event);
     }
+  }
+
+  handleCitationDocumentClick() {
+    this.isCitationDocumentAttached = !this.isCitationDocumentAttached;
+    console.log(this.isCitationDocumentAttached ? 'detach clicked!' : 'attach clicked!');
   }
 
   navigateToSalesforceRecord(event) {
@@ -205,5 +249,9 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
     return this.isSalesforceLink
       ? this.salesforceRecordUrl
       : (this.clickUri ?? this.citation?.uri);
+  }
+
+  get isCitationAttached() {
+    return this.isCitationDocumentAttached;
   }
 }
