@@ -1,8 +1,11 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
-import {wrapInResultTemplateForSections} from '@/storybook-utils/search/result-template-section-wrapper';
+import {
+  getResultSectionArgs,
+  getResultSectionArgTypes,
+  getResultSectionDecorators,
+} from '@/storybook-utils/search/result-section-story-utils';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -10,15 +13,17 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator: searchInterfaceDecorator, afterEach} = wrapInSearchInterface({
+const {play} = wrapInSearchInterface({
+  config: {
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.numberOfResults = 1;
+      request.body = JSON.stringify(parsed);
+      return request;
+    },
+  },
   includeCodeRoot: false,
 });
-const {decorator: resultListDecorator} = wrapInResultList(
-  'list',
-  false,
-  'max-width: 100%; width: 768px; padding: 2rem;'
-);
-const {decorator: resultTemplateDecorator} = wrapInResultTemplateForSections();
 
 const meta: Meta = {
   component: 'atomic-result-section-title',
@@ -31,21 +36,23 @@ const meta: Meta = {
       handles: events,
     },
   },
-  args,
-  argTypes,
+  args: {
+    ...args,
+    ...getResultSectionArgs(),
+  },
+  argTypes: {
+    ...argTypes,
+    ...getResultSectionArgTypes(),
+  },
 };
 
 export default meta;
 
 export const Default: Story = {
   name: 'atomic-result-section-title',
-  decorators: [
-    resultTemplateDecorator,
-    resultListDecorator,
-    searchInterfaceDecorator,
-  ],
-  afterEach,
+  decorators: getResultSectionDecorators(),
+  play,
   args: {
-    'default-slot': `<h3 class="text-lg font-semibold text-gray-900">Sony WH-1000XM4 Wireless Headphones</h3>`,
+    'default-slot': `<h3 class="text-lg font-semibold text-gray-900">Palm cockatoo: Why a unique ‘drumming’ bird is in peril - BBC News</h3>`,
   },
 };

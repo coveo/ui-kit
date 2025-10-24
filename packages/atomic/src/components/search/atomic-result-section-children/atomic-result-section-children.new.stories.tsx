@@ -1,8 +1,11 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
-import {wrapInResultTemplateForSections} from '@/storybook-utils/search/result-template-section-wrapper';
+import {
+  getResultSectionArgs,
+  getResultSectionArgTypes,
+  getResultSectionDecorators,
+} from '@/storybook-utils/search/result-section-story-utils';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -10,15 +13,17 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator: searchInterfaceDecorator, afterEach} = wrapInSearchInterface({
+const {play} = wrapInSearchInterface({
+  config: {
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.numberOfResults = 1;
+      request.body = JSON.stringify(parsed);
+      return request;
+    },
+  },
   includeCodeRoot: false,
 });
-const {decorator: resultListDecorator} = wrapInResultList(
-  'list',
-  false,
-  'max-width: 100%; width: 768px; padding: 2rem;'
-);
-const {decorator: resultTemplateDecorator} = wrapInResultTemplateForSections();
 const meta: Meta = {
   component: 'atomic-result-section-children',
   title: 'Search/Result Sections',
@@ -30,27 +35,29 @@ const meta: Meta = {
       handles: events,
     },
   },
-  args,
-  argTypes,
+  args: {
+    ...args,
+    ...getResultSectionArgs(),
+  },
+  argTypes: {
+    ...argTypes,
+    ...getResultSectionArgTypes(),
+  },
 };
 
 export default meta;
 
 export const Default: Story = {
   name: 'atomic-result-section-children',
-  decorators: [
-    resultTemplateDecorator,
-    resultListDecorator,
-    searchInterfaceDecorator,
-  ],
-  afterEach,
+  decorators: getResultSectionDecorators(),
+  play,
   args: {
     'default-slot': `
       <div class="p-3 mt-2 ml-4 border border-gray-200 rounded-lg bg-gray-50">
-        <div class="mb-2 text-sm font-medium text-gray-700">Related Results:</div>
+        <div class="mb-2 text-sm font-medium text-gray-700">Related Articles:</div>
         <div class="space-y-1">
-          <div class="text-sm text-gray-600">• Wireless Charging Case - $79.99</div>
-          <div class="text-sm text-gray-600">• Premium Foam Tips - $29.99</div>
+          <div class="text-sm text-gray-600">• How to train for a marathon</div>
+          <div class="text-sm text-gray-600">• Running 101</div>
         </div>
       </div>
     `,
