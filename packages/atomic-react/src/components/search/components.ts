@@ -20,6 +20,7 @@ import {
   AtomicResultSectionTitleMetadata as LitAtomicResultSectionTitleMetadata,
   AtomicResultSectionVisual as LitAtomicResultSectionVisual,
   AtomicResultsPerPage as LitAtomicResultsPerPage,
+  AtomicResultText as LitAtomicResultText,
   AtomicSearchBoxInstantResults as LitAtomicSearchBoxInstantResults,
   AtomicSearchBoxQuerySuggestions as LitAtomicSearchBoxQuerySuggestions,
   AtomicSearchBoxRecentQueries as LitAtomicSearchBoxRecentQueries,
@@ -154,6 +155,12 @@ export const AtomicResultsPerPage = createComponent({
   tagName: 'atomic-results-per-page',
   react: React,
   elementClass: LitAtomicResultsPerPage,
+});
+
+export const AtomicResultText = createComponent({
+  tagName: 'atomic-result-text',
+  react: React,
+  elementClass: LitAtomicResultText,
 });
 
 export const AtomicSearchBoxInstantResults = createComponent({
