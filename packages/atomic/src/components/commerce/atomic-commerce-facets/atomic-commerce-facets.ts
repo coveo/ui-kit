@@ -112,8 +112,7 @@ export class AtomicCommerceFacets
     return map(
       Array.from({length: this.collapseFacetsAfter}),
       () =>
-        html`
-          <atomic-facet-placeholder
+        html`<atomic-facet-placeholder
             value-count="8"
           ></atomic-facet-placeholder>`
     );
@@ -143,35 +142,32 @@ export class AtomicCommerceFacets
         case 'numericalRange':
           return html`${keyed(
             facet.state.facetId,
-            html`
-              <atomic-commerce-numeric-facet
-                .isCollapsed=${isCollapsed}
-                .summary=${this.summary}
-                .facet=${facet as NumericFacet}
-                .field=${facet.state.field}
-              ></atomic-commerce-numeric-facet>`
+            html`<atomic-commerce-numeric-facet
+              .isCollapsed=${isCollapsed}
+              .summary=${this.summary}
+              .facet=${facet as NumericFacet}
+              .field=${facet.state.field}
+            ></atomic-commerce-numeric-facet>`
           )}`;
         case 'dateRange':
           return html`${keyed(
             facet.state.facetId,
-            html`
-              <atomic-commerce-timeframe-facet
-                .isCollapsed=${isCollapsed}
-                .summary=${this.summary}
-                .facet=${facet as DateFacet}
-                .field=${facet.state.field}
-              ></atomic-commerce-timeframe-facet>`
+            html`<atomic-commerce-timeframe-facet
+              .isCollapsed=${isCollapsed}
+              .summary=${this.summary}
+              .facet=${facet as DateFacet}
+              .field=${facet.state.field}
+            ></atomic-commerce-timeframe-facet>`
           )}`;
         case 'hierarchical':
           return html`${keyed(
             facet.state.facetId,
-            html`
-              <atomic-commerce-category-facet
-                .isCollapsed=${isCollapsed}
-                .summary=${this.summary}
-                .facet=${facet as CategoryFacet}
-                .field=${facet.state.field}
-              ></atomic-commerce-category-facet>`
+            html`<atomic-commerce-category-facet
+              .isCollapsed=${isCollapsed}
+              .summary=${this.summary}
+              .facet=${facet as CategoryFacet}
+              .field=${facet.state.field}
+            ></atomic-commerce-category-facet>`
           )}`;
         default: {
           // TODO COMHUB-291 support location facet
