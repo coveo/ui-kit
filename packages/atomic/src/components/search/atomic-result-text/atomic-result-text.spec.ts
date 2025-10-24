@@ -96,6 +96,92 @@ describe('atomic-result-text', () => {
     expect(el).toBeInstanceOf(AtomicResultText);
   });
 
+  it('should set error when #field is empty', async () => {
+    const element = await renderComponent({field: 'author'});
+
+    expect(element.error).toBeNull();
+
+    element.field = '';
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/field/i);
+  });
+
+  it('should set error when valid #field is updated to an empty value', async () => {
+    const element = await renderComponent({field: 'author'});
+
+    expect(element.error).toBeNull();
+
+    element.field = '';
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/field/i);
+  });
+
+  it.each<{
+    prop: 'shouldHighlight' | 'disableHighlight';
+    invalidValue: string;
+  }>([
+    {
+      prop: 'shouldHighlight',
+      invalidValue: 'not-a-boolean',
+    },
+    {
+      prop: 'disableHighlight',
+      invalidValue: 'not-a-boolean',
+    },
+  ])(
+    'should set error when #$prop is invalid',
+    async ({prop, invalidValue}) => {
+      const element = await renderComponent({field: 'author'});
+
+      expect(element.error).toBeNull();
+
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
+
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+    }
+  );
+
+  it.each<{
+    prop: 'shouldHighlight' | 'disableHighlight';
+    validValue: boolean;
+    invalidValue: string;
+  }>([
+    {
+      prop: 'shouldHighlight',
+      validValue: true,
+      invalidValue: 'not-a-boolean',
+    },
+    {
+      prop: 'disableHighlight',
+      validValue: false,
+      invalidValue: 'not-a-boolean',
+    },
+  ])(
+    'should set error when valid #$prop is updated to an invalid value',
+    async ({prop, validValue, invalidValue}) => {
+      const element = await renderComponent({
+        field: 'author',
+        [prop]: validValue,
+      });
+
+      expect(element.error).toBeNull();
+
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
+
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+    }
+  );
+
   it('should render nothing when default props are used', async () => {
     const element = await renderComponent();
     const text = locators.getText(element);

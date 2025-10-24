@@ -1,3 +1,4 @@
+import {BooleanValue, Schema, StringValue} from '@coveo/bueno';
 import {
   HighlightUtils,
   type Result,
@@ -8,6 +9,7 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {renderItemTextFallback} from '@/src/components/common/item-text/item-text-fallback.js';
 import {renderItemTextHighlighted} from '@/src/components/common/item-text/item-text-highlighted.js';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller.js';
 import {booleanConverter} from '@/src/converters/boolean-converter';
@@ -73,6 +75,24 @@ export class AtomicResultText
   @state() public bindings!: Bindings;
 
   @state() public error!: Error;
+
+  constructor() {
+    super();
+
+    new ValidatePropsController(
+      this,
+      () => ({
+        field: this.field,
+        shouldHighlight: this.shouldHighlight,
+        disableHighlight: this.disableHighlight,
+      }),
+      new Schema({
+        field: new StringValue({required: true, emptyAllowed: false}),
+        shouldHighlight: new BooleanValue(),
+        disableHighlight: new BooleanValue(),
+      })
+    );
+  }
 
   public initialize() {
     if (!this.result && this.resultController.item) {
