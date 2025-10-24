@@ -6,6 +6,7 @@
     "declaration": true,
     "module": "ES2022",
     "target": "ES2022",
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM"]
   }
 }

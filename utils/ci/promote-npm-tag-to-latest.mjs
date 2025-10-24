@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 import {readFileSync} from 'node:fs';
-import {describeNpmTag, npmSetTag} from '@coveo/semantic-monorepo-tools';
+import {describePnpmTag, pnpmSetTag} from '@coveo/semantic-monorepo-tools';
 import {gt} from 'semver';
 import {NPM_LATEST_TAG} from './common/constants.mjs';
 
 if (!process.env.INIT_CWD) {
-  throw new Error('Should be called using npm run-script');
+  throw new Error('Should be called using pnpm run');
 }
 process.chdir(process.env.INIT_CWD);
 
@@ -13,7 +13,7 @@ const {name, version} = JSON.parse(
   readFileSync('package.json', {encoding: 'utf-8'})
 );
 
-const publishedVersion = await describeNpmTag(name, NPM_LATEST_TAG);
+const publishedVersion = await describePnpmTag(name, NPM_LATEST_TAG);
 
 if (gt(publishedVersion, version)) {
   console.log(
@@ -22,4 +22,4 @@ if (gt(publishedVersion, version)) {
   process.exit(1);
 }
 
-await npmSetTag(name, version, NPM_LATEST_TAG);
+await pnpmSetTag(name, version, NPM_LATEST_TAG);

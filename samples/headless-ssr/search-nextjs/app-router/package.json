@@ -8,19 +8,20 @@
     "build": "next build",
     "prod": "next start",
     "lint": "next lint",
-    "e2e": "cypress run --browser chrome --e2e --project ../ --env NEXTJS_ROUTER=app",
-    "e2e:watch": "cypress open --browser chrome --e2e --project ../"
+    "e2e": "cypress run --browser chrome --e2e --project . --env NEXTJS_ROUTER=app",
+    "e2e:watch": "cypress open --browser chrome --e2e --project ."
   },
   "dependencies": {
-    "@samples/headless-ssr-search-nextjs-common": "0.0.0",
-    "next": "15.2.4",
-    "react": "19.1.1",
-    "react-dom": "19.1.1"
+    "@samples/headless-ssr-search-nextjs-common": "workspace:*",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@types/node": "22.16.5",
-    "@types/react": "19.1.1",
-    "@types/react-dom": "19.1.2",
-    "typescript": "5.8.3"
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:",
+    "cypress-repeat": "catalog:"
   }
 }

@@ -29,15 +29,14 @@ export const mergeRefs = (
 };
 
 export const createForwardRef = <PropType, ElementType>(ReactComponent: any, displayName: string) => {
-  const forwardRef = (
-    props: StencilReactExternalProps<PropType, ElementType>,
-    ref: StencilReactForwardedRef<ElementType>
-  ) => {
-    return <ReactComponent {...props} forwardedRef={ref} />;
-  };
-  forwardRef.displayName = displayName;
+  type InternalProps = StencilReactExternalProps<PropType, ElementType> & { forwardedRef?: StencilReactForwardedRef<ElementType> };
+  type ExternalProps = Omit<InternalProps, 'forwardedRef'>;
 
-  return React.forwardRef(forwardRef);
+  const Forwarded = React.forwardRef<ElementType, ExternalProps>((props, ref) => {
+    return <ReactComponent {...(props as InternalProps)} forwardedRef={ref} />;
+  });
+  (Forwarded as any).displayName = displayName;
+  return Forwarded;
 };
 
 export const defineCustomElement = (tagName: string, customElement: any) => {

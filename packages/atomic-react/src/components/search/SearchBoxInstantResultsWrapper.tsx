@@ -1,7 +1,6 @@
 import type {Bindings} from '@coveo/atomic';
 import type {Result} from '@coveo/headless';
-// biome-ignore lint/style/useImportType: React is needed for JSX
-import React, {useEffect, useRef} from 'react';
+import React, {type JSX, useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
 import {AtomicSearchBoxInstantResults} from './components.js';

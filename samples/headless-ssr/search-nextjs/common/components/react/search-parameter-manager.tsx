@@ -26,7 +26,6 @@ export default function SearchParameterManager() {
   }, [historyRouter.url?.searchParams, methods]);
 
   // Update the browser's URL
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <>
   const correctedUrl = useMemo(() => {
     if (!historyRouter.url) {
       return null;
@@ -38,7 +37,6 @@ export default function SearchParameterManager() {
     return serialize(state.parameters, newURL);
   }, [state.parameters]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <>
   useEffect(() => {
     if (!correctedUrl || document.location.href === correctedUrl) {
       return;

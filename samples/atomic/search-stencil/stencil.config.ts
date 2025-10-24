@@ -1,7 +1,8 @@
 import {spawnSync} from 'node:child_process';
 import type {Config} from '@stencil/core';
-import html from 'rollup-plugin-html';
 import nodePolyfills from 'rollup-plugin-node-polyfills';
+// @ts-ignore
+import {string as html} from 'rollup-plugin-string';
 
 // https://stenciljs.com/docs/config
 
@@ -16,17 +17,17 @@ export const config: Config = {
       copy: [
         {src: 'pages', keepDirStructure: false},
         {
-          src: '../../../../node_modules/@coveo/atomic/dist/atomic/assets',
+          src: '../../../../packages/atomic/dist/atomic/assets',
           dest: 'assets',
           keepDirStructure: false,
         },
         {
-          src: '../../../../node_modules/@coveo/atomic/dist/atomic/lang',
+          src: '../../../../packages/atomic/dist/atomic/lang',
           dest: 'lang',
           keepDirStructure: false,
         },
         {
-          src: '../../../../node_modules/@coveo/atomic/dist/atomic/themes',
+          src: '../../../../packages/atomic/dist/atomic/themes',
           dest: 'themes',
           keepDirStructure: false,
         },
@@ -38,6 +39,7 @@ export const config: Config = {
       html({
         include: 'src/components/**/*.html',
       }),
+
       coveoResolve(),
     ],
     after: [nodePolyfills()],

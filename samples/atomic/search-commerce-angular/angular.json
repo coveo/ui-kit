@@ -30,7 +30,6 @@
             ],
             "scripts": [],
             "browser": "src/main.ts",
-            "preserveSymlinks": true,
             "allowedCommonJsDependencies": [
               "dayjs",
               "escape-html",

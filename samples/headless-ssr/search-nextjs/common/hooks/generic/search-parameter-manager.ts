@@ -52,7 +52,6 @@ export function useSyncSearchParameterManager({
   }, [historyRouter.url?.searchParams, controller]);
 
   // Update the URL.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <>
   const correctedUrl = useMemo(() => {
     if (!historyRouter.url) {
       return null;
@@ -62,7 +61,6 @@ export function useSyncSearchParameterManager({
     return serialize(state.parameters, newURL);
   }, [state.parameters]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <>
   useEffect(() => {
     if (!correctedUrl || document.location.href === correctedUrl) {
       return;
