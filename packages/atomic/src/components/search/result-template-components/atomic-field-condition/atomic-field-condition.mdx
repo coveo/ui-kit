@@ -1,0 +1,45 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicFieldConditionStories from './atomic-field-condition.new.stories';
+import { AtomicDocTemplate } from '../../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicFieldConditionStories} />
+
+<AtomicDocTemplate
+  stories={AtomicFieldConditionStories}
+  githubPath="search/atomic-field-condition/atomic-field-condition.ts"
+  tagName="atomic-field-condition"
+  className="AtomicFieldCondition"
+>
+# UX notes
+
+## Best practices
+
+### Usage notes
+
+* The `must-match` and `must-not-match` markup attributes require kebab-case when referring to a result property whose name is in camelCase.
+For example, the `isRecommendation` property should be written as `is-recommendation`.
+
+  ```html
+  <atomic-field-condition must-match-is-recommendation="true">
+    <!-- ... -->
+  </atomic-field-condition>
+  ```
+* Regardless of whether its condition is satisfied, the `atomic-field-condition` component will render all its children and itself.
+If its condition is not satsified, it will then remove itself and its children from the DOM.
+For example, consider the following:
+
+  ```html
+  <atomic-field-condition if-not-defined="thumbnailurl">
+    <atomic-result-icon class="icon"></atomic-result-icon>
+  </atomic-field-condition>
+
+  <atomic-field-condition if-defined="thumbnailurl">
+    <atomic-result-image field="thumbnailurl"></atomic-result-image>
+  </atomic-field-condition>
+  ```
+
+  When the `thumbnailurl` field isn’t defined on a result, the `atomic-result-icon` will be rendered as expected.
+  However, the `atomic-result-image` (nested in the second `atomic-field-condition`) will also be rendered and subsequently removed from the DOM.
+  This will produce a console warning, as the `thumbnailurl` is undefined when it’s referenced by the `atomic-result-image` component.
+
+</AtomicDocTemplate>

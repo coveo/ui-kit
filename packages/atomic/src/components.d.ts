@@ -73,7 +73,11 @@ export namespace Components {
         "updateCollapseFacetsDependingOnFacetsVisibility": (collapseAfter: number, numberOfVisibleFacets: number) => Promise<void>;
     }
     /**
-     * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     * The _Breadbox_ component helps the information seeker keep track of the navigational state of the currently active facet values, located in a single place on the search page.
+     * In most cases, these are on the top of a page between the search bar and the results.
+     * Each facet value that’s displayed in the breadcrumbs will appear as individual pill styled buttons.
+     * By default, the field name is displayed before the field value to clarify which facet the value is from.
+     * You can clear a single selection by clicking the `x` inside of each pill, or clear all selections by using the `Clear` button.
      */
     interface AtomicBreadbox {
         /**
@@ -2494,7 +2498,11 @@ declare global {
         new (): HTMLAtomicAutomaticFacetGeneratorElement;
     };
     /**
-     * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     * The _Breadbox_ component helps the information seeker keep track of the navigational state of the currently active facet values, located in a single place on the search page.
+     * In most cases, these are on the top of a page between the search bar and the results.
+     * Each facet value that’s displayed in the breadcrumbs will appear as individual pill styled buttons.
+     * By default, the field name is displayed before the field value to clarify which facet the value is from.
+     * You can clear a single selection by clicking the `x` inside of each pill, or clear all selections by using the `Clear` button.
      */
     interface HTMLAtomicBreadboxElement extends Components.AtomicBreadbox, HTMLStencilElement {
     }
@@ -3899,7 +3907,11 @@ declare namespace LocalJSX {
         "numberOfValues"?: number;
     }
     /**
-     * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     * The _Breadbox_ component helps the information seeker keep track of the navigational state of the currently active facet values, located in a single place on the search page.
+     * In most cases, these are on the top of a page between the search bar and the results.
+     * Each facet value that’s displayed in the breadcrumbs will appear as individual pill styled buttons.
+     * By default, the field name is displayed before the field value to clarify which facet the value is from.
+     * You can clear a single selection by clicking the `x` inside of each pill, or clear all selections by using the `Clear` button.
      */
     interface AtomicBreadbox {
         /**
@@ -6320,7 +6332,11 @@ declare module "@stencil/core" {
              */
             "atomic-automatic-facet-generator": LocalJSX.AtomicAutomaticFacetGenerator & JSXBase.HTMLAttributes<HTMLAtomicAutomaticFacetGeneratorElement>;
             /**
-             * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+             * The _Breadbox_ component helps the information seeker keep track of the navigational state of the currently active facet values, located in a single place on the search page.
+             * In most cases, these are on the top of a page between the search bar and the results.
+             * Each facet value that’s displayed in the breadcrumbs will appear as individual pill styled buttons.
+             * By default, the field name is displayed before the field value to clarify which facet the value is from.
+             * You can clear a single selection by clicking the `x` inside of each pill, or clear all selections by using the `Clear` button.
              */
             "atomic-breadbox": LocalJSX.AtomicBreadbox & JSXBase.HTMLAttributes<HTMLAtomicBreadboxElement>;
             /**

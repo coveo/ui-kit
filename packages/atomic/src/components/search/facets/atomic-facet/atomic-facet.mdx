@@ -1,0 +1,43 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicFacetStories from './atomic-facet.new.stories';
+import { AtomicDocTemplate } from '../../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicFacetStories} />
+
+<AtomicDocTemplate
+  stories={AtomicFacetStories}
+  githubPath="search/atomic-facet/atomic-facet.ts"
+  tagName="atomic-facet"
+  className="AtomicFacet"
+>
+# UX notes
+
+## Introduction
+
+A facet allows users to drill down inside a result set by filtering the result to certain field values.
+Adding an optional search box to a facet can help find specific values inside larger sets.
+
+## User Experience and Best Practices
+
+### Usage Notes
+
+* Checkboxes are the most commonly used display in most cases.
+* Boxes are multi-select, more visual, and able to present more values in a small space.
+* Links allow the user to select only one value at a time, and behave like a normal navigational link.
+
+### Guidelines
+
+Don’t use boxes if your facet values are long, it won’t provide a good experience for your users and you risk truncating values.
+Place facets on the left side of the search page; this is the most natural place for them and is where users expect to see them.
+Positioning facets on the right side results in lower adoption and decreases the usability of the search page.
+
+## Use Cases and Examples
+
+Facets are useful for large indexes because they provide multiple filters, one for every specific aspect of the content.
+Faceted navigation helps the user get an overview of the content available, helping them understand how to search for it.
+
+### Reference
+
+[Don’t Lose Face with Facets](https://source.coveo.com/2018/04/18/facets/)
+
+</AtomicDocTemplate>
