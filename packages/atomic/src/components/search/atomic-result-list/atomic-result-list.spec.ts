@@ -75,7 +75,7 @@ describe('atomic-result-list', () => {
   });
 
   it.each<{
-    prop: 'density' | 'display' | 'imageSize' | 'numberOfPlaceholders';
+    prop: 'density' | 'display' | 'imageSize';
     invalidValue: string | number;
   }>([
     {
@@ -89,10 +89,6 @@ describe('atomic-result-list', () => {
     {
       prop: 'imageSize',
       invalidValue: 'invalid',
-    },
-    {
-      prop: 'numberOfPlaceholders',
-      invalidValue: -1,
     },
   ])(
     'should set error when #$prop is invalid',
@@ -111,12 +107,8 @@ describe('atomic-result-list', () => {
   );
 
   it.each<{
-    prop: 'density' | 'display' | 'imageSize' | 'numberOfPlaceholders';
-    validValue:
-      | ItemDisplayDensity
-      | ItemDisplayLayout
-      | ItemDisplayImageSize
-      | number;
+    prop: 'density' | 'display' | 'imageSize';
+    validValue: ItemDisplayDensity | ItemDisplayLayout | ItemDisplayImageSize;
     invalidValue: string | number;
   }>([
     {
@@ -133,11 +125,6 @@ describe('atomic-result-list', () => {
       prop: 'imageSize',
       validValue: 'small',
       invalidValue: 'invalid',
-    },
-    {
-      prop: 'numberOfPlaceholders',
-      validValue: 10,
-      invalidValue: -1,
     },
   ])(
     'should set error when valid #$prop is updated to an invalid value',
@@ -333,16 +320,24 @@ describe('atomic-result-list', () => {
     });
 
     it('should render correct # of atomic-result-placeholder when app is not loaded', async () => {
+      const numberOfPlaceholders = 4;
+      vi.mocked(buildResultsPerPage).mockReturnValue(
+        buildFakeResultsPerPage({
+          numberOfResults: numberOfPlaceholders,
+        })
+      );
+
       const element = await setupElement({
         isAppLoaded: false,
         display,
-        numberOfPlaceholders: 4,
       });
 
       const atomicResultPlaceholderElements =
         element.shadowRoot?.querySelectorAll('atomic-result-placeholder');
 
-      expect(atomicResultPlaceholderElements).toHaveLength(4);
+      expect(atomicResultPlaceholderElements).toHaveLength(
+        numberOfPlaceholders
+      );
       expect(
         page.elementLocator(atomicResultPlaceholderElements!.item(0))
       ).toBeInTheDocument();
@@ -1092,13 +1087,11 @@ describe('atomic-result-list', () => {
     display = 'grid',
     density = 'normal',
     imageSize = 'small',
-    numberOfPlaceholders = 24,
     isAppLoaded = true,
   }: {
     display?: ItemDisplayLayout;
     density?: ItemDisplayDensity;
     imageSize?: ItemDisplayImageSize;
-    numberOfPlaceholders?: number;
     isAppLoaded?: boolean;
   } = {}) => {
     const {element} = await renderInAtomicSearchInterface<AtomicResultList>({
@@ -1106,7 +1099,6 @@ describe('atomic-result-list', () => {
           .display=${display}
           .density=${density}
           .imageSize=${imageSize}
-          .numberOfPlaceholders=${numberOfPlaceholders}
         >  <atomic-result-template
             .conditions=${[]}
             .mustMatch=${{}}
