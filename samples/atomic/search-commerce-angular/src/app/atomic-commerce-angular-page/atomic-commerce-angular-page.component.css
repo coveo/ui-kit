@@ -1,3 +1,7 @@
+atomic-commerce-search-box {
+ --atomic-primary: #B6254F;
+}
+
 atomic-color-facet[field="cat_color"]::part(value-Black) {
   background-color: #222222;
 }
