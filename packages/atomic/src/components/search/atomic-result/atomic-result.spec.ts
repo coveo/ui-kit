@@ -83,6 +83,74 @@ describe('atomic-result', () => {
     expect(element).toBeInstanceOf(AtomicResult);
   });
 
+  it.each<{
+    prop: 'density' | 'display' | 'imageSize';
+    invalidValue: string;
+  }>([
+    {
+      prop: 'density',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'display',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'imageSize',
+      invalidValue: 'invalid',
+    },
+  ])(
+    'should set error when #$prop is invalid',
+    async ({prop, invalidValue}) => {
+      const element = await renderResult();
+
+      expect(element.error).toBeUndefined();
+
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
+
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+    }
+  );
+
+  it.each<{
+    prop: 'density' | 'display' | 'imageSize';
+    validValue: ItemDisplayDensity | ItemDisplayLayout | ItemDisplayImageSize;
+    invalidValue: string;
+  }>([
+    {
+      prop: 'density',
+      validValue: 'normal',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'display',
+      validValue: 'list',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'imageSize',
+      validValue: 'icon',
+      invalidValue: 'invalid',
+    },
+  ])(
+    'should set error when valid #$prop is updated to an invalid value',
+    async ({prop, validValue, invalidValue}) => {
+      const element = await renderResult({[prop]: validValue});
+
+      expect(element.error).toBeUndefined();
+
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
+
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+    }
+  );
+
   it('should handle click and stop propagation', async () => {
     const element = await renderResult();
     const clickEvent = new MouseEvent('click', {

@@ -1,6 +1,7 @@
+import {Schema, StringValue} from '@coveo/bueno';
 import type {FoldedResult, InteractiveResult, Result} from '@coveo/headless';
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
+import {customElement, property, state} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
 import type {DisplayConfig} from '@/src/components/common/item-list/context/item-display-config-context-controller';
 import {
@@ -14,6 +15,7 @@ import type {
   ItemDisplayLayout,
 } from '@/src/components/common/layout/display-options';
 import {ItemLayoutController} from '@/src/components/common/layout/item-layout-controller';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {SearchStore} from '@/src/components/search/atomic-search-interface/store';
 import type {
   InteractiveResultContextEvent,
@@ -40,6 +42,9 @@ export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
   @apply atomic-template-system;
 }
 `;
+
+  @state()
+  error!: Error;
 
   /**
    * Whether `atomic-result-link` components nested in the `atomic-result` should stop click event propagation.
@@ -123,6 +128,28 @@ export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
    */
   @property({type: Object, attribute: 'rendering-function'})
   renderingFunction: ItemRenderingFunction;
+
+  constructor() {
+    super();
+
+    new ValidatePropsController(
+      this,
+      () => ({
+        display: this.display,
+        density: this.density,
+        imageSize: this.imageSize,
+      }),
+      new Schema({
+        display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
+        density: new StringValue({
+          constrainTo: ['normal', 'comfortable', 'compact'],
+        }),
+        imageSize: new StringValue({
+          constrainTo: ['small', 'large', 'icon', 'none'],
+        }),
+      })
+    );
+  }
 
   public resolveResult = (event: ResultContextEvent) => {
     event.preventDefault();
