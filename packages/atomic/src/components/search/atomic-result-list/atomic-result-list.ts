@@ -1,4 +1,4 @@
-import {ArrayValue, NumberValue, Schema, StringValue} from '@coveo/bueno';
+import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
 import {
   buildInteractiveResult,
   buildResultList,
@@ -8,6 +8,7 @@ import {
   type ResultList,
   type ResultListState,
   type ResultsPerPage,
+  type ResultsPerPageState,
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
@@ -116,9 +117,9 @@ export class AtomicResultList
   @state()
   private resultListState!: ResultListState;
 
-  /* @bindStateToController('resultsPerPage')
+  @bindStateToController('resultsPerPage')
   @state()
-  private resultsPerPageState!: ResultsPerPageState; */
+  private resultsPerPageState!: ResultsPerPageState;
 
   @bindStateToController('tabManager')
   @state()
@@ -173,9 +174,6 @@ export class AtomicResultList
   })
   public tabsExcluded: string[] = [];
 
-  @property({reflect: true, attribute: 'number-of-placeholders', type: Number})
-  numberOfPlaceholders = 24;
-
   constructor() {
     super();
 
@@ -185,7 +183,6 @@ export class AtomicResultList
         density: this.density,
         display: this.display,
         imageSize: this.imageSize,
-        numberOfPlaceholders: this.numberOfPlaceholders,
         tabsIncluded: this.tabsIncluded,
         tabsExcluded: this.tabsExcluded,
       }),
@@ -197,7 +194,6 @@ export class AtomicResultList
         imageSize: new StringValue({
           constrainTo: ['small', 'large', 'icon', 'none'],
         }),
-        numberOfPlaceholders: new NumberValue({min: 0}),
         tabsIncluded: new ArrayValue({
           each: new StringValue({}),
           required: false,
@@ -344,7 +340,8 @@ export class AtomicResultList
                       density: this.density,
                       display: this.display,
                       imageSize: this.imageSize,
-                      numberOfPlaceholders: this.numberOfPlaceholders,
+                      numberOfPlaceholders:
+                        this.resultsPerPageState.numberOfResults || 10,
                     },
                   })
                 )
