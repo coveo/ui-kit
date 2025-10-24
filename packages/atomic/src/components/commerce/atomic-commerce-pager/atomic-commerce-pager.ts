@@ -110,7 +110,7 @@ export class AtomicCommercePager
         numberOfPages: this.numberOfPages,
       }),
       new Schema({
-        numberOfPages: new NumberValue({min: 1}),
+        numberOfPages: new NumberValue({min: 0}),
       })
     );
   }
