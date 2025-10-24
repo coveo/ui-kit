@@ -7,14 +7,13 @@ import {makeMatchConditions} from '@/src/components/common/template-controller/t
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {mapProperty} from '@/src/utils/props-utils';
 import '@/src/components/common/atomic-component-error/atomic-component-error';
+import {arrayConverter} from '@/src/converters/array-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
 
 /**
- * The `atomic-result-children-template` component determines the format of the child results, depending on the conditions that are defined for each template.
+ * A children result template determines the format of the child results, depending on the conditions that are defined for each template.
  *
- * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
- * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
  * @slot default - The default slot where to insert the template element.
  */
 @customElement('atomic-result-children-template')
@@ -34,13 +33,13 @@ export class AtomicResultChildrenTemplate
    * For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`:
    * `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
    */
-  @property({attribute: false, type: Array})
+  @property({attribute: false, type: Array, converter: arrayConverter})
   conditions: ResultTemplateCondition[] = [];
 
   /**
    * The field and values that define which child results the condition must be applied to.
-   * For example, a template with the following attribute only applies to child results whose `sourcetype` is `YouTube` or `Salesforce`:
-   * `must-match-sourcetype="YouTube,Salesforce"`
+   * For example, a template with the following attribute only applies to child results whose `filetype` is `lithiummessage` or `YouTubePlaylist`:
+   * `must-match-filetype="lithiummessage,YouTubePlaylist"`
    * @type {Record<string, string[]>}
    * @default {}
    */
@@ -49,8 +48,8 @@ export class AtomicResultChildrenTemplate
 
   /**
    * The field and values that define which child results the condition must not be applied to.
-   * For example, a template with the following attribute only applies to child results whose `sourcetype` is not `YouTube`:
-   * `must-not-match-sourcetype="YouTube"`
+   * For example, a template with the following attribute only applies to child results whose `filetype` is not `lithiummessage`:
+   * `must-not-match-filetype="lithiummessage"`
    * @type {Record<string, string[]>}
    * @default {}
    */
