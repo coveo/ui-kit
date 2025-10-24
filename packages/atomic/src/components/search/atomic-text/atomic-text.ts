@@ -1,5 +1,7 @@
+import {NumberValue, Schema, StringValue} from '@coveo/bueno';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -28,6 +30,22 @@ export class AtomicText
    */
   @property({type: Number, reflect: true}) count?: number;
 
+  constructor() {
+    super();
+
+    new ValidatePropsController(
+      this,
+      () => ({
+        value: this.value,
+        count: this.count,
+      }),
+      new Schema({
+        value: new StringValue({required: true, emptyAllowed: false}),
+        count: new NumberValue({required: false}),
+      })
+    );
+  }
+
   private get strings() {
     return {
       value: () =>
@@ -37,11 +55,7 @@ export class AtomicText
     };
   }
 
-  public initialize() {
-    if (!this.value) {
-      this.error = new Error('The "value" attribute must be defined.');
-    }
-  }
+  public initialize() {}
 
   @bindingGuard()
   @errorGuard()

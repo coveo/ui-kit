@@ -57,6 +57,56 @@ describe('atomic-text', () => {
     expect(el).toBeInstanceOf(AtomicText);
   });
 
+  it('should set error when #value is empty', async () => {
+    const element = await renderComponent({value: 'test-key'});
+
+    expect(element.error).toBeUndefined();
+
+    element.value = '';
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/value/i);
+  });
+
+  it('should set error when valid #value is updated to an empty value', async () => {
+    const element = await renderComponent({value: 'test-key'});
+
+    expect(element.error).toBeUndefined();
+
+    element.value = '';
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/value/i);
+  });
+
+  it('should set error when #count is invalid', async () => {
+    const element = await renderComponent({value: 'test-key', count: 5});
+
+    expect(element.error).toBeUndefined();
+
+    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+    (element as any).count = 'not-a-number';
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/count/i);
+  });
+
+  it('should set error when valid #count is updated to an invalid value', async () => {
+    const element = await renderComponent({value: 'test-key', count: 5});
+
+    expect(element.error).toBeUndefined();
+
+    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+    (element as any).count = 'not-a-number';
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/count/i);
+  });
+
   it('should render with basic translation when value is provided', async () => {
     const element = await renderComponent({value: 'test-key'});
 
@@ -120,18 +170,14 @@ describe('atomic-text', () => {
     const element = await renderComponent();
 
     expect(element.error).toBeDefined();
-    expect(element.error.message).toBe(
-      'The "value" attribute must be defined.'
-    );
+    expect(element.error.message).toMatch(/value/i);
   });
 
   it('should set error when value is empty string', async () => {
     const element = await renderComponent({value: ''});
 
     expect(element.error).toBeDefined();
-    expect(element.error.message).toBe(
-      'The "value" attribute must be defined.'
-    );
+    expect(element.error.message).toMatch(/value/i);
   });
 
   describe('when error is present', () => {
@@ -139,9 +185,7 @@ describe('atomic-text', () => {
       const element = await renderComponent();
 
       expect(element.error).toBeDefined();
-      expect(element.error.message).toBe(
-        'The "value" attribute must be defined.'
-      );
+      expect(element.error.message).toMatch(/value/i);
     });
   });
 
