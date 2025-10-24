@@ -1,25 +1,27 @@
+import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
 import {
   logClearRecentQueries,
   logRecentQueryClick,
-} from '../../features/recent-queries/recent-queries-analytics-actions.js';
-import {executeSearch} from '../../features/search/search-actions.js';
+} from '../../../features/recent-queries/recent-queries-insight-analytics-actions.js';
 import {
-  buildMockSearchEngine,
-  type MockedSearchEngine,
-} from '../../test/mock-engine-v2.js';
-import {createMockState} from '../../test/mock-state.js';
-import {buildCoreRecentQueriesList} from '../core/recent-queries-list/headless-core-recent-queries-list.js';
+  buildMockInsightEngine,
+  type MockedInsightEngine,
+} from '../../../test/mock-engine-v2.js';
+import {buildMockInsightState} from '../../../test/mock-insight-state.js';
 import {
-  buildRecentQueriesList,
+  buildCoreRecentQueriesList,
   type RecentQueriesList,
-} from './headless-recent-queries-list.js';
+} from '../../core/recent-queries-list/headless-core-recent-queries-list.js';
+import {buildRecentQueriesList} from './headless-insight-recent-queries-list.js';
 
-vi.mock('../../features/search/search-actions.js');
-vi.mock('../../features/recent-queries/recent-queries-analytics-actions');
-vi.mock('../core/recent-queries-list/headless-core-recent-queries-list.js');
+vi.mock('../../../features/insight-search/insight-search-actions.js');
+vi.mock(
+  '../../../features/recent-queries/recent-queries-insight-analytics-actions'
+);
+vi.mock('../../core/recent-queries-list/headless-core-recent-queries-list.js');
 
-describe('recent queries list', () => {
-  let engine: MockedSearchEngine;
+describe('insight recent queries list', () => {
+  let engine: MockedInsightEngine;
   let mockCoreController: RecentQueriesList;
   let recentQueriesList: RecentQueriesList;
 
@@ -34,7 +36,7 @@ describe('recent queries list', () => {
   };
 
   beforeEach(() => {
-    engine = buildMockSearchEngine(createMockState());
+    engine = buildMockInsightEngine(buildMockInsightState());
 
     // Create a mock core controller
     mockCoreController = {

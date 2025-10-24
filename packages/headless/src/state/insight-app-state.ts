@@ -21,6 +21,7 @@ import type {
   QuerySetSection,
   QuerySuggestionSection,
   QuestionAnsweringSection,
+  RecentQueriesSection,
   ResultPreviewSection,
   SearchHubSection,
   SearchSection,
@@ -64,4 +65,5 @@ export type InsightAppState = InsightSearchParametersState &
   GeneratedAnswerSection &
   ContextSection &
   InsightUserActionsSection &
-  TriggerSection;
+  TriggerSection &
+  RecentQueriesSection;
