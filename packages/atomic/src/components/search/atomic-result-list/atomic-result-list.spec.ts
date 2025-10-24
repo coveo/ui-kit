@@ -74,46 +74,100 @@ describe('atomic-result-list', () => {
     expect(element).toBeInstanceOf(AtomicResultList);
   });
 
-  it('should throw when #density prop is invalid', async () => {
+  it('should set error when #density is invalid', async () => {
     const element = await setupElement();
 
-    expect(() => {
-      element.setAttribute('density', 'invalid');
-      element.initialize();
-    }).toThrow();
+    expect(element.error).toBeUndefined();
+
+    element.density = 'invalid' as ItemDisplayDensity;
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/density/i);
   });
 
-  it('should throw when #display prop is invalid', async () => {
-    const element = await setupElement();
+  it('should set error when valid #density is updated to an invalid value', async () => {
+    const element = await setupElement({density: 'normal'});
 
-    expect(() => {
-      element.setAttribute('display', 'invalid');
-      element.initialize();
-    }).toThrow();
+    expect(element.error).toBeUndefined();
+
+    element.density = 'invalid' as ItemDisplayDensity;
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/density/i);
   });
 
-  it('should throw when #imageSize prop is invalid', async () => {
+  it('should set error when #display is invalid', async () => {
     const element = await setupElement();
 
-    expect(() => {
-      element.setAttribute('image-size', 'invalid');
-      element.initialize();
-    }).toThrow();
+    expect(element.error).toBeUndefined();
+
+    element.display = 'invalid' as ItemDisplayLayout;
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/display/i);
   });
 
-  it('should throw when #numberOfPlaceholders prop is invalid', async () => {
-    const element = await setupElement();
+  it('should set error when valid #display is updated to an invalid value', async () => {
+    const element = await setupElement({display: 'list'});
 
-    expect(() => {
-      element.setAttribute('number-of-placeholders', '-1');
-      element.initialize();
-    }).toThrow();
+    expect(element.error).toBeUndefined();
+
+    element.display = 'invalid' as ItemDisplayLayout;
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/display/i);
   });
 
-  it('should not throw when all props are valid', async () => {
+  it('should set error when #imageSize is invalid', async () => {
     const element = await setupElement();
 
-    expect(() => element.initialize()).not.toThrow();
+    expect(element.error).toBeUndefined();
+
+    element.imageSize = 'invalid' as ItemDisplayImageSize;
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/imageSize/i);
+  });
+
+  it('should set error when valid #imageSize is updated to an invalid value', async () => {
+    const element = await setupElement({imageSize: 'small'});
+
+    expect(element.error).toBeUndefined();
+
+    element.imageSize = 'invalid' as ItemDisplayImageSize;
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/imageSize/i);
+  });
+
+  it('should set error when #numberOfPlaceholders is invalid', async () => {
+    const element = await setupElement();
+
+    expect(element.error).toBeUndefined();
+
+    element.numberOfPlaceholders = -1;
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/numberOfPlaceholders/i);
+  });
+
+  it('should set error when valid #numberOfPlaceholders is updated to an invalid value', async () => {
+    const element = await setupElement({numberOfPlaceholders: 10});
+
+    expect(element.error).toBeUndefined();
+
+    element.numberOfPlaceholders = -1;
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/numberOfPlaceholders/i);
   });
 
   describe('#updated', () => {
