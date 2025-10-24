@@ -155,7 +155,7 @@ describe('atomic-result-list', () => {
     }
   );
 
-  describe('#updated', () => {
+  describe('#willUpdate', () => {
     // biome-ignore lint/suspicious/noExplicitAny: <accessing private properties in tests>
     let element: any;
 
@@ -199,7 +199,7 @@ describe('atomic-result-list', () => {
         isLoading: newState,
         results: [buildFakeResult()],
       };
-      element.updated(new Map([['resultListState', {isLoading: oldState}]]));
+      element.willUpdate(new Map([['resultListState', {isLoading: oldState}]]));
 
       expect(element.isEveryResultReady).toBe(expectedResult);
     });

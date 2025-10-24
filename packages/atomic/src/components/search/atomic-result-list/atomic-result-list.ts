@@ -244,8 +244,8 @@ export class AtomicResultList
     });
   }
 
-  public async updated(changedProperties: Map<string, unknown>) {
-    super.updated(changedProperties);
+  public async willUpdate(changedProperties: Map<string, unknown>) {
+    super.willUpdate(changedProperties);
     if (changedProperties.has('tabManagerState')) {
       const oldValue = changedProperties.get('tabManagerState') as
         | TabManagerState
