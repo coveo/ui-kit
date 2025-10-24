@@ -153,7 +153,7 @@
     "typescript": "5.8.3",
     "vite": "7.0.6",
     "vitest": "3.2.4",
-    "wait-on": "8.0.4"
+    "wait-on": "9.0.1"
   },
   "peerDependencies": {
     "@coveo/bueno": "1.1.3",
