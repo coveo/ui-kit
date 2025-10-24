@@ -32,7 +32,10 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload.js';
-import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions.js';
+import {
+  logGeneratedAnswerResponseLinked,
+  logGeneratedAnswerStreamEnd,
+} from './generated-answer-analytics-actions.js';
 import {
   buildStreamingRequest,
   constructAnswerAPIQueryParams,
@@ -264,6 +267,7 @@ export const streamAnswer = createAsyncThunk<
         dispatch(setIsStreaming(false));
         dispatch(setIsAnswerGenerated(isAnswerGenerated));
         dispatch(logGeneratedAnswerStreamEnd(isAnswerGenerated));
+        dispatch(logGeneratedAnswerResponseLinked());
         break;
       }
       default:
