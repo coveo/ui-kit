@@ -204,6 +204,12 @@
           </atomic-facet-manager>
         </atomic-layout-section>
         <atomic-layout-section section="main">
+            <atomic-layout-section section="pagination">
+       
+              <atomic-pager></atomic-pager>
+              <atomic-results-per-page choices-displayed='5,10,50,100' initial-choice="5"></atomic-results-per-page>
+ 
+          </atomic-layout-section>
           <atomic-layout-section section="horizontal-facets">
             <atomic-segmented-facet-scrollable>
               <atomic-segmented-facet field="inat_kingdom" label="Kingdom"></atomic-segmented-facet>
@@ -384,13 +390,7 @@
             <atomic-query-error></atomic-query-error>
             <atomic-no-results></atomic-no-results>
           </atomic-layout-section>
-          <atomic-layout-section section="pagination">
-            <atomic-load-more-results></atomic-load-more-results>
-            <!-- Alternative pagination
-              <atomic-pager></atomic-pager>
-              <atomic-results-per-page></atomic-results-per-page>
-              -->
-          </atomic-layout-section>
+        
         </atomic-layout-section>
       </atomic-search-layout>
     </atomic-search-interface>
