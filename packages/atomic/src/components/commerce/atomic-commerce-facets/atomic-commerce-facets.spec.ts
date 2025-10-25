@@ -371,4 +371,110 @@ describe('atomic-commerce-facets', () => {
     expect(categoryFacet).not.toBeInTheDocument();
     expect(timeframeFacet).not.toBeInTheDocument();
   });
+
+  describe('#shouldCollapseFacet', () => {
+    it('should not collapse facets with active values even when exceeding collapseFacetsAfter', async () => {
+      mockedRegularFacet = buildFakeRegularFacet({
+        state: {
+          displayName: 'Regular Facet',
+          hasActiveValues: true,
+        },
+      });
+      mockedNumericFacet = buildFakeNumericFacet({
+        state: {
+          displayName: 'Numeric Facet',
+          hasActiveValues: false,
+        },
+      });
+      mockedCategoryFacet = buildFakeCategoryFacet({
+        state: {
+          displayName: 'Category Facet',
+          hasActiveValues: true,
+        },
+      });
+      mockedDateFacet = buildFakeDateFacet({
+        state: {
+          displayName: 'Date Facet',
+          hasActiveValues: false,
+        },
+      });
+
+      mockedFacetGenerator = buildFakeFacetGenerator({
+        state: [
+          mockedRegularFacet,
+          mockedNumericFacet,
+          mockedCategoryFacet,
+          mockedDateFacet,
+        ].map((facet) => facet.state.facetId),
+        implementation: {
+          facets: [
+            mockedRegularFacet,
+            mockedNumericFacet,
+            mockedCategoryFacet,
+            mockedDateFacet,
+          ],
+        },
+      });
+
+      const {header} = await renderCommerceFacets({
+        collapseFacetsAfter: 2,
+        isAppLoaded: true,
+      });
+
+      // First facet has active values, should stay expanded
+      await expect
+        .element(header('Regular Facet'))
+        .toHaveAttribute('aria-expanded', 'true');
+      // Second facet has no active values, should stay expanded (within limit)
+      await expect
+        .element(header('Numeric Facet'))
+        .toHaveAttribute('aria-expanded', 'true');
+      // Third facet has active values, should stay expanded even though it exceeds the limit
+      await expect
+        .element(header('Category Facet'))
+        .toHaveAttribute('aria-expanded', 'true');
+      // Fourth facet has no active values and exceeds limit, should collapse
+      await expect
+        .element(header('Date Facet'))
+        .toHaveAttribute('aria-expanded', 'false');
+    });
+
+    it('should keep all facets with active values expanded when collapseFacetsAfter is 0', async () => {
+      mockedRegularFacet = buildFakeRegularFacet({
+        state: {
+          displayName: 'Regular Facet',
+          hasActiveValues: true,
+        },
+      });
+      mockedNumericFacet = buildFakeNumericFacet({
+        state: {
+          displayName: 'Numeric Facet',
+          hasActiveValues: false,
+        },
+      });
+
+      mockedFacetGenerator = buildFakeFacetGenerator({
+        state: [mockedRegularFacet, mockedNumericFacet].map(
+          (facet) => facet.state.facetId
+        ),
+        implementation: {
+          facets: [mockedRegularFacet, mockedNumericFacet],
+        },
+      });
+
+      const {header} = await renderCommerceFacets({
+        collapseFacetsAfter: 0,
+        isAppLoaded: true,
+      });
+
+      // Facet with active values should stay expanded even when collapseFacetsAfter is 0
+      await expect
+        .element(header('Regular Facet'))
+        .toHaveAttribute('aria-expanded', 'true');
+      // Facet without active values should collapse
+      await expect
+        .element(header('Numeric Facet'))
+        .toHaveAttribute('aria-expanded', 'false');
+    });
+  });
 });
