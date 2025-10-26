@@ -2,7 +2,7 @@ import oapiSearch from 'virtual:open-api-coveo/SearchApi?group=public';
 import {fromOpenApi} from '@mswjs/source/open-api';
 import {delay, HttpResponse, http} from 'msw';
 import type {OpenAPIV3} from 'openapi-types';
-import {baseSearchResponse} from '@/storybook-utils/api/search';
+import {baseResponse as baseSearchResponse} from '@/storybook-utils/api/search/search-response';
 
 Object.assign(
   oapiSearch.paths['/rest/search/v2'].post.responses[200].content[
