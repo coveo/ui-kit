@@ -28,7 +28,7 @@ import {
   type ItemDisplayBasicLayout,
   type ItemDisplayDensity,
   type ItemDisplayImageSize,
-} from '@/src/components/common/layout/display-options';
+} from '@/src/components/common/layout/item-layout-utils';
 import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';

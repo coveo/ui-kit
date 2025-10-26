@@ -4,8 +4,10 @@ import {HttpResponse, http} from 'msw';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator, afterEach} = wrapInSearchInterface({
-  accessToken: 'invalidtoken',
+const {decorator, play} = wrapInSearchInterface({
+  config: {
+    accessToken: 'invalidtoken',
+  },
 });
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-query-error',
@@ -28,7 +30,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach,
+  play,
 };
 
 export default meta;

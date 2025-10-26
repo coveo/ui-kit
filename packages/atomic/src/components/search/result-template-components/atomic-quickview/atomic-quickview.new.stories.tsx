@@ -36,8 +36,9 @@ const {decorator: resultDecorator, engineConfig} = wrapInResult({
     return request;
   },
 });
-const {decorator: searchInterfaceDecorator, afterEach} =
-  wrapInSearchInterface(engineConfig);
+const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
+  config: engineConfig,
+});
 
 export const OutsideResultTemplate: Story = {
   name: 'Not inside a result template',
@@ -53,7 +54,7 @@ export const OutsideResultTemplate: Story = {
   args,
   argTypes,
 
-  afterEach,
+  play,
 };
 
 const meta: Meta = {
@@ -71,7 +72,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach,
+  play,
 };
 
 export default meta;
