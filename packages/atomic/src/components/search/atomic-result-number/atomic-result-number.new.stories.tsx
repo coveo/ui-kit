@@ -9,15 +9,18 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator: resultDecorator, engineConfig} = wrapInResult({
-  preprocessRequest: (request) => {
-    const parsed = JSON.parse(request.body as string);
-    parsed.fieldsToInclude = [...parsed.fieldsToInclude, 'size'];
-    parsed.numberOfResults = 1;
-    request.body = JSON.stringify(parsed);
-    return request;
+const {decorator: resultDecorator, engineConfig} = wrapInResult(
+  {
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.fieldsToInclude = [...parsed.fieldsToInclude, 'size'];
+      parsed.numberOfResults = 1;
+      request.body = JSON.stringify(parsed);
+      return request;
+    },
   },
-});
+  false
+);
 
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
   config: engineConfig,
