@@ -52,9 +52,7 @@ const SLOTS_DEFAULT = `
     </atomic-result-section-bottom-metadata>
     <atomic-result-section-children>
       <atomic-result-children image-size="icon">
-        <!-- CHILD -->
         <atomic-result-children-template>
-          <!-- CHILD TEMPLATE -->
           <template>
             <atomic-result-section-visual>
               <atomic-result-image class="icon" fallback="https://picsum.photos/350"></atomic-result-image>
@@ -127,8 +125,8 @@ const preprocessRequest = (response: any) => {
   return response;
 };
 
-const {decorator, afterEach} = wrapInSearchInterface({
-  preprocessRequest,
+const {decorator, play} = wrapInSearchInterface({
+  config: {preprocessRequest},
 });
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-folded-result-list',
@@ -149,7 +147,7 @@ const meta: Meta = {
   },
   args,
   argTypes,
-  afterEach,
+  play,
 };
 
 export default meta;
@@ -168,8 +166,10 @@ const preprocessRequestNoChildrenResult = (request: any) => {
   return request;
 };
 
-const {afterEach: noResultChildrenPlay} = wrapInSearchInterface({
-  preprocessRequest: preprocessRequestNoChildrenResult,
+const {play: noResultChildrenPlay} = wrapInSearchInterface({
+  config: {
+    preprocessRequest: preprocessRequestNoChildrenResult,
+  },
 });
 
 export const WithNoResultChildren: Story = {
@@ -177,7 +177,7 @@ export const WithNoResultChildren: Story = {
   args: {
     'default-slot': SLOTS_DEFAULT,
   },
-  afterEach: noResultChildrenPlay,
+  play: noResultChildrenPlay,
 };
 
 export const WithFewResultChildren: Story = {
@@ -202,7 +202,7 @@ export const WithFewResultChildren: Story = {
       ],
     },
   },
-  afterEach,
+  play,
 };
 
 export const WithMoreResultsAvailableAndNoChildren: Story = {
@@ -227,5 +227,5 @@ export const WithMoreResultsAvailableAndNoChildren: Story = {
       ],
     },
   },
-  afterEach: noResultChildrenPlay,
+  play: noResultChildrenPlay,
 };

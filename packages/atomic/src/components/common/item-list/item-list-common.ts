@@ -1,3 +1,7 @@
+import type {
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+} from '@/src/components/common/layout/item-layout-utils';
 import {
   type FocusTargetController,
   getFirstFocusableDescendant,
@@ -9,10 +13,6 @@ import type {CommerceRecommendationStore} from '../../commerce/atomic-commerce-r
 import type {InsightStore} from '../../insight/atomic-insight-interface/store';
 import type {RecsStore} from '../../recommendations/atomic-recs-interface/store';
 import type {SearchStore} from '../../search/atomic-search-interface/store';
-import type {
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-} from '../layout/display-options';
 import type {AnyItem} from './unfolded-item';
 
 export const resultComponentClass = 'result-component';

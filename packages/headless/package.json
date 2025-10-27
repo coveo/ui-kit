@@ -68,7 +68,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.32.0",
+  "version": "3.33.0",
   "files": [
     "dist/"
   ],
@@ -114,7 +114,7 @@
     "@coveo/relay-event-types": "15.1.0",
     "@reduxjs/toolkit": "2.6.0",
     "abortcontroller-polyfill": "1.7.8",
-    "coveo.analytics": "2.30.45",
+    "coveo.analytics": "2.30.49",
     "dayjs": "1.11.13",
     "exponential-backoff": "3.1.2",
     "fast-equals": "5.2.2",

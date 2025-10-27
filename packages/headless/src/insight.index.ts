@@ -54,6 +54,13 @@ export type {
 } from './controllers/insight/attach-to-case/headless-attach-to-case.js';
 export {buildAttachToCase} from './controllers/insight/attach-to-case/headless-attach-to-case.js';
 export type {
+  AttachedResults,
+  AttachedResultsOptions,
+  AttachedResultsProps,
+  AttachedResultsState,
+} from './controllers/insight/attached-results/headless-attached-results.js';
+export {buildAttachedResults} from './controllers/insight/attached-results/headless-attached-results.js';
+export type {
   Breadcrumb,
   BreadcrumbManager,
   BreadcrumbManagerState,
@@ -208,6 +215,14 @@ export type {
   QuickviewState,
 } from './controllers/insight/quickview/headless-insight-quickview.js';
 export {buildQuickview} from './controllers/insight/quickview/headless-insight-quickview.js';
+export type {
+  RecentQueriesList,
+  RecentQueriesListInitialState,
+  RecentQueriesListOptions,
+  RecentQueriesListProps,
+  RecentQueriesState,
+} from './controllers/insight/recent-queries-list/headless-insight-recent-queries-list.js';
+export {buildRecentQueriesList} from './controllers/insight/recent-queries-list/headless-insight-recent-queries-list.js';
 export type {
   InsightInteractiveResultOptions,
   InsightInteractiveResultProps,

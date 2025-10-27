@@ -6,27 +6,26 @@ import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-pro
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
-const {decorator: commerceInterfaceDecorator, afterEach} =
-  wrapInCommerceInterface({
-    type: 'product-listing',
-    engineConfig: {
-      context: {
-        view: {
-          url: 'https://ui-kit.coveo/atomic/storybook/atomic-product-image',
-        },
-        language: 'en',
-        country: 'US',
-        currency: 'USD',
+const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
+  type: 'product-listing',
+  engineConfig: {
+    context: {
+      view: {
+        url: 'https://ui-kit.coveo/atomic/storybook/atomic-product-image',
       },
-      preprocessRequest: (request) => {
-        const parsed = JSON.parse(request.body as string);
-        parsed.perPage = 2;
-        request.body = JSON.stringify(parsed);
-        return request;
-      },
+      language: 'en',
+      country: 'US',
+      currency: 'USD',
     },
-    includeCodeRoot: false,
-  });
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.perPage = 2;
+      request.body = JSON.stringify(parsed);
+      return request;
+    },
+  },
+  includeCodeRoot: false,
+});
 const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
   'list',
   false
@@ -61,7 +60,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach,
+  play,
 };
 
 export default meta;

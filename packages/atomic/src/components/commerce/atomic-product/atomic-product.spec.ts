@@ -262,7 +262,7 @@ describe('atomic-product', () => {
     it('should add "with-sections" class when content has sections', async () => {
       const renderingFunctionWithSections: ItemRenderingFunction = vi.fn(
         () =>
-          '<atomic-result-section-visual">Custom</atomic-result-section-visual>'
+          '<atomic-product-section-visual">Custom</atomic-product-section-visual>'
       );
       const element = await renderProduct({
         renderingFunction: renderingFunctionWithSections,

@@ -10,7 +10,7 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
-    "@coveo/headless-react": "2.6.6",
+    "@coveo/headless-react": "2.6.7",
     "@react-router/fs-routes": "7.8.2",
     "@react-router/node": "7.8.2",
     "@react-router/serve": "7.8.2",

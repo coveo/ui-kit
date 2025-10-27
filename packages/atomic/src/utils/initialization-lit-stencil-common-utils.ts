@@ -1,3 +1,4 @@
+import type {CoreEngine} from '@coveo/headless';
 import type {AnyBindings} from '../components/common/interface/bindings';
 import {closest} from './dom-utils';
 import {buildCustomEvent} from './event-utils';
@@ -39,3 +40,8 @@ export const initializableElements = [
   'atomic-external',
 ];
 export const initializeEventName = 'atomic/initializeComponent';
+
+export type AtomicInterface = HTMLElement & {
+  engine?: CoreEngine;
+  bindings?: AnyBindings;
+};
