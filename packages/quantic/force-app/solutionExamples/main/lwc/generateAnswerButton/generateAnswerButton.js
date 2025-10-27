@@ -71,6 +71,7 @@ export default class GenerateAnswerButton extends LightningElement {
    * Handles the button click event and triggers answer generation.
    */
   generateAnswer() {
+    this.engine.dispatch(this.actions.setAnswerGenerationMode('manual'));
     this.engine.dispatch(this.actions.generateAnswer());
     this.generateAnswerButtonIsDisplayed = false;
   }

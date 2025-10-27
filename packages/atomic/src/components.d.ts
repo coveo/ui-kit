@@ -5,8 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchStatus } from "@coveo/headless";
-import { AtomicInterface } from "./utils/initialization-utils";
+import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchStatus } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
@@ -19,11 +18,9 @@ import { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLe
 import { i18n } from "i18next";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
-import { SearchStore } from "./components/search/atomic-search-interface/store";
 import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
-export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchStatus } from "@coveo/headless";
-export { AtomicInterface } from "./utils/initialization-utils";
+export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchStatus } from "@coveo/headless";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
@@ -36,7 +33,6 @@ export { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLe
 export { i18n } from "i18next";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
-export { SearchStore } from "./components/search/atomic-search-interface/store";
 export { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 export { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
 export namespace Components {
@@ -268,97 +264,6 @@ export namespace Components {
           * Define which query correction system to use  `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms. `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.  Default value is `next`.
          */
         "queryCorrectionMode": 'legacy' | 'next';
-    }
-    /**
-     * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.
-     */
-    interface AtomicExternal {
-        /**
-          * Represents the bound interface for the AtomicExternal component.
-         */
-        "boundInterface"?: AtomicInterface;
-        /**
-          * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
-         */
-        "selector": string;
-    }
-    /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
-     * An `atomic-facet` displays a facet of the results for the current query.
-     */
-    interface AtomicFacet {
-        /**
-          * Specifies an explicit list of `allowedValues` in the Search API request, as a JSON string representation.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-facet> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
-         */
-        "allowedValues": string[] | string;
-        /**
-          * Identifies the facet values that must appear at the top, in this order. This parameter can be used in conjunction with the `sortCriteria` parameter.  Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.  Example:  The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.  If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.  ```html <atomic-facet field="objecttype" custom-sort='["Contact","Account","File"]' sort-criteria='occurrences'></atomic-facet> ``` The maximum amount of custom sort values is 25.  The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
-         */
-        "customSort": string[] | string;
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc   ... ></atomic-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-facet> ```
-         */
-        "dependsOn": Record<string, string>;
-        /**
-          * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
-         */
-        "displayValuesAs": 'checkbox' | 'link' | 'box';
-        /**
-          * Whether to allow excluding values from the facet.
-         */
-        "enableExclusion": boolean;
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount": boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel": number;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth": number;
-        /**
-          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
-         */
-        "isCollapsed": boolean;
-        /**
-          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label": string;
-        /**
-          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
-         */
-        "numberOfValues": number;
-        /**
-          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
-         */
-        "resultsMustMatch": FacetResultsMustMatch;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
-         */
-        "sortCriteria": FacetSortCriterion;
-        /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded": string[] | string;
-        /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded": string[] | string;
-        /**
-          * Whether this facet should contain a search box.
-         */
-        "withSearch": boolean;
     }
     /**
      * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
@@ -1761,57 +1666,6 @@ export namespace Components {
         "collapseFacetsAfter": number;
     }
     /**
-     * The `atomic-result` component is used internally by the `atomic-result-list` component.
-     */
-    interface AtomicResult {
-        /**
-          * The classes to add to the result element.
-         */
-        "classes": string;
-        /**
-          * The result content to display.
-         */
-        "content"?: ParentNode;
-        /**
-          * How large or small results should be.
-         */
-        "density": ItemDisplayDensity;
-        /**
-          * How results should be displayed.
-         */
-        "display": ItemDisplayLayout;
-        /**
-          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * The InteractiveResult item.
-         */
-        "interactiveResult": InteractiveResult;
-        /**
-          * The result link to use when the result is clicked in a grid layout.
-          * @default - An `atomic-result-link` without any customization.
-         */
-        "linkContent": ParentNode;
-        "loadingFlag"?: string;
-        /**
-          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
-         */
-        "renderingFunction": ItemRenderingFunction;
-        /**
-          * The result item.
-         */
-        "result": Result | FoldedResult;
-        /**
-          * Whether an atomic-result-link inside atomic-result should stop click event propagation.
-         */
-        "stopPropagation"?: boolean;
-        /**
-          * Global Atomic state.
-         */
-        "store"?: SearchStore;
-    }
-    /**
      * The `atomic-result-badge` element renders a badge to highlight special features of a result.
      * A badge can either display:
      * * Text:
@@ -2092,137 +1946,12 @@ export namespace Components {
         "maxValueInIndex": number;
     }
     /**
-     * This section allows the information seeker to perform an action on an item without having to view its details.
-     * For example, in Commerce you can add an item to the cart directly or add it to a wish list to view at a later time.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
-    interface AtomicResultSectionActions {
-    }
-    /**
-     * This section provides badges that highlight special features of the item.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
-    interface AtomicResultSectionBadges {
-    }
-    /**
-     * This section displays additional descriptive information about the item.
-     * Behavior:
-     * * Has a maximum height of two lines.
-     * ** We recommend that you use `atomic-result-fields-list` to ensure that the fields in this section don’t overflow.
-     * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     * * Has a font weight.
-     */
-    interface AtomicResultSectionBottomMetadata {
-    }
-    /**
-     * This section displays the folded results, available when using the <atomic-result-children> component.
-     * Behavior:
-     * * Shows children at the bottom of the result, indented and wrapped in a border.
-     */
-    interface AtomicResultSectionChildren {
-    }
-    /**
-     * This section displays the field that's important for its search criteria.
-     * For example, in Commerce, a product's cost is often more important than the title itself.
-     * Behavior:
-     * * Has a very large font size.
-     * * Is the second closest element beneath the title section.
-     */
-    interface AtomicResultSectionEmphasized {
-    }
-    /**
-     * This section contains an informative summary of the item's content.
-     * Behavior:
-     * * Has a fixed height of one to three lines, depending on the layout and density.
-     * * Ellipses overflowing text.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface AtomicResultSectionExcerpt {
-    }
-    /**
-     * This section identifies the item by its name, and its main use is to make the result list scannable.
-     * This is usually the page title.
-     * Behavior:
-     * * Has a fixed height of two lines on grid layouts.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface AtomicResultSectionTitle {
-    }
-    /**
-     * This section surfaces some fields that are directly related to the title of the item.
-     * For example, in Commerce, this could be the item's rating, which is tied to the nature of the product itself,
-     * rather than to the product's description.
-     * Behavior:
-     * * Has a very small font size.
-     * * Is the closest element beneath the title section.
-     */
-    interface AtomicResultSectionTitleMetadata {
-    }
-    /**
-     * This section provides visual information about the item.
-     * For example, in Commerce, an image is a great shorthand for a product category.
-     * An icon can quickly show the item type, or an avatar can help identify to whom it is related.
-     * Behavior:
-     * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
-     * ** When the image size is set to `icon`, this section stays very small.
-     * ** You should ensure that elements inside of it take the available space.
-     * * Always has a 1:1 aspect ratio.
-     */
-    interface AtomicResultSectionVisual {
-        /**
-          * How large or small the visual section of results using this template should be.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-    }
-    /**
      * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultTablePlaceholder {
         "density": ItemDisplayDensity;
         "imageSize": ItemDisplayImageSize;
         "rows": number;
-    }
-    /**
-     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface AtomicResultTemplate {
-        /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
-         */
-        "conditions": ResultTemplateCondition[];
-        /**
-          * Gets the appropriate result template based on conditions applied.
-         */
-        "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
-        /**
-          * Verifies whether the specified fields match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustMatch": Record<
-    string,
-    string[]
-  >;
-        /**
-          * Verifies whether the specified fields do not match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustNotMatch": Record<
-    string,
-    string[]
-  >;
     }
     /**
      * The `atomic-result-text` component renders the value of a string result field.
@@ -2810,25 +2539,6 @@ declare global {
     var HTMLAtomicDidYouMeanElement: {
         prototype: HTMLAtomicDidYouMeanElement;
         new (): HTMLAtomicDidYouMeanElement;
-    };
-    /**
-     * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.
-     */
-    interface HTMLAtomicExternalElement extends Components.AtomicExternal, HTMLStencilElement {
-    }
-    var HTMLAtomicExternalElement: {
-        prototype: HTMLAtomicExternalElement;
-        new (): HTMLAtomicExternalElement;
-    };
-    /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
-     * An `atomic-facet` displays a facet of the results for the current query.
-     */
-    interface HTMLAtomicFacetElement extends Components.AtomicFacet, HTMLStencilElement {
-    }
-    var HTMLAtomicFacetElement: {
-        prototype: HTMLAtomicFacetElement;
-        new (): HTMLAtomicFacetElement;
     };
     /**
      * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
@@ -3517,15 +3227,6 @@ declare global {
         new (): HTMLAtomicRefineToggleElement;
     };
     /**
-     * The `atomic-result` component is used internally by the `atomic-result-list` component.
-     */
-    interface HTMLAtomicResultElement extends Components.AtomicResult, HTMLStencilElement {
-    }
-    var HTMLAtomicResultElement: {
-        prototype: HTMLAtomicResultElement;
-        new (): HTMLAtomicResultElement;
-    };
-    /**
      * The `atomic-result-badge` element renders a badge to highlight special features of a result.
      * A badge can either display:
      * * Text:
@@ -3714,132 +3415,6 @@ declare global {
         new (): HTMLAtomicResultRatingElement;
     };
     /**
-     * This section allows the information seeker to perform an action on an item without having to view its details.
-     * For example, in Commerce you can add an item to the cart directly or add it to a wish list to view at a later time.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
-    interface HTMLAtomicResultSectionActionsElement extends Components.AtomicResultSectionActions, HTMLStencilElement {
-    }
-    var HTMLAtomicResultSectionActionsElement: {
-        prototype: HTMLAtomicResultSectionActionsElement;
-        new (): HTMLAtomicResultSectionActionsElement;
-    };
-    /**
-     * This section provides badges that highlight special features of the item.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
-    interface HTMLAtomicResultSectionBadgesElement extends Components.AtomicResultSectionBadges, HTMLStencilElement {
-    }
-    var HTMLAtomicResultSectionBadgesElement: {
-        prototype: HTMLAtomicResultSectionBadgesElement;
-        new (): HTMLAtomicResultSectionBadgesElement;
-    };
-    /**
-     * This section displays additional descriptive information about the item.
-     * Behavior:
-     * * Has a maximum height of two lines.
-     * ** We recommend that you use `atomic-result-fields-list` to ensure that the fields in this section don’t overflow.
-     * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     * * Has a font weight.
-     */
-    interface HTMLAtomicResultSectionBottomMetadataElement extends Components.AtomicResultSectionBottomMetadata, HTMLStencilElement {
-    }
-    var HTMLAtomicResultSectionBottomMetadataElement: {
-        prototype: HTMLAtomicResultSectionBottomMetadataElement;
-        new (): HTMLAtomicResultSectionBottomMetadataElement;
-    };
-    /**
-     * This section displays the folded results, available when using the <atomic-result-children> component.
-     * Behavior:
-     * * Shows children at the bottom of the result, indented and wrapped in a border.
-     */
-    interface HTMLAtomicResultSectionChildrenElement extends Components.AtomicResultSectionChildren, HTMLStencilElement {
-    }
-    var HTMLAtomicResultSectionChildrenElement: {
-        prototype: HTMLAtomicResultSectionChildrenElement;
-        new (): HTMLAtomicResultSectionChildrenElement;
-    };
-    /**
-     * This section displays the field that's important for its search criteria.
-     * For example, in Commerce, a product's cost is often more important than the title itself.
-     * Behavior:
-     * * Has a very large font size.
-     * * Is the second closest element beneath the title section.
-     */
-    interface HTMLAtomicResultSectionEmphasizedElement extends Components.AtomicResultSectionEmphasized, HTMLStencilElement {
-    }
-    var HTMLAtomicResultSectionEmphasizedElement: {
-        prototype: HTMLAtomicResultSectionEmphasizedElement;
-        new (): HTMLAtomicResultSectionEmphasizedElement;
-    };
-    /**
-     * This section contains an informative summary of the item's content.
-     * Behavior:
-     * * Has a fixed height of one to three lines, depending on the layout and density.
-     * * Ellipses overflowing text.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface HTMLAtomicResultSectionExcerptElement extends Components.AtomicResultSectionExcerpt, HTMLStencilElement {
-    }
-    var HTMLAtomicResultSectionExcerptElement: {
-        prototype: HTMLAtomicResultSectionExcerptElement;
-        new (): HTMLAtomicResultSectionExcerptElement;
-    };
-    /**
-     * This section identifies the item by its name, and its main use is to make the result list scannable.
-     * This is usually the page title.
-     * Behavior:
-     * * Has a fixed height of two lines on grid layouts.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface HTMLAtomicResultSectionTitleElement extends Components.AtomicResultSectionTitle, HTMLStencilElement {
-    }
-    var HTMLAtomicResultSectionTitleElement: {
-        prototype: HTMLAtomicResultSectionTitleElement;
-        new (): HTMLAtomicResultSectionTitleElement;
-    };
-    /**
-     * This section surfaces some fields that are directly related to the title of the item.
-     * For example, in Commerce, this could be the item's rating, which is tied to the nature of the product itself,
-     * rather than to the product's description.
-     * Behavior:
-     * * Has a very small font size.
-     * * Is the closest element beneath the title section.
-     */
-    interface HTMLAtomicResultSectionTitleMetadataElement extends Components.AtomicResultSectionTitleMetadata, HTMLStencilElement {
-    }
-    var HTMLAtomicResultSectionTitleMetadataElement: {
-        prototype: HTMLAtomicResultSectionTitleMetadataElement;
-        new (): HTMLAtomicResultSectionTitleMetadataElement;
-    };
-    /**
-     * This section provides visual information about the item.
-     * For example, in Commerce, an image is a great shorthand for a product category.
-     * An icon can quickly show the item type, or an avatar can help identify to whom it is related.
-     * Behavior:
-     * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
-     * ** When the image size is set to `icon`, this section stays very small.
-     * ** You should ensure that elements inside of it take the available space.
-     * * Always has a 1:1 aspect ratio.
-     */
-    interface HTMLAtomicResultSectionVisualElement extends Components.AtomicResultSectionVisual, HTMLStencilElement {
-    }
-    var HTMLAtomicResultSectionVisualElement: {
-        prototype: HTMLAtomicResultSectionVisualElement;
-        new (): HTMLAtomicResultSectionVisualElement;
-    };
-    /**
      * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface HTMLAtomicResultTablePlaceholderElement extends Components.AtomicResultTablePlaceholder, HTMLStencilElement {
@@ -3847,17 +3422,6 @@ declare global {
     var HTMLAtomicResultTablePlaceholderElement: {
         prototype: HTMLAtomicResultTablePlaceholderElement;
         new (): HTMLAtomicResultTablePlaceholderElement;
-    };
-    /**
-     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface HTMLAtomicResultTemplateElement extends Components.AtomicResultTemplate, HTMLStencilElement {
-    }
-    var HTMLAtomicResultTemplateElement: {
-        prototype: HTMLAtomicResultTemplateElement;
-        new (): HTMLAtomicResultTemplateElement;
     };
     /**
      * The `atomic-result-text` component renders the value of a string result field.
@@ -4180,8 +3744,6 @@ declare global {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
-        "atomic-external": HTMLAtomicExternalElement;
-        "atomic-facet": HTMLAtomicFacetElement;
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
@@ -4256,7 +3818,6 @@ declare global {
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
-        "atomic-result": HTMLAtomicResultElement;
         "atomic-result-badge": HTMLAtomicResultBadgeElement;
         "atomic-result-children": HTMLAtomicResultChildrenElement;
         "atomic-result-children-template": HTMLAtomicResultChildrenTemplateElement;
@@ -4273,17 +3834,7 @@ declare global {
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-rating": HTMLAtomicResultRatingElement;
-        "atomic-result-section-actions": HTMLAtomicResultSectionActionsElement;
-        "atomic-result-section-badges": HTMLAtomicResultSectionBadgesElement;
-        "atomic-result-section-bottom-metadata": HTMLAtomicResultSectionBottomMetadataElement;
-        "atomic-result-section-children": HTMLAtomicResultSectionChildrenElement;
-        "atomic-result-section-emphasized": HTMLAtomicResultSectionEmphasizedElement;
-        "atomic-result-section-excerpt": HTMLAtomicResultSectionExcerptElement;
-        "atomic-result-section-title": HTMLAtomicResultSectionTitleElement;
-        "atomic-result-section-title-metadata": HTMLAtomicResultSectionTitleMetadataElement;
-        "atomic-result-section-visual": HTMLAtomicResultSectionVisualElement;
         "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
-        "atomic-result-template": HTMLAtomicResultTemplateElement;
         "atomic-result-text": HTMLAtomicResultTextElement;
         "atomic-result-timespan": HTMLAtomicResultTimespanElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
@@ -4539,97 +4090,6 @@ declare namespace LocalJSX {
           * Define which query correction system to use  `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms. `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.  Default value is `next`.
          */
         "queryCorrectionMode"?: 'legacy' | 'next';
-    }
-    /**
-     * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.
-     */
-    interface AtomicExternal {
-        /**
-          * Represents the bound interface for the AtomicExternal component.
-         */
-        "boundInterface"?: AtomicInterface;
-        /**
-          * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
-         */
-        "selector"?: string;
-    }
-    /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
-     * An `atomic-facet` displays a facet of the results for the current query.
-     */
-    interface AtomicFacet {
-        /**
-          * Specifies an explicit list of `allowedValues` in the Search API request, as a JSON string representation.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-facet> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
-         */
-        "allowedValues"?: string[] | string;
-        /**
-          * Identifies the facet values that must appear at the top, in this order. This parameter can be used in conjunction with the `sortCriteria` parameter.  Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.  Example:  The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.  If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.  ```html <atomic-facet field="objecttype" custom-sort='["Contact","Account","File"]' sort-criteria='occurrences'></atomic-facet> ``` The maximum amount of custom sort values is 25.  The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
-         */
-        "customSort"?: string[] | string;
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc   ... ></atomic-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-facet> ```
-         */
-        "dependsOn"?: Record<string, string>;
-        /**
-          * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
-         */
-        "displayValuesAs"?: 'checkbox' | 'link' | 'box';
-        /**
-          * Whether to allow excluding values from the facet.
-         */
-        "enableExclusion"?: boolean;
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount"?: boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel"?: number;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth"?: number;
-        /**
-          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
-         */
-        "isCollapsed"?: boolean;
-        /**
-          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
-         */
-        "numberOfValues"?: number;
-        /**
-          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
-         */
-        "resultsMustMatch"?: FacetResultsMustMatch;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
-         */
-        "sortCriteria"?: FacetSortCriterion;
-        /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded"?: string[] | string;
-        /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded"?: string[] | string;
-        /**
-          * Whether this facet should contain a search box.
-         */
-        "withSearch"?: boolean;
     }
     /**
      * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
@@ -5972,57 +5432,6 @@ declare namespace LocalJSX {
         "collapseFacetsAfter"?: number;
     }
     /**
-     * The `atomic-result` component is used internally by the `atomic-result-list` component.
-     */
-    interface AtomicResult {
-        /**
-          * The classes to add to the result element.
-         */
-        "classes"?: string;
-        /**
-          * The result content to display.
-         */
-        "content"?: ParentNode;
-        /**
-          * How large or small results should be.
-         */
-        "density"?: ItemDisplayDensity;
-        /**
-          * How results should be displayed.
-         */
-        "display"?: ItemDisplayLayout;
-        /**
-          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * The InteractiveResult item.
-         */
-        "interactiveResult": InteractiveResult;
-        /**
-          * The result link to use when the result is clicked in a grid layout.
-          * @default - An `atomic-result-link` without any customization.
-         */
-        "linkContent"?: ParentNode;
-        "loadingFlag"?: string;
-        /**
-          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
-         */
-        "renderingFunction"?: ItemRenderingFunction;
-        /**
-          * The result item.
-         */
-        "result": Result | FoldedResult;
-        /**
-          * Whether an atomic-result-link inside atomic-result should stop click event propagation.
-         */
-        "stopPropagation"?: boolean;
-        /**
-          * Global Atomic state.
-         */
-        "store"?: SearchStore;
-    }
-    /**
      * The `atomic-result-badge` element renders a badge to highlight special features of a result.
      * A badge can either display:
      * * Text:
@@ -6294,133 +5703,12 @@ declare namespace LocalJSX {
         "maxValueInIndex"?: number;
     }
     /**
-     * This section allows the information seeker to perform an action on an item without having to view its details.
-     * For example, in Commerce you can add an item to the cart directly or add it to a wish list to view at a later time.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
-    interface AtomicResultSectionActions {
-    }
-    /**
-     * This section provides badges that highlight special features of the item.
-     * Behavior:
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-     * * Is a wrapping flexbox with a gap.
-     * * May appear over, next to, or beneath the visual section.
-     */
-    interface AtomicResultSectionBadges {
-    }
-    /**
-     * This section displays additional descriptive information about the item.
-     * Behavior:
-     * * Has a maximum height of two lines.
-     * ** We recommend that you use `atomic-result-fields-list` to ensure that the fields in this section don’t overflow.
-     * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     * * Has a font weight.
-     */
-    interface AtomicResultSectionBottomMetadata {
-    }
-    /**
-     * This section displays the folded results, available when using the <atomic-result-children> component.
-     * Behavior:
-     * * Shows children at the bottom of the result, indented and wrapped in a border.
-     */
-    interface AtomicResultSectionChildren {
-    }
-    /**
-     * This section displays the field that's important for its search criteria.
-     * For example, in Commerce, a product's cost is often more important than the title itself.
-     * Behavior:
-     * * Has a very large font size.
-     * * Is the second closest element beneath the title section.
-     */
-    interface AtomicResultSectionEmphasized {
-    }
-    /**
-     * This section contains an informative summary of the item's content.
-     * Behavior:
-     * * Has a fixed height of one to three lines, depending on the layout and density.
-     * * Ellipses overflowing text.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface AtomicResultSectionExcerpt {
-    }
-    /**
-     * This section identifies the item by its name, and its main use is to make the result list scannable.
-     * This is usually the page title.
-     * Behavior:
-     * * Has a fixed height of two lines on grid layouts.
-     * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-     * * Has a defined CSS `color` property for text.
-     */
-    interface AtomicResultSectionTitle {
-    }
-    /**
-     * This section surfaces some fields that are directly related to the title of the item.
-     * For example, in Commerce, this could be the item's rating, which is tied to the nature of the product itself,
-     * rather than to the product's description.
-     * Behavior:
-     * * Has a very small font size.
-     * * Is the closest element beneath the title section.
-     */
-    interface AtomicResultSectionTitleMetadata {
-    }
-    /**
-     * This section provides visual information about the item.
-     * For example, in Commerce, an image is a great shorthand for a product category.
-     * An icon can quickly show the item type, or an avatar can help identify to whom it is related.
-     * Behavior:
-     * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
-     * ** When the image size is set to `icon`, this section stays very small.
-     * ** You should ensure that elements inside of it take the available space.
-     * * Always has a 1:1 aspect ratio.
-     */
-    interface AtomicResultSectionVisual {
-        /**
-          * How large or small the visual section of results using this template should be.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-    }
-    /**
      * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultTablePlaceholder {
         "density": ItemDisplayDensity;
         "imageSize": ItemDisplayImageSize;
         "rows": number;
-    }
-    /**
-     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface AtomicResultTemplate {
-        /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
-         */
-        "conditions"?: ResultTemplateCondition[];
-        /**
-          * Verifies whether the specified fields match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustMatch"?: Record<
-    string,
-    string[]
-  >;
-        /**
-          * Verifies whether the specified fields do not match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustNotMatch"?: Record<
-    string,
-    string[]
-  >;
     }
     /**
      * The `atomic-result-text` component renders the value of a string result field.
@@ -6891,8 +6179,6 @@ declare namespace LocalJSX {
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
-        "atomic-external": AtomicExternal;
-        "atomic-facet": AtomicFacet;
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-number-input": AtomicFacetNumberInput;
         "atomic-field-condition": AtomicFieldCondition;
@@ -6967,7 +6253,6 @@ declare namespace LocalJSX {
         "atomic-recs-result-template": AtomicRecsResultTemplate;
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
-        "atomic-result": AtomicResult;
         "atomic-result-badge": AtomicResultBadge;
         "atomic-result-children": AtomicResultChildren;
         "atomic-result-children-template": AtomicResultChildrenTemplate;
@@ -6984,17 +6269,7 @@ declare namespace LocalJSX {
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-rating": AtomicResultRating;
-        "atomic-result-section-actions": AtomicResultSectionActions;
-        "atomic-result-section-badges": AtomicResultSectionBadges;
-        "atomic-result-section-bottom-metadata": AtomicResultSectionBottomMetadata;
-        "atomic-result-section-children": AtomicResultSectionChildren;
-        "atomic-result-section-emphasized": AtomicResultSectionEmphasized;
-        "atomic-result-section-excerpt": AtomicResultSectionExcerpt;
-        "atomic-result-section-title": AtomicResultSectionTitle;
-        "atomic-result-section-title-metadata": AtomicResultSectionTitleMetadata;
-        "atomic-result-section-visual": AtomicResultSectionVisual;
         "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
-        "atomic-result-template": AtomicResultTemplate;
         "atomic-result-text": AtomicResultText;
         "atomic-result-timespan": AtomicResultTimespan;
         "atomic-search-box": AtomicSearchBox;
@@ -7066,15 +6341,6 @@ declare module "@stencil/core" {
              * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
              */
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
-            /**
-             * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.
-             */
-            "atomic-external": LocalJSX.AtomicExternal & JSXBase.HTMLAttributes<HTMLAtomicExternalElement>;
-            /**
-             * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
-             * An `atomic-facet` displays a facet of the results for the current query.
-             */
-            "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
             /**
              * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
              */
@@ -7280,10 +6546,6 @@ declare module "@stencil/core" {
              */
             "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
             /**
-             * The `atomic-result` component is used internally by the `atomic-result-list` component.
-             */
-            "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
-            /**
              * The `atomic-result-badge` element renders a badge to highlight special features of a result.
              * A badge can either display:
              * * Text:
@@ -7392,96 +6654,9 @@ declare module "@stencil/core" {
              */
             "atomic-result-rating": LocalJSX.AtomicResultRating & JSXBase.HTMLAttributes<HTMLAtomicResultRatingElement>;
             /**
-             * This section allows the information seeker to perform an action on an item without having to view its details.
-             * For example, in Commerce you can add an item to the cart directly or add it to a wish list to view at a later time.
-             * Behavior:
-             * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-             * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-             * * Is a wrapping flexbox with a gap.
-             * * May appear over, next to, or beneath the visual section.
-             */
-            "atomic-result-section-actions": LocalJSX.AtomicResultSectionActions & JSXBase.HTMLAttributes<HTMLAtomicResultSectionActionsElement>;
-            /**
-             * This section provides badges that highlight special features of the item.
-             * Behavior:
-             * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-             * ** You should ensure that elements inside of it have `height: var(--line-height)`.
-             * * Is a wrapping flexbox with a gap.
-             * * May appear over, next to, or beneath the visual section.
-             */
-            "atomic-result-section-badges": LocalJSX.AtomicResultSectionBadges & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBadgesElement>;
-            /**
-             * This section displays additional descriptive information about the item.
-             * Behavior:
-             * * Has a maximum height of two lines.
-             * ** We recommend that you use `atomic-result-fields-list` to ensure that the fields in this section don’t overflow.
-             * * Exposes the `--line-height` variable so child elements can adjust to the current line height.
-             * * Has a defined CSS `color` property for text.
-             * * Has a font weight.
-             */
-            "atomic-result-section-bottom-metadata": LocalJSX.AtomicResultSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBottomMetadataElement>;
-            /**
-             * This section displays the folded results, available when using the <atomic-result-children> component.
-             * Behavior:
-             * * Shows children at the bottom of the result, indented and wrapped in a border.
-             */
-            "atomic-result-section-children": LocalJSX.AtomicResultSectionChildren & JSXBase.HTMLAttributes<HTMLAtomicResultSectionChildrenElement>;
-            /**
-             * This section displays the field that's important for its search criteria.
-             * For example, in Commerce, a product's cost is often more important than the title itself.
-             * Behavior:
-             * * Has a very large font size.
-             * * Is the second closest element beneath the title section.
-             */
-            "atomic-result-section-emphasized": LocalJSX.AtomicResultSectionEmphasized & JSXBase.HTMLAttributes<HTMLAtomicResultSectionEmphasizedElement>;
-            /**
-             * This section contains an informative summary of the item's content.
-             * Behavior:
-             * * Has a fixed height of one to three lines, depending on the layout and density.
-             * * Ellipses overflowing text.
-             * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-             * * Has a defined CSS `color` property for text.
-             */
-            "atomic-result-section-excerpt": LocalJSX.AtomicResultSectionExcerpt & JSXBase.HTMLAttributes<HTMLAtomicResultSectionExcerptElement>;
-            /**
-             * This section identifies the item by its name, and its main use is to make the result list scannable.
-             * This is usually the page title.
-             * Behavior:
-             * * Has a fixed height of two lines on grid layouts.
-             * * Exposes the `--line-height` CSS variable so child elements can adjust to the current line height.
-             * * Has a defined CSS `color` property for text.
-             */
-            "atomic-result-section-title": LocalJSX.AtomicResultSectionTitle & JSXBase.HTMLAttributes<HTMLAtomicResultSectionTitleElement>;
-            /**
-             * This section surfaces some fields that are directly related to the title of the item.
-             * For example, in Commerce, this could be the item's rating, which is tied to the nature of the product itself,
-             * rather than to the product's description.
-             * Behavior:
-             * * Has a very small font size.
-             * * Is the closest element beneath the title section.
-             */
-            "atomic-result-section-title-metadata": LocalJSX.AtomicResultSectionTitleMetadata & JSXBase.HTMLAttributes<HTMLAtomicResultSectionTitleMetadataElement>;
-            /**
-             * This section provides visual information about the item.
-             * For example, in Commerce, an image is a great shorthand for a product category.
-             * An icon can quickly show the item type, or an avatar can help identify to whom it is related.
-             * Behavior:
-             * * Has a fixed size that depends on the specified image size, the layout, the density, and the screen size.
-             * ** When the image size is set to `icon`, this section stays very small.
-             * ** You should ensure that elements inside of it take the available space.
-             * * Always has a 1:1 aspect ratio.
-             */
-            "atomic-result-section-visual": LocalJSX.AtomicResultSectionVisual & JSXBase.HTMLAttributes<HTMLAtomicResultSectionVisualElement>;
-            /**
              * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
-            /**
-             * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-             * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-             * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-             */
-            "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
             /**
              * The `atomic-result-text` component renders the value of a string result field.
              */
