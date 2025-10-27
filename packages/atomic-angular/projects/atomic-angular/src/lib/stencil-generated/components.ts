@@ -784,28 +784,6 @@ export declare interface AtomicRefineToggle extends Components.AtomicRefineToggl
 
 
 @ProxyCmp({
-  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'linkContent', 'result', 'stopPropagation']
-, defineCustomElementFn: defineCustomElementAtomicResult})
-@Component({standalone:false,
-  selector: 'atomic-result',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'linkContent', 'result', 'stopPropagation'],
-})
-export class AtomicResult {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicResult extends Components.AtomicResult {}
-
-
-@ProxyCmp({
   inputs: ['field', 'icon', 'label']
 , defineCustomElementFn: defineCustomElementAtomicResultBadge})
 @Component({standalone:false,
@@ -3271,6 +3249,32 @@ export class AtomicResultTemplate {
 }
 
 export declare interface AtomicResultTemplate extends LitAtomicResultTemplate {
+
+}
+
+@ProxyCmp({
+  inputs: ['stopPropagation', 'result', 'interactiveResult', 'store', 'content', 'linkContent', 'display', 'density', 'imageSize', 'classes'],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-result') || customElements.define('atomic-result', LitAtomicResult);}
+})
+@Component({
+  selector: 'atomic-result',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['stopPropagation', 'result', 'interactiveResult', 'store', 'content', 'linkContent', 'display', 'density', 'imageSize', 'classes']
+})
+export class AtomicResult {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicResult extends LitAtomicResult {
 
 }
 

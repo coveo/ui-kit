@@ -1,45 +1,53 @@
-import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
+import {Schema, StringValue} from '@coveo/bueno';
+import type {FoldedResult, InteractiveResult, Result} from '@coveo/headless';
+import {type CSSResultGroup, css, html, LitElement} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
-import type {CommerceStore} from '@/src/components/commerce/atomic-commerce-interface/store';
-import type {CommerceRecommendationStore} from '@/src/components/commerce/atomic-commerce-recommendation-interface/store';
-import type {
-  InteractiveProductContextEvent,
-  ProductContextEvent,
-} from '@/src/components/commerce/product-template-component-utils/context/product-context-controller';
 import type {DisplayConfig} from '@/src/components/common/item-list/context/item-display-config-context-controller';
 import {
   type ItemRenderingFunction,
   resultComponentClass,
 } from '@/src/components/common/item-list/item-list-common';
 import {CustomRenderController} from '@/src/components/common/layout/custom-render-controller';
-import {ItemLayoutController} from '@/src/components/common/layout/item-layout-controller';
 import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
-} from '@/src/components/common/layout/item-layout-utils';
+} from '@/src/components/common/layout/display-options';
+import {ItemLayoutController} from '@/src/components/common/layout/item-layout-controller';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
+import type {SearchStore} from '@/src/components/search/atomic-search-interface/store';
+import type {
+  InteractiveResultContextEvent,
+  ResultContextEvent,
+} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {parentNodeToString} from '@/src/utils/dom-utils';
-import styles from './atomic-product.tw.css';
-
 /**
- * The `atomic-product` component is used internally by the `atomic-commerce-product-list` and `atomic-commerce-recommendation-list` components.
+ * The `atomic-result` component is used internally by the `atomic-result-list` and `atomic-folded-result-list` components.
  */
-@customElement('atomic-product')
+@customElement('atomic-result')
 @withTailwindStyles
-export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
-  private productRootRef?: HTMLElement;
+export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
+  private resultRootRef?: HTMLElement;
   private linkContainerRef?: HTMLElement;
   private itemLayoutController!: ItemLayoutController;
 
-  static styles: CSSResultGroup = styles;
+  static styles: CSSResultGroup = css`
+@import "../../common/template-system/template-system.css";
+
+:host {
+  @apply atomic-template-system;
+}
+`;
+
+  @state()
+  error!: Error;
 
   /**
-   * Whether `atomic-product-link` components nested in the `atomic-product` should stop click event propagation.
+   * Whether `atomic-result-link` components nested in the `atomic-result` should stop click event propagation.
    */
   @property({
     attribute: 'stop-propagation',
@@ -50,60 +58,60 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
   stopPropagation?: boolean;
 
   /**
-   * The product item.
+   * The result item.
    */
-  @property({type: Object}) product!: Product;
+  @property({type: Object}) result!: Result | FoldedResult;
 
   /**
-   * The InteractiveProduct item.
+   * The InteractiveResult item.
    */
-  @property({type: Object, attribute: 'interactive-product'})
-  interactiveProduct!: InteractiveProduct;
+  @property({type: Object, attribute: 'interactive-result'})
+  interactiveResult!: InteractiveResult;
 
   /**
    * Global Atomic state.
    */
-  @property({type: Object}) store?: CommerceStore | CommerceRecommendationStore;
+  @property({type: Object}) store?: SearchStore;
 
   /**
-   * The product content to display.
+   * The result content to display.
    */
   @property({type: Object}) content?: ParentNode;
 
   /**
-   * The product link to use when the product is clicked in a grid layout.
+   * The result link to use when the result is clicked in a grid layout.
    *
-   * @default - An `atomic-product-link` without any customization.
+   * @default - An `atomic-result-link` without any customization.
    */
   @property({type: Object, attribute: 'link-content'}) linkContent: ParentNode =
     new DocumentFragment();
 
   /**
-   * How products should be displayed.
+   * How results should be displayed.
    */
   @property({reflect: true, type: String}) display: ItemDisplayLayout = 'list';
 
   /**
-   * How large or small products should be.
+   * How large or small results should be.
    */
   @property({reflect: true, type: String}) density: ItemDisplayDensity =
     'normal';
 
   /**
-   * The size of the visual section in product list items.
+   * The size of the visual section in result list items.
    *
-   * This is overwritten by the image size defined in the product content, if it exists.
+   * This is overwritten by the image size defined in the result content, if it exists.
    */
   @property({reflect: true, type: String, attribute: 'image-size'})
   imageSize: ItemDisplayImageSize = 'icon';
 
   /**
-   * The classes to add to the product element.
+   * The classes to add to the result element.
    */
   @property({type: String}) classes = '';
 
   /**
-   * A unique identifier for tracking the loading state of this product component.
+   * A unique identifier for tracking the loading state of this result component.
    * When set, this flag is added to the global loading flags array and automatically
    * removed when the component finishes its initial render. This allows the framework
    * to determine when all components have finished loading.
@@ -121,19 +129,39 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
   @property({type: Object, attribute: 'rendering-function'})
   renderingFunction: ItemRenderingFunction;
 
-  public resolveProduct = (event: ProductContextEvent) => {
+  constructor() {
+    super();
+
+    new ValidatePropsController(
+      this,
+      () => ({
+        display: this.display,
+        density: this.density,
+        imageSize: this.imageSize,
+      }),
+      new Schema({
+        display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
+        density: new StringValue({
+          constrainTo: ['normal', 'comfortable', 'compact'],
+        }),
+        imageSize: new StringValue({
+          constrainTo: ['small', 'large', 'icon', 'none'],
+        }),
+      })
+    );
+  }
+
+  public resolveResult = (event: ResultContextEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    event.detail(this.product);
+    event.detail(this.result);
   };
 
-  public resolveInteractiveProduct = (
-    event: InteractiveProductContextEvent
-  ) => {
+  public resolveInteractiveResult = (event: InteractiveResultContextEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    if (this.interactiveProduct) {
-      event.detail(this.interactiveProduct);
+    if (this.interactiveResult) {
+      event.detail(this.interactiveResult);
     }
   };
 
@@ -141,8 +169,8 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
     event.detail(this.stopPropagation);
   };
 
-  public resolveProductDisplayConfig = (
-    event: ProductContextEvent<DisplayConfig>
+  public resolveResultDisplayConfig = (
+    event: ResultContextEvent<DisplayConfig>
   ) => {
     event.preventDefault();
     event.stopPropagation();
@@ -164,7 +192,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
   public clickLinkContainer = () => {
     this.shadowRoot
       ?.querySelector<HTMLAnchorElement>(
-        '.link-container > atomic-product-link a:not([slot])'
+        '.link-container > atomic-result-link a:not([slot])'
       )
       ?.click();
   };
@@ -174,8 +202,8 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
 
     new CustomRenderController(this, {
       renderingFunction: () => this.renderingFunction,
-      itemData: () => this.product,
-      rootElementRef: () => this.productRootRef,
+      itemData: () => this.result,
+      rootElementRef: () => this.resultRootRef,
       linkContainerRef: () => this.linkContainerRef,
       onRenderComplete: (element, output) => {
         this.itemLayoutController.applyLayoutClassesToElement(element, output);
@@ -183,7 +211,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
     });
 
     this.itemLayoutController = new ItemLayoutController(this, {
-      elementPrefix: 'atomic-product',
+      elementPrefix: 'atomic-result',
       renderingFunction: () => this.renderingFunction,
       content: () => this.content,
       layoutConfig: () => ({
@@ -196,11 +224,11 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
 
     this.addEventListener(
       'atomic/resolveResult',
-      this.resolveProduct as EventListener
+      this.resolveResult as EventListener
     );
     this.addEventListener(
       'atomic/resolveInteractiveResult',
-      this.resolveInteractiveProduct as EventListener
+      this.resolveInteractiveResult as EventListener
     );
     this.addEventListener(
       'atomic/resolveStopPropagation',
@@ -208,7 +236,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
     );
     this.addEventListener(
       'atomic/resolveResultDisplayConfig',
-      this.resolveProductDisplayConfig as EventListener
+      this.resolveResultDisplayConfig as EventListener
     );
     this.addEventListener('click', this.handleClick);
 
@@ -221,11 +249,11 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
 
     this.removeEventListener(
       'atomic/resolveResult',
-      this.resolveProduct as EventListener
+      this.resolveResult as EventListener
     );
     this.removeEventListener(
       'atomic/resolveInteractiveResult',
-      this.resolveInteractiveProduct as EventListener
+      this.resolveInteractiveResult as EventListener
     );
     this.removeEventListener(
       'atomic/resolveStopPropagation',
@@ -233,7 +261,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
     );
     this.removeEventListener(
       'atomic/resolveResultDisplayConfig',
-      this.resolveProductDisplayConfig as EventListener
+      this.resolveResultDisplayConfig as EventListener
     );
     this.removeEventListener('click', this.handleClick);
   }
@@ -241,7 +269,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
   private getContentHTML() {
     if (!this.content) {
       console.warn(
-        'atomic-product: content property is undefined. Cannot get content HTML.',
+        'atomic-result: content property is undefined. Cannot get content HTML.',
         this
       );
       return '';
@@ -260,7 +288,7 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
           <div
             class="result-root"
             ${ref((el) => {
-              this.productRootRef = el as HTMLElement;
+              this.resultRootRef = el as HTMLElement;
             })}
           ></div>
           <div
@@ -297,6 +325,6 @@ export class AtomicProduct extends ChildrenUpdateCompleteMixin(LitElement) {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'atomic-product': AtomicProduct;
+    'atomic-result': AtomicResult;
   }
 }

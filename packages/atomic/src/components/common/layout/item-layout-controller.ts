@@ -1,12 +1,12 @@
 import type {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
 import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
 import type {AnyItem} from '@/src/components/common/item-list/unfolded-item';
-import {
-  type ItemDisplayDensity,
-  type ItemDisplayImageSize,
-  type ItemDisplayLayout,
-  ItemLayout,
-} from './display-options';
+import type {
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+  ItemDisplayLayout,
+} from './item-layout-utils';
+import {getItemLayoutClasses, type ItemLayoutConfig} from './item-layout-utils';
 
 export interface ItemLayoutHost extends ReactiveControllerHost {
   shadowRoot?: ShadowRoot | null;
@@ -32,7 +32,7 @@ export interface ItemLayoutOptions {
 export class ItemLayoutController implements ReactiveController {
   private host: ItemLayoutHost & LitElement;
   private options: Required<ItemLayoutOptions>;
-  private layoutInstance: ItemLayout | null = null;
+  private layout: ItemLayoutConfig | null = null;
 
   constructor(host: ItemLayoutHost & LitElement, options: ItemLayoutOptions) {
     this.host = host;
@@ -51,18 +51,20 @@ export class ItemLayoutController implements ReactiveController {
   }
 
   /**
-   * Gets the current layout instance
+   * Gets the current layout config
    */
-  public getLayout(): ItemLayout | null {
-    return this.layoutInstance;
+  public getLayout(): ItemLayoutConfig | null {
+    return this.layout;
   }
 
   /**
    * Gets combined layout and extra classes
    */
   public getCombinedClasses(additionalContent?: string): string[] {
-    const layout = this.getLayout();
-    const layoutClasses = layout ? layout.getClasses(additionalContent) : [];
+    const config = this.getLayout();
+    const layoutClasses = config
+      ? getItemLayoutClasses(config, additionalContent)
+      : [];
     const itemClasses = this.options
       .itemClasses()
       .split(/\s+/)
@@ -77,8 +79,8 @@ export class ItemLayoutController implements ReactiveController {
     element: HTMLElement,
     additionalContent?: string
   ): void {
-    const layout = this.getLayout();
-    if (!layout) {
+    const config = this.getLayout();
+    if (!config) {
       return;
     }
 
@@ -89,8 +91,8 @@ export class ItemLayoutController implements ReactiveController {
   }
 
   private applyLayoutClasses(): void {
-    const layout = this.getLayout();
-    if (!layout) {
+    const config = this.getLayout();
+    if (!config) {
       return;
     }
 
@@ -114,17 +116,17 @@ export class ItemLayoutController implements ReactiveController {
         `${this.options.elementPrefix}: content property is undefined. Cannot create layout.`,
         this.host
       );
-      this.layoutInstance = null;
+      this.layout = null;
       return;
     }
 
     const config = this.options.layoutConfig();
-    this.layoutInstance = new ItemLayout(
-      content.children,
-      config.display,
-      config.density,
-      config.imageSize
-    );
+    this.layout = {
+      children: content.children,
+      display: config.display,
+      density: config.density,
+      imageSize: config.imageSize,
+    };
   }
 
   private hasCustomRenderFunction(): boolean {
