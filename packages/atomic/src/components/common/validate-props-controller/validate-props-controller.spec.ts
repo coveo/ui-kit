@@ -42,6 +42,14 @@ describe('ValidatePropsController', () => {
   });
 
   describe('when the host is connected to the DOM', () => {
+    it('should set the error to undefined when it was initially null', async () => {
+      // @ts-ignore - it's actually possible that error will be null.
+      mockElement.error = null;
+
+      controller.hostConnected();
+
+      expect(mockElement.error).toBeUndefined();
+    });
     it('should validate the props', () => {
       const schemaSpy = vi.spyOn(mockSchema, 'validate');
       const props = {name: 'valid'};
