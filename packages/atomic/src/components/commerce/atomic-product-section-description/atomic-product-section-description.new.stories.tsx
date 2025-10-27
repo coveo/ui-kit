@@ -1,11 +1,14 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
-import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
-import {wrapInProductTemplateForSections} from '@/storybook-utils/commerce/product-template-section-wrapper';
+import {
+  getProductSectionArgs,
+  getProductSectionArgTypes,
+  getProductSectionDecorators,
+} from '@/storybook-utils/commerce/product-section-story-utils';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
-const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
+const {play} = wrapInCommerceInterface({
   engineConfig: {
     preprocessRequest: (request) => {
       const parsed = JSON.parse(request.body as string);
@@ -16,12 +19,6 @@ const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
   },
   includeCodeRoot: false,
 });
-const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
-  'grid',
-  false
-);
-const {decorator: productTemplateDecorator} =
-  wrapInProductTemplateForSections();
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-product-section-description',
@@ -39,19 +36,21 @@ const meta: Meta = {
       handles: events,
     },
   },
-  args,
-  argTypes,
+  args: {
+    ...args,
+    ...getProductSectionArgs(),
+  },
+  argTypes: {
+    ...argTypes,
+    ...getProductSectionArgTypes(),
+  },
 };
 
 export default meta;
 
 export const Default: Story = {
   name: 'atomic-product-section-description',
-  decorators: [
-    productTemplateDecorator,
-    commerceProductListDecorator,
-    commerceInterfaceDecorator,
-  ],
+  decorators: getProductSectionDecorators(),
   play,
   args: {
     'default-slot': `<p class="text-sm text-gray-600">Premium wireless headphones with industry-leading noise cancellation and superior sound quality.</p>`,
