@@ -21,7 +21,7 @@ const preprocessRequestForOneResult = (r: Request) => {
 };
 
 export const wrapInResult = (
-  engineConfig?: Partial<SearchEngineConfiguration>,
+  engineConfig?: Partial<SearchEngineConfiguration>
 ): {
   decorator: Decorator;
   engineConfig: Partial<SearchEngineConfiguration>;
