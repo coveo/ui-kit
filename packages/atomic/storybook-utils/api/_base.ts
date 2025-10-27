@@ -1,4 +1,10 @@
-import {type DefaultBodyType, type HttpHandler, HttpResponse, http} from 'msw';
+import {
+  type DefaultBodyType,
+  type HttpHandler,
+  HttpResponse,
+  type HttpResponseInit,
+  http,
+} from 'msw';
 
 export abstract class MockApi {
   abstract get handlers(): HttpHandler[];
@@ -6,7 +12,9 @@ export abstract class MockApi {
 
 type HttpMethod = 'GET' | 'POST';
 export class EndpointHarness<TResponse extends {}> {
-  private nextResponses: ((response: TResponse) => TResponse)[] = [];
+  private nextResponses: ('error' | ((response: TResponse) => TResponse))[] =
+    [];
+  private nextResponseInit: HttpResponseInit[] = [];
   private baseResponse: Readonly<TResponse>;
   private initialBaseResponse: Readonly<TResponse>;
   constructor(
@@ -14,7 +22,8 @@ export class EndpointHarness<TResponse extends {}> {
     private path: string,
     initialBaseResponse: TResponse,
     private mswHttpResponseFactory: (
-      response: TResponse
+      response: TResponse,
+      httpResponseInit?: HttpResponseInit
     ) => HttpResponse<DefaultBodyType> = HttpResponse.json
   ) {
     this.initialBaseResponse = initialBaseResponse;
@@ -29,8 +38,17 @@ export class EndpointHarness<TResponse extends {}> {
     this.modifyBaseResponse(() => this.initialBaseResponse);
   }
 
-  enqueueNextResponse(responseMiddleware: (response: TResponse) => TResponse) {
+  enqueueNetworkError() {
+    this.nextResponses.push('error');
+    this.nextResponseInit.push({});
+  }
+
+  enqueueNextResponse(
+    responseMiddleware: (response: TResponse) => TResponse,
+    httpResponseInit: HttpResponseInit = {}
+  ) {
     this.nextResponses.push(responseMiddleware);
+    this.nextResponseInit.push(httpResponseInit);
   }
 
   flushQueuedResponses() {
@@ -38,9 +56,20 @@ export class EndpointHarness<TResponse extends {}> {
   }
 
   getNextResponse(): HttpResponse<DefaultBodyType> {
-    return this.mswHttpResponseFactory(
-      this.nextResponses.shift()?.(this.baseResponse) ?? this.baseResponse
-    );
+    if (this.nextResponses.length === 0) {
+      return this.mswHttpResponseFactory(this.baseResponse);
+    } else {
+      const response = this.nextResponses.shift()!;
+      const responseInit = this.nextResponseInit.shift();
+      if (response === 'error') {
+        return HttpResponse.error();
+      } else {
+        return this.mswHttpResponseFactory(
+          response!(this.baseResponse),
+          responseInit
+        );
+      }
+    }
   }
 
   generateHandler() {
