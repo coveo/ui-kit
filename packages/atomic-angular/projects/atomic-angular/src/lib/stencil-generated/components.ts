@@ -2922,7 +2922,7 @@ export declare interface AtomicQuerySummary extends LitAtomicQuerySummary {
 }
 
 @ProxyCmp({
-  inputs: ['density', 'display', 'imageSize', 'tabsIncluded', 'tabsExcluded', 'numberOfPlaceholders'],
+  inputs: ['density', 'display', 'imageSize', 'tabsIncluded', 'tabsExcluded'],
   methods: ['setRenderFunction', 'initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-result-list') || customElements.define('atomic-result-list', LitAtomicResultList);}
 })
@@ -2932,7 +2932,7 @@ export declare interface AtomicQuerySummary extends LitAtomicQuerySummary {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['density', 'display', 'imageSize', 'tabsIncluded', 'tabsExcluded', 'numberOfPlaceholders']
+  inputs: ['density', 'display', 'imageSize', 'tabsIncluded', 'tabsExcluded']
 })
 export class AtomicResultList {
   protected readonly el: HTMLElement;
