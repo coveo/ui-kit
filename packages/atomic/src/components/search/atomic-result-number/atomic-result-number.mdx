@@ -11,8 +11,6 @@ import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/ato
   className="AtomicResultNumber"
 >
 
-The `atomic-result-number` component renders the value of a number result field.
-
 This component is used within `atomic-result-template` components inside the result list:
 
 ```html
@@ -33,14 +31,16 @@ This component is used within `atomic-result-template` components inside the res
 
 ## Number Formatting
 
-The number can be formatted by adding an `atomic-format-number`, `atomic-format-currency`, or `atomic-format-unit` component as a child:
+By default, the component uses a numeric formatter to localize the number based on the language of the search interface.
+
+For instance, if the language is `fr`, a number such as `12345.67` will be displayed as `12 345,67`, while in `en`, it will be displayed as `12,345.67`.
+
+You can insert an `atomic-format-number`, `atomic-format-currency`, or `atomic-format-unit` component as a child to customize the formatting:
 
 ```html
 <atomic-result-number field="size">
   <atomic-format-unit unit="byte" unit-display="long"></atomic-format-unit>
 </atomic-result-number>
 ```
-
-**Note:** Make sure the field specified in the `field` property is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
 
 </AtomicDocTemplate>
