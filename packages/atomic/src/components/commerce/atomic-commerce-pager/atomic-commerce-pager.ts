@@ -17,7 +17,10 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {FocusTargetController} from '@/src/utils/accessibility-utils';
+import {
+  AriaLiveRegionController,
+  FocusTargetController,
+} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
@@ -93,6 +96,8 @@ export class AtomicCommercePager
    */
   @property({reflect: true, attribute: 'next-button-icon', type: String})
   nextButtonIcon = ArrowRightIcon;
+
+  protected ariaMessage = new AriaLiveRegionController(this, 'atomic-pager');
 
   public pager!: Pagination;
   public listingOrSearch!: ProductListing | Search;
@@ -238,6 +243,13 @@ export class AtomicCommercePager
   private async focusOnFirstResultAndScrollToTop() {
     await this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
     this.dispatchEvent(new CustomEvent('atomic/scrollToTop'));
+    this.announcePageLoaded();
+  }
+
+  private announcePageLoaded() {
+    this.ariaMessage.message = this.bindings.i18n.t('pager-page-loaded', {
+      pageNumber: this.pagerState.page,
+    });
   }
 }
 
