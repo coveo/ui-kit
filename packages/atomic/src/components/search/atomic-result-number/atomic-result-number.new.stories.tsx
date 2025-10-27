@@ -23,14 +23,18 @@ const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
   includeCodeRoot: false,
 });
 const {decorator: resultListDecorator} = wrapInResultList('list', false);
-const {decorator: resultDecorator} = wrapInResultTemplate(false);
+const {decorator: resultTemplateDecorator} = wrapInResultTemplate(false);
 
 const meta: Meta = {
   component: 'atomic-result-number',
   title: 'Search/Result Number',
   id: 'atomic-result-number',
   render: (args) => template(args),
-  decorators: [resultDecorator, resultListDecorator, searchInterfaceDecorator],
+  decorators: [
+    resultTemplateDecorator,
+    resultListDecorator,
+    searchInterfaceDecorator,
+  ],
   parameters: {
     ...parameters,
     actions: {
