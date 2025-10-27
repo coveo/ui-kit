@@ -7,7 +7,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
 const {
   decorator: commerceInterfaceDecorator,
-  afterEach: initializeCommerceInterface,
+  play: initializeCommerceInterface,
 } = wrapInCommerceInterface({
   type: 'product-listing',
   engineConfig: {
@@ -60,7 +60,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach: initializeCommerceInterface,
+  play: initializeCommerceInterface,
 };
 
 export default meta;

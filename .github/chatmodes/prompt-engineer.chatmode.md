@@ -1,7 +1,6 @@
 ---
 description: 'Prompt Engineer'
 tools: ['edit', 'search', 'problems', 'vscodeAPI', 'todos']
-model: Claude Sonnet 4.5 (copilot)
 ---
 
 ## Purpose

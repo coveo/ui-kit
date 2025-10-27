@@ -8,7 +8,7 @@ import {updateQuery} from '../../../../../headless/src/features/commerce/query/q
 
 const {
   decorator: commerceInterfaceDecorator,
-  afterEach: initializeCommerceInterface,
+  play: initializeCommerceInterface,
 } = wrapInCommerceInterface({
   skipFirstRequest: true,
   engineConfig: {
@@ -59,7 +59,7 @@ export default meta;
 
 export const Default: Story = {
   name: 'atomic-product-text',
-  afterEach: async (context) => {
+  play: async (context) => {
     await initializeCommerceInterface(context);
 
     const searchInterface = context.canvasElement.querySelector(

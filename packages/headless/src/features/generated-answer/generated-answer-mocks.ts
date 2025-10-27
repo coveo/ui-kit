@@ -1085,6 +1085,7 @@ export const streamAnswerAPIStateMock: StreamAnswerAPIState = {
     expanded: false,
     answerConfigurationId: 'c36fd994-3eb7-4aaf-bfce-2dad4b15a622',
     cannotAnswer: false,
+    answerGenerationMode: 'automatic',
   },
 };
 

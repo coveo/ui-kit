@@ -10,6 +10,7 @@ import {
   beforeEach,
   describe,
   expect,
+  it,
   type MockInstance,
   test,
   vi,
@@ -80,11 +81,13 @@ describe('atomic-commerce-pager', () => {
 
     const {element} =
       await renderInAtomicCommerceInterface<AtomicCommercePager>({
-        template: html`<atomic-commerce-pager
-          number-of-pages=${ifDefined(numberOfPages)}
-          previous-button-icon=${ifDefined(previousButtonIcon)}
-          next-button-icon=${ifDefined(nextButtonIcon)}
-        ></atomic-commerce-pager>`,
+        template: html`
+          <atomic-commerce-pager
+            number-of-pages=${ifDefined(numberOfPages)}
+            previous-button-icon=${ifDefined(previousButtonIcon)}
+            next-button-icon=${ifDefined(nextButtonIcon)}
+          ></atomic-commerce-pager>
+        `,
         selector: 'atomic-commerce-pager',
         bindings: (bindings) => {
           bindings.interfaceElement.type = interfaceType ?? 'product-listing';
@@ -183,6 +186,7 @@ describe('atomic-commerce-pager', () => {
     let focusSpy: MockInstance;
     let eventSpy: MockInstance;
     let previousSpy: MockInstance;
+    let announcePageLoaded: MockInstance;
 
     beforeEach(async () => {
       const element = await renderPager({state: {page: 2}});
@@ -192,6 +196,7 @@ describe('atomic-commerce-pager', () => {
       );
       eventSpy = vi.spyOn(element, 'dispatchEvent');
       previousSpy = vi.spyOn(element.pager, 'previousPage');
+      announcePageLoaded = vi.spyOn(element, 'announcePageLoaded');
 
       await locators.previous.click();
     });
@@ -209,12 +214,17 @@ describe('atomic-commerce-pager', () => {
     test('should call #pager.previousPage', async () => {
       expect(previousSpy).toHaveBeenCalled();
     });
+
+    it('should announce page loaded with correct page number', async () => {
+      expect(announcePageLoaded).toHaveBeenCalledOnce();
+    });
   });
 
   describe('when clicking on the next button', () => {
     let focusSpy: MockInstance;
     let eventSpy: MockInstance;
     let nextSpy: MockInstance;
+    let announcePageLoadedSpy: MockInstance;
 
     beforeEach(async () => {
       const element = await renderPager({state: {page: 2}});
@@ -224,6 +234,7 @@ describe('atomic-commerce-pager', () => {
       );
       eventSpy = vi.spyOn(element, 'dispatchEvent');
       nextSpy = vi.spyOn(element.pager, 'nextPage');
+      announcePageLoadedSpy = vi.spyOn(element, 'announcePageLoaded');
 
       await locators.next.click();
     });
@@ -240,6 +251,10 @@ describe('atomic-commerce-pager', () => {
 
     test('should call #pager.nextPage', async () => {
       expect(nextSpy).toHaveBeenCalled();
+    });
+
+    it('should announce page loaded with correct page number', async () => {
+      expect(announcePageLoadedSpy).toHaveBeenCalledOnce();
     });
   });
 
@@ -336,5 +351,73 @@ describe('atomic-commerce-pager', () => {
     await expect.element(locators.page1).toHaveAttribute('value', '1');
     await expect.element(locators.page2).toHaveAttribute('value', '2');
     await expect.element(locators.page3).toHaveAttribute('value', '3');
+  });
+
+  describe('accessibility and focus', () => {
+    let element: AtomicCommercePager;
+
+    beforeEach(async () => {
+      element = await renderPager({state: {page: 2, totalPages: 10}});
+    });
+
+    const retrieveButtons = () => {
+      return Array.from(
+        element.shadowRoot?.querySelectorAll<HTMLInputElement>(
+          'input[type="radio"]'
+        ) || []
+      );
+    };
+
+    const expectFocusOnButton = async (
+      button: Element,
+      expectedFocusButton: Element
+    ) => {
+      await expect.element(button).toBe(expectedFocusButton);
+    };
+
+    test('should focus on previous button when navigating backward from first page button', async () => {
+      const buttons = retrieveButtons();
+
+      const [firstPageButton, lastPageButton] = [
+        buttons[0],
+        buttons[buttons.length - 1],
+      ];
+
+      await element['handleFocus'](buttons, firstPageButton, lastPageButton);
+
+      await expectFocusOnButton(
+        locators.previous.element(),
+        document.activeElement?.shadowRoot?.activeElement
+      );
+    });
+
+    test('should focus on next button when navigating forward from last page button', async () => {
+      const buttons = retrieveButtons();
+
+      const [firstPageButton, lastPageButton] = [
+        buttons[0],
+        buttons[buttons.length - 1],
+      ];
+
+      await element['handleFocus'](buttons, lastPageButton, firstPageButton);
+
+      await expectFocusOnButton(
+        locators.next.element(),
+        document.activeElement?.shadowRoot?.activeElement
+      );
+    });
+
+    test('should focus on next page button when navigating between page buttons', async () => {
+      const buttons = retrieveButtons();
+
+      const [currentButton, nextButton] = buttons;
+
+      await element['handleFocus'](buttons, currentButton, nextButton);
+
+      await expectFocusOnButton(
+        locators.page2.element(),
+        document.activeElement?.shadowRoot?.activeElement
+      );
+    });
   });
 });

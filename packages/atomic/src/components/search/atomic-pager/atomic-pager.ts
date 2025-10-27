@@ -21,6 +21,10 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
+import {
+  AriaLiveRegionController,
+  FocusTargetController,
+} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
@@ -99,10 +103,16 @@ export class AtomicPager
   @property({reflect: true, attribute: 'next-button-icon', type: String})
   nextButtonIcon: string = ArrowRightIcon;
 
+  protected ariaMessage = new AriaLiveRegionController(this, 'atomic-pager');
+
   private radioGroupName = randomID('atomic-pager-');
+
+  private previousButton!: FocusTargetController;
+  private nextButton!: FocusTargetController;
 
   public initialize() {
     this.validateProps();
+    this.initFocusTargets();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.pager = buildPager(this.bindings.engine, {
       options: {numberOfPages: this.numberOfPages},
@@ -142,6 +152,7 @@ export class AtomicPager
                 this.pager.previousPage();
                 this.focusOnFirstResultAndScrollToTop();
               },
+              ref: (el) => this.previousButton.setTarget(el as HTMLElement),
             },
           })}
           ${renderPageButtons({
@@ -167,6 +178,7 @@ export class AtomicPager
                     text: pageNumber.toLocaleString(
                       this.bindings.i18n.language
                     ),
+                    onFocusCallback: this.handleFocus,
                   },
                 })
               )
@@ -181,6 +193,7 @@ export class AtomicPager
                 this.pager.nextPage();
                 this.focusOnFirstResultAndScrollToTop();
               },
+              ref: (el) => this.nextButton.setTarget(el as HTMLElement),
             },
           })}
         `)}`
@@ -198,9 +211,42 @@ export class AtomicPager
     }
   }
 
+  private initFocusTargets() {
+    if (!this.previousButton) {
+      this.previousButton = new FocusTargetController(this, this.bindings);
+    }
+    if (!this.nextButton) {
+      this.nextButton = new FocusTargetController(this, this.bindings);
+    }
+  }
+
+  private handleFocus = async (
+    elements: HTMLInputElement[],
+    currentFocus: HTMLInputElement,
+    newFocus: HTMLInputElement
+  ) => {
+    const currentIndex = elements.indexOf(currentFocus);
+    const newIndex = elements.indexOf(newFocus);
+
+    if (currentIndex === elements.length - 1 && newIndex === 0) {
+      await this.nextButton.focus();
+    } else if (currentIndex === 0 && newIndex === elements.length - 1) {
+      await this.previousButton.focus();
+    } else {
+      newFocus.focus();
+    }
+  };
+
   private async focusOnFirstResultAndScrollToTop() {
     await this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
     this.dispatchEvent(new CustomEvent('atomic/scrollToTop'));
+    this.announcePageLoaded();
+  }
+
+  private announcePageLoaded() {
+    this.ariaMessage.message = this.bindings.i18n.t('pager-page-loaded', {
+      pageNumber: this.pagerState.currentPage,
+    });
   }
 }
 
