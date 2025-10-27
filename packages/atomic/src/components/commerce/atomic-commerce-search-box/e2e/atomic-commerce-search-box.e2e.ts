@@ -214,14 +214,9 @@ test.describe('atomic-commerce-search-box', () => {
     });
 
     test.describe('with recent queries', () => {
-      test.beforeEach(async ({searchBox, page}) => {
+      test.beforeEach(async ({searchBox}) => {
         await searchBox.searchInput.waitFor({state: 'visible'});
         await searchBox.searchInput.click();
-        await searchBox.searchInput.fill('kayak');
-        await searchBox.searchInput.press('Enter');
-        await searchBox.clearButton.waitFor({state: 'visible'});
-        await searchBox.searchInput.fill('');
-        await page.waitForLoadState('networkidle');
       });
 
       test('should display recent queries', async ({searchBox}) => {
@@ -306,7 +301,7 @@ test.describe('atomic-commerce-search-box', () => {
     test.beforeEach(async ({page, searchBox}) => {
       querySuggestionRequestPerformed = false;
       page.on('request', (request) => {
-        if (request.url().includes('/querySuggest')) {
+        if (request.url().includes('commerce/v2/search/querySuggest')) {
           querySuggestionRequestPerformed = true;
         }
       });

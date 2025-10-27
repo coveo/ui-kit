@@ -28,7 +28,6 @@ import {
   StorageItems,
 } from '@/src/utils/local-storage-utils';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
-import {getDefaultSlotContent} from '@/src/utils/slot-utils';
 import {
   isFocusingOut,
   once,
@@ -117,6 +116,7 @@ export class AtomicCommerceSearchBox
   private searchBoxSuggestionEventsQueue: CustomEvent<
     SearchBoxSuggestionsEvent<SearchBox | StandaloneSearchBox>
   >[] = [];
+  private searchBoxSuggestionsElements = new WeakSet<EventTarget>();
   private suggestionManager!: SuggestionManager<
     SearchBox | StandaloneSearchBox
   >;
@@ -213,6 +213,13 @@ export class AtomicCommerceSearchBox
         const customEvent = event as CustomEvent<
           SearchBoxSuggestionsEvent<SearchBox | StandaloneSearchBox>
         >;
+        if (
+          event.target === null ||
+          this.searchBoxSuggestionsElements.has(event.target)
+        ) {
+          return;
+        }
+        this.searchBoxSuggestionsElements.add(event.target);
         this.searchBoxSuggestionEventsQueue.push(customEvent);
       }
     );
@@ -697,18 +704,28 @@ export class AtomicCommerceSearchBox
     `;
   }
 
+  // TODO v4: Change event-based registration to `@lit/context` or similar
+  // Let's ensure whether emitter or (true) receiver is evaluated first,
+  // no event "leak" using something similar to ContextRoot from `@lit/context` (or, if possible, that lib directly)
+  // In the meantime, this "brute-force" approach ensures that slotted suggestion components are initialized properly
+  private handleSlotChange(e: Event & {target: HTMLSlotElement}) {
+    const childNodes = e.target.assignedNodes({flatten: true});
+    childNodes.forEach((node) => {
+      if (
+        'connectedCallback' in node &&
+        typeof node.connectedCallback === 'function'
+      ) {
+        node.connectedCallback();
+      }
+    });
+  }
+
   private renderSlotContent() {
-    const slots = getDefaultSlotContent(this);
-    if (slots.length > 1) {
-      console.warn('Element should only have 1 default slot.', this);
-    }
-
-    if (slots.length === 1) {
-      return html`<slot></slot>`;
-    }
-
-    return html`<atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
-      <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>`;
+    return html`
+      <slot @slotchange=${this.handleSlotChange}>
+        <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+        <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+      </slot>`;
   }
 
   @bindingGuard()

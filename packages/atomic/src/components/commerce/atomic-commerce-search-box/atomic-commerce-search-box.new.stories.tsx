@@ -5,9 +5,11 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {HttpResponse, http} from 'msw';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+
+const mockCommerceApi = new MockCommerceApi();
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-search-box',
@@ -32,13 +34,16 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
+    msw: {handlers: [...mockCommerceApi.handlers]},
   },
   args: {
     ...args,
     'minimum-query-length': '0',
   },
   argTypes,
-
+  beforeEach: async () => {
+    mockCommerceApi.querySuggestEndpoint.resetBaseResponse();
+  },
   play,
 };
 
@@ -49,11 +54,26 @@ export const Default: Story = {};
 export const RichSearchBox: Story = {
   name: 'With suggestions, recent queries and instant products',
   args: {
-    'default-slot': ` <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+    'default-slot': `
       <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+      <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
       <atomic-commerce-search-box-instant-products
         image-size="small"
-      ></atomic-commerce-search-box-instant-products>`,
+      ></atomic-commerce-search-box-instant-products>
+    `,
+  },
+  beforeEach: () => {
+    const count = 4;
+    const localStorageKey = 'coveo-recent-queries';
+    const recentQueries = Array.from(
+      {length: count},
+      (_, i) => `recent query ${i}`
+    );
+    const stringified = JSON.stringify(recentQueries);
+    localStorage.setItem(localStorageKey, stringified);
+    return () => {
+      localStorage.removeItem(localStorageKey);
+    };
   },
 };
 
@@ -71,19 +91,11 @@ export const WithSuggestions: Story = {
     'default-slot': `<atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>`,
     'minimum-query-length': '0',
   },
-  parameters: {
-    msw: {
-      handlers: [
-        http.post('**/v2/search/querySuggest', () => {
-          const completions = Array.from({length: 5}, (_, i) => ({
-            expression: `query-suggestion-${i}`,
-            highlighted: `query-suggestion-${i}`,
-          }));
-
-          return HttpResponse.json({completions});
-        }),
-      ],
-    },
+  beforeEach: () => {
+    mockCommerceApi.querySuggestEndpoint.enqueueNextResponse((response) => ({
+      ...response,
+      completions: response.completions.slice(0, 5),
+    }));
   },
 };
 
@@ -95,20 +107,6 @@ export const WithSuggestionsAndRecentQueries: Story = {
       <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
     `,
     'minimum-query-length': '0',
-  },
-  parameters: {
-    msw: {
-      handlers: [
-        http.post('**/v2/search/querySuggest', () => {
-          const completions = Array.from({length: 10}, (_, i) => ({
-            expression: `query-suggestion-${i}`,
-            highlighted: `query-suggestion-${i}`,
-          }));
-
-          return HttpResponse.json({completions});
-        }),
-      ],
-    },
   },
   beforeEach: () => {
     const count = 4;
@@ -131,13 +129,9 @@ export const WithNoSuggestions: Story = {
     'default-slot': `<atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>`,
     'minimum-query-length': '0',
   },
-  parameters: {
-    msw: {
-      handlers: [
-        http.post('**/v2/search/querySuggest', () => {
-          return HttpResponse.json({completions: []});
-        }),
-      ],
-    },
+  beforeEach: async () => {
+    mockCommerceApi.querySuggestEndpoint.modifyBaseResponse(() => ({
+      completions: [],
+    }));
   },
 };
