@@ -10,6 +10,7 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import SparklesIcon from '../../../images/sparkles.svg';
 
 /**
+ * Internal component made for builders preview.
  * @internal
  */
 @customElement('atomic-insight-generate-answer-button')
@@ -28,7 +29,7 @@ export class AtomicInsightGenerateAnswerButton
   @property({type: String, attribute: 'tooltip'}) tooltip = 'Generate Answer';
 
   public initialize() {
-    // No specific initialization needed for this placeholder component
+    // No specific initialization needed for this placeholder component.
   }
 
   @errorGuard()
