@@ -39,7 +39,7 @@ export class AtomicInsightGenerateAnswerButton
         ${renderIconButton({
           props: {
             partPrefix: 'generate-answer',
-            style: 'outline-primary',
+            style: 'primary',
             icon: SparklesIcon,
             ariaLabel: this.tooltip,
             title: this.tooltip,
@@ -52,6 +52,6 @@ export class AtomicInsightGenerateAnswerButton
 
 declare global {
   interface HTMLElementTagNameMap {
-    'atomic-insight-generate-answer-button': HTMLAtomicInsightGenerateAnswerButtonElement;
+    'atomic-insight-generate-answer-button': AtomicInsightGenerateAnswerButton;
   }
 }
