@@ -7,8 +7,7 @@ import type {
   ControllersPropsMap,
 } from '../../common/types/controllers.js';
 import type {HasKeys} from '../../common/types/utilities.js';
-import type {SSRSearchEngine} from '../engine/search-engine.ssr.js';
-import type {Build} from './build.js';
+import type {Build, SSRSearchEngine} from './build.js';
 import type {ControllerDefinitionsMap} from './controller-definition.js';
 import type {
   InferControllerPropsMapFromDefinitions,
@@ -33,7 +32,10 @@ export type EngineBuildResult<
  * @group Engine
  */
 export type SearchEngineDefinitionOptions<
-  TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<
+    SSRSearchEngine,
+    Controller
+  > = ControllerDefinitionsMap<SSRSearchEngine, Controller>,
 > = SearchEngineOptions & {
   /**
    * The controllers to initialize with the search engine.
@@ -62,6 +64,16 @@ export interface SearchEngineDefinition<
     AnyAction,
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
+  /**
+   * Returns the access token.
+   */
+  getAccessToken: () => string;
+
+  /**
+   * Updates the access token.
+   * @param accessToken - The access token to update.
+   */
+  setAccessToken: (accessToken: string) => void;
 }
 
 /**
