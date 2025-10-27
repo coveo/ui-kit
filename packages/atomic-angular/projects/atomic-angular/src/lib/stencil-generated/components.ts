@@ -2983,7 +2983,7 @@ export declare interface AtomicResultChildrenTemplate extends LitAtomicResultChi
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['density', 'display', 'imageSize', 'tabsIncluded', 'tabsExcluded', 'numberOfPlaceholders']
+  inputs: ['density', 'display', 'imageSize', 'tabsIncluded', 'tabsExcluded']
 })
 export class AtomicResultList {
   protected readonly el: HTMLElement;
