@@ -5,7 +5,7 @@ import type {
 } from '@coveo/headless/ssr-next';
 import {ErrorMessage} from '../components/ErrorMessage.js';
 import {formatQuerySummary, selectSummary} from '../components/QuerySummary.js';
-import {renderResultGrid, selectResults} from '../components/ResultList.js';
+import {renderResultList, selectResults} from '../components/ResultList.js';
 import {selectSearchValue} from '../components/Search.js';
 import type {SearchStaticState} from './types.js';
 
@@ -39,8 +39,8 @@ export const renderApp = (staticState: SearchStaticState) => {
             </div>
           </div>
 
-          <div id="result-grid" class="result-grid">
-            ${renderResultGrid(results)}
+          <div id="result-list" class="result-list">
+            ${renderResultList(results)}
           </div>
       
           ${ErrorMessage()}

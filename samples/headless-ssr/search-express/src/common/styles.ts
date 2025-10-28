@@ -109,15 +109,8 @@ export function getSharedStyles(): string {
         text-align: center;
       }
 
-      .product-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 24px;
-        padding: 24px;
-        min-height: 400px;
-      }
-
-      .product-card {
+      .result-card {
+        padding: 10px
         border: 1px solid #e9ecef;
         border-radius: 12px;
         padding: 20px;
@@ -127,7 +120,7 @@ export function getSharedStyles(): string {
         overflow: hidden;
       }
 
-      .product-card:hover {
+      .result-card:hover {
         transform: translateY(-4px);
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         border-color: #667eea;
@@ -169,8 +162,8 @@ export function getSharedStyles(): string {
         white-space: nowrap;
       }
 
-      .result-grid {
-        padding: 10px;
+      .result-list {
+        padding: 5px;
       }
 
       .result-excerpt {
@@ -188,10 +181,6 @@ export function getSharedStyles(): string {
         border-left: 3px solid #667eea;
       }
 
-      .result-card {
-        padding: 4px 0;
-      }
-
       .result-metadata > div {
         margin-bottom: 4px;
         font-size: 0.85em;
@@ -201,43 +190,6 @@ export function getSharedStyles(): string {
       .result-metadata strong {
         color: #333;
         font-weight: 600;
-      }
-
-      .product-image {
-        width: 100%;
-        height: 220px;
-        object-fit: cover;
-        border-radius: 8px;
-        margin-bottom: 16px;
-        background: #f8f9fa;
-      }
-
-      .product-name {
-        font-weight: 600;
-        margin-bottom: 8px;
-        color: #333;
-        font-size: 1.1em;
-        line-height: 1.4;
-      }
-
-      .product-brand {
-        color: #6c757d;
-        font-size: 0.9em;
-        margin-bottom: 8px;
-        font-weight: 500;
-      }
-
-      .product-price {
-        font-size: 1.4em;
-        font-weight: 700;
-        color: #28a745;
-        margin-bottom: 8px;
-      }
-
-      .product-rating {
-        color: #ffc107;
-        margin-bottom: 8px;
-        font-size: 0.9em;
       }
 
       .pagination {
@@ -281,31 +233,12 @@ export function getSharedStyles(): string {
         font-size: 1.1em;
       }
 
-      .query-error, .no-products {
+      .query-error, .no-results {
         text-align: center;
         padding: 60px 40px;
         color: #6c757d;
         font-size: 1.2em;
       }
 
-      @media (max-width: 768px) {
-        .product-grid {
-          grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-          gap: 16px;
-          padding: 16px;
-        }
-        
-        .search-box {
-          flex-direction: column;
-        }
-        
-        .app-header h1 {
-          font-size: 2em;
-        }
-        
-        .main-results {
-          margin: 0 10px;
-        }
-      }
     </style>`;
 }

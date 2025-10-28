@@ -1,8 +1,18 @@
 {
   "name": "@samples/headless-ssr-search-express",
-  "description": "Headless Search SSR Generic Sample using the new simplified ssr-next API",
+  "description": "Complete SSR search implementation with Coveo Headless (next major version) and Express.js - framework-agnostic sample",
   "version": "0.0.0",
   "private": true,
+  "keywords": [
+    "coveo",
+    "headless",
+    "ssr",
+    "server-side-rendering",
+    "express",
+    "search",
+    "typescript",
+    "framework-agnostic"
+  ],
   "scripts": {
     "dev": "npm run build:client -- --watch=forever & npx tsx watch ./src/server.ts",
     "build": "npm run build:server && npm run build:client",

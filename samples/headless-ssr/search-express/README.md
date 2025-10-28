@@ -1,70 +1,40 @@
-# Headless Search SSR Generic Sample
+# Coveo Headless SSR with Express.js
 
-## Purpose
+A complete example demonstrating server-side rendered search with Coveo Headless (next major version) and Express.js.
 
-This sample demonstrates server-side rendering (SSR) with Coveo Headless search controllers using a generic implementation. It shows how to:
+## Overview
 
-- Set up a search interface with server-side rendering
-- Use Headless controllers for search and result listing
-- Implement a simple search interface with plain HTML/CSS/JS
-- Handle search state on both server and client sides
+This sample shows how to build a framework-agnostic search experience with:
+
+- **Server-side rendering** for instant content delivery and SEO optimization
+- **Client-side hydration** for seamless interactive experiences
+- **Pure TypeScript** implementation with no framework dependencies
 
 ## Prerequisites
 
-- Node.js 22+ (LTS v22.18.0)
+- Node.js 22+ (LTS v22.18.0 recommended)
 - npm 10+
+- A Coveo organization (uses sample configuration by default)
 
-## Key Features
-
-- **Server-side rendering**: Initial page load with pre-rendered search results
-- **Client-side hydration**: Interactive search functionality after page load
-- **esbuild bundling**: Fast and efficient bundling for the client-side code
-- **TypeScript**: Full type safety throughout the application
-- **Express server**: Simple HTTP server for handling requests
-
-## Running
-
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-2. Build the project:
-   ```bash
-   npm run build
-   ```
-
-3. Start the server:
-   ```bash
-   npm start
-   ```
-
-4. Open your browser to `http://localhost:3000`
-
-## Development
-
-For development with automatic rebuilding:
+## Quick Start
 
 ```bash
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
 ```
 
-This will start the client bundler in watch mode and run the server with hot reload using tsx.
+Open [http://localhost:3000](http://localhost:3000) to see the search interface.
 
-
-## Testing
-
-```bash
-npm run test
-```
-
-Runs the Playwright end-to-end tests.
-
+### Available Scripts
 
 ```bash
-npm run test:headed
+npm run dev          # Development mode with hot reload
+npm run build        # Build for production
+npm start            # Start production server
+npm test             # Run e2e tests
+npm run test:headed  # Run tests with visible browser
+npm run type-check   # TypeScript type checking
 ```
-
-Runs the Playwright tests in headed mode (with a visible browser).
-
-

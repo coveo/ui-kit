@@ -7,7 +7,7 @@ import {getElement} from '../common/utils.js';
 export function ResultList(resultList: ResultListSSR) {
   if (!resultList) return;
 
-  const grid = getElement<HTMLDivElement>('result-grid');
+  const grid = getElement<HTMLDivElement>('result-list');
   const noProducts = getElement<HTMLDivElement>('no-results');
   if (!grid) return;
 
@@ -18,7 +18,7 @@ export function ResultList(resultList: ResultListSSR) {
     if (noProducts) {
       noProducts.style.display = hasResults ? 'none' : 'block';
     }
-    grid.innerHTML = hasResults ? renderResultGrid(results) : '';
+    grid.innerHTML = hasResults ? renderResultList(results) : '';
   };
 
   resultList.subscribe(render);
@@ -56,7 +56,7 @@ function renderResultCard(result: Result): string {
   `;
 }
 
-export function renderResultGrid(results: Result[]): string {
+export function renderResultList(results: Result[]): string {
   return results.map(renderResultCard).join('');
 }
 
