@@ -1,3 +1,9 @@
+## 1.2.14 (2025-10-28)
+
+### Bug Fixes
+
+- Update to NodeJS 24 for npm version [UA-10577] ([#211](https://github.com/coveo/relay/issues/211)) ([f85f525](https://github.com/coveo/relay/commits/))
+
 ## 1.2.13 (2025-10-22)
 
 ## 1.2.12 (2025-10-21)
