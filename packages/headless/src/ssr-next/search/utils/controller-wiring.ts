@@ -2,8 +2,7 @@ import {RecordValue, Schema} from '@coveo/bueno';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {nonRequiredEmptyAllowedString} from '../../../utils/validate-payload.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
-import type {SSRSearchEngine} from '../engine/search-engine.ssr.js';
-import type {BuildConfig} from '../types/build.js';
+import type {BuildConfig, SSRSearchEngine} from '../types/build.js';
 import type {ControllerDefinitionsMap} from '../types/controller-definition.js';
 import type {InferControllerPropsMapFromDefinitions} from '../types/controller-inference.js';
 

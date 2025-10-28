@@ -1,16 +1,13 @@
 /**
  * Utility functions to be used for Server Side Rendering.
  */
-import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {defineSearchParameterManager} from '../controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
 import {hydratedStaticStateFactory} from '../factories/hydrated-state-factory.js';
 import {fetchStaticStateFactory} from '../factories/static-state-factory.js';
 import type {SSRSearchEngine} from '../types/build.js';
+import type {AugmentedControllerDefinition} from '../types/controller-definition.js';
 import type {
-  AugmentedControllerDefinition,
-  ControllerDefinitionsMap,
-} from '../types/controller-definition.js';
-import type {
+  SearchControllerDefinitionsMap,
   SearchEngineDefinition,
   SearchEngineDefinitionOptions,
 } from '../types/engine.js';
@@ -40,10 +37,7 @@ import type {
  * @group Engine
  */
 export function defineSearchEngine<
-  TControllerDefinitions extends ControllerDefinitionsMap<
-    SSRSearchEngine,
-    Controller
-  >,
+  TControllerDefinitions extends SearchControllerDefinitionsMap,
 >(
   options: SearchEngineDefinitionOptions<TControllerDefinitions>
 ): SearchEngineDefinition<SSRSearchEngine, TControllerDefinitions> {

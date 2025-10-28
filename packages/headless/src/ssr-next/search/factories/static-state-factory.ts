@@ -1,30 +1,21 @@
-import type {UnknownAction} from '@reduxjs/toolkit';
-import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {createStaticState} from '../controller-utils.js';
-import type {SSRSearchEngine} from '../types/build.js';
+import type {SearchCompletedAction} from '../types/build.js';
+import type {AugmentedControllerDefinition} from '../types/controller-definition.js';
 import type {
-  AugmentedControllerDefinition,
-  ControllerDefinitionsMap,
-} from '../types/controller-definition.js';
-import type {
-  SearchEngineDefinition,
+  FetchStaticStateFunction,
+  FetchStaticStateParameters,
+  SearchControllerDefinitionsMap,
   SearchEngineDefinitionOptions,
 } from '../types/engine.js';
 import {buildFactory} from './build-factory.js';
 
 export function fetchStaticStateFactory<
-  TControllerDefinitions extends ControllerDefinitionsMap<
-    SSRSearchEngine,
-    Controller
-  >,
+  TControllerDefinitions extends SearchControllerDefinitionsMap,
 >(
   controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
   options: SearchEngineDefinitionOptions<TControllerDefinitions>
-): SearchEngineDefinition<
-  SSRSearchEngine,
-  TControllerDefinitions
->['fetchStaticState'] {
-  return async (params) => {
+): FetchStaticStateFunction<TControllerDefinitions> {
+  return async (params: FetchStaticStateParameters<TControllerDefinitions>) => {
     const {engine, controllers} = await buildFactory(
       controllerDefinitions,
       options
@@ -34,7 +25,7 @@ export function fetchStaticStateFactory<
     const searchActions = [await engine.waitForSearchCompletedAction()];
 
     const staticState = createStaticState<
-      UnknownAction,
+      SearchCompletedAction,
       TControllerDefinitions
     >({
       searchActions,

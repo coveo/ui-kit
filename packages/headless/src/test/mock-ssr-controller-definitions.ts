@@ -99,8 +99,6 @@ export function defineMockRecommendationDefinition(slotId: string) {
   };
 }
 
-// Search engine mock controller definitions
-
 interface MockSearchController {
   initialState?: Record<string, unknown>;
 }

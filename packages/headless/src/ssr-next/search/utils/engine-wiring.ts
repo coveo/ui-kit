@@ -1,10 +1,11 @@
 import {buildLogger, type LoggerOptions} from '../../../app/logger.js';
 import type {SearchEngineOptions} from '../../../app/search-engine/search-engine.js';
-import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
-import type {BuildConfig, SSRSearchEngine} from '../types/build.js';
-import type {ControllerDefinitionsMap} from '../types/controller-definition.js';
-import type {SearchEngineDefinitionOptions} from '../types/engine.js';
+import type {BuildConfig} from '../types/build.js';
+import type {
+  SearchControllerDefinitionsMap,
+  SearchEngineDefinitionOptions,
+} from '../types/engine.js';
 
 const ensureNavigatorContext = (
   buildConfig: BuildConfig,
@@ -19,10 +20,7 @@ const ensureNavigatorContext = (
 };
 
 export function augmentSearchEngineOptions<
-  TControllerDefinitions extends ControllerDefinitionsMap<
-    SSRSearchEngine,
-    Controller
-  >,
+  TControllerDefinitions extends SearchControllerDefinitionsMap,
 >(
   engineOptions: SearchEngineDefinitionOptions<TControllerDefinitions>,
   buildConfig: BuildConfig

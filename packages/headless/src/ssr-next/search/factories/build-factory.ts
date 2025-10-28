@@ -3,24 +3,17 @@ import {
   buildSearchEngine,
   type SearchEngineOptions,
 } from '../../../app/search-engine/search-engine.js';
-import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {createWaitForActionMiddleware} from '../../../utils/utils.js';
 import {buildControllerDefinitions} from '../controller-utils.js';
+import type {SearchCompletedAction, SSRSearchEngine} from '../types/build.js';
+import type {BakedInSearchControllers} from '../types/controller-definition.js';
+import type {InferControllersMapFromDefinition} from '../types/controller-inference.js';
 import type {
-  BuildConfig,
-  SearchCompletedAction,
-  SSRSearchEngine,
-} from '../types/build.js';
-import type {
-  AugmentedControllerDefinition,
-  BakedInSearchControllers,
-  ControllerDefinitionsMap,
-} from '../types/controller-definition.js';
-import type {
-  InferControllerPropsMapFromDefinitions,
-  InferControllersMapFromDefinition,
-} from '../types/controller-inference.js';
-import type {SearchEngineDefinitionOptions} from '../types/engine.js';
+  FetchStaticStateParameters,
+  HydrateStaticStateParameters,
+  SearchControllerDefinitionsMap,
+  SearchEngineDefinitionOptions,
+} from '../types/engine.js';
 import {wireControllerParams} from '../utils/controller-wiring.js';
 import {augmentSearchEngineOptions} from '../utils/engine-wiring.js';
 
@@ -52,20 +45,14 @@ function buildSSRSearchEngine(options: SearchEngineOptions): SSRSearchEngine {
 }
 
 export const buildFactory =
-  <
-    TControllerDefinitions extends ControllerDefinitionsMap<
-      SSRSearchEngine,
-      Controller
-    >,
-  >(
-    controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
+  <TControllerDefinitions extends SearchControllerDefinitionsMap>(
+    controllerDefinitions: TControllerDefinitions,
     options: SearchEngineDefinitionOptions<TControllerDefinitions>
   ) =>
   async (
-    buildOptions: BuildConfig & {
-      controllers?: InferControllerPropsMapFromDefinitions<TControllerDefinitions>;
-      searchActions?: UnknownAction[];
-    }
+    buildOptions:
+      | FetchStaticStateParameters<TControllerDefinitions>
+      | HydrateStaticStateParameters<TControllerDefinitions>
   ) => {
     const controllerProps = wireControllerParams(
       controllerDefinitions,
@@ -79,13 +66,10 @@ export const buildFactory =
     const controllers = buildControllerDefinitions({
       definitionsMap: controllerDefinitions,
       engine,
-      propsMap:
-        controllerProps as unknown as InferControllerPropsMapFromDefinitions<
-          AugmentedControllerDefinition<TControllerDefinitions>
-        >,
+      propsMap: controllerProps,
     });
 
-    if (buildOptions.searchActions) {
+    if (buildOptions && 'searchActions' in buildOptions) {
       buildOptions.searchActions.forEach((action) => {
         engine.dispatch(action);
       });
@@ -93,9 +77,8 @@ export const buildFactory =
 
     return {
       engine,
-      controllers: controllers as InferControllersMapFromDefinition<
-        AugmentedControllerDefinition<TControllerDefinitions>
-      > &
-        BakedInSearchControllers,
+      controllers:
+        controllers as InferControllersMapFromDefinition<TControllerDefinitions> &
+          BakedInSearchControllers,
     };
   };

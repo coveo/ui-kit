@@ -5,7 +5,8 @@ import type {
   ControllerDefinitionsMap,
 } from '../types/controller-definition.js';
 import type {
-  SearchEngineDefinition,
+  HydrateStaticStateFunction,
+  HydrateStaticStateParameters,
   SearchEngineDefinitionOptions,
 } from '../types/engine.js';
 import {buildFactory} from './build-factory.js';
@@ -18,11 +19,10 @@ export function hydratedStaticStateFactory<
 >(
   controllerDefinitions: AugmentedControllerDefinition<TControllerDefinitions>,
   options: SearchEngineDefinitionOptions<TControllerDefinitions>
-): SearchEngineDefinition<
-  SSRSearchEngine,
-  TControllerDefinitions
->['hydrateStaticState'] {
-  return async (params) => {
+): HydrateStaticStateFunction<TControllerDefinitions> {
+  return async (
+    params: HydrateStaticStateParameters<TControllerDefinitions>
+  ) => {
     const {engine, controllers} = await buildFactory(
       controllerDefinitions,
       options

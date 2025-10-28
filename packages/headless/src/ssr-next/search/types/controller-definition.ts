@@ -64,7 +64,7 @@ type BakedInControllerDefinitions = {
 };
 
 /**
- * Map of baked-in controllers for search engine
+ * Map of baked-in controllers for search engine (runtime controllers)
  */
 export type BakedInSearchControllers = {
   [K in keyof BakedInControllerDefinitions]: BakedInControllerDefinitions[K]['buildWithProps'];

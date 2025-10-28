@@ -1,21 +1,14 @@
 import {beforeEach, describe, expect, it} from 'vitest';
-import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {buildMockNavigatorContext} from '../../../test/mock-navigator-context.js';
 import {
   defineMockSearchControllerWithProps,
   defineMockSearchParameterManager,
 } from '../../../test/mock-ssr-controller-definitions.js';
-import type {SSRSearchEngine} from '../types/build.js';
-import type {ControllerDefinitionsMap} from '../types/controller-definition.js';
+import type {SearchControllerDefinitionsMap} from '../types/engine.js';
 import {
   searchDefinitionSchema,
   wireControllerParams,
 } from './controller-wiring.js';
-
-type SearchControllerDefinitionsMap = ControllerDefinitionsMap<
-  SSRSearchEngine,
-  Controller
->;
 
 describe('controller-wiring', () => {
   let mockControllerDefinitions: SearchControllerDefinitionsMap;
