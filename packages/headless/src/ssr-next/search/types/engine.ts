@@ -7,7 +7,7 @@ import type {
   ControllersPropsMap,
 } from '../../common/types/controllers.js';
 import type {HasKeys} from '../../common/types/utilities.js';
-import type {Build, SSRSearchEngine} from './build.js';
+import type {SSRSearchEngine} from './build.js';
 import type {ControllerDefinitionsMap} from './controller-definition.js';
 import type {
   InferControllerPropsMapFromDefinitions,
@@ -16,15 +16,6 @@ import type {
 } from './controller-inference.js';
 import type {FetchStaticState} from './fetch-static-state.js';
 import type {HydrateStaticState} from './hydrate-static-state.js';
-
-export type EngineBuildResult<
-  TEngine extends CoreEngine | CoreEngineNext,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
-> = Build<
-  TEngine,
-  InferControllersMapFromDefinition<TControllers>,
-  InferControllerPropsMapFromDefinitions<TControllers>
->;
 
 type ReservedControllerNames = 'parameterManager';
 
@@ -40,8 +31,7 @@ type ValidateControllerNames<T extends SearchControllerDefinitionsMap> = {
  * @group Engine
  */
 export type SearchEngineDefinitionOptions<
-  TControllers extends
-    SearchControllerDefinitionsMap = SearchControllerDefinitionsMap,
+  TControllers extends SearchControllerDefinitionsMap = {},
 > = SearchEngineOptions & {
   /**
    * The controllers to initialize with the search engine.

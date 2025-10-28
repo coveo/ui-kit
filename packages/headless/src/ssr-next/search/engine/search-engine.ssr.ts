@@ -37,7 +37,7 @@ import type {
  * @group Engine
  */
 export function defineSearchEngine<
-  TControllerDefinitions extends SearchControllerDefinitionsMap,
+  TControllerDefinitions extends SearchControllerDefinitionsMap = {},
 >(
   options: SearchEngineDefinitionOptions<TControllerDefinitions>
 ): SearchEngineDefinition<SSRSearchEngine, TControllerDefinitions> {
