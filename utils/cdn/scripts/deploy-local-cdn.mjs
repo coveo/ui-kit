@@ -1,13 +1,14 @@
 import fs from 'node:fs/promises';
+import {findPackageJSON} from 'node:module';
 import path from 'node:path';
 import colors from '../../ci/colors.mjs';
 
 const currentDir = import.meta.dirname;
-const resolvePackageJsonPath = (packageName) =>
-  path.resolve(currentDir, '../../../packages', packageName, 'package.json');
-
 const getVersionFromPackageJson = async (packageName, versionType) => {
-  const packageJsonPath = resolvePackageJsonPath(packageName);
+  const packageJsonPath = findPackageJSON(
+    `@coveo/${packageName}`,
+    import.meta.url
+  );
   try {
     const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
     const version = packageJson.version;
