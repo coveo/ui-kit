@@ -193,7 +193,9 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
         'ponyfills/headers-shim.js',
         'ponyfills/global-this-shim.js',
         'ponyfills/abortable-fetch-shim.js',
-        '../../node_modules/navigator.sendbeacon/dist/navigator.sendbeacon.cjs.js',
+        require.resolve(
+          'navigator.sendbeacon/dist/navigator.sendbeacon.cjs.js'
+        ),
       ],
       plugins: [
         umdWrapper({libraryName: globalName}),

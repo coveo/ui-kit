@@ -35,7 +35,7 @@ module.exports = {
       '<rootDir>/force-app/main/default/lwc/$1/$1',
       '<rootDir>/force-app/solutionExamples/main/lwc/$1/$1',
     ],
-    
+    '^marked$': require.resolve('marked'),
   },
   modulePathIgnorePatterns: ['.cache'],
   // add any custom configurations here

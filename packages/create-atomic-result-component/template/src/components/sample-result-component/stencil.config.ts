@@ -1,6 +1,6 @@
 import {coveoCdnResolve} from '@coveo/create-atomic-rollup-plugin';
 import {Config} from '@stencil/core';
-import html from 'rollup-plugin-html';
+import {string as html} from 'rollup-plugin-string';
 export const config: Config = {
   namespace: 'my-custom-components',
   outputTargets: [
