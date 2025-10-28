@@ -1,8 +1,20 @@
+declare module 'rollup-plugin-string';
+declare module 'rollup-plugin-node-polyfills';
+
 import {spawnSync} from 'node:child_process';
 import type {Config} from '@stencil/core';
-import nodePolyfills from 'rollup-plugin-node-polyfills';
-// @ts-ignore
-import {string as html} from 'rollup-plugin-string';
+import nodePolyfillsPlugin from 'rollup-plugin-node-polyfills';
+import {string as rollupStringPlugin} from 'rollup-plugin-string';
+
+type RollupStringOptions = {
+  include?: string | string[];
+  exclude?: string | string[];
+};
+
+type RollupString = (options?: RollupStringOptions) => unknown;
+
+const html = rollupStringPlugin as RollupString;
+const nodePolyfills = nodePolyfillsPlugin as unknown as () => unknown;
 
 // https://stenciljs.com/docs/config
 
