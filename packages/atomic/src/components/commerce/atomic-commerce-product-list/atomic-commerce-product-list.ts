@@ -42,7 +42,7 @@ import {
   type ItemDisplayDensity,
   type ItemDisplayImageSize,
   type ItemDisplayLayout,
-} from '@/src/components/common/layout/display-options';
+} from '@/src/components/common/layout/item-layout-utils';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';

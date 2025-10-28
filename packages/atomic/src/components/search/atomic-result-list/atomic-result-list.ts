@@ -37,12 +37,7 @@ import {
   renderTableLayout,
   renderTableRow,
 } from '@/src/components/common/item-list/table-layout';
-import {
-  getItemListDisplayClasses,
-  type ItemDisplayDensity,
-  type ItemDisplayImageSize,
-  type ItemDisplayLayout,
-} from '@/src/components/common/layout/display-options';
+
 import {renderTabWrapper} from '@/src/components/common/tabs/tab-wrapper';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {arrayConverter} from '@/src/converters/array-converter';
@@ -56,6 +51,12 @@ import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
 import '../atomic-result/atomic-result';
+import {
+  getItemListDisplayClasses,
+  type ItemDisplayDensity,
+  type ItemDisplayImageSize,
+  type ItemDisplayLayout,
+} from '@/src/components/common/layout/item-layout-utils';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 
 /**
