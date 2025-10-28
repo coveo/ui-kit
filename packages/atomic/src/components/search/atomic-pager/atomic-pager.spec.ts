@@ -13,7 +13,6 @@ import {buildFakePager} from '@/vitest-utils/testing-helpers/fixtures/headless/s
 import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
 import type {AtomicPager} from './atomic-pager';
 import './atomic-pager';
-import type {AtomicCommercePager} from '@/src/components';
 
 vi.mock('@coveo/headless', {spy: true});
 vi.mock('@/src/mixins/bindings-mixin', () => ({

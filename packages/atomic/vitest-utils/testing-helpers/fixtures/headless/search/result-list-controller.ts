@@ -1,20 +1,21 @@
 import type {ResultList, ResultListState} from '@coveo/headless';
-import {genericSubscribe} from '../common.js';
+import {genericSubscribe} from '../common';
 
 export const defaultState = {
-  firstSearchExecuted: true,
-  hasError: false,
-  hasResults: true,
-  isLoading: false,
   results: [],
-  searchResponseId: 'test-search-response-id',
-  moreResultsAvailable: false,
-};
+  searchResponseId: 'test-response-id',
+  moreResultsAvailable: true,
+  hasError: false,
+  isLoading: false,
+  hasResults: false,
+  firstSearchExecuted: false,
+} satisfies ResultListState;
 
 export const defaultImplementation = {
+  fetchMoreResults: () => {},
   subscribe: genericSubscribe,
   state: defaultState,
-};
+} satisfies ResultList;
 
 export const buildFakeResultList = ({
   implementation,
@@ -22,7 +23,7 @@ export const buildFakeResultList = ({
 }: Partial<{
   implementation?: Partial<ResultList>;
   state?: Partial<ResultListState>;
-}>): ResultList =>
+}> = {}): ResultList =>
   ({
     ...defaultImplementation,
     ...implementation,
