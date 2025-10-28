@@ -90,4 +90,23 @@ describe('#augmentPreprocessRequestWithForwardedFor', () => {
     const headers = new Headers(result.headers);
     expect(headers.get('x-forwarded-for')).toBe('9.9.9.9');
   });
+
+  describe('augmentation prevention', () => {
+    it('should not augment an already augmented function', () => {
+      const options: AugmentPreprocessRequestOptions = {
+        navigatorContext: {
+          forwardedFor: '127.0.0.1',
+        } as NavigatorContext,
+      };
+
+      const firstAugmented = augmentPreprocessRequestWithForwardedFor(options);
+
+      const secondAugmented = augmentPreprocessRequestWithForwardedFor({
+        ...options,
+        preprocessRequest: firstAugmented,
+      });
+
+      expect(firstAugmented).toBe(secondAugmented);
+    });
+  });
 });
