@@ -483,21 +483,6 @@ export namespace Components {
          */
         "isOpen": boolean;
     }
-    /**
-     * The `atomic-html` component renders the HTML value of a string.
-     * There is an inherent XSS security concern associated with the usage of this component.
-     * Use only with values for which you are certain the content is harmless.
-     */
-    interface AtomicHtml {
-        /**
-          * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
-         */
-        "sanitize": boolean;
-        /**
-          * The string value containing HTML to display;
-         */
-        "value": string;
-    }
     interface AtomicInsightEditToggle {
         "clickCallback": () => void;
         "tooltip": string;
@@ -2656,17 +2641,6 @@ declare global {
         prototype: HTMLAtomicGeneratedAnswerFeedbackModalElement;
         new (): HTMLAtomicGeneratedAnswerFeedbackModalElement;
     };
-    /**
-     * The `atomic-html` component renders the HTML value of a string.
-     * There is an inherent XSS security concern associated with the usage of this component.
-     * Use only with values for which you are certain the content is harmless.
-     */
-    interface HTMLAtomicHtmlElement extends Components.AtomicHtml, HTMLStencilElement {
-    }
-    var HTMLAtomicHtmlElement: {
-        prototype: HTMLAtomicHtmlElement;
-        new (): HTMLAtomicHtmlElement;
-    };
     interface HTMLAtomicInsightEditToggleElement extends Components.AtomicInsightEditToggle, HTMLStencilElement {
     }
     var HTMLAtomicInsightEditToggleElement: {
@@ -3754,7 +3728,6 @@ declare global {
         "atomic-format-unit": HTMLAtomicFormatUnitElement;
         "atomic-generated-answer": HTMLAtomicGeneratedAnswerElement;
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
-        "atomic-html": HTMLAtomicHtmlElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
@@ -4306,21 +4279,6 @@ declare namespace LocalJSX {
          */
         "isOpen"?: boolean;
         "onFeedbackSent"?: (event: AtomicGeneratedAnswerFeedbackModalCustomEvent<any>) => void;
-    }
-    /**
-     * The `atomic-html` component renders the HTML value of a string.
-     * There is an inherent XSS security concern associated with the usage of this component.
-     * Use only with values for which you are certain the content is harmless.
-     */
-    interface AtomicHtml {
-        /**
-          * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
-         */
-        "sanitize"?: boolean;
-        /**
-          * The string value containing HTML to display;
-         */
-        "value": string;
     }
     interface AtomicInsightEditToggle {
         "clickCallback"?: () => void;
@@ -6189,7 +6147,6 @@ declare namespace LocalJSX {
         "atomic-format-unit": AtomicFormatUnit;
         "atomic-generated-answer": AtomicGeneratedAnswer;
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
-        "atomic-html": AtomicHtml;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
         "atomic-insight-facet": AtomicInsightFacet;
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
@@ -6385,12 +6342,6 @@ declare module "@stencil/core" {
              * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
              */
             "atomic-generated-answer-feedback-modal": LocalJSX.AtomicGeneratedAnswerFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerFeedbackModalElement>;
-            /**
-             * The `atomic-html` component renders the HTML value of a string.
-             * There is an inherent XSS security concern associated with the usage of this component.
-             * Use only with values for which you are certain the content is harmless.
-             */
-            "atomic-html": LocalJSX.AtomicHtml & JSXBase.HTMLAttributes<HTMLAtomicHtmlElement>;
             "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;
             "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
