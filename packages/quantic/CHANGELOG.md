@@ -1,3 +1,9 @@
+## <small>3.33.1 (2025-10-28)</small>
+
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
 ## 3.33.0 (2025-10-28)
 
 * chore(quantic): parallelize scratch org setup (#6169) ([97e664c](https://github.com/coveo/ui-kit/commits/97e664c)), closes [#6169](https://github.com/coveo/ui-kit/issues/6169)

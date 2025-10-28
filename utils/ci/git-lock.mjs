@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+
+/*
+
 import {getSHA1fromRef, gitPull} from '@coveo/semantic-monorepo-tools';
 import {dedent} from 'ts-dedent';
 import {REPO_MAIN_BRANCH} from './common/constants.mjs';
@@ -35,3 +38,4 @@ const ensureUpToDateBranch = async () => {
 if (!isPrerelease) {
   await ensureUpToDateBranch();
 }
+*/

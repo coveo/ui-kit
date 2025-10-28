@@ -41,10 +41,15 @@ if (!(await isPublished(name, version))) {
   const tagToPublish = isPrerelease
     ? ['alpha', ...(tagSuffix ? [tagSuffix] : [])].join('-')
     : 'beta';
-  await pnpmPublishPackage('.', {
+
+  console.log(`pnpm publishing ${name}@${version} with tag ${tagToPublish}`);  
+  //await spawn('pnpm', ['publish'])
+  /*await pnpmPublishPackage('.', {
     tag: tagToPublish,
     provenance: true,
-  });
+  });*/
+
+
 } else {
   console.log(`Version ${version} is already published.`);
 }
