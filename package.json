@@ -46,7 +46,7 @@
     "husky": "9.1.7",
     "knip": "5.62.0",
     "lint-staged": "16.1.2",
-    "playwright": "1.56.0",
+    "playwright": "catalog:",
     "publint": "0.3.12",
     "semver": "7.7.2",
     "turbo": "2.5.5",
