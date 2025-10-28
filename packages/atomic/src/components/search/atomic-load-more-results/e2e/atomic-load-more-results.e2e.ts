@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-test.describe('atomic-load-more-products', () => {
+test.describe('atomic-load-more-results', () => {
   test.beforeEach(async ({loadMore}) => {
     await loadMore.load({story: 'default'});
   });
@@ -11,17 +11,17 @@ test.describe('atomic-load-more-products', () => {
     expect(accessibilityResults.violations).toEqual([]);
   });
 
-  test('should load more products when clicking the load more button', async ({
+  test('should load more results when clicking the load more button', async ({
     loadMore,
   }) => {
     await expect(loadMore.showingResults).toHaveText(
-      'Showing 48 of 632 products'
+      'Showing 10 of 457,527 results'
     );
 
     await loadMore.button.click();
 
     await expect(loadMore.showingResults).toHaveText(
-      'Showing 96 of 632 products'
+      'Showing 20 of 457,527 results'
     );
   });
 });
