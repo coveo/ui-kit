@@ -23,7 +23,7 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
- * The `atomic-commerce-load-more-results` component allows the user to load additional results if more are available.
+ * The `atomic-load-more-results` component allows the user to load additional results if more are available.
  *
  * @part container - The container of the component.
  * @part showing-results - The summary displaying which results are shown and how many are available.
@@ -80,7 +80,7 @@ export class AtomicLoadMoreResults
       renderLoadMoreContainer()(html`
         ${renderLoadMoreSummary({
           props: {
-            from: this.lastResult,
+            from: this.querySummaryState.lastResult,
             to: this.querySummaryState.total,
             i18n: this.bindings.i18n,
             label: 'showing-results-of-load-more',
@@ -88,7 +88,7 @@ export class AtomicLoadMoreResults
         })}
         ${renderLoadMoreProgressBar({
           props: {
-            from: this.lastResult,
+            from: this.querySummaryState.lastResult,
             to: this.querySummaryState.total,
           },
         })}
@@ -102,10 +102,6 @@ export class AtomicLoadMoreResults
         })}
       `)
     )}`;
-  }
-
-  private get lastResult() {
-    return this.resultListState.results.length;
   }
 
   private async onClick() {
