@@ -50,7 +50,7 @@ catalog:
   jest: 29.7.0
   jest-cli: 29.7.0
   local-web-server: 5.4.0
-  next: 15.2.4
+  next: 16.0.0
   prettier: 3.6.2
   puppeteer: 24.15.0
   playwright: 1.56.1
