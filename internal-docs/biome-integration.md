@@ -234,7 +234,7 @@ npx @biomejs/biome check . --apply   # Fix all files
 npx @biomejs/biome format --write .  # Format only
 
 # Or if you want to install globally
-npm install -g @biomejs/biome
+pnpm add -g @biomejs/biome
 biome check .                        # After global install
 ```
 
@@ -286,7 +286,7 @@ pnpm run lint:fix -- --reporter=json          # Custom reporter
 |---------|---------|-----|
 | **Terminal** | `npx @biomejs/biome check .` | Downloads/finds package as needed |
 | **Package script** | `"lint": "biome check ."` | Package manager resolves from node_modules/.bin |
-| **Global install** | `biome check .` | After `npm install -g @biomejs/biome` |
+| **Global install** | `biome check .` | After `pnpm add -g @biomejs/biome` |
 
 ---
 
