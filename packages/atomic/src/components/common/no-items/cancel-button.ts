@@ -1,4 +1,5 @@
 import type {i18n} from 'i18next';
+import {nothing} from 'lit';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderButton} from '../button';
 
@@ -18,4 +19,4 @@ export const renderCancelButton: FunctionalComponent<CancelButtonProps> = ({
       onClick: () => props.onClick(),
       class: 'my-3 px-2.5 py-3 font-bold',
     },
-  })();
+  })(nothing);

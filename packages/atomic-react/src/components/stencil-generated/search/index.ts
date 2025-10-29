@@ -25,7 +25,6 @@ export const AtomicGeneratedAnswerFeedbackModal = /*@__PURE__*/createReactCompon
 export const AtomicInsightUserActionsTimeline = /*@__PURE__*/createReactComponent<JSX.AtomicInsightUserActionsTimeline, HTMLAtomicInsightUserActionsTimelineElement>('atomic-insight-user-actions-timeline');
 export const AtomicInsightUserActionsToggle = /*@__PURE__*/createReactComponent<JSX.AtomicInsightUserActionsToggle, HTMLAtomicInsightUserActionsToggleElement>('atomic-insight-user-actions-toggle');
 export const AtomicLoadMoreResults = /*@__PURE__*/createReactComponent<JSX.AtomicLoadMoreResults, HTMLAtomicLoadMoreResultsElement>('atomic-load-more-results');
-export const AtomicNoResults = /*@__PURE__*/createReactComponent<JSX.AtomicNoResults, HTMLAtomicNoResultsElement>('atomic-no-results');
 export const AtomicNotifications = /*@__PURE__*/createReactComponent<JSX.AtomicNotifications, HTMLAtomicNotificationsElement>('atomic-notifications');
 export const AtomicNumericFacet = /*@__PURE__*/createReactComponent<JSX.AtomicNumericFacet, HTMLAtomicNumericFacetElement>('atomic-numeric-facet');
 export const AtomicNumericRange = /*@__PURE__*/createReactComponent<JSX.AtomicNumericRange, HTMLAtomicNumericRangeElement>('atomic-numeric-range');

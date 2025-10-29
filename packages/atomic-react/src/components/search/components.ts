@@ -7,6 +7,7 @@ import {
   AtomicIcon as LitAtomicIcon,
   AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicLayoutSection as LitAtomicLayoutSection,
+  AtomicNoResults as LitAtomicNoResults,
   AtomicPager as LitAtomicPager,
   AtomicQuerySummary as LitAtomicQuerySummary,
   AtomicRecsInterface as LitAtomicRecsInterface,
@@ -80,6 +81,12 @@ export const AtomicLayoutSection = createComponent({
   tagName: 'atomic-layout-section',
   react: React,
   elementClass: LitAtomicLayoutSection,
+});
+
+export const AtomicNoResults = createComponent({
+  tagName: 'atomic-no-results',
+  react: React,
+  elementClass: LitAtomicNoResults,
 });
 
 export const AtomicPager = createComponent({
