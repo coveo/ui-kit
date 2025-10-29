@@ -61,7 +61,7 @@ catalog:
   typedoc: 0.28.13
   typescript: 5.8.3
   vite: 7.0.5
-  vitest: 3.2.4
+  vitest: 4.0.5
 
 
 publicHoistPattern:
@@ -70,3 +70,7 @@ publicHoistPattern:
 minimumReleaseAge: 10080
 minimumReleaseAgeExclude:
   - '@coveo/*'
+  - 'storybook'
+  - '@storybook/*'
+  - 'vitest'
+  - '@vitest/*'
