@@ -56,17 +56,9 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           ref: ${{ github.head_ref }}
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: ./.github/actions/setup
         with:
-          node-version-file: ".nvmrc"
-      - name: Install pnpm
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 #v4.0.0
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-        shell: bash
-      - name: Build packages
-        run: pnpm run build
-        shell: bash
+          load-cache: "false"
   build-missing:
     name: "Build & commit missing generated files"
     runs-on: ubuntu-latest
@@ -311,6 +303,8 @@ jobs:
       - run: git branch main origin/main
         if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
+        with:
+          skip-build: "true"
       - run: pnpm run build
       - name: Identify E2E Test Files to run
         id: determine-tests
@@ -348,6 +342,8 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
+        with:
+          skip-build: "true"
       - run: pnpm run build
       - uses: ./.github/actions/playwright-atomic
         with:
@@ -369,6 +365,8 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
+        with:
+          skip-build: "true"
       - run: pnpm run build
       - name: Merge Playwright reports
         uses: ./.github/actions/merge-playwright-reports
@@ -407,6 +405,8 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
+        with:
+          skip-build: "true"
       - run: pnpm run build
       - uses: ./.github/actions/playwright-atomic-theming
   cypress-atomic-test:
@@ -555,6 +555,8 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
+        with:
+          skip-build: "true"
       - run: pnpm run build
       - uses: ./.github/actions/playwright-atomic-hosted-pages
   playwright-headless-ssr-commerce-nextjs-test:
@@ -573,6 +575,8 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
+        with:
+          skip-build: "true"
       - run: pnpm run build
       - uses: ./.github/actions/playwright-headless-ssr-commerce-nextjs
   cypress-atomic-insight-panel-test:
