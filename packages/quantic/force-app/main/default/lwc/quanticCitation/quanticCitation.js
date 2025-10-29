@@ -142,7 +142,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
    * Handles clicks on slotted citation action elements
    * @param {Event} event
    */
-  handleSlotActionClick(event) {
+  handleCitationActionClick(event) {
     // Only handle clicks from slotted content, not the container
     // @ts-ignore
     const slottedElement = event.target.closest('[slot="citation-action"]');
