@@ -93,7 +93,7 @@ export class AtomicProductImage
   }
 
   private logWarning(message: string) {
-    this.bindings.engine.logger.warn(message, this);
+    this.bindings.engine.logger.warn(message);
   }
 
   private handleImageError(event: Event) {

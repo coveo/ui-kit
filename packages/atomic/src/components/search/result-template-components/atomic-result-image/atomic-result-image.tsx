@@ -71,7 +71,7 @@ export class AtomicResultImage implements InitializableComponent {
   }
 
   private logWarning(message: string) {
-    this.bindings.engine.logger.warn(message, this.host);
+    this.bindings.engine.logger.warn(message);
   }
 
   private handleImageError() {

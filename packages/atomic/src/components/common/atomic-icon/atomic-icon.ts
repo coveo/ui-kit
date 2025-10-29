@@ -98,8 +98,7 @@ export class AtomicIcon
   private validateSVG(svg: string) {
     if (!/^<svg[\s\S]+<\/svg>$/gm.test(svg)) {
       this.bindings.engine.logger.warn(
-        'The inline "icon" prop is not an svg element. You may encounter rendering issues.',
-        this.icon
+        'The inline "icon" prop is not an svg element. You may encounter rendering issues.'
       );
     }
   }
