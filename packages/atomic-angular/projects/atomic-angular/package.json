@@ -8,10 +8,10 @@
   "peerDependencies": {
     "@angular/common": "14 - 19",
     "@angular/core": "14 - 19",
-    "@coveo/headless": "3.34.0"
+    "@coveo/headless": "workspace:*"
   },
   "dependencies": {
-    "@coveo/atomic": "3.37.0"
+    "@coveo/atomic": "workspace:*"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"
