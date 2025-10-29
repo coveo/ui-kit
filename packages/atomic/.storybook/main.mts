@@ -1,9 +1,13 @@
 import {readFileSync} from 'node:fs';
 import path, {dirname, resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import type {StorybookConfig} from '@storybook/web-components-vite';
 import type {PluginImpl} from 'rollup';
 import {mergeConfig} from 'vite';
 import {generateExternalPackageMappings} from '../scripts/externalPackageMappings.mjs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const virtualOpenApiModules: PluginImpl = () => {
   const virtualModules = new Map<string, string>();
