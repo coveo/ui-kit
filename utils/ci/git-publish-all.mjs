@@ -54,10 +54,11 @@ const commit = await commitChanges(commitMessage, octokit);
 
 // Add the tags locally...
 if (gitMessageExists) {
-  for (const tag of packagesReleased.split('\n')) {
-    if (tag.trim()) {
-      await gitTag(tag, commit);
-    }
+  for (const tag of packagesReleased
+    .split('\n')
+    .map((t) => t.trim())
+    .filter((t) => t)) {
+    await gitTag(tag, commit);
   }
 }
 
