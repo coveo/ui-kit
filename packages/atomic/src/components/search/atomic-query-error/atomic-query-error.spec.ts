@@ -116,153 +116,20 @@ describe('atomic-query-error', () => {
     expect(element).toBeDefined();
   });
 
-  it('should initialize with query error controller', async () => {
-    const element = await renderQueryError();
-    expect(buildQueryError).toHaveBeenCalledWith(element.bindings.engine);
-  });
+  describe('#initialize', () => {
+    it('should build query error controller with correct engine', async () => {
+      const element = await renderQueryError();
 
-  it('should render nothing when there is no error', async () => {
-    const element = await renderQueryError({hasError: false});
-
-    expect(element.shadowRoot?.textContent?.trim()).toBe('');
-  });
-
-  it('should render error content when there is an error', async () => {
-    const element = await renderQueryError({hasError: true, error: mockError});
-
-    expect(element.shadowRoot?.textContent).not.toBe('');
-  });
-
-  describe('when an error occurs', () => {
-    it('should display all error parts', async () => {
-      const element = await renderQueryError({
-        hasError: true,
-        error: mockError,
-      });
-      const parts = locators.parts(element);
-
-      expect(parts.icon).toBeInTheDocument();
-      expect(parts.title).toBeInTheDocument();
-      expect(parts.description).toBeInTheDocument();
+      expect(buildQueryError).toHaveBeenCalledWith(element.bindings.engine);
+      expect(element.queryError).toBeDefined();
     });
 
-    it('should set aria message for accessibility', async () => {
-      const element = await renderQueryError({
-        hasError: true,
-        error: mockError,
-        organizationId: 'test-org',
-        environment: 'prod',
-      });
-
-      expect(getAriaMessageFromErrorType).toHaveBeenCalledWith(
-        element.bindings.i18n,
-        'test-org',
-        expect.any(String), // organization endpoint URL
-        mockError.type
-      );
-    });
-  });
-
-  describe('when showMoreInfo is toggled', () => {
-    it('should initially set showMoreInfo to false', async () => {
-      const element = await renderQueryError({
-        hasError: true,
-        error: mockError,
-      });
-      expect(element.showMoreInfo).toBe(false);
-    });
-
-    it('should toggle showMoreInfo when show more is triggered', async () => {
-      const element = await renderQueryError({
-        hasError: true,
-        error: mockError,
-      });
-
-      // Simulate the onShowMore callback being triggered
-      element.showMoreInfo = !element.showMoreInfo;
-
-      expect(element.showMoreInfo).toBe(true);
-
-      // Toggle again
-      element.showMoreInfo = !element.showMoreInfo;
-
-      expect(element.showMoreInfo).toBe(false);
-    });
-
-    it('should render error details when showMoreInfo is true', async () => {
-      const element = await renderQueryError({
-        hasError: true,
-        error: mockError,
-      });
-      element.showMoreInfo = true;
-      await element.updateComplete;
-
-      const parts = locators.parts(element);
-      expect(parts.errorInfo).toBeInTheDocument();
-    });
-  });
-
-  describe('when different error types occur', () => {
-    const errorTypes = [
-      'InvalidTokenException',
-      'Disconnected',
-      'NoEndpointsException',
-      'OrganizationIsPausedException',
-      'UnknownError',
-    ];
-
-    errorTypes.forEach((errorType) => {
-      it(`should handle ${errorType} error type`, async () => {
-        const errorWithType = {...mockError, type: errorType};
-        await renderQueryError({hasError: true, error: errorWithType});
-
-        // Verify the controller was called with the correct error state
-        const mockQueryError =
-          vi.mocked(buildQueryError).mock.results[0]?.value;
-        expect(mockQueryError?.state.error?.type).toBe(errorType);
-      });
-    });
-  });
-
-  describe('when organization configuration changes', () => {
-    it('should handle different organization IDs', async () => {
-      const element = await renderQueryError({
-        hasError: true,
-        error: mockError,
-        organizationId: 'custom-org-id',
-      });
-
-      expect(element.bindings.engine.state.configuration.organizationId).toBe(
-        'custom-org-id'
-      );
-    });
-
-    it('should handle different environments', async () => {
-      const element = await renderQueryError({
-        hasError: true,
-        error: mockError,
-        environment: 'dev',
-      });
-
-      expect(element.bindings.engine.state.configuration.environment).toBe(
-        'dev'
-      );
-    });
-  });
-
-  describe('initialization', () => {
     it('should have required bindings after initialization', async () => {
       const element = await renderQueryError();
 
       expect(element.bindings).toBeDefined();
       expect(element.bindings.engine).toBeDefined();
       expect(element.bindings.i18n).toBeDefined();
-    });
-
-    it('should create queryError controller during initialization', async () => {
-      const element = await renderQueryError();
-
-      expect(element.queryError).toBeDefined();
     });
 
     it('should handle initialization errors gracefully', async () => {
@@ -273,108 +140,219 @@ describe('atomic-query-error', () => {
         throw buildEngineError;
       });
 
-      // The component should handle this error during initialization
-      await expect(() => renderQueryError()).rejects.toThrow();
-      expect(buildQueryError).toHaveBeenCalled();
-    });
-  });
-
-  describe('rendering edge cases', () => {
-    it('should handle null error gracefully', async () => {
-      await renderQueryError({hasError: true, error: null});
-
-      // Verify controller was created with null error
-      const mockQueryError = vi.mocked(buildQueryError).mock.results[0]?.value;
-      expect(mockQueryError?.state.hasError).toBe(true);
-      expect(mockQueryError?.state.error).toBeNull();
-    });
-
-    it('should handle error without type', async () => {
-      const errorWithoutType = {statusCode: 500, message: 'Error without type'};
-      await renderQueryError({hasError: true, error: errorWithoutType});
-
-      const mockQueryError = vi.mocked(buildQueryError).mock.results[0]?.value;
-      expect(mockQueryError?.state.error?.type).toBeUndefined();
-    });
-
-    it('should handle error with empty message', async () => {
-      const errorWithEmptyMessage = {
-        type: 'TestError',
-        statusCode: 500,
-        message: '',
-      };
-      await renderQueryError({hasError: true, error: errorWithEmptyMessage});
-
-      const mockQueryError = vi.mocked(buildQueryError).mock.results[0]?.value;
-      expect(mockQueryError?.state.error?.message).toBe('');
-    });
-  });
-
-  describe('accessibility', () => {
-    it('should update aria message when error occurs', async () => {
-      const mockAriaMessage = 'An error occurred with your search';
-      vi.mocked(getAriaMessageFromErrorType).mockReturnValue(mockAriaMessage);
-
-      await renderQueryError({hasError: true, error: mockError});
-
-      expect(getAriaMessageFromErrorType).toHaveBeenCalled();
-    });
-  });
-
-  describe('shadow DOM parts', () => {
-    it('should render all expected shadow DOM parts when error occurs', async () => {
-      const element = await renderQueryError({
-        hasError: true,
-        error: mockError,
-      });
-      const parts = locators.parts(element);
-
-      expect(parts.icon).toBeInTheDocument();
-      expect(parts.title).toBeInTheDocument();
-      expect(parts.description).toBeInTheDocument();
-    });
-
-    it('should conditionally render show more button part', async () => {
-      const element = await renderQueryError({
-        hasError: true,
-        error: mockError,
-      });
-      const parts = locators.parts(element);
-
-      expect(parts.moreInfoBtn).toBeInTheDocument();
-    });
-
-    it('should conditionally render error details part when showMoreInfo is true', async () => {
-      const element = await renderQueryError({
-        hasError: true,
-        error: mockError,
-      });
-      element.showMoreInfo = true;
-      await element.updateComplete;
-
-      const parts = locators.parts(element);
-      expect(parts.errorInfo).toBeInTheDocument();
-    });
-
-    it('should not render error details part when showMoreInfo is false', async () => {
-      const element = await renderQueryError({
-        hasError: true,
-        error: mockError,
-      });
-      element.showMoreInfo = false;
-      await element.updateComplete;
-
-      const parts = locators.parts(element);
-      expect(parts.errorInfo).not.toBeInTheDocument();
-    });
-  });
-
-  describe('#initialize', () => {
-    it('should build query error controller with correct engine', async () => {
       const element = await renderQueryError();
+      expect(element).toBeDefined();
+      expect(buildQueryError).toHaveBeenCalled();
 
-      expect(buildQueryError).toHaveBeenCalledWith(element.bindings.engine);
-      expect(element.queryError).toBeDefined();
+      expect(element.tagName.toLowerCase()).toBe('atomic-query-error');
+    });
+
+    describe('when organization configuration changes', () => {
+      it('should handle different organization IDs', async () => {
+        const element = await renderQueryError({
+          hasError: true,
+          error: mockError,
+          organizationId: 'custom-org-id',
+        });
+
+        expect(element.bindings.engine.state.configuration.organizationId).toBe(
+          'custom-org-id'
+        );
+      });
+
+      it('should handle different environments', async () => {
+        const element = await renderQueryError({
+          hasError: true,
+          error: mockError,
+          environment: 'dev',
+        });
+
+        expect(element.bindings.engine.state.configuration.environment).toBe(
+          'dev'
+        );
+      });
+    });
+  });
+
+  describe('#render', () => {
+    it('should render nothing when there is no error', async () => {
+      const element = await renderQueryError({hasError: false});
+
+      expect(element.shadowRoot?.textContent?.trim()).toBe('');
+    });
+
+    it('should render error content when there is an error', async () => {
+      const element = await renderQueryError({
+        hasError: true,
+        error: mockError,
+      });
+
+      expect(element.shadowRoot?.textContent).not.toBe('');
+    });
+
+    describe('when hasError is true', () => {
+      it('should display all error parts', async () => {
+        const element = await renderQueryError({
+          hasError: true,
+          error: mockError,
+        });
+        const parts = locators.parts(element);
+
+        expect(parts.icon).toBeInTheDocument();
+        expect(parts.title).toBeInTheDocument();
+        expect(parts.description).toBeInTheDocument();
+      });
+
+      it('should set aria message for accessibility', async () => {
+        const element = await renderQueryError({
+          hasError: true,
+          error: mockError,
+          organizationId: 'test-org',
+          environment: 'prod',
+        });
+
+        expect(getAriaMessageFromErrorType).toHaveBeenCalledWith(
+          element.bindings.i18n,
+          'test-org',
+          expect.any(String),
+          mockError.type
+        );
+      });
+
+      it.each([
+        'InvalidTokenException',
+        'Disconnected',
+        'NoEndpointsException',
+        'OrganizationIsPausedException',
+        'UnknownError',
+      ])('should handle %s error type', async (errorType) => {
+        const errorWithType = {...mockError, type: errorType};
+        await renderQueryError({hasError: true, error: errorWithType});
+
+        const mockQueryError =
+          vi.mocked(buildQueryError).mock.results[0]?.value;
+        expect(mockQueryError?.state.error?.type).toBe(errorType);
+      });
+
+      describe('when showMoreInfo state changes', () => {
+        it('should initially set showMoreInfo to false', async () => {
+          const element = await renderQueryError({
+            hasError: true,
+            error: mockError,
+          });
+          expect(element.showMoreInfo).toBe(false);
+        });
+
+        it('should toggle showMoreInfo when show more is triggered', async () => {
+          const element = await renderQueryError({
+            hasError: true,
+            error: mockError,
+          });
+
+          element.showMoreInfo = !element.showMoreInfo;
+
+          expect(element.showMoreInfo).toBe(true);
+
+          element.showMoreInfo = !element.showMoreInfo;
+
+          expect(element.showMoreInfo).toBe(false);
+        });
+
+        it('should render error details when showMoreInfo is true', async () => {
+          const element = await renderQueryError({
+            hasError: true,
+            error: mockError,
+          });
+          element.showMoreInfo = true;
+          await element.updateComplete;
+
+          const parts = locators.parts(element);
+          expect(parts.errorInfo).toBeInTheDocument();
+        });
+
+        it('should not render error details when showMoreInfo is false', async () => {
+          const element = await renderQueryError({
+            hasError: true,
+            error: mockError,
+          });
+          element.showMoreInfo = false;
+          await element.updateComplete;
+
+          const parts = locators.parts(element);
+          expect(parts.errorInfo).not.toBeInTheDocument();
+        });
+      });
+    });
+
+    describe('edge cases', () => {
+      it('should handle null error gracefully', async () => {
+        await renderQueryError({hasError: true, error: null});
+
+        const mockQueryError =
+          vi.mocked(buildQueryError).mock.results[0]?.value;
+        expect(mockQueryError?.state.hasError).toBe(true);
+        expect(mockQueryError?.state.error).toBeNull();
+      });
+
+      it('should handle error without type', async () => {
+        const errorWithoutType = {
+          statusCode: 500,
+          message: 'Error without type',
+        };
+        await renderQueryError({hasError: true, error: errorWithoutType});
+
+        const mockQueryError =
+          vi.mocked(buildQueryError).mock.results[0]?.value;
+        expect(mockQueryError?.state.error?.type).toBeUndefined();
+      });
+
+      it('should handle error with empty message', async () => {
+        const errorWithEmptyMessage = {
+          type: 'TestError',
+          statusCode: 500,
+          message: '',
+        };
+        await renderQueryError({hasError: true, error: errorWithEmptyMessage});
+
+        const mockQueryError =
+          vi.mocked(buildQueryError).mock.results[0]?.value;
+        expect(mockQueryError?.state.error?.message).toBe('');
+      });
+    });
+
+    describe('accessibility', () => {
+      it('should update aria message when error occurs', async () => {
+        const mockAriaMessage = 'An error occurred with your search';
+        vi.mocked(getAriaMessageFromErrorType).mockReturnValue(mockAriaMessage);
+
+        await renderQueryError({hasError: true, error: mockError});
+
+        expect(getAriaMessageFromErrorType).toHaveBeenCalled();
+      });
+    });
+
+    describe('shadow DOM parts', () => {
+      it('should render all expected shadow DOM parts when error occurs', async () => {
+        const element = await renderQueryError({
+          hasError: true,
+          error: mockError,
+        });
+        const parts = locators.parts(element);
+
+        expect(parts.icon).toBeInTheDocument();
+        expect(parts.title).toBeInTheDocument();
+        expect(parts.description).toBeInTheDocument();
+      });
+
+      it('should conditionally render show more button part', async () => {
+        const element = await renderQueryError({
+          hasError: true,
+          error: mockError,
+        });
+        const parts = locators.parts(element);
+
+        expect(parts.moreInfoBtn).toBeInTheDocument();
+      });
     });
   });
 });
