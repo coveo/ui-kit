@@ -42,7 +42,6 @@ The app will automatically reload when you make changes to the source files.
 ```bash
 npm run dev       # Start development server
 npm run build     # Build for production (outputs to dist/)
-npm test          # Run unit tests with Karma
 ```
 
 ## Key Implementation Details
