@@ -46,7 +46,10 @@ const virtualOpenApiModules: PluginImpl = () => {
           return moduleContent;
         } catch (error) {
           console.error(`Error fetching OpenAPI spec from ${url}:`, error);
-          throw error;
+          // Return empty object as fallback instead of throwing
+          const fallbackContent = `export default {};`;
+          virtualModules.set(id, fallbackContent);
+          return fallbackContent;
         }
       }
       return null;
