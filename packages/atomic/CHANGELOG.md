@@ -1,3 +1,10 @@
+## <small>3.37.1 (2025-10-29)</small>
+
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+* chore(atomic): migrate `atomic-html` (#6202) ([d204f17](https://github.com/coveo/ui-kit/commits/d204f17)), closes [#6202](https://github.com/coveo/ui-kit/issues/6202)
+
+
+
 ## 3.37.0 (2025-10-28)
 
 * chore(atomic): add tests for display-options (#6148) ([b15b00c](https://github.com/coveo/ui-kit/commits/b15b00c)), closes [#6148](https://github.com/coveo/ui-kit/issues/6148)
