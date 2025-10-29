@@ -88,12 +88,26 @@ We've added five chatmodes for specialized development tasks:
    - **Tools**: All available research tools
    - **Best for**: Understanding complex codebases or planning major changes
 
-### Phase 3: Agents Directory (✅ Completed)
+### Phase 3: Agents (✅ Completed)
 
-Created `.github/agents/` directory for future custom agent definitions. This directory is ready for:
+Created `.github/agents/` directory with custom agent definitions:
+
+1. **sprint-planning.agent.md**
+   - **Purpose**: Sprint and iteration planning specialist
+   - **Use case**: Analyzing GitHub Projects, issues, and milestones for sprint planning
+   - **Tools**: GitHub issue management, search, codebase analysis
+   - **Best for**: Validating sprint readiness and coordinating implementation planning
+   - **Key features**:
+     - Strategic context gathering from GitHub Projects
+     - Issue readiness validation with quality gates
+     - Dependency analysis and risk assessment
+     - Coordination between developers and specialized agents
+     - Human-approved planning process
+
+The agents directory is ready for future additions:
 - Custom MCP-powered agents specific to UI-KIT
 - Integration with external services (e.g., Neon, PagerDuty)
-- Repository-specific automation agents
+- Additional repository-specific automation agents
 
 ## Repository Context
 
@@ -154,6 +168,13 @@ The repository already has strong conventions:
    - Ensures acceptance criteria are well-defined
    - Improves team collaboration
 
+6. **Sprint Planning (sprint-planning.agent.md)**
+   - Analyzes GitHub Projects for macro strategy
+   - Reviews issues and milestones for sprint readiness
+   - Validates implementation approach and dependencies
+   - Coordinates between developers and specialized agents
+   - Requires human approval for final planning decisions
+
 ## Files Added
 
 ```
@@ -161,7 +182,8 @@ The repository already has strong conventions:
 ├── COPILOT_CUSTOMIZATION.md          # User documentation
 ├── CUSTOM_AGENTS_INTEGRATION.md      # This file (integration plan)
 ├── agents/
-│   └── .gitkeep                      # Placeholder for future agents
+│   ├── .gitkeep                      # Placeholder for future agents
+│   └── sprint-planning.agent.md      # Sprint/iteration planning specialist
 ├── chatmodes/
 │   ├── accessibility.chatmode.md
 │   ├── refine-issue.chatmode.md
@@ -211,10 +233,11 @@ We evaluated but did not include these from awesome-copilot:
 
 Potential additions as needs arise:
 
-1. **Custom Agents**
+1. **Additional Custom Agents**
    - Stencil-to-Lit migration agent
    - Component generation agent
    - Documentation generation agent
+   - Release planning and changelog agent
 
 2. **Additional Chatmodes**
    - Performance optimization mode

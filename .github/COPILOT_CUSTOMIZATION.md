@@ -9,7 +9,7 @@ The `.github` directory contains several types of Copilot customizations:
 - **Instructions** (`.github/instructions/`): Provide coding standards and best practices that apply to specific file patterns
 - **Chatmodes** (`.github/chatmodes/`): Specialized AI personas for different development tasks
 - **Prompts** (`.github/prompts/`): Task-specific prompts for generating code and documentation
-- **Agents** (`.github/agents/`): Custom agents that integrate with MCP servers (future use)
+- **Agents** (`.github/agents/`): Custom agents for specialized workflows and planning
 
 ## Instructions
 
@@ -86,6 +86,24 @@ The prompts directory contains reusable prompts for common tasks:
 - **migrate-stencil-to-lit.prompt.md** - Migrate Stencil components to Lit
 - **generate-vitest-tests-atomic-utils.prompt.md** - Generate tests for utility files
 
+## Agents
+
+Custom agents for specialized workflows that require systematic analysis and planning:
+
+### Planning and Strategy Agents
+
+- **sprint-planning.agent.md** - Sprint and iteration planning specialist
+  - **Purpose**: Analyze GitHub Projects, issues, and milestones for sprint planning
+  - **Use case**: Planning sprints with macro strategy awareness and issue readiness validation
+  - **Tools**: GitHub Projects API, issue management, codebase analysis
+  - **Best for**: Coordinating sprint planning with developers and specialized agents
+  - **Key features**:
+    - Strategic context gathering from GitHub Projects and milestones
+    - Issue readiness validation with comprehensive quality gates
+    - Dependency analysis and risk assessment
+    - Coordination between human developers and specialized agents
+    - Human-approved planning process ensuring oversight
+
 ## How to Use
 
 ### Using Instructions
@@ -99,6 +117,26 @@ In VS Code with GitHub Copilot:
 1. Open Copilot Chat (Ctrl/Cmd + Shift + I)
 2. Type `/` to see available commands
 3. Select or reference a chatmode for specialized assistance
+
+### Using Agents
+
+Agents are specialized chatmodes for complex workflows:
+
+1. Open Copilot Chat
+2. Reference the agent (e.g., `@sprint-planning`)
+3. Provide context (e.g., milestone name, project board)
+4. Review recommendations and provide approval
+
+**Example sprint planning usage:**
+```
+@sprint-planning Plan the next sprint using milestone "v2.5.0"
+```
+
+The agent will:
+- Analyze the milestone and associated issues
+- Validate issue readiness for implementation
+- Recommend sprint composition and implementation approach
+- Present planning recommendations for your approval
 
 ### Using Prompts
 
