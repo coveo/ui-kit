@@ -1,3 +1,4 @@
+import {ArrayValue, NumberValue, Schema, StringValue} from '@coveo/bueno';
 import {
   buildFacet,
   buildFacetConditionsManager,
@@ -59,6 +60,7 @@ import facetSearchStyles from '../../common/facets/facet-search/facet-search.tw.
 import facetValueBoxStyles from '../../common/facets/facet-value-box/facet-value-box.tw.css';
 import facetValueCheckboxStyles from '../../common/facets/facet-value-checkbox/facet-value-checkbox.tw.css';
 import facetValueExcludeStyles from '../../common/facets/facet-value-exclude/facet-value-exclude.tw.css';
+import {ValidatePropsController} from '../../common/validate-props-controller/validate-props-controller';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -338,6 +340,60 @@ export class AtomicFacet
   private headerFocus?: FocusTargetController;
   private facetConditionsManager?: FacetConditionsManager;
   private facetSearchAriaLive?: AriaLiveRegionController;
+
+  constructor() {
+    super();
+    new ValidatePropsController(
+      this,
+      () => ({
+        field: this.field,
+        numberOfValues: this.numberOfValues,
+        headingLevel: this.headingLevel,
+        injectionDepth: this.injectionDepth,
+        sortCriteria: this.sortCriteria,
+        resultsMustMatch: this.resultsMustMatch,
+        displayValuesAs: this.displayValuesAs,
+        allowedValues: this.allowedValues,
+        customSort: this.customSort,
+      }),
+      new Schema({
+        field: new StringValue({required: true, emptyAllowed: false}),
+        numberOfValues: new NumberValue({min: 1, required: false}),
+        headingLevel: new NumberValue({min: 0, max: 6, required: false}),
+        injectionDepth: new NumberValue({min: 0, required: false}),
+        sortCriteria: new StringValue({
+          constrainTo: [
+            'score',
+            'alphanumeric',
+            'alphanumericDescending',
+            'occurrences',
+            'alphanumericNatural',
+            'alphanumericNaturalDescending',
+            'automatic',
+          ],
+          required: false,
+        }),
+        resultsMustMatch: new StringValue({
+          constrainTo: ['atLeastOneValue', 'allValues'],
+          required: false,
+        }),
+        displayValuesAs: new StringValue({
+          constrainTo: ['checkbox', 'link', 'box'],
+          required: false,
+        }),
+        allowedValues: new ArrayValue({
+          each: new StringValue({emptyAllowed: false}),
+          max: 25,
+          required: false,
+        }),
+        customSort: new ArrayValue({
+          each: new StringValue({emptyAllowed: false}),
+          max: 25,
+          required: false,
+        }),
+      })
+    );
+  }
 
   public initialize() {
     if (
