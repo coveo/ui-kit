@@ -64,6 +64,10 @@ describe('numeric facet', () => {
     initNumericFacet();
   });
 
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('#initNumericFacet validates manual range', () => {
     options.currentValues = [
       buildNumericRange({

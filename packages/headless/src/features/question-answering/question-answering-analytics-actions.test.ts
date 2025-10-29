@@ -1,4 +1,5 @@
 import {createRelay} from '@coveo/relay';
+import {CoveoSearchPageClient} from 'coveo.analytics';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {
   buildMockSearchEngine,
@@ -57,9 +58,6 @@ const mockMakeCloseSmartSnippetFeedbackModal = vi.fn(() => ({
 const mockMakeSmartSnippetFeedback = vi.fn((..._args) => ({
   log: mockLogFunction,
 }));
-const mockMakeSmartSnippetDetailedFeedback = vi.fn(() => ({
-  log: mockLogFunction,
-}));
 const mockMakeExpandSmartSnippetSuggestion = vi.fn((..._args) => ({
   log: mockLogFunction,
 }));
@@ -85,31 +83,35 @@ vi.mocked(createRelay).mockReturnValue({
   version: 'foo',
 });
 
-vi.mock('coveo.analytics', () => {
-  const mockCoveoSearchPageClient = vi.fn(() => ({
-    disable: vi.fn(),
-    makeExpandSmartSnippet: mockMakeExpandSmartSnippet,
-    makeCollapseSmartSnippet: mockMakeCollapseSmartSnippet,
-    makeLikeSmartSnippet: mockMakeLikeSmartSnippet,
-    makeDislikeSmartSnippet: mockMakeDislikeSmartSnippet,
-    makeOpenSmartSnippetSource: mockMakeOpenSmartSnippetSource,
-    makeOpenSmartSnippetInlineLink: mockMakeOpenSmartSnippetInlineLink,
-    makeOpenSmartSnippetFeedbackModal: mockMakeOpenSmartSnippetFeedbackModal,
-    makeCloseSmartSnippetFeedbackModal: mockMakeCloseSmartSnippetFeedbackModal,
-    makeSmartSnippetFeedbackReason: mockMakeSmartSnippetFeedback,
-    makeSmartSnippetDetailedFeedback: mockMakeSmartSnippetDetailedFeedback,
-    makeExpandSmartSnippetSuggestion: mockMakeExpandSmartSnippetSuggestion,
-    makeCollapseSmartSnippetSuggestion: mockMakeCollapseSmartSnippetSuggestion,
-    makeOpenSmartSnippetSuggestionSource:
-      mockMakeOpenSmartSnippetSuggestionSource,
-    makeOpenSmartSnippetSuggestionInlineLink:
-      mockMakeOpenSmartSnippetSuggestionInlineLink,
-  }));
-
-  return {
-    CoveoSearchPageClient: mockCoveoSearchPageClient,
-    history: {HistoryStore: vi.fn()},
-  };
+vi.mock('coveo.analytics');
+vi.mocked(CoveoSearchPageClient).mockImplementation(function () {
+  this.disable = vi.fn();
+  this.makeExpandSmartSnippet =
+    mockMakeExpandSmartSnippet as unknown as typeof this.makeExpandSmartSnippet;
+  this.makeCollapseSmartSnippet =
+    mockMakeCollapseSmartSnippet as unknown as typeof this.makeCollapseSmartSnippet;
+  this.makeLikeSmartSnippet =
+    mockMakeLikeSmartSnippet as unknown as typeof this.makeLikeSmartSnippet;
+  this.makeDislikeSmartSnippet =
+    mockMakeDislikeSmartSnippet as unknown as typeof this.makeDislikeSmartSnippet;
+  this.makeOpenSmartSnippetSource =
+    mockMakeOpenSmartSnippetSource as unknown as typeof this.makeOpenSmartSnippetSource;
+  this.makeOpenSmartSnippetInlineLink =
+    mockMakeOpenSmartSnippetInlineLink as unknown as typeof this.makeOpenSmartSnippetInlineLink;
+  this.makeOpenSmartSnippetFeedbackModal =
+    mockMakeOpenSmartSnippetFeedbackModal as unknown as typeof this.makeOpenSmartSnippetFeedbackModal;
+  this.makeCloseSmartSnippetFeedbackModal =
+    mockMakeCloseSmartSnippetFeedbackModal as unknown as typeof this.makeCloseSmartSnippetFeedbackModal;
+  this.makeSmartSnippetFeedbackReason =
+    mockMakeSmartSnippetFeedback as unknown as typeof this.makeSmartSnippetFeedbackReason;
+  this.makeExpandSmartSnippetSuggestion =
+    mockMakeExpandSmartSnippetSuggestion as unknown as typeof this.makeExpandSmartSnippetSuggestion;
+  this.makeCollapseSmartSnippetSuggestion =
+    mockMakeCollapseSmartSnippetSuggestion as unknown as typeof this.makeCollapseSmartSnippetSuggestion;
+  this.makeOpenSmartSnippetSuggestionSource =
+    mockMakeOpenSmartSnippetSuggestionSource as unknown as typeof this.makeOpenSmartSnippetSuggestionSource;
+  this.makeOpenSmartSnippetSuggestionInlineLink =
+    mockMakeOpenSmartSnippetSuggestionInlineLink as unknown as typeof this.makeOpenSmartSnippetSuggestionInlineLink;
 });
 
 const exampleSearchUid = '456';

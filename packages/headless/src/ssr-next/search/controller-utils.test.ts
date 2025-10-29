@@ -36,17 +36,13 @@ describe('controller-utils', () => {
   });
 
   describe('#buildControllerDefinitions', () => {
-    let mockControllerBuilder: {
-      build: ReturnType<typeof vi.fn>;
-    };
-
+    const mockControllerBuilder = vi.mocked(ControllerBuilder);
+    const mockControllerBuilderBuildMethod = vi.fn();
     beforeEach(() => {
-      mockControllerBuilder = {
-        build: vi.fn().mockReturnValue(buildMockController()),
-      };
-
-      // @ts-expect-error: do not care about mocking all the class methods
-      vi.mocked(ControllerBuilder).mockReturnValue(mockControllerBuilder);
+      mockControllerBuilderBuildMethod.mockReturnValue(buildMockController());
+      mockControllerBuilder.mockImplementation(function () {
+        this.build = mockControllerBuilderBuildMethod;
+      });
 
       const definitionsMap = {
         controller1: defineMockController(),
@@ -64,7 +60,7 @@ describe('controller-utils', () => {
 
     it('should call #ControllerBuilder as many times as there are definitions', () => {
       expect(ControllerBuilder).toHaveBeenCalledTimes(2);
-      expect(mockControllerBuilder.build).toHaveBeenCalledTimes(2);
+      expect(mockControllerBuilderBuildMethod).toHaveBeenCalledTimes(2);
     });
 
     it('should call #ControllerBuilder for the controller without props with the correct arguments', () => {

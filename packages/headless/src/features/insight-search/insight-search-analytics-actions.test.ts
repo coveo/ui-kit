@@ -1,3 +1,4 @@
+import {CoveoInsightClient} from 'coveo.analytics';
 import type {InsightEngine} from '../../app/insight-engine/insight-engine.js';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import type {InsightAppState} from '../../state/insight-app-state.js';
@@ -14,27 +15,21 @@ import {
   logQueryError,
 } from './insight-search-analytics-actions.js';
 
+const mockCoveoInsightClient = vi.mocked(CoveoInsightClient);
+
 const mockLogContextChanged = vi.fn();
 const mockLogFetchMoreResults = vi.fn();
 const mockLogQueryError = vi.fn();
 const mockLogInterfaceLoad = vi.fn();
 const mockLogInterfaceChange = vi.fn();
 
-vi.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = vi.fn(() => ({
-    disable: () => {},
-    logContextChanged: mockLogContextChanged,
-    logFetchMoreResults: mockLogFetchMoreResults,
-    logQueryError: mockLogQueryError,
-    logInterfaceLoad: mockLogInterfaceLoad,
-    logInterfaceChange: mockLogInterfaceChange,
-  }));
-
-  return {
-    CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: vi.fn()},
-  };
-});
+vi.mock('coveo.analytics');
+// vi.mock('coveo.analytics', () => {
+//   return {
+//     CoveoInsightClient: mockCoveoInsightClient,
+//     history: {HistoryStore: vi.fn()},
+//   };
+// });
 
 describe('insight search analytics actions', () => {
   let state: InsightAppState;
@@ -50,6 +45,14 @@ describe('insight search analytics actions', () => {
   const exampleQuery = 'test query';
 
   beforeEach(() => {
+    mockCoveoInsightClient.mockImplementation(function () {
+      this.disable = () => {};
+      this.logContextChanged = mockLogContextChanged;
+      this.logFetchMoreResults = mockLogFetchMoreResults;
+      this.logQueryError = mockLogQueryError;
+      this.logInterfaceLoad = mockLogInterfaceLoad;
+      this.logInterfaceChange = mockLogInterfaceChange;
+    });
     const configuration = getConfigurationInitialState();
     configuration.analytics.analyticsMode = 'legacy';
     state = buildMockInsightState({
@@ -65,6 +68,10 @@ describe('insight search analytics actions', () => {
       configuration,
     });
     engine = buildMockInsightEngine(state);
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
   it('should log #logContextChanged with the right payload', async () => {

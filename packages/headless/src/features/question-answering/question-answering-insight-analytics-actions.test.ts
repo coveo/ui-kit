@@ -1,4 +1,5 @@
 import {createRelay} from '@coveo/relay';
+import {CoveoInsightClient} from 'coveo.analytics';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {
   buildMockInsightEngine,
@@ -38,7 +39,6 @@ const mockLogOpenSmartSnippetInlineLink = vi.fn();
 const mockLogOpenSmartSnippetFeedbackModal = vi.fn();
 const mockLogCloseSmartSnippetFeedbackModal = vi.fn();
 const mockLogSmartSnippetFeedback = vi.fn();
-const mockLogSmartSnippetDetailedFeedback = vi.fn();
 const mockLogExpandSmartSnippetSuggestion = vi.fn();
 const mockLogCollapseSmartSnippetSuggestion = vi.fn();
 const mockLogOpenSmartSnippetSuggestionSource = vi.fn();
@@ -56,31 +56,26 @@ vi.mocked(createRelay).mockReturnValue({
   version: 'foo',
 });
 
-vi.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = vi.fn(() => ({
-    disable: vi.fn(),
-    logExpandSmartSnippet: mockLogExpandSmartSnippet,
-    logCollapseSmartSnippet: mockLogCollapseSmartSnippet,
-    logLikeSmartSnippet: mockLogLikeSmartSnippet,
-    logDislikeSmartSnippet: mockLogDislikeSmartSnippet,
-    logOpenSmartSnippetSource: mockLogOpenSmartSnippetSource,
-    logOpenSmartSnippetInlineLink: mockLogOpenSmartSnippetInlineLink,
-    logOpenSmartSnippetFeedbackModal: mockLogOpenSmartSnippetFeedbackModal,
-    logCloseSmartSnippetFeedbackModal: mockLogCloseSmartSnippetFeedbackModal,
-    logSmartSnippetFeedbackReason: mockLogSmartSnippetFeedback,
-    logSmartSnippetDetailedFeedback: mockLogSmartSnippetDetailedFeedback,
-    logExpandSmartSnippetSuggestion: mockLogExpandSmartSnippetSuggestion,
-    logCollapseSmartSnippetSuggestion: mockLogCollapseSmartSnippetSuggestion,
-    logOpenSmartSnippetSuggestionSource:
-      mockLogOpenSmartSnippetSuggestionSource,
-    logOpenSmartSnippetSuggestionInlineLink:
-      mockLogOpenSmartSnippetSuggestionInlineLink,
-  }));
-
-  return {
-    CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: vi.fn()},
-  };
+vi.mock('coveo.analytics');
+vi.mocked(CoveoInsightClient).mockImplementation(function () {
+  this.disable = vi.fn();
+  this.logExpandSmartSnippet = mockLogExpandSmartSnippet;
+  this.logCollapseSmartSnippet = mockLogCollapseSmartSnippet;
+  this.logLikeSmartSnippet = mockLogLikeSmartSnippet;
+  this.logDislikeSmartSnippet = mockLogDislikeSmartSnippet;
+  this.logOpenSmartSnippetSource = mockLogOpenSmartSnippetSource;
+  this.logOpenSmartSnippetInlineLink = mockLogOpenSmartSnippetInlineLink;
+  this.logOpenSmartSnippetFeedbackModal = mockLogOpenSmartSnippetFeedbackModal;
+  this.logCloseSmartSnippetFeedbackModal =
+    mockLogCloseSmartSnippetFeedbackModal;
+  this.logSmartSnippetFeedbackReason = mockLogSmartSnippetFeedback;
+  this.logExpandSmartSnippetSuggestion = mockLogExpandSmartSnippetSuggestion;
+  this.logCollapseSmartSnippetSuggestion =
+    mockLogCollapseSmartSnippetSuggestion;
+  this.logOpenSmartSnippetSuggestionSource =
+    mockLogOpenSmartSnippetSuggestionSource;
+  this.logOpenSmartSnippetSuggestionInlineLink =
+    mockLogOpenSmartSnippetSuggestionInlineLink;
 });
 
 const exampleSearchUid = '456';

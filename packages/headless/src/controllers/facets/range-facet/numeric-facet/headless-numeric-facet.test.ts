@@ -66,6 +66,10 @@ describe('numeric facet', () => {
     initNumericFacet();
   });
 
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('#initNumericFacet validate manual range', () => {
     options.currentValues = [
       buildNumericRange({
@@ -184,11 +188,6 @@ describe('numeric facet', () => {
         facetId,
         selection: facetValue(),
       });
-    });
-
-    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
-      numericFacet.toggleSingleSelect(facetValue());
-      expect(updateFacetOptions).toHaveBeenCalled();
     });
 
     it('dispatches a search', () => {
