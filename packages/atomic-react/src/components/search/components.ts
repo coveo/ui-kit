@@ -3,11 +3,13 @@ import {
   AtomicComponentError as LitAtomicComponentError,
   AtomicExternal as LitAtomicExternal,
   AtomicFacet as LitAtomicFacet,
+  AtomicHtml as LitAtomicHtml,
   AtomicIcon as LitAtomicIcon,
   AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicPager as LitAtomicPager,
   AtomicQuerySummary as LitAtomicQuerySummary,
+  AtomicResult as LitAtomicResult,
   AtomicResultSectionActions as LitAtomicResultSectionActions,
   AtomicResultSectionBadges as LitAtomicResultSectionBadges,
   AtomicResultSectionBottomMetadata as LitAtomicResultSectionBottomMetadata,
@@ -51,6 +53,12 @@ export const AtomicFacet = createComponent({
   elementClass: LitAtomicFacet,
 });
 
+export const AtomicHtml = createComponent({
+  tagName: 'atomic-html',
+  react: React,
+  elementClass: LitAtomicHtml,
+});
+
 export const AtomicIcon = createComponent({
   tagName: 'atomic-icon',
   react: React,
@@ -79,6 +87,12 @@ export const AtomicQuerySummary = createComponent({
   tagName: 'atomic-query-summary',
   react: React,
   elementClass: LitAtomicQuerySummary,
+});
+
+export const AtomicResult = createComponent({
+  tagName: 'atomic-result',
+  react: React,
+  elementClass: LitAtomicResult,
 });
 
 export const AtomicResultSectionActions = createComponent({

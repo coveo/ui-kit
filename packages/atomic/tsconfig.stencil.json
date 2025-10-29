@@ -4,7 +4,7 @@
     "allowSyntheticDefaultImports": true,
     "declaration": false,
     "experimentalDecorators": true,
-    "lib": ["dom", "ES2023", "ESNext.Promise"],
+    "lib": ["dom", "dom.iterable", "ES2023", "ESNext.Promise"],
     "moduleResolution": "Bundler",
     "module": "ES2022",
     "target": "ES2021",
