@@ -12,7 +12,7 @@ import {commitChanges, setupGit} from './common/git.mjs';
 import {removeWriteAccessRestrictions} from './lock-main.mjs';
 
 if (!process.env.INIT_CWD) {
-  throw new Error('Should be called using npm run-script');
+  throw new Error('Should be called using pnpm run');
 }
 process.chdir(process.env.INIT_CWD);
 
@@ -35,10 +35,8 @@ const commitMessage = dedent`
   ${packagesReleased}
 
   **/CHANGELOG.md
-  **/package.json
   CHANGELOG.md
   package.json
-  package-lock.json
 `;
 
 // Setup Git with the bot user

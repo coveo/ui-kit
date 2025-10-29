@@ -8,8 +8,7 @@
     "esModuleInterop": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "isolatedModules": true,
-    "types": [""]
+    "isolatedModules": true
   },
   "include": ["src"]
 }

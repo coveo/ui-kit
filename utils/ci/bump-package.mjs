@@ -1,7 +1,5 @@
 #!/usr/bin/env node
-import {spawnSync} from 'node:child_process';
-import {appendFileSync, readFileSync, writeFileSync} from 'node:fs';
-import {join, resolve} from 'node:path';
+import {readFileSync} from 'node:fs';
 import {
   describeNpmTag,
   generateChangelog,
@@ -17,7 +15,6 @@ import {
 import changelogConvention from 'conventional-changelog-conventionalcommits';
 import {gt, SemVer} from 'semver';
 import {
-  REPO_FS_ROOT,
   REPO_HOST,
   REPO_NAME,
   REPO_OWNER,
@@ -25,52 +22,9 @@ import {
 } from './common/constants.mjs';
 
 if (!process.env.INIT_CWD) {
-  throw new Error('Should be called using npm run-script');
+  throw new Error('Should be called using pnpm run');
 }
 process.chdir(process.env.INIT_CWD);
-
-/**
- * Check if the package json in the provided folder has changed since the last commit
- * @param {string} directoryPath
- * @returns {boolean}
- */
-const hasPackageJsonChanged = (directoryPath) => {
-  const {stdout, stderr, status} = spawnSync(
-    'git',
-    ['diff', '--exit-code', 'package.json'],
-    {cwd: directoryPath, encoding: 'utf-8'}
-  );
-  switch (status) {
-    case 0:
-      return false;
-    case 1:
-      return true;
-    default:
-      console.log(stdout);
-      console.error(stderr);
-      throw new Error(`git diff exited with statusCode ${status}`);
-  }
-};
-
-/**
- * @typedef {import('./types.mjs').PackageJson} PackageJson
- */
-
-/**
- * @param {string} packageDir
- * @param {(packageJson: PackageJson) => PackageJson | void} modifyPackageJsonCallback
- */
-const modifyPackageJson = (packageDir, modifyPackageJsonCallback) => {
-  const packageJsonPath = resolve(packageDir, 'package.json');
-  const packageJson = JSON.parse(
-    readFileSync(packageJsonPath, {encoding: 'utf-8'})
-  );
-  const newPackageJson = modifyPackageJsonCallback(packageJson);
-  writeFileSync(
-    packageJsonPath,
-    JSON.stringify(newPackageJson || packageJson, null, 2)
-  );
-};
 
 const isPrerelease = process.env.IS_PRERELEASE === 'true';
 
@@ -87,7 +41,7 @@ const lastTag = await getLastTag({
   onBranch: `refs/remotes/origin/${REPO_RELEASE_BRANCH}`,
 });
 const commits = await getCommits(PATH, lastTag);
-if (commits.length === 0 && !hasPackageJsonChanged(PATH)) {
+if (commits.length === 0) {
   process.exit(0);
 }
 const parsedCommits = parseCommits(commits, convention.parserOpts);
@@ -107,11 +61,6 @@ const newVersion =
   isPrerelease && !privatePackage
     ? await getNextBetaVersion(nextGoldVersion)
     : nextGoldVersion;
-
-modifyPackageJson(PATH, (packageJson) => {
-  packageJson.version = newVersion;
-});
-await updateWorkspaceDependent(newVersion);
 if (privatePackage) {
   process.exit(0);
 }
@@ -128,68 +77,6 @@ if (parsedCommits.length > 0) {
     convention.writerOpts
   );
   await writeChangelog(PATH, changelog);
-}
-appendFileSync(
-  join(REPO_FS_ROOT, '.git-message'),
-  `${packageJson.name}@${newVersion}\n`
-);
-
-/**
- * Update the version of the package in the other packages of the workspace
- * @param {string} version
- */
-async function updateWorkspaceDependent(version) {
-  const topology = JSON.parse(
-    readFileSync(join(REPO_FS_ROOT, 'topology.json'), {encoding: 'utf-8'})
-  );
-  const dependencyPackageJson = JSON.parse(
-    readFileSync('package.json', {encoding: 'utf-8'})
-  );
-  const dependencyPackageName = dependencyPackageJson.name.replace(
-    '@coveo/',
-    ''
-  );
-  const dependentPackages = [];
-  for (const [name, dependencies] of Object.entries(
-    topology.graph.dependencies
-  )) {
-    if (
-      dependencies.find(
-        (/** @type {{target:string}} **/ dependency) =>
-          dependency.target === dependencyPackageName
-      )
-    ) {
-      dependentPackages.push(name);
-    }
-  }
-
-  for (const dependentPackage of dependentPackages) {
-    modifyPackageJson(
-      join(REPO_FS_ROOT, topology.graph.nodes[dependentPackage].data.root),
-      (packageJson) => {
-        updateDependency(packageJson, dependencyPackageJson.name, version);
-      }
-    );
-  }
-}
-
-/**
- * Update all instancies of the `dependency` in the `packageJson` to the given `version`.
- * @param {any} packageJson the packageJson object to update
- * @param {string} dependency the dependency to look for and update
- * @param {string} version the version to update to.
- */
-function updateDependency(packageJson, dependency, version) {
-  for (const dependencyType of [
-    'dependencies',
-    'devDependencies',
-    'peerDependencies',
-    'optionalDependencies',
-  ]) {
-    if (packageJson?.[dependencyType]?.[dependency]) {
-      packageJson[dependencyType][dependency] = version;
-    }
-  }
 }
 
 function isPrivatePackage() {

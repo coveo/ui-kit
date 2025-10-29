@@ -22,12 +22,9 @@ runs:
   steps:
     - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
       with:
-        registry-url: 'https://registry.npmjs.org'
         node-version-file: '.nvmrc'
-        cache: 'npm'
-    - name: Install npm
-      run: npm i -g npm@11.6.0
-      shell: bash
+    - name: Install pnpm
+      uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 #v4.0.0
     - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
       with:
         path: ~/.cache/Cypress
@@ -40,9 +37,9 @@ runs:
         name: ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo
         path: .turbo
     - if: steps.npm-cache.outputs.cache-hit != 'true'
-      run: npm ci
+      run: pnpm install --frozen-lockfile
       shell: bash
-    - run: npm run build
+    - run: pnpm run build
       if: inputs.skip-build != 'true'
       shell: bash
     - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
