@@ -15,13 +15,13 @@ test.describe('atomic-load-more-results', () => {
     loadMore,
   }) => {
     await expect(loadMore.showingResults).toHaveText(
-      'Showing 10 of 457,527 results'
+      /Showing 10 of [\d,]+ results/
     );
 
     await loadMore.button.click();
 
     await expect(loadMore.showingResults).toHaveText(
-      'Showing 20 of 457,527 results'
+      /Showing 20 of [\d,]+ results/
     );
   });
 });
