@@ -138,6 +138,34 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
     }
   }
 
+  /**
+   * Handles clicks on slotted citation action elements
+   * @param {Event} event
+   */
+  handleSlotActionClick(event) {
+    // Only handle clicks from slotted content, not the container
+    // @ts-ignore
+    const slottedElement = event.target.closest('[slot="citation-action"]');
+    if (!slottedElement) {
+      return;
+    }
+
+    event.stopPropagation();
+
+    // Dispatch custom event with citation data
+    this.dispatchEvent(
+      new CustomEvent('citationaction', {
+        detail: {
+          citation: this.citation,
+          citationId: this.citation?.index,
+          originalEvent: event,
+        },
+        bubbles: true,
+        composed: true,
+      })
+    );
+  }
+
   navigateToSalesforceRecord(event) {
     event.stopPropagation();
     const targetPageRef = {
