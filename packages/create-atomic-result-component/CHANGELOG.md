@@ -1,3 +1,10 @@
+## <small>1.3.9 (2025-10-29)</small>
+
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+* [Version Bump][skip ci]: ui-kit publish ([a4a23ae](https://github.com/coveo/ui-kit/commits/a4a23ae))
+
+
+
 ## <small>1.3.8 (2025-10-22)</small>
 
 * [Version Bump][skip ci]: ui-kit publish ([e2ffade](https://github.com/coveo/ui-kit/commits/e2ffade))
