@@ -88,12 +88,28 @@ We've added five chatmodes for specialized development tasks:
    - **Tools**: All available research tools
    - **Best for**: Understanding complex codebases or planning major changes
 
-### Phase 3: Agents Directory (✅ Completed)
+### Phase 3: Agents (✅ Completed)
 
-Created `.github/agents/` directory for future custom agent definitions. This directory is ready for:
+Created `.github/agents/` directory with custom agent definitions:
+
+1. **sprint-planning.agent.md**
+   - **Purpose**: Sprint and iteration planning specialist with automated execution
+   - **Use case**: Analyzing GitHub Projects, validating issues, and executing approved plans
+   - **Tools**: GitHub issue management, GitHub Projects API, search, codebase analysis
+   - **Best for**: Validating sprint readiness and executing sprint plans automatically
+   - **Key features**:
+     - Strategic context gathering from GitHub Projects and milestones
+     - Issue readiness validation with comprehensive quality gates
+     - Dependency analysis and risk assessment
+     - **Automated execution**: Moves issues in GitHub Projects after approval
+     - **Iteration protection**: Cannot modify current/ongoing sprints
+     - Coordination between developers and specialized agents
+     - Human review and approval before execution
+
+The agents directory is ready for future additions:
 - Custom MCP-powered agents specific to UI-KIT
 - Integration with external services (e.g., Neon, PagerDuty)
-- Repository-specific automation agents
+- Additional repository-specific automation agents
 
 ## Repository Context
 
@@ -154,6 +170,15 @@ The repository already has strong conventions:
    - Ensures acceptance criteria are well-defined
    - Improves team collaboration
 
+6. **Sprint Planning (sprint-planning.agent.md)**
+   - Analyzes GitHub Projects for macro strategy and deadlines
+   - Reviews issues and milestones for sprint readiness
+   - Validates implementation approach and dependencies
+   - **Executes approved plans** by moving issues in GitHub Projects
+   - **Protects ongoing sprints** from unintended modifications
+   - Coordinates between developers and specialized agents
+   - Provides human review workflow with automated execution
+
 ## Files Added
 
 ```
@@ -161,7 +186,8 @@ The repository already has strong conventions:
 ├── COPILOT_CUSTOMIZATION.md          # User documentation
 ├── CUSTOM_AGENTS_INTEGRATION.md      # This file (integration plan)
 ├── agents/
-│   └── .gitkeep                      # Placeholder for future agents
+│   ├── .gitkeep                      # Placeholder for future agents
+│   └── sprint-planning.agent.md      # Sprint/iteration planning specialist
 ├── chatmodes/
 │   ├── accessibility.chatmode.md
 │   ├── refine-issue.chatmode.md
@@ -211,10 +237,11 @@ We evaluated but did not include these from awesome-copilot:
 
 Potential additions as needs arise:
 
-1. **Custom Agents**
+1. **Additional Custom Agents**
    - Stencil-to-Lit migration agent
    - Component generation agent
    - Documentation generation agent
+   - Release planning and changelog agent
 
 2. **Additional Chatmodes**
    - Performance optimization mode
