@@ -6,15 +6,16 @@ runs:
   steps:
     - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
       with:
-        name: quantic-playwright-env
-        path: packages/quantic
+        pattern: quantic-playwright-env-*
+        path: packages/quantic/.env
+        merge-multiple: true
 
     - name: Read Org URLs from .env
       id: read-env
       shell: bash
       run: |
-        LWS_ENABLED_URL=$(grep 'Quantic__LWS_enabled_URL' packages/quantic/.env | cut -d '=' -f2-)
-        LWS_DISABLED_URL=$(grep 'Quantic__LWS_disabled_URL' packages/quantic/.env | cut -d '=' -f2-)
+        LWS_ENABLED_URL=$(grep 'Quantic__LWS_enabled_URL' packages/quantic/.env/Quantic__LWS_enabled.env | cut -d '=' -f2-)
+        LWS_DISABLED_URL=$(grep 'Quantic__LWS_disabled_URL' packages/quantic/.env/Quantic__LWS_disabled.env | cut -d '=' -f2-)
         echo "lws_enabled_url=$LWS_ENABLED_URL" >> $GITHUB_OUTPUT
         echo "lws_disabled_url=$LWS_DISABLED_URL" >> $GITHUB_OUTPUT
 
