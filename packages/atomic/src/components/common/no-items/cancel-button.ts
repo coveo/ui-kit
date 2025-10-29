@@ -1,6 +1,6 @@
 import type {i18n} from 'i18next';
+import {renderButton} from '@/src/components/common/button.js';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import {renderButton} from '../button';
 
 export interface CancelButtonProps {
   i18n: i18n;

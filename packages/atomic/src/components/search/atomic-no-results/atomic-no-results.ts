@@ -11,6 +11,14 @@ import {
 } from '@coveo/headless';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {renderCancelButton} from '@/src/components/common/no-items/cancel-button.js';
+import {renderNoItemsContainer} from '@/src/components/common/no-items/container.js';
+import {noItemsGuard} from '@/src/components/common/no-items/guard.js';
+import {renderMagnifyingGlass} from '@/src/components/common/no-items/magnifying-glass.js';
+import {renderNoItems} from '@/src/components/common/no-items/no-items.js';
+import {renderSearchTips} from '@/src/components/common/no-items/tips.js';
+import {getSummary} from '@/src/components/common/no-items/utils.js';
+import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
 import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
@@ -18,14 +26,6 @@ import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils.js';
-import {renderCancelButton} from '../../common/no-items/cancel-button.js';
-import {renderNoItemsContainer} from '../../common/no-items/container.js';
-import {noItemsGuard} from '../../common/no-items/guard.js';
-import {renderMagnifyingGlass} from '../../common/no-items/magnifying-glass.js';
-import {renderNoItems} from '../../common/no-items/no-items.js';
-import {renderSearchTips} from '../../common/no-items/tips.js';
-import {getSummary} from '../../common/no-items/utils.js';
-import type {Bindings} from '../atomic-search-interface/atomic-search-interface.js';
 
 /**
  * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
