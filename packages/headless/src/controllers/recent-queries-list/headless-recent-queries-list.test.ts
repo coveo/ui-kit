@@ -97,6 +97,9 @@ describe('recent queries list', () => {
       expect(mockCoreController.executeRecentQuery).toHaveBeenCalledWith(index);
       expect(executeSearch).toHaveBeenCalledWith({
         legacy: logRecentQueryClick(),
+        next: {
+          actionCause: 'recentQueriesClick',
+        },
       });
     });
   });
