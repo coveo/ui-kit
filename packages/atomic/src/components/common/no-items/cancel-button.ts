@@ -7,6 +7,8 @@ export interface CancelButtonProps {
   onClick: () => void;
 }
 
+import {nothing} from 'lit';
+
 export const renderCancelButton: FunctionalComponent<CancelButtonProps> = ({
   props,
 }) =>
@@ -18,4 +20,4 @@ export const renderCancelButton: FunctionalComponent<CancelButtonProps> = ({
       onClick: () => props.onClick(),
       class: 'my-3 px-2.5 py-3 font-bold',
     },
-  })();
+  })(nothing);
