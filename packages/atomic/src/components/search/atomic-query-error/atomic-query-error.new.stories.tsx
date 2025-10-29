@@ -35,26 +35,88 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {
-  name: 'atomic-query-error',
-};
+export const Default: Story = {};
 
-export const With419Error: Story = {
-  name: 'With 419 error',
+export const WithInvalidToken: Story = {
+  name: 'With Invalid Token Error',
   parameters: {
     msw: {
       handlers: [
         http.post('**/search/v2', () => {
           return HttpResponse.json(
             {
-              message: 'Expired token',
-              statusCode: 419,
-              type: 'ExpiredTokenException',
+              message: 'Token is invalid or expired',
+              statusCode: 401,
+              type: 'InvalidTokenException',
             },
-            {status: 419}
+            {status: 401}
           );
         }),
       ],
     },
   },
+  play,
+};
+
+export const WithDisconnected: Story = {
+  name: 'With Disconnected Error',
+  parameters: {
+    msw: {
+      handlers: [
+        http.post('**/search/v2', () => {
+          return HttpResponse.json(
+            {
+              message: 'Network connection failed',
+              statusCode: 0,
+              type: 'Disconnected',
+            },
+            {status: 500}
+          );
+        }),
+      ],
+    },
+  },
+  play,
+};
+
+export const WithNoEndpoints: Story = {
+  name: 'With No Endpoints Error',
+  parameters: {
+    msw: {
+      handlers: [
+        http.post('**/search/v2', () => {
+          return HttpResponse.json(
+            {
+              message: 'No content sources available',
+              statusCode: 404,
+              type: 'NoEndpointsException',
+            },
+            {status: 404}
+          );
+        }),
+      ],
+    },
+  },
+  play,
+};
+
+export const WithOrganizationPaused: Story = {
+  name: 'With Organization Paused Error',
+  parameters: {
+    msw: {
+      handlers: [
+        http.post('**/search/v2', () => {
+          return HttpResponse.json(
+            {
+              message: 'Organization is paused due to inactivity',
+              statusCode: 503,
+              type: 'OrganizationIsPausedException',
+            },
+            {status: 503}
+          );
+        }),
+      ],
+    },
+  },
+  play,
 };
