@@ -9,6 +9,7 @@ import {
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicPager as LitAtomicPager,
   AtomicQuerySummary as LitAtomicQuerySummary,
+  AtomicResult as LitAtomicResult,
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
   AtomicResultSectionActions as LitAtomicResultSectionActions,
   AtomicResultSectionBadges as LitAtomicResultSectionBadges,
@@ -87,6 +88,12 @@ export const AtomicQuerySummary = createComponent({
   tagName: 'atomic-query-summary',
   react: React,
   elementClass: LitAtomicQuerySummary,
+});
+
+export const AtomicResult = createComponent({
+  tagName: 'atomic-result',
+  react: React,
+  elementClass: LitAtomicResult,
 });
 
 export const AtomicResultChildrenTemplate = createComponent({
