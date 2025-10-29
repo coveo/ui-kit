@@ -32,7 +32,7 @@
   ],
   "dependencies": {
     "@coveo/atomic": "workspace:*",
-    "@lit/react": "1.0.6"
+    "@lit/react": "1.0.8"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "28.0.6",
