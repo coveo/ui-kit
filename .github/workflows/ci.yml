@@ -36,6 +36,7 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           skip-build: "true"
+          load-cache: "false"
       - run: pnpm run pr:report
         env:
           GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
@@ -689,6 +690,7 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           skip-build: "true"
+          load-cache: "false"
       - name: Call ui-kit-cd for dev
         run: node ./scripts/deploy/trigger-ui-kit-cd-pr.mjs
         env:
@@ -854,6 +856,7 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           skip-build: "true"
+          load-cache: "false"
       - name: Call ui-kit-cd for dev
         run: node ./scripts/deploy/trigger-ui-kit-cd-dev.mjs
         env:
