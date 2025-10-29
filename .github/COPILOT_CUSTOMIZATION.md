@@ -93,16 +93,18 @@ Custom agents for specialized workflows that require systematic analysis and pla
 ### Planning and Strategy Agents
 
 - **sprint-planning.agent.md** - Sprint and iteration planning specialist
-  - **Purpose**: Analyze GitHub Projects, issues, and milestones for sprint planning
-  - **Use case**: Planning sprints with macro strategy awareness and issue readiness validation
+  - **Purpose**: Analyze GitHub Projects, validate issues, and execute approved sprint plans
+  - **Use case**: Planning sprints with macro strategy awareness and automated execution
   - **Tools**: GitHub Projects API, issue management, codebase analysis
   - **Best for**: Coordinating sprint planning with developers and specialized agents
   - **Key features**:
     - Strategic context gathering from GitHub Projects and milestones
     - Issue readiness validation with comprehensive quality gates
     - Dependency analysis and risk assessment
+    - **Automated execution**: Moves issues in GitHub Projects after approval
+    - **Iteration protection**: Cannot modify current/ongoing sprints
     - Coordination between human developers and specialized agents
-    - Human-approved planning process ensuring oversight
+    - Human-approved planning with automatic execution
 
 ## How to Use
 
@@ -137,6 +139,10 @@ The agent will:
 - Validate issue readiness for implementation
 - Recommend sprint composition and implementation approach
 - Present planning recommendations for your approval
+- **Execute the plan** by moving issues in GitHub Projects (future iterations only)
+- Provide execution confirmation with detailed logs
+
+**Important**: The agent will only modify future sprints/iterations. It cannot add or modify issues in the current/ongoing iteration.
 
 ### Using Prompts
 

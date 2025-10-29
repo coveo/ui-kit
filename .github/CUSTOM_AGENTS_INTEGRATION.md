@@ -93,16 +93,18 @@ We've added five chatmodes for specialized development tasks:
 Created `.github/agents/` directory with custom agent definitions:
 
 1. **sprint-planning.agent.md**
-   - **Purpose**: Sprint and iteration planning specialist
-   - **Use case**: Analyzing GitHub Projects, issues, and milestones for sprint planning
-   - **Tools**: GitHub issue management, search, codebase analysis
-   - **Best for**: Validating sprint readiness and coordinating implementation planning
+   - **Purpose**: Sprint and iteration planning specialist with automated execution
+   - **Use case**: Analyzing GitHub Projects, validating issues, and executing approved plans
+   - **Tools**: GitHub issue management, GitHub Projects API, search, codebase analysis
+   - **Best for**: Validating sprint readiness and executing sprint plans automatically
    - **Key features**:
-     - Strategic context gathering from GitHub Projects
-     - Issue readiness validation with quality gates
+     - Strategic context gathering from GitHub Projects and milestones
+     - Issue readiness validation with comprehensive quality gates
      - Dependency analysis and risk assessment
+     - **Automated execution**: Moves issues in GitHub Projects after approval
+     - **Iteration protection**: Cannot modify current/ongoing sprints
      - Coordination between developers and specialized agents
-     - Human-approved planning process
+     - Human review and approval before execution
 
 The agents directory is ready for future additions:
 - Custom MCP-powered agents specific to UI-KIT
@@ -169,11 +171,13 @@ The repository already has strong conventions:
    - Improves team collaboration
 
 6. **Sprint Planning (sprint-planning.agent.md)**
-   - Analyzes GitHub Projects for macro strategy
+   - Analyzes GitHub Projects for macro strategy and deadlines
    - Reviews issues and milestones for sprint readiness
    - Validates implementation approach and dependencies
+   - **Executes approved plans** by moving issues in GitHub Projects
+   - **Protects ongoing sprints** from unintended modifications
    - Coordinates between developers and specialized agents
-   - Requires human approval for final planning decisions
+   - Provides human review workflow with automated execution
 
 ## Files Added
 
