@@ -14,13 +14,13 @@
 To install all dependencies and link local packages, run:
 
 ```sh
-npm i
+pnpm install
 ```
 
 To install a dependency in a specific package, specify the workspace:
 
 ```sh
-npm i lodash -w @coveo/headless-react-samples
+pnpm add lodash -w @coveo/headless-react-samples
 ```
 
 ## Build
@@ -28,13 +28,13 @@ npm i lodash -w @coveo/headless-react-samples
 To build all projects for production, run:
 
 ```sh
-npm run build
+pnpm run build
 ```
 
 To build a single project for production (for instance, the `atomic` package), run:
 
 ```sh
-npx turbo run @coveo/atomic#build
+pnpm turbo run @coveo/atomic#build
 ```
 
 ## Development mode
@@ -44,13 +44,13 @@ Add the `--stencil` switch if you are changing stencil files.
 To start a single project in development (for instance, the `quantic` package), run:
 
 ```sh
-npx turbo run @coveo/quantic#dev
+pnpm turbo run @coveo/quantic#dev
 ```
 
 To run a specific task in a package separate it with colon e.g. to run `test:watch` inside quantic
 
 ```sh
-npx turbo test:watch --filter=@coveo/quantic
+pnpm turbo test:watch --filter=@coveo/quantic
 ```
 
 ## Test
@@ -58,33 +58,33 @@ npx turbo test:watch --filter=@coveo/quantic
 To run the tests for a specific package (recommended) e.g. `atomic` package
 
 ```sh
-npx turbo test --filter=@coveo/atomic
+pnpm turbo test --filter=@coveo/atomic
 ```
 
 For e2e tests
 
 ```sh
-npx turbo run @coveo/atomic#dev
+pnpm turbo run @coveo/atomic#dev
 # In a separate terminal
-npx turbo run @coveo/atomic#e2e
+pnpm turbo run @coveo/atomic#e2e
 ```
 
 To run e2e tests for specific files/components using the Cypress GUI
 
 ```sh
-npx turbo e2e:watch --filter=@coveo/atomic
+pnpm turbo e2e:watch --filter=@coveo/atomic
 ```
 
 ## Lint
 
 ```sh
-npm run lint:check
-npm run lint:fix
+pnpm run lint:check
+pnpm run lint:fix
 ```
 
 ## Misc
 
-The project uses git hooks with [Husky](https://www.npmjs.com/package/husky). You can make sure hooks are correctly installed using the `npm rebuild` command.
+The project uses git hooks with [Husky](https://www.npmjs.com/package/husky). You can make sure hooks are correctly installed using the `pnpm rebuild` command.
 
 ## Recommended VS Code Settings
 

@@ -25,7 +25,7 @@ runs:
         pattern: ${{ inputs.artifact-pattern }}
         merge-multiple: true
     - name: Merge into HTML Report
-      run: npx playwright merge-reports --reporter html ./all-blob-reports
+      run: pnpm exec playwright merge-reports --reporter html ./all-blob-reports
       working-directory: ${{ inputs.working-directory }}
       shell: bash
 
