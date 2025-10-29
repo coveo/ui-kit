@@ -10,6 +10,10 @@ export default {
   'atomic-relevance-inspector': async () =>
     await import('./atomic-relevance-inspector/atomic-relevance-inspector.js'),
   'atomic-result': async () => await import('./atomic-result/atomic-result.js'),
+  'atomic-result-children-template': async () =>
+    await import(
+      './atomic-result-children-template/atomic-result-children-template.js'
+    ),
   'atomic-result-section-actions': async () =>
     await import(
       './atomic-result-section-actions/atomic-result-section-actions.js'
