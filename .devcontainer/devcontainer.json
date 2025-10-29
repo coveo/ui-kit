@@ -12,7 +12,7 @@
   // "forwardPorts": [],
 
   // Use 'updateContentCommand ' to run commands when the prebuild is created or updated https://docs.github.com/en/codespaces/prebuilding-your-codespaces/configuring-prebuilds#configuring-time-consuming-tasks-to-be-included-in-the-prebuild
-  "onCreateCommand": "CI=true bash -c 'npm ci && npm run build'"
+  "onCreateCommand": "CI=true bash -c 'corepack enable pnpm && pnpm install --frozen-lockfile && pnpm run build'"
 
   // Configure tool-specific properties.
   // "customizations": {},

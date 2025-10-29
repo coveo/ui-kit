@@ -1,3 +1,23 @@
+## <small>3.37.1 (2025-10-29)</small>
+
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+* chore(atomic): migrate `atomic-html` (#6202) ([d204f17](https://github.com/coveo/ui-kit/commits/d204f17)), closes [#6202](https://github.com/coveo/ui-kit/issues/6202)
+
+
+
+## 3.37.0 (2025-10-28)
+
+* chore(atomic): add tests for display-options (#6148) ([b15b00c](https://github.com/coveo/ui-kit/commits/b15b00c)), closes [#6148](https://github.com/coveo/ui-kit/issues/6148)
+* chore(atomic): improve item section stories (#6209) ([cb92e2d](https://github.com/coveo/ui-kit/commits/cb92e2d)), closes [#6209](https://github.com/coveo/ui-kit/issues/6209)
+* chore(atomic): migrate atomic-external to lit (#6184) ([9235b73](https://github.com/coveo/ui-kit/commits/9235b73)), closes [#6184](https://github.com/coveo/ui-kit/issues/6184)
+* chore(atomic): migrate atomic-facet (#5995) ([bbd2ea2](https://github.com/coveo/ui-kit/commits/bbd2ea2)), closes [#5995](https://github.com/coveo/ui-kit/issues/5995)
+* chore(atomic): migrate atomic-result (#6134) ([006e0a8](https://github.com/coveo/ui-kit/commits/006e0a8)), closes [#6134](https://github.com/coveo/ui-kit/issues/6134)
+* chore(atomic): migrate item-list-guard (#6196) ([bd74dc5](https://github.com/coveo/ui-kit/commits/bd74dc5)), closes [#6196](https://github.com/coveo/ui-kit/issues/6196)
+* feat(atomic): accessibility updates (LENS-3853) (#6130) ([75b21af](https://github.com/coveo/ui-kit/commits/75b21af)), closes [#6130](https://github.com/coveo/ui-kit/issues/6130)
+* feat(atomic): accessibility updates (locales) (#6200) ([ab843ee](https://github.com/coveo/ui-kit/commits/ab843ee)), closes [#6200](https://github.com/coveo/ui-kit/issues/6200)
+
+
+
 ## 3.36.0 (2025-10-22)
 
 * chore: enable MSW in dev (#6175) ([da90479](https://github.com/coveo/ui-kit/commits/da90479)), closes [#6175](https://github.com/coveo/ui-kit/issues/6175)
