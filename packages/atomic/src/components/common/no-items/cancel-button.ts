@@ -8,6 +8,8 @@ export interface CancelButtonProps {
   onClick: () => void;
 }
 
+import {nothing} from 'lit';
+
 export const renderCancelButton: FunctionalComponent<CancelButtonProps> = ({
   props,
 }) =>
