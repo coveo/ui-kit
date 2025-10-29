@@ -33,12 +33,9 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
       - run: git branch main origin/main
         if: ${{ github.event_name != 'pull_request' }}
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: ./.github/actions/setup
         with:
-          node-version-file: ".nvmrc"
-      - name: Install pnpm
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 #v4.0.0
-      - run: pnpm install --frozen-lockfile
+          skip-build: "true"
       - run: pnpm run pr:report
         env:
           GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
@@ -689,13 +686,9 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
       - run: git branch main origin/main
         if: ${{ github.event_name != 'pull_request' }}
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: ./.github/actions/setup
         with:
-          node-version-file: ".nvmrc"
-      - name: Install pnpm
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 #v4.0.0
-      - run: pnpm install --frozen-lockfile
-        shell: bash
+          skip-build: "true"
       - name: Call ui-kit-cd for dev
         run: node ./scripts/deploy/trigger-ui-kit-cd-pr.mjs
         env:
@@ -858,13 +851,9 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
       - run: git branch main origin/main
         if: ${{ github.event_name != 'pull_request' }}
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: ./.github/actions/setup
         with:
-          node-version-file: ".nvmrc"
-      - name: Install pnpm
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 #v4.0.0
-      - run: pnpm install --frozen-lockfile
-        shell: bash
+          skip-build: "true"
       - name: Call ui-kit-cd for dev
         run: node ./scripts/deploy/trigger-ui-kit-cd-dev.mjs
         env:
