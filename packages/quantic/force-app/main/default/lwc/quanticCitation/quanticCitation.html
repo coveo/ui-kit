@@ -10,53 +10,19 @@
       rel="noopener"
       onmouseenter={handleMouseEnter}
       onmouseleave={handleMouseLeave}
-      onclick={handleClick}
+      onclick={handleClick} 
     >
-      <template lwc:if={shouldShowIcon}>
-        <lightning-icon
-          icon-name={iconName}
-          size="xx-small"
-          class="slds-m-right_xx-small"
-        ></lightning-icon>
-      </template>
       <p
         class="citation__title slds-m-left_x-small slds-truncate slds-has-flexi-truncate"
       >
         {citationTitle}
       </p>
     </a>
-    <c-quantic-tooltip
-      light-theme
-      class="slds-show_medium"
-      target={template.host}
-    >
-      <div
-        class="citation__tooltip"
-        slot="content"
-        onmouseenter={handleTooltipMouseEnter}
-        onmouseleave={handleTooltipMouseLeave}
-      >
-        <div
-          data-testid="citation__tooltip-uri"
-          class="slds-text-body_small slds-text-color_weak slds-truncate slds-var-p-vertical_xxx-small"
-        >
-          {hrefValue}
-        </div>
-        <div
-          data-testid="citation__tooltip-title"
-          class="slds-text-title_bold slds-var-p-vertical_xx-small"
-        >
-          {citationTitle}
-        </div>
-        <div
-          data-testid="citation__tooltip-text"
-          class="citation__tooltip-text slds-text-body_small slds-var-p-vertical_xxx-small"
-        >
-          {text}
-        </div>
-        <div class="citation__tooltip-actions slds-var-p-vertical_x-small">
-          <slot name="actions"></slot>
-        </div>
+    <c-quantic-tooltip light-theme class="slds-show_medium" target={template.host}>
+      <div class="citation__tooltip" slot="content">
+        <div data-testid="citation__tooltip-uri" class="slds-text-body_small slds-text-color_weak slds-truncate slds-var-p-vertical_xxx-small">{hrefValue}</div>
+        <div data-testid="citation__tooltip-title" class="slds-text-title_bold slds-var-p-vertical_xx-small">{citationTitle}</div>
+        <div data-testid="citation__tooltip-text" class="citation__tooltip-text slds-text-body_small slds-var-p-vertical_xxx-small">{text}</div>
       </div>
     </c-quantic-tooltip>
   </li>

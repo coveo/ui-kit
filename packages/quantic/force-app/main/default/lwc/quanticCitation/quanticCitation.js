@@ -14,7 +14,7 @@ const supportedFileTypesForTextFragment = ['html', 'SalesforceItem'];
  * @fires CustomEvent#quantic__citationhover
  * @category Internal
  * @example
- * <c-quantic-citation citation={citation} interactive-citation={interactiveCitation} icon-name="utility:attach" onclick={handleClick} onquantic__citationhover={handleHover} onquantic__citationattach={handleCitationAttach}></c-quantic-citation>
+ * <c-quantic-citation citation={citation} interactive-citation={interactiveCitation} onclick={handleClick} onquantic__citationhover={handleHover}></c-quantic-citation>
  */
 export default class QuanticCitation extends NavigationMixin(LightningElement) {
   /**
@@ -36,12 +36,6 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
    * @default false
    */
   @api disableCitationAnchoring = false;
-  /**
-   * Icon name to display next to the citation. If not provided, no icon is shown.
-   * @api
-   * @type {string}
-   */
-  @api iconName;
 
   /** @type {Object} */
   timeout;
@@ -59,10 +53,6 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   salesforceRecordUrl;
   /** @type {boolean} */
   isHrefWithTextFragment = false;
-  /** @type {boolean} */
-  isHoveringCitation = false;
-  /** @type {boolean} */
-  isHoveringTooltip = false;
 
   connectedCallback() {
     const fileType = this.citation?.fields?.filetype;
@@ -108,47 +98,14 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   }
 
   handleMouseLeave() {
-    this.isHoveringCitation = false;
-
-    // Add a small delay to allow moving to tooltip
     clearTimeout(this.timeout);
-    // eslint-disable-next-line @lwc/lwc/no-async-operation
-    this.timeout = setTimeout(() => {
-      // Only hide if not hovering either element
-      if (!this.isHoveringCitation && !this.isHoveringTooltip) {
-        this.hideTooltipAndDispatchEvent();
-      }
-    }, 100); // Small delay to prevent flickering
-  }
-
-  // New methods for tooltip hover handling
-  handleTooltipMouseEnter() {
-    this.isHoveringTooltip = true;
-    clearTimeout(this.timeout);
-  }
-
-  handleTooltipMouseLeave() {
-    this.isHoveringTooltip = false;
-
-    // Add delay to allow moving back to citation
-    clearTimeout(this.timeout);
-    // eslint-disable-next-line @lwc/lwc/no-async-operation
-    this.timeout = setTimeout(() => {
-      if (!this.isHoveringCitation && !this.isHoveringTooltip) {
-        this.hideTooltipAndDispatchEvent();
-      }
-    }, 100);
-  }
-
-  // Extract the hide logic to avoid duplication
-  hideTooltipAndDispatchEvent() {
     if (this.tooltipIsDisplayed) {
       const tooltipDisplayDuration = Date.now() - this.hoverStartTimestamp;
       if (tooltipDisplayDuration >= minimumTooltipDisplayDurationMs) {
         this.dispatchEvent(
           new CustomEvent('quantic__citationhover', {
             detail: {
-              citationHoverTimeMs: tooltipDisplayDuration,
+              citationHoverTimeMs: Date.now() - this.hoverStartTimestamp,
             },
             bubbles: true,
           })
@@ -180,7 +137,6 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       this.navigateToSalesforceRecord(event);
     }
   }
-
 
   navigateToSalesforceRecord(event) {
     event.stopPropagation();
@@ -249,9 +205,5 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
     return this.isSalesforceLink
       ? this.salesforceRecordUrl
       : (this.clickUri ?? this.citation?.uri);
-  }
-
-  get shouldShowIcon() {
-    return !!this.iconName;
   }
 }
