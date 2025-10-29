@@ -1,0 +1,891 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translations xmlns="http://soap.sforce.com/2006/04/metadata">
+  <customLabels>
+    <label>Resultado {{0}} de {{1}}</label>
+    <name>quantic_ShowingResultsOf</name>
+  </customLabels>
+  <customLabels>
+    <label>Resultados {{0}} de {{1}}</label>
+    <name>quantic_ShowingResultsOf_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Ningún resultado</label>
+    <name>quantic_ShowingResultsOf_zero</name>
+  </customLabels>
+  <customLabels>
+    <label>Resultado {{0}} de {{1}} para {{2}}</label>
+    <name>quantic_ShowingResultsOfWithQuery</name>
+  </customLabels>
+  <customLabels>
+    <label>Resultados {{0}} de {{1}} para {{2}}</label>
+    <name>quantic_ShowingResultsOfWithQuery_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Ningún resultado para {{2}}</label>
+    <name>quantic_ShowingResultsOfWithQuery_zero</name>
+  </customLabels>
+  <customLabels>
+    <label>Ningún resultado</label>
+    <name>quantic_NoResults</name>
+  </customLabels>
+  <customLabels>
+    <label>Ningún resultado para {{0}}</label>
+    <name>quantic_NoResultsFor</name>
+  </customLabels>
+  <customLabels>
+    <label>Eliminar todos los filtros</label>
+    <name>quantic_ClearAllFilters</name>
+  </customLabels>
+  <customLabels>
+    <label>Borrar</label>
+    <name>quantic_Clear</name>
+  </customLabels>
+  <customLabels>
+    <label>Eliminar el filtro</label>
+    <name>quantic_ClearFilter</name>
+  </customLabels>
+  <customLabels>
+    <label>Eliminar {{0}} filtros</label>
+    <name>quantic_ClearFilter_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>+ Ver más resultados</label>
+    <name>quantic_ShowMore</name>
+  </customLabels>
+  <customLabels>
+    <label>- Ver menos resultados</label>
+    <name>quantic_ShowLess</name>
+  </customLabels>
+  <customLabels>
+    <label>Mostrar más valores para la faceta {{0}}</label>
+    <name>quantic_ShowMoreFacetValues</name>
+  </customLabels>
+  <customLabels>
+    <label>Mostrar menos valores para la faceta {{0}}</label>
+    <name>quantic_ShowLessFacetValues</name>
+  </customLabels>
+  <customLabels>
+    <label>Todas las categorías</label>
+    <name>quantic_AllCategories</name>
+  </customLabels>
+  <customLabels>
+    <label>en</label>
+    <name>quantic_InLabel</name>
+  </customLabels>
+  <customLabels>
+    <label>{{0}} más...</label>
+    <name>quantic_NMore</name>
+  </customLabels>
+  <customLabels>
+    <label>Anterior</label>
+    <name>quantic_Previous</name>
+  </customLabels>
+  <customLabels>
+    <label>Siguiente</label>
+    <name>quantic_Next</name>
+  </customLabels>
+  <customLabels>
+    <label>Buscar...</label>
+    <name>quantic_Search</name>
+  </customLabels>
+  <customLabels>
+    <label>La consulta se corrigió automáticamente a {{0}}</label>
+    <name>quantic_QueryCorrectedTo</name>
+  </customLabels>
+  <customLabels>
+    <label>Ordenar por</label>
+    <name>quantic_SortBy</name>
+  </customLabels>
+  <customLabels>
+    <label>Relevancia</label>
+    <name>quantic_Relevancy</name>
+  </customLabels>
+  <customLabels>
+    <label>Más recientes</label>
+    <name>quantic_Newest</name>
+  </customLabels>
+  <customLabels>
+    <label>Más antiguos</label>
+    <name>quantic_Oldest</name>
+  </customLabels>
+  <customLabels>
+    <label>No encontramos nada para {{0}}</label>
+    <name>quantic_NoResultsForTitle</name>
+  </customLabels>
+  <customLabels>
+    <label>Ningún resultado</label>
+    <name>quantic_NoResultsTitle</name>
+  </customLabels>
+  <customLabels>
+    <label>Intente usar diferentes palabras clave o verifique la ortografía.</label>
+    <name>quantic_NoResultsWithoutFilters</name>
+  </customLabels>
+  <customLabels>
+    <label>Intente usar diferentes palabras clave, verificar la ortografía o seleccionar menos filtros.</label>
+    <name>quantic_NoResultsWithFilters</name>
+  </customLabels>
+  <customLabels>
+    <label>Deshacer la última acción</label>
+    <name>quantic_UndoLastAction</name>
+  </customLabels>
+  <customLabels>
+    <label>Ayuda en línea de Coveo</label>
+    <name>quantic_CoveoOnlineHelpLink</name>
+  </customLabels>
+  <customLabels>
+    <label>Más información</label>
+    <name>quantic_MoreInformation</name>
+  </customLabels>
+  <customLabels>
+    <label>Verifique {{0}} para errores similares o {{1}} para más información.</label>
+    <name>quantic_CheckForMore</name>
+  </customLabels>
+  <customLabels>
+    <label>Comunidad</label>
+    <name>quantic_Community</name>
+  </customLabels>
+  <customLabels>
+    <label>Contactar al equipo de soporte de Coveo.</label>
+    <name>quantic_ContactCoveoSupportTeam</name>
+  </customLabels>
+  <customLabels>
+    <label>Volver</label>
+    <name>quantic_GoBack</name>
+  </customLabels>
+  <customLabels>
+    <label>No se puede conectar.</label>
+    <name>quantic_DisconnectedTitle</name>
+  </customLabels>
+  <customLabels>
+    <label>No se pudo enviar su consulta. Puede que haya perdido su conexión a internet.</label>
+    <name>quantic_DisconnectedDesc</name>
+  </customLabels>
+  <customLabels>
+    <label>La organización de Coveo no tiene un punto de acceso único.</label>
+    <name>quantic_NoEndpointsTitle</name>
+  </customLabels>
+  <customLabels>
+    <label>Deberá agregar fuentes a su índice o esperar a que finalice la indexación de las fuentes creadas.</label>
+    <name>quantic_NoEndpointsDesc</name>
+  </customLabels>
+  <customLabels>
+    <label>La organización de Coveo es inaccesible.</label>
+    <name>quantic_InvalidTokenTitle</name>
+  </customLabels>
+  <customLabels>
+    <label>El token de autenticación no es válido.</label>
+    <name>quantic_InvalidTokenDesc</name>
+  </customLabels>
+  <customLabels>
+    <label>Su organización volverá a estar activa y estará disponible pronto.</label>
+    <name>quantic_OrganizationIsPausedTitle</name>
+  </customLabels>
+  <customLabels>
+    <label>Su organización de Coveo está en pausa por inactividad y la búsqueda no está disponible en este momento.</label>
+    <name>quantic_OrganizationIsPausedDesc</name>
+  </customLabels>
+  <customLabels>
+    <label>Ocurrió un error.</label>
+    <name>quantic_GenericErrorTitle</name>
+  </customLabels>
+  <customLabels>
+    <label>Si el problema persiste, contacte al administrador.</label>
+    <name>quantic_GenericErrorDesc</name>
+  </customLabels>
+  <customLabels>
+    <label>Resultados recientes</label>
+    <name>quantic_RecentResults</name>
+  </customLabels>
+  <customLabels>
+    <label>Sus resultados seleccionados recientemente aparecerán aquí.</label>
+    <name>quantic_EmptyRecentResultListLabel</name>
+  </customLabels>
+  <customLabels>
+    <label>Contraer la faceta {{0}}</label>
+    <name>quantic_CollapseFacet</name>
+  </customLabels>
+  <customLabels>
+    <label>Expandir la faceta {{0}}</label>
+    <name>quantic_ExpandFacet</name>
+  </customLabels>
+  <customLabels>
+    <label>Contraer {{0}}</label>
+    <name>quantic_Collapse</name>
+  </customLabels>
+  <customLabels>
+    <label>Expandir {{0}}</label>
+    <name>quantic_Expand</name>
+  </customLabels>
+  <customLabels>
+    <label>Documentación</label>
+    <name>quantic_Documentation</name>
+  </customLabels>
+  <customLabels>
+    <label>Mensaje</label>
+    <name>quantic_Message</name>
+  </customLabels>
+  <customLabels>
+    <label>Video</label>
+    <name>quantic_Video</name>
+  </customLabels>
+  <customLabels>
+    <label>Recomendado</label>
+    <name>quantic_Recommended</name>
+  </customLabels>
+  <customLabels>
+    <label>Destacado</label>
+    <name>quantic_Featured</name>
+  </customLabels>
+  <customLabels>
+    <label>Mín</label>
+    <name>quantic_Min</name>
+  </customLabels>
+  <customLabels>
+    <label>Máx</label>
+    <name>quantic_Max</name>
+  </customLabels>
+  <customLabels>
+    <label>Introduzca un valor numérico mínimo para la faceta {{0}}</label>
+    <name>quantic_NumberInputMinimum</name>
+  </customLabels>
+  <customLabels>
+    <label>Introduzca un valor numérico máximo para la faceta {{0}}</label>
+    <name>quantic_NumberInputMaximum</name>
+  </customLabels>
+  <customLabels>
+    <label>Filtrar</label>
+    <name>quantic_Apply</name>
+  </customLabels>
+  <customLabels>
+    <label>Aplicar los filtros manuales de periodo para la faceta {{0}}</label>
+    <name>quantic_TimeframeInputApply</name>
+  </customLabels>
+  <customLabels>
+    <label>Aplicar los filtros manuales numéricos para la faceta {{0}}</label>
+    <name>quantic_NumberInputApply</name>
+  </customLabels>
+  <customLabels>
+    <label>Este valor debe ser menor o igual a {{0}}</label>
+    <name>quantic_MessageWhenRangeOverflow</name>
+  </customLabels>
+  <customLabels>
+    <label>Este valor debe ser mayor o igual a {{0}}</label>
+    <name>quantic_MessageWhenRangeUnderflow</name>
+  </customLabels>
+  <customLabels>
+    <label>Cerrar</label>
+    <name>quantic_Close</name>
+  </customLabels>
+  <customLabels>
+    <label>Abrir vista previa</label>
+    <name>quantic_OpenPreview</name>
+  </customLabels>
+  <customLabels>
+    <label>Vista previa no disponible</label>
+    <name>quantic_NoPreviewAvailable</name>
+  </customLabels>
+  <customLabels>
+    <label> :</label>
+    <name>quantic_Colon</name>
+  </customLabels>
+  <customLabels>
+    <label>Última hora</label>
+    <name>quantic_PastHour</name>
+  </customLabels>
+  <customLabels>
+    <label>{{0}} últimas horas</label>
+    <name>quantic_PastHour_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Último día</label>
+    <name>quantic_PastDay</name>
+  </customLabels>
+  <customLabels>
+    <label>{{0}} últimos días</label>
+    <name>quantic_PastDay_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Última semana</label>
+    <name>quantic_PastWeek</name>
+  </customLabels>
+  <customLabels>
+    <label>{{0}} últimas semanas</label>
+    <name>quantic_PastWeek_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Último mes</label>
+    <name>quantic_PastMonth</name>
+  </customLabels>
+  <customLabels>
+    <label>{{0}} últimos meses</label>
+    <name>quantic_PastMonth_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Último trimestre</label>
+    <name>quantic_PastQuarter</name>
+  </customLabels>
+  <customLabels>
+    <label>{{0}} últimos trimestres</label>
+    <name>quantic_PastQuarter_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Último año</label>
+    <name>quantic_PastYear</name>
+  </customLabels>
+  <customLabels>
+    <label>{{0}} últimos años</label>
+    <name>quantic_PastYear_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Próxima hora</label>
+    <name>quantic_NextHour</name>
+  </customLabels>
+  <customLabels>
+    <label>{{0}} próximas horas</label>
+    <name>quantic_NextHour_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Próximo día</label>
+    <name>quantic_NextDay</name>
+  </customLabels>
+  <customLabels>
+    <label>{{0}} próximos días</label>
+    <name>quantic_NextDay_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Próxima semana</label>
+    <name>quantic_NextWeek</name>
+  </customLabels>
+  <customLabels>
+    <label>{{0}} próximas semanas</label>
+    <name>quantic_NextWeek_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Próximo mes</label>
+    <name>quantic_NextMonth</name>
+  </customLabels>
+  <customLabels>
+    <label>{{0}} próximos meses</label>
+    <name>quantic_NextMonth_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Próximo trimestre</label>
+    <name>quantic_NextQuarter</name>
+  </customLabels>
+  <customLabels>
+    <label>{{0}} próximos trimestres</label>
+    <name>quantic_NextQuarter_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Próximo año</label>
+    <name>quantic_NextYear</name>
+  </customLabels>
+  <customLabels>
+    <label>{{0}} próximos años</label>
+    <name>quantic_NextYear_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>d</label>
+    <name>quantic_DatePatternDay</name>
+  </customLabels>
+  <customLabels>
+    <label>m</label>
+    <name>quantic_DatePatternMonth</name>
+  </customLabels>
+  <customLabels>
+    <label>a</label>
+    <name>quantic_DatePatternYear</name>
+  </customLabels>
+  <customLabels>
+    <label>Inicio :</label>
+    <name>quantic_StartLabel</name>
+  </customLabels>
+  <customLabels>
+    <label>Fin :</label>
+    <name>quantic_EndLabel</name>
+  </customLabels>
+  <customLabels>
+    <label>Cargando</label>
+    <name>quantic_Loading</name>
+  </customLabels>
+  <customLabels>
+    <label>Sin sugerencias</label>
+    <name>quantic_NoSuggestions</name>
+  </customLabels>
+  <customLabels>
+    <label>¿Cómo podemos ayudarte? Selecciona una opción.</label>
+    <name>quantic_CaseClassificationTitle</name>
+  </customLabels>
+  <customLabels>
+    <label>Opciones adicionales</label>
+    <name>quantic_MoreTopics</name>
+  </customLabels>
+  <customLabels>
+    <label>Selecciona una opción</label>
+    <name>quantic_SelectOption</name>
+  </customLabels>
+  <customLabels>
+    <label>Saber más</label>
+    <name>quantic_ReadMore</name>
+  </customLabels>
+  <customLabels>
+    <label>Más</label>
+    <name>quantic_More</name>
+  </customLabels>
+  <customLabels>
+    <label>Filtros</label>
+    <name>quantic_Filters</name>
+  </customLabels>
+  <customLabels>
+    <label>Ordenar y filtrar</label>
+    <name>quantic_SortAndFilters</name>
+  </customLabels>
+  <customLabels>
+    <label>Ver resultados</label>
+    <name>quantic_ViewResults</name>
+  </customLabels>
+  <customLabels>
+    <label>Página siguiente</label>
+    <name>quantic_NextPage</name>
+  </customLabels>
+  <customLabels>
+    <label>Página anterior</label>
+    <name>quantic_PreviousPage</name>
+  </customLabels>
+  <customLabels>
+    <label>Ir a la página {{0}}.</label>
+    <name>quantic_GoToPage</name>
+  </customLabels>
+  <customLabels>
+    <label>Mostrar {{0}} resultados por página.</label>
+    <name>quantic_ShowNResultsPerPage</name>
+  </customLabels>
+  <customLabels>
+    <label>No hay filtros disponibles para esta consulta</label>
+    <name>quantic_NoFiltersAvailableForThisQuery</name>
+  </customLabels>
+  <customLabels>
+    <label>No hay filtros disponibles para esta consulta en la pestaña actual</label>
+    <name>quantic_NoFilterForCurrentTab</name>
+  </customLabels>
+  <customLabels>
+    <label>Copiar</label>
+    <name>quantic_Copy</name>
+  </customLabels>
+  <customLabels>
+    <label>¡Copiado!</label>
+    <name>quantic_Copied</name>
+  </customLabels>
+  <customLabels>
+    <label>Sí</label>
+    <name>quantic_Yes</name>
+  </customLabels>
+  <customLabels>
+    <label>No</label>
+    <name>quantic_No</name>
+  </customLabels>
+  <customLabels>
+    <label>¿Esto fue útil?</label>
+    <name>quantic_WasThisUseful</name>
+  </customLabels>
+  <customLabels>
+    <label>Dinos por qué</label>
+    <name>quantic_ExplainWhy</name>
+  </customLabels>
+  <customLabels>
+    <label>Ver más</label>
+    <name>quantic_SmartSnippetShowMore</name>
+  </customLabels>
+  <customLabels>
+    <label>Ver menos</label>
+    <name>quantic_SmartSnippetShowLess</name>
+  </customLabels>
+  <customLabels>
+    <label>No responde en absoluto a mi pregunta</label>
+    <name>quantic_DidNotAnswerQuestion</name>
+  </customLabels>
+  <customLabels>
+    <label>No responde completamente a mi pregunta</label>
+    <name>quantic_PartiallyAnsweredQuestion</name>
+  </customLabels>
+  <customLabels>
+    <label>Mi solicitud no era una pregunta</label>
+    <name>quantic_RequestWasNotQuestion</name>
+  </customLabels>
+  <customLabels>
+    <label>Otro</label>
+    <name>quantic_Other</name>
+  </customLabels>
+  <customLabels>
+    <label>¡Gracias por tus comentarios!</label>
+    <name>quantic_ThankYouForFeedback</name>
+  </customLabels>
+  <customLabels>
+    <label>Selecciona el motivo</label>
+    <name>quantic_SelectTheReason</name>
+  </customLabels>
+  <customLabels>
+    <label>Por favor, proporciona detalles.</label>
+    <name>quantic_ProvideDetails</name>
+  </customLabels>
+  <customLabels>
+    <label>Por favor, completa este campo</label>
+    <name>quantic_FillOutField</name>
+  </customLabels>
+  <customLabels>
+    <label>Por favor, elige una de las opciones anteriores</label>
+    <name>quantic_SelectOneOfOptions</name>
+  </customLabels>
+  <customLabels>
+    <label>Cancelar</label>
+    <name>quantic_Cancel</name>
+  </customLabels>
+  <customLabels>
+    <label>Enviar comentarios</label>
+    <name>quantic_SendFeedback</name>
+  </customLabels>
+  <customLabels>
+    <label>Campo obligatorio.</label>
+    <name>quantic_requiredFeedbackQuestion</name>
+  </customLabels>
+  <customLabels>
+    <label>Campos obligatorios</label>
+    <name>quantic_requiredFields</name>
+  </customLabels>
+  <customLabels>
+    <label>Omitir</label>
+    <name>quantic_Skip</name>
+  </customLabels>
+  <customLabels>
+    <label>Hecho</label>
+    <name>quantic_Done</name>
+  </customLabels>
+  <customLabels>
+    <label>Tus comentarios ayudan a mejorar la experiencia de búsqueda.</label>
+    <name>quantic_YourFeedbackHelps</name>
+  </customLabels>
+  <customLabels>
+    <label>¡Ayúdanos a mejorar! Envíanos comentarios adicionales</label>
+    <name>quantic_FeedbackHelpUsImprove</name>
+  </customLabels>
+  <customLabels>
+    <label>¡Gracias por tus comentarios!</label>
+    <name>quantic_ThankYouForYourFeedback</name>
+  </customLabels>
+  <customLabels>
+    <label>la gente también pregunta</label>
+    <name>quantic_PeopleAlsoAsk</name>
+  </customLabels>
+  <customLabels>
+    <label>Filtro por {{0}}; {{1}} resultado</label>
+    <name>quantic_InclusionFilter</name>
+  </customLabels>
+  <customLabels>
+    <label>Filtro por {{0}}; {{1}} resultados</label>
+    <name>quantic_InclusionFilter_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Filtro por {{0}}; ningún resultado</label>
+    <name>quantic_InclusionFilter_zero</name>
+  </customLabels>
+  <customLabels>
+    <label>Consultas recientes</label>
+    <name>quantic_RecentQueries</name>
+  </customLabels>
+  <customLabels>
+    <label>Tus consultas recientes aparecerán aquí.</label>
+    <name>quantic_EmptyRecentQueriesListLabel</name>
+  </customLabels>
+  <customLabels>
+    <label>Mostrar más</label>
+    <name>quantic_LoadRelatedItems</name>
+  </customLabels>
+  <customLabels>
+    <label>Mostrar menos</label>
+    <name>quantic_HideRelatedItems</name>
+  </customLabels>
+  <customLabels>
+    <label>No hay elementos relacionados</label>
+    <name>quantic_NoRelatedItems</name>
+  </customLabels>
+  <customLabels>
+    <label>Navegar al registro</label>
+    <name>quantic_NavigateToRecord</name>
+  </customLabels>
+  <customLabels>
+    <label>Abrir en una pestaña del navegador</label>
+    <name>quantic_OpensInBrowserTab</name>
+  </customLabels>
+  <customLabels>
+    <label>Error del componente {{0}}</label>
+    <name>quantic_ComponentError</name>
+  </customLabels>
+  <customLabels>
+    <label>Consulta la Developer Consola del navegador para más información.</label>
+    <name>quantic_LookAtDeveloperConsole</name>
+  </customLabels>
+  <customLabels>
+    <label>El número máximo de sugerencias de documentos debe ser un entero mayor que 0.</label>
+    <name>quantic_InvalidMaxNumberOfDocumentSuggestions</name>
+  </customLabels>
+  <customLabels>
+    <label>El número de sugerencias de documentos que se abren automáticamente debe ser un entero mayor que 0.</label>
+    <name>quantic_InvalidNumberOfAutoOpenedDocuments</name>
+  </customLabels>
+  <customLabels>
+    <label>No se encontró el nombre de campo API de Salesforce "{{0}}".</label>
+    <name>quantic_SalesforceFieldNotFound</name>
+  </customLabels>
+  <customLabels>
+    <label>El número máximo de sugerencias debe ser un entero mayor que 0.</label>
+    <name>quantic_InvalidMaxNumberOfSuggestions</name>
+  </customLabels>
+  <customLabels>
+    <label>La propiedad "{{0}}" es obligatoria, por favor define su valor.</label>
+    <name>quantic_PropertyIsRequired</name>
+  </customLabels>
+  <customLabels>
+    <label>Error al inicializar un componente</label>
+    <name>quantic_ComponentInitializationError</name>
+  </customLabels>
+  <customLabels>
+    <label>Error fatal: no se pudo inicializar el componente {{0}}.</label>
+    <name>quantic_UnableToInitializeComponent</name>
+  </customLabels>
+  <customLabels>
+    <label>Visto por el cliente</label>
+    <name>quantic_ViewedByCustomer</name>
+  </customLabels>
+  <customLabels>
+    <label>Cargando resultados de búsqueda</label>
+    <name>quantic_LoadingResults</name>
+  </customLabels>
+  <customLabels>
+    <label>Cargando recomendaciones</label>
+    <name>quantic_LoadingRecommendations</name>
+  </customLabels>
+  <customLabels>
+    <label>El valor de la propiedad {{0}} debe ser un número entero mayor que 0.</label>
+    <name>quantic_InvalidPositiveIntegerProperty</name>
+  </customLabels>
+  <customLabels>
+    <label>{{0}} de {{1}}</label>
+    <name>quantic_XOfY</name>
+  </customLabels>
+  <customLabels>
+    <label>Los mejores documentos para ti</label>
+    <name>quantic_TopDocumentsForYou</name>
+  </customLabels>
+  <customLabels>
+    <label>Carrusel</label>
+    <name>quantic_Carousel</name>
+  </customLabels>
+  <customLabels>
+    <label>Deslizar</label>
+    <name>quantic_Slide</name>
+  </customLabels>
+  <customLabels>
+    <label>Respuesta generada</label>
+    <name>quantic_GeneratedAnswerForYou</name>
+  </customLabels>
+  <customLabels>
+    <label>Esta respuesta no fue útil</label>
+    <name>quantic_ThisAnswerWasNotHelpful</name>
+  </customLabels>
+  <customLabels>
+    <label>Esta respuesta fue útil</label>
+    <name>quantic_ThisAnswerWasHelpful</name>
+  </customLabels>
+  <customLabels>
+    <label>Citas</label>
+    <name>quantic_Citations</name>
+  </customLabels>
+  <customLabels>
+    <label>Intentar de nuevo</label>
+    <name>quantic_TryAgain</name>
+  </customLabels>
+  <customLabels>
+    <label>Algo salió mal al intentar generar una respuesta.</label>
+    <name>quantic_CouldNotGenerateAnAnswer</name>
+  </customLabels>
+  <customLabels>
+    <label>Mostrando resultados para {{0}}</label>
+    <name>quantic_ShowingResultsFor</name>
+  </customLabels>
+  <customLabels>
+    <label>Buscar en su lugar {{0}}</label>
+    <name>quantic_SearchInsteadFor</name>
+  </customLabels>
+  <customLabels>
+    <label>Mostrar respuesta generada</label>
+    <name>quantic_ShowGeneratedAnswer</name>
+  </customLabels>
+  <customLabels>
+    <label>Irrelevante</label>
+    <name>quantic_Irrelevant</name>
+  </customLabels>
+  <customLabels>
+    <label>Inexacta</label>
+    <name>quantic_Inaccurate</name>
+  </customLabels>
+  <customLabels>
+    <label>Desactualizada</label>
+    <name>quantic_OutOfDate</name>
+  </customLabels>
+  <customLabels>
+    <label>Ofensiva</label>
+    <name>quantic_Harmful</name>
+  </customLabels>
+  <customLabels>
+    <label>Comentarios</label>
+    <name>quantic_Feedback</name>
+  </customLabels>
+  <customLabels>
+    <label>Cuéntanos por qué la respuesta generada no fue útil.</label>
+    <name>quantic_WhyGeneratedAnswerWasNotHelpful</name>
+  </customLabels>
+  <customLabels>
+    <label>La respuesta generada está oculta</label>
+    <name>quantic_GeneratedAnswerIsHidden</name>
+  </customLabels>
+  <customLabels>
+    <label>Respuesta generada: {{0}}</label>
+    <name>quantic_AnswerGenerated</name>
+  </customLabels>
+  <customLabels>
+    <label>Generando respuesta</label>
+    <name>quantic_GeneratingAnswer</name>
+  </customLabels>
+  <customLabels>
+    <label>Respuesta generada ACTIVADA</label>
+    <name>quantic_GeneratedAnswerOn</name>
+  </customLabels>
+  <customLabels>
+    <label>Respuesta generada DESACTIVADA</label>
+    <name>quantic_GeneratedAnswerOff</name>
+  </customLabels>
+  <customLabels>
+    <label>El contenido generado puede contener errores. Verifica la información importante.</label>
+    <name>quantic_RGADisclaimer</name>
+  </customLabels>
+  <customLabels>
+    <label>Ver más</label>
+    <name>quantic_GeneratedAnswerShowMore</name>
+  </customLabels>
+  <customLabels>
+    <label>Ver menos</label>
+    <name>quantic_GeneratedAnswerShowLess</name>
+  </customLabels>
+  <customLabels>
+    <label>La configuración del orden personalizado no es válida.</label>
+    <name>quantic_InvalidCustomSortConfiguration</name>
+  </customLabels>
+  <customLabels>
+    <label>Campo de búsqueda con sugerencias. Las sugerencias pueden aparecer debajo de este campo. Para enviar, presiona Enter.</label>
+    <name>quantic_SearchFieldWithSuggestions</name>
+  </customLabels>
+  <customLabels>
+    <label>{{0}} sugerencia de búsqueda encontrada, usa las flechas arriba y abajo para navegar.</label>
+    <name>quantic_SuggestionFound</name>
+  </customLabels>
+  <customLabels>
+    <label>{{0}} sugerencias de búsqueda encontradas, usa las flechas arriba y abajo para navegar.</label>
+    <name>quantic_SuggestionFound_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>No hay sugerencias de búsqueda.</label>
+    <name>quantic_SuggestionNotFound</name>
+  </customLabels>
+  <customLabels>
+    <label>Búsqueda reciente,</label>
+    <name>quantic_RecentQueryAriaLabel</name>
+  </customLabels>
+  <customLabels>
+    <label>Sugerencia de búsqueda,</label>
+    <name>quantic_QuerySuggestionAriaLabel</name>
+  </customLabels>
+  <customLabels>
+    <label>¿La respuesta trata sobre el tema correcto?</label>
+    <name>quantic_FeedbackQuestionTopic</name>
+  </customLabels>
+  <customLabels>
+    <label>¿La respuesta está libre de contenido inventado?</label>
+    <name>quantic_FeedbackQuestionHallucination</name>
+  </customLabels>
+  <customLabels>
+    <label>¿La documentación puede responder la pregunta?</label>
+    <name>quantic_FeedbackQuestionDocumented</name>
+  </customLabels>
+  <customLabels>
+    <label>¿La respuesta es clara y legible?</label>
+    <name>quantic_FeedbackQuestionReadable</name>
+  </customLabels>
+  <customLabels>
+    <label>No estoy seguro</label>
+    <name>quantic_FeedbackNotSure</name>
+  </customLabels>
+  <customLabels>
+    <label>Evaluación de la respuesta</label>
+    <name>quantic_FeedbackAnswerEvaluation</name>
+  </customLabels>
+  <customLabels>
+    <label>Enlace a la respuesta correcta</label>
+    <name>quantic_FeedbackDocumentUrl</name>
+  </customLabels>
+  <customLabels>
+    <label>Por favor, proporciona un enlace a la respuesta correcta</label>
+    <name>quantic_FeedbackDocumentUrlExplanation</name>
+  </customLabels>
+  <customLabels>
+    <label>Ticket creado</label>
+    <name>quantic_TicketCreated</name>
+  </customLabels>
+  <customLabels>
+    <label>Búsqueda vacía</label>
+    <name>quantic_EmptySearch</name>
+  </customLabels>
+  <customLabels>
+    <label>{{count}} acción adicional en esta sesión</label>
+    <name>quantic_MoreActionsInThisSession</name>
+  </customLabels>
+  <customLabels>
+    <label>{{count}} otras acciones en esta sesión</label>
+    <name>quantic_MoreActionsInThisSession_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Mostrar sesiones siguientes</label>
+    <name>quantic_ShowFollowingSessions</name>
+  </customLabels>
+  <customLabels>
+    <label>Ocultar sesiones siguientes</label>
+    <name>quantic_HideFollowingSessions</name>
+  </customLabels>
+  <customLabels>
+    <label>Mostrar sesiones anteriores</label>
+    <name>quantic_ShowPrecedingSessions</name>
+  </customLabels>
+  <customLabels>
+    <label>Ocultar sesiones anteriores</label>
+    <name>quantic_HidePrecedingSessions</name>
+  </customLabels>
+  <customLabels>
+    <label>No hay acciones de usuario disponibles</label>
+    <name>quantic_NoUserActionsAvailable</name>
+  </customLabels>
+  <customLabels>
+    <label>No hay acciones de usuario asociadas con el identificador de usuario o el caso es demasiado antiguo para detectar acciones relacionadas.</label>
+    <name>quantic_NoUserActionsAssociatedWithParams</name>
+  </customLabels>
+  <customLabels>
+    <label>Acciones del usuario</label>
+    <name>quantic_UserActions</name>
+  </customLabels>
+  <customLabels>
+    <label>Cerrar notificación</label>
+    <name>quantic_CloseNotification</name>
+  </customLabels>
+  <customLabels>
+    <label>Recursos relevantes para este caso</label>
+    <name>quantic_InsightRelatedToThisCase</name>
+  </customLabels>
+</Translations>
