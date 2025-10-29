@@ -115,7 +115,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
 
     this.tooltipIsDisplayed = false;
     this.shouldShowTooltipAfterDelay = false;
-    this.tooltipComponent.hideTooltip();
+    // this.tooltipComponent.hideTooltip();
   }
 
   /**
