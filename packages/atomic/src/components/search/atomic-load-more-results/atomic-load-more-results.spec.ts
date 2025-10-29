@@ -2,6 +2,7 @@ import {buildQuerySummary, buildResultList} from '@coveo/headless';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
+import {createAppLoadedListener} from '@/src/components/common/interface/store';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
@@ -11,12 +12,17 @@ import type {AtomicLoadMoreResults} from './atomic-load-more-results';
 import './atomic-load-more-results';
 
 vi.mock('@coveo/headless', {spy: true});
+vi.mock('@/src/components/common/interface/store', {spy: true});
 describe('atomic-load-more-results', () => {
   const mockedEngine = buildFakeSearchEngine();
   let fetchMoreResultsSpy: Mock;
+  let appLoadedCallback: (isAppLoaded: boolean) => void;
 
   beforeEach(() => {
     fetchMoreResultsSpy = vi.fn();
+    vi.mocked(createAppLoadedListener).mockImplementation((_store, cb) => {
+      appLoadedCallback = cb;
+    });
   });
 
   const renderLoadMoreResults = async ({
@@ -75,6 +81,8 @@ describe('atomic-load-more-results', () => {
         },
       });
 
+    appLoadedCallback(isAppLoaded);
+
     return {
       element,
       get loadMoreButton() {
@@ -101,6 +109,28 @@ describe('atomic-load-more-results', () => {
       },
     };
   };
+
+  describe('#initialize', () => {
+    it('should call #createAppLoadedListener with store', async () => {
+      const {element} = await renderLoadMoreResults();
+      expect(createAppLoadedListener).toHaveBeenCalledWith(
+        element.bindings.store,
+        expect.any(Function)
+      );
+    });
+
+    it('should update #isAppLoaded when app loaded state changes', async () => {
+      const {element} = await renderLoadMoreResults({
+        props: {isAppLoaded: false},
+      });
+      // biome-ignore lint/complexity/useLiteralKeys: <accessing private property for testing>
+      expect(element['isAppLoaded']).toBe(false);
+
+      appLoadedCallback(true);
+      // biome-ignore lint/complexity/useLiteralKeys: <accessing private property for testing>
+      expect(element['isAppLoaded']).toBe(true);
+    });
+  });
 
   it('should call #buildQuerySummary with engine', async () => {
     const {element} = await renderLoadMoreResults();
