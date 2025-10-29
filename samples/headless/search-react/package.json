@@ -27,7 +27,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && vite build --ssr server/server.tsx --outDir build/server",
     "serve": "vite preview",
     "test": "vitest run",
     "prod:ssr": "node ./build/server/index.js"
