@@ -50,6 +50,7 @@ describe('atomic-load-more-results', () => {
       buildFakeSummary({
         state: {
           total: totalNumberOfResults,
+          lastResult: numberOfResults,
           hasResults: totalNumberOfResults > 0,
           firstSearchExecuted: true,
         },
