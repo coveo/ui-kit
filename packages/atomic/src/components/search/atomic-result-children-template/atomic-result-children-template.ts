@@ -12,14 +12,13 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
 
 /**
- * A result template determines the format of the query results, depending on the conditions that are defined for each template.
+ * A children result template determines the format of the child results, depending on the conditions that are defined for each template.
  *
  * @slot default - The default slot where to insert the template element.
- * @slot link - A `template` element that contains a single `atomic-result-link` component.
  */
-@customElement('atomic-result-template')
+@customElement('atomic-result-children-template')
 @withTailwindStyles
-export class AtomicResultTemplate
+export class AtomicResultChildrenTemplate
   extends LitElement
   implements LitElementWithError
 {
@@ -38,9 +37,9 @@ export class AtomicResultTemplate
   conditions: ResultTemplateCondition[] = [];
 
   /**
-   * The field and values that define which results the condition must be applied to.
-   * For example, a template with the following attribute only applies to results whose `sourcetype` is `YouTube` or `Salesforce`:
-   * `must-match-sourcetype="YouTube,Salesforce"`
+   * The field and values that define which child results the condition must be applied to.
+   * For example, a template with the following attribute only applies to child results whose `filetype` is `lithiummessage` or `YouTubePlaylist`:
+   * `must-match-filetype="lithiummessage,YouTubePlaylist"`
    * @type {Record<string, string[]>}
    * @default {}
    */
@@ -48,26 +47,21 @@ export class AtomicResultTemplate
   mustMatch!: Record<string, string[]>;
 
   /**
-   * The field and values that define which results the condition must not be applied to.
-   * For example, a template with the following attribute only applies to results whose `sourcetype` is not `YouTube`:
-   * `must-not-match-sourcetype="YouTube"`
+   * The field and values that define which child results the condition must not be applied to.
+   * For example, a template with the following attribute only applies to child results whose `filetype` is not `lithiummessage`:
+   * `must-not-match-filetype="lithiummessage"`
    * @type {Record<string, string[]>}
    * @default {}
    */
   @mapProperty({splitValues: true, attributePrefix: 'must-not-match'})
   mustNotMatch!: Record<string, string[]>;
+
   constructor() {
     super();
-    const validParent = [
-      'atomic-result-list',
-      'atomic-folded-result-list',
-      'atomic-search-box-instant-results',
-    ];
-    const allowEmpty = true;
     this.resultTemplateController = new ResultTemplateController(
       this,
-      validParent,
-      allowEmpty
+      ['atomic-result-children'],
+      false
     );
   }
 
@@ -95,6 +89,6 @@ export class AtomicResultTemplate
 
 declare global {
   interface HTMLElementTagNameMap {
-    'atomic-result-template': AtomicResultTemplate;
+    'atomic-result-children-template': AtomicResultChildrenTemplate;
   }
 }
