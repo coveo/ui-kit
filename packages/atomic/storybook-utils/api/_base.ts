@@ -30,20 +30,20 @@ export class EndpointHarness<TResponse extends {}> {
     this.baseResponse = initialBaseResponse;
   }
 
-  modifyBaseResponse(modifier: (base: TResponse) => TResponse) {
+  mock(modifier: (base: TResponse) => TResponse) {
     this.baseResponse = modifier(this.baseResponse);
   }
 
-  resetBaseResponse() {
-    this.modifyBaseResponse(() => this.initialBaseResponse);
+  reset() {
+    this.mock(() => this.initialBaseResponse);
   }
 
-  enqueueNetworkError() {
+  mockErrorOnce() {
     this.nextResponses.push('error');
     this.nextResponseInit.push({});
   }
 
-  enqueueNextResponse(
+  mockOnce(
     responseMiddleware: (response: TResponse) => TResponse,
     httpResponseInit: HttpResponseInit = {}
   ) {
@@ -51,7 +51,7 @@ export class EndpointHarness<TResponse extends {}> {
     this.nextResponseInit.push(httpResponseInit);
   }
 
-  flushQueuedResponses() {
+  clear() {
     this.nextResponses.length = 0;
   }
 

@@ -55,7 +55,7 @@ const meta: Meta = {
     handlers: [...mockCommerceApi.handlers],
   },
   beforeEach: async () => {
-    mockCommerceApi.recommendationEndpoint.flushQueuedResponses();
+    mockCommerceApi.recommendationEndpoint.clear();
   },
   argTypes,
 
@@ -120,7 +120,7 @@ export const AsCarousel: Story = {
 export const NoRecommendations: Story = {
   name: 'No recommendations',
   beforeEach: async () => {
-    mockCommerceApi.recommendationEndpoint.enqueueNextResponse((response) => ({
+    mockCommerceApi.recommendationEndpoint.mockOnce((response) => ({
       ...response,
       products: [],
       pagination: {

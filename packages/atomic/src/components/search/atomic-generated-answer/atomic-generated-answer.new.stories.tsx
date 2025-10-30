@@ -13,7 +13,7 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 
 const mockedAnswerApi = new MockAnswerApi();
 const mockedSearchApi = new MockSearchApi();
-mockedSearchApi.searchEndpoint.modifyBaseResponse((response) => ({
+mockedSearchApi.searchEndpoint.mock((response) => ({
   ...response,
   extendedResults: {
     generativeQuestionAnsweringId: 'fbc64016-5f04-4a47-aad1-0bccaa2c0616',
