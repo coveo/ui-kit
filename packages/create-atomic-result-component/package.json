@@ -7,8 +7,11 @@
   "bin": "index.js",
   "files": [
     "index.js",
-    "template/**/*",
-    "!template/**/project.json",
+    "template/src/components/sample-result-component/.gitignore",
+    "template/src/components/sample-result-component/package.json",
+    "template/src/components/sample-result-component/stencil.config.ts",
+    "template/src/components/sample-result-component/tsconfig.json",
+    "template/src/components/sample-result-component/src/**/*",
     "template/.gitignore"
   ],
   "scripts": {
