@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 import {readFileSync} from 'node:fs';
-import {describeNpmTag, npmPublish} from '@coveo/semantic-monorepo-tools';
+import {
+  describePnpmTag,
+  pnpmPublishPackage,
+} from '@coveo/semantic-monorepo-tools';
 
 if (!process.env.INIT_CWD) {
-  throw new Error('Should be called using npm run-script');
+  throw new Error('Should be called using pnpm run');
 }
 process.chdir(process.env.INIT_CWD);
 
@@ -14,7 +17,7 @@ process.chdir(process.env.INIT_CWD);
  */
 async function isPublished(name, version, tag = version) {
   try {
-    const publishedVersion = await describeNpmTag(name, tag);
+    const publishedVersion = await describePnpmTag(name, tag);
     return publishedVersion === version;
   } catch (e) {
     const message = /** @type {{stderr?: string}} */ (e).stderr;
@@ -38,7 +41,7 @@ if (!(await isPublished(name, version))) {
   const tagToPublish = isPrerelease
     ? ['alpha', ...(tagSuffix ? [tagSuffix] : [])].join('-')
     : 'beta';
-  await npmPublish('.', {
+  await pnpmPublishPackage('.', {
     tag: tagToPublish,
     provenance: true,
   });

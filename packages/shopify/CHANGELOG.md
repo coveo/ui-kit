@@ -1,3 +1,9 @@
+## <small>1.9.7 (2025-10-29)</small>
+
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
 ## <small>1.9.3 (2025-10-15)</small>
 
 * feat(shopify): minify shopify cdn output (#6120) ([1d72d4e](https://github.com/coveo/ui-kit/commits/1d72d4e)), closes [#6120](https://github.com/coveo/ui-kit/issues/6120)

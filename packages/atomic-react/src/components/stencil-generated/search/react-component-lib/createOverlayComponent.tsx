@@ -136,7 +136,12 @@ export const createOverlayComponent = <OverlayComponent extends object, OverlayT
     }
   }
 
-  return React.forwardRef<OverlayType, Props>((props, ref) => {
-    return <Overlay {...props} forwardedRef={ref} />;
+  type InternalProps = Props;
+  type ExternalProps = Omit<InternalProps, 'forwardedRef'>;
+
+  const Forwarded = React.forwardRef<OverlayType, ExternalProps>((props, ref) => {
+    return <Overlay {...(props as InternalProps)} forwardedRef={ref} />;
   });
+  (Forwarded as any).displayName = (Overlay as any).displayName;
+  return Forwarded;
 };

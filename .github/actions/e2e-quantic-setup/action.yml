@@ -15,7 +15,7 @@ runs:
   steps:
     - run: |
         echo "${{ inputs.jwtkey }}" > server.key
-        npx --no-install ts-node scripts/build/deploy-community.ts --ci --scratch-org-def-path=./config/lws-${{ inputs.lws-status }}-scratch-def.json
+        pnpm exec ts-node scripts/build/deploy-community.ts --ci --scratch-org-def-path=./config/lws-${{ inputs.lws-status }}-scratch-def.json
         rm server.key
       shell: bash
       working-directory: ./packages/quantic
