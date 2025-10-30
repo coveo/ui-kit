@@ -7,9 +7,13 @@
   "bin": "index.js",
   "files": [
     "index.js",
-    "template/**/*",
-    "!template/**/project.json",
-    "template/.gitignore"
+    "template/.editorconfig",
+    "template/.gitignore",
+    "template/package.json",
+    "template/readme.md",
+    "template/stencil.config.ts",
+    "template/tsconfig.json",
+    "template/src/**/*"
   ],
   "scripts": {
     "release:phase3": "pnpm --filter @coveo/ci npm-publish",
