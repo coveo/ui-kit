@@ -1,6 +1,12 @@
 import {expect, test} from './fixture';
 
 test.describe('atomic-recs-interface', () => {
+  test('should be A11y compliant', async ({recsInterface, makeAxeBuilder}) => {
+    await recsInterface.load();
+    await recsInterface.hydrated.waitFor();
+    const accessibilityResults = await makeAxeBuilder().analyze();
+    expect(accessibilityResults.violations).toEqual([]);
+  });
   test.describe('when interface has not been initialized', () => {
     test.beforeEach(async ({recsInterface}) => {
       await recsInterface.load({
@@ -37,15 +43,6 @@ test.describe('atomic-recs-interface', () => {
       });
     });
 
-    test('should be A11y compliant', async ({
-      recsInterface,
-      makeAxeBuilder,
-    }) => {
-      await recsInterface.hydrated.waitFor();
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations).toEqual([]);
-    });
-
     test('should display the recs interface', async ({recsInterface}) => {
       await expect(recsInterface.interface()).toBeVisible();
     });
@@ -66,7 +63,10 @@ test.describe('atomic-recs-interface', () => {
       recsInterface,
     }) => {
       await recsInterface.hydrated.waitFor();
-      const firstResultLink = recsInterface.getResultLink(0);
+      const firstResultLink = recsInterface
+        .getResultLink(0)
+        .locator('a')
+        .first();
       await expect(firstResultLink).toBeVisible();
       await expect(firstResultLink).toHaveAttribute('href');
     });
