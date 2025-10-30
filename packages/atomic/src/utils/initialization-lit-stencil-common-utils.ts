@@ -4,6 +4,11 @@ import {closest} from './dom-utils';
 import {buildCustomEvent} from './event-utils';
 import {enqueueOrDispatchInitializationEvent} from './init-queue';
 
+/**
+ * Retrieves `Bindings` or `CommerceBindings` on a configured parent interface.
+ * @param event - The element on which to dispatch the event, which must be the child of a configured Atomic container element.
+ * @returns A promise that resolves upon initialization of the parent container element, and rejects otherwise.
+ */
 export function fetchBindings<SpecificBindings extends AnyBindings>(
   element: Element
 ) {

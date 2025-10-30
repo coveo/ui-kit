@@ -3,6 +3,7 @@ import {
   fetchBindings,
   MissingInterfaceParentError,
 } from './initialization-lit-stencil-common-utils';
+import '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
 
 describe('fetchBindings', () => {
   it('should rejects when the component is not the children of a search interface element', async () => {
@@ -12,8 +13,7 @@ describe('fetchBindings', () => {
     );
   });
 
-  // TODO: KIT-3909: un-skip test once the search interface is implemented
-  it.skip("revolves the bindings when it's a children of a configured search interface element", async () => {
+  it("resolves the bindings when it's a children of a configured search interface element", async () => {
     const searchInterface = document.createElement('atomic-search-interface');
     document.body.appendChild(searchInterface);
 

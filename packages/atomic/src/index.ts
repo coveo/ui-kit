@@ -21,7 +21,7 @@ export {RecsBindings} from './components/recommendations/atomic-recs-interface/a
 export {Bindings} from './components/search/atomic-search-interface/atomic-search-interface';
 export {resultContext} from './components/search/result-template-component-utils/context/stencil-result-template-decorators';
 export {
-  initializeBindings,
+  fetchBindings as initializeBindings,
   MissingInterfaceParentError,
-} from './utils/initialization-utils';
+} from './utils/initialization-lit-stencil-common-utils';
 export {bindLogDocumentOpenOnResult} from './utils/result-utils';
