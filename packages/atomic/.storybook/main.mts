@@ -96,7 +96,6 @@ function getPackageVersion(): string {
 const config: StorybookConfig = {
   stories: [
     './Introduction.stories.tsx',
-    '../src/**/CommerceIntroduction.stories.tsx',
     '../src/**/*.new.stories.tsx',
     '../src/**/*.mdx',
     '../storybook-pages/**/*.new.stories.tsx',
