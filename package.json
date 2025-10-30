@@ -65,7 +65,8 @@
       "@wc-toolkit/storybook-helpers@9.0.1": "patches/@wc-toolkit+storybook-helpers+9.0.1.patch",
       "fix-esm-import-path@1.10.1": "patches/fix-esm-import-path+1.10.1.patch",
       "jest-environment-jsdom@29.7.0": "patches/jest-environment-jsdom+29.7.0.patch",
-      "@stencil/react-output-target@0.5.3": "patches/@stencil__react-output-target@0.5.3.patch"
+      "@stencil/react-output-target@0.5.3": "patches/@stencil__react-output-target@0.5.3.patch",
+      "dayjs": "patches/dayjs.patch"
     },
     "overrides": {
       "braces": "3.0.3",
