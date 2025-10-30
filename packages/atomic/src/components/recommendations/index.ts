@@ -1,2 +1,2 @@
 // Auto-generated file
-export {};
+export {AtomicRecsInterface} from './atomic-recs-interface/atomic-recs-interface.js';
