@@ -73,7 +73,7 @@
     "dist/"
   ],
   "scripts": {
-    "dev": "concurrently \"pnpm run build:definitions -- -w\" \"pnpm run build:bundles -- dev\"",
+    "dev": "concurrently \"pnpm run build:definitions -w\" \"pnpm run build:bundles dev\"",
     "build": "pnpm run build:definitions && pnpm run build:bundles && pnpm run build:esm",
     "build:bundles": "node esbuild.mjs",
     "build:esm": "node ./scripts/build.mjs --config=tsconfig.build-esm.json",
