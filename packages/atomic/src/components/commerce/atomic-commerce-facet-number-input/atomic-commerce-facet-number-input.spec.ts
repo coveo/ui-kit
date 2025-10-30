@@ -1,7 +1,7 @@
 import type {NumericFacet} from '@coveo/headless/commerce';
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
+import {page} from 'vitest/browser';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {
   AtomicCommerceFacetNumberInput,
@@ -63,8 +63,8 @@ describe('atomic-commerce-facet-number-input', () => {
     };
   };
 
-  it('should be defined', () => {
-    const el = document.createElement('atomic-commerce-facet-number-input');
+  it('should be defined', async () => {
+    const el = await setupElement();
     expect(el).toBeInstanceOf(AtomicCommerceFacetNumberInput);
   });
 

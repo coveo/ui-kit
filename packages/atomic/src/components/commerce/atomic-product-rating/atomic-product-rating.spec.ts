@@ -79,8 +79,8 @@ describe('atomic-product-rating', () => {
     return element;
   };
 
-  it('should be defined', () => {
-    const el = document.createElement('atomic-product-rating');
+  it('should be defined', async () => {
+    const el = await renderComponent();
     expect(el).toBeInstanceOf(AtomicProductRating);
   });
 

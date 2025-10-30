@@ -1,6 +1,6 @@
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
+import {page} from 'vitest/browser';
 import {renderFacetValueCheckbox} from '@/src/components/common/facets/facet-value-checkbox/facet-value-checkbox';
 import {renderFacetValueLabelHighlight} from '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {renderFacetValueLink} from '@/src/components/common/facets/facet-value-link/facet-value-link';

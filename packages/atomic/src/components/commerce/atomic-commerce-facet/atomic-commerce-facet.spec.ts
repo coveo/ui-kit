@@ -1,5 +1,4 @@
 import type {RegularFacet, Summary} from '@coveo/headless/commerce';
-import {page, userEvent} from '@vitest/browser/context';
 import {html, LitElement} from 'lit';
 import {
   afterEach,
@@ -10,6 +9,7 @@ import {
   type MockInstance,
   vi,
 } from 'vitest';
+import {page, userEvent} from 'vitest/browser';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeRegularFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/facet-controller';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';

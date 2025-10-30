@@ -6,10 +6,11 @@ import {createProductContextController} from './product-context-controller';
 vi.mock(
   '@/src/components/common/item-list/context/item-context-controller',
   () => ({
-    ItemContextController: vi.fn().mockImplementation(() => ({})),
+    ItemContextController: vi.fn().mockImplementation(() => {}),
     MissingParentError: vi
       .fn()
-      .mockImplementation((elementName, parentName) => {
+      // biome-ignore lint/complexity/useArrowFunction: https://vitest.dev/guide/migration.html#spyon-and-fn-support-constructors
+      .mockImplementation(function (elementName, parentName) {
         const error = new Error(
           `The "${elementName}" element must be the child of an "${parentName}" element.`
         );
@@ -52,12 +53,9 @@ describe('product-template-controllers', () => {
     });
 
     it('should return ItemContextController instance', () => {
-      const mockController = {} as ItemContextController;
-      vi.mocked(ItemContextController).mockReturnValue(mockController);
-
       const result = createProductContextController(mockHost);
 
-      expect(result).toBe(mockController);
+      expect(result).toBe(vi.mocked(ItemContextController).mock.instances[0]);
     });
   });
 });

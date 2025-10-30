@@ -1,6 +1,6 @@
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {page} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderCarouselIndicator} from './image-carousel-indicators';
 

@@ -1,7 +1,7 @@
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeAll, describe, expect, it} from 'vitest';
+import {page} from 'vitest/browser';
 import '@/src/components/common/atomic-layout-section/atomic-layout-section';
 import './atomic-commerce-layout';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';

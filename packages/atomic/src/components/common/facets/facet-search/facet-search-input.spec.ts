@@ -1,7 +1,7 @@
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {userEvent} from 'storybook/test';
 import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
+import {page} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {

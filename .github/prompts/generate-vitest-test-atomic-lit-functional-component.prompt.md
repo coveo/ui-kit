@@ -50,7 +50,7 @@ For functional components, you'll typically need:
 ```typescript
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {page} from '@vitest/browser/context';
+import {page} from 'vitest/browser';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {describe, it, vi, expect, beforeEach, beforeAll} from 'vitest';

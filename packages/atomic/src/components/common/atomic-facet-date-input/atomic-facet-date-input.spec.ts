@@ -1,10 +1,10 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: For testing, locators should always exist */
 
 import type {DateFilterRange} from '@coveo/headless';
-import {page, userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {when} from 'lit/directives/when.js';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {page, userEvent} from 'vitest/browser';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import './atomic-facet-date-input';
 import {AtomicFacetDateInput} from './atomic-facet-date-input';
@@ -68,8 +68,8 @@ describe('atomic-facet-date-input', () => {
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
-  it('should initialize', () => {
-    const el = document.createElement('atomic-facet-date-input');
+  it('should initialize', async () => {
+    const el = await setupElement();
     expect(el).toBeInstanceOf(AtomicFacetDateInput);
   });
 

@@ -1,8 +1,8 @@
 /* eslint-disable @cspell/spellchecker */
 
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeAll, describe, expect, it, type MockedFunction, vi} from 'vitest';
+import {page} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import type {CategoryFacetAllCategoryButtonProps} from './all-categories-button';

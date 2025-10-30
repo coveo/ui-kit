@@ -1,7 +1,7 @@
 import {buildProductListing, buildSearch} from '@coveo/headless/commerce';
-import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {userEvent} from 'vitest/browser';
 import {getAriaMessageFromErrorType} from '@/src/components/common/query-error/utils';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';

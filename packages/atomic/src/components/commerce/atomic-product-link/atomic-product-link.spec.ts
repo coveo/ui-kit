@@ -1,8 +1,8 @@
 import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
-import {type Locator, page} from '@vitest/browser/context';
 import {html, nothing} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {type Locator, page} from 'vitest/browser';
 import type {InteractiveItemContextController} from '@/src/components/common/item-list/context/interactive-item-context-controller';
 import type {ItemContextController} from '@/src/components/common/item-list/context/item-context-controller';
 import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-product-fixture';
@@ -89,8 +89,8 @@ describe('atomic-product-link', () => {
     };
   };
 
-  it('should be defined', () => {
-    const el = document.createElement('atomic-product-link');
+  it('should be defined', async () => {
+    const el = await renderProductLink();
     expect(el).toBeInstanceOf(AtomicProductLink);
   });
 

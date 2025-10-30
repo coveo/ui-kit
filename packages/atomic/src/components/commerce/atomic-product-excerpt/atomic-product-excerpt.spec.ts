@@ -4,8 +4,8 @@ import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/ato
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import './atomic-product-excerpt';
 import '../atomic-product-text/atomic-product-text';
-import {userEvent} from '@vitest/browser/context';
 import {ifDefined} from 'lit/directives/if-defined.js';
+import {userEvent} from 'vitest/browser';
 import type {TruncateAfter} from '../../common/expandable-text/expandable-text';
 import type {AtomicProductExcerpt} from './atomic-product-excerpt';
 

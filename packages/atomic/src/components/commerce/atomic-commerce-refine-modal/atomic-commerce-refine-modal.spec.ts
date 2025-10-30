@@ -11,10 +11,10 @@ import {
   type SortState,
   type Summary,
 } from '@coveo/headless/commerce';
-import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, expect, it, vi} from 'vitest';
+import {userEvent} from 'vitest/browser';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/breadcrumb-manager-subcontroller';
 import {buildFakeFacetGenerator} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/facet-generator-subcontroller';

@@ -55,7 +55,7 @@ Create a `.spec.ts` file with this structure:
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFake*} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/*-controller';
 import {vi, describe, it, expect, beforeEach} from 'vitest';
-import {page} from '@vitest/browser/context';
+import {page} from 'vitest/browser';
 import {html} from 'lit';
 
 // Component import

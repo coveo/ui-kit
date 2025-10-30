@@ -1,9 +1,9 @@
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildProductListing, buildSearch} from '@coveo/headless/commerce';
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {page} from 'vitest/browser';
 import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
@@ -68,8 +68,8 @@ describe('atomic-commerce-sort-dropdown', () => {
     return element;
   };
 
-  it('is defined', () => {
-    const el = document.createElement('atomic-commerce-sort-dropdown');
+  it('is defined', async () => {
+    const el = await setupElement();
     expect(el).toBeInstanceOf(AtomicCommerceSortDropdown);
   });
 

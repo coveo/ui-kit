@@ -1,7 +1,7 @@
-import {page} from '@vitest/browser/context';
 import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {page} from 'vitest/browser';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {arrayConverter} from './array-converter';
 

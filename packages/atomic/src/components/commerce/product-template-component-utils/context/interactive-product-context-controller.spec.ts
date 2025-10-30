@@ -7,7 +7,7 @@ import {createInteractiveProductContextController} from './interactive-product-c
 vi.mock(
   '@/src/components/common/item-list/context/interactive-item-context-controller',
   () => ({
-    InteractiveItemContextController: vi.fn().mockImplementation(() => ({})),
+    InteractiveItemContextController: vi.fn().mockImplementation(() => {}),
   })
 );
 

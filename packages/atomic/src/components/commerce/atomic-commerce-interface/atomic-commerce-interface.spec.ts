@@ -18,7 +18,15 @@ import {customElement, state} from 'lit/decorators.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {when} from 'lit/directives/when.js';
 import {within} from 'shadow-dom-testing-library';
-import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  type MockInstance,
+  vi,
+} from 'vitest';
 import {InterfaceController} from '@/src/components/common/interface/interface-controller';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
@@ -183,6 +191,10 @@ describe('atomic-commerce-interface', () => {
     vi.mocked(loadQueryActions).mockReturnValue({
       updateQuery: vi.fn(),
     });
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
   describe('#constructor (when created)', () => {

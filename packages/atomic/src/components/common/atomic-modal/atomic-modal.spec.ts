@@ -1,6 +1,6 @@
-import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {userEvent} from 'vitest/browser';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';

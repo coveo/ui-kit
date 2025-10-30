@@ -30,8 +30,10 @@ describe('LayoutStylesController', () => {
     const mockStyleSheet = {
       replaceSync: vi.fn(),
     } as unknown as CSSStyleSheet;
-
-    globalThis.CSSStyleSheet = vi.fn(() => mockStyleSheet);
+    vi.stubGlobal(
+      'CSSStyleSheet',
+      vi.fn(() => mockStyleSheet)
+    );
     return mockStyleSheet;
   };
 

@@ -45,7 +45,7 @@ Always include these imports in your commerce component tests:
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFake*} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/*-controller';
 import {vi, describe, it, expect, beforeEach} from 'vitest';
-import {page} from '@vitest/browser/context';
+import {page} from 'vitest/browser';
 import {html} from 'lit';
 
 // Mock headless at the top level
@@ -86,7 +86,7 @@ const renderComponent = async (options = {}) => {
 
 ### Using Page Locators
 
-Use page locators from `@vitest/browser/context` for element selection:
+Use page locators from `vitest/browser` for element selection:
 
 ```typescript
 const locators = {
@@ -164,7 +164,7 @@ Molecule example
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeController} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/controller';
 import {buildHeadlessFunction} from '@coveo/headless/commerce';
-import {page} from '@vitest/browser/context';
+import {page} from 'vitest/browser';
 import {html} from 'lit';
 import {describe, it, vi, expect, beforeEach} from 'vitest';
 
@@ -371,7 +371,7 @@ describe('my-utils-file', () => {
 - **Use `beforeEach` for setup, not `afterEach`** - the framework handles cleanup automatically
 - **Prefer `renderInAtomicCommerceInterface`** over `fixture` for commerce components to ensure proper context
 - **Mock logger when tests log errors/warnings** to keep test output clean
-- **Use page locators** from `@vitest/browser/context` for better test reliability
+- **Use page locators** from `vitest/browser` for better test reliability
 - **Create reusable render functions** to avoid duplication and ensure consistent setup
 - **Use `buildFake*` utilities** instead of creating manual mocks for headless controllers
 

@@ -4,9 +4,9 @@ import {
   buildSearchStatus,
   buildTabManager,
 } from '@coveo/headless';
-import {page, userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
+import {page, userEvent} from 'vitest/browser';
 import './atomic-facet';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
