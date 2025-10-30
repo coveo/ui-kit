@@ -11,22 +11,22 @@ import {
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
+import {renderQueryErrorContainer} from '@/src/components/common/query-error/container';
+import {renderQueryErrorDescription} from '@/src/components/common/query-error/description';
+import {renderQueryErrorDetails} from '@/src/components/common/query-error/details';
+import {renderQueryErrorIcon} from '@/src/components/common/query-error/icon';
+import {renderQueryErrorLink} from '@/src/components/common/query-error/link';
+import {renderQueryErrorShowMore} from '@/src/components/common/query-error/show-more';
+import {renderQueryErrorTitle} from '@/src/components/common/query-error/title';
+import {getAriaMessageFromErrorType} from '@/src/components/common/query-error/utils';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {AriaLiveRegionController} from '../../../utils/accessibility-utils';
-import {renderQueryErrorContainer} from '../../common/query-error/container';
-import {renderQueryErrorDescription} from '../../common/query-error/description';
-import {renderQueryErrorDetails} from '../../common/query-error/details';
-import {renderQueryErrorIcon} from '../../common/query-error/icon';
-import {renderQueryErrorLink} from '../../common/query-error/link';
-import {renderQueryErrorShowMore} from '../../common/query-error/show-more';
-import {renderQueryErrorTitle} from '../../common/query-error/title';
-import {getAriaMessageFromErrorType} from '../../common/query-error/utils';
-import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 
 /**
  * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
