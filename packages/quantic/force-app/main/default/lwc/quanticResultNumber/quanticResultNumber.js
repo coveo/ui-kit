@@ -1,5 +1,4 @@
 import LOCALE from '@salesforce/i18n/locale';
-import {getBueno} from 'c/quanticHeadlessLoader';
 import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
@@ -49,23 +48,21 @@ export default class QuanticResultNumber extends LightningElement {
   validated = false;
 
   connectedCallback() {
-    getBueno(this).then(() => {
-      if (!this.result || !this.field || !Bueno.isString(this.field)) {
-        console.error(
-          `The ${this.template.host.localName} requires a result and a number field to be specified.`
-        );
-        this.setError();
-      }
-      if (this.label && !Bueno.isString(this.label)) {
-        console.error(`The "${this.label}" label is not a valid string.`);
-        this.setError();
-      }
-      if (!Bueno.isNumber(this.fieldValue)) {
-        console.error(`The "${this.field}" field value is not a valid number.`);
-        this.setError();
-      }
-      this.validated = true;
-    });
+    if (!this.result || !this.field || !Bueno.isString(this.field)) {
+      console.error(
+        `The ${this.template.host.localName} requires a result and a number field to be specified.`
+      );
+      this.setError();
+    }
+    if (this.label && !Bueno.isString(this.label)) {
+      console.error(`The "${this.label}" label is not a valid string.`);
+      this.setError();
+    }
+    if (!Bueno.isNumber(this.fieldValue)) {
+      console.error(`The "${this.field}" field value is not a valid number.`);
+      this.setError();
+    }
+    this.validated = true;
   }
 
   setError() {

@@ -9,7 +9,6 @@ import selectTheReason from '@salesforce/label/c.quantic_SelectTheReason';
 import sendFeedback from '@salesforce/label/c.quantic_SendFeedback';
 import thankYouForYourFeedback from '@salesforce/label/c.quantic_ThankYouForYourFeedback';
 import yourFeedbackHelps from '@salesforce/label/c.quantic_YourFeedbackHelps';
-import {getBueno} from 'c/quanticHeadlessLoader';
 import LightningModal from 'lightning/modal';
 import {api} from 'lwc';
 import errorTemplate from './error.html';
@@ -77,16 +76,14 @@ export default class QuanticFeedbackModal extends LightningModal {
    * Validates the properties provided to the feedback modal.
    */
   validateFeedbackModal() {
-    getBueno(this).then(() => {
-      this.validateTheOptionsProperty();
-      if (!this.error) {
-        this.validateOptions();
-      }
-      if (!this.error) {
-        this.validateTheSubmitFeedbackProperty();
-      }
-      this.isValidated = true;
-    });
+    this.validateTheOptionsProperty();
+    if (!this.error) {
+      this.validateOptions();
+    }
+    if (!this.error) {
+      this.validateTheSubmitFeedbackProperty();
+    }
+    this.isValidated = true;
   }
 
   validateTheOptionsProperty() {

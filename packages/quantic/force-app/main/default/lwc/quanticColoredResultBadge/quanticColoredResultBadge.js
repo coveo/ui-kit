@@ -1,4 +1,3 @@
-import {getBueno} from 'c/quanticHeadlessLoader';
 import {LightningElement, api} from 'lwc';
 import {HEXToRGB, invalidRGBValues, validHEXColor} from './colorsUtils';
 
@@ -52,27 +51,25 @@ export default class QuanticColoredResultBadge extends LightningElement {
   validated = false;
 
   connectedCallback() {
-    getBueno(this).then(() => {
-      if (
-        (!this.label || !Bueno.isString(this.label)) &&
-        (!this.result || !this.field || !Bueno.isString(this.field))
-      ) {
-        console.error(
-          `The ${this.template.host.localName} requires a label or result and a field to be specified.`
-        );
-        this.setError();
-      }
-      if (this.color && !validHEXColor(this.color)) {
-        console.error(`The "${this.color}" color is not a valid HEX color.`);
-        this.setError();
-      }
-      if (!this.color) {
-        console.warn(
-          'The color property has not been specified, the default colors will be used.'
-        );
-      }
-      this.validated = true;
-    });
+    if (
+      (!this.label || !Bueno.isString(this.label)) &&
+      (!this.result || !this.field || !Bueno.isString(this.field))
+    ) {
+      console.error(
+        `The ${this.template.host.localName} requires a label or result and a field to be specified.`
+      );
+      this.setError();
+    }
+    if (this.color && !validHEXColor(this.color)) {
+      console.error(`The "${this.color}" color is not a valid HEX color.`);
+      this.setError();
+    }
+    if (!this.color) {
+      console.warn(
+        'The color property has not been specified, the default colors will be used.'
+      );
+    }
+    this.validated = true;
   }
 
   setError() {
