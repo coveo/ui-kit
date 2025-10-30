@@ -11,6 +11,7 @@ import {
   AtomicQuerySummary as LitAtomicQuerySummary,
   AtomicResult as LitAtomicResult,
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
+  AtomicResultList as LitAtomicResultList,
   AtomicResultSectionActions as LitAtomicResultSectionActions,
   AtomicResultSectionBadges as LitAtomicResultSectionBadges,
   AtomicResultSectionBottomMetadata as LitAtomicResultSectionBottomMetadata,
@@ -100,6 +101,12 @@ export const AtomicResultChildrenTemplate = createComponent({
   tagName: 'atomic-result-children-template',
   react: React,
   elementClass: LitAtomicResultChildrenTemplate,
+});
+
+export const AtomicResultList = createComponent({
+  tagName: 'atomic-result-list',
+  react: React,
+  elementClass: LitAtomicResultList,
 });
 
 export const AtomicResultSectionActions = createComponent({
