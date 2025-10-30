@@ -1,13 +1,9 @@
 import {readFileSync} from 'node:fs';
 import path, {dirname, resolve} from 'node:path';
-import {fileURLToPath} from 'node:url';
 import type {StorybookConfig} from '@storybook/web-components-vite';
 import type {PluginImpl} from 'rollup';
 import {mergeConfig} from 'vite';
 import {generateExternalPackageMappings} from '../scripts/externalPackageMappings.mjs';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 const virtualOpenApiModules: PluginImpl = () => {
   const virtualModules = new Map<string, string>();
@@ -46,10 +42,7 @@ const virtualOpenApiModules: PluginImpl = () => {
           return moduleContent;
         } catch (error) {
           console.error(`Error fetching OpenAPI spec from ${url}:`, error);
-          // Return empty object as fallback instead of throwing
-          const fallbackContent = `export default {};`;
-          virtualModules.set(id, fallbackContent);
-          return fallbackContent;
+          throw error;
         }
       }
       return null;

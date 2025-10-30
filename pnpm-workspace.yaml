@@ -70,7 +70,3 @@ publicHoistPattern:
 minimumReleaseAge: 10080
 minimumReleaseAgeExclude:
   - '@coveo/*'
-  - 'storybook'
-  - '@storybook/*'
-  - 'vitest'
-  - '@vitest/*'
