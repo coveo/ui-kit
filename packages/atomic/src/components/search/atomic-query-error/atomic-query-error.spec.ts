@@ -4,7 +4,7 @@ import {
   type QueryErrorState,
 } from '@coveo/headless';
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {getAriaMessageFromErrorType} from '@/src/components/common/query-error/utils';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
@@ -19,21 +19,6 @@ describe('atomic-query-error', () => {
     type: 'UnknownError',
     statusCode: 500,
     message: 'An error occurred',
-  };
-
-  const locators = {
-    parts: (element: AtomicQueryError) => {
-      const qs = (part: string) =>
-        element.shadowRoot?.querySelector(`[part="${part}"]`);
-      return {
-        icon: qs('icon'),
-        title: qs('title'),
-        description: qs('description'),
-        docLink: qs('doc-link'),
-        moreInfoBtn: qs('more-info-btn'),
-        errorInfo: qs('error-info'),
-      };
-    },
   };
 
   const buildFakeQueryError = ({
@@ -104,28 +89,44 @@ describe('atomic-query-error', () => {
       },
     });
 
-    return element;
+    return {
+      element,
+      icon: element.shadowRoot!.querySelector('[part="icon"]'),
+      title: element.shadowRoot!.querySelector('[part="title"]'),
+      description: element.shadowRoot!.querySelector('[part="description"]'),
+      docLink: element.shadowRoot!.querySelector('[part="doc-link"]'),
+      moreInfoBtn: element.shadowRoot!.querySelector('[part="more-info-btn"]'),
+      errorInfo: element.shadowRoot!.querySelector('[part="error-info"]'),
+      parts: (element: AtomicQueryError) => {
+        const qs = (part: string) =>
+          element.shadowRoot?.querySelector(`[part="${part}"]`);
+        return {
+          icon: qs('icon'),
+          title: qs('title'),
+          description: qs('description'),
+          docLink: qs('doc-link'),
+          moreInfoBtn: qs('more-info-btn'),
+          errorInfo: qs('error-info'),
+        };
+      },
+    };
   };
 
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   it('should render correctly', async () => {
-    const element = await renderQueryError();
+    const {element} = await renderQueryError();
     expect(element).toBeDefined();
   });
 
   describe('#initialize', () => {
     it('should build query error controller with correct engine', async () => {
-      const element = await renderQueryError();
+      const {element} = await renderQueryError();
 
       expect(buildQueryError).toHaveBeenCalledWith(element.bindings.engine);
       expect(element.queryError).toBeDefined();
     });
 
     it('should have required bindings after initialization', async () => {
-      const element = await renderQueryError();
+      const {element} = await renderQueryError();
 
       expect(element.bindings).toBeDefined();
       expect(element.bindings.engine).toBeDefined();
@@ -140,7 +141,7 @@ describe('atomic-query-error', () => {
         throw buildEngineError;
       });
 
-      const element = await renderQueryError();
+      const {element} = await renderQueryError();
       expect(element).toBeDefined();
       expect(buildQueryError).toHaveBeenCalled();
 
@@ -149,7 +150,7 @@ describe('atomic-query-error', () => {
 
     describe('when organization configuration changes', () => {
       it('should handle different organization IDs', async () => {
-        const element = await renderQueryError({
+        const {element} = await renderQueryError({
           hasError: true,
           error: mockError,
           organizationId: 'custom-org-id',
@@ -161,7 +162,7 @@ describe('atomic-query-error', () => {
       });
 
       it('should handle different environments', async () => {
-        const element = await renderQueryError({
+        const {element} = await renderQueryError({
           hasError: true,
           error: mockError,
           environment: 'dev',
@@ -176,13 +177,13 @@ describe('atomic-query-error', () => {
 
   describe('#render', () => {
     it('should render nothing when there is no error', async () => {
-      const element = await renderQueryError({hasError: false});
+      const {element} = await renderQueryError({hasError: false});
 
       expect(element.shadowRoot?.textContent?.trim()).toBe('');
     });
 
     it('should render error content when there is an error', async () => {
-      const element = await renderQueryError({
+      const {element} = await renderQueryError({
         hasError: true,
         error: mockError,
       });
@@ -192,19 +193,18 @@ describe('atomic-query-error', () => {
 
     describe('when hasError is true', () => {
       it('should display all error parts', async () => {
-        const element = await renderQueryError({
+        const {icon, title, description} = await renderQueryError({
           hasError: true,
           error: mockError,
         });
-        const parts = locators.parts(element);
 
-        expect(parts.icon).toBeInTheDocument();
-        expect(parts.title).toBeInTheDocument();
-        expect(parts.description).toBeInTheDocument();
+        expect(icon).toBeInTheDocument();
+        expect(title).toBeInTheDocument();
+        expect(description).toBeInTheDocument();
       });
 
       it('should set aria message for accessibility', async () => {
-        const element = await renderQueryError({
+        const {element} = await renderQueryError({
           hasError: true,
           error: mockError,
           organizationId: 'test-org',
@@ -236,7 +236,7 @@ describe('atomic-query-error', () => {
 
       describe('when showMoreInfo state changes', () => {
         it('should initially set showMoreInfo to false', async () => {
-          const element = await renderQueryError({
+          const {element} = await renderQueryError({
             hasError: true,
             error: mockError,
           });
@@ -244,7 +244,7 @@ describe('atomic-query-error', () => {
         });
 
         it('should toggle showMoreInfo when show more is triggered', async () => {
-          const element = await renderQueryError({
+          const {element} = await renderQueryError({
             hasError: true,
             error: mockError,
           });
@@ -259,27 +259,27 @@ describe('atomic-query-error', () => {
         });
 
         it('should render error details when showMoreInfo is true', async () => {
-          const element = await renderQueryError({
+          const {element, parts} = await renderQueryError({
             hasError: true,
             error: mockError,
           });
           element.showMoreInfo = true;
           await element.updateComplete;
 
-          const parts = locators.parts(element);
-          expect(parts.errorInfo).toBeInTheDocument();
+          const errorInfo = parts(element).errorInfo;
+          expect(errorInfo).toBeInTheDocument();
         });
 
         it('should not render error details when showMoreInfo is false', async () => {
-          const element = await renderQueryError({
+          const {element, parts} = await renderQueryError({
             hasError: true,
             error: mockError,
           });
           element.showMoreInfo = false;
           await element.updateComplete;
 
-          const parts = locators.parts(element);
-          expect(parts.errorInfo).not.toBeInTheDocument();
+          const errorInfo = parts(element).errorInfo;
+          expect(errorInfo).not.toBeInTheDocument();
         });
       });
     });
@@ -333,25 +333,23 @@ describe('atomic-query-error', () => {
 
     describe('shadow DOM parts', () => {
       it('should render all expected shadow DOM parts when error occurs', async () => {
-        const element = await renderQueryError({
+        const {icon, title, description} = await renderQueryError({
           hasError: true,
           error: mockError,
         });
-        const parts = locators.parts(element);
 
-        expect(parts.icon).toBeInTheDocument();
-        expect(parts.title).toBeInTheDocument();
-        expect(parts.description).toBeInTheDocument();
+        expect(icon).toBeInTheDocument();
+        expect(title).toBeInTheDocument();
+        expect(description).toBeInTheDocument();
       });
 
       it('should conditionally render show more button part', async () => {
-        const element = await renderQueryError({
+        const {moreInfoBtn} = await renderQueryError({
           hasError: true,
           error: mockError,
         });
-        const parts = locators.parts(element);
 
-        expect(parts.moreInfoBtn).toBeInTheDocument();
+        expect(moreInfoBtn).toBeInTheDocument();
       });
     });
   });
