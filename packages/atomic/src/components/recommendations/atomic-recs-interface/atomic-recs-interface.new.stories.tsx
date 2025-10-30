@@ -37,9 +37,32 @@ const meta: Meta = {
     await customElements.whenDefined('atomic-recs-interface');
     await recsInterface!.getRecommendations();
   },
-  argTypes,
+  argTypes: {
+    ...argTypes,
+    engine: {
+      ...argTypes,
+      control: {
+        disable: true,
+      },
+      table: {
+        defaultValue: {summary: undefined},
+      },
+    },
+    i18n: {
+      ...argTypes.i18n,
+      control: {
+        disable: true,
+      },
+      table: {
+        defaultValue: {summary: undefined},
+      },
+    },
+  },
   args: {
     ...args,
+    engine: undefined,
+    i18n: undefined,
+    language: 'en',
     'default-slot': `<span>Interface content</span>`,
   },
 };
@@ -49,7 +72,7 @@ export default meta;
 export const Default: Story = {};
 
 export const RecsBeforeInit: Story = {
-  tags: ['test'],
+  tags: ['!dev'],
   play: async (context) => {
     const recsInterface = context.canvasElement.querySelector(
       'atomic-recs-interface'
