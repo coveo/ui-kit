@@ -152,12 +152,16 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
 
     event.stopPropagation();
 
+    // Extract action type from data attribute of the slotted element
+    const actionType = slottedElement.dataset.action;
+
     // Dispatch custom event with citation data
     this.dispatchEvent(
       new CustomEvent('citationaction', {
         detail: {
           citation: this.citation,
           citationId: this.citation?.index,
+          actionType,
           originalEvent: event,
         },
         bubbles: true,
