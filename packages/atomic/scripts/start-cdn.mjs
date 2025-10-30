@@ -152,7 +152,7 @@ const validateArgs = (
   ) {
     console.error(
       colors.red(
-        'Usage: npm run web:cdn -w=@coveo/atomic -- --env <local|prod|dev|staging> --atomic <vX.Y.Z> [--headless <vX.Y.Z>]'
+        'Usage: pnpm --filter @coveo/atomic web:cdn -- --env <local|prod|dev|staging> --atomic <vX.Y.Z> [--headless <vX.Y.Z>]'
       )
     );
     process.exit(1);

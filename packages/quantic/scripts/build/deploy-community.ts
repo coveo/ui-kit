@@ -37,6 +37,7 @@ interface Options {
 function updateEnvFile(filePath, newVariables) {
   try {
     if (!fs.existsSync(filePath)) {
+      fs.mkdirSync(path.dirname(filePath), {recursive: true});
       fs.writeFileSync(filePath, '', 'utf8');
     }
 
@@ -289,7 +290,7 @@ async function publishCommunity(
 }
 
 async function setCommunityBaseUrlAsEnvVariable(log, communityUrl, orgName) {
-  const pathSegments = [__dirname, '..', '..', '.env'];
+  const pathSegments = [__dirname, '..', '..', '.env', `${orgName}.env`];
   const envFilePath = path.join(...pathSegments);
   const newEnvVariables = {
     [`${orgName}_URL`]: communityUrl,
