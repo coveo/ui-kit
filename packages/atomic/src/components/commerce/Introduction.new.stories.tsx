@@ -2,7 +2,7 @@ import type {Meta, StoryObj} from '@storybook/web-components-vite';
 import {html} from 'lit';
 
 const meta: Meta = {
-  title: 'Commerce',
+  title: 'Commerce/Introduction',
   id: 'commerce-introduction',
 };
 
