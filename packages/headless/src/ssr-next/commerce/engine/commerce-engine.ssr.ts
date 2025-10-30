@@ -3,6 +3,7 @@
  */
 
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import {createAccessTokenManager} from '../../common/access-token-manager.js';
 import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
 import {defineContext} from '../controllers/context/headless-context.ssr.js';
 import {defineParameterManager} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
@@ -19,7 +20,6 @@ import type {
   CommerceEngineDefinition,
   CommerceEngineDefinitionOptions,
 } from '../types/engine.js';
-import {createAccessTokenManager} from '../utils/access-token-manager.js';
 import {validateControllerNames} from '../validation/controller-validation.js';
 
 /**
