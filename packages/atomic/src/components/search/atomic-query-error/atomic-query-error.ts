@@ -7,21 +7,21 @@ import {
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import {renderQueryErrorContainer} from '@/src/components/common/query-error/container';
+import {renderQueryErrorDescription} from '@/src/components/common/query-error/description';
+import {renderQueryErrorDetails} from '@/src/components/common/query-error/details';
+import {renderQueryErrorIcon} from '@/src/components/common/query-error/icon';
+import {renderQueryErrorLink} from '@/src/components/common/query-error/link';
+import {renderQueryErrorShowMore} from '@/src/components/common/query-error/show-more';
+import {renderQueryErrorTitle} from '@/src/components/common/query-error/title';
+import {getAriaMessageFromErrorType} from '@/src/components/common/query-error/utils';
 import {bindStateToController} from '@/src/decorators/bind-state';
-import {bindingGuard} from '@/src/decorators/binding-guard.js';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {AriaLiveRegionController} from '../../../utils/accessibility-utils';
-import {renderQueryErrorContainer} from '../../common/query-error/container';
-import {renderQueryErrorDescription} from '../../common/query-error/description';
-import {renderQueryErrorDetails} from '../../common/query-error/details';
-import {renderQueryErrorIcon} from '../../common/query-error/icon';
-import {renderQueryErrorLink} from '../../common/query-error/link';
-import {renderQueryErrorShowMore} from '../../common/query-error/show-more';
-import {renderQueryErrorTitle} from '../../common/query-error/title';
-import {getAriaMessageFromErrorType} from '../../common/query-error/utils';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -50,7 +50,7 @@ export class AtomicQueryError
   @state() public bindings!: Bindings;
   public queryError!: QueryError;
   @state() public error!: Error;
-  @state() showMoreInfo = false;
+  @state() public showMoreInfo = false;
 
   public initialize() {
     this.queryError = buildQueryError(this.bindings.engine);
@@ -60,16 +60,9 @@ export class AtomicQueryError
   @bindingGuard()
   render() {
     const {hasError, error} = this.queryErrorState;
-    const {
-      bindings: {
-        i18n,
-        engine: {
-          state: {
-            configuration: {organizationId, environment},
-          },
-        },
-      },
-    } = this;
+    const i18n = this.bindings.i18n;
+    const {organizationId, environment} =
+      this.bindings.engine.state.configuration;
     const url = getOrganizationEndpoint(organizationId, environment);
     if (hasError) {
       this.ariaMessage.message = getAriaMessageFromErrorType(
