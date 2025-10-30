@@ -353,8 +353,10 @@ export class AtomicFacet
         sortCriteria: this.sortCriteria,
         resultsMustMatch: this.resultsMustMatch,
         displayValuesAs: this.displayValuesAs,
-        allowedValues: this.allowedValues,
-        customSort: this.customSort,
+        allowedValues: Array.isArray(this.allowedValues)
+          ? this.allowedValues
+          : [],
+        customSort: Array.isArray(this.customSort) ? this.customSort : [],
       }),
       new Schema({
         field: new StringValue({required: true, emptyAllowed: false}),
