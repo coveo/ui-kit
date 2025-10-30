@@ -35,7 +35,7 @@ const meta: Meta = {
   args,
   argTypes,
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.clearMockedResponses();
+    mockSearchApi.searchEndpoint.clear();
   },
   play,
 };
@@ -51,7 +51,7 @@ export const QueryTrigger: Story = {};
 export const WithAutomaticQueryCorrection: Story = {
   name: 'With automatic query correction',
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockImplementationOnce((response) => ({
+    mockSearchApi.searchEndpoint.mockOnce((response) => ({
       ...response,
       queryCorrection: {
         correctedQuery: 'coveo',
@@ -65,7 +65,7 @@ export const WithAutomaticQueryCorrection: Story = {
 export const WithoutAutomaticQueryCorrection: Story = {
   name: 'Without automatic query correction',
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockImplementationOnce((response) => ({
+    mockSearchApi.searchEndpoint.mockOnce((response) => ({
       ...response,
       queryCorrection: {
         corrections: [

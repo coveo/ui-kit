@@ -142,7 +142,7 @@ const meta: Meta = {
   args,
   argTypes,
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.clearMockedResponses();
+    mockSearchApi.searchEndpoint.clear();
   },
   play,
 };
@@ -162,7 +162,7 @@ export const WithNoResultChildren: Story = {
     'default-slot': SLOTS_DEFAULT,
   },
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockImplementationOnce(() => ({
+    mockSearchApi.searchEndpoint.mockOnce(() => ({
       ...baseFoldedResponse,
       results: [
         {
@@ -183,7 +183,7 @@ export const WithFewResultChildren: Story = {
     'default-slot': SLOTS_DEFAULT,
   },
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockImplementationOnce(() => ({
+    mockSearchApi.searchEndpoint.mockOnce(() => ({
       ...baseFoldedResponse,
       results: [
         {
@@ -203,7 +203,7 @@ export const WithMoreResultsAvailableAndNoChildren: Story = {
     'default-slot': SLOTS_DEFAULT,
   },
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockImplementationOnce(() => ({
+    mockSearchApi.searchEndpoint.mockOnce(() => ({
       ...baseFoldedResponse,
       results: [
         {

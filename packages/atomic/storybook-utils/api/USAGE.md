@@ -64,7 +64,7 @@ export const Default: Story = {
 
 Each endpoint in a Mock API class is an `EndpointHarness` instance with the following methods:
 
-### `mockImplementation(modifier)`
+### `mock(modifier)`
 
 Permanently modifies the base response used for all subsequent requests.
 
@@ -72,7 +72,7 @@ Permanently modifies the base response used for all subsequent requests.
 
 ```typescript
 // Reduce total results to 30
-searchApiHarness.searchEndpoint.mockImplementation((response) => ({
+searchApiHarness.searchEndpoint.mock((response) => ({
   ...response,
   results: response.results.slice(0, 30),
   totalCount: 30,
@@ -80,7 +80,7 @@ searchApiHarness.searchEndpoint.mockImplementation((response) => ({
 }));
 ```
 
-### `mockImplementationOnce(modifier, httpResponseInit?)`
+### `mockOnce(modifier, httpResponseInit?)`
 
 Queues a modified response for the next API request. Responses are consumed in FIFO order.
 
@@ -88,7 +88,7 @@ Queues a modified response for the next API request. Responses are consumed in F
 
 ```typescript
 // Queue specific responses for a story
-searchApiHarness.searchEndpoint.mockImplementationOnce((response) => ({
+searchApiHarness.searchEndpoint.mockOnce((response) => ({
   ...response,
   results: response.results.slice(0, 10),
 }));
@@ -97,22 +97,22 @@ searchApiHarness.searchEndpoint.mockImplementationOnce((response) => ({
 **Optional second parameter** for HTTP response options:
 
 ```typescript
-searchApiHarness.searchEndpoint.mockImplementationOnce(
+searchApiHarness.searchEndpoint.mockOnce(
   (response) => response,
   { status: 201, headers: { 'X-Custom': 'value' } }
 );
 ```
 
-### `mockNetworkErrorOnce()`
+### `mockErrorOnce()`
 
 Queues a network error for the next request.
 
 ```typescript
 // Simulate network failure
-searchApiHarness.searchEndpoint.mockNetworkErrorOnce();
+searchApiHarness.searchEndpoint.mockErrorOnce();
 ```
 
-### `clearMockedResponses()`
+### `clear()`
 
 Clears all queued responses, returning to the base response behavior.
 
@@ -120,16 +120,16 @@ Clears all queued responses, returning to the base response behavior.
 
 ```typescript
 beforeEach: () => {
-  searchApiHarness.searchEndpoint.clearMockedResponses();
+  searchApiHarness.searchEndpoint.clear();
 }
 ```
 
-### `resetImplementation()`
+### `reset()`
 
 Resets the base response to the initial default.
 
 ```typescript
-searchApiHarness.searchEndpoint.resetImplementation();
+searchApiHarness.searchEndpoint.reset();
 ```
 
 ## Common Patterns
@@ -142,22 +142,22 @@ Test multi-page interactions by queuing responses for each page:
 const meta: Meta = {
   // ... config
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.clearMockedResponses();
+    searchApiHarness.searchEndpoint.clear();
     
     // First page: results 0-40
-    searchApiHarness.searchEndpoint.mockImplementationOnce((response) => ({
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       results: response.results.slice(0, 40),
     }));
     
     // Second page: results 40-80
-    searchApiHarness.searchEndpoint.mockImplementationOnce((response) => ({
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       results: response.results.slice(40, 80),
     }));
     
     // Third page: results 80-120
-    searchApiHarness.searchEndpoint.mockImplementationOnce((response) => ({
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       results: response.results.slice(80),
     }));
@@ -172,7 +172,7 @@ Test components with no results:
 ```typescript
 export const NoResults: Story = {
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.mockImplementationOnce((response) => ({
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       results: [],
       totalCount: 0,
@@ -190,7 +190,7 @@ Test components with fewer results than expected:
 ```typescript
 export const FewResults: Story = {
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.mockImplementationOnce((response) => ({
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       results: response.results.slice(0, 3),
       totalCount: 3,
@@ -208,14 +208,14 @@ Test error states and network failures:
 ```typescript
 export const NetworkError: Story = {
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.mockNetworkErrorOnce();
+    searchApiHarness.searchEndpoint.mockErrorOnce();
   },
   play,
 };
 
 export const ApiError: Story = {
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.mockImplementationOnce(() => ({
+    searchApiHarness.searchEndpoint.mockOnce(() => ({
       ok: false,
       status: 500,
       statusCode: 500,
@@ -235,7 +235,7 @@ Modify the base response at the meta level to affect all stories:
 const searchApiHarness = new MockSearchApi();
 
 // Apply to all stories
-searchApiHarness.searchEndpoint.mockImplementation((response) => ({
+searchApiHarness.searchEndpoint.mock((response) => ({
   ...response,
   results: response.results.slice(0, 50),
   totalCount: 50,
@@ -278,7 +278,7 @@ Flush responses **before** each story to ensure a clean slate:
 ```typescript
 const meta: Meta = {
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.clearMockedResponses();
+    searchApiHarness.searchEndpoint.clear();
     // Queue responses for this story
   },
 };
@@ -294,7 +294,7 @@ Avoid flushing in `afterEach` when testing multi-step interactions:
 // ❌ DON'T DO THIS
 const meta: Meta = {
   afterEach: () => {
-    searchApiHarness.searchEndpoint.clearMockedResponses();
+    searchApiHarness.searchEndpoint.clear();
   },
 };
 ```
@@ -327,7 +327,7 @@ The streaming response is handled automatically by the harness. You can still en
 ```typescript
 import { buildAnsweringStreamingResponse } from '@/storybook-utils/api/answer/generate-response';
 
-answerApiHarness.generateEndpoint.mockImplementationOnce(
+answerApiHarness.generateEndpoint.mockOnce(
   () => buildAnsweringStreamingResponse({ delayBetweenMessages: 0 })
 );
 ```
@@ -341,7 +341,7 @@ import { wrapInCommerceInterface } from '@/storybook-utils/commerce/commerce-int
 const commerceApiHarness = new MockCommerceApi();
 
 // Modify base to show fewer products
-commerceApiHarness.searchEndpoint.mockImplementation((response) => ({
+commerceApiHarness.searchEndpoint.mock((response) => ({
   ...response,
   products: response.products.slice(0, 12),
 }));
@@ -365,7 +365,7 @@ export const Default: Story = {};
 
 export const NoProducts: Story = {
   beforeEach: () => {
-    commerceApiHarness.searchEndpoint.mockImplementationOnce((response) => ({
+    commerceApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       products: [],
       totalCount: 0,
@@ -409,9 +409,9 @@ beforeEach: () => {
   // 1. First page shows results 0-40
   // 2. Second page shows results 40-80  
   // 3. Third page shows final results (80+)
-  searchApiHarness.searchEndpoint.mockImplementationOnce(/* ... */);
-  searchApiHarness.searchEndpoint.mockImplementationOnce(/* ... */);
-  searchApiHarness.searchEndpoint.mockImplementationOnce(/* ... */);
+  searchApiHarness.searchEndpoint.mockOnce(/* ... */);
+  searchApiHarness.searchEndpoint.mockOnce(/* ... */);
+  searchApiHarness.searchEndpoint.mockOnce(/* ... */);
 }
 ```
 
@@ -421,7 +421,7 @@ Always flush queued responses in `beforeEach` to ensure each story starts clean:
 
 ```typescript
 beforeEach: () => {
-  searchApiHarness.searchEndpoint.clearMockedResponses();
+  searchApiHarness.searchEndpoint.clear();
   // Then queue responses specific to this story
 }
 ```
@@ -433,11 +433,11 @@ Queue responses to simulate multi-step user interactions:
 ```typescript
 beforeEach: () => {
   // User sees initial results
-  searchApiHarness.searchEndpoint.mockImplementationOnce(/* initial */);
+  searchApiHarness.searchEndpoint.mockOnce(/* initial */);
   // User clicks "load more"
-  searchApiHarness.searchEndpoint.mockImplementationOnce(/* page 2 */);
+  searchApiHarness.searchEndpoint.mockOnce(/* page 2 */);
   // User reaches end
-  searchApiHarness.searchEndpoint.mockImplementationOnce(/* final page */);
+  searchApiHarness.searchEndpoint.mockOnce(/* final page */);
 }
 ```
 
@@ -460,7 +460,7 @@ beforeEach: () => {
 
 ```typescript
 beforeEach: () => {
-  harness.searchEndpoint.clearMockedResponses();
+  harness.searchEndpoint.clear();
   // Then enqueue in the correct order
 }
 ```
@@ -473,13 +473,13 @@ beforeEach: () => {
 
 ```typescript
 // ✅ Good
-mockImplementationOnce((response) => ({
+mockOnce((response) => ({
   ...response,
   results: [],
 }))
 
 // ❌ Bad - missing fields
-mockImplementationOnce(() => ({
+mockOnce(() => ({
   results: [],
 }))
 ```

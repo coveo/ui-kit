@@ -271,11 +271,11 @@ this.searchEndpoint = new EndpointHarness<
 
 ```typescript
 // In beforeEach
-harness.searchEndpoint.mockImplementationOnce((response) => ({
+harness.searchEndpoint.mockOnce((response) => ({
   ...response,
   results: response.results.slice(0, 20),
 }));
-harness.searchEndpoint.mockImplementationOnce((response) => ({
+harness.searchEndpoint.mockOnce((response) => ({
   ...response,
   results: response.results.slice(20, 40),
 }));
@@ -285,10 +285,10 @@ harness.searchEndpoint.mockImplementationOnce((response) => ({
 
 ```typescript
 // Enqueue a network error
-harness.searchEndpoint.mockNetworkErrorOnce();
+harness.searchEndpoint.mockErrorOnce();
 
 // Or enqueue an API error response
-harness.searchEndpoint.mockImplementationOnce(() => ({
+harness.searchEndpoint.mockOnce(() => ({
   ok: false,
   status: 404,
   statusCode: 404,
@@ -301,7 +301,7 @@ harness.searchEndpoint.mockImplementationOnce(() => ({
 
 ```typescript
 // Permanently modify the base response for all stories
-harness.searchEndpoint.mockImplementation((response) => ({
+harness.searchEndpoint.mock((response) => ({
   ...response,
   totalCount: 100,
   results: response.results.slice(0, 100),

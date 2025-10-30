@@ -32,16 +32,16 @@ const meta: Meta = {
   args,
   argTypes,
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.clearMockedResponses();
-    searchApiHarness.searchEndpoint.mockImplementationOnce((response) => ({
+    searchApiHarness.searchEndpoint.clear();
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       results: response.results.slice(0, 40),
     }));
-    searchApiHarness.searchEndpoint.mockImplementationOnce((response) => ({
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       results: response.results.slice(40, 80),
     }));
-    searchApiHarness.searchEndpoint.mockImplementationOnce((response) => ({
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
       ...response,
       results: response.results.slice(80),
     }));

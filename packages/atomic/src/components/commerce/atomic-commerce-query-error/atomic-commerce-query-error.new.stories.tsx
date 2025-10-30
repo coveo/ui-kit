@@ -28,7 +28,7 @@ const meta: Meta = {
   args,
   argTypes,
   beforeEach: async () => {
-    mockCommerceApi.searchEndpoint.clearMockedResponses();
+    mockCommerceApi.searchEndpoint.clear();
   },
   play,
 };
@@ -37,14 +37,14 @@ export default meta;
 
 export const Default: Story = {
   beforeEach: async () => {
-    mockCommerceApi.searchEndpoint.mockNetworkErrorOnce();
+    mockCommerceApi.searchEndpoint.mockErrorOnce();
   },
 };
 
 export const With418Error: Story = {
   name: 'With 418 error',
   beforeEach: async () => {
-    mockCommerceApi.searchEndpoint.mockImplementationOnce(
+    mockCommerceApi.searchEndpoint.mockOnce(
       () => ({
         ok: false,
         status: 418,

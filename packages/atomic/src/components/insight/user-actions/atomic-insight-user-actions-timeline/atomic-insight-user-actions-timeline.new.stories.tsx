@@ -45,7 +45,7 @@ export const Default: Story = {
 export const WithNoUserActions: Story = {
   name: 'With no user actions',
   beforeEach: async () => {
-    mockMachineLearningApi.userActionsEndpoint.mockImplementationOnce(() => ({
+    mockMachineLearningApi.userActionsEndpoint.mockOnce(() => ({
       value: [],
     }));
   },
@@ -55,7 +55,7 @@ export const WithNoUserActions: Story = {
 export const WithUserActionsError: Story = {
   name: 'With user actions error',
   beforeEach: async () => {
-    mockMachineLearningApi.userActionsEndpoint.mockImplementationOnce(
+    mockMachineLearningApi.userActionsEndpoint.mockOnce(
       () => ({
         ok: false,
         status: 403,
