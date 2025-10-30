@@ -1,6 +1,6 @@
 import {API_DATE_FORMAT, buildDateRange} from '@coveo/headless';
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
+import dayjs from 'dayjs/esm/index.js';
+import customParseFormat from 'dayjs/esm/plugin/customParseFormat/index';
 
 dayjs.extend(customParseFormat);
 

@@ -1,8 +1,8 @@
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {Component, Prop, Element, State} from '@stencil/core';
-import dayjs from 'dayjs';
-import calendar from 'dayjs/plugin/calendar';
-import updateLocale from 'dayjs/plugin/updateLocale';
+import dayjs from 'dayjs/esm/index';
+import calendar from 'dayjs/esm/plugin/calendar';
+import updateLocale from 'dayjs/esm/plugin/updateLocale/index';
 import {parseDate} from '../../../../utils/date-utils';
 import {
   InitializableComponent,

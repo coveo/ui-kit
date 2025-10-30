@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import dayjs from 'dayjs/esm/index.js';
 import {
   afterEach,
   beforeAll,
@@ -10,7 +10,7 @@ import {
 } from 'vitest';
 import {loadDayjsLocale} from './dayjs-locales';
 
-vi.mock('dayjs', () => ({
+vi.mock('dayjs/esm/index.js', () => ({
   __esModule: true,
   default: {locale: vi.fn()},
 }));

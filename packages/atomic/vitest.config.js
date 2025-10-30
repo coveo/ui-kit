@@ -38,20 +38,6 @@ export default defineConfig({
     alias: [
       {find: '@/', replacement: `${path.resolve(import.meta.dirname, './')}/`},
       {
-        find: /^@coveo\/headless\/(.*)$/,
-        replacement: path.resolve(
-          import.meta.dirname,
-          '../headless/cdn/$1/headless.esm.js'
-        ),
-      },
-      {
-        find: '@coveo/headless',
-        replacement: path.resolve(
-          import.meta.dirname,
-          '../headless/cdn/headless.esm.js'
-        ),
-      },
-      {
         find: '../components/components/lazy-index.js',
         replacement: path.resolve(
           import.meta.dirname,

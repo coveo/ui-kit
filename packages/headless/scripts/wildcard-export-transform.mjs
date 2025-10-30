@@ -69,6 +69,7 @@ export default function wildcardExportTransformer(context) {
 
   function extractExportsFromAST(sourceFile) {
     const exports = new Set();
+    const typeOnlyExports = new Set();
 
     function visit(node) {
       // Direct exports: export function, export class, export const, etc.
@@ -89,19 +90,25 @@ export default function wildcardExportTransformer(context) {
           isEnumDeclaration(node)
         ) {
           if (node.name) {
-            exports.add(node.name.text);
+            // These are type-only exports
+            typeOnlyExports.add(node.name.text);
           }
         }
       }
 
-      // Named export declarations: export { name1, name2 }
+      // Named export declarations: export { name1, name2 } or export type { Type1, Type2 }
       if (
         isExportDeclaration(node) &&
         node.exportClause &&
         node.exportClause.kind === SyntaxKind.NamedExports
       ) {
         node.exportClause.elements.forEach((element) => {
-          exports.add(element.name.text);
+          if (node.isTypeOnly || element.isTypeOnly) {
+            // This is a type-only export
+            typeOnlyExports.add(element.name.text);
+          } else {
+            exports.add(element.name.text);
+          }
         });
       }
 
@@ -114,7 +121,12 @@ export default function wildcardExportTransformer(context) {
     }
 
     visit(sourceFile);
-    return Array.from(exports).sort();
+
+    // Return both runtime exports and type-only exports
+    return {
+      runtimeExports: Array.from(exports).sort(),
+      typeOnlyExports: Array.from(typeOnlyExports).sort(),
+    };
   }
 
   function getNamedExportsFromModule(moduleSpecifier, sourceFile) {
@@ -139,12 +151,17 @@ export default function wildcardExportTransformer(context) {
         true
       );
 
-      const exports = extractExportsFromAST(targetSourceFile);
+      const {runtimeExports, typeOnlyExports} =
+        extractExportsFromAST(targetSourceFile);
 
       // Cache the result
-      exportCache.set(resolvedPath, exports);
+      const result = {
+        runtimeExports,
+        typeOnlyExports,
+      };
+      exportCache.set(resolvedPath, result);
 
-      return exports.length > 0 ? exports : null;
+      return result;
     } catch (error) {
       console.warn(`Could not parse file "${resolvedPath}":`, error.message);
       return null;
@@ -161,41 +178,53 @@ export default function wildcardExportTransformer(context) {
       !node.isTypeOnly // Skip type-only exports
     ) {
       const moduleSpecifier = node.moduleSpecifier.text;
-      const namedExports = getNamedExportsFromModule(
+      const exportsData = getNamedExportsFromModule(
         moduleSpecifier,
         sourceFile
       );
 
-      if (namedExports && namedExports.length > 0) {
-        console.log(
-          `Transforming wildcard export from "${moduleSpecifier}" to ${namedExports.length} named exports:`,
-          namedExports.slice(0, 5),
-          namedExports.length > 5
-            ? `... and ${namedExports.length - 5} more`
-            : ''
-        );
+      if (exportsData) {
+        const {runtimeExports, typeOnlyExports} = exportsData;
+        const hasRuntimeExports = runtimeExports.length > 0;
 
-        // Create named export specifiers
-        const exportSpecifiers = namedExports.map((name) =>
-          factory.createExportSpecifier(
+        // Only process if we have runtime exports (drop type-only exports entirely)
+        if (hasRuntimeExports) {
+          const exportSpecifiers = [];
+
+          // Create only runtime export specifiers (no type-only exports in JS)
+          runtimeExports.forEach((name) => {
+            exportSpecifiers.push(
+              factory.createExportSpecifier(
+                false, // isTypeOnly
+                undefined, // propertyName (for aliases)
+                factory.createIdentifier(name) // name
+              )
+            );
+          });
+
+          console.log(
+            `Transforming wildcard export from "${moduleSpecifier}": ${runtimeExports.length} runtime exports (${typeOnlyExports.length} type-only exports dropped)`
+          );
+
+          // Create the export clause with only runtime exports
+          const exportClause = factory.createNamedExports(exportSpecifiers);
+
+          // Create the new export declaration
+          return factory.updateExportDeclaration(
+            node,
+            node.modifiers,
             false, // isTypeOnly
-            undefined, // propertyName (for aliases)
-            factory.createIdentifier(name) // name
-          )
-        );
-
-        // Create the export clause with named exports
-        const exportClause = factory.createNamedExports(exportSpecifiers);
-
-        // Create the new export declaration
-        return factory.updateExportDeclaration(
-          node,
-          node.modifiers,
-          false, // isTypeOnly
-          exportClause,
-          node.moduleSpecifier,
-          node.assertClause
-        );
+            exportClause,
+            node.moduleSpecifier,
+            node.assertClause
+          );
+        } else if (typeOnlyExports.length > 0) {
+          // If we only have type-only exports, remove the entire export statement
+          console.log(
+            `Removing wildcard export from "${moduleSpecifier}": only type-only exports (${typeOnlyExports.length} dropped)`
+          );
+          return undefined; // This removes the node
+        }
       } else {
         console.log(
           `No named exports found for wildcard export from "${moduleSpecifier}", keeping as-is`
