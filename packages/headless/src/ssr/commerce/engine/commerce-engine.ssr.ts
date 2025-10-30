@@ -5,7 +5,7 @@
 import type {CommerceEngineOptions as OriginalCommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import {createAccessTokenManager} from '../../../ssr-next/commerce/utils/access-token-manager.js';
+import {createAccessTokenManager} from '../../common/access-token-manager.js';
 import {
   buildFactory,
   type CommerceEngineDefinitionOptions,
