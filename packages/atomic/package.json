@@ -121,7 +121,6 @@
     "@types/jest": "catalog:",
     "@types/minimatch": "5.1.2",
     "@types/node": "catalog:",
-    "@vitest/browser": "4.0.5",
     "@vitest/browser-playwright": "4.0.5",
     "@wc-toolkit/storybook-helpers": "9.0.1",
     "axe-core": "4.10.3",

@@ -90,8 +90,8 @@ describe('atomic-product-link', () => {
   };
 
   it('should be defined', async () => {
-    const el = await renderProductLink();
-    expect(el).toBeInstanceOf(AtomicProductLink);
+    const {element} = await renderProductLink();
+    expect(element).toBeInstanceOf(AtomicProductLink);
   });
 
   it('should render nothing when product is not available', async () => {

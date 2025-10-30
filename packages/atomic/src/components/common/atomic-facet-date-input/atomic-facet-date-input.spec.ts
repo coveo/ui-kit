@@ -69,8 +69,8 @@ describe('atomic-facet-date-input', () => {
   });
 
   it('should initialize', async () => {
-    const el = await setupElement();
-    expect(el).toBeInstanceOf(AtomicFacetDateInput);
+    const {element} = await setupElement();
+    expect(element).toBeInstanceOf(AtomicFacetDateInput);
   });
 
   it('should render the form', async () => {

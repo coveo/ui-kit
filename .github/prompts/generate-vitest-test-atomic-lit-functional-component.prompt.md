@@ -51,7 +51,6 @@ For functional components, you'll typically need:
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {page} from 'vitest/browser';
-import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {describe, it, vi, expect, beforeEach, beforeAll} from 'vitest';
 import {render[ComponentName], [ComponentName]Props} from './component-name';

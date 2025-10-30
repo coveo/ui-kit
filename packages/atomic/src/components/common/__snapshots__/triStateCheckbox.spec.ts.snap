@@ -3,7 +3,3 @@
 exports[`#renderTriStateCheckbox > renders the correct icon for "excluded" state 1`] = `"<svg viewBox="0 0 22 22"><g transform="matrix(.7071 -.7071 .7071 .7071 -3.142 11)"><path d="m9-3.4h2v26.9h-2z"/><path d="m-3.4 9h26.9v2h-26.9z"/></g></svg>"`;
 
 exports[`#renderTriStateCheckbox > renders the correct icon for "selected" state 1`] = `"<svg viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg">    <path d="M1.5 5L4.6 7.99999L11 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>"`;
-
-exports[`renderTriStateCheckbox > renders the correct icon for "excluded" state 1`] = `"<svg viewBox="0 0 22 22"><g transform="matrix(.7071 -.7071 .7071 .7071 -3.142 11)"><path d="m9-3.4h2v26.9h-2z"/><path d="m-3.4 9h26.9v2h-26.9z"/></g></svg>"`;
-
-exports[`renderTriStateCheckbox > renders the correct icon for "selected" state 1`] = `"<svg viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg">    <path d="M1.5 5L4.6 7.99999L11 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>"`;

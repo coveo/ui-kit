@@ -64,8 +64,8 @@ describe('atomic-commerce-facet-number-input', () => {
   };
 
   it('should be defined', async () => {
-    const el = await setupElement();
-    expect(el).toBeInstanceOf(AtomicCommerceFacetNumberInput);
+    const {element} = await setupElement();
+    expect(element).toBeInstanceOf(AtomicCommerceFacetNumberInput);
   });
 
   it('should render the form with correct input and values', async () => {

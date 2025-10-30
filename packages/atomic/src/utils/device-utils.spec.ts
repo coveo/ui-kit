@@ -104,8 +104,8 @@ describe('device-utils', () => {
       // Mock Audio with iOS quirk (volume stays at 1)
       vi.stubGlobal(
         'Audio',
-        vi.fn().mockImplementation(() =>
-          Object.create(
+        vi.fn().mockImplementation(function (this: unknown) {
+          return Object.create(
             {},
             {
               volume: {
@@ -113,8 +113,8 @@ describe('device-utils', () => {
                 set: () => {},
               },
             }
-          )
-        )
+          );
+        })
       );
 
       expect(isIOS()).toBe(true);

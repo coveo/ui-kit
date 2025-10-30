@@ -22,6 +22,7 @@ describe('atomic-commerce-timeframe-facet', () => {
   let mockedConsoleError: MockInstance;
 
   beforeEach(() => {
+    vi.mocked(shouldDisplayInputForFacetRange).mockReset();
     mockedConsoleError = vi
       .spyOn(console, 'error')
       .mockImplementation(() => {});
