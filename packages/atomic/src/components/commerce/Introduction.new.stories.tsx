@@ -18,8 +18,9 @@ export const Introduction: StoryObj = {
         This section showcases interactive documentation for the <a href="https://docs.coveo.com/en/p8bd0068" target="_blank">Coveo Atomic for Commerce</a> components.
       </p>
 
+      <br>
 
-      <h2>Getting Started</h2>
+      <h3>Getting Started</h3>
       <p>
         Begin by exploring the individual components in the sidebar. Each component includes:
       </p>
