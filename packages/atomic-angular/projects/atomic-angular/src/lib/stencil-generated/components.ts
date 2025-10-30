@@ -2973,7 +2973,7 @@ export declare interface AtomicResultChildrenTemplate extends LitAtomicResultChi
 }
 
 @ProxyCmp({
-  inputs: ['density', 'display', 'imageSize', 'tabsIncluded', 'tabsExcluded', 'numberOfPlaceholders'],
+  inputs: ['density', 'display', 'imageSize', 'tabsIncluded', 'tabsExcluded'],
   methods: ['setRenderFunction', 'initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-result-list') || customElements.define('atomic-result-list', LitAtomicResultList);}
 })
