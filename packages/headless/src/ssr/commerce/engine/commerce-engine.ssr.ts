@@ -80,10 +80,25 @@ export function defineCommerceEngine<
     tokenManager.registerCallback(updateCallback);
   };
 
-  const definitionOptions = {
-    ...engineOptions,
-    onAccessTokenUpdate,
-  };
+  /**
+   * HACK: We assign engineOptions by reference (not by value) to definitionOptions
+   * so that when setNavigatorContextProvider() modifies engineOptions.navigatorContextProvider,
+   * the factories will see the updated navigator context when they are called later.
+   *
+   * This works because:
+   * 1. setNavigatorContextProvider() modifies engineOptions.navigatorContextProvider
+   * 2. definitionOptions points to the same object as engineOptions
+   * 3. When fetchStaticState() is called, it uses the current value from the shared object
+   *
+   * Without this reference sharing, definitionOptions would be a snapshot taken at
+   * definition time, and navigator context updates would be ignored.
+   *
+   * TODO: This will be removed in the next major version with a cleaner design
+   * where context is provided directly to fetchStaticState() rather than through
+   * the engine definition.
+   */
+  const definitionOptions = engineOptions;
+  definitionOptions.onAccessTokenUpdate = onAccessTokenUpdate;
 
   const getAccessToken = () => tokenManager.getAccessToken();
   const setAccessToken = (accessToken: string) => {
