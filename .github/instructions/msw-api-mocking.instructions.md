@@ -96,7 +96,7 @@ When all stories need the same modified response:
 const searchApiHarness = new MockSearchApi();
 
 // Apply to ALL stories in this file
-searchApiHarness.searchEndpoint.modifyBaseResponse((response) => ({
+searchApiHarness.searchEndpoint.mockImplementation((response) => ({
   ...response,
   results: response.results.slice(0, 30),
   totalCount: 30,
@@ -115,7 +115,7 @@ When individual stories need different responses:
 ```typescript
 export const NoResults: Story = {
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.enqueueNextResponse((response) => ({
+    searchApiHarness.searchEndpoint.mockImplementationOnce((response) => ({
       ...response,
       results: [],
       totalCount: 0,
@@ -127,7 +127,7 @@ export const NoResults: Story = {
 
 export const FewResults: Story = {
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.enqueueNextResponse((response) => ({
+    searchApiHarness.searchEndpoint.mockImplementationOnce((response) => ({
       ...response,
       results: response.results.slice(0, 3),
       totalCount: 3,
@@ -146,22 +146,22 @@ For components that load more results:
 const meta: Meta = {
   // ... other config
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.flushQueuedResponses();
+    searchApiHarness.searchEndpoint.clearMockedResponses();
     
     // First request - initial page
-    searchApiHarness.searchEndpoint.enqueueNextResponse((response) => ({
+    searchApiHarness.searchEndpoint.mockImplementationOnce((response) => ({
       ...response,
       results: response.results.slice(0, 40),
     }));
     
     // Second request - next page
-    searchApiHarness.searchEndpoint.enqueueNextResponse((response) => ({
+    searchApiHarness.searchEndpoint.mockImplementationOnce((response) => ({
       ...response,
       results: response.results.slice(40, 80),
     }));
     
     // Third request - final page
-    searchApiHarness.searchEndpoint.enqueueNextResponse((response) => ({
+    searchApiHarness.searchEndpoint.mockImplementationOnce((response) => ({
       ...response,
       results: response.results.slice(80),
     }));
@@ -175,14 +175,14 @@ const meta: Meta = {
 ```typescript
 export const NetworkError: Story = {
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.enqueueNetworkError();
+    searchApiHarness.searchEndpoint.mockNetworkErrorOnce();
   },
   play,
 };
 
 export const ApiError: Story = {
   beforeEach: () => {
-    searchApiHarness.searchEndpoint.enqueueNextResponse(() => ({
+    searchApiHarness.searchEndpoint.mockImplementationOnce(() => ({
       ok: false,
       status: 500,
       statusCode: 500,
@@ -305,8 +305,8 @@ export class Mock[Domain]Api implements MockApi {
 
 ### DO:
 - ✅ Always flush queued responses in `beforeEach` hooks
-- ✅ Use `modifyBaseResponse()` for changes affecting all stories
-- ✅ Use `enqueueNextResponse()` for story-specific responses
+- ✅ Use `mockImplementation()` for changes affecting all stories
+- ✅ Use `mockImplementationOnce()` for story-specific responses
 - ✅ Spread the base response when modifying: `{...response, field: newValue}`
 - ✅ Include all handlers in MSW parameters: `handlers: [...harness.handlers]`
 - ✅ Use descriptive story names that indicate what's being tested
@@ -402,7 +402,7 @@ this.generateInsightEndpoint = new EndpointHarness(
 
 ### "Wrong response returned" Issue
 **Cause:** Queued responses from previous story
-**Fix:** Add `beforeEach` hook with `flushQueuedResponses()`
+**Fix:** Add `beforeEach` hook with `clearMockedResponses()`
 
 ### TypeScript Type Errors
 **Cause:** Response structure doesn't match base response
@@ -434,11 +434,11 @@ Look at these files for complete examples:
 
 | Method | Purpose | When to Use |
 |--------|---------|-------------|
-| `modifyBaseResponse(fn)` | Permanently modify base response | Setup for all stories |
-| `enqueueNextResponse(fn)` | Queue one response for next request | Story-specific behavior |
-| `enqueueNetworkError()` | Queue network error | Testing error states |
-| `flushQueuedResponses()` | Clear queued responses | Reset in beforeEach |
-| `resetBaseResponse()` | Reset to original base | Rarely needed |
+| `mockImplementation(fn)` | Permanently modify base response | Setup for all stories |
+| `mockImplementationOnce(fn)` | Queue one response for next request | Story-specific behavior |
+| `mockNetworkErrorOnce()` | Queue network error | Testing error states |
+| `clearMockedResponses()` | Clear queued responses | Reset in beforeEach |
+| `resetImplementation()` | Reset to original base | Rarely needed |
 
 ### Response Modifier Pattern
 

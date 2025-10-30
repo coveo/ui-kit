@@ -7,7 +7,7 @@ import {wrapInRecommendationInterface} from '@/storybook-utils/search/recs-inter
 
 const mockedSearchApi = new MockSearchApi();
 
-mockedSearchApi.searchEndpoint.modifyBaseResponse((response) => ({
+mockedSearchApi.searchEndpoint.mockImplementation((response) => ({
   ...response,
   results: response.results.slice(0, 30),
   totalCount: 30,
@@ -36,7 +36,7 @@ const meta: Meta = {
     },
   },
   beforeEach: () => {
-    mockedSearchApi.searchEndpoint.flushQueuedResponses();
+    mockedSearchApi.searchEndpoint.clearMockedResponses();
   },
   args,
   argTypes,
@@ -131,7 +131,7 @@ export const RecsAsCarousel: Story = {
 export const NotEnoughRecsForCarousel: Story = {
   name: 'Not enough recommendations for carousel',
   beforeEach: () => {
-    mockedSearchApi.searchEndpoint.enqueueNextResponse((response) => ({
+    mockedSearchApi.searchEndpoint.mockImplementationOnce((response) => ({
       ...response,
       results: response.results.slice(0, 3),
       totalCount: 3,
@@ -144,7 +144,7 @@ export const NotEnoughRecsForCarousel: Story = {
 export const NoRecommendations: Story = {
   name: 'No recommendations',
   beforeEach: async () => {
-    mockedSearchApi.searchEndpoint.enqueueNextResponse((response) => ({
+    mockedSearchApi.searchEndpoint.mockImplementationOnce((response) => ({
       ...response,
       totalCount: 0,
       totalCountFiltered: 0,

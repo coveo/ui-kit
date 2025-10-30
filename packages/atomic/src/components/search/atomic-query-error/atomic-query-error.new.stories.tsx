@@ -32,7 +32,7 @@ const meta: Meta = {
   args,
   argTypes,
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.flushQueuedResponses();
+    mockSearchApi.searchEndpoint.clearMockedResponses();
   },
   play,
 };
@@ -42,14 +42,14 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-query-error',
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.enqueueNetworkError();
+    mockSearchApi.searchEndpoint.mockNetworkErrorOnce();
   },
 };
 
 export const With419Error: Story = {
   name: 'With 419 error',
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.enqueueNextResponse(
+    mockSearchApi.searchEndpoint.mockImplementationOnce(
       () => ({
         ok: false,
         status: 419,
