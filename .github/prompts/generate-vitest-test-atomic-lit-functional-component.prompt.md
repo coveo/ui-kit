@@ -1,537 +1,179 @@
 ---
 mode: 'agent'
-description: 'Generate comprehensive Vitest unit tests to Atomic Lit functional components following established patterns'
+description: 'Generate comprehensive Vitest unit tests for an Atomic Lit functional component following established patterns'
 ---
 
-# Add Vitest Tests to Atomic Lit Functional Components
+# Add Vitest Tests to Atomic Lit Functional Component
 
-You are a senior web developer with expertise in the Atomic Lit framework and Vitest testing library. You understand the structure and conventions of the UI Kit project, particularly how to write unit tests for functional components that return Lit templates. Your goal is to create comprehensive Vitest unit tests for an existing Atomic Lit functional component following the established patterns and conventions in the UI Kit project.
+Generate comprehensive Vitest unit tests for functional components (functions returning Lit `TemplateResult`, not classes). These are named `render[ComponentName]` (e.g., `renderButton`, `renderSortOption`), accept props, and are located in `src/components/common/` or similar.
 
-**Note: All commands in this guide should be run from the `packages/atomic` directory.**
+**Working directory:** `packages/atomic`
+**If component name not provided, ask for it.**
 
-## Task Overview
+## Required Steps
 
-You will be asked to add unit tests for a specific Atomic Lit functional component. These are typically rendering functions that return Lit templates (e.g., `renderButton`, `renderCheckbox`, `renderSortOption`) rather than full Web Components. Follow the guidelines from the [atomic testing instructions](../instructions/tests-atomic.instructions.md) and create a complete test suite that covers all functionality.
+**Use `manage_todo_list` tool:** Track progress through steps below. Mark ONE in-progress before working, mark completed immediately after finishing each step. Final todo must be execution summary generation.
 
-## Understanding Functional Components
+**Checklist:**
+- [ ] Analyze component (signature, props, children, events, dependencies)
+- [ ] Create test file `{component-name}.spec.ts` in component directory
+- [ ] Structure tests with describe blocks and helpers
+- [ ] Implement test patterns (basic rendering, props, events, children)
+- [ ] Ensure essential coverage (rendering, props, interactions, attributes, children, errors)
+- [ ] Run tests with Vitest
+- [ ] Generate execution summary (mandatory final todo)
 
-Functional components in the Atomic package are:
+### 1. Analyze the Component
 
-- Functions that return Lit `TemplateResult` (not classes extending `LitElement`)
-- Named with the pattern `render[ComponentName]` (e.g., `renderButton`, `renderSortOption`)
-- Take props as input and return rendered HTML
-- Used as building blocks within larger Web Components
-- Located in `src/components/common/` or similar directories
+Examine for:
+- **Function signature** - Props interface and types
+- **Return type** - What it renders
+- **Children handling** - Accepts child content?
+- **Event handlers** - Supported interactions
+- **Conditional rendering** - Logic affecting output
+- **Dependencies** - i18n, icons, other render functions
 
-## Steps to Create Tests
+### 2. Create Test File
 
-Ask for the component name if not provided, then follow these steps:
+`{component-name}.spec.ts` in same directory as component.
 
-### 1. Analyze the Functional Component
+### 3. Structure Tests
 
-First, examine the component file to understand:
+Use `describe('#render[ComponentName]', () => {...})` with nested describes for conditions (`'when [condition]'`). Test names start with "should".
 
-- **Function signature**: What props does it accept?
-- **Return type**: What does it render (buttons, inputs, containers, etc.)?
-- **Props interface**: What are the required vs optional properties?
-- **Children handling**: Does it accept and render child content?
-- **Event handlers**: What user interactions does it support?
-- **Conditional rendering**: What logic affects what gets rendered?
-- **Dependencies**: Does it use i18n, icons, other render functions?
+### 4. Test Patterns
 
-### 2. Create Test File Structure
-
-Create a test file named `{component-name}.spec.ts` in the same directory as the component.
-
-### 3. Set Up Required Imports
-
-For functional components, you'll typically need:
-
+**Basic setup with helper:**
 ```typescript
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {page} from '@vitest/browser/context';
-import '@vitest/browser/matchers.d.ts';
-import {html} from 'lit';
-import {describe, it, vi, expect, beforeEach, beforeAll} from 'vitest';
-import {render[ComponentName], [ComponentName]Props} from './component-name';
-
-// Mock external dependencies if needed
-vi.mock('@/src/utils/module', () => ({
-  utilFunction: vi.fn(),
-}));
+const renderComponent = async (props: Partial<ComponentProps> = {}) => {
+  const defaultProps: ComponentProps = {text: 'Default', onClick: vi.fn()};
+  return await renderFunctionFixture(
+    html`${renderComponentName({props: {...defaultProps, ...props}})}`
+  );
+};
 ```
 
-### 4. Create Test Suite Structure
-
-Follow this naming pattern:
-
-- Main describe: `#render[ComponentName]` (e.g., `'#renderButton'`, `'#renderSortOption'`)
-- Condition describes: `'when [condition]'` (e.g., `'when disabled is true'`)
-- Test cases: Always start with "should" (e.g., `'should render with correct attributes'`)
-
-### 5. Implement Test Patterns Based on Component Type
-
-#### A. Simple Functional Components (Buttons, Text, Icons)
-
+**Components with children:**
 ```typescript
-describe('#renderComponentName', () => {
-  const renderComponent = async (props: Partial<ComponentProps> = {}) => {
-    const defaultProps: ComponentProps = {
-      // Set required props
-      text: 'Default Text',
-      onClick: vi.fn(),
-      // Add other required props
-    };
+const renderComponent = async (
+  props: Partial<ComponentProps> = {},
+  children = html`<span>Default</span>`
+) => {
+  return await renderFunctionFixture(
+    html`${renderComponentName({props: {...defaultProps, ...props}})(children)}`
+  );
+};
+```
 
-    const mergedProps = {...defaultProps, ...props};
-    return await renderFunctionFixture(
-      html`${renderComponentName({props: mergedProps})}`
-    );
-  };
+**Components with i18n:**
+```typescript
+let i18n: Awaited<ReturnType<typeof createTestI18n>>;
+beforeAll(async () => { i18n = await createTestI18n(); });
 
-  it('should render with default props', async () => {
-    const element = await renderComponent();
-    expect(element).toBeDefined();
-  });
+const renderComponent = async (props: Partial<ComponentProps> = {}) => {
+  return await renderFunctionFixture(
+    html`${renderComponentName({props: {i18n, ...defaultProps, ...props}})}`
+  );
+};
+```
 
-  it('should render with correct attributes', async () => {
-    const element = await renderComponent({
-      text: 'Test Text',
-      disabled: true,
-    });
+**Interactive tests with locators:**
+```typescript
+const locators = {
+  get button() { return page.getByRole('button'); },
+  option({selected = false}) { return page.getByRole('option', {selected}); },
+};
 
-    const button = element.querySelector('button');
-    expect(button).toHaveTextContent('Test Text');
-    expect(button).toHaveAttribute('disabled');
-  });
+it('should handle click', async () => {
+  const onClick = vi.fn();
+  await renderComponent({onClick});
+  await locators.button.click();
+  expect(onClick).toHaveBeenCalledOnce();
 });
 ```
 
-#### B. Components with Children (Containers, Wrappers)
+### 5. Essential Coverage
 
+Test: (1) Basic rendering, (2) All props/defaults, (3) User interactions, (4) Visual attributes (classes, ARIA), (5) Children if applicable, (6) Error conditions.
+
+### 6. Key Patterns
+
+**Attributes & events:**
 ```typescript
-describe('#renderComponentName', () => {
-  const renderComponent = async (
-    props: Partial<ComponentProps> = {},
-    children = html`<span>Test Children</span>`
-  ) => {
-    const defaultProps: ComponentProps = {
-      // Set required props
-    };
+it('should apply classes and handle clicks', async () => {
+  const onClick = vi.fn();
+  const element = await renderComponent({class: 'custom', onClick});
+  
+  expect(element.querySelector('button')).toHaveClass('custom');
+  await page.getByRole('button').click();
+  expect(onClick).toHaveBeenCalledOnce();
+});
+```
 
-    const mergedProps = {...defaultProps, ...props};
-    return await renderFunctionFixture(
-      html`${renderComponentName({props: mergedProps})(children)}`
-    );
-  };
-
-  it('should render children correctly', async () => {
-    const element = await renderComponent(
-      {},
-      html`<div class="test-child">Child Content</div>`
-    );
-
-    const child = element.querySelector('.test-child');
-    expect(child).toHaveTextContent('Child Content');
+**Conditional rendering:**
+```typescript
+describe('when disabled', () => {
+  it('should render disabled and not call onClick', async () => {
+    const onClick = vi.fn();
+    const element = await renderComponent({disabled: true, onClick});
+    
+    expect(element.querySelector('button')).toHaveAttribute('disabled');
+    await page.getByRole('button').click();
+    expect(onClick).not.toHaveBeenCalled();
   });
 });
 ```
 
-#### C. Components with i18n Support
-
+**i18n:**
 ```typescript
-describe('#renderComponentName', () => {
-  let i18n: Awaited<ReturnType<typeof createTestI18n>>;
-
-  beforeAll(async () => {
-    i18n = await createTestI18n();
-  });
-
-  const renderComponent = async (props: Partial<ComponentProps> = {}) => {
-    const defaultProps: ComponentProps = {
-      i18n,
-      // Other required props
-    };
-
-    const mergedProps = {...defaultProps, ...props};
-    return await renderFunctionFixture(
-      html`${renderComponentName({props: mergedProps})}`
-    );
-  };
-
-  it('should render with correct i18n text', async () => {
-    const element = await renderComponent();
-    // Test i18n functionality
-  });
-});
-```
-
-#### D. Components with Page Locators (Interactive Elements)
-
-```typescript
-describe('#renderComponentName', () => {
-  const locators = {
-    get button() {
-      return page.getByRole('button');
-    },
-    get input() {
-      return page.getByRole('textbox');
-    },
-    option({selected}: {selected: boolean} = {selected: false}) {
-      return page.getByRole('option', {selected});
-    },
-  };
-
-  const renderComponent = async (props: Partial<ComponentProps> = {}) => {
-    // Setup implementation
-  };
-
-  it('should handle user interaction when clicked', async () => {
-    await renderComponent({onClick: vi.fn()});
-
-    await locators.button.click();
-
-    // Test expectations
-  });
-});
-```
-
-### 6. Implement Essential Test Cases
-
-Create tests for:
-
-1. **Basic Rendering**
-
-   - Component renders without errors
-   - Default props work correctly
-   - Required props are handled
-
-2. **Props Validation**
-
-   - All public properties work as expected
-   - Conditional rendering based on props
-   - Default values are applied
-
-3. **User Interactions**
-
-   - Click handlers work
-   - Form inputs respond correctly
-   - Keyboard interactions (if applicable)
-
-4. **Visual Attributes**
-
-   - CSS classes are applied correctly
-   - Part attributes are set
-   - ARIA attributes are present
-
-5. **Children Handling** (if applicable)
-
-   - Children are rendered in correct location
-   - Multiple children work
-   - Empty children cases
-
-6. **Error Conditions**
-   - Missing required props
-   - Invalid prop values
-   - Edge cases
-
-### 7. Common Test Patterns and Examples
-
-#### Testing Attribute Rendering
-
-```typescript
-it('should apply correct CSS classes when style prop is provided', async () => {
-  const element = await renderComponent({
-    style: 'primary',
-    additionalClass: 'custom-class',
-  });
-
-  const button = element.querySelector('button');
-  expect(button).toHaveClass('btn-primary', 'custom-class');
-});
-
-it('should set part attribute correctly', async () => {
-  const element = await renderComponent({part: 'custom-part'});
-
-  const button = element.querySelector('button');
-  expect(button).toHaveAttribute('part', 'custom-part');
-});
-```
-
-#### Testing Event Handlers
-
-```typescript
-it('should call onClick when button is clicked', async () => {
-  const handleClick = vi.fn();
-  await renderComponent({onClick: handleClick});
-
-  const button = page.getByRole('button');
-  await button.click();
-
-  expect(handleClick).toHaveBeenCalledTimes(1);
-});
-
-it('should pass correct arguments to event handler', async () => {
-  const handleClick = vi.fn();
-  await renderComponent({
-    onClick: handleClick,
-    value: 'test-value',
-  });
-
-  const button = page.getByRole('button');
-  await button.click();
-
-  expect(handleClick).toHaveBeenCalledWith('test-value');
-});
-```
-
-#### Testing Conditional Rendering
-
-```typescript
-describe('when disabled is true', () => {
-  it('should render disabled button', async () => {
-    const element = await renderComponent({disabled: true});
-
-    const button = element.querySelector('button');
-    expect(button).toHaveAttribute('disabled');
-    expect(button).toHaveAttribute('aria-disabled', 'true');
-  });
-
-  it('should not call onClick when disabled', async () => {
-    const handleClick = vi.fn();
-    await renderComponent({
-      disabled: true,
-      onClick: handleClick,
-    });
-
-    const button = page.getByRole('button');
-    await button.click();
-
-    expect(handleClick).not.toHaveBeenCalled();
-  });
-});
-```
-
-#### Testing i18n Integration
-
-```typescript
-it('should render localized text correctly', async () => {
+it('should render localized text', async () => {
   const customI18n = await createTestI18n();
-  customI18n.addResourceBundle('en', 'translation', {
-    'button.label': 'Custom Button Label',
-  });
-
-  const element = await renderComponent({
-    i18n: customI18n,
-    labelKey: 'button.label',
-  });
-
-  const button = element.querySelector('button');
-  expect(button).toHaveTextContent('Custom Button Label');
-});
-
-it('should fall back to key when translation missing', async () => {
-  const element = await renderComponent({
-    labelKey: 'missing.key',
-  });
-
-  const button = element.querySelector('button');
-  expect(button).toHaveTextContent('missing.key');
+  customI18n.addResourceBundle('en', 'translation', {'key': 'Localized'});
+  
+  const element = await renderComponent({i18n: customI18n, labelKey: 'key'});
+  expect(element).toHaveTextContent('Localized');
 });
 ```
 
-#### Testing Children Rendering
-
-```typescript
-it('should render single child correctly', async () => {
-  const element = await renderComponent(
-    {},
-    html`<span class="child">Single Child</span>`
-  );
-
-  const child = element.querySelector('.child');
-  expect(child).toHaveTextContent('Single Child');
-});
-
-it('should render multiple children correctly', async () => {
-  const element = await renderComponent(
-    {},
-    html`
-      <div class="child-1">Child 1</div>
-      <div class="child-2">Child 2</div>
-    `
-  );
-
-  expect(element.querySelector('.child-1')).toHaveTextContent('Child 1');
-  expect(element.querySelector('.child-2')).toHaveTextContent('Child 2');
-});
-
-it('should handle empty children', async () => {
-  const element = await renderComponent({}, html``);
-
-  // Test that component still renders correctly with no children
-  expect(element.querySelector('[part="container"]')).toBeInTheDocument();
-});
-```
-
-### 8. Run Tests to Verify
+### 7. Run Tests
 
 ```bash
-npx vitest --config vitest.config.ts ./src/components/path/component.spec.ts --run
+npx vitest ./src/components/path/component.spec.ts --run
 ```
 
-## Testing Utilities for Functional Components
+## Guidelines
 
-### Main Utilities
-
-- **`renderFunctionFixture(template)`** - Primary utility for rendering functional components
-- **`createTestI18n()`** - Creates test i18n instance
-- **`page` locators** - Use for interactive element selection
-- **`vi.fn()`** - For mocking functions and event handlers
-
-### Required Setup Pattern
-
+**Mock dependencies before imports:**
 ```typescript
-// 1. Import the render function and props interface
-import {renderComponentName, ComponentNameProps} from './component-name';
-
-// 2. Create a reusable render helper
-const renderComponent = async (props: Partial<ComponentNameProps> = {}) => {
-  const defaultProps: ComponentNameProps = {
-    // Set all required props with sensible defaults
-  };
-
-  const mergedProps = {...defaultProps, ...props};
-  return await renderFunctionFixture(
-    html`${renderComponentName({props: mergedProps})}`
-  );
-};
-
-// 3. For components with children
-const renderComponentWithChildren = async (
-  props: Partial<ComponentNameProps> = {},
-  children = html`<span>Default Children</span>`
-) => {
-  const mergedProps = {...defaultProps, ...props};
-  return await renderFunctionFixture(
-    html`${renderComponentName({props: mergedProps})(children)}`
-  );
-};
+vi.mock('@/src/utils/module', () => ({utilFunction: vi.fn()}));
 ```
 
-## Important Guidelines
-
-### Mock Management
-
-⚠️ **Mock external dependencies at the top level**:
-
+**Use `page` locators for interactions:**
 ```typescript
-// ✅ Correct
-vi.mock('@/src/utils/module', () => ({
-  utilFunction: vi.fn(),
-}));
-
-import {renderComponentName} from './component-name';
-
-// ❌ Incorrect - mocks should be before imports
-import {renderComponentName} from './component-name';
-vi.mock('@/src/utils/module');
+await page.getByRole('button').click();
 ```
 
-### Test Organization
-
-- **Function level**: Use `#render[ComponentName]` for the main describe
-- **Props testing**: Group related prop tests together
-- **Interaction testing**: Group user interaction tests
-- **Conditional rendering**: Use `'when [condition]'` describes
-
-### Naming Conventions
-
-- **Main describe**: `#render[ComponentName]` (e.g., `#renderButton`)
-- **Condition describes**: `when [condition]` (e.g., `when disabled is true`)
-- **Test cases**: Always start with "should" (e.g., `should render correctly`)
-
-### Common Patterns to Test
-
-1. **Default rendering** - Component renders with minimal props
-2. **Prop variations** - Each prop affects rendering correctly
-3. **Edge cases** - Empty values, null/undefined props
-4. **User interactions** - All event handlers work
-5. **Accessibility** - ARIA attributes, keyboard navigation
-6. **Visual attributes** - CSS classes, part attributes
-7. **Children handling** - If component accepts children
-
-## Completion Checklist
-
-After creating the test file:
-
-- [ ] All imports are correctly set up
-- [ ] Component render function works with default props
-- [ ] All public props are tested
-- [ ] Event handlers are tested (if applicable)
-- [ ] Children rendering is tested (if applicable)
-- [ ] Conditional rendering scenarios are covered
-- [ ] Edge cases and error conditions are tested
-- [ ] Tests follow naming conventions
-- [ ] Tests run successfully without errors
-- [ ] No console warnings or errors during test execution
-
-## Common Functional Component Examples
-
-### Button Component Test Structure
-
+**Prefer creation over mutation:**
 ```typescript
-describe('#renderButton', () => {
-  const renderButton = (props: Partial<ButtonProps> = {}) => {
-    return renderFunctionFixture(
-      html`${renderButton({
-        props: {
-          style: 'primary',
-          ...props,
-        },
-      })(html`Button Text`)}`
-    );
-  };
+// ✅ Good - create with desired props
+const element = await renderComponent({property: 'value'});
 
-  it('should render button with correct style class', async () => {
-    const element = await renderButton({style: 'secondary'});
-    const button = element.querySelector('button');
-    expect(button).toHaveClass('btn-secondary');
-  });
+// ❌ Avoid - unless testing reactivity
+element.property = 'value';
+await element.updateComplete;
+```
+
+**Group related tests:**
+```typescript
+describe('when disabled', () => {
+  // All disabled-related tests
 });
 ```
 
-### Option Component Test Structure
+## Post-Execution Summary
 
-```typescript
-describe('#renderSortOption', () => {
-  let i18n: Awaited<ReturnType<typeof createTestI18n>>;
+**Mandatory final todo:** Generate `.github/prompts/.executions/generate-vitest-test-atomic-lit-functional-component-[YYYY-MM-DD-HHmmss].prompt-execution.md` following `TEMPLATE.prompt-execution.md`.
 
-  beforeAll(async () => {
-    i18n = await createTestI18n();
-  });
+**Include:** Reference components used, type selection issues, ambiguous instructions, time-consuming operations, missing guidance, concrete improvement suggestions.
 
-  const locators = {
-    option({selected}: {selected: boolean} = {selected: false}) {
-      return page.getByRole('option', {selected});
-    },
-  };
-
-  const setupElement = async (props: Partial<SortOptionProps>) => {
-    return await renderFunctionFixture(
-      html`${renderSortOption({
-        props: {
-          i18n,
-          value: 'default-value',
-          selected: false,
-          label: 'default-label',
-          ...props,
-        },
-      })}`
-    );
-  };
-});
-```
-
-Ask me for the functional component name if not provided, then proceed to analyze the component and create comprehensive tests following these patterns.
+**Inform user** of summary location and suggest "Prompt Engineer" chatmode for optimization. Mark complete only after file created and user informed.
