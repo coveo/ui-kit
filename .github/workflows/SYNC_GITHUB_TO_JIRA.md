@@ -84,7 +84,7 @@ Jira issues created by this workflow:
   4. Select the `read:project` scope
   5. Generate and copy the token
   6. Add it as a secret named `PROJECT_PAT` in the repository
-  7. In the workflow file, change line 47 from `github-token: ${{ secrets.GITHUB_TOKEN }}` to `github-token: ${{ secrets.PROJECT_PAT }}`
+  7. In the workflow file, change line 43 from `github-token: ${{ secrets.GITHUB_TOKEN }}` to `github-token: ${{ secrets.PROJECT_PAT }}`
 
 ### Workflow fails with authentication error
 - Verify that all three Jira secrets are correctly set

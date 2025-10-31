@@ -89,8 +89,8 @@ jobs:
                 body: item.content.body || '',
                 state: item.content.state,
                 url: item.content.url,
-                labels: item.content.labels.nodes.map(l => l.name),
-                assignees: item.content.assignees.nodes.map(a => a.login)
+                labels: item.content.labels?.nodes?.map(l => l.name) || [],
+                assignees: item.content.assignees?.nodes?.map(a => a.login) || []
               }));
 
             console.log(`Found ${issues.length} issues in project`);
@@ -102,9 +102,10 @@ jobs:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          ISSUES_JSON: ${{ steps.query-issues.outputs.result }}
         with:
           script: |
-            const issues = JSON.parse('${{ steps.query-issues.outputs.result }}');
+            const issues = JSON.parse(process.env.ISSUES_JSON);
             const jiraBaseUrl = process.env.JIRA_BASE_URL;
             const jiraEmail = process.env.JIRA_USER_EMAIL;
             const jiraToken = process.env.JIRA_API_TOKEN;
