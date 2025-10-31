@@ -4,8 +4,8 @@ import type {i18n} from 'i18next';
 import {html, LitElement, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {vi} from 'vitest';
+import {bindingsContext} from '@/src/components/common/context/bindings-context.js';
 import type {BaseAtomicInterface} from '@/src/components/common/interface/interface-controller.js';
-import {bindingsContext} from '@/src/components/context/bindings-context.js';
 import type {AtomicSearchInterface} from '@/src/components/index.js';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces.js';
 import type {SearchStore} from '@/src/components/search/atomic-search-interface/store.js';
@@ -82,6 +82,8 @@ export const defaultBindings = {
   } as Partial<SearchStore> as SearchStore,
   engine: {
     subscribe: genericSubscribe,
+    addReducers: vi.fn(),
+    dispatch: vi.fn(),
   } as Partial<SearchEngine> as SearchEngine,
 } as const;
 

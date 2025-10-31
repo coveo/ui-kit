@@ -7,8 +7,9 @@ import {makeMatchConditions} from '@/src/components/common/template-controller/t
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {mapProperty} from '@/src/utils/props-utils';
 import '@/src/components/common/atomic-component-error/atomic-component-error';
-import '@/src/components/search/atomic-result/atomic-result';
+import {arrayConverter} from '@/src/converters/array-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
+import '../atomic-result/atomic-result';
 import type {LitElementWithError} from '@/src/decorators/types';
 
 /**
@@ -34,7 +35,7 @@ export class AtomicResultTemplate
    * For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`:
    * `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
    */
-  @property({attribute: false, type: Array})
+  @property({attribute: false, type: Array, converter: arrayConverter})
   conditions: ResultTemplateCondition[] = [];
 
   /**

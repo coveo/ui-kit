@@ -5,6 +5,7 @@
 import type {CommerceEngineOptions as OriginalCommerceEngineOptions} from '../../../app/commerce-engine/commerce-engine.js';
 import type {NavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import {createAccessTokenManager} from '../../common/access-token-manager.js';
 import {
   buildFactory,
   type CommerceEngineDefinitionOptions,
@@ -63,41 +64,69 @@ export function defineCommerceEngine<
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
-  const getOptions = () => engineOptions;
-
   const setNavigatorContextProvider = (
     navigatorContextProvider: NavigatorContextProvider
   ) => {
     engineOptions.navigatorContextProvider = navigatorContextProvider;
   };
 
-  const getAccessToken = () => engineOptions.configuration.accessToken;
+  const tokenManager = createAccessTokenManager(
+    engineOptions.configuration.accessToken
+  );
 
+  const onAccessTokenUpdate = (
+    updateCallback: (accessToken: string) => void
+  ) => {
+    tokenManager.registerCallback(updateCallback);
+  };
+
+  /**
+   * HACK: We assign engineOptions by reference (not by value) to definitionOptions
+   * so that when setNavigatorContextProvider() modifies engineOptions.navigatorContextProvider,
+   * the factories will see the updated navigator context when they are called later.
+   *
+   * This works because:
+   * 1. setNavigatorContextProvider() modifies engineOptions.navigatorContextProvider
+   * 2. definitionOptions points to the same object as engineOptions
+   * 3. When fetchStaticState() is called, it uses the current value from the shared object
+   *
+   * Without this reference sharing, definitionOptions would be a snapshot taken at
+   * definition time, and navigator context updates would be ignored.
+   *
+   * TODO: This will be removed in the next major version with a cleaner design
+   * where context is provided directly to fetchStaticState() rather than through
+   * the engine definition.
+   */
+  const definitionOptions = engineOptions;
+  definitionOptions.onAccessTokenUpdate = onAccessTokenUpdate;
+
+  const getAccessToken = () => tokenManager.getAccessToken();
   const setAccessToken = (accessToken: string) => {
     engineOptions.configuration.accessToken = accessToken;
+    tokenManager.setAccessToken(accessToken);
   };
 
   const build = buildFactory<TControllerDefinitions>(
     controllerDefinitions,
-    getOptions()
+    definitionOptions
   );
   const fetchStaticState = fetchStaticStateFactory<TControllerDefinitions>(
     controllerDefinitions,
-    getOptions()
+    definitionOptions
   );
   const hydrateStaticState = hydratedStaticStateFactory<TControllerDefinitions>(
     controllerDefinitions,
-    getOptions()
+    definitionOptions
   );
   const fetchRecommendationStaticState =
     fetchRecommendationStaticStateFactory<TControllerDefinitions>(
       controllerDefinitions,
-      getOptions()
+      definitionOptions
     );
   const hydrateRecommendationStaticState =
     hydratedRecommendationStaticStateFactory<TControllerDefinitions>(
       controllerDefinitions,
-      getOptions()
+      definitionOptions
     );
 
   return {

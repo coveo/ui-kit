@@ -4,15 +4,29 @@ import type {CartItem} from '@coveo/headless-react/ssr-commerce-next';
 import {cookies} from 'next/headers';
 
 async function getCartFromCookies(): Promise<CartItem[]> {
-  const cartCookie = (await cookies()).get('headless-cart');
-  return cartCookie ? JSON.parse(cartCookie.value) : [];
+  try {
+    const cookieStore = await cookies();
+    const cartCookie = cookieStore.get('headless-cart');
+    return cartCookie ? JSON.parse(cartCookie.value) : [];
+  } catch (error) {
+    console.error('Error getting cart from cookies:', error);
+    return [];
+  }
 }
 
 async function setCartInCookies(cart: CartItem[]) {
-  (await cookies()).set('headless-cart', JSON.stringify(cart), {
-    path: '/',
-    maxAge: 60 * 60 * 24,
-  });
+  try {
+    const cookieStore = await cookies();
+    cookieStore.set('headless-cart', JSON.stringify(cart), {
+      path: '/',
+      maxAge: 60 * 60 * 24,
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+    });
+  } catch (error) {
+    console.error('Error setting cart in cookies:', error);
+  }
 }
 
 /**
@@ -38,7 +52,7 @@ export async function addItemToCart(newItem: CartItem): Promise<CartItem[]> {
   } else {
     cart.push(newItem);
   }
-  setCartInCookies(cart);
+  await setCartInCookies(cart);
   return cart;
 }
 
@@ -56,11 +70,11 @@ export async function updateItemQuantity(
       existingItem.quantity = updatedItem.quantity;
     }
   }
-  setCartInCookies(cart);
+  await setCartInCookies(cart);
   return cart;
 }
 
 export async function clearCart(): Promise<CartItem[]> {
-  setCartInCookies([]);
+  await setCartInCookies([]);
   return [];
 }

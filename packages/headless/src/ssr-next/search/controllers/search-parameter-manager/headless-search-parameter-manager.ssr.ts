@@ -44,6 +44,7 @@ export interface SearchParameterManagerDefinition
  * */
 export function defineSearchParameterManager(): SearchParameterManagerDefinition {
   return {
+    // TODO: KIT-5154 - Apply commerce pattern
     buildWithProps: (engine, props) => {
       if (props === undefined) {
         throw new MissingControllerProps('SearchParameterManager');

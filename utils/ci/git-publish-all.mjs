@@ -37,6 +37,7 @@ const commitMessage = dedent`
   **/CHANGELOG.md
   CHANGELOG.md
   package.json
+  **/package.json
 `;
 
 // Setup Git with the bot user

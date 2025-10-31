@@ -9,12 +9,12 @@ import {
   resultComponentClass,
 } from '@/src/components/common/item-list/item-list-common';
 import {CustomRenderController} from '@/src/components/common/layout/custom-render-controller';
+import {ItemLayoutController} from '@/src/components/common/layout/item-layout-controller';
 import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
-} from '@/src/components/common/layout/display-options';
-import {ItemLayoutController} from '@/src/components/common/layout/item-layout-controller';
+} from '@/src/components/common/layout/item-layout-utils';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {SearchStore} from '@/src/components/search/atomic-search-interface/store';
 import type {
@@ -25,6 +25,7 @@ import {booleanConverter} from '@/src/converters/boolean-converter';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {parentNodeToString} from '@/src/utils/dom-utils';
+import '../atomic-result-text/atomic-result-text';
 /**
  * The `atomic-result` component is used internally by the `atomic-result-list` and `atomic-folded-result-list` components.
  */

@@ -11,6 +11,7 @@ import {provide} from '@lit/context';
 import i18next, {type i18n} from 'i18next';
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {bindingsContext} from '@/src/components/common/context/bindings-context';
 import type {
   CommonBindings,
   NonceBindings,
@@ -19,7 +20,6 @@ import {
   type BaseAtomicInterface,
   InterfaceController,
 } from '@/src/components/common/interface/interface-controller';
-import {bindingsContext} from '@/src/components/context/bindings-context';
 import {arrayConverter} from '@/src/converters/array-converter.js';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';

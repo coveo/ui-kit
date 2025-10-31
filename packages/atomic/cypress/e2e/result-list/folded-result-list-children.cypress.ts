@@ -44,15 +44,21 @@ describe('Folded Result List Component - Children results', () => {
     FoldedResultListSelectors.childrenRoot().should('be.visible');
 
     FoldedResultListSelectors.firstResult()
-      .contains(ExpectedHierarchy.rootName)
-      .should('be.visible');
+      .find('atomic-text')
+      .should('be.visible')
+      .shadow()
+      .should('contain.text', ExpectedHierarchy.rootName)
 
     FoldedResultListSelectors.childResultAtIndex(0)
       .find(resultLinkComponent)
-      .contains(ExpectedHierarchy.children[0].name);
+      .find('atomic-text')
+      .shadow()
+      .should('contain.text', ExpectedHierarchy.children[0].name);
     FoldedResultListSelectors.childResultAtIndex(1)
       .find(resultLinkComponent)
-      .contains(ExpectedHierarchy.children[1].name);
+      .find('atomic-text')
+      .shadow()
+      .should('contain.text', ExpectedHierarchy.children[1].name);
   });
 
   it('should show more child results when the number of folded results exceed the default', () => {
@@ -67,18 +73,36 @@ describe('Folded Result List Component - Children results', () => {
       .init();
 
     FoldedResultListSelectors.firstResult()
-      .contains(ExpectedHierarchyWith10foldedResultsRequested.rootName)
-      .should('be.visible');
+      .find('atomic-text')
+      .should('be.visible')
+      .shadow()
+      .should('contain.text', ExpectedHierarchyWith10foldedResultsRequested.rootName)
+
 
     FoldedResultListSelectors.childResultAtIndex(0)
       .find(resultLinkComponent)
-      .contains(ExpectedHierarchyWith10foldedResultsRequested.children[0].name);
+      .find('atomic-text')
+      .shadow()
+      .should(
+        'contain.text',
+        ExpectedHierarchyWith10foldedResultsRequested.children[0].name
+      );
     FoldedResultListSelectors.childResultAtIndex(1)
       .find(resultLinkComponent)
-      .contains(ExpectedHierarchyWith10foldedResultsRequested.children[1].name);
+      .find('atomic-text')
+      .shadow()
+      .should(
+        'contain.text',
+        ExpectedHierarchyWith10foldedResultsRequested.children[1].name
+      );
     FoldedResultListSelectors.childResultAtIndex(2)
       .find(resultLinkComponent)
-      .contains(ExpectedHierarchyWith10foldedResultsRequested.children[2].name);
+      .find('atomic-text')
+      .shadow()
+      .should(
+        'contain.text',
+        ExpectedHierarchyWith10foldedResultsRequested.children[2].name
+      );
   });
 
   it('should not show a "no results" label when no child results are found when no-result-text is empty', () => {

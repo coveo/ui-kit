@@ -1,14 +1,17 @@
 {
   "name": "@coveo/create-atomic-result-component",
-  "version": "1.3.8",
+  "version": "1.3.10",
   "description": "Initialize a Coveo Atomic Result Component",
   "type": "module",
   "main": "index.js",
   "bin": "index.js",
   "files": [
     "index.js",
-    "template/**/*",
-    "!template/**/project.json",
+    "template/src/components/sample-result-component/.gitignore",
+    "template/src/components/sample-result-component/package.json",
+    "template/src/components/sample-result-component/stencil.config.ts",
+    "template/src/components/sample-result-component/tsconfig.json",
+    "template/src/components/sample-result-component/src/**/*",
     "template/.gitignore"
   ],
   "scripts": {

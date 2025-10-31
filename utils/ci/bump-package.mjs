@@ -1,5 +1,7 @@
 #!/usr/bin/env node
-import {readFileSync} from 'node:fs';
+import {spawnSync} from 'node:child_process';
+import {appendFileSync, readFileSync, writeFileSync} from 'node:fs';
+import {join, resolve} from 'node:path';
 import {
   describeNpmTag,
   generateChangelog,
@@ -15,6 +17,7 @@ import {
 import changelogConvention from 'conventional-changelog-conventionalcommits';
 import {gt, SemVer} from 'semver';
 import {
+  REPO_FS_ROOT,
   REPO_HOST,
   REPO_NAME,
   REPO_OWNER,
@@ -25,6 +28,49 @@ if (!process.env.INIT_CWD) {
   throw new Error('Should be called using pnpm run');
 }
 process.chdir(process.env.INIT_CWD);
+
+/**
+ * Check if the package json in the provided folder has changed since the last commit
+ * @param {string} directoryPath
+ * @returns {boolean}
+ */
+const hasPackageJsonChanged = (directoryPath) => {
+  const {stdout, stderr, status} = spawnSync(
+    'git',
+    ['diff', '--exit-code', 'package.json'],
+    {cwd: directoryPath, encoding: 'utf-8'}
+  );
+  switch (status) {
+    case 0:
+      return false;
+    case 1:
+      return true;
+    default:
+      console.log(stdout);
+      console.error(stderr);
+      throw new Error(`git diff exited with statusCode ${status}`);
+  }
+};
+
+/**
+ * @typedef {import('./types.mjs').PackageJson} PackageJson
+ */
+
+/**
+ * @param {string} packageDir
+ * @param {(packageJson: PackageJson) => PackageJson | void} modifyPackageJsonCallback
+ */
+const modifyPackageJson = (packageDir, modifyPackageJsonCallback) => {
+  const packageJsonPath = resolve(packageDir, 'package.json');
+  const packageJson = JSON.parse(
+    readFileSync(packageJsonPath, {encoding: 'utf-8'})
+  );
+  const newPackageJson = modifyPackageJsonCallback(packageJson);
+  writeFileSync(
+    packageJsonPath,
+    JSON.stringify(newPackageJson || packageJson, null, 2)
+  );
+};
 
 const isPrerelease = process.env.IS_PRERELEASE === 'true';
 
@@ -41,7 +87,7 @@ const lastTag = await getLastTag({
   onBranch: `refs/remotes/origin/${REPO_RELEASE_BRANCH}`,
 });
 const commits = await getCommits(PATH, lastTag);
-if (commits.length === 0) {
+if (commits.length === 0 && !hasPackageJsonChanged(PATH)) {
   process.exit(0);
 }
 const parsedCommits = parseCommits(commits, convention.parserOpts);
@@ -61,6 +107,10 @@ const newVersion =
   isPrerelease && !privatePackage
     ? await getNextBetaVersion(nextGoldVersion)
     : nextGoldVersion;
+
+modifyPackageJson(PATH, (packageJson) => {
+  packageJson.version = newVersion;
+});
 if (privatePackage) {
   process.exit(0);
 }
@@ -78,6 +128,10 @@ if (parsedCommits.length > 0) {
   );
   await writeChangelog(PATH, changelog);
 }
+appendFileSync(
+  join(REPO_FS_ROOT, '.git-message'),
+  `${packageJson.name}@${newVersion}\n`
+);
 
 function isPrivatePackage() {
   const packageJson = JSON.parse(

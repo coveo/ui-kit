@@ -1,7 +1,9 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {wrapInResult} from '@/storybook-utils/search/result-wrapper';
+import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
+import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -9,17 +11,36 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator: resultDecorator, engineConfig} = wrapInResult();
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
-  config: engineConfig,
+  config: {
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
+      console.log(parsed);
+      parsed.numberOfResults = 1;
+      request.body = JSON.stringify(parsed);
+      return request;
+    },
+  },
 });
+
+const {decorator: resultListDecorator} = wrapInResultList('list');
+const {decorator: resultTemplateDecorator} = wrapInResultTemplate(false);
 
 const meta: Meta = {
   component: 'atomic-result-icon',
   title: 'Search/ResultList/ResultIcon',
   id: 'atomic-result-icon',
   render: (args) => template(args),
-  decorators: [resultDecorator, searchInterfaceDecorator],
+  decorators: [
+    (story) => html`
+        <atomic-result-section-visual id="code-root">
+          ${story()}
+        </atomic-result-section-visual>    
+      `,
+    resultTemplateDecorator,
+    resultListDecorator,
+    searchInterfaceDecorator,
+  ],
   parameters: {
     ...parameters,
     actions: {
@@ -28,7 +49,6 @@ const meta: Meta = {
   },
   args,
   argTypes,
-
   play,
 };
 
