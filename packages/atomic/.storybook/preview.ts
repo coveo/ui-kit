@@ -126,3 +126,9 @@ function disableAnalytics(container, selectors) {
     });
   });
 }
+
+export default {
+  globals: {
+    a11y: {manual: true},
+  },
+};
