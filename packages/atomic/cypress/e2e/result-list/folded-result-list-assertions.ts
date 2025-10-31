@@ -36,21 +36,29 @@ export const ExpectedHierarchyWith10foldedResultsRequested = {
 };
 
 export function assertRendersGrandchildren() {
-  it.skip('should render grandchildren', () => {
+  it('should render grandchildren', () => {
     FoldedResultListSelectors.firstResult()
-      .contains(ExpectedHierarchy.rootName)
-      .should('be.visible');
+      .find('atomic-text')
+      .should('be.visible')
+      .shadow()
+      .should('contain.text', ExpectedHierarchy.rootName);
 
     FoldedResultListSelectors.childResultAtIndex(0)
       .find(resultLinkComponent)
-      .contains(ExpectedHierarchy.children[0].name);
+      .find('atomic-text')
+      .shadow()
+      .should('contain.text', ExpectedHierarchy.children[0].name);
     FoldedResultListSelectors.childResultAtIndex(1)
       .find(resultLinkComponent)
-      .contains(ExpectedHierarchy.children[1].name);
+      .find('atomic-text')
+      .shadow()
+      .should('contain.text', ExpectedHierarchy.children[1].name);
 
     FoldedResultListSelectors.grandChildResultAtIndex(0, 1)
       .find(resultLinkComponent)
-      .contains(ExpectedHierarchy.children[1].children[0].name);
+      .find('atomic-text')
+      .shadow()
+      .should('contain.text', ExpectedHierarchy.children[1].children[0].name);
   });
 }
 
@@ -61,9 +69,13 @@ export function assertRendersWholeCollection() {
       .eq(9)
       .shadow()
       .find(resultLinkComponent)
-      .contains(ExpectedHierarchy.children[9].name);
+      .find('atomic-text')
+      .shadow()
+      .should('contain.text', ExpectedHierarchy.children[9].name);
     FoldedResultListSelectors.grandChildResultAtIndex(3, 9)
       .find(resultLinkComponent)
-      .contains(ExpectedHierarchy.children[9].children[3].name);
+      .find('atomic-text')
+      .shadow()
+      .should('contain.text', ExpectedHierarchy.children[9].children[3].name);
   });
 }
