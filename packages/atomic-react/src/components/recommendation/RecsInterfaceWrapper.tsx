@@ -1,18 +1,22 @@
-import type {i18n, JSX} from '@coveo/atomic';
+import type {i18n} from '@coveo/atomic';
 import {
   buildRecommendationEngine,
   getSampleRecommendationEngineConfiguration,
 } from '@coveo/headless/recommendation';
 // biome-ignore lint/style/useImportType: <React is needed>
 import React, {useEffect, useRef} from 'react';
-import {AtomicRecsInterface} from '../stencil-generated/search/index.js';
+import {AtomicRecsInterface} from '../search/components';
 
-type GetRecommendations = HTMLAtomicRecsInterfaceElement['getRecommendations'];
+type AtomicRecsInterfaceProps = React.ComponentProps<
+  typeof AtomicRecsInterface
+>;
+
+type GetRecommendations = AtomicRecsInterfaceProps['getRecommendations'];
 /**
  * The properties of the AtomicRecsInterface component
  */
 interface WrapperProps
-  extends Omit<JSX.AtomicRecsInterface, 'i18n' | 'pipeline' | 'searchHub'> {
+  extends Omit<AtomicRecsInterfaceProps, 'i18n' | 'pipeline' | 'searchHub'> {
   /**
    * An optional callback function that can be used to control the execution of the first query.
    *
@@ -30,7 +34,7 @@ interface WrapperProps
 
 const DefaultProps: Required<Pick<WrapperProps, 'onReady' | 'localization'>> = {
   onReady: (getRecommendations) => {
-    return getRecommendations();
+    return getRecommendations ? getRecommendations() : Promise.resolve();
   },
   localization: () => {},
 };
@@ -50,7 +54,8 @@ export const RecsInterfaceWrapper = (
     });
   }
   const {engine, localization, onReady, ...allOtherProps} = mergedProps;
-  const recsInterfaceRef = useRef<HTMLAtomicRecsInterfaceElement>(null);
+  const recsInterfaceRef =
+    useRef<React.ElementRef<typeof AtomicRecsInterface>>(null);
   let initialization: Promise<void> | null = null;
 
   useEffect(() => {

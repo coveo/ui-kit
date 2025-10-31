@@ -952,6 +952,7 @@ describe('atomic-search-interface', () => {
   // #toggleAnalytics
   it('should call InterfaceController.onAnalyticsChange when the analytics attribute changes', async () => {
     const element = await setupElement();
+    await element.initialize(searchEngineConfig);
     const onAnalyticsChangeSpy = vi.spyOn(
       InterfaceController.prototype,
       'onAnalyticsChange'
