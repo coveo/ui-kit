@@ -1,6 +1,6 @@
 import {css, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import type {ItemDisplayImageSize} from '@/src/components/common/layout/display-options';
+import type {ItemDisplayImageSize} from '@/src/components/common/layout/item-layout-utils';
 import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
 /**

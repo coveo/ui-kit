@@ -1,14 +1,17 @@
 {
   "name": "@coveo/create-atomic-component",
-  "version": "1.5.8",
+  "version": "1.5.10",
   "description": "Initialize a Coveo Atomic Component",
   "type": "module",
   "main": "index.js",
   "bin": "index.js",
   "files": [
     "index.js",
-    "template/**/*",
-    "!template/**/project.json",
+    "template/src/components/sample-component/src/**/*",
+    "template/src/components/sample-component/.gitignore",
+    "template/src/components/sample-component/package.json",
+    "template/src/components/sample-component/stencil.config.ts",
+    "template/src/components/sample-component/tsconfig.json",
     "template/.gitignore"
   ],
   "scripts": {

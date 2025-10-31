@@ -1712,38 +1712,6 @@ export namespace Components {
         "noResultText": string;
     }
     /**
-     * The `atomic-result-children-template` component determines the format of the child results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-children-template`, and an `atomic-result-children` must be the parent of each `atomic-result-children-template`.
-     * Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface AtomicResultChildrenTemplate {
-        /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
-         */
-        "conditions": ResultTemplateCondition[];
-        /**
-          * Gets the appropriate result template based on conditions applied.
-         */
-        "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
-        /**
-          * Verifies whether the specified fields match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustMatch": Record<
-    string,
-    string[]
-  >;
-        /**
-          * Verifies whether the specified fields do not match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustNotMatch": Record<
-    string,
-    string[]
-  >;
-    }
-    /**
      * The `atomic-result-date` component renders the value of a date result field.
      */
     interface AtomicResultDate {
@@ -1811,36 +1779,6 @@ export namespace Components {
           * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
          */
         "hrefTemplate"?: string;
-    }
-    /**
-     * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
-     */
-    interface AtomicResultList {
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density": ItemDisplayDensity;
-        /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
-         */
-        "display": ItemDisplayLayout;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-          * @param resultRenderingFunction
-         */
-        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
-        /**
-          * The tabs on which this result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-result-list> ``` If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded": string[] | string;
-        /**
-          * The tabs on which the result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-result-list snippet> ``` If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list can only be displayed on the specified tabs.
-         */
-        "tabsIncluded": string[] | string;
     }
     /**
      * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
@@ -3246,18 +3184,6 @@ declare global {
         new (): HTMLAtomicResultChildrenElement;
     };
     /**
-     * The `atomic-result-children-template` component determines the format of the child results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-children-template`, and an `atomic-result-children` must be the parent of each `atomic-result-children-template`.
-     * Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface HTMLAtomicResultChildrenTemplateElement extends Components.AtomicResultChildrenTemplate, HTMLStencilElement {
-    }
-    var HTMLAtomicResultChildrenTemplateElement: {
-        prototype: HTMLAtomicResultChildrenTemplateElement;
-        new (): HTMLAtomicResultChildrenTemplateElement;
-    };
-    /**
      * The `atomic-result-date` component renders the value of a date result field.
      */
     interface HTMLAtomicResultDateElement extends Components.AtomicResultDate, HTMLStencilElement {
@@ -3313,15 +3239,6 @@ declare global {
     var HTMLAtomicResultLinkElement: {
         prototype: HTMLAtomicResultLinkElement;
         new (): HTMLAtomicResultLinkElement;
-    };
-    /**
-     * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
-     */
-    interface HTMLAtomicResultListElement extends Components.AtomicResultList, HTMLStencilElement {
-    }
-    var HTMLAtomicResultListElement: {
-        prototype: HTMLAtomicResultListElement;
-        new (): HTMLAtomicResultListElement;
     };
     /**
      * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
@@ -3793,14 +3710,12 @@ declare global {
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-result-badge": HTMLAtomicResultBadgeElement;
         "atomic-result-children": HTMLAtomicResultChildrenElement;
-        "atomic-result-children-template": HTMLAtomicResultChildrenTemplateElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
         "atomic-result-html": HTMLAtomicResultHtmlElement;
         "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
-        "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-result-localized-text": HTMLAtomicResultLocalizedTextElement;
         "atomic-result-multi-value-text": HTMLAtomicResultMultiValueTextElement;
         "atomic-result-number": HTMLAtomicResultNumberElement;
@@ -5451,34 +5366,6 @@ declare namespace LocalJSX {
         "noResultText"?: string;
     }
     /**
-     * The `atomic-result-children-template` component determines the format of the child results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-children-template`, and an `atomic-result-children` must be the parent of each `atomic-result-children-template`.
-     * Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface AtomicResultChildrenTemplate {
-        /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
-         */
-        "conditions"?: ResultTemplateCondition[];
-        /**
-          * Verifies whether the specified fields match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustMatch"?: Record<
-    string,
-    string[]
-  >;
-        /**
-          * Verifies whether the specified fields do not match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustNotMatch"?: Record<
-    string,
-    string[]
-  >;
-    }
-    /**
      * The `atomic-result-date` component renders the value of a date result field.
      */
     interface AtomicResultDate {
@@ -5546,31 +5433,6 @@ declare namespace LocalJSX {
           * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
          */
         "hrefTemplate"?: string;
-    }
-    /**
-     * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
-     */
-    interface AtomicResultList {
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density"?: ItemDisplayDensity;
-        /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
-         */
-        "display"?: ItemDisplayLayout;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * The tabs on which this result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-result-list> ``` If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded"?: string[] | string;
-        /**
-          * The tabs on which the result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-result-list snippet> ``` If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list can only be displayed on the specified tabs.
-         */
-        "tabsIncluded"?: string[] | string;
     }
     /**
      * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
@@ -6212,14 +6074,12 @@ declare namespace LocalJSX {
         "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-result-badge": AtomicResultBadge;
         "atomic-result-children": AtomicResultChildren;
-        "atomic-result-children-template": AtomicResultChildrenTemplate;
         "atomic-result-date": AtomicResultDate;
         "atomic-result-fields-list": AtomicResultFieldsList;
         "atomic-result-html": AtomicResultHtml;
         "atomic-result-icon": AtomicResultIcon;
         "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
-        "atomic-result-list": AtomicResultList;
         "atomic-result-localized-text": AtomicResultLocalizedText;
         "atomic-result-multi-value-text": AtomicResultMultiValueText;
         "atomic-result-number": AtomicResultNumber;
@@ -6532,13 +6392,6 @@ declare module "@stencil/core" {
              */
             "atomic-result-children": LocalJSX.AtomicResultChildren & JSXBase.HTMLAttributes<HTMLAtomicResultChildrenElement>;
             /**
-             * The `atomic-result-children-template` component determines the format of the child results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-children-template`, and an `atomic-result-children` must be the parent of each `atomic-result-children-template`.
-             * Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
-             * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-             * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-             */
-            "atomic-result-children-template": LocalJSX.AtomicResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultChildrenTemplateElement>;
-            /**
              * The `atomic-result-date` component renders the value of a date result field.
              */
             "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
@@ -6565,10 +6418,6 @@ declare module "@stencil/core" {
              * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
              */
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
-            /**
-             * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
-             */
-            "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             /**
              * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
              * Given this i18n configuration:
