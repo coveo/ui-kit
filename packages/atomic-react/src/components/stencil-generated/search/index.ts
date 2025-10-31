@@ -1,11 +1,11 @@
 /* eslint-disable */
 /* tslint:disable */
 /* auto-generated react proxies */
-import { createReactComponent } from './react-component-lib';
+import { createReactComponent } from './react-component-lib/index.js';
 
 import type { JSX } from '@coveo/atomic';
 
-import { defineCustomElements } from '@coveo/atomic/dist/atomic/loader';
+import { defineCustomElements } from '@coveo/atomic/loader';
 
 defineCustomElements();
 export const AtomicAutomaticFacet = /*@__PURE__*/createReactComponent<JSX.AtomicAutomaticFacet, HTMLAtomicAutomaticFacetElement>('atomic-automatic-facet');
