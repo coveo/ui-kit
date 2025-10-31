@@ -297,7 +297,6 @@ export const InASearchBoxInstantResults: Story = {
   play: async (context) => {
     await initializeSearchInterface(context);
     const {canvas, step} = context;
-    // Using context.canvas directly (augmented in preview.ts)
     await step('Click Searchbox', async () => {
       (
         await canvas.findAllByShadowTitle('Search field with suggestions.', {

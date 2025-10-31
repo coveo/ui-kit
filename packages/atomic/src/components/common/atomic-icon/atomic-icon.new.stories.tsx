@@ -57,7 +57,6 @@ export const Default: Story = {
   play: async (context) => {
     await play(context);
     const {canvas, step} = context;
-    // Using context.canvas directly (augmented in preview.ts)
     await step('Wait for the facet values to render', async () => {
       await waitFor(
         () => expect(canvas.getByShadowTitle('People')).toBeInTheDocument(),

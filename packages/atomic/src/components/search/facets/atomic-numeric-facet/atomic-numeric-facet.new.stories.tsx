@@ -78,7 +78,6 @@ export const WithDependsOn: Story = {
   },
   play: async (context) => {
     const {canvas, step} = context;
-    // Using context.canvas directly (augmented in preview.ts)
     await play(context);
     await step('Select YouTubeVideo in filetype facet', async () => {
       const button = await canvas.findByShadowLabelText(

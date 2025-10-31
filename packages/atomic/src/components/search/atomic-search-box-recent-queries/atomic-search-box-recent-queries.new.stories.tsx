@@ -30,7 +30,6 @@ const meta: Meta = {
 
   play: async (context) => {
     await searchInterfacePlay(context);
-    // Using context.canvas directly (augmented in preview.ts)
     const searchBox = await canvas.findAllByShadowPlaceholderText('Search');
     await userEvent.click(searchBox[0]);
   },
