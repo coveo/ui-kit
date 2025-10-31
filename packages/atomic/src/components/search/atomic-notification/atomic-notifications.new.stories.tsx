@@ -8,22 +8,24 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator, afterEach} = wrapInSearchInterface({
-  search: {
-    preprocessSearchResponseMiddleware: (response) => {
-      response.body.triggers = [
-        {
-          type: 'notify',
-          content:
-            'This is a demo notification. It contains text that may span over a different number of lines depending on your screen width. Notifications are returned by the Coveo Search API.',
-        },
-        {
-          type: 'notify',
-          content:
-            'This is a different notification. Any amount of notifications can be returned by the Coveo Search API.',
-        },
-      ];
-      return response;
+const {decorator, play} = wrapInSearchInterface({
+  config: {
+    search: {
+      preprocessSearchResponseMiddleware: (response) => {
+        response.body.triggers = [
+          {
+            type: 'notify',
+            content:
+              'This is a demo notification. It contains text that may span over a different number of lines depending on your screen width. Notifications are returned by the Coveo Search API.',
+          },
+          {
+            type: 'notify',
+            content:
+              'This is a different notification. Any amount of notifications can be returned by the Coveo Search API.',
+          },
+        ];
+        return response;
+      },
     },
   },
 });
@@ -44,7 +46,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach,
+  play,
 };
 
 export default meta;

@@ -20,6 +20,7 @@ import i18next, {type i18n} from 'i18next';
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, query, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import {bindingsContext} from '@/src/components/common/context/bindings-context';
 import type {
   CommonBindings,
   NonceBindings,
@@ -29,7 +30,6 @@ import {
   InterfaceController,
 } from '@/src/components/common/interface/interface-controller';
 import {MobileBreakpointController} from '@/src/components/common/layout/mobile-breakpoint-controller';
-import {bindingsContext} from '@/src/components/context/bindings-context';
 import {
   errorSelector,
   firstSearchExecutedSelector,
@@ -52,7 +52,12 @@ import {getAnalyticsConfig} from './analytics-config';
 import {createSearchStore, type SearchStore} from './store';
 // TODO - Remove once all components that use atomic-modal have been migrated.
 import '@/src/components/common/atomic-modal/atomic-modal';
+// TODO - KIT-4989: Remove once atomic-result-icon is migrated
+import '@/src/components/common/atomic-icon/atomic-icon';
+// TODO - KIT-5056: Remove once atomic-result-list has been migrated.
+import '@/src/components/search/atomic-result/atomic-result';
 import {augmentAnalyticsConfigWithAtomicVersion} from '@/src/components/common/interface/analytics-config';
+import {arrayConverter} from '@/src/converters/array-converter';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
@@ -119,18 +124,7 @@ export class AtomicSearchInterface
   @property({
     type: Array,
     attribute: 'fields-to-include',
-    converter: {
-      fromAttribute: (value: string | null) => {
-        if (!value) return [];
-        try {
-          const parsed = JSON.parse(value);
-          return Array.isArray(parsed) ? parsed : [];
-        } catch {
-          return [];
-        }
-      },
-      toAttribute: (value: string[]) => JSON.stringify(value),
-    },
+    converter: arrayConverter,
   })
   public fieldsToInclude: string[] = [];
 
@@ -280,6 +274,7 @@ export class AtomicSearchInterface
   public connectedCallback() {
     super.connectedCallback();
     this.store.setLoadingFlag(FirstSearchExecutedFlag);
+    this.initFieldsToInclude();
 
     this.addEventListener(
       'atomic/initializeComponent',

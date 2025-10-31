@@ -5,18 +5,19 @@
   "type": "module",
   "scripts": {
     "dev": "stencil build --dev --watch --serve --port 3666 --no-open",
-    "build": "npm run-script -w=@coveo/ci if-not-cdn -- \"node --max_old_space_size=6144 ../../../node_modules/@stencil/core/bin/stencil build\"",
+    "build": "pnpm --filter @coveo/ci if-not-cdn -- \"pnpm exec node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build\"",
     "e2e:watch": "cypress open --browser chrome --e2e"
   },
   "dependencies": {
-    "@coveo/atomic": "3.35.5",
-    "@coveo/headless": "3.32.0",
-    "@stencil/core": "4.20.0",
+    "@coveo/atomic": "workspace:*",
+    "@coveo/headless": "workspace:*",
+    "@stencil/core": "catalog:",
     "stencil-router-v2": "0.6.0"
   },
   "devDependencies": {
-    "cypress": "13.7.3",
-    "rollup-plugin-node-polyfills": "0.2.1",
-    "rollup-plugin-html": "0.2.1"
+    "cypress": "catalog:",
+    "cypress-repeat": "catalog:",
+    "rollup-plugin-string": "catalog:",
+    "rollup-plugin-node-polyfills": "catalog:"
   }
 }

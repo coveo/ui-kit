@@ -1,11 +1,26 @@
 {
   "name": "@coveo/create-atomic",
   "description": "Coveo Atomic Generator",
-  "version": "1.41.3",
+  "version": "1.41.5",
   "files": [
     "/dist",
-    "/template",
-    "/template/.gitignore"
+    "template/.env.example",
+    "template/.env.hbs",
+    "template/.eslintrc",
+    "template/.gitignore",
+    "template/.gitignore.hbs",
+    "template/.prettierignore",
+    "template/.prettierrc.cjs",
+    "template/README.md",
+    "template/coveo.deploy.json",
+    "template/deployment.esbuild.mjs",
+    "template/package.json",
+    "template/package.json.hbs",
+    "template/scripts/**/*",
+    "template/src/**/*",
+    "template/stencil.config.ts",
+    "template/tsconfig.donotcopy.json",
+    "template/tsconfig.json"
   ],
   "bin": "./index.mjs",
   "type": "module",
@@ -17,12 +32,12 @@
   },
   "scripts": {
     "start": "node ./index.mjs",
-    "build": "node ../../utils/ci/rm-rf.mjs template && npm run build:ts && node ./scripts/preparePackageJsonTemplate.mjs",
+    "build": "node ../../utils/ci/rm-rf.mjs template && pnpm run build:ts && node ./scripts/preparePackageJsonTemplate.mjs",
     "build:ts": "tsc -p tsconfig.json",
     "lint": "prettier --check . && eslint .",
-    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
-    "release:phase1": "npm run-script -w=@coveo/ci bump",
-    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
+    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
+    "release:phase1": "pnpm --filter @coveo/ci bump",
+    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod"
   },
   "keywords": [
     "coveo",
@@ -46,6 +61,7 @@
     "plop": "4.0.1"
   },
   "devDependencies": {
-    "typescript": "5.8.3"
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
   }
 }

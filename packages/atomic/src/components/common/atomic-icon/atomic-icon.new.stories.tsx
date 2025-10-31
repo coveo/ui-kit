@@ -14,7 +14,7 @@ function snakeToCamel(value: string) {
     .replace(/([_][a-z])/g, (group) => group.toUpperCase().replace('_', ''));
 }
 
-const {decorator, afterEach} = wrapInSearchInterface();
+const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers('atomic-icon', {
   excludeCategories: ['methods'],
 });
@@ -35,7 +35,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach,
+  play,
   //TODO: Investigate https://coveord.atlassian.net/browse/KIT-5112
   tags: ['!test'],
 };
@@ -57,8 +57,8 @@ export const Default: Story = {
         </style>
         ${story()}`,
   ],
-  afterEach: async (context) => {
-    await afterEach(context);
+  play: async (context) => {
+    await play(context);
     const {canvasElement, step} = context;
     const canvas = within(canvasElement);
     await step('Wait for the facet values to render', async () => {

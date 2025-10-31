@@ -1,6 +1,6 @@
 {
   "name": "@coveo/headless-react",
-  "version": "2.6.6",
+  "version": "2.6.10",
   "description": "React utilities for SSR (Server Side Rendering) with headless",
   "homepage": "https://docs.coveo.com/en/headless/latest/",
   "repository": {
@@ -30,26 +30,26 @@
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
     "test": "vitest run",
     "test:watch": "vitest",
-    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
-    "release:phase1": "npm run-script -w=@coveo/ci bump",
-    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
-    "build:typedoc": "npm run build:typedoc:docs && npm run build:typedoc:merge",
-    "build:typedoc:docs": "concurrently \"npm run build:typedoc:ssr\" \"npm run build:typedoc:ssr-commerce\"",
+    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
+    "release:phase1": "pnpm --filter @coveo/ci bump",
+    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
+    "build:typedoc": "pnpm run build:typedoc:docs && pnpm run build:typedoc:merge",
+    "build:typedoc:docs": "concurrently \"pnpm run build:typedoc:ssr\" \"pnpm run build:typedoc:ssr-commerce\"",
     "build:typedoc:ssr": "typedoc --json ./temp/ssr.json --tsconfig tsconfig.json --options typedoc-configs/ssr.typedoc.json",
     "build:typedoc:ssr-commerce": "typedoc --json ./temp/ssr-commerce.json --tsconfig tsconfig.json --options typedoc-configs/ssr-commerce.typedoc.json",
     "build:typedoc:merge": "typedoc --tsconfig tsconfig.typedoc.json",
     "serve:typedoc": "live-server ./docs"
   },
   "dependencies": {
-    "@coveo/headless": "3.32.0"
+    "@coveo/headless": "workspace:*"
   },
   "devDependencies": {
-    "@testing-library/react": "16.3.0",
+    "@testing-library/react": "catalog:",
     "live-server": "1.2.2",
-    "typescript": "5.8.3",
-    "typedoc": "0.28.13",
-    "vitest": "3.2.4",
-    "@coveo/documentation": "1.0.0"
+    "typescript": "catalog:",
+    "typedoc": "catalog:",
+    "vitest": "catalog:",
+    "@coveo/documentation": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18 || ^19",

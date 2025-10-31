@@ -10,7 +10,7 @@ import customElements from '../custom-elements.json';
 import {defineCustomElements} from '../dist/atomic/loader/index.js';
 
 initialize(
-  import.meta.env.VITE_IS_CDN === 'true'
+  import.meta.env.DEV || import.meta.env.VITE_IS_CDN === 'true'
     ? {serviceWorker: {url: './mockServiceWorker.js'}}
     : {}
 );

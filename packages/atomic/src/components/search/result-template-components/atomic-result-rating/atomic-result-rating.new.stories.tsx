@@ -19,8 +19,9 @@ const {decorator: resultDecorator, engineConfig} = wrapInResult({
     return r;
   },
 });
-const {decorator: searchInterfaceDecorator, afterEach} =
-  wrapInSearchInterface(engineConfig);
+const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
+  config: engineConfig,
+});
 
 const meta: Meta = {
   component: 'atomic-result-rating',
@@ -37,7 +38,7 @@ const meta: Meta = {
   args,
   argTypes,
 
-  afterEach,
+  play,
 };
 
 export default meta;

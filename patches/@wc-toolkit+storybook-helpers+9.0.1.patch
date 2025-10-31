@@ -1,7 +1,7 @@
-diff --git a/node_modules/@wc-toolkit/storybook-helpers/dist/index.d.ts b/node_modules/@wc-toolkit/storybook-helpers/dist/index.d.ts
+diff --git a/dist/index.d.ts b/dist/index.d.ts
 index 867be0c..d822e79 100644
---- a/node_modules/@wc-toolkit/storybook-helpers/dist/index.d.ts
-+++ b/node_modules/@wc-toolkit/storybook-helpers/dist/index.d.ts
+--- a/dist/index.d.ts
++++ b/dist/index.d.ts
 @@ -19,6 +19,8 @@ type StoryOptions = {
      excludeCategories?: Array<Categories>;
      /** Adds a <script> tag where a `component` variable will reference the story's component */
@@ -11,10 +11,10 @@ index 867be0c..d822e79 100644
  };
  type StoryHelpers<T> = {
      args: Partial<T> & {
-diff --git a/node_modules/@wc-toolkit/storybook-helpers/dist/index.js b/node_modules/@wc-toolkit/storybook-helpers/dist/index.js
-index 1c0f4ce..8e3ceba 100644
---- a/node_modules/@wc-toolkit/storybook-helpers/dist/index.js
-+++ b/node_modules/@wc-toolkit/storybook-helpers/dist/index.js
+diff --git a/dist/index.js b/dist/index.js
+index 1c0f4ce..1051420 100644
+--- a/dist/index.js
++++ b/dist/index.js
 @@ -568,7 +568,7 @@ var options2 = {};
  setTimeout(() => {
    options2 = globalThis?.__WC_STORYBOOK_HELPERS_CONFIG__ || {};

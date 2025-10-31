@@ -32,7 +32,10 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload.js';
-import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions.js';
+import {
+  logGeneratedAnswerResponseLinked,
+  logGeneratedAnswerStreamEnd,
+} from './generated-answer-analytics-actions.js';
 import {
   buildStreamingRequest,
   constructAnswerAPIQueryParams,
@@ -77,6 +80,19 @@ export const setIsVisible = createAction(
 export const setAnswerId = createAction(
   'generatedAnswer/setAnswerId',
   (payload: string) => validatePayload(payload, requiredNonEmptyString)
+);
+
+export const setAnswerGenerationMode = createAction(
+  'generatedAnswer/setAnswerGenerationMode',
+  (payload: 'automatic' | 'manual') =>
+    validatePayload(
+      payload,
+      new StringValue<'automatic' | 'manual'>({
+        constrainTo: ['automatic', 'manual'],
+        required: false,
+        default: 'automatic',
+      })
+    )
 );
 
 export const setIsEnabled = createAction(
@@ -251,6 +267,7 @@ export const streamAnswer = createAsyncThunk<
         dispatch(setIsStreaming(false));
         dispatch(setIsAnswerGenerated(isAnswerGenerated));
         dispatch(logGeneratedAnswerStreamEnd(isAnswerGenerated));
+        dispatch(logGeneratedAnswerResponseLinked());
         break;
       }
       default:
@@ -314,9 +331,8 @@ export const streamAnswer = createAsyncThunk<
  * instead of the regular search pipeline.
  *
  * Flow:
- * 1. Reset any existing answer state.
+ * 1. Construct the Answer API query parameters based on the current state.
  * 2. Fetch a new answer from the Answer API using the provided configuration.
- * 3. Update the search action metadata.
  */
 export const generateAnswer = createAsyncThunk<
   void,
