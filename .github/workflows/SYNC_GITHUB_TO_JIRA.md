@@ -25,6 +25,16 @@ The workflow requires the following GitHub secrets to be configured in the repos
 | `JIRA_USER_EMAIL` | Email address of the Jira user | The email of a service account or user with access to create/update issues in the KIT project |
 | `JIRA_API_TOKEN` | Jira API token for authentication | Generate at https://id.atlassian.com/manage-profile/security/api-tokens |
 
+### Optional: GitHub Personal Access Token (PAT)
+
+If the workflow fails with permission errors when querying the project board, you may need to create a Personal Access Token:
+
+| Secret Name | Description | How to Obtain |
+|------------|-------------|---------------|
+| `PROJECT_PAT` | GitHub PAT with project read access | Generate at https://github.com/settings/tokens with `read:project` scope, then uncomment the PAT line in the workflow file |
+
+The default `GITHUB_TOKEN` should work for most cases, but organization projects may require additional permissions.
+
 ### Setting up Jira API Token
 
 1. Log in to https://id.atlassian.com/manage-profile/security/api-tokens
@@ -65,8 +75,19 @@ Jira issues created by this workflow:
 
 ## Troubleshooting
 
+### Workflow fails with "Resource not accessible by integration" error
+- This error indicates that `GITHUB_TOKEN` doesn't have sufficient permissions to read organization project data
+- Solution: Create a Personal Access Token (PAT) with `read:project` scope:
+  1. Go to https://github.com/settings/tokens
+  2. Click "Generate new token" → "Generate new token (classic)"
+  3. Give it a descriptive name (e.g., "Project Board Sync")
+  4. Select the `read:project` scope
+  5. Generate and copy the token
+  6. Add it as a secret named `PROJECT_PAT` in the repository
+  7. In the workflow file, change line 47 from `github-token: ${{ secrets.GITHUB_TOKEN }}` to `github-token: ${{ secrets.PROJECT_PAT }}`
+
 ### Workflow fails with authentication error
-- Verify that all three secrets are correctly set
+- Verify that all three Jira secrets are correctly set
 - Verify that the Jira API token is valid and hasn't expired
 - Verify that the user associated with the API token has permissions to create/update issues in the KIT project
 

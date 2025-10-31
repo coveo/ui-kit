@@ -37,6 +37,9 @@ jobs:
         id: query-issues
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
+          # Note: For organization project boards, GITHUB_TOKEN may need 'project' read permission.
+          # If this workflow fails with permission errors, create a PAT with 'read:project' scope
+          # and use it here instead: github-token: ${{ secrets.PROJECT_PAT }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const query = `
@@ -101,7 +104,7 @@ jobs:
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
         with:
           script: |
-            const issues = ${{ steps.query-issues.outputs.result }};
+            const issues = JSON.parse('${{ steps.query-issues.outputs.result }}');
             const jiraBaseUrl = process.env.JIRA_BASE_URL;
             const jiraEmail = process.env.JIRA_USER_EMAIL;
             const jiraToken = process.env.JIRA_API_TOKEN;
@@ -154,7 +157,7 @@ jobs:
                     ]
                   },
                   issuetype: { name: 'Task' },
-                  labels: issue.labels.concat([`github-issue-${issue.number}`])
+                  labels: [...(issue.labels || []), `github-issue-${issue.number}`]
                 }
               };
 
