@@ -6,6 +6,11 @@ import type {
   ControllerDefinitionWithProps,
 } from '../ssr/common/types/controllers.js';
 import {recommendationInternalOptionKey} from '../ssr-next/commerce/types/controller-constants.js';
+import type {SSRSearchEngine} from '../ssr-next/search/types/build.js';
+import type {
+  ControllerDefinitionWithoutProps as SearchControllerDefinitionWithoutProps,
+  ControllerDefinitionWithProps as SearchControllerDefinitionWithProps,
+} from '../ssr-next/search/types/controller-definition.js';
 import {
   buildMockController,
   buildMockControllerWithInitialState,
@@ -91,5 +96,47 @@ export function defineMockRecommendationDefinition(slotId: string) {
         initialState: props?.initialState,
       }),
     })),
+  };
+}
+
+interface MockSearchController {
+  initialState?: Record<string, unknown>;
+}
+
+interface MockSearchControllerDefinitionWithoutProps
+  extends SearchControllerDefinitionWithoutProps<SSRSearchEngine, Controller> {}
+
+interface MockSearchControllerDefinitionWithProps
+  extends SearchControllerDefinitionWithProps<
+    SSRSearchEngine,
+    Controller,
+    MockSearchController
+  > {}
+
+export function defineMockSearchController(): MockSearchControllerDefinitionWithoutProps {
+  return {
+    build: vi.fn((_engine) => {
+      return buildMockController();
+    }),
+  };
+}
+
+export function defineMockSearchControllerWithProps(): MockSearchControllerDefinitionWithProps {
+  return {
+    buildWithProps: vi.fn((engine, props) => {
+      return buildMockControllerWithInitialState(engine, {
+        initialState: props?.initialState,
+      });
+    }),
+  };
+}
+
+export function defineMockSearchParameterManager(): MockSearchControllerDefinitionWithProps {
+  return {
+    buildWithProps: vi.fn((engine, props) => {
+      return buildMockControllerWithInitialState(engine, {
+        initialState: props?.initialState,
+      });
+    }),
   };
 }

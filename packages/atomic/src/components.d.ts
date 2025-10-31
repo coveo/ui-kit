@@ -1877,23 +1877,6 @@ export namespace Components {
         "rows": number;
     }
     /**
-     * The `atomic-result-text` component renders the value of a string result field.
-     */
-    interface AtomicResultText {
-        /**
-          * The locale key for the text to display when the configured field has no value.
-         */
-        "default"?: string;
-        /**
-          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response.
-         */
-        "shouldHighlight": boolean;
-    }
-    /**
      * The `atomic-result-timespan` component renders a target result number field value as a duration.
      */
     interface AtomicResultTimespan {
@@ -3302,15 +3285,6 @@ declare global {
         new (): HTMLAtomicResultTablePlaceholderElement;
     };
     /**
-     * The `atomic-result-text` component renders the value of a string result field.
-     */
-    interface HTMLAtomicResultTextElement extends Components.AtomicResultText, HTMLStencilElement {
-    }
-    var HTMLAtomicResultTextElement: {
-        prototype: HTMLAtomicResultTextElement;
-        new (): HTMLAtomicResultTextElement;
-    };
-    /**
      * The `atomic-result-timespan` component renders a target result number field value as a duration.
      */
     interface HTMLAtomicResultTimespanElement extends Components.AtomicResultTimespan, HTMLStencilElement {
@@ -3701,7 +3675,6 @@ declare global {
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-rating": HTMLAtomicResultRatingElement;
         "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
-        "atomic-result-text": HTMLAtomicResultTextElement;
         "atomic-result-timespan": HTMLAtomicResultTimespanElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
@@ -5508,23 +5481,6 @@ declare namespace LocalJSX {
         "rows": number;
     }
     /**
-     * The `atomic-result-text` component renders the value of a string result field.
-     */
-    interface AtomicResultText {
-        /**
-          * The locale key for the text to display when the configured field has no value.
-         */
-        "default"?: string;
-        /**
-          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response.
-         */
-        "shouldHighlight"?: boolean;
-    }
-    /**
      * The `atomic-result-timespan` component renders a target result number field value as a duration.
      */
     interface AtomicResultTimespan {
@@ -6051,7 +6007,6 @@ declare namespace LocalJSX {
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-rating": AtomicResultRating;
         "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
-        "atomic-result-text": AtomicResultText;
         "atomic-result-timespan": AtomicResultTimespan;
         "atomic-search-box": AtomicSearchBox;
         "atomic-segmented-facet": AtomicSegmentedFacet;
@@ -6420,10 +6375,6 @@ declare module "@stencil/core" {
              * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
-            /**
-             * The `atomic-result-text` component renders the value of a string result field.
-             */
-            "atomic-result-text": LocalJSX.AtomicResultText & JSXBase.HTMLAttributes<HTMLAtomicResultTextElement>;
             /**
              * The `atomic-result-timespan` component renders a target result number field value as a duration.
              */

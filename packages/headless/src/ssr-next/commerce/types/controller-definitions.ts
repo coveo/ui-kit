@@ -90,7 +90,9 @@ type BakedInControllerDefinitions = {
  * Map of baked-in controllers
  */
 export type BakedInControllers = {
-  [K in keyof BakedInControllerDefinitions]: BakedInControllerDefinitions[K]['buildWithProps'];
+  [K in keyof BakedInControllerDefinitions]: ReturnType<
+    BakedInControllerDefinitions[K]['buildWithProps']
+  >;
 };
 
 /**
