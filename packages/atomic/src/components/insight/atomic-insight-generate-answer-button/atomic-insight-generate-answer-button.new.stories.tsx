@@ -30,8 +30,8 @@ export default meta;
 
 export const Default: Story = {};
 
-export const CustomTooltip: Story = {
-  name: 'With custom tooltip',
+export const Tooltip: Story = {
+  name: 'With tooltip',
   args: {
     tooltip: 'Generate Answer',
   },

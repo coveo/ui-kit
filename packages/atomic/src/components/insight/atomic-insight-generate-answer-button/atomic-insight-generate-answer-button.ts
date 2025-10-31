@@ -7,10 +7,10 @@ import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import SparklesIcon from '../../../images/sparkles.svg';
+import SparklesIcon from '@/src/images/sparkles.svg';
 
 /**
- * Internal component made for builders preview.
+ * The atomic-insight-generate-answer-button component is an internal component made for builders preview.
  * @internal
  */
 @customElement('atomic-insight-generate-answer-button')
@@ -36,17 +36,15 @@ export class AtomicInsightGenerateAnswerButton
   @bindingGuard()
   render() {
     return html`
-      <div class="flex items-center justify-center px-4">
-        ${renderIconButton({
-          props: {
-            partPrefix: 'generate-answer',
-            style: 'primary',
-            icon: SparklesIcon,
-            ariaLabel: this.tooltip,
-            title: this.tooltip,
-          },
-        })}
-      </div>
+      ${renderIconButton({
+        props: {
+          partPrefix: 'generate-answer',
+          style: 'primary',
+          icon: SparklesIcon,
+          ariaLabel: this.tooltip,
+          title: this.tooltip,
+        },
+      })}
     `;
   }
 }
