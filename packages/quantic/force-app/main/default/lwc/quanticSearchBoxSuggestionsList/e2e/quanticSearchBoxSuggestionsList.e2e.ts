@@ -117,10 +117,6 @@ useCaseTestCases.forEach((useCase) => {
           });
 
           test.describe('when clicking on a recent query', () => {
-            test.skip(
-              useCase.value === useCaseEnum.insight,
-              'Recent queries are not available in Insight use case'
-            );
             test.use({
               recentQueries: mockRecentQueries,
             });
@@ -157,10 +153,6 @@ useCaseTestCases.forEach((useCase) => {
           });
 
           test.describe('when clicking on the clear recent queries button', () => {
-            test.skip(
-              useCase.value === useCaseEnum.insight,
-              'Recent queries are not available in Insight use case'
-            );
             test.use({
               recentQueries: mockRecentQueries,
             });
@@ -224,10 +216,6 @@ useCaseTestCases.forEach((useCase) => {
           });
 
           test.describe('when selecting a recent query', () => {
-            test.skip(
-              useCase.value === useCaseEnum.insight,
-              'Recent queries are not available in Insight use case'
-            );
             test.use({
               recentQueries: mockRecentQueries,
             });
@@ -265,10 +253,6 @@ useCaseTestCases.forEach((useCase) => {
           });
 
           test.describe('when selecting the clear recent queries button', () => {
-            test.skip(
-              useCase.value === useCaseEnum.insight,
-              'Recent queries are not available in Insight use case'
-            );
             test.use({
               recentQueries: mockRecentQueries,
             });
