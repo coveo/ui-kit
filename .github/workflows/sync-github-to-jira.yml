@@ -22,9 +22,9 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: '20'
+          node-version-file: ".nvmrc"
 
       - name: Jira Login
         uses: atlassian/gajira-login@45fd029b9f1d6d8926c6f04175aa80c0e42c9026 # v3.0.1
@@ -65,30 +65,6 @@ jobs:
                             }
                           }
                         }
-                        fieldValues(first: 20) {
-                          nodes {
-                            ... on ProjectV2ItemFieldTextValue {
-                              text
-                              field {
-                                ... on ProjectV2FieldCommon {
-                                  name
-                                }
-                              }
-                            }
-                            ... on ProjectV2ItemFieldSingleSelectValue {
-                              name
-                              field {
-                                ... on ProjectV2FieldCommon {
-                                  name
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                      pageInfo {
-                        hasNextPage
-                        endCursor
                       }
                     }
                   }
@@ -133,7 +109,7 @@ jobs:
             const authHeader = 'Basic ' + Buffer.from(`${jiraEmail}:${jiraToken}`).toString('base64');
 
             async function searchJiraIssue(githubIssueNumber) {
-              const jql = `project = KIT AND "GitHub Issue" ~ "${githubIssueNumber}"`;
+              const jql = `project = KIT AND labels = "github-issue-${githubIssueNumber}"`;
               const response = await fetch(
                 `${jiraBaseUrl}/rest/api/3/search?jql=${encodeURIComponent(jql)}`,
                 {
