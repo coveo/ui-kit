@@ -293,5 +293,18 @@ describe('SSR', () => {
         });
       });
     });
+
+    describe('access token management', () => {
+      it('#getAccessToken should return the access token', () => {
+        expect(engineDefinition.getAccessToken()).toBe(
+          getSampleSearchEngineConfiguration().accessToken
+        );
+      });
+
+      it('#setAccessToken should update the access token', () => {
+        engineDefinition.setAccessToken('new-access-token');
+        expect(engineDefinition.getAccessToken()).toBe('new-access-token');
+      });
+    });
   });
 });
