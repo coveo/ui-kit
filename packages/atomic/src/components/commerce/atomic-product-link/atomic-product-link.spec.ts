@@ -72,6 +72,13 @@ describe('atomic-product-link', () => {
     await atomicInterface.updateComplete;
     await atomicProduct.updateComplete;
     await element.updateComplete;
+    // Prevent navigation during tests
+    page
+      .getByRole('link')
+      .query()
+      ?.addEventListener('click', (e) => {
+        e.preventDefault();
+      });
 
     return {
       element,
