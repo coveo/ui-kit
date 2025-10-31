@@ -75,7 +75,7 @@ describe('atomic-recs-interface', () => {
   ) => {
     const element = (await fixture<AtomicRecsInterface>(
       html`<atomic-recs-interface
-        ?analytics=${props.analytics}
+        analytics=${props.analytics}
         icon-assets-path=${ifDefined(props.iconAssetsPath)}
         language=${ifDefined(props.language)}
         language-assets-path=${ifDefined(props.languageAssetsPath)}

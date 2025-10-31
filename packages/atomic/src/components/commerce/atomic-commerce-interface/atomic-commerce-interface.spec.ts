@@ -91,13 +91,13 @@ describe('atomic-commerce-interface', () => {
   ) => {
     const element = (await fixture<AtomicCommerceInterface>(
       html`<atomic-commerce-interface
-        ?analytics=${props.analytics}
+        analytics=${props.analytics}
         ?disable-state-reflection-in-url=${props.disableStateReflectionInUrl}
         icon-assets-path=${ifDefined(props.iconAssetsPath)}
         language=${ifDefined(props.language)}
         language-assets-path=${ifDefined(props.languageAssetsPath)}
         log-level=${ifDefined(props.logLevel)}
-        ?reflect-state-in-url=${props.reflectStateInUrl}
+        reflect-state-in-url=${props.reflectStateInUrl}
         scroll-container=${ifDefined(props.scrollContainer)}
         type=${ifDefined(props.type)}
         >${when(props.mobileBreakpoint, () => html`<atomic-commerce-layout mobile-breakpoint=${ifDefined(props.mobileBreakpoint)}></atomic-commerce-layout>`)}<div>Interface content</div></atomic-commerce-layout></atomic-commerce-interface
