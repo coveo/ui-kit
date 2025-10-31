@@ -6,8 +6,21 @@ import {
 import {setStorybookHelpersConfig} from '@wc-toolkit/storybook-helpers';
 import {render} from 'lit';
 import {initialize, mswLoader} from 'msw-storybook-addon';
+import {shadowQueries} from 'shadow-dom-testing-library';
+import {within as storybookWithin} from 'storybook/test';
 import customElements from '../custom-elements.json';
 import {defineCustomElements} from '../dist/atomic/loader/index.js';
+
+/**
+ * Custom within function that extends Storybook's within with shadow DOM queries.
+ * See: https://storybook.js.org/docs/writing-tests/interaction-testing#querying-within-shadow-dom
+ */
+export function within(canvas: HTMLElement) {
+  return {
+    ...storybookWithin(canvas),
+    ...shadowQueries(canvas),
+  };
+}
 
 initialize(
   import.meta.env.DEV || import.meta.env.VITE_IS_CDN === 'true'

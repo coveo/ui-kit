@@ -1,10 +1,10 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {within} from 'shadow-dom-testing-library';
 import {userEvent} from 'storybook/test';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
+import {within} from '../../../../.storybook/preview';
 
 const {decorator, play} = wrapInCommerceInterface({
   includeCodeRoot: false,

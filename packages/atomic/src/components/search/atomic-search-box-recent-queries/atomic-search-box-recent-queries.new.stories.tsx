@@ -1,10 +1,10 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {within} from 'shadow-dom-testing-library';
 import {userEvent} from 'storybook/test';
 import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 import {wrapInSearchBox} from '@/storybook-utils/search/search-box-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import {within} from '../../../.storybook/preview';
 
 const {decorator: searchInterfaceDecorator, play: searchInterfacePlay} =
   wrapInSearchInterface({}, false, false);
