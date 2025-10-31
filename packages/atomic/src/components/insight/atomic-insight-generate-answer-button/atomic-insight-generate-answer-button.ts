@@ -7,11 +7,9 @@ import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import SparklesIcon from '@/src/images/sparkles.svg';
 
 /**
  * The atomic-insight-generate-answer-button component is an internal component made for builders preview.
- * @internal
  */
 @customElement('atomic-insight-generate-answer-button')
 @bindings()
@@ -40,7 +38,7 @@ export class AtomicInsightGenerateAnswerButton
         props: {
           partPrefix: 'generate-answer',
           style: 'primary',
-          icon: SparklesIcon,
+          icon: 'assets://sparkles.svg',
           ariaLabel: this.tooltip,
           title: this.tooltip,
         },

@@ -130,6 +130,10 @@ export const config: Config = {
           src: './node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
           dest: 'assets',
         },
+        {
+          src: '../../../node_modules/@salesforce-ux/design-system/assets/icons/utility/sparkles.svg',
+          dest: 'assets/sparkles.svg',
+        },
       ],
     },
     {
