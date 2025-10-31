@@ -90,7 +90,7 @@ describe('atomic-search-interface', () => {
   ) => {
     const element = (await fixture<AtomicSearchInterface>(
       html`<atomic-search-interface
-        analytics=${props.analytics}
+        ?analytics=${props.analytics}
         ?disable-state-reflection-in-url=${props.disableStateReflectionInUrl}
         icon-assets-path=${ifDefined(props.iconAssetsPath)}
         language=${ifDefined(props.language)}
@@ -952,6 +952,7 @@ describe('atomic-search-interface', () => {
   // #toggleAnalytics
   it('should call InterfaceController.onAnalyticsChange when the analytics attribute changes', async () => {
     const element = await setupElement();
+    await element.initialize(searchEngineConfig);
     const onAnalyticsChangeSpy = vi.spyOn(
       InterfaceController.prototype,
       'onAnalyticsChange'
