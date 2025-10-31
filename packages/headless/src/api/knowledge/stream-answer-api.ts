@@ -7,7 +7,10 @@ import {
   updateCitations,
   updateMessage,
 } from '../../features/generated-answer/generated-answer-actions.js';
-import {logGeneratedAnswerStreamEnd} from '../../features/generated-answer/generated-answer-analytics-actions.js';
+import {
+  logGeneratedAnswerResponseLinked,
+  logGeneratedAnswerStreamEnd,
+} from '../../features/generated-answer/generated-answer-analytics-actions.js';
 import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
 import type {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
@@ -129,6 +132,7 @@ export const updateCacheWithEvent = (
       dispatch(
         logGeneratedAnswerStreamEnd(parsedPayload.answerGenerated ?? false)
       );
+      dispatch(logGeneratedAnswerResponseLinked());
       break;
   }
 };

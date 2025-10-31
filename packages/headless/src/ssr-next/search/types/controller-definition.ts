@@ -8,6 +8,7 @@ import type {
   InferHydratedState,
   InferStaticState,
 } from '../../common/types/engine.js';
+import type {SearchParameterManagerDefinition} from '../controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
 
 export type {
   InferStaticState,
@@ -57,3 +58,31 @@ export interface ControllerDefinitionsMap<
 > {
   [customName: string]: ControllerDefinition<TEngine, TController>;
 }
+
+type BakedInControllerDefinitions = {
+  parameterManager: SearchParameterManagerDefinition;
+};
+
+/**
+ * Map of baked-in controllers for search engine (runtime controllers)
+ */
+export type BakedInSearchControllers = {
+  [K in keyof BakedInControllerDefinitions]: ReturnType<
+    BakedInControllerDefinitions[K]['buildWithProps']
+  >;
+};
+
+/**
+ * Map of controller definitions available to the search engine definition.
+ *
+ * This type combines user-defined controllers with the system's baked-in controllers
+ * (parameterManager).
+ *
+ * @template TControllerDefinitions - The controller definitions map
+ */
+export type AugmentedControllerDefinition<
+  TControllerDefinitions extends ControllerDefinitionsMap<
+    CoreEngine | CoreEngineNext,
+    Controller
+  >,
+> = TControllerDefinitions & BakedInControllerDefinitions;
