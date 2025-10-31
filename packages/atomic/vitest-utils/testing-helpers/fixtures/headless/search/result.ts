@@ -1,0 +1,31 @@
+import type {Result} from '@coveo/headless';
+
+export const buildFakeResult = (result?: Partial<Result>): Result => ({
+  title: 'title',
+  uri: 'https://example.com/uri',
+  printableUri: 'https://example.com/printableUri',
+  clickUri: '',
+  uniqueId: 'uniqueId',
+  excerpt: 'excerpt',
+  firstSentences: 'firstSentences',
+  summary: null,
+  flags: '',
+  hasHtmlVersion: false,
+  score: 0,
+  percentScore: 0,
+  rankingInfo: null,
+  isTopResult: false,
+  isRecommendation: false,
+  titleHighlights: [],
+  firstSentencesHighlights: [],
+  excerptHighlights: [],
+  printableUriHighlights: [],
+  summaryHighlights: [],
+  absentTerms: [],
+  raw: {
+    urihash: 'urihash',
+  },
+  isUserActionView: false,
+  searchUid: 'searchUid',
+  ...result,
+});

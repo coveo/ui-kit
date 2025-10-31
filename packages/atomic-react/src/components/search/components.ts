@@ -1,11 +1,14 @@
 import {
   AtomicAriaLive as LitAtomicAriaLive,
   AtomicComponentError as LitAtomicComponentError,
+  AtomicExternal as LitAtomicExternal,
+  AtomicFacet as LitAtomicFacet,
   AtomicIcon as LitAtomicIcon,
   AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicPager as LitAtomicPager,
   AtomicQuerySummary as LitAtomicQuerySummary,
+  AtomicResult as LitAtomicResult,
   AtomicResultSectionActions as LitAtomicResultSectionActions,
   AtomicResultSectionBadges as LitAtomicResultSectionBadges,
   AtomicResultSectionBottomMetadata as LitAtomicResultSectionBottomMetadata,
@@ -37,6 +40,18 @@ export const AtomicComponentError = createComponent({
   elementClass: LitAtomicComponentError,
 });
 
+export const AtomicExternal = createComponent({
+  tagName: 'atomic-external',
+  react: React,
+  elementClass: LitAtomicExternal,
+});
+
+export const AtomicFacet = createComponent({
+  tagName: 'atomic-facet',
+  react: React,
+  elementClass: LitAtomicFacet,
+});
+
 export const AtomicIcon = createComponent({
   tagName: 'atomic-icon',
   react: React,
@@ -65,6 +80,12 @@ export const AtomicQuerySummary = createComponent({
   tagName: 'atomic-query-summary',
   react: React,
   elementClass: LitAtomicQuerySummary,
+});
+
+export const AtomicResult = createComponent({
+  tagName: 'atomic-result',
+  react: React,
+  elementClass: LitAtomicResult,
 });
 
 export const AtomicResultSectionActions = createComponent({

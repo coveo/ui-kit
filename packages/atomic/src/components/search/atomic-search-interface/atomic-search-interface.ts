@@ -52,6 +52,10 @@ import {getAnalyticsConfig} from './analytics-config';
 import {createSearchStore, type SearchStore} from './store';
 // TODO - Remove once all components that use atomic-modal have been migrated.
 import '@/src/components/common/atomic-modal/atomic-modal';
+// TODO - KIT-4989: Remove once atomic-result-icon is migrated
+import '@/src/components/common/atomic-icon/atomic-icon';
+// TODO - KIT-5056: Remove once atomic-result-list has been migrated.
+import '@/src/components/search/atomic-result/atomic-result';
 import {augmentAnalyticsConfigWithAtomicVersion} from '@/src/components/common/interface/analytics-config';
 import {arrayConverter} from '@/src/converters/array-converter';
 
@@ -270,6 +274,7 @@ export class AtomicSearchInterface
   public connectedCallback() {
     super.connectedCallback();
     this.store.setLoadingFlag(FirstSearchExecutedFlag);
+    this.initFieldsToInclude();
 
     this.addEventListener(
       'atomic/initializeComponent',
