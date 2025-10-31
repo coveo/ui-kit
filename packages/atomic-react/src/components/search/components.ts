@@ -12,6 +12,7 @@ import {
   AtomicQuerySummary as LitAtomicQuerySummary,
   AtomicResult as LitAtomicResult,
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
+  AtomicResultList as LitAtomicResultList,
   AtomicResultSectionActions as LitAtomicResultSectionActions,
   AtomicResultSectionBadges as LitAtomicResultSectionBadges,
   AtomicResultSectionBottomMetadata as LitAtomicResultSectionBottomMetadata,
@@ -22,11 +23,13 @@ import {
   AtomicResultSectionTitleMetadata as LitAtomicResultSectionTitleMetadata,
   AtomicResultSectionVisual as LitAtomicResultSectionVisual,
   AtomicResultsPerPage as LitAtomicResultsPerPage,
+  AtomicResultText as LitAtomicResultText,
   AtomicSearchBoxInstantResults as LitAtomicSearchBoxInstantResults,
   AtomicSearchBoxQuerySuggestions as LitAtomicSearchBoxQuerySuggestions,
   AtomicSearchBoxRecentQueries as LitAtomicSearchBoxRecentQueries,
   AtomicSearchInterface as LitAtomicSearchInterface,
   AtomicSearchLayout as LitAtomicSearchLayout,
+  AtomicText as LitAtomicText,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
@@ -109,6 +112,12 @@ export const AtomicResultChildrenTemplate = createComponent({
   elementClass: LitAtomicResultChildrenTemplate,
 });
 
+export const AtomicResultList = createComponent({
+  tagName: 'atomic-result-list',
+  react: React,
+  elementClass: LitAtomicResultList,
+});
+
 export const AtomicResultSectionActions = createComponent({
   tagName: 'atomic-result-section-actions',
   react: React,
@@ -169,6 +178,12 @@ export const AtomicResultsPerPage = createComponent({
   elementClass: LitAtomicResultsPerPage,
 });
 
+export const AtomicResultText = createComponent({
+  tagName: 'atomic-result-text',
+  react: React,
+  elementClass: LitAtomicResultText,
+});
+
 export const AtomicSearchBoxInstantResults = createComponent({
   tagName: 'atomic-search-box-instant-results',
   react: React,
@@ -197,4 +212,10 @@ export const AtomicSearchLayout = createComponent({
   tagName: 'atomic-search-layout',
   react: React,
   elementClass: LitAtomicSearchLayout,
+});
+
+export const AtomicText = createComponent({
+  tagName: 'atomic-text',
+  react: React,
+  elementClass: LitAtomicText,
 });

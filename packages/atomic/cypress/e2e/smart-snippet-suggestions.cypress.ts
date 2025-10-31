@@ -131,7 +131,12 @@ describe('Smart Snippet Suggestions Test Suites', () => {
           )
         );
       SmartSnippetSuggestionsSelectors.sourceTitle()
-        .map((el) => el.text())
+        .map((el) =>
+          el
+            .find('atomic-text')
+            .get(0)
+            .shadowRoot?.textContent
+        )
         .should(
           'deep.equal',
           defaultRelatedQuestions.map(

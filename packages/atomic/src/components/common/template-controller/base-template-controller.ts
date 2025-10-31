@@ -1,6 +1,6 @@
 import type {ReactiveController, ReactiveControllerHost} from 'lit';
-import type {ItemTarget} from '@/src/components/common/layout/display-options';
 import {isResultSectionNode} from '@/src/components/common/layout/item-layout-sections';
+import type {ItemTarget} from '@/src/components/common/layout/item-layout-utils';
 import {tableElementTagName} from '@/src/components/common/table-element-utils';
 import {aggregate, isElementNode, isVisualNode} from '@/src/utils/utils';
 

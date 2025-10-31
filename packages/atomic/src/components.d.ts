@@ -1776,36 +1776,6 @@ export namespace Components {
         "hrefTemplate"?: string;
     }
     /**
-     * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
-     */
-    interface AtomicResultList {
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density": ItemDisplayDensity;
-        /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
-         */
-        "display": ItemDisplayLayout;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-          * @param resultRenderingFunction
-         */
-        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
-        /**
-          * The tabs on which this result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-result-list> ``` If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded": string[] | string;
-        /**
-          * The tabs on which the result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-result-list snippet> ``` If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list can only be displayed on the specified tabs.
-         */
-        "tabsIncluded": string[] | string;
-    }
-    /**
      * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
      * Given this i18n configuration:
      * ```
@@ -1900,23 +1870,6 @@ export namespace Components {
         "density": ItemDisplayDensity;
         "imageSize": ItemDisplayImageSize;
         "rows": number;
-    }
-    /**
-     * The `atomic-result-text` component renders the value of a string result field.
-     */
-    interface AtomicResultText {
-        /**
-          * The locale key for the text to display when the configured field has no value.
-         */
-        "default"?: string;
-        /**
-          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response.
-         */
-        "shouldHighlight": boolean;
     }
     /**
      * The `atomic-result-timespan` component renders a target result number field value as a duration.
@@ -2249,19 +2202,6 @@ export namespace Components {
           * The label to display in the header of this column.
          */
         "label": string;
-    }
-    /**
-     * The `atomic-text` component leverages the I18n translation module through the atomic-search-interface.
-     */
-    interface AtomicText {
-        /**
-          * The count value used for plurals.
-         */
-        "count"?: number;
-        /**
-          * The string key value.
-         */
-        "value": string;
     }
     /**
      * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
@@ -3257,15 +3197,6 @@ declare global {
         new (): HTMLAtomicResultLinkElement;
     };
     /**
-     * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
-     */
-    interface HTMLAtomicResultListElement extends Components.AtomicResultList, HTMLStencilElement {
-    }
-    var HTMLAtomicResultListElement: {
-        prototype: HTMLAtomicResultListElement;
-        new (): HTMLAtomicResultListElement;
-    };
-    /**
      * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
      * Given this i18n configuration:
      * ```
@@ -3338,15 +3269,6 @@ declare global {
     var HTMLAtomicResultTablePlaceholderElement: {
         prototype: HTMLAtomicResultTablePlaceholderElement;
         new (): HTMLAtomicResultTablePlaceholderElement;
-    };
-    /**
-     * The `atomic-result-text` component renders the value of a string result field.
-     */
-    interface HTMLAtomicResultTextElement extends Components.AtomicResultText, HTMLStencilElement {
-    }
-    var HTMLAtomicResultTextElement: {
-        prototype: HTMLAtomicResultTextElement;
-        new (): HTMLAtomicResultTextElement;
     };
     /**
      * The `atomic-result-timespan` component renders a target result number field value as a duration.
@@ -3624,15 +3546,6 @@ declare global {
         new (): HTMLAtomicTableElementElement;
     };
     /**
-     * The `atomic-text` component leverages the I18n translation module through the atomic-search-interface.
-     */
-    interface HTMLAtomicTextElement extends Components.AtomicText, HTMLStencilElement {
-    }
-    var HTMLAtomicTextElement: {
-        prototype: HTMLAtomicTextElement;
-        new (): HTMLAtomicTextElement;
-    };
-    /**
      * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
      * A timeframe is a span of time from now to a specific time in the past.
      */
@@ -3740,7 +3653,6 @@ declare global {
         "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
-        "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-result-localized-text": HTMLAtomicResultLocalizedTextElement;
         "atomic-result-multi-value-text": HTMLAtomicResultMultiValueTextElement;
         "atomic-result-number": HTMLAtomicResultNumberElement;
@@ -3748,7 +3660,6 @@ declare global {
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-rating": HTMLAtomicResultRatingElement;
         "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
-        "atomic-result-text": HTMLAtomicResultTextElement;
         "atomic-result-timespan": HTMLAtomicResultTimespanElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
@@ -3770,7 +3681,6 @@ declare global {
         "atomic-tab-manager": HTMLAtomicTabManagerElement;
         "atomic-tab-popover": HTMLAtomicTabPopoverElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
-        "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
     }
@@ -5455,31 +5365,6 @@ declare namespace LocalJSX {
         "hrefTemplate"?: string;
     }
     /**
-     * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
-     */
-    interface AtomicResultList {
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density"?: ItemDisplayDensity;
-        /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
-         */
-        "display"?: ItemDisplayLayout;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * The tabs on which this result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-result-list> ``` If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded"?: string[] | string;
-        /**
-          * The tabs on which the result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-result-list snippet> ``` If you don't set this property, the result list can be displayed on any tab. Otherwise, the result list can only be displayed on the specified tabs.
-         */
-        "tabsIncluded"?: string[] | string;
-    }
-    /**
      * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
      * Given this i18n configuration:
      * ```
@@ -5574,23 +5459,6 @@ declare namespace LocalJSX {
         "density": ItemDisplayDensity;
         "imageSize": ItemDisplayImageSize;
         "rows": number;
-    }
-    /**
-     * The `atomic-result-text` component renders the value of a string result field.
-     */
-    interface AtomicResultText {
-        /**
-          * The locale key for the text to display when the configured field has no value.
-         */
-        "default"?: string;
-        /**
-          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response.
-         */
-        "shouldHighlight"?: boolean;
     }
     /**
      * The `atomic-result-timespan` component renders a target result number field value as a duration.
@@ -5940,19 +5808,6 @@ declare namespace LocalJSX {
         "label": string;
     }
     /**
-     * The `atomic-text` component leverages the I18n translation module through the atomic-search-interface.
-     */
-    interface AtomicText {
-        /**
-          * The count value used for plurals.
-         */
-        "count"?: number;
-        /**
-          * The string key value.
-         */
-        "value": string;
-    }
-    /**
      * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
      * A timeframe is a span of time from now to a specific time in the past.
      */
@@ -6124,7 +5979,6 @@ declare namespace LocalJSX {
         "atomic-result-icon": AtomicResultIcon;
         "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
-        "atomic-result-list": AtomicResultList;
         "atomic-result-localized-text": AtomicResultLocalizedText;
         "atomic-result-multi-value-text": AtomicResultMultiValueText;
         "atomic-result-number": AtomicResultNumber;
@@ -6132,7 +5986,6 @@ declare namespace LocalJSX {
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-rating": AtomicResultRating;
         "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
-        "atomic-result-text": AtomicResultText;
         "atomic-result-timespan": AtomicResultTimespan;
         "atomic-search-box": AtomicSearchBox;
         "atomic-segmented-facet": AtomicSegmentedFacet;
@@ -6154,7 +6007,6 @@ declare namespace LocalJSX {
         "atomic-tab-manager": AtomicTabManager;
         "atomic-tab-popover": AtomicTabPopover;
         "atomic-table-element": AtomicTableElement;
-        "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
     }
@@ -6460,10 +6312,6 @@ declare module "@stencil/core" {
              */
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             /**
-             * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
-             */
-            "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
-            /**
              * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
              * Given this i18n configuration:
              * ```
@@ -6502,10 +6350,6 @@ declare module "@stencil/core" {
              * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
-            /**
-             * The `atomic-result-text` component renders the value of a string result field.
-             */
-            "atomic-result-text": LocalJSX.AtomicResultText & JSXBase.HTMLAttributes<HTMLAtomicResultTextElement>;
             /**
              * The `atomic-result-timespan` component renders a target result number field value as a duration.
              */
@@ -6601,10 +6445,6 @@ declare module "@stencil/core" {
              * The `atomic-table-element` element defines a table column in a result list.
              */
             "atomic-table-element": LocalJSX.AtomicTableElement & JSXBase.HTMLAttributes<HTMLAtomicTableElementElement>;
-            /**
-             * The `atomic-text` component leverages the I18n translation module through the atomic-search-interface.
-             */
-            "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
             /**
              * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
              * A timeframe is a span of time from now to a specific time in the past.
