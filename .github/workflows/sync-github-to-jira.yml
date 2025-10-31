@@ -1,0 +1,281 @@
+name: Sync GitHub Issues to Jira
+on:
+  schedule:
+    # Run daily at 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: read
+
+jobs:
+  sync-to-jira:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: '20'
+
+      - name: Jira Login
+        uses: atlassian/gajira-login@45fd029b9f1d6d8926c6f04175aa80c0e42c9026 # v3.0.1
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+
+      - name: Query GitHub Project Issues
+        id: query-issues
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const query = `
+              query($org: String!, $number: Int!) {
+                organization(login: $org) {
+                  projectV2(number: $number) {
+                    items(first: 100) {
+                      nodes {
+                        content {
+                          ... on Issue {
+                            id
+                            number
+                            title
+                            body
+                            state
+                            url
+                            labels(first: 10) {
+                              nodes {
+                                name
+                              }
+                            }
+                            assignees(first: 5) {
+                              nodes {
+                                login
+                              }
+                            }
+                          }
+                        }
+                        fieldValues(first: 20) {
+                          nodes {
+                            ... on ProjectV2ItemFieldTextValue {
+                              text
+                              field {
+                                ... on ProjectV2FieldCommon {
+                                  name
+                                }
+                              }
+                            }
+                            ... on ProjectV2ItemFieldSingleSelectValue {
+                              name
+                              field {
+                                ... on ProjectV2FieldCommon {
+                                  name
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                      pageInfo {
+                        hasNextPage
+                        endCursor
+                      }
+                    }
+                  }
+                }
+              }
+            `;
+
+            const variables = {
+              org: 'coveo',
+              number: 21
+            };
+
+            const result = await github.graphql(query, variables);
+            const issues = result.organization.projectV2.items.nodes
+              .filter(item => item.content && item.content.number)
+              .map(item => ({
+                number: item.content.number,
+                title: item.content.title,
+                body: item.content.body || '',
+                state: item.content.state,
+                url: item.content.url,
+                labels: item.content.labels.nodes.map(l => l.name),
+                assignees: item.content.assignees.nodes.map(a => a.login)
+              }));
+
+            console.log(`Found ${issues.length} issues in project`);
+            return issues;
+
+      - name: Sync Issues to Jira
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+        with:
+          script: |
+            const issues = ${{ steps.query-issues.outputs.result }};
+            const jiraBaseUrl = process.env.JIRA_BASE_URL;
+            const jiraEmail = process.env.JIRA_USER_EMAIL;
+            const jiraToken = process.env.JIRA_API_TOKEN;
+
+            const authHeader = 'Basic ' + Buffer.from(`${jiraEmail}:${jiraToken}`).toString('base64');
+
+            async function searchJiraIssue(githubIssueNumber) {
+              const jql = `project = KIT AND "GitHub Issue" ~ "${githubIssueNumber}"`;
+              const response = await fetch(
+                `${jiraBaseUrl}/rest/api/3/search?jql=${encodeURIComponent(jql)}`,
+                {
+                  headers: {
+                    'Authorization': authHeader,
+                    'Content-Type': 'application/json'
+                  }
+                }
+              );
+              const data = await response.json();
+              return data.issues && data.issues.length > 0 ? data.issues[0] : null;
+            }
+
+            async function createJiraIssue(issue) {
+              const payload = {
+                fields: {
+                  project: { key: 'KIT' },
+                  summary: `[GH-${issue.number}] ${issue.title}`,
+                  description: {
+                    type: 'doc',
+                    version: 1,
+                    content: [
+                      {
+                        type: 'paragraph',
+                        content: [
+                          {
+                            type: 'text',
+                            text: issue.body || 'No description provided'
+                          }
+                        ]
+                      },
+                      {
+                        type: 'paragraph',
+                        content: [
+                          {
+                            type: 'text',
+                            text: `GitHub Issue: ${issue.url}`,
+                            marks: [{ type: 'link', attrs: { href: issue.url } }]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  issuetype: { name: 'Task' },
+                  labels: issue.labels.concat([`github-issue-${issue.number}`])
+                }
+              };
+
+              const response = await fetch(
+                `${jiraBaseUrl}/rest/api/3/issue`,
+                {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': authHeader,
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(payload)
+                }
+              );
+
+              if (!response.ok) {
+                const error = await response.text();
+                console.error(`Failed to create Jira issue for GH-${issue.number}: ${error}`);
+                return null;
+              }
+
+              const data = await response.json();
+              console.log(`Created Jira issue ${data.key} for GitHub issue #${issue.number}`);
+              return data;
+            }
+
+            async function updateJiraIssue(jiraIssue, githubIssue) {
+              const payload = {
+                fields: {
+                  summary: `[GH-${githubIssue.number}] ${githubIssue.title}`,
+                  description: {
+                    type: 'doc',
+                    version: 1,
+                    content: [
+                      {
+                        type: 'paragraph',
+                        content: [
+                          {
+                            type: 'text',
+                            text: githubIssue.body || 'No description provided'
+                          }
+                        ]
+                      },
+                      {
+                        type: 'paragraph',
+                        content: [
+                          {
+                            type: 'text',
+                            text: `GitHub Issue: ${githubIssue.url}`,
+                            marks: [{ type: 'link', attrs: { href: githubIssue.url } }]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              };
+
+              const response = await fetch(
+                `${jiraBaseUrl}/rest/api/3/issue/${jiraIssue.key}`,
+                {
+                  method: 'PUT',
+                  headers: {
+                    'Authorization': authHeader,
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(payload)
+                }
+              );
+
+              if (!response.ok) {
+                const error = await response.text();
+                console.error(`Failed to update Jira issue ${jiraIssue.key}: ${error}`);
+                return false;
+              }
+
+              console.log(`Updated Jira issue ${jiraIssue.key} for GitHub issue #${githubIssue.number}`);
+              return true;
+            }
+
+            // Process each issue
+            for (const issue of issues) {
+              try {
+                const existingJiraIssue = await searchJiraIssue(issue.number);
+
+                if (existingJiraIssue) {
+                  console.log(`Jira issue ${existingJiraIssue.key} already exists for GitHub issue #${issue.number}`);
+                  await updateJiraIssue(existingJiraIssue, issue);
+                } else {
+                  await createJiraIssue(issue);
+                }
+
+                // Add a small delay to avoid rate limiting
+                await new Promise(resolve => setTimeout(resolve, 1000));
+              } catch (error) {
+                console.error(`Error processing GitHub issue #${issue.number}:`, error);
+              }
+            }
+
+            console.log('Sync completed');
