@@ -1,7 +1,7 @@
 {
   "name": "@coveo/create-atomic",
   "description": "Coveo Atomic Generator",
-  "version": "1.41.3",
+  "version": "1.41.5",
   "files": [
     "/dist",
     "template/.env.example",
