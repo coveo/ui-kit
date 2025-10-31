@@ -1,7 +1,6 @@
 import {testSearch, testInsight} from './fixture';
 import {
   useCaseTestCases,
-  useCaseEnum,
 } from '../../../../../../playwright/utils/useCase';
 import {
   AnalyticsModeEnum,
