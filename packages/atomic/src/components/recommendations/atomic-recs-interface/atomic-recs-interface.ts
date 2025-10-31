@@ -14,7 +14,7 @@ import {
 } from '@coveo/headless/recommendation';
 import {provide} from '@lit/context';
 import i18next, {type i18n} from 'i18next';
-import {type CSSResultGroup, css, html, LitElement} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {bindingsContext} from '@/src/components/common/context/bindings-context';
 import {augmentAnalyticsConfigWithAtomicVersion} from '@/src/components/common/interface/analytics-config';
@@ -72,14 +72,6 @@ export class AtomicRecsInterface
     'CoveoAtomicRecs',
     HEADLESS_VERSION
   );
-
-  static styles: CSSResultGroup = [
-    css`
-      :host {
-        display: block;
-      }
-    `,
-  ];
 
   /**
    * A list of non-default fields to include in the query results.
