@@ -2,7 +2,7 @@
   "name": "@coveo/atomic-react",
   "sideEffects": false,
   "type": "module",
-  "version": "3.3.20",
+  "version": "3.3.21",
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
@@ -32,7 +32,7 @@
   ],
   "dependencies": {
     "@coveo/atomic": "workspace:*",
-    "@lit/react": "1.0.6"
+    "@lit/react": "1.0.8"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "28.0.6",
