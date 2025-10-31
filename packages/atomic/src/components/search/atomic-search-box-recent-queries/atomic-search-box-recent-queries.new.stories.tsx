@@ -30,7 +30,8 @@ const meta: Meta = {
 
   play: async (context) => {
     await searchInterfacePlay(context);
-    const searchBox = await canvas.findAllByShadowPlaceholderText('Search');
+    const searchBox =
+      await context.canvas.findAllByShadowPlaceholderText('Search');
     await userEvent.click(searchBox[0]);
   },
 };
