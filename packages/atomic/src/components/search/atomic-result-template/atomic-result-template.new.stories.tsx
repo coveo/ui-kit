@@ -6,7 +6,6 @@ import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {parameters as searchBoxParameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
-import {within} from '../../../.storybook/preview';
 
 const TEMPLATE_EXAMPLE = `<template>
   <atomic-result-section-visual>
@@ -297,8 +296,8 @@ export const InASearchBoxInstantResults: Story = {
   parameters: searchBoxParameters,
   play: async (context) => {
     await initializeSearchInterface(context);
-    const {canvasElement, step} = context;
-    const canvas = within(canvasElement);
+    const {canvas, step} = context;
+    // Using context.canvas directly (augmented in preview.ts)
     await step('Click Searchbox', async () => {
       (
         await canvas.findAllByShadowTitle('Search field with suggestions.', {

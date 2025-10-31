@@ -8,7 +8,6 @@ import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
-import {within} from '../../../../.storybook/preview';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-timeframe-facet',
@@ -96,8 +95,8 @@ export const WithDependsOn: Story = {
     'depends-on-filetype': 'YouTubeVideo',
   },
   play: async (context) => {
-    const {canvasElement, step} = context;
-    const canvas = within(canvasElement);
+    const {canvas, step} = context;
+    // Using context.canvas directly (augmented in preview.ts)
     await play(context);
     await step('Select YouTubeVideo in filetype facet', async () => {
       const button = await canvas.findByShadowLabelText(

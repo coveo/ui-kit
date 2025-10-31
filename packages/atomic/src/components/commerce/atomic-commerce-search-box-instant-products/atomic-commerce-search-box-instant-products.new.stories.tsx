@@ -5,7 +5,6 @@ import {userEvent} from 'storybook/test';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceSearchBox} from '@/storybook-utils/commerce/commerce-search-box-wrapper';
 import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
-import {within} from '../../../../.storybook/preview';
 
 const {decorator: commerceInterfaceDecorator, play: commerceInterfacePlay} =
   wrapInCommerceInterface({includeCodeRoot: false});
@@ -34,8 +33,8 @@ const meta: Meta = {
 
   play: async (context) => {
     await commerceInterfacePlay(context);
-    const canvas = within(context.canvasElement);
-    const searchBox = await canvas.findAllByShadowPlaceholderText('Search');
+    const searchBox =
+      await context.canvas.findAllByShadowPlaceholderText('Search');
     await userEvent.click(searchBox[0]);
   },
 };

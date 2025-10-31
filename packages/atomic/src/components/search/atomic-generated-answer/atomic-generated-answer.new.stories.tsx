@@ -7,7 +7,6 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
-import {within} from '../../../.storybook/preview';
 import {handlers} from './e2e/mock-answering-api';
 
 const {events, args, argTypes, template} = getStorybookHelpers(

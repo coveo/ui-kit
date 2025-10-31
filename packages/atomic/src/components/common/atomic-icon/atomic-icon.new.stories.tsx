@@ -6,7 +6,6 @@ import {expect, userEvent, waitFor} from 'storybook/test';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import AssetsList from '../../../../docs/assets.json';
-import {within} from '../../../.storybook/preview';
 
 function snakeToCamel(value: string) {
   return value
@@ -57,8 +56,8 @@ export const Default: Story = {
   ],
   play: async (context) => {
     await play(context);
-    const {canvasElement, step} = context;
-    const canvas = within(canvasElement);
+    const {canvas, step} = context;
+    // Using context.canvas directly (augmented in preview.ts)
     await step('Wait for the facet values to render', async () => {
       await waitFor(
         () => expect(canvas.getByShadowTitle('People')).toBeInTheDocument(),

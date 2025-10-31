@@ -1,4 +1,5 @@
 import '@coveo/atomic/themes/coveo.css';
+import type {Preview} from '@storybook/web-components-vite';
 import {
   type Parameters,
   setCustomElementsManifest,
@@ -6,21 +7,9 @@ import {
 import {setStorybookHelpersConfig} from '@wc-toolkit/storybook-helpers';
 import {render} from 'lit';
 import {initialize, mswLoader} from 'msw-storybook-addon';
-import {shadowQueries} from 'shadow-dom-testing-library';
-import {within as storybookWithin} from 'storybook/test';
+import {within as withinShadow} from 'shadow-dom-testing-library';
 import customElements from '../custom-elements.json';
 import {defineCustomElements} from '../dist/atomic/loader/index.js';
-
-/**
- * Custom within function that extends Storybook's within with shadow DOM queries.
- * See: https://storybook.js.org/docs/writing-tests/interaction-testing#querying-within-shadow-dom
- */
-export function within(canvas: HTMLElement) {
-  return {
-    ...storybookWithin(canvas),
-    ...shadowQueries(canvas),
-  };
-}
 
 initialize(
   import.meta.env.DEV || import.meta.env.VITE_IS_CDN === 'true'
@@ -138,4 +127,20 @@ function disableAnalytics(container, selectors) {
       element.setAttribute('analytics', 'false');
     });
   });
+}
+
+const preview: Preview = {
+  // Augment the canvas with the shadow DOM queries
+  beforeEach({canvasElement, canvas}) {
+    Object.assign(canvas, {...withinShadow(canvasElement)});
+  },
+};
+
+export default preview;
+
+// Extend TypeScript types for safety
+export type ShadowQueries = ReturnType<typeof withinShadow>;
+
+declare module '@storybook/test' {
+  interface Canvas extends ShadowQueries {}
 }

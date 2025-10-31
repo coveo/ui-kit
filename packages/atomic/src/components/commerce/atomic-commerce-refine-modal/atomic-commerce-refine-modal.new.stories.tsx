@@ -4,7 +4,6 @@ import {html} from 'lit';
 import {userEvent} from 'storybook/test';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
-import {within} from '../../../../.storybook/preview';
 
 const {decorator, play} = wrapInCommerceInterface({
   includeCodeRoot: false,
@@ -47,10 +46,7 @@ const meta: Meta = {
   },
   play: async (context) => {
     await play(context);
-    const canvas = within(
-      context.canvasElement.querySelector('atomic-commerce-refine-toggle')!
-    );
-    const refineToggle = await canvas.findByShadowRole('button', {
+    const refineToggle = await context.canvas.findByShadowRole('button', {
       name: 'Sort & Filter',
     });
 

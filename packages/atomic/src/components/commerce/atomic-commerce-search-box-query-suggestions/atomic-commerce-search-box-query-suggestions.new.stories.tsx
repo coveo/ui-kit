@@ -4,7 +4,6 @@ import {userEvent} from 'storybook/test';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceSearchBox} from '@/storybook-utils/commerce/commerce-search-box-wrapper';
 import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
-import {within} from '../../../../.storybook/preview';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-search-box-query-suggestions',
@@ -31,7 +30,7 @@ const meta: Meta = {
 
   play: async (context) => {
     await commerceInterfacePlay(context);
-    const canvas = within(context.canvasElement);
+    // Using context.canvas directly (augmented in preview.ts)
     const searchBox = await canvas.findAllByShadowPlaceholderText('Search');
     await userEvent.click(searchBox[0]);
   },

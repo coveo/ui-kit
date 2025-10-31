@@ -7,7 +7,6 @@ import {wrapInCommerceRecommendationList} from '@/storybook-utils/commerce/comme
 import {wrapInCommerceSearchBoxInstantProducts} from '@/storybook-utils/commerce/commerce-searchbox-instant-products-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {parameters as searchBoxParameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
-import {within} from '../../../../.storybook/preview';
 
 const TEMPLATE_EXAMPLE = `<template>
   <atomic-product-section-name>
@@ -135,8 +134,7 @@ export const InASearchBoxInstantProducts: Story = {
   parameters: searchBoxParameters,
   play: async (context) => {
     await initializeCommerceInterface(context);
-    const {canvasElement, step} = context;
-    const canvas = within(canvasElement);
+    const {canvas, step} = context;
     await step('Click Searchbox', async () => {
       (
         await canvas.findAllByShadowTitle('Search field with suggestions.', {
