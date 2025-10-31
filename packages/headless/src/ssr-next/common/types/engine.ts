@@ -6,13 +6,13 @@ export interface EngineStaticState<
   TControllers extends ControllerStaticStateMap,
 > {
   /**
-   * An array of Redux actions representing completed search operations that were executed during static state generation.
+   * An array of Redux actions representing completed search operations that were executed when the static state was fetched.
    *
    * These actions capture the results of search requests (both successful and failed) performed on the server side.
    * During client-side hydration, these actions are replayed to restore the engine to the exact same state
    * it was in on the server, ensuring consistency between server-rendered and client-rendered content.
    *
-   * Each action contains the search results, metadata, and any error information from the search API responses.
+   * Each action contains the search results, metadata, and any error information from the Search API responses.
    */
   searchActions: TSearchAction[];
 

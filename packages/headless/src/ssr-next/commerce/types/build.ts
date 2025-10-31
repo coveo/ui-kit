@@ -111,13 +111,13 @@ export interface CommonBuildConfig {
   navigatorContext: NavigatorContext;
 
   /**
-   * Initial context options passed to the engine during static state generation.
+   * The initial context options passed to the engine when fetching the static state.
    *
    * This property is used to configure the commerce context (e.g., currency, language, country)
-   * when calling `fetchStaticState()`. It's not meant to be read directly from the build config.
+   * when calling `fetchStaticState()`.
    *
    * @remarks
-   * To access the context after engine creation, use the context controller instead.
+   * To access the context after engine creation, use the context controller.
    *
    * @example
    * ```typescript
@@ -135,14 +135,13 @@ export interface CommonBuildConfig {
   context: ContextOptions;
 
   /**
-   * Initial search parameters to apply when generating static state.
+   * The initial search parameters to apply when fetching the static state.
    *
    * This property allows you to set initial search parameters (filters, facets, query, etc.)
-   * that will be applied during the server-side search execution. It's not meant to be read
-   * directly from the build config.
+   * that will be applied during the server-side search execution.
    *
    * @remarks
-   * To access search parameters after engine creation, use the parameter manager controller instead.
+   * To access search parameters after engine creation, use the parameter manager controller.
    *
    * @example
    * ```typescript
@@ -162,13 +161,13 @@ export interface CommonBuildConfig {
   searchParams?: ParameterManagerState<Parameters>['parameters'];
 
   /**
-   * Initial cart state to apply when generating static state.
+   * The initial cart state to apply when fetching the static state.
    *
    * This property allows you to set an initial cart state that will be used during
-   * server-side rendering. It's not meant to be read directly from the build config.
+   * server-side rendering.
    *
    * @remarks
-   * To access cart state after engine creation, use the cart controller instead.
+   * To access cart state after engine creation, use the cart controller.
    *
    * @example
    * ```typescript

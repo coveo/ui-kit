@@ -62,9 +62,9 @@ export interface CommerceEngineDefinition<
    *
    * The returned static state includes controller states (facets, products, pagination, etc.)
    *
-   * @param params - Configuration object containing navigation context, search parameters,
+   * @param params - A configuration object containing navigation context, search parameters,
    *                 cart state, and controller-specific props
-   * @returns Promise resolving to the static state containing controller states
+   * @returns A Promise that resolves to the static state containing controller states
    *
    * @example
    * ```typescript
@@ -104,12 +104,12 @@ export interface CommerceEngineDefinition<
    * The hydration process:
    * - Recreates the engine with the same configuration
    * - Restores all controller states from the static state
-   * - Replays search/listing/recommendation actions to synchronize state
+   * - Replays search/listing/recommendation actions to synchronize the state
    * - Returns live, interactive controllers ready for user interaction
    *
-   * @param params - Configuration object containing the static state, navigation context,
+   * @param params - A configuration object containing the static state, navigation context,
    *                 and any controller-specific props needed for hydration
-   * @returns Promise resolving to the hydrated engine and interactive controllers
+   * @returns A Promise that resolves to the hydrated engine and interactive controllers
    *
    * @example
    * ```typescript
