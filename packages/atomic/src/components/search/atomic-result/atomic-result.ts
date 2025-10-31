@@ -9,12 +9,12 @@ import {
   resultComponentClass,
 } from '@/src/components/common/item-list/item-list-common';
 import {CustomRenderController} from '@/src/components/common/layout/custom-render-controller';
+import {ItemLayoutController} from '@/src/components/common/layout/item-layout-controller';
 import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
-} from '@/src/components/common/layout/display-options';
-import {ItemLayoutController} from '@/src/components/common/layout/item-layout-controller';
+} from '@/src/components/common/layout/item-layout-utils';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {SearchStore} from '@/src/components/search/atomic-search-interface/store';
 import type {
