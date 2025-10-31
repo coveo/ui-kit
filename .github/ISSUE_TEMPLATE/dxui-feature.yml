@@ -2,7 +2,7 @@ name: DXUI Feature
 description: Request a new feature for the DXUI team
 title: '[DXUI Feature]: '
 type: feature
-projects: coveo/21
+projects: ['coveo/21']
 body:
   - type: markdown
     attributes:
