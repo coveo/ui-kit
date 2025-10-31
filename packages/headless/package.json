@@ -117,10 +117,10 @@
     "coveo.analytics": "catalog:",
     "dayjs": "catalog:",
     "exponential-backoff": "catalog:",
-    "fast-equals": "5.2.2",
+    "fast-equals": "5.3.2",
     "headers-polyfill": "4.0.3",
     "navigator.sendbeacon": "0.0.20",
-    "pino": "9.7.0",
+    "pino": "9.14.0",
     "redux-thunk": "3.1.0",
     "reselect": "5.1.1"
   },

@@ -27,7 +27,7 @@ runs:
         
     - name: Install pnpm
       uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 #v4.0.0
-    - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+    - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
       with:
         path: ~/.cache/Cypress
         key: ${{ runner.os }}-${{ inputs.cache-prefix }}-cy-${{ github.sha }}
