@@ -78,6 +78,17 @@ export interface EngineDefinition<
     InferControllersMapFromDefinition<TControllers>,
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
+
+  /**
+   * Returns the access token.
+   */
+  getAccessToken: () => string;
+
+  /**
+   * Updates the access token.
+   * @param accessToken - The access token to update.
+   */
+  setAccessToken: (accessToken: string) => void;
 }
 
 /**
