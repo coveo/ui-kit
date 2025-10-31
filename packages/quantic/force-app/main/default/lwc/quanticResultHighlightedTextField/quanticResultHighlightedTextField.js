@@ -57,13 +57,16 @@ export default class QuanticResultHighlightedTextField extends LightningElement 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
     if (this.isValid && this.isInitialized) {
-      this.updatDisplayOfResultTextValue();
+      this.updateDisplayOfResultTextValue();
     }
   }
 
   initialize = () => {
     this.headless = getHeadlessBundle(this.engineId);
     this.isInitialized = true;
+    if (this.isValid) {
+      this.updateDisplayOfResultTextValue();
+    }
   };
 
   setError() {
@@ -84,7 +87,7 @@ export default class QuanticResultHighlightedTextField extends LightningElement 
     this.validated = true;
   }
 
-  updatDisplayOfResultTextValue() {
+  updateDisplayOfResultTextValue() {
     const fieldValue = this.headless.ResultTemplatesHelpers.getResultProperty(
       this.result,
       this.field
