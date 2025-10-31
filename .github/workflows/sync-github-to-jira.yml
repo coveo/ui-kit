@@ -26,13 +26,6 @@ jobs:
         with:
           node-version-file: ".nvmrc"
 
-      - name: Jira Login
-        uses: atlassian/gajira-login@45fd029b9f1d6d8926c6f04175aa80c0e42c9026 # v3.0.1
-        env:
-          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
-          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
-          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-
       - name: Query GitHub Project Issues
         id: query-issues
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
@@ -82,12 +75,17 @@ jobs:
 
             const result = await github.graphql(query, variables);
             const issues = result.organization.projectV2.items.nodes
-              .filter(item => item.content && item.content.number)
+              .filter(item =>
+                item.content &&
+                item.content.number &&
+                item.content.title &&
+                item.content.url
+              )
               .map(item => ({
                 number: item.content.number,
                 title: item.content.title,
                 body: item.content.body || '',
-                state: item.content.state,
+                state: item.content.state || 'OPEN',
                 url: item.content.url,
                 labels: item.content.labels?.nodes?.map(l => l.name) || [],
                 assignees: item.content.assignees?.nodes?.map(a => a.login) || []
@@ -123,6 +121,13 @@ jobs:
                   }
                 }
               );
+
+              if (!response.ok) {
+                const error = await response.text();
+                console.error(`Failed to search Jira for GH-${githubIssueNumber}: ${response.status} ${error}`);
+                return null;
+              }
+
               const data = await response.json();
               return data.issues && data.issues.length > 0 ? data.issues[0] : null;
             }
@@ -158,7 +163,7 @@ jobs:
                     ]
                   },
                   issuetype: { name: 'Task' },
-                  labels: [...(issue.labels || []), `github-issue-${issue.number}`]
+                  labels: [...issue.labels, `github-issue-${issue.number}`]
                 }
               };
 
