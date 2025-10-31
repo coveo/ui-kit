@@ -1,4 +1,4 @@
-import {AriaLabelGenerator} from '../../../../src/components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results';
+import {AriaLabelGenerator} from '../../../../src/components/search/atomic-search-box-instant-results/atomic-search-box-instant-results';
 import {
   SafeStorage,
   StorageItems,
@@ -114,7 +114,7 @@ describe('Instant Results Test Suites', () => {
 
     SearchBoxSelectors.textArea().type(`${downKeys(2)}`, delay());
     InstantResultsSelectors.results()
-      .find(resultTextComponent, {includeShadowDom: true})
+      .find(resultTextComponent, {includeShadowDom: true}).find('atomic-text').shadow()
       .should(($els) => expect($els.text().trim().length).to.greaterThan(0));
 
     CommonAssertions.assertAccessibility(searchBoxComponent);
