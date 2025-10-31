@@ -42,7 +42,7 @@ import {
   type ItemDisplayDensity,
   type ItemDisplayImageSize,
   type ItemDisplayLayout,
-} from '@/src/components/common/layout/display-options';
+} from '@/src/components/common/layout/item-layout-utils';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -166,20 +166,20 @@ export class AtomicCommerceProductList
    * product, and the font sizes of different parts in a product.
    */
   @property({reflect: true, type: String})
-  density: ItemDisplayDensity = 'normal';
+  public density: ItemDisplayDensity = 'normal';
 
   /**
    * The desired layout to use when displaying products. Layouts affect how many products to display per row and how
    * visually distinct they are from each other.
    */
   @property({reflect: true, type: String})
-  display: ItemDisplayLayout = 'grid';
+  public display: ItemDisplayLayout = 'grid';
 
   /**
    * The expected size of the image displayed for products.
    */
   @property({reflect: true, attribute: 'image-size', type: String})
-  imageSize: ItemDisplayImageSize = 'small';
+  public imageSize: ItemDisplayImageSize = 'small';
 
   /**
    * The desired number of placeholders to display while the product list is loading.

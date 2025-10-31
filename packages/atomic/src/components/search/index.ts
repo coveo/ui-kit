@@ -6,6 +6,8 @@ export {AtomicPager} from './atomic-pager/atomic-pager.js';
 export {AtomicQuerySummary} from './atomic-query-summary/atomic-query-summary.js';
 export {AtomicRelevanceInspector} from './atomic-relevance-inspector/atomic-relevance-inspector.js';
 export {AtomicResult} from './atomic-result/atomic-result.js';
+export {AtomicResultChildrenTemplate} from './atomic-result-children-template/atomic-result-children-template.js';
+export {AtomicResultList} from './atomic-result-list/atomic-result-list.js';
 export {AtomicResultSectionActions} from './atomic-result-section-actions/atomic-result-section-actions.js';
 export {AtomicResultSectionBadges} from './atomic-result-section-badges/atomic-result-section-badges.js';
 export {AtomicResultSectionBottomMetadata} from './atomic-result-section-bottom-metadata/atomic-result-section-bottom-metadata.js';
@@ -22,3 +24,4 @@ export {AtomicSearchBoxQuerySuggestions} from './atomic-search-box-query-suggest
 export {AtomicSearchBoxRecentQueries} from './atomic-search-box-recent-queries/atomic-search-box-recent-queries.js';
 export {AtomicSearchInterface} from './atomic-search-interface/atomic-search-interface.js';
 export {AtomicSearchLayout} from './atomic-search-layout/atomic-search-layout.js';
+export {AtomicText} from './atomic-text/atomic-text.js';

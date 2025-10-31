@@ -10,6 +10,8 @@ import {
   AtomicPager as LitAtomicPager,
   AtomicQuerySummary as LitAtomicQuerySummary,
   AtomicResult as LitAtomicResult,
+  AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
+  AtomicResultList as LitAtomicResultList,
   AtomicResultSectionActions as LitAtomicResultSectionActions,
   AtomicResultSectionBadges as LitAtomicResultSectionBadges,
   AtomicResultSectionBottomMetadata as LitAtomicResultSectionBottomMetadata,
@@ -25,6 +27,7 @@ import {
   AtomicSearchBoxRecentQueries as LitAtomicSearchBoxRecentQueries,
   AtomicSearchInterface as LitAtomicSearchInterface,
   AtomicSearchLayout as LitAtomicSearchLayout,
+  AtomicText as LitAtomicText,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
@@ -93,6 +96,18 @@ export const AtomicResult = createComponent({
   tagName: 'atomic-result',
   react: React,
   elementClass: LitAtomicResult,
+});
+
+export const AtomicResultChildrenTemplate = createComponent({
+  tagName: 'atomic-result-children-template',
+  react: React,
+  elementClass: LitAtomicResultChildrenTemplate,
+});
+
+export const AtomicResultList = createComponent({
+  tagName: 'atomic-result-list',
+  react: React,
+  elementClass: LitAtomicResultList,
 });
 
 export const AtomicResultSectionActions = createComponent({
@@ -183,4 +198,10 @@ export const AtomicSearchLayout = createComponent({
   tagName: 'atomic-search-layout',
   react: React,
   elementClass: LitAtomicSearchLayout,
+});
+
+export const AtomicText = createComponent({
+  tagName: 'atomic-text',
+  react: React,
+  elementClass: LitAtomicText,
 });
