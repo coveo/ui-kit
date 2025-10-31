@@ -1,12 +1,11 @@
 import {
-  type CommerceEngineDefinitionOptions,
   defineProductList,
   defineSearchBox,
   defineSummary,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/ssr-commerce-next';
 
-export const engineConfig: CommerceEngineDefinitionOptions = {
+export const engineConfig = {
   configuration: getSampleCommerceEngineConfiguration(),
   controllers: {
     searchBox: defineSearchBox(),

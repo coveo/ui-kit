@@ -1,3 +1,16 @@
+## <small>2.6.10 (2025-10-30)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
+## <small>2.6.9 (2025-10-29)</small>
+
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
 ## <small>2.6.7 (2025-10-22)</small>
 
 * docs(headless-react): update sample links in README files to use the correct path (#6086) ([17e5c58](https://github.com/coveo/ui-kit/commits/17e5c58)), closes [#6086](https://github.com/coveo/ui-kit/issues/6086)

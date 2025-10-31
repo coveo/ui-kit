@@ -24,19 +24,19 @@ Once you have cloned the repo, follow the instructions in the top-level [README.
 To start the project in development mode, run:
 
 ```bash
-npm run start
+pnpm run start
 ```
 
 To build the library for production, run:
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 To run the unit tests for the components, run:
 
 ```bash
-npm test
+pnpm test
 ```
 
 ## Run Cypress for Atomic components
@@ -50,19 +50,19 @@ Ref: https://docs.cypress.io/
 To open cypress, run:
 
 ```sh
-npm run e2e:watch
+pnpm run e2e:watch
 ```
 
 To run all the test, run:
 
 ```sh
-npm run e2e
+pnpm run e2e
 ```
 
 To run all the test in Firefox:
 
 ```sh
-npm run e2e:firefox
+pnpm run e2e:firefox
 ```
 
 ## Utilities
@@ -139,7 +139,7 @@ export class AtomicResultComponent {
 To generate a new component, use the following command:
 
 ```bash
-npx turbo generate-component --filter=@coveo/atomic -- --name=<component-name> --output=<path-to-output-directory>
+pnpm turbo generate-component --filter=@coveo/atomic -- --name=<component-name> --output=<path-to-output-directory>
 ```
 
 The `output` argument is optional. If not provided, it will default to `src/components/commerce`.
@@ -147,7 +147,7 @@ The `output` argument is optional. If not provided, it will default to `src/comp
 For example, to generate a component named `atomic-ball`, run:
 
 ```bash
-npx turbo generate-component --filter=@coveo/atomic -- --name=ball
+pnpm turbo generate-component --filter=@coveo/atomic -- --name=ball
 ```
 
 This will create the necessary component files under the default path `src/components/commerce/atomic-ball`.
@@ -155,7 +155,7 @@ This will create the necessary component files under the default path `src/compo
 If you'd like to specify a different path, you can use the `--output` flag. For example, to generate the component under `src/components/search`, run:
 
 ```bash
-npx turbo generate-component --filter=@coveo/atomic -- --name=ball --output=src/components/search
+pnpm turbo generate-component --filter=@coveo/atomic -- --name=ball --output=src/components/search
 ```
 
 You can also use `--name=atomic-ball` if you'd like, but the script will automatically add the "atomic" prefix if necessary.

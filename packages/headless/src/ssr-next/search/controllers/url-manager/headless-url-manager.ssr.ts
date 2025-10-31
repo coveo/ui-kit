@@ -27,6 +27,7 @@ export const defineUrlManager = (): ControllerDefinitionWithProps<
   UrlManagerBuildProps
 > => ({
   buildWithProps: (engine, props) => {
+    // TODO: KIT-5154 - Apply commerce pattern
     if (props === undefined) {
       throw new MissingControllerProps('UrlManager');
     }

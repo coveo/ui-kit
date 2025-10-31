@@ -25,7 +25,7 @@ import {
 } from './common/constants.mjs';
 
 if (!process.env.INIT_CWD) {
-  throw new Error('Should be called using npm run-script');
+  throw new Error('Should be called using pnpm run');
 }
 process.chdir(process.env.INIT_CWD);
 
@@ -111,7 +111,6 @@ const newVersion =
 modifyPackageJson(PATH, (packageJson) => {
   packageJson.version = newVersion;
 });
-await updateWorkspaceDependent(newVersion);
 if (privatePackage) {
   process.exit(0);
 }
@@ -133,64 +132,6 @@ appendFileSync(
   join(REPO_FS_ROOT, '.git-message'),
   `${packageJson.name}@${newVersion}\n`
 );
-
-/**
- * Update the version of the package in the other packages of the workspace
- * @param {string} version
- */
-async function updateWorkspaceDependent(version) {
-  const topology = JSON.parse(
-    readFileSync(join(REPO_FS_ROOT, 'topology.json'), {encoding: 'utf-8'})
-  );
-  const dependencyPackageJson = JSON.parse(
-    readFileSync('package.json', {encoding: 'utf-8'})
-  );
-  const dependencyPackageName = dependencyPackageJson.name.replace(
-    '@coveo/',
-    ''
-  );
-  const dependentPackages = [];
-  for (const [name, dependencies] of Object.entries(
-    topology.graph.dependencies
-  )) {
-    if (
-      dependencies.find(
-        (/** @type {{target:string}} **/ dependency) =>
-          dependency.target === dependencyPackageName
-      )
-    ) {
-      dependentPackages.push(name);
-    }
-  }
-
-  for (const dependentPackage of dependentPackages) {
-    modifyPackageJson(
-      join(REPO_FS_ROOT, topology.graph.nodes[dependentPackage].data.root),
-      (packageJson) => {
-        updateDependency(packageJson, dependencyPackageJson.name, version);
-      }
-    );
-  }
-}
-
-/**
- * Update all instancies of the `dependency` in the `packageJson` to the given `version`.
- * @param {any} packageJson the packageJson object to update
- * @param {string} dependency the dependency to look for and update
- * @param {string} version the version to update to.
- */
-function updateDependency(packageJson, dependency, version) {
-  for (const dependencyType of [
-    'dependencies',
-    'devDependencies',
-    'peerDependencies',
-    'optionalDependencies',
-  ]) {
-    if (packageJson?.[dependencyType]?.[dependency]) {
-      packageJson[dependencyType][dependency] = version;
-    }
-  }
-}
 
 function isPrivatePackage() {
   const packageJson = JSON.parse(

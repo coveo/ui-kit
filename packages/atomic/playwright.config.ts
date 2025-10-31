@@ -46,8 +46,8 @@ export default defineConfig({
   webServer: process.env.CI
     ? {
         command: isCDN
-          ? 'npx turbo serve --filter=@coveo/cdn'
-          : 'npx ws -d ./dist-storybook -p 4400',
+          ? 'pnpm exec turbo serve --filter=@coveo/cdn'
+          : 'pnpm exec ws -d ./dist-storybook -p 4400',
 
         stdout: 'pipe',
         url: isCDN
