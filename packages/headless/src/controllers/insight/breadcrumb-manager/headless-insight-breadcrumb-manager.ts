@@ -1,5 +1,6 @@
 import {configuration} from '../../../app/common-reducers.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import {SearchPageEvents} from '../../../features/analytics/search-action-cause.js';
 import {deselectAllCategoryFacetValues} from '../../../features/facets/category-facet-set/category-facet-set-actions.js';
 import {categoryBreadcrumbFacet} from '../../../features/facets/category-facet-set/category-facet-set-analytics-actions.js';
 import {logCategoryFacetBreadcrumb} from '../../../features/facets/category-facet-set/category-facet-set-insight-analytics-actions.js';
@@ -295,6 +296,7 @@ export function buildBreadcrumbManager(
       dispatch(
         executeSearch({
           legacy: logClearBreadcrumbs(),
+          next: {actionCause: SearchPageEvents.breadcrumbResetAll},
         })
       );
     },
