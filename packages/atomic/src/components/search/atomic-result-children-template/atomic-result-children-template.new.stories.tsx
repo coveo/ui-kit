@@ -137,20 +137,19 @@ const meta: Meta = {
 
 export default meta;
 
-const {decorator: searchInterfaceDecorator, play: initializeSearchInterface} =
-  wrapInSearchInterface({
-    config: {
-      preprocessRequest: (request: any) => {
-        const parsed = JSON.parse(request.body as string);
-        parsed.numberOfResults = 4;
-        parsed.aq = '@source=iNaturalistTaxons';
-        request.body = JSON.stringify(parsed);
-        return request;
-      },
+const {decorator, play} = wrapInSearchInterface({
+  config: {
+    preprocessRequest: (request: any) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.numberOfResults = 4;
+      parsed.aq = '@source=iNaturalistTaxons';
+      request.body = JSON.stringify(parsed);
+      return request;
     },
-    skipFirstSearch: false,
-    includeCodeRoot: false,
-  });
+  },
+  skipFirstSearch: false,
+  includeCodeRoot: false,
+});
 
 export const Default: Story = {
   name: 'In a folded result list',
@@ -165,9 +164,9 @@ export const Default: Story = {
         </atomic-result-children>
       </atomic-folded-result-list>
     `,
-    searchInterfaceDecorator,
+    decorator,
   ],
-  afterEach: initializeSearchInterface,
+  play,
   parameters: {
     docs: {
       source: {
