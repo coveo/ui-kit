@@ -11,7 +11,9 @@
           interactive-citation={citation.interactiveCitation}
           onquantic__citationhover={citation.handleCitationHover}
           disable-citation-anchoring={disableCitationAnchoring}
-        ></c-quantic-citation>
+        >
+        <slot name="citation-action" slot="citation-action"></slot>
+      </c-quantic-citation>
       </template>
     </ol>
   </template>

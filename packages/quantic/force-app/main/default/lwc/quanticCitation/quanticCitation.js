@@ -115,7 +115,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
 
     this.tooltipIsDisplayed = false;
     this.shouldShowTooltipAfterDelay = false;
-    this.tooltipComponent.hideTooltip();
+    // this.tooltipComponent.hideTooltip();
   }
 
   /**
@@ -136,6 +136,38 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       event.preventDefault();
       this.navigateToSalesforceRecord(event);
     }
+  }
+
+  /**
+   * Handles clicks on slotted citation action elements
+   * @param {Event} event
+   */
+  handleCitationActionClick(event) {
+    // Only handle clicks from slotted content, not the container
+    // @ts-ignore
+    const slottedElement = event.target.closest('[slot="citation-action"]');
+    if (!slottedElement) {
+      return;
+    }
+
+    event.stopPropagation();
+
+    // Extract action type from data attribute of the slotted element
+    const actionType = slottedElement.dataset.action;
+
+    // Dispatch custom event with citation data
+    this.dispatchEvent(
+      new CustomEvent('citationaction', {
+        detail: {
+          citation: this.citation,
+          citationId: this.citation?.index,
+          actionType,
+          originalEvent: event,
+        },
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 
   navigateToSalesforceRecord(event) {
