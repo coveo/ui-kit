@@ -4,9 +4,47 @@ import {HttpResponse, http} from 'msw';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
-const {decorator, play} = wrapInCommerceInterface({
-  engineConfig: {organizationId: 'invalid-organization-id'},
+const sharedHandlers = [
+  http.post('**/v2/search', ({request}) => {
+    const url = new URL(request.url);
+    const orgIdMatch = url.pathname.match(/\/organizations\/([^/]+)\//);
+    const orgId = orgIdMatch ? orgIdMatch[1] : null;
+
+    if (orgId === 'teapot-organization-id') {
+      return HttpResponse.json(
+        {
+          ok: false,
+          status: 418,
+          message: 'Something very weird just happened',
+          statusCode: 418,
+          type: 'ClientError',
+        },
+        {status: 418}
+      );
+    }
+
+    return HttpResponse.json(
+      {
+        ok: false,
+        status: 500,
+        message: 'Internal Server Error',
+        statusCode: 500,
+        type: 'UnknownError',
+      },
+      {status: 500}
+    );
+  }),
+];
+
+const {decorator: defaultDecorator, play: defaultPlay} =
+  wrapInCommerceInterface({
+    engineConfig: {organizationId: 'invalid-organization-id'},
+  });
+
+const {decorator: teapotDecorator, play: teapotPlay} = wrapInCommerceInterface({
+  engineConfig: {organizationId: 'teapot-organization-id'},
 });
+
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-commerce-query-error',
   {excludeCategories: ['methods']}
@@ -17,42 +55,40 @@ const meta: Meta = {
   title: 'Commerce/Query Error',
   id: 'atomic-commerce-query-error',
   render: (args) => template(args),
-  decorators: [decorator],
   parameters: {
     ...parameters,
     actions: {
       handles: events,
     },
+    msw: {
+      handlers: sharedHandlers,
+    },
   },
   args,
   argTypes,
 
-  play,
+  play: defaultPlay,
 };
 
 export default meta;
 
-export const Default: Story = {};
+export const Default: Story = {
+  decorators: [defaultDecorator],
+  parameters: {
+    msw: {
+      handlers: sharedHandlers,
+    },
+  },
+  play: defaultPlay,
+};
 
 export const With418Error: Story = {
   name: 'With 418 error',
+  decorators: [teapotDecorator],
   parameters: {
     msw: {
-      handlers: [
-        http.post('**/v2/search', () => {
-          return HttpResponse.json(
-            {
-              ok: false,
-              status: 418,
-              message: 'Something very weird just happened',
-              statusCode: 418,
-              type: 'ClientError',
-            },
-            {status: 418}
-          );
-        }),
-      ],
+      handlers: sharedHandlers,
     },
   },
-  play,
+  play: teapotPlay,
 };
