@@ -38,7 +38,7 @@ jobs:
           node-version-file: ".nvmrc"
           registry-url: 'https://registry.npmjs.org'
       - name: Install pnpm
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 #v4.0.0
+        uses: step-security/action-setup@92da25bc4fa3a114b7a78c686a5ec142ccb12c8b # v4.1.1
       - run: pnpm install --frozen-lockfile
       - run: pnpm run pr:report
         env:
@@ -62,7 +62,7 @@ jobs:
           node-version-file: ".nvmrc"
           registry-url: 'https://registry.npmjs.org'
       - name: Install pnpm
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 #v4.0.0
+        uses: step-security/action-setup@92da25bc4fa3a114b7a78c686a5ec142ccb12c8b # v4.1.1
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
         shell: bash
@@ -692,7 +692,7 @@ jobs:
           node-version-file: ".nvmrc"
           registry-url: 'https://registry.npmjs.org'
       - name: Install pnpm
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 #v4.0.0
+        uses: step-security/action-setup@92da25bc4fa3a114b7a78c686a5ec142ccb12c8b # v4.1.1
       - run: pnpm install --frozen-lockfile
         shell: bash
       - name: Call ui-kit-cd for dev
@@ -862,7 +862,7 @@ jobs:
           node-version-file: ".nvmrc"
           registry-url: 'https://registry.npmjs.org'
       - name: Install pnpm
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 #v4.0.0
+        uses: step-security/action-setup@92da25bc4fa3a114b7a78c686a5ec142ccb12c8b # v4.1.1
       - run: pnpm install --frozen-lockfile
         shell: bash
       - name: Call ui-kit-cd for dev
