@@ -113,7 +113,25 @@
           </atomic-facet-manager>
         </atomic-layout-section>
         <atomic-layout-section section="status">
-          <atomic-insight-query-summary></atomic-insight-query-summary>
+          <style>
+            .insights-header {
+              display: flex;
+              align-items: center;
+              background-color: #F1F2FF;
+            }
+            .insights-header atomic-insight-generate-answer-button {
+              padding: 0rem 1.5rem;
+            }
+            .insights-summary {
+              flex-grow: 1;
+            }
+          </style>
+          <div class="insights-header">
+            <div class="insights-summary">
+              <atomic-insight-query-summary></atomic-insight-query-summary>
+            </div>
+            <atomic-insight-generate-answer-button></atomic-insight-generate-answer-button>
+          </div>
         </atomic-layout-section>
         <atomic-layout-section section="results">
           <atomic-insight-smart-snippet></atomic-insight-smart-snippet>
