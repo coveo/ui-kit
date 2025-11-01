@@ -79,12 +79,51 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - name: Merge Playwright reports
+      - name: Merge Playwright HTML reports
         uses: ./.github/actions/merge-playwright-reports
         with:
           working-directory: packages/quantic
           artifact-pattern: quantic-blob-report-*
           upload-artifact-name: quantic-playwright-report
+      - name: Merge Playwright JSON reports
+        uses: ./.github/actions/merge-playwright-json-reports
+        with:
+          working-directory: packages/quantic
+          artifact-pattern: quantic-blob-report-*
+          upload-artifact-name: quantic-playwright-report-json
+  Publish-Dashboard:
+    name: Create playwright-dashboard page
+    if: (success() || failure())
+    # if: (success() || failure()) && github.event_name == 'schedule' && github.ref == 'refs/heads/master'
+    needs: [merge-quantic-playwright-reports]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        with:
+          egress-policy: audit
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+
+      - name: Publish google chart
+        uses: coveo-platform/actions/playwright-dashboard@playwright-dashboard-v1
+        with:
+          project_name: "quantic-regression"
+          artifact_name: quantic-playwright-report-json
+          json_report_name: merged-json-report.json
+          filter_report_by_branch: "SFINT-6399"
+          filter_report_by_event_type: "pull_request"
+          days_in_past: "30"
+
+      - name: Upload Playwright report and charts to S3
+        run: |
+          aws s3 cp $GITHUB_WORKSPACE/quantic-playwright-report \
+          s3://playwright-dashboard-bucket/quantic-regression/quantic-regression-reports/${{ github.run_id }}/ \
+          --recursive || true
+
+          aws s3 cp $GITHUB_WORKSPACE/quantic-regression_chart.html \
+          s3://playwright-dashboard-bucket/quantic-regression/quantic-regression_chart.html
   e2e-quantic-cleanup:
     if: cancelled() || failure() || success()
     needs:
