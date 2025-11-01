@@ -5,7 +5,6 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {within} from 'shadow-dom-testing-library';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -96,8 +95,7 @@ export const WithDependsOn: Story = {
     'depends-on-filetype': 'YouTubeVideo',
   },
   play: async (context) => {
-    const {canvasElement, step} = context;
-    const canvas = within(canvasElement);
+    const {canvas, step} = context;
     await play(context);
     await step('Select YouTubeVideo in filetype facet', async () => {
       const button = await canvas.findByShadowLabelText(

@@ -1,4 +1,5 @@
 import '@coveo/atomic/themes/coveo.css';
+import type {Preview} from '@storybook/web-components-vite';
 import {
   type Parameters,
   setCustomElementsManifest,
@@ -6,6 +7,7 @@ import {
 import {setStorybookHelpersConfig} from '@wc-toolkit/storybook-helpers';
 import {render} from 'lit';
 import {initialize, mswLoader} from 'msw-storybook-addon';
+import {within as withinShadow} from 'shadow-dom-testing-library';
 import customElements from '../custom-elements.json';
 import {defineCustomElements} from '../dist/atomic/loader/index.js';
 
@@ -127,8 +129,21 @@ function disableAnalytics(container, selectors) {
   });
 }
 
-export default {
+const preview: Preview = {
+  // Augment the canvas with the shadow DOM queries
+  beforeEach({canvasElement, canvas}) {
+    Object.assign(canvas, {...withinShadow(canvasElement)});
+  },
   globals: {
     a11y: {manual: true},
   },
 };
+
+export default preview;
+
+// Extend TypeScript types for safety
+export type ShadowQueries = ReturnType<typeof withinShadow>;
+
+declare module '@storybook/test' {
+  interface Canvas extends ShadowQueries {}
+}

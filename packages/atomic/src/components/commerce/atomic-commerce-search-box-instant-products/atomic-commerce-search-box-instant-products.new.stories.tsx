@@ -1,7 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {within} from 'shadow-dom-testing-library';
 import {userEvent} from 'storybook/test';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceSearchBox} from '@/storybook-utils/commerce/commerce-search-box-wrapper';
@@ -34,8 +33,8 @@ const meta: Meta = {
 
   play: async (context) => {
     await commerceInterfacePlay(context);
-    const canvas = within(context.canvasElement);
-    const searchBox = await canvas.findAllByShadowPlaceholderText('Search');
+    const searchBox =
+      await context.canvas.findAllByShadowPlaceholderText('Search');
     await userEvent.click(searchBox[0]);
   },
 };
