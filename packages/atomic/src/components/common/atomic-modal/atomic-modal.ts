@@ -37,6 +37,19 @@ export class AtomicModal
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<AnyBindings>
 {
+  // Hide the modal before it's defined to prevent FOUC
+  static {
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+      const styleId = 'atomic-modal-predefined-styles';
+      if (!document.getElementById(styleId)) {
+        const style = document.createElement('style');
+        style.id = styleId;
+        style.textContent = 'atomic-modal:not(:defined) { display: none; }';
+        document.head.appendChild(style);
+      }
+    }
+  }
+
   static styles = css`
   @reference '../../../utils/tailwind.global.tw.css';
   
