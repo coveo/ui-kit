@@ -15,7 +15,6 @@ import {
   initializeWithHeadless,
   registerToStore,
   getHeadlessBundle,
-  getBueno,
 } from 'c/quanticHeadlessLoader';
 import {
   I18nUtils,
@@ -338,21 +337,19 @@ export default class QuanticFacet extends LightningElement {
   }
   validateDependsOnProperty() {
     if (this.dependsOn) {
-      getBueno(this).then(() => {
-        const {parentFacetId, expectedValue} = this.dependsOn;
-        if (!Bueno.isString(parentFacetId)) {
-          console.error(
-            `The ${this.field} ${this.template.host.localName} requires dependsOn.parentFacetId to be a valid string.`
-          );
-          this.setInitializationError();
-        }
-        if (expectedValue && !Bueno.isString(expectedValue)) {
-          console.error(
-            `The ${this.field} ${this.template.host.localName} requires dependsOn.expectedValue to be a valid string.`
-          );
-          this.setInitializationError();
-        }
-      });
+      const {parentFacetId, expectedValue} = this.dependsOn;
+      if (!Bueno.isString(parentFacetId)) {
+        console.error(
+          `The ${this.field} ${this.template.host.localName} requires dependsOn.parentFacetId to be a valid string.`
+        );
+        this.setInitializationError();
+      }
+      if (expectedValue && !Bueno.isString(expectedValue)) {
+        console.error(
+          `The ${this.field} ${this.template.host.localName} requires dependsOn.expectedValue to be a valid string.`
+        );
+        this.setInitializationError();
+      }
     }
   }
 

@@ -8,7 +8,6 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
   registerSortOptionsToStore,
-  getBueno,
 } from 'c/quanticHeadlessLoader';
 import {LightningElement, track, api} from 'lwc';
 
@@ -137,11 +136,9 @@ export default class QuanticSort extends LightningElement {
       },
     });
     this.searchStatus = this.headless.buildSearchStatus(engine);
-    getBueno(this).then(() => {
-      this.generateSchemas();
-      this.customSortOptions.forEach((option) => {
-        this.validateSortOption(option);
-      });
+    this.generateSchemas();
+    this.customSortOptions.forEach((option) => {
+      this.validateSortOption(option);
     });
     this.unsubscribeSort = this.sort.subscribe(() => this.updateState());
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
