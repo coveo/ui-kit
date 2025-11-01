@@ -119,9 +119,9 @@
     "@tailwindcss/vite": "4.1.13",
     "@types/escape-html": "1.0.4",
     "@types/jest": "catalog:",
-    "@types/minimatch": "5.1.2",
+    "@types/minimatch": "6.0.0",
     "@types/node": "catalog:",
-    "@vitest/browser": "3.2.4",
+    "@vitest/browser": "4.0.3",
     "@wc-toolkit/storybook-helpers": "9.0.1",
     "axe-core": "4.10.3",
     "cypress": "catalog:",
@@ -156,7 +156,7 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:",
-    "wait-on": "8.0.4"
+    "wait-on": "9.0.1"
   },
   "peerDependencies": {
     "@coveo/bueno": "workspace:*",
