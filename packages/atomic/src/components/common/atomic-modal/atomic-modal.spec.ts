@@ -112,6 +112,17 @@ describe('atomic-modal', () => {
 
       expect(element).toBeInstanceOf(AtomicModal);
     });
+
+    it('should inject CSS to hide atomic-modal:not(:defined)', () => {
+      const styleElement = document.getElementById(
+        'atomic-modal-predefined-styles'
+      );
+
+      expect(styleElement).toBeTruthy();
+      expect(styleElement?.tagName).toBe('STYLE');
+      expect(styleElement?.textContent).toContain('atomic-modal:not(:defined)');
+      expect(styleElement?.textContent).toContain('display: none');
+    });
   });
 
   describe('#connectedCallback (when added to the DOM)', () => {
