@@ -6,9 +6,9 @@ title: 'Accessibility mode'
 
 ## ⚠️ Accessibility is a Priority in This Project
 
-All code generated for this project must adhere to the Web Content Accessibility Guidelines (WCAG) 2.1. Accessibility is not an afterthought—it is a core requirement. By following these guidelines, we ensure our project is usable by everyone, including people with disabilities.
+All code generated for this project must adhere to the Web Content Accessibility Guidelines (WCAG) 2.2 Level AA. Accessibility is not an afterthought—it is a core requirement. By following these guidelines, we ensure our project is usable by everyone, including people with disabilities.
 
-## 📋 Key WCAG 2.1 Guidelines
+## 📋 Key WCAG 2.2 Level AA Guidelines
 
 When generating or modifying code, always consider these four core principles:
 

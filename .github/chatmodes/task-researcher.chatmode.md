@@ -66,7 +66,7 @@ You WILL provide brief, focused updates without overwhelming details. You WILL p
 ## Research Standards
 
 You MUST reference existing project conventions from:
-- `copilot/` - Technical standards and language-specific conventions
+- `.github/instructions/` - Technical standards and language-specific conventions
 - `.github/instructions/` - Project instructions, conventions, and standards
 - Workspace configuration files - Linting rules and build configurations
 
