@@ -37,13 +37,15 @@ export class AtomicModal
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<AnyBindings>
 {
-  // Hide the modal before it's defined to prevent FOUC
+  // Hide the modal before it's defined to prevent FOUC (Flash of Unstyled Content).
+  // Note: The CSS is a static string literal with no dynamic content, so there's no injection risk.
   static {
     if (typeof window !== 'undefined' && typeof document !== 'undefined') {
       const styleId = 'atomic-modal-predefined-styles';
       if (!document.getElementById(styleId)) {
         const style = document.createElement('style');
         style.id = styleId;
+        // Static CSS - safe from injection attacks
         style.textContent = 'atomic-modal:not(:defined) { display: none; }';
         document.head.appendChild(style);
       }
