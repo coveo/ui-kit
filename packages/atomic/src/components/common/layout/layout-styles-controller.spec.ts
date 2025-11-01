@@ -7,9 +7,7 @@ import {
   type LayoutStylesHost,
 } from './layout-styles-controller';
 
-vi.mock('@/src/utils/utils', () => ({
-  randomID: vi.fn((prefix: string) => `${prefix}mock-id-12345`),
-}));
+vi.mock('@/src/utils/utils', {spy: true});
 
 @customElement('test-layout-element')
 class TestLayoutElement extends LitElement implements LayoutStylesHost {
@@ -30,12 +28,19 @@ describe('LayoutStylesController', () => {
     const mockStyleSheet = {
       replaceSync: vi.fn(),
     } as unknown as CSSStyleSheet;
-
-    globalThis.CSSStyleSheet = vi.fn(() => mockStyleSheet);
+    vi.stubGlobal(
+      'CSSStyleSheet',
+      vi.fn().mockImplementation(function (this: unknown) {
+        return mockStyleSheet;
+      })
+    );
     return mockStyleSheet;
   };
 
   beforeEach(() => {
+    vi.mocked(randomID).mockImplementation(
+      (prefix) => `${prefix}mock-id-12345`
+    );
     mockElement = new TestLayoutElement();
     mockStylesBuilder = vi.fn().mockReturnValue('.test-styles { color: red; }');
 

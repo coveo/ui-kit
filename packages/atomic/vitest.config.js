@@ -1,6 +1,7 @@
 import {readFileSync} from 'node:fs';
 import path, {dirname, resolve} from 'node:path';
 import tailwindcss from '@tailwindcss/vite';
+import {playwright} from '@vitest/browser-playwright';
 import {configDefaults, defineConfig} from 'vitest/config';
 import packageJsonHeadless from '../headless/package.json' with {type: 'json'};
 import packageJson from './package.json' with {type: 'json'};
@@ -36,20 +37,6 @@ export default defineConfig({
   resolve: {
     alias: [
       {find: '@/', replacement: `${path.resolve(import.meta.dirname, './')}/`},
-      {
-        find: /^@coveo\/headless\/(.*)$/,
-        replacement: path.resolve(
-          import.meta.dirname,
-          '../headless/cdn/$1/headless.esm.js'
-        ),
-      },
-      {
-        find: '@coveo/headless',
-        replacement: path.resolve(
-          import.meta.dirname,
-          '../headless/cdn/headless.esm.js'
-        ),
-      },
       {
         find: '../components/components/lazy-index.js',
         replacement: path.resolve(
@@ -107,7 +94,7 @@ export default defineConfig({
       moduleDirectories: ['node_modules', path.resolve('../../packages')],
     },
     browser: {
-      provider: 'playwright',
+      provider: playwright(),
       enabled: true,
       instances: [
         {

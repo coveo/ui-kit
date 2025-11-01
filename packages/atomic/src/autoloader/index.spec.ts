@@ -25,6 +25,9 @@ const mockCustomElements = {
   upgrade: vi.fn(),
 };
 
+class XTestComponent extends HTMLElement {}
+class XTestComponentInside extends HTMLElement {}
+
 describe('autoloader', () => {
   beforeAll(() => {
     vi.stubGlobal('customElements', mockCustomElements);
@@ -34,10 +37,13 @@ describe('autoloader', () => {
       __esModule: true,
       default: {
         'x-test-component': async () => {
-          customElements.define('x-test-component', HTMLElement);
+          customElements.define('x-test-component', XTestComponent);
         },
         'x-test-component-inside': async () => {
-          customElements.define('x-test-component-inside', HTMLElement);
+          customElements.define(
+            'x-test-component-inside',
+            XTestComponentInside
+          );
         },
       },
     }));

@@ -78,7 +78,7 @@ Reference: `packages/atomic/scripts/generate-component-templates/component.spec.
 
 ```typescript
 import {buildController, type ControllerState} from '@coveo/headless';
-import {page} from '@vitest/browser/context';
+import {page} from 'vitest/browser';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';

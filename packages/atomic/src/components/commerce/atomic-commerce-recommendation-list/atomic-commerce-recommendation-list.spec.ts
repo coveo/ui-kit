@@ -4,9 +4,9 @@ import {
   type InteractiveProductProps,
   type Product,
 } from '@coveo/headless/commerce';
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {page} from 'vitest/browser';
 import type {
   ItemDisplayBasicLayout,
   ItemDisplayDensity,
@@ -680,12 +680,8 @@ describe('atomic-commerce-recommendation-list', () => {
         });
       } else {
         it('should pass empty link template to #linkContent', async () => {
-          const mockProduct1 = {
-            permanentid: 123,
-          } as unknown as Product;
-          const mockProduct2 = {
-            permanentid: 456,
-          } as unknown as Product;
+          const mockProduct1 = buildFakeProduct({permanentid: '123'});
+          const mockProduct2 = buildFakeProduct({permanentid: '456'});
 
           const element = await setupElement({display});
 

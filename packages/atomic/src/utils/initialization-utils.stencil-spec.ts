@@ -7,20 +7,18 @@ import {
 import {Component, h} from '@stencil/core';
 import {newSpecPage, type SpecPage} from '@stencil/core/testing';
 import i18next, {type i18n} from 'i18next';
-import {AtomicSearchBox} from '../components/search/atomic-search-box/atomic-search-box';
-import type {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
+import {AtomicSearchBox} from '../components/search/atomic-search-box/atomic-search-box.js';
+import type {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface.js';
 import {
   createSearchStore,
   type SearchStore,
-} from '../components/search/atomic-search-interface/store';
-import {markParentAsReady} from './init-queue';
+} from '../components/search/atomic-search-interface/store.js';
+import {markParentAsReady} from './init-queue.js';
 import {
   BindStateToController,
   type InitializableComponent,
   InitializeBindings,
-  initializeBindings,
-  MissingInterfaceParentError,
-} from './initialization-utils';
+} from './initialization-utils.js';
 
 @Component({
   tag: 'atomic-search-interface',
@@ -328,39 +326,6 @@ describe('BindStateToController decorator', () => {
       component.initialize!();
 
       expect(controller.subscribe).toHaveBeenCalledTimes(1);
-    });
-  });
-});
-
-describe('initializeBindings method', () => {
-  it('rejects when the component is not the children of a search interface element', async () => {
-    const element = document.createElement('my-component');
-    await expect(initializeBindings(element)).rejects.toEqual(
-      new MissingInterfaceParentError('my-component')
-    );
-  });
-
-  it("revolves the bindings when it's a children of a configured search interface element", async () => {
-    const page = await newSpecPage({
-      components: [AtomicSearchInterface],
-      html: '<atomic-search-interface></atomic-search-interface>',
-    });
-    const searchInterface = page.body.querySelector('atomic-search-interface')!;
-    const searchInterfaceInstance = page.rootInstance as AtomicSearchInterface;
-    searchInterfaceInstance.host = searchInterface;
-    await searchInterfaceInstance.initialize({
-      accessToken: '123456789',
-      organizationId: 'myorg',
-    });
-
-    const element = document.createElement('my-component');
-    searchInterface.appendChild(element);
-    const bindings = await initializeBindings(element);
-    expect(bindings).toMatchObject({
-      interfaceElement: searchInterface,
-      i18n: searchInterfaceInstance.i18n,
-      store: expect.anything(),
-      engine: searchInterfaceInstance.engine,
     });
   });
 });

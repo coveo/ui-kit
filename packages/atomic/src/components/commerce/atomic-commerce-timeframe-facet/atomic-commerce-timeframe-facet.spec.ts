@@ -1,9 +1,9 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: For testing, locators should always exist */
 
 import type {DateFacet, Summary} from '@coveo/headless/commerce';
-import {page, userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {page, userEvent} from 'vitest/browser';
 import {shouldDisplayInputForFacetRange} from '@/src/components/common/facets/facet-common';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
@@ -22,6 +22,7 @@ describe('atomic-commerce-timeframe-facet', () => {
   let mockedConsoleError: MockInstance;
 
   beforeEach(() => {
+    vi.mocked(shouldDisplayInputForFacetRange).mockReset();
     mockedConsoleError = vi
       .spyOn(console, 'error')
       .mockImplementation(() => {});

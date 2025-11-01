@@ -10,10 +10,10 @@ import {
   loadQuerySetActions,
   loadQuerySuggestActions,
 } from '@coveo/headless/commerce';
-import {userEvent} from '@vitest/browser/context';
 import {html, type TemplateResult} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, expect, it, vi} from 'vitest';
+import {userEvent} from 'vitest/browser';
 import {randomID} from '@/src/utils/utils';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakeLoadQuerySetActions} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-set-actions';

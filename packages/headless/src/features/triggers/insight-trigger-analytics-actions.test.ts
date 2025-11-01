@@ -1,3 +1,4 @@
+import {CoveoInsightClient} from 'coveo.analytics';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {
   buildMockInsightEngine,
@@ -10,17 +11,12 @@ import {getTriggerInitialState} from './triggers-state.js';
 
 const mockLogTriggerNotify = vi.fn();
 
-vi.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = vi.fn(() => ({
-    disable: vi.fn(),
-    logTriggerNotify: mockLogTriggerNotify,
-  }));
-
-  return {
-    CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: vi.fn()},
-  };
+vi.mock('coveo.analytics');
+vi.mocked(CoveoInsightClient).mockImplementation(function () {
+  this.disable = () => {};
+  this.logTriggerNotify = mockLogTriggerNotify;
 });
+
 const expectedNotifications = ['Hello'];
 
 const exampleSubject = 'example subject';

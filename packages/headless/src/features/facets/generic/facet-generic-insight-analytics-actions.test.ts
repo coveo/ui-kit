@@ -1,3 +1,4 @@
+import {CoveoInsightClient} from 'coveo.analytics';
 import type {ThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
 import {buildMockInsightEngine} from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
@@ -6,16 +7,10 @@ import {logClearBreadcrumbs} from './facet-generic-insight-analytics-actions.js'
 
 const mockLogBreadcrumbResetAll = vi.fn();
 
-vi.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = vi.fn(() => ({
-    disable: () => {},
-    logBreadcrumbResetAll: mockLogBreadcrumbResetAll,
-  }));
-
-  return {
-    CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: vi.fn()},
-  };
+vi.mock('coveo.analytics');
+vi.mocked(CoveoInsightClient).mockImplementation(function () {
+  this.disable = () => {};
+  this.logBreadcrumbResetAll = mockLogBreadcrumbResetAll;
 });
 
 describe('facet generic insight analytics actions', () => {

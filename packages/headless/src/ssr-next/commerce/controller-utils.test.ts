@@ -45,10 +45,8 @@ describe('commerce controller-utils', () => {
   });
 
   describe('#buildControllerDefinitions', () => {
-    let mockControllerBuilder: {
-      withAdditionalArgs: ReturnType<typeof vi.fn>;
-      build: ReturnType<typeof vi.fn>;
-    };
+    const mockControllerBuilderWithAdditionalArgs = vi.fn();
+    const mockControllerBuilderBuild = vi.fn();
 
     const buildControllersWithDefaultSetup = () => {
       const definitionsMap = {
@@ -67,25 +65,25 @@ describe('commerce controller-utils', () => {
     };
 
     beforeEach(() => {
-      mockControllerBuilder = {
-        withAdditionalArgs: vi.fn().mockReturnThis(),
-        build: vi.fn().mockReturnValue(buildMockController()),
-      };
-
-      // @ts-expect-error: do not care about mocking all the class methods
-      vi.mocked(ControllerBuilder).mockReturnValue(mockControllerBuilder);
+      vi.mocked(ControllerBuilder).mockImplementation(function () {
+        this.withAdditionalArgs =
+          mockControllerBuilderWithAdditionalArgs.mockReturnThis();
+        this.build = mockControllerBuilderBuild.mockReturnValue(
+          buildMockController()
+        );
+      });
     });
 
     it('should call #ControllerBuilder as many times as there are definitions', () => {
       buildControllersWithDefaultSetup();
       expect(ControllerBuilder).toHaveBeenCalledTimes(2);
-      expect(mockControllerBuilder.build).toHaveBeenCalledTimes(2);
+      expect(mockControllerBuilderBuild).toHaveBeenCalledTimes(2);
     });
 
     it('should call #withAdditionalArgs with solutionType for each controller', () => {
       buildControllersWithDefaultSetup();
-      expect(mockControllerBuilder.withAdditionalArgs).toHaveBeenCalledTimes(2);
-      expect(mockControllerBuilder.withAdditionalArgs).toHaveBeenCalledWith([
+      expect(mockControllerBuilderWithAdditionalArgs).toHaveBeenCalledTimes(2);
+      expect(mockControllerBuilderWithAdditionalArgs).toHaveBeenCalledWith([
         SolutionType.search,
       ]);
     });

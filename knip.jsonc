@@ -50,6 +50,9 @@
       "ignore": ["src/components/legacy-field-suggestions/**"],
       "ignoreDependencies": ["jsdom"]
     },
+    "samples/headless-ssr/commerce-express": {
+      "entry": ["src/server.ts", "src/client.ts"]
+    },
     "samples/headless/search-react": {
       "entry": ["server/server.tsx", "src/index.tsx"],
       "ignoreDependencies": ["jsdom"]

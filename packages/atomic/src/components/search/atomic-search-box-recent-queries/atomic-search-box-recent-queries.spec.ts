@@ -1,8 +1,8 @@
 import {buildRecentQueriesList} from '@coveo/headless';
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {page} from 'vitest/browser';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderInAtomicSearchBox} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-box-fixture';

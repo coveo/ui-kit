@@ -6,9 +6,9 @@ import {
   type QueryTrigger,
   type QueryTriggerState,
 } from '@coveo/headless/commerce';
-import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {userEvent} from 'vitest/browser';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeDidYouMean} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/did-you-mean-subcontroller';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';

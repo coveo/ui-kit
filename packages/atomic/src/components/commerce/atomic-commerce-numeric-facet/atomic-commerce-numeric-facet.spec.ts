@@ -4,7 +4,6 @@ import {
   type NumericFacet,
   type Summary,
 } from '@coveo/headless/commerce';
-import {page, userEvent} from '@vitest/browser/context';
 import {html, LitElement} from 'lit';
 import {
   afterEach,
@@ -15,6 +14,7 @@ import {
   type MockInstance,
   vi,
 } from 'vitest';
+import {page, userEvent} from 'vitest/browser';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';

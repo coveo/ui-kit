@@ -1,4 +1,5 @@
 import {createRelay} from '@coveo/relay';
+import {CoveoInsightClient} from 'coveo.analytics';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {
   buildMockInsightEngine,
@@ -52,28 +53,23 @@ vi.mocked(createRelay).mockReturnValue({
   version: 'foo',
 });
 
-vi.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = vi.fn(() => ({
-    disable: vi.fn(),
-    logGeneratedAnswerFeedbackSubmit: mockLogGeneratedAnswerFeedbackSubmit,
-    logRetryGeneratedAnswer: mockLogRetryGeneratedAnswer,
-    logGeneratedAnswerCitationClick: mockLogGeneratedAnswerCitationClick,
-    logGeneratedAnswerSourceHover: mockLogHoverCitation,
-    logLikeGeneratedAnswer: mockLogLikeGeneratedAnswer,
-    logDislikeGeneratedAnswer: mockLogDislikeGeneratedAnswer,
-    logGeneratedAnswerStreamEnd: mockLogGeneratedAnswerStreamEnd,
-    logGeneratedAnswerShowAnswers: mockLogGeneratedAnswerShowAnswers,
-    logGeneratedAnswerHideAnswers: mockLogGeneratedAnswerHideAnswers,
-    logGeneratedAnswerCopyToClipboard: mockLogCopyGeneratedAnswer,
-    logGeneratedAnswerExpand: mockLogGeneratedAnswerExpand,
-    logGeneratedAnswerCollapse: mockLogGeneratedAnswerCollapse,
-    logGeneratedAnswerFeedbackSubmitV2: mockLogGeneratedAnswerFeedbackSubmitV2,
-  }));
-
-  return {
-    CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: vi.fn()},
-  };
+vi.mock('coveo.analytics');
+vi.mocked(CoveoInsightClient).mockImplementation(function () {
+  this.disable = () => {};
+  this.logGeneratedAnswerFeedbackSubmit = mockLogGeneratedAnswerFeedbackSubmit;
+  this.logRetryGeneratedAnswer = mockLogRetryGeneratedAnswer;
+  this.logGeneratedAnswerCitationClick = mockLogGeneratedAnswerCitationClick;
+  this.logGeneratedAnswerSourceHover = mockLogHoverCitation;
+  this.logLikeGeneratedAnswer = mockLogLikeGeneratedAnswer;
+  this.logDislikeGeneratedAnswer = mockLogDislikeGeneratedAnswer;
+  this.logGeneratedAnswerStreamEnd = mockLogGeneratedAnswerStreamEnd;
+  this.logGeneratedAnswerShowAnswers = mockLogGeneratedAnswerShowAnswers;
+  this.logGeneratedAnswerHideAnswers = mockLogGeneratedAnswerHideAnswers;
+  this.logGeneratedAnswerCopyToClipboard = mockLogCopyGeneratedAnswer;
+  this.logGeneratedAnswerExpand = mockLogGeneratedAnswerExpand;
+  this.logGeneratedAnswerCollapse = mockLogGeneratedAnswerCollapse;
+  this.logGeneratedAnswerFeedbackSubmitV2 =
+    mockLogGeneratedAnswerFeedbackSubmitV2;
 });
 
 const exampleFeedback: GeneratedAnswerFeedback = {

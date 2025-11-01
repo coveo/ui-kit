@@ -8,8 +8,6 @@ import type {ControllerDefinitionWithoutProps} from '../../../../types/controlle
 
 export * from '../../../../../../controllers/facets/range-facet/date-facet/headless-date-facet.js';
 
-export {buildDateRange} from '../../../../../../controllers/facets/range-facet/date-facet/headless-date-facet.js';
-
 export interface DateFacetDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, DateFacet> {}
 

@@ -1,7 +1,7 @@
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {createRef} from 'lit/directives/ref.js';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {page} from 'vitest/browser';
 import {renderCheckbox} from '@/src/components/common/checkbox';
 import type {FacetValuePropsBase} from '@/src/components/common/facets/facet-common';
 import {renderFacetValueExclude} from '@/src/components/common/facets/facet-value-exclude/facet-value-exclude';

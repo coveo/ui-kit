@@ -335,7 +335,6 @@ export type {
   FacetValueRequest,
 } from './features/facets/facet-set/interfaces/request.js';
 export * from './features/facets/range-facets/date-facet-set/date-facet-actions-loader.js';
-export * from './features/facets/range-facets/date-facet-set/date-facet-actions-loader.js';
 export type {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response.js';
 export type {
   RangeFacetRangeAlgorithm,
