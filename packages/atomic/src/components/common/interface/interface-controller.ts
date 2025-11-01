@@ -65,8 +65,7 @@ export class InterfaceController<EngineType extends AnyEngineType>
   public async onInitialization(initEngine: () => void) {
     if (this.host.engine) {
       this.host.engine.logger.warn(
-        `The ${this.interfaceTagname} component "initialize" has already been called.`,
-        this.host
+        `The ${this.interfaceTagname} component "initialize" has already been called.`
       );
       return;
     }

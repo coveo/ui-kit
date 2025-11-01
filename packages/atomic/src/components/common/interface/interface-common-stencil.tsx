@@ -84,8 +84,7 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
   public async onInitialization(initEngine: () => void) {
     if (this.atomicInterface.engine) {
       this.atomicInterface.engine.logger.warn(
-        `The ${this.interfaceTagname} component "initialize" has already been called.`,
-        this.atomicInterface.host
+        `The ${this.interfaceTagname} component "initialize" has already been called.`
       );
       return;
     }

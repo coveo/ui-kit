@@ -28,14 +28,15 @@ export const logActionErrorMiddleware: (logger: Logger) => Middleware =
       .join(' - ');
 
     if (!unknownAction.payload?.ignored) {
-      logger.error(
+      const errorMessage =
         errorPayloadMessage ||
-          error.stack ||
-          error.message ||
-          error.name ||
-          'Error',
-        `Action dispatch error ${unknownAction.type}`,
-        action
+        error.stack ||
+        error.message ||
+        error.name ||
+        'Error';
+      logger.error(
+        {error, action},
+        `${errorMessage} - Action dispatch error ${unknownAction.type}`
       );
     }
 
