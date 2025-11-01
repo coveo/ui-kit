@@ -1,0 +1,26 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicTimeframeFacetStories from './atomic-timeframe-facet.new.stories';
+import { AtomicDocTemplate } from '../../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicTimeframeFacetStories} />
+
+<AtomicDocTemplate
+  stories={AtomicTimeframeFacetStories}
+  githubPath="search/atomic-timeframe-facet/atomic-timeframe-facet.ts"
+  tagName="atomic-timeframe-facet"
+  className="AtomicTimeframeFacet"
+>
+# UX notes
+
+## Introduction
+
+A facet allows users to drill down inside a result set by restricting the result to certain field values.
+The _Timeframe Facet_ is used specifically with field values that are dates.
+An optional date picker is available to this facet, allowing users to set custom ranges.
+
+## User Experience and Best Practices
+
+* Users can search for items based on dates, such as: publication date, latest update date, submission date, etc.
+* Enabling the date picker allows users to set a custom date range, helping narrow results to a very specific range.
+
+</AtomicDocTemplate>

@@ -1,0 +1,41 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicLoadMoreResultsStories from './atomic-load-more-results.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicLoadMoreResultsStories} />
+
+<AtomicDocTemplate
+  stories={AtomicLoadMoreResultsStories}
+  githubPath="search/atomic-load-more-results/atomic-load-more-results.ts"
+  tagName="atomic-load-more-results"
+  className="AtomicLoadMoreResults"
+>
+# UX notes
+
+## Introduction
+
+This component allows a user to load more results when they reach the bottom of a page, assuming there are more results.
+This approach offers a smoother and more intuitive browsing experience, as there’s no "page reload."
+
+## User Experience and Best Practices
+
+### Usage Notes
+
+* The Load More Results component is especially useful when you want your user to browse more results, rather than return to and refine facets or reconsider their query.
+* When the items in a source are highly specific, a pager is a more appropriate component.
+
+### Guidelines
+
+Users browse longer than with Load more than with Pagination.
+Load more is less effective when the items in a source are very specific and require comparison.
+
+## Use Cases and Examples
+
+On an ecommerce site, users will view more products using a Load More button then with a Pager.
+When considering designing for mobile, a Load More button is a better experience for the user.
+
+### Reference
+
+[Pagination vs. Infinate Scroll vs. Load More Explained](https://crocoblock.com/blog/pagination-vs-infinite-scroll/)
+
+</AtomicDocTemplate>

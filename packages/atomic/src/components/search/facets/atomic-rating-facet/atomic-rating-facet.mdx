@@ -1,0 +1,35 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicRatingFacetStories from './atomic-rating-facet.new.stories';
+import { AtomicDocTemplate } from '../../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicRatingFacetStories} />
+
+<AtomicDocTemplate
+  stories={AtomicRatingFacetStories}
+  githubPath="search/atomic-rating-facet/atomic-rating-facet.ts"
+  tagName="atomic-rating-facet"
+  className="AtomicRatingFacet"
+>
+# UX notes
+
+## Introduction
+
+A facet allows users to drill down inside a result set by filtering the result to certain field values.
+The _Rating Facet_ component displays a facet of the results for the current query as ratings.
+
+## User Experience and Best Practices
+
+* Use the Rating Facet when social proof is important in guiding the user’s decisions.
+* Ratings help users understand what others think, or how they have rated the item.
+* The Rating Facet only works with numeric field values.
+
+### Guidelines
+
+Don’t use a range that’s too large, keep it below ten.
+A five star rating system is ideal; this is a common system that’s familiar to most people.
+
+## Use Cases and Examples
+
+On an ecommerce website, a user may want to filter their results to display only the items that have a rating of four stars or above.
+
+</AtomicDocTemplate>
