@@ -403,9 +403,6 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-        with:
-          skip-build: "true"
-      - run: pnpm run build
       - uses: ./.github/actions/playwright-atomic-theming
   cypress-atomic-test:
     name: "Run Cypress tests on Atomic"
