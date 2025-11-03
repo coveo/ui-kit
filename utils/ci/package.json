@@ -1,7 +1,7 @@
 {
   "name": "@coveo/ci",
   "private": true,
-  "authors": "Coveo",
+  "author": "Coveo",
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
