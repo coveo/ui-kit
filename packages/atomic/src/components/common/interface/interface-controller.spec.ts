@@ -284,31 +284,6 @@ describe('InterfaceController', () => {
           atomicInterface.bindings
         );
       });
-
-      it('should collect initializationPromise from components during initialization', async () => {
-        const atomicInterface = await setupElement();
-        const helper = new InterfaceController(
-          atomicInterface,
-          'CoveoAtomic',
-          VERSION
-        );
-        const mockPromise = Promise.resolve();
-        const hangingEvent = {
-          preventDefault: vi.fn(),
-          stopPropagation: vi.fn(),
-          detail: vi.fn(),
-          target: {
-            initializationPromise: mockPromise,
-          },
-        };
-        helper.onComponentInitializing(hangingEvent as never);
-
-        await helper.onInitialization(vi.fn());
-
-        expect(hangingEvent.detail).toHaveBeenCalledWith(
-          atomicInterface.bindings
-        );
-      });
     });
   });
 
@@ -323,7 +298,9 @@ describe('InterfaceController', () => {
         'CoveoAtomic',
         VERSION
       );
-      const whenDefinedSpy = vi.spyOn(window.customElements, 'whenDefined');
+      const whenDefinedSpy = vi
+        .spyOn(window.customElements, 'whenDefined')
+        .mockResolvedValue(undefined as never);
 
       await helper.awaitComponentsInitialization();
 
@@ -349,6 +326,10 @@ describe('InterfaceController', () => {
         VERSION
       );
 
+      vi.spyOn(window.customElements, 'whenDefined').mockResolvedValue(
+        undefined as never
+      );
+
       const awaitPromise = helper.awaitComponentsInitialization();
       let completed = false;
       awaitPromise.then(() => {
@@ -371,6 +352,10 @@ describe('InterfaceController', () => {
         VERSION
       );
 
+      vi.spyOn(window.customElements, 'whenDefined').mockResolvedValue(
+        undefined as never
+      );
+
       await expect(
         helper.awaitComponentsInitialization()
       ).resolves.toBeUndefined();
@@ -385,6 +370,10 @@ describe('InterfaceController', () => {
         atomicInterface,
         'CoveoAtomic',
         VERSION
+      );
+
+      vi.spyOn(window.customElements, 'whenDefined').mockResolvedValue(
+        undefined as never
       );
 
       await expect(

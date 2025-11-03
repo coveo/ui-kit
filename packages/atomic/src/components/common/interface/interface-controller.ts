@@ -30,7 +30,6 @@ export class InterfaceController<EngineType extends AnyEngineType>
   private host: LitElement & BaseAtomicInterface<EngineType>;
   private i18nPromise!: Promise<TFunction>;
   private hangingComponentsInitialization: InitializeEvent[] = [];
-  private componentInitializationPromises: Promise<void>[] = [];
 
   constructor(
     host: LitElement & BaseAtomicInterface<EngineType>,
@@ -135,17 +134,9 @@ export class InterfaceController<EngineType extends AnyEngineType>
   }
 
   private initComponents() {
-    this.hangingComponentsInitialization.forEach((event) => {
-      event.detail(this.host.bindings);
-      const element = event.target as HTMLElement & {
-        initializationPromise?: Promise<void>;
-      };
-      if (element.initializationPromise) {
-        this.componentInitializationPromises.push(
-          element.initializationPromise
-        );
-      }
-    });
+    this.hangingComponentsInitialization.forEach((event) =>
+      event.detail(this.host.bindings)
+    );
   }
 
   /**
@@ -176,16 +167,11 @@ export class InterfaceController<EngineType extends AnyEngineType>
       })
       .filter((promise): promise is Promise<void> => promise !== undefined);
 
-    const allPromises = [
-      ...this.componentInitializationPromises,
-      ...initPromises,
-    ];
-
-    if (allPromises.length === 0) {
+    if (initPromises.length === 0) {
       return;
     }
 
-    await Promise.all(allPromises);
+    await Promise.all(initPromises);
   }
 
   private initAriaLive() {
