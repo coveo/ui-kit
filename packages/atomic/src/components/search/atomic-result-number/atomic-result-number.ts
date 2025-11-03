@@ -98,9 +98,8 @@ export class AtomicResultNumber
       throw new Error(
         `Could not parse "${value}" from field "${this.field}" as a number.`
       );
-    } else {
-      return valueAsNumber;
     }
+    return valueAsNumber;
   }
 
   private formatValue(value: number): string {
