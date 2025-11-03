@@ -39,9 +39,6 @@ export class AtomicResultNumber
   @state() private formatter: NumberFormatter = defaultNumberFormatter;
 
   private resultContext = createResultContextController(this);
-  private get result(): Result {
-    return this.resultContext.item as Result;
-  }
 
   constructor() {
     super();
@@ -126,6 +123,10 @@ export class AtomicResultNumber
     } catch (error) {
       this.error = error as Error;
     }
+  }
+
+  private get result(): Result {
+    return this.resultContext.item as Result;
   }
 }
 
