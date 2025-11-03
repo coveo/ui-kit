@@ -1,7 +1,7 @@
 import {test as base} from '@playwright/test';
 import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
-import {AtomicResultPageObject as Result} from '@/src/components/search/atomic-result/e2e/page-object';
-import {AtomicResultListPageObject as ResultList} from '@/src/components/search/atomic-result-list/e2e/page-object';
+import {ResultPageObject as Result} from '@/src/components/search/atomic-result/e2e/page-object';
+import {ResultListPageObject as ResultList} from '@/src/components/search/atomic-result-list/e2e/page-object';
 import {SearchBoxPageObject as SearchBox} from '@/src/components/search/atomic-search-box/e2e/page-object';
 import {LoadMoreResultsPageObject as LoadMore} from './page-object';
 

@@ -76,7 +76,7 @@ describe('Result Badge Component', () => {
         });
 
         it('renders the localized text', () => {
-          ResultBadgeSelectors.resultText().should('have.text', localizedText);
+          ResultBadgeSelectors.resultText().find('atomic-text').shadow().should('contain.text', localizedText);
         });
         it('should be accessible', () => {
           CommonAssertions.assertAccessibility(
@@ -96,7 +96,7 @@ describe('Result Badge Component', () => {
         });
 
         it('renders the localized text', () => {
-          ResultBadgeSelectors.text().should('have.text', localizedText);
+          ResultBadgeSelectors.text().should('contain.text', localizedText);
         });
       });
 
