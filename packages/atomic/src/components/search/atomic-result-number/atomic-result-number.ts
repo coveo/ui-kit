@@ -31,7 +31,7 @@ export class AtomicResultNumber
    * The component looks for this field in the `Result` object, then in `Result.raw` if not found.
    * This field must be present in the `fieldsToInclude` property of the `atomic-search-interface` component.
    */
-  @property({reflect: true}) field!: string;
+  @property({reflect: true}) public field!: string;
 
   @state() public bindings!: Bindings;
   @state() public error!: Error;
