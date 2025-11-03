@@ -65,10 +65,14 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
       this.schema.validate(this.currentProps);
     } catch (error) {
       const logger = this.getLogger?.();
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+
       if (logger) {
-        logger.warn((error as Error).message);
+        logger.warn(errorMessage);
       } else {
-        this.host.error = error as Error;
+        this.host.error =
+          error instanceof Error ? error : new Error(errorMessage);
       }
     } finally {
       this.previousProps = this.currentProps;

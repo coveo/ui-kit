@@ -60,6 +60,16 @@ import {
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 
 /**
+ * Valid values for the display prop.
+ */
+const VALID_DISPLAY_VALUES: ItemDisplayLayout[] = ['grid', 'list', 'table'];
+
+/**
+ * Default display value to use when the display prop is invalid.
+ */
+const DEFAULT_DISPLAY_FALLBACK: ItemDisplayLayout = 'list';
+
+/**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
  *
  * @slot default - The default slot where the result templates are inserted.
@@ -191,7 +201,7 @@ export class AtomicResultList
         density: new StringValue({
           constrainTo: ['normal', 'comfortable', 'compact'],
         }),
-        display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
+        display: new StringValue({constrainTo: VALID_DISPLAY_VALUES}),
         imageSize: new StringValue({
           constrainTo: ['small', 'large', 'icon', 'none'],
         }),
@@ -389,8 +399,9 @@ export class AtomicResultList
    * Returns the display value, falling back to 'list' if the value is invalid.
    */
   private get validatedDisplay(): ItemDisplayLayout {
-    const validDisplayValues: ItemDisplayLayout[] = ['grid', 'list', 'table'];
-    return validDisplayValues.includes(this.display) ? this.display : 'list';
+    return VALID_DISPLAY_VALUES.includes(this.display)
+      ? this.display
+      : DEFAULT_DISPLAY_FALLBACK;
   }
 
   private computeListDisplayClasses() {
