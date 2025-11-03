@@ -25,6 +25,7 @@ import {booleanConverter} from '@/src/converters/boolean-converter';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {parentNodeToString} from '@/src/utils/dom-utils';
+import '../atomic-result-text/atomic-result-text';
 /**
  * The `atomic-result` component is used internally by the `atomic-result-list` and `atomic-folded-result-list` components.
  */

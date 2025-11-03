@@ -113,6 +113,8 @@ describe('Result Printable Uri Component', () => {
       ResultPrintableUriSelectors.firstInResult()
         .find(resultTextComponent)
         .should('exist')
+        .find('atomic-text')
+        .shadow()
         .should('have.text', 'a printable uri');
 
       ResultPrintableUriSelectors.links()
