@@ -1,15 +1,19 @@
 {
   "name": "@coveo/create-atomic-component-project",
-  "version": "1.5.8",
+  "version": "1.5.10",
   "description": "Initialize a Coveo Atomic Library Project",
   "type": "module",
   "main": "index.js",
   "bin": "index.js",
   "files": [
     "index.js",
-    "template/**/*",
-    "!template/**/project.json",
-    "template/.gitignore"
+    "template/.editorconfig",
+    "template/.gitignore",
+    "template/package.json",
+    "template/readme.md",
+    "template/stencil.config.ts",
+    "template/tsconfig.json",
+    "template/src/**/*"
   ],
   "scripts": {
     "release:phase3": "pnpm --filter @coveo/ci npm-publish",

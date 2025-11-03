@@ -7,6 +7,7 @@ import {
 import {buildLogger} from '../../../app/logger.js';
 import {stateKey} from '../../../app/state-key.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import {loadConfigurationActions} from '../../../features/commerce/configuration/configuration-actions-loader.js';
 import {
   createWaitForActionMiddleware,
   createWaitForActionMiddlewareForRecommendation,
@@ -60,7 +61,12 @@ export type SSRCommerceEngineOptions = Omit<
 export type CommerceEngineDefinitionOptions<
   TControllers extends
     ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
-> = EngineDefinitionOptions<SSRCommerceEngineOptions, TControllers>;
+> = EngineDefinitionOptions<SSRCommerceEngineOptions, TControllers> & {
+  /**
+   * Callback invoked when the access token changes.
+   */
+  onAccessTokenUpdate?: (updateCallback: (token: string) => void) => void;
+};
 
 function isListingFetchCompletedAction(action: unknown): action is Action {
   return /^commerce\/productListing\/fetch\/(fulfilled|rejected)$/.test(
@@ -193,6 +199,19 @@ export const buildFactory =
         : options,
       enabledRecommendationControllers
     );
+
+    const updateEngineConfiguration = (accessToken: string) => {
+      const {updateBasicConfiguration} = loadConfigurationActions(engine);
+      engine.dispatch(
+        updateBasicConfiguration({
+          accessToken,
+        })
+      );
+    };
+
+    if (options.onAccessTokenUpdate) {
+      options.onAccessTokenUpdate(updateEngineConfiguration);
+    }
 
     const controllers = buildControllerDefinitions({
       definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,

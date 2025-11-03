@@ -1,53 +1,88 @@
-# Getting Started with Create React App
+# Headless Search with React
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This sample demonstrates how to build a custom search interface using `@coveo/headless` controllers with React. It shows how to create a fully custom UI while leveraging Coveo's headless search capabilities.
+
+## Features
+
+- Custom search interface built with Headless controllers
+- React components for search box, facets, results, and more
+- State management using Headless engine
+- Custom styling and UI components
+- Server-side rendering (SSR) support
+
+## Technology Stack
+
+- **React**: UI framework
+- **@coveo/headless**: Coveo's headless search library
+- **TypeScript**: Type-safe JavaScript
+- **Create React App**: React application setup
+
+## Prerequisites
+
+- Node.js 18+ (LTS recommended)
+- npm 9+
+
+## Getting Started
+
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+3. Open your browser to `http://localhost:3000`
+
+The page will reload when you make edits, and you'll see any lint errors in the console.
 
 ## Available Scripts
 
-In the project directory, you can run:
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run prod:ssr     # Start production server with SSR
+npm test             # Run tests in interactive watch mode
+```
 
-### `npm run dev`
+## Key Implementation Details
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Headless Controllers
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+This sample demonstrates how to:
+- Initialize a Headless search engine
+- Create and manage controllers for different search features (search box, facets, results, etc.)
+- Subscribe to state changes and update the UI
+- Implement custom UI components that interact with Headless controllers
 
-### `npm test`
+### Server-Side Rendering (SSR)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+To run the application with server-side rendering:
 
-### `npm run build`
+1. Build the app and server:
+   ```bash
+   npm run build
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. Start the SSR server:
+   ```bash
+   npm run prod:ssr
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+This approach pre-renders the search interface on the server for improved initial load performance and SEO.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Custom UI
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Unlike Atomic components, this sample gives you complete control over:
+- Component structure and styling
+- User interactions and behavior
+- Integration with your design system
+- Custom business logic
 
 ## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-# Server-Side Rendering (SSR)
-
-To start the application in SSR mode:
-
-1. Build the app and server using: `npm run build`
-2. Start the server: `npm run prod:ssr`.
+- [Coveo Headless Documentation](https://docs.coveo.com/en/headless/)
+- [Create React App Documentation](https://facebook.github.io/create-react-app/docs/getting-started)
+- [React Documentation](https://reactjs.org/)

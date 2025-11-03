@@ -20,6 +20,7 @@ export interface ContextDefinition
  * */
 export function defineContext(): ContextDefinition {
   return {
+    // TODO: KIT-5154 - Apply commerce pattern
     buildWithProps: (engine, props) => {
       if (props === undefined) {
         throw new MissingControllerProps('Context');
