@@ -387,11 +387,9 @@ describe('PlatformClient call', () => {
       const retryFn = backOffSpy.mock.calls[0][1]?.retry;
       expect(retryFn).toBeDefined();
 
-      // Should retry on 429
       const response429 = new Response(JSON.stringify({}), {status: 429});
       expect(retryFn!(response429, 1)).toBe(true);
 
-      // Should not retry on other status codes
       const response500 = new Response(JSON.stringify({}), {status: 500});
       expect(retryFn!(response500, 1)).toBe(false);
 
