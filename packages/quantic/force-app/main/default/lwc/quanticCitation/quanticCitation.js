@@ -83,29 +83,52 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
 
   disconnectedCallback() {
     this.removeBindings?.();
+    clearTimeout(this.timeout);
   }
 
   handleMouseEnter() {
+    clearTimeout(this.timeout);
     this.shouldShowTooltipAfterDelay = true;
-    // eslint-disable-next-line @lwc/lwc/no-async-operation
-    this.timeout = setTimeout(() => {
-      if (this.shouldShowTooltipAfterDelay) {
-        this.hoverStartTimestamp = Date.now();
-        this.tooltipIsDisplayed = true;
-        this.tooltipComponent.showTooltip();
-      }
-    }, debounceDurationBeforeHoverMs);
+    // Only start show timeout if tooltip isn't already displayed
+    if (!this.tooltipIsDisplayed) {
+      // eslint-disable-next-line @lwc/lwc/no-async-operation
+      this.timeout = setTimeout(() => {
+        if (this.shouldShowTooltipAfterDelay) {
+          this.hoverStartTimestamp = Date.now();
+          this.tooltipIsDisplayed = true;
+          this.tooltipComponent.showTooltip();
+        }
+      }, debounceDurationBeforeHoverMs);
+    }
   }
 
   handleMouseLeave() {
+    this.shouldShowTooltipAfterDelay = false;
     clearTimeout(this.timeout);
+    
+    // Add delay to allow moving to tooltip
+    // eslint-disable-next-line @lwc/lwc/no-async-operation
+    this.timeout = setTimeout(() => {
+      this.hideTooltip();
+    }, 100);
+  }
+
+  handleTooltipMouseEnter() {
+    clearTimeout(this.timeout); // Cancel any pending hide
+  }
+
+  handleTooltipMouseLeave() {
+    this.hideTooltip();
+  }
+
+  hideTooltip() {
     if (this.tooltipIsDisplayed) {
       const tooltipDisplayDuration = Date.now() - this.hoverStartTimestamp;
       if (tooltipDisplayDuration >= minimumTooltipDisplayDurationMs) {
         this.dispatchEvent(
           new CustomEvent('quantic__citationhover', {
             detail: {
-              citationHoverTimeMs: Date.now() - this.hoverStartTimestamp,
+              citationHoverTimeMs: tooltipDisplayDuration,
             },
             bubbles: true,
           })
@@ -114,7 +137,6 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
     }
 
     this.tooltipIsDisplayed = false;
-    this.shouldShowTooltipAfterDelay = false;
     this.tooltipComponent.hideTooltip();
   }
 
