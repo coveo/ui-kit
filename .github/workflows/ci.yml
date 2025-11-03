@@ -302,7 +302,7 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
         with:
-          skip-build: "true"
+          # Removed skip-build: "true" to avoid unnecessary duplication; setup action will handle build
       - run: pnpm run build
       - name: Identify E2E Test Files to run
         id: determine-tests
