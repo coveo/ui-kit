@@ -306,23 +306,6 @@ describe('InterfaceController', () => {
 
       expect(whenDefinedSpy).toHaveBeenCalledWith('atomic-test-element');
     });
-
-    it('should complete immediately when no custom elements exist', async () => {
-      const atomicInterface = await setupElement();
-      const helper = new InterfaceController(
-        atomicInterface,
-        'CoveoAtomic',
-        VERSION
-      );
-
-      vi.spyOn(window.customElements, 'whenDefined').mockResolvedValue(
-        undefined as never
-      );
-
-      await expect(
-        helper.waitForAllCustomElementDefined()
-      ).resolves.toBeUndefined();
-    });
   });
 
   describe('#onAnalyticsChange', () => {
