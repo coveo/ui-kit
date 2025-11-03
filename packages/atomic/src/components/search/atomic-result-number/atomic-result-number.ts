@@ -17,8 +17,7 @@ import {LightDomMixin} from '@/src/mixins/light-dom';
 
 /**
  * The `atomic-result-number` component renders the value of a numeric result field.
- *
- * @slot default - You can embed an `atomic-format-number`, `atomic-format-currency`, or `atomic-format-unit` into this component to format its value.
+ * You can embed an `atomic-format-number`, `atomic-format-currency`, or `atomic-format-unit` component inside this component to format its value.
  */
 @customElement('atomic-result-number')
 @bindings()
@@ -39,9 +38,6 @@ export class AtomicResultNumber
   @state() private formatter: NumberFormatter = defaultNumberFormatter;
 
   private resultContext = createResultContextController(this);
-  private get result(): Result {
-    return this.resultContext.item as Result;
-  }
 
   constructor() {
     super();
@@ -126,6 +122,10 @@ export class AtomicResultNumber
     } catch (error) {
       this.error = error as Error;
     }
+  }
+
+  private get result(): Result {
+    return this.resultContext.item as Result;
   }
 }
 
