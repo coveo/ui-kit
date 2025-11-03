@@ -53,7 +53,6 @@ runs:
         name: ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo
         path: .turbo
     - run: pnpm install --frozen-lockfile --prefer-offline
-      if: steps.pnpm-cache.outputs.cache-hit != 'true'
       shell: bash
     - run: pnpm run build
       if: inputs.skip-build != 'true'
