@@ -71,6 +71,15 @@ export class PlatformClient {
 
     try {
       const response = await backOff(request, {
+        // Optimized for Search API per-second rate limiting
+        // Wait at least 1 second before first retry to ensure we're in a new rate limit window
+        startingDelay: 1000,
+        // Use constant delay (no exponential growth) since rate limit resets every second
+        timeMultiple: 1,
+        // Cap maximum delay at 1 second to match rate limit window
+        maxDelay: 1000,
+        // Add jitter to prevent thundering herd when multiple requests retry simultaneously
+        jitter: 'full',
         retry: (e: Response) => {
           const shouldRetry = e && isThrottled(e.status);
           shouldRetry && logger.info('Platform retrying request');
