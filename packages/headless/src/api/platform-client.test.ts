@@ -340,26 +340,6 @@ describe('PlatformClient call', () => {
   });
 
   describe('retry configuration for 429 responses', () => {
-    it('should configure backOff with optimized settings for per-second rate limiting', async () => {
-      const backOffSpy = vi.spyOn(BackOff, 'backOff');
-      mockFetch.mockReturnValueOnce(
-        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
-      );
-
-      await platformCall();
-
-      expect(backOffSpy).toHaveBeenCalledWith(
-        expect.any(Function),
-        expect.objectContaining({
-          startingDelay: 1000,
-          timeMultiple: 1,
-          maxDelay: 1000,
-          jitter: 'full',
-          retry: expect.any(Function),
-        })
-      );
-    });
-
     it.each([
       {
         option: 'startingDelay',
