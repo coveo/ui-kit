@@ -7,7 +7,7 @@ import {
 import {setStorybookHelpersConfig} from '@wc-toolkit/storybook-helpers';
 import {render} from 'lit';
 import {initialize, mswLoader} from 'msw-storybook-addon';
-import {within as withinShadow} from 'shadow-dom-testing-library';
+import {within} from 'shadow-dom-testing-library';
 import customElements from '../custom-elements.json';
 import {defineCustomElements} from '../dist/atomic/loader/index.js';
 
@@ -132,7 +132,7 @@ function disableAnalytics(container, selectors) {
 const preview: Preview = {
   // Augment the canvas with the shadow DOM queries
   beforeEach({canvasElement, canvas}) {
-    Object.assign(canvas, {...withinShadow(canvasElement)});
+    Object.assign(canvas, {...within(canvasElement)});
   },
   globals: {
     a11y: {manual: true},
@@ -142,8 +142,6 @@ const preview: Preview = {
 export default preview;
 
 // Extend TypeScript types for safety
-export type ShadowQueries = ReturnType<typeof withinShadow>;
-
 declare module '@storybook/test' {
-  interface Canvas extends ShadowQueries {}
+  interface Canvas extends ReturnType<typeof within> {}
 }
