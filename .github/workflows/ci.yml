@@ -301,9 +301,6 @@ jobs:
       - run: git branch main origin/main
         if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
-        with:
-          # Removed skip-build: "true" to avoid unnecessary duplication; setup action will handle build
-      - run: pnpm run build
       - name: Identify E2E Test Files to run
         id: determine-tests
         run: |
@@ -340,9 +337,6 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-        with:
-          skip-build: "true"
-      - run: pnpm run build
       - uses: ./.github/actions/playwright-atomic
         with:
           shardIndex: ${{ matrix.shardIndex }}
@@ -363,9 +357,6 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-        with:
-          skip-build: "true"
-      - run: pnpm run build
       - name: Merge Playwright reports
         uses: ./.github/actions/merge-playwright-reports
         with:
@@ -550,9 +541,6 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-        with:
-          skip-build: "true"
-      - run: pnpm run build
       - uses: ./.github/actions/playwright-atomic-hosted-pages
   playwright-headless-ssr-commerce-nextjs-test:
     name: "Run e2e tests on Headless SSR Commerce NextJS"
@@ -570,9 +558,6 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-        with:
-          skip-build: "true"
-      - run: pnpm run build
       - uses: ./.github/actions/playwright-headless-ssr-commerce-nextjs
   cypress-atomic-insight-panel-test:
     name: "Run e2e tests on Atomic insight panel"
