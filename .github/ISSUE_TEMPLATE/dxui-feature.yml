@@ -1,0 +1,54 @@
+name: DXUI Feature
+description: Request a new feature for the DXUI team
+title: '[DXUI Feature]: '
+type: feature
+projects: ['coveo/21']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This template is for DXUI team feature requests. Issues created with this template will automatically:
+        - Be assigned to the DXUI project board
+        - Create a corresponding Jira ticket in the KIT project
+        - Track status updates through the issue lifecycle
+
+        ---
+
+        Please provide clear information about the desired feature.
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Feature Description
+      description: What feature would you like to see implemented?
+      placeholder: Describe the desired functionality and its purpose
+    validations:
+      required: true
+  - type: textarea
+    id: user-story
+    attributes:
+      label: User Story
+      description: Who would benefit and how?
+      placeholder: |
+        As a [user type]
+        I want [functionality]
+        So that [benefit]
+    validations:
+      required: true
+  - type: textarea
+    id: implementation-notes
+    attributes:
+      label: Implementation Notes
+      description: Any technical considerations or suggestions for implementation
+      placeholder: Include any ideas about how this could be implemented or technical constraints
+  - type: input
+    id: jira-ticket
+    attributes:
+      label: Jira Ticket
+      description: Leave empty for auto-creation, or specify existing ticket (e.g., KIT-1234)
+      placeholder: KIT-1234 (optional)
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        
+        **Note:** If you leave the Jira Ticket field empty, a ticket will be automatically created in the KIT project when this issue is created.
