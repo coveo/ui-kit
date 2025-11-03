@@ -360,53 +360,41 @@ describe('PlatformClient call', () => {
       );
     });
 
-    it('should use startingDelay of 1000ms to wait for new rate limit window', async () => {
-      const backOffSpy = vi.spyOn(BackOff, 'backOff');
-      mockFetch.mockReturnValueOnce(
-        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
-      );
+    it.each([
+      {
+        option: 'startingDelay',
+        expectedValue: 1000,
+        description: 'to wait for new rate limit window',
+      },
+      {
+        option: 'timeMultiple',
+        expectedValue: 1,
+        description: 'for constant delay between retries',
+      },
+      {
+        option: 'maxDelay',
+        expectedValue: 1000,
+        description: 'to match rate limit window',
+      },
+      {
+        option: 'jitter',
+        expectedValue: 'full',
+        description: 'to prevent thundering herd',
+      },
+    ])(
+      'should use $option of $expectedValue $description',
+      async ({option, expectedValue}) => {
+        const backOffSpy = vi.spyOn(BackOff, 'backOff');
+        mockFetch.mockReturnValueOnce(
+          Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
+        );
 
-      await platformCall();
+        await platformCall();
 
-      const options = backOffSpy.mock.calls[0][1];
-      expect(options?.startingDelay).toBe(1000);
-    });
-
-    it('should use timeMultiple of 1 for constant delay between retries', async () => {
-      const backOffSpy = vi.spyOn(BackOff, 'backOff');
-      mockFetch.mockReturnValueOnce(
-        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
-      );
-
-      await platformCall();
-
-      const options = backOffSpy.mock.calls[0][1];
-      expect(options?.timeMultiple).toBe(1);
-    });
-
-    it('should cap maxDelay at 1000ms to match rate limit window', async () => {
-      const backOffSpy = vi.spyOn(BackOff, 'backOff');
-      mockFetch.mockReturnValueOnce(
-        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
-      );
-
-      await platformCall();
-
-      const options = backOffSpy.mock.calls[0][1];
-      expect(options?.maxDelay).toBe(1000);
-    });
-
-    it('should enable full jitter to prevent thundering herd', async () => {
-      const backOffSpy = vi.spyOn(BackOff, 'backOff');
-      mockFetch.mockReturnValueOnce(
-        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
-      );
-
-      await platformCall();
-
-      const options = backOffSpy.mock.calls[0][1];
-      expect(options?.jitter).toBe('full');
-    });
+        const options = backOffSpy.mock.calls[0][1];
+        expect(options?.[option as keyof typeof options]).toBe(expectedValue);
+      }
+    );
 
     it('should retry only on 429 status code', async () => {
       const backOffSpy = vi.spyOn(BackOff, 'backOff');
