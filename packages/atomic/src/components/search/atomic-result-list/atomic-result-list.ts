@@ -203,7 +203,8 @@ export class AtomicResultList
           each: new StringValue({}),
           required: false,
         }),
-      })
+      }),
+      () => this.bindings?.engine.logger
     );
   }
 
@@ -317,15 +318,15 @@ export class AtomicResultList
                 renderDisplayWrapper({
                   props: {
                     listClasses: resultClasses,
-                    display: this.display,
+                    display: this.validatedDisplay,
                   },
                 })(
                   html`${when(
-                    this.display === 'grid',
+                    this.validatedDisplay === 'grid',
                     () => this.renderGrid(),
                     () =>
                       html`${when(
-                        this.display === 'list',
+                        this.validatedDisplay === 'list',
                         () => this.renderList(),
                         () => this.renderTable()
                       )}`
@@ -334,12 +335,12 @@ export class AtomicResultList
               )}
               ${when(!this.isEveryResultReady, () =>
                 renderDisplayWrapper({
-                  props: {listClasses, display: this.display},
+                  props: {listClasses, display: this.validatedDisplay},
                 })(
                   renderItemPlaceholders({
                     props: {
                       density: this.density,
-                      display: this.display,
+                      display: this.validatedDisplay,
                       imageSize: this.imageSize,
                       numberOfPlaceholders:
                         this.resultsPerPageState.numberOfResults || 10,
@@ -384,11 +385,19 @@ export class AtomicResultList
     });
   }
 
+  /**
+   * Returns the display value, falling back to 'list' if the value is invalid.
+   */
+  private get validatedDisplay(): ItemDisplayLayout {
+    const validDisplayValues: ItemDisplayLayout[] = ['grid', 'list', 'table'];
+    return validDisplayValues.includes(this.display) ? this.display : 'list';
+  }
+
   private computeListDisplayClasses() {
     const displayPlaceholders = !(this.isAppLoaded && this.isEveryResultReady);
 
     return getItemListDisplayClasses(
-      this.display,
+      this.validatedDisplay,
       this.density,
       this.imageSize,
       this.resultListState?.isLoading,
@@ -416,7 +425,7 @@ export class AtomicResultList
           html`<atomic-result
             .content=${this.getContent(result)}
             .density=${this.density}
-            .display=${this.display}
+            .display=${this.validatedDisplay}
             .imageSize=${this.imageSize}
             .interactiveResult=${this.getInteractiveResult(result)}
             .linkContent=${this.getLinkContent(result)}
@@ -443,7 +452,7 @@ export class AtomicResultList
          )}
             .content=${this.getContent(result)}
             .density=${this.density}
-            .display=${this.display}
+            .display=${this.validatedDisplay}
             .imageSize=${this.imageSize}
             .interactiveResult=${this.getInteractiveResult(result)}
             .linkContent=${this.getLinkContent(result)}
@@ -496,7 +505,7 @@ export class AtomicResultList
                     return html`<atomic-result
                       .content=${content}
                       .density=${this.density}
-                      .display=${this.display}
+                      .display=${this.validatedDisplay}
                       .imageSize=${this.imageSize}
                       .interactiveResult=${this.getInteractiveResult(result)}
                        .linkContent=${this.getLinkContent(result)}
@@ -524,7 +533,7 @@ export class AtomicResultList
   }
 
   private getLinkContent(result: Result) {
-    return this.display === 'grid'
+    return this.validatedDisplay === 'grid'
       ? this.resultTemplateProvider.getLinkTemplateContent(result)
       : this.resultTemplateProvider.getEmptyLinkTemplateContent();
   }

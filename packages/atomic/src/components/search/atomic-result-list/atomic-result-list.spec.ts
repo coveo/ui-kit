@@ -91,7 +91,7 @@ describe('atomic-result-list', () => {
       invalidValue: 'invalid',
     },
   ])(
-    'should set error when #$prop is invalid',
+    'should not set error when #$prop is invalid (should log warning instead)',
     async ({prop, invalidValue}) => {
       const element = await setupElement();
 
@@ -101,8 +101,42 @@ describe('atomic-result-list', () => {
       (element as any)[prop] = invalidValue;
       await element.updateComplete;
 
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+      expect(element.error).toBeUndefined();
+    }
+  );
+
+  it.each<{
+    prop: 'display';
+    invalidValue: string;
+  }>([
+    {
+      prop: 'display',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'display',
+      invalidValue: 'List',
+    },
+    {
+      prop: 'display',
+      invalidValue: 'GRID',
+    },
+  ])(
+    'should fall back to list display when #$prop is $invalidValue',
+    async ({prop, invalidValue}) => {
+      const element = await setupElement();
+
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
+
+      // Check that validatedDisplay returns 'list'
+      // biome-ignore lint/suspicious/noExplicitAny: accessing private property for testing
+      expect((element as any).validatedDisplay).toBe('list');
+
+      // Verify that the component renders in list mode
+      const resultListParts = getParts(element).gridOrList.resultList;
+      expect(resultListParts).toHaveLength(1);
     }
   );
 
@@ -127,7 +161,7 @@ describe('atomic-result-list', () => {
       invalidValue: 'invalid',
     },
   ])(
-    'should set error when valid #$prop is updated to an invalid value',
+    'should not set error when valid #$prop is updated to an invalid value (should log warning instead)',
     async ({prop, validValue, invalidValue}) => {
       const element = await setupElement({[prop]: validValue});
 
@@ -137,8 +171,7 @@ describe('atomic-result-list', () => {
       (element as any)[prop] = invalidValue;
       await element.updateComplete;
 
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+      expect(element.error).toBeUndefined();
     }
   );
 
