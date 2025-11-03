@@ -130,7 +130,6 @@ function disableAnalytics(container, selectors) {
 }
 
 const preview: Preview = {
-  // Augment the canvas with the shadow DOM queries
   beforeEach({canvasElement, canvas}) {
     Object.assign(canvas, {...within(canvasElement)});
   },
@@ -141,7 +140,6 @@ const preview: Preview = {
 
 export default preview;
 
-// Extend TypeScript types for safety
 declare module '@storybook/test' {
   interface Canvas extends ReturnType<typeof within> {}
 }
