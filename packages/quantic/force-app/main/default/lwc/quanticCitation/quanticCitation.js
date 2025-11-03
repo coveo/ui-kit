@@ -45,6 +45,10 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   shouldShowTooltipAfterDelay = false;
   /** @type {boolean} */
   tooltipIsDisplayed = false;
+  /** @type {boolean} */
+  isHoveringCitation = false;
+  /** @type {boolean} */
+  isHoveringTooltip = false;
   /** @type {function} */
   removeBindings;
   /** @type {boolean} */
@@ -86,11 +90,31 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
     clearTimeout(this.timeout);
   }
 
-  handleMouseEnter() {
-    clearTimeout(this.timeout);
-    this.shouldShowTooltipAfterDelay = true;
-    // Only start show timeout if tooltip isn't already displayed
+  handleCitationMouseEnter() {
+    this.isHoveringCitation = true;
+    clearTimeout(this.timeout); // Cancel any pending hide
+    this.showTooltipIfNeeded();
+  }
+
+  handleCitationMouseLeave() {
+    this.isHoveringCitation = false;
+    this.scheduleHideIfNeeded();
+  }
+
+  handleTooltipMouseEnter() {
+    this.isHoveringTooltip = true;
+    clearTimeout(this.timeout); // Cancel any pending hide or show
+  }
+
+  handleTooltipMouseLeave() {
+    this.isHoveringTooltip = false;
+    this.scheduleHideIfNeeded();
+  }
+
+  showTooltipIfNeeded() {
     if (!this.tooltipIsDisplayed) {
+      this.shouldShowTooltipAfterDelay = true;
+      
       // eslint-disable-next-line @lwc/lwc/no-async-operation
       this.timeout = setTimeout(() => {
         if (this.shouldShowTooltipAfterDelay) {
@@ -102,42 +126,32 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
     }
   }
 
-  handleMouseLeave() {
-    this.shouldShowTooltipAfterDelay = false;
-    clearTimeout(this.timeout);
-    
-    // Add delay to allow moving to tooltip
+  scheduleHideIfNeeded() {
+    // Use a longer delay to ensure we're really leaving the area
     // eslint-disable-next-line @lwc/lwc/no-async-operation
     this.timeout = setTimeout(() => {
-      this.hideTooltip();
-    }, 100);
-  }
+      // Only hide if we're not hovering either element
+      if (!this.isHoveringCitation && !this.isHoveringTooltip) {
+        this.shouldShowTooltipAfterDelay = false;
+        
+        if (this.tooltipIsDisplayed) {
+          const tooltipDisplayDuration = Date.now() - this.hoverStartTimestamp;
+          if (tooltipDisplayDuration >= minimumTooltipDisplayDurationMs) {
+            this.dispatchEvent(
+              new CustomEvent('quantic__citationhover', {
+                detail: {
+                  citationHoverTimeMs: tooltipDisplayDuration,
+                },
+                bubbles: true,
+              })
+            );
+          }
+        }
 
-  handleTooltipMouseEnter() {
-    clearTimeout(this.timeout); // Cancel any pending hide
-  }
-
-  handleTooltipMouseLeave() {
-    this.hideTooltip();
-  }
-
-  hideTooltip() {
-    if (this.tooltipIsDisplayed) {
-      const tooltipDisplayDuration = Date.now() - this.hoverStartTimestamp;
-      if (tooltipDisplayDuration >= minimumTooltipDisplayDurationMs) {
-        this.dispatchEvent(
-          new CustomEvent('quantic__citationhover', {
-            detail: {
-              citationHoverTimeMs: tooltipDisplayDuration,
-            },
-            bubbles: true,
-          })
-        );
+        this.tooltipIsDisplayed = false;
+        this.tooltipComponent.hideTooltip();
       }
-    }
-
-    this.tooltipIsDisplayed = false;
-    this.tooltipComponent.hideTooltip();
+    }, 200); // Increased delay to handle cursor movement
   }
 
   /**

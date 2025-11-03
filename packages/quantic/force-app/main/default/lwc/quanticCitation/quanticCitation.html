@@ -1,8 +1,6 @@
 <template>
   <li
     class="citation slds-m-right_xx-small slds-m-vertical_xx-small slds-is-relative"
-    onmouseenter={handleMouseEnter}
-    onmouseleave={handleMouseLeave}
   >
     <a
       class="citation__link slds-badge slds-badge_lightest slds-align_absolute-center slds-text-link_reset slds-p-left_xx-small slds-p-right_x-small"
@@ -10,6 +8,8 @@
       href={hrefValue}
       target="_blank"
       rel="noopener"
+      onmouseenter={handleCitationMouseEnter}
+      onmouseleave={handleCitationMouseLeave}
       onclick={handleClick}
     >
       <p
