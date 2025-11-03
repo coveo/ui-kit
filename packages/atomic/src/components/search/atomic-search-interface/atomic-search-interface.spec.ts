@@ -166,6 +166,11 @@ describe('atomic-search-interface', () => {
         '@coveo/atomic': '1.0.0',
       },
     });
+
+    vi.spyOn(
+      InterfaceController.prototype,
+      'awaitComponentsInitialization'
+    ).mockResolvedValue(undefined);
   });
 
   describe('#constructor (when created)', () => {
@@ -368,6 +373,20 @@ describe('atomic-search-interface', () => {
 
       expect(childElement.initialize).toHaveBeenCalledOnce();
       expect(descendantElement.initialize).toHaveBeenCalledOnce();
+    });
+
+    it('should wait for all components initialization to complete', async () => {
+      const element = await setupElement();
+      await addChildElement(element);
+
+      const awaitComponentsInitializationSpy = vi.spyOn(
+        InterfaceController.prototype,
+        'awaitComponentsInitialization'
+      );
+
+      await callTestedInitMethod(element);
+
+      expect(awaitComponentsInitializationSpy).toHaveBeenCalledOnce();
     });
 
     it('should call the #markParentAsReady util function with the element as an argument', async () => {

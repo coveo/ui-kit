@@ -6,6 +6,7 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
+import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -14,7 +15,7 @@ import type {Bindings} from '../atomic-search-interface/atomic-search-interface'
 @customElement('atomic-text')
 @bindings()
 export class AtomicText
-  extends LitElement
+  extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
   @state() public bindings!: Bindings;

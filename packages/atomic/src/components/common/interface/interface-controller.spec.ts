@@ -284,6 +284,112 @@ describe('InterfaceController', () => {
           atomicInterface.bindings
         );
       });
+
+      it('should collect initializationPromise from components during initialization', async () => {
+        const atomicInterface = await setupElement();
+        const helper = new InterfaceController(
+          atomicInterface,
+          'CoveoAtomic',
+          VERSION
+        );
+        const mockPromise = Promise.resolve();
+        const hangingEvent = {
+          preventDefault: vi.fn(),
+          stopPropagation: vi.fn(),
+          detail: vi.fn(),
+          target: {
+            initializationPromise: mockPromise,
+          },
+        };
+        helper.onComponentInitializing(hangingEvent as never);
+
+        await helper.onInitialization(vi.fn());
+
+        expect(hangingEvent.detail).toHaveBeenCalledWith(
+          atomicInterface.bindings
+        );
+      });
+    });
+  });
+
+  describe('#awaitComponentsInitialization', () => {
+    it('should wait for all custom elements to be defined', async () => {
+      const atomicInterface = await setupElement();
+      const customElement = document.createElement('atomic-test-element');
+      atomicInterface.appendChild(customElement);
+
+      const helper = new InterfaceController(
+        atomicInterface,
+        'CoveoAtomic',
+        VERSION
+      );
+      const whenDefinedSpy = vi.spyOn(window.customElements, 'whenDefined');
+
+      await helper.awaitComponentsInitialization();
+
+      expect(whenDefinedSpy).toHaveBeenCalledWith('atomic-test-element');
+    });
+
+    it('should wait for component initialization promises', async () => {
+      const atomicInterface = await setupElement();
+      let resolvePromise: () => void;
+      const mockPromise = new Promise<void>((resolve) => {
+        resolvePromise = resolve;
+      });
+
+      const customElement = document.createElement(
+        'atomic-test-element'
+      ) as HTMLElement & {initializationPromise?: Promise<void>};
+      customElement.initializationPromise = mockPromise;
+      atomicInterface.appendChild(customElement);
+
+      const helper = new InterfaceController(
+        atomicInterface,
+        'CoveoAtomic',
+        VERSION
+      );
+
+      const awaitPromise = helper.awaitComponentsInitialization();
+      let completed = false;
+      awaitPromise.then(() => {
+        completed = true;
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      expect(completed).toBe(false);
+
+      resolvePromise!();
+      await awaitPromise;
+      expect(completed).toBe(true);
+    });
+
+    it('should complete immediately when no custom elements exist', async () => {
+      const atomicInterface = await setupElement();
+      const helper = new InterfaceController(
+        atomicInterface,
+        'CoveoAtomic',
+        VERSION
+      );
+
+      await expect(
+        helper.awaitComponentsInitialization()
+      ).resolves.toBeUndefined();
+    });
+
+    it('should handle components without initializationPromise', async () => {
+      const atomicInterface = await setupElement();
+      const customElement = document.createElement('atomic-test-element');
+      atomicInterface.appendChild(customElement);
+
+      const helper = new InterfaceController(
+        atomicInterface,
+        'CoveoAtomic',
+        VERSION
+      );
+
+      await expect(
+        helper.awaitComponentsInitialization()
+      ).resolves.toBeUndefined();
     });
   });
 

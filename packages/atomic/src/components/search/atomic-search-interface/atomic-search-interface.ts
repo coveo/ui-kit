@@ -629,6 +629,7 @@ export class AtomicSearchInterface
     this.searchHub = this.engine!.state.searchHub;
     this.initSearchStatus();
     await this.getUpdateComplete();
+    await this.interfaceController.awaitComponentsInitialization();
     this.initUrlManager();
     this.initialized = true;
   }
