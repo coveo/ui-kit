@@ -198,7 +198,7 @@ describe('c-quantic-citation', () => {
       await citationLink.dispatchEvent(
         new CustomEvent('mouseenter', {bubbles: true})
       );
-      jest.advanceTimersByTime(1200);
+      jest.advanceTimersByTime(1000);
       await citationLink.dispatchEvent(
         new CustomEvent('mouseleave', {bubbles: true})
       );
@@ -207,7 +207,7 @@ describe('c-quantic-citation', () => {
 
       expect(functionsMocks.eventHandler).toHaveBeenCalledTimes(1);
       expect(functionsMocks.eventHandler).toHaveBeenCalledWith({
-        citationHoverTimeMs: 1200,
+        citationHoverTimeMs: 1000,
       });
     });
 
