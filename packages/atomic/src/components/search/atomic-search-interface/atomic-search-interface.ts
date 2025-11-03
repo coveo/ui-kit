@@ -628,8 +628,9 @@ export class AtomicSearchInterface
     this.pipeline = this.engine!.state.pipeline;
     this.searchHub = this.engine!.state.searchHub;
     this.initSearchStatus();
+    await this.interfaceController.waitForAllCustomElementDefined();
     await this.getUpdateComplete();
-    await this.interfaceController.awaitComponentsInitialization();
+
     this.initUrlManager();
     this.initialized = true;
   }

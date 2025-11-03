@@ -169,7 +169,7 @@ describe('atomic-search-interface', () => {
 
     vi.spyOn(
       InterfaceController.prototype,
-      'awaitComponentsInitialization'
+      'waitForAllCustomElementDefined'
     ).mockResolvedValue(undefined);
   });
 
@@ -375,18 +375,18 @@ describe('atomic-search-interface', () => {
       expect(descendantElement.initialize).toHaveBeenCalledOnce();
     });
 
-    it('should wait for all components initialization to complete', async () => {
+    it('should wait for all custom components to be defined', async () => {
       const element = await setupElement();
       await addChildElement(element);
 
-      const awaitComponentsInitializationSpy = vi.spyOn(
+      const awaitComponentsDefinitionSpy = vi.spyOn(
         InterfaceController.prototype,
-        'awaitComponentsInitialization'
+        'waitForAllCustomElementDefined'
       );
 
       await callTestedInitMethod(element);
 
-      expect(awaitComponentsInitializationSpy).toHaveBeenCalledOnce();
+      expect(awaitComponentsDefinitionSpy).toHaveBeenCalledOnce();
     });
 
     it('should call the #markParentAsReady util function with the element as an argument', async () => {

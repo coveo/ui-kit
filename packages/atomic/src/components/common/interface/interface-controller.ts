@@ -140,38 +140,20 @@ export class InterfaceController<EngineType extends AnyEngineType>
   }
 
   /**
-   * Waits for all child components to complete their initialization.
-   * This includes:
-   * 1. Waiting for components to be defined by the autoloader
-   * 2. Waiting for any async initialize() methods to complete
+   * Waits for all child custom elements to be defined by the autoloader.
    *
-   * @returns A promise that resolves when all component initializations are complete.
+   * @returns A promise that resolves when all custom elements are defined.
    */
-  public async awaitComponentsInitialization(): Promise<void> {
+  public async waitForAllCustomElementDefined(): Promise<void> {
     const customElements = Array.from(this.host.querySelectorAll('*')).filter(
       (el) => el.tagName.includes('-')
     );
 
-    const definitionPromises = customElements.map((el) =>
-      window.customElements.whenDefined(el.tagName.toLowerCase())
+    await Promise.all(
+      customElements.map((el) =>
+        window.customElements.whenDefined(el.tagName.toLowerCase())
+      )
     );
-
-    await Promise.all(definitionPromises);
-
-    const initPromises = customElements
-      .map((el) => {
-        const component = el as HTMLElement & {
-          initializationPromise?: Promise<void>;
-        };
-        return component.initializationPromise;
-      })
-      .filter((promise): promise is Promise<void> => promise !== undefined);
-
-    if (initPromises.length === 0) {
-      return;
-    }
-
-    await Promise.all(initPromises);
   }
 
   private initAriaLive() {

@@ -287,7 +287,7 @@ describe('InterfaceController', () => {
     });
   });
 
-  describe('#awaitComponentsInitialization', () => {
+  describe('#waitForAllCustomElementDefined', () => {
     it('should wait for all custom elements to be defined', async () => {
       const atomicInterface = await setupElement();
       const customElement = document.createElement('atomic-test-element');
@@ -302,46 +302,9 @@ describe('InterfaceController', () => {
         .spyOn(window.customElements, 'whenDefined')
         .mockResolvedValue(undefined as never);
 
-      await helper.awaitComponentsInitialization();
+      await helper.waitForAllCustomElementDefined();
 
       expect(whenDefinedSpy).toHaveBeenCalledWith('atomic-test-element');
-    });
-
-    it('should wait for component initialization promises', async () => {
-      const atomicInterface = await setupElement();
-      let resolvePromise: () => void;
-      const mockPromise = new Promise<void>((resolve) => {
-        resolvePromise = resolve;
-      });
-
-      const customElement = document.createElement(
-        'atomic-test-element'
-      ) as HTMLElement & {initializationPromise?: Promise<void>};
-      customElement.initializationPromise = mockPromise;
-      atomicInterface.appendChild(customElement);
-
-      const helper = new InterfaceController(
-        atomicInterface,
-        'CoveoAtomic',
-        VERSION
-      );
-
-      vi.spyOn(window.customElements, 'whenDefined').mockResolvedValue(
-        undefined as never
-      );
-
-      const awaitPromise = helper.awaitComponentsInitialization();
-      let completed = false;
-      awaitPromise.then(() => {
-        completed = true;
-      });
-
-      await new Promise((resolve) => setTimeout(resolve, 10));
-      expect(completed).toBe(false);
-
-      resolvePromise!();
-      await awaitPromise;
-      expect(completed).toBe(true);
     });
 
     it('should complete immediately when no custom elements exist', async () => {
@@ -357,27 +320,7 @@ describe('InterfaceController', () => {
       );
 
       await expect(
-        helper.awaitComponentsInitialization()
-      ).resolves.toBeUndefined();
-    });
-
-    it('should handle components without initializationPromise', async () => {
-      const atomicInterface = await setupElement();
-      const customElement = document.createElement('atomic-test-element');
-      atomicInterface.appendChild(customElement);
-
-      const helper = new InterfaceController(
-        atomicInterface,
-        'CoveoAtomic',
-        VERSION
-      );
-
-      vi.spyOn(window.customElements, 'whenDefined').mockResolvedValue(
-        undefined as never
-      );
-
-      await expect(
-        helper.awaitComponentsInitialization()
+        helper.waitForAllCustomElementDefined()
       ).resolves.toBeUndefined();
     });
   });
