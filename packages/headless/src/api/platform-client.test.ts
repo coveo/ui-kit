@@ -388,7 +388,7 @@ describe('PlatformClient call', () => {
       expect(options?.jitter).toBe('full');
     });
 
-    it('should retry only on 429 status code', async () => {
+    it('should retry on 429', async () => {
       const backOffSpy = vi.spyOn(BackOff, 'backOff');
       mockFetch.mockReturnValueOnce(
         Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
@@ -401,9 +401,33 @@ describe('PlatformClient call', () => {
 
       const response429 = new Response(JSON.stringify({}), {status: 429});
       expect(retryFn!(response429, 1)).toBe(true);
+    });
+
+    it('should not retry on 500', async () => {
+      const backOffSpy = vi.spyOn(BackOff, 'backOff');
+      mockFetch.mockReturnValueOnce(
+        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
+      );
+
+      await platformCall();
+
+      const retryFn = backOffSpy.mock.calls[0][1]?.retry;
+      expect(retryFn).toBeDefined();
 
       const response500 = new Response(JSON.stringify({}), {status: 500});
       expect(retryFn!(response500, 1)).toBe(false);
+    });
+
+    it('should not retry on 200', async () => {
+      const backOffSpy = vi.spyOn(BackOff, 'backOff');
+      mockFetch.mockReturnValueOnce(
+        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
+      );
+
+      await platformCall();
+
+      const retryFn = backOffSpy.mock.calls[0][1]?.retry;
+      expect(retryFn).toBeDefined();
 
       const response200 = new Response(JSON.stringify({}), {status: 200});
       expect(retryFn!(response200, 1)).toBe(false);
