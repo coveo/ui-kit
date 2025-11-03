@@ -10,7 +10,7 @@ import './atomic-result-number';
 import type {i18n} from 'i18next';
 import {customElement} from 'lit/decorators.js';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {defaultNumberFormatter} from '../../common/formats/format-common';
+import {defaultNumberFormatter} from '@/src/components/common/formats/format-common';
 
 vi.mock('@coveo/headless', async () => {
   const actual =
