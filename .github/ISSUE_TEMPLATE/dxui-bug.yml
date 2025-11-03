@@ -1,0 +1,54 @@
+name: DXUI Bug
+description: Report a bug for the DXUI team
+title: '[DXUI Bug]: '
+type: bug
+projects: ['coveo/21']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This template is for DXUI team bug reports. Issues created with this template will automatically:
+        - Be assigned to the DXUI project board
+        - Create a corresponding Jira ticket in the KIT project
+        - Track status updates through the issue lifecycle
+
+        ---
+
+        Please provide clear information to help reproduce and fix this bug.
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Bug Description
+      description: What is the bug and what should happen instead?
+      placeholder: Describe the issue, expected behavior, and actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this issue?
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+    validations:
+      required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Screenshots, logs, environment details, or other relevant information
+      placeholder: Add any other context about the problem here
+  - type: input
+    id: jira-ticket
+    attributes:
+      label: Jira Ticket
+      description: Leave empty for auto-creation, or specify existing ticket (e.g., KIT-1234)
+      placeholder: KIT-1234 (optional)
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        
+        **Note:** If you leave the Jira Ticket field empty, a ticket will be automatically created in the KIT project when this issue is created.

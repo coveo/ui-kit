@@ -444,5 +444,3 @@ After completing migration, generate execution summary:
 **4. Inform user** about summary location
 
 **5. Mark complete** only after file created and user informed.
-
-```

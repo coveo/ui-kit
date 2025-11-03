@@ -1,4 +1,4 @@
-import type {Result} from '@coveo/headless';
+import type {InteractiveResult, Result} from '@coveo/headless';
 import {html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces.js';
@@ -9,7 +9,6 @@ import {
   renderInAtomicSearchInterface,
   defaultBindings as searchDefaultBindings,
 } from './atomic-search-interface-fixture.js';
-
 /**
  * Test fixture that provides result context to child result template components.
  * Mimics the behavior of atomic-result by responding to atomic/resolveResult events.
@@ -19,6 +18,9 @@ import {
 export class FixtureAtomicResult extends LitElement {
   @state() template!: TemplateResult;
   @property({type: Object}) result?: Result;
+  @property({type: Object}) content?: ParentNode;
+  @property({type: Object, attribute: 'interactive-result'})
+  interactiveResult?: InteractiveResult;
 
   get ready() {
     return Boolean(this.template);
@@ -31,11 +33,19 @@ export class FixtureAtomicResult extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('atomic/resolveResult', this.handleResolveResult);
+    this.addEventListener(
+      'atomic/resolveInteractiveResult',
+      this.handleResolveInteractiveResult
+    );
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('atomic/resolveResult', this.handleResolveResult);
+    this.removeEventListener(
+      'atomic/resolveInteractiveResult',
+      this.handleResolveInteractiveResult
+    );
   }
 
   private handleResolveResult = (event: Event) => {
@@ -46,6 +56,19 @@ export class FixtureAtomicResult extends LitElement {
     customEvent.stopPropagation();
     if (this.result && typeof customEvent.detail === 'function') {
       customEvent.detail(this.result as unknown as Record<string, unknown>);
+    }
+  };
+
+  private handleResolveInteractiveResult = (event: Event) => {
+    const customEvent = event as CustomEvent<
+      (interactiveResult: Record<string, unknown>) => void
+    >;
+    customEvent.preventDefault();
+    customEvent.stopPropagation();
+    if (this.interactiveResult && typeof customEvent.detail === 'function') {
+      customEvent.detail(
+        this.interactiveResult as unknown as Record<string, unknown>
+      );
     }
   };
 
@@ -82,6 +105,7 @@ export function renderInAtomicResult<T extends LitElement>({
   selector,
   bindings,
   result,
+  interactiveResult,
 }: {
   template: TemplateResult;
   selector?: string;
@@ -89,6 +113,7 @@ export function renderInAtomicResult<T extends LitElement>({
     | Partial<Bindings>
     | ((bindings: MinimalBindings) => MinimalBindings);
   result?: Result;
+  interactiveResult?: InteractiveResult;
 }): Promise<{
   element: T;
   atomicResult: FixtureAtomicResult;
@@ -100,6 +125,7 @@ export async function renderInAtomicResult<T extends LitElement>({
   selector,
   bindings,
   result,
+  interactiveResult,
 }: {
   template: TemplateResult;
   selector?: string | never;
@@ -107,13 +133,14 @@ export async function renderInAtomicResult<T extends LitElement>({
     | Partial<Bindings>
     | ((bindings: MinimalBindings) => MinimalBindings);
   result?: Result;
+  interactiveResult?: InteractiveResult;
 }): Promise<{
   element: null | T;
   atomicResult: FixtureAtomicResult;
   atomicInterface: FixtureAtomicSearchInterface;
 }> {
   const atomicResult = await fixture<FixtureAtomicResult>(
-    html`<atomic-result .result=${result}></atomic-result>`
+    html`<atomic-result .result=${result} .interactiveResult=${interactiveResult}></atomic-result>`
   );
 
   atomicResult.setRenderTemplate(template);

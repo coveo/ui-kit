@@ -164,6 +164,7 @@ describe('atomic-component', () => {
 
 For result/product template components, use context fixtures:
 
+**✅ DO:**
 ```typescript
 import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {html} from 'lit';
