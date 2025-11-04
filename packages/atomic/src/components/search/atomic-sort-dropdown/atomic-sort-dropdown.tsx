@@ -20,7 +20,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {shouldDisplayOnCurrentTab} from '../../../utils/tab-utils';
 import {randomID} from '../../../utils/utils';
-import {SortContainer} from '../../common/sort/container';
+import {SortContainer} from '../../common/sort/stencil-container';
 import {SortGuard} from '../../common/sort/stencil-guard';
 import {SortLabel} from '../../common/sort/stencil-label';
 import {SortOption} from '../../common/sort/stencil-option';
