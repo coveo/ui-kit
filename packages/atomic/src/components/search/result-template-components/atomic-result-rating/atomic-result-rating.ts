@@ -1,0 +1,125 @@
+import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
+import {html, LitElement} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
+import ratingStyles from '@/src/components/common/atomic-rating/atomic-rating.tw.css.js';
+import {computeNumberOfStars} from '@/src/components/common/atomic-rating/rating-utils.js';
+import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller.js';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings.js';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {InitializableComponent} from '@/src/decorators/types.js';
+import {LightDomMixin} from '@/src/mixins/light-dom';
+import {renderRating} from '../../../common/atomic-rating/rating';
+import Star from '../../../images/star.svg';
+import type {Bindings} from '../../atomic-search-interface/interfaces';
+
+/**
+ * The `atomic-result-rating` element renders a star rating.
+ *
+ * @part value-rating - The wrapper that contains the row of inactive stars and the row of active stars.
+ * @part value-rating-icon - The individual star icons used in the rating display.
+ *
+ * @cssprop --atomic-rating-icon-active-color - Color of the icon when active.
+ * @cssprop --atomic-rating-icon-inactive-color - Color of the icon when inactive.
+ * @cssprop --atomic-rating-icon-outline - Outline color of the icon.
+ */
+@customElement('atomic-result-rating')
+@bindings()
+export class AtomicResultRating
+  extends LightDomMixin(LitElement)
+  implements InitializableComponent<Bindings>
+{
+  @state() public bindings!: Bindings;
+  @state() public error!: Error;
+
+  private resultController = createResultContextController(this);
+
+  @state() private result!: Result;
+
+  static styles = ratingStyles;
+
+  /**
+   * The field whose values you want to display as a rating.
+   */
+  @property({reflect: true}) public field!: string;
+
+  /**
+   * The maximum value of the field. This value is also used as the number of icons to be displayed.
+   */
+  @property({type: Number, reflect: true, attribute: 'max-value-in-index'})
+  public maxValueInIndex = 5;
+
+  /**
+   * The SVG icon to use to display the rating.
+   *
+   * - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location.
+   * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
+   * - Use a stringified SVG to display it directly.
+   *
+   * When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`.
+   * This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):
+   *
+   * - `--atomic-rating-icon-active-color`
+   * - `--atomic-rating-icon-inactive-color`
+   */
+  @property({reflect: true}) public icon = Star;
+
+  @state() private numberOfStars: number | null = null;
+
+  public initialize() {
+    if (!this.result && this.resultController.item) {
+      this.result = this.resultController.item;
+    }
+  }
+
+  private updateNumberOfStars() {
+    const value = ResultTemplatesHelpers.getResultProperty(
+      this.result,
+      this.field
+    );
+    try {
+      this.numberOfStars = computeNumberOfStars(value, this.field);
+    } catch (error) {
+      this.error = error instanceof Error ? error : new Error(`${error}`);
+      this.numberOfStars = null;
+    }
+  }
+
+  private updateStates() {
+    if (!this.result) {
+      return;
+    }
+    this.updateNumberOfStars();
+  }
+
+  @bindingGuard()
+  @errorGuard()
+  render() {
+    if (!this.result && this.resultController.item) {
+      this.result = this.resultController.item;
+    }
+
+    this.updateStates();
+
+    return html`
+      ${when(this.numberOfStars !== null, () =>
+        renderRating({
+          props: {
+            i18n: this.bindings.i18n,
+            icon: this.icon,
+            numberOfTotalIcons: this.maxValueInIndex,
+            numberOfActiveIcons: this.numberOfStars!,
+            iconSize: 0.875,
+          },
+        })
+      )}
+    `;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-result-rating': AtomicResultRating;
+  }
+}

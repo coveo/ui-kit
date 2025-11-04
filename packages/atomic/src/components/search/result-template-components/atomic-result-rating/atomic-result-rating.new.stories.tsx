@@ -47,3 +47,19 @@ export const Default: Story = {
   name: 'atomic-result-rating',
   args: {field: 'snrating'},
 };
+
+export const WithAMaxValueInIndex: Story = {
+  name: 'With a custom max value',
+  args: {
+    field: 'snrating',
+    'max-value-in-index': 10,
+  },
+};
+
+export const WithADifferentIcon: Story = {
+  name: 'With a custom icon',
+  args: {
+    field: 'snrating',
+    icon: 'https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/circle.svg',
+  },
+};
