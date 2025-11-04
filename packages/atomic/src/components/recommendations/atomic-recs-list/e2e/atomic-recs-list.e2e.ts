@@ -55,7 +55,6 @@ test.describe('with a carousel', () => {
   test.beforeEach(async ({recsList, page}) => {
     await recsList.load({story: 'recs-as-carousel'});
     await recsList.hydrated.waitFor();
-    // Wait for recommendations to load and render their content
     await recsList.recommendation.first().waitFor({state: 'visible'});
     await page.waitForLoadState('networkidle');
   });
