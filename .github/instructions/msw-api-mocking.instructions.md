@@ -311,13 +311,6 @@ export class Mock[Domain]Api implements MockApi {
 - ✅ Include all handlers in MSW parameters: `handlers: [...harness.handlers]`
 - ✅ Use descriptive story names that indicate what's being tested
 
-### DON'T:
-- ❌ Don't flush in `afterEach` - it removes responses needed during the story
-- ❌ Don't create new response objects from scratch - always spread the base
-- ❌ Don't import response data directly in stories - use the harness
-- ❌ Don't create multiple harness instances for the same API in one file
-- ❌ Don't forget to import and include handlers in MSW parameters
-- ❌ Don't hardcode API URLs - use the mock classes
 
 ## Naming Conventions
 
@@ -403,10 +396,6 @@ this.generateInsightEndpoint = new EndpointHarness(
 ### "Wrong response returned" Issue
 **Cause:** Queued responses from previous story
 **Fix:** Add `beforeEach` hook with `clear()`
-
-### TypeScript Type Errors
-**Cause:** Response structure doesn't match base response
-**Fix:** Ensure all required fields are present and types match
 
 ## Examples to Reference
 

@@ -7,7 +7,6 @@ export class MockMachineLearningApi implements MockApi {
   readonly userActionsEndpoint;
 
   constructor(basePath: string = 'https://:orgId.org.coveo.com') {
-    //TODO: Fix type after encoding Search API response typing properly.
     this.userActionsEndpoint = new EndpointHarness<
       typeof baseUserActionsResponse | APIErrorWithStatusCode
     >(

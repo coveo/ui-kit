@@ -46,6 +46,3 @@ export class MockCommerceApi implements MockApi {
     ];
   }
 }
-
-// TODO: Remove exports once the concept is fully internalized.
-export {baseSearchResponse};
