@@ -73,7 +73,7 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
 
   private hide(element: Element) {
     // Check if using inert is supported and preferred over aria-hidden
-    if ('inert' in HTMLElement.prototype && !element.hasAttribute('inert')) {
+    if ('inert' in HTMLElement.prototype) {
       // Skip elements that are already inert
       if ((element as HTMLElement).inert) {
         return;
@@ -106,11 +106,11 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
   private showAll() {
     let el = this.hiddenElements.pop();
     while (el) {
-      if ('inert' in HTMLElement.prototype && (el as HTMLElement).inert) {
+      // Clean up both inert and aria-hidden to handle all cases
+      if ('inert' in HTMLElement.prototype) {
         (el as HTMLElement).inert = false;
-      } else {
-        el.removeAttribute('aria-hidden');
       }
+      el.removeAttribute('aria-hidden');
       el = this.hiddenElements.pop();
     }
   }
