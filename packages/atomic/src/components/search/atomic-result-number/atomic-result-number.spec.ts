@@ -188,7 +188,6 @@ describe('atomic-result-number', () => {
 
     describe('when using the default formatter', () => {
       it('should set the error when the formatter throws', async () => {
-        // Mock toLocaleString to throw an error
         const originalToLocaleString = Number.prototype.toLocaleString;
         Number.prototype.toLocaleString = () => {
           throw new Error('Formatter error');
@@ -199,7 +198,6 @@ describe('atomic-result-number', () => {
         expect(element.error).toBeInstanceOf(Error);
         expect(element.error.message).toBe('Formatter error');
 
-        // Restore original toLocaleString
         Number.prototype.toLocaleString = originalToLocaleString;
       });
 
