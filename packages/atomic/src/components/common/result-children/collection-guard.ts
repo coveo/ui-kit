@@ -50,8 +50,7 @@ export const renderCollectionGuard: FunctionalComponentWithChildren<
         noResultText.trim().length > 0,
         () => html`<p part="no-result-root" class="no-result-root my-3">
           ${noResultText}
-        </p>`,
-        () => nothing
+        </p>`
       );
     }
 
