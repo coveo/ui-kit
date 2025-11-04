@@ -9,7 +9,6 @@ import {AtomicResultNumber} from './atomic-result-number';
 import './atomic-result-number';
 import type {i18n} from 'i18next';
 import {customElement} from 'lit/decorators.js';
-import {defaultNumberFormatter} from '@/src/components/common/formats/format-common';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 
 vi.mock('@coveo/headless', async () => {
@@ -22,8 +21,6 @@ vi.mock('@coveo/headless', async () => {
     },
   };
 });
-
-vi.mock('@/src/components/common/formats/format-common', {spy: true});
 
 @customElement('test-formatter')
 class TestFormatter extends LitElement {
@@ -167,7 +164,9 @@ describe('atomic-result-number', () => {
 
   describe('when rendering', () => {
     it('should remove itself from the DOM when the field value is null', async () => {
-      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(null);
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockImplementation(
+        () => null
+      );
 
       const {element} = await renderResultNumber({
         props: {field: 'missing'},
@@ -177,8 +176,8 @@ describe('atomic-result-number', () => {
     });
 
     it('should set the error when the field value cannot be parsed as a number', async () => {
-      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
-        'not a number'
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockImplementation(
+        () => 'not a number'
       );
 
       const {element} = await renderResultNumber({props: {field: 'invalid'}});
@@ -191,19 +190,24 @@ describe('atomic-result-number', () => {
 
     describe('when using the default formatter', () => {
       it('should set the error when the formatter throws', async () => {
-        vi.mocked(defaultNumberFormatter).mockImplementation(() => {
+        // Mock toLocaleString to throw an error
+        const originalToLocaleString = Number.prototype.toLocaleString;
+        Number.prototype.toLocaleString = () => {
           throw new Error('Formatter error');
-        });
+        };
 
         const {element} = await renderResultNumber({props: {field: 'size'}});
 
         expect(element.error).toBeInstanceOf(Error);
         expect(element.error.message).toBe('Formatter error');
+
+        // Restore original toLocaleString
+        Number.prototype.toLocaleString = originalToLocaleString;
       });
 
       it('should format a valid number value', async () => {
-        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
-          1234.56
+        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockImplementation(
+          () => 1234.56
         );
 
         const {element} = await renderResultNumber({props: {field: 'size'}});
@@ -212,8 +216,8 @@ describe('atomic-result-number', () => {
       });
 
       it('should format a valid string value that can be parsed to a number', async () => {
-        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
-          '1234.56'
+        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockImplementation(
+          () => '1234.56'
         );
 
         const {element} = await renderResultNumber({props: {field: 'price'}});
@@ -223,8 +227,8 @@ describe('atomic-result-number', () => {
 
       it('should format using the active i18n language', async () => {
         await i18n.changeLanguage('fr');
-        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
-          1234.56
+        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockImplementation(
+          () => 1234.56
         );
 
         const {element} = await renderResultNumber({props: {field: 'size'}});
@@ -234,8 +238,8 @@ describe('atomic-result-number', () => {
     });
 
     it('should use the specified formatter instead of the default one when it has a slotted formatter', async () => {
-      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
-        1234.56
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockImplementation(
+        () => 1234.56
       );
       const {element} = await renderResultNumber({
         props: {field: 'price'},
