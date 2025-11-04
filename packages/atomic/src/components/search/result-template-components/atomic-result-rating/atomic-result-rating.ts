@@ -1,9 +1,11 @@
+import {NumberValue, Schema, StringValue} from '@coveo/bueno';
 import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import ratingStyles from '@/src/components/common/atomic-rating/atomic-rating.tw.css.js';
 import {computeNumberOfStars} from '@/src/components/common/atomic-rating/rating-utils.js';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings.js';
@@ -67,6 +69,26 @@ export class AtomicResultRating
   @property({reflect: true}) public icon = Star;
 
   @state() private numberOfStars: number | null = null;
+
+  constructor() {
+    super();
+
+    new ValidatePropsController(
+      this,
+      () => ({
+        field: this.field,
+        maxValueInIndex: this.maxValueInIndex,
+      }),
+      new Schema({
+        field: new StringValue({required: true, emptyAllowed: false}),
+        maxValueInIndex: new NumberValue({
+          default: 5,
+          min: 1,
+          required: false,
+        }),
+      })
+    );
+  }
 
   public initialize() {
     if (!this.result && this.resultController.item) {
