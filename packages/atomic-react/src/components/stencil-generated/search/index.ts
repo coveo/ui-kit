@@ -1,11 +1,11 @@
 /* eslint-disable */
 /* tslint:disable */
 /* auto-generated react proxies */
-import { createReactComponent } from './react-component-lib/index.js';
+import { createReactComponent } from './react-component-lib';
 
 import type { JSX } from '@coveo/atomic';
 
-import { defineCustomElements } from '@coveo/atomic/loader';
+import { defineCustomElements } from '@coveo/atomic/dist/atomic/loader';
 
 defineCustomElements();
 export const AtomicAutomaticFacet = /*@__PURE__*/createReactComponent<JSX.AtomicAutomaticFacet, HTMLAtomicAutomaticFacetElement>('atomic-automatic-facet');
@@ -47,7 +47,6 @@ export const AtomicResultFieldsList = /*@__PURE__*/createReactComponent<JSX.Atom
 export const AtomicResultHtml = /*@__PURE__*/createReactComponent<JSX.AtomicResultHtml, HTMLAtomicResultHtmlElement>('atomic-result-html');
 export const AtomicResultIcon = /*@__PURE__*/createReactComponent<JSX.AtomicResultIcon, HTMLAtomicResultIconElement>('atomic-result-icon');
 export const AtomicResultImage = /*@__PURE__*/createReactComponent<JSX.AtomicResultImage, HTMLAtomicResultImageElement>('atomic-result-image');
-export const AtomicResultLink = /*@__PURE__*/createReactComponent<JSX.AtomicResultLink, HTMLAtomicResultLinkElement>('atomic-result-link');
 export const AtomicResultLocalizedText = /*@__PURE__*/createReactComponent<JSX.AtomicResultLocalizedText, HTMLAtomicResultLocalizedTextElement>('atomic-result-localized-text');
 export const AtomicResultMultiValueText = /*@__PURE__*/createReactComponent<JSX.AtomicResultMultiValueText, HTMLAtomicResultMultiValueTextElement>('atomic-result-multi-value-text');
 export const AtomicResultNumber = /*@__PURE__*/createReactComponent<JSX.AtomicResultNumber, HTMLAtomicResultNumberElement>('atomic-result-number');
