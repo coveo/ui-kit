@@ -428,7 +428,7 @@ describe('PlatformClient call', () => {
       expect(retryFn).toBeDefined();
 
       const response429 = new Response(JSON.stringify({}), {status: 429});
-      expect(retryFn!(response429, 1)).toBe(true);
+      expect(await retryFn!(response429, 1)).toBe(true);
     });
 
     it('should not retry on 500', async () => {
@@ -443,7 +443,7 @@ describe('PlatformClient call', () => {
       expect(retryFn).toBeDefined();
 
       const response500 = new Response(JSON.stringify({}), {status: 500});
-      expect(retryFn!(response500, 1)).toBe(false);
+      expect(await retryFn!(response500, 1)).toBe(false);
     });
 
     it('should not retry on 200', async () => {
@@ -458,7 +458,7 @@ describe('PlatformClient call', () => {
       expect(retryFn).toBeDefined();
 
       const response200 = new Response(JSON.stringify({}), {status: 200});
-      expect(retryFn!(response200, 1)).toBe(false);
+      expect(await retryFn!(response200, 1)).toBe(false);
     });
   });
 

@@ -61,12 +61,7 @@ export class PlatformClient {
     logger.info(requestInfo, 'Platform request');
 
     const {url, ...requestData} = requestInfo;
-    let isFirstAttempt = true;
     const request = async () => {
-      if (!isFirstAttempt) {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
-      isFirstAttempt = false;
       const response = await fetch(url, requestData);
       if (isThrottled(response.status)) {
         throw response;
@@ -81,9 +76,12 @@ export class PlatformClient {
         maxDelay: 800,
         numOfAttempts: 4,
         jitter: 'full',
-        retry: (e: Response) => {
+        retry: async (e: Response) => {
           const shouldRetry = e && isThrottled(e.status);
-          shouldRetry && logger.info('Platform retrying request');
+          if (shouldRetry) {
+            logger.info('Platform retrying request');
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          }
           return shouldRetry;
         },
       });
