@@ -10,7 +10,7 @@
       "outputs": []
     },
     "build:storybook": {
-      "dependsOn": ["build:cem", "build:list-assets"],
+      "dependsOn": ["build:cem", "build:list-assets", "build:copy-assets"],
       "outputs": ["./dist-storybook/**"]
     },
     "build:cem": {
@@ -33,7 +33,7 @@
       ]
     },
     "build:copy-assets": {
-      "dependsOn": ["build:locales"],
+      "dependsOn": ["build:stencil-lit"],
       "outputs": ["dist/atomic/themes/**", "dist/atomic/lang/**"]
     },
     "build:locales": {
