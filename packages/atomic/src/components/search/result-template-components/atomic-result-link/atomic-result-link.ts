@@ -15,6 +15,7 @@ import {buildCustomEvent} from '@/src/utils/event-utils';
 import {buildStringTemplateFromResult} from '@/src/utils/result-utils';
 import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import '../../atomic-result-text/atomic-result-text';
+import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {
   type LightDOMWithSlots,
@@ -31,7 +32,9 @@ import styles from './atomic-result-link.tw.css';
 @customElement('atomic-result-link')
 @bindings()
 export class AtomicResultLink
-  extends LightDomMixin(SlotsForNoShadowDOMMixin(LitElement))
+  extends InitializeBindingsMixin(
+    LightDomMixin(SlotsForNoShadowDOMMixin(LitElement))
+  )
   implements InitializableComponent<Bindings>
 {
   static styles = styles;

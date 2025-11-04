@@ -17,7 +17,7 @@ const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
 
 const meta: Meta = {
   component: 'atomic-result-link',
-  title: 'Search/ResultList/ResultLink',
+  title: 'Search/Result Link',
   id: 'atomic-result-link',
   render: (args) => template(args),
   decorators: [resultDecorator, searchInterfaceDecorator],
