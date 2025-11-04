@@ -5,6 +5,7 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {getAttributesFromLinkSlotContent} from '@/src/components/common/item-link/attributes-slot';
 import {renderLinkWithItemAnalytics} from '@/src/components/common/item-link/item-link';
+import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {createInteractiveResultContextController} from '@/src/components/search/result-template-component-utils/context/interactive-result-context-controller';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -13,8 +14,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import {buildStringTemplateFromResult} from '@/src/utils/result-utils';
-import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import '../../atomic-result-text/atomic-result-text';
+import '@/src/components/search/atomic-result-text/atomic-result-text';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {
