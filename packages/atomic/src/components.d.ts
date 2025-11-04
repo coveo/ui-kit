@@ -5,31 +5,25 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchStatus } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
-import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-import { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 import { i18n } from "i18next";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
-export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchStatus } from "@coveo/headless";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
-export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-export { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 export { i18n } from "i18next";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
@@ -1734,21 +1728,6 @@ export namespace Components {
     interface AtomicResultFieldsList {
     }
     /**
-     * The `atomic-result-html` component renders the HTML value of a string result field.
-     * There is an inherent XSS security concern associated with the usage of this component.
-     * Use only with fields for which you are certain the data is harmless.
-     */
-    interface AtomicResultHtml {
-        /**
-          * The result field which the component should use. If set, Atomic searches for the specified field in the `Result` object first. If there's no such a field, Atomic searches through the `Result.raw` object. It's important to include the necessary field in the `ResultList` component.
-         */
-        "field": string;
-        /**
-          * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
-         */
-        "sanitize": boolean;
-    }
-    /**
      * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
      * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
      */
@@ -3172,17 +3151,6 @@ declare global {
         new (): HTMLAtomicResultFieldsListElement;
     };
     /**
-     * The `atomic-result-html` component renders the HTML value of a string result field.
-     * There is an inherent XSS security concern associated with the usage of this component.
-     * Use only with fields for which you are certain the data is harmless.
-     */
-    interface HTMLAtomicResultHtmlElement extends Components.AtomicResultHtml, HTMLStencilElement {
-    }
-    var HTMLAtomicResultHtmlElement: {
-        prototype: HTMLAtomicResultHtmlElement;
-        new (): HTMLAtomicResultHtmlElement;
-    };
-    /**
      * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
      * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
      */
@@ -3664,7 +3632,6 @@ declare global {
         "atomic-result-children": HTMLAtomicResultChildrenElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
-        "atomic-result-html": HTMLAtomicResultHtmlElement;
         "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
@@ -5338,21 +5305,6 @@ declare namespace LocalJSX {
     interface AtomicResultFieldsList {
     }
     /**
-     * The `atomic-result-html` component renders the HTML value of a string result field.
-     * There is an inherent XSS security concern associated with the usage of this component.
-     * Use only with fields for which you are certain the data is harmless.
-     */
-    interface AtomicResultHtml {
-        /**
-          * The result field which the component should use. If set, Atomic searches for the specified field in the `Result` object first. If there's no such a field, Atomic searches through the `Result.raw` object. It's important to include the necessary field in the `ResultList` component.
-         */
-        "field": string;
-        /**
-          * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
-         */
-        "sanitize"?: boolean;
-    }
-    /**
      * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
      * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
      */
@@ -5996,7 +5948,6 @@ declare namespace LocalJSX {
         "atomic-result-children": AtomicResultChildren;
         "atomic-result-date": AtomicResultDate;
         "atomic-result-fields-list": AtomicResultFieldsList;
-        "atomic-result-html": AtomicResultHtml;
         "atomic-result-icon": AtomicResultIcon;
         "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
@@ -6317,12 +6268,6 @@ declare module "@stencil/core" {
              * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
              */
             "atomic-result-fields-list": LocalJSX.AtomicResultFieldsList & JSXBase.HTMLAttributes<HTMLAtomicResultFieldsListElement>;
-            /**
-             * The `atomic-result-html` component renders the HTML value of a string result field.
-             * There is an inherent XSS security concern associated with the usage of this component.
-             * Use only with fields for which you are certain the data is harmless.
-             */
-            "atomic-result-html": LocalJSX.AtomicResultHtml & JSXBase.HTMLAttributes<HTMLAtomicResultHtmlElement>;
             /**
              * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
              * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
