@@ -56,6 +56,17 @@
         margin-right: auto;
         box-shadow: 0px 3px 24px 0px #0000001a;
       }
+      .insights-header {
+        display: flex;
+        align-items: center;
+        background-color: #F1F2FF;
+      }
+      .insights-header atomic-insight-generate-answer-button {
+        padding: 0rem 1.5rem;
+      }
+      .insights-summary {
+        flex-grow: 1;
+      }
     </style>
   </head>
 
@@ -113,19 +124,6 @@
           </atomic-facet-manager>
         </atomic-layout-section>
         <atomic-layout-section section="status">
-          <style>
-            .insights-header {
-              display: flex;
-              align-items: center;
-              background-color: #F1F2FF;
-            }
-            .insights-header atomic-insight-generate-answer-button {
-              padding: 0rem 1.5rem;
-            }
-            .insights-summary {
-              flex-grow: 1;
-            }
-          </style>
           <div class="insights-header">
             <div class="insights-summary">
               <atomic-insight-query-summary></atomic-insight-query-summary>

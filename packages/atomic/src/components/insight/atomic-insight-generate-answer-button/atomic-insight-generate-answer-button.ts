@@ -42,8 +42,9 @@ export class AtomicInsightGenerateAnswerButton
   @errorGuard()
   @bindingGuard()
   render() {
-    const {hasQuery} = this.querySummaryState;
-    if (hasQuery) {
+    const {hasQuery, total} = this.querySummaryState;
+
+    if (hasQuery || total === 0) {
       return html``;
     }
 
