@@ -1,10 +1,10 @@
 import {html} from 'lit';
 import {keyed} from 'lit/directives/keyed.js';
 import {ref} from 'lit/directives/ref.js';
+import type {FacetValuePropsBase} from '@/src/components/common/facets/facet-common';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
-import {createRipple} from '../../../../utils/ripple-utils';
-import {randomID} from '../../../../utils/utils';
-import type {FacetValuePropsBase} from '../../../common/facets/facet-common';
+import {createRipple} from '@/src/utils/ripple-utils';
+import {randomID} from '@/src/utils/utils';
 
 export const renderColorFacetCheckbox: FunctionalComponentWithChildren<
   FacetValuePropsBase
