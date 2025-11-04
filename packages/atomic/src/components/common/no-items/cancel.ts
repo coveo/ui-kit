@@ -3,16 +3,12 @@ import {nothing} from 'lit';
 import {renderButton} from '@/src/components/common/button.js';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
-export interface CancelButtonProps {
+export interface CancelProps {
   i18n: i18n;
   onClick: () => void;
 }
 
-import {nothing} from 'lit';
-
-export const renderCancelButton: FunctionalComponent<CancelButtonProps> = ({
-  props,
-}) =>
+export const renderCancel: FunctionalComponent<CancelProps> = ({props}) =>
   renderButton({
     props: {
       style: 'primary',

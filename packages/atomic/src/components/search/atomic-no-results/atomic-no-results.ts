@@ -11,7 +11,7 @@ import {
 } from '@coveo/headless';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {renderCancelButton} from '@/src/components/common/no-items/cancel-button.js';
+import {renderCancel} from '@/src/components/common/no-items/cancel.js';
 import {renderNoItemsContainer} from '@/src/components/common/no-items/container.js';
 import {noItemsGuard} from '@/src/components/common/no-items/guard.js';
 import {renderMagnifyingGlass} from '@/src/components/common/no-items/magnifying-glass.js';
@@ -138,7 +138,7 @@ export class AtomicNoResults
       return null;
     }
 
-    return renderCancelButton({
+    return renderCancel({
       props: {
         i18n: this.bindings.i18n,
         onClick: () => this.history.backOnNoResults(),
