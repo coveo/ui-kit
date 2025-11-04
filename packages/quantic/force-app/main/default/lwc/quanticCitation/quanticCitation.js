@@ -14,7 +14,7 @@ const supportedFileTypesForTextFragment = ['html', 'SalesforceItem'];
  * Includes a cancel method to clear any pending timeout.
  * @param {Function} fn - The function to debounce
  * @param {number} delay - The number of milliseconds to delay
- * @returns {Function & {cancel: Function}} The debounced function with cancel method
+ * @returns {Function} The debounced function with cancel method
  */
 export function debounce(fn, delay) {
   let timeout;
@@ -69,7 +69,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   salesforceRecordUrl;
   /** @type {boolean} */
   isHrefWithTextFragment = false;
-  /** @type {function & {cancel: function}} */
+  /** @type {Object} */
   hideTooltipDebounced;
 
   connectedCallback() {
