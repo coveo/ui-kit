@@ -38,7 +38,7 @@ describe('#renderColorFacetCheckbox', () => {
     };
   };
 
-  it('renders all elements', async () => {
+  it('should render all elements', async () => {
     const {listItem, label, valueCount, checkbox} = await setupElement();
     expect(listItem).toBeInTheDocument();
     expect(label).toBeInTheDocument();
@@ -46,7 +46,7 @@ describe('#renderColorFacetCheckbox', () => {
     expect(checkbox).toBeInTheDocument();
   });
 
-  it('renders correctly with valid parts', async () => {
+  it('should render correctly with valid parts', async () => {
     const {label, valueCount, checkbox} = await setupElement();
 
     expect(label).toHaveAttribute('part', 'value-checkbox-label');
@@ -57,7 +57,7 @@ describe('#renderColorFacetCheckbox', () => {
     );
   });
 
-  it('applies the correct part value based on display value', async () => {
+  it('should apply the correct part value based on display value', async () => {
     const {checkbox} = await setupElement({displayValue: 'TestColor'});
 
     expect(checkbox.element()).toHaveAttribute(
@@ -66,7 +66,7 @@ describe('#renderColorFacetCheckbox', () => {
     );
   });
 
-  it('adds checked part when selected', async () => {
+  it('should add checked part when selected', async () => {
     const {checkbox} = await setupElement({isSelected: true});
 
     expect(checkbox.element()).toHaveAttribute(
@@ -75,7 +75,7 @@ describe('#renderColorFacetCheckbox', () => {
     );
   });
 
-  it('does not add checked part when not selected', async () => {
+  it('should not add checked part when not selected', async () => {
     const {checkbox} = await setupElement({isSelected: false});
 
     expect(checkbox.element()).not.toHaveAttribute(
@@ -84,19 +84,19 @@ describe('#renderColorFacetCheckbox', () => {
     );
   });
 
-  it('applies ring-primary class when selected', async () => {
+  it('should apply ring-primary class when selected', async () => {
     const {checkbox} = await setupElement({isSelected: true});
 
     expect(checkbox.element()).toHaveClass('ring-primary');
   });
 
-  it('does not apply ring-primary class when not selected', async () => {
+  it('should not apply ring-primary class when not selected', async () => {
     const {checkbox} = await setupElement({isSelected: false});
 
     expect(checkbox.element()).not.toHaveClass('ring-primary');
   });
 
-  it('calls onClick when checkbox is clicked', async () => {
+  it('should call onClick when checkbox is clicked', async () => {
     const onClick = vi.fn();
 
     const {checkbox} = await setupElement({onClick});
@@ -106,7 +106,7 @@ describe('#renderColorFacetCheckbox', () => {
     expect(onClick).toHaveBeenCalled();
   });
 
-  it('calls createRipple when checkbox is clicked with mousedown', async () => {
+  it('should call createRipple when checkbox is clicked with mousedown', async () => {
     const createRippleSpy = vi.mocked(createRipple);
 
     const {checkbox} = await setupElement();
@@ -116,7 +116,7 @@ describe('#renderColorFacetCheckbox', () => {
     expect(createRippleSpy).toHaveBeenCalled();
   });
 
-  it('calls createRipple when label is clicked with mousedown', async () => {
+  it('should call createRipple when label is clicked with mousedown', async () => {
     const createRippleSpy = vi.mocked(createRipple);
 
     const {label} = await setupElement();
@@ -126,31 +126,31 @@ describe('#renderColorFacetCheckbox', () => {
     expect(createRippleSpy).toHaveBeenCalled();
   });
 
-  it('sets aria-checked to "true" when selected', async () => {
+  it('should set aria-checked to "true" when selected', async () => {
     const {checkbox} = await setupElement({isSelected: true});
 
     expect(checkbox.element()).toHaveAttribute('aria-checked', 'true');
   });
 
-  it('sets aria-checked to "false" when not selected', async () => {
+  it('should set aria-checked to "false" when not selected', async () => {
     const {checkbox} = await setupElement({isSelected: false});
 
     expect(checkbox.element()).toHaveAttribute('aria-checked', 'false');
   });
 
-  it('formats the count according to locale', async () => {
+  it('should format the count according to locale', async () => {
     const {valueCount} = await setupElement({numberOfResults: 1000});
 
     expect(valueCount).toBeInTheDocument();
   });
 
-  it('renders children inside the label', async () => {
+  it('should render children inside the label', async () => {
     await setupElement({});
     const child = page.getByText('Some Value Label');
     expect(child).toBeInTheDocument();
   });
 
-  it('renders custom children inside the label', async () => {
+  it('should render custom children inside the label', async () => {
     await renderFunctionFixture(
       html`${renderColorFacetCheckbox({
         props: {
