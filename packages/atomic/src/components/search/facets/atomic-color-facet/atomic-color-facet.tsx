@@ -51,7 +51,7 @@ import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stenci
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {Hidden} from '../../../common/stencil-hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {ColorFacetCheckbox} from '../color-facet-checkbox/color-facet-checkbox';
+import {ColorFacetCheckbox} from '../color-facet-checkbox/stencil-color-facet-checkbox';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
