@@ -27,6 +27,12 @@ vi.mock('i18next-http-backend', () => {
     default: mockBackend,
   };
 });
+vi.mock('@/src/components/lazy-index.js', () => ({
+  default: {
+    'atomic-test-element': vi.fn(),
+    'atomic-facet': vi.fn(),
+  } as Record<string, () => Promise<unknown>>,
+}));
 
 describe('InterfaceController', () => {
   const setupElement = async () => {
@@ -288,10 +294,12 @@ describe('InterfaceController', () => {
   });
 
   describe('#waitForAllCustomElementDefined', () => {
-    it('should wait for all custom elements to be defined', async () => {
+    it('should wait for Atomic components to be defined', async () => {
       const atomicInterface = await setupElement();
-      const customElement = document.createElement('atomic-test-element');
-      atomicInterface.appendChild(customElement);
+      const atomicElement = document.createElement('atomic-test-element');
+      const nonAtomicElement = document.createElement('other-custom-element');
+      atomicInterface.appendChild(atomicElement);
+      atomicInterface.appendChild(nonAtomicElement);
 
       const helper = new InterfaceController(
         atomicInterface,
@@ -304,7 +312,10 @@ describe('InterfaceController', () => {
 
       await helper.waitForAllCustomElementDefined();
 
+      // Should only be called for atomic-test-element (which is in elementMap)
+      // Should NOT be called for other-custom-element (not in elementMap)
       expect(whenDefinedSpy).toHaveBeenCalledWith('atomic-test-element');
+      expect(whenDefinedSpy).not.toHaveBeenCalledWith('other-custom-element');
     });
   });
 
