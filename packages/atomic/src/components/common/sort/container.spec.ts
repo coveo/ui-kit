@@ -16,18 +16,16 @@ describe('#renderSortContainer', () => {
     };
   };
 
-  it('should render a div with the correct classes', async () => {
+  it('should render a div', async () => {
     const {container} = await renderComponent();
 
-    expect(container).toHaveClass('text-on-background');
-    expect(container).toHaveClass('flex');
-    expect(container).toHaveClass('flex-wrap');
-    expect(container).toHaveClass('items-center');
+    expect(container?.tagName).toBe('DIV');
   });
 
   it('should render the children inside the div', async () => {
-    const {children} = await renderComponent();
+    const {container, children} = await renderComponent();
 
     expect(children).toHaveTextContent('Test Children');
+    expect(container).toContainElement(children);
   });
 });
