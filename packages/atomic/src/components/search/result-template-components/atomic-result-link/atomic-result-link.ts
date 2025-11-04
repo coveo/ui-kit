@@ -1,6 +1,6 @@
 import {isUndefined} from '@coveo/bueno';
 import type {InteractiveResult, Result} from '@coveo/headless';
-import {html, LitElement} from 'lit';
+import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {getAttributesFromLinkSlotContent} from '@/src/components/common/item-link/attributes-slot';
@@ -21,7 +21,6 @@ import {
   type LightDOMWithSlots,
   SlotsForNoShadowDOMMixin,
 } from '@/src/mixins/slots-for-no-shadow-dom-mixin';
-import styles from './atomic-result-link.tw.css';
 
 /**
  * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
@@ -37,7 +36,13 @@ export class AtomicResultLink
   )
   implements InitializableComponent<Bindings>
 {
-  static styles = styles;
+  static styles = css`@reference '../../../../utils/tailwind.global.tw.css';
+
+atomic-result-link {
+  a {
+    @apply link-style;
+  }
+}`;
 
   /**
    * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value.
