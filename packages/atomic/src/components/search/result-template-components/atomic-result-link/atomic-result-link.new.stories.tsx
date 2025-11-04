@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResult} from '@/storybook-utils/search/result-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -15,7 +16,7 @@ const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
 });
 
 const meta: Meta = {
-  component: 'atomic-result-icon',
+  component: 'atomic-result-link',
   title: 'Search/ResultList/ResultLink',
   id: 'atomic-result-link',
   render: (args) => template(args),
@@ -34,6 +35,45 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {
-  name: 'atomic-result-link',
+export const Default: Story = {};
+
+export const WithSlotsAttributes: Story = {
+  name: 'With a slot for attributes',
+  decorators: [
+    () => {
+      return html`
+        <atomic-result-link>
+          <a slot="attributes" target="_blank"></a>
+        </atomic-result-link>
+      `;
+    },
+  ],
+};
+
+export const WithAlternativeContent: Story = {
+  name: 'With alternative content',
+  decorators: [
+    () => {
+      return html`
+        <atomic-result-link>
+          <div>
+            <img src="https://picsum.photos/350" class="thumbnail" />
+          </div>
+        </atomic-result-link>
+      `;
+    },
+  ],
+};
+
+export const WithHrefTemplate: Story = {
+  name: 'With an href template',
+  decorators: [
+    () => {
+      return html`
+        <atomic-result-link
+          href-template="\${clickUri}?source=\${raw.source}"
+        ></atomic-result-link>
+      `;
+    },
+  ],
 };
