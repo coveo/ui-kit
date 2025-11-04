@@ -8,7 +8,7 @@ import {getAnalyticsConfig} from './analytics-config';
 vi.mock('@coveo/headless/recommendation', {spy: true});
 
 describe('#getAnalyticsConfig', () => {
-  it('should return default configuration when analytics is not defined in commerceEngineConfig', () => {
+  it('should return default configuration when analytics is not defined in recommendationEngineConfig', () => {
     const recommendationEngineConfig = {} as RecommendationEngineConfiguration;
     const enabled = true;
     const config = getAnalyticsConfig(recommendationEngineConfig, enabled);
@@ -28,7 +28,7 @@ describe('#getAnalyticsConfig', () => {
     }
   });
 
-  it('should merge default configuration with commerceEngineConfig.analytics', () => {
+  it('should merge default configuration with recommendationEngineConfig.analytics', () => {
     const recommendationEngineConfig: RecommendationEngineConfiguration = {
       ...getSampleRecommendationEngineConfiguration(),
       analytics: {

@@ -168,7 +168,9 @@ export class AtomicSearchInterface
   @property({type: String, reflect: true}) public timezone?: string;
 
   /**
-   * The severity level of the messages to log in the console.
+   * The minimum severity level of messages to log in the console.
+   * Messages with a severity level below this threshold will not be logged.
+   * Possible values are `trace`, `debug`, `info`, `warn`, `error`, `fatal`, or `silent`.
    */
   @property({type: String, attribute: 'log-level', reflect: true})
   public logLevel?: LogLevel;

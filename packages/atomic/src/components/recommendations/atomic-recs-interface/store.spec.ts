@@ -1,11 +1,11 @@
 import type {RecommendationEngine} from '@coveo/headless/recommendation';
-import {describe, expect, test, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {createRecsStore} from './store';
 
 vi.mock('@coveo/headless/recommendation', {spy: true});
 
 describe('RecsStore', () => {
-  test('should set and unset loading flags correctly', () => {
+  it('should set and unset loading flags correctly', () => {
     const store = createRecsStore();
     const loadingFlag = 'test-loading-flag';
 
@@ -18,7 +18,7 @@ describe('RecsStore', () => {
     expect(store.state.loadingFlags).not.toContain(loadingFlag);
   });
 
-  test('should return unique ID from engine', () => {
+  it('should return unique ID from engine', () => {
     const mockEngine = {
       state: {
         recommendation: {
@@ -32,7 +32,7 @@ describe('RecsStore', () => {
     expect(store.getUniqueIDFromEngine(mockEngine)).toBe('test-search-uid');
   });
 
-  test('should add fields to include', () => {
+  it('should add fields to include', () => {
     const store = createRecsStore();
 
     expect(store.state.fieldsToInclude).toEqual([]);
@@ -44,7 +44,7 @@ describe('RecsStore', () => {
     expect(store.state.fieldsToInclude).toEqual(['field1', 'field2', 'field3']);
   });
 
-  test('should initialize with correct default state', () => {
+  it('should initialize with correct default state', () => {
     const store = createRecsStore();
 
     expect(store.state).toEqual({

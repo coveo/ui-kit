@@ -43,11 +43,10 @@ export type RecsBindings = CommonBindings<
 
 const FirstRecommendationExecutedFlag = 'firstRecommendationExecuted';
 
-const mismatchedInterfaceAndEnginePropError = (
-  interfaceKind: 'search' | 'recommendation',
+const engineConfigurationConflictError = (
   configurationName: 'query pipeline' | 'search hub'
 ) =>
-  `A ${configurationName} is configured on the ${interfaceKind} interface element, but the ${interfaceKind} interface was initialized with an engine. You should only configure the ${configurationName} in the target engine.`;
+  `A ${configurationName} is configured on the recommendation interface element, but the recommendation interface was initialized with an engine. You should only configure the ${configurationName} in the target engine.`;
 
 /**
  * The `atomic-recs-interface` component is the parent to all other atomic components in a recommendation interface. It handles the headless recommendation engine and localization configurations.
@@ -126,7 +125,9 @@ export class AtomicRecsInterface
   @property({type: String, reflect: true}) public timezone?: string;
 
   /**
-   * The severity level of the messages to log in the console.
+   * The minimum severity level of messages to log in the console.
+   * Messages with a severity level below this threshold will not be logged.
+   * Possible values are `trace`, `debug`, `info`, `warn`, `error`, `fatal`, or `silent`.
    */
   @property({type: String, attribute: 'log-level', reflect: true})
   public logLevel?: RecsLogLevel;
@@ -142,7 +143,7 @@ export class AtomicRecsInterface
   @property({type: String, reflect: true}) public language = 'en';
 
   /**
-   * The recommendation interface headless engine.
+   * The headless recommendation engine.
    */
   @property({type: Object, attribute: false})
   public engine?: RecommendationEngine;
@@ -207,22 +208,15 @@ export class AtomicRecsInterface
     return this.internalInitialization(() => this.initEngine(options));
   }
   /**
-   * Initializes the interface using the provided [headless recommendation engine](https://docs.coveo.com/en/headless/latest/reference/modules/Recommendation.html, as opposed to the `initialize` method which internally builds a search engine instance.
+   * Initializes the interface using the provided [headless recommendation engine](https://docs.coveo.com/en/headless/latest/reference/modules/Recommendation.html), as opposed to the `initialize` method which internally builds a recommendation engine instance.
    * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
    */
   public initializeWithRecommendationEngine(engine: RecommendationEngine) {
     if (this.pipeline && this.pipeline !== engine.state.pipeline) {
-      console.warn(
-        mismatchedInterfaceAndEnginePropError(
-          'recommendation',
-          'query pipeline'
-        )
-      );
+      console.warn(engineConfigurationConflictError('query pipeline'));
     }
     if (this.searchHub && this.searchHub !== engine.state.searchHub) {
-      console.warn(
-        mismatchedInterfaceAndEnginePropError('recommendation', 'search hub')
-      );
+      console.warn(engineConfigurationConflictError('search hub'));
     }
 
     engine.dispatch(

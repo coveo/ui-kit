@@ -59,14 +59,7 @@ describe('atomic-recs-interface', () => {
       iconAssetsPath?: string;
       language?: string;
       languageAssetsPath?: string;
-      logLevel?:
-        | 'debug'
-        | 'fatal'
-        | 'error'
-        | 'warn'
-        | 'info'
-        | 'trace'
-        | 'silent';
+      logLevel?: LogLevel;
       fieldsToInclude?: string[];
       pipeline?: string;
       searchHub?: string;
