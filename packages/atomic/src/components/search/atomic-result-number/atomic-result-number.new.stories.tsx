@@ -1,5 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
@@ -58,26 +60,37 @@ export const WithCurrencyFormatting: Story = {
   name: 'With currency formatting',
   args: {
     field: 'size',
-    'default-slot': `
-      <atomic-format-currency currency="USD" currency-display="code" minimum-fraction-digits="2" maximum-fraction-digits="2"></atomic-format-currency>
-    `,
   },
+  render: (args) =>
+    html`<atomic-result-number field=${args.field}>
+      ${unsafeHTML(
+        '<atomic-format-currency currency="USD" currency-display="code" minimum-fraction-digits="2" maximum-fraction-digits="2"></atomic-format-currency>'
+      )}
+    </atomic-result-number>`,
 };
 
 export const WithNumberFormatting: Story = {
   name: 'With number formatting',
   args: {
     field: 'size',
-    'default-slot': `<atomic-format-number minimum-fraction-digits="2" maximum-fraction-digits="2"></atomic-format-number>`,
   },
+  render: (args) =>
+    html`<atomic-result-number field=${args.field}>
+      ${unsafeHTML(
+        '<atomic-format-number minimum-fraction-digits="2" maximum-fraction-digits="2"></atomic-format-number>'
+      )}
+    </atomic-result-number>`,
 };
 
 export const WithUnitFormatting: Story = {
   name: 'With unit formatting',
   args: {
     field: 'size',
-    'default-slot': `
-      <atomic-format-unit unit="byte" unit-display="long"></atomic-format-unit>
-    `,
   },
+  render: (args) =>
+    html`<atomic-result-number field=${args.field}>
+      ${unsafeHTML(
+        '<atomic-format-unit unit="byte" unit-display="long"></atomic-format-unit>'
+      )}
+    </atomic-result-number>`,
 };
