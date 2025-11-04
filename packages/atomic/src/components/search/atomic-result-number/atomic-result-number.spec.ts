@@ -164,9 +164,7 @@ describe('atomic-result-number', () => {
 
   describe('when rendering', () => {
     it('should remove itself from the DOM when the field value is null', async () => {
-      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockImplementation(
-        () => null
-      );
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(null);
 
       const {element} = await renderResultNumber({
         props: {field: 'missing'},
@@ -176,8 +174,8 @@ describe('atomic-result-number', () => {
     });
 
     it('should set the error when the field value cannot be parsed as a number', async () => {
-      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockImplementation(
-        () => 'not a number'
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
+        'not a number'
       );
 
       const {element} = await renderResultNumber({props: {field: 'invalid'}});
@@ -206,8 +204,8 @@ describe('atomic-result-number', () => {
       });
 
       it('should format a valid number value', async () => {
-        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockImplementation(
-          () => 1234.56
+        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
+          1234.56
         );
 
         const {element} = await renderResultNumber({props: {field: 'size'}});
@@ -216,8 +214,8 @@ describe('atomic-result-number', () => {
       });
 
       it('should format a valid string value that can be parsed to a number', async () => {
-        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockImplementation(
-          () => '1234.56'
+        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
+          '1234.56'
         );
 
         const {element} = await renderResultNumber({props: {field: 'price'}});
@@ -227,8 +225,8 @@ describe('atomic-result-number', () => {
 
       it('should format using the active i18n language', async () => {
         await i18n.changeLanguage('fr');
-        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockImplementation(
-          () => 1234.56
+        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
+          1234.56
         );
 
         const {element} = await renderResultNumber({props: {field: 'size'}});
@@ -238,8 +236,8 @@ describe('atomic-result-number', () => {
     });
 
     it('should use the specified formatter instead of the default one when it has a slotted formatter', async () => {
-      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockImplementation(
-        () => 1234.56
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
+        1234.56
       );
       const {element} = await renderResultNumber({
         props: {field: 'price'},

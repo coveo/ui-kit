@@ -22,7 +22,7 @@ describe('field-warning', () => {
     it('should log an error when item value is an array', () => {
       const field = 'multiValueField';
       const itemValueRaw = ['value1', 'value2'];
-      vi.mocked(isArray).mockImplementation(() => true);
+      vi.mocked(isArray).mockReturnValue(true);
 
       possiblyWarnOnBadFieldType(field, itemValueRaw, mockHost, mockLogger);
 
@@ -36,7 +36,7 @@ describe('field-warning', () => {
     it('should not log an error when item value is not an array', () => {
       const field = 'singleValueField';
       const itemValueRaw = 'singleValue';
-      vi.mocked(isArray).mockImplementation(() => false);
+      vi.mocked(isArray).mockReturnValue(false);
 
       possiblyWarnOnBadFieldType(field, itemValueRaw, mockHost, mockLogger);
 

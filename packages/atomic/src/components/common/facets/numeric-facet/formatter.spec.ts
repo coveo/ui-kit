@@ -67,9 +67,7 @@ describe('formatter', () => {
         },
       ];
 
-      vi.mocked(getFieldValueCaption).mockImplementation(
-        () => 'Budget Range Caption'
-      );
+      vi.mocked(getFieldValueCaption).mockReturnValue('Budget Range Caption');
 
       const result = formatHumanReadable({
         ...defaultFormatProps,
@@ -134,9 +132,7 @@ describe('formatter', () => {
         },
       ];
 
-      vi.mocked(getFieldValueCaption).mockImplementation(
-        () => 'Medium Range Caption'
-      );
+      vi.mocked(getFieldValueCaption).mockReturnValue('Medium Range Caption');
 
       const result = formatHumanReadable({
         ...defaultFormatProps,
