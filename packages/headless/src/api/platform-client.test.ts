@@ -340,7 +340,7 @@ describe('PlatformClient call', () => {
   });
 
   describe('retry configuration for 429 responses', () => {
-    it('should use startingDelay of 1000 to wait for new rate limit window', async () => {
+    it('should use startingDelay of 1100ms for base delay plus exponential component', async () => {
       const backOffSpy = vi.spyOn(BackOff, 'backOff');
       mockFetch.mockReturnValueOnce(
         Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
@@ -349,10 +349,10 @@ describe('PlatformClient call', () => {
       await platformCall();
 
       const options = backOffSpy.mock.calls[0][1];
-      expect(options?.startingDelay).toBe(1000);
+      expect(options?.startingDelay).toBe(1100);
     });
 
-    it('should use timeMultiple of 1 for constant delay between retries', async () => {
+    it('should use timeMultiple of 2 for exponential backoff', async () => {
       const backOffSpy = vi.spyOn(BackOff, 'backOff');
       mockFetch.mockReturnValueOnce(
         Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
@@ -361,10 +361,10 @@ describe('PlatformClient call', () => {
       await platformCall();
 
       const options = backOffSpy.mock.calls[0][1];
-      expect(options?.timeMultiple).toBe(1);
+      expect(options?.timeMultiple).toBe(2);
     });
 
-    it('should cap maxDelay at 1000ms to match rate limit window', async () => {
+    it('should cap maxDelay at 1800ms', async () => {
       const backOffSpy = vi.spyOn(BackOff, 'backOff');
       mockFetch.mockReturnValueOnce(
         Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
@@ -373,7 +373,19 @@ describe('PlatformClient call', () => {
       await platformCall();
 
       const options = backOffSpy.mock.calls[0][1];
-      expect(options?.maxDelay).toBe(1000);
+      expect(options?.maxDelay).toBe(1800);
+    });
+
+    it('should limit to 4 retry attempts', async () => {
+      const backOffSpy = vi.spyOn(BackOff, 'backOff');
+      mockFetch.mockReturnValueOnce(
+        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
+      );
+
+      await platformCall();
+
+      const options = backOffSpy.mock.calls[0][1];
+      expect(options?.numOfAttempts).toBe(4);
     });
 
     it('should enable full jitter to prevent thundering herd', async () => {

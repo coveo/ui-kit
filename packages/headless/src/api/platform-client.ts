@@ -71,9 +71,10 @@ export class PlatformClient {
 
     try {
       const response = await backOff(request, {
-        startingDelay: 1000,
-        timeMultiple: 1,
-        maxDelay: 1000,
+        startingDelay: 1100,
+        timeMultiple: 2,
+        maxDelay: 1800,
+        numOfAttempts: 4,
         jitter: 'full',
         retry: (e: Response) => {
           const shouldRetry = e && isThrottled(e.status);
