@@ -25,6 +25,9 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {parentNodeToString} from '@/src/utils/dom-utils';
 import styles from './atomic-product.tw.css';
+import '../atomic-product-text/atomic-product-text';
+import '../atomic-product-link/atomic-product-link';
+import '../atomic-product-image/atomic-product-image';
 
 /**
  * The `atomic-product` component is used internally by the `atomic-commerce-product-list` and `atomic-commerce-recommendation-list` components.
