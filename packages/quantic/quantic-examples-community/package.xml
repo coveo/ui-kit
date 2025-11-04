@@ -5,10 +5,6 @@
         <name>ExperienceBundle</name>
     </types>
     <types>
-        <members>Quantic Examples</members>
-        <name>Network</name>
-    </types>
-    <types>
         <members>Quantic Examples Profile</members>
         <name>Profile</name>
     </types>
