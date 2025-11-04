@@ -54,6 +54,7 @@
     "build:angular": "npx turbo gen:lit --filter=@coveo/atomic-angular-builder",
     "build:react": "npx turbo gen:lit --filter=@coveo/atomic-react",
     "build:locales": "node ./scripts/create-generated-folder.mjs && node ./scripts/split-locales.mjs && node ./scripts/copy-dayjs-locales.mjs",
+    "build:copy-assets": "node ./scripts/copy-assets.mjs",
     "build:list-assets": "node ./scripts/list-assets.mjs",
     "dev": "node ./scripts/dev.mjs",
     "web:dev": "npx vite serve dev",
