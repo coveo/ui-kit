@@ -560,20 +560,17 @@ describe('atomic-commerce-search-box', () => {
     });
   });
 
-  it('should warn when element has more than 1 default slot', async () => {
+  it('should accept multiple slotted components without warning', async () => {
     const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
-    const {element} = await renderSearchBox({
+    await renderSearchBox({
       additionalChildren: html`
-        <slot>some child</slot>
-        <slot>some child</slot>
+        <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+        <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
       `,
     });
 
-    expect(consoleSpy).toHaveBeenCalledExactlyOnceWith(
-      'Element should only have 1 default slot.',
-      element
-    );
+    expect(consoleSpy).not.toHaveBeenCalled();
   });
 });
 
