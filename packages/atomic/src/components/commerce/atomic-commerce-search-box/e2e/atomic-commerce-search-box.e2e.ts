@@ -156,6 +156,12 @@ test.describe('atomic-commerce-search-box', () => {
         await searchBox.searchInput.click();
       });
 
+      test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
+        await searchBox.hydrated.waitFor();
+        const accessibilityResults = await makeAxeBuilder().analyze();
+        expect(accessibilityResults.violations).toEqual([]);
+      });
+
       test.describe('after entering text', () => {
         test.beforeEach(async ({searchBox}) => {
           await searchBox.searchInput.fill('kayak');
@@ -181,12 +187,6 @@ test.describe('atomic-commerce-search-box', () => {
           await expect(searchBox.searchInput).toHaveText('');
           await expect(searchBox.clearButton).not.toBeVisible();
         });
-      });
-
-      test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
-        await searchBox.hydrated.waitFor();
-        const accessibilityResults = await makeAxeBuilder().analyze();
-        expect(accessibilityResults.violations).toEqual([]);
       });
 
       test.describe('after clicking the submit button', () => {
@@ -249,6 +249,12 @@ test.describe('atomic-commerce-search-box', () => {
         await searchBox.searchInput.click();
       });
 
+      test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
+        await searchBox.hydrated.waitFor();
+        const accessibilityResults = await makeAxeBuilder().analyze();
+        expect(accessibilityResults.violations).toEqual([]);
+      });
+
       test('should display suggested queries', async ({searchBox}) => {
         await expect(
           searchBox.searchSuggestions({listSide: 'Left'}).first()
@@ -259,12 +265,6 @@ test.describe('atomic-commerce-search-box', () => {
         await expect(
           searchBox.instantProduct({listSide: 'Right'}).first()
         ).toBeVisible();
-      });
-
-      test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
-        await searchBox.hydrated.waitFor();
-        const accessibilityResults = await makeAxeBuilder().analyze();
-        expect(accessibilityResults.violations).toEqual([]);
       });
 
       test('should display in the search box what has been submitted', async ({
@@ -320,18 +320,23 @@ test.describe('atomic-commerce-search-box', () => {
     });
 
     const testCases = () => {
+      test('should be accessible', async ({
+        searchBox,
+        makeAxeBuilder,
+        page,
+      }) => {
+        await searchBox.hydrated.waitFor();
+        await page.waitForLoadState('networkidle');
+        const accessibilityResults = await makeAxeBuilder().analyze();
+        expect(accessibilityResults.violations).toEqual([]);
+      });
+
       test('the submit button is disabled', async ({searchBox}) => {
         await expect(searchBox.submitButton).toBeDisabled();
       });
 
       test('there are no search suggestions', async ({searchBox}) => {
         await expect(searchBox.searchSuggestions().first()).not.toBeVisible();
-      });
-
-      test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
-        await searchBox.hydrated.waitFor();
-        const accessibilityResults = await makeAxeBuilder().analyze();
-        expect(accessibilityResults.violations).toEqual([]);
       });
 
       test('should not perform requests against the query suggest endpoint', () => {
@@ -373,18 +378,23 @@ test.describe('atomic-commerce-search-box', () => {
     });
 
     const testCases = () => {
+      test('should be accessible', async ({
+        searchBox,
+        makeAxeBuilder,
+        page,
+      }) => {
+        await searchBox.hydrated.waitFor();
+        await page.waitForLoadState('networkidle');
+        const accessibilityResults = await makeAxeBuilder().analyze();
+        expect(accessibilityResults.violations).toEqual([]);
+      });
+
       test('the submit button is disabled', async ({searchBox}) => {
         await expect(searchBox.submitButton).toBeDisabled();
       });
 
       test('there are no search suggestions', async ({searchBox}) => {
         await expect(searchBox.searchSuggestions().first()).not.toBeVisible();
-      });
-
-      test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
-        await searchBox.hydrated.waitFor();
-        const accessibilityResults = await makeAxeBuilder().analyze();
-        expect(accessibilityResults.violations).toEqual([]);
       });
     };
 

@@ -11,17 +11,17 @@ import {
 import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import {createAppLoadedListener} from '@/src/components/common/interface/store';
+import {renderLoadMoreButton} from '@/src/components/common/load-more/button';
+import {renderLoadMoreContainer} from '@/src/components/common/load-more/container';
+import {renderLoadMoreProgressBar} from '@/src/components/common/load-more/progress-bar';
+import {renderLoadMoreSummary} from '@/src/components/common/load-more/summary';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {createAppLoadedListener} from '../../common/interface/store';
-import {renderLoadMoreButton} from '../../common/load-more/button';
-import {renderLoadMoreContainer} from '../../common/load-more/container';
-import {renderLoadMoreProgressBar} from '../../common/load-more/progress-bar';
-import {renderLoadMoreSummary} from '../../common/load-more/summary';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
