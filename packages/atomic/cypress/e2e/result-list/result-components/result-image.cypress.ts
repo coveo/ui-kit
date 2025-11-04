@@ -15,7 +15,7 @@ import {
 
 const field = 'somethumbnail';
 const image = 'https://www.coveo.com/public/img/logos/coveo/coveo_logo_en.svg';
-const invalidImage = 'https://www.coveoooo.com/image.svg';
+const invalidImage = 'https://www.dummy.coveo.com/image.svg';
 const fallback = 'https://picsum.photos/seed/picsum/200/300';
 const notAString = 123;
 
