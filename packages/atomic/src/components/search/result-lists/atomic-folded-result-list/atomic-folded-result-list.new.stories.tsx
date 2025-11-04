@@ -154,6 +154,10 @@ export const Default: Story = {
   args: {
     'default-slot': SLOTS_DEFAULT,
   },
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mockOnce(() => baseFoldedResponse);
+  },
+  play,
 };
 
 export const WithNoResultChildren: Story = {
