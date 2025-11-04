@@ -113,9 +113,9 @@ describe('c-quantic-citation', () => {
     cleanup();
   });
 
-describe('debounce (Simplified Tests)', () => {
+describe('debounce function', () => {
   let mockFnToDebounce;
-  const DELAY = 200; // 200ms debounce delay
+  const DEBOUNCE_DELAY = 200;
 
   beforeEach(() => {
     jest.useFakeTimers();
@@ -128,19 +128,19 @@ describe('debounce (Simplified Tests)', () => {
 
   // Ensures that rapid calls result in only one execution
   test('should execute once after the delay and use the arguments from the last call', () => {
-    const debouncedFn = debounce(mockFnToDebounce, DELAY);
+    const debouncedFn = debounce(mockFnToDebounce, DEBOUNCE_DELAY);
 
     debouncedFn('first');
     expect(mockFnToDebounce).not.toHaveBeenCalled();
 
-    jest.advanceTimersByTime(DELAY - 100);
+    jest.advanceTimersByTime(DEBOUNCE_DELAY - 100);
     debouncedFn('middle');
 
-    jest.advanceTimersByTime(DELAY - 100);
+    jest.advanceTimersByTime(DEBOUNCE_DELAY - 100);
     debouncedFn('last');
 
     expect(mockFnToDebounce).not.toHaveBeenCalled();
-    jest.advanceTimersByTime(DELAY);
+    jest.advanceTimersByTime(DEBOUNCE_DELAY);
 
     expect(mockFnToDebounce).toHaveBeenCalledTimes(1);
     expect(mockFnToDebounce).toHaveBeenCalledWith('last');
@@ -148,28 +148,28 @@ describe('debounce (Simplified Tests)', () => {
 
   // Ensures calls separated by more than the delay execute independently.
   test('should execute multiple times if calls are spaced outside the delay', () => {
-    const debouncedFn = debounce(mockFnToDebounce, DELAY);
+    const debouncedFn = debounce(mockFnToDebounce, DEBOUNCE_DELAY);
 
     debouncedFn(100);
-    jest.advanceTimersByTime(DELAY);
+    jest.advanceTimersByTime(DEBOUNCE_DELAY);
     expect(mockFnToDebounce).toHaveBeenCalledTimes(1);
     expect(mockFnToDebounce).toHaveBeenCalledWith(100);
 
     debouncedFn(200, { data: 'second' });
-    jest.advanceTimersByTime(DELAY);
+    jest.advanceTimersByTime(DEBOUNCE_DELAY);
     expect(mockFnToDebounce).toHaveBeenCalledTimes(2);
     expect(mockFnToDebounce).toHaveBeenCalledWith(200, { data: 'second' });
   });
 
   // Ensures that the execution can be canceled before the delay expires.
   test('should not execute the function if cancel is called before the delay', () => {
-    const debouncedFn = debounce(mockFnToDebounce, DELAY);
+    const debouncedFn = debounce(mockFnToDebounce, DEBOUNCE_DELAY);
 
     debouncedFn('should not run');
-    jest.advanceTimersByTime(DELAY / 2);
+    jest.advanceTimersByTime(DEBOUNCE_DELAY / 2);
     debouncedFn.cancel();
 
-    jest.advanceTimersByTime(DELAY * 2);
+    jest.advanceTimersByTime(DEBOUNCE_DELAY * 2);
     expect(mockFnToDebounce).not.toHaveBeenCalled();
   });
 });
