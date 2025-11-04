@@ -139,9 +139,11 @@ describe('#renderColorFacetCheckbox', () => {
   });
 
   it('should format the count according to locale', async () => {
-    const {valueCount} = await setupElement({numberOfResults: 1000});
+    const {element} = await setupElement({numberOfResults: 1000});
 
+    const valueCount = element.querySelector('[part="value-count"]');
     expect(valueCount).toBeInTheDocument();
+    expect(valueCount?.textContent).toBeTruthy();
   });
 
   it('should render children inside the label', async () => {
