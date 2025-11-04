@@ -5,9 +5,27 @@ import {LightningElement, api} from 'lwc';
 /** @typedef {import("coveo").InteractiveCitation} InteractiveCitation */
 
 const minimumTooltipDisplayDurationMs = 1000;
-const debounceDurationBeforeHoverMs = 200;
-
+const tooltipHideDelayMs = 200;
 const supportedFileTypesForTextFragment = ['html', 'SalesforceItem'];
+
+/**
+ * Debounce function that delays invoking func until after wait milliseconds
+ * have elapsed since the last time the debounced function was invoked.
+ * Includes a cancel method to clear any pending timeout.
+ * @param {Function} fn - The function to debounce
+ * @param {number} delay - The number of milliseconds to delay
+ * @returns {Function & {cancel: Function}} The debounced function with cancel method
+ */
+export function debounce(fn, delay) {
+  let timeout;
+  const debounced = (...args) => {
+    clearTimeout(timeout);
+    // eslint-disable-next-line @lwc/lwc/no-async-operation
+    timeout = setTimeout(() => fn(...args), delay);
+  };
+  debounced.cancel = () => clearTimeout(timeout);
+  return debounced;
+}
 
 /**
  * The `QuanticCitation` component renders an individual citation.
@@ -42,13 +60,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   /** @type {number} */
   hoverStartTimestamp;
   /** @type {boolean} */
-  shouldShowTooltipAfterDelay = false;
-  /** @type {boolean} */
   tooltipIsDisplayed = false;
-  /** @type {boolean} */
-  isHoveringCitation = false;
-  /** @type {boolean} */
-  isHoveringTooltip = false;
   /** @type {function} */
   removeBindings;
   /** @type {boolean} */
@@ -57,6 +69,8 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   salesforceRecordUrl;
   /** @type {boolean} */
   isHrefWithTextFragment = false;
+  /** @type {function & {cancel: function}} */
+  hideTooltipDebounced;
 
   connectedCallback() {
     const fileType = this.citation?.fields?.filetype;
@@ -64,6 +78,15 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       !this.disableCitationAnchoring &&
       supportedFileTypesForTextFragment.includes(fileType) &&
       !!this.text;
+
+    // Initialize the debounced hide tooltip function
+    this.hideTooltipDebounced = debounce(() => {
+      if (this.tooltipIsDisplayed) {
+        this.dispatchCitationHoverEvent();
+      }
+      this.tooltipIsDisplayed = false;
+      this.tooltipComponent?.hideTooltip();
+    }, tooltipHideDelayMs);
   }
 
   renderedCallback() {
@@ -88,78 +111,35 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   disconnectedCallback() {
     this.removeBindings?.();
     clearTimeout(this.timeout);
+    this.hideTooltipDebounced?.cancel();
   }
 
-  /**
-   * Handles mouse enter on the citation link.
-   * Shows tooltip after delay if not already visible.
-   */
   handleCitationMouseEnter() {
-    this.isHoveringCitation = true;
-    clearTimeout(this.timeout);
-    this.showTooltipIfNeeded();
+    this.showTooltip();
   }
 
-  /**
-   * Handles mouse leave on the citation link.
-   * Schedules tooltip hiding with delay to allow moving to tooltip.
-   */
   handleCitationMouseLeave() {
-    this.isHoveringCitation = false;
-    this.hideTooltipIfNeeded();
+    this.hideTooltipDebounced();
   }
 
-  /**
-   * Handles mouse enter on the tooltip.
-   * Cancels any pending hide to keep tooltip visible.
-   */
   handleTooltipMouseEnter() {
-    this.isHoveringTooltip = true;
-    clearTimeout(this.timeout);
+    this.hideTooltipDebounced.cancel();
   }
 
-  /**
-   * Handles mouse leave on the tooltip.
-   * Schedules tooltip hiding with delay.
-   */
   handleTooltipMouseLeave() {
-    this.isHoveringTooltip = false;
-    this.hideTooltipIfNeeded();
+    this.hideTooltipDebounced();
   }
 
   /**
-   * Shows the tooltip after a delay if not already displayed.
+   * Shows the tooltip immediately and cancels any pending hide.
    */
-  showTooltipIfNeeded() {
+  showTooltip() {
+    this.hideTooltipDebounced.cancel();
     if (!this.tooltipIsDisplayed) {
-      this.shouldShowTooltipAfterDelay = true;
-      // eslint-disable-next-line @lwc/lwc/no-async-operation
-      this.timeout = setTimeout(() => {
-        if (this.shouldShowTooltipAfterDelay) {
-          this.hoverStartTimestamp = Date.now();
-          this.tooltipIsDisplayed = true;
-          this.tooltipComponent.showTooltip();
-        }
-      }, debounceDurationBeforeHoverMs);
+      this.hoverStartTimestamp = Date.now();
+      this.tooltipIsDisplayed = true;
+      this.tooltipComponent?.showTooltip();
     }
-  }
-
-  /**
-   * Hides the tooltip with a delay to allow smooth cursor movement between citation link and tooltip elements.
-   */
-  hideTooltipIfNeeded() {
-    // eslint-disable-next-line @lwc/lwc/no-async-operation
-    this.timeout = setTimeout(() => {
-      if (!this.isHoveringCitation && !this.isHoveringTooltip) {
-        this.shouldShowTooltipAfterDelay = false;
-        if (this.tooltipIsDisplayed) {
-          this.dispatchCitationHoverEvent();
-        }
-
-        this.tooltipIsDisplayed = false;
-        this.tooltipComponent.hideTooltip();
-      }
-    }, debounceDurationBeforeHoverMs);
   }
 
   /**

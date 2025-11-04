@@ -5,6 +5,7 @@ import {
 // @ts-ignore
 import {createElement} from 'lwc';
 import QuanticCitation from '../quanticCitation';
+import {debounce} from '../quanticCitation';
 
 const functionsMocks = {
   eventHandler: jest.fn((event) => event),
@@ -112,6 +113,67 @@ describe('c-quantic-citation', () => {
     cleanup();
   });
 
+describe('debounce (Simplified Tests)', () => {
+  let mockFnToDebounce;
+  const DELAY = 200; // 200ms debounce delay
+
+  beforeEach(() => {
+    jest.useFakeTimers();
+    mockFnToDebounce = jest.fn();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  // Ensures that rapid calls result in only one execution
+  test('should execute once after the delay and use the arguments from the last call', () => {
+    const debouncedFn = debounce(mockFnToDebounce, DELAY);
+
+    debouncedFn('first');
+    expect(mockFnToDebounce).not.toHaveBeenCalled();
+
+    jest.advanceTimersByTime(DELAY - 100);
+    debouncedFn('middle');
+
+    jest.advanceTimersByTime(DELAY - 100);
+    debouncedFn('last');
+
+    expect(mockFnToDebounce).not.toHaveBeenCalled();
+    jest.advanceTimersByTime(DELAY);
+
+    expect(mockFnToDebounce).toHaveBeenCalledTimes(1);
+    expect(mockFnToDebounce).toHaveBeenCalledWith('last');
+  });
+
+  // Ensures calls separated by more than the delay execute independently.
+  test('should execute multiple times if calls are spaced outside the delay', () => {
+    const debouncedFn = debounce(mockFnToDebounce, DELAY);
+
+    debouncedFn(100);
+    jest.advanceTimersByTime(DELAY);
+    expect(mockFnToDebounce).toHaveBeenCalledTimes(1);
+    expect(mockFnToDebounce).toHaveBeenCalledWith(100);
+
+    debouncedFn(200, { data: 'second' });
+    jest.advanceTimersByTime(DELAY);
+    expect(mockFnToDebounce).toHaveBeenCalledTimes(2);
+    expect(mockFnToDebounce).toHaveBeenCalledWith(200, { data: 'second' });
+  });
+
+  // Ensures that the execution can be canceled before the delay expires.
+  test('should not execute the function if cancel is called before the delay', () => {
+    const debouncedFn = debounce(mockFnToDebounce, DELAY);
+
+    debouncedFn('should not run');
+    jest.advanceTimersByTime(DELAY / 2);
+    debouncedFn.cancel();
+
+    jest.advanceTimersByTime(DELAY * 2);
+    expect(mockFnToDebounce).not.toHaveBeenCalled();
+  });
+});
+
   it('should properly display the citation', async () => {
     const element = createTestComponent();
     await flushPromises();
@@ -207,7 +269,7 @@ describe('c-quantic-citation', () => {
 
       expect(functionsMocks.eventHandler).toHaveBeenCalledTimes(1);
       expect(functionsMocks.eventHandler).toHaveBeenCalledWith({
-        citationHoverTimeMs: 1000,
+        citationHoverTimeMs: 1200,
       });
     });
 
