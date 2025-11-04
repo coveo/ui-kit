@@ -1,0 +1,32 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicFieldConditionStories from './atomic-field-condition.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={ AtomicFieldConditionStories } />
+
+<AtomicDocTemplate
+  stories={ AtomicFieldConditionStories }
+  githubPath="search/result-template-components/atomic-field-condition/atomic-field-condition.ts"
+  tagName="atomic-field-condition"
+  className="AtomicFieldCondition"
+>
+
+`atomic-field-condition` conditionally renders its content based on result attributes.
+This component can verify whether specified fields are defined, not defined, match specific values, or do not match specific values.
+
+It is typically used within `atomic-result-template`.
+
+```html
+<atomic-result-template>
+  ... 
+
+  <atomic-field-condition
+    if-defined="author"
+  >
+  <span>Render me if <strong>author</strong> is defined.</span>
+  </atomic-field-condition>
+  
+</atomic-result-template>
+```
+
+</AtomicDocTemplate>
