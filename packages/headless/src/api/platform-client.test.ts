@@ -340,7 +340,7 @@ describe('PlatformClient call', () => {
   });
 
   describe('retry configuration for 429 responses', () => {
-    it('should use startingDelay of 1100ms for base delay plus exponential component', async () => {
+    it('should use startingDelay of 100ms for exponential component', async () => {
       const backOffSpy = vi.spyOn(BackOff, 'backOff');
       mockFetch.mockReturnValueOnce(
         Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
@@ -349,7 +349,7 @@ describe('PlatformClient call', () => {
       await platformCall();
 
       const options = backOffSpy.mock.calls[0][1];
-      expect(options?.startingDelay).toBe(1100);
+      expect(options?.startingDelay).toBe(100);
     });
 
     it('should use timeMultiple of 2 for exponential backoff', async () => {
@@ -364,7 +364,7 @@ describe('PlatformClient call', () => {
       expect(options?.timeMultiple).toBe(2);
     });
 
-    it('should cap maxDelay at 1800ms', async () => {
+    it('should cap maxDelay at 800ms', async () => {
       const backOffSpy = vi.spyOn(BackOff, 'backOff');
       mockFetch.mockReturnValueOnce(
         Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
@@ -373,7 +373,7 @@ describe('PlatformClient call', () => {
       await platformCall();
 
       const options = backOffSpy.mock.calls[0][1];
-      expect(options?.maxDelay).toBe(1800);
+      expect(options?.maxDelay).toBe(800);
     });
 
     it('should limit to 4 retry attempts', async () => {
@@ -398,6 +398,22 @@ describe('PlatformClient call', () => {
 
       const options = backOffSpy.mock.calls[0][1];
       expect(options?.jitter).toBe('full');
+    });
+
+    it('should wait minimum 1s between retries', async () => {
+      const startTime = Date.now();
+      mockFetch
+        .mockReturnValueOnce(
+          Promise.resolve(new Response(JSON.stringify({}), {status: 429}))
+        )
+        .mockReturnValueOnce(
+          Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
+        );
+
+      await platformCall();
+
+      const elapsedTime = Date.now() - startTime;
+      expect(elapsedTime).toBeGreaterThanOrEqual(1000);
     });
 
     it('should retry on 429', async () => {

@@ -61,7 +61,12 @@ export class PlatformClient {
     logger.info(requestInfo, 'Platform request');
 
     const {url, ...requestData} = requestInfo;
+    let isFirstAttempt = true;
     const request = async () => {
+      if (!isFirstAttempt) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+      isFirstAttempt = false;
       const response = await fetch(url, requestData);
       if (isThrottled(response.status)) {
         throw response;
@@ -71,9 +76,9 @@ export class PlatformClient {
 
     try {
       const response = await backOff(request, {
-        startingDelay: 1100,
+        startingDelay: 100,
         timeMultiple: 2,
-        maxDelay: 1800,
+        maxDelay: 800,
         numOfAttempts: 4,
         jitter: 'full',
         retry: (e: Response) => {
