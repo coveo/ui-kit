@@ -9,6 +9,7 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types.js';
+import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {renderRating} from '../../../common/atomic-rating/rating';
 import Star from '../../../images/star.svg';
@@ -27,7 +28,7 @@ import type {Bindings} from '../../atomic-search-interface/interfaces';
 @customElement('atomic-result-rating')
 @bindings()
 export class AtomicResultRating
-  extends LightDomMixin(LitElement)
+  extends LightDomMixin(InitializeBindingsMixin(LitElement))
   implements InitializableComponent<Bindings>
 {
   @state() public bindings!: Bindings;
