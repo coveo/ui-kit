@@ -1,10 +1,10 @@
 import {html, nothing} from 'lit';
 import {when} from 'lit/directives/when.js';
+import {renderItemPlaceholders} from '@/src/components/common/atomic-result-placeholder/item-placeholders';
 import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
 } from '@/src/components/common/layout/display-options';
-import {renderItemPlaceholders} from '@/src/components/common/atomic-result-placeholder/item-placeholders';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 
 interface CollectionGuardProps {
