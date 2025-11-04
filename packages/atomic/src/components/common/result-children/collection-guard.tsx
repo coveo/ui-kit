@@ -4,7 +4,7 @@ import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
 } from '../layout/display-options';
-import {ChildrenWrapper} from './children-wrapper';
+import {ChildrenWrapper} from './stencil-children-wrapper';
 
 interface CollectionGuardProps {
   isLoadingMoreResults: boolean;
