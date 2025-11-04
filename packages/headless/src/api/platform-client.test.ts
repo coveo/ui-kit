@@ -428,7 +428,10 @@ describe('PlatformClient call', () => {
       expect(retryFn).toBeDefined();
 
       const response429 = new Response(JSON.stringify({}), {status: 429});
+      const startTime = Date.now();
       expect(await retryFn!(response429, 1)).toBe(true);
+      const elapsedTime = Date.now() - startTime;
+      expect(elapsedTime).toBeGreaterThanOrEqual(1000);
     });
 
     it('should not retry on 500', async () => {
@@ -443,7 +446,10 @@ describe('PlatformClient call', () => {
       expect(retryFn).toBeDefined();
 
       const response500 = new Response(JSON.stringify({}), {status: 500});
+      const startTime = Date.now();
       expect(await retryFn!(response500, 1)).toBe(false);
+      const elapsedTime = Date.now() - startTime;
+      expect(elapsedTime).toBeLessThan(100);
     });
 
     it('should not retry on 200', async () => {
@@ -458,7 +464,10 @@ describe('PlatformClient call', () => {
       expect(retryFn).toBeDefined();
 
       const response200 = new Response(JSON.stringify({}), {status: 200});
+      const startTime = Date.now();
       expect(await retryFn!(response200, 1)).toBe(false);
+      const elapsedTime = Date.now() - startTime;
+      expect(elapsedTime).toBeLessThan(100);
     });
   });
 
