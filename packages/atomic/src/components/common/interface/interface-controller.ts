@@ -153,7 +153,7 @@ export class InterfaceController<EngineType extends AnyEngineType>
   public async waitForAllCustomElementDefined(): Promise<void> {
     const uniqueAtomicTags = new Set<string>();
 
-    for (const element of this.host.querySelectorAll('*')) {
+    for (const element of Array.from(this.host.querySelectorAll('*'))) {
       const tagName = element.tagName;
       if (tagName.includes('-') && upperCaseElementMap.has(tagName)) {
         uniqueAtomicTags.add(tagName);
