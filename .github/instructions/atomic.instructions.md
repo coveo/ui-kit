@@ -1,194 +1,219 @@
 ---
-applyTo: '**packages/atomic/**/**'
+applyTo: 'packages/atomic/**'
 ---
 
-_All new atomic components should be lit components, not stencil components. This document describes the structure and conventions for atomic components in the UI Kit._
+**All new Atomic components must be Lit components, not Stencil.** This document describes structure and conventions for Atomic components.
 
-**Note: All commands in this document should be run from the `packages/atomic` directory.**
-
-When generating new atomic component use the script like this:
+**Generate new components from `packages/atomic` directory:**
 
 ```bash
-node scripts/generate-component.mjs test-component src/components/common
+node scripts/generate-component.mjs component-name src/components/common
 ```
 
-This will create a new component in the `src/components/common` directory with the name `test-component`.
+The generated boilerplate demonstrates established patterns. Follow these conventions for consistency.
 
-The generate-lit-exports.mjs script is used to generate the exports for the new component in the `src/components/index.ts` file.
+## Component Directory Structure
 
-## Structure
+Atomic components live in `src/components/` organized by use case:
 
-The atomic components are placed in the `src/components` directory. They are organized by use case, such as `commerce`, `common`, `search`, etc. Each (lit) component has its own directory containing the following files:
+- `/commerce` - Components exclusive to the commerce use-case
+- `/common` - Shared components across all interfaces
+- `/search` - Components exclusive to the search use-case
+- `/insight` - Components exclusive to the Insight use-case
+- `/ipx` - Components exclusive to the In-Product Experience use case
+- `/recommendations` - Components exclusive to the Recommendations use case
 
-- `atomic-test-component.mdx`: The documentation file for the component.
-- `atomic-test-component.new.stories.tsx`: The Storybook stories for the component.
-- `atomic-test-component.ts`: The main component file.
-- `atomic-test-component.spec.ts`: The test file for the component.
-- `atomic-test-component.tw.css`: The CSS file for the component.
-- `e2e/atomic-test-component.e2e.ts`: The end-to-end test file.
-- `e2e/fixture.ts`: The E2E test fixture.
-- `e2e/page-object.ts`: The E2E page object.
+### Lit Component Files (New Standard)
 
-Components not yet migrated to lit use stencil, and have the following files:
+Each component has an `atomic-*` directory with:
 
-- `atomic-test-component.tsx`: The main component file (Stencil-based).
-- `atomic-test-component.pcss`: The PostCSS file for the component.
-- `atomic-test-component.new.stories.tsx`: The Storybook stories for the component.
-- `atomic-test-component.spec.ts`: The test file for the component.
-- `e2e/atomic-test-component.e2e.ts`: The end-to-end test file.
-- `e2e/fixture.ts`: The E2E test fixture.
-- `e2e/page-object.ts`: The E2E page object.
+- `atomic-name.ts` - Main component (TypeScript)
+- `atomic-name.tw.css.ts` - Styles (Optional; Tailwind CSS)
+- `atomic-name.spec.ts` - Unit tests
+- `atomic-name.mdx` - Documentation
+- `atomic-name.new.stories.tsx` - Storybook stories
+- `e2e/atomic-name.e2e.ts` - End-to-end tests (happy path + accessibility)
+- `e2e/fixture.ts` - E2E test setup
+- `e2e/page-object.ts` - E2E interaction layer
 
-## Component Directories
+### Stencil Component Files (Legacy)
 
-Components are organized by use case in the following directories:
+Legacy components use `.tsx` (Stencil) and `.pcss` (PostCSS). Same structure otherwise. Gradually migrating to Lit.
 
-- `src/components/commerce/`: Commerce-related components (e.g., product lists, shopping cart features)
-- `src/components/common/`: Shared/common components used across different interfaces
-- `src/components/search/`: Search-related components (e.g., facets, search box, results)
-- `src/components/insight/`: Insight interface components for analytics and reporting
-- `src/components/ipx/`: IPX (In-Product Experience) components
-- `src/components/recommendations/`: Recommendation components
+## Naming Conventions
 
-## Key Differences Between Lit and Stencil Components
+- Component tag: `atomic-kebab-case` (e.g., `atomic-search-box`)
+- File names: `atomic-kebab-case.ts` (match tag name)
+- Class names: `AtomicPascalCase` (e.g., `AtomicSearchBox`)
+- All component files share the same base name
 
-### Lit Components (New)
+## Lit Component Implementation
 
-- Use TypeScript with `.ts` extension
-- Use Tailwind CSS with `.tw.css` extension
-- Modern Lit-based web components
-- Preferred for new components
+### Component Class Documentation
 
-### Stencil Components (Legacy)
+**Start with:** "The `atomic-element-name` component [description]."
 
-- Use TypeScript JSX with `.tsx` extension
-- Use PostCSS with `.pcss` extension
-- Stencil-based web components
-- Being gradually migrated to Lit
+**Document shadow parts:** `@part partName - Description of the part's purpose.`
 
-## File Naming Conventions
+**Document events:** `@event eventName - Description of when/why emitted.`
 
-All atomic components follow these naming conventions:
+**Document slots:** `@slot slotName - Description.` (Use `@slot (default) - Description.` for default slot)
 
-- Component names are prefixed with `atomic-`
-- File names use kebab-case (e.g., `atomic-my-component`)
-- Class names use PascalCase (e.g., `AtomicMyComponent`)
-- All files in a component directory share the same base name
+### Property Documentation
 
-## Testing Structure
+Start every `@property` field doc with: "The", "A", "An", or "Whether".
 
-Each component includes comprehensive testing:
+**Example:**
+```typescript
+/**
+ * The maximum number of results to display.
+ */
+@property({type: Number}) max = 10;
 
-- **Unit Tests** (`.spec.ts`): Test component logic and behaviour
-- **End-to-End Tests** (`e2e/*.e2e.ts`): Test component integration and user interactions
-- **Test Fixtures** (`e2e/fixture.ts`): Setup and configuration for E2E tests
-- **Page Objects** (`e2e/page-object.ts`): Abstraction layer for E2E test interactions
+/**
+ * Whether the component displays in compact mode.
+ */
+@property({type: Boolean}) compact = false;
+```
 
-## Documentation and Storybook
+### Decorators and Class Structure
 
-- **MDX Documentation** (`.mdx`): Component documentation with examples
-- **Storybook Stories** (`.new.stories.tsx`): Interactive component demonstrations
-- Stories include controls for testing different component configurations
+**Always use:**
+- `@customElement('atomic-element-name')` on component class
 
-## Lit components style guide
+**Use when applicable:**
+- `@bindings()` - Only if component requires engine/interface bindings
+- `@withTailwindStyles` - Only for shadow DOM components with Tailwind styles
 
-- All properties with more than one word should have their attribute value in kebab-case. Example: `@property({type: String, attribute: 'my-attribute'}) myAttribute: string;`
-- Components that need bindings should use the `@bindings`decorator.
-- In general, prefer decorators over mixins, and lit reactive controllers over decorators when it makes sense.
+**Multi-word properties:** Use kebab-case attributes explicitly:
+```typescript
+@property({type: String, attribute: 'entity-to-greet'}) entityToGreet: string;
+```
 
-## Atomic Chemistry 101
+**Light DOM components:** Extend `LightDomMixin(LitElement)` or `LightDomMixin(InitializeBindingsMixin(LitElement))`
 
-To ensure consistency, clarity, and ease of contribution to our Atomic design system, we use a naming convention inspired by Atomic Design. This helps us better communicate component roles, organize code, and onboard new contributors.
+**Initializable components:** Implement `InitializableComponent<BindingsType>` for components requiring initialization
 
-### 🔹 Atom
+**Architecture preference:** Decorators > Mixins > Lit reactive controllers (use controllers when they provide clear lifecycle/state management benefits)
 
-**Definition:**
-An Atom is a small, pure, stateless function that renders a piece of UI. It does not connect Headless.
+### Class Field Declaration Order
 
-**Characteristics:**
+Declare class fields in this order:
 
-- Stateless and functional
-- Has no dependencies on Headless
-- Focused purely on presentation
-- Simple, reusable, and easy to test
+1. `static styles` - Immediately after class declaration
+2. `@property` decorated fields (public properties)
+3. `@state` decorated fields:
+   - `bindings` (for initializable components requiring engine/interface bindings)
+   - `error` (for initializable components)
+   - Controller-bound state using `@bindStateToController`
+   - Other public state
+   - Private state
+4. Non-decorated fields (controllers, refs, etc.)
 
-**Examples:**
+**Controller-bound state pattern:**
+```typescript
+@bindStateToController('querySummary')
+@state()
+public querySummaryState!: QuerySummaryState;
+public querySummary!: QuerySummary;
+```
 
-- A function that renders a styled button
-- A function that returns an icon, text label, or layout fragment
+**Example structure:**
+```typescript
+export class AtomicExample extends LitElement {
+  static styles = css`...`;
+  
+  @property({type: String}) label = 'default';
+  
+  @state() public bindings!: Bindings;
+  @state() public error!: Error;
+  @bindStateToController('controller')
+  @state()
+  public controllerState!: ControllerState;
+  public controller!: Controller;
+  @state() private isOpen = false;
+  
+  private myRef = createRef<HTMLElement>();
+}
+```
 
-**Why it matters:**
-Atoms allow us to build a clean visual language, isolate visual elements, and promote maximum component reuse.
+### Method declaration order
 
-### 🔸 Molecule
+Declare component methods in the following order:
 
-**Definition:**
-A Molecule is a Custom Element that combines one or more Atoms and connects to Headless for behaviour and state management.
+1. Standard custom element lifecycle method overrides:
+    1. `constructor`
+    2. `connectedCallback`
+    3. `disconnectedCallback` - Always call `super.disconnectedCallback()` first, then clean up event listeners and resources
+    4. `adoptedCallback`
+    5. `attributeChangedCallback`
+2. Public methods / getters (`initialize`  method first, then in alphabetical order)
+3. Lit reactive update lifecycle method overrides:
+    1. `shouldUpdate`
+    2. `willUpdate`
+    3. `update`
+    4. `render`
+    5. `firstUpdated`
+    6. `updated`
+4. Private methods / getters, in any order
 
-**Characteristics:**
+### Event Listener Lifecycle
 
-- Composed of Atoms
-- Connects to Headless controllers
-- Exposed as part of the Atomic custom elements library
-- Handles interactions and state
+Register custom event listeners in `initialize()` for initializable components. Always remove them in `disconnectedCallback()` to prevent memory leaks.
 
-**Examples:**
+**Pattern:**
+```typescript
+public initialize() {
+  this.controller = buildController(this.bindings.engine);
+  this.addEventListener('custom-event', this.handleEvent as EventListener);
+}
 
-- `<atomic-search-box>`: Renders input + button and handles search state
-- `<atomic-result-list>`: Renders search results from Headless data
+disconnectedCallback() {
+  super.disconnectedCallback();
+  this.removeEventListener('custom-event', this.handleEvent as EventListener);
+}
+```
 
-**Why it matters:**
-Molecules are the interactive, declarative components we expose to consumers. They encapsulate structure and behaviour cleanly.
+### Property validation
 
-### ⚡ Ion
+Use `ValidatePropsController` in `constructor` for validation. Boolean props don't require validation.
 
-**Definition:**
-An Ion is a small utility or helper used to support Atoms. It provides styling, layout logic, mappings, or constants — anything that helps Atoms stay clean and focused.
+**Example:**
+```typescript
+constructor() {
+  super();
+  
+  new ValidatePropsController(
+    this,
+    () => ({pathLimit: this.pathLimit}),
+    new Schema({
+      pathLimit: new NumberValue({min: 1, required: false}),
+    })
+  );
+}
+```
 
-**Characteristics:**
+### Rendering with Lit Directives
 
-- Atom-level scope
-- No UI rendering of its own
-- Stateless and reusable
-- Lightweight and focused
+**Use Lit directives for conditional rendering** instead of ternaries or manual `if` statements:
 
-**Examples:**
+- `when(condition, trueTemplate, falseTemplate)` - Conditional rendering
+- `classMap(obj)` - Conditional CSS classes
+- `nothing` - Render nothing (import from `lit`)
 
-- Reusable guards
-- Styling utilities
-- Layout logic helpers
-- Constants and mappings
+**Example:**
+```typescript
+import {when} from 'lit/directives/when.js';
+import {nothing} from 'lit';
 
-**Why it matters:**
-Ions allow us to share low-level presentation logic across Atoms while keeping them simple and consistent.
-
-### ⚙️ Enzyme
-
-**Definition:**
-An Enzyme is a utility, decorator, or helper that enhances a Molecule's behaviour or binds logic to it. Like biological enzymes, they enable or accelerate functionality without being part of the core structure.
-
-**Characteristics:**
-
-- Provides logic "glue" or behaviour enhancements
-- Often implemented as decorators, event hooks, or bindings
-- Not responsible for rendering UI directly
-
-**Examples:**
-
-- A class decorator to load Tailwind CSS within the Shadow DOM of a Molecule
-- A Mixin that sets up the atomic-\*-interface bindings within a Molecule
-- A Reactive Controller that injects accessibility or styling enhancements
-
-**Why it matters:**
-Enzymes help keep Molecules clean, modular, and focused by isolating cross-cutting concerns into composable enhancements.
-
-## Component Architecture Guidelines
-
-When developing atomic components, follow these architectural principles:
-
-1. **Atoms** should be pure presentation functions without business logic
-2. **Molecules** should compose Atoms and handle state/interactions via Headless
-3. **Ions** should provide reusable utilities that support Atoms
-4. **Enzymes** should enhance Molecules with cross-cutting concerns
-
-This architecture ensures a clear separation of concerns and promotes maintainable, testable code.
+render() {
+  return html`
+    ${when(
+      this.isVulcan,
+      () => html`🖖 ${this.entityToGreet}!`,
+      () => html`👋 ${this.entityToGreet}!`
+    )}
+    ${when(this.hasQuery, () => this.renderQuery())}
+  `;
+}
+```

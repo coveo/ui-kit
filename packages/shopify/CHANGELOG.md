@@ -1,3 +1,10 @@
+## <small>1.9.8 (2025-10-30)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
 ## <small>1.9.7 (2025-10-29)</small>
 
 * ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
@@ -78,7 +85,7 @@
 
 ## 1.7.0 (2025-06-25)
 
-- feat(shopify): add init function to make it easy to emit custom events on pages with no search (#552 ([5eb2d5d](https://github.com/coveo/ui-kit/commits/5eb2d5d)), closes [#5524](https://github.com/coveo/ui-kit/issues/5524)
+- feat(shopify): add init function to make it easy to emit custom events on pages with no search (#5524) ([5eb2d5d](https://github.com/coveo/ui-kit/commits/5eb2d5d)), closes [#5524](https://github.com/coveo/ui-kit/issues/5524)
 
 ## 1.6.0 (2025-06-18)
 

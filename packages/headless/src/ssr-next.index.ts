@@ -461,11 +461,11 @@ export type {
   UrlManagerState,
 } from './ssr-next/search/controllers/url-manager/headless-url-manager.ssr.js';
 export {defineUrlManager} from './ssr-next/search/controllers/url-manager/headless-url-manager.ssr.js';
+export {defineSearchEngine} from './ssr-next/search/engine/search-engine.ssr.js';
 export type {
   SearchCompletedAction,
   SSRSearchEngine as SearchEngine,
-} from './ssr-next/search/engine/search-engine.ssr.js';
-export {defineSearchEngine} from './ssr-next/search/engine/search-engine.ssr.js';
+} from './ssr-next/search/types/build.js';
 export type {
   ControllerDefinitionsMap,
   InferControllerStaticStateFromController,

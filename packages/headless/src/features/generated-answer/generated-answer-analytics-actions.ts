@@ -248,6 +248,26 @@ export const logGeneratedAnswerStreamEnd = (
     },
   });
 
+export const logGeneratedAnswerResponseLinked = (): CustomAction =>
+  makeAnalyticsAction({
+    prefix: 'analytics/generatedAnswer/responseLinked',
+    __legacy__getBuilder: () => {
+      return null;
+    },
+    analyticsType: 'Rga.ResponseLinked',
+    analyticsPayloadBuilder: (state): Rga.ResponseLinked | undefined => {
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+      return {
+        answerId: generativeQuestionAnsweringId ?? '',
+        responseId:
+          state.search?.searchResponseId ||
+          state.search?.response.searchUid ||
+          '',
+      };
+    },
+  });
+
 export const logGeneratedAnswerShowAnswers = (): CustomAction =>
   makeAnalyticsAction({
     prefix: 'analytics/generatedAnswer/show',

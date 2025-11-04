@@ -1,7 +1,7 @@
 import type {ComplexAttributeConverter} from 'lit';
 
 export const arrayConverter: ComplexAttributeConverter<string[]> = {
-  fromAttribute: (value: string | null) => {
+  fromAttribute: (value: string | null): string[] => {
     if (!value) return [];
     try {
       const parsed = JSON.parse(value);

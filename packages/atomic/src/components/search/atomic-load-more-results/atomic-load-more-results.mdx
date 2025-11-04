@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicLoadMoreResultsStories from './atomic-load-more-results.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicLoadMoreResultsStories} />
+
+<AtomicDocTemplate
+  stories={AtomicLoadMoreResultsStories}
+  githubPath="search/atomic-load-more-results/atomic-load-more-results.ts"
+  tagName="atomic-load-more-results"
+  className="AtomicLoadMoreResults"
+>
+
+This component is typically placed within the "pagination" section of the layout.
+
+**Note:** Use either `atomic-load-more-results` OR `atomic-pager` for pagination, but not both. These components provide alternative pagination approaches:
+- `atomic-pager`: Provides traditional page-based navigation with numbered pages. It is often used along with the `atomic-results-per-page` component.
+- `atomic-load-more-results`: Allows users to incrementally load additional results with a "Load More" button.
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+      <atomic-layout-section section="pagination">
+        
+        <atomic-load-more-results></atomic-load-more-results>
+
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+</AtomicDocTemplate>
