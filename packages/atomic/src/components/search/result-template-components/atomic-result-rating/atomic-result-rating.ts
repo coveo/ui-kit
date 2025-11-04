@@ -74,6 +74,9 @@ export class AtomicResultRating
   }
 
   private updateNumberOfStars() {
+    if (!this.result) {
+      return;
+    }
     const value = ResultTemplatesHelpers.getResultProperty(
       this.result,
       this.field
@@ -86,13 +89,6 @@ export class AtomicResultRating
     }
   }
 
-  private updateStates() {
-    if (!this.result) {
-      return;
-    }
-    this.updateNumberOfStars();
-  }
-
   @bindingGuard()
   @errorGuard()
   render() {
@@ -100,7 +96,7 @@ export class AtomicResultRating
       this.result = this.resultController.item;
     }
 
-    this.updateStates();
+    this.updateNumberOfStars();
 
     return html`
       ${when(this.numberOfStars !== null, () =>
