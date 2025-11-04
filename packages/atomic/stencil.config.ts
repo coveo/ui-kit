@@ -131,7 +131,7 @@ export const config: Config = {
           dest: 'assets',
         },
         {
-          src: '../../../node_modules/@salesforce-ux/design-system/assets/icons/utility/sparkles.svg',
+          src: './node_modules/@salesforce-ux/design-system/assets/icons/utility/sparkles.svg',
           dest: 'assets/sparkles.svg',
         },
       ],
