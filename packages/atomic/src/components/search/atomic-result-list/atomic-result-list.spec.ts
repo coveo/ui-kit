@@ -106,41 +106,6 @@ describe('atomic-result-list', () => {
   );
 
   it.each<{
-    prop: 'display';
-    invalidValue: string;
-  }>([
-    {
-      prop: 'display',
-      invalidValue: 'invalid',
-    },
-    {
-      prop: 'display',
-      invalidValue: 'List',
-    },
-    {
-      prop: 'display',
-      invalidValue: 'GRID',
-    },
-  ])(
-    'should fall back to list display when #$prop is $invalidValue',
-    async ({prop, invalidValue}) => {
-      const element = await setupElement();
-
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-      (element as any)[prop] = invalidValue;
-      await element.updateComplete;
-
-      // Check that validatedDisplay returns 'list'
-      // biome-ignore lint/suspicious/noExplicitAny: accessing private property for testing
-      expect((element as any).validatedDisplay).toBe('list');
-
-      // Verify that the component renders in list mode
-      const resultListParts = getParts(element).gridOrList.resultList;
-      expect(resultListParts).toHaveLength(1);
-    }
-  );
-
-  it.each<{
     prop: 'density' | 'display' | 'imageSize';
     validValue: ItemDisplayDensity | ItemDisplayLayout | ItemDisplayImageSize;
     invalidValue: string | number;
@@ -161,7 +126,7 @@ describe('atomic-result-list', () => {
       invalidValue: 'invalid',
     },
   ])(
-    'should not set error when valid #$prop is updated to an invalid value (should log warning instead)',
+    'should not set error when valid #$prop is updated to an invalid value',
     async ({prop, validValue, invalidValue}) => {
       const element = await setupElement({[prop]: validValue});
 

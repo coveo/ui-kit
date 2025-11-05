@@ -139,7 +139,8 @@ describe('atomic-commerce-breadbox', () => {
     expect(element.breadcrumbManager).toBe(mockedBreadcrumbManager);
   });
 
-  it('should set error when pathLimit is initially lower than 1', async () => {
+  // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
+  it.skip('should set error when pathLimit is initially lower than 1', async () => {
     const {element} = await renderBreadbox({
       interfaceElementType: 'product-listing',
       pathLimit: 0,
@@ -151,7 +152,32 @@ describe('atomic-commerce-breadbox', () => {
     );
   });
 
-  it('should set error when valid pathLimit is updated to a value lower than 1', async () => {
+  // TODO V4: KIT-5197 - Remove this test after migration to error-based validation
+  it('should log warning when pathLimit is initially lower than 1', async () => {
+    const consoleWarnSpy = vi
+      .spyOn(console, 'warn')
+      .mockImplementation(() => {});
+    const {element} = await renderBreadbox({
+      interfaceElementType: 'product-listing',
+      pathLimit: 0,
+    });
+
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'Prop validation failed for component atomic-commerce-breadbox'
+      ),
+      element
+    );
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('pathLimit'),
+      element
+    );
+
+    consoleWarnSpy.mockRestore();
+  });
+
+  // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
+  it.skip('should set error when valid pathLimit is updated to a value lower than 1', async () => {
     const {element} = await renderBreadbox();
 
     expect(element.error).toBeUndefined();
@@ -164,6 +190,30 @@ describe('atomic-commerce-breadbox', () => {
     expect(element.error.message).toMatch(
       /pathLimit: minimum value of 1 not respected/i
     );
+  });
+
+  // TODO V4: KIT-5197 - Remove this test after migration to error-based validation
+  it('should log warning when valid pathLimit is updated to a value lower than 1', async () => {
+    const consoleWarnSpy = vi
+      .spyOn(console, 'warn')
+      .mockImplementation(() => {});
+    const {element} = await renderBreadbox();
+
+    element.pathLimit = 0;
+    await element.updateComplete;
+
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'Prop validation failed for component atomic-commerce-breadbox'
+      ),
+      element
+    );
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('pathLimit'),
+      element
+    );
+
+    consoleWarnSpy.mockRestore();
   });
 
   it('should render nothing when there are no breadcrumbs', async () => {

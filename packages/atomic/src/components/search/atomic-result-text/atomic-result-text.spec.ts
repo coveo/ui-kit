@@ -96,7 +96,8 @@ describe('atomic-result-text', () => {
     expect(el).toBeInstanceOf(AtomicResultText);
   });
 
-  it('should set error when #field is empty', async () => {
+  // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
+  it.skip('should set error when #field is empty', async () => {
     const element = await renderComponent({field: 'author'});
 
     expect(element.error).toBeNull();
@@ -104,11 +105,36 @@ describe('atomic-result-text', () => {
     element.field = '';
     await element.updateComplete;
 
-    expect(element.error).toBeDefined();
-    expect(element.error.message).toMatch(/field/i);
+    // TODO V4: KIT-5197 - Change back to expect error after migration period
+    expect(element.error).toBeNull();
   });
 
-  it('should set error when valid #field is updated to an empty value', async () => {
+  // TODO V4: KIT-5197 - Remove this test after migration to error-based validation
+  it('should log warning when #field is empty', async () => {
+    const consoleWarnSpy = vi
+      .spyOn(console, 'warn')
+      .mockImplementation(() => {});
+    const element = await renderComponent({field: 'author'});
+
+    element.field = '';
+    await element.updateComplete;
+
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'Prop validation failed for component atomic-result-text'
+      ),
+      element
+    );
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('field'),
+      element
+    );
+
+    consoleWarnSpy.mockRestore();
+  });
+
+  // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
+  it.skip('should set error when valid #field is updated to an empty value', async () => {
     const element = await renderComponent({field: 'author'});
 
     expect(element.error).toBeNull();
@@ -116,8 +142,32 @@ describe('atomic-result-text', () => {
     element.field = '';
     await element.updateComplete;
 
-    expect(element.error).toBeDefined();
-    expect(element.error.message).toMatch(/field/i);
+    // TODO V4: KIT-5197 - Change back to expect error after migration period
+    expect(element.error).toBeNull();
+  });
+
+  // TODO V4: KIT-5197 - Remove this test after migration to error-based validation
+  it('should log warning when valid #field is updated to an empty value', async () => {
+    const consoleWarnSpy = vi
+      .spyOn(console, 'warn')
+      .mockImplementation(() => {});
+    const element = await renderComponent({field: 'author'});
+
+    element.field = '';
+    await element.updateComplete;
+
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'Prop validation failed for component atomic-result-text'
+      ),
+      element
+    );
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('field'),
+      element
+    );
+
+    consoleWarnSpy.mockRestore();
   });
 
   it.each<{
@@ -133,6 +183,7 @@ describe('atomic-result-text', () => {
       invalidValue: 'not-a-boolean',
     },
   ])(
+    // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
     'should set error when #$prop is invalid',
     async ({prop, invalidValue}) => {
       const element = await renderComponent({field: 'author'});
@@ -143,8 +194,49 @@ describe('atomic-result-text', () => {
       (element as any)[prop] = invalidValue;
       await element.updateComplete;
 
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+      // TODO V4: KIT-5197 - Change back to expect error after migration period
+      expect(element.error).toBeNull();
+    },
+    {skip: true}
+  );
+
+  // TODO V4: KIT-5197 - Remove this test after migration to error-based validation
+  it.each<{
+    prop: 'shouldHighlight' | 'disableHighlight';
+    invalidValue: unknown;
+  }>([
+    {
+      prop: 'shouldHighlight',
+      invalidValue: 'not-a-boolean',
+    },
+    {
+      prop: 'disableHighlight',
+      invalidValue: 'not-a-boolean',
+    },
+  ])(
+    'should log warning when #$prop is invalid',
+    async ({prop, invalidValue}) => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+      const element = await renderComponent({field: 'author'});
+
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
+
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'Prop validation failed for component atomic-result-text'
+        ),
+        element
+      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(prop),
+        element
+      );
+
+      consoleWarnSpy.mockRestore();
     }
   );
 
@@ -164,6 +256,7 @@ describe('atomic-result-text', () => {
       invalidValue: 'not-a-boolean',
     },
   ])(
+    // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
     'should set error when valid #$prop is updated to an invalid value',
     async ({prop, validValue, invalidValue}) => {
       const element = await renderComponent({
@@ -179,7 +272,8 @@ describe('atomic-result-text', () => {
 
       expect(element.error).toBeDefined();
       expect(element.error.message).toMatch(new RegExp(prop, 'i'));
-    }
+    },
+    {skip: true}
   );
 
   it('should render nothing when default props are used', async () => {
@@ -189,6 +283,52 @@ describe('atomic-result-text', () => {
     expect(text).toBeNull();
     expect(element.textContent?.trim()).toBe('');
   });
+
+  // TODO V4: KIT-5197 - Remove this test after migration to error-based validation
+  it.each<{
+    prop: 'shouldHighlight' | 'disableHighlight';
+    validValue: boolean;
+    invalidValue: unknown;
+  }>([
+    {
+      prop: 'shouldHighlight',
+      validValue: true,
+      invalidValue: 'not-a-boolean',
+    },
+    {
+      prop: 'disableHighlight',
+      validValue: false,
+      invalidValue: 'not-a-boolean',
+    },
+  ])(
+    'should log warning when valid #$prop is updated to an invalid value',
+    async ({prop, validValue, invalidValue}) => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+      const element = await renderComponent({
+        field: 'author',
+        [prop]: validValue,
+      });
+
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
+
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'Prop validation failed for component atomic-result-text'
+        ),
+        element
+      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(prop),
+        element
+      );
+
+      consoleWarnSpy.mockRestore();
+    }
+  );
 
   describe('when field has no value', () => {
     it.each([
