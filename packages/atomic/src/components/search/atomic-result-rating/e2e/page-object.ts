@@ -6,10 +6,13 @@ export class ResultRatingPageObject extends BasePageObject {
     super(page, 'atomic-result-rating');
   }
 
-  get yellowIcons() {
-    return this.page
-      .getByRole('img', {name: /stars out of \d+/})
-      .locator('div')
-      .nth(1);
+  get ratingContainer() {
+    return this.page.locator('atomic-result-rating [part="value-rating"]');
+  }
+
+  get ratingIcons() {
+    return this.page.locator(
+      'atomic-result-rating [part="value-rating-icon"]'
+    );
   }
 }

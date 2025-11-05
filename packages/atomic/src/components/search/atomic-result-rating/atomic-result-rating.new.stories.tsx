@@ -1,7 +1,8 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {wrapInResult} from '@/storybook-utils/search/result-wrapper';
+import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
+import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -9,26 +10,32 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator: resultDecorator, engineConfig} = wrapInResult({
-  preprocessRequest: (r) => {
-    const parsed = JSON.parse(r.body as string);
-    parsed.aq = '@snrating';
-    parsed.fieldsToInclude = [...parsed.fieldsToInclude, 'snrating'];
-    parsed.numberOfResults = 1;
-    r.body = JSON.stringify(parsed);
-    return r;
+const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
+  config: {
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.aq = '@snrating';
+      parsed.fieldsToInclude = [...parsed.fieldsToInclude, 'snrating'];
+      parsed.numberOfResults = 1;
+      request.body = JSON.stringify(parsed);
+      return request;
+    },
   },
 });
-const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
-  config: engineConfig,
-});
+
+const {decorator: resultListDecorator} = wrapInResultList(undefined, false);
+const {decorator: resultTemplateDecorator} = wrapInResultTemplate();
 
 const meta: Meta = {
   component: 'atomic-result-rating',
-  title: 'Search/ResultList/ResultRating',
+  title: 'Search/Result Rating',
   id: 'atomic-result-rating',
   render: (args) => template(args),
-  decorators: [resultDecorator, searchInterfaceDecorator],
+  decorators: [
+    resultTemplateDecorator,
+    resultListDecorator,
+    searchInterfaceDecorator,
+  ],
   parameters: {
     ...parameters,
     actions: {
