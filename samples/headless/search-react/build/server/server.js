@@ -1429,9 +1429,17 @@ class PlatformClient {
     };
     try {
       const response = await backoffExports.backOff(request, {
-        retry: (e) => {
+        startingDelay: 100,
+        timeMultiple: 2,
+        maxDelay: 800,
+        numOfAttempts: 4,
+        jitter: "full",
+        retry: async (e) => {
           const shouldRetry = e && isThrottled(e.status);
-          shouldRetry && logger.info("Platform retrying request");
+          if (shouldRetry) {
+            logger.info("Platform retrying request");
+            await new Promise((resolve) => setTimeout(resolve, 1e3));
+          }
           return shouldRetry;
         }
       });
@@ -5052,7 +5060,7 @@ function createRelay(initialConfig) {
 function isBrowser() {
   return typeof window !== "undefined" && typeof document !== "undefined";
 }
-const VERSION = "3.34.0";
+const VERSION = "3.35.0";
 const COVEO_FRAMEWORK = ["@coveo/atomic", "@coveo/quantic"];
 const getAnalyticsSource = createSelector((state) => state.source, (source) => Object.entries(source).map(([frameworkName, frameworkVersion]) => `${frameworkName}@${frameworkVersion}`).concat(`@coveo/headless@${VERSION}`));
 const getRelayInstanceFromState = createSelector((state) => state.configuration.organizationId, (state) => state.configuration.environment, (state) => state.configuration.accessToken, (state) => state.configuration.analytics, (state) => getAnalyticsSource(state.configuration.analytics), (_state, navigatorContextProvider) => navigatorContextProvider, (organizationId, platformEnvironment, token, { trackingId, apiBaseUrl, enabled }, source, navigatorContextProvider) => {
@@ -13108,6 +13116,20 @@ const logGeneratedAnswerStreamEnd = (answerGenerated) => makeAnalyticsAction({
     };
   }
 });
+const logGeneratedAnswerResponseLinked = () => makeAnalyticsAction({
+  prefix: "analytics/generatedAnswer/responseLinked",
+  __legacy__getBuilder: () => {
+    return null;
+  },
+  analyticsType: "Rga.ResponseLinked",
+  analyticsPayloadBuilder: (state) => {
+    const generativeQuestionAnsweringId = generativeQuestionAnsweringIdSelector(state);
+    return {
+      answerId: generativeQuestionAnsweringId ?? "",
+      responseId: state.search?.searchResponseId || state.search?.response.searchUid || ""
+    };
+  }
+});
 const selectAdvancedSearchQueries = createSelector((state) => state.advancedSearchQueries, (advancedSearchQueries) => {
   if (!advancedSearchQueries) {
     return {};
@@ -13347,6 +13369,7 @@ createAsyncThunk("generatedAnswer/streamAnswer", async (params, config) => {
         dispatch(setIsStreaming(false));
         dispatch(setIsAnswerGenerated(isAnswerGenerated));
         dispatch(logGeneratedAnswerStreamEnd(isAnswerGenerated));
+        dispatch(logGeneratedAnswerResponseLinked());
         break;
       }
       default:
@@ -13484,6 +13507,7 @@ const updateCacheWithEvent = (event, draft, dispatch) => {
     case "genqa.endOfStreamType":
       handleEndOfStream(draft, parsedPayload);
       dispatch(logGeneratedAnswerStreamEnd(parsedPayload.answerGenerated ?? false));
+      dispatch(logGeneratedAnswerResponseLinked());
       break;
   }
 };
