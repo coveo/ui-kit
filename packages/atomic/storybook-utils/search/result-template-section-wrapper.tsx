@@ -51,9 +51,9 @@ txt</span>`},
       {tag: 'atomic-result-section-excerpt', content: `<p class="text-sm text-gray-600">The palm cockatoo is thought to be the only bird species to use tools musically – drumming wood to attract a mate.</p>`},
       {tag: 'atomic-result-section-actions', content: '<button class="p-1 btn btn-primary">Show Details</button>'},
       {tag: 'atomic-result-section-badges', content: `<div>
-        <span class="badge badge-primary" style="background: #ef4444; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">NEW</span>
-        <span class="badge badge-secondary" style="background: #f59e0b; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">DOCUMENTATION</span>
-        <span class="badge badge-success" style="background: #10b981; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">ARTICLE</span>
+        <span class="badge badge-primary" style="background: #b21010; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">NEW</span>
+        <span class="badge badge-secondary" style="background: #2f0ab8; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">DOCUMENTATION</span>
+        <span class="badge badge-success" style="background: #096243; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">ARTICLE</span>
       </div>`},
       {tag: 'atomic-result-section-bottom-metadata', content: `<div class="text-xs text-gray-500">
         <span>Author: Mark Twain</span>

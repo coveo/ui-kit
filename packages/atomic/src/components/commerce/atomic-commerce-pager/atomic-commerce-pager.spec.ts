@@ -383,7 +383,7 @@ describe('atomic-commerce-pager', () => {
         buttons[buttons.length - 1],
       ];
 
-      await element['handleFocus'](buttons, firstPageButton, lastPageButton);
+      await element.handleFocus(buttons, firstPageButton, lastPageButton);
 
       await expectFocusOnButton(
         locators.previous.element(),
@@ -399,7 +399,7 @@ describe('atomic-commerce-pager', () => {
         buttons[buttons.length - 1],
       ];
 
-      await element['handleFocus'](buttons, lastPageButton, firstPageButton);
+      await element.handleFocus(buttons, lastPageButton, firstPageButton);
 
       await expectFocusOnButton(
         locators.next.element(),
@@ -412,7 +412,7 @@ describe('atomic-commerce-pager', () => {
 
       const [currentButton, nextButton] = buttons;
 
-      await element['handleFocus'](buttons, currentButton, nextButton);
+      await element.handleFocus(buttons, currentButton, nextButton);
 
       await expectFocusOnButton(
         locators.page2.element(),

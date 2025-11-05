@@ -7,9 +7,9 @@ import {
   type InteractiveResultProps,
   type Result,
 } from '@coveo/headless';
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {page} from 'vitest/browser/context';
 import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,

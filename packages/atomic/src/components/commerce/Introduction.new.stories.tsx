@@ -20,7 +20,7 @@ export const Introduction: StoryObj = {
 
       <br>
 
-      <h3>Getting Started</h3>
+      <h2>Getting Started</h2>
       <p>
         Begin by exploring the individual components in the sidebar. Each component includes:
       </p>

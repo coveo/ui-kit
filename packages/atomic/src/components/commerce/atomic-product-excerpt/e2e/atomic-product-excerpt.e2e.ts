@@ -6,11 +6,6 @@ test.describe('atomic-product-excerpt', async () => {
     await productExcerpt.hydrated.first().waitFor();
   });
 
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should render excerpt text and the show more button', async ({
     productExcerpt,
   }) => {

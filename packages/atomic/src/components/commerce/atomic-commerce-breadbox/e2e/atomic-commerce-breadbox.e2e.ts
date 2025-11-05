@@ -7,13 +7,6 @@ test.describe('atomic-commerce-breadbox', () => {
     await breadbox.load();
   });
 
-  test('should be accessible', async ({breadbox, makeAxeBuilder}) => {
-    await breadbox.getFacetValue('regular').first().click();
-
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test.describe('when restoring the state from URL', () => {
     [
       {

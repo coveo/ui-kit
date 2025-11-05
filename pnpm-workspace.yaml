@@ -61,7 +61,9 @@ catalog:
   typedoc: 0.28.13
   typescript: 5.8.3
   vite: 7.0.5
-  vitest: 4.0.5
+  vitest: 4.0.7
+  '@vitest/coverage-v8': 4.0.7
+  '@vitest/browser-playwright': 4.0.7
 
 
 publicHoistPattern:
