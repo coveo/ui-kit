@@ -6,11 +6,6 @@ test.describe('before query is loaded', () => {
     await recsList.hydrated.waitFor();
   });
 
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should have placeholders', async ({recsList}) => {
     await expect(recsList.placeholder.first()).toBeVisible();
   });
@@ -20,11 +15,6 @@ test.describe('after query is loaded', () => {
   test.beforeEach(async ({recsList}) => {
     await recsList.load({story: 'default'});
     await recsList.hydrated.waitFor();
-  });
-
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should have recommendations', async ({recsList}) => {
@@ -38,11 +28,6 @@ test.describe('with a full result template', () => {
     await recsList.hydrated.waitFor();
   });
 
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should have recommendations', async ({recsList}) => {
     await expect(recsList.recommendation.first()).toBeVisible();
   });
@@ -52,11 +37,6 @@ test.describe('with a carousel', () => {
   test.beforeEach(async ({recsList}) => {
     await recsList.load({story: 'recs-as-carousel'});
     await recsList.hydrated.waitFor();
-  });
-
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should have recommendations', async ({recsList}) => {

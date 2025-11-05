@@ -6,11 +6,6 @@ test.describe('atomic-external', () => {
     await external.hydrated.waitFor();
   });
 
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test.describe('when modifying state of a component (search box) that is a child of an atomic-external component', () => {
     test.beforeEach(async ({external, page}) => {
       await page

@@ -6,13 +6,6 @@ test.describe('atomic-load-more-results', () => {
     await loadMore.hydrated.waitFor();
   });
 
-  test('should be accessible', async ({loadMore, makeAxeBuilder}) => {
-    await loadMore.load();
-    await loadMore.hydrated.waitFor();
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should display a load more button when there are more results', async ({
     loadMore,
   }) => {

@@ -109,7 +109,6 @@ export const GridDisplayWithTemplate: Story = {
   </template>
 </atomic-product-template>`,
   },
-  
 };
 
 export const GridDisplayBeforeQuery: Story = {
@@ -121,7 +120,7 @@ export const GridDisplayBeforeQuery: Story = {
 
 export const ListDisplay: Story = {
   name: 'Using list display',
-  
+
   args: {
     display: 'list',
   },
@@ -129,7 +128,7 @@ export const ListDisplay: Story = {
 
 export const ListDisplayWithTemplate: Story = {
   name: 'Using list display with template',
-  
+
   args: {
     display: 'list',
     'default-slot': `<atomic-product-template>
@@ -184,7 +183,7 @@ export const ListDisplayBeforeQuery: Story = {
 
 export const TableDisplay: Story = {
   name: 'Using table display',
-  
+
   args: {
     display: 'table',
     'default-slot': `<atomic-product-template>

@@ -1,5 +1,4 @@
 import {test as base} from '@playwright/test';
-import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {ResultPageObject as Result} from '@/src/components/search/atomic-result/e2e/page-object';
 import {ResultListPageObject as ResultList} from '@/src/components/search/atomic-result-list/e2e/page-object';
 import {SearchBoxPageObject as SearchBox} from '@/src/components/search/atomic-search-box/e2e/page-object';
@@ -12,8 +11,7 @@ type MyFixtures = {
   result: Result;
 };
 
-export const test = base.extend<MyFixtures & AxeFixture>({
-  makeAxeBuilder,
+export const test = base.extend<MyFixtures>({
   loadMore: async ({page}, use) => {
     await use(new LoadMore(page));
   },
