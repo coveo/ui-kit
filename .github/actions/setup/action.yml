@@ -1,3 +1,4 @@
+#region Metadata
 name: 'Setup & build'
 description: 'Setup node, install dependencies & build'
 inputs:
@@ -17,31 +18,24 @@ inputs:
     description: 'Skip the build step'
     required: false
     default: 'false'
+#endregion
 runs:
   using: composite
   steps:
-    - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-      with:
-        node-version-file: '.nvmrc'
-        registry-url: 'https://registry.npmjs.org'
-        
+#region PNPM
     - name: Install pnpm
       uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 #v4.0.0
       with:
         run_install: false
-    - name: Resolve pnpm store directory
-      id: pnpm-store
-      run: echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
-      shell: bash
-    - name: Cache pnpm store
-      if: inputs.load-cache == 'true'
-      id: pnpm-cache
-      uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+    - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
       with:
-        path: ${{ steps.pnpm-store.outputs.path }}
-        key: ${{ runner.os }}-${{ inputs.cache-prefix }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-        restore-keys: |
-          ${{ runner.os }}-${{ inputs.cache-prefix }}-pnpm-
+        node-version-file: '.nvmrc'
+        registry-url: 'https://registry.npmjs.org'
+        cache: 'pnpm'
+    - run: pnpm install --frozen-lockfile --prefer-offline
+      shell: bash
+#endregion
+#region Caches
     - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
       with:
         path: ~/.cache/Cypress
@@ -53,8 +47,8 @@ runs:
       with:
         name: ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo
         path: .turbo
-    - run: pnpm install --frozen-lockfile --prefer-offline
-      shell: bash
+#endregion
+#region Build
     - run: pnpm run build
       if: inputs.skip-build != 'true'
       shell: bash
@@ -66,3 +60,4 @@ runs:
         include-hidden-files: true
         retention-days: 1
         if-no-files-found: error
+#endregion
