@@ -42,6 +42,7 @@ export const wrapInSearchInterface = ({
     }
     await step('Execute the first search', async () => {
       await searchInterface!.executeFirstSearch();
+      await new Promise((resolve) => requestAnimationFrame(resolve));
     });
   },
 });

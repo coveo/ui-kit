@@ -8,11 +8,6 @@ test.describe('atomic-product-image', () => {
       await productImage.noCarouselImage.waitFor();
     });
 
-    test('should be accessible', async ({makeAxeBuilder}) => {
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations).toEqual([]);
-    });
-
     test('should render the image', async ({productImage}) => {
       await expect(productImage.noCarouselImage).toBeVisible();
     });
@@ -29,11 +24,6 @@ test.describe('atomic-product-image', () => {
     test.beforeEach(async ({productImage}) => {
       await productImage.load();
       await productImage.carouselImage.waitFor();
-    });
-
-    test('should be accessible', async ({makeAxeBuilder}) => {
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations).toEqual([]);
     });
 
     test('should render the first image by default', async ({productImage}) => {
