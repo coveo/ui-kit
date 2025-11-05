@@ -20,78 +20,16 @@ applyTo: '**/atomic/**/*.spec.{ts}'
 - **Same condition/state:** `describe('when <condition>', () => {...})` - Groups tests that share common setup or state
 - **Same lifecycle callback:** `describe('#connectedCallback (when added to the DOM)', () => {...})` - Tests for component lifecycle methods
 - **Same public method:** `describe('#methodName', () => {...})` - Tests for public methods or properties
-- **Same behavioral category:** `describe('property change behavior', () => {...})` - Logical grouping of related behaviors
 
 **When to use nested describe:**
 - Tests share setup logic (e.g., same `beforeEach` mock configuration)
 - Multiple tests verify different aspects of the same condition
 - Testing a method with multiple scenarios or edge cases
-- Grouping related behaviors for better test organization and readability
 
 **When NOT to use nested describe:**
 - Single test for a condition - include condition in `it()` statement instead
 - Tests are unrelated despite similar names
 - Over-nesting (avoid more than 2-3 levels deep)
-
-**Examples:**
-
-```typescript
-// ✅ Good: Grouping tests for a lifecycle callback
-describe('#connectedCallback (when added to the DOM)', () => {
-  it('should add event listener to document body', async () => {
-    // test implementation
-  });
-  
-  describe('when a "keyup" event is dispatched with the "Escape" key', () => {
-    it('should dispatch a "close" custom event when isOpen is true', async () => {
-      // test implementation
-    });
-    
-    it('should not dispatch a "close" custom event when isOpen is false', async () => {
-      // test implementation
-    });
-  });
-});
-
-// ✅ Good: Grouping tests that share setup
-describe('when #waitUntilFirstUpdate is false', () => {
-  // Shared beforeEach mock configuration for all tests in this group
-  beforeEach(() => {
-    // setup specific to this condition
-  });
-  
-  it('should call the watch on the first render', async () => {
-    // test implementation
-  });
-  
-  it('should pass correct parameters to the watch function', async () => {
-    // test implementation
-  });
-});
-
-// ✅ Good: Behavioral grouping
-describe('property change behavior', () => {
-  it('should call the watch method when the property changes', async () => {
-    // test implementation
-  });
-  
-  it('should not call the watch method when a different property changes', async () => {
-    // test implementation
-  });
-});
-
-// ❌ Bad: Single test - include condition in it() instead
-describe('when isOpen is true', () => {
-  it('should render the modal', async () => {
-    // test implementation
-  });
-});
-
-// ✅ Better: Condition in the it() statement
-it('should render the modal when isOpen is true', async () => {
-  // test implementation
-});
-```
 
 ## Imports & Mocking
 
