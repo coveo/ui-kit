@@ -11,7 +11,16 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface();
+const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
+  config: {
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.numberOfResults = 1;
+      request.body = JSON.stringify(parsed);
+      return request;
+    },
+  },
+});
 const {decorator: resultListDecorator} = wrapInResultList(undefined, false);
 const {decorator: resultTemplateDecorator} = wrapInResultTemplate();
 
