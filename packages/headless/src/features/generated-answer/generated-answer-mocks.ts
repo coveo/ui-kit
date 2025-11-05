@@ -1349,6 +1349,11 @@ export const streamAnswerAPIStateMockWithCaseContextIncluded: StreamAnswerAPISta
     },
   };
 
+export const streamAnswerAPIStateMockWithoutContext: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  context: undefined,
+};
+
 export const expectedStreamAnswerAPIParam = {
   q: 'what is the hardest wood',
   aq: 'aq-test-query',
