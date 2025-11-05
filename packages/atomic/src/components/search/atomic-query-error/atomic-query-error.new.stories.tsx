@@ -151,54 +151,29 @@ export default meta;
 
 export const Default: Story = {
   decorators: [defaultDecorator],
-  parameters: {
-    msw: {
-      handlers: sharedHandlers,
-    },
-  },
   play: defaultPlay,
 };
 
 export const WithInvalidToken: Story = {
   name: 'With Invalid Token Error',
   decorators: [invalidTokenDecorator],
-  parameters: {
-    msw: {
-      handlers: sharedHandlers,
-    },
-  },
   play: invalidTokenPlay,
 };
 
 export const WithDisconnected: Story = {
   name: 'With Disconnected Error',
   decorators: [disconnectedDecorator],
-  parameters: {
-    msw: {
-      handlers: sharedHandlers,
-    },
-  },
   play: disconnectedPlay,
 };
 
 export const WithNoEndpoints: Story = {
   name: 'With No Endpoints Error',
   decorators: [noEndpointsDecorator],
-  parameters: {
-    msw: {
-      handlers: sharedHandlers,
-    },
-  },
   play: noEndpointsPlay,
 };
 
 export const WithOrganizationPaused: Story = {
   name: 'With Organization Paused Error',
   decorators: [pausedDecorator],
-  parameters: {
-    msw: {
-      handlers: sharedHandlers,
-    },
-  },
   play: pausedPlay,
 };

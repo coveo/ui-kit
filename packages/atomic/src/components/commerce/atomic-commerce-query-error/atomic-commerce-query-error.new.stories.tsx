@@ -17,7 +17,7 @@ const sharedHandlers = [
           status: 418,
           message: 'Something very weird just happened',
           statusCode: 418,
-          type: 'ClientError',
+          type: 'Disconnected',
         },
         {status: 418}
       );
@@ -74,21 +74,11 @@ export default meta;
 
 export const Default: Story = {
   decorators: [defaultDecorator],
-  parameters: {
-    msw: {
-      handlers: sharedHandlers,
-    },
-  },
   play: defaultPlay,
 };
 
 export const With418Error: Story = {
   name: 'With 418 error',
   decorators: [teapotDecorator],
-  parameters: {
-    msw: {
-      handlers: sharedHandlers,
-    },
-  },
   play: teapotPlay,
 };
