@@ -156,6 +156,25 @@ export const Default: Story = {
   },
   beforeEach: async () => {
     mockSearchApi.searchEndpoint.mockOnce(() => baseFoldedResponse);
+    mockSearchApi.searchEndpoint.mockOnce(() => {
+      const results = baseFoldedResponse.results;
+      results[0]!.childResults.push({
+        title: 'Birds',
+        excerpt: 'Bird species',
+        clickUri: 'https://example.com/birds',
+        uniqueId: 'birds-child',
+        raw: {
+          foldingcollection: 'Animals',
+          foldingchild: ['birds'],
+          foldingparent: 'animals',
+        },
+      });
+      results[0].totalNumberOfChildResults = 1;
+      return {
+        ...baseFoldedResponse,
+        results,
+      };
+    });
   },
   play,
 };
@@ -191,7 +210,7 @@ export const WithFewResultChildren: Story = {
       ...baseFoldedResponse,
       results: [
         {
-          ...baseFoldedResponse.results[0],
+          ...baseFoldedResponse.results[0]!,
           totalNumberOfChildResults: 1,
         },
         ...baseFoldedResponse.results.slice(1),
@@ -211,7 +230,7 @@ export const WithMoreResultsAvailableAndNoChildren: Story = {
       ...baseFoldedResponse,
       results: [
         {
-          ...baseFoldedResponse.results[0],
+          ...baseFoldedResponse.results[0]!,
           totalNumberOfChildResults: 10,
           childResults: [],
         },
