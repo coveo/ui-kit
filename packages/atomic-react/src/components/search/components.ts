@@ -8,6 +8,7 @@ import {
   AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
   AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicLayoutSection as LitAtomicLayoutSection,
+  AtomicLoadMoreResults as LitAtomicLoadMoreResults,
   AtomicNoResults as LitAtomicNoResults,
   AtomicPager as LitAtomicPager,
   AtomicQuerySummary as LitAtomicQuerySummary,
@@ -88,6 +89,12 @@ export const AtomicLayoutSection = createComponent({
   tagName: 'atomic-layout-section',
   react: React,
   elementClass: LitAtomicLayoutSection,
+});
+
+export const AtomicLoadMoreResults = createComponent({
+  tagName: 'atomic-load-more-results',
+  react: React,
+  elementClass: LitAtomicLoadMoreResults,
 });
 
 export const AtomicNoResults = createComponent({
