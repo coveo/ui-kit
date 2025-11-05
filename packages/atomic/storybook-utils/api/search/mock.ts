@@ -9,7 +9,7 @@ export class MockSearchApi implements MockApi {
   readonly querySuggestEndpoint;
 
   constructor(basePath: string = 'https://:orgId.org.coveo.com') {
-    //TODO: Fix type after encoding Search API response typing properly.
+    //TODO: Fix type after encoding Search API response typing properly #6481
     this.searchEndpoint = new EndpointHarness<
       typeof baseSearchResponse | APIErrorWithStatusCode
     >('POST', `${basePath}/rest/search/v2`, baseSearchResponse);
