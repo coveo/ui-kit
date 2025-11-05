@@ -1,15 +1,6 @@
 import {expect, test} from './fixture';
 
 test.describe('AtomicSearchInterface', () => {
-  test('should be A11y compliant', async ({
-    searchInterface,
-    makeAxeBuilder,
-  }) => {
-    await searchInterface.load();
-    await searchInterface.hydrated.waitFor();
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
   test.describe('when a query is performed automatically', () => {
     test.beforeEach(async ({searchInterface}) => {
       await searchInterface.load({

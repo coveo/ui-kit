@@ -1,13 +1,11 @@
 import {test as base} from '@playwright/test';
-import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {AtomicCommerceSearchBoxRecentQueriesPageObject} from './page-object';
 
 type Fixtures = {
   commerceSearchBoxRecentQueries: AtomicCommerceSearchBoxRecentQueriesPageObject;
 };
 
-export const test = base.extend<Fixtures & AxeFixture>({
-  makeAxeBuilder,
+export const test = base.extend<Fixtures>({
   commerceSearchBoxRecentQueries: async ({page}, use) => {
     await use(new AtomicCommerceSearchBoxRecentQueriesPageObject(page));
   },

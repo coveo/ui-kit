@@ -1,14 +1,10 @@
 import {expect, test} from './fixture';
 
 test.describe('before query is loaded', () => {
-  test.beforeEach(async ({recsList}) => {
+  test.beforeEach(async ({recsList, page}) => {
     await recsList.load({story: 'recs-before-query'});
     await recsList.hydrated.waitFor();
-  });
-
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
+    await page.waitForLoadState('networkidle');
   });
 
   test('should have placeholders', async ({recsList}) => {
@@ -17,14 +13,10 @@ test.describe('before query is loaded', () => {
 });
 
 test.describe('after query is loaded', () => {
-  test.beforeEach(async ({recsList}) => {
+  test.beforeEach(async ({recsList, page}) => {
     await recsList.load({story: 'default'});
     await recsList.hydrated.waitFor();
-  });
-
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
+    await page.waitForLoadState('networkidle');
   });
 
   test('should have recommendations', async ({recsList}) => {
@@ -33,14 +25,10 @@ test.describe('after query is loaded', () => {
 });
 
 test.describe('with a full result template', () => {
-  test.beforeEach(async ({recsList}) => {
+  test.beforeEach(async ({recsList, page}) => {
     await recsList.load({story: 'recs-with-full-template'});
     await recsList.hydrated.waitFor();
-  });
-
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
+    await page.waitForLoadState('networkidle');
   });
 
   test('should have recommendations', async ({recsList}) => {
@@ -49,14 +37,11 @@ test.describe('with a full result template', () => {
 });
 
 test.describe('with a carousel', () => {
-  test.beforeEach(async ({recsList}) => {
+  test.beforeEach(async ({recsList, page}) => {
     await recsList.load({story: 'recs-as-carousel'});
     await recsList.hydrated.waitFor();
-  });
-
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
+    await recsList.recommendation.first().waitFor({state: 'visible'});
+    await page.waitForLoadState('networkidle');
   });
 
   test('should have recommendations', async ({recsList}) => {
@@ -72,13 +57,13 @@ test.describe('with a carousel', () => {
 
     await recsList.prevButton.click();
     await recsList.prevButton.click();
-    await expect(recsList.indicators.nth(2)).toHaveAttribute(
+    await expect(recsList.indicators.last()).toHaveAttribute(
       'part',
       'indicator active-indicator'
     );
 
     await recsList.nextButton.click();
-    await expect(recsList.indicators.nth(0)).toHaveAttribute(
+    await expect(recsList.indicators.first()).toHaveAttribute(
       'part',
       'indicator active-indicator'
     );

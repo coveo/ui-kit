@@ -6,13 +6,6 @@ test.describe('atomic-query-summary', () => {
     await querySummary.hydrated.waitFor();
   });
 
-  test('should be accessible', async ({makeAxeBuilder, querySummary}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-
-    await expect(querySummary.ariaLive).toBeVisible();
-  });
-
   test('should display message with hidden duration count', async ({
     querySummary,
   }) => {

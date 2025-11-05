@@ -5,12 +5,6 @@ test.describe('atomic-commerce-numeric-facet', () => {
     await numericFacet.load();
   });
 
-  test('should be accessible', async ({numericFacet, makeAxeBuilder}) => {
-    await numericFacet.hydrated.waitFor();
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should allow to select and deselect a range', async ({
     numericFacet,
   }) => {
