@@ -1,27 +1,64 @@
-# Angular
+# Atomic Search & Commerce with Angular
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.1.4.
+This sample demonstrates how to integrate Coveo Atomic components into an Angular application for building search and commerce experiences.
 
-## Development server
+## Features
 
-Run `npm run dev` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+- Integration of `@coveo/atomic` web components in Angular
+- Search and commerce interface examples
+- Angular component wrappers for Atomic elements
+- Proper integration with Angular's change detection
 
-## Code scaffolding
+## Technology Stack
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- **Angular**: Web application framework (v13.1.4+)
+- **@coveo/atomic**: Coveo's web component library
+- **TypeScript**: Type-safe JavaScript
+- **Angular CLI**: Angular development tooling
 
-## Build
+## Prerequisites
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- Node.js 18+ (LTS recommended)
+- npm 9+
 
-## Running unit tests
+## Getting Started
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-## Running end-to-end tests
+2. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+3. Open your browser to `http://localhost:4200/`
 
-## Further help
+The app will automatically reload when you make changes to the source files.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Available Scripts
+
+```bash
+npm run dev       # Start development server
+npm run build     # Build for production (outputs to dist/)
+```
+
+## Key Implementation Details
+
+### Angular Integration
+
+To use Atomic web components in Angular, you need to:
+
+1. Import the Atomic loader in your main TypeScript file
+2. Configure Angular to recognize custom elements with the `CUSTOM_ELEMENTS_SCHEMA`
+3. Initialize Atomic components after Angular bootstraps
+
+This sample demonstrates the proper setup and best practices for integrating Coveo's web components within Angular's component architecture.
+
+## Learn More
+
+- [Angular Documentation](https://angular.io/docs)
+- [Angular CLI Reference](https://angular.io/cli)
+- [Atomic Documentation](https://docs.coveo.com/en/atomic/)
+- [Integrating Atomic with Angular](https://docs.coveo.com/en/atomic/latest/usage/)
