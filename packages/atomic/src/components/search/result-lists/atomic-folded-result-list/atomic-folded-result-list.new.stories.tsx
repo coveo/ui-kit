@@ -12,7 +12,7 @@ const SLOTS_DEFAULT = `
   <template>
     <atomic-result-section-visual>
       <atomic-result-image class="icon" fallback="https://picsum.photos/350"></atomic-result-image>
-      <img src="https://picsum.photos/350" class="thumbnail" />
+      <img src="https://picsum.photos/350" alt="Thumbnail" class="thumbnail" />
     </atomic-result-section-visual>
     <atomic-result-section-badges>
       <atomic-field-condition must-match-sourcetype="Salesforce">
@@ -57,7 +57,7 @@ const SLOTS_DEFAULT = `
           <template>
             <atomic-result-section-visual>
               <atomic-result-image class="icon" fallback="https://picsum.photos/350"></atomic-result-image>
-              <img src="https://picsum.photos/350" class="thumbnail" />
+              <img src="https://picsum.photos/350" alt="Thumbnail" class="thumbnail" />
             </atomic-result-section-visual>
             <atomic-result-section-title
               ><atomic-result-link></atomic-result-link
