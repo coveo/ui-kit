@@ -113,66 +113,66 @@ describe('c-quantic-citation', () => {
     cleanup();
   });
 
-describe('debounce function', () => {
-  let mockFnToDebounce;
-  const DEBOUNCE_DELAY = 200;
+  describe('debounce function', () => {
+    let mockFnToDebounce;
+    const DEBOUNCE_DELAY = 200;
 
-  beforeEach(() => {
-    jest.useFakeTimers();
-    mockFnToDebounce = jest.fn();
+    beforeEach(() => {
+      jest.useFakeTimers();
+      mockFnToDebounce = jest.fn();
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    // Ensures that rapid calls result in only one execution
+    test('should execute once after the delay and use the arguments from the last call', () => {
+      const debouncedFn = debounce(mockFnToDebounce, DEBOUNCE_DELAY);
+
+      debouncedFn('first');
+      expect(mockFnToDebounce).not.toHaveBeenCalled();
+
+      jest.advanceTimersByTime(DEBOUNCE_DELAY - 100);
+      debouncedFn('middle');
+
+      jest.advanceTimersByTime(DEBOUNCE_DELAY - 100);
+      debouncedFn('last');
+
+      expect(mockFnToDebounce).not.toHaveBeenCalled();
+      jest.advanceTimersByTime(DEBOUNCE_DELAY);
+
+      expect(mockFnToDebounce).toHaveBeenCalledTimes(1);
+      expect(mockFnToDebounce).toHaveBeenCalledWith('last');
+    });
+
+    // Ensures calls separated by more than the delay execute independently.
+    test('should execute multiple times if calls are spaced outside the delay', () => {
+      const debouncedFn = debounce(mockFnToDebounce, DEBOUNCE_DELAY);
+
+      debouncedFn(100);
+      jest.advanceTimersByTime(DEBOUNCE_DELAY);
+      expect(mockFnToDebounce).toHaveBeenCalledTimes(1);
+      expect(mockFnToDebounce).toHaveBeenCalledWith(100);
+
+      debouncedFn(200, {data: 'second'});
+      jest.advanceTimersByTime(DEBOUNCE_DELAY);
+      expect(mockFnToDebounce).toHaveBeenCalledTimes(2);
+      expect(mockFnToDebounce).toHaveBeenCalledWith(200, {data: 'second'});
+    });
+
+    // Ensures that the execution can be canceled before the delay expires.
+    test('should not execute the function if cancel is called before the delay', () => {
+      const debouncedFn = debounce(mockFnToDebounce, DEBOUNCE_DELAY);
+
+      debouncedFn('should not run');
+      jest.advanceTimersByTime(DEBOUNCE_DELAY / 2);
+      debouncedFn.cancel();
+
+      jest.advanceTimersByTime(DEBOUNCE_DELAY * 2);
+      expect(mockFnToDebounce).not.toHaveBeenCalled();
+    });
   });
-
-  afterEach(() => {
-    jest.useRealTimers();
-  });
-
-  // Ensures that rapid calls result in only one execution
-  test('should execute once after the delay and use the arguments from the last call', () => {
-    const debouncedFn = debounce(mockFnToDebounce, DEBOUNCE_DELAY);
-
-    debouncedFn('first');
-    expect(mockFnToDebounce).not.toHaveBeenCalled();
-
-    jest.advanceTimersByTime(DEBOUNCE_DELAY - 100);
-    debouncedFn('middle');
-
-    jest.advanceTimersByTime(DEBOUNCE_DELAY - 100);
-    debouncedFn('last');
-
-    expect(mockFnToDebounce).not.toHaveBeenCalled();
-    jest.advanceTimersByTime(DEBOUNCE_DELAY);
-
-    expect(mockFnToDebounce).toHaveBeenCalledTimes(1);
-    expect(mockFnToDebounce).toHaveBeenCalledWith('last');
-  });
-
-  // Ensures calls separated by more than the delay execute independently.
-  test('should execute multiple times if calls are spaced outside the delay', () => {
-    const debouncedFn = debounce(mockFnToDebounce, DEBOUNCE_DELAY);
-
-    debouncedFn(100);
-    jest.advanceTimersByTime(DEBOUNCE_DELAY);
-    expect(mockFnToDebounce).toHaveBeenCalledTimes(1);
-    expect(mockFnToDebounce).toHaveBeenCalledWith(100);
-
-    debouncedFn(200, { data: 'second' });
-    jest.advanceTimersByTime(DEBOUNCE_DELAY);
-    expect(mockFnToDebounce).toHaveBeenCalledTimes(2);
-    expect(mockFnToDebounce).toHaveBeenCalledWith(200, { data: 'second' });
-  });
-
-  // Ensures that the execution can be canceled before the delay expires.
-  test('should not execute the function if cancel is called before the delay', () => {
-    const debouncedFn = debounce(mockFnToDebounce, DEBOUNCE_DELAY);
-
-    debouncedFn('should not run');
-    jest.advanceTimersByTime(DEBOUNCE_DELAY / 2);
-    debouncedFn.cancel();
-
-    jest.advanceTimersByTime(DEBOUNCE_DELAY * 2);
-    expect(mockFnToDebounce).not.toHaveBeenCalled();
-  });
-});
 
   it('should properly display the citation', async () => {
     const element = createTestComponent();
