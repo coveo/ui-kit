@@ -5,9 +5,19 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
+import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
-import {handlers} from './e2e/mock-answering-api';
+
+const mockedAnswerApi = new MockAnswerApi();
+const mockedSearchApi = new MockSearchApi();
+mockedSearchApi.searchEndpoint.mock((response) => ({
+  ...response,
+  extendedResults: {
+    generativeQuestionAnsweringId: 'fbc64016-5f04-4a47-aad1-0bccaa2c0616',
+  },
+}));
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-generated-answer',
@@ -50,7 +60,7 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers,
+      handlers: [...mockedSearchApi.handlers, ...mockedAnswerApi.handlers],
     },
   },
   args: {
@@ -61,8 +71,7 @@ const meta: Meta = {
 
   play: async (storyContext) => {
     await play(storyContext);
-    const canvas = within(storyContext.canvasElement);
-    const searchBox = await canvas.findAllByShadowPlaceholderText('Search');
+    const searchBox = await storyContext.canvas.findAllByShadowPlaceholderText('Search');
     await storyContext.userEvent.type(
       searchBox[0],
       'how to resolve netflix connection with tivo{enter}'
