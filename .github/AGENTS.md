@@ -32,6 +32,16 @@ Instructions are automatically applied based on file patterns and provide coding
   - Applies to: Test files (`**/*.e2e.ts`, `**/*.spec.ts`)
   - Focus: User-facing locators, auto-retrying assertions, test structure
 
+## Custom Agents
+
+Custom agents provide specialized coding assistance with deep repository knowledge:
+
+- **coding-agent.md** - Instruction-aware coding agent with iterative test fixing
+  - Automatically applies all repository instructions from `.github/instructions/`
+  - Implements background test verification for failing test fixes
+  - Ensures changes follow established patterns and conventions
+  - Only commits fixes after verifying tests pass consistently
+
 ## Chatmodes
 
 Chatmodes provide specialized AI personas for specific development tasks:
@@ -69,6 +79,16 @@ Task-specific prompts for common development workflows:
 
 ## Usage
 
-Instructions are automatically applied by GitHub Copilot based on file patterns. Chatmodes can be invoked in VS Code Copilot Chat for specialized assistance.
+### Instructions
+Instructions are automatically applied by GitHub Copilot based on file patterns when editing files.
 
-For more details, see the individual instruction and chatmode files in `.github/instructions/` and `.github/chatmodes/`.
+### Custom Agents
+Custom agents can be invoked in GitHub Copilot Chat or used by AI coding assistants to provide specialized coding assistance that follows repository conventions.
+
+### Chatmodes
+Chatmodes can be invoked in VS Code Copilot Chat for specialized assistance on specific development tasks.
+
+### Prompts
+Prompts are task-specific workflows that can be used as templates for common development activities.
+
+For more details, see the individual files in `.github/agents/`, `.github/instructions/`, `.github/chatmodes/`, and `.github/prompts/`.
