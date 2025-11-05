@@ -5,7 +5,6 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
-import {within} from 'shadow-dom-testing-library';
 import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -72,8 +71,8 @@ const meta: Meta = {
 
   play: async (storyContext) => {
     await play(storyContext);
-    const canvas = within(storyContext.canvasElement);
-    const searchBox = await canvas.findAllByShadowPlaceholderText('Search');
+    const searchBox =
+      await storyContext.canvas.findAllByShadowPlaceholderText('Search');
     await storyContext.userEvent.type(
       searchBox[0],
       'how to resolve netflix connection with tivo{enter}'

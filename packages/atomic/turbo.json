@@ -46,6 +46,10 @@
       "dependsOn": ["^build", "build"],
       "outputs": ["coverage/**"]
     },
+    "test:storybook": {
+      "dependsOn": ["^build", "build"],
+      "outputs": []
+    },
     "web:dev": {
       "dependsOn": ["build"],
       "cache": false,
