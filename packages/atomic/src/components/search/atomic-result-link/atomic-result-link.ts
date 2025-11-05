@@ -1,5 +1,5 @@
 import {isUndefined} from '@coveo/bueno';
-import type {InteractiveResult, Result} from '@coveo/headless';
+import type {FoldedResult, InteractiveResult, Result} from '@coveo/headless';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
@@ -52,7 +52,7 @@ export class AtomicResultLink
   @property({type: String, attribute: 'href-template', reflect: true})
   hrefTemplate?: string;
 
-  @state() public result?: Result;
+  @state() public result?: Result | FoldedResult;
   @state() public interactiveResult?: InteractiveResult;
 
   public resultController = createResultContextController(this);
@@ -99,7 +99,7 @@ export class AtomicResultLink
   @errorGuard()
   render() {
     return html`${when(this.result && this.interactiveResult, () => {
-      const result = this.result!;
+      const result = this.getUnfoldedResult(this.result!);
       const interactiveResult = this.interactiveResult!;
 
       const href = isUndefined(this.hrefTemplate)
@@ -145,6 +145,10 @@ export class AtomicResultLink
           )}
         `);
     })}`;
+  }
+
+  private getUnfoldedResult(item: Result | FoldedResult): Result {
+    return 'result' in item ? item.result : item;
   }
 }
 
