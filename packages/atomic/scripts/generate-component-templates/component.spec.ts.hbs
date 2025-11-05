@@ -1,7 +1,7 @@
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {buildQuerySummary, type QuerySummaryState} from '@coveo/headless';
-import {page} from 'vitest/browser/context';
+import {page} from 'vitest/browser';
 import {html, type TemplateResult} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {within} from 'shadow-dom-testing-library';

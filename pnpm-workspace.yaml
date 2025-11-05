@@ -74,3 +74,6 @@ minimumReleaseAgeExclude:
   - '@coveo/*'
   - '@storybook/*'
   - '@wc-toolkit/storybook-helpers'
+  - storybook
+  - vitest
+  - '@vitest/*'

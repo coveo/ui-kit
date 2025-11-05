@@ -9,7 +9,7 @@ import {
 } from '@coveo/headless';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {page} from 'vitest/browser/context';
+import {page} from 'vitest/browser';
 import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
