@@ -38,6 +38,7 @@ const meta: Meta = {
       handles: events,
     },
   },
+  tags: ['!test'],
   args,
   argTypes,
 

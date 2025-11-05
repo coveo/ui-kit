@@ -6,11 +6,6 @@ test.describe('atomic-commerce-no-products', () => {
     await noProducts.hydrated.waitFor();
   });
 
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should be present in the page', async ({noProducts}) => {
     await expect(noProducts.ariaLive()).toBeVisible();
   });

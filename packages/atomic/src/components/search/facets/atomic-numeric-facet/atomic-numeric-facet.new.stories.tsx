@@ -1,8 +1,12 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
+import {
+  facetDecorator,
+  withBreadboxDecorator,
+  withFacetContainer,
+  withRegularFacet,
+} from '@/storybook-utils/common/facets-decorator';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -10,21 +14,14 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator, play} = wrapInSearchInterface({
-  preprocessRequest: (r) => {
-    const parsed = JSON.parse(r.body as string);
-    parsed.aq = '@filetype==("YouTubeVideo")';
-    r.body = JSON.stringify(parsed);
-    return r;
-  },
-});
+const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-numeric-facet',
   title: 'Search/NumericFacet',
   id: 'atomic-numeric-facet',
   render: (args) => template(args),
-  decorators: [decorator],
+  decorators: [facetDecorator, withFacetContainer, decorator],
   parameters: {
     ...parameters,
     actions: {
@@ -32,7 +29,6 @@ const meta: Meta = {
     },
   },
   argTypes,
-
   play,
   args: {
     ...args,
@@ -53,23 +49,7 @@ export const Default: Story = {
 export const WithDependsOn: Story = {
   name: 'atomic-numeric-facet-with-depends-on',
   tags: ['test'],
-  decorators: [
-    (story, context) =>
-      html`<style>
-          ${context.componentId},
-          atomic-facet {
-            max-width: 500px;
-            margin: auto;
-          }
-        </style>
-        <atomic-breadbox data-testid="breadbox"></atomic-breadbox>
-        ${story({})}
-        <atomic-facet
-          data-testid="parent-facet"
-          field="filetype"
-          label="File Type (Parent facet)"
-        ></atomic-facet>`,
-  ],
+  decorators: [withRegularFacet('before'), withBreadboxDecorator('before')],
   args: {
     label: 'YouTube View Count (Dependent facet)',
     field: 'ytviewcount',
@@ -77,8 +57,10 @@ export const WithDependsOn: Story = {
     'depends-on-filetype': 'YouTubeVideo',
   },
   play: async (context) => {
-    const {canvas, step} = context;
+    //TODO: Fix component registration race condition #6480
+    await customElements.whenDefined('atomic-facet');
     await play(context);
+    const {canvas, step} = context;
     await step('Select YouTubeVideo in filetype facet', async () => {
       const button = await canvas.findByShadowLabelText(
         'Inclusion filter on YouTubeVideo',
