@@ -116,8 +116,7 @@ describe('atomic-commerce-text', () => {
     expect(element.error).toBeUndefined();
   });
 
-  // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
-  it.skip('should set error when value is not provided', async () => {
+  it('should set error when value is not provided', async () => {
     const element = await renderComponent();
 
     expect(element.error).toBeDefined();
@@ -126,56 +125,13 @@ describe('atomic-commerce-text', () => {
     );
   });
 
-  // TODO V4: KIT-5197 - Remove this test after migration to error-based validation
-  it('should log warning when value is not provided', async () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
-    const element = await renderComponent();
-
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Prop validation failed for component atomic-commerce-text'
-      ),
-      element
-    );
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('value'),
-      element
-    );
-
-    consoleWarnSpy.mockRestore();
-  });
-
-  // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
-  it.skip('should set error when value is empty string', async () => {
+  it('should set error when value is empty string', async () => {
     const element = await renderComponent({value: ''});
 
     expect(element.error).toBeDefined();
     expect(element.error.message).toBe(
       'The "value" attribute must be defined.'
     );
-  });
-
-  // TODO V4: KIT-5197 - Remove this test after migration to error-based validation
-  it('should log warning when value is empty string', async () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
-    const element = await renderComponent({value: ''});
-
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Prop validation failed for component atomic-commerce-text'
-      ),
-      element
-    );
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('value'),
-      element
-    );
-
-    consoleWarnSpy.mockRestore();
   });
 
   describe('when error is present', () => {

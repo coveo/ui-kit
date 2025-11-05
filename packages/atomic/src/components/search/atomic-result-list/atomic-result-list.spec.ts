@@ -74,7 +74,8 @@ describe('atomic-result-list', () => {
     expect(element).toBeInstanceOf(AtomicResultList);
   });
 
-  it.each<{
+  // TODO V4: KIT-5197 - Remove skip
+  it.skip.each<{
     prop: 'density' | 'display' | 'imageSize';
     invalidValue: string | number;
   }>([
@@ -91,7 +92,7 @@ describe('atomic-result-list', () => {
       invalidValue: 'invalid',
     },
   ])(
-    'should not set error when #$prop is invalid (should log warning instead)',
+    'should set error when #$prop is invalid',
     async ({prop, invalidValue}) => {
       const element = await setupElement();
 
@@ -101,10 +102,12 @@ describe('atomic-result-list', () => {
       (element as any)[prop] = invalidValue;
       await element.updateComplete;
 
-      expect(element.error).toBeUndefined();
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
     }
   );
 
+  // TODO V4: KIT-5197 - Remove this test
   it.each<{
     prop: 'density' | 'display' | 'imageSize';
     validValue: ItemDisplayDensity | ItemDisplayLayout | ItemDisplayImageSize;
@@ -126,7 +129,56 @@ describe('atomic-result-list', () => {
       invalidValue: 'invalid',
     },
   ])(
-    'should not set error when valid #$prop is updated to an invalid value',
+    'should log validation warning when #$prop is updated to invalid value',
+    async ({prop, validValue, invalidValue}) => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+
+      const element = await setupElement({[prop]: validValue});
+
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
+
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'Prop validation failed for component atomic-result-list'
+        ),
+        element
+      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(prop),
+        element
+      );
+
+      consoleWarnSpy.mockRestore();
+    }
+  );
+
+  // TODO V4: KIT-5197 - Remove skip
+  it.skip.each<{
+    prop: 'density' | 'display' | 'imageSize';
+    validValue: ItemDisplayDensity | ItemDisplayLayout | ItemDisplayImageSize;
+    invalidValue: string | number;
+  }>([
+    {
+      prop: 'density',
+      validValue: 'normal',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'display',
+      validValue: 'list',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'imageSize',
+      validValue: 'small',
+      invalidValue: 'invalid',
+    },
+  ])(
+    'should set error when valid #$prop is updated to an invalid value',
     async ({prop, validValue, invalidValue}) => {
       const element = await setupElement({[prop]: validValue});
 
@@ -136,7 +188,8 @@ describe('atomic-result-list', () => {
       (element as any)[prop] = invalidValue;
       await element.updateComplete;
 
-      expect(element.error).toBeUndefined();
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
     }
   );
 

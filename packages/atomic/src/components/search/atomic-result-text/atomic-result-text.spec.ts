@@ -96,7 +96,7 @@ describe('atomic-result-text', () => {
     expect(el).toBeInstanceOf(AtomicResultText);
   });
 
-  // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
+  // TODO V4: KIT-5197 - Remove skip
   it.skip('should set error when #field is empty', async () => {
     const element = await renderComponent({field: 'author'});
 
@@ -105,11 +105,11 @@ describe('atomic-result-text', () => {
     element.field = '';
     await element.updateComplete;
 
-    // TODO V4: KIT-5197 - Change back to expect error after migration period
-    expect(element.error).toBeNull();
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/field/i);
   });
 
-  // TODO V4: KIT-5197 - Remove this test after migration to error-based validation
+  // TODO V4: KIT-5197 - Remove this test
   it('should log warning when #field is empty', async () => {
     const consoleWarnSpy = vi
       .spyOn(console, 'warn')
@@ -133,7 +133,7 @@ describe('atomic-result-text', () => {
     consoleWarnSpy.mockRestore();
   });
 
-  // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
+  // TODO V4: KIT-5197 - Remove skip
   it.skip('should set error when valid #field is updated to an empty value', async () => {
     const element = await renderComponent({field: 'author'});
 
@@ -142,11 +142,11 @@ describe('atomic-result-text', () => {
     element.field = '';
     await element.updateComplete;
 
-    // TODO V4: KIT-5197 - Change back to expect error after migration period
-    expect(element.error).toBeNull();
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/field/i);
   });
 
-  // TODO V4: KIT-5197 - Remove this test after migration to error-based validation
+  // TODO V4: KIT-5197 - Remove this test
   it('should log warning when valid #field is updated to an empty value', async () => {
     const consoleWarnSpy = vi
       .spyOn(console, 'warn')
@@ -183,7 +183,7 @@ describe('atomic-result-text', () => {
       invalidValue: 'not-a-boolean',
     },
   ])(
-    // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
+    // TODO V4: KIT-5197 - Remove skip
     'should set error when #$prop is invalid',
     async ({prop, invalidValue}) => {
       const element = await renderComponent({field: 'author'});
@@ -194,13 +194,13 @@ describe('atomic-result-text', () => {
       (element as any)[prop] = invalidValue;
       await element.updateComplete;
 
-      // TODO V4: KIT-5197 - Change back to expect error after migration period
-      expect(element.error).toBeNull();
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
     },
     {skip: true}
   );
 
-  // TODO V4: KIT-5197 - Remove this test after migration to error-based validation
+  // TODO V4: KIT-5197 - Remove this test
   it.each<{
     prop: 'shouldHighlight' | 'disableHighlight';
     invalidValue: unknown;
@@ -256,7 +256,7 @@ describe('atomic-result-text', () => {
       invalidValue: 'not-a-boolean',
     },
   ])(
-    // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
+    // TODO V4: KIT-5197 - Remove skip
     'should set error when valid #$prop is updated to an invalid value',
     async ({prop, validValue, invalidValue}) => {
       const element = await renderComponent({
@@ -284,7 +284,7 @@ describe('atomic-result-text', () => {
     expect(element.textContent?.trim()).toBe('');
   });
 
-  // TODO V4: KIT-5197 - Remove this test after migration to error-based validation
+  // TODO V4: KIT-5197 - Remove this test
   it.each<{
     prop: 'shouldHighlight' | 'disableHighlight';
     validValue: boolean;

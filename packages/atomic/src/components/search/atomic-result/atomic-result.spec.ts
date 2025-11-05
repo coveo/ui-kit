@@ -100,7 +100,7 @@ describe('atomic-result', () => {
       invalidValue: 'invalid',
     },
   ])(
-    // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
+    // TODO V4: KIT-5197 - Remove skip
     'should set error when #$prop is invalid',
     async ({prop, invalidValue}) => {
       const element = await renderResult();
@@ -117,7 +117,7 @@ describe('atomic-result', () => {
     {skip: true}
   );
 
-  // TODO: KIT-5197 - Remove this test after migration to error-based validation
+  // TODO V4: KIT-5197 - Remove this test
   it.each<{
     prop: 'density' | 'display' | 'imageSize';
     invalidValue: unknown;
@@ -182,7 +182,7 @@ describe('atomic-result', () => {
       invalidValue: 'invalid',
     },
   ])(
-    // TODO: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
+    // TODO V4: KIT-5197 - Remove skip
     'should set error when valid #$prop is updated to an invalid value',
     async ({prop, validValue, invalidValue}) => {
       const element = await renderResult({[prop]: validValue});
@@ -199,7 +199,7 @@ describe('atomic-result', () => {
     {skip: true}
   );
 
-  // TODO: KIT-5197 - Remove this test after migration to error-based validation
+  // TODO V4: KIT-5197 - Remove this test
   it.each<{
     prop: 'density' | 'display' | 'imageSize';
     validValue: ItemDisplayDensity | ItemDisplayLayout | ItemDisplayImageSize;

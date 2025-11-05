@@ -57,7 +57,7 @@ describe('atomic-text', () => {
     expect(el).toBeInstanceOf(AtomicText);
   });
 
-  // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
+  // TODO V4: KIT-5197 - Remove skip
   it.skip('should set error when #value is empty', async () => {
     const element = await renderComponent({value: 'test-key'});
 
@@ -70,7 +70,7 @@ describe('atomic-text', () => {
     expect(element.error.message).toMatch(/value/i);
   });
 
-  // TODO V4: KIT-5197 - Remove this test after migration to error-based validation
+  // TODO V4: KIT-5197 - Remove this test
   it('should log warning when #value is empty', async () => {
     const consoleWarnSpy = vi
       .spyOn(console, 'warn')
@@ -94,7 +94,7 @@ describe('atomic-text', () => {
     consoleWarnSpy.mockRestore();
   });
 
-  // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
+  // TODO V4: KIT-5197 - Remove skip
   it.skip('should set error when valid #value is updated to an empty value', async () => {
     const element = await renderComponent({value: 'test-key'});
 
@@ -107,7 +107,7 @@ describe('atomic-text', () => {
     expect(element.error.message).toMatch(/value/i);
   });
 
-  // TODO V4: KIT-5197 - Remove this test after migration to error-based validation
+  // TODO V4: KIT-5197 - Remove this test
   it('should log warning when valid #value is updated to an empty value', async () => {
     const consoleWarnSpy = vi
       .spyOn(console, 'warn')
@@ -131,7 +131,7 @@ describe('atomic-text', () => {
     consoleWarnSpy.mockRestore();
   });
 
-  // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
+  // TODO V4: KIT-5197 - Remove skip
   it.skip('should set error when #count is invalid', async () => {
     const element = await renderComponent({value: 'test-key', count: 5});
 
@@ -145,7 +145,7 @@ describe('atomic-text', () => {
     expect(element.error.message).toMatch(/count/i);
   });
 
-  // TODO V4: KIT-5197 - Remove this test after migration to error-based validation
+  // TODO V4: KIT-5197 - Remove this test
   it('should log warning when #count is invalid', async () => {
     const consoleWarnSpy = vi
       .spyOn(console, 'warn')
@@ -170,7 +170,7 @@ describe('atomic-text', () => {
     consoleWarnSpy.mockRestore();
   });
 
-  // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
+  // TODO V4: KIT-5197 - Remove skip
   it.skip('should set error when valid #count is updated to an invalid value', async () => {
     const element = await renderComponent({value: 'test-key', count: 5});
 
@@ -184,7 +184,7 @@ describe('atomic-text', () => {
     expect(element.error.message).toMatch(/count/i);
   });
 
-  // TODO V4: KIT-5197 - Remove this test after migration to error-based validation
+  // TODO V4: KIT-5197 - Remove this test
   it('should log warning when valid #count is updated to an invalid value', async () => {
     const consoleWarnSpy = vi
       .spyOn(console, 'warn')
@@ -268,7 +268,7 @@ describe('atomic-text', () => {
     expect(element.error).toBeUndefined();
   });
 
-  // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
+  // TODO V4: KIT-5197 - Remove skip
   it.skip('should set error when value is not provided', async () => {
     const element = await renderComponent();
 
@@ -276,7 +276,7 @@ describe('atomic-text', () => {
     expect(element.error.message).toMatch(/value/i);
   });
 
-  // TODO V4: KIT-5197 - Remove this test after migration to error-based validation
+  // TODO V4: KIT-5197 - Remove this test
   it('should log warning when value is not provided', async () => {
     const consoleWarnSpy = vi
       .spyOn(console, 'warn')
@@ -297,7 +297,7 @@ describe('atomic-text', () => {
     consoleWarnSpy.mockRestore();
   });
 
-  // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
+  // TODO V4: KIT-5197 - Remove skip
   it.skip('should set error when value is empty string', async () => {
     const element = await renderComponent({value: ''});
 
@@ -305,7 +305,7 @@ describe('atomic-text', () => {
     expect(element.error.message).toMatch(/value/i);
   });
 
-  // TODO V4: KIT-5197 - Remove this test after migration to error-based validation
+  // TODO V4: KIT-5197 - Remove this test
   it('should log warning when value is empty string', async () => {
     const consoleWarnSpy = vi
       .spyOn(console, 'warn')
@@ -327,7 +327,8 @@ describe('atomic-text', () => {
   });
 
   describe('when error is present', () => {
-    it('should render error component when value is missing', async () => {
+    // TODO V4: KIT-5197 - Remove skip
+    it.skip('should render error component when value is missing', async () => {
       const element = await renderComponent();
 
       expect(element.error).toBeDefined();

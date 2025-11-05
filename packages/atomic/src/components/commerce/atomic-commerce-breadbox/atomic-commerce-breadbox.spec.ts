@@ -139,7 +139,7 @@ describe('atomic-commerce-breadbox', () => {
     expect(element.breadcrumbManager).toBe(mockedBreadcrumbManager);
   });
 
-  // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
+  // TODO V4: KIT-5197 - Remove skip
   it.skip('should set error when pathLimit is initially lower than 1', async () => {
     const {element} = await renderBreadbox({
       interfaceElementType: 'product-listing',
@@ -152,31 +152,7 @@ describe('atomic-commerce-breadbox', () => {
     );
   });
 
-  // TODO V4: KIT-5197 - Remove this test after migration to error-based validation
-  it('should log warning when pathLimit is initially lower than 1', async () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
-    const {element} = await renderBreadbox({
-      interfaceElementType: 'product-listing',
-      pathLimit: 0,
-    });
-
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Prop validation failed for component atomic-commerce-breadbox'
-      ),
-      element
-    );
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('pathLimit'),
-      element
-    );
-
-    consoleWarnSpy.mockRestore();
-  });
-
-  // TODO V4: KIT-5197 - Remove skip and update test to verify warning logs instead of errors
+  // TODO V4: KIT-5197 - Remove skip
   it.skip('should set error when valid pathLimit is updated to a value lower than 1', async () => {
     const {element} = await renderBreadbox();
 
@@ -192,28 +168,29 @@ describe('atomic-commerce-breadbox', () => {
     );
   });
 
-  // TODO V4: KIT-5197 - Remove this test after migration to error-based validation
-  it('should log warning when valid pathLimit is updated to a value lower than 1', async () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
-    const {element} = await renderBreadbox();
+  // TODO V4: KIT-5197 - Remove this test
+  it('should log validation error when pathLimit is updated to invalid value via ValidatePropsController', async () => {
+    const loggerWarnSpy = vi.spyOn(mockedEngine.logger, 'warn');
 
-    element.pathLimit = 0;
+    const {element} = await renderBreadbox({
+      pathLimit: 3,
+    });
+
+    element.pathLimit = -1;
     await element.updateComplete;
 
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
+    expect(loggerWarnSpy).toHaveBeenCalledWith(
       expect.stringContaining(
         'Prop validation failed for component atomic-commerce-breadbox'
       ),
       element
     );
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
+    expect(loggerWarnSpy).toHaveBeenCalledWith(
       expect.stringContaining('pathLimit'),
       element
     );
 
-    consoleWarnSpy.mockRestore();
+    loggerWarnSpy.mockRestore();
   });
 
   it('should render nothing when there are no breadcrumbs', async () => {
