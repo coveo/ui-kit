@@ -62,16 +62,12 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
   }
 
   private _handleValidationError(error: Error) {
-    if (this.host.bindings?.engine?.logger) {
-      this.host.bindings.engine.logger.warn(
-        `Prop validation failed for component ${this.host.tagName?.toLowerCase()}: ${error.message}`,
-        this.host
-      );
+    const message = `Prop validation failed for component ${this.host.tagName?.toLowerCase()}: ${error.message}`;
+
+    if (this.host.bindings?.engine?.logger?.warn) {
+      this.host.bindings.engine.logger.warn(message, this.host);
     } else {
-      console.warn(
-        `Prop validation failed for component ${this.host.tagName?.toLowerCase()}: ${error.message}`,
-        this.host
-      );
+      console.warn(message, this.host);
     }
   }
 }

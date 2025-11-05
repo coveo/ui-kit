@@ -184,4 +184,25 @@ describe('ValidatePropsController', () => {
       expect(consoleWarnSpy).not.toHaveBeenCalled();
     });
   });
+
+  describe('when engine logger exists but warn method is not available', () => {
+    beforeEach(() => {
+      mockElement.bindings = {
+        engine: {logger: {error: vi.fn()}},
+      } as unknown as AnyBindings;
+    });
+
+    it('should fall back to console.warn', () => {
+      mockGetProps.mockReturnValue({name: 'invalid-value'});
+
+      controller.hostConnected();
+
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'Prop validation failed for component test-element'
+        ),
+        mockElement
+      );
+    });
+  });
 });
