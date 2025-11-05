@@ -1,9 +1,10 @@
 import {expect, test} from './fixture';
 
 test.describe('before query is loaded', () => {
-  test.beforeEach(async ({recsList}) => {
+  test.beforeEach(async ({recsList, page}) => {
     await recsList.load({story: 'recs-before-query'});
     await recsList.hydrated.waitFor();
+    await page.waitForLoadState('networkidle');
   });
 
   test('should be accessible', async ({makeAxeBuilder}) => {
@@ -17,9 +18,10 @@ test.describe('before query is loaded', () => {
 });
 
 test.describe('after query is loaded', () => {
-  test.beforeEach(async ({recsList}) => {
+  test.beforeEach(async ({recsList, page}) => {
     await recsList.load({story: 'default'});
     await recsList.hydrated.waitFor();
+    await page.waitForLoadState('networkidle');
   });
 
   test('should be accessible', async ({makeAxeBuilder}) => {
@@ -33,9 +35,10 @@ test.describe('after query is loaded', () => {
 });
 
 test.describe('with a full result template', () => {
-  test.beforeEach(async ({recsList}) => {
+  test.beforeEach(async ({recsList, page}) => {
     await recsList.load({story: 'recs-with-full-template'});
     await recsList.hydrated.waitFor();
+    await page.waitForLoadState('networkidle');
   });
 
   test('should be accessible', async ({makeAxeBuilder}) => {
@@ -49,9 +52,11 @@ test.describe('with a full result template', () => {
 });
 
 test.describe('with a carousel', () => {
-  test.beforeEach(async ({recsList}) => {
+  test.beforeEach(async ({recsList, page}) => {
     await recsList.load({story: 'recs-as-carousel'});
     await recsList.hydrated.waitFor();
+    await recsList.recommendation.first().waitFor({state: 'visible'});
+    await page.waitForLoadState('networkidle');
   });
 
   test('should be accessible', async ({makeAxeBuilder}) => {
