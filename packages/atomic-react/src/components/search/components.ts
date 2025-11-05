@@ -7,8 +7,10 @@ import {
   AtomicIcon as LitAtomicIcon,
   AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicLayoutSection as LitAtomicLayoutSection,
+  AtomicLoadMoreResults as LitAtomicLoadMoreResults,
   AtomicPager as LitAtomicPager,
   AtomicQuerySummary as LitAtomicQuerySummary,
+  AtomicRecsInterface as LitAtomicRecsInterface,
   AtomicResult as LitAtomicResult,
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
   AtomicResultList as LitAtomicResultList,
@@ -81,6 +83,12 @@ export const AtomicLayoutSection = createComponent({
   elementClass: LitAtomicLayoutSection,
 });
 
+export const AtomicLoadMoreResults = createComponent({
+  tagName: 'atomic-load-more-results',
+  react: React,
+  elementClass: LitAtomicLoadMoreResults,
+});
+
 export const AtomicPager = createComponent({
   tagName: 'atomic-pager',
   react: React,
@@ -91,6 +99,12 @@ export const AtomicQuerySummary = createComponent({
   tagName: 'atomic-query-summary',
   react: React,
   elementClass: LitAtomicQuerySummary,
+});
+
+export const AtomicRecsInterface = createComponent({
+  tagName: 'atomic-recs-interface',
+  react: React,
+  elementClass: LitAtomicRecsInterface,
 });
 
 export const AtomicResult = createComponent({
