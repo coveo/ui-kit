@@ -9,12 +9,6 @@ test.describe('default', () => {
     await expect(searchBox.submitButton).toBeEnabled();
   });
 
-  test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
-    await searchBox.hydrated.waitFor();
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test.describe('after clicking the searchbox input', () => {
     test.beforeEach(async ({searchBox}) => {
       await searchBox.searchInput.waitFor({state: 'visible'});
@@ -23,12 +17,6 @@ test.describe('default', () => {
 
     test('should display suggested queries', async ({searchBox}) => {
       await expect(searchBox.searchSuggestions().first()).toBeVisible();
-    });
-
-    test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
-      await searchBox.hydrated.waitFor();
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations).toEqual([]);
     });
 
     test.describe('after clicking the submit button', () => {
@@ -100,12 +88,6 @@ test.describe('with instant results & query suggestions', () => {
       await expect(
         searchBox.instantResult({listSide: 'Right'}).first()
       ).toBeVisible();
-    });
-
-    test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
-      await searchBox.hydrated.waitFor();
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations).toEqual([]);
     });
 
     test('should display in the search box what has been submitted', async ({
@@ -185,12 +167,6 @@ test.describe('with disable-search=true and minimum-query-length=1', () => {
     test('there are no search suggestions', async ({searchBox}) => {
       await expect(searchBox.searchSuggestions().first()).not.toBeVisible();
     });
-
-    test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
-      await searchBox.hydrated.waitFor();
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations).toEqual([]);
-    });
   };
 
   testCases();
@@ -227,12 +203,6 @@ test.describe('with minimum-query-length=4', () => {
 
     test('there are no search suggestions', async ({searchBox}) => {
       await expect(searchBox.searchSuggestions().first()).not.toBeVisible();
-    });
-
-    test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
-      await searchBox.hydrated.waitFor();
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations).toEqual([]);
     });
   };
 

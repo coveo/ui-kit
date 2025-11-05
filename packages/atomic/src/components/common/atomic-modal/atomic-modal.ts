@@ -178,16 +178,16 @@ export class AtomicModal
 
   // Public methods
 
-  public initialize() {
+  public async initialize() {
     if (this.isOpen) {
       this.shouldRender = true;
-      this.handleToggleOpen(this.isOpen);
+      await this.handleToggleOpen(this.isOpen);
     }
   }
 
   @watch('isOpen', {waitUntilFirstUpdate: false})
-  watchToggleOpen(_prev?: boolean, next?: boolean) {
-    this.handleToggleOpen(next ?? this.isOpen);
+  async watchToggleOpen(_prev?: boolean, next?: boolean) {
+    await this.handleToggleOpen(next ?? this.isOpen);
   }
 
   // Private methods

@@ -58,6 +58,7 @@ import {
   type ItemDisplayLayout,
 } from '@/src/components/common/layout/item-layout-utils';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
+import '@/src/components/search/atomic-result-template/atomic-result-template';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
