@@ -2,7 +2,7 @@ name: DXUI Task
 description: Create a task Issue for the DXUI team
 title: '[DXUI]: '
 type: task
-projects: coveo/21
+projects: ['coveo/21']
 body:
   - type: markdown
     attributes:

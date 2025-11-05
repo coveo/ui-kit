@@ -2,7 +2,7 @@ name: DXUI Bug
 description: Report a bug for the DXUI team
 title: '[DXUI Bug]: '
 type: bug
-projects: coveo/21
+projects: ['coveo/21']
 body:
   - type: markdown
     attributes:
