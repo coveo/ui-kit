@@ -8,6 +8,7 @@ export {AtomicQuerySummary} from './atomic-query-summary/atomic-query-summary.js
 export {AtomicRelevanceInspector} from './atomic-relevance-inspector/atomic-relevance-inspector.js';
 export {AtomicResult} from './atomic-result/atomic-result.js';
 export {AtomicResultChildrenTemplate} from './atomic-result-children-template/atomic-result-children-template.js';
+export {AtomicResultLink} from './atomic-result-link/atomic-result-link.js';
 export {AtomicResultList} from './atomic-result-list/atomic-result-list.js';
 export {AtomicResultSectionActions} from './atomic-result-section-actions/atomic-result-section-actions.js';
 export {AtomicResultSectionBadges} from './atomic-result-section-badges/atomic-result-section-badges.js';

@@ -16,6 +16,8 @@ export default {
     await import(
       './atomic-result-children-template/atomic-result-children-template.js'
     ),
+  'atomic-result-link': async () =>
+    await import('./atomic-result-link/atomic-result-link.js'),
   'atomic-result-list': async () =>
     await import('./atomic-result-list/atomic-result-list.js'),
   'atomic-result-section-actions': async () =>
