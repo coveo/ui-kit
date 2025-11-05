@@ -71,7 +71,8 @@ const meta: Meta = {
 
   play: async (storyContext) => {
     await play(storyContext);
-    const searchBox = await storyContext.canvas.findAllByShadowPlaceholderText('Search');
+    const searchBox =
+      await storyContext.canvas.findAllByShadowPlaceholderText('Search');
     await storyContext.userEvent.type(
       searchBox[0],
       'how to resolve netflix connection with tivo{enter}'
