@@ -1,9 +1,10 @@
 import {expect, test} from './fixture';
 
 test.describe('atomic-external', () => {
-  test.beforeEach(async ({external}) => {
+  test.beforeEach(async ({external, page}) => {
     await external.load();
     await external.hydrated.waitFor();
+    await page.waitForLoadState('networkidle');
   });
 
   test.describe('when modifying state of a component (search box) that is a child of an atomic-external component', () => {
@@ -19,6 +20,8 @@ test.describe('atomic-external', () => {
         .fill('hello');
 
       await external.searchBox.press('Enter');
+
+      await page.waitForLoadState('networkidle');
     });
 
     test('should affect state of other components inside the same atomic-external', async ({
