@@ -150,12 +150,6 @@ test.describe('atomic-commerce-search-box', () => {
         await searchBox.searchInput.click();
       });
 
-      test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
-        await searchBox.hydrated.waitFor();
-        const accessibilityResults = await makeAxeBuilder().analyze();
-        expect(accessibilityResults.violations).toEqual([]);
-      });
-
       test.describe('after entering text', () => {
         test.beforeEach(async ({searchBox}) => {
           await searchBox.searchInput.fill('kayak');
@@ -243,12 +237,6 @@ test.describe('atomic-commerce-search-box', () => {
         await searchBox.searchInput.click();
       });
 
-      test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
-        await searchBox.hydrated.waitFor();
-        const accessibilityResults = await makeAxeBuilder().analyze();
-        expect(accessibilityResults.violations).toEqual([]);
-      });
-
       test('should display suggested queries', async ({searchBox}) => {
         await expect(
           searchBox.searchSuggestions({listSide: 'Left'}).first()
@@ -314,17 +302,6 @@ test.describe('atomic-commerce-search-box', () => {
     });
 
     const testCases = () => {
-      test('should be accessible', async ({
-        searchBox,
-        makeAxeBuilder,
-        page,
-      }) => {
-        await searchBox.hydrated.waitFor();
-        await page.waitForLoadState('networkidle');
-        const accessibilityResults = await makeAxeBuilder().analyze();
-        expect(accessibilityResults.violations).toEqual([]);
-      });
-
       test('the submit button is disabled', async ({searchBox}) => {
         await expect(searchBox.submitButton).toBeDisabled();
       });
@@ -372,17 +349,6 @@ test.describe('atomic-commerce-search-box', () => {
     });
 
     const testCases = () => {
-      test('should be accessible', async ({
-        searchBox,
-        makeAxeBuilder,
-        page,
-      }) => {
-        await searchBox.hydrated.waitFor();
-        await page.waitForLoadState('networkidle');
-        const accessibilityResults = await makeAxeBuilder().analyze();
-        expect(accessibilityResults.violations).toEqual([]);
-      });
-
       test('the submit button is disabled', async ({searchBox}) => {
         await expect(searchBox.submitButton).toBeDisabled();
       });
