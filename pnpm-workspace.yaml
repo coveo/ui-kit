@@ -72,3 +72,5 @@ publicHoistPattern:
 minimumReleaseAge: 10080
 minimumReleaseAgeExclude:
   - '@coveo/*'
+  - '@storybook/*'
+  - '@wc-toolkit/storybook-helpers'

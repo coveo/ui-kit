@@ -141,7 +141,7 @@ const storybook = defineConfig({
       fileParallelism: false,
       enabled: true,
       headless: true,
-      provider: 'playwright',
+      provider: playwright(),
       instances: [{browser: 'chromium'}],
       context: {
         actionTimeout: 3000,
