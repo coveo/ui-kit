@@ -60,16 +60,6 @@ import {
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 
 /**
- * Valid values for the display prop.
- */
-const VALID_DISPLAY_VALUES: ItemDisplayLayout[] = ['grid', 'list', 'table'];
-
-/**
- * Default display value to use when the display prop is invalid.
- */
-const DEFAULT_DISPLAY_FALLBACK: ItemDisplayLayout = 'list';
-
-/**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
  *
  * @slot default - The default slot where the result templates are inserted.
@@ -201,7 +191,7 @@ export class AtomicResultList
         density: new StringValue({
           constrainTo: ['normal', 'comfortable', 'compact'],
         }),
-        display: new StringValue({constrainTo: VALID_DISPLAY_VALUES}),
+        display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
         imageSize: new StringValue({
           constrainTo: ['small', 'large', 'icon', 'none'],
         }),
@@ -213,8 +203,7 @@ export class AtomicResultList
           each: new StringValue({}),
           required: false,
         }),
-      }),
-      () => this.bindings?.engine.logger
+      })
     );
   }
 
@@ -328,29 +317,29 @@ export class AtomicResultList
                 renderDisplayWrapper({
                   props: {
                     listClasses: resultClasses,
-                    display: this.validatedDisplay,
+                    display: this.display,
                   },
                 })(
                   html`${when(
-                    this.validatedDisplay === 'grid',
+                    this.display === 'grid',
                     () => this.renderGrid(),
                     () =>
                       html`${when(
-                        this.validatedDisplay === 'list',
-                        () => this.renderList(),
-                        () => this.renderTable()
+                        this.display === 'table',
+                        () => this.renderTable(),
+                        () => this.renderList()
                       )}`
                   )}`
                 )
               )}
               ${when(!this.isEveryResultReady, () =>
                 renderDisplayWrapper({
-                  props: {listClasses, display: this.validatedDisplay},
+                  props: {listClasses, display: this.display},
                 })(
                   renderItemPlaceholders({
                     props: {
                       density: this.density,
-                      display: this.validatedDisplay,
+                      display: this.display,
                       imageSize: this.imageSize,
                       numberOfPlaceholders:
                         this.resultsPerPageState.numberOfResults || 10,
@@ -395,20 +384,11 @@ export class AtomicResultList
     });
   }
 
-  /**
-   * Returns the display value, falling back to 'list' if the value is invalid.
-   */
-  private get validatedDisplay(): ItemDisplayLayout {
-    return VALID_DISPLAY_VALUES.includes(this.display)
-      ? this.display
-      : DEFAULT_DISPLAY_FALLBACK;
-  }
-
   private computeListDisplayClasses() {
     const displayPlaceholders = !(this.isAppLoaded && this.isEveryResultReady);
 
     return getItemListDisplayClasses(
-      this.validatedDisplay,
+      this.display,
       this.density,
       this.imageSize,
       this.resultListState?.isLoading,
@@ -436,7 +416,7 @@ export class AtomicResultList
           html`<atomic-result
             .content=${this.getContent(result)}
             .density=${this.density}
-            .display=${this.validatedDisplay}
+            .display=${this.display}
             .imageSize=${this.imageSize}
             .interactiveResult=${this.getInteractiveResult(result)}
             .linkContent=${this.getLinkContent(result)}
@@ -463,7 +443,7 @@ export class AtomicResultList
          )}
             .content=${this.getContent(result)}
             .density=${this.density}
-            .display=${this.validatedDisplay}
+            .display=${this.display}
             .imageSize=${this.imageSize}
             .interactiveResult=${this.getInteractiveResult(result)}
             .linkContent=${this.getLinkContent(result)}
@@ -516,7 +496,7 @@ export class AtomicResultList
                     return html`<atomic-result
                       .content=${content}
                       .density=${this.density}
-                      .display=${this.validatedDisplay}
+                      .display=${this.display}
                       .imageSize=${this.imageSize}
                       .interactiveResult=${this.getInteractiveResult(result)}
                        .linkContent=${this.getLinkContent(result)}
@@ -544,7 +524,7 @@ export class AtomicResultList
   }
 
   private getLinkContent(result: Result) {
-    return this.validatedDisplay === 'grid'
+    return this.display === 'grid'
       ? this.resultTemplateProvider.getLinkTemplateContent(result)
       : this.resultTemplateProvider.getEmptyLinkTemplateContent();
   }
