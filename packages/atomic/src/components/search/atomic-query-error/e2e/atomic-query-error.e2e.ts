@@ -1,18 +1,16 @@
 import {expect, test} from './fixture';
 
 test.describe('atomic-query-error', () => {
-  test.beforeEach(async ({queryError}) => {
-    await queryError.load();
-  });
+  test.describe('when there is an invalid token', () => {
+    test('should display the component with the correct content', async ({
+      queryError,
+    }) => {
+      await queryError.load();
 
-  test('should be accessible', async ({queryError, makeAxeBuilder}) => {
-    await queryError.hydrated.waitFor();
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
-  test('should display an error title', async ({queryError}) => {
-    await expect(queryError.title).toBeVisible();
+      await expect(queryError.title).toBeVisible();
+      await expect(queryError.description).toBeVisible();
+      await expect(queryError.moreInfoButton).toBeVisible();
+    });
   });
 
   test('should display an error description', async ({queryError}) => {

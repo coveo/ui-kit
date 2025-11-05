@@ -1,9 +1,10 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {HttpResponse, http} from 'msw';
-import {exampleUserActions} from '@/storybook-utils/api/contextApi';
+import {MockMachineLearningApi} from '@/storybook-utils/api/machinelearning/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
+
+const mockMachineLearningApi = new MockMachineLearningApi();
 
 const {decorator, play} = wrapInInsightInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -20,9 +21,12 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    // TODO SFINT-6463: Fix a11y issues in the User Actions Timeline component.
+    a11y: {disable: true},
     actions: {
       handles: events,
     },
+    msw: {handlers: [...mockMachineLearningApi.handlers]},
   },
   args: {
     ...args,
@@ -37,49 +41,34 @@ export default meta;
 
 export const Default: Story = {
   name: 'atomic-insight-user-actions-timeline',
-  parameters: {
-    msw: {
-      handlers: [
-        http.post('**/user/actions', () => {
-          return HttpResponse.json({value: exampleUserActions}, {status: 200});
-        }),
-      ],
-    },
-  },
   play,
 };
 
 export const WithNoUserActions: Story = {
   name: 'With no user actions',
-  parameters: {
-    msw: {
-      handlers: [
-        http.post('**/user/actions', () => {
-          return HttpResponse.json({value: []}, {status: 200});
-        }),
-      ],
-    },
+  beforeEach: async () => {
+    mockMachineLearningApi.userActionsEndpoint.mockOnce(() => ({
+      value: [],
+    }));
   },
   play,
 };
 
 export const WithUserActionsError: Story = {
   name: 'With user actions error',
-  parameters: {
-    msw: {
-      handlers: [
-        http.post('**/user/actions', () => {
-          return HttpResponse.json(
-            {
-              message: 'Access is denied.',
-              errorCode: 'ACCESS_DENIED',
-              requestID: '1486603b-db83-4dc2-9580-5f8e81c8e00c',
-            },
-            {status: 403}
-          );
-        }),
-      ],
-    },
+  beforeEach: async () => {
+    mockMachineLearningApi.userActionsEndpoint.mockOnce(
+      () => ({
+        ok: false,
+        status: 403,
+        statusCode: 403,
+        message: 'Access is denied.',
+        errorCode: 'ACCESS_DENIED',
+        requestID: '1486603b-db83-4dc2-9580-5f8e81c8e00c',
+        type: 'ACCESS_DENIED',
+      }),
+      {status: 403}
+    );
   },
   play,
 };

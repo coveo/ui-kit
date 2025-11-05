@@ -2,6 +2,7 @@
 export {AtomicExternal} from './atomic-external/atomic-external.js';
 export {AtomicFacet} from './atomic-facet/atomic-facet.js';
 export {AtomicHtml} from './atomic-html/atomic-html.js';
+export {AtomicLoadMoreResults} from './atomic-load-more-results/atomic-load-more-results.js';
 export {AtomicPager} from './atomic-pager/atomic-pager.js';
 export {AtomicQueryError} from './atomic-query-error/atomic-query-error.js';
 export {AtomicQuerySummary} from './atomic-query-summary/atomic-query-summary.js';

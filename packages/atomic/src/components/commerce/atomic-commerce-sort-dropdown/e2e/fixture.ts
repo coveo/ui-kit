@@ -1,13 +1,11 @@
 import {test as base} from '@playwright/test';
-import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {AtomicCommerceSortDropdownPageObject} from './page-object';
 
 type Fixtures = {
   commerceSortDropdown: AtomicCommerceSortDropdownPageObject;
 };
 
-export const test = base.extend<Fixtures & AxeFixture>({
-  makeAxeBuilder,
+export const test = base.extend<Fixtures>({
   commerceSortDropdown: async ({page}, use) => {
     await use(new AtomicCommerceSortDropdownPageObject(page));
   },

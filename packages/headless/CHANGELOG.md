@@ -1,3 +1,11 @@
+## 3.35.0 (2025-11-05)
+
+* Optimize retry strategy for Search API with guaranteed 1s minimum delay plus exponential backoff (#6 ([5e8c454](https://github.com/coveo/ui-kit/commits/5e8c454)), closes [#6439](https://github.com/coveo/ui-kit/issues/6439)
+* chore(headless-ssr): refactor Search Engine SSR (#6212) ([c51b571](https://github.com/coveo/ui-kit/commits/c51b571)), closes [#6212](https://github.com/coveo/ui-kit/issues/6212)
+* feat(headless): started sending response linked event for CRGA with EP (#6211) ([ca919b7](https://github.com/coveo/ui-kit/commits/ca919b7)), closes [#6211](https://github.com/coveo/ui-kit/issues/6211)
+
+
+
 ## <small>3.34.2 (2025-10-30)</small>
 
 * fix(headless-ssr): fix `setAccessToken` for ssr commerce (#6181) ([acfc6c5](https://github.com/coveo/ui-kit/commits/acfc6c5)), closes [#6181](https://github.com/coveo/ui-kit/issues/6181)

@@ -1,15 +1,11 @@
 import {test as base} from '@playwright/test';
-import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {UserActionsTimelinePageObject} from './page-object';
 
 type AtomicInsightUserActionsTimelineE2EFixtures = {
   userActionsTimeline: UserActionsTimelinePageObject;
 };
 
-export const test = base.extend<
-  AtomicInsightUserActionsTimelineE2EFixtures & AxeFixture
->({
-  makeAxeBuilder,
+export const test = base.extend<AtomicInsightUserActionsTimelineE2EFixtures>({
   userActionsTimeline: async ({page}, use) => {
     await use(new UserActionsTimelinePageObject(page));
   },
