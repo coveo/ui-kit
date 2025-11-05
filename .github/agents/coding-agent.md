@@ -175,7 +175,7 @@ Result: [Pass/Fail]
 ### Monorepo Structure
 - **Package Manager**: pnpm with workspaces
 - **Build System**: Turbo for task orchestration
-- **TypeScript**: 5.8.3 targeting ES2022
+- **TypeScript**: Check `package.json` and `tsconfig.json` for current version and target
 
 ### Key Packages
 - **atomic**: UI component library (Lit/Stencil)
@@ -221,75 +221,11 @@ Result: [Pass/Fail]
 - Use `.gitignore` to exclude build artifacts
 - Ensure minimal, surgical changes
 
-## Common Patterns Reference
-
-### Component Creation (Atomic)
-```typescript
-import {customElement, property, state} from 'lit/decorators.js';
-import {LitElement, html, css} from 'lit';
-import {bindings} from '@/src/decorators/bindings';
-import {bindStateToController} from '@/src/decorators/bind-state-to-controller';
-
-@customElement('atomic-example')
-export class AtomicExample extends LitElement {
-  static styles = css`...`;
-  
-  @property({type: String}) label = 'default';
-  
-  @state() public bindings!: Bindings;
-  @bindStateToController('controller')
-  @state() public controllerState!: ControllerState;
-  
-  constructor() {
-    super();
-    new ValidatePropsController(this, () => ({...}), schema);
-  }
-  
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    // Clean up event listeners
-  }
-  
-  render() {
-    return html`...`;
-  }
-}
-```
-
-### Test Creation (Atomic)
-```typescript
-import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {page} from '@vitest/browser/context';
-import {buildFakeController} from '@/vitest-utils/testing-helpers/fixtures/headless/...';
-
-vi.mock('@coveo/headless', {spy: true});
-
-const renderComponent = async ({props = {}, controllerState = {}} = {}) => {
-  vi.mocked(buildController).mockReturnValue(
-    buildFakeController({state: controllerState})
-  );
-  
-  const {element} = await renderInAtomicSearchInterface({
-    template: html`<atomic-example .prop=${props.value}></atomic-example>`,
-    selector: 'atomic-example',
-  });
-  
-  return {
-    element,
-    button: page.getByRole('button'),
-    parts: (el) => ({
-      container: el.shadowRoot?.querySelector('[part="container"]'),
-    }),
-  };
-};
-
-describe('atomic-example', () => {
-  it('should render', async () => {
-    const {element} = await renderComponent();
-    await expect.element(element).toBeInTheDocument();
-  });
-});
-```
+### 5. PR and Commit Standards
+- **PR Title**: Must be a semantic commit (can be prefixed with `WIP:` while work is in progress)
+  - Examples: `feat: add new component`, `fix: resolve test failure`, `WIP: refactor authentication`
+- **PR Description**: Should include `Fixes #Issue_number` in the footer when addressing a specific issue
+- **Commit Messages**: Use clear, descriptive commit messages that explain the change
 
 ## Quality Checklist
 
