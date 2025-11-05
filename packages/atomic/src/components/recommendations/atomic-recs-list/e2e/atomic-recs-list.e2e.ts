@@ -57,13 +57,13 @@ test.describe('with a carousel', () => {
 
     await recsList.prevButton.click();
     await recsList.prevButton.click();
-    await expect(recsList.indicators.nth(2)).toHaveAttribute(
+    await expect(recsList.indicators.last()).toHaveAttribute(
       'part',
       'indicator active-indicator'
     );
 
     await recsList.nextButton.click();
-    await expect(recsList.indicators.nth(0)).toHaveAttribute(
+    await expect(recsList.indicators.first()).toHaveAttribute(
       'part',
       'indicator active-indicator'
     );

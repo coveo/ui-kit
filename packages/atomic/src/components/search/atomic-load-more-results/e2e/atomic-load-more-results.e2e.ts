@@ -9,13 +9,13 @@ test.describe('atomic-load-more-results', () => {
     loadMore,
   }) => {
     await expect(loadMore.showingResults).toHaveText(
-      /Showing 10 of [\d,]+ results/
+      /Showing 40 of [\d,]+ results/
     );
 
     await loadMore.button.click();
 
     await expect(loadMore.showingResults).toHaveText(
-      /Showing 20 of [\d,]+ results/
+      /Showing 80 of [\d,]+ results/
     );
   });
 });
