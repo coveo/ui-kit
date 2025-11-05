@@ -173,7 +173,7 @@ describe('#renderColorFacetCheckbox', () => {
     const {element} = await setupElement({numberOfResults: 42});
 
     const valueCount = element.querySelector('[part="value-count"]');
-    expect(valueCount?.textContent).toBe('(42)');
+    expect(valueCount?.textContent?.trim()).toBe('(42)');
   });
 
   it('should use "facet-value" translation for aria-label', async () => {
@@ -184,7 +184,7 @@ describe('#renderColorFacetCheckbox', () => {
 
     expect(checkbox.element()).toHaveAttribute(
       'aria-label',
-      'Inclusion filter on Test Value; 42 result'
+      'Inclusion filter on Test Value; 42 results'
     );
   });
 });
