@@ -11,5 +11,9 @@ export async function createTestI18n(): Promise<I18n> {
       },
     },
   });
+  // Ensure languages property is set for tests
+  if (!i18n.languages || i18n.languages.length === 0) {
+    i18n.languages = ['en'];
+  }
   return i18n;
 }
