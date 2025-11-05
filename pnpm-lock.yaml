@@ -115,7 +115,7 @@ patchedDependencies:
     hash: bca691c52b3fa2f491c35229af7f145e17fd520326f997c6a15ca31fd19b937e
     path: patches/@stencil__react-output-target@0.5.3.patch
   '@wc-toolkit/storybook-helpers@9.0.1':
-    hash: 9f098b922d1c5841f98943006971dda1b8c3725e1f23933b1a6399beadddeff4
+    hash: faa3d80e4fe5c26a948e0387112f223337748e98d4e1537126dddddf2569576a
     path: patches/@wc-toolkit+storybook-helpers+9.0.1.patch
   fix-esm-import-path@1.10.1:
     hash: d8c4a243b0a6082b2f2f0dedd8551ff16da1e9adcda2a63b337f2664708a7f7d
@@ -255,9 +255,6 @@ importers:
         specifier: 1.1.0
         version: 1.1.0
     devDependencies:
-      '@axe-core/playwright':
-        specifier: 4.10.2
-        version: 4.10.2(playwright-core@1.56.1)
       '@custom-elements-manifest/analyzer':
         specifier: 0.10.4
         version: 0.10.4
@@ -294,6 +291,9 @@ importers:
       '@storybook/addon-docs':
         specifier: 9.1.2
         version: 9.1.2(@types/react@19.2.2)(storybook@9.1.2(@testing-library/dom@10.4.1)(msw@2.11.4(@types/node@22.16.5)(typescript@5.8.3))(prettier@3.6.2)(vite@7.0.5(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)))
+      '@storybook/addon-vitest':
+        specifier: 9.1.2
+        version: 9.1.2(@vitest/browser@3.2.4)(@vitest/runner@3.2.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(storybook@9.1.2(@testing-library/dom@10.4.1)(msw@2.11.4(@types/node@22.16.5)(typescript@5.8.3))(prettier@3.6.2)(vite@7.0.5(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)))(vitest@3.2.4)
       '@storybook/icons':
         specifier: 1.4.0
         version: 1.4.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -321,9 +321,12 @@ importers:
       '@vitest/browser':
         specifier: 3.2.4
         version: 3.2.4(msw@2.11.4(@types/node@22.16.5)(typescript@5.8.3))(playwright@1.56.1)(vite@7.0.5(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(vitest@3.2.4)
+      '@vitest/coverage-v8':
+        specifier: ^3.2.4
+        version: 3.2.4(@vitest/browser@3.2.4)(vitest@3.2.4)
       '@wc-toolkit/storybook-helpers':
         specifier: 9.0.1
-        version: 9.0.1(patch_hash=9f098b922d1c5841f98943006971dda1b8c3725e1f23933b1a6399beadddeff4)(lit@3.3.1)(storybook@9.1.2(@testing-library/dom@10.4.1)(msw@2.11.4(@types/node@22.16.5)(typescript@5.8.3))(prettier@3.6.2)(vite@7.0.5(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)))
+        version: 9.0.1(patch_hash=faa3d80e4fe5c26a948e0387112f223337748e98d4e1537126dddddf2569576a)(lit@3.3.1)(storybook@9.1.2(@testing-library/dom@10.4.1)(msw@2.11.4(@types/node@22.16.5)(typescript@5.8.3))(prettier@3.6.2)(vite@7.0.5(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)))
       axe-core:
         specifier: 4.10.3
         version: 4.10.3
@@ -1008,8 +1011,8 @@ importers:
         specifier: 19.2.2
         version: 19.2.2(@angular/common@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@19.2.2(@angular/animations@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
       '@coveo/atomic-angular':
-        specifier: 3.7.15
-        version: 3.7.15(@angular/common@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(@coveo/bueno@1.1.3)(@coveo/headless@3.34.0(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.82.0(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)
+        specifier: workspace:*
+        version: link:../../../packages/atomic-angular/projects/atomic-angular
       rxjs:
         specifier: 7.8.2
         version: 7.8.2
@@ -1042,8 +1045,8 @@ importers:
   samples/atomic/search-commerce-react:
     dependencies:
       '@coveo/atomic-react':
-        specifier: 3.3.19
-        version: 3.3.19(@coveo/bueno@1.1.3)(@coveo/headless@packages+headless)(@types/react@19.2.2)(postcss@8.5.6)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.8.3)
+        specifier: workspace:*
+        version: link:../../../packages/atomic-react
       '@coveo/headless':
         specifier: workspace:*
         version: link:../../../packages/headless
@@ -1781,11 +1784,6 @@ packages:
       '@angular/platform-browser': 19.2.2
       rxjs: ^6.5.3 || ^7.4.0
 
-  '@axe-core/playwright@4.10.2':
-    resolution: {integrity: sha512-6/b5BJjG6hDaRNtgzLIfKr5DfwyiLHO4+ByTLB0cJgWSM8Ll7KqtdblIS6bEkwSF642/Ex91vNqIl3GLXGlceg==}
-    peerDependencies:
-      playwright-core: '>= 1.0.0'
-
   '@babel/cli@7.28.0':
     resolution: {integrity: sha512-CYrZG7FagtE8ReKDBfItxnrEBf2khq2eTMnPuqO8UVN0wzhp1eMX1wfda8b1a32l2aqYLwRRIOGNovm8FVzmMw==}
     engines: {node: '>=6.9.0'}
@@ -2512,6 +2510,10 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
+  '@bcoe/v8-coverage@1.0.2':
+    resolution: {integrity: sha512-6zABk/ECA/QYSCQ1NGiVwwbQerUCZ+TQbp64Q3AgmfNvurHH0j8TtXa1qbShXA6qqkpAj4V5W8pP6mLe1mcMqA==}
+    engines: {node: '>=18'}
+
   '@biomejs/biome@2.1.4':
     resolution: {integrity: sha512-QWlrqyxsU0FCebuMnkvBIkxvPqH89afiJzjMl+z67ybutse590jgeaFdDurE9XYtzpjRGTI1tlUZPGWmbKsElA==}
     engines: {node: '>=14.21.3'}
@@ -2573,54 +2575,12 @@ packages:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
 
-  '@coveo/atomic-angular@3.7.15':
-    resolution: {integrity: sha512-VSMiehC3T5s0HojvM4HQmXMGZswkkdXQHt5FJi5jBWuVCR0Xnq5uJf+GqyQPGliEDAc/2JSJ6+y3J63jX6VZTw==}
-    engines: {node: ^20.9.0 || ^22.11.0}
-    peerDependencies:
-      '@angular/common': 14 - 19
-      '@angular/core': 14 - 19
-      '@coveo/headless': 3.34.0
-
   '@coveo/atomic-component-health-check@2.2.19':
     resolution: {integrity: sha512-n/llxt8mLYW5P9G8R0ozbrMrqtnDT03oMix7tQ796+F2AFwL6F3FcXyRPVMqsWuTnKH6jOwZ04HcAoP+868Ejw==}
     hasBin: true
 
-  '@coveo/atomic-react@3.3.19':
-    resolution: {integrity: sha512-I4VE0rhhRBmVAMNZ701i3rWlldjKZ9nnMTJMAUuwnRmn4vwWXUptImwyFhbBt7icVB//EIqgPqxjAyzCaKacvA==}
-    engines: {node: ^20.9.0 || ^22.11.0}
-    peerDependencies:
-      '@coveo/headless': 3.33.0
-      react: 19.2.0
-      react-dom: 19.2.0
-
-  '@coveo/atomic@3.36.0':
-    resolution: {integrity: sha512-/8Gi/8fJOzHw37B6q5Uoudk+B+WgbVE+BGlRBSAHqIqhIDzKFJkD7Rtjgr/RG90zQG4jbUzmSi4G9LFPshBL9w==}
-    engines: {node: ^20.9.0 || ^22.11.0}
-    peerDependencies:
-      '@coveo/bueno': 1.1.3
-      '@coveo/headless': 3.33.0
-      typescript: 5.8.3
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@coveo/atomic@3.37.0':
-    resolution: {integrity: sha512-1uD+estmxmo+RbHMM46lzXcE2fdIoNZynZMA/KMfUVygMkkrkn1aJeEBOVRUr3eoW1UPDOHGhnKch2X4TuLTqw==}
-    engines: {node: ^20.9.0 || ^22.11.0}
-    peerDependencies:
-      '@coveo/bueno': 1.1.3
-      '@coveo/headless': 3.34.0
-      typescript: 5.8.3
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
   '@coveo/auth@2.1.1':
     resolution: {integrity: sha512-m51EdkcG47/LJmCXOPrpKvYBaeiyNrs0JXpA0BaFiqnhdje/ap84iJxpXKnRUHMZvC9vxufdWExGTwXyt2NdNA==}
-    engines: {node: ^20.9.0 || ^22.11.0}
-
-  '@coveo/bueno@1.1.3':
-    resolution: {integrity: sha512-JpF4f7l/dcmv4MTQAU+gIR5VAr+pAvZP/OxUN6a7wqKtzdCrTDnOEyDUKEbZjT3hgQw3FnXJeoXfTXJBg/T/ow==}
     engines: {node: ^20.9.0 || ^22.11.0}
 
   '@coveo/create-atomic-component-project@1.4.2':
@@ -2636,17 +2596,6 @@ packages:
 
   '@coveo/explorer-messenger@0.4.1':
     resolution: {integrity: sha512-MX+alPTsRQLAC99b7cUwMGtaGcDw44ftEJOFwoS8alTgFlY7oaUP4jyZSJ/BCOMXlYpkhU2VYDERr/HD5P1Dtw==}
-
-  '@coveo/headless@3.34.0':
-    resolution: {integrity: sha512-gD5AswSnyDyb5QZuDWHJ9vyM+/E/ykcvuPbLvIp6XZMZYdBzLDX7kAmgy6+fNZNWGM4j+wxlAdSS3f+h25KKWg==}
-    engines: {node: ^20.9.0 || ^22.11.0}
-    peerDependencies:
-      encoding: ^0.1.13
-      pino-pretty: ^6.0.0 || ^10.0.0 || ^11.0.0 || ^13.0.0
-      typescript: 5.8.3
-    peerDependenciesMeta:
-      typescript:
-        optional: true
 
   '@coveo/platform-client@60.4.0':
     resolution: {integrity: sha512-Mh3681cqiLqEZWxleo93f1jKL1DCIxn/GiAvQ4Mw8HbLZ1AVMGD0pJ9kngSzirOsNtxME6Y7Qlx11/oWhLiiDQ==}
@@ -3903,11 +3852,6 @@ packages:
 
   '@lit/context@1.1.6':
     resolution: {integrity: sha512-M26qDE6UkQbZA2mQ3RjJ3Gzd8TxP+/0obMgE5HfkfLhEEyYE3Bui4A5XHiGPjy0MUGAyxB3QgVuw2ciS0kHn6A==}
-
-  '@lit/react@1.0.6':
-    resolution: {integrity: sha512-QIss8MPh6qUoFJmuaF4dSHts3qCsA36S3HcOLiNPShxhgYPr4XJRnCBKPipk85sR9xr6TQrOcDMfexwbNdJHYA==}
-    peerDependencies:
-      '@types/react': 17 || 18
 
   '@lit/react@1.0.8':
     resolution: {integrity: sha512-p2+YcF+JE67SRX3mMlJ1TKCSTsgyOVdAwd/nxp3NuV1+Cb6MWALbN6nT7Ld4tpmYofcE5kcaSY1YBB9erY+6fw==}
@@ -5347,6 +5291,21 @@ packages:
     peerDependencies:
       storybook: ^9.1.2
 
+  '@storybook/addon-vitest@9.1.2':
+    resolution: {integrity: sha512-lfaGyWFg8lu9ObHg8i783U/JH8LYaAc+lTjBvy5dMx38HH/XC+QuAoOCYhHU2rx0zeFHIyXGDol4d1uQxMTlLQ==}
+    peerDependencies:
+      '@vitest/browser': ^3.0.0
+      '@vitest/runner': ^3.0.0
+      storybook: ^9.1.2
+      vitest: ^3.0.0
+    peerDependenciesMeta:
+      '@vitest/browser':
+        optional: true
+      '@vitest/runner':
+        optional: true
+      vitest:
+        optional: true
+
   '@storybook/builder-vite@9.1.2':
     resolution: {integrity: sha512-5Y7e5wnSzFxCGP63UNRRZVoxHe1znU4dYXazJBobAlEcUPBk7A0sH2716tA6bS4oz92oG9tgvn1g996hRrw4ow==}
     peerDependencies:
@@ -6021,6 +5980,15 @@ packages:
       webdriverio:
         optional: true
 
+  '@vitest/coverage-v8@3.2.4':
+    resolution: {integrity: sha512-EyF9SXU6kS5Ku/U82E259WSnvg6c8KTjppUncuNdm5QHpe17mwREHnjDzozC8x9MZ0xfBUFSaLkRv4TMA75ALQ==}
+    peerDependencies:
+      '@vitest/browser': 3.2.4
+      vitest: 3.2.4
+    peerDependenciesMeta:
+      '@vitest/browser':
+        optional: true
+
   '@vitest/expect@3.2.4':
     resolution: {integrity: sha512-Io0yyORnB6sikFlt8QW5K7slY4OjqNX9jmJQ02QDda8lyM6B5oNgVWoSoKPac8/kgnCUzuHQKrSLtu/uOqqrig==}
 
@@ -6464,6 +6432,9 @@ packages:
   ast-types@0.9.6:
     resolution: {integrity: sha512-qEdtR2UH78yyHX/AUNfXmJTlM48XoFZKBdwi1nzkI1mJL21cmbu0cvjxjpkXJ5NENMq42H+hNs8VLJcqXLerBQ==}
     engines: {node: '>= 0.8'}
+
+  ast-v8-to-istanbul@0.3.8:
+    resolution: {integrity: sha512-szgSZqUxI5T8mLKvS7WTjF9is+MVbOeLADU73IseOcrqhxr/VAvy6wfoVE39KnKzA7JRhjF5eUagNlHwvZPlKQ==}
 
   astral-regex@2.0.0:
     resolution: {integrity: sha512-Z7tMw1ytTXt5jqMcOP+OQteU1VuNK9Y02uuJtKQ1Sv69jXQKKg5cibLwGJow8yzZP+eAc18EmLGPal0bp36rvQ==}
@@ -9480,6 +9451,10 @@ packages:
     resolution: {integrity: sha512-n3s8EwkdFIJCG3BPKBYvskgXGoy88ARzvegkitk60NxRdwltLOTaH7CUiMRXvwYorl0Q712iEjcWB+fK/MrWVw==}
     engines: {node: '>=10'}
 
+  istanbul-lib-source-maps@5.0.6:
+    resolution: {integrity: sha512-yg2d+Em4KizZC5niWhQaIomgf5WlL4vOOjZ5xGCmF8SnPE/mDWWXgvRExdcpCgh9lLRRa1/fSYp2ymmbJ1pI+A==}
+    engines: {node: '>=10'}
+
   istanbul-reports@3.2.0:
     resolution: {integrity: sha512-HGYWWS/ehqTV3xN10i23tkPkpH46MLCIMFNCaaKNavAXTF1RkqxawEPtnjnGZ6XKSInBKkiOA5BKS+aZiY3AvA==}
     engines: {node: '>=8'}
@@ -10227,6 +10202,9 @@ packages:
 
   magic-string@0.30.19:
     resolution: {integrity: sha512-2N21sPY9Ws53PZvsEpVtNuSW+ScYbQdp4b9qUaL+9QkHUrGFKo56Lg9Emg5s9V/qrtNBmiR01sYhUOwu3H+VOw==}
+
+  magicast@0.3.5:
+    resolution: {integrity: sha512-L0WhttDl+2BOsybvEOLK7fW3UA0OQ0IQ2d6Zl2x/a6vVRs3bAY0ECOSHHeL5jD+SbOpOCUEi0y1DgHEn9Qn1AQ==}
 
   make-dir@2.1.0:
     resolution: {integrity: sha512-LS9X+dc8KLxXCb8dni79fLIIUA5VyZoyjSMCwTluaXA0o27cCK0bhXkpgw+sTXVpPy/lSO57ilRixqk0vDmtRA==}
@@ -12747,6 +12725,10 @@ packages:
     resolution: {integrity: sha512-cAGWPIyOHU6zlmg88jwm7VRyXnMN7iV68OGAbYDk/Mh/xC/pzVPlQtY6ngoIH/5/tciuhGfvESU8GrHrcxD56w==}
     engines: {node: '>=8'}
 
+  test-exclude@7.0.1:
+    resolution: {integrity: sha512-pFYqmTw68LXVjeWJMST4+borgQP2AyMNbg1BpZh9LbyhUeNkeaPF9gzfPGUAnSMV3qPYdWUwDIjjCLiSDOl7vg==}
+    engines: {node: '>=18'}
+
   text-decoder@1.2.3:
     resolution: {integrity: sha512-3/o9z3X0X0fTupwsYvR03pJ/DjWuqqrfwBgTQzdWDiQSm9KitAyz/9WqsT2JQW7KV2m+bC2ol/zqpW37NHxLaA==}
 
@@ -14197,11 +14179,6 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
 
-  '@axe-core/playwright@4.10.2(playwright-core@1.56.1)':
-    dependencies:
-      axe-core: 4.10.3
-      playwright-core: 1.56.1
-
   '@babel/cli@7.28.0(@babel/core@7.28.4)':
     dependencies:
       '@babel/core': 7.28.4
@@ -15329,6 +15306,8 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
+  '@bcoe/v8-coverage@1.0.2': {}
+
   '@biomejs/biome@2.1.4':
     optionalDependencies:
       '@biomejs/cli-darwin-arm64': 2.1.4
@@ -15367,89 +15346,12 @@ snapshots:
   '@colors/colors@1.5.0':
     optional: true
 
-  '@coveo/atomic-angular@3.7.15(@angular/common@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(@coveo/bueno@1.1.3)(@coveo/headless@3.34.0(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.82.0(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)':
-    dependencies:
-      '@angular/common': 19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
-      '@angular/core': 19.2.2(rxjs@7.8.2)(zone.js@0.15.1)
-      '@coveo/atomic': 3.37.0(@coveo/bueno@1.1.3)(@coveo/headless@3.34.0(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.82.0(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)
-      '@coveo/headless': 3.34.0(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.82.0(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3)
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - '@coveo/bueno'
-      - encoding
-      - postcss
-      - typescript
-
   '@coveo/atomic-component-health-check@2.2.19':
     dependencies:
       chalk: 4.1.2
       zod: 3.22.4
 
-  '@coveo/atomic-react@3.3.19(@coveo/bueno@1.1.3)(@coveo/headless@packages+headless)(@types/react@19.2.2)(postcss@8.5.6)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.8.3)':
-    dependencies:
-      '@coveo/atomic': 3.36.0(@coveo/bueno@1.1.3)(@coveo/headless@packages+headless)(postcss@8.5.6)(typescript@5.8.3)
-      '@coveo/headless': link:packages/headless
-      '@lit/react': 1.0.6(@types/react@19.2.2)
-      react: 19.2.0
-      react-dom: 19.2.0(react@19.2.0)
-    transitivePeerDependencies:
-      - '@coveo/bueno'
-      - '@types/react'
-      - encoding
-      - postcss
-      - typescript
-
-  '@coveo/atomic@3.36.0(@coveo/bueno@1.1.3)(@coveo/headless@packages+headless)(postcss@8.5.6)(typescript@5.8.3)':
-    dependencies:
-      '@coveo/bueno': 1.1.3
-      '@coveo/headless': link:packages/headless
-      '@lit/context': 1.1.6
-      '@open-wc/lit-helpers': 0.7.0(lit@3.3.1)
-      '@popperjs/core': 2.11.8
-      '@salesforce-ux/design-system': 2.27.2(postcss@8.5.6)
-      '@stencil/core': 4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9)
-      cssnano: 7.1.1(postcss@8.5.6)
-      dayjs: 1.11.13
-      dompurify: 3.2.6
-      escape-html: 1.0.3
-      i18next: 25.3.2(typescript@5.8.3)
-      i18next-http-backend: 3.0.2(encoding@0.1.13)
-      lit: 3.3.1
-      marked: 12.0.2
-      stencil-inline-svg: 1.1.0
-    optionalDependencies:
-      typescript: 5.8.3
-    transitivePeerDependencies:
-      - encoding
-      - postcss
-
-  '@coveo/atomic@3.37.0(@coveo/bueno@1.1.3)(@coveo/headless@3.34.0(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.82.0(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)':
-    dependencies:
-      '@coveo/bueno': 1.1.3
-      '@coveo/headless': 3.34.0(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.82.0(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3)
-      '@lit/context': 1.1.6
-      '@open-wc/lit-helpers': 0.7.0(lit@3.3.1)
-      '@popperjs/core': 2.11.8
-      '@salesforce-ux/design-system': 2.27.2(postcss@8.5.6)
-      '@stencil/core': 4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9)
-      cssnano: 7.1.1(postcss@8.5.6)
-      dayjs: 1.11.13
-      dompurify: 3.2.6
-      escape-html: 1.0.3
-      i18next: 25.3.2(typescript@5.8.3)
-      i18next-http-backend: 3.0.2(encoding@0.1.13)
-      lit: 3.3.1
-      marked: 12.0.2
-      stencil-inline-svg: 1.1.0
-    optionalDependencies:
-      typescript: 5.8.3
-    transitivePeerDependencies:
-      - encoding
-      - postcss
-
   '@coveo/auth@2.1.1': {}
-
-  '@coveo/bueno@1.1.3': {}
 
   '@coveo/create-atomic-component-project@1.4.2': {}
 
@@ -15458,31 +15360,6 @@ snapshots:
   '@coveo/create-atomic-rollup-plugin@1.2.1': {}
 
   '@coveo/explorer-messenger@0.4.1': {}
-
-  '@coveo/headless@3.34.0(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.82.0(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3)':
-    dependencies:
-      '@coveo/bueno': 1.1.3
-      '@coveo/relay': 1.2.7
-      '@coveo/relay-event-types': 15.1.0
-      '@reduxjs/toolkit': 2.6.0(react@19.2.0)
-      abortcontroller-polyfill: 1.7.8
-      coveo.analytics: 2.30.49(encoding@0.1.13)(react-native@0.82.0(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))
-      dayjs: 1.11.13
-      encoding: 0.1.13
-      exponential-backoff: 3.1.2
-      fast-equals: 5.2.2
-      headers-polyfill: 4.0.3
-      navigator.sendbeacon: 0.0.20
-      pino: 9.7.0
-      pino-pretty: 13.1.1
-      redux-thunk: 3.1.0(redux@5.0.1)
-    optionalDependencies:
-      typescript: 5.8.3
-    transitivePeerDependencies:
-      - react
-      - react-native
-      - react-redux
-      - redux
 
   '@coveo/platform-client@60.4.0':
     dependencies:
@@ -16668,10 +16545,6 @@ snapshots:
   '@lit/context@1.1.6':
     dependencies:
       '@lit/reactive-element': 2.1.1
-
-  '@lit/react@1.0.6(@types/react@19.2.2)':
-    dependencies:
-      '@types/react': 19.2.2
 
   '@lit/react@1.0.8(@types/react@19.2.2)':
     dependencies:
@@ -18067,6 +17940,21 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
+  '@storybook/addon-vitest@9.1.2(@vitest/browser@3.2.4)(@vitest/runner@3.2.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(storybook@9.1.2(@testing-library/dom@10.4.1)(msw@2.11.4(@types/node@22.16.5)(typescript@5.8.3))(prettier@3.6.2)(vite@7.0.5(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)))(vitest@3.2.4)':
+    dependencies:
+      '@storybook/global': 5.0.0
+      '@storybook/icons': 1.4.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      prompts: 2.4.2
+      storybook: 9.1.2(@testing-library/dom@10.4.1)(msw@2.11.4(@types/node@22.16.5)(typescript@5.8.3))(prettier@3.6.2)(vite@7.0.5(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))
+      ts-dedent: 2.2.0
+    optionalDependencies:
+      '@vitest/browser': 3.2.4(msw@2.11.4(@types/node@22.16.5)(typescript@5.8.3))(playwright@1.56.1)(vite@7.0.5(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(vitest@3.2.4)
+      '@vitest/runner': 3.2.4
+      vitest: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jiti@2.6.1)(jsdom@20.0.3)(less@4.4.2)(lightningcss@1.30.1)(msw@2.11.4(@types/node@22.16.5)(typescript@5.8.3))(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
+    transitivePeerDependencies:
+      - react
+      - react-dom
+
   '@storybook/builder-vite@9.1.2(storybook@9.1.2(@testing-library/dom@10.4.1)(msw@2.11.4(@types/node@22.16.5)(typescript@5.8.3))(prettier@3.6.2)(vite@7.0.5(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.0.5(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))':
     dependencies:
       '@storybook/csf-plugin': 9.1.2(storybook@9.1.2(@testing-library/dom@10.4.1)(msw@2.11.4(@types/node@22.16.5)(typescript@5.8.3))(prettier@3.6.2)(vite@7.0.5(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)))
@@ -18907,6 +18795,27 @@ snapshots:
       - vite
     optional: true
 
+  '@vitest/coverage-v8@3.2.4(@vitest/browser@3.2.4)(vitest@3.2.4)':
+    dependencies:
+      '@ampproject/remapping': 2.3.0
+      '@bcoe/v8-coverage': 1.0.2
+      ast-v8-to-istanbul: 0.3.8
+      debug: 4.4.3(supports-color@8.1.1)
+      istanbul-lib-coverage: 3.2.2
+      istanbul-lib-report: 3.0.1
+      istanbul-lib-source-maps: 5.0.6
+      istanbul-reports: 3.2.0
+      magic-string: 0.30.19
+      magicast: 0.3.5
+      std-env: 3.9.0
+      test-exclude: 7.0.1
+      tinyrainbow: 2.0.0
+      vitest: 3.2.4(@types/node@22.16.5)(@vitest/browser@3.2.4)(jiti@2.6.1)(jsdom@20.0.3)(less@4.4.2)(lightningcss@1.30.1)(msw@2.11.4(@types/node@22.16.5)(typescript@5.8.3))(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
+    optionalDependencies:
+      '@vitest/browser': 3.2.4(msw@2.11.4(@types/node@22.16.5)(typescript@5.8.3))(playwright@1.56.1)(vite@7.0.5(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(vitest@3.2.4)
+    transitivePeerDependencies:
+      - supports-color
+
   '@vitest/expect@3.2.4':
     dependencies:
       '@types/chai': 5.2.2
@@ -19047,7 +18956,7 @@ snapshots:
 
   '@vue/shared@3.5.22': {}
 
-  '@wc-toolkit/storybook-helpers@9.0.1(patch_hash=9f098b922d1c5841f98943006971dda1b8c3725e1f23933b1a6399beadddeff4)(lit@3.3.1)(storybook@9.1.2(@testing-library/dom@10.4.1)(msw@2.11.4(@types/node@22.16.5)(typescript@5.8.3))(prettier@3.6.2)(vite@7.0.5(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)))':
+  '@wc-toolkit/storybook-helpers@9.0.1(patch_hash=faa3d80e4fe5c26a948e0387112f223337748e98d4e1537126dddddf2569576a)(lit@3.3.1)(storybook@9.1.2(@testing-library/dom@10.4.1)(msw@2.11.4(@types/node@22.16.5)(typescript@5.8.3))(prettier@3.6.2)(vite@7.0.5(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)))':
     dependencies:
       lit: 3.3.1
       storybook: 9.1.2(@testing-library/dom@10.4.1)(msw@2.11.4(@types/node@22.16.5)(typescript@5.8.3))(prettier@3.6.2)(vite@7.0.5(@types/node@22.16.5)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))
@@ -19413,6 +19322,12 @@ snapshots:
       tslib: 2.8.1
 
   ast-types@0.9.6: {}
+
+  ast-v8-to-istanbul@0.3.8:
+    dependencies:
+      '@jridgewell/trace-mapping': 0.3.31
+      estree-walker: 3.0.3
+      js-tokens: 9.0.1
 
   astral-regex@2.0.0: {}
 
@@ -22999,6 +22914,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  istanbul-lib-source-maps@5.0.6:
+    dependencies:
+      '@jridgewell/trace-mapping': 0.3.31
+      debug: 4.4.3(supports-color@8.1.1)
+      istanbul-lib-coverage: 3.2.2
+    transitivePeerDependencies:
+      - supports-color
+
   istanbul-reports@3.2.0:
     dependencies:
       html-escaper: 2.0.2
@@ -24201,6 +24124,12 @@ snapshots:
   magic-string@0.30.19:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
+
+  magicast@0.3.5:
+    dependencies:
+      '@babel/parser': 7.28.4
+      '@babel/types': 7.28.4
+      source-map-js: 1.2.1
 
   make-dir@2.1.0:
     dependencies:
@@ -27273,6 +27202,12 @@ snapshots:
       '@istanbuljs/schema': 0.1.3
       glob: 7.2.3
       minimatch: 3.1.2
+
+  test-exclude@7.0.1:
+    dependencies:
+      '@istanbuljs/schema': 0.1.3
+      glob: 10.4.5
+      minimatch: 9.0.5
 
   text-decoder@1.2.3:
     dependencies:

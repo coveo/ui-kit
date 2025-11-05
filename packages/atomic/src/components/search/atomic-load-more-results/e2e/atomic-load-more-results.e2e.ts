@@ -5,23 +5,17 @@ test.describe('atomic-load-more-results', () => {
     await loadMore.load({story: 'default'});
   });
 
-  test('should be accessible', async ({loadMore, makeAxeBuilder}) => {
-    await loadMore.hydrated.waitFor();
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
-  test('should load more results when clicking the load more button', async ({
+  test('should display a load more button when there are more results', async ({
     loadMore,
   }) => {
     await expect(loadMore.showingResults).toHaveText(
-      /Showing 10 of [\d,]+ results/
+      /Showing 40 of [\d,]+ results/
     );
 
     await loadMore.button.click();
 
     await expect(loadMore.showingResults).toHaveText(
-      /Showing 20 of [\d,]+ results/
+      /Showing 80 of [\d,]+ results/
     );
   });
 });

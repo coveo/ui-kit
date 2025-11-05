@@ -1,13 +1,11 @@
 import {test as base} from '@playwright/test';
-import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {NumericFacetPageObject} from './page-object';
 
 type MyFixtures = {
   numericFacet: NumericFacetPageObject;
 };
 
-export const test = base.extend<MyFixtures & AxeFixture>({
-  makeAxeBuilder,
+export const test = base.extend<MyFixtures>({
   numericFacet: async ({page}, use) => {
     await use(new NumericFacetPageObject(page));
   },

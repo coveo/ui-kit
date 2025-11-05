@@ -5,6 +5,7 @@ import {
   AtomicFacet as LitAtomicFacet,
   AtomicHtml as LitAtomicHtml,
   AtomicIcon as LitAtomicIcon,
+  AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
   AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
@@ -69,6 +70,12 @@ export const AtomicIcon = createComponent({
   tagName: 'atomic-icon',
   react: React,
   elementClass: LitAtomicIcon,
+});
+
+export const AtomicInsightGenerateAnswerButton = createComponent({
+  tagName: 'atomic-insight-generate-answer-button',
+  react: React,
+  elementClass: LitAtomicInsightGenerateAnswerButton,
 });
 
 export const AtomicInsightInterface = createComponent({

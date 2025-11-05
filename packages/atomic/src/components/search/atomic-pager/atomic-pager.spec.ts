@@ -94,7 +94,7 @@ describe('atomic-pager', () => {
       },
     });
 
-    element['isAppLoaded'] = isAppLoaded;
+    element.isAppLoaded = isAppLoaded;
 
     return element;
   };
@@ -523,7 +523,7 @@ describe('atomic-pager', () => {
         buttons[buttons.length - 1],
       ];
 
-      await element['handleFocus'](buttons, firstPageButton, lastPageButton);
+      await element.handleFocus(buttons, firstPageButton, lastPageButton);
 
       await expectFocusOnButton(
         locators.previous.element(),
@@ -539,7 +539,7 @@ describe('atomic-pager', () => {
         buttons[buttons.length - 1],
       ];
 
-      await element['handleFocus'](buttons, lastPageButton, firstPageButton);
+      await element.handleFocus(buttons, lastPageButton, firstPageButton);
 
       await expectFocusOnButton(
         locators.next.element(),
@@ -552,7 +552,7 @@ describe('atomic-pager', () => {
 
       const [currentButton, nextButton] = buttons;
 
-      await element['handleFocus'](buttons, currentButton, nextButton);
+      await element.handleFocus(buttons, currentButton, nextButton);
 
       await expectFocusOnButton(
         locators.page2.element(),
