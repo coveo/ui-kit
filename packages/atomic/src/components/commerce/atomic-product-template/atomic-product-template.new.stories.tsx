@@ -1,6 +1,5 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {within} from 'shadow-dom-testing-library';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInCommerceRecommendationInterface} from '@/storybook-utils/commerce/commerce-recommendation-interface-wrapper';
@@ -135,8 +134,7 @@ export const InASearchBoxInstantProducts: Story = {
   parameters: searchBoxParameters,
   play: async (context) => {
     await initializeCommerceInterface(context);
-    const {canvasElement, step} = context;
-    const canvas = within(canvasElement);
+    const {canvas, step} = context;
     await step('Click Searchbox', async () => {
       (
         await canvas.findAllByShadowTitle('Search field with suggestions.', {

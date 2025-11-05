@@ -385,26 +385,6 @@ export class AtomicInsightUserActionsToggle {
 export declare interface AtomicInsightUserActionsToggle extends Components.AtomicInsightUserActionsToggle {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicLoadMoreResults})
-@Component({standalone:false,
-  selector: 'atomic-load-more-results',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicLoadMoreResults {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicLoadMoreResults extends Components.AtomicLoadMoreResults {}
-
-
 @ProxyCmp({
   inputs: ['headingLevel', 'icon']
 , defineCustomElementFn: defineCustomElementAtomicNotifications})
@@ -2698,6 +2678,32 @@ export class AtomicLayoutSection {
 }
 
 export declare interface AtomicLayoutSection extends LitAtomicLayoutSection {
+
+}
+
+@ProxyCmp({
+  inputs: ['tooltip'],
+  methods: ['initialize'],
+  defineCustomElementFn: () => {customElements.get('atomic-insight-generate-answer-button') || customElements.define('atomic-insight-generate-answer-button', LitAtomicInsightGenerateAnswerButton);}
+})
+@Component({
+  selector: 'atomic-insight-generate-answer-button',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['tooltip']
+})
+export class AtomicInsightGenerateAnswerButton {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicInsightGenerateAnswerButton extends LitAtomicInsightGenerateAnswerButton {
 
 }
 

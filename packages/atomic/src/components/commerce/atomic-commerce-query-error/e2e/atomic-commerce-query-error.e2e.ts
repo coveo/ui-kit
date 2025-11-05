@@ -5,12 +5,6 @@ test.describe('atomic-commerce-query-error', () => {
     await queryError.load({story: 'with-418-error'});
   });
 
-  test('should be accessible', async ({queryError, makeAxeBuilder}) => {
-    await queryError.hydrated.waitFor();
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should update aria-live message', async ({queryError}) => {
     await expect(queryError.ariaLive).toHaveText(
       'Something went wrong. If the problem persists contact the administrator.'

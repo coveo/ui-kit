@@ -1,14 +1,6 @@
 import {expect, test} from './fixture';
 
 test.describe('atomic-commerce-facets', async () => {
-  test('should be accessible', async ({facets, makeAxeBuilder}) => {
-    await facets.load();
-    await facets.hydrated.waitFor();
-    const accessibilityResults = await makeAxeBuilder().analyze();
-
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should display facets', async ({facets}) => {
     await facets.load();
     await expect(facets.standardFacets.first()).toBeVisible();

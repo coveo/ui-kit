@@ -165,7 +165,8 @@ watch('src', {recursive: true}, async (_, filename) => {
     filename.endsWith('.spec.ts') ||
     filename.includes('e2e') ||
     filename.endsWith('index.ts') ||
-    filename.endsWith('lazy-index.ts')
+    filename.endsWith('lazy-index.ts') ||
+    filename.endsWith('.DS_Store')
   ) {
     return;
   }

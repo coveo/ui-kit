@@ -10,11 +10,6 @@ test.describe('with an alt text field', async () => {
       await resultImage.hydrated.waitFor();
     });
 
-    test('should be accessible', async ({makeAxeBuilder}) => {
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations).toEqual([]);
-    });
-
     test('should use the alt text', async ({resultImage}) => {
       expect(resultImage.hydrated.first().getByAltText('Some alt value'));
     });

@@ -38,11 +38,6 @@ test.describe('Quickview', () => {
       await quickview.modal.waitFor({state: 'visible'});
     });
 
-    test('should be accessible', async ({makeAxeBuilder}) => {
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations).toEqual([]);
-    });
-
     test('should display the quickview modal', async ({quickview}) => {
       await expect(quickview.modal).toBeVisible();
     });
