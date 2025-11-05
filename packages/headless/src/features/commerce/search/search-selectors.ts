@@ -21,26 +21,18 @@ import type {CommerceSearchParameters} from '../search-parameters/search-paramet
  * Duplicate selector since the state is no longer accessible externally
  * TODO: KIT-3199: Update all other selectors to use the engine as a parameter
  */
-export const responseIdSelectorFromEngine = createSelector(
-  (engine: CommerceEngine) => engine[stateKey].commerceSearch.responseId,
-  (responseId) => responseId
-);
+export const responseIdSelectorFromEngine = (engine: CommerceEngine) =>
+  engine[stateKey].commerceSearch.responseId;
 
-export const responseIdSelector = createSelector(
-  (state: CommerceEngineState) => state.commerceSearch.responseId,
-  (responseId) => responseId
-);
+export const responseIdSelector = (state: CommerceEngineState) =>
+  state.commerceSearch.responseId;
 
-export const requestIdSelector = createSelector(
-  (state: CommerceEngineState) => state.commerceSearch.requestId,
-  (requestId) => requestId
-);
+export const requestIdSelector = (state: CommerceEngineState) =>
+  state.commerceSearch.requestId;
 
-export const numberOfProductsSelector = createSelector(
-  (state: Partial<CommerceSearchSection>) =>
-    state.commerceSearch?.products.length || 0,
-  (len) => len
-);
+export const numberOfProductsSelector = (
+  state: Partial<CommerceSearchSection>
+) => state.commerceSearch?.products.length || 0;
 
 export const moreProductsAvailableSelector = createSelector(
   (state: Partial<CommercePaginationSection & CommerceSearchSection>) => ({
@@ -65,10 +57,8 @@ export const querySelector = createSelector(
   (query) => query ?? ''
 );
 
-const queryExecutedSelector = createSelector(
-  (state: CommerceSearchSection) => state.commerceSearch?.queryExecuted,
-  (query) => query
-);
+const queryExecutedSelector = (state: CommerceSearchSection) =>
+  state.commerceSearch?.queryExecuted;
 
 export const queryExecutedFromResponseSelector = (
   state: CommerceQuerySection,
