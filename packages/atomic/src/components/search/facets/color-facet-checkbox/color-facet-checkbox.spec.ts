@@ -168,4 +168,23 @@ describe('#renderColorFacetCheckbox', () => {
     const child = page.getByText('Custom Label');
     expect(child).toBeInTheDocument();
   });
+
+  it('should use "between-parentheses" translation for count display', async () => {
+    const {element} = await setupElement({numberOfResults: 42});
+
+    const valueCount = element.querySelector('[part="value-count"]');
+    expect(valueCount?.textContent).toBe('(42)');
+  });
+
+  it('should use "facet-value" translation for aria-label', async () => {
+    const {checkbox} = await setupElement({
+      displayValue: 'Test Value',
+      numberOfResults: 42,
+    });
+
+    expect(checkbox.element()).toHaveAttribute(
+      'aria-label',
+      'Inclusion filter on Test Value; 42 result'
+    );
+  });
 });
