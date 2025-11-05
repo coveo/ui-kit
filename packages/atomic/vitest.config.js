@@ -1,5 +1,6 @@
 import {readFileSync} from 'node:fs';
 import path, {dirname, resolve} from 'node:path';
+import replacePlugin from '@rollup/plugin-replace';
 import {storybookTest} from '@storybook/addon-vitest/vitest-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import {configDefaults, defineConfig} from 'vitest/config';
@@ -24,14 +25,20 @@ function svgTransform(code, id) {
   );
 }
 
+function replace() {
+  return replacePlugin({
+    values: {
+      'process.env.VERSION': `"0.0.0"`,
+      'import.meta.env.RESOURCE_URL': `"${resourceUrl}"`,
+      __ATOMIC_VERSION__: `"${packageJson.version}"`,
+      __HEADLESS_VERSION__: `"${packageJsonHeadless.version}"`,
+    },
+    preventAssignment: true,
+  });
+}
+
 const atomicDefault = defineConfig({
   name: 'atomic-default',
-  define: {
-    'import.meta.env.RESOURCE_URL': `"${resourceUrl}"`,
-    __ATOMIC_VERSION__: `"${packageJson.version}"`,
-    __HEADLESS_VERSION__: `"${packageJsonHeadless.version}"`,
-    'process.env': {},
-  },
   server: {
     port: port,
   },
@@ -65,6 +72,7 @@ const atomicDefault = defineConfig({
     ],
   },
   plugins: [
+    replace(),
     {
       name: 'force-inline-css-imports',
       enforce: 'pre',
