@@ -10,7 +10,41 @@ const getNthResult = (n: number) => ({
   },
 });
 
-export const baseResponse = {
+interface Response {
+  totalCount: number;
+  totalCountFiltered: number;
+  duration: number;
+  indexDuration: number;
+  requestDuration: number;
+  searchUid: string;
+  pipeline: string;
+  index?: string;
+  apiVersion: number;
+  queryCorrections: unknown[];
+  basicExpression: string | null;
+  advancedExpression: string | null;
+  largeExpression: string | null;
+  constantExpression: string | null;
+  disjunctionExpression: string | null;
+  mandatoryExpression: string | null;
+  userIdentities: unknown[];
+  rankingExpressions: unknown[];
+  topResults: unknown[];
+  executionReport: Record<string, unknown>;
+  refinedKeywords: unknown[];
+  triggers: unknown[];
+  termsToHighlight: Record<string, unknown>;
+  phrasesToHighlight: Record<string, unknown>;
+  groupByResults: unknown[];
+  facets: unknown[];
+  suggestedFacets: unknown[];
+  categoryFacets: unknown[];
+  results: unknown[];
+  questionAnswer: Record<string, unknown>;
+  extendedResults?: Record<string, unknown>;
+}
+
+export const baseResponse: Response = {
   totalCount: 120,
   totalCountFiltered: 120,
   duration: 175,
@@ -58,7 +92,7 @@ export const baseResponse = {
   },
 };
 
-export const baseFoldedResponse = {
+export const baseFoldedResponse: Response = {
   totalCount: 100,
   totalCountFiltered: 100,
   duration: 27,

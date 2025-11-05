@@ -1,4 +1,5 @@
 import '@coveo/atomic/themes/coveo.css';
+import type {Preview} from '@storybook/web-components-vite';
 import {
   type Parameters,
   setCustomElementsManifest,
@@ -6,6 +7,7 @@ import {
 import {setStorybookHelpersConfig} from '@wc-toolkit/storybook-helpers';
 import {render} from 'lit';
 import {initialize, mswLoader} from 'msw-storybook-addon';
+import {within} from 'shadow-dom-testing-library';
 import customElements from '../custom-elements.json';
 import {defineCustomElements} from '../dist/atomic/loader/index.js';
 
@@ -134,8 +136,13 @@ function disableAnalytics(container, selectors) {
   });
 }
 
-export default {
+const preview: Preview = {
+  beforeEach({canvasElement, canvas}) {
+    Object.assign(canvas, {...within(canvasElement)});
+  },
   globals: {
     a11y: {manual: true},
   },
 };
+
+export default preview;

@@ -15,7 +15,7 @@ const {events, args, argTypes, styleTemplate} = getStorybookHelpers(
 const meta: Meta = {
   component: 'atomic-commerce-refine-modal',
   title: 'Commerce/Refine Modal',
-  id: 'atomic-commerce-refine-toggle',
+  id: 'atomic-commerce-refine-modal',
   render: (args) =>
     html`${styleTemplate(args)}<atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>`,
   decorators: [decorator],
@@ -71,23 +71,28 @@ const meta: Meta = {
   },
   play: async (context) => {
     await play(context);
-    const {canvasElement, step, userEvent} = context;
-    const canvas = within(
+    const {canvasElement, canvas, step, userEvent} = context;
+    const refineToggleElement = within(
       canvasElement.querySelector('atomic-commerce-refine-toggle')!
     );
-    const refineToggle = await canvas.findByShadowRole('button', {
-      name: 'Sort & Filter',
-    });
+    const refineToggleButton = await refineToggleElement.findByShadowRole(
+      'button',
+      {
+        name: 'Sort & Filter',
+      }
+    );
     await step('Open refine modal', async () => {
-      await userEvent.click(refineToggle);
+      await userEvent.click(refineToggleButton);
       await expect(
         await canvas.findByShadowText(
-          'View products',
+          'Relevance',
           {exact: false},
           {timeout: 10e3}
         )
       ).toBeVisible();
     });
+    // It's tough to wait exactly for the modal to be visible because of animations. Thus, we add a small delay here.
+    await new Promise((resolve) => setTimeout(resolve, 100));
   },
 };
 

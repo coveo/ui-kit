@@ -1011,8 +1011,8 @@ importers:
         specifier: 19.2.2
         version: 19.2.2(@angular/common@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@19.2.2(@angular/animations@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
       '@coveo/atomic-angular':
-        specifier: 3.7.15
-        version: 3.7.15(@angular/common@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(@coveo/bueno@1.1.5)(@coveo/headless@3.34.2(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.82.0(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)
+        specifier: workspace:*
+        version: link:../../../packages/atomic-angular/projects/atomic-angular
       rxjs:
         specifier: 7.8.2
         version: 7.8.2
@@ -1045,8 +1045,8 @@ importers:
   samples/atomic/search-commerce-react:
     dependencies:
       '@coveo/atomic-react':
-        specifier: 3.3.19
-        version: 3.3.19(@coveo/bueno@1.1.5)(@coveo/headless@packages+headless)(@types/react@19.2.2)(postcss@8.5.6)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.8.3)
+        specifier: workspace:*
+        version: link:../../../packages/atomic-react
       '@coveo/headless':
         specifier: workspace:*
         version: link:../../../packages/headless
@@ -2575,54 +2575,12 @@ packages:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
 
-  '@coveo/atomic-angular@3.7.15':
-    resolution: {integrity: sha512-VSMiehC3T5s0HojvM4HQmXMGZswkkdXQHt5FJi5jBWuVCR0Xnq5uJf+GqyQPGliEDAc/2JSJ6+y3J63jX6VZTw==}
-    engines: {node: ^20.9.0 || ^22.11.0}
-    peerDependencies:
-      '@angular/common': 14 - 19
-      '@angular/core': 14 - 19
-      '@coveo/headless': 3.34.0
-
   '@coveo/atomic-component-health-check@2.2.19':
     resolution: {integrity: sha512-n/llxt8mLYW5P9G8R0ozbrMrqtnDT03oMix7tQ796+F2AFwL6F3FcXyRPVMqsWuTnKH6jOwZ04HcAoP+868Ejw==}
     hasBin: true
 
-  '@coveo/atomic-react@3.3.19':
-    resolution: {integrity: sha512-I4VE0rhhRBmVAMNZ701i3rWlldjKZ9nnMTJMAUuwnRmn4vwWXUptImwyFhbBt7icVB//EIqgPqxjAyzCaKacvA==}
-    engines: {node: ^20.9.0 || ^22.11.0}
-    peerDependencies:
-      '@coveo/headless': 3.33.0
-      react: 19.2.0
-      react-dom: 19.2.0
-
-  '@coveo/atomic@3.36.0':
-    resolution: {integrity: sha512-/8Gi/8fJOzHw37B6q5Uoudk+B+WgbVE+BGlRBSAHqIqhIDzKFJkD7Rtjgr/RG90zQG4jbUzmSi4G9LFPshBL9w==}
-    engines: {node: ^20.9.0 || ^22.11.0}
-    peerDependencies:
-      '@coveo/bueno': 1.1.3
-      '@coveo/headless': 3.33.0
-      typescript: 5.8.3
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@coveo/atomic@3.37.0':
-    resolution: {integrity: sha512-1uD+estmxmo+RbHMM46lzXcE2fdIoNZynZMA/KMfUVygMkkrkn1aJeEBOVRUr3eoW1UPDOHGhnKch2X4TuLTqw==}
-    engines: {node: ^20.9.0 || ^22.11.0}
-    peerDependencies:
-      '@coveo/bueno': 1.1.3
-      '@coveo/headless': 3.34.0
-      typescript: 5.8.3
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
   '@coveo/auth@2.1.1':
     resolution: {integrity: sha512-m51EdkcG47/LJmCXOPrpKvYBaeiyNrs0JXpA0BaFiqnhdje/ap84iJxpXKnRUHMZvC9vxufdWExGTwXyt2NdNA==}
-    engines: {node: ^20.9.0 || ^22.11.0}
-
-  '@coveo/bueno@1.1.5':
-    resolution: {integrity: sha512-sDilwcVTBZ+pohmed4lkGnIqTGqsbf8fTLZb00EHPw6XZzwvT76xuV+4RO2chxyKbgjNa4FfjwBBz1FBUNgFJQ==}
     engines: {node: ^20.9.0 || ^22.11.0}
 
   '@coveo/create-atomic-component-project@1.4.2':
@@ -2638,17 +2596,6 @@ packages:
 
   '@coveo/explorer-messenger@0.4.1':
     resolution: {integrity: sha512-MX+alPTsRQLAC99b7cUwMGtaGcDw44ftEJOFwoS8alTgFlY7oaUP4jyZSJ/BCOMXlYpkhU2VYDERr/HD5P1Dtw==}
-
-  '@coveo/headless@3.34.2':
-    resolution: {integrity: sha512-I8wOsD03waUT27WEEkJNlA6OeDnDtRNfzYkyqyRnRwOmK6omz5Vi3rRLi7iz+q0xfAWhap3lfKY/3/e+u6pvrQ==}
-    engines: {node: ^20.9.0 || ^22.11.0}
-    peerDependencies:
-      encoding: ^0.1.13
-      pino-pretty: ^6.0.0 || ^10.0.0 || ^11.0.0 || ^13.0.0
-      typescript: 5.8.3
-    peerDependenciesMeta:
-      typescript:
-        optional: true
 
   '@coveo/platform-client@60.4.0':
     resolution: {integrity: sha512-Mh3681cqiLqEZWxleo93f1jKL1DCIxn/GiAvQ4Mw8HbLZ1AVMGD0pJ9kngSzirOsNtxME6Y7Qlx11/oWhLiiDQ==}
@@ -3905,11 +3852,6 @@ packages:
 
   '@lit/context@1.1.6':
     resolution: {integrity: sha512-M26qDE6UkQbZA2mQ3RjJ3Gzd8TxP+/0obMgE5HfkfLhEEyYE3Bui4A5XHiGPjy0MUGAyxB3QgVuw2ciS0kHn6A==}
-
-  '@lit/react@1.0.6':
-    resolution: {integrity: sha512-QIss8MPh6qUoFJmuaF4dSHts3qCsA36S3HcOLiNPShxhgYPr4XJRnCBKPipk85sR9xr6TQrOcDMfexwbNdJHYA==}
-    peerDependencies:
-      '@types/react': 17 || 18
 
   '@lit/react@1.0.8':
     resolution: {integrity: sha512-p2+YcF+JE67SRX3mMlJ1TKCSTsgyOVdAwd/nxp3NuV1+Cb6MWALbN6nT7Ld4tpmYofcE5kcaSY1YBB9erY+6fw==}
@@ -15397,89 +15339,12 @@ snapshots:
   '@colors/colors@1.5.0':
     optional: true
 
-  '@coveo/atomic-angular@3.7.15(@angular/common@19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(@coveo/bueno@1.1.5)(@coveo/headless@3.34.2(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.82.0(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)':
-    dependencies:
-      '@angular/common': 19.2.2(@angular/core@19.2.2(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
-      '@angular/core': 19.2.2(rxjs@7.8.2)(zone.js@0.15.1)
-      '@coveo/atomic': 3.37.0(@coveo/bueno@1.1.5)(@coveo/headless@3.34.2(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.82.0(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)
-      '@coveo/headless': 3.34.2(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.82.0(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3)
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - '@coveo/bueno'
-      - encoding
-      - postcss
-      - typescript
-
   '@coveo/atomic-component-health-check@2.2.19':
     dependencies:
       chalk: 4.1.2
       zod: 3.22.4
 
-  '@coveo/atomic-react@3.3.19(@coveo/bueno@1.1.5)(@coveo/headless@packages+headless)(@types/react@19.2.2)(postcss@8.5.6)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.8.3)':
-    dependencies:
-      '@coveo/atomic': 3.36.0(@coveo/bueno@1.1.5)(@coveo/headless@packages+headless)(postcss@8.5.6)(typescript@5.8.3)
-      '@coveo/headless': link:packages/headless
-      '@lit/react': 1.0.6(@types/react@19.2.2)
-      react: 19.2.0
-      react-dom: 19.2.0(react@19.2.0)
-    transitivePeerDependencies:
-      - '@coveo/bueno'
-      - '@types/react'
-      - encoding
-      - postcss
-      - typescript
-
-  '@coveo/atomic@3.36.0(@coveo/bueno@1.1.5)(@coveo/headless@packages+headless)(postcss@8.5.6)(typescript@5.8.3)':
-    dependencies:
-      '@coveo/bueno': 1.1.5
-      '@coveo/headless': link:packages/headless
-      '@lit/context': 1.1.6
-      '@open-wc/lit-helpers': 0.7.0(lit@3.3.1)
-      '@popperjs/core': 2.11.8
-      '@salesforce-ux/design-system': 2.27.2(postcss@8.5.6)
-      '@stencil/core': 4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9)
-      cssnano: 7.1.1(postcss@8.5.6)
-      dayjs: 1.11.13
-      dompurify: 3.2.6
-      escape-html: 1.0.3
-      i18next: 25.3.2(typescript@5.8.3)
-      i18next-http-backend: 3.0.2(encoding@0.1.13)
-      lit: 3.3.1
-      marked: 12.0.2
-      stencil-inline-svg: 1.1.0
-    optionalDependencies:
-      typescript: 5.8.3
-    transitivePeerDependencies:
-      - encoding
-      - postcss
-
-  '@coveo/atomic@3.37.0(@coveo/bueno@1.1.5)(@coveo/headless@3.34.2(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.82.0(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3))(encoding@0.1.13)(postcss@8.5.6)(typescript@5.8.3)':
-    dependencies:
-      '@coveo/bueno': 1.1.5
-      '@coveo/headless': 3.34.2(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.82.0(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3)
-      '@lit/context': 1.1.6
-      '@open-wc/lit-helpers': 0.7.0(lit@3.3.1)
-      '@popperjs/core': 2.11.8
-      '@salesforce-ux/design-system': 2.27.2(postcss@8.5.6)
-      '@stencil/core': 4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9)
-      cssnano: 7.1.1(postcss@8.5.6)
-      dayjs: 1.11.13
-      dompurify: 3.2.6
-      escape-html: 1.0.3
-      i18next: 25.3.2(typescript@5.8.3)
-      i18next-http-backend: 3.0.2(encoding@0.1.13)
-      lit: 3.3.1
-      marked: 12.0.2
-      stencil-inline-svg: 1.1.0
-    optionalDependencies:
-      typescript: 5.8.3
-    transitivePeerDependencies:
-      - encoding
-      - postcss
-
   '@coveo/auth@2.1.1': {}
-
-  '@coveo/bueno@1.1.5': {}
 
   '@coveo/create-atomic-component-project@1.4.2': {}
 
@@ -15488,32 +15353,6 @@ snapshots:
   '@coveo/create-atomic-rollup-plugin@1.2.1': {}
 
   '@coveo/explorer-messenger@0.4.1': {}
-
-  '@coveo/headless@3.34.2(encoding@0.1.13)(pino-pretty@13.1.1)(react-native@0.82.0(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))(react@19.2.0)(redux@5.0.1)(typescript@5.8.3)':
-    dependencies:
-      '@coveo/bueno': 1.1.5
-      '@coveo/relay': 1.2.7
-      '@coveo/relay-event-types': 15.1.0
-      '@reduxjs/toolkit': 2.6.0(react@19.2.0)
-      abortcontroller-polyfill: 1.7.8
-      coveo.analytics: 2.30.49(encoding@0.1.13)(react-native@0.82.0(@babel/core@7.28.4)(@types/react@19.2.2)(react@19.2.0))
-      dayjs: 1.11.13
-      encoding: 0.1.13
-      exponential-backoff: 3.1.2
-      fast-equals: 5.2.2
-      headers-polyfill: 4.0.3
-      navigator.sendbeacon: 0.0.20
-      pino: 9.7.0
-      pino-pretty: 13.1.1
-      redux-thunk: 3.1.0(redux@5.0.1)
-      reselect: 5.1.1
-    optionalDependencies:
-      typescript: 5.8.3
-    transitivePeerDependencies:
-      - react
-      - react-native
-      - react-redux
-      - redux
 
   '@coveo/platform-client@60.4.0':
     dependencies:
@@ -16699,10 +16538,6 @@ snapshots:
   '@lit/context@1.1.6':
     dependencies:
       '@lit/reactive-element': 2.1.1
-
-  '@lit/react@1.0.6(@types/react@19.2.2)':
-    dependencies:
-      '@types/react': 19.2.2
 
   '@lit/react@1.0.8(@types/react@19.2.2)':
     dependencies:
