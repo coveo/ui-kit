@@ -12,9 +12,7 @@ const virtualOpenApiModules: PluginImpl = () => {
     name: 'virtual-openapi-modules',
     enforce: 'pre',
     resolveId(id) {
-      console.log('resolveId', id);
       if (id.startsWith('virtual:open-api-coveo')) {
-        console.log('resolveId', id);
         return id;
       }
       return null;
