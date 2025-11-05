@@ -12,7 +12,7 @@ export type {QuerySummary, QuerySummaryState};
  * @param engine - The headless engine instance.
  * @returns A `QuerySummary` controller instance.
  *
- * Example: [query-summary.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/query-summary/query-summary.fn.tsx)
+ * Example: [query-summary.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/query-summary/query-summary.fn.tsx)
  *
  * @group Controllers
  * @category QuerySummary

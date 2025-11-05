@@ -97,7 +97,7 @@ export type {
 /**
  * The `BreadcrumbManager` headless controller manages a summary of the currently active facet filters.
  *
- * Example: [breadcrumb-manager.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/breadcrumb-manager/breadcrumb-manager.fn.tsx)
+ * Example: [breadcrumb-manager.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/breadcrumb-manager/breadcrumb-manager.fn.tsx)
  *
  * @group Controllers
  * @category BreadcrumbManager
