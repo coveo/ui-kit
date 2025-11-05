@@ -56,9 +56,7 @@ test.describe('when a "depends-on" prop is provided', () => {
     test('dependent facet should not be visible', async ({facet}) => {
       const breadbox = facet.page.getByTestId('breadbox');
       await breadbox
-        .getByLabel(
-          'Remove inclusion filter on File Type (Parent facet): YouTubeVideo'
-        )
+        .getByLabel('Remove inclusion filter on File Type: YouTubeVideo')
         .click();
 
       await expect(facet.facet).not.toBeVisible();
@@ -73,9 +71,7 @@ test.describe('when a "depends-on" prop is provided', () => {
       await expect(breadbox).toBeVisible();
 
       await breadbox
-        .getByLabel(
-          'Remove inclusion filter on File Type (Parent facet): YouTubeVideo'
-        )
+        .getByLabel('Remove inclusion filter on File Type: YouTubeVideo')
         .click();
 
       await breadbox.waitFor({state: 'hidden'});
@@ -92,9 +88,7 @@ test.describe('when a "depends-on" prop is provided', () => {
       await expect(breadbox).toBeVisible();
 
       await breadbox
-        .getByLabel(
-          'Remove inclusion filter on File Type (Parent facet): YouTubeVideo'
-        )
+        .getByLabel('Remove inclusion filter on File Type: YouTubeVideo')
         .click();
 
       await breadbox.waitFor({state: 'hidden'});
