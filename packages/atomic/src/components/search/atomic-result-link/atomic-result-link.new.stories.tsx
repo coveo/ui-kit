@@ -2,7 +2,8 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {wrapInResult} from '@/storybook-utils/search/result-wrapper';
+import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
+import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -10,17 +11,20 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator: resultDecorator, engineConfig} = wrapInResult();
-const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
-  config: engineConfig,
-});
+const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface();
+const {decorator: resultListDecorator} = wrapInResultList(undefined, false);
+const {decorator: resultTemplateDecorator} = wrapInResultTemplate();
 
 const meta: Meta = {
   component: 'atomic-result-link',
   title: 'Search/Result Link',
   id: 'atomic-result-link',
   render: (args) => template(args),
-  decorators: [resultDecorator, searchInterfaceDecorator],
+  decorators: [
+    resultTemplateDecorator,
+    resultListDecorator,
+    searchInterfaceDecorator,
+  ],
   parameters: {
     ...parameters,
     actions: {
