@@ -844,8 +844,10 @@ jobs:
   #       env:
   #         IS_PRERELEASE: "true"
   prerelease-cdn-merge:
-    if: ${{ !cancelled() && needs.is-valid.result == 'success' && github.event_name == 'merge_group' }}
-    needs: is-valid
+    if: ${{ !cancelled() && needs.is-valid.result == 'success' && needs.build-cdn.result == 'success' && github.event_name == 'merge_group' }}
+    needs: 
+      - is-valid
+      - build-cdn
     name: Pre-release CDN in dev (Merge group)
     environment: "Prerelease (CDN)"
     runs-on: ubuntu-latest
