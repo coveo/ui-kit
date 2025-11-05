@@ -1,3 +1,15 @@
+## <small>3.37.3 (2025-11-05)</small>
+
+* test: manage REST API mocking through utilities wrapping MSW (#6177) ([1434a17](https://github.com/coveo/ui-kit/commits/1434a17)), closes [#6177](https://github.com/coveo/ui-kit/issues/6177)
+* chore: do not run a11y automatically on stories (#6220) ([6751e86](https://github.com/coveo/ui-kit/commits/6751e86)), closes [#6220](https://github.com/coveo/ui-kit/issues/6220)
+* chore(atomic): migrate atomic-load-more-results (#6217) ([ffc26c1](https://github.com/coveo/ui-kit/commits/ffc26c1)), closes [#6217](https://github.com/coveo/ui-kit/issues/6217)
+* chore(atomic): migrate atomic-recs-interface (#6337) ([fc956f2](https://github.com/coveo/ui-kit/commits/fc956f2)), closes [#6337](https://github.com/coveo/ui-kit/issues/6337)
+* chore(atomic): migrate atomic-result-text (#6206) ([3521050](https://github.com/coveo/ui-kit/commits/3521050)), closes [#6206](https://github.com/coveo/ui-kit/issues/6206)
+* chore(atomic): migrate atomic-text (#6205) ([bf2294c](https://github.com/coveo/ui-kit/commits/bf2294c)), closes [#6205](https://github.com/coveo/ui-kit/issues/6205)
+* docs:(atomic commerce): Add an intro page for atomic commerce (#6338) ([3bbce15](https://github.com/coveo/ui-kit/commits/3bbce15)), closes [#6338](https://github.com/coveo/ui-kit/issues/6338)
+
+
+
 ## <small>3.37.2 (2025-10-30)</small>
 
 * fix(atomic): prevent facets from closing when active values are selected (#6208) ([47d1b97](https://github.com/coveo/ui-kit/commits/47d1b97)), closes [#6208](https://github.com/coveo/ui-kit/issues/6208)

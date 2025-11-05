@@ -1,13 +1,11 @@
 import {test as base} from '@playwright/test';
-import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {ProductImageObject} from './page-object';
 
 interface TestFixture {
   productImage: ProductImageObject;
 }
 
-export const test = base.extend<TestFixture & AxeFixture>({
-  makeAxeBuilder,
+export const test = base.extend<TestFixture>({
   productImage: async ({page}, use) => {
     await use(new ProductImageObject(page));
   },

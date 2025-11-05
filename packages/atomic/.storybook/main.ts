@@ -12,9 +12,7 @@ const virtualOpenApiModules: PluginImpl = () => {
     name: 'virtual-openapi-modules',
     enforce: 'pre',
     resolveId(id) {
-      console.log('resolveId', id);
       if (id.startsWith('virtual:open-api-coveo')) {
-        console.log('resolveId', id);
         return id;
       }
       return null;
@@ -108,7 +106,11 @@ const config: StorybookConfig = {
     {from: '../dist/atomic/lang', to: './lang'},
     {from: './public', to: '/'},
   ],
-  addons: ['@storybook/addon-a11y', '@storybook/addon-docs'],
+  addons: [
+    '@storybook/addon-a11y',
+    '@storybook/addon-docs',
+    '@storybook/addon-vitest',
+  ],
   framework: {
     name: '@storybook/web-components-vite',
     options: {},

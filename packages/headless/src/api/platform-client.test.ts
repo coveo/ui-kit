@@ -339,6 +339,138 @@ describe('PlatformClient call', () => {
     expect(response).toBe(expectedResponse);
   });
 
+  describe('retry configuration for 429 responses', () => {
+    it('should use startingDelay of 100ms for exponential component', async () => {
+      const backOffSpy = vi.spyOn(BackOff, 'backOff');
+      mockFetch.mockReturnValueOnce(
+        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
+      );
+
+      await platformCall();
+
+      const options = backOffSpy.mock.calls[0][1];
+      expect(options?.startingDelay).toBe(100);
+    });
+
+    it('should use timeMultiple of 2 for exponential backoff', async () => {
+      const backOffSpy = vi.spyOn(BackOff, 'backOff');
+      mockFetch.mockReturnValueOnce(
+        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
+      );
+
+      await platformCall();
+
+      const options = backOffSpy.mock.calls[0][1];
+      expect(options?.timeMultiple).toBe(2);
+    });
+
+    it('should cap maxDelay at 800ms', async () => {
+      const backOffSpy = vi.spyOn(BackOff, 'backOff');
+      mockFetch.mockReturnValueOnce(
+        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
+      );
+
+      await platformCall();
+
+      const options = backOffSpy.mock.calls[0][1];
+      expect(options?.maxDelay).toBe(800);
+    });
+
+    it('should limit to 4 retry attempts', async () => {
+      const backOffSpy = vi.spyOn(BackOff, 'backOff');
+      mockFetch.mockReturnValueOnce(
+        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
+      );
+
+      await platformCall();
+
+      const options = backOffSpy.mock.calls[0][1];
+      expect(options?.numOfAttempts).toBe(4);
+    });
+
+    it('should enable full jitter to prevent thundering herd', async () => {
+      const backOffSpy = vi.spyOn(BackOff, 'backOff');
+      mockFetch.mockReturnValueOnce(
+        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
+      );
+
+      await platformCall();
+
+      const options = backOffSpy.mock.calls[0][1];
+      expect(options?.jitter).toBe('full');
+    });
+
+    it('should wait minimum 1s between retries', async () => {
+      const startTime = Date.now();
+      mockFetch
+        .mockReturnValueOnce(
+          Promise.resolve(new Response(JSON.stringify({}), {status: 429}))
+        )
+        .mockReturnValueOnce(
+          Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
+        );
+
+      await platformCall();
+
+      const elapsedTime = Date.now() - startTime;
+      expect(elapsedTime).toBeGreaterThanOrEqual(1000);
+    });
+
+    it('should retry on 429', async () => {
+      const backOffSpy = vi.spyOn(BackOff, 'backOff');
+      mockFetch.mockReturnValueOnce(
+        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
+      );
+
+      await platformCall();
+
+      const retryFn = backOffSpy.mock.calls[0][1]?.retry;
+      expect(retryFn).toBeDefined();
+
+      const response429 = new Response(JSON.stringify({}), {status: 429});
+      const startTime = Date.now();
+      expect(await retryFn!(response429, 1)).toBe(true);
+      const elapsedTime = Date.now() - startTime;
+      expect(elapsedTime).toBeGreaterThanOrEqual(1000);
+    });
+
+    it('should not retry on 500', async () => {
+      const backOffSpy = vi.spyOn(BackOff, 'backOff');
+      mockFetch.mockReturnValueOnce(
+        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
+      );
+
+      await platformCall();
+
+      const retryFn = backOffSpy.mock.calls[0][1]?.retry;
+      expect(retryFn).toBeDefined();
+
+      const response500 = new Response(JSON.stringify({}), {status: 500});
+      const startTime = Date.now();
+      expect(await retryFn!(response500, 1)).toBe(false);
+      const elapsedTime = Date.now() - startTime;
+      expect(elapsedTime).toBeLessThan(100);
+    });
+
+    it('should not retry on 200', async () => {
+      const backOffSpy = vi.spyOn(BackOff, 'backOff');
+      mockFetch.mockReturnValueOnce(
+        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
+      );
+
+      await platformCall();
+
+      const retryFn = backOffSpy.mock.calls[0][1]?.retry;
+      expect(retryFn).toBeDefined();
+
+      const response200 = new Response(JSON.stringify({}), {status: 200});
+      const startTime = Date.now();
+      expect(await retryFn!(response200, 1)).toBe(false);
+      const elapsedTime = Date.now() - startTime;
+      expect(elapsedTime).toBeLessThan(100);
+    });
+  });
+
   it('should not throw when fetch throws a common error', async () => {
     const fetchError = new Error('Could not fetch');
     fetchError.name = 'FetchError';

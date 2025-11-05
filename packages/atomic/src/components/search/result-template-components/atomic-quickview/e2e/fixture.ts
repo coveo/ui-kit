@@ -1,13 +1,11 @@
 import {test as base} from '@playwright/test';
-import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {AtomicQuickviewLocators as Quickview} from './page-object';
 
 type MyFixtures = {
   quickview: Quickview;
 };
 
-export const test = base.extend<MyFixtures & AxeFixture>({
-  makeAxeBuilder,
+export const test = base.extend<MyFixtures>({
   quickview: async ({page}, use) => {
     await use(new Quickview(page));
   },
