@@ -16,6 +16,7 @@ import {
   logGeneratedAnswerExpand,
   logGeneratedAnswerFeedback,
   logGeneratedAnswerHideAnswers,
+  logGeneratedAnswerResponseLinked,
   logGeneratedAnswerShowAnswers,
   logGeneratedAnswerStreamEnd,
   logHoverCitation,
@@ -548,6 +549,17 @@ describe('generated answer insight analytics actions', () => {
         expect(emit).toHaveBeenCalledTimes(1);
         expect(emit.mock.calls[0]).toMatchSnapshot();
       });
+    });
+
+    it('should log #logGeneratedAnswerResponseLinked with the response id and answer id', async () => {
+      await logGeneratedAnswerResponseLinked()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
     });
   });
 });

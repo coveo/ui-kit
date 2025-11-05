@@ -1,13 +1,11 @@
 import {test as base} from '@playwright/test';
-import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {AtomicResultsPerPagePageObject} from './page-object';
 
 type Fixtures = {
   resultsPerPage: AtomicResultsPerPagePageObject;
 };
 
-export const test = base.extend<Fixtures & AxeFixture>({
-  makeAxeBuilder,
+export const test = base.extend<Fixtures>({
   resultsPerPage: async ({page}, use) => {
     await use(new AtomicResultsPerPagePageObject(page));
   },

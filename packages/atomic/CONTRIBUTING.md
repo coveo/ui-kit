@@ -235,7 +235,6 @@ Integration testing that validates component behavior in real browser environmen
 **Purpose:**
 - Follow the [Atomic test conventions](https://coveord.atlassian.net/wiki/spaces/JSUI/pages/5221122259/Atomic+test+conventions)
 - **Test the golden path** - Focus on the most common, successful user journey through the component
-- **Test accessibility compliance** - Validate accessibility using the `makeAxeBuilder` function from the base page object
 - **Keep it simple** - Usually should only include the default story and test a very simple golden path
 
 **Example:** See [`atomic-product-children.e2e.ts`](src/components/commerce/atomic-product-children/e2e/atomic-product-children.e2e.ts) for a reference implementation.

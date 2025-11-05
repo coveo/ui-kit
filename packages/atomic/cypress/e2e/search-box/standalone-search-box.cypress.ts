@@ -106,7 +106,7 @@ describe('Standalone Search Box Test Suites', () => {
     });
 
     it('uses the query syntax for the first search', () => {
-      ResultTextSelectors.firstInResult().should('have.text', 'bushy lichens');
+      ResultTextSelectors.firstInResult().find('atomic-text').shadow().should('have.text', 'bushy lichens');
     });
   });
 });

@@ -35,10 +35,9 @@ const commitMessage = dedent`
   ${packagesReleased}
 
   **/CHANGELOG.md
-  **/package.json
   CHANGELOG.md
   package.json
-  package-lock.json
+  **/package.json
 `;
 
 // Setup Git with the bot user

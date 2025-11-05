@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.70",
+  "version": "3.0.73",
   "scripts": {
     "postinstall": "husky install",
     "reset:install": "git checkout origin/main pnpm-lock.yaml && pnpm install",
@@ -18,14 +18,13 @@
     "pre-commit": "lint-staged",
     "promote:npm:latest": "turbo promote:npm:latest",
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs",
-    "release": "pnpm run nx:graph && pnpm run release:phase0 && pnpm run release:phase1 && pnpm run release:phase2 && pnpm run release:phase3 && pnpm run release:phase4 && pnpm run release:phase5",
+    "release": "pnpm run nx:graph && pnpm run release:phase0 && pnpm run release:phase1 && pnpm run release:phase2 && pnpm run release:phase3 && pnpm run release:phase4",
     "nx:graph": "turbo release:phase1 --dry-run=json > topology-raw.json && node scripts/transform-topology.mjs topology-raw.json topology.json",
     "release:phase0": "pnpm --filter @coveo/ci git-lock",
     "release:phase1": "turbo release:phase1 --concurrency=1 && pnpm run build",
     "release:phase2": "pnpm --filter @coveo/ci bump:root",
     "release:phase3": "turbo release:phase3 --concurrency=1",
-    "release:phase4": "pnpm --filter @coveo/ci reify",
-    "release:phase5": "pnpm --filter @coveo/ci git-publish-all",
+    "release:phase4": "pnpm --filter @coveo/ci git-publish-all",
     "knip": "knip"
   },
   "devDependencies": {

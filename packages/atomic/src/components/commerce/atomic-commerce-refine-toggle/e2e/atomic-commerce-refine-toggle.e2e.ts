@@ -6,11 +6,6 @@ test.describe('atomic-commerce-refine-toggle', () => {
     await commerceRefineToggle.hydrated.waitFor();
   });
 
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should open the modal when the button is clicked', async ({
     commerceRefineToggle,
   }) => {

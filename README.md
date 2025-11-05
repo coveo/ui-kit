@@ -9,6 +9,10 @@
 - [Auth](packages/auth): Functions to help authenticate with the Coveo platform.
 - [Headless React Samples](packages/samples/headless-react): Various code samples using Headless inside a React application.
 
+## Samples
+
+Looking for code examples? Check out the [samples](samples/) directory for working examples using Atomic, Headless, and Headless SSR across various frameworks including React, Angular, Vue.js, and Next.js.
+
 ## Install
 
 To install all dependencies and link local packages, run:
