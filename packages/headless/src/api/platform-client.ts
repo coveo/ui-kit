@@ -71,9 +71,17 @@ export class PlatformClient {
 
     try {
       const response = await backOff(request, {
-        retry: (e: Response) => {
+        startingDelay: 100,
+        timeMultiple: 2,
+        maxDelay: 800,
+        numOfAttempts: 4,
+        jitter: 'full',
+        retry: async (e: Response) => {
           const shouldRetry = e && isThrottled(e.status);
-          shouldRetry && logger.info('Platform retrying request');
+          if (shouldRetry) {
+            logger.info('Platform retrying request');
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          }
           return shouldRetry;
         },
       });

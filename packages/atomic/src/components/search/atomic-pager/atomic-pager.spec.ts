@@ -13,7 +13,6 @@ import {buildFakePager} from '@/vitest-utils/testing-helpers/fixtures/headless/s
 import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
 import type {AtomicPager} from './atomic-pager';
 import './atomic-pager';
-import type {AtomicCommercePager} from '@/src/components';
 
 vi.mock('@coveo/headless', {spy: true});
 vi.mock('@/src/mixins/bindings-mixin', () => ({
@@ -95,7 +94,7 @@ describe('atomic-pager', () => {
       },
     });
 
-    element['isAppLoaded'] = isAppLoaded;
+    element.isAppLoaded = isAppLoaded;
 
     return element;
   };
@@ -524,7 +523,7 @@ describe('atomic-pager', () => {
         buttons[buttons.length - 1],
       ];
 
-      await element['handleFocus'](buttons, firstPageButton, lastPageButton);
+      await element.handleFocus(buttons, firstPageButton, lastPageButton);
 
       await expectFocusOnButton(
         locators.previous.element(),
@@ -540,7 +539,7 @@ describe('atomic-pager', () => {
         buttons[buttons.length - 1],
       ];
 
-      await element['handleFocus'](buttons, lastPageButton, firstPageButton);
+      await element.handleFocus(buttons, lastPageButton, firstPageButton);
 
       await expectFocusOnButton(
         locators.next.element(),
@@ -553,7 +552,7 @@ describe('atomic-pager', () => {
 
       const [currentButton, nextButton] = buttons;
 
-      await element['handleFocus'](buttons, currentButton, nextButton);
+      await element.handleFocus(buttons, currentButton, nextButton);
 
       await expectFocusOnButton(
         locators.page2.element(),

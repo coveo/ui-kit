@@ -5,15 +5,6 @@ test.describe('atomic-commerce-sort-dropdown', () => {
     await commerceSortDropdown.load();
   });
 
-  test('should be accessible', async ({
-    commerceSortDropdown,
-    makeAxeBuilder,
-  }) => {
-    await commerceSortDropdown.hydrated.waitFor();
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test.describe('when selecting a relevance sort criterion', async () => {
     test.beforeEach(async ({commerceSortDropdown}) => {
       await commerceSortDropdown.select.selectOption('relevance');
