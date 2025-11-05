@@ -2,7 +2,8 @@
 
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {bypass, HttpResponse, http} from 'msw';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {baseFoldedResponse} from '@/storybook-utils/api/search/search-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
@@ -117,17 +118,9 @@ const SLOTS_DEFAULT = `
 </atomic-result-template>
 `;
 
-const preprocessRequest = (response: any) => {
-  const parsed = JSON.parse(response.body as string);
-  parsed.aq = '@source==("iNaturalistTaxons")';
-  parsed.fieldsToInclude = [...(parsed.fieldsToInclude || []), 'source'];
-  response.body = JSON.stringify(parsed);
-  return response;
-};
+const mockSearchApi = new MockSearchApi();
 
-const {decorator, play} = wrapInSearchInterface({
-  config: {preprocessRequest},
-});
+const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-folded-result-list',
   {excludeCategories: ['methods']}
@@ -144,9 +137,13 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
+    msw: {handlers: [...mockSearchApi.handlers]},
   },
   args,
   argTypes,
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.clear();
+  },
   play,
 };
 
@@ -157,27 +154,31 @@ export const Default: Story = {
   args: {
     'default-slot': SLOTS_DEFAULT,
   },
-};
-
-const preprocessRequestNoChildrenResult = (request: any) => {
-  const parsed = JSON.parse(request.body as string);
-  parsed.aq = '@foldingcollection==("atlcontinentantarctica")';
-  request.body = JSON.stringify(parsed);
-  return request;
-};
-
-const {play: noResultChildrenPlay} = wrapInSearchInterface({
-  config: {
-    preprocessRequest: preprocessRequestNoChildrenResult,
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mockOnce(() => baseFoldedResponse);
   },
-});
+  play,
+};
 
 export const WithNoResultChildren: Story = {
   name: 'With no result children',
   args: {
     'default-slot': SLOTS_DEFAULT,
   },
-  play: noResultChildrenPlay,
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mockOnce(() => ({
+      ...baseFoldedResponse,
+      results: [
+        {
+          ...baseFoldedResponse.results[0],
+          parentResult: null,
+          totalNumberOfChildResults: 0,
+          childResults: [],
+        },
+      ] as unknown as typeof baseFoldedResponse.results,
+    }));
+  },
+  play,
 };
 
 export const WithFewResultChildren: Story = {
@@ -185,22 +186,17 @@ export const WithFewResultChildren: Story = {
   args: {
     'default-slot': SLOTS_DEFAULT,
   },
-  parameters: {
-    msw: {
-      handlers: [
-        http.post('**/search/v2', async ({request}) => {
-          const response = await fetch(bypass(request));
-          const body = await response.json();
-
-          // Modify the first result to have result children
-          if (body.results?.[0]) {
-            body.results[0].totalNumberOfChildResults = 1;
-          }
-
-          return HttpResponse.json(body);
-        }),
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mockOnce(() => ({
+      ...baseFoldedResponse,
+      results: [
+        {
+          ...baseFoldedResponse.results[0],
+          totalNumberOfChildResults: 1,
+        },
+        ...baseFoldedResponse.results.slice(1),
       ],
-    },
+    }));
   },
   play,
 };
@@ -210,22 +206,17 @@ export const WithMoreResultsAvailableAndNoChildren: Story = {
   args: {
     'default-slot': SLOTS_DEFAULT,
   },
-  parameters: {
-    msw: {
-      handlers: [
-        http.post('**/search/v2', async ({request}) => {
-          const response = await fetch(bypass(request));
-          const body = await response.json();
-
-          // Modify the first result to have no results available
-          if (body.results?.[0]) {
-            body.results[0].totalNumberOfChildResults = 10;
-          }
-
-          return HttpResponse.json(body);
-        }),
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mockOnce(() => ({
+      ...baseFoldedResponse,
+      results: [
+        {
+          ...baseFoldedResponse.results[0],
+          totalNumberOfChildResults: 10,
+          childResults: [],
+        },
       ],
-    },
+    }));
   },
-  play: noResultChildrenPlay,
+  play,
 };

@@ -693,7 +693,7 @@ describe('Search Box Test Suites', () => {
     it('uses the query syntax', () => {
       SearchBoxSelectors.textArea().type('@urihash=Wl1SZoqFsR8bpsbG');
       SearchBoxSelectors.submitButton().click();
-      ResultTextSelectors.firstInResult().should('have.text', 'bushy lichens');
+      ResultTextSelectors.firstInResult().find('atomic-text').shadow().should('have.text', 'bushy lichens');
     });
   });
 });

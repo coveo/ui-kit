@@ -3,6 +3,7 @@
  */
 
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import {createAccessTokenManager} from '../../common/access-token-manager.js';
 import {defineCart} from '../controllers/cart/headless-cart.ssr.js';
 import {defineContext} from '../controllers/context/headless-context.ssr.js';
 import {defineParameterManager} from '../controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
@@ -70,12 +71,25 @@ export function defineCommerceEngine<
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
-  const getOptions = () => engineOptions;
+  const tokenManager = createAccessTokenManager(
+    engineOptions.configuration.accessToken
+  );
 
-  const getAccessToken = () => engineOptions.configuration.accessToken;
+  const onAccessTokenUpdate = (
+    updateCallback: (accessToken: string) => void
+  ) => {
+    tokenManager.registerCallback(updateCallback);
+  };
 
+  const definitionOptions = {
+    ...engineOptions,
+    onAccessTokenUpdate,
+  };
+
+  const getAccessToken = () => tokenManager.getAccessToken();
   const setAccessToken = (accessToken: string) => {
     engineOptions.configuration.accessToken = accessToken;
+    tokenManager.setAccessToken(accessToken);
   };
 
   controllerDefinitions && validateControllerNames(controllerDefinitions);
@@ -89,21 +103,21 @@ export function defineCommerceEngine<
 
   const fetchStaticState = fetchStaticStateFactory<TControllerDefinitions>(
     augmentedControllerDefinition,
-    getOptions()
+    definitionOptions
   );
   const hydrateStaticState = hydratedStaticStateFactory<TControllerDefinitions>(
     augmentedControllerDefinition,
-    getOptions()
+    definitionOptions
   );
   const fetchRecommendationStaticState =
     fetchRecommendationStaticStateFactory<TControllerDefinitions>(
       augmentedControllerDefinition,
-      getOptions()
+      definitionOptions
     );
   const hydrateRecommendationStaticState =
     hydratedRecommendationStaticStateFactory<TControllerDefinitions>(
       augmentedControllerDefinition,
-      getOptions()
+      definitionOptions
     );
   const commonMethods = {
     getAccessToken,

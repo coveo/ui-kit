@@ -1,3 +1,25 @@
+## 3.35.0 (2025-11-05)
+
+* Optimize retry strategy for Search API with guaranteed 1s minimum delay plus exponential backoff (#6 ([5e8c454](https://github.com/coveo/ui-kit/commits/5e8c454)), closes [#6439](https://github.com/coveo/ui-kit/issues/6439)
+* chore(headless-ssr): refactor Search Engine SSR (#6212) ([c51b571](https://github.com/coveo/ui-kit/commits/c51b571)), closes [#6212](https://github.com/coveo/ui-kit/issues/6212)
+* feat(headless): started sending response linked event for CRGA with EP (#6211) ([ca919b7](https://github.com/coveo/ui-kit/commits/ca919b7)), closes [#6211](https://github.com/coveo/ui-kit/issues/6211)
+
+
+
+## <small>3.34.2 (2025-10-30)</small>
+
+* fix(headless-ssr): fix `setAccessToken` for ssr commerce (#6181) ([acfc6c5](https://github.com/coveo/ui-kit/commits/acfc6c5)), closes [#6181](https://github.com/coveo/ui-kit/issues/6181)
+* [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
+## <small>3.34.1 (2025-10-29)</small>
+
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
 ## 3.34.0 (2025-10-28)
 
 * feat(headless, quantic): recent queries feature made available for the insight use case (#6114) ([3f66527](https://github.com/coveo/ui-kit/commits/3f66527)), closes [#6114](https://github.com/coveo/ui-kit/issues/6114)

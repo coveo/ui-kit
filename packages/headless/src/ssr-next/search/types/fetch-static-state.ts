@@ -5,6 +5,7 @@ import type {
 } from '../../common/types/controllers.js';
 import type {EngineStaticState} from '../../common/types/engine.js';
 import type {BuildConfig} from './build.js';
+import type {BakedInSearchControllers} from './controller-definition.js';
 import type {SearchEngineDefinitionControllersPropsOption} from './engine.js';
 
 /**
@@ -20,5 +21,9 @@ export type FetchStaticState<
   params: BuildConfig &
     SearchEngineDefinitionControllersPropsOption<TControllersProps>
 ) => Promise<
-  EngineStaticState<TSearchAction, TControllersStaticState> & BuildConfig
+  EngineStaticState<
+    TSearchAction,
+    TControllersStaticState & BakedInSearchControllers
+  > &
+    BuildConfig
 >;
