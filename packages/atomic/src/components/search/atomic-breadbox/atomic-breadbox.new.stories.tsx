@@ -1,7 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
-import {within} from 'shadow-dom-testing-library';
 import {expect, userEvent, waitFor} from 'storybook/test';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -62,8 +61,7 @@ export const Default: Story = {
   ],
   play: async (context) => {
     await play(context);
-    const {canvasElement, step} = context;
-    const canvas = within(canvasElement);
+    const {canvas, step} = context;
     await step('Wait for the facet values to render', async () => {
       await waitFor(
         () => expect(canvas.getByShadowTitle('People')).toBeInTheDocument(),

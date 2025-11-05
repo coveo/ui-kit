@@ -49,8 +49,10 @@ const precedingSessionsActions = [
   },
 ];
 
-export const exampleUserActions = [
-  ...followingSessionsActions,
-  ...ticketCreationSessionActions,
-  ...precedingSessionsActions,
-];
+export const baseResponse = {
+  value: [
+    ...followingSessionsActions,
+    ...ticketCreationSessionActions,
+    ...precedingSessionsActions,
+  ],
+};
