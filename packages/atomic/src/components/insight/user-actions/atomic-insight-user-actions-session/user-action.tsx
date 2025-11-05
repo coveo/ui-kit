@@ -88,7 +88,7 @@ export const UserAction: FunctionalComponent<UserAction> = ({
   };
 
   return (
-    <div class="flex">
+    <li class="flex">
       <div class="flex-none pr-2">
         <div class="flex justify-center py-1">{renderIcon()}</div>
         <div class="flex justify-center py-1">
@@ -102,6 +102,6 @@ export const UserAction: FunctionalComponent<UserAction> = ({
           <div class="px-2">{action.searchHub}</div>
         </div>
       </div>
-    </div>
+    </li>
   );
 };

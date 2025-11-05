@@ -1137,11 +1137,6 @@ export namespace Components {
     interface AtomicIpxTabs {
     }
     /**
-     * The `atomic-load-more-results` component allows the user to load additional results if more are available.
-     */
-    interface AtomicLoadMoreResults {
-    }
-    /**
      * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
      */
     interface AtomicNoResults {
@@ -2843,15 +2838,6 @@ declare global {
         new (): HTMLAtomicIpxTabsElement;
     };
     /**
-     * The `atomic-load-more-results` component allows the user to load additional results if more are available.
-     */
-    interface HTMLAtomicLoadMoreResultsElement extends Components.AtomicLoadMoreResults, HTMLStencilElement {
-    }
-    var HTMLAtomicLoadMoreResultsElement: {
-        prototype: HTMLAtomicLoadMoreResultsElement;
-        new (): HTMLAtomicLoadMoreResultsElement;
-    };
-    /**
      * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
      */
     interface HTMLAtomicNoResultsElement extends Components.AtomicNoResults, HTMLStencilElement {
@@ -3547,7 +3533,6 @@ declare global {
         "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
         "atomic-ipx-tab": HTMLAtomicIpxTabElement;
         "atomic-ipx-tabs": HTMLAtomicIpxTabsElement;
-        "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-notifications": HTMLAtomicNotificationsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
@@ -4672,11 +4657,6 @@ declare namespace LocalJSX {
         "label"?: string;
     }
     interface AtomicIpxTabs {
-    }
-    /**
-     * The `atomic-load-more-results` component allows the user to load additional results if more are available.
-     */
-    interface AtomicLoadMoreResults {
     }
     /**
      * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
@@ -5814,7 +5794,6 @@ declare namespace LocalJSX {
         "atomic-ipx-result-link": AtomicIpxResultLink;
         "atomic-ipx-tab": AtomicIpxTab;
         "atomic-ipx-tabs": AtomicIpxTabs;
-        "atomic-load-more-results": AtomicLoadMoreResults;
         "atomic-no-results": AtomicNoResults;
         "atomic-notifications": AtomicNotifications;
         "atomic-numeric-facet": AtomicNumericFacet;
@@ -6025,10 +6004,6 @@ declare module "@stencil/core" {
             "atomic-ipx-result-link": LocalJSX.AtomicIpxResultLink & JSXBase.HTMLAttributes<HTMLAtomicIpxResultLinkElement>;
             "atomic-ipx-tab": LocalJSX.AtomicIpxTab & JSXBase.HTMLAttributes<HTMLAtomicIpxTabElement>;
             "atomic-ipx-tabs": LocalJSX.AtomicIpxTabs & JSXBase.HTMLAttributes<HTMLAtomicIpxTabsElement>;
-            /**
-             * The `atomic-load-more-results` component allows the user to load additional results if more are available.
-             */
-            "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;
             /**
              * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
              */

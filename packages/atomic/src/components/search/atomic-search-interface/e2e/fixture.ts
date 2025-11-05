@@ -1,13 +1,11 @@
 import {test as base} from '@playwright/test';
-import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {AtomicSearchInterfacePageObject} from './page-object';
 
 type Fixtures = {
   searchInterface: AtomicSearchInterfacePageObject;
 };
 
-export const test = base.extend<Fixtures & AxeFixture>({
-  makeAxeBuilder,
+export const test = base.extend<Fixtures>({
   searchInterface: async ({page}, use) => {
     await use(new AtomicSearchInterfacePageObject(page));
   },

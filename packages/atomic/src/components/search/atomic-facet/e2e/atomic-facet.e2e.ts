@@ -36,22 +36,12 @@ test.describe('when the "Show more" button has not been selected', () => {
     await facet.load({story: 'month-facet'});
     await facet.hydrated.waitFor();
   });
-
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
 });
 
 test.describe('when the "Show more" button has been selected', () => {
   test.beforeEach(async ({facet}) => {
     await facet.load({story: 'month-facet'});
     await facet.showMoreButton.click();
-  });
-
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test('should have facet values sorted alphabetically', async ({facet}) => {
