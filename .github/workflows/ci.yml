@@ -630,7 +630,7 @@ jobs:
   e2e-quantic:
     name: "Run Quantic E2E tests"
     needs: affected
-    if: contains(needs.affected.outputs.projects, '@coveo/quantic') && (github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'skip-quantic'))
+    if: contains(needs.affected.outputs.projects, '@coveo/quantic') && !(github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'skip-quantic'))
     uses: ./.github/workflows/e2e-quantic.yml
     secrets:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
