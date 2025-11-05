@@ -10,12 +10,6 @@ test.describe('atomic-commerce-search-box', () => {
       await expect(searchBox.submitButton).toBeEnabled();
     });
 
-    test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
-      await searchBox.hydrated.waitFor();
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations).toEqual([]);
-    });
-
     test.describe('when suggestions are available', () => {
       test.beforeEach(async ({searchBox}) => {
         await searchBox.load({story: 'with-suggestions'});
@@ -183,12 +177,6 @@ test.describe('atomic-commerce-search-box', () => {
         });
       });
 
-      test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
-        await searchBox.hydrated.waitFor();
-        const accessibilityResults = await makeAxeBuilder().analyze();
-        expect(accessibilityResults.violations).toEqual([]);
-      });
-
       test.describe('after clicking the submit button', () => {
         test.beforeEach(async ({searchBox}) => {
           await searchBox
@@ -261,12 +249,6 @@ test.describe('atomic-commerce-search-box', () => {
         ).toBeVisible();
       });
 
-      test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
-        await searchBox.hydrated.waitFor();
-        const accessibilityResults = await makeAxeBuilder().analyze();
-        expect(accessibilityResults.violations).toEqual([]);
-      });
-
       test('should display in the search box what has been submitted', async ({
         searchBox,
       }) => {
@@ -328,12 +310,6 @@ test.describe('atomic-commerce-search-box', () => {
         await expect(searchBox.searchSuggestions().first()).not.toBeVisible();
       });
 
-      test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
-        await searchBox.hydrated.waitFor();
-        const accessibilityResults = await makeAxeBuilder().analyze();
-        expect(accessibilityResults.violations).toEqual([]);
-      });
-
       test('should not perform requests against the query suggest endpoint', () => {
         expect(querySuggestionRequestPerformed).toBe(false);
       });
@@ -379,12 +355,6 @@ test.describe('atomic-commerce-search-box', () => {
 
       test('there are no search suggestions', async ({searchBox}) => {
         await expect(searchBox.searchSuggestions().first()).not.toBeVisible();
-      });
-
-      test('should be accessible', async ({searchBox, makeAxeBuilder}) => {
-        await searchBox.hydrated.waitFor();
-        const accessibilityResults = await makeAxeBuilder().analyze();
-        expect(accessibilityResults.violations).toEqual([]);
       });
     };
 

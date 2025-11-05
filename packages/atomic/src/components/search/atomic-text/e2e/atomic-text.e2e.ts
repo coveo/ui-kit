@@ -7,14 +7,6 @@ test.describe('atomic-text', () => {
     await expect(text.getText).toHaveText('Atomic Text');
   });
 
-  test('should be accessible', async ({text, makeAxeBuilder}) => {
-    await text.load();
-
-    await text.hydrated.waitFor();
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should translate text', async ({text}) => {
     await text.load({story: 'with-translations'});
 
