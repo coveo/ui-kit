@@ -19,6 +19,7 @@ import {renderNoItems} from '@/src/components/common/no-items/no-items.js';
 import {renderSearchTips} from '@/src/components/common/no-items/tips.js';
 import {getSummary} from '@/src/components/common/no-items/utils.js';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
+import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
@@ -69,15 +70,29 @@ export class AtomicNoResults
 
   protected ariaMessage = new AriaLiveRegionController(this, 'no-results');
 
+  // TODO - (v4) KIT-4823: Remove.
   /**
    * Whether to display a button which cancels the last available action.
+   * @deprecated - replaced by `disable-cancel-last-action` (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
     reflect: true,
     attribute: 'enable-cancel-last-action',
+    converter: booleanConverter,
   })
   enableCancelLastAction = true;
+
+  /**
+   * Whether to disable the button which cancels the last available action.
+   */
+  @property({
+    type: Boolean,
+    reflect: true,
+    attribute: 'disable-cancel-last-action',
+    useDefault: true,
+  })
+  disableCancelLastAction = false;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -134,7 +149,11 @@ export class AtomicNoResults
   }
 
   private renderCancelButton() {
-    if (!this.enableCancelLastAction || !this.historyState.past.length) {
+    if (
+      this.disableCancelLastAction ||
+      !this.enableCancelLastAction ||
+      !this.historyState.past.length
+    ) {
       return null;
     }
 

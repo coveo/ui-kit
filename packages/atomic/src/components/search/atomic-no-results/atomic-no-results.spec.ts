@@ -36,6 +36,7 @@ describe('atomic-no-results', () => {
   }: {
     props?: {
       enableCancelLastAction?: boolean;
+      disableCancelLastAction?: boolean;
     };
     searchStatusState?: Partial<SearchStatusState>;
     querySummaryState?: Partial<QuerySummaryState>;
@@ -70,9 +71,7 @@ describe('atomic-no-results', () => {
     vi.mocked(buildHistoryManager).mockReturnValue(mockedHistory);
 
     const {element} = await renderInAtomicSearchInterface<AtomicNoResults>({
-      template: html`<atomic-no-results
-        ?enable-cancel-last-action=${props.enableCancelLastAction ?? true}
-      ></atomic-no-results>`,
+      template: html`<atomic-no-results></atomic-no-results>`,
       selector: 'atomic-no-results',
       bindings: (bindings) => {
         bindings.engine = mockedEngine;
@@ -80,6 +79,14 @@ describe('atomic-no-results', () => {
         return bindings;
       },
     });
+
+    if (props.enableCancelLastAction !== undefined) {
+      element.enableCancelLastAction = props.enableCancelLastAction;
+    }
+    if (props.disableCancelLastAction !== undefined) {
+      element.disableCancelLastAction = props.disableCancelLastAction;
+    }
+    await element.updateComplete;
 
     return {
       element,
@@ -201,7 +208,7 @@ describe('atomic-no-results', () => {
     });
 
     expect(parts(element).noResults).toHaveTextContent(
-      `We couldn't find anything for "${query}"`
+      `We couldn't find anything for “${query}”`
     );
   });
 
@@ -309,6 +316,65 @@ describe('atomic-no-results', () => {
       const {element, parts} = await renderNoResults({
         props: {
           enableCancelLastAction: false,
+        },
+        historyState: {
+          past: [{name: 'action1', value: 'value1'}],
+        },
+      });
+
+      expect(parts(element).cancelButton).not.toBeInTheDocument();
+    });
+  });
+
+  describe('when disableCancelLastAction is true', () => {
+    it('should not render cancel button even when history has past actions', async () => {
+      const {element, parts} = await renderNoResults({
+        props: {
+          disableCancelLastAction: true,
+        },
+        historyState: {
+          past: [{name: 'action1', value: 'value1'}],
+        },
+      });
+
+      expect(parts(element).cancelButton).not.toBeInTheDocument();
+    });
+
+    it('should not render cancel button regardless of enableCancelLastAction', async () => {
+      const {element, parts} = await renderNoResults({
+        props: {
+          enableCancelLastAction: true,
+          disableCancelLastAction: true,
+        },
+        historyState: {
+          past: [{name: 'action1', value: 'value1'}],
+        },
+      });
+
+      expect(parts(element).cancelButton).not.toBeInTheDocument();
+    });
+  });
+
+  describe('when disableCancelLastAction is false', () => {
+    it('should render cancel button when enableCancelLastAction is true and history has past actions', async () => {
+      const {element, parts} = await renderNoResults({
+        props: {
+          enableCancelLastAction: true,
+          disableCancelLastAction: false,
+        },
+        historyState: {
+          past: [{name: 'action1', value: 'value1'}],
+        },
+      });
+
+      expect(parts(element).cancelButton).toBeInTheDocument();
+    });
+
+    it('should not render cancel button when enableCancelLastAction is false', async () => {
+      const {element, parts} = await renderNoResults({
+        props: {
+          enableCancelLastAction: false,
+          disableCancelLastAction: false,
         },
         historyState: {
           past: [{name: 'action1', value: 'value1'}],
