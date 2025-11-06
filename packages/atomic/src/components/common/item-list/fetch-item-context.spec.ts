@@ -84,7 +84,11 @@ describe('item-context', () => {
         'The "atomic-result" element must be the child of an "parent-element" element.'
       );
       expectedError.name = 'MissingParentError';
-      vi.mocked(MissingParentError).mockReturnValue(expectedError);
+      vi.mocked(MissingParentError).mockImplementation(function (
+        this: unknown
+      ) {
+        return expectedError;
+      });
 
       await expect(
         fetchItemContext(elementWithUpperCase, 'parent-element')

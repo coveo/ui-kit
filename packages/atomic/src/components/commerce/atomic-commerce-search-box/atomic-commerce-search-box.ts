@@ -698,12 +698,9 @@ export class AtomicCommerceSearchBox
   }
 
   private renderSlotContent() {
-    const slots = getDefaultSlotContent(this);
-    if (slots.length > 1) {
-      console.warn('Element should only have 1 default slot.', this);
-    }
+    const hasDefaultSlot = getDefaultSlotContent(this).length > 0;
 
-    if (slots.length === 1) {
+    if (hasDefaultSlot) {
       return html`<slot></slot>`;
     }
 

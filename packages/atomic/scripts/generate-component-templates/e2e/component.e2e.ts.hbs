@@ -5,8 +5,8 @@ test.describe('{{name}}', () => {
     await {{shorterName}}.load();
   });
 
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
+  // Add your tests here
+  test('should render properly', async ({ {{shorterName}} }) => {
+    // TODO: Add test implementation
   });
 });

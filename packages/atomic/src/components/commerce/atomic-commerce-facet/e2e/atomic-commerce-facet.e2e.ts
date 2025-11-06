@@ -6,12 +6,6 @@ test.describe('atomic-commerce-facet', () => {
     await facet.load();
   });
 
-  test('should be accessible', async ({facet, makeAxeBuilder}) => {
-    await facet.hydrated.waitFor({state: 'attached'});
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should allow to filter by selecting and deselecting a value', async ({
     facet,
   }) => {

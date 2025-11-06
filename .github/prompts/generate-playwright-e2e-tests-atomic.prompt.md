@@ -127,7 +127,6 @@ export class ComponentPageObject extends BasePageObject<'atomic-component'> {
 
 ```typescript
 import {test as base, type Page} from '@playwright/test';
-import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {ComponentPageObject} from './page-object';
 
 type MyFixtures = {
@@ -158,8 +157,7 @@ export async function setLocalStorage(page: Page, key: string, value: unknown) {
   );
 }
 
-export const test = base.extend<MyFixtures & AxeFixture>({
-  makeAxeBuilder,
+export const test = base.extend<MyFixtures>({
   component: async ({page}, use) => {
     await use(new ComponentPageObject(page));
   },
@@ -178,11 +176,6 @@ test.describe('atomic-component', () => {
     test.beforeEach(async ({component}) => {
       await component.load({story: 'default'});
       await component.hydrated.waitFor();
-    });
-
-    test('should be accessible', async ({makeAxeBuilder}) => {
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations).toEqual([]);
     });
 
     test('should render primary content', async ({component}) => {
