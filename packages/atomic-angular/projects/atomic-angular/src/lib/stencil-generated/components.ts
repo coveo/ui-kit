@@ -2864,7 +2864,7 @@ export declare interface AtomicLoadMoreResults extends LitAtomicLoadMoreResults 
 }
 
 @ProxyCmp({
-  inputs: ['enableCancelLastAction'],
+  inputs: ['enableCancelLastAction', 'disableCancelLastAction'],
   methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-no-results') || customElements.define('atomic-no-results', LitAtomicNoResults);}
 })
@@ -2874,7 +2874,7 @@ export declare interface AtomicLoadMoreResults extends LitAtomicLoadMoreResults 
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['enableCancelLastAction']
+  inputs: ['enableCancelLastAction', 'disableCancelLastAction']
 })
 export class AtomicNoResults {
   protected readonly el: HTMLElement;
