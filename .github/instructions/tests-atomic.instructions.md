@@ -36,38 +36,27 @@ vi.mock('@/src/utils/xss-utils', () => ({
 
 **Mock cleanup:** Automatic via `restoreMocks: true` in vitest.config.js. Never manually reset in `beforeEach` unless preserving state across tests.
 
-**⚠️ Important: `{spy: true}` Limitation**
+**⚠️ Important: Browser Mode Spying Pattern**
 
-When using `vi.mock(module, {spy: true})`, you **cannot** use `mockReturnValue()`, `mockImplementation()`, etc. on the spied functions. The `{spy: true}` option creates spies that track calls but don't provide the full mock API.
+When using `vi.mock(module, {spy: true})` in **browser mode** with monorepo packages, import the module as a namespace to use `mockReturnValue()`:
 
 ```typescript
-// ❌ Bad - This will fail with "mockReturnValue is not a function"
+// ❌ Wrong - Named imports don't work with mockReturnValue in browser mode
+import {isArray} from '@coveo/bueno';
 vi.mock('@coveo/bueno', {spy: true});
-it('test', () => {
-  vi.mocked(isArray).mockReturnValue(true); // ERROR!
-});
+vi.mocked(isArray).mockReturnValue(true); // May fail in browser mode
 
-// ✅ Good - Use real values instead (preferred for simple utilities)
-// No mocking needed - just use real arrays!
-it('test', () => {
-  const arrayValue = ['value1', 'value2'];
-  // The real isArray() will return true for real arrays
-});
+// ✅ Correct - Namespace import allows direct method calls
+import * as bueno from '@coveo/bueno';
+vi.mock('@coveo/bueno', {spy: true});
+bueno.isArray.mockReturnValue(true); // Works in browser mode
 
-// ✅ Good - Or provide full mock implementation
-vi.mock('@coveo/bueno', () => ({
-  isArray: vi.fn(),
-  isUndefined: vi.fn(),
-}));
-it('test', () => {
-  vi.mocked(isArray).mockReturnValue(true); // Works!
-});
+// ✅ Alternative - Use vi.spyOn for individual functions
+import * as bueno from '@coveo/bueno';
+vi.spyOn(bueno, 'isArray').mockReturnValue(true);
 ```
 
-**When to mock:**
-- **Simple utilities** (`isArray`, `isUndefined` from `@coveo/bueno`) → Use real values, don't mock
-- **Headless controllers** → Use `{spy: true}` with `buildFake*` utilities (no `mockReturnValue` needed)
-- **Local utilities** → Use `{spy: true}` or full mock as needed
+This is specific to browser mode with modules that use re-exports (`export *`). For more details, see [Vitest Browser Mode - Spying on Module Exports](https://vitest.dev/guide/browser/#spying-on-module-exports).
 
 ## Testing Components
 

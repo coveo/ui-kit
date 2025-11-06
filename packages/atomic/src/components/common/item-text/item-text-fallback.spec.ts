@@ -1,7 +1,9 @@
+import * as bueno from '@coveo/bueno';
 import {html, nothing} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {type ItemTextProps, renderItemTextFallback} from './item-text-fallback';
 
+vi.mock('@coveo/bueno', {spy: true});
 vi.mock('./field-warning', {spy: true});
 
 describe('#renderItemTextFallback', () => {
@@ -33,7 +35,7 @@ describe('#renderItemTextFallback', () => {
 
   it('should return children when defaultValue is defined', () => {
     mockGetProperty.mockReturnValue('fieldValue');
-    props.defaultValue = 'default';
+    bueno.isUndefined.mockReturnValue(false);
 
     const children = html`<span>Test content</span>`;
     const result = renderItemTextFallback({props})(children);
@@ -43,7 +45,7 @@ describe('#renderItemTextFallback', () => {
 
   it('should remove host and return nothing when defaultValue is undefined', () => {
     mockGetProperty.mockReturnValue('fieldValue');
-    props.defaultValue = undefined;
+    bueno.isUndefined.mockReturnValue(true);
 
     const children = html`<span>Test content</span>`;
     const result = renderItemTextFallback({props})(children);
@@ -54,7 +56,7 @@ describe('#renderItemTextFallback', () => {
 
   it('should handle array of children', () => {
     mockGetProperty.mockReturnValue('fieldValue');
-    props.defaultValue = 'default';
+    bueno.isUndefined.mockReturnValue(false);
 
     const children = [
       html`<span>First child</span>`,
@@ -68,6 +70,7 @@ describe('#renderItemTextFallback', () => {
   describe('when defaultValue is undefined', () => {
     beforeEach(() => {
       props.defaultValue = undefined;
+      bueno.isUndefined.mockReturnValue(true);
     });
 
     it('should remove host element', () => {
@@ -87,7 +90,7 @@ describe('#renderItemTextFallback', () => {
 
   describe('when defaultValue is defined', () => {
     beforeEach(() => {
-      props.defaultValue = 'default';
+      bueno.isUndefined.mockReturnValue(false);
     });
 
     it('should not remove host element', () => {
