@@ -1,23 +1,10 @@
 import {html} from 'lit';
-import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import type {AtomicFocusTrap} from './atomic-focus-trap';
 import './atomic-focus-trap';
 
 describe('atomic-focus-trap', () => {
-  let container: HTMLElement;
-
-  beforeEach(() => {
-    // Create a test container
-    container = document.createElement('div');
-    document.body.appendChild(container);
-  });
-
-  afterEach(() => {
-    // Clean up
-    document.body.removeChild(container);
-  });
-
   const renderFocusTrap = async (
     options: {
       active?: boolean;
@@ -83,14 +70,18 @@ describe('atomic-focus-trap', () => {
 
   describe('when active is false (initial state)', () => {
     it('should not hide siblings', async () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+
       const sibling = document.createElement('div');
       sibling.textContent = 'Sibling';
       container.appendChild(sibling);
 
       await renderFocusTrap({active: false});
 
-      // Sibling should not have aria-hidden
       expect(sibling.hasAttribute('aria-hidden')).toBe(false);
+
+      document.body.removeChild(container);
     });
 
     it('should hide itself when shouldHideSelf is true', async () => {
@@ -99,7 +90,6 @@ describe('atomic-focus-trap', () => {
         shouldHideSelf: true,
       });
 
-      // Element should be hidden
       if ('inert' in HTMLElement.prototype) {
         expect((element as HTMLElement).inert).toBe(true);
       } else {
@@ -114,7 +104,6 @@ describe('atomic-focus-trap', () => {
         shouldHideSelf: false,
       });
 
-      // Element should not be hidden
       if ('inert' in HTMLElement.prototype) {
         expect((element as HTMLElement).inert).toBe(false);
       }
@@ -124,6 +113,9 @@ describe('atomic-focus-trap', () => {
 
   describe('when active is set to true', () => {
     it('should hide sibling elements', async () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+
       const sibling = document.createElement('div');
       sibling.textContent = 'Sibling';
       container.appendChild(sibling);
@@ -131,11 +123,9 @@ describe('atomic-focus-trap', () => {
       const {element} = await renderFocusTrap({active: false});
       container.appendChild(element);
 
-      // Activate the trap
       element.active = true;
       await element.updateComplete;
 
-      // Wait for activation to complete
       await vi.waitFor(() => {
         if ('inert' in HTMLElement.prototype) {
           expect((sibling as HTMLElement).inert).toBe(true);
@@ -143,9 +133,14 @@ describe('atomic-focus-trap', () => {
           expect(sibling.hasAttribute('aria-hidden')).toBe(true);
         }
       });
+
+      document.body.removeChild(container);
     });
 
     it('should not hide elements with aria-live attribute', async () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+
       const ariaLiveElement = document.createElement('div');
       ariaLiveElement.setAttribute('aria-live', 'polite');
       ariaLiveElement.textContent = 'Live Region';
@@ -157,14 +152,18 @@ describe('atomic-focus-trap', () => {
       element.active = true;
       await element.updateComplete;
 
-      // aria-live element should not be hidden
       expect(ariaLiveElement.hasAttribute('aria-hidden')).toBe(false);
       if ('inert' in HTMLElement.prototype) {
         expect((ariaLiveElement as HTMLElement).inert).toBe(false);
       }
+
+      document.body.removeChild(container);
     });
 
     it('should not hide atomic-aria-live elements', async () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+
       const ariaLiveElement = document.createElement('atomic-aria-live');
       container.appendChild(ariaLiveElement);
 
@@ -174,11 +173,12 @@ describe('atomic-focus-trap', () => {
       element.active = true;
       await element.updateComplete;
 
-      // atomic-aria-live should not be hidden
       expect(ariaLiveElement.hasAttribute('aria-hidden')).toBe(false);
       if ('inert' in HTMLElement.prototype) {
         expect((ariaLiveElement as HTMLElement).inert).toBe(false);
       }
+
+      document.body.removeChild(container);
     });
 
     it('should show itself', async () => {
@@ -190,7 +190,6 @@ describe('atomic-focus-trap', () => {
       element.active = true;
       await element.updateComplete;
 
-      // Element should be visible
       if ('inert' in HTMLElement.prototype) {
         expect((element as HTMLElement).inert).toBe(false);
       }
@@ -201,6 +200,9 @@ describe('atomic-focus-trap', () => {
 
   describe('when active is set to false after being true', () => {
     it('should restore hidden siblings', async () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+
       const sibling = document.createElement('div');
       sibling.textContent = 'Sibling';
       container.appendChild(sibling);
@@ -216,20 +218,23 @@ describe('atomic-focus-trap', () => {
         }
       });
 
-      // Deactivate the trap
       element.active = false;
       await element.updateComplete;
 
-      // Sibling should be restored
       await vi.waitFor(() => {
         if ('inert' in HTMLElement.prototype) {
           expect((sibling as HTMLElement).inert).toBe(false);
         }
         expect(sibling.hasAttribute('aria-hidden')).toBe(false);
       });
+
+      document.body.removeChild(container);
     });
 
     it('should focus the source element if provided', async () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+
       const sourceElement = document.createElement('button');
       sourceElement.textContent = 'Source';
       container.appendChild(sourceElement);
@@ -247,6 +252,8 @@ describe('atomic-focus-trap', () => {
       await vi.waitFor(() => {
         expect(focusSpy).toHaveBeenCalled();
       });
+
+      document.body.removeChild(container);
     });
 
     it('should hide itself again when shouldHideSelf is true', async () => {
@@ -295,6 +302,9 @@ describe('atomic-focus-trap', () => {
 
   describe('custom container', () => {
     it('should hide the custom container instead of itself', async () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+
       const customContainer = document.createElement('div');
       customContainer.textContent = 'Custom Container';
       container.appendChild(customContainer);
@@ -305,7 +315,6 @@ describe('atomic-focus-trap', () => {
         container: customContainer,
       });
 
-      // Custom container should be hidden
       if ('inert' in HTMLElement.prototype) {
         expect((customContainer as HTMLElement).inert).toBe(true);
       } else {
@@ -313,13 +322,17 @@ describe('atomic-focus-trap', () => {
       }
       expect(customContainer.getAttribute('tabindex')).toBe('-1');
 
-      // Element itself should not be hidden (container is hidden instead)
       expect(element.hasAttribute('aria-hidden')).toBe(false);
+
+      document.body.removeChild(container);
     });
   });
 
   describe('custom scope', () => {
     it('should only hide siblings within the custom scope', async () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+
       const customScope = document.createElement('div');
       const siblingInScope = document.createElement('div');
       const siblingOutOfScope = document.createElement('div');
@@ -335,7 +348,6 @@ describe('atomic-focus-trap', () => {
       customScope.appendChild(element);
 
       await vi.waitFor(() => {
-        // Sibling in scope should be hidden
         if ('inert' in HTMLElement.prototype) {
           expect((siblingInScope as HTMLElement).inert).toBe(true);
         } else {
@@ -343,11 +355,12 @@ describe('atomic-focus-trap', () => {
         }
       });
 
-      // Sibling out of scope should not be affected
       expect(siblingOutOfScope.hasAttribute('aria-hidden')).toBe(false);
       if ('inert' in HTMLElement.prototype) {
         expect((siblingOutOfScope as HTMLElement).inert).toBe(false);
       }
+
+      document.body.removeChild(container);
     });
   });
 });
