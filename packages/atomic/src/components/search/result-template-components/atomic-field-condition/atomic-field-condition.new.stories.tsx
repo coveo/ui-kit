@@ -17,7 +17,7 @@ const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
 
 const meta: Meta = {
   component: 'atomic-field-condition',
-  title: 'Search/ResultList/FieldCondition',
+  title: 'Search/Field Condition',
   id: 'atomic-field-condition',
 
   render: (args) => template(args),
