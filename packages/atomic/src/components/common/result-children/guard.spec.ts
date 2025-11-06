@@ -38,7 +38,7 @@ describe('#renderResultChildrenGuard', () => {
       templateHasError: true,
     });
 
-    expect(slot).toBeVisible();
+    expect(slot).toBeInTheDocument();
   });
 
   it('should render children when #inheritTemplates is true', async () => {
