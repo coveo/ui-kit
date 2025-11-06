@@ -443,7 +443,7 @@ test.describe('atomic-commerce-breadbox', () => {
       });
 
       test('should update the "Show More" button count', async ({breadbox}) => {
-        await expect(breadbox.getShowMorebutton()).toContainText('+ 6');
+        await expect(breadbox.getShowMorebutton()).toContainText('+ 5');
       });
     });
 

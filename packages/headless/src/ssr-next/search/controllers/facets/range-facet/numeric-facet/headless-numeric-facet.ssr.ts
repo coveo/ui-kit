@@ -8,8 +8,6 @@ import type {ControllerDefinitionWithoutProps} from '../../../../types/controlle
 
 export * from '../../../../../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet.js';
 
-export {buildNumericRange} from '../../../../../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet.js';
-
 export interface NumericFacetDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, NumericFacet> {}
 
