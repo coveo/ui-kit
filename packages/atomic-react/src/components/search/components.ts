@@ -11,6 +11,7 @@ import {
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
   AtomicPager as LitAtomicPager,
+  AtomicQueryError as LitAtomicQueryError,
   AtomicQuerySummary as LitAtomicQuerySummary,
   AtomicRecsInterface as LitAtomicRecsInterface,
   AtomicResult as LitAtomicResult,
@@ -107,6 +108,12 @@ export const AtomicPager = createComponent({
   tagName: 'atomic-pager',
   react: React,
   elementClass: LitAtomicPager,
+});
+
+export const AtomicQueryError = createComponent({
+  tagName: 'atomic-query-error',
+  react: React,
+  elementClass: LitAtomicQueryError,
 });
 
 export const AtomicQuerySummary = createComponent({

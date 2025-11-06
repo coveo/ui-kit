@@ -29,7 +29,6 @@ export const AtomicNotifications = /*@__PURE__*/createReactComponent<JSX.AtomicN
 export const AtomicNumericFacet = /*@__PURE__*/createReactComponent<JSX.AtomicNumericFacet, HTMLAtomicNumericFacetElement>('atomic-numeric-facet');
 export const AtomicNumericRange = /*@__PURE__*/createReactComponent<JSX.AtomicNumericRange, HTMLAtomicNumericRangeElement>('atomic-numeric-range');
 export const AtomicPopover = /*@__PURE__*/createReactComponent<JSX.AtomicPopover, HTMLAtomicPopoverElement>('atomic-popover');
-export const AtomicQueryError = /*@__PURE__*/createReactComponent<JSX.AtomicQueryError, HTMLAtomicQueryErrorElement>('atomic-query-error');
 export const AtomicQuickview = /*@__PURE__*/createReactComponent<JSX.AtomicQuickview, HTMLAtomicQuickviewElement>('atomic-quickview');
 export const AtomicQuickviewModal = /*@__PURE__*/createReactComponent<JSX.AtomicQuickviewModal, HTMLAtomicQuickviewModalElement>('atomic-quickview-modal');
 export const AtomicRatingFacet = /*@__PURE__*/createReactComponent<JSX.AtomicRatingFacet, HTMLAtomicRatingFacetElement>('atomic-rating-facet');
