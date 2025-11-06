@@ -1661,21 +1661,6 @@ export namespace Components {
     interface AtomicResultFieldsList {
     }
     /**
-     * The `atomic-result-html` component renders the HTML value of a string result field.
-     * There is an inherent XSS security concern associated with the usage of this component.
-     * Use only with fields for which you are certain the data is harmless.
-     */
-    interface AtomicResultHtml {
-        /**
-          * The result field which the component should use. If set, Atomic searches for the specified field in the `Result` object first. If there's no such a field, Atomic searches through the `Result.raw` object. It's important to include the necessary field in the `ResultList` component.
-         */
-        "field": string;
-        /**
-          * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
-         */
-        "sanitize": boolean;
-    }
-    /**
      * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
      * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
      */
@@ -3081,17 +3066,6 @@ declare global {
         new (): HTMLAtomicResultFieldsListElement;
     };
     /**
-     * The `atomic-result-html` component renders the HTML value of a string result field.
-     * There is an inherent XSS security concern associated with the usage of this component.
-     * Use only with fields for which you are certain the data is harmless.
-     */
-    interface HTMLAtomicResultHtmlElement extends Components.AtomicResultHtml, HTMLStencilElement {
-    }
-    var HTMLAtomicResultHtmlElement: {
-        prototype: HTMLAtomicResultHtmlElement;
-        new (): HTMLAtomicResultHtmlElement;
-    };
-    /**
      * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
      * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
      */
@@ -3571,7 +3545,6 @@ declare global {
         "atomic-result-children": HTMLAtomicResultChildrenElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
-        "atomic-result-html": HTMLAtomicResultHtmlElement;
         "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
@@ -5186,21 +5159,6 @@ declare namespace LocalJSX {
     interface AtomicResultFieldsList {
     }
     /**
-     * The `atomic-result-html` component renders the HTML value of a string result field.
-     * There is an inherent XSS security concern associated with the usage of this component.
-     * Use only with fields for which you are certain the data is harmless.
-     */
-    interface AtomicResultHtml {
-        /**
-          * The result field which the component should use. If set, Atomic searches for the specified field in the `Result` object first. If there's no such a field, Atomic searches through the `Result.raw` object. It's important to include the necessary field in the `ResultList` component.
-         */
-        "field": string;
-        /**
-          * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
-         */
-        "sanitize"?: boolean;
-    }
-    /**
      * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
      * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
      */
@@ -5842,7 +5800,6 @@ declare namespace LocalJSX {
         "atomic-result-children": AtomicResultChildren;
         "atomic-result-date": AtomicResultDate;
         "atomic-result-fields-list": AtomicResultFieldsList;
-        "atomic-result-html": AtomicResultHtml;
         "atomic-result-icon": AtomicResultIcon;
         "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
@@ -6155,12 +6112,6 @@ declare module "@stencil/core" {
              * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
              */
             "atomic-result-fields-list": LocalJSX.AtomicResultFieldsList & JSXBase.HTMLAttributes<HTMLAtomicResultFieldsListElement>;
-            /**
-             * The `atomic-result-html` component renders the HTML value of a string result field.
-             * There is an inherent XSS security concern associated with the usage of this component.
-             * Use only with fields for which you are certain the data is harmless.
-             */
-            "atomic-result-html": LocalJSX.AtomicResultHtml & JSXBase.HTMLAttributes<HTMLAtomicResultHtmlElement>;
             /**
              * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
              * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.

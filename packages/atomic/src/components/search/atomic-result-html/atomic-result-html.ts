@@ -1,9 +1,7 @@
-import {BooleanValue, Schema, StringValue} from '@coveo/bueno';
 import type {Result} from '@coveo/headless';
-import {html, LitElement, nothing} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
-import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -12,7 +10,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {getStringValueFromResultOrNull} from '@/src/utils/result-utils';
-import '../../atomic-html/atomic-html';
+import '../atomic-html/atomic-html';
 
 /**
  * The `atomic-result-html` component renders the HTML value of a string result field.
@@ -48,22 +46,6 @@ export class AtomicResultHtml
 
   @state() public error!: Error;
 
-  constructor() {
-    super();
-
-    new ValidatePropsController(
-      this,
-      () => ({
-        field: this.field,
-        sanitize: this.sanitize,
-      }),
-      new Schema({
-        field: new StringValue({required: true, emptyAllowed: false}),
-        sanitize: new BooleanValue(),
-      })
-    );
-  }
-
   public initialize() {
     if (!this.result && this.resultController.item) {
       const item = this.resultController.item;
@@ -79,18 +61,14 @@ export class AtomicResultHtml
   @errorGuard()
   render() {
     return html`
-      ${when(
-        this.result && this.field,
-        () => this.renderResultHtml(),
-        () => nothing
-      )}
+      ${when(this.result && this.field, () => this.renderResultHtml())}
     `;
   }
 
   private renderResultHtml() {
     const resultValue = getStringValueFromResultOrNull(this.result, this.field);
     if (!resultValue) {
-      return nothing;
+      return this.remove();
     }
 
     return html`
