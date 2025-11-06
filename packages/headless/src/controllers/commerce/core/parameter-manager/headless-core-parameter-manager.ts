@@ -1,5 +1,5 @@
 import {RecordValue, Schema, type SchemaDefinition} from '@coveo/bueno';
-import {createSelector, type UnknownAction} from '@reduxjs/toolkit';
+import type {UnknownAction} from '@reduxjs/toolkit';
 import type {
   CommerceEngine,
   CommerceEngineState,
@@ -121,10 +121,8 @@ export function buildCoreParameterManager<T extends Parameters>(
     throw loadReducerError;
   }
 
-  const parametersSelector = createSelector(
-    (state: CommerceEngineState) => state.commerceParameters,
-    (parameters) => parameters
-  );
+  const parametersSelector = (state: CommerceEngineState) =>
+    state.commerceParameters;
 
   const {dispatch} = engine;
   const controller = buildController(engine);
