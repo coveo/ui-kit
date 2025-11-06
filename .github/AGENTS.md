@@ -71,61 +71,12 @@ These instructions are automatically applied by GitHub Copilot based on file pat
 - **Testing**: Vitest (unit), Playwright (E2E)
 - **UI Frameworks**: Lit (preferred), Stencil (legacy)
 
-### Key Conventions
-
-**Import Paths**: Use `@/*` path aliases for imports outside current directory when configured:
-```typescript
-// ✅ Correct
-import {bindings} from '@/src/decorators/bindings';
-
-// ❌ Avoid
-import {bindings} from '../../../decorators/bindings';
-```
-
-**Type Safety**: Avoid `any` types. Use unions, generics, or conditional types. Add `// biome-ignore` with reason when necessary.
-
-**Component Structure** (Atomic package):
-- Lit components are preferred for new code
-- Use decorators: `@customElement`, `@property`, `@state`, `@bindStateToController`
-- Clean up resources in `disconnectedCallback()`
-- Field order: styles → @property → @state → non-decorated
-- Method order: lifecycle → public → Lit reactive → render → private
-
-**Testing Patterns**:
-- Test naming: `it('should <behavior> [when <condition>]')`
-- Mock at file top (after imports, before tests)
-- One behavior per test
-- Use `render<ComponentName>()` helper for component tests
-
-## Test Fixing Protocol
-
-When fixing failing tests, agents MUST:
-
-1. Run the failing test to understand the failure
-2. Iterate on solutions in the background
-3. Verify tests pass consistently (multiple runs)
-4. Only commit when tests are verified to work
-
-**DO NOT commit changes until tests pass.**
-
-Commands for verification:
-```bash
-cd packages/atomic
-
-# Unit tests
-pnpm test -- <test-file-path>
-pnpm test:watch  # For iterative fixing
-
-# E2E tests
-pnpm e2e <test-file-path>
-pnpm e2e --debug
-```
-
 ## PR Standards
 
 - **Title**: Semantic commit format (e.g., `feat:`, `fix:`, `refactor:`)
   - Prefix with `WIP:` while work is in progress
 - **Description**: Include `Fixes #Issue_number` when addressing a specific issue
+- **Template**: For Stencil → Lit migrations, use `.github/PULL_REQUEST_TEMPLATE/atomic-stencil-lit-migration.md`
 - **Commits**: Use clear, descriptive messages
 
 ## Custom Agents

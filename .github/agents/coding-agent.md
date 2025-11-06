@@ -225,6 +225,7 @@ Result: [Pass/Fail]
 - **PR Title**: Must be a semantic commit (can be prefixed with `WIP:` while work is in progress)
   - Examples: `feat: add new component`, `fix: resolve test failure`, `WIP: refactor authentication`
 - **PR Description**: Should include `Fixes #Issue_number` in the footer when addressing a specific issue
+- **PR Template**: When opening a PR for a Stencil → Lit component migration (i.e., `atomic`-prefixed custom element), use the `.github/PULL_REQUEST_TEMPLATE/atomic-stencil-lit-migration.md` PR template
 - **Commit Messages**: Use clear, descriptive commit messages that explain the change
 
 ## Quality Checklist
