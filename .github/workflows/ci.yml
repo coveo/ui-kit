@@ -325,7 +325,7 @@ jobs:
       image: mcr.microsoft.com/playwright:v1.56.1-noble
       options: --user 1001
     strategy:
-      fail-fast: false
+      fail-fast: ${{ github.event_name == 'merge_group' }}
       matrix:
         shardIndex: ${{ fromJson(needs.prepare-playwright-atomic.outputs.shardIndex) }}
         shardTotal: ${{ fromJson(needs.prepare-playwright-atomic.outputs.shardTotal) }}
@@ -401,7 +401,7 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
+      fail-fast: ${{ github.event_name == 'merge_group' }}
       matrix:
         containers:
           [
@@ -471,7 +471,7 @@ jobs:
       image: mcr.microsoft.com/playwright:v1.56.1-noble
       options: --user 1001
     strategy:
-      fail-fast: false
+      fail-fast: ${{ github.event_name == 'merge_group' }}
       matrix:
         shardIndex: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         shardTotal: [10]
@@ -630,8 +630,10 @@ jobs:
   e2e-quantic:
     name: "Run Quantic E2E tests"
     needs: affected
-    if: contains(needs.affected.outputs.projects, '@coveo/quantic')
+    if: contains(needs.affected.outputs.projects, '@coveo/quantic') && !(github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'skip-quantic'))
     uses: ./.github/workflows/e2e-quantic.yml
+    with:
+      event_name: ${{ github.event_name }}
     secrets:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
@@ -844,8 +846,10 @@ jobs:
   #       env:
   #         IS_PRERELEASE: "true"
   prerelease-cdn-merge:
-    if: ${{ !cancelled() && needs.is-valid.result == 'success' && github.event_name == 'merge_group' }}
-    needs: is-valid
+    if: ${{ !cancelled() && needs.is-valid.result == 'success' && needs.build-cdn.result == 'success' && github.event_name == 'merge_group' }}
+    needs: 
+      - is-valid
+      - build-cdn
     name: Pre-release CDN in dev (Merge group)
     environment: "Prerelease (CDN)"
     runs-on: ubuntu-latest
