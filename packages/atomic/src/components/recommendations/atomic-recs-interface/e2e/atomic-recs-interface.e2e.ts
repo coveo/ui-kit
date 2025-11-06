@@ -1,12 +1,6 @@
 import {expect, test} from './fixture';
 
 test.describe('atomic-recs-interface', () => {
-  test('should be A11y compliant', async ({recsInterface, makeAxeBuilder}) => {
-    await recsInterface.load();
-    await recsInterface.hydrated.waitFor();
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
   test.describe('when interface has not been initialized', () => {
     test.beforeEach(async ({recsInterface}) => {
       await recsInterface.load({

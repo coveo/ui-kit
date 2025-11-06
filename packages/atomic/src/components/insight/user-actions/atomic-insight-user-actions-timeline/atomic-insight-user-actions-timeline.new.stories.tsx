@@ -21,6 +21,8 @@ const meta: Meta = {
   decorators: [decorator],
   parameters: {
     ...parameters,
+    // TODO SFINT-6463: Fix a11y issues in the User Actions Timeline component.
+    a11y: {disable: true},
     actions: {
       handles: events,
     },

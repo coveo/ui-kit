@@ -12,7 +12,7 @@
     "build:vite": "pnpm --filter @coveo/ci if-not-cdn -- \"vite build\""
   },
   "dependencies": {
-    "@coveo/atomic-react": "3.3.19",
+    "@coveo/atomic-react": "workspace:*",
     "@coveo/headless": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:"

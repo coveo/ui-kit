@@ -6,11 +6,6 @@ test.describe('atomic-product-link', () => {
     await productLink.hydrated.first().waitFor({state: 'visible'});
   });
 
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should render as links', async ({productLink, page}) => {
     await expect(productLink.anchor().first()).toHaveAttribute('href');
 
