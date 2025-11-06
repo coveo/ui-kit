@@ -4436,8 +4436,8 @@ packages:
   '@octokit/types@14.1.0':
     resolution: {integrity: sha512-1y6DgTy8Jomcpu33N+p5w58l6xyt55Ar2I91RPiIA0xCJBXyUAhXCcmZaDWSANiha7R9a6qJJ2CRomGPZ6f46g==}
 
-  '@octokit/types@15.0.1':
-    resolution: {integrity: sha512-sdiirM93IYJ9ODDCBgmRPIboLbSkpLa5i+WLuXH8b8Atg+YMLAyLvDDhNWLV4OYd08tlvYfVm/dw88cqHWtw1Q==}
+  '@octokit/types@15.0.2':
+    resolution: {integrity: sha512-rR+5VRjhYSer7sC51krfCctQhVTmjyUMAaShfPB8mscVa8tSoLyon3coxQmXu0ahJoLVWl8dSGD/3OGZlFV44Q==}
 
   '@octokit/webhooks-methods@5.1.1':
     resolution: {integrity: sha512-NGlEHZDseJTCj8TMMFehzwa9g7On4KJMPVHDSrHxCQumL6uSQR8wIkP/qesv52fXqV1BPf4pTxwtS31ldAt9Xg==}
@@ -6821,8 +6821,8 @@ packages:
   chardet@0.7.0:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
 
-  chardet@2.1.0:
-    resolution: {integrity: sha512-bNFETTG/pM5ryzQ9Ad0lJOTa6HWD/YsScAR3EnCPZRPlQh77JocYktSHOUHelyhm8IARL+o4c4F1bP5KVOjiRA==}
+  chardet@2.1.1:
+    resolution: {integrity: sha512-PsezH1rqdV9VvyNhxxOW32/d75r01NY7TQCmOqomRo15ZSOKbpTFVsfjghxo6JloQUCGnH4k1LGu0R4yCLlWQQ==}
 
   check-error@2.1.1:
     resolution: {integrity: sha512-OAlb+T7V4Op9OwdkjmguYRqncdlx5JiofwOAUkmTF+jNdHwzTaTs4sRAGpzLF3oOz5xAyDGrPgeIDFQmDOTiJw==}
@@ -16119,7 +16119,7 @@ snapshots:
 
   '@inquirer/external-editor@1.0.2(@types/node@22.16.5)':
     dependencies:
-      chardet: 2.1.0
+      chardet: 2.1.1
       iconv-lite: 0.7.0
     optionalDependencies:
       '@types/node': 22.16.5
@@ -17005,7 +17005,7 @@ snapshots:
 
   '@octokit/endpoint@11.0.1':
     dependencies:
-      '@octokit/types': 15.0.1
+      '@octokit/types': 15.0.2
       universal-user-agent: 7.0.3
 
   '@octokit/endpoint@9.0.6':
@@ -17115,13 +17115,13 @@ snapshots:
 
   '@octokit/request-error@7.0.1':
     dependencies:
-      '@octokit/types': 15.0.1
+      '@octokit/types': 15.0.2
 
   '@octokit/request@10.0.5':
     dependencies:
       '@octokit/endpoint': 11.0.1
       '@octokit/request-error': 7.0.1
-      '@octokit/types': 15.0.1
+      '@octokit/types': 15.0.2
       fast-content-type-parse: 3.0.0
       universal-user-agent: 7.0.3
 
@@ -17152,7 +17152,7 @@ snapshots:
     dependencies:
       '@octokit/openapi-types': 25.1.0
 
-  '@octokit/types@15.0.1':
+  '@octokit/types@15.0.2':
     dependencies:
       '@octokit/openapi-types': 26.0.0
 
@@ -19738,7 +19738,7 @@ snapshots:
 
   chardet@0.7.0: {}
 
-  chardet@2.1.0: {}
+  chardet@2.1.1: {}
 
   check-error@2.1.1: {}
 
