@@ -265,6 +265,43 @@ describe('constructAnswerAPIQueryParams', () => {
       expect(queryParams.locale).toEqual('en');
       expect(queryParams.timezone).toEqual('America/New_York');
     });
+
+    it('should include fieldsToInclude when fields state is present', () => {
+      const stateWithFields = {
+        ...streamAnswerAPIStateMock,
+        fields: {
+          fieldsToInclude: ['title', 'summary', 'uri', 'author'],
+          fetchAllFields: false,
+          fieldsDescription: [],
+        },
+      } as typeof streamAnswerAPIStateMock;
+
+      const queryParams = constructAnswerAPIQueryParams(
+        stateWithFields,
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams.fieldsToInclude).toEqual([
+        'title',
+        'summary',
+        'uri',
+        'author',
+      ]);
+    });
+
+    it('should not include fieldsToInclude when fields state is undefined', () => {
+      const stateWithoutFields = {
+        ...streamAnswerAPIStateMock,
+        fields: undefined,
+      } as typeof streamAnswerAPIStateMock;
+
+      const queryParams = constructAnswerAPIQueryParams(
+        stateWithoutFields,
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams.fieldsToInclude).toBeUndefined();
+    });
   });
 
   describe('context parameter handling', () => {
@@ -366,6 +403,146 @@ describe('constructAnswerAPIQueryParams', () => {
       );
 
       expect(queryParams.facetOptions).toBeDefined();
+    });
+  });
+
+  describe('query correction parameter handling', () => {
+    it('should include enableDidYouMean when legacy mode is enabled', () => {
+      const queryParams = constructAnswerAPIQueryParams(
+        streamAnswerAPIStateMock,
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams.enableDidYouMean).toBe(true);
+      expect(queryParams.queryCorrection?.enabled).toBe(false);
+    });
+
+    it('should include queryCorrection when next mode is enabled', () => {
+      const stateWithNextDidYouMean = {
+        ...streamAnswerAPIStateMock,
+        didYouMean: {
+          ...streamAnswerAPIStateMock.didYouMean,
+          queryCorrectionMode: 'next',
+        },
+      } as typeof streamAnswerAPIStateMock;
+
+      const queryParams = constructAnswerAPIQueryParams(
+        stateWithNextDidYouMean,
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams.queryCorrection?.enabled).toBe(true);
+      expect(queryParams.queryCorrection?.options?.automaticallyCorrect).toBe(
+        'whenNoResults'
+      );
+      expect(queryParams.enableDidYouMean).toBe(false);
+    });
+
+    it('should handle automaticallyCorrectQuery false in next mode', () => {
+      const stateWithNextDidYouMean = {
+        ...streamAnswerAPIStateMock,
+        didYouMean: {
+          ...streamAnswerAPIStateMock.didYouMean,
+          automaticallyCorrectQuery: false,
+          queryCorrectionMode: 'next',
+        },
+      } as typeof streamAnswerAPIStateMock;
+
+      const queryParams = constructAnswerAPIQueryParams(
+        stateWithNextDidYouMean,
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams.queryCorrection?.options?.automaticallyCorrect).toBe(
+        'never'
+      );
+    });
+  });
+
+  describe('debug parameter handling', () => {
+    it('should include debug parameter when set to true', () => {
+      const stateWithDebug = {
+        ...streamAnswerAPIStateMock,
+        debug: true,
+      } as typeof streamAnswerAPIStateMock;
+
+      const queryParams = constructAnswerAPIQueryParams(
+        stateWithDebug,
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams.debug).toBe(true);
+    });
+
+    it('should include debug parameter when set to false', () => {
+      const stateWithDebug = {
+        ...streamAnswerAPIStateMock,
+        debug: false,
+      } as typeof streamAnswerAPIStateMock;
+
+      const queryParams = constructAnswerAPIQueryParams(
+        stateWithDebug,
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams.debug).toBe(false);
+    });
+
+    it('should not include debug parameter when undefined', () => {
+      const stateWithoutDebug = {
+        ...streamAnswerAPIStateMock,
+        debug: undefined,
+      } as typeof streamAnswerAPIStateMock;
+
+      const queryParams = constructAnswerAPIQueryParams(
+        stateWithoutDebug,
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams.debug).toBeUndefined();
+    });
+  });
+
+  describe('facet parameter handling', () => {
+    it('should sort facets by facetId alphabetically', () => {
+      const queryParams = constructAnswerAPIQueryParams(
+        streamAnswerAPIStateMock,
+        buildMockNavigatorContextProvider()()
+      );
+
+      const facetIds = queryParams.facets?.map((f) => f.facetId);
+      expect(facetIds).toEqual([
+        'author',
+        'date',
+        'date_input',
+        'date_input_range',
+        'filetype',
+        'geographicalhierarchy',
+        'sncost',
+        'snrating',
+        'snrating_range',
+        'source',
+        'year',
+        'ytviewcount_input',
+        'ytviewcount_input_range',
+      ]);
+    });
+
+    it('should handle empty facetSet', () => {
+      const stateWithoutFacets = {
+        ...streamAnswerAPIStateMock,
+        facetSet: {},
+        numericFacetSet: {},
+        dateFacetSet: {},
+        categoryFacetSet: {},
+      } as typeof streamAnswerAPIStateMock;
+
+      const queryParams = constructAnswerAPIQueryParams(
+        stateWithoutFacets,
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams.facets).toBeUndefined();
     });
   });
 });
