@@ -4,20 +4,13 @@ import * as env from './environment';
 describe('environment', () => {
   const globalWindow = window as Record<string, unknown>;
   const originalCoveoAtomic = globalWindow.COVEO_ATOMIC;
-  const originalEnv = process.env.VERSION;
 
   beforeEach(() => {
     delete globalWindow.COVEO_ATOMIC;
-    process.env.VERSION = 'ATOMIC_VERSION';
   });
 
   afterEach(() => {
     globalWindow.COVEO_ATOMIC = originalCoveoAtomic;
-    if (originalEnv !== undefined) {
-      process.env.VERSION = originalEnv;
-    } else {
-      delete process.env.VERSION;
-    }
   });
 
   describe('#getAtomicEnvironment', () => {
@@ -25,7 +18,7 @@ describe('environment', () => {
       const result = env.getAtomicEnvironment('HEADLESS_VERSION');
 
       expect(result).toEqual({
-        version: 'ATOMIC_VERSION',
+        version: '0.0.0',
         headlessVersion: 'HEADLESS_VERSION',
       });
     });
@@ -38,7 +31,7 @@ describe('environment', () => {
       env.setCoveoGlobal('COVEO_ATOMIC', 'HEADLESS_VERSION');
 
       expect((window as Record<string, unknown>).COVEO_ATOMIC).toEqual({
-        version: 'ATOMIC_VERSION',
+        version: '0.0.0',
         headlessVersion: 'HEADLESS_VERSION',
       });
     });

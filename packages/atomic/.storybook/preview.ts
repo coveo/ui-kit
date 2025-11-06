@@ -28,7 +28,6 @@ setStorybookHelpersConfig({
     'cssStates',
     'events',
     'methods',
-    'properties',
     'slots',
   ],
   hideArgRef: true,
@@ -91,6 +90,13 @@ export const parameters: Parameters = {
   controls: {
     expanded: true,
   },
+
+  a11y: {
+    // 'todo' - show a11y violations in the test UI only
+    // 'error' - fail CI on a11y violations
+    // 'off' - skip a11y checks entirely
+    test: 'error',
+  },
 };
 
 export const decorators = [
@@ -139,7 +145,3 @@ const preview: Preview = {
 };
 
 export default preview;
-
-declare module '@storybook/test' {
-  interface Canvas extends ReturnType<typeof within> {}
-}

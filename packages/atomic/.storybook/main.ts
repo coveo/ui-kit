@@ -1,9 +1,13 @@
 import {readFileSync} from 'node:fs';
 import path, {dirname, resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import type {StorybookConfig} from '@storybook/web-components-vite';
 import type {PluginImpl} from 'rollup';
 import {mergeConfig} from 'vite';
 import {generateExternalPackageMappings} from '../scripts/externalPackageMappings.mjs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const virtualOpenApiModules: PluginImpl = () => {
   const virtualModules = new Map<string, string>();
@@ -12,9 +16,7 @@ const virtualOpenApiModules: PluginImpl = () => {
     name: 'virtual-openapi-modules',
     enforce: 'pre',
     resolveId(id) {
-      console.log('resolveId', id);
       if (id.startsWith('virtual:open-api-coveo')) {
-        console.log('resolveId', id);
         return id;
       }
       return null;
@@ -108,7 +110,11 @@ const config: StorybookConfig = {
     {from: '../dist/atomic/lang', to: './lang'},
     {from: './public', to: '/'},
   ],
-  addons: ['@storybook/addon-a11y', '@storybook/addon-docs'],
+  addons: [
+    '@storybook/addon-a11y',
+    '@storybook/addon-docs',
+    '@storybook/addon-vitest',
+  ],
   framework: {
     name: '@storybook/web-components-vite',
     options: {},

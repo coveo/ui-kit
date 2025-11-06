@@ -28,11 +28,6 @@ test.describe('AtomicTabManager', () => {
   });
 
   test.describe('when viewport is large enough to display all tabs', () => {
-    test('should be accessible', async ({makeAxeBuilder}) => {
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations).toEqual([]);
-    });
-
     test('should display tabs area', async ({tabManager}) => {
       await expect(tabManager.tabArea).toBeVisible();
     });
@@ -251,11 +246,6 @@ test.describe('AtomicTabManager', () => {
   test.describe('when viewport is too small to display all buttons', () => {
     test.beforeEach(async ({page}) => {
       await page.setViewportSize({width: 300, height: 1000});
-    });
-
-    test('should be accessible', async ({makeAxeBuilder}) => {
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations).toEqual([]);
     });
 
     test.describe('keyboard navigation', () => {

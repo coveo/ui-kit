@@ -1,5 +1,4 @@
 import {test as base} from '@playwright/test';
-import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {SearchBoxPageObject as SearchBox} from '../../atomic-commerce-search-box/e2e/page-object';
 import {QueryErrorPageObject as QueryError} from './page-object';
 
@@ -8,8 +7,7 @@ type MyFixtures = {
   queryError: QueryError;
 };
 
-export const test = base.extend<MyFixtures & AxeFixture>({
-  makeAxeBuilder,
+export const test = base.extend<MyFixtures>({
   searchBox: async ({page}, use) => {
     await use(new SearchBox(page));
   },
