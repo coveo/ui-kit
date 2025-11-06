@@ -26,7 +26,7 @@ const moduleLinkPhase = ({moduleDoc}) => {
     }
 
     declaration.members = declaration.members.filter(
-      (member) => member?.privacy !== 'private' && member.kind === 'method'
+      (member) => member?.privacy !== 'private'
     );
   }
 
