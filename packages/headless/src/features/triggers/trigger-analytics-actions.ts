@@ -1,4 +1,4 @@
-import {RecordValue} from '@coveo/bueno';
+import {RecordValue} from '../../utils/bueno-zod.js';
 import {
   requiredEmptyAllowedString,
   validatePayload,

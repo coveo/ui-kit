@@ -1,3 +1,8 @@
+import {createAction} from '@reduxjs/toolkit';
+import {
+  allowedValues,
+  customSort,
+} from '../../../controllers/core/facets/_common/facet-option-definitions.js';
 import {
   ArrayValue,
   BooleanValue,
@@ -5,12 +10,7 @@ import {
   RecordValue,
   StringValue,
   Value,
-} from '@coveo/bueno';
-import {createAction} from '@reduxjs/toolkit';
-import {
-  allowedValues,
-  customSort,
-} from '../../../controllers/core/facets/_common/facet-option-definitions.js';
+} from '../../../utils/bueno-zod.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
 import type {FacetResultsMustMatch} from '../facet-api/request.js';
 import {facetIdDefinition} from '../generic/facet-actions-validation.js';

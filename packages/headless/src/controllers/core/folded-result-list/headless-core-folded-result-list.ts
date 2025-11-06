@@ -1,4 +1,3 @@
-import {Schema} from '@coveo/bueno';
 import type {AsyncThunkAction} from '@reduxjs/toolkit';
 import type {Result} from '../../../api/search/search/result.js';
 import type {CoreEngine} from '../../../app/engine.js';
@@ -25,6 +24,7 @@ import type {
   QuerySection,
   SearchSection,
 } from '../../../state/state-sections.js';
+import {Schema} from '../../../utils/bueno-zod.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {validateOptions} from '../../../utils/validate-payload.js';
 import type {Controller} from '../../controller/headless-controller.js';

@@ -1,4 +1,4 @@
-import {NumberValue, RecordValue} from '@coveo/bueno';
+import {NumberValue, RecordValue} from '../../../utils/bueno-zod.js';
 
 export const parametersDefinition = {
   f: new RecordValue(),

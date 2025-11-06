@@ -4,7 +4,7 @@ import {
   NumberValue,
   StringValue,
   Value,
-} from '@coveo/bueno';
+} from '../../../utils/bueno-zod.js';
 import {
   requiredNonEmptyString,
   validatePayloadAndThrow,

@@ -1,6 +1,6 @@
-import {ArrayValue} from '@coveo/bueno';
 import type {CategoryFacetMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
 import type {InsightAppState} from '../../../state/insight-app-state.js';
+import {ArrayValue} from '../../../utils/bueno-zod.js';
 import {
   requiredNonEmptyString,
   validatePayload,

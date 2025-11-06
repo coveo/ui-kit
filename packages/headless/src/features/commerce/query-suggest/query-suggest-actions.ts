@@ -1,4 +1,3 @@
-import {NumberValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   type AsyncThunkCommerceOptions,
@@ -13,6 +12,7 @@ import type {
   QuerySetSection,
   VersionSection,
 } from '../../../state/state-sections.js';
+import {NumberValue} from '../../../utils/bueno-zod.js';
 import {
   requiredEmptyAllowedString,
   requiredNonEmptyString,

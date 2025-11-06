@@ -1,6 +1,6 @@
-import {NumberValue, RecordValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import type {SpecificFacetSearchResult} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
+import {NumberValue, RecordValue} from '../../../../utils/bueno-zod.js';
 import {
   requiredEmptyAllowedString,
   validatePayload,

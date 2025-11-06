@@ -1,5 +1,5 @@
-import {isString} from '@coveo/bueno';
 import type {Result} from '../../api/search/search/result.js';
+import {isString} from '../../utils/bueno-zod.js';
 import type {AttachedResult} from './attached-results-state.js';
 
 const ensureStringOrUndefined = (

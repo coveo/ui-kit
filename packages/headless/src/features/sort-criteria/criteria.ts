@@ -1,4 +1,9 @@
-import {EnumValue, isArray, RecordValue, StringValue} from '@coveo/bueno';
+import {
+  EnumValue,
+  isArray,
+  RecordValue,
+  StringValue,
+} from '../../utils/bueno-zod.js';
 
 /**
  * The available sort orders.

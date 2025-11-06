@@ -1,5 +1,5 @@
-import {ArrayValue, isString} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
+import {ArrayValue, isString} from '../../utils/bueno-zod.js';
 import {
   requiredNonEmptyString,
   validatePayload,

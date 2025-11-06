@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer, type Reducer} from '@reduxjs/toolkit';
 import type P from 'pino';
 import type {Logger} from 'pino';
@@ -13,6 +12,7 @@ import {getPipelineInitialState} from '../../features/pipeline/pipeline-state.js
 import {setSearchHub} from '../../features/search-hub/search-hub-actions.js';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
+import {isNullOrUndefined} from '../../utils/bueno-zod.js';
 import {type JWTPayload, parseJWT} from '../../utils/jwt-utils.js';
 
 interface CoveoJSONWebToken extends JWTPayload {

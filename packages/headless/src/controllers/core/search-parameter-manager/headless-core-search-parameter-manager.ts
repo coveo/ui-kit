@@ -1,4 +1,3 @@
-import {RecordValue, Schema} from '@coveo/bueno';
 import type {CoreEngine} from '../../../app/engine.js';
 import type {AutomaticFacetResponse} from '../../../features/facets/automatic-facet-set/interfaces/response.js';
 import {findActiveValueAncestry} from '../../../features/facets/category-facet-set/category-facet-utils.js';
@@ -23,6 +22,7 @@ import {initialSearchParameterSelector} from '../../../features/search-parameter
 import {getSortCriteriaInitialState} from '../../../features/sort-criteria/sort-criteria-state.js';
 import type {TabSetState} from '../../../features/tab-set/tab-set-state.js';
 import type {SearchParametersState} from '../../../state/search-app-state.js';
+import {RecordValue, Schema} from '../../../utils/bueno-zod.js';
 import {validateInitialState} from '../../../utils/validate-payload.js';
 import {
   buildController,

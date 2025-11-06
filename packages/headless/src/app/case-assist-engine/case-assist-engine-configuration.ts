@@ -1,4 +1,4 @@
-import {Schema} from '@coveo/bueno';
+import {Schema} from '../../utils/bueno-zod.js';
 import {
   nonEmptyString,
   requiredNonEmptyString,

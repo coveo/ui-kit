@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {AnyAction} from '@reduxjs/toolkit';
 import type {ThunkDispatch} from 'redux-thunk';
 import type {StateNeededBySearchAnalyticsProvider} from '../../../api/analytics/search-analytics.js';
@@ -35,6 +34,7 @@ import type {
   SortSection,
   TriggerSection,
 } from '../../../state/state-sections.js';
+import {isNullOrUndefined} from '../../../utils/bueno-zod.js';
 import type {AnalyticsAsyncThunk} from '../../analytics/analytics-utils.js';
 import {applyDidYouMeanCorrection} from '../../did-you-mean/did-you-mean-actions.js';
 import {logDidYouMeanAutomatic} from '../../did-you-mean/did-you-mean-analytics-actions.js';

@@ -1,5 +1,5 @@
-import {BooleanValue, StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
+import {BooleanValue, StringValue} from '../../utils/bueno-zod.js';
 import {validatePayload} from '../../utils/validate-payload.js';
 
 export interface UpdateQueryActionCreatorPayload {

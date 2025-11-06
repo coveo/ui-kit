@@ -1,4 +1,3 @@
-import {RecordValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   type AsyncThunkCommerceOptions,
@@ -9,6 +8,7 @@ import type {CommerceRecommendationsRequest} from '../../../api/commerce/recomme
 import type {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response.js';
 import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {RecommendationsSection} from '../../../state/state-sections.js';
+import {RecordValue, StringValue} from '../../../utils/bueno-zod.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
 import {
   buildPaginatedCommerceAPIRequest,

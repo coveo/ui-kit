@@ -1,4 +1,4 @@
-import {ArrayValue, RecordValue, StringValue} from '@coveo/bueno';
+import {ArrayValue, RecordValue, StringValue} from '../../utils/bueno-zod.js';
 import {
   requiredEmptyAllowedString,
   requiredNonEmptyString,

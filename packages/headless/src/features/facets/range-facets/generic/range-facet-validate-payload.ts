@@ -1,4 +1,8 @@
-import {BooleanValue, NumberValue, RecordValue} from '@coveo/bueno';
+import {
+  BooleanValue,
+  NumberValue,
+  RecordValue,
+} from '../../../../utils/bueno-zod.js';
 import {requiredNonEmptyString} from '../../../../utils/validate-payload.js';
 import {facetIdDefinition} from '../../generic/facet-actions-validation.js';
 import type {RangeFacetValue} from './interfaces/range-facet.js';

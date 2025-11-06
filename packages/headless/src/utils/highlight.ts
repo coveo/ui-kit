@@ -1,4 +1,4 @@
-import {isNullOrUndefined} from '@coveo/bueno';
+import {isNullOrUndefined} from './bueno-zod.js';
 import {isEmptyString} from './utils.js';
 
 export interface HighlightKeyword {

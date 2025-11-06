@@ -1,5 +1,5 @@
-import type {PrimitivesValues} from '@coveo/bueno';
 import {createCustomEqual} from 'fast-equals';
+import type {PrimitivesValues} from './bueno-zod.js';
 
 export function arrayEqual<T>(
   firstArray: T[],

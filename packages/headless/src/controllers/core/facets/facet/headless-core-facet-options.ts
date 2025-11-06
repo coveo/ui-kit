@@ -1,4 +1,3 @@
-import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {
   type FacetResultsMustMatch,
   facetResultsMustMatch,
@@ -7,6 +6,12 @@ import {
   type FacetSortCriterion,
   facetSortCriteria,
 } from '../../../../features/facets/facet-set/interfaces/request.js';
+import {
+  ArrayValue,
+  RecordValue,
+  Schema,
+  StringValue,
+} from '../../../../utils/bueno-zod.js';
 import {
   facetId,
   facetSearch,

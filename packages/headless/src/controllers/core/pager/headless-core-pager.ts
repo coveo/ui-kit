@@ -1,4 +1,3 @@
-import {NumberValue, Schema} from '@coveo/bueno';
 import {configuration} from '../../../app/common-reducers.js';
 import type {CoreEngine} from '../../../app/engine.js';
 import {
@@ -18,6 +17,7 @@ import type {
   ConfigurationSection,
   PaginationSection,
 } from '../../../state/state-sections.js';
+import {NumberValue, Schema} from '../../../utils/bueno-zod.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   validateInitialState,

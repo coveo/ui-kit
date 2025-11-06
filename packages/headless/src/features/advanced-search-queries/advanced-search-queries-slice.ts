@@ -1,5 +1,5 @@
-import {isUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
+import {isUndefined} from '../../utils/bueno-zod.js';
 import {change} from '../history/history-actions.js';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
 import {

@@ -1,6 +1,6 @@
-import {RecordValue, StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import type {ChildProduct} from '../../../api/commerce/common/product.js';
+import {RecordValue, StringValue} from '../../../utils/bueno-zod.js';
 import {
   requiredEmptyAllowedString,
   requiredNonEmptyString,

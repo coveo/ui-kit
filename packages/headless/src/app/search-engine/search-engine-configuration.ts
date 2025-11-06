@@ -1,9 +1,14 @@
-import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import type {
   PostprocessFacetSearchResponseMiddleware,
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware.js';
+import {
+  ArrayValue,
+  RecordValue,
+  Schema,
+  StringValue,
+} from '../../utils/bueno-zod.js';
 import {
   nonEmptyString,
   requiredNonEmptyString,

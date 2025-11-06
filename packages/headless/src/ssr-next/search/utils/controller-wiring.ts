@@ -1,5 +1,5 @@
-import {RecordValue, Schema} from '@coveo/bueno';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import {RecordValue, Schema} from '../../../utils/bueno-zod.js';
 import {nonRequiredEmptyAllowedString} from '../../../utils/validate-payload.js';
 import type {ControllersPropsMap} from '../../common/types/controllers.js';
 import type {BuildConfig, SSRSearchEngine} from '../types/build.js';

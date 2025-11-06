@@ -1,5 +1,5 @@
-import {Schema, StringValue} from '@coveo/bueno';
 import type {PostprocessSearchResponseMiddleware} from '../../api/search/search-api-client-middleware.js';
+import {Schema, StringValue} from '../../utils/bueno-zod.js';
 import {nonEmptyString} from '../../utils/validate-payload.js';
 import {
   type EngineConfiguration,

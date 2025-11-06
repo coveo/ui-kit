@@ -1,5 +1,5 @@
-import {StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
+import {StringValue} from '../../../utils/bueno-zod.js';
 import type {PlatformEnvironment} from '../../../utils/url-utils.js';
 import {
   nonEmptyString,

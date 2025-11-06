@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {ThunkDispatch} from 'redux-thunk';
 import {
@@ -17,6 +16,7 @@ import type {
   CommerceSearchSection,
   TriggerSection,
 } from '../../../state/state-sections.js';
+import {isNullOrUndefined} from '../../../utils/bueno-zod.js';
 import {
   buildFilterableCommerceAPIRequest,
   type StateNeededForFilterableCommerceAPIRequest,

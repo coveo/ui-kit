@@ -1,10 +1,10 @@
-import {NumberValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import type {EventDescription} from 'coveo.analytics';
 import HistoryStore from '../../../api/analytics/coveo.analytics/history-store.js';
 import type {SearchResponseSuccess} from '../../../api/search/search/search-response.js';
 import type {AsyncThunkSearchOptions} from '../../../api/search/search-api-client.js';
 import type {InstantResultSection} from '../../../state/state-sections.js';
+import {NumberValue} from '../../../utils/bueno-zod.js';
 import {
   requiredNonEmptyString,
   validatePayload,

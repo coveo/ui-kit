@@ -1,10 +1,10 @@
-import {BooleanValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   type AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client.js';
 import {isRedirectTrigger} from '../../../api/common/trigger.js';
+import {BooleanValue, StringValue} from '../../../utils/bueno-zod.js';
 import {
   requiredNonEmptyString,
   validatePayload,

@@ -1,8 +1,13 @@
-import {BooleanValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import type {CartInitialState} from '../../controllers/commerce/context/cart/headless-cart.js';
 import type {ContextOptions} from '../../controllers/commerce/context/headless-context.js';
 import {cartDefinition} from '../../features/commerce/context/cart/cart-validation.js';
 import {contextDefinition} from '../../features/commerce/context/context-validation.js';
+import {
+  BooleanValue,
+  RecordValue,
+  Schema,
+  StringValue,
+} from '../../utils/bueno-zod.js';
 import {nonEmptyString} from '../../utils/validate-payload.js';
 import {
   type AnalyticsConfiguration,

@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import type {GeneratedAnswerCitation} from '../../controllers/generated-answer/headless-generated-answer.js';
@@ -7,6 +6,7 @@ import type {
   GeneratedAnswerSection,
   SearchSection,
 } from '../../state/state-sections.js';
+import {isNullOrUndefined} from '../../utils/bueno-zod.js';
 
 export const generativeQuestionAnsweringIdSelector = (
   state: Partial<SearchAppState>

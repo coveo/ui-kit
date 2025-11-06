@@ -1,11 +1,3 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  RecordValue,
-  Schema,
-  type SchemaDefinition,
-  StringValue,
-} from '@coveo/bueno';
 import type {CoreEngine} from '../../../../../app/engine.js';
 import {facetValueStates} from '../../../../../features/facets/facet-api/value.js';
 import {validateManualDateRanges} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions.js';
@@ -21,6 +13,14 @@ import type {
   DateFacetSection,
   SearchSection,
 } from '../../../../../state/state-sections.js';
+import {
+  ArrayValue,
+  BooleanValue,
+  RecordValue,
+  Schema,
+  type SchemaDefinition,
+  StringValue,
+} from '../../../../../utils/bueno-zod.js';
 import {validateOptions} from '../../../../../utils/validate-payload.js';
 import {
   facetId,

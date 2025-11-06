@@ -1,3 +1,5 @@
+import type {SerializedError} from '@reduxjs/toolkit';
+import type {CoreEngine, CoreEngineNext} from '../app/engine.js';
 import {
   ArrayValue,
   RecordValue,
@@ -6,9 +8,7 @@ import {
   SchemaValidationError,
   type SchemaValue,
   StringValue,
-} from '@coveo/bueno';
-import type {SerializedError} from '@reduxjs/toolkit';
-import type {CoreEngine, CoreEngineNext} from '../app/engine.js';
+} from './bueno-zod.js';
 
 export const requiredNonEmptyString = new StringValue({
   required: true,

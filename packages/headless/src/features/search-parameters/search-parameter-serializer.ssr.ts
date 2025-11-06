@@ -1,4 +1,4 @@
-import {isNullOrUndefined} from '@coveo/bueno';
+import {isNullOrUndefined} from '../../utils/bueno-zod.js';
 import {arrayEqualStrictlyDifferentOrder} from '../../utils/compare-utils.js';
 import type {SearchParameters} from './search-parameter-actions.js';
 import {

@@ -1,8 +1,13 @@
-import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {
   type CategoryFacetSortCriterion,
   categoryFacetSortCriteria,
 } from '../../../../features/facets/category-facet-set/interfaces/request.js';
+import {
+  ArrayValue,
+  RecordValue,
+  Schema,
+  StringValue,
+} from '../../../../utils/bueno-zod.js';
 import {
   basePath,
   delimitingCharacter,

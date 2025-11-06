@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {AnyAction, ThunkDispatch} from '@reduxjs/toolkit';
 import {
   isErrorResponse,
@@ -11,6 +10,7 @@ import type {
 } from '../../api/service/insight/insight-api-client.js';
 import type {InsightQueryRequest} from '../../api/service/insight/query/query-request.js';
 import type {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {isNullOrUndefined} from '../../utils/bueno-zod.js';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions.js';
 import {snapshot} from '../history/history-actions.js';
 import {extractHistory} from '../history/history-state.js';

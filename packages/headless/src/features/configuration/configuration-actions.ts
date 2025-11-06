@@ -1,3 +1,5 @@
+import {createAction} from '@reduxjs/toolkit';
+import type {IRuntimeEnvironment} from 'coveo.analytics';
 import {
   ArrayValue,
   BooleanValue,
@@ -5,9 +7,7 @@ import {
   type SchemaDefinition,
   StringValue,
   Value,
-} from '@coveo/bueno';
-import {createAction} from '@reduxjs/toolkit';
-import type {IRuntimeEnvironment} from 'coveo.analytics';
+} from '../../utils/bueno-zod.js';
 import type {PlatformEnvironment} from '../../utils/url-utils.js';
 import {
   nonEmptyString,

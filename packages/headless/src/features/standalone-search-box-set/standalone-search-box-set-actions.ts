@@ -1,4 +1,3 @@
-import {BooleanValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {getSearchApiBaseUrl} from '../../api/platform-client.js';
 import {ExecutionPlan} from '../../api/search/plan/plan-endpoint.js';
@@ -15,6 +14,7 @@ import type {
   QuerySection,
   SearchHubSection,
 } from '../../state/state-sections.js';
+import {BooleanValue, StringValue} from '../../utils/bueno-zod.js';
 import {
   requiredNonEmptyString,
   validatePayload,

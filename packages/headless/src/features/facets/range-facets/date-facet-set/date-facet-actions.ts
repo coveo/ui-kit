@@ -1,11 +1,3 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  RecordValue,
-  StringValue,
-  Value,
-} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {parseDate} from '../../../../api/search/date/date-format.js';
 import {
@@ -13,6 +5,14 @@ import {
   isRelativeDateFormat,
 } from '../../../../api/search/date/relative-date.js';
 import {buildDateRange} from '../../../../controllers/core/facets/range-facet/date-facet/date-range.js';
+import {
+  ArrayValue,
+  BooleanValue,
+  NumberValue,
+  RecordValue,
+  StringValue,
+  Value,
+} from '../../../../utils/bueno-zod.js';
 import {
   requiredNonEmptyString,
   serializeSchemaValidationError,

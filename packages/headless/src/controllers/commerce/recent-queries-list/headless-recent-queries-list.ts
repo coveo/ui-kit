@@ -1,10 +1,3 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  Schema,
-  StringValue,
-} from '@coveo/bueno';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
 import type {UpdateQueryPayload} from '../../../features/commerce/query/query-actions.js';
@@ -20,6 +13,13 @@ import {
 } from '../../../features/commerce/search/search-actions.js';
 import {commerceSearchReducer as search} from '../../../features/commerce/search/search-slice.js';
 import type {RecentQueriesSection} from '../../../state/state-sections.js';
+import {
+  ArrayValue,
+  BooleanValue,
+  NumberValue,
+  Schema,
+  StringValue,
+} from '../../../utils/bueno-zod.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   validateInitialState,

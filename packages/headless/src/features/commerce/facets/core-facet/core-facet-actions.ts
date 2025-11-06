@@ -1,5 +1,5 @@
-import {BooleanValue, NumberValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
+import {BooleanValue, NumberValue} from '../../../../utils/bueno-zod.js';
 import {
   requiredNonEmptyString,
   validatePayload,

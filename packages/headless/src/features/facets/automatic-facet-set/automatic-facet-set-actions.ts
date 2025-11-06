@@ -1,6 +1,6 @@
-import {NumberValue, RecordValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import type {AutomaticFacetGeneratorOptions} from '../../../controllers/facets/automatic-facet-generator/headless-automatic-facet-generator-options.js';
+import {NumberValue, RecordValue} from '../../../utils/bueno-zod.js';
 import {
   requiredNonEmptyString,
   validatePayload,

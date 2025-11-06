@@ -1,4 +1,4 @@
-import {NumberValue, Schema} from '@coveo/bueno';
+import {NumberValue, Schema} from '../../utils/bueno-zod.js';
 import {nonEmptyString} from '../../utils/validate-payload.js';
 
 export interface InstantResultOptions {

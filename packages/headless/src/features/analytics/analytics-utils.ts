@@ -1,10 +1,5 @@
 /** biome-ignore-all lint/suspicious/noConfusingVoidType: <> */
-import {
-  isNullOrUndefined,
-  RecordValue,
-  Schema,
-  StringValue,
-} from '@coveo/bueno';
+
 import type {createRelay} from '@coveo/relay';
 import type {ItemMetaData} from '@coveo/relay-event-types';
 import {
@@ -56,6 +51,12 @@ import type {
   ConfigurationSection,
   PipelineSection,
 } from '../../state/state-sections.js';
+import {
+  isNullOrUndefined,
+  RecordValue,
+  Schema,
+  StringValue,
+} from '../../utils/bueno-zod.js';
 import {requiredNonEmptyString} from '../../utils/validate-payload.js';
 import type {ResultWithFolding} from '../folding/folding-slice.js';
 import {getAllIncludedResultsFrom} from '../folding/folding-utils.js';

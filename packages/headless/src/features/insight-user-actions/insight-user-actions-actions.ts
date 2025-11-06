@@ -1,4 +1,3 @@
-import {ArrayValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {isErrorResponse} from '../../api/search/search-api-client.js';
 import type {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client.js';
@@ -7,6 +6,7 @@ import type {
   ConfigurationSection,
   InsightUserActionsSection,
 } from '../../state/state-sections.js';
+import {ArrayValue, StringValue} from '../../utils/bueno-zod.js';
 import {nonEmptyString, validatePayload} from '../../utils/validate-payload.js';
 import {buildFetchUserActionsRequest} from './insight-user-actions-request.js';
 

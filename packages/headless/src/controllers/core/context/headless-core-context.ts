@@ -1,4 +1,3 @@
-import {RecordValue, Schema} from '@coveo/bueno';
 import type {AnyAction, Dispatch} from '@reduxjs/toolkit';
 import type {CoreEngine} from '../../../app/engine.js';
 import {
@@ -15,6 +14,7 @@ import type {
   ConfigurationSection,
   ContextSection,
 } from '../../../state/state-sections.js';
+import {RecordValue, Schema} from '../../../utils/bueno-zod.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {validateInitialState} from '../../../utils/validate-payload.js';
 import {

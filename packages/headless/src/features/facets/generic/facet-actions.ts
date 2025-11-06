@@ -1,5 +1,5 @@
-import {BooleanValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
+import {BooleanValue} from '../../../utils/bueno-zod.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
 
 export interface UpdateFacetAutoSelectionActionCreatorPayload {

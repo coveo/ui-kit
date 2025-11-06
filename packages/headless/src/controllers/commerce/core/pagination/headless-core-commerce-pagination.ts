@@ -1,4 +1,3 @@
-import {NumberValue, Schema} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
 import type {
   CommerceEngine,
@@ -13,6 +12,7 @@ import {
   setPageSize,
 } from '../../../../features/commerce/pagination/pagination-actions.js';
 import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice.js';
+import {NumberValue, Schema} from '../../../../utils/bueno-zod.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {validateOptions} from '../../../../utils/validate-payload.js';
 import {

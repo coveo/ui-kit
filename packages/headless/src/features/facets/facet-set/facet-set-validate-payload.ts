@@ -1,4 +1,4 @@
-import {NumberValue} from '@coveo/bueno';
+import {NumberValue} from '../../../utils/bueno-zod.js';
 import {requiredNonEmptyString} from '../../../utils/validate-payload.js';
 
 export const facetValueDefinition = {

@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {Result} from '../../../api/search/search/result.js';
 import {configuration} from '../../../app/common-reducers.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
@@ -17,6 +16,7 @@ import type {
   AttachedResultsSection,
   ConfigurationSection,
 } from '../../../state/state-sections.js';
+import {isNullOrUndefined} from '../../../utils/bueno-zod.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   buildController,

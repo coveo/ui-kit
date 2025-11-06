@@ -1,5 +1,5 @@
-import {Value} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
+import {Value} from '../../../../utils/bueno-zod.js';
 import {validatePayload} from '../../../../utils/validate-payload.js';
 import {facetIdDefinition} from '../../generic/facet-actions-validation.js';
 import type {RangeFacetSortCriterion} from './interfaces/request.js';

@@ -1,4 +1,4 @@
-import {BooleanValue, Schema, StringValue} from '@coveo/bueno';
+import {BooleanValue, Schema, StringValue} from '../../../utils/bueno-zod.js';
 import {
   type SearchBoxOptions,
   searchBoxOptionDefinitions,

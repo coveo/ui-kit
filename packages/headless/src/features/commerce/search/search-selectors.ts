@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
 import type {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
 import type {
@@ -11,6 +10,7 @@ import type {
   CommerceQuerySection,
   CommerceSearchSection,
 } from '../../../state/state-sections.js';
+import {isNullOrUndefined} from '../../../utils/bueno-zod.js';
 import {getQ} from '../../parameter-manager/parameter-manager-selectors.js';
 import {totalEntriesPrincipalSelector} from '../pagination/pagination-selectors.js';
 import {activeParametersSelector as coreActiveParametersSelector} from '../parameters/parameters-selectors.js';

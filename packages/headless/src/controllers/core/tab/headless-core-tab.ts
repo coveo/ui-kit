@@ -1,4 +1,3 @@
-import {BooleanValue, Schema} from '@coveo/bueno';
 import {configuration} from '../../../app/common-reducers.js';
 import type {CoreEngine} from '../../../app/engine.js';
 import {getConfigurationInitialState} from '../../../features/configuration/configuration-state.js';
@@ -12,6 +11,7 @@ import type {
   ConfigurationSection,
   TabSection,
 } from '../../../state/state-sections.js';
+import {BooleanValue, Schema} from '../../../utils/bueno-zod.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   requiredEmptyAllowedString,

@@ -1,4 +1,3 @@
-import {isString} from '@coveo/bueno';
 import {
   API_DATE_FORMAT,
   isSearchApiDate,
@@ -14,6 +13,7 @@ import {
 } from '../../controllers/facets/range-facet/date-facet/headless-date-facet.js';
 import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet.js';
 import type {FacetValueState} from '../../ssr.index.js';
+import {isString} from '../../utils/bueno-zod.js';
 import type {RangeValueRequest} from '../facets/range-facets/generic/interfaces/range-facet.js';
 import type {SearchParameters} from './search-parameter-actions.js';
 

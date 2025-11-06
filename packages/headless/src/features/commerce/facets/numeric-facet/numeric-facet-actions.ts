@@ -1,11 +1,11 @@
+import {createAction} from '@reduxjs/toolkit';
 import {
   ArrayValue,
   BooleanValue,
   NumberValue,
   RecordValue,
   StringValue,
-} from '@coveo/bueno';
-import {createAction} from '@reduxjs/toolkit';
+} from '../../../../utils/bueno-zod.js';
 import {
   requiredNonEmptyString,
   serializeSchemaValidationError,

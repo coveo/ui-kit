@@ -1,8 +1,8 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
 import type {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {emptyQuestionAnswer} from '../../features/search/search-state.js';
 import type {SearchAppState} from '../../state/search-app-state.js';
+import {isNullOrUndefined} from '../../utils/bueno-zod.js';
 import {pickNonBaseParams, unwrapError} from '../api-client-utils.js';
 import {PlatformClient} from '../platform-client.js';
 import type {BaseParam} from '../platform-service-params.js';

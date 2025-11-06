@@ -1,4 +1,3 @@
-import {ArrayValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   buildContentURL,
@@ -13,6 +12,7 @@ import {isErrorResponse} from '../../api/search/search-api-client.js';
 import type {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response.js';
 import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
 import type {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
+import {ArrayValue} from '../../utils/bueno-zod.js';
 import {validatePayload} from '../../utils/validate-payload.js';
 import {
   buildResultPreviewRequest,

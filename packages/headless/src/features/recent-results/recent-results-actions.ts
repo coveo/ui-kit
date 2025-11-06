@@ -1,6 +1,6 @@
-import {ArrayValue, NumberValue, RecordValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import type {Result} from '../../api/search/search/result.js';
+import {ArrayValue, NumberValue, RecordValue} from '../../utils/bueno-zod.js';
 import {validatePayload} from '../../utils/validate-payload.js';
 import {
   resultPartialDefinition,

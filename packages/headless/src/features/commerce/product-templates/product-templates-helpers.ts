@@ -1,8 +1,8 @@
-import {isArray, isNullOrUndefined} from '@coveo/bueno';
 import type {
   ChildProduct,
   Product,
 } from '../../../api/commerce/common/product.js';
+import {isArray, isNullOrUndefined} from '../../../utils/bueno-zod.js';
 import type {ProductTemplateCondition} from './product-templates-manager.js';
 
 /**

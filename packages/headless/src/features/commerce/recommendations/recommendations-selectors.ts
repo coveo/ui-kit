@@ -1,9 +1,9 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
 import type {
   CommercePaginationSection,
   RecommendationsSection,
 } from '../../../state/state-sections.js';
+import {isNullOrUndefined} from '../../../utils/bueno-zod.js';
 import {totalEntriesRecommendationSelector} from '../pagination/pagination-selectors.js';
 
 export const numberOfRecommendationsSelector = createSelector(

@@ -1,4 +1,3 @@
-import {NumberValue, Schema, StringValue} from '@coveo/bueno';
 import type {Result} from '../../api/search/search/result.js';
 import {configuration} from '../../app/common-reducers.js';
 import type {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine.js';
@@ -8,6 +7,7 @@ import {
   setRecommendationId,
 } from '../../features/recommendation/recommendation-actions.js';
 import {recommendationReducer as recommendation} from '../../features/recommendation/recommendation-slice.js';
+import {NumberValue, Schema, StringValue} from '../../utils/bueno-zod.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {validateOptions} from '../../utils/validate-payload.js';
 import type {ErrorPayload} from '../controller/error-payload.js';

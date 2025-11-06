@@ -1,3 +1,4 @@
+import type {FacetSearchRequestOptions} from '../../../../api/search/facet-search/base/base-facet-search-request.js';
 import {
   ArrayValue,
   BooleanValue,
@@ -5,8 +6,7 @@ import {
   RecordValue,
   type SchemaDefinition,
   StringValue,
-} from '@coveo/bueno';
-import type {FacetSearchRequestOptions} from '../../../../api/search/facet-search/base/base-facet-search-request.js';
+} from '../../../../utils/bueno-zod.js';
 
 export const facetId = new StringValue({
   regex: /^[a-zA-Z0-9-_]+$/,

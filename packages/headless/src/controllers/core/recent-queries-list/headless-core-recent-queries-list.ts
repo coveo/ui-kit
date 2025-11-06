@@ -1,11 +1,3 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  isBoolean,
-  NumberValue,
-  Schema,
-  StringValue,
-} from '@coveo/bueno';
 import type {CoreEngine} from '../../../app/engine.js';
 import type {UpdateQueryActionCreatorPayload} from '../../../features/query/query-actions.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
@@ -24,6 +16,14 @@ import type {
   RecentQueriesSection,
   SearchSection,
 } from '../../../state/state-sections.js';
+import {
+  ArrayValue,
+  BooleanValue,
+  isBoolean,
+  NumberValue,
+  Schema,
+  StringValue,
+} from '../../../utils/bueno-zod.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {
   validateInitialState,

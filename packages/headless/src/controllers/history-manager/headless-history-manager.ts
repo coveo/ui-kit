@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {configuration} from '../../app/common-reducers.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import type {StateWithHistory} from '../../app/undoable.js';
@@ -16,6 +15,7 @@ import type {
   ConfigurationSection,
   HistorySection,
 } from '../../state/state-sections.js';
+import {isNullOrUndefined} from '../../utils/bueno-zod.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {
   buildController,

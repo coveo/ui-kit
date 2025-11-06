@@ -1,5 +1,5 @@
-import {ArrayValue, RecordValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
+import {ArrayValue, RecordValue} from '../../../../utils/bueno-zod.js';
 import {
   requiredNonEmptyString,
   serializeSchemaValidationError,

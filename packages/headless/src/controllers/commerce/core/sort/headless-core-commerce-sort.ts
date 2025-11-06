@@ -1,4 +1,3 @@
-import {Schema} from '@coveo/bueno';
 import type {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../../app/state-key.js';
 import {
@@ -14,6 +13,7 @@ import {
 } from '../../../../features/commerce/sort/sort.js';
 import {applySort} from '../../../../features/commerce/sort/sort-actions.js';
 import {sortReducer as commerceSort} from '../../../../features/commerce/sort/sort-slice.js';
+import {Schema} from '../../../../utils/bueno-zod.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {validateInitialState} from '../../../../utils/validate-payload.js';
 import {

@@ -1,4 +1,3 @@
-import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import type {EventDescription} from 'coveo.analytics';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
@@ -7,6 +6,7 @@ import type {AsyncThunkSearchOptions} from '../../api/search/search-api-client.j
 import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
 import type {NavigatorContext} from '../../app/navigator-context-provider.js';
 import type {InstantResultSection} from '../../state/state-sections.js';
+import {BooleanValue, NumberValue, StringValue} from '../../utils/bueno-zod.js';
 import {
   requiredNonEmptyString,
   validatePayload,

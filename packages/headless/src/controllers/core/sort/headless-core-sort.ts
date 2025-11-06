@@ -1,4 +1,3 @@
-import {ArrayValue, isArray, Schema} from '@coveo/bueno';
 import {configuration} from '../../../app/common-reducers.js';
 import type {CoreEngine} from '../../../app/engine.js';
 import {updatePage} from '../../../features/pagination/pagination-actions.js';
@@ -16,6 +15,7 @@ import type {
   ConfigurationSection,
   SortSection,
 } from '../../../state/state-sections.js';
+import {ArrayValue, isArray, Schema} from '../../../utils/bueno-zod.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {validateInitialState} from '../../../utils/validate-payload.js';
 import {

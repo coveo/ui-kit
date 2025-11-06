@@ -1,9 +1,9 @@
-import {Schema, StringValue} from '@coveo/bueno';
 import {configuration} from '../../app/common-reducers.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {buildSearchParameterSerializer} from '../../features/search-parameters/search-parameter-serializer.js';
 import type {SearchParametersState} from '../../state/search-app-state.js';
 import type {ConfigurationSection} from '../../state/state-sections.js';
+import {Schema, StringValue} from '../../utils/bueno-zod.js';
 import {deepEqualAnyOrder} from '../../utils/compare-utils.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {validateInitialState} from '../../utils/validate-payload.js';

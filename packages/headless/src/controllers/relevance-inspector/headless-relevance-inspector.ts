@@ -1,4 +1,3 @@
-import {BooleanValue, Schema} from '@coveo/bueno';
 import type {FieldDescription} from '../../api/search/fields/fields-response.js';
 import type {
   ExecutionReport,
@@ -32,6 +31,7 @@ import type {
   FieldsSection,
   SearchSection,
 } from '../../state/state-sections.js';
+import {BooleanValue, Schema} from '../../utils/bueno-zod.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {validateInitialState} from '../../utils/validate-payload.js';
 import {

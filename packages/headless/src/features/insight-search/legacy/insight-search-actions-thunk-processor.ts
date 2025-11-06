@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {AnyAction, ThunkDispatch} from '@reduxjs/toolkit';
 import type {StateNeededByInsightAnalyticsProvider} from '../../../api/analytics/insight-analytics.js';
 import type {SearchResponseSuccess} from '../../../api/search/search/search-response.js';
@@ -13,6 +12,7 @@ import type {
 } from '../../../api/service/insight/insight-api-client.js';
 import type {InsightQueryRequest} from '../../../api/service/insight/query/query-request.js';
 import type {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
+import {isNullOrUndefined} from '../../../utils/bueno-zod.js';
 import type {AnalyticsAsyncThunk} from '../../analytics/analytics-utils.js';
 import {applyDidYouMeanCorrection} from '../../did-you-mean/did-you-mean-actions.js';
 import {logDidYouMeanAutomatic} from '../../did-you-mean/did-you-mean-insight-analytics-actions.js';

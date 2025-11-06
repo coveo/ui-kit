@@ -1,5 +1,5 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {Result} from '../../api/search/search/result.js';
+import {isNullOrUndefined} from '../../utils/bueno-zod.js';
 import {isArray} from '../../utils/utils.js';
 import type {ResultTemplateCondition} from './result-templates-manager.js';
 

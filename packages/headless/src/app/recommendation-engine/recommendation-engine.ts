@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {StateFromReducersMapObject} from '@reduxjs/toolkit';
 import type {Logger} from 'pino';
 import {NoopPreprocessRequest} from '../../api/preprocess-request.js';
@@ -16,6 +15,7 @@ import {recommendationReducer as recommendation} from '../../features/recommenda
 import {setSearchHub} from '../../features/search-hub/search-hub-actions.js';
 import {searchHubReducer as searchHub} from '../../features/search-hub/search-hub-slice.js';
 import type {RecommendationAppState} from '../../state/recommendation-app-state.js';
+import {isNullOrUndefined} from '../../utils/bueno-zod.js';
 import {
   buildEngine,
   type CoreEngine,

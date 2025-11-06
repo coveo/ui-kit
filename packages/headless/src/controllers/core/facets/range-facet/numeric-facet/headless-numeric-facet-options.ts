@@ -1,12 +1,3 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  RecordValue,
-  Schema,
-  type SchemaDefinition,
-  StringValue,
-} from '@coveo/bueno';
 import type {CoreEngine} from '../../../../../app/engine.js';
 import {
   type FacetResultsMustMatch,
@@ -26,6 +17,15 @@ import type {
   NumericFacetSection,
   SearchSection,
 } from '../../../../../state/state-sections.js';
+import {
+  ArrayValue,
+  BooleanValue,
+  NumberValue,
+  RecordValue,
+  Schema,
+  type SchemaDefinition,
+  StringValue,
+} from '../../../../../utils/bueno-zod.js';
 import {validateOptions} from '../../../../../utils/validate-payload.js';
 import {
   facetId,

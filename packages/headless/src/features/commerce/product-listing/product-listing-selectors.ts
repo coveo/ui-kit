@@ -1,4 +1,3 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {createSelector} from '@reduxjs/toolkit';
 import type {
   CommerceEngine,
@@ -9,6 +8,7 @@ import type {
   CommercePaginationSection,
   ProductListingSection,
 } from '../../../state/state-sections.js';
+import {isNullOrUndefined} from '../../../utils/bueno-zod.js';
 import {totalEntriesPrincipalSelector} from '../pagination/pagination-selectors.js';
 
 /**

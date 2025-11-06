@@ -1,5 +1,5 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
+import {isNullOrUndefined} from '../../../utils/bueno-zod.js';
 import {updateBasicConfiguration} from '../../configuration/configuration-actions.js';
 import {
   disableAnalytics,

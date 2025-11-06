@@ -1,4 +1,3 @@
-import type {SchemaDefinition} from '@coveo/bueno';
 import type {UnknownAction} from '@reduxjs/toolkit';
 import type {CommerceAPIErrorStatusResponse} from '../../../../api/commerce/commerce-api-error-response.js';
 import type {FacetSearchType} from '../../../../api/commerce/facet-search/facet-search-request.js';
@@ -12,6 +11,7 @@ import type {Parameters} from '../../../../features/commerce/parameters/paramete
 import type {Serializer} from '../../../../features/commerce/parameters/parameters-serializer.js';
 import type {ProductListingParameters} from '../../../../features/commerce/product-listing-parameters/product-listing-parameters-actions.js';
 import type {CommerceSearchParameters} from '../../../../features/commerce/search-parameters/search-parameters-actions.js';
+import type {SchemaDefinition} from '../../../../utils/bueno-zod.js';
 import type {ProductListingSummaryState} from '../../product-listing/summary/headless-product-listing-summary.js';
 import {
   buildDidYouMean,

@@ -1,4 +1,3 @@
-import {ArrayValue, NumberValue, Schema} from '@coveo/bueno';
 import type {Result} from '../../api/search/search/result.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {
@@ -8,6 +7,7 @@ import {
 import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions.js';
 import {recentResultsReducer as recentResults} from '../../features/recent-results/recent-results-slice.js';
 import type {RecentResultsSection} from '../../state/state-sections.js';
+import {ArrayValue, NumberValue, Schema} from '../../utils/bueno-zod.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {
   validateInitialState,

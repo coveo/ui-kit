@@ -1,4 +1,3 @@
-import {BooleanValue, RecordValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   type AsyncThunkCommerceOptions,
@@ -6,6 +5,11 @@ import {
 } from '../../../api/commerce/commerce-api-client.js';
 import type {ChildProduct} from '../../../api/commerce/common/product.js';
 import type {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
+import {
+  BooleanValue,
+  RecordValue,
+  StringValue,
+} from '../../../utils/bueno-zod.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
 import {buildBaseCommerceAPIRequest} from '../common/base-commerce-api-request-builder.js';
 import {buildFilterableCommerceAPIRequest} from '../common/filterable-commerce-api-request-builder.js';

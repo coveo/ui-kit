@@ -1,4 +1,3 @@
-import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
 import type {AsyncThunkAction} from '@reduxjs/toolkit';
 import type {Result} from '../../../api/search/search/result.js';
 import {configuration} from '../../../app/common-reducers.js';
@@ -11,6 +10,7 @@ import type {
   FieldsSection,
   SearchSection,
 } from '../../../state/state-sections.js';
+import {ArrayValue, Schema, StringValue} from '../../../utils/bueno-zod.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {validateOptions} from '../../../utils/validate-payload.js';
 import {

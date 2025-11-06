@@ -1,10 +1,10 @@
-import {RecordValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import type {AsyncThunkOptions} from '../../../../app/async-thunk-options.js';
 import type {
   ConfigurationSection,
   DateFacetSection,
 } from '../../../../state/state-sections.js';
+import {RecordValue} from '../../../../utils/bueno-zod.js';
 import {updateFacetOptions} from '../../../facet-options/facet-options-actions.js';
 import {facetIdDefinition} from '../../generic/facet-actions-validation.js';
 import {

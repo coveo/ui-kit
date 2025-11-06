@@ -1,4 +1,3 @@
-import {Schema} from '@coveo/bueno';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {executeSearch} from '../../features/search/search-actions.js';
 import {
@@ -20,6 +19,7 @@ import type {
   StaticFilterValueState,
 } from '../../features/static-filter-set/static-filter-set-state.js';
 import type {StaticFilterSection} from '../../state/state-sections.js';
+import {Schema} from '../../utils/bueno-zod.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {validateOptions} from '../../utils/validate-payload.js';
 import {

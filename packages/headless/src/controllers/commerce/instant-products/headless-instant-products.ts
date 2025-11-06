@@ -1,4 +1,3 @@
-import {NumberValue, Schema} from '@coveo/bueno';
 import type {SerializedError} from '@reduxjs/toolkit';
 import type {CommerceAPIErrorResponse} from '../../../api/commerce/commerce-api-error-response.js';
 import type {
@@ -17,6 +16,7 @@ import {instantProductsReducer} from '../../../features/commerce/instant-product
 import {fetchInstantProducts} from '../../../features/commerce/search/search-actions.js';
 import {hasExpired} from '../../../features/instant-items/instant-items-state.js';
 import type {InstantProductsSection} from '../../../state/state-sections.js';
+import {NumberValue, Schema} from '../../../utils/bueno-zod.js';
 import {loadReducerError} from '../../../utils/errors.js';
 import {randomID} from '../../../utils/utils.js';
 import {

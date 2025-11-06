@@ -1,6 +1,10 @@
-import {ArrayValue, NumberValue, RecordValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import type {CategoryFacetSearchResult} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
+import {
+  ArrayValue,
+  NumberValue,
+  RecordValue,
+} from '../../../../utils/bueno-zod.js';
 import {
   requiredEmptyAllowedString,
   requiredNonEmptyString,

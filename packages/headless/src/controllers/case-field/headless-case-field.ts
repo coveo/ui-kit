@@ -1,4 +1,3 @@
-import {Schema} from '@coveo/bueno';
 import type {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client.js';
 import type {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine.js';
 import {configuration} from '../../app/common-reducers.js';
@@ -25,6 +24,7 @@ import type {
   ConfigurationSection,
   DocumentSuggestionSection,
 } from '../../state/state-sections.js';
+import {Schema} from '../../utils/bueno-zod.js';
 import {loadReducerError} from '../../utils/errors.js';
 import {
   requiredNonEmptyString,

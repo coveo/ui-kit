@@ -1,10 +1,3 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  NumberValue,
-  RecordValue,
-  StringValue,
-} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import type {AsyncThunkGeneratedAnswerOptions} from '../../api/generated-answer/generated-answer-client.js';
 import type {
@@ -27,6 +20,13 @@ import type {
   GeneratedAnswerSection,
   SearchSection,
 } from '../../state/state-sections.js';
+import {
+  ArrayValue,
+  BooleanValue,
+  NumberValue,
+  RecordValue,
+  StringValue,
+} from '../../utils/bueno-zod.js';
 import {
   nonEmptyStringArray,
   requiredNonEmptyString,

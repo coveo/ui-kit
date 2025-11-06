@@ -1,4 +1,3 @@
-import {NumberValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import {getSearchApiBaseUrl} from '../../api/platform-client.js';
@@ -17,6 +16,7 @@ import type {
   QuerySuggestionSection,
   SearchHubSection,
 } from '../../state/state-sections.js';
+import {NumberValue} from '../../utils/bueno-zod.js';
 import {
   requiredEmptyAllowedString,
   requiredNonEmptyString,

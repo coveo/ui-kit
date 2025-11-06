@@ -1,5 +1,5 @@
-import {RecordValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
+import {RecordValue} from '../../utils/bueno-zod.js';
 import {
   requiredEmptyAllowedString,
   requiredNonEmptyString,

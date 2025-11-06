@@ -1,14 +1,14 @@
-import {
-  BooleanValue,
-  RecordValue,
-  type SchemaDefinition,
-  StringValue,
-} from '@coveo/bueno';
 import type {
   AnalyticsClientSendEventHook,
   IRuntimeEnvironment,
 } from 'coveo.analytics';
 import type {PreprocessRequest} from '../api/preprocess-request.js';
+import {
+  BooleanValue,
+  RecordValue,
+  type SchemaDefinition,
+  StringValue,
+} from '../utils/bueno-zod.js';
 import type {PlatformEnvironment} from '../utils/url-utils.js';
 import {requiredNonEmptyString} from '../utils/validate-payload.js';
 import type {CoveoFramework} from '../utils/version.js';

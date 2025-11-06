@@ -1,4 +1,3 @@
-import {NumberValue, type SchemaDefinition, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import type {Result} from '../../api/search/search/result.js';
 import {
@@ -10,6 +9,11 @@ import type {
   FoldingSection,
   QuerySection,
 } from '../../state/state-sections.js';
+import {
+  NumberValue,
+  type SchemaDefinition,
+  StringValue,
+} from '../../utils/bueno-zod.js';
 import {validatePayload} from '../../utils/validate-payload.js';
 import {buildSearchAndFoldingLoadCollectionRequest as legacyBuildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/legacy/search-and-folding-request.js';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request.js';

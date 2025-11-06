@@ -1,4 +1,4 @@
-import {isNullOrUndefined} from '@coveo/bueno';
+import {isNullOrUndefined} from '../../utils/bueno-zod.js';
 import {isEmptyString} from '../../utils/utils.js';
 import type {DateRangeRequest} from '../facets/range-facets/date-facet-set/interfaces/request.js';
 import type {NumericRangeRequest} from '../facets/range-facets/numeric-facet-set/interfaces/request.js';

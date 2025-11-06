@@ -1,8 +1,8 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {
   DateRangeRequest,
   NumericRangeRequest,
 } from '../../../controllers/commerce/core/facets/headless-core-commerce-facet.js';
+import {isNullOrUndefined} from '../../../utils/bueno-zod.js';
 import {arrayEqualStrictlyDifferentOrder} from '../../../utils/compare-utils.js';
 import {isEmptyString} from '../../../utils/utils.js';
 import {

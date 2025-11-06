@@ -1,10 +1,10 @@
-import {isNullOrUndefined} from '@coveo/bueno';
 import type {EventDescription} from 'coveo.analytics';
 import HistoryStore from '../../../api/analytics/coveo.analytics/history-store.js';
 import {getSearchApiBaseUrl} from '../../../api/platform-client.js';
 import type {SearchRequest} from '../../../api/search/search/search-request.js';
 import type {SearchAppState} from '../../../state/search-app-state.js';
 import type {ConfigurationSection} from '../../../state/state-sections.js';
+import {isNullOrUndefined} from '../../../utils/bueno-zod.js';
 import {fromAnalyticsStateToAnalyticsParams} from '../../configuration/legacy-analytics-params.js';
 
 type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
