@@ -3,7 +3,7 @@ import {describe, expect, it} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderCollectionGuard} from './collection-guard';
 
-describe('renderCollectionGuard', () => {
+describe('#renderCollectionGuard', () => {
   const defaultProps = {
     isLoadingMoreResults: false,
     moreResultsAvailable: true,
