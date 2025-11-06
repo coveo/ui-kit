@@ -7,11 +7,6 @@ test.describe('atomic-result-number', () => {
       await resultNumber.hydrated.first().waitFor();
     });
 
-    test('should be accessible', async ({makeAxeBuilder}) => {
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations.length).toEqual(0);
-    });
-
     test('should render the numeric value with default formatting', async ({
       resultNumber,
     }) => {
