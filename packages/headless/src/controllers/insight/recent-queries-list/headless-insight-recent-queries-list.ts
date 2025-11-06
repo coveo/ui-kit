@@ -1,4 +1,5 @@
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
+import {SearchPageEvents} from '../../../features/analytics/search-action-cause.js';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
 import {
   logClearRecentQueries,
@@ -55,6 +56,7 @@ export function buildRecentQueriesList(
       dispatch(
         executeSearch({
           legacy: logRecentQueryClick(),
+          next: {actionCause: SearchPageEvents.recentQueriesClick},
         })
       );
     },

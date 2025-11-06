@@ -5,9 +5,9 @@ import {
   type SearchSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
-import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
+import {userEvent} from 'vitest/browser';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
