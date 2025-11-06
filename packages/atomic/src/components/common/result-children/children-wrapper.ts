@@ -1,18 +1,14 @@
 import {html} from 'lit';
 import {when} from 'lit/directives/when.js';
-import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
+import type {FunctionalComponentWithChildrenNoProps} from '@/src/utils/functional-component-utils';
 
-interface ChildrenWrapperProps {
-  hasChildren: boolean;
-}
-
-export const renderChildrenWrapper: FunctionalComponentWithChildren<
-  ChildrenWrapperProps
-> =
-  ({props}) =>
-  (children) =>
-    html`<div part="children-root">
-      ${when(props.hasChildren, () => html`<slot name="before-children"></slot>`)}
+export const renderChildrenWrapper: FunctionalComponentWithChildrenNoProps =
+  () => (children) => {
+    const hasChildren =
+      Array.isArray(children) ? children.length > 0 : !!children;
+    return html`<div part="children-root">
+      ${when(hasChildren, () => html`<slot name="before-children"></slot>`)}
       ${children}
-      ${when(props.hasChildren, () => html`<slot name="after-children"></slot>`)}
+      ${when(hasChildren, () => html`<slot name="after-children"></slot>`)}
     </div>`;
+  };

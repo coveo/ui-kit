@@ -1,12 +1,12 @@
-import {html} from 'lit';
+import {html, nothing} from 'lit';
 import {describe, expect, it} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderChildrenWrapper} from './children-wrapper';
 
 describe('#renderChildrenWrapper', () => {
-  const renderComponent = async ({hasChildren = false} = {}) => {
+  const renderComponent = async (children = html`<div>Test content</div>`) => {
     const element = await renderFunctionFixture(
-      html`${renderChildrenWrapper({props: {hasChildren}})(html`<div>Test content</div>`)}`
+      html`${renderChildrenWrapper()(children)}`
     );
 
     return {
@@ -29,29 +29,29 @@ describe('#renderChildrenWrapper', () => {
     expect(content).toContain('Test content');
   });
 
-  describe('when hasChildren is true', () => {
+  describe('when children are provided', () => {
     it('should render before-children slot', async () => {
-      const {beforeSlot} = await renderComponent({hasChildren: true});
+      const {beforeSlot} = await renderComponent(html`<div>Test content</div>`);
 
       expect(beforeSlot).toHaveAttribute('name', 'before-children');
     });
 
     it('should render after-children slot', async () => {
-      const {afterSlot} = await renderComponent({hasChildren: true});
+      const {afterSlot} = await renderComponent(html`<div>Test content</div>`);
 
       expect(afterSlot).toHaveAttribute('name', 'after-children');
     });
   });
 
-  describe('when hasChildren is false', () => {
+  describe('when no children are provided', () => {
     it('should not render before-children slot', async () => {
-      const {beforeSlot} = await renderComponent({hasChildren: false});
+      const {beforeSlot} = await renderComponent(nothing);
 
       expect(beforeSlot).toBeNull();
     });
 
     it('should not render after-children slot', async () => {
-      const {afterSlot} = await renderComponent({hasChildren: false});
+      const {afterSlot} = await renderComponent(nothing);
 
       expect(afterSlot).toBeNull();
     });
