@@ -307,7 +307,6 @@
     "nextjs",
     "stencil",
     "WCAG",
-    "IDREF",
-    "keyup"
+    "IDREF"
   ]
 }
