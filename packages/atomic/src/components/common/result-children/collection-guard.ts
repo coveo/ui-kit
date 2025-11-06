@@ -4,7 +4,7 @@ import {renderItemPlaceholders} from '@/src/components/common/atomic-result-plac
 import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
-} from '@/src/components/common/layout/display-options';
+} from '@/src/components/common/layout/item-layout-utils';
 import {renderChildrenWrapper} from '@/src/components/common/result-children/children-wrapper';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 
