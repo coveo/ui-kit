@@ -27,6 +27,7 @@ import {
   AtomicCommerceText as LitAtomicCommerceText,
   AtomicCommerceTimeframeFacet as LitAtomicCommerceTimeframeFacet,
   AtomicComponentError as LitAtomicComponentError,
+  AtomicFocusTrap as LitAtomicFocusTrap,
   AtomicIcon as LitAtomicIcon,
   AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
   AtomicInsightInterface as LitAtomicInsightInterface,
@@ -222,6 +223,12 @@ export const AtomicComponentError = createComponent({
   tagName: 'atomic-component-error',
   react: React,
   elementClass: LitAtomicComponentError,
+});
+
+export const AtomicFocusTrap = createComponent({
+  tagName: 'atomic-focus-trap',
+  react: React,
+  elementClass: LitAtomicFocusTrap,
 });
 
 export const AtomicIcon = createComponent({
