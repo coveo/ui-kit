@@ -33,7 +33,7 @@ import {
 } from '../../../common/item-list/stencil-item-decorators';
 import {ItemDisplayImageSize} from '../../../common/layout/display-options';
 import {ChildrenWrapper} from '../../../common/result-children/stencil-children-wrapper';
-import {CollectionGuard} from '../../../common/result-children/stencil-collection-guard';
+import {CollectionGuard} from '../../../common/result-children/collection-guard';
 import {ResultChildrenGuard} from '../../../common/result-children/stencil-guard';
 import {ShowHideButton} from '../../../common/result-children/show-hide-button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
