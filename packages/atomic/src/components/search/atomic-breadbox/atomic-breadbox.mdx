@@ -1,0 +1,54 @@
+import {Canvas, Meta} from '@storybook/blocks';
+import * as AtomicBreadboxStories from './atomic-breadbox.new.stories';
+
+<Meta of={AtomicBreadboxStories} />
+
+# atomic-breadbox
+
+The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+This component helps users understand and manage their current filter selections by showing them in a compact, visual format.
+
+## Usage
+
+```html
+<atomic-breadbox></atomic-breadbox>
+```
+
+## Props
+
+### pathLimit
+
+Controls the display depth of the path by specifying the number of parent or ancestor breadcrumb links relative to the currently selected value.
+
+- If the path size is equal to or less than the pathLimit, all values in the path will be displayed without truncation.
+- If the path size exceeds the pathLimit, it will truncate the path by replacing the middle values with ellipses ('...').
+
+**Type:** `number`  
+**Default:** `3`  
+**Minimum:** `1`
+
+## Parts
+
+The component exposes the following parts for styling:
+
+- `container` - The container of the whole component, list & label.
+- `breadcrumb-list-container` - The container of the list of breadcrumb buttons.
+- `breadcrumb-list` - The list of breadcrumb buttons.
+- `breadcrumb-button` - A single breadcrumb button.
+- `breadcrumb-label` - The breadcrumb label, associated with the facet.
+- `breadcrumb-value` - The breadcrumb formatted value.
+- `breadcrumb-clear` - The button to clear individual filters.
+- `show-more` - The button to display all breadcrumbs.
+- `show-less` - The button to display less breadcrumbs.
+- `label` - The "Filters" label.
+- `clear` - The button to clear all filters.
+
+## Examples
+
+### Default
+
+<Canvas of={AtomicBreadboxStories.Default} />
+
+### With Rating Facet
+
+<Canvas of={AtomicBreadboxStories.WithRatingFacet} />
