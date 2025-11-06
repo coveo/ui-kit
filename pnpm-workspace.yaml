@@ -64,6 +64,7 @@ catalog:
   vitest: 4.0.7
   '@vitest/coverage-v8': 4.0.7
   '@vitest/browser-playwright': 4.0.7
+  zod: 3.24.1
 
 
 publicHoistPattern:

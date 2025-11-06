@@ -1,6 +1,7 @@
-import {NumberValue, Schema, StringValue} from '@coveo/bueno';
 import dayjs, {type QUnitType} from 'dayjs/esm/index.js';
 import quarterOfYear from 'dayjs/esm/plugin/quarterOfYear/index.js';
+import {z} from 'zod';
+import {validateSchema} from '../../../utils/validation.js';
 import {
   assertDateAboveAPIMinimum,
   formatDateForSearchApi,
@@ -12,7 +13,7 @@ dayjs.extend(quarterOfYear);
  * The period to set the date relative to.
  */
 export type RelativeDatePeriod = 'past' | 'now' | 'next';
-const validRelativeDatePeriods = ['past', 'now', 'next'];
+const validRelativeDatePeriods = ['past', 'now', 'next'] as const;
 
 /**
  * The unit of time in which the date is set relative to.
@@ -33,7 +34,7 @@ const validRelativeDateUnits = [
   'month',
   'quarter',
   'year',
-];
+] as const;
 
 /**
  * Defines a date relative to the current moment.
@@ -53,19 +54,15 @@ export interface RelativeDate {
   amount?: number;
 }
 
-const buildRelativeDateDefinition = (period: RelativeDatePeriod) => {
+const buildRelativeDateSchema = (period: RelativeDatePeriod) => {
   const isNow = period === 'now';
-  return {
-    amount: new NumberValue({required: !isNow, min: 1}),
-    unit: new StringValue({
-      required: !isNow,
-      constrainTo: validRelativeDateUnits,
-    }),
-    period: new StringValue({
-      required: true,
-      constrainTo: validRelativeDatePeriods,
-    }),
-  };
+  return z.object({
+    amount: isNow ? z.number().min(1).optional() : z.number().min(1),
+    unit: isNow
+      ? z.enum(validRelativeDateUnits).optional()
+      : z.enum(validRelativeDateUnits),
+    period: z.enum(validRelativeDatePeriods),
+  });
 };
 
 /**
@@ -82,9 +79,7 @@ export function validateRelativeDate(date: RelativeDate | string) {
   const relativeDate =
     typeof date === 'string' ? parseRelativeDate(date) : date;
 
-  new Schema(buildRelativeDateDefinition(relativeDate.period)).validate(
-    relativeDate
-  );
+  validateSchema(buildRelativeDateSchema(relativeDate.period), relativeDate);
 
   const dayJsDate = relativeToAbsoluteDate(relativeDate);
   const stringifiedDate = JSON.stringify(relativeDate);
@@ -135,11 +130,11 @@ export function isRelativeDateFormat(date: string) {
     return true;
   }
 
-  if (!validRelativeDatePeriods.includes(period)) {
+  if (!validRelativeDatePeriods.includes(period as RelativeDatePeriod)) {
     return false;
   }
 
-  if (!validRelativeDateUnits.includes(unit)) {
+  if (!validRelativeDateUnits.includes(unit as RelativeDateUnit)) {
     return false;
   }
 

@@ -122,7 +122,8 @@
     "navigator.sendbeacon": "0.0.20",
     "pino": "9.7.0",
     "redux-thunk": "3.1.0",
-    "reselect": "5.1.1"
+    "reselect": "5.1.1",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@coveo/documentation": "workspace:*",
