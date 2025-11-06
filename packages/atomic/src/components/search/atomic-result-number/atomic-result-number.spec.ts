@@ -9,7 +9,6 @@ import {AtomicResultNumber} from './atomic-result-number';
 import './atomic-result-number';
 import type {i18n} from 'i18next';
 import {customElement} from 'lit/decorators.js';
-import {defaultNumberFormatter} from '@/src/components/common/formats/format-common';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 
 vi.mock('@coveo/headless', async () => {
@@ -22,8 +21,6 @@ vi.mock('@coveo/headless', async () => {
     },
   };
 });
-
-vi.mock('@/src/components/common/formats/format-common', {spy: true});
 
 @customElement('test-formatter')
 class TestFormatter extends LitElement {
@@ -191,11 +188,38 @@ describe('atomic-result-number', () => {
 
     describe('when using the default formatter', () => {
       it('should set the error when the formatter throws', async () => {
-        vi.mocked(defaultNumberFormatter).mockImplementation(() => {
-          throw new Error('Formatter error');
-        });
+        // Ensure the mock returns a valid number
+        vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
+          1234.56
+        );
 
-        const {element} = await renderResultNumber({props: {field: 'size'}});
+        @customElement('test-throwing-formatter')
+        class TestThrowingFormatter extends LitElement {
+          firstUpdated(
+            _changedProperties: Map<string | number | symbol, unknown>
+          ): void {
+            super.updated(_changedProperties);
+            const event = new CustomEvent('atomic/numberFormat', {
+              detail: () => {
+                throw new Error('Formatter error');
+              },
+              bubbles: true,
+              cancelable: true,
+            });
+            this.dispatchEvent(event);
+          }
+
+          public render() {
+            return html``;
+          }
+        }
+
+        void TestThrowingFormatter;
+
+        const {element} = await renderResultNumber({
+          props: {field: 'size'},
+          slottedContent: html`<test-throwing-formatter></test-throwing-formatter>`,
+        });
 
         expect(element.error).toBeInstanceOf(Error);
         expect(element.error.message).toBe('Formatter error');
