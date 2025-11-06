@@ -1,0 +1,102 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicColorFacetStories from './atomic-color-facet.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={ AtomicColorFacetStories } />
+
+<AtomicDocTemplate
+  stories={ AtomicColorFacetStories }
+  githubPath="search/facets/atomic-color-facet/atomic-color-facet.ts"
+  tagName="atomic-color-facet"
+  className="AtomicColorFacet"
+>
+
+The `atomic-color-facet` component displays a facet of the results for the current query as colors. This is particularly useful when you want to represent facet values visually, such as file types, categories, or any field that can be associated with colors or icons.
+
+This component is typically placed within the "facets" section of the layout.
+
+You can also place facets inside an `atomic-facet-manager` component to ensure the effective functioning of DNE (Dynamic Navigation Experience). 
+More info here: [atomic-facet-manager](https://docs.coveo.com/en/2918).
+
+## Usage
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="facets">
+      ...
+        <atomic-color-facet field="filetype" label="File Types"></atomic-color-facet>
+
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+## Customizing Colors
+
+You can customize the colors for specific facet values using CSS shadow parts. The component provides dynamic parts for each facet value:
+
+- `default-color-value` - Default styling for all color boxes
+- `value-{value}` - Specific styling for a particular facet value
+
+### Example: Customizing File Type Colors
+
+```html
+<style>
+  atomic-color-facet::part(value-pdf default-color-value) {
+    background-image: url('atomic/assets/pdf.svg');
+    background-color: rgb(255, 0, 0);
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  
+  atomic-color-facet::part(value-doc default-color-value) {
+    background-image: url('atomic/assets/document.svg');
+    background-color: rgb(146, 151, 196);
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+</style>
+
+<atomic-color-facet field="filetype" label="File Types" display-values-as="box"></atomic-color-facet>
+```
+
+## Display Modes
+
+The component supports two display modes:
+
+- **box** (default): Displays facet values as colored boxes with labels below
+- **checkbox**: Displays facet values as checkboxes with colored indicators
+
+```html
+<!-- Box display mode (default) -->
+<atomic-color-facet field="filetype" label="File Types" display-values-as="box"></atomic-color-facet>
+
+<!-- Checkbox display mode -->
+<atomic-color-facet field="filetype" label="File Types" display-values-as="checkbox"></atomic-color-facet>
+```
+
+## Customizing Layout
+
+You can customize the number of color boxes displayed per row using CSS custom properties:
+
+```html
+<style>
+  atomic-color-facet {
+    --atomic-facet-color-boxes-per-row: 4;
+    --atomic-facet-color-boxes-gap: 1rem;
+  }
+</style>
+```
+
+## Related Components
+
+- [atomic-facet](/?path=/docs/search-atomic-facet--docs) - Standard facet component
+- [atomic-facet-manager](https://docs.coveo.com/en/2918) - Manages multiple facets with DNE
+- [atomic-rating-facet](/?path=/docs/search-atomic-rating-facet--docs) - Facet for rating values
+
+</AtomicDocTemplate>
