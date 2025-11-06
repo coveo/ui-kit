@@ -4,6 +4,8 @@ export default {
     await import('./atomic-external/atomic-external.js'),
   'atomic-facet': async () => await import('./atomic-facet/atomic-facet.js'),
   'atomic-html': async () => await import('./atomic-html/atomic-html.js'),
+  'atomic-load-more-results': async () =>
+    await import('./atomic-load-more-results/atomic-load-more-results.js'),
   'atomic-pager': async () => await import('./atomic-pager/atomic-pager.js'),
   'atomic-query-summary': async () =>
     await import('./atomic-query-summary/atomic-query-summary.js'),
@@ -14,6 +16,8 @@ export default {
     await import(
       './atomic-result-children-template/atomic-result-children-template.js'
     ),
+  'atomic-result-list': async () =>
+    await import('./atomic-result-list/atomic-result-list.js'),
   'atomic-result-section-actions': async () =>
     await import(
       './atomic-result-section-actions/atomic-result-section-actions.js'
@@ -52,6 +56,8 @@ export default {
     ),
   'atomic-result-template': async () =>
     await import('./atomic-result-template/atomic-result-template.js'),
+  'atomic-result-text': async () =>
+    await import('./atomic-result-text/atomic-result-text.js'),
   'atomic-results-per-page': async () =>
     await import('./atomic-results-per-page/atomic-results-per-page.js'),
   'atomic-search-box-instant-results': async () =>
@@ -70,6 +76,7 @@ export default {
     await import('./atomic-search-interface/atomic-search-interface.js'),
   'atomic-search-layout': async () =>
     await import('./atomic-search-layout/atomic-search-layout.js'),
+  'atomic-text': async () => await import('./atomic-text/atomic-text.js'),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';

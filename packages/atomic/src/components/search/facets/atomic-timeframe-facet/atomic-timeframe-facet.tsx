@@ -29,7 +29,7 @@ import {
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
 import {parseDependsOn} from '../../../common/facets/depends-on';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/stencil-facet-placeholder';
 import {TimeframeFacetCommon} from '../../../common/facets/timeframe-facet-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 

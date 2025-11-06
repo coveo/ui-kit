@@ -1,3 +1,17 @@
+## <small>3.33.3 (2025-11-05)</small>
+
+* enabled recent queries test for insight use case (#6421) ([73fac60](https://github.com/coveo/ui-kit/commits/73fac60)), closes [#6421](https://github.com/coveo/ui-kit/issues/6421)
+* fix(quantic): fix setup scratch org step in CI (#6449) ([8c148c3](https://github.com/coveo/ui-kit/commits/8c148c3)), closes [#6449](https://github.com/coveo/ui-kit/issues/6449)
+
+
+
+## <small>3.33.2 (2025-10-30)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
 ## <small>3.33.1 (2025-10-29)</small>
 
 * ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)

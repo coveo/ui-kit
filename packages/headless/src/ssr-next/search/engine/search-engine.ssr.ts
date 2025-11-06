@@ -1,76 +1,16 @@
 /**
  * Utility functions to be used for Server Side Rendering.
  */
-import type {UnknownAction} from '@reduxjs/toolkit';
-import {buildLogger} from '../../../app/logger.js';
-import {
-  buildSearchEngine,
-  type SearchEngine,
-  type SearchEngineOptions,
-} from '../../../app/search-engine/search-engine.js';
-import type {Controller} from '../../../controllers/controller/headless-controller.js';
-import type {LegacySearchAction} from '../../../features/analytics/analytics-utils.js';
-import {createWaitForActionMiddleware} from '../../../utils/utils.js';
-import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
-import type {EngineStaticState} from '../../common/types/engine.js';
-import {
-  buildControllerDefinitions,
-  createStaticState,
-} from '../controller-utils.js';
-import type {BuildConfig} from '../types/build.js';
-import type {ControllerDefinitionsMap} from '../types/controller-definition.js';
+import {defineSearchParameterManager} from '../controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
+import {hydratedStaticStateFactory} from '../factories/hydrated-state-factory.js';
+import {fetchStaticStateFactory} from '../factories/static-state-factory.js';
+import type {SSRSearchEngine} from '../types/build.js';
+import type {AugmentedControllerDefinition} from '../types/controller-definition.js';
 import type {
-  InferControllerPropsMapFromDefinitions,
-  InferControllerStaticStateMapFromDefinitions,
-} from '../types/controller-inference.js';
-import type {
-  EngineBuildResult,
+  SearchControllerDefinitionsMap,
   SearchEngineDefinition,
   SearchEngineDefinitionOptions,
 } from '../types/engine.js';
-
-/**
- * The SSR search engine.
- *
- * @group Engine
- */
-export interface SSRSearchEngine extends SearchEngine {
-  /**
-   * Waits for the search to be completed and returns a promise that resolves to a `SearchCompletedAction`.
-   */
-  waitForSearchCompletedAction(): Promise<SearchCompletedAction>;
-}
-
-export type SearchCompletedAction = ReturnType<
-  LegacySearchAction['fulfilled' | 'rejected']
->;
-
-function isSearchCompletedAction(
-  action: unknown
-): action is SearchCompletedAction {
-  return /^search\/executeSearch\/(fulfilled|rejected)$/.test(
-    (action as UnknownAction).type
-  );
-}
-
-function buildSSRSearchEngine(options: SearchEngineOptions): SSRSearchEngine {
-  const {middleware, promise} = createWaitForActionMiddleware(
-    isSearchCompletedAction
-  );
-  const searchEngine = buildSearchEngine({
-    ...options,
-    middlewares: [...(options.middlewares ?? []), middleware],
-  });
-  return {
-    ...searchEngine,
-    get state() {
-      return searchEngine.state;
-    },
-    waitForSearchCompletedAction() {
-      return promise;
-    },
-  };
-}
 
 /**
  * Initializes a Search engine definition in SSR with given controllers definitions and search engine config.
@@ -78,102 +18,59 @@ function buildSSRSearchEngine(options: SearchEngineOptions): SSRSearchEngine {
  * @param options - The search engine definition
  * @returns Two utility functions to fetch the initial state of the engine in SSR and hydrate the state in CSR.
  *
+ * @remarks
+ * You can use the {@link InferStaticState} and {@link InferHydratedState} utility types with the returned engine definition
+ * to infer the types of static and hydrated state for your controllers.
+ *
  * @example
  * ```ts
- * const searchEngine = defineSearchEngine(config);
+ * const searchEngineDefinition = defineSearchEngine(config);
  *
- * const staticState = await searchEngine.fetchStaticState({
- *   navigatorContextProvider: () => {/*...* /},
+ * const staticState = await searchEngineDefinition.fetchStaticState({
+ *   navigatorContext: {/*...* /},
  * });
+ *
+ * type SearchStaticState = InferStaticState<typeof searchEngineDefinition>;
+ * type SearchHydratedState = InferHydratedState<typeof searchEngineDefinition>;
  * ```
  *
  * @group Engine
  */
 export function defineSearchEngine<
-  TControllerDefinitions extends ControllerDefinitionsMap<
-    SearchEngine,
-    Controller
-  >,
->(options: SearchEngineDefinitionOptions<TControllerDefinitions>) {
+  TControllerDefinitions extends SearchControllerDefinitionsMap = {},
+>(
+  options: SearchEngineDefinitionOptions<TControllerDefinitions>
+): SearchEngineDefinition<SSRSearchEngine, TControllerDefinitions> {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
-  type BuildFunction = EngineBuildResult<
-    SSRSearchEngine,
-    TControllerDefinitions
-  >;
-  type Definition = SearchEngineDefinition<
-    SSRSearchEngine,
-    TControllerDefinitions
-  >;
-  type FetchStaticStateFunction = Definition['fetchStaticState'];
-  type HydrateStaticStateFunction = Definition['hydrateStaticState'];
-  type BuildParameters = Parameters<BuildFunction>[0];
-  type FetchStaticStateParameters = Parameters<FetchStaticStateFunction>[0];
-  type HydrateStaticStateParameters = Parameters<HydrateStaticStateFunction>[0];
 
-  const build: BuildFunction = async (buildOptions: BuildParameters) => {
-    if (!(buildOptions as BuildConfig).navigatorContext) {
-      const logger = buildLogger(options.loggerOptions);
-      logger.error(
-        'No navigatorContext was provided. This may impact analytics accuracy, personalization, and session tracking. Refer to the Coveo documentation on server-side navigation context for implementation guidance.'
-      );
-    }
+  const getOptions = () => engineOptions;
 
-    engineOptions.navigatorContextProvider = () =>
-      (buildOptions as BuildConfig).navigatorContext;
-    engineOptions.configuration.preprocessRequest =
-      augmentPreprocessRequestWithForwardedFor({
-        preprocessRequest: engineOptions.configuration.preprocessRequest,
-        navigatorContext: (buildOptions as BuildConfig).navigatorContext,
-        loggerOptions: engineOptions.loggerOptions,
-      });
+  const getAccessToken = () => engineOptions.configuration.accessToken;
 
-    const engine = buildSSRSearchEngine(engineOptions);
-    const controllers = buildControllerDefinitions({
-      definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
-      engine,
-      propsMap: (buildOptions && 'controllers' in buildOptions
-        ? buildOptions.controllers
-        : {}) as InferControllerPropsMapFromDefinitions<TControllerDefinitions>,
-    });
-    return {
-      engine,
-      controllers,
-    };
+  const setAccessToken = (accessToken: string) => {
+    // TODO: KIT-5150 - Apply `setAccessToken` propagation fix for SSR search
+    engineOptions.configuration.accessToken = accessToken;
   };
 
-  const fetchStaticState: FetchStaticStateFunction = async (
-    params: FetchStaticStateParameters
-  ) => {
-    const {engine, controllers} = await build(params as BuildParameters);
+  const augmentedControllerDefinition = {
+    ...controllerDefinitions,
+    parameterManager: defineSearchParameterManager(),
+  } as AugmentedControllerDefinition<TControllerDefinitions>;
 
-    engine.executeFirstSearch();
-    const staticState = createStaticState({
-      searchActions: [await engine.waitForSearchCompletedAction()],
-      controllers: controllers,
-    }) as EngineStaticState<
-      UnknownAction,
-      InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
-    >;
+  const fetchStaticState = fetchStaticStateFactory<TControllerDefinitions>(
+    augmentedControllerDefinition,
+    getOptions()
+  );
 
-    return {
-      ...params,
-      ...staticState,
-    };
-  };
-
-  const hydrateStaticState: HydrateStaticStateFunction = async (
-    params: HydrateStaticStateParameters
-  ) => {
-    const {engine, controllers} = await build(params as BuildParameters);
-    params.searchActions.forEach((action) => {
-      engine.dispatch(action);
-    });
-    await engine.waitForSearchCompletedAction();
-    return {engine, controllers};
-  };
+  const hydrateStaticState = hydratedStaticStateFactory<TControllerDefinitions>(
+    augmentedControllerDefinition,
+    getOptions()
+  );
 
   return {
     fetchStaticState,
     hydrateStaticState,
+    getAccessToken,
+    setAccessToken,
   };
 }

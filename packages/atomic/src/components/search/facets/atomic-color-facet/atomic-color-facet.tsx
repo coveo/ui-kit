@@ -36,7 +36,7 @@ import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
 import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/stencil-facet-placeholder';
 import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';
 import {
   shouldUpdateFacetSearchComponent,
@@ -51,7 +51,7 @@ import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stenci
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {Hidden} from '../../../common/stencil-hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {ColorFacetCheckbox} from '../color-facet-checkbox/color-facet-checkbox';
+import {ColorFacetCheckbox} from '../color-facet-checkbox/stencil-color-facet-checkbox';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).

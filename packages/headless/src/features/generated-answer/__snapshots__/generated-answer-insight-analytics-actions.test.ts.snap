@@ -68,6 +68,16 @@ exports[`generated answer insight analytics actions > when analyticsMode is \`ne
 ]
 `;
 
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerResponseLinked with the response id and answer id 1`] = `
+[
+  "Rga.ResponseLinked",
+  {
+    "answerId": "123",
+    "responseId": "456",
+  },
+]
+`;
+
 exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerShowAnswers with the right payload 1`] = `
 [
   "Rga.AnswerAction",

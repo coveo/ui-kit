@@ -1,0 +1,54 @@
+name: DXUI Task
+description: Create a task Issue for the DXUI team
+title: '[DXUI]: '
+type: task
+projects: ['coveo/21']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This template is for DXUI team tasks. Issues created with this template will automatically:
+        - Be assigned to the DXUI project board
+        - Create a corresponding Jira ticket in the KIT project
+        - Track status updates through the issue lifecycle
+
+        ---
+
+        Please provide clear and detailed information to help track and complete this task.
+  - type: textarea
+    id: task-description
+    attributes:
+      label: Task Description
+      description: Provide a clear and detailed description of the task
+      placeholder: Describe what needs to be done, why it's needed, and any relevant context
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Define the criteria that must be met for this task to be considered complete
+      placeholder: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+        - [ ] Criterion 3
+    validations:
+      required: true
+  - type: textarea
+    id: technical-notes
+    attributes:
+      label: Technical Notes
+      description: Any technical considerations, constraints, or implementation details
+      placeholder: Include relevant technical details, dependencies, or constraints
+  - type: input
+    id: jira-ticket
+    attributes:
+      label: Jira Ticket
+      description: Leave empty for auto-creation, or specify existing ticket (e.g., KIT-1234)
+      placeholder: KIT-1234 (optional)
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        
+        **Note:** If you leave the Jira Ticket field empty, a ticket will be automatically created in the KIT project when this issue is created.

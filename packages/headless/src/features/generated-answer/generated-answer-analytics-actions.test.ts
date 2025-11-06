@@ -1,4 +1,5 @@
 import {createRelay} from '@coveo/relay';
+import {CoveoSearchPageClient} from 'coveo.analytics';
 import type {ThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import type {GeneratedAnswerCitation} from '../../controllers/generated-answer/headless-generated-answer.js';
 import {
@@ -17,6 +18,7 @@ import {
   logGeneratedAnswerExpand,
   logGeneratedAnswerFeedback,
   logGeneratedAnswerHideAnswers,
+  logGeneratedAnswerResponseLinked,
   logGeneratedAnswerShowAnswers,
   logGeneratedAnswerStreamEnd,
   logHoverCitation,
@@ -79,30 +81,8 @@ vi.mocked(createRelay).mockReturnValue({
   version: 'foo',
 });
 
-vi.mock('coveo.analytics', () => {
-  const mockCoveoSearchPageClient = vi.fn(() => ({
-    disable: vi.fn(),
-    makeGeneratedAnswerFeedbackSubmit: mockMakeGeneratedAnswerFeedbackSubmit,
-    makeRetryGeneratedAnswer: mockMakeRetryGeneratedAnswer,
-    makeGeneratedAnswerCitationClick: mockMakeGeneratedAnswerCitationClick,
-    makeGeneratedAnswerSourceHover: mockMakeGeneratedAnswerSourceHover,
-    makeLikeGeneratedAnswer: mockMakeLikeGeneratedAnswer,
-    makeDislikeGeneratedAnswer: mockMakeDislikeGeneratedAnswer,
-    makeGeneratedAnswerStreamEnd: mockMakeGeneratedAnswerStreamEnd,
-    makeGeneratedAnswerShowAnswers: mockMakeGeneratedAnswerShowAnswers,
-    makeGeneratedAnswerHideAnswers: mockMakeGeneratedAnswerHideAnswers,
-    makeGeneratedAnswerCopyToClipboard: mockMakeGeneratedAnswerCopyToClipboard,
-    makeGeneratedAnswerExpand: mockMakeGeneratedAnswerExpand,
-    makeGeneratedAnswerCollapse: mockMakeGeneratedAnswerCollapse,
-    makeGeneratedAnswerFeedbackSubmitV2:
-      mockMakeGeneratedAnswerFeedbackSubmitV2,
-  }));
-
-  return {
-    CoveoSearchPageClient: mockCoveoSearchPageClient,
-    history: {HistoryStore: vi.fn()},
-  };
-});
+vi.mock('coveo.analytics');
+const mockCoveoSearchPageClient = vi.mocked(CoveoSearchPageClient);
 
 const exampleFeedback: GeneratedAnswerFeedback = {
   helpful: true,
@@ -159,6 +139,35 @@ describe('generated answer analytics actions', () => {
 
   describe('when analyticsMode is `legacy`', () => {
     beforeEach(() => {
+      mockCoveoSearchPageClient.mockImplementation(function () {
+        this.disable = vi.fn();
+        this.makeGeneratedAnswerFeedbackSubmit =
+          mockMakeGeneratedAnswerFeedbackSubmit as unknown as typeof this.makeGeneratedAnswerFeedbackSubmit;
+        this.makeRetryGeneratedAnswer =
+          mockMakeRetryGeneratedAnswer as unknown as typeof this.makeRetryGeneratedAnswer;
+        this.makeGeneratedAnswerCitationClick =
+          mockMakeGeneratedAnswerCitationClick as unknown as typeof this.makeGeneratedAnswerCitationClick;
+        this.makeGeneratedAnswerSourceHover =
+          mockMakeGeneratedAnswerSourceHover as unknown as typeof this.makeGeneratedAnswerSourceHover;
+        this.makeLikeGeneratedAnswer =
+          mockMakeLikeGeneratedAnswer as unknown as typeof this.makeLikeGeneratedAnswer;
+        this.makeDislikeGeneratedAnswer =
+          mockMakeDislikeGeneratedAnswer as unknown as typeof this.makeDislikeGeneratedAnswer;
+        this.makeGeneratedAnswerStreamEnd =
+          mockMakeGeneratedAnswerStreamEnd as unknown as typeof this.makeGeneratedAnswerStreamEnd;
+        this.makeGeneratedAnswerShowAnswers =
+          mockMakeGeneratedAnswerShowAnswers as unknown as typeof this.makeGeneratedAnswerShowAnswers;
+        this.makeGeneratedAnswerHideAnswers =
+          mockMakeGeneratedAnswerHideAnswers as unknown as typeof this.makeGeneratedAnswerHideAnswers;
+        this.makeGeneratedAnswerCopyToClipboard =
+          mockMakeGeneratedAnswerCopyToClipboard as unknown as typeof this.makeGeneratedAnswerCopyToClipboard;
+        this.makeGeneratedAnswerExpand =
+          mockMakeGeneratedAnswerExpand as unknown as typeof this.makeGeneratedAnswerExpand;
+        this.makeGeneratedAnswerCollapse =
+          mockMakeGeneratedAnswerCollapse as unknown as typeof this.makeGeneratedAnswerCollapse;
+        this.makeGeneratedAnswerFeedbackSubmitV2 =
+          mockMakeGeneratedAnswerFeedbackSubmitV2 as unknown as typeof this.makeGeneratedAnswerFeedbackSubmitV2;
+      });
       engine = buildMockSearchEngine(
         createMockState({
           configuration: {
@@ -557,6 +566,17 @@ describe('generated answer analytics actions', () => {
         expect(emit).toHaveBeenCalledTimes(1);
         expect(emit.mock.calls[0]).toMatchSnapshot();
       });
+    });
+
+    it('should log #logGeneratedAnswerResponseLinked with the response id and answer id', async () => {
+      await logGeneratedAnswerResponseLinked()()(
+        engine.dispatch,
+        () => engine.state,
+        {} as ThunkExtraArguments
+      );
+
+      expect(emit).toHaveBeenCalledTimes(1);
+      expect(emit.mock.calls[0]).toMatchSnapshot();
     });
   });
 });

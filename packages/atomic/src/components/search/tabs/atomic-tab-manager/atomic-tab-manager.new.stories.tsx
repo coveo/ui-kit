@@ -252,7 +252,7 @@ export const Default: Story = {
                     ><atomic-quickview></atomic-quickview
                   ></atomic-result-section-actions>
                   <atomic-result-section-visual>
-                    <img src="https://picsum.photos/350" class="thumbnail" />
+                    <img src="https://picsum.photos/350" alt="Thumbnail" class="thumbnail" />
                   </atomic-result-section-visual>
                   <atomic-result-section-title
                     ><atomic-result-link></atomic-result-link

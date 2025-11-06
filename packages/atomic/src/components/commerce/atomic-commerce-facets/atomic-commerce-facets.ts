@@ -28,6 +28,10 @@ import '../atomic-commerce-facet/atomic-commerce-facet';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import '../atomic-commerce-numeric-facet/atomic-commerce-numeric-facet';
 import '../atomic-commerce-timeframe-facet/atomic-commerce-timeframe-facet';
+import type {
+  FacetType,
+  MappedGeneratedFacetController,
+} from '@coveo/headless/commerce';
 import {keyed} from 'lit/directives/keyed.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {LightDomMixin} from '@/src/mixins/light-dom';
@@ -92,8 +96,11 @@ export class AtomicCommerceFacets
     });
   }
 
-  private shouldCollapseFacet(index: number): boolean {
-    if (this.collapseFacetsAfter === -1) {
+  private shouldCollapseFacet(
+    index: number,
+    facet: MappedGeneratedFacetController[FacetType]
+  ): boolean {
+    if (this.collapseFacetsAfter === -1 || facet.state.hasActiveValues) {
       return false;
     }
     return this.collapseFacetsAfter
@@ -106,8 +113,8 @@ export class AtomicCommerceFacets
       Array.from({length: this.collapseFacetsAfter}),
       () =>
         html`<atomic-facet-placeholder
-          value-count="8"
-        ></atomic-facet-placeholder>`
+            value-count="8"
+          ></atomic-facet-placeholder>`
     );
   }
 
@@ -117,20 +124,20 @@ export class AtomicCommerceFacets
         return nothing;
       }
 
-      const isCollapsed = this.shouldCollapseFacet(index);
+      const isCollapsed = this.shouldCollapseFacet(index, facet);
 
       switch (facet.state.type) {
         case 'regular':
           return html`${keyed(
             facet.state.facetId,
             html`
-          <atomic-commerce-facet
-            .isCollapsed=${isCollapsed}
-            .summary=${this.summary}
-            .facet=${facet as RegularFacet}
-            .field=${facet.state.field}
-          ></atomic-commerce-facet>
-          `
+              <atomic-commerce-facet
+                .isCollapsed=${isCollapsed}
+                .summary=${this.summary}
+                .facet=${facet as RegularFacet}
+                .field=${facet.state.field}
+              ></atomic-commerce-facet>
+            `
           )} `;
         case 'numericalRange':
           return html`${keyed(

@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.71",
+  "version": "3.0.73",
   "scripts": {
     "postinstall": "husky install",
     "reset:install": "git checkout origin/main pnpm-lock.yaml && pnpm install",
@@ -36,7 +36,6 @@
     "@tsconfig/node20": "20.1.6",
     "@types/jest": "catalog:",
     "@types/node": "catalog:",
-    "@vitest/browser": "3.2.4",
     "concurrently": "9.2.0",
     "cspell": "9.2.0",
     "esbuild": "catalog:",
@@ -63,10 +62,11 @@
     "patchedDependencies": {
       "@stencil/angular-output-target@0.8.4": "patches/@stencil+angular-output-target+0.8.4.patch",
       "@stencil/core@4.20.0": "patches/@stencil+core+4.20.0.patch",
-      "@wc-toolkit/storybook-helpers@9.0.1": "patches/@wc-toolkit+storybook-helpers+9.0.1.patch",
+      "@wc-toolkit/storybook-helpers@10.0.0": "patches/@wc-toolkit+storybook-helpers+10.0.0.patch",
       "fix-esm-import-path@1.10.1": "patches/fix-esm-import-path+1.10.1.patch",
       "jest-environment-jsdom@29.7.0": "patches/jest-environment-jsdom+29.7.0.patch",
-      "@stencil/react-output-target@0.5.3": "patches/@stencil__react-output-target@0.5.3.patch"
+      "@stencil/react-output-target@0.5.3": "patches/@stencil__react-output-target@0.5.3.patch",
+      "dayjs": "patches/dayjs.patch"
     },
     "overrides": {
       "braces": "3.0.3",

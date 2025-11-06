@@ -1,20 +1,40 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import {type CSSResultGroup, css, html, LitElement} from 'lit';
+import {
+  buildQuerySummary,
+  type QuerySummary,
+  type QuerySummaryState,
+} from '@coveo/headless';
+import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import type {Bindings} from '@/src/components';
-// import {bindStateToController} from '@/src/decorators/bind-state';
-import {bindingGuard} from '@/src/decorators/binding-guard.js';
-import {bindings} from '@/src/decorators/bindings.js';
+import {when} from 'lit/directives/when.js';
+import {renderButton} from '@/src/components/common/button';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
+import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
+import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 
 /**
-* The `{{name}}` component displays a simple greeting message.
-*
-* @part heading - The element that displays the component name.
-* @part greeting - The element that displays the greeting message.
-*/
+ * The `{{name}}` component displays a simple greeting message and
+ * allows the user to show or hide the current query.
+ *
+ * @part container - The container for the entire component.
+ * @part message - The greeting message itself.
+ * @part query-container - The container for the button and query.
+ * @part toggle-reveal-query-button - The button to show or hide the query.
+ * @part query - The query.
+ *
+ * @slot - Content to display between the message and the the query container.
+ * @slot before - Content to display before the message.
+ * @slot after - Content to display after the query container.
+ *
+ * @remarks
+ * This is a template meant to be used as a starting point for creating or
+ * migrating components. It demonstrates common patterns and good practices.
+ */
 @customElement('{{name}}')
 @bindings()
 @withTailwindStyles
@@ -22,55 +42,171 @@ export class {{namePascalCase}}
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  @state() bindings!: Bindings; // Use the correct type here, e.g., Bindings, CommerceBindings, InsightBindings
-  @state() error!: Error;
-
-  /* This is how you would bind the state of a Headless controller instance to a
-  reactive state property: */
-
-  // @bindStateToController('someHeadlessController')
-  // @state()
-  // public someHeadlessControllerState!: someHeadlessControllerState;
-
-  static styles: CSSResultGroup = css`
-    h1 {
-      color: #3490dc;
-  }`
-
   /**
    * The name of the entity to greet.
+   *
+   * Must be a non-empty string.
    */
-  @property({type: String}) name: string = 'World';
+  @property({type: String, attribute: 'entity-to-greet'})
+  entityToGreet: string = 'Mr LaForge';
 
-  /* If your component relies on a headless controller, it must be defined as 
-  public member: */
+  /**
+   * Whether the greeting should be Vulcan.
+   */
+  @property({type: Boolean, attribute: 'is-vulcan'}) isVulcan: boolean = false;
 
-  // public someHeadlessController: SomeHeadlessController;
+  @state() public bindings!: Bindings;
+  @state() public error!: Error;
+  @bindStateToController('querySummary')
+  @state()
+  public querySummaryState!: QuerySummaryState;
+  public querySummary!: QuerySummary;
 
-  public initialize() {
-    this.validateProps();
+  @state() private isQueryRevealed = false;
 
-    /* If your component relies on a headless controller, this is typically
-    where you would initialize it: */
+  static styles: CSSResultGroup = css`
+    :host {
+      overflow: hidden;
+    }
+  `;
 
-    // this.someHeadlessController = buildSomeHeadlessController();
+  // ==========================================================================
+  // Standard custom element lifecycle methods
+  // ==========================================================================
+  /*
+  Override standard custom element lifecycle methods in this section.
+
+  Use the following order:
+    1. `constructor`
+    2. `connectedCallback`
+    3. `disconnectedCallback`
+    4. `adoptedCallback`
+    5. `attributeChangedCallback`
+
+  Remove this multiline comment when no longer needed.
+  */
+
+  constructor() {
+    super();
+
+    new ValidatePropsController(
+      this,
+      () => ({entityToGreet: this.entityToGreet}),
+      new Schema({
+        entityToGreet: new StringValue({
+          emptyAllowed: false
+        }),
+      })
+    )
   }
 
-  @errorGuard()
+  disconnectedCallback() {
+    super.disconnectedCallback();
+
+    this.removeEventListener(
+      'atomic/redden',
+      this.handleReddenEvent as EventListener
+    );
+  }
+
+  // ==========================================================================
+  // Public methods
+  // ==========================================================================
+  /*
+  Declare public non-lifecycle methods in this section.
+
+  For initializable components, declare the `initialize` method first.
+  
+  Declare other public methods in alphabetical order.
+
+  Remove this multiline comment when no longer needed.
+  */
+
+  public initialize() {
+    this.querySummary = buildQuerySummary(this.bindings.engine);
+    this.addEventListener(
+      'atomic/redden',
+      this.handleReddenEvent as EventListener
+    );
+  }
+
+  // ==========================================================================
+  // Lit reactive update lifecycle methods
+  // ==========================================================================
+  /*
+  Override Lit reactive update lifecycle method in this section.
+
+  Use the following order:
+    1. `shouldUpdate`
+    2. `willUpdate`
+    3. `update`
+    4. `render`
+    5. `firstUpdated`
+    6. `updated`
+
+  Remove this multiline comment when no longer needed.
+  */
+
   @bindingGuard()
+  @errorGuard()
   render() {
-    return html`<div>
-      <h2 part="heading">{{name}}</h2>
-      <p part="greeting">Hello ${this.name}</p>
+    return html`<div part="container">
+      <slot name="before"></slot>
+      <p part="message">${when(
+        this.isVulcan,
+        () => this.vulcanMessage,
+        () => this.nonVulcanMessage
+      )}</p>
+      <slot></slot>
+      <div part="query-container">
+        ${renderButton({
+          props: {
+            disabled: !this.querySummaryState?.hasQuery,
+            onClick: this.toggleRevealQuery,
+            part: 'toggle-reveal-query-button',
+            style: 'primary',
+            text: this.isQueryRevealed
+              ? this.bindings.i18n.t('show-less')
+              : this.bindings.i18n.t('show-more'),
+          },
+        })(nothing)}
+        ${when(this.isQueryRevealed, () => this.renderQuery())}
+      </div>
+      <slot name="after"></slot>
     </div>`;
   }
 
-  private validateProps() {
-    new Schema({
-      name: new StringValue({emptyAllowed: false}),
-    }).validate({
-      name: this.name,
-    });
+  // ==========================================================================
+  // Private methods
+  // ==========================================================================
+  /*
+  Declare private methods in this section in any order.
+
+  Remove this multiline comment when no longer needed.
+  */
+
+  private get nonVulcanMessage() {
+    return html`👋 ${this.entityToGreet}!`;
+  }
+
+  private get vulcanMessage() {
+    return html`🖖 ${this.entityToGreet}!`;
+  }
+
+  private handleReddenEvent() {
+    this.shadowRoot
+      ?.querySelector('[part="message"]')
+      ?.classList.add('text-red-600');
+
+    console.log('The greeting has been reddened!');
+  }
+
+  private renderQuery() {
+    return html`<p part="query">${this.querySummaryState.query}</p>`;
+  }
+
+  private toggleRevealQuery() {
+    this.isQueryRevealed = !this.isQueryRevealed;
   }
 }
 

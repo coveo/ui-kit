@@ -7,11 +7,6 @@ test.describe('atomic-product-text', () => {
       await productText.hydrated.first().waitFor();
     });
 
-    test('should be accessible', async ({makeAxeBuilder}) => {
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations).toEqual([]);
-    });
-
     test.describe('when field has no value and default is set', async () => {
       test('should render default text', async ({productText}) => {
         await productText.load({

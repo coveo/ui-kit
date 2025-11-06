@@ -1,3 +1,27 @@
+## <small>3.37.3 (2025-11-05)</small>
+
+* test: manage REST API mocking through utilities wrapping MSW (#6177) ([1434a17](https://github.com/coveo/ui-kit/commits/1434a17)), closes [#6177](https://github.com/coveo/ui-kit/issues/6177)
+* chore: do not run a11y automatically on stories (#6220) ([6751e86](https://github.com/coveo/ui-kit/commits/6751e86)), closes [#6220](https://github.com/coveo/ui-kit/issues/6220)
+* chore(atomic): migrate atomic-load-more-results (#6217) ([ffc26c1](https://github.com/coveo/ui-kit/commits/ffc26c1)), closes [#6217](https://github.com/coveo/ui-kit/issues/6217)
+* chore(atomic): migrate atomic-recs-interface (#6337) ([fc956f2](https://github.com/coveo/ui-kit/commits/fc956f2)), closes [#6337](https://github.com/coveo/ui-kit/issues/6337)
+* chore(atomic): migrate atomic-result-text (#6206) ([3521050](https://github.com/coveo/ui-kit/commits/3521050)), closes [#6206](https://github.com/coveo/ui-kit/issues/6206)
+* chore(atomic): migrate atomic-text (#6205) ([bf2294c](https://github.com/coveo/ui-kit/commits/bf2294c)), closes [#6205](https://github.com/coveo/ui-kit/issues/6205)
+* docs:(atomic commerce): Add an intro page for atomic commerce (#6338) ([3bbce15](https://github.com/coveo/ui-kit/commits/3bbce15)), closes [#6338](https://github.com/coveo/ui-kit/issues/6338)
+
+
+
+## <small>3.37.2 (2025-10-30)</small>
+
+* fix(atomic): prevent facets from closing when active values are selected (#6208) ([47d1b97](https://github.com/coveo/ui-kit/commits/47d1b97)), closes [#6208](https://github.com/coveo/ui-kit/issues/6208)
+* chore: improve workspace copilot instructions / prompts & atomic component boilerplates (#6165) ([7b06c77](https://github.com/coveo/ui-kit/commits/7b06c77)), closes [#6165](https://github.com/coveo/ui-kit/issues/6165)
+* chore(atomic): migrate `atomic-html` (#6202) ([d204f17](https://github.com/coveo/ui-kit/commits/d204f17)), closes [#6202](https://github.com/coveo/ui-kit/issues/6202)
+* chore(atomic): migrate atomic-result-list (#6189) ([eace955](https://github.com/coveo/ui-kit/commits/eace955)), closes [#6189](https://github.com/coveo/ui-kit/issues/6189)
+* [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
+* chore (atomic): migrated atomic-result-children-template to lit (#6199) ([c0f6684](https://github.com/coveo/ui-kit/commits/c0f6684)), closes [#6199](https://github.com/coveo/ui-kit/issues/6199)
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
 ## <small>3.37.1 (2025-10-29)</small>
 
 * ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)

@@ -1,6 +1,6 @@
 {
   "name": "@coveo/create-atomic-result-component",
-  "version": "1.3.8",
+  "version": "1.3.10",
   "description": "Initialize a Coveo Atomic Result Component",
   "type": "module",
   "main": "index.js",
