@@ -15,6 +15,7 @@ import colors from '../../../utils/ci/colors.mjs';
 
 import analyticsTransformer from './analytics-transform.mjs';
 import versionTransformer from './version-transform.mjs';
+import wildcardExportTransformer from './wildcard-export-transform.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -24,7 +25,11 @@ if (configArg === undefined) {
   throw new Error('Missing --config=[PATH] argument');
 }
 const tsConfigPath = configArg.split('=')[1];
-const transformers = [versionTransformer, analyticsTransformer];
+const transformers = [
+  versionTransformer,
+  analyticsTransformer,
+  wildcardExportTransformer,
+];
 
 function loadTsConfig(configPath) {
   const configFile = readConfigFile(configPath, sys.readFile);

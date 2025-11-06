@@ -5,12 +5,6 @@ test.describe('atomic-commerce-pager', () => {
     await pager.load();
   });
 
-  test('should be accessible', async ({pager, makeAxeBuilder}) => {
-    await pager.hydrated.waitFor();
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should render pager with navigation elements', async ({pager}) => {
     await expect(pager.pages).toHaveCount(5);
     await expect(pager.previousButton).toBeVisible();

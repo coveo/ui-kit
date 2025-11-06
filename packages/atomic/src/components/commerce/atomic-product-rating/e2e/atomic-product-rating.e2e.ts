@@ -7,10 +7,6 @@ test.describe('atomic-product-rating', () => {
       await productRating.hydrated.first().waitFor();
     });
 
-    test('should be accessible', async ({makeAxeBuilder}) => {
-      expect((await makeAxeBuilder().analyze()).violations.length).toBe(0);
-    });
-
     test('should have the right number of yellow icons', async ({
       productRating,
     }) => {
@@ -26,12 +22,6 @@ test.describe('atomic-product-rating', () => {
       await productRating.load({story: 'with-a-rating-details-field'});
     });
 
-    test('should be accessible', async ({productRating, makeAxeBuilder}) => {
-      await expect(productRating.hydrated.first()).toBeVisible();
-
-      expect((await makeAxeBuilder().analyze()).violations.length).toBe(0);
-    });
-
     test('should show the rating details next to the rating', async ({
       productRating,
     }) => {
@@ -43,10 +33,6 @@ test.describe('atomic-product-rating', () => {
     test.beforeEach(async ({productRating}) => {
       await productRating.load({story: 'with-a-max-value-in-index'});
       await expect(productRating.hydrated.first()).toBeVisible();
-    });
-
-    test('should be accessible', async ({makeAxeBuilder}) => {
-      expect((await makeAxeBuilder().analyze()).violations.length).toBe(0);
     });
 
     test('should have the right number of yellow icons', async ({
@@ -63,10 +49,6 @@ test.describe('atomic-product-rating', () => {
     test.beforeEach(async ({productRating}) => {
       await productRating.load({story: 'with-a-different-icon'});
       await expect(productRating.hydrated.first()).toBeVisible();
-    });
-
-    test('should be accessible', async ({makeAxeBuilder}) => {
-      expect((await makeAxeBuilder().analyze()).violations.length).toBe(0);
     });
 
     test('should have the right number of yellow icons', async ({

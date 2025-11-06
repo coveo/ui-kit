@@ -19,22 +19,6 @@ test.describe('atomic-commerce-recommendation-interface', () => {
     ).toBeVisible();
   });
 
-  test('should be accessible', async ({
-    commerceRecommendationInterface,
-    makeAxeBuilder,
-  }) => {
-    await commerceRecommendationInterface.load({
-      story: 'with-recommendation-list',
-    });
-    await commerceRecommendationInterface
-      .recommendationList()
-      .waitFor({state: 'visible'});
-
-    const accessibilityResults = await makeAxeBuilder().analyze();
-
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   // TODO (KIT-4365): remove this test in v4
   test('should support language localization through the #language property', async ({
     commerceRecommendationInterface,

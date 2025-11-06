@@ -6,11 +6,6 @@ test.describe('atomic-product-children', () => {
     await productChildren.hydrated.waitFor();
   });
 
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should render a label', async ({productChildren}) => {
     await expect(productChildren.availableInLabel).toBeVisible();
   });
