@@ -5,6 +5,7 @@ import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
 } from '@/src/components/common/layout/display-options';
+import {renderChildrenWrapper} from '@/src/components/common/result-children/children-wrapper';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 
 interface CollectionGuardProps {
@@ -33,7 +34,7 @@ export const renderCollectionGuard: FunctionalComponentWithChildren<
     } = props;
 
     if (isLoadingMoreResults) {
-      return renderChildrenWrapper({props: {hasChildren}})(
+      return renderChildrenWrapper()(
         renderItemPlaceholders({
           props: {
             numberOfPlaceholders: numberOfChildren,
@@ -59,22 +60,4 @@ export const renderCollectionGuard: FunctionalComponentWithChildren<
     }
 
     return children;
-  };
-
-interface ChildrenWrapperProps {
-  hasChildren: boolean;
-}
-
-const renderChildrenWrapper: FunctionalComponentWithChildren<
-  ChildrenWrapperProps
-> =
-  ({props}) =>
-  (children) => {
-    const {hasChildren} = props;
-
-    return html`<div part="children-root">
-      ${when(hasChildren, () => html`<slot name="before-children"></slot>`)}
-      ${children}
-      ${when(hasChildren, () => html`<slot name="after-children"></slot>`)}
-    </div>`;
   };

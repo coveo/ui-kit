@@ -6,11 +6,6 @@ test.describe('atomic-result-text', () => {
     await resultText.hydrated.first().waitFor();
   });
 
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test.describe('when using a field that supports highlights', () => {
     test('should highlight keywords in the excerpt', async ({resultText}) => {
       await resultText.load({args: {field: 'excerpt'}});

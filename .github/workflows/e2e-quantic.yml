@@ -1,5 +1,11 @@
 on:
   workflow_call:
+    inputs:
+      event_name:
+        description: 'The event name that triggered the workflow'
+        required: false
+        type: string
+        default: 'pull_request'
     secrets:
       SFDX_AUTH_CLIENT_ID:
         required: true
@@ -10,6 +16,7 @@ jobs:
     name: 'Setup e2e tests on Quantic'
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: ${{ inputs.event_name == 'merge_group' }}
       matrix:
         lws-status: ['enabled', 'disabled']
     steps:
@@ -48,7 +55,7 @@ jobs:
       image: mcr.microsoft.com/playwright:v1.56.1-noble
       options: --user 1001
     strategy:
-      fail-fast: false
+      fail-fast: ${{ inputs.event_name == 'merge_group' }}
       matrix:
         shardIndex: [1, 2, 3, 4]
         shardTotal: [4]
