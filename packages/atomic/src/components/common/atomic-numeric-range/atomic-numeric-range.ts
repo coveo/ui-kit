@@ -24,7 +24,7 @@ export class AtomicNumericRange extends LightDomMixin(LitElement) {
   @property({type: Number, reflect: true}) public end!: number;
 
   /**
-   * Whether the end value should be included in the range.
+   * Specifies whether the end value should be included in the range.
    */
   @property({type: Boolean, reflect: true}) public endInclusive = false;
 }

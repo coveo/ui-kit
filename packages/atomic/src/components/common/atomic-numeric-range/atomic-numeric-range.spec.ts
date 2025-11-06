@@ -62,17 +62,29 @@ describe('atomic-numeric-range', () => {
     expect(element.label).toBe('Custom Label');
   });
 
-  it('should reflect properties to attributes', async () => {
+  it('should reflect numeric properties to attributes', async () => {
     const {element} = await renderComponent({
       start: 10,
       end: 90,
-      endInclusive: true,
-      label: 'Test',
     });
 
     expect(element.getAttribute('start')).toBe('10');
     expect(element.getAttribute('end')).toBe('90');
+  });
+
+  it('should reflect boolean property to attribute', async () => {
+    const {element} = await renderComponent({
+      endInclusive: true,
+    });
+
     expect(element.hasAttribute('endInclusive')).toBe(true);
+  });
+
+  it('should reflect string property to attribute', async () => {
+    const {element} = await renderComponent({
+      label: 'Test',
+    });
+
     expect(element.getAttribute('label')).toBe('Test');
   });
 
