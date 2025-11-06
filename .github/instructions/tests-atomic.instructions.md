@@ -36,6 +36,39 @@ vi.mock('@/src/utils/xss-utils', () => ({
 
 **Mock cleanup:** Automatic via `restoreMocks: true` in vitest.config.js. Never manually reset in `beforeEach` unless preserving state across tests.
 
+**⚠️ Important: `{spy: true}` Limitation**
+
+When using `vi.mock(module, {spy: true})`, you **cannot** use `mockReturnValue()`, `mockImplementation()`, etc. on the spied functions. The `{spy: true}` option creates spies that track calls but don't provide the full mock API.
+
+```typescript
+// ❌ Bad - This will fail with "mockReturnValue is not a function"
+vi.mock('@coveo/bueno', {spy: true});
+it('test', () => {
+  vi.mocked(isArray).mockReturnValue(true); // ERROR!
+});
+
+// ✅ Good - Use real values instead (preferred for simple utilities)
+// No mocking needed - just use real arrays!
+it('test', () => {
+  const arrayValue = ['value1', 'value2'];
+  // The real isArray() will return true for real arrays
+});
+
+// ✅ Good - Or provide full mock implementation
+vi.mock('@coveo/bueno', () => ({
+  isArray: vi.fn(),
+  isUndefined: vi.fn(),
+}));
+it('test', () => {
+  vi.mocked(isArray).mockReturnValue(true); // Works!
+});
+```
+
+**When to mock:**
+- **Simple utilities** (`isArray`, `isUndefined` from `@coveo/bueno`) → Use real values, don't mock
+- **Headless controllers** → Use `{spy: true}` with `buildFake*` utilities (no `mockReturnValue` needed)
+- **Local utilities** → Use `{spy: true}` or full mock as needed
+
 ## Testing Components
 
 > **Template reference:** `packages/atomic/scripts/generate-component-templates/component.spec.ts.hbs`
