@@ -1251,11 +1251,6 @@ export namespace Components {
     interface AtomicPopover {
     }
     /**
-     * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
-     */
-    interface AtomicQueryError {
-    }
-    /**
      * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
      * about a result.
      * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (e.g., custom styles and embedded
@@ -2884,15 +2879,6 @@ declare global {
         new (): HTMLAtomicPopoverElement;
     };
     /**
-     * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
-     */
-    interface HTMLAtomicQueryErrorElement extends Components.AtomicQueryError, HTMLStencilElement {
-    }
-    var HTMLAtomicQueryErrorElement: {
-        prototype: HTMLAtomicQueryErrorElement;
-        new (): HTMLAtomicQueryErrorElement;
-    };
-    /**
      * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
      * about a result.
      * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (e.g., custom styles and embedded
@@ -3538,7 +3524,6 @@ declare global {
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
         "atomic-popover": HTMLAtomicPopoverElement;
-        "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-quickview": HTMLAtomicQuickviewElement;
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
@@ -4773,11 +4758,6 @@ declare namespace LocalJSX {
     interface AtomicPopover {
     }
     /**
-     * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
-     */
-    interface AtomicQueryError {
-    }
-    /**
      * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
      * about a result.
      * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (e.g., custom styles and embedded
@@ -5799,7 +5779,6 @@ declare namespace LocalJSX {
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-numeric-range": AtomicNumericRange;
         "atomic-popover": AtomicPopover;
-        "atomic-query-error": AtomicQueryError;
         "atomic-quickview": AtomicQuickview;
         "atomic-quickview-modal": AtomicQuickviewModal;
         "atomic-rating-facet": AtomicRatingFacet;
@@ -6025,10 +6004,6 @@ declare module "@stencil/core" {
              * The `atomic-popover` component displays any facet as a popover menu.
              */
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
-            /**
-             * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
-             */
-            "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             /**
              * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
              * about a result.

@@ -1,74 +1,153 @@
-# GitHub Copilot Agents Configuration
+# AGENTS.md - Coding Agent Instructions
 
-This repository uses GitHub Copilot custom agents to enhance the development experience with specialized instructions, chatmodes, and prompts.
+This file provides specialized instructions for AI coding agents working in the Coveo UI-Kit repository.
 
-## Instructions
+## Quick Start
 
-Instructions are automatically applied based on file patterns and provide coding standards and best practices:
+### Building
+```bash
+pnpm install
+pnpm build
+```
 
-### General Instructions
+### Testing
+```bash
+# Run all tests
+pnpm test
 
-- **general.instructions.md** - Core development principles
-  - Applies to: All files
-  - Focus: Correctness, code quality, defensive programming
+# Run E2E tests
+pnpm e2e
 
-### Package-Specific Instructions
+# Run tests for specific package
+cd packages/atomic
+pnpm test
+pnpm e2e
+```
 
-- **atomic.instructions.md** - Atomic package conventions
-  - Applies to: `packages/atomic/**/**`
-  - Focus: Lit/Stencil components, Atomic Chemistry naming, file structure
+### Linting
+```bash
+pnpm lint:check  # Check for issues
+pnpm lint:fix    # Auto-fix issues
+```
 
-- **tests-atomic.instructions.md** - Atomic testing patterns
-  - Applies to: `**/atomic/**/*.spec.ts`
-  - Focus: Vitest unit tests, test structure, mocking
+## Repository Structure
 
-### Technology-Specific Instructions
+```
+ui-kit/
+├── packages/
+│   ├── atomic/          # UI component library (Lit/Stencil)
+│   ├── headless/        # Headless UI library
+│   ├── quantic/         # Salesforce Lightning components
+│   └── headless-react/  # React bindings
+├── .github/
+│   ├── instructions/    # Coding standards and conventions
+│   ├── agents/          # Custom agent definitions
+│   ├── chatmodes/       # Specialized AI personas
+│   └── prompts/         # Task-specific workflows
+└── samples/             # Example implementations
+```
 
-- **a11y.instructions.md** - Accessibility (WCAG 2.2 Level AA)
-  - Applies to: All files
-  - Focus: Keyboard navigation, ARIA, screen reader support, inclusive language
+## Coding Standards
 
-- **playwright-typescript.instructions.md** - Playwright E2E testing
-  - Applies to: Test files (`**/*.e2e.ts`, `**/*.spec.ts`)
-  - Focus: User-facing locators, auto-retrying assertions, test structure
+### Instructions System
 
-## Chatmodes
+All code changes MUST follow the conventions defined in `.github/instructions/`:
 
-Chatmodes provide specialized AI personas for specific development tasks:
+- **general.instructions.md** - Core development principles (all files)
+- **general.typescript.instructions.md** - TypeScript conventions (all .ts/.tsx files)
+- **atomic.instructions.md** - Atomic package conventions (`packages/atomic/**`)
+- **tests-atomic.instructions.md** - Atomic testing patterns (`**/atomic/**/*.spec.ts`)
+- **playwright-typescript.instructions.md** - E2E testing patterns (`**/*.e2e.ts`)
+- **a11y.instructions.md** - Accessibility standards (all files)
+- **msw-api-mocking.instructions.md** - API mocking for Storybook
 
-- **accessibility.chatmode.md** - WCAG compliance review and testing
-- **typescript-mcp-expert.chatmode.md** - TypeScript MCP server development
-- **refine-issue.chatmode.md** - Issue refinement with acceptance criteria
-- **research-technical-spike.chatmode.md** - Technical investigation and documentation
-- **task-researcher.chatmode.md** - Deep codebase analysis and research
-
-## Prompts
-
-Task-specific prompts for common development workflows:
-
-- Component generation and migration prompts
-- Test generation prompts
-- Documentation generation prompts
-
-## Repository Context
+These instructions are automatically applied by GitHub Copilot based on file patterns.
 
 ### Technology Stack
 
-- TypeScript 5.8.3 targeting ES2022
-- UI Frameworks: Lit (preferred), Stencil (legacy)
-- Testing: Vitest (unit), Playwright (E2E)
-- Package Manager: pnpm
-- Monorepo: Turbo workspace
+- **TypeScript**: Check `package.json` for current version
+- **Build System**: Turbo (monorepo orchestration) + package-specific builds
+- **Package Manager**: pnpm with workspaces
+- **Testing**: Vitest (unit), Playwright (E2E)
+- **UI Frameworks**: Lit (preferred), Stencil (legacy)
 
-### Key Packages
+## PR Standards
 
-- **atomic**: UI component library
-- **headless**: Headless UI library
-- **quantic**: Salesforce Lightning components
-- **headless-react**: React bindings
+- **Title**: Semantic commit format (e.g., `feat:`, `fix:`, `refactor:`)
+  - Prefix with `WIP:` while work is in progress
+- **Description**: Include `Fixes #Issue_number` when addressing a specific issue
+- **Template**: For Stencil → Lit migrations, use `.github/PULL_REQUEST_TEMPLATE/atomic-stencil-lit-migration.md`
+- **Commits**: Use clear, descriptive messages
 
-## Usage
+## Custom Agents
 
-Instructions are automatically applied by GitHub Copilot based on file patterns. Chatmodes can be invoked in VS Code Copilot Chat for specialized assistance.
+- **component-migration-agent.md** - Specialized agent for Stencil → Lit component migrations
+  - Location: `.github/agents/component-migration-agent.md`
+  - Performs complete migrations: component code, unit tests, Storybook stories, E2E tests, and MDX documentation
+  - Uses dedicated prompts for each migration step
+  - Identifies and documents blocking dependencies
+  - Uses `.github/PULL_REQUEST_TEMPLATE/atomic-stencil-lit-migration.md` template for PRs
 
-For more details, see the individual instruction and chatmode files in `.github/instructions/` and `.github/chatmodes/`.
+## Chatmodes (VS Code Copilot)
+
+- **accessibility.chatmode.md** - WCAG compliance review
+- **typescript-mcp-expert.chatmode.md** - TypeScript MCP server development
+- **refine-issue.chatmode.md** - Issue refinement with acceptance criteria
+- **research-technical-spike.chatmode.md** - Technical investigation
+- **task-researcher.chatmode.md** - Deep codebase analysis
+
+## Prompts (Task Templates)
+
+Located in `.github/prompts/`:
+- Component generation and migration
+- Test generation (Vitest, Playwright)
+- Documentation generation
+
+## Common Workflows
+
+### Creating a New Component
+```bash
+cd packages/atomic
+node scripts/generate-component.mjs component-name src/components/common
+```
+
+### Running Specific Package Commands
+```bash
+# Atomic package
+cd packages/atomic
+pnpm build:stencil-lit  # Build
+pnpm test:lit           # Test Lit components
+pnpm e2e                # E2E tests
+
+# Headless package
+cd packages/headless
+pnpm build
+pnpm test
+```
+
+### Debugging Test Failures
+```bash
+cd packages/atomic
+pnpm test -- <test-file> --reporter=verbose
+pnpm e2e <test-file> --debug --headed
+```
+
+## Quality Checklist
+
+Before committing:
+- [ ] Read relevant `.github/instructions/` files
+- [ ] Tests pass consistently (unit and/or E2E)
+- [ ] Linting passes: `pnpm lint:fix`
+- [ ] Builds succeed: `pnpm build`
+- [ ] Used path aliases for imports
+- [ ] Type safety maintained (no `any` without justification)
+- [ ] Resources cleaned up in lifecycle methods
+- [ ] Changes are minimal and surgical
+- [ ] PR follows semantic commit format
+- [ ] PR description includes `Fixes #Issue_number` if applicable
+
+## For Human Contributors
+
+For general contribution guidelines, project overview, and getting started information, see the main [README.md](../README.md).
+
+This file is optimized for AI coding agents and contains detailed build steps, test commands, and conventions that complement the human-focused README.
