@@ -1,6 +1,6 @@
 import type {Result, ResultTemplateCondition} from '@coveo/headless';
 import {ResultTemplatesHelpers} from '@coveo/headless';
-import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
+import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {
   makeDefinedConditions,
@@ -83,7 +83,7 @@ export class AtomicFieldCondition
     const result: Result | undefined = this.resultController.item;
 
     if (!result || !this.conditions.every((condition) => condition(result))) {
-      return nothing;
+      this.remove();
     }
 
     return html`<slot></slot>`;
