@@ -219,6 +219,24 @@ describe('atomic-query-error', () => {
         );
       });
 
+      it('should update aria message when error occurs', async () => {
+        const mockAriaMessage = 'An error occurred with your search';
+        vi.mocked(getAriaMessageFromErrorType).mockReturnValue(mockAriaMessage);
+
+        await renderQueryError({hasError: true, error: mockError});
+
+        expect(getAriaMessageFromErrorType).toHaveBeenCalled();
+      });
+
+      it('should render show more button part', async () => {
+        const {moreInfoBtn} = await renderQueryError({
+          hasError: true,
+          error: mockError,
+        });
+
+        expect(moreInfoBtn).toBeInTheDocument();
+      });
+
       it.each([
         'InvalidTokenException',
         'Disconnected',
@@ -284,73 +302,35 @@ describe('atomic-query-error', () => {
       });
     });
 
-    describe('edge cases', () => {
-      it('should handle null error gracefully', async () => {
-        await renderQueryError({hasError: true, error: null});
+    it('should handle null error gracefully', async () => {
+      await renderQueryError({hasError: true, error: null});
 
-        const mockQueryError =
-          vi.mocked(buildQueryError).mock.results[0]?.value;
-        expect(mockQueryError?.state.hasError).toBe(true);
-        expect(mockQueryError?.state.error).toBeNull();
-      });
-
-      it('should handle error without type', async () => {
-        const errorWithoutType = {
-          statusCode: 500,
-          message: 'Error without type',
-        };
-        await renderQueryError({hasError: true, error: errorWithoutType});
-
-        const mockQueryError =
-          vi.mocked(buildQueryError).mock.results[0]?.value;
-        expect(mockQueryError?.state.error?.type).toBeUndefined();
-      });
-
-      it('should handle error with empty message', async () => {
-        const errorWithEmptyMessage = {
-          type: 'TestError',
-          statusCode: 500,
-          message: '',
-        };
-        await renderQueryError({hasError: true, error: errorWithEmptyMessage});
-
-        const mockQueryError =
-          vi.mocked(buildQueryError).mock.results[0]?.value;
-        expect(mockQueryError?.state.error?.message).toBe('');
-      });
+      const mockQueryError = vi.mocked(buildQueryError).mock.results[0]?.value;
+      expect(mockQueryError?.state.hasError).toBe(true);
+      expect(mockQueryError?.state.error).toBeNull();
     });
 
-    describe('accessibility', () => {
-      it('should update aria message when error occurs', async () => {
-        const mockAriaMessage = 'An error occurred with your search';
-        vi.mocked(getAriaMessageFromErrorType).mockReturnValue(mockAriaMessage);
+    it('should handle error without type', async () => {
+      const errorWithoutType = {
+        statusCode: 500,
+        message: 'Error without type',
+      };
+      await renderQueryError({hasError: true, error: errorWithoutType});
 
-        await renderQueryError({hasError: true, error: mockError});
-
-        expect(getAriaMessageFromErrorType).toHaveBeenCalled();
-      });
+      const mockQueryError = vi.mocked(buildQueryError).mock.results[0]?.value;
+      expect(mockQueryError?.state.error?.type).toBeUndefined();
     });
 
-    describe('shadow DOM parts', () => {
-      it('should render all expected shadow DOM parts when error occurs', async () => {
-        const {icon, title, description} = await renderQueryError({
-          hasError: true,
-          error: mockError,
-        });
+    it('should handle error with empty message', async () => {
+      const errorWithEmptyMessage = {
+        type: 'TestError',
+        statusCode: 500,
+        message: '',
+      };
+      await renderQueryError({hasError: true, error: errorWithEmptyMessage});
 
-        expect(icon).toBeInTheDocument();
-        expect(title).toBeInTheDocument();
-        expect(description).toBeInTheDocument();
-      });
-
-      it('should conditionally render show more button part', async () => {
-        const {moreInfoBtn} = await renderQueryError({
-          hasError: true,
-          error: mockError,
-        });
-
-        expect(moreInfoBtn).toBeInTheDocument();
-      });
+      const mockQueryError = vi.mocked(buildQueryError).mock.results[0]?.value;
+      expect(mockQueryError?.state.error?.message).toBe('');
     });
   });
 });
