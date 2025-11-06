@@ -1,5 +1,4 @@
 import {buildInstantProducts} from '@coveo/headless/commerce';
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {
   beforeEach,
@@ -10,6 +9,7 @@ import {
   type MockInstance,
   vi,
 } from 'vitest';
+import {page} from 'vitest/browser';
 import type {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
