@@ -471,26 +471,6 @@ export class AtomicPopover {
 export declare interface AtomicPopover extends Components.AtomicPopover {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicQueryError})
-@Component({standalone:false,
-  selector: 'atomic-query-error',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicQueryError {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicQueryError extends Components.AtomicQueryError {}
-
-
 @ProxyCmp({
   inputs: ['sandbox']
 , defineCustomElementFn: defineCustomElementAtomicQuickview})
@@ -2913,6 +2893,32 @@ export class AtomicPager {
 
 export declare interface AtomicPager extends LitAtomicPager {
   'atomic/scrollToTop': EventEmitter<CustomEvent<any>>;
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: ['initialize'],
+  defineCustomElementFn: () => {customElements.get('atomic-query-error') || customElements.define('atomic-query-error', LitAtomicQueryError);}
+})
+@Component({
+  selector: 'atomic-query-error',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicQueryError {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicQueryError extends LitAtomicQueryError {
+
 }
 
 @ProxyCmp({

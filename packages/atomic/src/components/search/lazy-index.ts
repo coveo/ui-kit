@@ -9,6 +9,8 @@ export default {
   'atomic-no-results': async () =>
     await import('./atomic-no-results/atomic-no-results.js'),
   'atomic-pager': async () => await import('./atomic-pager/atomic-pager.js'),
+  'atomic-query-error': async () =>
+    await import('./atomic-query-error/atomic-query-error.js'),
   'atomic-query-summary': async () =>
     await import('./atomic-query-summary/atomic-query-summary.js'),
   'atomic-relevance-inspector': async () =>
