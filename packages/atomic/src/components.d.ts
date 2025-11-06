@@ -308,25 +308,6 @@ export namespace Components {
          */
         "mustNotMatch": Record<string, string[]>;
     }
-    interface AtomicFocusTrap {
-        "active": boolean;
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
-         */
-        "container"?: HTMLElement;
-        /**
-          * The common ancestor of the focus trap and of all the elements that should be inaccessible when inside the focus trap.
-         */
-        "scope": HTMLElement;
-        /**
-          * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
-         */
-        "shouldHideSelf": boolean;
-        /**
-          * The source to focus when the focus trap becomes inactive.
-         */
-        "source"?: HTMLElement;
-    }
     /**
      * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
      */
@@ -2401,12 +2382,6 @@ declare global {
         prototype: HTMLAtomicFieldConditionElement;
         new (): HTMLAtomicFieldConditionElement;
     };
-    interface HTMLAtomicFocusTrapElement extends Components.AtomicFocusTrap, HTMLStencilElement {
-    }
-    var HTMLAtomicFocusTrapElement: {
-        prototype: HTMLAtomicFocusTrapElement;
-        new (): HTMLAtomicFocusTrapElement;
-    };
     /**
      * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
      */
@@ -3499,7 +3474,6 @@ declare global {
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
-        "atomic-focus-trap": HTMLAtomicFocusTrapElement;
         "atomic-folded-result-list": HTMLAtomicFoldedResultListElement;
         "atomic-format-currency": HTMLAtomicFormatCurrencyElement;
         "atomic-format-number": HTMLAtomicFormatNumberElement;
@@ -3881,25 +3855,6 @@ declare namespace LocalJSX {
           * @type {Record<string, string[]>}
          */
         "mustNotMatch"?: Record<string, string[]>;
-    }
-    interface AtomicFocusTrap {
-        "active"?: boolean;
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
-         */
-        "container"?: HTMLElement;
-        /**
-          * The common ancestor of the focus trap and of all the elements that should be inaccessible when inside the focus trap.
-         */
-        "scope"?: HTMLElement;
-        /**
-          * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
-         */
-        "shouldHideSelf"?: boolean;
-        /**
-          * The source to focus when the focus trap becomes inactive.
-         */
-        "source"?: HTMLElement;
     }
     /**
      * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
@@ -5770,7 +5725,6 @@ declare namespace LocalJSX {
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-number-input": AtomicFacetNumberInput;
         "atomic-field-condition": AtomicFieldCondition;
-        "atomic-focus-trap": AtomicFocusTrap;
         "atomic-folded-result-list": AtomicFoldedResultList;
         "atomic-format-currency": AtomicFormatCurrency;
         "atomic-format-number": AtomicFormatNumber;
@@ -5937,7 +5891,6 @@ declare module "@stencil/core" {
              * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
              */
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
-            "atomic-focus-trap": LocalJSX.AtomicFocusTrap & JSXBase.HTMLAttributes<HTMLAtomicFocusTrapElement>;
             /**
              * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
              */

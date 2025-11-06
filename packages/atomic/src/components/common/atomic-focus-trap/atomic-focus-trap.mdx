@@ -1,22 +1,16 @@
-import {Canvas, Meta} from '@storybook/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicFocusTrapStories from './atomic-focus-trap.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
 
 <Meta of={AtomicFocusTrapStories} />
 
-# atomic-focus-trap
-
+<AtomicDocTemplate
+  stories={AtomicFocusTrapStories}
+  githubPath="common/atomic-focus-trap/atomic-focus-trap.ts"
+  tagName="atomic-focus-trap"
+  className="AtomicFocusTrap"
+>
 The `atomic-focus-trap` component is an internal utility that manages focus within modal dialogs and popovers. When active, it ensures keyboard navigation stays within the trap and hides sibling elements from assistive technologies.
 
-## Properties
-
-- `active` (boolean): Whether the focus trap is active.
-- `source` (HTMLElement): The element to focus when the trap becomes inactive.
-- `container` (HTMLElement): The container to hide when the trap is inactive.
-- `shouldHideSelf` (boolean): Whether to hide the element when inactive.
-- `scope` (Element): The common ancestor for determining accessible elements.
-
-## Notes
-
-- Uses the `inert` attribute when supported for better accessibility.
-- Falls back to `aria-hidden` for older browsers.
-- Respects `aria-live` regions which must remain accessible.
+</AtomicDocTemplate>

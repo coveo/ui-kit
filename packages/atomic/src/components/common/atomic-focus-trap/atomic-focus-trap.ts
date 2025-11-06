@@ -1,4 +1,4 @@
-import {html, LitElement} from 'lit';
+import {LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {getFirstFocusableDescendant} from '@/src/utils/accessibility-utils';
@@ -14,8 +14,6 @@ import {
  * ensuring keyboard navigation stays within the trap when active. When active,
  * it hides sibling elements from assistive technologies and restricts tab focus
  * to its descendants.
- *
- * @internal
  */
 @customElement('atomic-focus-trap')
 export class AtomicFocusTrap extends LightDomMixin(LitElement) {
@@ -67,18 +65,11 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
     }
   }
 
-  render() {
-    return html`<slot></slot>`;
-  }
-
   private hide(element: Element) {
-    // Check if using inert is supported and preferred over aria-hidden
     if ('inert' in HTMLElement.prototype) {
-      // Skip elements that are already inert
       if ((element as HTMLElement).inert) {
         return;
       }
-      // Skip aria-live regions as they must announce dynamic changes
       if (
         element.hasAttribute('aria-live') ||
         element.tagName.toLowerCase() === 'atomic-aria-live'
@@ -106,7 +97,6 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
   private showAll() {
     let el = this.hiddenElements.pop();
     while (el) {
-      // Clean up both inert and aria-hidden to handle all cases
       if ('inert' in HTMLElement.prototype) {
         (el as HTMLElement).inert = false;
       }
@@ -204,7 +194,7 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
     getFirstFocusableDescendant(this)?.focus();
   };
 
-  private get parentToHide() {
+  private get parentToHide(): Element {
     return this.container ?? this;
   }
 }
