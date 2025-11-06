@@ -13,7 +13,6 @@ export const AtomicAutomaticFacetGenerator = /*@__PURE__*/createReactComponent<J
 export const AtomicBreadbox = /*@__PURE__*/createReactComponent<JSX.AtomicBreadbox, HTMLAtomicBreadboxElement>('atomic-breadbox');
 export const AtomicCategoryFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCategoryFacet, HTMLAtomicCategoryFacetElement>('atomic-category-facet');
 export const AtomicCitation = /*@__PURE__*/createReactComponent<JSX.AtomicCitation, HTMLAtomicCitationElement>('atomic-citation');
-export const AtomicColorFacet = /*@__PURE__*/createReactComponent<JSX.AtomicColorFacet, HTMLAtomicColorFacetElement>('atomic-color-facet');
 export const AtomicDidYouMean = /*@__PURE__*/createReactComponent<JSX.AtomicDidYouMean, HTMLAtomicDidYouMeanElement>('atomic-did-you-mean');
 export const AtomicFacetManager = /*@__PURE__*/createReactComponent<JSX.AtomicFacetManager, HTMLAtomicFacetManagerElement>('atomic-facet-manager');
 export const AtomicFoldedResultList = /*@__PURE__*/createReactComponent<JSX.AtomicFoldedResultList, HTMLAtomicFoldedResultListElement>('atomic-folded-result-list');
