@@ -21,7 +21,7 @@ applyTo: '**/atomic/**/*.spec.{ts}'
 **Import explicitly from Vitest:**
 ```typescript
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
-import {page} from '@vitest/browser/context';
+import {page} from 'vitest/browser';
 import {html} from 'lit';
 ```
 
@@ -177,7 +177,11 @@ describe('when validation fails', () => {
 
 **❌ Don't mock console at top level** - this hides unexpected errors in other tests.
 
-**✅ Use page locators over direct DOM queries** for browser-context tests.
+- **Always mock headless at the top level** with `vi.mock('@coveo/headless/commerce', {spy: true})`
+- **Use `beforeEach` for setup, not `afterEach`** - the framework handles cleanup automatically
+- **Use page locators** from `vitest/browser` for better test reliability
+- **Create reusable render functions** to avoid duplication and ensure consistent setup
+- **Use `buildFake*` utilities** instead of creating manual mocks for headless controllers
 
 ## Commands
 
