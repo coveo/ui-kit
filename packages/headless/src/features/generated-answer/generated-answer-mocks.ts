@@ -1354,6 +1354,161 @@ export const streamAnswerAPIStateMockWithoutContext: StreamAnswerAPIState = {
   context: undefined,
 };
 
+// Query Correction Mocks
+export const streamAnswerAPIStateMockWithLegacyDidYouMean: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    didYouMean: {
+      enableDidYouMean: true,
+      wasCorrectedTo: '',
+      wasAutomaticallyCorrected: false,
+      queryCorrection: {
+        correctedQuery: '',
+        wordCorrections: [],
+      },
+      originalQuery: '',
+      automaticallyCorrectQuery: false,
+      queryCorrectionMode: 'legacy',
+    },
+  };
+
+export const streamAnswerAPIStateMockWithNextDidYouMeanAutoCorrect: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    didYouMean: {
+      enableDidYouMean: true,
+      wasCorrectedTo: '',
+      wasAutomaticallyCorrected: false,
+      queryCorrection: {
+        correctedQuery: '',
+        wordCorrections: [],
+      },
+      originalQuery: '',
+      automaticallyCorrectQuery: true,
+      queryCorrectionMode: 'next',
+    },
+  };
+
+export const streamAnswerAPIStateMockWithNextDidYouMeanNoAutoCorrect: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    didYouMean: {
+      enableDidYouMean: true,
+      wasCorrectedTo: '',
+      wasAutomaticallyCorrected: false,
+      queryCorrection: {
+        correctedQuery: '',
+        wordCorrections: [],
+      },
+      originalQuery: '',
+      automaticallyCorrectQuery: false,
+      queryCorrectionMode: 'next',
+    },
+  };
+
+// Fields Mocks
+export const streamAnswerAPIStateMockWithFieldsToInclude: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    fields: {
+      fieldsToInclude: ['title', 'summary', 'uri', 'author'],
+      fetchAllFields: false,
+      fieldsDescription: [],
+    },
+  };
+
+export const streamAnswerAPIStateMockWithoutFields: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  fields: undefined,
+};
+
+// Debug Mocks
+export const streamAnswerAPIStateMockWithDebugTrue: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  debug: true,
+};
+
+export const streamAnswerAPIStateMockWithDebugFalse: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  debug: false,
+};
+
+export const streamAnswerAPIStateMockWithDebugUndefined: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    debug: undefined,
+  };
+
+// Facet Sorting Mock
+export const streamAnswerAPIStateMockWithSortableFacets: StreamAnswerAPIState =
+  {
+    ...streamAnswerAPIStateMock,
+    facetSet: {
+      'zebra-facet': {
+        request: {
+          filterFacetCount: true,
+          injectionDepth: 1000,
+          numberOfValues: 8,
+          sortCriteria: 'automatic',
+          resultsMustMatch: 'atLeastOneValue',
+          type: 'specific',
+          currentValues: [],
+          freezeCurrentValues: false,
+          isFieldExpanded: false,
+          preventAutoSelect: false,
+          facetId: 'zebra-facet',
+          field: 'zebra',
+        },
+        hasBreadcrumbs: true,
+      },
+      'alpha-facet': {
+        request: {
+          filterFacetCount: true,
+          injectionDepth: 1000,
+          numberOfValues: 8,
+          sortCriteria: 'automatic',
+          resultsMustMatch: 'atLeastOneValue',
+          type: 'specific',
+          currentValues: [],
+          freezeCurrentValues: false,
+          isFieldExpanded: false,
+          preventAutoSelect: false,
+          facetId: 'alpha-facet',
+          field: 'alpha',
+        },
+        hasBreadcrumbs: true,
+      },
+      'beta-facet': {
+        request: {
+          filterFacetCount: true,
+          injectionDepth: 1000,
+          numberOfValues: 8,
+          sortCriteria: 'automatic',
+          resultsMustMatch: 'atLeastOneValue',
+          type: 'specific',
+          currentValues: [],
+          freezeCurrentValues: false,
+          isFieldExpanded: false,
+          preventAutoSelect: false,
+          facetId: 'beta-facet',
+          field: 'beta',
+        },
+        hasBreadcrumbs: true,
+      },
+    },
+    numericFacetSet: {},
+    dateFacetSet: {},
+    categoryFacetSet: {},
+  };
+
+export const streamAnswerAPIStateMockWithoutAnyFacets: StreamAnswerAPIState = {
+  ...streamAnswerAPIStateMock,
+  facetSet: {},
+  numericFacetSet: {},
+  dateFacetSet: {},
+  categoryFacetSet: {},
+};
+
 export const expectedStreamAnswerAPIParam = {
   q: 'what is the hardest wood',
   aq: 'aq-test-query',

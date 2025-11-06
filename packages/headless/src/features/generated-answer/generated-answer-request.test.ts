@@ -6,16 +6,26 @@ import {
   streamAnswerAPIStateMockWithAnalyticsEnabled,
   streamAnswerAPIStateMockWithATabWithAnExpression,
   streamAnswerAPIStateMockWithCaseContextIncluded,
+  streamAnswerAPIStateMockWithDebugFalse,
+  streamAnswerAPIStateMockWithDebugTrue,
+  streamAnswerAPIStateMockWithDebugUndefined,
   streamAnswerAPIStateMockWithDictionaryFieldContext,
   streamAnswerAPIStateMockWithExcerptLength,
+  streamAnswerAPIStateMockWithFieldsToInclude,
   streamAnswerAPIStateMockWithFoldingDisabled,
   streamAnswerAPIStateMockWithFoldingEnabled,
+  streamAnswerAPIStateMockWithLegacyDidYouMean,
+  streamAnswerAPIStateMockWithNextDidYouMeanAutoCorrect,
+  streamAnswerAPIStateMockWithNextDidYouMeanNoAutoCorrect,
   streamAnswerAPIStateMockWithNonValidFilters,
+  streamAnswerAPIStateMockWithoutAnyFacets,
   streamAnswerAPIStateMockWithoutAnyFilters,
   streamAnswerAPIStateMockWithoutAnyTab,
   streamAnswerAPIStateMockWithoutContext,
+  streamAnswerAPIStateMockWithoutFields,
   streamAnswerAPIStateMockWithoutSearchAction,
   streamAnswerAPIStateMockWithQuerySyntaxEnabled,
+  streamAnswerAPIStateMockWithSortableFacets,
   streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
   streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ,
   streamAnswerAPIStateMockWithStaticFiltersSelected,
@@ -267,17 +277,8 @@ describe('constructAnswerAPIQueryParams', () => {
     });
 
     it('should include fieldsToInclude when fields state is present', () => {
-      const stateWithFields = {
-        ...streamAnswerAPIStateMock,
-        fields: {
-          fieldsToInclude: ['title', 'summary', 'uri', 'author'],
-          fetchAllFields: false,
-          fieldsDescription: [],
-        },
-      } as typeof streamAnswerAPIStateMock;
-
       const queryParams = constructAnswerAPIQueryParams(
-        stateWithFields,
+        streamAnswerAPIStateMockWithFieldsToInclude,
         buildMockNavigatorContextProvider()()
       );
 
@@ -290,13 +291,8 @@ describe('constructAnswerAPIQueryParams', () => {
     });
 
     it('should not include fieldsToInclude when fields state is undefined', () => {
-      const stateWithoutFields = {
-        ...streamAnswerAPIStateMock,
-        fields: undefined,
-      } as typeof streamAnswerAPIStateMock;
-
       const queryParams = constructAnswerAPIQueryParams(
-        stateWithoutFields,
+        streamAnswerAPIStateMockWithoutFields,
         buildMockNavigatorContextProvider()()
       );
 
@@ -409,7 +405,7 @@ describe('constructAnswerAPIQueryParams', () => {
   describe('query correction parameter handling', () => {
     it('should include enableDidYouMean when legacy mode is enabled', () => {
       const queryParams = constructAnswerAPIQueryParams(
-        streamAnswerAPIStateMock,
+        streamAnswerAPIStateMockWithLegacyDidYouMean,
         buildMockNavigatorContextProvider()()
       );
 
@@ -418,16 +414,8 @@ describe('constructAnswerAPIQueryParams', () => {
     });
 
     it('should include queryCorrection when next mode is enabled', () => {
-      const stateWithNextDidYouMean = {
-        ...streamAnswerAPIStateMock,
-        didYouMean: {
-          ...streamAnswerAPIStateMock.didYouMean,
-          queryCorrectionMode: 'next',
-        },
-      } as typeof streamAnswerAPIStateMock;
-
       const queryParams = constructAnswerAPIQueryParams(
-        stateWithNextDidYouMean,
+        streamAnswerAPIStateMockWithNextDidYouMeanAutoCorrect,
         buildMockNavigatorContextProvider()()
       );
 
@@ -439,17 +427,8 @@ describe('constructAnswerAPIQueryParams', () => {
     });
 
     it('should handle automaticallyCorrectQuery false in next mode', () => {
-      const stateWithNextDidYouMean = {
-        ...streamAnswerAPIStateMock,
-        didYouMean: {
-          ...streamAnswerAPIStateMock.didYouMean,
-          automaticallyCorrectQuery: false,
-          queryCorrectionMode: 'next',
-        },
-      } as typeof streamAnswerAPIStateMock;
-
       const queryParams = constructAnswerAPIQueryParams(
-        stateWithNextDidYouMean,
+        streamAnswerAPIStateMockWithNextDidYouMeanNoAutoCorrect,
         buildMockNavigatorContextProvider()()
       );
 
@@ -461,13 +440,8 @@ describe('constructAnswerAPIQueryParams', () => {
 
   describe('debug parameter handling', () => {
     it('should include debug parameter when set to true', () => {
-      const stateWithDebug = {
-        ...streamAnswerAPIStateMock,
-        debug: true,
-      } as typeof streamAnswerAPIStateMock;
-
       const queryParams = constructAnswerAPIQueryParams(
-        stateWithDebug,
+        streamAnswerAPIStateMockWithDebugTrue,
         buildMockNavigatorContextProvider()()
       );
 
@@ -475,13 +449,8 @@ describe('constructAnswerAPIQueryParams', () => {
     });
 
     it('should include debug parameter when set to false', () => {
-      const stateWithDebug = {
-        ...streamAnswerAPIStateMock,
-        debug: false,
-      } as typeof streamAnswerAPIStateMock;
-
       const queryParams = constructAnswerAPIQueryParams(
-        stateWithDebug,
+        streamAnswerAPIStateMockWithDebugFalse,
         buildMockNavigatorContextProvider()()
       );
 
@@ -489,13 +458,8 @@ describe('constructAnswerAPIQueryParams', () => {
     });
 
     it('should not include debug parameter when undefined', () => {
-      const stateWithoutDebug = {
-        ...streamAnswerAPIStateMock,
-        debug: undefined,
-      } as typeof streamAnswerAPIStateMock;
-
       const queryParams = constructAnswerAPIQueryParams(
-        stateWithoutDebug,
+        streamAnswerAPIStateMockWithDebugUndefined,
         buildMockNavigatorContextProvider()()
       );
 
@@ -506,39 +470,17 @@ describe('constructAnswerAPIQueryParams', () => {
   describe('facet parameter handling', () => {
     it('should sort facets by facetId alphabetically', () => {
       const queryParams = constructAnswerAPIQueryParams(
-        streamAnswerAPIStateMock,
+        streamAnswerAPIStateMockWithSortableFacets,
         buildMockNavigatorContextProvider()()
       );
 
       const facetIds = queryParams.facets?.map((f) => f.facetId);
-      expect(facetIds).toEqual([
-        'author',
-        'date',
-        'date_input',
-        'date_input_range',
-        'filetype',
-        'geographicalhierarchy',
-        'sncost',
-        'snrating',
-        'snrating_range',
-        'source',
-        'year',
-        'ytviewcount_input',
-        'ytviewcount_input_range',
-      ]);
+      expect(facetIds).toEqual(['alpha-facet', 'beta-facet', 'zebra-facet']);
     });
 
     it('should handle empty facetSet', () => {
-      const stateWithoutFacets = {
-        ...streamAnswerAPIStateMock,
-        facetSet: {},
-        numericFacetSet: {},
-        dateFacetSet: {},
-        categoryFacetSet: {},
-      } as typeof streamAnswerAPIStateMock;
-
       const queryParams = constructAnswerAPIQueryParams(
-        stateWithoutFacets,
+        streamAnswerAPIStateMockWithoutAnyFacets,
         buildMockNavigatorContextProvider()()
       );
 
