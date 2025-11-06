@@ -47,7 +47,6 @@ export const AtomicResultImage = /*@__PURE__*/createReactComponent<JSX.AtomicRes
 export const AtomicResultLink = /*@__PURE__*/createReactComponent<JSX.AtomicResultLink, HTMLAtomicResultLinkElement>('atomic-result-link');
 export const AtomicResultLocalizedText = /*@__PURE__*/createReactComponent<JSX.AtomicResultLocalizedText, HTMLAtomicResultLocalizedTextElement>('atomic-result-localized-text');
 export const AtomicResultMultiValueText = /*@__PURE__*/createReactComponent<JSX.AtomicResultMultiValueText, HTMLAtomicResultMultiValueTextElement>('atomic-result-multi-value-text');
-export const AtomicResultNumber = /*@__PURE__*/createReactComponent<JSX.AtomicResultNumber, HTMLAtomicResultNumberElement>('atomic-result-number');
 export const AtomicResultPrintableUri = /*@__PURE__*/createReactComponent<JSX.AtomicResultPrintableUri, HTMLAtomicResultPrintableUriElement>('atomic-result-printable-uri');
 export const AtomicResultRating = /*@__PURE__*/createReactComponent<JSX.AtomicResultRating, HTMLAtomicResultRatingElement>('atomic-result-rating');
 export const AtomicResultTimespan = /*@__PURE__*/createReactComponent<JSX.AtomicResultTimespan, HTMLAtomicResultTimespanElement>('atomic-result-timespan');

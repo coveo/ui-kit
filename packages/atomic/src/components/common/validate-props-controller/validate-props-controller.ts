@@ -35,6 +35,10 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
 
   hostConnected() {
     this.currentProps = this.getProps();
+    if (this.host.error === null) {
+      // @ts-expect-error: we need to set the error to undefined if it was null.
+      this.host.error = undefined;
+    }
     this._validateProps();
   }
 
