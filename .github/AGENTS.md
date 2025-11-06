@@ -81,10 +81,12 @@ These instructions are automatically applied by GitHub Copilot based on file pat
 
 ## Custom Agents
 
-- **coding-agent.md** - Instruction-aware coding with iterative test fixing
-  - Location: `.github/agents/coding-agent.md`
-  - Applies all instruction files automatically
-  - Enforces test verification before commits
+- **component-migration-agent.md** - Specialized agent for Stencil → Lit component migrations
+  - Location: `.github/agents/component-migration-agent.md`
+  - Performs complete migrations: component code, unit tests, Storybook stories, E2E tests, and MDX documentation
+  - Uses dedicated prompts for each migration step
+  - Identifies and documents blocking dependencies
+  - Uses `.github/PULL_REQUEST_TEMPLATE/atomic-stencil-lit-migration.md` template for PRs
 
 ## Chatmodes (VS Code Copilot)
 
