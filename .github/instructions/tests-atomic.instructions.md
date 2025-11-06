@@ -14,7 +14,22 @@ applyTo: '**/atomic/**/*.spec.{ts}'
 - Mixins: `'MixinConstName'`
 - Utils: `'module-file-name'` (no extension)
 
-**Test naming:** Use `it('should <behavior> [when <condition>]')` (never `test()`). Nest multiple related tests under `describe('when <condition>', () => {...})` or `describe('#methodName', () => {...})` for public methods.
+**Test naming:** Use `it('should <behavior> [when <condition>]')` (never `test()`).
+
+**Nested describe blocks:** Use `describe` blocks to group related tests that share:
+- **Same condition/state:** `describe('when <condition>', () => {...})` - Groups tests that share common setup or state
+- **Same lifecycle callback:** `describe('#connectedCallback (when added to the DOM)', () => {...})` - Tests for component lifecycle methods
+- **Same public method:** `describe('#methodName', () => {...})` - Tests for public methods or properties
+
+**When to use nested describe:**
+- Tests share setup logic (e.g., same `beforeEach` mock configuration)
+- Multiple tests verify different aspects of the same condition
+- Testing a method with multiple scenarios or edge cases
+
+**When NOT to use nested describe:**
+- Single test for a condition - include condition in `it()` statement instead
+- Tests are unrelated despite similar names
+- Over-nesting (avoid more than 2-3 levels deep)
 
 ## Imports & Mocking
 
