@@ -305,6 +305,8 @@
     "angular",
     "vuejs",
     "nextjs",
-    "stencil"
+    "stencil",
+    "WCAG",
+    "IDREF"
   ]
 }

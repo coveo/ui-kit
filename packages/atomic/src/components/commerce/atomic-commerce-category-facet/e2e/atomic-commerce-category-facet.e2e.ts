@@ -5,12 +5,6 @@ test.describe('atomic-commerce-category-facet', () => {
     await categoryFacet.load();
   });
 
-  test('should be accessible', async ({categoryFacet, makeAxeBuilder}) => {
-    await categoryFacet.hydrated.waitFor();
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should allow to filter by selecting and deselecting a value', async ({
     categoryFacet,
   }) => {

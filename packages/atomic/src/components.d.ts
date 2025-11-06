@@ -5,29 +5,33 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchStatus } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
+import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-import { i18n } from "i18next";
-import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
+import { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
+import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
+export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchStatus } from "@coveo/headless";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
+export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-export { i18n } from "i18next";
-export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
+export { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { RedirectionPayload } from "./components/common/search-box/redirection-payload";
+export { i18n } from "i18next";
 export { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
 export namespace Components {
     /**
@@ -1133,11 +1137,6 @@ export namespace Components {
     interface AtomicIpxTabs {
     }
     /**
-     * The `atomic-load-more-results` component allows the user to load additional results if more are available.
-     */
-    interface AtomicLoadMoreResults {
-    }
-    /**
      * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
      */
     interface AtomicNoResults {
@@ -1417,72 +1416,6 @@ export namespace Components {
     interface AtomicRecsError {
     }
     /**
-     * The `atomic-recs-interface` component is the parent to all other atomic components in a recommendation interface. It handles the headless recommendation engine and localization configurations.
-     */
-    interface AtomicRecsInterface {
-        /**
-          * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
-          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
-         */
-        "CspNonce"?: string;
-        /**
-          * Whether analytics should be enabled.
-         */
-        "analytics": boolean;
-        /**
-          * The recommendation interface headless engine.
-         */
-        "engine"?: RecommendationEngine;
-        /**
-          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-recs-interface fields-to-include='["fieldA", "fieldB"]'></atomic-recs-interface> ```
-         */
-        "fieldsToInclude": string[] | string;
-        /**
-          * Fetches new recommendations.
-         */
-        "getRecommendations": () => Promise<void>;
-        /**
-          * The recommendation interface i18next instance.
-         */
-        "i18n": i18n;
-        /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
-         */
-        "iconAssetsPath": string;
-        /**
-          * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `environment` (defaults to `prod`), and `renewAccessToken`.
-         */
-        "initialize": (options: RecsInitializationOptions) => Promise<void>;
-        /**
-          * Initializes the connection with an already preconfigured headless recommendation engine. This bypasses the properties set on the component, such as analytics, recommendation, searchHub, language, timezone & logLevel.
-         */
-        "initializeWithRecommendationEngine": (engine: RecommendationEngine) => Promise<void>;
-        /**
-          * The recommendation interface language.
-         */
-        "language": string;
-        /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
-         */
-        "languageAssetsPath": string;
-        /**
-          * The severity level of the messages to log in the console.
-         */
-        "logLevel"?: RecsLogLevel;
-        /**
-          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the query pipeline should instead be configured in the target engine.
-         */
-        "pipeline"?: string;
-        /**
-          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the search hub should instead be configured in the target engine.
-         */
-        "searchHub"?: string;
-        /**
-          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
-         */
-        "timezone"?: string;
-    }
-    /**
      * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
      */
     interface AtomicRecsList {
@@ -1726,6 +1659,21 @@ export namespace Components {
      * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
      */
     interface AtomicResultFieldsList {
+    }
+    /**
+     * The `atomic-result-html` component renders the HTML value of a string result field.
+     * There is an inherent XSS security concern associated with the usage of this component.
+     * Use only with fields for which you are certain the data is harmless.
+     */
+    interface AtomicResultHtml {
+        /**
+          * The result field which the component should use. If set, Atomic searches for the specified field in the `Result` object first. If there's no such a field, Atomic searches through the `Result.raw` object. It's important to include the necessary field in the `ResultList` component.
+         */
+        "field": string;
+        /**
+          * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
+         */
+        "sanitize": boolean;
     }
     /**
      * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
@@ -2899,15 +2847,6 @@ declare global {
         new (): HTMLAtomicIpxTabsElement;
     };
     /**
-     * The `atomic-load-more-results` component allows the user to load additional results if more are available.
-     */
-    interface HTMLAtomicLoadMoreResultsElement extends Components.AtomicLoadMoreResults, HTMLStencilElement {
-    }
-    var HTMLAtomicLoadMoreResultsElement: {
-        prototype: HTMLAtomicLoadMoreResultsElement;
-        new (): HTMLAtomicLoadMoreResultsElement;
-    };
-    /**
      * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
      */
     interface HTMLAtomicNoResultsElement extends Components.AtomicNoResults, HTMLStencilElement {
@@ -3028,15 +2967,6 @@ declare global {
         new (): HTMLAtomicRecsErrorElement;
     };
     /**
-     * The `atomic-recs-interface` component is the parent to all other atomic components in a recommendation interface. It handles the headless recommendation engine and localization configurations.
-     */
-    interface HTMLAtomicRecsInterfaceElement extends Components.AtomicRecsInterface, HTMLStencilElement {
-    }
-    var HTMLAtomicRecsInterfaceElement: {
-        prototype: HTMLAtomicRecsInterfaceElement;
-        new (): HTMLAtomicRecsInterfaceElement;
-    };
-    /**
      * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
      */
     interface HTMLAtomicRecsListElement extends Components.AtomicRecsList, HTMLStencilElement {
@@ -3149,6 +3079,17 @@ declare global {
     var HTMLAtomicResultFieldsListElement: {
         prototype: HTMLAtomicResultFieldsListElement;
         new (): HTMLAtomicResultFieldsListElement;
+    };
+    /**
+     * The `atomic-result-html` component renders the HTML value of a string result field.
+     * There is an inherent XSS security concern associated with the usage of this component.
+     * Use only with fields for which you are certain the data is harmless.
+     */
+    interface HTMLAtomicResultHtmlElement extends Components.AtomicResultHtml, HTMLStencilElement {
+    }
+    var HTMLAtomicResultHtmlElement: {
+        prototype: HTMLAtomicResultHtmlElement;
+        new (): HTMLAtomicResultHtmlElement;
     };
     /**
      * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
@@ -3610,7 +3551,6 @@ declare global {
         "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
         "atomic-ipx-tab": HTMLAtomicIpxTabElement;
         "atomic-ipx-tabs": HTMLAtomicIpxTabsElement;
-        "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-notifications": HTMLAtomicNotificationsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
@@ -3622,7 +3562,6 @@ declare global {
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
         "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
         "atomic-recs-error": HTMLAtomicRecsErrorElement;
-        "atomic-recs-interface": HTMLAtomicRecsInterfaceElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-recs-result": HTMLAtomicRecsResultElement;
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
@@ -3632,6 +3571,7 @@ declare global {
         "atomic-result-children": HTMLAtomicResultChildrenElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
+        "atomic-result-html": HTMLAtomicResultHtmlElement;
         "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
@@ -4738,11 +4678,6 @@ declare namespace LocalJSX {
     interface AtomicIpxTabs {
     }
     /**
-     * The `atomic-load-more-results` component allows the user to load additional results if more are available.
-     */
-    interface AtomicLoadMoreResults {
-    }
-    /**
      * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
      */
     interface AtomicNoResults {
@@ -5023,60 +4958,6 @@ declare namespace LocalJSX {
     interface AtomicRecsError {
     }
     /**
-     * The `atomic-recs-interface` component is the parent to all other atomic components in a recommendation interface. It handles the headless recommendation engine and localization configurations.
-     */
-    interface AtomicRecsInterface {
-        /**
-          * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
-          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
-         */
-        "CspNonce"?: string;
-        /**
-          * Whether analytics should be enabled.
-         */
-        "analytics"?: boolean;
-        /**
-          * The recommendation interface headless engine.
-         */
-        "engine"?: RecommendationEngine;
-        /**
-          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-recs-interface fields-to-include='["fieldA", "fieldB"]'></atomic-recs-interface> ```
-         */
-        "fieldsToInclude"?: string[] | string;
-        /**
-          * The recommendation interface i18next instance.
-         */
-        "i18n"?: i18n;
-        /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
-         */
-        "iconAssetsPath"?: string;
-        /**
-          * The recommendation interface language.
-         */
-        "language"?: string;
-        /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
-         */
-        "languageAssetsPath"?: string;
-        /**
-          * The severity level of the messages to log in the console.
-         */
-        "logLevel"?: RecsLogLevel;
-        /**
-          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the query pipeline should instead be configured in the target engine.
-         */
-        "pipeline"?: string;
-        /**
-          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).  If the recommendation interface is initialized using [`initializeWithRecommendationEngine`](https://docs.coveo.com/en/atomic/latest/reference/recommendation-components/atomic-recs-interface/#initializewithrecommendationengine), the search hub should instead be configured in the target engine.
-         */
-        "searchHub"?: string;
-        /**
-          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
-         */
-        "timezone"?: string;
-    }
-    /**
      * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
      */
     interface AtomicRecsList {
@@ -5303,6 +5184,21 @@ declare namespace LocalJSX {
      * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
      */
     interface AtomicResultFieldsList {
+    }
+    /**
+     * The `atomic-result-html` component renders the HTML value of a string result field.
+     * There is an inherent XSS security concern associated with the usage of this component.
+     * Use only with fields for which you are certain the data is harmless.
+     */
+    interface AtomicResultHtml {
+        /**
+          * The result field which the component should use. If set, Atomic searches for the specified field in the `Result` object first. If there's no such a field, Atomic searches through the `Result.raw` object. It's important to include the necessary field in the `ResultList` component.
+         */
+        "field": string;
+        /**
+          * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
+         */
+        "sanitize"?: boolean;
     }
     /**
      * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
@@ -5926,7 +5822,6 @@ declare namespace LocalJSX {
         "atomic-ipx-result-link": AtomicIpxResultLink;
         "atomic-ipx-tab": AtomicIpxTab;
         "atomic-ipx-tabs": AtomicIpxTabs;
-        "atomic-load-more-results": AtomicLoadMoreResults;
         "atomic-no-results": AtomicNoResults;
         "atomic-notifications": AtomicNotifications;
         "atomic-numeric-facet": AtomicNumericFacet;
@@ -5938,7 +5833,6 @@ declare namespace LocalJSX {
         "atomic-rating-facet": AtomicRatingFacet;
         "atomic-rating-range-facet": AtomicRatingRangeFacet;
         "atomic-recs-error": AtomicRecsError;
-        "atomic-recs-interface": AtomicRecsInterface;
         "atomic-recs-list": AtomicRecsList;
         "atomic-recs-result": AtomicRecsResult;
         "atomic-recs-result-template": AtomicRecsResultTemplate;
@@ -5948,6 +5842,7 @@ declare namespace LocalJSX {
         "atomic-result-children": AtomicResultChildren;
         "atomic-result-date": AtomicResultDate;
         "atomic-result-fields-list": AtomicResultFieldsList;
+        "atomic-result-html": AtomicResultHtml;
         "atomic-result-icon": AtomicResultIcon;
         "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
@@ -6139,10 +6034,6 @@ declare module "@stencil/core" {
             "atomic-ipx-tab": LocalJSX.AtomicIpxTab & JSXBase.HTMLAttributes<HTMLAtomicIpxTabElement>;
             "atomic-ipx-tabs": LocalJSX.AtomicIpxTabs & JSXBase.HTMLAttributes<HTMLAtomicIpxTabsElement>;
             /**
-             * The `atomic-load-more-results` component allows the user to load additional results if more are available.
-             */
-            "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;
-            /**
              * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
              */
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
@@ -6195,10 +6086,6 @@ declare module "@stencil/core" {
              * The `atomic-recs-error` component handles fatal errors when performing a recommendations request on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
              */
             "atomic-recs-error": LocalJSX.AtomicRecsError & JSXBase.HTMLAttributes<HTMLAtomicRecsErrorElement>;
-            /**
-             * The `atomic-recs-interface` component is the parent to all other atomic components in a recommendation interface. It handles the headless recommendation engine and localization configurations.
-             */
-            "atomic-recs-interface": LocalJSX.AtomicRecsInterface & JSXBase.HTMLAttributes<HTMLAtomicRecsInterfaceElement>;
             /**
              * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
              */
@@ -6268,6 +6155,12 @@ declare module "@stencil/core" {
              * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
              */
             "atomic-result-fields-list": LocalJSX.AtomicResultFieldsList & JSXBase.HTMLAttributes<HTMLAtomicResultFieldsListElement>;
+            /**
+             * The `atomic-result-html` component renders the HTML value of a string result field.
+             * There is an inherent XSS security concern associated with the usage of this component.
+             * Use only with fields for which you are certain the data is harmless.
+             */
+            "atomic-result-html": LocalJSX.AtomicResultHtml & JSXBase.HTMLAttributes<HTMLAtomicResultHtmlElement>;
             /**
              * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
              * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
