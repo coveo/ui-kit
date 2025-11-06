@@ -34,7 +34,7 @@ import {
 import {ItemDisplayImageSize} from '../../../common/layout/display-options';
 import {ChildrenWrapper} from '../../../common/result-children/stencil-children-wrapper';
 import {CollectionGuard} from '../../../common/result-children/collection-guard';
-import {ResultChildrenGuard} from '../../../common/result-children/guard';
+import {ResultChildrenGuard} from '../../../common/result-children/stencil-guard';
 import {ShowHideButton} from '../../../common/result-children/show-hide-button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
