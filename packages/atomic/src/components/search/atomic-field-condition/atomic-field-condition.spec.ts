@@ -3,8 +3,8 @@ import {html} from 'lit';
 import {describe, expect, it} from 'vitest';
 import {renderInAtomicResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-result-fixture';
 import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
-import type {AtomicFieldCondition} from './atomic-field-condition';
-import './atomic-field-condition';
+import type {AtomicFieldCondition} from './atomic-field-condition.js';
+import './atomic-field-condition.js';
 
 describe('atomic-field-condition', () => {
   const renderFieldCondition = async ({

@@ -1,4 +1,4 @@
-import {expect, test} from './fixture';
+import {expect, test} from './fixture.js';
 
 test.describe('atomic-field-condition', () => {
   test.beforeEach(async ({fieldCondition}) => {

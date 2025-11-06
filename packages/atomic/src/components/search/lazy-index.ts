@@ -3,6 +3,8 @@ export default {
   'atomic-external': async () =>
     await import('./atomic-external/atomic-external.js'),
   'atomic-facet': async () => await import('./atomic-facet/atomic-facet.js'),
+  'atomic-field-condition': async () =>
+    await import('./atomic-field-condition/atomic-field-condition.js'),
   'atomic-html': async () => await import('./atomic-html/atomic-html.js'),
   'atomic-load-more-results': async () =>
     await import('./atomic-load-more-results/atomic-load-more-results.js'),

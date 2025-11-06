@@ -80,9 +80,15 @@ export class AtomicFieldCondition
 
   @errorGuard()
   render() {
-    const result: Result | undefined = this.resultController.item;
+    const result = this.resultController.item;
 
-    if (!result || !this.conditions.every((condition) => condition(result))) {
+    const actualResult =
+      result && 'result' in result && result.result ? result.result : result;
+
+    if (
+      !actualResult ||
+      !this.conditions.every((condition) => condition(actualResult as Result))
+    ) {
       this.remove();
     }
 
