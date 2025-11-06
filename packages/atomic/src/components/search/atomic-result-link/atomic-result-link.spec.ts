@@ -274,4 +274,50 @@ describe('atomic-result-link', () => {
     const errorComponent = element?.querySelector('atomic-component-error');
     expect(errorComponent).toBeTruthy();
   });
+
+  it('should render nothing when not used inside a result template', async () => {
+    const element = document.createElement('atomic-result-link');
+    document.body.appendChild(element);
+    await element.updateComplete;
+
+    // Component should render an error or nothing without result context
+    expect(
+      element.querySelector('atomic-component-error') ||
+        element.textContent?.trim() === ''
+    ).toBeTruthy();
+
+    element.remove();
+  });
+
+  it('should render both attributes slot and default slot content', async () => {
+    const {link} = await renderResultLink({
+      slotContent: html`<span id="custom-content">Custom Content</span>`,
+      attributes: 'target="_blank" download',
+    });
+
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('download');
+    expect(link.first().element()?.textContent).toContain('Custom Content');
+  });
+
+  it('should build href from window object in template', async () => {
+    const {link} = await renderResultLink({
+      hrefTemplate: 'http://$' + '{window.location.host}/path',
+    });
+
+    // In test environment, window.location.host should be defined
+    const href = await link.getAttribute('href');
+    expect(href).toContain('http://');
+    expect(href).toContain('/path');
+  });
+
+  it('should filter out invalid protocols from href', async () => {
+    const {link} = await renderResultLink({
+      hrefTemplate: 'javascript:alert("xss")',
+    });
+
+    const href = await link.getAttribute('href');
+    // Invalid protocol should be filtered out, resulting in empty or safe href
+    expect(href).not.toContain('javascript:');
+  });
 });
