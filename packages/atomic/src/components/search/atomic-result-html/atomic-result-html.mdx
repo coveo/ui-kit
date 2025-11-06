@@ -1,0 +1,64 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicResultHtmlStories from './atomic-result-html.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicResultHtmlStories} />
+
+<AtomicDocTemplate
+  stories={AtomicResultHtmlStories}
+  githubPath="search/atomic-result-html/atomic-result-html.ts"
+  tagName="atomic-result-html"
+  className="AtomicResultHtml"
+>
+
+The `atomic-result-html` component renders the HTML value of a string result field.
+
+**⚠️ Security Warning:** There is an inherent XSS security concern associated with the usage of this component. Use only with fields for which you are certain the data is harmless.
+
+This component is used within `atomic-result-template` components inside the result list:
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-result-list>
+    <atomic-result-template>
+      <template>
+        <atomic-result-html field="excerpt"></atomic-result-html>
+        <atomic-result-html field="custom_html_field" sanitize="true"></atomic-result-html>
+      </template>
+    </atomic-result-template>
+  </atomic-result-list>
+  ...
+</atomic-search-interface>
+```
+
+### Basic Usage
+
+To display HTML content from a result field:
+
+```html
+<atomic-result-html field="excerpt"></atomic-result-html>
+```
+
+### With Sanitization
+
+By default, the component sanitizes HTML content using DOMPurify. You can control this behavior:
+
+```html
+<!-- Sanitized (default) -->
+<atomic-result-html field="excerpt" sanitize="true"></atomic-result-html>
+
+<!-- Not sanitized (use only with trusted data) -->
+<atomic-result-html field="excerpt" sanitize="false"></atomic-result-html>
+```
+
+### Supported Fields
+
+The component looks for fields in this order:
+1. First in the Result object properties
+2. Then in the `result.raw` object
+
+If the field has no value, the component will not render anything.
+
+</AtomicDocTemplate>

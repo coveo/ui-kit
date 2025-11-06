@@ -1,5 +1,5 @@
 import type {Result} from '@coveo/headless';
-import {html, LitElement} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
@@ -68,7 +68,7 @@ export class AtomicResultHtml
   private renderResultHtml() {
     const resultValue = getStringValueFromResultOrNull(this.result, this.field);
     if (!resultValue) {
-      return this.remove();
+      return nothing;
     }
 
     return html`
