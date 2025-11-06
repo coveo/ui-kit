@@ -393,8 +393,9 @@ export class AtomicBreadbox
       html`${this.renderBreadcrumbs(breadcrumbs)}
       ${renderBreadcrumbShowMore({
         props: {
-          refCallback: async (el) => {
-            await this.breadcrumbShowLessFocus.setTarget(el!);
+          refCallback: async (_el) => {
+            // Show more button doesn't need to set focus target
+            // Focus target for breadcrumbShowMoreFocus is set on the breadcrumb buttons themselves
           },
           onShowMore: () => {
             this.firstExpandedBreadcrumbIndex =
@@ -407,7 +408,7 @@ export class AtomicBreadbox
           numberOfCollapsedBreadcrumbs: this.numberOfCollapsedBreadcrumbs,
           value: this.showMoreText,
           ariaLabel: this.bindings.i18n.t('show-n-more-filters', {
-            value: this.showMoreText,
+            value: this.numberOfCollapsedBreadcrumbs,
           }),
         },
       })}
