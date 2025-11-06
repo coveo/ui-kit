@@ -650,4 +650,15 @@ describe('atomic-color-facet', () => {
       }
     });
   });
+
+  describe('error handling', () => {
+    it('should set error when invalid sort criteria is provided', async () => {
+      const {element} = await setupElement({
+        // @ts-expect-error Testing invalid value
+        sortCriteria: 'invalidOption',
+      });
+
+      expect(element.error).toBeInstanceOf(Error);
+    });
+  });
 });
