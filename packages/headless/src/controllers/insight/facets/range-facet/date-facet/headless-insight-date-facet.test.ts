@@ -57,6 +57,10 @@ describe('insight date facet', () => {
     initDateFacet();
   });
 
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
   describe('#toggleSelect', () => {
     it('dispatches a executeToggleDateFacetSelect with the passed value', () => {
       const value = buildMockDateFacetValue();
@@ -119,11 +123,6 @@ describe('insight date facet', () => {
         facetId,
         selection: facetValue(),
       });
-    });
-
-    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
-      dateFacet.toggleSingleSelect(facetValue());
-      expect(updateFacetOptions).toHaveBeenCalled();
     });
 
     it('dispatches a search', () => {

@@ -123,14 +123,6 @@ export const config: Config = {
       type: 'dist',
       esmLoaderPath: './atomic/loader',
       collectionDir: null,
-      copy: [
-        {src: 'themes'},
-        {src: 'assets/lang', dest: 'lang'},
-        {
-          src: './node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
-          dest: 'assets',
-        },
-      ],
     },
     {
       type: 'docs-json',
