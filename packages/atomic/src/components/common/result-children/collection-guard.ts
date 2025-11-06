@@ -34,18 +34,16 @@ export const renderCollectionGuard: FunctionalComponentWithChildren<
     } = props;
 
     if (isLoadingMoreResults) {
-      const placeholders = renderItemPlaceholders({
-        props: {
-          numberOfPlaceholders: numberOfChildren,
-          density,
-          display: 'list',
-          imageSize,
-        },
-      });
-
-      return hasChildren
-        ? renderChildrenWrapper()(placeholders)
-        : html`<div part="children-root">${placeholders}</div>`;
+      return renderChildrenWrapper()(
+        renderItemPlaceholders({
+          props: {
+            numberOfPlaceholders: numberOfChildren,
+            density,
+            display: 'list',
+            imageSize,
+          },
+        })
+      );
     }
 
     if (!moreResultsAvailable && !hasChildren) {

@@ -97,28 +97,6 @@ describe('#renderCollectionGuard', () => {
         expect(slots).toHaveLength(1);
       });
     });
-
-    describe('when hasChildren is false', () => {
-      it('should not render before-children slot', async () => {
-        const element = await renderComponent({
-          isLoadingMoreResults: true,
-          hasChildren: false,
-        });
-
-        const slots = element.querySelectorAll('slot[name="before-children"]');
-        expect(slots).toHaveLength(0);
-      });
-
-      it('should not render after-children slot', async () => {
-        const element = await renderComponent({
-          isLoadingMoreResults: true,
-          hasChildren: false,
-        });
-
-        const slots = element.querySelectorAll('slot[name="after-children"]');
-        expect(slots).toHaveLength(0);
-      });
-    });
   });
 
   describe('when moreResultsAvailable is false and hasChildren is false', () => {
