@@ -1,7 +1,7 @@
 import {buildInstantResults} from '@coveo/headless';
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {page} from 'vitest/browser';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeInstantResults} from '@/vitest-utils/testing-helpers/fixtures/headless/search/instant-results-controller';
