@@ -1,7 +1,6 @@
 import dayjs, {type QUnitType} from 'dayjs/esm/index.js';
 import quarterOfYear from 'dayjs/esm/plugin/quarterOfYear/index.js';
-import {z} from 'zod';
-import {validateSchema} from '../../../utils/validation.js';
+import {NumberValue, Schema, StringValue} from '../../../utils/bueno-zod.js';
 import {
   assertDateAboveAPIMinimum,
   formatDateForSearchApi,
@@ -54,15 +53,19 @@ export interface RelativeDate {
   amount?: number;
 }
 
-const buildRelativeDateSchema = (period: RelativeDatePeriod) => {
+const buildRelativeDateDefinition = (period: RelativeDatePeriod) => {
   const isNow = period === 'now';
-  return z.object({
-    amount: isNow ? z.number().min(1).optional() : z.number().min(1),
-    unit: isNow
-      ? z.enum(validRelativeDateUnits).optional()
-      : z.enum(validRelativeDateUnits),
-    period: z.enum(validRelativeDatePeriods),
-  });
+  return {
+    amount: new NumberValue({required: !isNow, min: 1}),
+    unit: new StringValue({
+      required: !isNow,
+      constrainTo: validRelativeDateUnits,
+    }),
+    period: new StringValue({
+      required: true,
+      constrainTo: validRelativeDatePeriods,
+    }),
+  };
 };
 
 /**
@@ -79,7 +82,9 @@ export function validateRelativeDate(date: RelativeDate | string) {
   const relativeDate =
     typeof date === 'string' ? parseRelativeDate(date) : date;
 
-  validateSchema(buildRelativeDateSchema(relativeDate.period), relativeDate);
+  new Schema(buildRelativeDateDefinition(relativeDate.period)).validate(
+    relativeDate
+  );
 
   const dayJsDate = relativeToAbsoluteDate(relativeDate);
   const stringifiedDate = JSON.stringify(relativeDate);

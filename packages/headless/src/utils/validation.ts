@@ -1,4 +1,4 @@
-import {type ZodSchema, z} from 'zod';
+import type {ZodSchema} from 'zod';
 
 /**
  * Error thrown when validation fails.
@@ -65,11 +65,4 @@ export function isArray(value: unknown): value is Array<unknown> {
 
 export function isString(value: unknown): value is string {
   return Object.prototype.toString.call(value) === '[object String]';
-}
-
-/**
- * Helper to create a Zod schema with default values similar to bueno's Schema
- */
-export function createSchema<T extends z.ZodRawShape>(shape: T) {
-  return z.object(shape).partial();
 }
