@@ -147,7 +147,6 @@ describe('constructAnswerAPIQueryParams', () => {
         buildMockNavigatorContextProvider()()
       );
 
-      // Verify that all analytics fields are present including volatile ones
       expect(queryParams.analytics).toBeDefined();
       expect(queryParams.analytics?.clientTimestamp).toBeDefined();
       expect(queryParams.analytics?.actionCause).toBeDefined();

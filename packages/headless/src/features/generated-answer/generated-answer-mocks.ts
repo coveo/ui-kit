@@ -1205,7 +1205,7 @@ export const streamAnswerAPIStateMockWithNonValidFilters: StreamAnswerAPIState =
         values: [
           {
             caption: 'empty',
-            expression: '', // empty expression
+            expression: '',
             state: 'selected',
           },
         ],
@@ -1354,7 +1354,6 @@ export const streamAnswerAPIStateMockWithoutContext: StreamAnswerAPIState = {
   context: undefined,
 };
 
-// Query Correction Mocks
 export const streamAnswerAPIStateMockWithLegacyDidYouMean: StreamAnswerAPIState =
   {
     ...streamAnswerAPIStateMock,
@@ -1406,7 +1405,6 @@ export const streamAnswerAPIStateMockWithNextDidYouMeanNoAutoCorrect: StreamAnsw
     },
   };
 
-// Fields Mocks
 export const streamAnswerAPIStateMockWithFieldsToInclude: StreamAnswerAPIState =
   {
     ...streamAnswerAPIStateMock,
@@ -1422,7 +1420,6 @@ export const streamAnswerAPIStateMockWithoutFields: StreamAnswerAPIState = {
   fields: undefined,
 };
 
-// Debug Mocks
 export const streamAnswerAPIStateMockWithDebugTrue: StreamAnswerAPIState = {
   ...streamAnswerAPIStateMock,
   debug: true,
@@ -1439,7 +1436,6 @@ export const streamAnswerAPIStateMockWithDebugUndefined: StreamAnswerAPIState =
     debug: undefined,
   };
 
-// Facet Sorting Mock
 export const streamAnswerAPIStateMockWithSortableFacets: StreamAnswerAPIState =
   {
     ...streamAnswerAPIStateMock,
