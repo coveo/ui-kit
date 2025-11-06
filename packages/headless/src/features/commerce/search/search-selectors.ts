@@ -42,20 +42,16 @@ export const moreProductsAvailableSelector = createSelector(
   ({current, total}) => current < total
 );
 
-export const isLoadingSelector = createSelector(
-  (state: Partial<CommerceSearchSection>) => state.commerceSearch?.isLoading,
-  (isLoading) => (isNullOrUndefined(isLoading) ? false : isLoading)
-);
+export const isLoadingSelector = (state: Partial<CommerceSearchSection>) => {
+  const isLoading = state.commerceSearch?.isLoading;
+  return isNullOrUndefined(isLoading) ? false : isLoading;
+};
 
-export const errorSelector = createSelector(
-  (state: Partial<CommerceSearchSection>) => state.commerceSearch?.error,
-  (error) => error ?? null
-);
+export const errorSelector = (state: Partial<CommerceSearchSection>) =>
+  state.commerceSearch?.error ?? null;
 
-export const querySelector = createSelector(
-  (state: CommerceQuerySection) => state.commerceQuery?.query,
-  (query) => query ?? ''
-);
+export const querySelector = (state: CommerceQuerySection) =>
+  state.commerceQuery?.query ?? '';
 
 const queryExecutedSelector = (state: CommerceSearchSection) =>
   state.commerceSearch?.queryExecuted;

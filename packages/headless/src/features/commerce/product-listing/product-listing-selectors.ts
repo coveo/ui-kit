@@ -36,12 +36,10 @@ export const moreProductsAvailableSelector = createSelector(
   ({current, total}) => current < total
 );
 
-export const isLoadingSelector = createSelector(
-  (state: Partial<ProductListingSection>) => state.productListing?.isLoading,
-  (isLoading) => (isNullOrUndefined(isLoading) ? false : isLoading)
-);
+export const isLoadingSelector = (state: Partial<ProductListingSection>) => {
+  const isLoading = state.productListing?.isLoading;
+  return isNullOrUndefined(isLoading) ? false : isLoading;
+};
 
-export const errorSelector = createSelector(
-  (state: Partial<ProductListingSection>) => state.productListing?.error,
-  (error) => error ?? null
-);
+export const errorSelector = (state: Partial<ProductListingSection>) =>
+  state.productListing?.error ?? null;
