@@ -137,6 +137,26 @@ export const Default: Story = {
   decorators: [facetDecorator],
 };
 
+export const BoxDisplay: Story = {
+  name: 'Box Display Mode',
+  args: {
+    field: 'filetype',
+    'display-values-as': 'box',
+    numberOfValues: 8,
+  },
+  decorators: [facetDecorator],
+};
+
+export const CheckboxDisplay: Story = {
+  name: 'Checkbox Display Mode',
+  args: {
+    field: 'filetype',
+    'display-values-as': 'checkbox',
+    numberOfValues: 8,
+  },
+  decorators: [facetDecorator],
+};
+
 export const LowFacetValues: Story = {
   tags: ['test'],
   args: {

@@ -11,12 +11,11 @@ import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/ato
   className="AtomicColorFacet"
 >
 
-The `atomic-color-facet` component displays a facet of the results for the current query as colors. This is particularly useful when you want to represent facet values visually, such as file types, categories, or any field that can be associated with colors or icons.
+The `atomic-color-facet` component displays a facet of the results for the current query as colors. This is useful when you want to represent facet values visually, such as file types, categories, or any field whose values can be associated with distinct colors.
 
 This component is typically placed within the "facets" section of the layout.
 
-You can also place facets inside an `atomic-facet-manager` component to ensure the effective functioning of DNE (Dynamic Navigation Experience). 
-More info here: [atomic-facet-manager](https://docs.coveo.com/en/2918).
+You can also place facets inside an <a href="https://docs.coveo.com/en/2918">`atomic-facet-manager`</a> component to leverage the Dynamic Navigation Experience (DNE) feature.
 
 ## Usage
 
@@ -63,21 +62,6 @@ You can customize the colors for specific facet values using CSS shadow parts. T
 </style>
 
 <atomic-color-facet field="filetype" label="File Types" display-values-as="box"></atomic-color-facet>
-```
-
-## Display Modes
-
-The component supports two display modes:
-
-- **box** (default): Displays facet values as colored boxes with labels below
-- **checkbox**: Displays facet values as checkboxes with colored indicators
-
-```html
-<!-- Box display mode (default) -->
-<atomic-color-facet field="filetype" label="File Types" display-values-as="box"></atomic-color-facet>
-
-<!-- Checkbox display mode -->
-<atomic-color-facet field="filetype" label="File Types" display-values-as="checkbox"></atomic-color-facet>
 ```
 
 ## Customizing Layout

@@ -31,19 +31,6 @@ test.describe('atomic-color-facet E2E tests', () => {
     });
   });
 
-  test.describe('accessibility', () => {
-    test.beforeEach(async ({facet}) => {
-      await facet.load();
-    });
-
-    test('should have no accessibility violations', async ({facet}) => {
-      await expect(facet.hydrated).toBeAttached();
-      // Component should be accessible with keyboard navigation
-      const firstValue = facet.getFacetValue.first();
-      await expect(firstValue).toBeVisible();
-    });
-  });
-
   test.describe('collapse and expand', () => {
     test.beforeEach(async ({facet}) => {
       await facet.load();
