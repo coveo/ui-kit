@@ -1,4 +1,5 @@
 // Auto-generated file
+
 export {AtomicExternal} from './atomic-external/atomic-external.js';
 export {AtomicFacet} from './atomic-facet/atomic-facet.js';
 export {AtomicHtml} from './atomic-html/atomic-html.js';
@@ -29,3 +30,4 @@ export {AtomicSearchBoxRecentQueries} from './atomic-search-box-recent-queries/a
 export {AtomicSearchInterface} from './atomic-search-interface/atomic-search-interface.js';
 export {AtomicSearchLayout} from './atomic-search-layout/atomic-search-layout.js';
 export {AtomicText} from './atomic-text/atomic-text.js';
+export {AtomicCategoryFacet} from './facets/atomic-category-facet/atomic-category-facet.js';

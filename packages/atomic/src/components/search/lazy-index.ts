@@ -1,5 +1,7 @@
 // Auto-generated file
 export default {
+  'atomic-category-facet': async () =>
+    await import('./facets/atomic-category-facet/atomic-category-facet.js'),
   'atomic-external': async () =>
     await import('./atomic-external/atomic-external.js'),
   'atomic-facet': async () => await import('./atomic-facet/atomic-facet.js'),
