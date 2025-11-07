@@ -9,6 +9,7 @@ import {
   AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
+  AtomicNumericFacet as LitAtomicNumericFacet,
   AtomicNumericRange as LitAtomicNumericRange,
   AtomicPager as LitAtomicPager,
   AtomicQueryError as LitAtomicQueryError,
@@ -97,6 +98,12 @@ export const AtomicLoadMoreResults = createComponent({
   tagName: 'atomic-load-more-results',
   react: React,
   elementClass: LitAtomicLoadMoreResults,
+});
+
+export const AtomicNumericFacet = createComponent({
+  tagName: 'atomic-numeric-facet',
+  react: React,
+  elementClass: LitAtomicNumericFacet,
 });
 
 export const AtomicNumericRange = createComponent({
