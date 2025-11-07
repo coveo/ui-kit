@@ -18,7 +18,6 @@ import {getFieldValueCaption} from '../../../utils/field-utils';
 import {randomID} from '../../../utils/utils';
 import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
 import {Bindings as SearchBindings} from '../../search/atomic-search-interface/atomic-search-interface';
-import '../atomic-facet-date-input/atomic-facet-date-input';
 import {Hidden} from '../stencil-hidden';
 import {FacetInfo} from './facet-common-store';
 import {FacetContainer} from './facet-container/stencil-facet-container';
