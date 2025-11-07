@@ -27,7 +27,6 @@ export const AtomicInsightUserActionsToggle = /*@__PURE__*/createReactComponent<
 export const AtomicNoResults = /*@__PURE__*/createReactComponent<JSX.AtomicNoResults, HTMLAtomicNoResultsElement>('atomic-no-results');
 export const AtomicNotifications = /*@__PURE__*/createReactComponent<JSX.AtomicNotifications, HTMLAtomicNotificationsElement>('atomic-notifications');
 export const AtomicNumericFacet = /*@__PURE__*/createReactComponent<JSX.AtomicNumericFacet, HTMLAtomicNumericFacetElement>('atomic-numeric-facet');
-export const AtomicNumericRange = /*@__PURE__*/createReactComponent<JSX.AtomicNumericRange, HTMLAtomicNumericRangeElement>('atomic-numeric-range');
 export const AtomicPopover = /*@__PURE__*/createReactComponent<JSX.AtomicPopover, HTMLAtomicPopoverElement>('atomic-popover');
 export const AtomicQuickview = /*@__PURE__*/createReactComponent<JSX.AtomicQuickview, HTMLAtomicQuickviewElement>('atomic-quickview');
 export const AtomicQuickviewModal = /*@__PURE__*/createReactComponent<JSX.AtomicQuickviewModal, HTMLAtomicQuickviewModalElement>('atomic-quickview-modal');
