@@ -3,6 +3,7 @@ import path, {dirname, resolve} from 'node:path';
 import replacePlugin from '@rollup/plugin-replace';
 import {storybookTest} from '@storybook/addon-vitest/vitest-plugin';
 import tailwindcss from '@tailwindcss/vite';
+import {playwright} from '@vitest/browser-playwright';
 import {configDefaults, defineConfig} from 'vitest/config';
 import packageJsonHeadless from '../headless/package.json' with {type: 'json'};
 import packageJson from './package.json' with {type: 'json'};
@@ -47,20 +48,6 @@ const atomicDefault = defineConfig({
       {
         find: '@/',
         replacement: `${path.resolve(import.meta.dirname, './')}/`,
-      },
-      {
-        find: /^@coveo\/headless\/(.*)$/,
-        replacement: path.resolve(
-          import.meta.dirname,
-          '../headless/cdn/$1/headless.esm.js'
-        ),
-      },
-      {
-        find: '@coveo/headless',
-        replacement: path.resolve(
-          import.meta.dirname,
-          '../headless/cdn/headless.esm.js'
-        ),
       },
       {
         find: '../components/components/lazy-index.js',
@@ -121,7 +108,7 @@ const atomicDefault = defineConfig({
       moduleDirectories: ['node_modules', path.resolve('../../packages')],
     },
     browser: {
-      provider: 'playwright',
+      provider: playwright(),
       enabled: true,
       instances: [
         {
@@ -154,7 +141,7 @@ const storybook = defineConfig({
       fileParallelism: false,
       enabled: true,
       headless: true,
-      provider: 'playwright',
+      provider: playwright(),
       instances: [{browser: 'chromium'}],
       context: {
         actionTimeout: 3000,

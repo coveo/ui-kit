@@ -28,7 +28,6 @@ setStorybookHelpersConfig({
     'cssStates',
     'events',
     'methods',
-    'properties',
     'slots',
   ],
   hideArgRef: true,
