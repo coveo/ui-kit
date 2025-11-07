@@ -6,16 +6,56 @@
   "image": "mcr.microsoft.com/devcontainers/typescript-node:2-22-bookworm",
 
   // Features to add to the dev container. More info: https://containers.dev/features.
-  // "features": {},
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
 
-  // Use 'updateContentCommand ' to run commands when the prebuild is created or updated https://docs.github.com/en/codespaces/prebuilding-your-codespaces/configuring-prebuilds#configuring-time-consuming-tasks-to-be-included-in-the-prebuild
-  "onCreateCommand": "CI=true bash -c 'corepack enable pnpm && pnpm install --frozen-lockfile && pnpm run build'"
+  // Lifecycle commands optimized for GitHub Codespaces prebuilds
+  // See: https://docs.github.com/en/codespaces/prebuilding-your-codespaces/configuring-prebuilds
+
+  // postCreateCommand runs AFTER prebuild (fast for users)
+  // Used for quick setup tasks after a codespace is created
+  "postCreateCommand": "bash -c 'corepack enable pnpm'",
+
+  // updateContentCommand runs DURING prebuild (slow but cached)
+  // This is where expensive operations like install and build should go
+  "updateContentCommand": "bash -c 'corepack enable pnpm && pnpm install --frozen-lockfile && CI=true pnpm run build'",
+
+  // postStartCommand runs every time the codespace starts
+  // Keep this minimal for fast startup
+  "postStartCommand": "echo 'Codespace ready! Run pnpm run dev to start development.'",
 
   // Configure tool-specific properties.
-  // "customizations": {},
+  "customizations": {
+    "vscode": {
+      // Extensions that will be automatically installed
+      "extensions": [
+        "biomejs.biome",
+        "streetsidesoftware.code-spell-checker",
+        "github.copilot",
+        "github.copilot-chat",
+        "runem.lit-plugin",
+        "unifiedjs.vscode-mdx",
+        "ms-playwright.playwright",
+        "bradlc.vscode-tailwindcss",
+        "vitest.explorer"
+      ],
+      // VS Code settings for better developer experience
+      "settings": {
+        "editor.defaultFormatter": "biomejs.biome",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "quickfix.biome": "explicit",
+          "source.organizeImports.biome": "explicit"
+        },
+        "files.eol": "\n",
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  }
 
   // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
   // "remoteUser": "root"
