@@ -141,8 +141,76 @@ export class AtomicBreadbox
     );
   }
 
-  updated() {
+  public updated() {
     this.adaptBreadcrumbs();
+  }
+
+  @bindingGuard()
+  @errorGuard()
+  render() {
+    const breadcrumbs = this.allBreadcrumbs;
+
+    if (!breadcrumbs.length) {
+      return html`${nothing}`;
+    }
+
+    return html`${renderBreadcrumbContainer({
+      props: {
+        isCollapsed: this.isCollapsed,
+        i18n: this.bindings.i18n,
+      },
+    })(
+      html`${this.renderBreadcrumbs(breadcrumbs)}
+      ${renderBreadcrumbShowMore({
+        props: {
+          refCallback: async (_el) => {
+            // Show more button doesn't need to set focus target
+            // Focus target for breadcrumbShowMoreFocus is set on the breadcrumb buttons themselves
+          },
+          onShowMore: () => {
+            this.firstExpandedBreadcrumbIndex =
+              this.numberOfBreadcrumbs - this.numberOfCollapsedBreadcrumbs;
+            this.breadcrumbShowMoreFocus.focusOnNextTarget();
+            this.isCollapsed = false;
+          },
+          isCollapsed: this.isCollapsed,
+          i18n: this.bindings.i18n,
+          numberOfCollapsedBreadcrumbs: this.numberOfCollapsedBreadcrumbs,
+          value: this.showMoreText,
+          ariaLabel: this.bindings.i18n.t('show-n-more-filters', {
+            value: this.numberOfCollapsedBreadcrumbs,
+          }),
+        },
+      })}
+      ${renderBreadcrumbShowLess({
+        props: {
+          onShowLess: () => {
+            this.breadcrumbShowLessFocus.focusOnNextTarget();
+            this.isCollapsed = true;
+          },
+          isCollapsed: this.isCollapsed,
+          i18n: this.bindings.i18n,
+        },
+      })}
+      ${renderBreadcrumbClearAll({
+        props: {
+          refCallback: async (ref) => {
+            const isFocusTarget =
+              this.lastRemovedBreadcrumbIndex === this.numberOfBreadcrumbs;
+
+            if (isFocusTarget) {
+              await this.breadcrumbRemovedFocus.setTarget(ref);
+            }
+          },
+          onClick: () => {
+            this.breadcrumbManager.deselectAll();
+            this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
+          },
+          isCollapsed: this.isCollapsed,
+          i18n: this.bindings.i18n,
+        },
+      })} `
+    )}`;
   }
 
   public disconnectedCallback() {
@@ -373,74 +441,6 @@ export class AtomicBreadbox
         })}`
       )}`;
     });
-  }
-
-  @bindingGuard()
-  @errorGuard()
-  render() {
-    const breadcrumbs = this.allBreadcrumbs;
-
-    if (!breadcrumbs.length) {
-      return html`${nothing}`;
-    }
-
-    return html`${renderBreadcrumbContainer({
-      props: {
-        isCollapsed: this.isCollapsed,
-        i18n: this.bindings.i18n,
-      },
-    })(
-      html`${this.renderBreadcrumbs(breadcrumbs)}
-      ${renderBreadcrumbShowMore({
-        props: {
-          refCallback: async (_el) => {
-            // Show more button doesn't need to set focus target
-            // Focus target for breadcrumbShowMoreFocus is set on the breadcrumb buttons themselves
-          },
-          onShowMore: () => {
-            this.firstExpandedBreadcrumbIndex =
-              this.numberOfBreadcrumbs - this.numberOfCollapsedBreadcrumbs;
-            this.breadcrumbShowMoreFocus.focusOnNextTarget();
-            this.isCollapsed = false;
-          },
-          isCollapsed: this.isCollapsed,
-          i18n: this.bindings.i18n,
-          numberOfCollapsedBreadcrumbs: this.numberOfCollapsedBreadcrumbs,
-          value: this.showMoreText,
-          ariaLabel: this.bindings.i18n.t('show-n-more-filters', {
-            value: this.numberOfCollapsedBreadcrumbs,
-          }),
-        },
-      })}
-      ${renderBreadcrumbShowLess({
-        props: {
-          onShowLess: () => {
-            this.breadcrumbShowLessFocus.focusOnNextTarget();
-            this.isCollapsed = true;
-          },
-          isCollapsed: this.isCollapsed,
-          i18n: this.bindings.i18n,
-        },
-      })}
-      ${renderBreadcrumbClearAll({
-        props: {
-          refCallback: async (ref) => {
-            const isFocusTarget =
-              this.lastRemovedBreadcrumbIndex === this.numberOfBreadcrumbs;
-
-            if (isFocusTarget) {
-              await this.breadcrumbRemovedFocus.setTarget(ref);
-            }
-          },
-          onClick: () => {
-            this.breadcrumbManager.deselectAll();
-            this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
-          },
-          isCollapsed: this.isCollapsed,
-          i18n: this.bindings.i18n,
-        },
-      })} `
-    )}`;
   }
 }
 
