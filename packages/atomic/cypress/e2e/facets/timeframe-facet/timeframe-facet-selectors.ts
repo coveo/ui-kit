@@ -56,7 +56,7 @@ export const TimeframeFacetSelectors = {
     return this.valueLabel().eq(index);
   },
   rangeInput() {
-    return this.shadow().find('atomic-stencil-facet-date-input form');
+    return this.shadow().find('atomic-facet-date-input form');
   },
   startDate() {
     return this.shadow().find('[part="input-start"]');

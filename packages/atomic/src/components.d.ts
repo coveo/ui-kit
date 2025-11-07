@@ -5,30 +5,24 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchStatus } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
-import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-import { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
-export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchStatus } from "@coveo/headless";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
-export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-export { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 export { i18n } from "i18next";
@@ -2011,19 +2005,6 @@ export namespace Components {
         "tabsIncluded": string[] | string;
     }
     /**
-     * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
-     * Internal component made to be integrated in a TimeframeFacet.
-     */
-    interface AtomicStencilFacetDateInput {
-        "bindings": AnyBindings;
-        "facetId": string;
-        "label": string;
-        "max"?: string;
-        "min"?: string;
-        "rangeGetter": () => DateFilterRange | undefined;
-        "rangeSetter": (range: DateRangeRequest) => void;
-    }
-    /**
      * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
      * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
      * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
@@ -2244,10 +2225,6 @@ export interface AtomicSmartSnippetFeedbackModalCustomEvent<T> extends CustomEve
 export interface AtomicSmartSnippetSourceCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicSmartSnippetSourceElement;
-}
-export interface AtomicStencilFacetDateInputCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicStencilFacetDateInputElement;
 }
 declare global {
     /**
@@ -3325,27 +3302,6 @@ declare global {
         prototype: HTMLAtomicSortExpressionElement;
         new (): HTMLAtomicSortExpressionElement;
     };
-    interface HTMLAtomicStencilFacetDateInputElementEventMap {
-        "atomic/dateInputApply": any;
-    }
-    /**
-     * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
-     * Internal component made to be integrated in a TimeframeFacet.
-     */
-    interface HTMLAtomicStencilFacetDateInputElement extends Components.AtomicStencilFacetDateInput, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicStencilFacetDateInputElementEventMap>(type: K, listener: (this: HTMLAtomicStencilFacetDateInputElement, ev: AtomicStencilFacetDateInputCustomEvent<HTMLAtomicStencilFacetDateInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicStencilFacetDateInputElementEventMap>(type: K, listener: (this: HTMLAtomicStencilFacetDateInputElement, ev: AtomicStencilFacetDateInputCustomEvent<HTMLAtomicStencilFacetDateInputElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicStencilFacetDateInputElement: {
-        prototype: HTMLAtomicStencilFacetDateInputElement;
-        new (): HTMLAtomicStencilFacetDateInputElement;
-    };
     /**
      * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
      * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
@@ -3530,7 +3486,6 @@ declare global {
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
-        "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
         "atomic-tab": HTMLAtomicTabElement;
         "atomic-tab-bar": HTMLAtomicTabBarElement;
@@ -5488,20 +5443,6 @@ declare namespace LocalJSX {
         "tabsIncluded"?: string[] | string;
     }
     /**
-     * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
-     * Internal component made to be integrated in a TimeframeFacet.
-     */
-    interface AtomicStencilFacetDateInput {
-        "bindings": AnyBindings;
-        "facetId": string;
-        "label": string;
-        "max"?: string;
-        "min"?: string;
-        "onAtomic/dateInputApply"?: (event: AtomicStencilFacetDateInputCustomEvent<any>) => void;
-        "rangeGetter": () => DateFilterRange | undefined;
-        "rangeSetter": (range: DateRangeRequest) => void;
-    }
-    /**
      * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
      * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
      * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
@@ -5763,7 +5704,6 @@ declare namespace LocalJSX {
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
-        "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
         "atomic-tab": AtomicTab;
         "atomic-tab-bar": AtomicTabBar;
@@ -6163,11 +6103,6 @@ declare module "@stencil/core" {
              * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
              */
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
-            /**
-             * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
-             * Internal component made to be integrated in a TimeframeFacet.
-             */
-            "atomic-stencil-facet-date-input": LocalJSX.AtomicStencilFacetDateInput & JSXBase.HTMLAttributes<HTMLAtomicStencilFacetDateInputElement>;
             /**
              * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
              * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil

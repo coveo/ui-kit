@@ -18,6 +18,7 @@ import {getFieldValueCaption} from '../../../utils/field-utils';
 import {randomID} from '../../../utils/utils';
 import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
 import {Bindings as SearchBindings} from '../../search/atomic-search-interface/atomic-search-interface';
+import '../atomic-facet-date-input/atomic-facet-date-input';
 import {Hidden} from '../stencil-hidden';
 import {FacetInfo} from './facet-common-store';
 import {FacetContainer} from './facet-container/stencil-facet-container';
@@ -351,17 +352,13 @@ export class TimeframeFacetCommon {
 
   private renderDateInput() {
     return (
-      <atomic-stencil-facet-date-input
+      <atomic-facet-date-input
         min={this.props.min}
         max={this.props.max}
-        bindings={this.props.bindings}
         label={this.props.label}
         facetId={this.filter!.state!.facetId}
-        rangeGetter={() => this.filter!.state.range}
-        rangeSetter={(request: DateRangeRequest) => {
-          this.filter!.setRange(request);
-        }}
-      ></atomic-stencil-facet-date-input>
+        inputRange={this.filter!.state.range}
+      ></atomic-facet-date-input>
     );
   }
 

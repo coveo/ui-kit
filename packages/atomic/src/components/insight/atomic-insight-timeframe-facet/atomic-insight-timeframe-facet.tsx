@@ -217,7 +217,13 @@ export class AtomicInsightTimeframeFacet
   }
 
   @Listen('atomic/dateInputApply')
-  public applyDateInput() {
+  public applyDateInput(event: CustomEvent) {
+    // Set the date range on the filter
+    if (this.filter && event.detail) {
+      this.filter.setRange(event.detail);
+    }
+
+    // Deselect all facet values when a custom range is applied
     this.facetId &&
       this.bindings.engine.dispatch(
         loadInsightDateFacetSetActions(
