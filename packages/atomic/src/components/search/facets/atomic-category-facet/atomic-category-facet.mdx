@@ -1,0 +1,61 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicCategoryFacetStories from './atomic-category-facet.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicCategoryFacetStories} />
+
+<AtomicDocTemplate
+  stories={AtomicCategoryFacetStories}
+  githubPath="search/facets/atomic-category-facet/atomic-category-facet.ts"
+  tagName="atomic-category-facet"
+  className="AtomicCategoryFacet"
+>
+
+The `atomic-category-facet` component displays a facet of values in a browsable, hierarchical fashion. This is useful for fields with hierarchical values, such as geographic locations or product categories.
+
+## Usage
+
+```html
+<atomic-search-interface>
+  <atomic-facet-manager>
+    <atomic-category-facet 
+      field="geographicalhierarchy" 
+      label="Location"
+      delimiting-character=";"
+    ></atomic-category-facet>
+  </atomic-facet-manager>
+</atomic-search-interface>
+```
+
+### With Search
+
+You can enable a search box within the facet to help users find specific values:
+
+```html
+<atomic-category-facet 
+  field="geographicalhierarchy" 
+  label="Location"
+  with-search
+></atomic-category-facet>
+```
+
+### Base Path
+
+You can restrict the facet to display only values under a specific path:
+
+```html
+<atomic-category-facet 
+  field="geographicalhierarchy" 
+  label="Location"
+  base-path='["North America", "United States"]'
+></atomic-category-facet>
+```
+
+## Related Components
+
+- `<atomic-facet>` - For regular facets with flat value lists
+- `<atomic-facet-manager>` - To manage multiple facets
+- `<atomic-breadbox>` - To display active facet selections
+
+</AtomicDocTemplate>
