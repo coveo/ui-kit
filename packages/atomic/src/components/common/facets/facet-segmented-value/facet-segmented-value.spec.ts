@@ -1,12 +1,11 @@
-import type {i18n} from 'i18next';
 import {beforeAll, describe, expect, it} from 'vitest';
 import {page} from 'vitest/browser';
-import {renderFunctionFixture} from '@/src/utils/testing-helpers/vitest-utils/functional-component-fixtures';
-import {createTestI18n} from '@/src/utils/testing-helpers/vitest-utils/i18n';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderFacetSegmentedValue} from './facet-segmented-value';
 
 describe('renderFacetSegmentedValue', () => {
-  let i18n: i18n;
+  let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
   beforeAll(async () => {
     i18n = await createTestI18n();
@@ -41,7 +40,7 @@ describe('renderFacetSegmentedValue', () => {
   describe('when rendering the component', () => {
     it('should render a list item with a button', async () => {
       const {button} = await renderSegmentedValue();
-      await expect.element(button).toBeInTheDocument();
+      expect(button).toBeInTheDocument();
     });
 
     it('should display the value label', async () => {
@@ -72,43 +71,40 @@ describe('renderFacetSegmentedValue', () => {
   describe('when the value is not selected', () => {
     it('should set aria-pressed to false', async () => {
       const {button} = await renderSegmentedValue({isSelected: false});
-      await expect.element(button).toHaveAttribute('aria-pressed', 'false');
+      await expect(button).toHaveAttribute('aria-pressed', 'false');
     });
 
     it('should not include value-box-selected in the part attribute', async () => {
       const {button} = await renderSegmentedValue({isSelected: false});
-      await expect
-        .element(button)
-        .not.toHaveAttribute('part', /value-box-selected/);
+      await expect(button).not.toHaveAttribute(
+        'part',
+        expect.stringContaining('value-box-selected')
+      );
     });
 
     it('should not have the selected class', async () => {
       const {button} = await renderSegmentedValue({isSelected: false});
-      const hasSelectedClass = (await button.element()).classList.contains(
-        'selected'
-      );
-      expect(hasSelectedClass).toBe(false);
+      await expect(button).not.toHaveClass('selected');
     });
   });
 
   describe('when the value is selected', () => {
     it('should set aria-pressed to true', async () => {
       const {button} = await renderSegmentedValue({isSelected: true});
-      await expect.element(button).toHaveAttribute('aria-pressed', 'true');
+      await expect(button).toHaveAttribute('aria-pressed', 'true');
     });
 
     it('should include value-box-selected in the part attribute', async () => {
       const {button} = await renderSegmentedValue({isSelected: true});
-      const part = await button.element().then((el) => el.getAttribute('part'));
-      expect(part).toContain('value-box-selected');
+      await expect(button).toHaveAttribute(
+        'part',
+        expect.stringContaining('value-box-selected')
+      );
     });
 
     it('should have the selected class', async () => {
       const {button} = await renderSegmentedValue({isSelected: true});
-      const hasSelectedClass = (await button.element()).classList.contains(
-        'selected'
-      );
-      expect(hasSelectedClass).toBe(true);
+      await expect(button).toHaveClass('selected');
     });
   });
 
@@ -118,11 +114,7 @@ describe('renderFacetSegmentedValue', () => {
         displayValue: 'Category A',
         numberOfResults: 100,
       });
-      const ariaLabel = await button
-        .element()
-        .then((el) => el.getAttribute('aria-label'));
-      expect(ariaLabel).toBeTruthy();
-      expect(ariaLabel).toContain('Category A');
+      await expect(button).toHaveAccessibleName(/Category A/);
     });
 
     it('should use the localized count in aria-label', async () => {
@@ -130,10 +122,7 @@ describe('renderFacetSegmentedValue', () => {
         displayValue: 'Test',
         numberOfResults: 1000,
       });
-      const ariaLabel = await button
-        .element()
-        .then((el) => el.getAttribute('aria-label'));
-      expect(ariaLabel).toContain('1,000');
+      await expect(button).toHaveAccessibleName(/1,000/);
     });
   });
 
