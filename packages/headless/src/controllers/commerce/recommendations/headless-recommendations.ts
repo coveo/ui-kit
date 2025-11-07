@@ -1,4 +1,3 @@
-import {createSelector} from '@reduxjs/toolkit';
 import type {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
 import type {
   ChildProduct,
@@ -139,10 +138,9 @@ export function buildRecommendations(
   const {slotId, productId} = props.options;
   dispatch(registerRecommendationsSlot({slotId, productId}));
 
-  const recommendationStateSelector = createSelector(
-    (state: CommerceEngineState) => state.recommendations[slotId]!,
-    (recommendations) => recommendations
-  );
+  const recommendationStateSelector = (state: CommerceEngineState) =>
+    state.recommendations[slotId]!;
+
   const subControllers = buildBaseSubControllers<RecommendationsSummaryState>(
     engine,
     {

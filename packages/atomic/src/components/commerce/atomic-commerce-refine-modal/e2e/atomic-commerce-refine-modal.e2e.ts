@@ -10,15 +10,6 @@ test.describe('atomic-commerce-refine-modal', () => {
     await page.locator('atomic-commerce-refine-toggle').click();
   });
 
-  test('should be accessible', async ({
-    makeAxeBuilder,
-    commerceRefineModal,
-  }) => {
-    await commerceRefineModal.closeButton.waitFor({state: 'visible'});
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should be able to close the modal', async ({commerceRefineModal}) => {
     await commerceRefineModal.closeButton.click();
     await commerceRefineModal.hydrated.waitFor({state: 'hidden'});

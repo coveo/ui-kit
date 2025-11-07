@@ -11,6 +11,7 @@ import {
 } from '../../features/facets/facet-set/facet-set-actions.js';
 import {facetSetReducer as facetSet} from '../../features/facets/facet-set/facet-set-slice.js';
 import type {FacetValue} from '../../features/facets/facet-set/interfaces/response.js';
+import {logClearBreadcrumbs} from '../../features/facets/generic/facet-generic-analytics-actions.js';
 import {
   toggleExcludeDateFacetValue,
   toggleSelectDateFacetValue,
@@ -77,6 +78,7 @@ vi.mock(
 );
 vi.mock('../../features/search/search-actions');
 vi.mock('../../features/static-filter-set/static-filter-set-actions');
+vi.mock('../../features/facets/generic/facet-generic-analytics-actions');
 
 describe('headless breadcrumb manager', () => {
   const facetId = 'abc123';
@@ -640,8 +642,16 @@ describe('headless breadcrumb manager', () => {
     });
 
     it('dispatches #executeSearch', () => {
+      vi.clearAllMocks();
       breadcrumbManager.deselectAll();
       expect(executeSearch).toHaveBeenCalled();
+      expect(executeSearch).toHaveBeenCalledTimes(1);
+      expect(executeSearch).toHaveBeenCalledWith({
+        legacy: logClearBreadcrumbs(),
+        next: {
+          actionCause: 'breadcrumbResetAll',
+        },
+      });
     });
   });
 });

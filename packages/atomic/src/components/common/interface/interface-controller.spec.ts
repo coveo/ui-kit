@@ -382,12 +382,9 @@ describe('InterfaceController', () => {
   describe('#onLanguageChange', () => {
     it('should use the provided newLanguage parameter when it is defined', async () => {
       const mockReadMethod = vi.fn();
-      vi.mocked(Backend).mockImplementation(
-        () =>
-          ({
-            read: mockReadMethod,
-          }) as unknown as Backend
-      );
+      vi.mocked(Backend).mockImplementation(function () {
+        this.read = mockReadMethod;
+      });
 
       const atomicInterface = await setupElement();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).language = 'fr';
@@ -418,12 +415,9 @@ describe('InterfaceController', () => {
 
     it('should use the atomic interface language when newLanguage is not provided', async () => {
       const mockReadMethod = vi.fn();
-      vi.mocked(Backend).mockImplementation(
-        () =>
-          ({
-            read: mockReadMethod,
-          }) as unknown as Backend
-      );
+      vi.mocked(Backend).mockImplementation(function () {
+        this.read = mockReadMethod;
+      });
 
       const atomicInterface = await setupElement();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).language = 'fr';
@@ -502,12 +496,9 @@ describe('InterfaceController', () => {
 
     it('should call #Backend.read with correct arguments for full language code', async () => {
       const mockReadMethod = vi.fn();
-      const BackendSpy = vi.mocked(Backend).mockImplementation(
-        () =>
-          ({
-            read: mockReadMethod,
-          }) as unknown as Backend
-      );
+      const BackendSpy = vi.mocked(Backend).mockImplementation(function () {
+        this.read = mockReadMethod;
+      });
 
       const atomicInterface = await setupElement();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).language =
@@ -530,12 +521,9 @@ describe('InterfaceController', () => {
 
     it('should call #Backend.read with correct arguments for simple language code', async () => {
       const mockReadMethod = vi.fn();
-      const BackendSpy = vi.mocked(Backend).mockImplementation(
-        () =>
-          ({
-            read: mockReadMethod,
-          }) as unknown as Backend
-      );
+      const BackendSpy = vi.mocked(Backend).mockImplementation(function () {
+        this.read = mockReadMethod;
+      });
 
       const atomicInterface = await setupElement();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).language = 'es';
@@ -558,12 +546,9 @@ describe('InterfaceController', () => {
     describe('when #Backend.read callback is executed', () => {
       it('should call #i18n.addResourceBundle with correct arguments', async () => {
         const mockReadMethod = vi.fn();
-        vi.mocked(Backend).mockImplementation(
-          () =>
-            ({
-              read: mockReadMethod,
-            }) as unknown as Backend
-        );
+        vi.mocked(Backend).mockImplementation(function () {
+          this.read = mockReadMethod;
+        });
 
         const atomicInterface = await setupElement();
         (atomicInterface as BaseAtomicInterface<CommerceEngine>).language =
@@ -596,12 +581,9 @@ describe('InterfaceController', () => {
 
       it('should call #i18n.changeLanguage with the full language code', async () => {
         const mockReadMethod = vi.fn();
-        vi.mocked(Backend).mockImplementation(
-          () =>
-            ({
-              read: mockReadMethod,
-            }) as unknown as Backend
-        );
+        vi.mocked(Backend).mockImplementation(function () {
+          this.read = mockReadMethod;
+        });
 
         const atomicInterface = await setupElement();
         (atomicInterface as BaseAtomicInterface<CommerceEngine>).language =
@@ -629,12 +611,9 @@ describe('InterfaceController', () => {
 
     it("should work correctly when language is undefined and fallback to 'en'", async () => {
       const mockReadMethod = vi.fn();
-      vi.mocked(Backend).mockImplementation(
-        () =>
-          ({
-            read: mockReadMethod,
-          }) as unknown as Backend
-      );
+      vi.mocked(Backend).mockImplementation(function () {
+        this.read = mockReadMethod;
+      });
 
       const atomicInterface = await setupElement();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).language =
@@ -678,12 +657,9 @@ describe('InterfaceController', () => {
 
     it('should handle complex language code with multiple dashes correctly', async () => {
       const mockReadMethod = vi.fn();
-      vi.mocked(Backend).mockImplementation(
-        () =>
-          ({
-            read: mockReadMethod,
-          }) as unknown as Backend
-      );
+      vi.mocked(Backend).mockImplementation(function () {
+        this.read = mockReadMethod;
+      });
 
       const atomicInterface = await setupElement();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).language =

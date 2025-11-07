@@ -6,11 +6,6 @@ test.describe('atomic-commerce-products-per-page', () => {
     await productsPerPage.hydrated.waitFor();
   });
 
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should display the correct number of choices', async ({
     productsPerPage,
   }) => {

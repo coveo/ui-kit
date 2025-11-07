@@ -109,7 +109,7 @@ describe('atomic-result-text', () => {
   it('should set error when #field is empty', async () => {
     const element = await renderComponent({field: 'author'});
 
-    expect(element.error).toBeNull();
+    expect(element.error).toBeUndefined();
 
     element.field = '';
     await element.updateComplete;
@@ -121,7 +121,7 @@ describe('atomic-result-text', () => {
   it('should set error when valid #field is updated to an empty value', async () => {
     const element = await renderComponent({field: 'author'});
 
-    expect(element.error).toBeNull();
+    expect(element.error).toBeUndefined();
 
     element.field = '';
     await element.updateComplete;
@@ -147,7 +147,7 @@ describe('atomic-result-text', () => {
     async ({prop, invalidValue}) => {
       const element = await renderComponent({field: 'author'});
 
-      expect(element.error).toBeNull();
+      expect(element.error).toBeUndefined();
 
       // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
       (element as any)[prop] = invalidValue;
@@ -181,7 +181,7 @@ describe('atomic-result-text', () => {
         [prop]: validValue,
       });
 
-      expect(element.error).toBeNull();
+      expect(element.error).toBeUndefined();
 
       // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
       (element as any)[prop] = invalidValue;

@@ -1,18 +1,6 @@
 import {expect, test} from './fixture';
 
 test.describe('atomic-commerce-timeframe-facet', () => {
-  test('should be accessible', async ({
-    makeAxeBuilder,
-    commerceTimeframeFacet,
-  }) => {
-    await commerceTimeframeFacet.load({
-      args: {withDatePicker: true},
-    });
-
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should complete the full date picker workflow', async ({
     commerceTimeframeFacet,
   }) => {

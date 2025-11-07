@@ -59,7 +59,6 @@ import '@/src/components/search/atomic-result/atomic-result';
 import {augmentAnalyticsConfigWithAtomicVersion} from '@/src/components/common/interface/analytics-config';
 import {arrayConverter} from '@/src/converters/array-converter';
 
-const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
 
 export type Bindings = CommonBindings<
@@ -69,6 +68,8 @@ export type Bindings = CommonBindings<
 > &
   //TODO: KIT-4893 - Remove once atomic-quickview-modal migration is complete.
   NonceBindings;
+
+const FirstSearchExecutedFlag = 'firstSearchExecuted';
 
 /**
  * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
@@ -92,6 +93,7 @@ export class AtomicSearchInterface
   private unsubscribeSearchStatus: Unsubscribe = () => {};
   private initialized = false;
   private store: SearchStore;
+  private i18Initialized: Promise<void>;
   private interfaceController = new InterfaceController<SearchEngine>(
     this,
     'CoveoAtomic',
@@ -155,7 +157,7 @@ export class AtomicSearchInterface
     converter: booleanConverter,
     reflect: true,
   })
-  analytics = true;
+  public analytics = true;
 
   /**
    * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items.
@@ -166,7 +168,9 @@ export class AtomicSearchInterface
   @property({type: String, reflect: true}) public timezone?: string;
 
   /**
-   * The severity level of the messages to log in the console.
+   * The minimum severity level of messages to log in the console.
+   * Messages with a severity level below this threshold will not be logged.
+   * Possible values are `trace`, `debug`, `info`, `warn`, `error`, `fatal`, or `silent`.
    */
   @property({type: String, attribute: 'log-level', reflect: true})
   public logLevel?: LogLevel;
@@ -213,7 +217,7 @@ export class AtomicSearchInterface
    * The CSS selector for the container where the interface will scroll back to.
    */
   @property({type: String, attribute: 'scroll-container', reflect: true})
-  scrollContainer = 'atomic-search-interface';
+  public scrollContainer = 'atomic-search-interface';
 
   /**
    * The language assets path. By default, this will be a relative URL pointing to `./lang`.
@@ -222,7 +226,7 @@ export class AtomicSearchInterface
    *
    */
   @property({type: String, attribute: 'language-assets-path', reflect: true})
-  languageAssetsPath = './lang';
+  public languageAssetsPath = './lang';
 
   /**
    * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
@@ -231,7 +235,7 @@ export class AtomicSearchInterface
    *
    */
   @property({type: String, attribute: 'icon-assets-path', reflect: true})
-  iconAssetsPath = './assets';
+  public iconAssetsPath = './assets';
 
   // TODO - (v4) KIT-5004: Remove.
   /**
@@ -248,7 +252,7 @@ export class AtomicSearchInterface
     reflect: true,
     converter: booleanConverter,
   })
-  enableRelevanceInspector = true;
+  public enableRelevanceInspector = true;
 
   /**
    * Whether to disable the relevance inspector shortcut for this interface.
@@ -258,9 +262,7 @@ export class AtomicSearchInterface
     attribute: 'disable-relevance-inspector',
     reflect: true,
   })
-  disableRelevanceInspector = false;
-
-  private i18Initialized: Promise<void>;
+  public disableRelevanceInspector = false;
 
   public constructor() {
     super();
@@ -313,10 +315,6 @@ export class AtomicSearchInterface
       this.scrollToTop as EventListener
     );
   }
-
-  private handleInitialization = (event: InitializeEvent) => {
-    this.interfaceController.onComponentInitializing(event);
-  };
 
   // TODO - (v4) KIT-4991: Make private.
   public scrollToTop() {
@@ -431,6 +429,14 @@ export class AtomicSearchInterface
     );
   }
 
+  public registerFieldsToInclude() {
+    this.engine?.dispatch(
+      loadFieldActions(this.engine!).registerFieldsToInclude(
+        this.store.state.fieldsToInclude
+      )
+    );
+  }
+
   @watch('searchHub')
   public updateSearchHub() {
     this.updateSearchConfiguration('searchHub', this.searchHub ?? 'default');
@@ -443,6 +449,9 @@ export class AtomicSearchInterface
 
   @watch('analytics')
   public toggleAnalytics() {
+    if (!this.interfaceController.engineIsCreated(this.engine)) {
+      return;
+    }
     this.interfaceController.onAnalyticsChange();
   }
 
@@ -471,6 +480,23 @@ export class AtomicSearchInterface
     this.store.state.iconAssetsPath = this.iconAssetsPath;
   }
 
+  @errorGuard()
+  render() {
+    return html`
+      ${when(
+        this.bindings?.engine &&
+          this.enableRelevanceInspector &&
+          !this.disableRelevanceInspector,
+        () => html`<atomic-relevance-inspector></atomic-relevance-inspector>`
+      )}
+      <slot></slot>
+    `;
+  }
+
+  private handleInitialization = (event: InitializeEvent) => {
+    this.interfaceController.onComponentInitializing(event);
+  };
+
   private getBindings(): Bindings {
     return {
       engine: this.engine!,
@@ -498,14 +524,6 @@ export class AtomicSearchInterface
     this.store.state.fieldsToInclude = [];
     this.initFieldsToInclude();
     this.registerFieldsToInclude();
-  }
-
-  public registerFieldsToInclude() {
-    this.engine?.dispatch(
-      loadFieldActions(this.engine!).registerFieldsToInclude(
-        this.store.state.fieldsToInclude
-      )
-    );
   }
 
   private initEngine(options: InitializationOptions) {
@@ -633,19 +651,6 @@ export class AtomicSearchInterface
 
     this.initUrlManager();
     this.initialized = true;
-  }
-
-  @errorGuard()
-  render() {
-    return html`
-      ${when(
-        this.bindings?.engine &&
-          this.enableRelevanceInspector &&
-          !this.disableRelevanceInspector,
-        () => html`<atomic-relevance-inspector></atomic-relevance-inspector>`
-      )}
-      <slot></slot>
-    `;
   }
 }
 
