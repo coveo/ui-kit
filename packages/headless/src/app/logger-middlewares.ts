@@ -36,7 +36,7 @@ export const logActionErrorMiddleware: (logger: Logger) => Middleware =
         'Error';
       logger.error(
         {error, action},
-        `${errorMessage} - Action dispatch error ${unknownAction.type}`
+        `Action dispatch error ${unknownAction.type}`
       );
     }
 
