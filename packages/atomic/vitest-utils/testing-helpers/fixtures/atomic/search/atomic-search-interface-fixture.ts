@@ -43,9 +43,13 @@ export class FixtureAtomicSearchInterface
 
   constructor() {
     super();
+    // TODO: KIT-4974 - Once all components are migrated from InitializeBindingsMixin to using only the @bindings decorator,
+    // we can move markParentAsReady() back here (after i18n is created) instead of in setBindings().
+    // The @bindings decorator uses Lit's ContextConsumer which properly waits for non-empty bindings,
+    // whereas InitializeBindingsMixin uses the event queue system which has a race condition with setBindings().
     createTestI18n().then((i18n) => {
       this.i18n = i18n;
-      markParentAsReady(this);
+      // markParentAsReady will be called from setBindings for now
     });
     this.host = this;
   }
@@ -63,6 +67,9 @@ export class FixtureAtomicSearchInterface
       i18n: bindings.i18n ?? this.i18n,
       interfaceElement: this as unknown as AtomicSearchInterface,
     } as Bindings;
+    // TODO: KIT-4974 - Remove this call once all components use @bindings decorator instead of InitializeBindingsMixin.
+    // Mark parent as ready after bindings are set to avoid race condition with components using InitializeBindingsMixin.
+    markParentAsReady(this);
   }
 
   protected render() {
