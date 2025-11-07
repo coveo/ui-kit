@@ -1,7 +1,7 @@
 import {html} from 'lit';
 import {describe, expect, it} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderRefineModalBody} from './body';
 
 describe('#renderRefineModalBody', () => {
