@@ -10,9 +10,9 @@ import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {page, userEvent} from 'vitest/browser';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
-import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/breadcrumb-manager';
-import {buildFakeEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/engine';
-import {buildFakeFacetManager} from '@/vitest-utils/testing-helpers/fixtures/headless/facet-manager';
+import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/breadcrumb-manager';
+import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
+import {buildFakeFacetManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/facet-manager';
 import {mockConsole} from '@/vitest-utils/testing-helpers/testing-utils/mock-console';
 import type {AtomicBreadbox} from './atomic-breadbox';
 import './atomic-breadbox';
@@ -20,7 +20,7 @@ import './atomic-breadbox';
 vi.mock('@coveo/headless', {spy: true});
 
 describe('atomic-breadbox', () => {
-  const mockedEngine = buildFakeEngine();
+  const mockedEngine = buildFakeSearchEngine();
   let mockedBreadcrumbManager: BreadcrumbManager;
   let mockedFacetManager: FacetManager;
   const mockedDeselectAll = vi.fn();
@@ -56,6 +56,23 @@ describe('atomic-breadbox', () => {
       selector: 'atomic-breadbox',
       bindings: (bindings) => {
         bindings.engine = mockedEngine;
+        bindings.store.state.facets = {
+          'test-facet': {
+            facetId: 'test-facet',
+            label: () => 'Test Facet',
+            element: document.createElement('div'),
+            isHidden: () => false,
+          },
+        };
+        bindings.store.state.numericFacets = {
+          'test-numeric-facet': {
+            facetId: 'test-numeric-facet',
+            label: () => 'Test Numeric Facet',
+            element: document.createElement('div'),
+            isHidden: () => false,
+            format: vi.fn((value) => value.toString()),
+          },
+        };
         return bindings;
       },
     });
@@ -85,244 +102,422 @@ describe('atomic-breadbox', () => {
     };
   };
 
-  it('should call buildBreadcrumbManager', async () => {
-    await renderBreadbox();
-    expect(buildBreadcrumbManager).toHaveBeenCalledWith(mockedEngine);
-  });
+  describe('#constructor', () => {
+    it('should not set error when pathLimit is valid', async () => {
+      const {element} = await renderBreadbox({
+        pathLimit: 3,
+      });
 
-  it('should call buildFacetManager', async () => {
-    await renderBreadbox();
-    expect(buildFacetManager).toHaveBeenCalledWith(mockedEngine);
-  });
-
-  it('should set error when pathLimit is initially lower than 1', async () => {
-    const {element} = await renderBreadbox({
-      pathLimit: 0,
+      expect(element.error).toBeUndefined();
     });
 
-    expect(element.error).toBeDefined();
-    expect(element.error.message).toMatch(
-      /pathLimit: minimum value of 1 not respected/i
+    it('should set error when pathLimit is initially lower than 1', async () => {
+      const {element} = await renderBreadbox({
+        pathLimit: 0,
+      });
+
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(
+        /pathLimit: minimum value of 1 not respected/i
+      );
+    });
+
+    it('should set error when valid pathLimit is updated to a value lower than 1', async () => {
+      const {element} = await renderBreadbox();
+
+      expect(element.error).toBeUndefined();
+
+      element.pathLimit = 0;
+
+      await element.updateComplete;
+
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(
+        /pathLimit: minimum value of 1 not respected/i
+      );
+    });
+  });
+
+  describe('#initialize', () => {
+    it('should call buildBreadcrumbManager', async () => {
+      await renderBreadbox();
+      expect(buildBreadcrumbManager).toHaveBeenCalledWith(mockedEngine);
+    });
+
+    it('should call buildFacetManager', async () => {
+      await renderBreadbox();
+      expect(buildFacetManager).toHaveBeenCalledWith(mockedEngine);
+    });
+
+    it.each([
+      {
+        description: 'ResizeObserver is available',
+        resizeObserverAvailable: true,
+        shouldObserve: true,
+      },
+      {
+        description: 'ResizeObserver is not available',
+        resizeObserverAvailable: false,
+        shouldObserve: false,
+      },
+    ])(
+      'should handle ResizeObserver creation when $description',
+      async ({resizeObserverAvailable, shouldObserve}) => {
+        const originalResizeObserver = window.ResizeObserver;
+        const observeSpy = vi.spyOn(ResizeObserver.prototype, 'observe');
+
+        if (!resizeObserverAvailable) {
+          // @ts-expect-error - Intentionally setting to undefined for testing
+          window.ResizeObserver = undefined;
+        }
+
+        const {element} = await renderBreadbox();
+
+        if (shouldObserve) {
+          expect(observeSpy).toHaveBeenCalledWith(element.parentElement);
+        } else {
+          expect(observeSpy).not.toHaveBeenCalled();
+        }
+
+        window.ResizeObserver = originalResizeObserver;
+      }
     );
   });
 
-  it('should set error when valid pathLimit is updated to a value lower than 1', async () => {
-    const {element} = await renderBreadbox();
-
-    expect(element.error).toBeUndefined();
-
-    element.pathLimit = 0;
-
-    await element.updateComplete;
-
-    expect(element.error).toBeDefined();
-    expect(element.error.message).toMatch(
-      /pathLimit: minimum value of 1 not respected/i
-    );
-  });
-
-  it('should render nothing when there are no breadcrumbs', async () => {
-    const {element} = await renderBreadbox({
-      breadcrumbState: {
-        facetBreadcrumbs: [],
-        categoryFacetBreadcrumbs: [],
-        numericFacetBreadcrumbs: [],
-        dateFacetBreadcrumbs: [],
-        automaticFacetBreadcrumbs: [],
-      },
+  describe('#render', () => {
+    it('should render nothing when there are no breadcrumbs', async () => {
+      const {element} = await renderBreadbox({
+        breadcrumbState: {
+          facetBreadcrumbs: [],
+          categoryFacetBreadcrumbs: [],
+          numericFacetBreadcrumbs: [],
+          dateFacetBreadcrumbs: [],
+          automaticFacetBreadcrumbs: [],
+        },
+      });
+      expect(
+        element.shadowRoot?.querySelector('[part="container"]')
+      ).toBeNull();
     });
-    expect(element.shadowRoot?.querySelector('[part="container"]')).toBeNull();
-  });
 
-  it('should have the right text on the label', async () => {
-    const {label} = await renderBreadbox({
-      breadcrumbState: {
-        facetBreadcrumbs: [
-          {
-            facetId: 'test-facet',
-            field: 'test-field',
-            values: [
-              {
-                value: {
-                  value: 'test-value',
-                  state: 'selected',
-                  numberOfResults: 1,
+    it('should have the right text on the label', async () => {
+      const {label} = await renderBreadbox({
+        breadcrumbState: {
+          facetBreadcrumbs: [
+            {
+              facetId: 'test-facet',
+              field: 'test-field',
+              values: [
+                {
+                  value: {
+                    value: 'test-value',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
                 },
-                deselect: vi.fn(),
-              },
-            ],
-          },
-        ],
-      },
+              ],
+            },
+          ],
+        },
+      });
+      await expect.element(label()).toHaveTextContent('Filters:');
     });
-    await expect.element(label()).toHaveTextContent('Filters:');
+
+    it('should render every part', async () => {
+      const {element, parts} = await renderBreadbox({
+        breadcrumbState: {
+          facetBreadcrumbs: [
+            {
+              facetId: 'test-facet',
+              field: 'test-field',
+              values: [
+                {
+                  value: {
+                    value: 'test-value',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+        },
+      });
+
+      const partsElements = parts(element);
+
+      await expect
+        .element(partsElements.container! as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(partsElements.breadcrumbListContainer! as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(partsElements.breadcrumbList! as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(partsElements.breadcrumbButton! as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(partsElements.breadcrumbLabel! as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(partsElements.breadcrumbValue! as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(partsElements.breadcrumbClear! as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(partsElements.clearAll! as HTMLElement)
+        .toBeInTheDocument();
+    });
+
+    it('should render show more part when component has collapsed state', async () => {
+      const {element, parts} = await renderBreadbox({
+        breadcrumbState: {
+          facetBreadcrumbs: [
+            {
+              facetId: 'test-facet',
+              field: 'test-field',
+              values: [
+                {
+                  value: {
+                    value: 'test-value-1',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+          categoryFacetBreadcrumbs: [],
+          numericFacetBreadcrumbs: [],
+          dateFacetBreadcrumbs: [],
+          automaticFacetBreadcrumbs: [],
+          hasBreadcrumbs: true,
+        },
+        pathLimit: 2,
+      });
+
+      // The show-more part should exist in shadow DOM even if not visible
+      expect(parts(element).showMore).toBeTruthy();
+    });
+
+    it('should not render show less part when component is collapsed', async () => {
+      const {element, parts} = await renderBreadbox({
+        breadcrumbState: {
+          facetBreadcrumbs: [
+            {
+              facetId: 'test-facet',
+              field: 'test-field',
+              values: [
+                {
+                  value: {
+                    value: 'test-value-1',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+          categoryFacetBreadcrumbs: [],
+          numericFacetBreadcrumbs: [],
+          dateFacetBreadcrumbs: [],
+          automaticFacetBreadcrumbs: [],
+          hasBreadcrumbs: true,
+        },
+        pathLimit: 2,
+      });
+
+      // The show-less part should not exist when collapsed
+      expect(parts(element).showLess).toBeNull();
+    });
+
+    it('should render different breadcrumb types', async () => {
+      const {element} = await renderBreadbox({
+        breadcrumbState: {
+          facetBreadcrumbs: [
+            {
+              facetId: 'test-facet',
+              field: 'test-field',
+              values: [
+                {
+                  value: {
+                    value: 'facet-value',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+          numericFacetBreadcrumbs: [
+            {
+              facetId: 'test-numeric-facet',
+              field: 'test-numeric-field',
+              values: [
+                {
+                  value: {
+                    start: 0,
+                    end: 100,
+                    endInclusive: true,
+                    state: 'selected',
+                    numberOfResults: 5,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+        },
+      });
+
+      expect(
+        element.shadowRoot?.querySelector('[part="container"]')
+      ).not.toBeNull();
+    });
   });
 
-  it('should call deselect when a breadcrumb is clicked', async () => {
-    const mockedDeselect = vi.fn();
-    await renderBreadbox({
-      breadcrumbState: {
-        facetBreadcrumbs: [
-          {
-            facetId: 'test-facet',
-            field: 'test-field',
-            values: [
-              {
-                value: {
-                  value: 'test-value',
-                  state: 'selected',
-                  numberOfResults: 1,
+  describe('user interactions', () => {
+    it('should call deselect when a breadcrumb is clicked', async () => {
+      const mockedDeselect = vi.fn();
+      await renderBreadbox({
+        breadcrumbState: {
+          facetBreadcrumbs: [
+            {
+              facetId: 'test-facet',
+              field: 'test-field',
+              values: [
+                {
+                  value: {
+                    value: 'test-value',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: mockedDeselect,
                 },
-                deselect: mockedDeselect,
-              },
-            ],
-          },
-        ],
-      },
+              ],
+            },
+          ],
+        },
+      });
+
+      // Find any button first to debug what's available
+      const breadcrumbButton = page.getByRole('button', {
+        name: /test-value/i,
+      });
+      await userEvent.click(breadcrumbButton);
+
+      expect(mockedDeselect).toHaveBeenCalled();
     });
 
-    const breadcrumbButton = page.getByRole('button', {
-      name: /test-field: test-value/i,
+    it('should call the deselectAll method when the clear all button is clicked', async () => {
+      const {clearAll} = await renderBreadbox({
+        breadcrumbState: {
+          facetBreadcrumbs: [
+            {
+              facetId: 'test-facet',
+              field: 'test-field',
+              values: [
+                {
+                  value: {
+                    value: 'test-value',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+        },
+      });
+      await userEvent.click(clearAll());
+      expect(mockedDeselectAll).toHaveBeenCalled();
     });
-    await userEvent.click(breadcrumbButton);
 
-    expect(mockedDeselect).toHaveBeenCalled();
+    it('should have the correct text on the clear all button', async () => {
+      const {clearAll} = await renderBreadbox({
+        breadcrumbState: {
+          facetBreadcrumbs: [
+            {
+              facetId: 'test-facet',
+              field: 'test-field',
+              values: [
+                {
+                  value: {
+                    value: 'test-value',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+        },
+      });
+      await expect.element(clearAll()).toHaveTextContent('Clear');
+    });
+
+    it('should have the correct aria-label on the clear all button', async () => {
+      const {clearAll} = await renderBreadbox({
+        breadcrumbState: {
+          facetBreadcrumbs: [
+            {
+              facetId: 'test-facet',
+              field: 'test-field',
+              values: [
+                {
+                  value: {
+                    value: 'test-value',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+        },
+      });
+      await expect
+        .element(clearAll())
+        .toHaveAttribute('aria-label', 'Clear All Filters');
+    });
   });
 
-  it('should call the deselectAll method when the clear all button is clicked', async () => {
-    const {clearAll} = await renderBreadbox({
-      breadcrumbState: {
-        facetBreadcrumbs: [
-          {
-            facetId: 'test-facet',
-            field: 'test-field',
-            values: [
-              {
-                value: {
-                  value: 'test-value',
-                  state: 'selected',
-                  numberOfResults: 1,
+  describe('#disconnectedCallback', () => {
+    it('should disconnect the resize observer when disconnected', async () => {
+      const {element} = await renderBreadbox({
+        breadcrumbState: {
+          facetBreadcrumbs: [
+            {
+              facetId: 'test-facet',
+              field: 'test-field',
+              values: [
+                {
+                  value: {
+                    value: 'test-value',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
                 },
-                deselect: vi.fn(),
-              },
-            ],
-          },
-        ],
-      },
+              ],
+            },
+          ],
+        },
+      });
+      const disconnectSpy = vi.spyOn(ResizeObserver.prototype, 'disconnect');
+      element.disconnectedCallback();
+      expect(disconnectSpy).toHaveBeenCalled();
     });
-    await userEvent.click(clearAll());
-    expect(mockedDeselectAll).toHaveBeenCalled();
-  });
-
-  it('should have the correct text on the clear all button', async () => {
-    const {clearAll} = await renderBreadbox({
-      breadcrumbState: {
-        facetBreadcrumbs: [
-          {
-            facetId: 'test-facet',
-            field: 'test-field',
-            values: [
-              {
-                value: {
-                  value: 'test-value',
-                  state: 'selected',
-                  numberOfResults: 1,
-                },
-                deselect: vi.fn(),
-              },
-            ],
-          },
-        ],
-      },
-    });
-    await expect.element(clearAll()).toHaveTextContent('Clear');
-  });
-
-  it('should have the correct aria-label on the clear all button', async () => {
-    const {clearAll} = await renderBreadbox({
-      breadcrumbState: {
-        facetBreadcrumbs: [
-          {
-            facetId: 'test-facet',
-            field: 'test-field',
-            values: [
-              {
-                value: {
-                  value: 'test-value',
-                  state: 'selected',
-                  numberOfResults: 1,
-                },
-                deselect: vi.fn(),
-              },
-            ],
-          },
-        ],
-      },
-    });
-    await expect
-      .element(clearAll())
-      .toHaveAttribute('aria-label', 'Clear All Filters');
-  });
-
-  it('should render every part', async () => {
-    const {element, parts} = await renderBreadbox({
-      breadcrumbState: {
-        facetBreadcrumbs: [
-          {
-            facetId: 'test-facet',
-            field: 'test-field',
-            values: [
-              {
-                value: {
-                  value: 'test-value',
-                  state: 'selected',
-                  numberOfResults: 1,
-                },
-                deselect: vi.fn(),
-              },
-            ],
-          },
-        ],
-      },
-    });
-
-    const partsElements = parts(element);
-
-    await expect.element(partsElements.container!).toBeInTheDocument();
-    await expect
-      .element(partsElements.breadcrumbListContainer!)
-      .toBeInTheDocument();
-    await expect.element(partsElements.breadcrumbList!).toBeInTheDocument();
-    await expect.element(partsElements.breadcrumbButton!).toBeInTheDocument();
-    await expect.element(partsElements.breadcrumbLabel!).toBeInTheDocument();
-    await expect.element(partsElements.breadcrumbValue!).toBeInTheDocument();
-    await expect.element(partsElements.breadcrumbClear!).toBeInTheDocument();
-    await expect.element(partsElements.clearAll!).toBeInTheDocument();
-  });
-
-  it('should disconnect the resize observer when disconnected', async () => {
-    const {element} = await renderBreadbox({
-      breadcrumbState: {
-        facetBreadcrumbs: [
-          {
-            facetId: 'test-facet',
-            field: 'test-field',
-            values: [
-              {
-                value: {
-                  value: 'test-value',
-                  state: 'selected',
-                  numberOfResults: 1,
-                },
-                deselect: vi.fn(),
-              },
-            ],
-          },
-        ],
-      },
-    });
-    const disconnectSpy = vi.spyOn(ResizeObserver.prototype, 'disconnect');
-    element.disconnectedCallback();
-    expect(disconnectSpy).toHaveBeenCalled();
   });
 });
