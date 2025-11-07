@@ -289,17 +289,21 @@ describe('atomic-recs-interface', () => {
             buildRecommendationEngine
           );
 
-          await element.initialize(recommendationEngineConfig);
+          // Use config without searchHub to test that property value is used
+          const {searchHub: _, ...configWithoutSearchHub} =
+            recommendationEngineConfig;
+
+          await element.initialize(configWithoutSearchHub);
 
           expect(getAnalyticsConfig).toHaveBeenCalledExactlyOnceWith(
-            recommendationEngineConfig,
+            configWithoutSearchHub,
             element.analytics
           );
           expect(
             mockedBuildRecommendationEngine
           ).toHaveBeenCalledExactlyOnceWith({
             configuration: {
-              ...recommendationEngineConfig,
+              ...configWithoutSearchHub,
               pipeline: 'test-pipeline',
               searchHub: 'test-hub',
               locale: 'fr',
