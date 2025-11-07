@@ -33,7 +33,7 @@ On receiving an issue, you **MUST** follow this cognitive loop:
             * `dependencies`: []
             * `status`: "pending"
     
-    * **C. Implement-then-Verify Rule**: When creating any plan (either in this step or via a 'discovery' task), you **MUST** follow an "Implement-then-Verify" pattern. For every `task` object that *implements* code (e.g., `python_flask_developer`), you **MUST** create a subsequent `task` object for *testing* that code (e.g., `pytest_tester`), with the implementation task as its dependency.
+    * **C. Implement-then-Verify Rule**: When creating any plan (either in this step or via a 'discovery' task), you **MUST** follow an "Implement-then-Verify" pattern. For every `task` object that *implements* code (e.g., `typescript_developer`), you **MUST** create a subsequent `task` object for *testing* that code (e.g., `vitest_tester` or `playwright_tester`), with the implementation task as its dependency.
 
 2.  **Plan Refinement (Dynamic Update)**:
     * After *any* task successfully completes, you **MUST** read its `report_file`.
@@ -86,7 +86,7 @@ On receiving an issue, you **MUST** follow this cognitive loop:
     4.  This new task object will look like:
         * `id`: "step-1-fix1"
         * `task_description`: "The task `step-1` failed verification by `step-2`. The failure log is: {step-2.failure_log}. Analyze this log, fix the bug in the code from `step-1`, and commit the changes."
-        * `expert_persona`: The *same persona* as "step-1" (e.g., "python_flask_developer").
+        * `expert_persona`: The *same persona* as "step-1" (e.g., "typescript_developer").
         * `dependencies`: `["step-1"]` (or the original dependencies of step-1)
         * `status`: "pending"
     5.  Continue executing the [PLAN]. The loop will naturally pick up this new "fix-it" task, and the invalidated dependent tasks (from step 3.1.2) will run again after it.
@@ -103,7 +103,7 @@ On receiving an issue, you **MUST** follow this cognitive loop:
     4.  **Task B (Retry Implementation):**
         * `id`: "step-1-retry-v2"
         * `task_description`: "Re-attempting task `step-1` using an improved v2 prompt."
-        * `expert_persona`: The *original* persona (e.g., "python_flask_developer").
+        * `expert_persona`: The *original* persona (e.g., "typescript_developer").
         * `dependencies`: `["step-1-promptfix"]`
         * `status`: "pending"
         * **`prompt_file`: "work-log/step-1.v2.prompt.md"`**
