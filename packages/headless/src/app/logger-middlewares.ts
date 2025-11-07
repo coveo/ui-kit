@@ -20,15 +20,7 @@ export const logActionErrorMiddleware: (logger: Logger) => Middleware =
 
     const error: SerializedError = unknownAction.error;
 
-    const errorPayloadMessage = [
-      unknownAction.payload?.errorCode,
-      unknownAction.payload?.message,
-    ]
-      .filter(Boolean)
-      .join(' - ');
-
     if (!unknownAction.payload?.ignored) {
-
       logger.error(
         {error, action},
         `Action dispatch error ${unknownAction.type}`
