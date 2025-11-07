@@ -55,7 +55,7 @@ On receiving an issue, you **MUST** follow this cognitive loop:
             > Their specific mission is: `{task.task_description}`.
             >
             > **MANDATORY CONTEXT FOR PROMPT:**
-            > * The generated prompt **MUST** instruct the agent that it has the following tools available: `["read", "edit", "run-tests", "search", "create_branch", "commit_changes"]`.
+            > * The generated prompt **MUST** instruct the agent that it has the following tools available: `["read", "edit", "run-tests", "search", "create_branch", "commit_changes", "merge_branch", "create_pull_request"]`.
             > * The generated prompt **MUST** instruct the agent to perform all its work (code changes and report file) on a **new, unique branch** named after its Task ID (e.g., `feature/step-1-impl`) and then use `commit_changes`.
             > * The generated prompt **MUST** adhere to the guidelines in `AGENTS.md`.
             > * Based on my analysis (or the discovery task's report), the relevant files for this task are: `[Orchestrator: You MUST provide a list of relevant files here]`.
