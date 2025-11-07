@@ -1,4 +1,4 @@
-import {describe, expect, it} from 'vitest';
+import {afterEach, describe, expect, it} from 'vitest';
 import {
   fetchBindings,
   MissingInterfaceParentError,
@@ -6,6 +6,16 @@ import {
 import '@/src/components/search/atomic-search-interface/atomic-search-interface.js';
 
 describe('fetchBindings', () => {
+  afterEach(() => {
+    // Clean up DOM
+    document.body.innerHTML = '';
+    // Clean up global initialization queue state
+    if (window.initQueueNamespace) {
+      window.initQueueNamespace.eventQueueMap.clear();
+      window.initQueueNamespace.parentReadyMap.clear();
+    }
+  });
+
   it('should rejects when the component is not the children of a search interface element', async () => {
     const element = document.createElement('my-component');
     await expect(fetchBindings(element)).rejects.toEqual(
