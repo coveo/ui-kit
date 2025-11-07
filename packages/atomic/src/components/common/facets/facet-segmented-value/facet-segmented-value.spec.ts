@@ -59,7 +59,7 @@ describe('renderFacetSegmentedValue', () => {
 
     it('should display the compact count in parentheses', async () => {
       const {valueCount} = await renderSegmentedValue({numberOfResults: 1500});
-      await expect(valueCount).toContainText('1.5K');
+      await expect(valueCount).toHaveTextContent(/1\.5K/);
     });
 
     it('should set the title attribute on the value label', async () => {
