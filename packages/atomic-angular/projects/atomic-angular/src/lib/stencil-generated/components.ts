@@ -915,28 +915,6 @@ export declare interface AtomicResultMultiValueText extends Components.AtomicRes
 
 
 @ProxyCmp({
-  inputs: ['field']
-, defineCustomElementFn: defineCustomElementAtomicResultNumber})
-@Component({standalone:false,
-  selector: 'atomic-result-number',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['field'],
-})
-export class AtomicResultNumber {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicResultNumber extends Components.AtomicResultNumber {}
-
-
-@ProxyCmp({
   inputs: ['maxNumberOfParts']
 , defineCustomElementFn: defineCustomElementAtomicResultPrintableUri})
 @Component({standalone:false,
@@ -2996,6 +2974,32 @@ export class AtomicResultList {
 }
 
 export declare interface AtomicResultList extends LitAtomicResultList {
+
+}
+
+@ProxyCmp({
+  inputs: ['field'],
+  methods: ['initialize'],
+  defineCustomElementFn: () => {customElements.get('atomic-result-number') || customElements.define('atomic-result-number', LitAtomicResultNumber);}
+})
+@Component({
+  selector: 'atomic-result-number',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['field']
+})
+export class AtomicResultNumber {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicResultNumber extends LitAtomicResultNumber {
 
 }
 

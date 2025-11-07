@@ -101,7 +101,41 @@ Migrate files according to this mapping:
 - Convert lifecycle methods (componentWillLoad → willUpdate, etc.)
 - Replace CSS classes with Tailwind CSS utilities
 - **Use Lit reactive controllers instead of Stencil context providers** (e.g., ProductContext should be a reactive controller)
+- **Result template components:** Replace Stencil `@ResultContext()` decorator with `createResultContextController`:
+  ```typescript
+  import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
+  
+  private resultContext = createResultContextController(this);
+  private get result(): Result {
+    return this.resultContext.item as Result;
+  }
+  ```
 - **Use Lit's `nothing` directive instead of `null` for conditional rendering**
+
+**Light DOM Components:**
+
+Light DOM components render without Shadow DOM for styling integration. Use `LightDomMixin` for this pattern.
+
+```typescript
+import {LightDomMixin} from '@/src/mixins/light-dom';
+
+// Basic light DOM component
+@customElement('atomic-result-number')
+@bindings()
+export class AtomicResultNumber
+  extends LightDomMixin(LitElement)
+  implements InitializableComponent<Bindings>
+
+// Light DOM component requiring bindings initialization
+@customElement('atomic-icon')
+export class AtomicIcon
+  extends LightDomMixin(InitializeBindingsMixin(LitElement))
+  implements InitializableComponent<AnyBindings>
+```
+
+**When to use:**
+- `LightDomMixin(LitElement)` - Most light DOM components with `@bindings()` decorator
+- `LightDomMixin(InitializeBindingsMixin(LitElement))` - Components needing binding initialization logic (e.g., components without use case-specific bindings)
 
 **Import Path Migration (CRITICAL):**
 
@@ -330,21 +364,27 @@ return condition ? html`<div>Content</div>` : nothing;
 html`<div>${shouldShow ? html`<span>Content</span>` : nothing}</div>`;
 ```
 
+**❌ Missing result context controller:**
+
+```typescript
+// DON'T: Try to access result without controller
+@ResultContext() result!: Result;  // Stencil pattern
+```
+
+**✅ Correct result context setup:**
+
+```typescript
+import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
+
+private resultContext = createResultContextController(this);
+private get result(): Result {
+  return this.resultContext.item as Result;
+}
+```
+
 ## Important Constraints
 
-**Do not do the following unless explicitly asked by the user:**
-
-- Do not build the Atomic package
-- Do not run tests or generate new tests
-- Do not fix linting issues (save linting fixes for after migration is complete)
-- Do not modify existing test files (`.spec.ts`, `e2e/` files)
-- Do not check if generation scripts succeeded or look for generated files
-
-**Focus only on:**
-
-- Code migration from Stencil to Lit
-- Style migration from PostCSS to Tailwind
-- Functional component/utility migration
+Focus on code/style/functional migration only. Do not: build, test, lint, modify test files, or verify generation script outputs (unless user requests).
 
 ## Migration Checklist
 
@@ -404,5 +444,3 @@ After completing migration, generate execution summary:
 **4. Inform user** about summary location
 
 **5. Mark complete** only after file created and user informed.
-
-```

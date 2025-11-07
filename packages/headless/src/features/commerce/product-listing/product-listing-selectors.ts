@@ -15,26 +15,18 @@ import {totalEntriesPrincipalSelector} from '../pagination/pagination-selectors.
  * Duplicate selector since the state is no longer accessible externally
  * TODO: KIT-3199: Update all other selectors to use the engine as a parameter
  */
-export const responseIdSelectorFromEngine = createSelector(
-  (engine: CommerceEngine) => engine[stateKey].productListing.responseId,
-  (responseId) => responseId
-);
+export const responseIdSelectorFromEngine = (engine: CommerceEngine) =>
+  engine[stateKey].productListing.responseId;
 
-export const responseIdSelector = createSelector(
-  (state: CommerceEngineState) => state.productListing.responseId,
-  (responseId) => responseId
-);
+export const responseIdSelector = (state: CommerceEngineState) =>
+  state.productListing.responseId;
 
-export const requestIdSelector = createSelector(
-  (state: CommerceEngineState) => state.productListing.requestId,
-  (requestId) => requestId
-);
+export const requestIdSelector = (state: CommerceEngineState) =>
+  state.productListing.requestId;
 
-export const numberOfProductsSelector = createSelector(
-  (state: Partial<ProductListingSection>) =>
-    state.productListing?.products.length || 0,
-  (len) => len
-);
+export const numberOfProductsSelector = (
+  state: Partial<ProductListingSection>
+) => state.productListing?.products.length || 0;
 
 export const moreProductsAvailableSelector = createSelector(
   (state: Partial<CommercePaginationSection & ProductListingSection>) => ({
@@ -44,12 +36,10 @@ export const moreProductsAvailableSelector = createSelector(
   ({current, total}) => current < total
 );
 
-export const isLoadingSelector = createSelector(
-  (state: Partial<ProductListingSection>) => state.productListing?.isLoading,
-  (isLoading) => (isNullOrUndefined(isLoading) ? false : isLoading)
-);
+export const isLoadingSelector = (state: Partial<ProductListingSection>) => {
+  const isLoading = state.productListing?.isLoading;
+  return isNullOrUndefined(isLoading) ? false : isLoading;
+};
 
-export const errorSelector = createSelector(
-  (state: Partial<ProductListingSection>) => state.productListing?.error,
-  (error) => error ?? null
-);
+export const errorSelector = (state: Partial<ProductListingSection>) =>
+  state.productListing?.error ?? null;

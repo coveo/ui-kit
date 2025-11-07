@@ -11,6 +11,7 @@ export {AtomicRelevanceInspector} from './atomic-relevance-inspector/atomic-rele
 export {AtomicResult} from './atomic-result/atomic-result.js';
 export {AtomicResultChildrenTemplate} from './atomic-result-children-template/atomic-result-children-template.js';
 export {AtomicResultList} from './atomic-result-list/atomic-result-list.js';
+export {AtomicResultNumber} from './atomic-result-number/atomic-result-number.js';
 export {AtomicResultSectionActions} from './atomic-result-section-actions/atomic-result-section-actions.js';
 export {AtomicResultSectionBadges} from './atomic-result-section-badges/atomic-result-section-badges.js';
 export {AtomicResultSectionBottomMetadata} from './atomic-result-section-bottom-metadata/atomic-result-section-bottom-metadata.js';

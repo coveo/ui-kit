@@ -1739,15 +1739,6 @@ export namespace Components {
         "maxValuesToDisplay": number;
     }
     /**
-     * The `atomic-result-number` component renders the value of a number result field.
-     */
-    interface AtomicResultNumber {
-        /**
-          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
-         */
-        "field": string;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
@@ -3117,15 +3108,6 @@ declare global {
         new (): HTMLAtomicResultMultiValueTextElement;
     };
     /**
-     * The `atomic-result-number` component renders the value of a number result field.
-     */
-    interface HTMLAtomicResultNumberElement extends Components.AtomicResultNumber, HTMLStencilElement {
-    }
-    var HTMLAtomicResultNumberElement: {
-        prototype: HTMLAtomicResultNumberElement;
-        new (): HTMLAtomicResultNumberElement;
-    };
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface HTMLAtomicResultPlaceholderElement extends Components.AtomicResultPlaceholder, HTMLStencilElement {
@@ -3543,7 +3525,6 @@ declare global {
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-localized-text": HTMLAtomicResultLocalizedTextElement;
         "atomic-result-multi-value-text": HTMLAtomicResultMultiValueTextElement;
-        "atomic-result-number": HTMLAtomicResultNumberElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-rating": HTMLAtomicResultRatingElement;
@@ -5230,15 +5211,6 @@ declare namespace LocalJSX {
         "maxValuesToDisplay"?: number;
     }
     /**
-     * The `atomic-result-number` component renders the value of a number result field.
-     */
-    interface AtomicResultNumber {
-        /**
-          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
-         */
-        "field": string;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
@@ -5798,7 +5770,6 @@ declare namespace LocalJSX {
         "atomic-result-link": AtomicResultLink;
         "atomic-result-localized-text": AtomicResultLocalizedText;
         "atomic-result-multi-value-text": AtomicResultMultiValueText;
-        "atomic-result-number": AtomicResultNumber;
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-rating": AtomicResultRating;
@@ -6135,10 +6106,6 @@ declare module "@stencil/core" {
              * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
              */
             "atomic-result-multi-value-text": LocalJSX.AtomicResultMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicResultMultiValueTextElement>;
-            /**
-             * The `atomic-result-number` component renders the value of a number result field.
-             */
-            "atomic-result-number": LocalJSX.AtomicResultNumber & JSXBase.HTMLAttributes<HTMLAtomicResultNumberElement>;
             /**
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
