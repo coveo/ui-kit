@@ -401,8 +401,8 @@ describe('constructAnswerAPIQueryParams', () => {
     });
   });
 
-  describe('query correction parameter handling', () => {
-    it('should include enableDidYouMean when legacy mode is enabled', () => {
+  describe('diYouMean parameter handling', () => {
+    it('should include legacy didYouMean when using legacy mode', () => {
       const queryParams = constructAnswerAPIQueryParams(
         streamAnswerAPIStateMockWithLegacyDidYouMean,
         buildMockNavigatorContextProvider()()
@@ -412,7 +412,7 @@ describe('constructAnswerAPIQueryParams', () => {
       expect(queryParams.queryCorrection?.enabled).toBe(false);
     });
 
-    it('should include queryCorrection when next mode is enabled', () => {
+    it('should include next didYouMean params when using next mode', () => {
       const queryParams = constructAnswerAPIQueryParams(
         streamAnswerAPIStateMockWithNextDidYouMeanAutoCorrect,
         buildMockNavigatorContextProvider()()
@@ -425,7 +425,7 @@ describe('constructAnswerAPIQueryParams', () => {
       expect(queryParams.enableDidYouMean).toBe(false);
     });
 
-    it('should handle automaticallyCorrectQuery false in next mode', () => {
+    it('should set automaticallyCorrectQuery to "never" when in next mode', () => {
       const queryParams = constructAnswerAPIQueryParams(
         streamAnswerAPIStateMockWithNextDidYouMeanNoAutoCorrect,
         buildMockNavigatorContextProvider()()
