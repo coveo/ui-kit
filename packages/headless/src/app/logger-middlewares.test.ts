@@ -88,7 +88,7 @@ describe('logActionErrorMiddleware', () => {
     invoke(action);
     expect(logger.error).toHaveBeenCalledWith(
       {error, action},
-      `${error.stack} - Action dispatch error ${action.type}`
+      `Action dispatch error ${action.type}`
     );
   });
 });
