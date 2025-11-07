@@ -29,3 +29,4 @@ export {AtomicSearchBoxRecentQueries} from './atomic-search-box-recent-queries/a
 export {AtomicSearchInterface} from './atomic-search-interface/atomic-search-interface.js';
 export {AtomicSearchLayout} from './atomic-search-layout/atomic-search-layout.js';
 export {AtomicText} from './atomic-text/atomic-text.js';
+export {AtomicNumericFacet} from './facets/atomic-numeric-facet/atomic-numeric-facet.js';

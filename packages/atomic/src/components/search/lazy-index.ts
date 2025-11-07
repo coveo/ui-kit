@@ -6,6 +6,8 @@ export default {
   'atomic-html': async () => await import('./atomic-html/atomic-html.js'),
   'atomic-load-more-results': async () =>
     await import('./atomic-load-more-results/atomic-load-more-results.js'),
+  'atomic-numeric-facet': async () =>
+    await import('./facets/atomic-numeric-facet/atomic-numeric-facet.js'),
   'atomic-pager': async () => await import('./atomic-pager/atomic-pager.js'),
   'atomic-query-error': async () =>
     await import('./atomic-query-error/atomic-query-error.js'),
