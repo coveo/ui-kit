@@ -100,7 +100,7 @@ export class AtomicIPXRefineModal implements InitializableComponent {
     }
 
     return (
-      <aside slot="body" class="flex flex-col w-full">
+      <aside slot="body" class="flex flex-col w-full" aria-label={this.bindings.i18n.t('refine-modal-content')}>
         {this.renderHeader()}
         <slot name="facets"></slot>
       </aside>
