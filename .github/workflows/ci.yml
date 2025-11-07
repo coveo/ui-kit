@@ -401,7 +401,6 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@coveo/atomic') && github.event_name != 'merge_group'
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: ${{ github.event_name == 'merge_group' }}
       matrix:
         containers:
           [
