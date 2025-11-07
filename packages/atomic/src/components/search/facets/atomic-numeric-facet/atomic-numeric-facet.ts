@@ -42,9 +42,7 @@ import '@/src/components/common/facets/facet-number-input/atomic-facet-number-in
 import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
 import {initializePopover} from '@/src/components/common/facets/popover/popover-type';
 import {bindStateToController} from '@/src/decorators/bind-state';
-import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
-import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
@@ -173,14 +171,18 @@ export class AtomicNumericFacet
   @property({type: Object, attribute: 'depends-on'})
   dependsOn: Record<string, string> = {};
 
+  public facetForRange?: NumericFacet;
+  public facetForInput?: NumericFacet;
+  public filter?: NumericFilter;
+  public searchStatus!: SearchStatus;
+  public tabManager!: TabManager;
+
   @state() bindings!: Bindings;
   @state() error!: Error;
 
-  @bindStateToController('facetForRange')
   @state()
-  public facetState!: NumericFacetState;
+  public facetState?: NumericFacetState;
 
-  @bindStateToController('filter')
   @state()
   public filterState?: NumericFilterState;
 
@@ -192,15 +194,8 @@ export class AtomicNumericFacet
   @state()
   public tabManagerState!: TabManagerState;
 
-  @bindStateToController('facetForInput')
   @state()
   public facetForInputState?: NumericFacetState;
-
-  public facetForRange?: NumericFacet;
-  public facetForInput?: NumericFacet;
-  public filter!: NumericFilter;
-  public searchStatus!: SearchStatus;
-  public tabManager!: TabManager;
 
   private manualRanges: (NumericRangeRequest & {label?: string})[] = [];
   private formatter: NumberFormatter = defaultNumberFormatter;
@@ -231,6 +226,23 @@ export class AtomicNumericFacet
     this.initializeFilter();
     this.initializeSearchStatus();
     this.registerFacetToStore();
+
+    // Subscribe to optional controllers manually
+    if (this.facetForRange) {
+      this.facetForRange.subscribe(() => {
+        this.facetState = this.facetForRange!.state;
+      });
+    }
+    if (this.facetForInput) {
+      this.facetForInput.subscribe(() => {
+        this.facetForInputState = this.facetForInput!.state;
+      });
+    }
+    if (this.filter) {
+      this.filter.subscribe(() => {
+        this.filterState = this.filter!.state;
+      });
+    }
 
     // Listen for number format events
     this.addEventListener(
@@ -532,9 +544,7 @@ export class AtomicNumericFacet
     );
   }
 
-  @bindingGuard()
-  @errorGuard()
-  protected render() {
+  render() {
     const {
       searchStatusState: {firstSearchExecuted, hasError},
       bindings: {i18n},
@@ -550,7 +560,7 @@ export class AtomicNumericFacet
     }
 
     if (!this.shouldRenderFacet) {
-      return nothing;
+      return html`${nothing}`;
     }
 
     return renderFacetContainer()(html`
