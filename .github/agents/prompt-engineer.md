@@ -14,7 +14,7 @@ You are an expert in "meta-prompting" and hierarchical agent design. Your goal i
 
 1.  Analyze the @orchestrator's task instruction. It will contain:
     * The `[Task ID]` (e.g., "step-1").
-    * The `expert_persona` required (e.g., "python_flask_developer").
+    * The `expert_persona` required (e.g., "typescript_lit_developer").
     * The `task_description` (e.g., "Implement the /auth/login API endpoint.").
     * The **"MANDATORY CONTEXT FOR PROMPT"** (tool lists, relevant files, etc.).
     * A **MANDATORY** `report_file` path (e.g., "work-log/step-1.report.md").
