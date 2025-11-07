@@ -13,8 +13,9 @@ You will perform full component migrations including:
 2. Unit test generation (Vitest)
 3. Storybook stories with MSW API mocking
 4. E2E test generation (Playwright)
-5. MDX documentation
-6. Dependency identification and migration planning
+5. Cypress test analysis and migration
+6. MDX documentation
+7. Dependency identification and migration planning
 
 ## Knowledge Base
 
@@ -72,7 +73,64 @@ Generate Playwright E2E tests:
 - Test happy path and accessibility
 - Follow `playwright-typescript.instructions.md` conventions
 
-### Step 5: Documentation
+### Step 5: Cypress Test Analysis & Migration
+
+Analyze and migrate existing Cypress tests to ensure no essential test coverage is lost:
+
+#### 5.1 Locate Cypress Tests
+- Check for Cypress test files in `packages/atomic/cypress/e2e/` (may be in subfolders)
+- File naming pattern typically matches component name (e.g., `result-link.cypress.ts` for `atomic-result-link`)
+- If no Cypress tests exist for the component, skip to Step 6
+
+#### 5.2 Analyze Each Cypress Test
+For each test in the Cypress suite, determine which category it falls into:
+
+**Category A: Duplicated by unit test**
+- The test verifies behavior already covered by a unit test in the component's `.spec.ts` file
+- Example: Testing prop validation, controller initialization, basic rendering
+- **Action:** Mark for deletion (no migration needed)
+
+**Category B: Duplicated by Playwright E2E test**
+- The test verifies behavior already covered in the component's Playwright E2E tests
+- Example: Testing interactive behavior, accessibility, integration with search interface
+- **Action:** Mark for deletion (no migration needed)
+
+**Category C: Should become unit test**
+- The test verifies component-specific behavior not covered in unit tests
+- The test doesn't require full browser environment or complex user interactions
+- Example: Testing specific prop combinations, edge cases in rendering logic, slot behavior
+- **Action:** Convert to Vitest unit test in the component's `.spec.ts` file
+
+**Category D: Should become E2E test**
+- The test verifies integration behavior not covered in Playwright E2E tests
+- The test requires full browser environment or complex user interactions
+- Example: Testing specific user workflows, keyboard navigation patterns, focus management
+- **Action:** Convert to Playwright E2E test in the component's `e2e/{component-name}.e2e.ts` file
+
+**Category E: Superfluous test**
+- The test verifies trivial behavior that doesn't add value
+- The test duplicates framework functionality (e.g., testing that Stencil slots work)
+- The test is outdated or no longer relevant to the migrated component
+- **Action:** Mark for deletion with brief justification
+
+#### 5.3 Execute Conversions
+For tests marked as Category C or D:
+- **Unit tests (Category C):** Add test cases to the component's `.spec.ts` file following Vitest patterns
+  - Use the `render<ComponentName>()` helper pattern
+  - Mock controllers appropriately with `buildFake*` fixtures
+  - Follow conventions in `tests-atomic.instructions.md`
+- **E2E tests (Category D):** Add test cases to the component's `e2e/{component-name}.e2e.ts` file following Playwright patterns
+  - Use the component's page object model
+  - Add new locator methods to `page-object.ts` if needed
+  - Follow conventions in `playwright-typescript.instructions.md`
+
+#### 5.4 Clean Up Cypress Files
+Once all tests have been analyzed and converted:
+- Delete the Cypress test file(s) for the migrated component
+- Do **not** delete shared Cypress utilities or tests for other components
+- Only remove files specific to the component being migrated
+
+### Step 6: Documentation
 **Prompt:** `.github/prompts/write-atomic-component-mdx-documentation.prompt.md`
 
 Write MDX documentation:
@@ -139,7 +197,8 @@ Before completing a migration, verify:
 - [ ] Build succeeds: `pnpm build`
 - [ ] All functionality preserved from Stencil version
 - [ ] Accessibility maintained (WCAG 2.2)
-- [ ] Old Cypress tests removed (if exclusive to component)
+- [ ] Cypress tests analyzed and migrated (unit or E2E tests added as needed)
+- [ ] Cypress test files for component removed
 - [ ] Lit component exported in `index.ts` and `lazy-index.ts`
 
 ## Working Directory
@@ -175,6 +234,8 @@ A successful migration includes:
 - ✅ Comprehensive unit tests
 - ✅ Working Storybook stories with API mocking
 - ✅ E2E tests covering happy path and accessibility
+- ✅ Cypress tests analyzed and migrated (no coverage loss)
+- ✅ Component-specific Cypress test files removed
 - ✅ Complete MDX documentation
 - ✅ All tests passing
 - ✅ All linting passing
@@ -183,8 +244,9 @@ A successful migration includes:
 
 ## Important Notes
 
-- **Follow prompt order**: Execute steps 1-5 in sequence
-- **Use dedicated prompts**: Each step has a specialized prompt with detailed guidance
+- **Follow prompt order**: Execute steps 1-6 in sequence
+- **Use dedicated prompts**: Steps 1, 2, 4, and 6 have specialized prompts with detailed guidance
+- **Cypress test migration**: Step 5 ensures no test coverage is lost during migration
 - **Reference similar components**: Always find and analyze equivalent components in other use cases
 - **Preserve functionality**: The migrated component must behave identically to the Stencil version
 - **Single source of truth**: All conventions are in instruction files - refer to them for patterns

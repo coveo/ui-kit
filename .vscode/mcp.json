@@ -1,6 +1,7 @@
 {
   "servers": {
     "atlassian": {
+      "type": "http",
       "url": "https://mcp.atlassian.com/v1/sse"
     },
     "github": {

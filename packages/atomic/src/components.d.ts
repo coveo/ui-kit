@@ -1225,27 +1225,6 @@ export namespace Components {
         "withInput"?: NumberInputType;
     }
     /**
-     * The `atomic-numeric-range` component defines the range of an `atomic-numeric-facet`, and therefore must be defined within an `atomic-numeric-facet` component.
-     */
-    interface AtomicNumericRange {
-        /**
-          * The ending value for the numeric range.
-         */
-        "end": number;
-        /**
-          * Specifies whether the end value should be included in the range.
-         */
-        "endInclusive": boolean;
-        /**
-          * The non-localized label for the facet. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The starting value for the numeric range.
-         */
-        "start": number;
-    }
-    /**
      * The `atomic-popover` component displays any facet as a popover menu.
      */
     interface AtomicPopover {
@@ -1737,15 +1716,6 @@ export namespace Components {
           * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
          */
         "maxValuesToDisplay": number;
-    }
-    /**
-     * The `atomic-result-number` component renders the value of a number result field.
-     */
-    interface AtomicResultNumber {
-        /**
-          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
-         */
-        "field": string;
     }
     /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
@@ -2861,15 +2831,6 @@ declare global {
         new (): HTMLAtomicNumericFacetElement;
     };
     /**
-     * The `atomic-numeric-range` component defines the range of an `atomic-numeric-facet`, and therefore must be defined within an `atomic-numeric-facet` component.
-     */
-    interface HTMLAtomicNumericRangeElement extends Components.AtomicNumericRange, HTMLStencilElement {
-    }
-    var HTMLAtomicNumericRangeElement: {
-        prototype: HTMLAtomicNumericRangeElement;
-        new (): HTMLAtomicNumericRangeElement;
-    };
-    /**
      * The `atomic-popover` component displays any facet as a popover menu.
      */
     interface HTMLAtomicPopoverElement extends Components.AtomicPopover, HTMLStencilElement {
@@ -3115,15 +3076,6 @@ declare global {
     var HTMLAtomicResultMultiValueTextElement: {
         prototype: HTMLAtomicResultMultiValueTextElement;
         new (): HTMLAtomicResultMultiValueTextElement;
-    };
-    /**
-     * The `atomic-result-number` component renders the value of a number result field.
-     */
-    interface HTMLAtomicResultNumberElement extends Components.AtomicResultNumber, HTMLStencilElement {
-    }
-    var HTMLAtomicResultNumberElement: {
-        prototype: HTMLAtomicResultNumberElement;
-        new (): HTMLAtomicResultNumberElement;
     };
     /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
@@ -3522,7 +3474,6 @@ declare global {
         "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-notifications": HTMLAtomicNotificationsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
-        "atomic-numeric-range": HTMLAtomicNumericRangeElement;
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-quickview": HTMLAtomicQuickviewElement;
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
@@ -3543,7 +3494,6 @@ declare global {
         "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-localized-text": HTMLAtomicResultLocalizedTextElement;
         "atomic-result-multi-value-text": HTMLAtomicResultMultiValueTextElement;
-        "atomic-result-number": HTMLAtomicResultNumberElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-rating": HTMLAtomicResultRatingElement;
@@ -4732,27 +4682,6 @@ declare namespace LocalJSX {
         "withInput"?: NumberInputType;
     }
     /**
-     * The `atomic-numeric-range` component defines the range of an `atomic-numeric-facet`, and therefore must be defined within an `atomic-numeric-facet` component.
-     */
-    interface AtomicNumericRange {
-        /**
-          * The ending value for the numeric range.
-         */
-        "end": number;
-        /**
-          * Specifies whether the end value should be included in the range.
-         */
-        "endInclusive"?: boolean;
-        /**
-          * The non-localized label for the facet. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The starting value for the numeric range.
-         */
-        "start": number;
-    }
-    /**
      * The `atomic-popover` component displays any facet as a popover menu.
      */
     interface AtomicPopover {
@@ -5228,15 +5157,6 @@ declare namespace LocalJSX {
           * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
          */
         "maxValuesToDisplay"?: number;
-    }
-    /**
-     * The `atomic-result-number` component renders the value of a number result field.
-     */
-    interface AtomicResultNumber {
-        /**
-          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
-         */
-        "field": string;
     }
     /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
@@ -5777,7 +5697,6 @@ declare namespace LocalJSX {
         "atomic-no-results": AtomicNoResults;
         "atomic-notifications": AtomicNotifications;
         "atomic-numeric-facet": AtomicNumericFacet;
-        "atomic-numeric-range": AtomicNumericRange;
         "atomic-popover": AtomicPopover;
         "atomic-quickview": AtomicQuickview;
         "atomic-quickview-modal": AtomicQuickviewModal;
@@ -5798,7 +5717,6 @@ declare namespace LocalJSX {
         "atomic-result-image": AtomicResultImage;
         "atomic-result-localized-text": AtomicResultLocalizedText;
         "atomic-result-multi-value-text": AtomicResultMultiValueText;
-        "atomic-result-number": AtomicResultNumber;
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-rating": AtomicResultRating;
@@ -5997,10 +5915,6 @@ declare module "@stencil/core" {
              */
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             /**
-             * The `atomic-numeric-range` component defines the range of an `atomic-numeric-facet`, and therefore must be defined within an `atomic-numeric-facet` component.
-             */
-            "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;
-            /**
              * The `atomic-popover` component displays any facet as a popover menu.
              */
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
@@ -6135,10 +6049,6 @@ declare module "@stencil/core" {
              * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
              */
             "atomic-result-multi-value-text": LocalJSX.AtomicResultMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicResultMultiValueTextElement>;
-            /**
-             * The `atomic-result-number` component renders the value of a number result field.
-             */
-            "atomic-result-number": LocalJSX.AtomicResultNumber & JSXBase.HTMLAttributes<HTMLAtomicResultNumberElement>;
             /**
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
