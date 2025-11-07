@@ -137,7 +137,7 @@ describe('renderFacetSegmentedValue', () => {
     it('should format the count with locale-specific formatting', async () => {
       const {valueCount} = await renderSegmentedValue({numberOfResults: 1000});
       // The compact format for 1000 should be "1K"
-      await expect(valueCount).toContainText('1K');
+      await expect(valueCount).toHaveTextContent(/1K/);
     });
 
     it('should format large numbers compactly', async () => {
@@ -145,7 +145,7 @@ describe('renderFacetSegmentedValue', () => {
         numberOfResults: 1500000,
       });
       // The compact format for 1,500,000 should be "1.5M"
-      await expect(valueCount).toContainText('1.5M');
+      await expect(valueCount).toHaveTextContent(/1\.5M/);
     });
   });
 });
