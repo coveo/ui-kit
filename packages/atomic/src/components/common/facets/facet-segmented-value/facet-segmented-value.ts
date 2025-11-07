@@ -25,7 +25,7 @@ export const renderFacetSegmentedValue: FunctionalComponent<
   return html`
       ${keyed(
         props.displayValue,
-        html`<li .key=${props.displayValue}>
+        html`<li>
           ${renderButton({
             props: {
               style: 'square-neutral',
