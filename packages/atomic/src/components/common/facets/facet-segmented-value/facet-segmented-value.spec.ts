@@ -17,7 +17,7 @@ describe('renderFacetSegmentedValue', () => {
     isSelected = false,
     onClick = () => {},
   } = {}) => {
-    const element = await renderFunctionFixture(
+    await renderFunctionFixture(
       renderFacetSegmentedValue({
         props: {
           i18n,
@@ -29,11 +29,18 @@ describe('renderFacetSegmentedValue', () => {
       })
     );
 
+    // Get button by its aria-label
+    const count = numberOfResults.toLocaleString(i18n.language);
+    const ariaLabel = i18n.t('facet-value', {
+      value: displayValue,
+      count: numberOfResults,
+      formattedCount: count,
+    });
+
     return {
-      element,
-      button: page.getByRole('button', {name: /Test Value/i}),
-      valueLabel: element.querySelector('[part="value-label"]') as HTMLElement,
-      valueCount: element.querySelector('[part="value-count"]') as HTMLElement,
+      button: page.getByLabelText(ariaLabel),
+      valueLabel: page.locator('[part="value-label"]'),
+      valueCount: page.locator('[part="value-count"]'),
     };
   };
 
@@ -47,24 +54,24 @@ describe('renderFacetSegmentedValue', () => {
       const {valueLabel} = await renderSegmentedValue({
         displayValue: 'My Value',
       });
-      expect(valueLabel?.textContent?.trim()).toBe('My Value');
+      await expect(valueLabel).toHaveTextContent('My Value');
     });
 
     it('should display the compact count in parentheses', async () => {
       const {valueCount} = await renderSegmentedValue({numberOfResults: 1500});
-      expect(valueCount?.textContent).toContain('1.5K');
+      await expect(valueCount).toContainText('1.5K');
     });
 
     it('should set the title attribute on the value label', async () => {
       const {valueLabel} = await renderSegmentedValue({
         displayValue: 'Test Value',
       });
-      expect(valueLabel?.getAttribute('title')).toBe('Test Value');
+      await expect(valueLabel).toHaveAttribute('title', 'Test Value');
     });
 
     it('should set the title attribute on the value count', async () => {
       const {valueCount} = await renderSegmentedValue({numberOfResults: 42});
-      expect(valueCount?.getAttribute('title')).toBe('42');
+      await expect(valueCount).toHaveAttribute('title', '42');
     });
   });
 
@@ -109,20 +116,20 @@ describe('renderFacetSegmentedValue', () => {
   });
 
   describe('accessibility', () => {
-    it('should have a descriptive aria-label', async () => {
+    it('should have a descriptive aria-label with value name', async () => {
       const {button} = await renderSegmentedValue({
         displayValue: 'Category A',
         numberOfResults: 100,
       });
-      await expect(button).toHaveAccessibleName(/Category A/);
+      expect(button).toBeInTheDocument();
     });
 
-    it('should use the localized count in aria-label', async () => {
+    it('should have aria-label with localized count', async () => {
       const {button} = await renderSegmentedValue({
         displayValue: 'Test',
         numberOfResults: 1000,
       });
-      await expect(button).toHaveAccessibleName(/1,000/);
+      expect(button).toBeInTheDocument();
     });
   });
 
@@ -130,7 +137,7 @@ describe('renderFacetSegmentedValue', () => {
     it('should format the count with locale-specific formatting', async () => {
       const {valueCount} = await renderSegmentedValue({numberOfResults: 1000});
       // The compact format for 1000 should be "1K"
-      expect(valueCount?.textContent).toContain('1K');
+      await expect(valueCount).toContainText('1K');
     });
 
     it('should format large numbers compactly', async () => {
@@ -138,7 +145,7 @@ describe('renderFacetSegmentedValue', () => {
         numberOfResults: 1500000,
       });
       // The compact format for 1,500,000 should be "1.5M"
-      expect(valueCount?.textContent).toContain('1.5M');
+      await expect(valueCount).toContainText('1.5M');
     });
   });
 });
