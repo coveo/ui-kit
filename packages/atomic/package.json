@@ -58,7 +58,7 @@
     "build:list-assets": "node ./scripts/list-assets.mjs",
     "dev": "node ./scripts/dev.mjs",
     "web:dev": "npx vite serve dev",
-    "web:cdn": "node ./scripts/start-cdn.mjÈts",
+    "web:cdn": "node ./scripts/start-cdn.mjs",
     "prod": "npx serve www -l 3333 --no-request-logging",
     "test": "pnpm run test:lit",
     "test:stencil": "stencil test --spec -- src/utils/initialization-utils.spec.ts",
