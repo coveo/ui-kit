@@ -24,35 +24,32 @@ import {provide} from '@lit/context';
 import i18next, {type i18n} from 'i18next';
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {
+  errorSelector,
+  firstSearchExecutedSelector,
+  noProductsSelector,
+} from '@/src/components/commerce//atomic-commerce-layout/commerce-layout';
+import {bindingsContext} from '@/src/components/common/context/bindings-context';
+import {augmentAnalyticsConfigWithAtomicVersion} from '@/src/components/common/interface/analytics-config';
+import type {CommonBindings} from '@/src/components/common/interface/bindings';
+import {
+  type BaseAtomicInterface,
+  InterfaceController,
+} from '@/src/components/common/interface/interface-controller';
 import {MobileBreakpointController} from '@/src/components/common/layout/mobile-breakpoint-controller';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
 import {
   SafeStorage,
   type StandaloneSearchBoxData,
   StorageItems,
 } from '@/src/utils/local-storage-utils';
-import {ChildrenUpdateCompleteMixin} from '../../../mixins/children-update-complete-mixin';
-import {bindingsContext} from '../../common/context/bindings-context';
-import {augmentAnalyticsConfigWithAtomicVersion} from '../../common/interface/analytics-config';
-import type {CommonBindings} from '../../common/interface/bindings';
-import {
-  type BaseAtomicInterface,
-  InterfaceController,
-} from '../../common/interface/interface-controller';
-import {
-  type CommerceStore,
-  createCommerceStore,
-} from '../atomic-commerce-interface/store';
-import {
-  errorSelector,
-  firstSearchExecutedSelector,
-  noProductsSelector,
-} from '../atomic-commerce-layout/commerce-layout';
 import {getAnalyticsConfig} from './analytics-config';
+import {type CommerceStore, createCommerceStore} from './store';
 
 export type CommerceInitializationOptions = CommerceEngineConfiguration;
 export type CommerceBindings = CommonBindings<
@@ -80,15 +77,17 @@ export class AtomicCommerceInterface
   @state()
   @provide({context: bindingsContext})
   public bindings: CommerceBindings = {} as CommerceBindings;
-  public context!: Context;
   @state() public error!: Error;
+
+  public context!: Context;
   public summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   public urlManager!: UrlManager;
   public searchOrListing!: Search | ProductListing;
-  private unsubscribeUrlManager?: Unsubscribe;
-  private unsubscribeSummary?: Unsubscribe;
+  private unsubscribeUrlManager: Unsubscribe = () => {};
+  private unsubscribeSummary: Unsubscribe = () => {};
   private initialized = false;
   private store: CommerceStore;
+  private i18Initialized: Promise<void>;
   private interfaceController = new InterfaceController<CommerceEngine>(
     this,
     'CoveoAtomic',
@@ -98,7 +97,6 @@ export class AtomicCommerceInterface
   static styles: CSSResultGroup = [
     css`
       :host {
-        display: block;
         height: inherit;
         width: inherit;
         & > slot {
@@ -108,15 +106,16 @@ export class AtomicCommerceInterface
     `,
   ];
 
-  // TODO - KIT-4994: Add disableAnalytics property that defaults to false.
-
   /**
    * The type of the interface.
    * - 'search': Indicates that the interface is used for Search.
    * - 'product-listing': Indicates that the interface is used for Product listing.
    */
-  @property({type: String, reflect: true}) type: 'search' | 'product-listing' =
-    'search';
+  @property({type: String, reflect: true}) public type:
+    | 'search'
+    | 'product-listing' = 'search';
+
+  // TODO - KIT-4994: Add disableAnalytics property that defaults to false.
 
   // TODO - KIT-4994: Deprecate in favor of disableAnalytics property.
   // TODO - (v4) KIT-4990: Remove.
@@ -128,18 +127,20 @@ export class AtomicCommerceInterface
     converter: booleanConverter,
     reflect: true,
   })
-  analytics = true;
+  public analytics = true;
 
   /**
-   * The severity level of the messages to log in the console.
+   * The minimum severity level of messages to log in the console.
+   * Messages with a severity level below this threshold will not be logged.
+   * Possible values are `trace`, `debug`, `info`, `warn`, `error`, `fatal`, or `silent`.
    */
   @property({type: String, attribute: 'log-level', reflect: true})
-  logLevel?: LogLevel;
+  public logLevel?: LogLevel;
 
   /**
    * The commerce interface i18next instance.
    */
-  @property({type: Object, attribute: false}) i18n: i18n;
+  @property({type: Object, attribute: false}) public i18n: i18n;
 
   // TODO - (v4) KIT-4365: Remove (or turn into private state attribute)
   /**
@@ -153,13 +154,12 @@ export class AtomicCommerceInterface
    * through the engine configuration when calling `initializeWithEngine`, and
    * update the language as needed using the `updateLocale` method.
    */
-  @property({type: String, attribute: 'language', reflect: true})
-  language?: string;
+  @property({type: String, reflect: true}) public language?: string;
 
   /**
    * The commerce interface headless engine.
    */
-  @property({type: Object, attribute: false}) engine?: CommerceEngine;
+  @property({type: Object, attribute: false}) public engine?: CommerceEngine;
 
   // TODO - (v4) KIT-4823: Remove.
   /**
@@ -188,7 +188,7 @@ export class AtomicCommerceInterface
    * The CSS selector for the container where the interface will scroll back to.
    */
   @property({type: String, attribute: 'scroll-container', reflect: true})
-  scrollContainer = 'atomic-commerce-interface';
+  public scrollContainer = 'atomic-commerce-interface';
 
   /**
    * The language assets path. By default, this will be a relative URL pointing to `./lang`.
@@ -197,7 +197,7 @@ export class AtomicCommerceInterface
    *
    */
   @property({type: String, attribute: 'language-assets-path', reflect: true})
-  languageAssetsPath = './lang';
+  public languageAssetsPath = './lang';
 
   /**
    * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
@@ -206,9 +206,7 @@ export class AtomicCommerceInterface
    *
    */
   @property({type: String, attribute: 'icon-assets-path', reflect: true})
-  iconAssetsPath = './assets';
-
-  private i18Initialized: Promise<void>;
+  public iconAssetsPath = './assets';
 
   public constructor() {
     super();
@@ -229,6 +227,25 @@ export class AtomicCommerceInterface
     );
 
     this.addEventListener(
+      'atomic/scrollToTop',
+      this.scrollToTop as EventListener
+    );
+  }
+
+  public disconnectedCallback() {
+    super.disconnectedCallback();
+    if (typeof this.unsubscribeUrlManager === 'function') {
+      this.unsubscribeUrlManager();
+    }
+    if (typeof this.unsubscribeSummary === 'function') {
+      this.unsubscribeSummary();
+    }
+    window.removeEventListener('hashchange', this.onHashChange);
+    this.removeEventListener(
+      'atomic/initializeComponent',
+      this.handleInitialization as EventListener
+    );
+    this.removeEventListener(
       'atomic/scrollToTop',
       this.scrollToTop as EventListener
     );
@@ -348,12 +365,10 @@ export class AtomicCommerceInterface
 
   @watch('analytics')
   public toggleAnalytics() {
+    if (!this.interfaceController.engineIsCreated(this.engine)) {
+      return;
+    }
     this.interfaceController.onAnalyticsChange();
-  }
-
-  @watch('iconAssetsPath')
-  public updateIconAssetsPath(): void {
-    this.store.state.iconAssetsPath = this.iconAssetsPath;
   }
 
   // TODO - (v4) KIT-4365: Remove.
@@ -376,26 +391,9 @@ export class AtomicCommerceInterface
     return this.interfaceController.onLanguageChange();
   }
 
-  public disconnectedCallback() {
-    super.disconnectedCallback();
-    if (typeof this.unsubscribeUrlManager === 'function') {
-      this.unsubscribeUrlManager();
-      this.unsubscribeUrlManager = undefined;
-    }
-    if (typeof this.unsubscribeSummary === 'function') {
-      this.unsubscribeSummary();
-      this.unsubscribeSummary = undefined;
-    }
-
-    window.removeEventListener('hashchange', this.onHashChange);
-    this.removeEventListener(
-      'atomic/initializeComponent',
-      this.handleInitialization as EventListener
-    );
-    this.removeEventListener(
-      'atomic/scrollToTop',
-      this.scrollToTop as EventListener
-    );
+  @watch('iconAssetsPath')
+  public updateIconAssetsPath(): void {
+    this.store.state.iconAssetsPath = this.iconAssetsPath;
   }
 
   @errorGuard()
@@ -403,25 +401,17 @@ export class AtomicCommerceInterface
     return html`<slot></slot>`;
   }
 
-  private get fragment() {
-    return window.location.hash.slice(1);
-  }
+  private handleInitialization = (event: InitializeEvent) => {
+    this.interfaceController.onComponentInitializing(event);
+  };
 
   private getBindings(): CommerceBindings {
     return {
       engine: this.engine!,
       i18n: this.i18n,
       store: this.store,
-      interfaceElement: this as AtomicCommerceInterface,
+      interfaceElement: this,
     };
-  }
-
-  private handleInitialization = (event: InitializeEvent) => {
-    this.interfaceController.onComponentInitializing(event);
-  };
-
-  private initContext() {
-    this.context = buildContext(this.engine!);
   }
 
   private initEngine(options: CommerceInitializationOptions) {
@@ -440,6 +430,14 @@ export class AtomicCommerceInterface
       this.error = error as Error;
       throw error;
     }
+  }
+
+  private get fragment() {
+    return window.location.hash.slice(1);
+  }
+
+  private initContext() {
+    this.context = buildContext(this.engine!);
   }
 
   private initLanguage() {
@@ -484,13 +482,14 @@ export class AtomicCommerceInterface
     if (!this.reflectStateInUrl) {
       return;
     }
+
     this.urlManager = this.searchOrListing.urlManager({
       initialState: {fragment: this.fragment},
     });
 
-    this.unsubscribeUrlManager = this.urlManager.subscribe(() => {
-      this.updateHash();
-    });
+    this.unsubscribeUrlManager = this.urlManager.subscribe(() =>
+      this.updateHash()
+    );
 
     window.addEventListener('hashchange', this.onHashChange);
   }

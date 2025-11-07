@@ -1,0 +1,125 @@
+diff --git a/dist/index.d.ts b/dist/index.d.ts
+index 867be0c..d822e79 100644
+--- a/dist/index.d.ts
++++ b/dist/index.d.ts
+@@ -19,6 +19,8 @@ type StoryOptions = {
+     excludeCategories?: Array<Categories>;
+     /** Adds a <script> tag where a `component` variable will reference the story's component */
+     setComponentVariable?: boolean;
++    /** Selector for the element containing the rendered story */
++    containerSelector?: string;
+ };
+ type StoryHelpers<T> = {
+     args: Partial<T> & {
+diff --git a/dist/index.js b/dist/index.js
+index 1c0f4ce..1051420 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -568,7 +568,7 @@ var options2 = {};
+ setTimeout(() => {
+   options2 = globalThis?.__WC_STORYBOOK_HELPERS_CONFIG__ || {};
+ });
+-function getTemplate(component, args, slot, argTypes, excludeCategories, setComponentVariable) {
++function getTemplate(component, args, slot, argTypes, excludeCategories, setComponentVariable, containerSelector) {
+   if (!args) {
+     return html`<${unsafeStatic(component.tagName)}></${unsafeStatic(component.tagName)}>`;
+   }
+@@ -579,11 +579,23 @@ function getTemplate(component, args, slot, argTypes, excludeCategories, setComp
+   const { attrOperators, propOperators, additionalAttrs } = getTemplateOperators(component, args, argTypes);
+   const operators = { ...attrOperators, ...propOperators, ...additionalAttrs };
+   const slotsTemplate = getSlotsTemplate(component, args, excludeCategories);
+-  syncControls(component);
++  syncControls(component, containerSelector);
+   return html`${getStyleTemplate(component, args, excludeCategories)}
+ <${unsafeStatic(component.tagName)} ${spread(operators)}>${slotsTemplate}${slot || ""}</${unsafeStatic(component.tagName)}>
+ ${options2.setComponentVariable || setComponentVariable ? unsafeHTML(
+-    "<script>\n  window.component = document.querySelector('" + component.tagName + "');\n</script>"
++    `<script>
++      var containerElement = ${containerSelector ? `document.querySelector('${containerSelector}')` : 'document'};
++      if (!containerElement) {
++        containerElement = document;
++      }
++      if (containerElement instanceof HTMLTemplateElement) {
++        containerElement = containerElement.content;
++      }
++      if (containerElement.shadowRoot) {
++        containerElement = containerElement.shadowRoot;
++      } 
++      window.component = containerElement.querySelector('" + component.tagName + "');
++    }\n</script>`
+   ) : ""}
+ `;
+ }
+@@ -705,18 +717,32 @@ function getSlotsTemplate(component, args, excludeCategories) {
+ ${slotTemplates}
+ `) : "";
+ }
+-function syncControls(component) {
++function syncControls(component, containerSelector) {
+   setArgObserver(component);
+   setTimeout(() => {
+-    const selectedComponent = document.querySelector(component.tagName);
++    let containerElement = containerSelector ? document.querySelector(containerSelector) : document;
++    if (!containerElement) {
++      containerElement = document;
++    }
++    if (containerElement instanceof HTMLTemplateElement) {
++      containerElement = containerElement.content;
++    }
++    if (containerElement.shadowRoot) {
++      containerElement = containerElement.shadowRoot;
++    } 
++    const selectedComponent = containerElement.querySelector(component.tagName);
++    if(!selectedComponent) {
++      return;
++    }
+     argObserver?.observe(selectedComponent, {
+-      attributes: true
++      attributes: true,
++      attributeOldValue: true,
+     });
+   });
+ }
+ function setArgObserver(component) {
+   let isUpdating = false;
+-  const updateArgs = useArgs()[1];
++  const [args, updateArgs] = useArgs();
+   const { attrArgs: attributes } = getAttributesAndProperties(component);
+   if (argObserver) {
+     return;
+@@ -726,13 +752,24 @@ function setArgObserver(component) {
+       if (mutation.attributeName === "class" && isUpdating) {
+         return;
+       }
+-      isUpdating = true;
+       const attribute = attributes[`${mutation.attributeName}`];
++      if (!attribute) { return; }
++      if(mutation.oldValue=== mutation.target.getAttribute(mutation.attributeName || "")) {
++        return;
++      }
+       if (attribute?.control === "boolean" || attribute?.control?.type === "boolean") {
++        if (args[`${mutation.attributeName}`] === mutation.target.hasAttribute(mutation.attributeName || "")) {
++          return;
++        }
++        isUpdating = true;
+         updateArgs({
+           [`${mutation.attributeName}`]: mutation.target?.hasAttribute(mutation.attributeName || "")
+         });
+       } else {
++        if (args[`${mutation.attributeName}`] == mutation.target.getAttribute(mutation.attributeName || "")) {
++          return;
++        }
++        isUpdating = true;
+         updateArgs({
+           [`${mutation.attributeName}`]: mutation.target.getAttribute(mutation.attributeName || "")
+         });
+@@ -781,7 +818,8 @@ function getStorybookHelpers(tagName, options3) {
+       slot,
+       argTypes,
+       options3?.excludeCategories || [],
+-      options3?.setComponentVariable
++      options3?.setComponentVariable,
++      options3?.containerSelector
+     )
+   };
+   return helpers;

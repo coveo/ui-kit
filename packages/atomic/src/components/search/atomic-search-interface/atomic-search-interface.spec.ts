@@ -740,15 +740,15 @@ describe('atomic-search-interface', () => {
 
     it('should subscribe to the search status state updates', async () => {
       const element = await setupElement();
-      const mockSearchStatus = buildFakeSearchStatus();
-      const subscribeSpy = vi.spyOn(mockSearchStatus, 'subscribe');
-      vi.mocked(buildSearchStatus).mockReturnValue(mockSearchStatus);
+      const subscribe = vi.fn();
+      vi.mocked(buildSearchStatus).mockImplementationOnce(() => ({
+        ...buildFakeSearchStatus(),
+        subscribe,
+      }));
 
       await callTestedInitMethod(element);
 
-      expect(subscribeSpy).toHaveBeenCalledExactlyOnceWith(
-        expect.any(Function)
-      );
+      expect(subscribe).toHaveBeenCalledExactlyOnceWith(expect.any(Function));
     });
 
     describe('when the search status state changes', () => {
@@ -952,6 +952,7 @@ describe('atomic-search-interface', () => {
   // #toggleAnalytics
   it('should call InterfaceController.onAnalyticsChange when the analytics attribute changes', async () => {
     const element = await setupElement();
+    await element.initialize(searchEngineConfig);
     const onAnalyticsChangeSpy = vi.spyOn(
       InterfaceController.prototype,
       'onAnalyticsChange'
