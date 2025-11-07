@@ -53,8 +53,8 @@ When the `@prompt-engineer-agent` is tasked with generating a prompt for an `@ex
 > ## 2. CONTEXT & RELEVANT FILES
 >
 > You **MUST** limit your analysis to the following files provided by the @orchestrator:
-> * `[relevant_file_1.py]`
-> * `[relevant_file_2.js]`
+> * `[relevant_file_1.ts]`
+> * `[relevant_file_2.ts]`
 > * ...
 >
 > ## 3. TOOLKIT
@@ -85,8 +85,8 @@ When the `@prompt-engineer-agent` is tasked with generating a prompt for an `@ex
 > Summary: [A brief, one-sentence summary of what you did.]
 >
 > Files:
->   - [list/of/files/you/modified.py]
->   - [list/of/files/you/created.js]
+>   - [list/of/files/you/modified.ts]
+>   - [list/of/files/you/created.ts]
 >
 > Errors: [null OR A detailed error message and traceback if Status was Failure.]
 > ---
