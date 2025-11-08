@@ -2,7 +2,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
-import {expect} from 'storybook/test';
+import {expect, waitFor} from 'storybook/test';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 
@@ -91,8 +91,21 @@ const meta: Meta = {
         )
       ).toBeVisible();
     });
-    // It's tough to wait exactly for the modal to be visible because of animations. Thus, we add a small delay here.
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await step('Wait for modal to be fully rendered', async () => {
+      // Wait for the modal footer button to be in the document and visible
+      // This ensures the modal animation is complete and all content is rendered
+      await waitFor(
+        async () => {
+          const footerButton = await canvas.findByShadowRole(
+            'button',
+            {name: /view products/i},
+            {timeout: 1000}
+          );
+          expect(footerButton).toBeVisible();
+        },
+        {timeout: 10e3}
+      );
+    });
   },
 };
 
