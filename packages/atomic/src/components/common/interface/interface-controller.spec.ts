@@ -20,9 +20,11 @@ vi.mock('./i18n.js', () => ({
 }));
 vi.mock('@/src/utils/dayjs-locales.js', {spy: true});
 vi.mock('i18next-http-backend', () => {
-  const mockBackend = vi.fn(() => ({
-    read: vi.fn(),
-  }));
+  const mockBackend = vi.fn(function (this: Backend) {
+    return {
+      read: vi.fn(),
+    };
+  });
   return {
     default: mockBackend,
   };
