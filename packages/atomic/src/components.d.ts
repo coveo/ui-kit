@@ -1216,27 +1216,6 @@ export namespace Components {
         "withInput"?: NumberInputType;
     }
     /**
-     * The `atomic-numeric-range` component defines the range of an `atomic-numeric-facet`, and therefore must be defined within an `atomic-numeric-facet` component.
-     */
-    interface AtomicNumericRange {
-        /**
-          * The ending value for the numeric range.
-         */
-        "end": number;
-        /**
-          * Specifies whether the end value should be included in the range.
-         */
-        "endInclusive": boolean;
-        /**
-          * The non-localized label for the facet. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The starting value for the numeric range.
-         */
-        "start": number;
-    }
-    /**
      * The `atomic-popover` component displays any facet as a popover menu.
      */
     interface AtomicPopover {
@@ -2843,15 +2822,6 @@ declare global {
         new (): HTMLAtomicNumericFacetElement;
     };
     /**
-     * The `atomic-numeric-range` component defines the range of an `atomic-numeric-facet`, and therefore must be defined within an `atomic-numeric-facet` component.
-     */
-    interface HTMLAtomicNumericRangeElement extends Components.AtomicNumericRange, HTMLStencilElement {
-    }
-    var HTMLAtomicNumericRangeElement: {
-        prototype: HTMLAtomicNumericRangeElement;
-        new (): HTMLAtomicNumericRangeElement;
-    };
-    /**
      * The `atomic-popover` component displays any facet as a popover menu.
      */
     interface HTMLAtomicPopoverElement extends Components.AtomicPopover, HTMLStencilElement {
@@ -3503,7 +3473,6 @@ declare global {
         "atomic-ipx-tabs": HTMLAtomicIpxTabsElement;
         "atomic-notifications": HTMLAtomicNotificationsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
-        "atomic-numeric-range": HTMLAtomicNumericRangeElement;
         "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-quickview": HTMLAtomicQuickviewElement;
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
@@ -4704,27 +4673,6 @@ declare namespace LocalJSX {
         "withInput"?: NumberInputType;
     }
     /**
-     * The `atomic-numeric-range` component defines the range of an `atomic-numeric-facet`, and therefore must be defined within an `atomic-numeric-facet` component.
-     */
-    interface AtomicNumericRange {
-        /**
-          * The ending value for the numeric range.
-         */
-        "end": number;
-        /**
-          * Specifies whether the end value should be included in the range.
-         */
-        "endInclusive"?: boolean;
-        /**
-          * The non-localized label for the facet. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The starting value for the numeric range.
-         */
-        "start": number;
-    }
-    /**
      * The `atomic-popover` component displays any facet as a popover menu.
      */
     interface AtomicPopover {
@@ -5748,7 +5696,6 @@ declare namespace LocalJSX {
         "atomic-ipx-tabs": AtomicIpxTabs;
         "atomic-notifications": AtomicNotifications;
         "atomic-numeric-facet": AtomicNumericFacet;
-        "atomic-numeric-range": AtomicNumericRange;
         "atomic-popover": AtomicPopover;
         "atomic-quickview": AtomicQuickview;
         "atomic-quickview-modal": AtomicQuickviewModal;
@@ -5963,10 +5910,6 @@ declare module "@stencil/core" {
              * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
              */
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
-            /**
-             * The `atomic-numeric-range` component defines the range of an `atomic-numeric-facet`, and therefore must be defined within an `atomic-numeric-facet` component.
-             */
-            "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;
             /**
              * The `atomic-popover` component displays any facet as a popover menu.
              */

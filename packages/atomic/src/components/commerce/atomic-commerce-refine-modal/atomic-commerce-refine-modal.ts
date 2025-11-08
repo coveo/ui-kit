@@ -233,7 +233,7 @@ export class AtomicCommerceRefineModal
         openButton: this.openButton,
       },
     })(
-      renderRefineModalBody()(html`
+      renderRefineModalBody(this.bindings.i18n)(html`
         ${this.renderSort()} ${this.renderFilters()}
       `)
     )}`;
