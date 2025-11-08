@@ -108,6 +108,7 @@
     "GITHUB_*",
     "RUNNER_*",
     "SFDX_*",
-    "PLAYWRIGHT_BROWSERS_PATH"
+    "PLAYWRIGHT_BROWSERS_PATH",
+    "DEBUG"
   ]
 }

@@ -104,9 +104,6 @@ const atomicDefault = defineConfig({
     ],
     restoreMocks: true,
     setupFiles: ['./vitest-utils/setup.ts'],
-    deps: {
-      moduleDirectories: ['node_modules', path.resolve('../../packages')],
-    },
     browser: {
       provider: playwright(),
       enabled: true,
