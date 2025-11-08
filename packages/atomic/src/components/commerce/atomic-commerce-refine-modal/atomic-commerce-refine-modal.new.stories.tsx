@@ -92,13 +92,13 @@ const meta: Meta = {
       ).toBeVisible();
     });
     await step('Wait for modal to be fully rendered', async () => {
-      // Wait for the modal footer button to be in the document
+      // Wait for the modal footer button to be visible
       // This ensures the modal animation is complete and all content is rendered
       await waitFor(
         () =>
           expect(
             canvas.getByShadowText(/view products/i, {exact: false})
-          ).toBeInTheDocument(),
+          ).toBeVisible(),
         {timeout: 10e3}
       );
     });
