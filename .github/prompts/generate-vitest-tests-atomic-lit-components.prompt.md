@@ -58,7 +58,7 @@ Before writing tests:
      export const buildFakeController = ({implementation, state} = {}) => ({
        ...defaultImplementation,
        ...implementation,
-       ...(state && {state: {...defaultState, ...state}}),
+       ...({state: {...defaultState, ...(state || {})}}),
      });
      ```
    - **Result/product templates:** Ensure `atomic-result-fixture.ts` or `atomic-product-fixture.ts` exists (already available)

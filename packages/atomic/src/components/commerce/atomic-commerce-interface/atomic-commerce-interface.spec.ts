@@ -4,6 +4,7 @@ import {
   buildProductListing,
   buildSearch,
   type CommerceEngineConfiguration,
+  type ContextActionCreators,
   getSampleCommerceEngineConfiguration,
   type LogLevel,
   loadConfigurationActions,
@@ -24,6 +25,7 @@ import {
   describe,
   expect,
   it,
+  type MockedFunction,
   type MockInstance,
   vi,
 } from 'vitest';
@@ -1124,8 +1126,10 @@ describe('atomic-commerce-interface', () => {
     describe('when the engine has been created and the context is defined', () => {
       let element: AtomicCommerceInterface;
       let engine: ReturnType<typeof buildFakeCommerceEngine>;
-      let onLanguageChangeSpy: ReturnType<typeof vi.spyOn>;
-      let setContextMock: ReturnType<typeof vi.fn>;
+      let onLanguageChangeSpy: MockedFunction<
+        typeof InterfaceController.prototype.onLanguageChange
+      >;
+      let setContextMock: MockedFunction<ContextActionCreators['setContext']>;
 
       beforeEach(async () => {
         element = await setupElement();
@@ -1134,13 +1138,15 @@ describe('atomic-commerce-interface', () => {
         await element.initializeWithEngine(engine);
 
         setContextMock = vi.fn();
-        vi.mocked(loadContextActions, {partial: true}).mockReturnValue({
-          setContext: setContextMock,
-        });
         onLanguageChangeSpy = vi.spyOn(
           InterfaceController.prototype,
           'onLanguageChange'
         );
+        onLanguageChangeSpy.mockClear();
+
+        vi.mocked(loadContextActions).mockReturnValue({
+          setContext: setContextMock,
+        } as unknown as ReturnType<typeof loadContextActions>);
       });
 
       it('should call InterfaceController.onLanguageChange when the language parameter is provided', async () => {
@@ -1301,12 +1307,14 @@ describe('atomic-commerce-interface', () => {
       });
 
       it('should call InterfaceController.onLanguageChange with no argument', async () => {
-        const element = await setupElement({language: 'en'});
-        await element.initialize(commerceEngineConfig);
         const onLanguageChangeSpy = vi.spyOn(
           InterfaceController.prototype,
           'onLanguageChange'
         );
+        const element = await setupElement({language: 'en'});
+        await element.initialize(commerceEngineConfig);
+        await element.updateComplete;
+        onLanguageChangeSpy.mockClear();
 
         element.language = 'fr';
         await element.updateComplete;
