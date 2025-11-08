@@ -91,9 +91,8 @@ const meta: Meta = {
         )
       ).toBeVisible();
     });
-    await step('Wait for modal to be fully rendered', async () => {
+    await step('Wait for modal animation to complete', async () => {
       // Wait for the modal footer button to be visible
-      // This ensures the modal animation is complete and all content is rendered
       await waitFor(
         () =>
           expect(
@@ -101,6 +100,9 @@ const meta: Meta = {
           ).toBeVisible(),
         {timeout: 10e3}
       );
+      // The modal has a 500ms scale-up animation. Wait for it to complete
+      // to ensure all content is stable before a11y checks run.
+      await new Promise((resolve) => setTimeout(resolve, 600));
     });
   },
 };
