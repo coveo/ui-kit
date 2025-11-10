@@ -78,7 +78,7 @@ export class AtomicInsightResultList
   @Prop({reflect: true}) imageSize: ItemDisplayImageSize = 'icon';
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
-   * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
+   * You can use this function while working with web frameworks that don't use plain HTML syntax such as React, Angular, or Vue.
    *
    * Do not use this method if you integrate Atomic in a plain HTML deployment.
    *

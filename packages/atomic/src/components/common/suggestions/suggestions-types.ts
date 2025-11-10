@@ -43,7 +43,7 @@ export interface SearchBoxSuggestionElement {
 }
 
 /**
- * List of suggestions that will be displayed along other lists (e.g recent queries) when the search box's input is selected.
+ * List of suggestions that will be displayed along other lists (for example, recent queries) when the search box's input is selected.
  */
 export interface SearchBoxSuggestions {
   /**

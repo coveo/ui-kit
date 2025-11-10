@@ -11,7 +11,7 @@ import {removeCookie, setCookie} from '@/utils/cookie-utils.client';
  *
  * The `coveo_capture` cookie would be considered strictly necessary in this implementation, as it is a persistent way
  * to communicate to the server whether the client allows Coveo requests to capture analytics data, thus enabling the
- * server to honor the user's privacy settings when performing Coveo requests (e.g., to fetch the static state).
+ * server to honor the user's privacy settings when performing Coveo requests (for example, to fetch the static state).
  */
 
 const useClientId = () =>

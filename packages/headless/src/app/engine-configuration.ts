@@ -38,7 +38,7 @@ export interface EngineConfiguration {
    */
   preprocessRequest?: PreprocessRequest;
   /**
-   * The Engine name (e.g., myEngine). Specifying your Engine name will help in debugging when using an application with multiple Redux stores.
+   * The Engine name (for example, myEngine). Specifying your Engine name will help in debugging when using an application with multiple Redux stores.
    * @defaultValue 'coveo-headless'
    */
   name?: string;
@@ -49,7 +49,7 @@ export interface EngineConfiguration {
   /**
    * The environment in which the organization is hosted.
    *
-   * The `dev` and `stg` environments are only available internally for Coveo employees (e.g., Professional Services).
+   * The `dev` and `stg` environments are only available internally for Coveo employees (for example, Professional Services).
    *
    * Defaults to `prod`.
    */
@@ -127,8 +127,8 @@ export interface AnalyticsConfiguration {
   trackingId?: string;
   /**
    * The analytics client to use.
-   * - `legacy`: The legacy analytics client, i.e., the Coveo Analytics.js library.
-   * - `next`: The next analytics client, i.e., the Coveo Event Protocol with the Relay library.
+   * - `legacy`: The legacy analytics client, that is, the Coveo Analytics.js library.
+   * - `next`: The next analytics client, that is, the Coveo Event Protocol with the Relay library.
    *
    * The default value is `next`.
    *
@@ -141,7 +141,7 @@ export interface AnalyticsConfiguration {
    */
   source?: Partial<Record<CoveoFramework, string>>;
   /**
-   * The base URL to use to proxy Coveo analytics requests (e.g., `https://example.com/analytics`).
+   * The base URL to use to proxy Coveo analytics requests (for example, `https://example.com/analytics`).
    *
    * This is an advanced option that you only set if you proxy Coveo analytics requests through your own
    * server. In most cases, you should not set this option.
