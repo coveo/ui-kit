@@ -9,12 +9,15 @@ import {
   AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
+  AtomicNumericRange as LitAtomicNumericRange,
   AtomicPager as LitAtomicPager,
+  AtomicQueryError as LitAtomicQueryError,
   AtomicQuerySummary as LitAtomicQuerySummary,
   AtomicRecsInterface as LitAtomicRecsInterface,
   AtomicResult as LitAtomicResult,
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
   AtomicResultList as LitAtomicResultList,
+  AtomicResultNumber as LitAtomicResultNumber,
   AtomicResultSectionActions as LitAtomicResultSectionActions,
   AtomicResultSectionBadges as LitAtomicResultSectionBadges,
   AtomicResultSectionBottomMetadata as LitAtomicResultSectionBottomMetadata,
@@ -96,10 +99,22 @@ export const AtomicLoadMoreResults = createComponent({
   elementClass: LitAtomicLoadMoreResults,
 });
 
+export const AtomicNumericRange = createComponent({
+  tagName: 'atomic-numeric-range',
+  react: React,
+  elementClass: LitAtomicNumericRange,
+});
+
 export const AtomicPager = createComponent({
   tagName: 'atomic-pager',
   react: React,
   elementClass: LitAtomicPager,
+});
+
+export const AtomicQueryError = createComponent({
+  tagName: 'atomic-query-error',
+  react: React,
+  elementClass: LitAtomicQueryError,
 });
 
 export const AtomicQuerySummary = createComponent({
@@ -130,6 +145,12 @@ export const AtomicResultList = createComponent({
   tagName: 'atomic-result-list',
   react: React,
   elementClass: LitAtomicResultList,
+});
+
+export const AtomicResultNumber = createComponent({
+  tagName: 'atomic-result-number',
+  react: React,
+  elementClass: LitAtomicResultNumber,
 });
 
 export const AtomicResultSectionActions = createComponent({

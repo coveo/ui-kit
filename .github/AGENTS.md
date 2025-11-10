@@ -1,74 +1,108 @@
-# GitHub Copilot Agents Configuration
+---
+name: AGENTS.md
+description: The master guidelines, protocols, and standards for all agents in this framework.
+---
 
-This repository uses GitHub Copilot custom agents to enhance the development experience with specialized instructions, chatmodes, and prompts.
+# 🤖 AGENT FRAMEWORK GUIDELINES
 
-## Instructions
+This document defines the roles, standards, and communication protocols for all AI agents operating within this repository. All agents, especially the `@prompt-engineer-agent`, **MUST** adhere to these guidelines when generating prompts.
 
-Instructions are automatically applied based on file patterns and provide coding standards and best practices:
+## 1. Core Agent Roster
 
-### General Instructions
+The system is managed by a team of three "meta-agents."
 
-- **general.instructions.md** - Core development principles
-  - Applies to: All files
-  - Focus: Correctness, code quality, defensive programming
+* **@orchestrator**
+    * **Role:** The Project Manager.
+    * **Function:** Analyzes the GitHub Issue, creates a `[PLAN]` of tasks, and manages the end-to-end workflow.
+    * **Key Behavior:** Does **NOT** write implementation code. It delegates tasks to the `@prompt-engineer-agent` and `@executor-vessel`.
 
-### Package-Specific Instructions
+* **@prompt-engineer-agent**
+    * **Role:** The Persona Expert / "Prompt Factory."
+    * **Function:** Receives a single task specification from the `@orchestrator` and generates a high-quality, expert meta-prompt for the `@executor-vessel`.
+    * **Key Behavior:** Its *only* output is a new `.md` prompt file. It **MUST** follow the templates in Section 3 and 4 of *this* document.
 
-- **atomic.instructions.md** - Atomic package conventions
-  - Applies to: `packages/atomic/**/**`
-  - Focus: Lit/Stencil components, Atomic Chemistry naming, file structure
+* **@executor-vessel**
+    * **Role:** The "Empty" Worker / Task Runner.
+    * **Function:** A generic agent that adopts the persona and executes the *entire* meta-prompt given to it by the `@orchestrator`.
+    * **Key Behavior:** Has no long-term memory or persistent persona. It is a "blank slate" for every task.
 
-- **tests-atomic.instructions.md** - Atomic testing patterns
-  - Applies to: `**/atomic/**/*.spec.ts`
-  - Focus: Vitest unit tests, test structure, mocking
+---
 
-### Technology-Specific Instructions
+## 2. Communication & File Protocol
 
-- **a11y.instructions.md** - Accessibility (WCAG 2.2 Level AA)
-  - Applies to: All files
-  - Focus: Keyboard navigation, ARIA, screen reader support, inclusive language
+Agents **do not** communicate directly. Communication is **asynchronous** and **file-based**.
 
-- **playwright-typescript.instructions.md** - Playwright E2E testing
-  - Applies to: Test files (`**/*.e2e.ts`, `**/*.spec.ts`)
-  - Focus: User-facing locators, auto-retrying assertions, test structure
+1.  **Workspace:** All temporary files, logs, and reports **MUST** be written inside the `work-log/` directory.
+2.  **Code:** All code modifications **MUST** be applied to the relevant source directories (e.g., `src/`).
+3.  **Forbidden Zone:** Agents **MUST NEVER** modify core framework files (e.g., `orchestrator.md`, `prompt-engineer.md`, `executor-vessel.md`, or this `AGENTS.md` file).
 
-## Chatmodes
+---
 
-Chatmodes provide specialized AI personas for specific development tasks:
+## 3. Dynamic Prompt Generation Standard (for @prompt-engineer-agent)
 
-- **accessibility.chatmode.md** - WCAG compliance review and testing
-- **typescript-mcp-expert.chatmode.md** - TypeScript MCP server development
-- **refine-issue.chatmode.md** - Issue refinement with acceptance criteria
-- **research-technical-spike.chatmode.md** - Technical investigation and documentation
-- **task-researcher.chatmode.md** - Deep codebase analysis and research
+When the `@prompt-engineer-agent` is tasked with generating a prompt for an `@executor-vessel`, that new prompt **MUST** follow this structure:
 
-## Prompts
+> ```markdown
+> # META-PROMPT: [EXPERT PERSONA NAME]
+>
+> ## 1. ROLE & GOAL
+>
+> You are an expert [PERSONA].
+> Your **sole mission** is to: [Task Description from Orchestrator]
+>
+> ## 2. CONTEXT & RELEVANT FILES
+>
+> You **MUST** limit your analysis to the following files provided by the @orchestrator:
+> * `[relevant_file_1.ts]`
+> * `[relevant_file_2.ts]`
+> * ...
+>
+> ## 3. TOOLKIT
+>
+> You have the following tools available:
+> `["read", "edit", "run-tests", "search", "create_branch", "commit_changes"]`
+>
+> ## 4. ACTIONABLE STEPS
+>
+> 1.  **Branch:** Use `create_branch` to create a new, unique branch for your work (e.g., `feature/task-id-xyz`).
+> 2.  **Analyze:** Use `read` to analyze the provided context files.
+> 3.  **Implement:** Use `edit` to make the required code changes.
+> 4.  **Verify:** Use `run-tests` to ensure your changes work and have not caused regressions.
+> 5.  **Report:** Create your report file (as defined in Section 5).
+> 6.  **Commit:** Use `commit_changes` with a clear message. This **MUST** be your final action.
+>
+> ## 5. MANDATORY REPORT BACK PROTOCOL
+>
+> As the **final step before** committing, you **MUST** create the following unique report file:
+>
+> **File Path:** `[path.to/report.md (e.g., "work-log/step-1.report.md")]`
+>
+> **Content:**
+> ```
+> ---
+> Status: [Success OR Failure]
+>
+> Summary: [A brief, one-sentence summary of what you did.]
+>
+> Files:
+>   - [list/of/files/you/modified.ts]
+>   - [list/of/files/you/created.ts]
+>
+> Errors: [null OR A detailed error message and traceback if Status was Failure.]
+> ---
+> ```
+>
+> *This report is non-optional and is read by the @orchestrator.*
+> ```
 
-Task-specific prompts for common development workflows:
+---
 
-- Component generation and migration prompts
-- Test generation prompts
-- Documentation generation prompts
+## 4. Git & Branching Protocol (for @executor-vessel)
 
-## Repository Context
+All work performed by an `@executor-vessel` **MUST** be done on a new, isolated branch.
 
-### Technology Stack
+1.  **Branch Creation:** The **first** action an agent takes **MUST** be to use the `create_branch` tool.
+2.  **Branch Naming:** The branch name should be descriptive and based on the `Task ID` (which will be in the prompt), e.g., `feature/step-1`, `fix/step-1-fix1`.
+3.  **Committing:** The **last** action an agent takes **MUST** be to use the `commit_changes` tool. This commit **MUST** include both the code changes *and* the mandatory report file.
 
-- TypeScript 5.8.3 targeting ES2022
-- UI Frameworks: Lit (preferred), Stencil (legacy)
-- Testing: Vitest (unit), Playwright (E2E)
-- Package Manager: pnpm
-- Monorepo: Turbo workspace
-
-### Key Packages
-
-- **atomic**: UI component library
-- **headless**: Headless UI library
-- **quantic**: Salesforce Lightning components
-- **headless-react**: React bindings
-
-## Usage
-
-Instructions are automatically applied by GitHub Copilot based on file patterns. Chatmodes can be invoked in VS Code Copilot Chat for specialized assistance.
-
-For more details, see the individual instruction and chatmode files in `.github/instructions/` and `.github/chatmodes/`.
+The `@orchestrator` is responsible for merging these branches *after* it has read and verified the report file.
