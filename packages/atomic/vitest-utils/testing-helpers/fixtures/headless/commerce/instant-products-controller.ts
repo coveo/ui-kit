@@ -54,5 +54,5 @@ export const buildFakeInstantProducts = (
 ): InstantProducts =>
   ({
     ...defaultImplementation,
-    ...(state && {state: {...defaultState, ...state}}),
+    ...{state: {...defaultState, ...(state || {})}},
   }) as InstantProducts;

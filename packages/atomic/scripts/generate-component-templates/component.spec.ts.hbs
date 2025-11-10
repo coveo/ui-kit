@@ -27,7 +27,7 @@ describe('{{name}}', () => {
   } = {}) => {
     mockedQuerySummary = buildFakeSummary({state: querySummaryState});
 
-    vi.mocked(buildQuerySummary).mockReturnValue(mockedQuerySummary);
+    vi.mocked(buildQuerySummary).mockImplementation(() => mockedQuerySummary);
 
     const {element} = await renderInAtomicSearchInterface<{{namePascalCase}}>({
       template: html`<{{name}}
