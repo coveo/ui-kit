@@ -204,7 +204,9 @@ export class AtomicResultList
           each: new StringValue({}),
           required: false,
         }),
-      })
+      }),
+      // TODO V4: KIT-5197 - Remove false
+      false
     );
   }
 

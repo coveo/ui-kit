@@ -57,8 +57,7 @@ describe('atomic-text', () => {
     expect(el).toBeInstanceOf(AtomicText);
   });
 
-  // TODO V4: KIT-5197 - Remove skip
-  it.skip('should set error when #value is empty', async () => {
+  it('should set error when #value is empty', async () => {
     const element = await renderComponent({value: 'test-key'});
 
     expect(element.error).toBeUndefined();
@@ -70,32 +69,7 @@ describe('atomic-text', () => {
     expect(element.error.message).toMatch(/value/i);
   });
 
-  // TODO V4: KIT-5197 - Remove this test
-  it('should log warning when #value is empty', async () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
-    const element = await renderComponent({value: 'test-key'});
-
-    element.value = '';
-    await element.updateComplete;
-
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Prop validation failed for component atomic-text'
-      ),
-      element
-    );
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('value'),
-      element
-    );
-
-    consoleWarnSpy.mockRestore();
-  });
-
-  // TODO V4: KIT-5197 - Remove skip
-  it.skip('should set error when valid #value is updated to an empty value', async () => {
+  it('should set error when valid #value is updated to an empty value', async () => {
     const element = await renderComponent({value: 'test-key'});
 
     expect(element.error).toBeUndefined();
@@ -107,32 +81,7 @@ describe('atomic-text', () => {
     expect(element.error.message).toMatch(/value/i);
   });
 
-  // TODO V4: KIT-5197 - Remove this test
-  it('should log warning when valid #value is updated to an empty value', async () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
-    const element = await renderComponent({value: 'test-key'});
-
-    element.value = '';
-    await element.updateComplete;
-
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Prop validation failed for component atomic-text'
-      ),
-      element
-    );
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('value'),
-      element
-    );
-
-    consoleWarnSpy.mockRestore();
-  });
-
-  // TODO V4: KIT-5197 - Remove skip
-  it.skip('should set error when #count is invalid', async () => {
+  it('should set error when #count is invalid', async () => {
     const element = await renderComponent({value: 'test-key', count: 5});
 
     expect(element.error).toBeUndefined();
@@ -145,33 +94,7 @@ describe('atomic-text', () => {
     expect(element.error.message).toMatch(/count/i);
   });
 
-  // TODO V4: KIT-5197 - Remove this test
-  it('should log warning when #count is invalid', async () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
-    const element = await renderComponent({value: 'test-key', count: 5});
-
-    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-    (element as any).count = 'not-a-number';
-    await element.updateComplete;
-
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Prop validation failed for component atomic-text'
-      ),
-      element
-    );
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('count'),
-      element
-    );
-
-    consoleWarnSpy.mockRestore();
-  });
-
-  // TODO V4: KIT-5197 - Remove skip
-  it.skip('should set error when valid #count is updated to an invalid value', async () => {
+  it('should set error when valid #count is updated to an invalid value', async () => {
     const element = await renderComponent({value: 'test-key', count: 5});
 
     expect(element.error).toBeUndefined();
@@ -182,31 +105,6 @@ describe('atomic-text', () => {
 
     expect(element.error).toBeDefined();
     expect(element.error.message).toMatch(/count/i);
-  });
-
-  // TODO V4: KIT-5197 - Remove this test
-  it('should log warning when valid #count is updated to an invalid value', async () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
-    const element = await renderComponent({value: 'test-key', count: 5});
-
-    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-    (element as any).count = 'not-a-number';
-    await element.updateComplete;
-
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Prop validation failed for component atomic-text'
-      ),
-      element
-    );
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('count'),
-      element
-    );
-
-    consoleWarnSpy.mockRestore();
   });
 
   it('should render with basic translation when value is provided', async () => {
@@ -268,67 +166,22 @@ describe('atomic-text', () => {
     expect(element.error).toBeUndefined();
   });
 
-  // TODO V4: KIT-5197 - Remove skip
-  it.skip('should set error when value is not provided', async () => {
+  it('should set error when value is not provided', async () => {
     const element = await renderComponent();
 
     expect(element.error).toBeDefined();
     expect(element.error.message).toMatch(/value/i);
   });
 
-  // TODO V4: KIT-5197 - Remove this test
-  it('should log warning when value is not provided', async () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
-    const element = await renderComponent();
-
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Prop validation failed for component atomic-text'
-      ),
-      element
-    );
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('value'),
-      element
-    );
-
-    consoleWarnSpy.mockRestore();
-  });
-
-  // TODO V4: KIT-5197 - Remove skip
-  it.skip('should set error when value is empty string', async () => {
+  it('should set error when value is empty string', async () => {
     const element = await renderComponent({value: ''});
 
     expect(element.error).toBeDefined();
     expect(element.error.message).toMatch(/value/i);
-  });
-
-  // TODO V4: KIT-5197 - Remove this test
-  it('should log warning when value is empty string', async () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
-    const element = await renderComponent({value: ''});
-
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Prop validation failed for component atomic-text'
-      ),
-      element
-    );
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('value'),
-      element
-    );
-
-    consoleWarnSpy.mockRestore();
   });
 
   describe('when error is present', () => {
-    // TODO V4: KIT-5197 - Remove skip
-    it.skip('should render error component when value is missing', async () => {
+    it('should render error component when value is missing', async () => {
       const element = await renderComponent();
 
       expect(element.error).toBeDefined();

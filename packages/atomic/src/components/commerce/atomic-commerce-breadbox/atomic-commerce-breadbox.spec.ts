@@ -139,8 +139,7 @@ describe('atomic-commerce-breadbox', () => {
     expect(element.breadcrumbManager).toBe(mockedBreadcrumbManager);
   });
 
-  // TODO V4: KIT-5197 - Remove skip
-  it.skip('should set error when pathLimit is initially lower than 1', async () => {
+  it('should set error when pathLimit is initially lower than 1', async () => {
     const {element} = await renderBreadbox({
       interfaceElementType: 'product-listing',
       pathLimit: 0,
@@ -152,8 +151,7 @@ describe('atomic-commerce-breadbox', () => {
     );
   });
 
-  // TODO V4: KIT-5197 - Remove skip
-  it.skip('should set error when valid pathLimit is updated to a value lower than 1', async () => {
+  it('should set error when valid pathLimit is updated to a value lower than 1', async () => {
     const {element} = await renderBreadbox();
 
     expect(element.error).toBeUndefined();
@@ -166,31 +164,6 @@ describe('atomic-commerce-breadbox', () => {
     expect(element.error.message).toMatch(
       /pathLimit: minimum value of 1 not respected/i
     );
-  });
-
-  // TODO V4: KIT-5197 - Remove this test
-  it('should log validation error when pathLimit is updated to invalid value via ValidatePropsController', async () => {
-    const loggerWarnSpy = vi.spyOn(mockedEngine.logger, 'warn');
-
-    const {element} = await renderBreadbox({
-      pathLimit: 3,
-    });
-
-    element.pathLimit = -1;
-    await element.updateComplete;
-
-    expect(loggerWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Prop validation failed for component atomic-commerce-breadbox'
-      ),
-      element
-    );
-    expect(loggerWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('pathLimit'),
-      element
-    );
-
-    loggerWarnSpy.mockRestore();
   });
 
   it('should render nothing when there are no breadcrumbs', async () => {

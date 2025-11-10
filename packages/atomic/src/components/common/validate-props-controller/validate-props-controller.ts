@@ -1,7 +1,6 @@
 import type {Schema} from '@coveo/bueno';
 import type {ReactiveController, ReactiveControllerHost} from 'lit';
 import {deepEqual} from '@/src/utils/compare-utils';
-import type {AnyBindings} from '../interface/bindings';
 
 /**
  * A reactive controller that validates the props of a Lit component against a
@@ -11,8 +10,8 @@ import type {AnyBindings} from '../interface/bindings';
  * the host updates, revalidating only if the props have changed since the last
  * validation.
  *
- * If validation fails, the controller logs a warning using the engine logger
- * and handles fallback values for specific properties to avoid breaking changes.
+ * If validation fails, the controller either sets the `error` property on the host
+ * or logs a warning, depending on the `throwOnError` configuration.
  */
 export class ValidatePropsController<TProps extends Record<string, unknown>>
   implements ReactiveController
@@ -23,22 +22,27 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
   /**
    * Creates a `ValidatePropsController`.
    *
-   * @param host The host element with bindings.
+   * @param host The host element.
    * @param getProps A function that returns the current props to validate.
    * @param schema The Bueno schema to validate the props against.
+   * @param throwOnError Whether to throw an error (true) or log a warning (false) when validation fails. Defaults to true.
    */
   constructor(
-    private host: ReactiveControllerHost &
-      HTMLElement & {bindings?: AnyBindings},
+    private host: ReactiveControllerHost & HTMLElement & {error: Error},
     private getProps: () => TProps,
-    private schema: Schema<TProps>
+    private schema: Schema<TProps>,
+    private throwOnError: boolean = true
   ) {
     host.addController(this);
   }
 
   hostConnected() {
     this.currentProps = this.getProps();
-    this._validateProps();
+    if (this.host.error === null) {
+      // @ts-expect-error: we need to set the error to undefined if it was null.
+      this.host.error = undefined;
+    }
+    this.validateProps();
   }
 
   hostUpdate() {
@@ -48,26 +52,23 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
       return;
     }
 
-    this._validateProps();
+    // @ts-expect-error: we need to clear the error.
+    this.host.error = undefined;
+    this.validateProps();
   }
 
-  private _validateProps() {
+  private validateProps() {
     try {
       this.schema.validate(this.currentProps);
     } catch (error) {
-      this._handleValidationError(error as Error);
+      if (this.throwOnError) {
+        this.host.error = error as Error;
+      } else {
+        const message = `Prop validation failed for component ${this.host.tagName?.toLowerCase()}: ${(error as Error).message}`;
+        console.warn(message, this.host);
+      }
     } finally {
       this.previousProps = this.currentProps;
-    }
-  }
-
-  private _handleValidationError(error: Error) {
-    const message = `Prop validation failed for component ${this.host.tagName?.toLowerCase()}: ${error.message}`;
-
-    if (this.host.bindings?.engine?.logger?.warn) {
-      this.host.bindings.engine.logger.warn(message, this.host);
-    } else {
-      console.warn(message, this.host);
     }
   }
 }

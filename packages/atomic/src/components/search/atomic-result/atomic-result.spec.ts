@@ -100,7 +100,6 @@ describe('atomic-result', () => {
       invalidValue: 'invalid',
     },
   ])(
-    // TODO V4: KIT-5197 - Remove skip
     'should set error when #$prop is invalid',
     async ({prop, invalidValue}) => {
       const element = await renderResult();
@@ -113,51 +112,6 @@ describe('atomic-result', () => {
 
       expect(element.error).toBeDefined();
       expect(element.error.message).toMatch(new RegExp(prop, 'i'));
-    },
-    {skip: true}
-  );
-
-  // TODO V4: KIT-5197 - Remove this test
-  it.each<{
-    prop: 'density' | 'display' | 'imageSize';
-    invalidValue: unknown;
-  }>([
-    {
-      prop: 'density',
-      invalidValue: 'invalid',
-    },
-    {
-      prop: 'display',
-      invalidValue: 'invalid',
-    },
-    {
-      prop: 'imageSize',
-      invalidValue: 'invalid',
-    },
-  ])(
-    'should log warning when #$prop is invalid',
-    async ({prop, invalidValue}) => {
-      const consoleWarnSpy = vi
-        .spyOn(console, 'warn')
-        .mockImplementation(() => {});
-      const element = await renderResult();
-
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-      (element as any)[prop] = invalidValue;
-      await element.updateComplete;
-
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining(
-          'Prop validation failed for component atomic-result'
-        ),
-        element
-      );
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining(prop),
-        element
-      );
-
-      consoleWarnSpy.mockRestore();
     }
   );
 
@@ -182,7 +136,6 @@ describe('atomic-result', () => {
       invalidValue: 'invalid',
     },
   ])(
-    // TODO V4: KIT-5197 - Remove skip
     'should set error when valid #$prop is updated to an invalid value',
     async ({prop, validValue, invalidValue}) => {
       const element = await renderResult({[prop]: validValue});
@@ -195,55 +148,6 @@ describe('atomic-result', () => {
 
       expect(element.error).toBeDefined();
       expect(element.error.message).toMatch(new RegExp(prop, 'i'));
-    },
-    {skip: true}
-  );
-
-  // TODO V4: KIT-5197 - Remove this test
-  it.each<{
-    prop: 'density' | 'display' | 'imageSize';
-    validValue: ItemDisplayDensity | ItemDisplayLayout | ItemDisplayImageSize;
-    invalidValue: unknown;
-  }>([
-    {
-      prop: 'density',
-      validValue: 'normal',
-      invalidValue: 'invalid',
-    },
-    {
-      prop: 'display',
-      validValue: 'list',
-      invalidValue: 'invalid',
-    },
-    {
-      prop: 'imageSize',
-      validValue: 'icon',
-      invalidValue: 'invalid',
-    },
-  ])(
-    'should log warning when valid #$prop is updated to an invalid value',
-    async ({prop, validValue, invalidValue}) => {
-      const consoleWarnSpy = vi
-        .spyOn(console, 'warn')
-        .mockImplementation(() => {});
-      const element = await renderResult({[prop]: validValue});
-
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-      (element as any)[prop] = invalidValue;
-      await element.updateComplete;
-
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining(
-          'Prop validation failed for component atomic-result'
-        ),
-        element
-      );
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining(prop),
-        element
-      );
-
-      consoleWarnSpy.mockRestore();
     }
   );
 
