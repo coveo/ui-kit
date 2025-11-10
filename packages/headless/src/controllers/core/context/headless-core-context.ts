@@ -51,7 +51,7 @@ const initialStateSchema = new Schema<ContextInitialState>({
  * The `Context` controller injects [custom contextual information](https://docs.coveo.com/en/3389/)
  * into the search requests and usage analytics search events sent from a search interface.
  *
- * Example: [context.ts](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/context/context.ts)
+ * Example: [context.ts](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/context/context.ts)
  *
  * @group Controllers
  * @category Context
