@@ -1,9 +1,10 @@
 import type {Search, SearchState} from '@coveo/headless/commerce';
 import {genericSubscribe} from '../common';
+import {buildFakeProduct} from './product';
 
 export const defaultState = {
   responseId: 'some-id',
-  products: [{}],
+  products: [buildFakeProduct()],
   isLoading: false,
   error: null,
 };
@@ -22,5 +23,5 @@ export const buildFakeSearch = ({
   ({
     ...defaultImplementation,
     ...implementation,
-    ...(state && {state: {...defaultState, ...state}}),
+    ...{state: {...defaultState, ...(state || {})}},
   }) as Search;

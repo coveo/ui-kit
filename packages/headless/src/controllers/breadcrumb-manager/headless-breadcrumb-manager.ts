@@ -1,5 +1,6 @@
 import {configuration} from '../../app/common-reducers.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {SearchPageEvents} from '../../features/analytics/search-action-cause.js';
 import {toggleSelectAutomaticFacetValue} from '../../features/facets/automatic-facet-set/automatic-facet-set-actions.js';
 import type {AutomaticFacetResponse} from '../../features/facets/automatic-facet-set/interfaces/response.js';
 import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions.js';
@@ -97,7 +98,7 @@ export type {
 /**
  * The `BreadcrumbManager` headless controller manages a summary of the currently active facet filters.
  *
- * Example: [breadcrumb-manager.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/breadcrumb-manager/breadcrumb-manager.fn.tsx)
+ * Example: [breadcrumb-manager.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/breadcrumb-manager/breadcrumb-manager.fn.tsx)
  *
  * @group Controllers
  * @category BreadcrumbManager
@@ -403,6 +404,7 @@ export function buildBreadcrumbManager(
       dispatch(
         executeSearch({
           legacy: logClearBreadcrumbs(),
+          next: {actionCause: SearchPageEvents.breadcrumbResetAll},
         })
       );
     },

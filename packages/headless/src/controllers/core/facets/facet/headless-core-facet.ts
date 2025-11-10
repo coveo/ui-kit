@@ -73,9 +73,9 @@ interface CoreFacetProps {
  * model, the `Facet` controller automatically reorders facet values according to the user query.
  *
  * Examples:
- * - [facet.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/facet/facet.fn.tsx)
- * - [facet-search.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/facet/facet-search.tsx)
- * - [facet.class.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/facet/facet.class.tsx)
+ * - [facet.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/facet/facet.fn.tsx)
+ * - [facet-search.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/facet/facet-search.tsx)
+ * - [facet.class.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/facet/facet.class.tsx)
  *
  * @group Controllers
  * @category Facet

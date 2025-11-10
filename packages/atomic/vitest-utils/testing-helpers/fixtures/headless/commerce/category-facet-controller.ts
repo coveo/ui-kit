@@ -112,5 +112,5 @@ export const buildFakeCategoryFacet = ({
   ({
     ...defaultImplementation,
     ...implementation,
-    ...(state && {state: {...defaultState, ...state}}),
+    ...{state: {...defaultState, ...(state || {})}},
   }) as CategoryFacet;

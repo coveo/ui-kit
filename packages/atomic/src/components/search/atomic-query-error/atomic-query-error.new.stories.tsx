@@ -9,8 +9,10 @@ const mockSearchApi = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface({
   config: {
     accessToken: 'invalidtoken',
+    organizationId: 'default-org',
   },
 });
+
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-query-error',
   {excludeCategories: ['methods']}
@@ -18,9 +20,8 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-query-error',
-  title: 'Search/QueryError',
+  title: 'Search/Query Error',
   id: 'atomic-query-error',
-
   render: (args) => template(args),
   decorators: [decorator],
   parameters: {
@@ -28,6 +29,7 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
+    msw: {handlers: [...mockSearchApi.handlers]},
   },
   args,
   argTypes,
@@ -40,24 +42,71 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-query-error',
   beforeEach: async () => {
     mockSearchApi.searchEndpoint.mockErrorOnce();
   },
 };
 
-export const With419Error: Story = {
-  name: 'With 419 error',
+export const WithInvalidToken: Story = {
+  name: 'With Invalid Token Error',
   beforeEach: async () => {
     mockSearchApi.searchEndpoint.mockOnce(
       () => ({
         ok: false,
-        status: 419,
-        message: 'Expired token',
-        statusCode: 419,
-        type: 'ExpiredTokenException',
+        status: 401,
+        message: 'Token is invalid or expired',
+        statusCode: 401,
+        type: 'InvalidTokenException',
       }),
-      {status: 419}
+      {status: 401}
+    );
+  },
+};
+
+export const WithDisconnected: Story = {
+  name: 'With Disconnected Error',
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mockOnce(
+      () => ({
+        ok: false,
+        status: 0,
+        message: 'Network connection failed',
+        statusCode: 0,
+        type: 'Disconnected',
+      }),
+      {status: 500}
+    );
+  },
+};
+
+export const WithNoEndpoints: Story = {
+  name: 'With No Endpoints Error',
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mockOnce(
+      () => ({
+        ok: false,
+        status: 404,
+        message: 'No content sources available',
+        statusCode: 404,
+        type: 'NoEndpointsException',
+      }),
+      {status: 404}
+    );
+  },
+};
+
+export const WithOrganizationPaused: Story = {
+  name: 'With Organization Paused Error',
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mockOnce(
+      () => ({
+        ok: false,
+        status: 503,
+        message: 'Organization is paused due to inactivity',
+        statusCode: 503,
+        type: 'OrganizationIsPausedException',
+      }),
+      {status: 503}
     );
   },
 };
