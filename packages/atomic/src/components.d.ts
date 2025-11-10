@@ -328,7 +328,7 @@ export namespace Components {
         "source"?: HTMLElement;
     }
     /**
-     * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
+     * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child, and grandchild).
      */
     interface AtomicFoldedResultList {
         /**
@@ -1242,7 +1242,7 @@ export namespace Components {
         "sandbox": string;
     }
     /**
-     * The modal opened when clicking on a quickview button.
+     * The modal opened when clicking a quickview button.
      * Do not use this component directly; use `atomic-quickview` instead.
      */
     interface AtomicQuickviewModal {
@@ -2373,7 +2373,7 @@ declare global {
         new (): HTMLAtomicFocusTrapElement;
     };
     /**
-     * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
+     * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child, and grandchild).
      */
     interface HTMLAtomicFoldedResultListElement extends Components.AtomicFoldedResultList, HTMLStencilElement {
     }
@@ -2865,7 +2865,7 @@ declare global {
         "atomic/quickview/previous": any;
     }
     /**
-     * The modal opened when clicking on a quickview button.
+     * The modal opened when clicking a quickview button.
      * Do not use this component directly; use `atomic-quickview` instead.
      */
     interface HTMLAtomicQuickviewModalElement extends Components.AtomicQuickviewModal, HTMLStencilElement {
@@ -3837,7 +3837,7 @@ declare namespace LocalJSX {
         "source"?: HTMLElement;
     }
     /**
-     * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
+     * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child, and grandchild).
      */
     interface AtomicFoldedResultList {
         /**
@@ -4718,7 +4718,7 @@ declare namespace LocalJSX {
         "sandbox"?: string;
     }
     /**
-     * The modal opened when clicking on a quickview button.
+     * The modal opened when clicking a quickview button.
      * Do not use this component directly; use `atomic-quickview` instead.
      */
     interface AtomicQuickviewModal {
@@ -5836,7 +5836,7 @@ declare module "@stencil/core" {
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
             "atomic-focus-trap": LocalJSX.AtomicFocusTrap & JSXBase.HTMLAttributes<HTMLAtomicFocusTrapElement>;
             /**
-             * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
+             * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child, and grandchild).
              */
             "atomic-folded-result-list": LocalJSX.AtomicFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicFoldedResultListElement>;
             /**
@@ -5955,7 +5955,7 @@ declare module "@stencil/core" {
              */
             "atomic-quickview": LocalJSX.AtomicQuickview & JSXBase.HTMLAttributes<HTMLAtomicQuickviewElement>;
             /**
-             * The modal opened when clicking on a quickview button.
+             * The modal opened when clicking a quickview button.
              * Do not use this component directly; use `atomic-quickview` instead.
              */
             "atomic-quickview-modal": LocalJSX.AtomicQuickviewModal & JSXBase.HTMLAttributes<HTMLAtomicQuickviewModalElement>;
