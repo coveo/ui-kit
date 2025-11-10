@@ -39,6 +39,22 @@ To run the unit tests for the components, run:
 pnpm test
 ```
 
+## Storybook
+
+Atomic uses Storybook for component development, documentation, and testing. To start Storybook in development mode:
+
+```bash
+pnpm run start
+```
+
+Storybook will be available at `http://localhost:6006`.
+
+### Storybook MCP (Model Context Protocol)
+
+This Storybook instance is configured with the MCP addon, which enables AI agents to programmatically interact with component stories. When Storybook is running, the MCP server is accessible at `http://localhost:6006/mcp`.
+
+For more information about the MCP setup, see [.storybook/README-MCP.md](.storybook/README-MCP.md).
+
 ## Run Cypress for Atomic components
 
 Ref: https://docs.cypress.io/
