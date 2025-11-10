@@ -1,3 +1,9 @@
+## 2.2.18 (2025-11-10)
+
+### Bug Fixes
+
+- **deps:** update dependency next to v16 ([#215](https://github.com/coveo/relay/issues/215)) ([dcb40f0](https://github.com/coveo/relay/commits/))
+
 ## 2.2.17 (2025-10-28)
 
 ### Bug Fixes
