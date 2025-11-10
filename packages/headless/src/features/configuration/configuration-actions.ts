@@ -24,7 +24,7 @@ const originSchemaOnUpdate = () => requiredNonEmptyString;
 
 export interface UpdateBasicConfigurationActionCreatorPayload {
   /**
-   * The access token to use to authenticate requests against the Coveo Cloud endpoints. Typically, this will be an API key or search token that grants the privileges to execute queries and push usage analytics data in the target Coveo Cloud organization.
+   * The access token to use to authenticate requests against the Coveo endpoints. Typically, this will be an API key or search token that grants the privileges to execute queries and push usage analytics data in the target Coveo organization.
    */
   accessToken?: string;
 
@@ -36,7 +36,7 @@ export interface UpdateBasicConfigurationActionCreatorPayload {
   environment?: PlatformEnvironment;
 
   /**
-   * The unique identifier of the target Coveo Cloud organization (e.g., `mycoveocloudorganizationg8tp8wu3`)
+   * The unique identifier of the target Coveo organization (for example, `mycoveocloudorganizationg8tp8wu3`)
    */
   organizationId?: string;
 }

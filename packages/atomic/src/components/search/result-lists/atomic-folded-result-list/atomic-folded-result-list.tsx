@@ -53,7 +53,7 @@ import {Hidden} from '../../../common/stencil-hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
- * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
+ * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child, and grandchild).
  * @slot default - The default slot where the result templates are inserted.
  * @part result-list - The element containing every result of a result list
  * @part outline - The element displaying an outline or a divider around a result
