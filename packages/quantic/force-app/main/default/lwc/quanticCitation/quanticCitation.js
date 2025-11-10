@@ -60,7 +60,9 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       !this.disableCitationAnchoring &&
       supportedFileTypesForTextFragment.includes(fileType) &&
       !!this.text;
-  }
+    // Listens to register event from citation action slot
+    this.template.addEventListener('actionregister', this.handleCitationActionRegister);
+}
 
   renderedCallback() {
     if (this.isInitialRender) {
@@ -83,6 +85,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
 
   disconnectedCallback() {
     this.removeBindings?.();
+    this.template.removeEventListener('actionregister', this.handleCitationActionRegister);
   }
 
   handleMouseEnter() {
@@ -115,7 +118,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
 
     this.tooltipIsDisplayed = false;
     this.shouldShowTooltipAfterDelay = false;
-    // this.tooltipComponent.hideTooltip();
+    // this.tooltipComponent.hideTooltip(); // to un-comment later, this is just so we can click the action button.
   }
 
   /**
@@ -138,36 +141,17 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
     }
   }
 
-  /**
-   * Handles clicks on slotted citation action elements
-   * @param {Event} event
-   */
-  handleCitationActionClick(event) {
-    // Only handle clicks from slotted content, not the container
-    // @ts-ignore
-    const slottedElement = event.target.closest('[slot="citation-action"]');
-    if (!slottedElement) {
-      return;
-    }
-
+  handleCitationActionRegister(event) {
+    console.log('Handle citation action register event:', event);
     event.stopPropagation();
-
-    // Extract action type from data attribute of the slotted element
-    const actionType = slottedElement.dataset.action;
-
-    // Dispatch custom event with citation data
-    this.dispatchEvent(
-      new CustomEvent('citationaction', {
-        detail: {
-          citation: this.citation,
-          citationId: this.citation?.index,
-          actionType,
-          originalEvent: event,
-        },
-        bubbles: true,
-        composed: true,
-      })
-    );
+    // Child component provides a function we can call to give it the citation data
+    const register = event?.detail?.register;
+    if (typeof register === 'function') {
+      register({
+        citation: this.citation,
+        interactiveCitation: this.interactiveCitation,
+      });
+    }
   }
 
   navigateToSalesforceRecord(event) {

@@ -43,7 +43,7 @@
           {text}
         </div>
         <div class="citation__tooltip-actions" onclick={handleCitationActionClick}>
-          <slot name="citation-action"></slot>
+          <slot name="citation-action" onactionregister={handleCitationActionRegister}></slot>
         </div>
       </div>
     </c-quantic-tooltip>
