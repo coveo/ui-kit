@@ -235,14 +235,3 @@ render() {
 1. Use `mcp_storybook_get-story-urls` tool to generate story links for visual inspection
 2. Provide story URLs to users for component validation
 3. Ensure all component variants are covered in stories
-
-**Story linking pattern:**
-```typescript
-// In prompts and agents, always provide story links after component changes
-const storyUrls = await getStoryUrls([
-  {
-    exportName: 'Default',
-    absoluteStoryPath: '/path/to/component.new.stories.tsx'
-  }
-]);
-```

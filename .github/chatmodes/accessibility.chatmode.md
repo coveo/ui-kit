@@ -78,21 +78,6 @@ Content must be robust enough to be interpreted reliably by a wide variety of us
 4. **Test keyboard navigation** in Storybook's interactive environment
 5. **Verify screen reader compatibility** using Storybook's accessibility addon
 
-**Example workflow:**
-```typescript
-// After modifying a component, get story URLs for accessibility review
-const storyUrls = await getStoryUrls([
-  {
-    exportName: 'Default',
-    absoluteStoryPath: 'packages/atomic/src/components/path/component.new.stories.tsx'
-  },
-  {
-    exportName: 'ErrorState', 
-    absoluteStoryPath: 'packages/atomic/src/components/path/component.new.stories.tsx'
-  }
-]);
-```
-
 Stories provide isolated environments for testing:
 - Focus management and keyboard navigation
 - Screen reader announcements
