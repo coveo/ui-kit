@@ -1,108 +1,155 @@
----
-name: AGENTS.md
-description: The master guidelines, protocols, and standards for all agents in this framework.
----
+# AGENTS.md - Coding Agent Instructions
 
-# 🤖 AGENT FRAMEWORK GUIDELINES
+This file provides specialized instructions for AI coding agents working in the Coveo UI-Kit repository.
 
-This document defines the roles, standards, and communication protocols for all AI agents operating within this repository. All agents, especially the `@prompt-engineer-agent`, **MUST** adhere to these guidelines when generating prompts.
+## Quick Start
 
-## 1. Core Agent Roster
+### Building
+```bash
+pnpm install
+pnpm build
+```
 
-The system is managed by a team of three "meta-agents."
+### Testing
+```bash
+# Run all tests
+pnpm test
 
-* **@orchestrator**
-    * **Role:** The Project Manager.
-    * **Function:** Analyzes the GitHub Issue, creates a `[PLAN]` of tasks, and manages the end-to-end workflow.
-    * **Key Behavior:** Does **NOT** write implementation code. It delegates tasks to the `@prompt-engineer-agent` and `@executor-vessel`.
+# Run E2E tests
+pnpm e2e
 
-* **@prompt-engineer-agent**
-    * **Role:** The Persona Expert / "Prompt Factory."
-    * **Function:** Receives a single task specification from the `@orchestrator` and generates a high-quality, expert meta-prompt for the `@executor-vessel`.
-    * **Key Behavior:** Its *only* output is a new `.md` prompt file. It **MUST** follow the templates in Section 3 and 4 of *this* document.
+# Run tests for specific package
+cd packages/atomic
+pnpm test
+pnpm e2e
+```
 
-* **@executor-vessel**
-    * **Role:** The "Empty" Worker / Task Runner.
-    * **Function:** A generic agent that adopts the persona and executes the *entire* meta-prompt given to it by the `@orchestrator`.
-    * **Key Behavior:** Has no long-term memory or persistent persona. It is a "blank slate" for every task.
+### Linting
+```bash
+pnpm lint:check  # Check for issues
+pnpm lint:fix    # Auto-fix issues
+```
 
----
+## Repository Structure
 
-## 2. Communication & File Protocol
+```
+ui-kit/
+├── packages/
+│   ├── atomic/          # UI component library (Lit/Stencil)
+│   ├── headless/        # Headless UI library
+│   ├── quantic/         # Salesforce Lightning components
+│   └── headless-react/  # React bindings
+├── .github/
+│   ├── instructions/    # Coding standards and conventions
+│   ├── agents/          # Custom agent definitions
+│   ├── chatmodes/       # Specialized AI personas
+│   └── prompts/         # Task-specific workflows
+└── samples/             # Example implementations
+```
 
-Agents **do not** communicate directly. Communication is **asynchronous** and **file-based**.
+## Coding Standards
 
-1.  **Workspace:** All temporary files, logs, and reports **MUST** be written inside the `work-log/` directory.
-2.  **Code:** All code modifications **MUST** be applied to the relevant source directories (e.g., `src/`).
-3.  **Forbidden Zone:** Agents **MUST NEVER** modify core framework files (e.g., `orchestrator.md`, `prompt-engineer.md`, `executor-vessel.md`, or this `AGENTS.md` file).
+### Instructions System
 
----
+All code changes MUST follow the conventions defined in `.github/instructions/`:
 
-## 3. Dynamic Prompt Generation Standard (for @prompt-engineer-agent)
+- **general.instructions.md** - Core development principles (all files)
+- **general.typescript.instructions.md** - TypeScript conventions (all .ts/.tsx files)
+- **atomic.instructions.md** - Atomic package conventions (`packages/atomic/**`)
+- **tests-atomic.instructions.md** - Atomic testing patterns (`**/atomic/**/*.spec.ts`)
+- **playwright-typescript.instructions.md** - E2E testing patterns (`**/*.e2e.ts`)
+- **a11y.instructions.md** - Accessibility standards (all files)
+- **msw-api-mocking.instructions.md** - API mocking for Storybook
 
-When the `@prompt-engineer-agent` is tasked with generating a prompt for an `@executor-vessel`, that new prompt **MUST** follow this structure:
+These instructions are automatically applied by GitHub Copilot based on file patterns.
 
-> ```markdown
-> # META-PROMPT: [EXPERT PERSONA NAME]
->
-> ## 1. ROLE & GOAL
->
-> You are an expert [PERSONA].
-> Your **sole mission** is to: [Task Description from Orchestrator]
->
-> ## 2. CONTEXT & RELEVANT FILES
->
-> You **MUST** limit your analysis to the following files provided by the @orchestrator:
-> * `[relevant_file_1.ts]`
-> * `[relevant_file_2.ts]`
-> * ...
->
-> ## 3. TOOLKIT
->
-> You have the following tools available:
-> `["read", "edit", "run-tests", "search", "create_branch", "commit_changes"]`
->
-> ## 4. ACTIONABLE STEPS
->
-> 1.  **Branch:** Use `create_branch` to create a new, unique branch for your work (e.g., `feature/task-id-xyz`).
-> 2.  **Analyze:** Use `read` to analyze the provided context files.
-> 3.  **Implement:** Use `edit` to make the required code changes.
-> 4.  **Verify:** Use `run-tests` to ensure your changes work and have not caused regressions.
-> 5.  **Report:** Create your report file (as defined in Section 5).
-> 6.  **Commit:** Use `commit_changes` with a clear message. This **MUST** be your final action.
->
-> ## 5. MANDATORY REPORT BACK PROTOCOL
->
-> As the **final step before** committing, you **MUST** create the following unique report file:
->
-> **File Path:** `[path.to/report.md (e.g., "work-log/step-1.report.md")]`
->
-> **Content:**
-> ```
-> ---
-> Status: [Success OR Failure]
->
-> Summary: [A brief, one-sentence summary of what you did.]
->
-> Files:
->   - [list/of/files/you/modified.ts]
->   - [list/of/files/you/created.ts]
->
-> Errors: [null OR A detailed error message and traceback if Status was Failure.]
-> ---
-> ```
->
-> *This report is non-optional and is read by the @orchestrator.*
-> ```
+### Technology Stack
 
----
+- **TypeScript**: Check `package.json` for current version
+- **Build System**: Turbo (monorepo orchestration) + package-specific builds
+- **Package Manager**: pnpm with workspaces
+- **Testing**: Vitest (unit), Playwright (E2E)
+- **UI Frameworks**: Lit (preferred), Stencil (legacy)
 
-## 4. Git & Branching Protocol (for @executor-vessel)
+## PR Standards
 
-All work performed by an `@executor-vessel` **MUST** be done on a new, isolated branch.
+- **Title**: Semantic commit format (e.g., `feat:`, `fix:`, `refactor:`)
+  - Prefix with `WIP:` while work is in progress
+- **Description**: Include `Fixes #Issue_number` when addressing a specific issue
+- **Template**: For Stencil → Lit migrations, use `.github/PULL_REQUEST_TEMPLATE/atomic-stencil-lit-migration.md`
+- **Commits**: Use clear, descriptive messages
 
-1.  **Branch Creation:** The **first** action an agent takes **MUST** be to use the `create_branch` tool.
-2.  **Branch Naming:** The branch name should be descriptive and based on the `Task ID` (which will be in the prompt), e.g., `feature/step-1`, `fix/step-1-fix1`.
-3.  **Committing:** The **last** action an agent takes **MUST** be to use the `commit_changes` tool. This commit **MUST** include both the code changes *and* the mandatory report file.
+## Custom Agents
 
-The `@orchestrator` is responsible for merging these branches *after* it has read and verified the report file.
+- **stencil-to-lit-migration-agent.md** - Specialized agent for Stencil → Lit migrations (components, functional components, utils)
+  - Location: `.github/agents/stencil-to-lit-migration-agent.md`
+  - Detects migration type and applies appropriate workflow
+  - For components: complete migrations including code, tests, Storybook stories, E2E tests, and MDX documentation
+  - For functional components: migration and unit test generation
+  - For utils: unit test generation only
+  - Uses dedicated prompts for each migration step
+  - Identifies and documents blocking dependencies
+
+## Chatmodes (VS Code Copilot)
+
+- **accessibility.chatmode.md** - WCAG compliance review
+- **typescript-mcp-expert.chatmode.md** - TypeScript MCP server development
+- **refine-issue.chatmode.md** - Issue refinement with acceptance criteria
+- **research-technical-spike.chatmode.md** - Technical investigation
+- **task-researcher.chatmode.md** - Deep codebase analysis
+
+## Prompts (Task Templates)
+
+Located in `.github/prompts/`:
+- Component generation and migration
+- Test generation (Vitest, Playwright)
+- Documentation generation
+
+## Common Workflows
+
+### Creating a New Component
+```bash
+cd packages/atomic
+node scripts/generate-component.mjs component-name src/components/common
+```
+
+### Running Specific Package Commands
+```bash
+# Atomic package
+cd packages/atomic
+pnpm build:stencil-lit  # Build
+pnpm test:lit           # Test Lit components
+pnpm e2e                # E2E tests
+
+# Headless package
+cd packages/headless
+pnpm build
+pnpm test
+```
+
+### Debugging Test Failures
+```bash
+cd packages/atomic
+pnpm test -- <test-file> --reporter=verbose
+pnpm e2e <test-file> --debug --headed
+```
+
+## Quality Checklist
+
+Before committing:
+- [ ] Read relevant `.github/instructions/` files
+- [ ] Tests pass consistently (unit and/or E2E)
+- [ ] Linting passes: `pnpm lint:fix`
+- [ ] Builds succeed: `pnpm build`
+- [ ] Used path aliases for imports
+- [ ] Type safety maintained (no `any` without justification)
+- [ ] Resources cleaned up in lifecycle methods
+- [ ] Changes are minimal and surgical
+- [ ] PR follows semantic commit format
+- [ ] PR description includes `Fixes #Issue_number` if applicable
+
+## For Human Contributors
+
+For general contribution guidelines, project overview, and getting started information, see the main [README.md](../README.md).
+
+This file is optimized for AI coding agents and contains detailed build steps, test commands, and conventions that complement the human-focused README.
