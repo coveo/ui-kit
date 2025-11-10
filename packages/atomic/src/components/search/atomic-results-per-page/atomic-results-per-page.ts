@@ -83,7 +83,7 @@ export class AtomicResultsPerPage
         error instanceof ChoiceIsNaNError ||
         error instanceof InitialChoiceNotInChoicesError
       ) {
-        this.bindings.engine.logger.error(error.message, this);
+        this.bindings.engine.logger.error(error.message);
         throw error;
       }
     }

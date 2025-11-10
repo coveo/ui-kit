@@ -48,7 +48,7 @@ import type {ProductListingSummaryState} from './summary/headless-product-listin
 /**
  * The `ProductListing` controller exposes a method for retrieving product listing content in a commerce interface.
  *
- * Example: [product-listing.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/commerce/product-listing.fn.tsx)
+ * Example: [product-listing.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/commerce/product-listing.fn.tsx)
  *
  * @group Buildable controllers
  * @category ProductListing
