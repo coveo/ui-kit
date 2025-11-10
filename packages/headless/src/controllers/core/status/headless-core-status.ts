@@ -11,7 +11,7 @@ import {
 /**
  * The `SearchStatus` controller lets you access search status information.
  *
- * Example: [search-status.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/search-status/search-status.fn.tsx)
+ * Example: [search-status.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/search-status/search-status.fn.tsx)
  *
  * @group Controllers
  * @category SearchStatus
