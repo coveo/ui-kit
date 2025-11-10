@@ -12,7 +12,7 @@ GitHub Codespaces provides a complete, cloud-based development environment with:
 - ✅ VS Code extensions automatically installed
 - ✅ Consistent environment across all developers
 
-**First time setup**: ~5 minutes | **With prebuilds**: ~30 seconds
+**First-time setup**: ~5 minutes | **With prebuilds**: ~30 seconds
 
 See [.devcontainer/README.md](.devcontainer/README.md) for details on the devcontainer configuration.
 

@@ -32,7 +32,9 @@ The following extensions are automatically installed:
 - Biome (formatter and linter)
 - Code Spell Checker
 - GitHub Copilot
+- GitHub Copilot Chat
 - Lit Plugin
+- MDX Language Support
 - Playwright Test Runner
 - Tailwind CSS IntelliSense
 - Vitest Explorer
@@ -113,7 +115,7 @@ To customize the devcontainer:
 - Consider manually triggering the prebuild workflow
 
 ### Build failures in prebuild
-- Check the workflow logs in `.github/workflows/codespaces-prebuild.yml`
+- Check the prebuild logs in the Codespaces section of the repository settings
 - Ensure `pnpm install --frozen-lockfile` and `pnpm run build` work locally
 - Verify all dependencies are correctly specified in `pnpm-lock.yaml`
 
