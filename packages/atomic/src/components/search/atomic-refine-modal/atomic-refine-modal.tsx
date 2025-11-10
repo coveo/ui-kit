@@ -340,7 +340,7 @@ export class AtomicRefineModal implements InitializableComponent {
         numberOfItems={this.querySummaryState.total}
         openButton={this.openButton}
       >
-        <RefineModalBody>
+        <RefineModalBody ariaLabel={this.bindings.i18n.t('refine-modal-content')}>
           {this.renderSort()}
           {this.renderFilters()}
         </RefineModalBody>

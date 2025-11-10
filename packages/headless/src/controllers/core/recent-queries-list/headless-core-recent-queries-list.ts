@@ -87,7 +87,7 @@ const optionsSchema = new Schema<RecentQueriesListOptions>({
 /**
  * The `RecentQueriesList` controller manages the user's recent queries.
  *
- * Example: [recent-queries.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/recent-queries/recent-queries.fn.tsx)
+ * Example: [recent-queries.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/recent-queries/recent-queries.fn.tsx)
  *
  * @group Controllers
  * @category RecentQueriesList

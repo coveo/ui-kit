@@ -93,7 +93,7 @@ export interface CategoryFieldSuggestionsState {
  *
  * This controller is a wrapper around the basic category facet controller search functionality, and thus exposes similar options and properties.
  *
- * Example: [category-suggestions.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/field-suggestions/category-field/category-suggestions.fn.tsx)
+ * Example: [category-suggestions.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/field-suggestions/category-field/category-suggestions.fn.tsx)
  *
  * @group Controllers
  * @category CategoryFieldSuggestions

@@ -65,7 +65,7 @@ const optionsSchema = new Schema<RecentResultsListOptions>({
 /**
  * The `RecentResultsList` controller manages a user's recently clicked results.
  *
- * Example: [recent-results.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/recent-results/recent-results.fn.tsx)
+ * Example: [recent-results.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/recent-results/recent-results.fn.tsx)
  *
  * @group Controllers
  * @category RecentResultsList
