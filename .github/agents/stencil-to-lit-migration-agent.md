@@ -210,11 +210,12 @@ Execute these steps when migrating a **functional component** (render function):
 
 Migrate the functional component from Stencil to Lit:
 - Analyze the existing functional component
+- Rename original Stencil file with `stencil-` prefix (e.g., `button.tsx` → `stencil-button.tsx`)
 - Create new Lit version with correct `FunctionalComponent*` types
 - Use `({props})` destructuring pattern
 - Apply Lit directives (`when`, `ifDefined`, `ref`)
 - Use Tailwind CSS with `tw` and `multiClassMap`
-- Keep original Stencil file untouched (parallel file approach)
+- Update ALL imports across all packages to use the prefixed version for Stencil imports
 
 ### Step 2: Unit Tests
 **Prompt:** `.github/prompts/generate-vitest-test-atomic-lit-functional-component.prompt.md`
@@ -243,7 +244,8 @@ Before completing a functional component migration, verify:
 
 - [ ] Functional component migrated to Lit with correct types
 - [ ] All imports use `@/*` path aliases (no `../` imports)
-- [ ] Original Stencil file kept untouched
+- [ ] Original Stencil file renamed with `stencil-` prefix
+- [ ] All imports updated to reference prefixed Stencil version where needed
 - [ ] Unit tests pass: `cd packages/atomic && pnpm test`
 - [ ] Linting passes: `pnpm lint:fix`
 - [ ] Build succeeds: `pnpm build`
@@ -363,7 +365,8 @@ node scripts/generate-component.mjs component-name src/components/common
 **Functional component migration** includes:
 - ✅ Functional component fully functional in Lit
 - ✅ Comprehensive unit tests
-- ✅ Original Stencil file preserved
+- ✅ Original Stencil file renamed with `stencil-` prefix
+- ✅ All imports updated to use prefixed version
 - ✅ All tests passing
 - ✅ All linting passing
 - ✅ Standard PR (not migration template)
