@@ -61,7 +61,7 @@ import facetValueCheckboxStyles from '../../common/facets/facet-value-checkbox/f
 import facetValueExcludeStyles from '../../common/facets/facet-value-exclude/facet-value-exclude.tw.css';
 
 /**
- * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+ * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
  * An `atomic-facet` displays a facet of the results for the current query.
  *
  * @part facet - The wrapper for the entire facet.
@@ -97,7 +97,7 @@ import facetValueExcludeStyles from '../../common/facets/facet-value-exclude/fac
  *
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
- * @part show-more-less-icon - The icons of the show more & show less buttons.
+ * @part show-more-less-icon - The icons of the show more and show less buttons.
  */
 @customElement('atomic-facet')
 @bindings()
@@ -147,7 +147,7 @@ export class AtomicFacet
   /**
    * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.
    *
-   * Set this property as a stringified JSON array, e.g.,
+   * Set this property as a stringified JSON array, for example:
    * ```html
    *  <atomic-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-facet>
    * ```
@@ -163,7 +163,7 @@ export class AtomicFacet
   /**
    * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.
    *
-   * Set this property as a stringified JSON array, e.g.,
+   * Set this property as a stringified JSON array, for example:
    * ```html
    *  <atomic-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-facet>
    * ```
