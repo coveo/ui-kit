@@ -1,0 +1,58 @@
+<template>
+  <template lwc:if={answers.length}>
+    <div class="header slds-var-p-around_small">
+      <lightning-icon
+        icon-name="utility:sparkles"
+        alternative-text="sparkles"
+        size="xx-small"
+      ></lightning-icon>
+      <span class="slds-text-heading_small slds-var-m-left_small"
+        >Generated Answers</span
+      >
+    </div>
+    <div class="answers-container">
+      <lightning-accordion
+        active-section-name={activeSectionName}
+        allow-multiple-sections-open
+        class="example-accordion"
+      >
+        <template for:each={answers} for:item="answer">
+          <lightning-accordion-section
+            key={answer.answerId}
+            name={answer.prompt}
+            label={answer.prompt}
+          >
+            <c-quantic-generated-answer-content
+              answer-content-format={answer.answerContentFormat}
+              answer={answer.answer}
+              is-streaming={answer.isStreaming}
+            >
+            </c-quantic-generated-answer-content>
+            <div class="slds-var-m-top_small">
+              <c-quantic-source-citations
+                engine-id={engineId}
+                citations={answer.citations}
+              >
+              </c-quantic-source-citations>
+            </div>
+          </lightning-accordion-section>
+        </template>
+      </lightning-accordion>
+    </div>
+    <div class="follow-up-questions slds-var-p-around_small">
+      <div class="slds-var-m-right_x-small slds-flex slds-align-middle slds-grow">
+        <lightning-input
+          variant="label-hidden"
+          type="text"
+          placeholder="Ask follow up question"
+        ></lightning-input>
+      </div>
+      <lightning-button-icon
+        icon-name="utility:send"
+        alternative-text="Ask follow up question"
+        title="Ask follow up question"
+        onclick={handleFollowUpQuestion}
+      ></lightning-button-icon>
+    </div>
+  </template>
+</template>
