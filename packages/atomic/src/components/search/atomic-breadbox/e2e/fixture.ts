@@ -1,13 +1,13 @@
 import {test as base} from '@playwright/test';
-import {AtomicCommerceBreadboxPageObject} from './page-object';
+import {AtomicBreadboxPageObject} from './page-object';
 
 type MyFixtures = {
-  breadbox: AtomicCommerceBreadboxPageObject;
+  breadbox: AtomicBreadboxPageObject;
 };
 
 export const test = base.extend<MyFixtures>({
   breadbox: async ({page}, use) => {
-    await use(new AtomicCommerceBreadboxPageObject(page));
+    await use(new AtomicBreadboxPageObject(page));
   },
 });
 export {expect} from '@playwright/test';

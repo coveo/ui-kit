@@ -83,23 +83,3 @@ export const Default: Story = {
     });
   },
 };
-
-export const WithRatingFacet: Story = {
-  name: 'atomic-breadbox with rating facet',
-  decorators: [
-    (story) => html`
-      ${story()}
-      <div style="margin:20px 0">
-        Select a rating facet value to see the Breadbox component.
-      </div>
-      <div style="display: flex; justify-content: flex-start;">
-        <atomic-rating-facet
-          field="snrating"
-          label="Rating"
-          number-of-intervals="5"
-        >
-        </atomic-rating-facet>
-      </div>
-    `,
-  ],
-};

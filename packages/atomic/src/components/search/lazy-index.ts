@@ -1,5 +1,7 @@
 // Auto-generated file
 export default {
+  'atomic-breadbox': async () =>
+    await import('./atomic-breadbox/atomic-breadbox.js'),
   'atomic-external': async () =>
     await import('./atomic-external/atomic-external.js'),
   'atomic-facet': async () => await import('./atomic-facet/atomic-facet.js'),

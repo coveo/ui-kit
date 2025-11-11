@@ -71,16 +71,6 @@ export namespace Components {
         "updateCollapseFacetsDependingOnFacetsVisibility": (collapseAfter: number, numberOfVisibleFacets: number) => Promise<void>;
     }
     /**
-     * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
-     */
-    interface AtomicBreadbox {
-        /**
-          * This prop allows you to control the display depth of the path by specifying the number of parent or ancestor breadcrumbs links relative to the currently selected value.  If the path size is equal to or less than the pathLimit, all values in the path will be displayed without truncation.  If the path size exceeds the pathLimit, it will truncate the path by replacing the middle values with ellipses ('...').  Minimum: `1`
-          * @defaultValue `3`
-         */
-        "pathLimit": number;
-    }
-    /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
      * An `atomic-category-facet` displays a facet of values in a browsable, hierarchical fashion.
      */
@@ -2279,15 +2269,6 @@ declare global {
         new (): HTMLAtomicAutomaticFacetGeneratorElement;
     };
     /**
-     * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
-     */
-    interface HTMLAtomicBreadboxElement extends Components.AtomicBreadbox, HTMLStencilElement {
-    }
-    var HTMLAtomicBreadboxElement: {
-        prototype: HTMLAtomicBreadboxElement;
-        new (): HTMLAtomicBreadboxElement;
-    };
-    /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
      * An `atomic-category-facet` displays a facet of values in a browsable, hierarchical fashion.
      */
@@ -3429,7 +3410,6 @@ declare global {
     interface HTMLElementTagNameMap {
         "atomic-automatic-facet": HTMLAtomicAutomaticFacetElement;
         "atomic-automatic-facet-generator": HTMLAtomicAutomaticFacetGeneratorElement;
-        "atomic-breadbox": HTMLAtomicBreadboxElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
@@ -3577,16 +3557,6 @@ declare namespace LocalJSX {
           * @defaultValue `8`
          */
         "numberOfValues"?: number;
-    }
-    /**
-     * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
-     */
-    interface AtomicBreadbox {
-        /**
-          * This prop allows you to control the display depth of the path by specifying the number of parent or ancestor breadcrumbs links relative to the currently selected value.  If the path size is equal to or less than the pathLimit, all values in the path will be displayed without truncation.  If the path size exceeds the pathLimit, it will truncate the path by replacing the middle values with ellipses ('...').  Minimum: `1`
-          * @defaultValue `3`
-         */
-        "pathLimit"?: number;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -5662,7 +5632,6 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "atomic-automatic-facet": AtomicAutomaticFacet;
         "atomic-automatic-facet-generator": AtomicAutomaticFacetGenerator;
-        "atomic-breadbox": AtomicBreadbox;
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-citation": AtomicCitation;
         "atomic-color-facet": AtomicColorFacet;
@@ -5797,10 +5766,6 @@ declare module "@stencil/core" {
              * To learn more about the automatic facet generator feature, see: [About the Facet Generator](https://docs.coveo.com/en/n9sd0159/).
              */
             "atomic-automatic-facet-generator": LocalJSX.AtomicAutomaticFacetGenerator & JSXBase.HTMLAttributes<HTMLAtomicAutomaticFacetGeneratorElement>;
-            /**
-             * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
-             */
-            "atomic-breadbox": LocalJSX.AtomicBreadbox & JSXBase.HTMLAttributes<HTMLAtomicBreadboxElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
              * An `atomic-category-facet` displays a facet of values in a browsable, hierarchical fashion.
