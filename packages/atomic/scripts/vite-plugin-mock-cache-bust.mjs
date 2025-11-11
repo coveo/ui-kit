@@ -13,9 +13,18 @@
  * - Ensures each test file gets its own cached version of mocked modules
  *
  * This prevents browser caching issues where mocked modules interfere between tests.
+ *
+ * Debug logging can be enabled by setting DEBUG=vite-plugin-mock-cache-bust:*
  */
 
 import crypto from 'node:crypto';
+import debugFactory from 'debug';
+
+// Create debug instances for different parts of the plugin
+const debugPre = debugFactory('vite-plugin-mock-cache-bust:pre');
+const debugPost = debugFactory('vite-plugin-mock-cache-bust:post');
+const debugExtract = debugFactory('vite-plugin-mock-cache-bust:extract');
+const debugRewrite = debugFactory('vite-plugin-mock-cache-bust:rewrite');
 
 /**
  * Creates the mock cache bust plugin with pre and post phase instances.
@@ -45,24 +54,30 @@ export function mockCacheBustPlugin() {
         return null;
       }
 
+      debugPre(`Processing test file: ${id}`);
+
       try {
         // Parse the code to find vi.mock() and vi.mocked() calls
         const mockedModules = extractMockedModules(code);
+
+        debugPre(
+          `Found ${mockedModules.size} mocked modules:`,
+          Array.from(mockedModules)
+        );
 
         if (mockedModules.size > 0) {
           mockedModulesMap.set(id, mockedModules);
 
           // Generate a unique ID for this test file if not already present
           if (!testFileIds.has(id)) {
-            testFileIds.set(id, generateUniqueId(id));
+            const uniqueId = generateUniqueId(id);
+            testFileIds.set(id, uniqueId);
+            debugPre(`Generated unique ID for ${id}: ${uniqueId}`);
           }
         }
       } catch (error) {
         // If parsing fails, just skip this file
-        console.warn(
-          `[mock-cache-bust:pre] Failed to parse ${id}:`,
-          error.message
-        );
+        debugPre(`Failed to parse ${id}: ${error.message}`);
       }
 
       // Don't modify the code in pre-phase, just collect information
@@ -86,33 +101,41 @@ export function mockCacheBustPlugin() {
         return null;
       }
 
+      debugPost(`Processing test file: ${id}`);
+
       // Check if this test file has any mocked modules
       const mockedModules = mockedModulesMap.get(id);
       if (!mockedModules || mockedModules.size === 0) {
+        debugPost(`No mocked modules found for ${id}, skipping`);
         return null;
       }
 
       // Get the unique ID for this test file
       const uniqueId = testFileIds.get(id);
       if (!uniqueId) {
+        debugPost(`No unique ID found for ${id}, skipping`);
         return null;
       }
+
+      debugPost(
+        `Rewriting imports for ${mockedModules.size} mocked modules with ID: ${uniqueId}`
+      );
 
       try {
         // Rewrite imports to add query parameters for mocked modules
         const transformedCode = rewriteImports(code, mockedModules, uniqueId);
 
         if (transformedCode !== code) {
+          debugPost(`Successfully transformed imports in ${id}`);
           return {
             code: transformedCode,
             map: null,
           };
+        } else {
+          debugPost(`No imports to transform in ${id}`);
         }
       } catch (error) {
-        console.warn(
-          `[mock-cache-bust:post] Failed to transform ${id}:`,
-          error.message
-        );
+        debugPost(`Failed to transform ${id}: ${error.message}`);
       }
 
       return null;
@@ -133,12 +156,14 @@ export function mockCacheBustPlugin() {
  */
 function extractMockedModules(code) {
   const mockedModules = new Set();
+  debugExtract('Analyzing code for mocked modules...');
 
   // Pattern 1: vi.mock('module-path') or vi.mock("module-path")
   // Matches: vi.mock('path', ...) or vi.mock("path", ...)
   const viMockRegex = /vi\.mock\s*\(\s*['"]([^'"]+)['"]/g;
   let match = viMockRegex.exec(code);
   while (match !== null) {
+    debugExtract(`Found vi.mock() call for: ${match[1]}`);
     mockedModules.add(match[1]);
     match = viMockRegex.exec(code);
   }
@@ -146,6 +171,7 @@ function extractMockedModules(code) {
   // Pattern 2: vi.mocked(importName)
   // First, we need to build a map of imports to their module paths
   const importMap = buildImportMap(code);
+  debugExtract('Built import map:', Object.fromEntries(importMap));
 
   // Find all vi.mocked() calls
   const viMockedRegex =
@@ -155,11 +181,19 @@ function extractMockedModules(code) {
     const identifierChain = match[1];
     // Get the root identifier (first part before any dots)
     const rootIdentifier = identifierChain.split('.')[0];
+    debugExtract(
+      `Found vi.mocked() call for identifier: ${identifierChain} (root: ${rootIdentifier})`
+    );
 
     // Look up the module path for this identifier
     const modulePath = importMap.get(rootIdentifier);
     if (modulePath) {
+      debugExtract(`Resolved ${rootIdentifier} to module: ${modulePath}`);
       mockedModules.add(modulePath);
+    } else {
+      debugExtract(
+        `Could not resolve module path for identifier: ${rootIdentifier}`
+      );
     }
     match = viMockedRegex.exec(code);
   }
@@ -245,6 +279,7 @@ function rewriteImports(code, mockedModules, uniqueId) {
         // Add query parameter with unique ID
         const separator = modulePath.includes('?') ? '&' : '?';
         const newModulePath = `${modulePath}${separator}mock=${uniqueId}`;
+        debugRewrite(`Transforming import: ${modulePath} -> ${newModulePath}`);
         return match.replace(modulePath, newModulePath);
       }
       return match;

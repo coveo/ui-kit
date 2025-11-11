@@ -66,7 +66,6 @@ const atomicDefault = defineConfig({
     mockCacheBustPre,
     {
       name: 'force-inline-css-imports',
-      enforce: 'pre',
       transform(code, id) {
         if (id.endsWith('.ts')) {
           return {
@@ -81,10 +80,8 @@ const atomicDefault = defineConfig({
         return null;
       },
     },
-    tailwindcss(),
     {
       name: 'svg-transform',
-      enforce: 'pre',
       transform(code, id) {
         if (id.endsWith('.ts')) {
           const transformedCode = svgTransform(code, id);
@@ -96,6 +93,7 @@ const atomicDefault = defineConfig({
         return null;
       },
     },
+    tailwindcss(),
     mockCacheBustPost,
   ],
   test: {

@@ -209,7 +209,7 @@ jobs:
   lab-test:
     name: "Run lab tests"
     env:
-      DEBUG: "vitest:*;pw:*"
+      DEBUG: vite-plugin-mock-cache-bust:*
     needs: build
     runs-on: ubuntu-latest
     container:
