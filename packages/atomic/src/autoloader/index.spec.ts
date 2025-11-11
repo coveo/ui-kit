@@ -25,22 +25,25 @@ const mockCustomElements = {
   upgrade: vi.fn(),
 };
 
+class XTestComponent extends HTMLElement {}
+class XTestComponentInside extends HTMLElement {}
+
+vi.mock('@/src/components/lazy-index.js', () => ({
+  __esModule: true,
+  default: {
+    'x-test-component': async () => {
+      customElements.define('x-test-component', XTestComponent);
+    },
+    'x-test-component-inside': async () => {
+      customElements.define('x-test-component-inside', XTestComponentInside);
+    },
+  },
+}));
+
 describe('autoloader', () => {
   beforeAll(() => {
     vi.stubGlobal('customElements', mockCustomElements);
     vi.useFakeTimers();
-
-    vi.mock('@/src/components/lazy-index.js', () => ({
-      __esModule: true,
-      default: {
-        'x-test-component': async () => {
-          customElements.define('x-test-component', HTMLElement);
-        },
-        'x-test-component-inside': async () => {
-          customElements.define('x-test-component-inside', HTMLElement);
-        },
-      },
-    }));
   });
 
   afterAll(() => {

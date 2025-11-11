@@ -58,6 +58,7 @@ import {
   type ItemDisplayLayout,
 } from '@/src/components/common/layout/item-layout-utils';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
+import '@/src/components/search/atomic-result-template/atomic-result-template';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -65,7 +66,7 @@ import {ValidatePropsController} from '@/src/components/common/validate-props-co
  * @slot default - The default slot where the result templates are inserted.
  * @part result-list - The element containing every result of a result list
  * @part outline - The element displaying an outline or a divider around a result
- * @part result-list-grid-clickable-container - The parent of the result & the clickable link encompassing it, when results are displayed as a grid
+ * @part result-list-grid-clickable-container - The parent of the result and the clickable link encompassing it, when results are displayed as a grid
  * @part result-list-grid-clickable - The clickable link encompassing the result when results are displayed as a grid
  * @part result-table - The element of the result table containing a heading and a body
  * @part result-table-heading - The element containing the row of cells in the result table's heading
@@ -146,7 +147,7 @@ export class AtomicResultList
   /**
    * The tabs on which the result list can be displayed. This property should not be used at the same time as `tabs-excluded`.
    *
-   * Set this property as a stringified JSON array, e.g.,
+   * Set this property as a stringified JSON array, for example:
    * ```html
    *  <atomic-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-result-list snippet>
    * ```
@@ -162,7 +163,7 @@ export class AtomicResultList
   /**
    * The tabs on which this result list must not be displayed. This property should not be used at the same time as `tabs-included`.
    *
-   * Set this property as a stringified JSON array, e.g.,
+   * Set this property as a stringified JSON array, for example:
    * ```html
    *  <atomic-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-result-list>
    * ```
@@ -209,7 +210,7 @@ export class AtomicResultList
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
-   * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
+   * You can use this function while working with web frameworks that don't use plain HTML syntax such as React, Angular, or Vue.
    *
    * Do not use this method if you integrate Atomic in a plain HTML deployment.
    *

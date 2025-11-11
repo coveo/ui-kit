@@ -8,9 +8,9 @@
       href={hrefValue}
       target="_blank"
       rel="noopener"
-      onmouseenter={handleMouseEnter}
-      onmouseleave={handleMouseLeave}
-      onclick={handleClick} 
+      onmouseenter={handleCitationMouseEnter}
+      onmouseleave={handleCitationMouseLeave}
+      onclick={handleClick}
     >
       <p
         class="citation__title slds-m-left_x-small slds-truncate slds-has-flexi-truncate"
@@ -18,7 +18,13 @@
         {citationTitle}
       </p>
     </a>
-    <c-quantic-tooltip light-theme class="slds-show_medium" target={template.host}>
+    <c-quantic-tooltip
+      light-theme
+      class="slds-show_medium"
+      target={template.host}
+      onmouseenter={handleTooltipMouseEnter}
+      onmouseleave={handleTooltipMouseLeave}
+    >
       <div class="citation__tooltip" slot="content">
         <div data-testid="citation__tooltip-uri" class="slds-text-body_small slds-text-color_weak slds-truncate slds-var-p-vertical_xxx-small">{hrefValue}</div>
         <div data-testid="citation__tooltip-title" class="slds-text-title_bold slds-var-p-vertical_xx-small">{citationTitle}</div>

@@ -21,7 +21,7 @@ export const RecommendationProvider = buildProviderWithDefinition(
   _recommendationEngineDefinition
 );
 
-// Used for components that don’t require triggering a search or product fetch (e.g., cart pages, standalone search box)
+// Used for components that don’t require triggering a search or product fetch (for example, cart pages, standalone search box)
 export const StandaloneProvider = buildProviderWithDefinition(
   _standaloneEngineDefinition
 );

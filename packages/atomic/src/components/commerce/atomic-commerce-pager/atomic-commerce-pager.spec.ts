@@ -3,7 +3,6 @@ import {
   buildSearch,
   type PaginationState,
 } from '@coveo/headless/commerce';
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {
@@ -15,6 +14,7 @@ import {
   test,
   vi,
 } from 'vitest';
+import {page} from 'vitest/browser';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakePager} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/pager-subcontroller';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
@@ -383,7 +383,7 @@ describe('atomic-commerce-pager', () => {
         buttons[buttons.length - 1],
       ];
 
-      await element['handleFocus'](buttons, firstPageButton, lastPageButton);
+      await element.handleFocus(buttons, firstPageButton, lastPageButton);
 
       await expectFocusOnButton(
         locators.previous.element(),
@@ -399,7 +399,7 @@ describe('atomic-commerce-pager', () => {
         buttons[buttons.length - 1],
       ];
 
-      await element['handleFocus'](buttons, lastPageButton, firstPageButton);
+      await element.handleFocus(buttons, lastPageButton, firstPageButton);
 
       await expectFocusOnButton(
         locators.next.element(),
@@ -412,7 +412,7 @@ describe('atomic-commerce-pager', () => {
 
       const [currentButton, nextButton] = buttons;
 
-      await element['handleFocus'](buttons, currentButton, nextButton);
+      await element.handleFocus(buttons, currentButton, nextButton);
 
       await expectFocusOnButton(
         locators.page2.element(),

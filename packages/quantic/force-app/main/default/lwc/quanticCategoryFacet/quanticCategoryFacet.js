@@ -42,7 +42,7 @@ import {api, LightningElement, track} from 'lwc';
  */
 
 /**
- * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criterion (e.g., number of occurrences).
+ * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criterion (for example, number of occurrences).
  * A `QuanticCategoryFacet` displays field values in a browsable, hierarchical fashion.
  * Custom captions can be provided by adding caption provider components to the `captions` named slot.
  * See [Create a custom caption provider component for Quantic facets](https://docs.coveo.com/en/quantic/latest/usage/create-custom-caption-provider-component/).

@@ -24,7 +24,7 @@ import type {AtomicProduct} from '../atomic-product/atomic-product';
 const AMOUNT_OF_VISIBLE_CHILDREN = 5;
 
 /**
- * The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
+ * The `atomic-product-children` component renders a section that allows the user to select a nested product (for example, a color variant of a given product).
  *
  * This component leverages the [product grouping](https://docs.coveo.com/en/l78i2152/) feature.
  *

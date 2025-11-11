@@ -14,9 +14,9 @@ import {
   type SearchSummaryState,
   type Summary,
 } from '@coveo/headless/commerce';
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {page} from 'vitest/browser';
 import {createAppLoadedListener} from '@/src/components/common/interface/store';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeCategoryFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/category-facet-controller';

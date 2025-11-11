@@ -66,7 +66,7 @@ const initialStateSchema = new Schema({
 /**
  * The `Pager` controller allows to navigate through the different result pages.
  *
- * [pager.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/pager/pager.fn.tsx)
+ * [pager.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/pager/pager.fn.tsx)
  *
  * @group Controllers
  * @category Pager

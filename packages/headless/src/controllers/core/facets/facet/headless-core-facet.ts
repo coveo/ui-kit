@@ -68,14 +68,14 @@ interface CoreFacetProps {
 
 /**
  * The `Facet` controller allows you to create a search interface component that the end user
- * can use to refine a query by selecting filters based on item metadata (i.e., field values).
+ * can use to refine a query by selecting filters based on item metadata (that is, field values).
  * If you have enabled a [Dynamic Navigation Experience (DNE)](https://docs.coveo.com/en/m2na0333/)
  * model, the `Facet` controller automatically reorders facet values according to the user query.
  *
  * Examples:
- * - [facet.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/facet/facet.fn.tsx)
- * - [facet-search.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/facet/facet-search.tsx)
- * - [facet.class.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/facet/facet.class.tsx)
+ * - [facet.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/facet/facet.fn.tsx)
+ * - [facet-search.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/facet/facet-search.tsx)
+ * - [facet.class.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/facet/facet.class.tsx)
  *
  * @group Controllers
  * @category Facet
