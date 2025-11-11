@@ -7,6 +7,7 @@ import {playwright} from '@vitest/browser-playwright';
 import {configDefaults, defineConfig} from 'vitest/config';
 import packageJsonHeadless from '../headless/package.json' with {type: 'json'};
 import packageJson from './package.json' with {type: 'json'};
+import {mockCacheBustPlugin} from './scripts/vite-plugin-mock-cache-bust.mjs';
 
 const port = 63315;
 const resourceUrl = `http://localhost:${port}/`;
@@ -38,6 +39,8 @@ function replace() {
   });
 }
 
+const [mockCacheBustPre, mockCacheBustPost] = mockCacheBustPlugin();
+
 const atomicDefault = defineConfig({
   name: 'atomic-default',
   server: {
@@ -60,6 +63,7 @@ const atomicDefault = defineConfig({
   },
   plugins: [
     replace(),
+    mockCacheBustPre,
     {
       name: 'force-inline-css-imports',
       enforce: 'pre',
@@ -92,11 +96,12 @@ const atomicDefault = defineConfig({
         return null;
       },
     },
+    mockCacheBustPost,
   ],
   test: {
     name: 'atomic-default',
     css: true,
-    include: ['src/**/*.spec.ts', 'scripts/stencil-proxy.spec.mjs'],
+    include: ['src/**/*.spec.ts', 'scripts/**/*.spec.mjs'],
     exclude: [
       ...configDefaults.exclude,
       'src/**/initialization-utils.spec.ts',
