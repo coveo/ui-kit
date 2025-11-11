@@ -4,6 +4,7 @@ import {
   buildProductListing,
   buildSearch,
   type CommerceEngineConfiguration,
+  type ContextActionCreators,
   getSampleCommerceEngineConfiguration,
   type LogLevel,
   loadConfigurationActions,
@@ -18,7 +19,16 @@ import {customElement, state} from 'lit/decorators.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {when} from 'lit/directives/when.js';
 import {within} from 'shadow-dom-testing-library';
-import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  type MockedFunction,
+  type MockInstance,
+  vi,
+} from 'vitest';
 import {InterfaceController} from '@/src/components/common/interface/interface-controller';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
@@ -183,6 +193,10 @@ describe('atomic-commerce-interface', () => {
     vi.mocked(loadQueryActions).mockReturnValue({
       updateQuery: vi.fn(),
     });
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
   describe('#constructor (when created)', () => {
@@ -1112,8 +1126,10 @@ describe('atomic-commerce-interface', () => {
     describe('when the engine has been created and the context is defined', () => {
       let element: AtomicCommerceInterface;
       let engine: ReturnType<typeof buildFakeCommerceEngine>;
-      let onLanguageChangeSpy: ReturnType<typeof vi.spyOn>;
-      let setContextMock: ReturnType<typeof vi.fn>;
+      let onLanguageChangeSpy: MockedFunction<
+        typeof InterfaceController.prototype.onLanguageChange
+      >;
+      let setContextMock: MockedFunction<ContextActionCreators['setContext']>;
 
       beforeEach(async () => {
         element = await setupElement();
@@ -1122,13 +1138,15 @@ describe('atomic-commerce-interface', () => {
         await element.initializeWithEngine(engine);
 
         setContextMock = vi.fn();
-        vi.mocked(loadContextActions, {partial: true}).mockReturnValue({
-          setContext: setContextMock,
-        });
         onLanguageChangeSpy = vi.spyOn(
           InterfaceController.prototype,
           'onLanguageChange'
         );
+        onLanguageChangeSpy.mockClear();
+
+        vi.mocked(loadContextActions).mockImplementation(() => ({
+          setContext: setContextMock,
+        }));
       });
 
       it('should call InterfaceController.onLanguageChange when the language parameter is provided', async () => {
@@ -1192,6 +1210,7 @@ describe('atomic-commerce-interface', () => {
   // #toggleAnalytics
   it('should call InterfaceController.onAnalyticsChange when the analytics attribute changes', async () => {
     const element = await setupElement();
+    await element.initialize(commerceEngineConfig);
     const onAnalyticsChangeSpy = vi.spyOn(
       InterfaceController.prototype,
       'onAnalyticsChange'
@@ -1288,12 +1307,14 @@ describe('atomic-commerce-interface', () => {
       });
 
       it('should call InterfaceController.onLanguageChange with no argument', async () => {
-        const element = await setupElement({language: 'en'});
-        await element.initialize(commerceEngineConfig);
         const onLanguageChangeSpy = vi.spyOn(
           InterfaceController.prototype,
           'onLanguageChange'
         );
+        const element = await setupElement({language: 'en'});
+        await element.initialize(commerceEngineConfig);
+        await element.updateComplete;
+        onLanguageChangeSpy.mockClear();
 
         element.language = 'fr';
         await element.updateComplete;

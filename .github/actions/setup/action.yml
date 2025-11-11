@@ -1,12 +1,13 @@
+#region Metadata
 name: 'Setup & build'
 description: 'Setup node, install dependencies & build'
 inputs:
   save-cache:
-    description: 'Whether to save the cache.'
+    description: 'Whether to save the turbo cache. Note: pnpm is cached via setup-node.'
     required: false
     default: 'false'
   load-cache:
-    description: 'Whether to load the cache.'
+    description: 'Whether to load the turbo cache. Note: pnpm is cached via setup-node.'
     required: false
     default: 'true'
   cache-prefix:
@@ -17,34 +18,45 @@ inputs:
     description: 'Skip the build step'
     required: false
     default: 'false'
+#endregion
 runs:
   using: composite
   steps:
+#region PNPM
+    # Note: pnpm dependencies are cached automatically by setup-node (cache: 'pnpm')
+    # The load-cache/save-cache inputs only control turbo cache artifacts
+    - name: Install pnpm
+      uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 #v4.0.0
+      with:
+        run_install: false
     - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
       with:
-        registry-url: 'https://registry.npmjs.org'
         node-version-file: '.nvmrc'
-        cache: 'npm'
-    - name: Install npm
-      run: npm i -g npm@11.6.0
+        registry-url: 'https://registry.npmjs.org'
+        cache: 'pnpm'
+    - run: pnpm install --frozen-lockfile --prefer-offline
       shell: bash
+#endregion
+#region Caches
+    # Cypress cache
     - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
       with:
         path: ~/.cache/Cypress
         key: ${{ runner.os }}-${{ inputs.cache-prefix }}-cy-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-${{ inputs.cache-prefix }}-cy-
+    # Turbo cache (controlled by load-cache input)
     - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
       if: inputs.save-cache != 'true' && inputs.load-cache == 'true'
       with:
         name: ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo
         path: .turbo
-    - if: steps.npm-cache.outputs.cache-hit != 'true'
-      run: npm ci
-      shell: bash
-    - run: npm run build
+#endregion
+#region Build
+    - run: pnpm run build
       if: inputs.skip-build != 'true'
       shell: bash
+    # Save turbo cache (controlled by save-cache input)
     - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       if: inputs.save-cache == 'true'
       with:
@@ -53,3 +65,4 @@ runs:
         include-hidden-files: true
         retention-days: 1
         if-no-files-found: error
+#endregion

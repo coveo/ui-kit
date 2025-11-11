@@ -86,10 +86,10 @@ export async function commitChanges(commitMessage, octokit) {
 }
 
 /**
- * Run `npm run pre-commit`
+ * Run `pnpm run pre-commit`
  */
 function runPrecommit() {
-  spawnSync(appendCmdIfWindows`npm`, ['run', 'pre-commit']);
+  spawnSync(appendCmdIfWindows('pnpm'), ['run', 'pre-commit']);
 }
 
 /**

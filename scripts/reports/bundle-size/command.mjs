@@ -4,7 +4,7 @@ import {execute} from '../../exec.mjs';
 
 async function setup() {
   console.log('setting up repositories');
-  await execute('npm', ['ci']);
+  await execute('pnpm', ['install', '--frozen-lockfile']);
 }
 
 async function buildFiles() {

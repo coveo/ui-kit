@@ -386,6 +386,13 @@ describe('knowledge-generated-answer', () => {
       question: 'this est une question',
     };
     generatedAnswer.sendFeedback(feedback);
+
+    expect(
+      generatedAnswerAnalyticsClient.logGeneratedAnswerFeedback
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      generatedAnswerAnalyticsClient.logGeneratedAnswerFeedback
+    ).toHaveBeenCalledWith(feedback);
     expect(answerEvaluation.endpoints.post.initiate).toHaveBeenCalledTimes(1);
     expect(answerEvaluation.endpoints.post.initiate).toHaveBeenCalledWith(
       expectedArgs

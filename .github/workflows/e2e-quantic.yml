@@ -1,5 +1,11 @@
 on:
   workflow_call:
+    inputs:
+      event_name:
+        description: 'The event name that triggered the workflow'
+        required: false
+        type: string
+        default: 'pull_request'
     secrets:
       SFDX_AUTH_CLIENT_ID:
         required: true
@@ -9,6 +15,10 @@ jobs:
   e2e-quantic-setup:
     name: 'Setup e2e tests on Quantic'
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: ${{ inputs.event_name == 'merge_group' }}
+      matrix:
+        lws-status: ['enabled', 'disabled']
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -22,6 +32,7 @@ jobs:
         with:
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+          lws-status: ${{ matrix.lws-status }}
   post-scratch-org-links-to-pr:
     name: 'Post Scratch Org Links to PR'
     needs: e2e-quantic-setup
@@ -41,10 +52,10 @@ jobs:
     needs: e2e-quantic-setup
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.54.1-noble
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
       options: --user 1001
     strategy:
-      fail-fast: false
+      fail-fast: ${{ inputs.event_name == 'merge_group' }}
       matrix:
         shardIndex: [1, 2, 3, 4]
         shardTotal: [4]
@@ -96,7 +107,7 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
       - run: |
-          npx --no-install ts-node scripts/build/delete-org.ts --scratch-org-def-path=./config/lws-disabled-scratch-def.json
-          npx --no-install ts-node scripts/build/delete-org.ts --scratch-org-def-path=./config/lws-enabled-scratch-def.json
+          pnpm exec ts-node scripts/build/delete-org.ts --scratch-org-def-path=./config/lws-disabled-scratch-def.json
+          pnpm exec ts-node scripts/build/delete-org.ts --scratch-org-def-path=./config/lws-enabled-scratch-def.json
         shell: bash
         working-directory: ./packages/quantic

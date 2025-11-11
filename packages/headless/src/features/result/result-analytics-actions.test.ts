@@ -23,9 +23,9 @@ describe('result analytics actions', () => {
     const emit = vi.fn();
 
     beforeEach(() => {
-      vi.mocked(CoveoSearchPageClient).mockReturnValue({
-        makeDocumentOpen,
-      } as unknown as CoveoSearchPageClient);
+      vi.mocked(CoveoSearchPageClient).mockImplementation(function () {
+        this.makeDocumentOpen = makeDocumentOpen;
+      });
       vi.mocked(createRelay).mockReturnValue(buildMockRelay({emit}));
     });
 

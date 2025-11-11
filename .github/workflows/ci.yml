@@ -33,14 +33,11 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
       - run: git branch main origin/main
         if: ${{ github.event_name != 'pull_request' }}
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: ./.github/actions/setup
         with:
-          node-version-file: ".nvmrc"
-      - name: Install npm
-        run: npm i -g npm@11.6.0
-        shell: bash
-      - run: npm ci
-      - run: npm run pr:report
+          skip-build: "true"
+          load-cache: "false"
+      - run: pnpm run pr:report
         env:
           GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
   build-windows:
@@ -57,19 +54,9 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           ref: ${{ github.head_ref }}
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: ./.github/actions/setup
         with:
-          registry-url: "https://registry.npmjs.org"
-          node-version-file: ".nvmrc"
-      - name: Install npm
-        run: npm i -g npm@11.6.0
-        shell: bash
-      - name: Install dependencies
-        run: npm ci
-        shell: bash
-      - name: Build packages
-        run: npm run build
-        shell: bash
+          load-cache: "false"
   build-missing:
     name: "Build & commit missing generated files"
     runs-on: ubuntu-latest
@@ -105,7 +92,7 @@ jobs:
           repositories: "ui-kit"
       - name: Commit files
         if: ${{ steps.check-changes.outputs.has_changes == 'true' && github.event_name == 'pull_request' }}
-        run: npm run-script -w=@coveo/ci add-generated-files
+        run: pnpm --filter @coveo/ci add-generated-files
         env:
           GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
           DEBUG: "*"
@@ -165,7 +152,7 @@ jobs:
       - name: Get affected projects
         id: set
         run: |
-          AFFECTED=$(npx turbo build --affected --dry-run 2>/dev/null \
+          AFFECTED=$(pnpm exec turbo build --affected --dry-run 2>/dev/null \
           | awk '/^@(coveo|samples)/ && !/#/ {print $1}' \
           | tr '\n' ' ')
           echo "projects=$AFFECTED" >> "$GITHUB_OUTPUT"
@@ -184,7 +171,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - name: Run knip
-        run: npm run knip
+        run: pnpm run knip
   cdn-checks:
     name: "CDN Checks"
     needs: [affected]
@@ -193,7 +180,7 @@ jobs:
       DEPLOYMENT_ENVIRONMENT: CDN
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.54.1-noble
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -218,15 +205,15 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - run: npm run lint:check
+      - run: pnpm run lint:check
   unit-test:
     name: "Run unit tests"
     needs: build
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.54.1-noble
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
       options: --user 1001
-    timeout-minutes: 15
+    timeout-minutes: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'long-test') && 120 || 15 }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -242,7 +229,7 @@ jobs:
       - run: git branch main origin/main
         if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
-      - run: npx turbo test --affected
+      - run: pnpm exec turbo test --affected
   package-compatibility:
     name: "Verify compatibility of packages"
     needs: build
@@ -255,7 +242,7 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - run: npm run package-compatibility
+      - run: pnpm run package-compatibility
   typedoc:
     name: "Build typedoc"
     needs: affected
@@ -270,10 +257,10 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - name: "Build headless typedoc"
-        run: npm run build:typedoc
+        run: pnpm run build:typedoc
         working-directory: packages/headless
       - name: "Build headless-react typedoc"
-        run: npm run build:typedoc
+        run: pnpm run build:typedoc
         working-directory: packages/headless-react
   e2e-atomic-csp-test:
     name: "Run e2e tests on Atomic CSP"
@@ -314,7 +301,6 @@ jobs:
       - run: git branch main origin/main
         if: ${{ github.event_name != 'pull_request' }}
       - uses: ./.github/actions/setup
-      - run: npm run build
       - name: Identify E2E Test Files to run
         id: determine-tests
         run: |
@@ -336,10 +322,10 @@ jobs:
     if: ${{ needs.prepare-playwright-atomic.outputs.shardIndex != '[0]' && needs.prepare-playwright-atomic.outputs.shardTotal != '[0]' }}
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.54.1-noble
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
       options: --user 1001
     strategy:
-      fail-fast: false
+      fail-fast: ${{ github.event_name == 'merge_group' }}
       matrix:
         shardIndex: ${{ fromJson(needs.prepare-playwright-atomic.outputs.shardIndex) }}
         shardTotal: ${{ fromJson(needs.prepare-playwright-atomic.outputs.shardTotal) }}
@@ -351,7 +337,6 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - run: npm run build
       - uses: ./.github/actions/playwright-atomic
         with:
           shardIndex: ${{ matrix.shardIndex }}
@@ -372,7 +357,6 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - run: npm run build
       - name: Merge Playwright reports
         uses: ./.github/actions/merge-playwright-reports
         with:
@@ -400,7 +384,7 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.54.1-noble
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -410,7 +394,6 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - run: npm run build
       - uses: ./.github/actions/playwright-atomic-theming
   cypress-atomic-test:
     name: "Run Cypress tests on Atomic"
@@ -418,7 +401,7 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
+      fail-fast: ${{ github.event_name == 'merge_group' }}
       matrix:
         containers:
           [
@@ -480,13 +463,39 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/cypress-atomic-screenshots
+  storybook-atomic:
+    name: "Run Storybook tests"
+    needs: build
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --user 1001
+    strategy:
+      fail-fast: ${{ github.event_name == 'merge_group' }}
+      matrix:
+        shardIndex: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        shardTotal: [10]
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
+      - run: git branch main origin/main
+      - uses: ./.github/actions/setup
+      - run: npm run test:storybook -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        working-directory: packages/atomic
   playwright-atomic-search-commerce-react-test:
     name: "Run e2e tests on Atomic Search Commerce React"
     needs: affected
     if: contains(needs.affected.outputs.projects, '@samples/atomic-search-commerce-react')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.54.1-noble
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -517,7 +526,7 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@samples/atomic-search-commerce-angular')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.54.1-noble
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -548,7 +557,7 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@coveo/atomic-hosted-page')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.54.1-noble
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -558,7 +567,6 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - run: npm run build
       - uses: ./.github/actions/playwright-atomic-hosted-pages
   playwright-headless-ssr-commerce-nextjs-test:
     name: "Run e2e tests on Headless SSR Commerce NextJS"
@@ -566,7 +574,7 @@ jobs:
     if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-commerce-nextjs')
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.54.1-noble
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
       options: --user 1001
     steps:
       - name: Harden Runner
@@ -576,7 +584,6 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - run: npm run build
       - uses: ./.github/actions/playwright-headless-ssr-commerce-nextjs
   cypress-atomic-insight-panel-test:
     name: "Run e2e tests on Atomic insight panel"
@@ -623,8 +630,10 @@ jobs:
   e2e-quantic:
     name: "Run Quantic E2E tests"
     needs: affected
-    if: contains(needs.affected.outputs.projects, '@coveo/quantic')
+    if: contains(needs.affected.outputs.projects, '@coveo/quantic') && !(github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'skip-quantic'))
     uses: ./.github/workflows/e2e-quantic.yml
+    with:
+      event_name: ${{ github.event_name }}
     secrets:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
       SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
@@ -688,15 +697,10 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
       - run: git branch main origin/main
         if: ${{ github.event_name != 'pull_request' }}
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: ./.github/actions/setup
         with:
-          registry-url: "https://registry.npmjs.org"
-          node-version-file: ".nvmrc"
-      - name: Install npm
-        run: npm i -g npm@11.6.0
-        shell: bash
-      - run: npm ci
-        shell: bash
+          skip-build: "true"
+          load-cache: "false"
       - name: Call ui-kit-cd for dev
         run: node ./scripts/deploy/trigger-ui-kit-cd-pr.mjs
         env:
@@ -842,8 +846,10 @@ jobs:
   #       env:
   #         IS_PRERELEASE: "true"
   prerelease-cdn-merge:
-    if: ${{ !cancelled() && needs.is-valid.result == 'success' && github.event_name == 'merge_group' }}
-    needs: is-valid
+    if: ${{ !cancelled() && needs.is-valid.result == 'success' && needs.build-cdn.result == 'success' && github.event_name == 'merge_group' }}
+    needs: 
+      - is-valid
+      - build-cdn
     name: Pre-release CDN in dev (Merge group)
     environment: "Prerelease (CDN)"
     runs-on: ubuntu-latest
@@ -859,15 +865,10 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
       - run: git branch main origin/main
         if: ${{ github.event_name != 'pull_request' }}
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: ./.github/actions/setup
         with:
-          registry-url: "https://registry.npmjs.org"
-          node-version-file: ".nvmrc"
-      - name: Install npm
-        run: npm i -g npm@11.6.0
-        shell: bash
-      - run: npm ci
-        shell: bash
+          skip-build: "true"
+          load-cache: "false"
       - name: Call ui-kit-cd for dev
         run: node ./scripts/deploy/trigger-ui-kit-cd-dev.mjs
         env:

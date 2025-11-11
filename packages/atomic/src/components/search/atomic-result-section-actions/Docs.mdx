@@ -1,0 +1,104 @@
+import { Meta, Title, Description, Canvas, Subtitle, Story } from '@storybook/addon-docs/blocks';
+import * as ResultSectionActionsStories from './atomic-result-section-actions.new.stories';
+import * as ResultSectionBadgesStories from '../atomic-result-section-badges/atomic-result-section-badges.new.stories';
+import { CanvasWithGithub } from '../../../../storybook-utils/documentation/canvas-with-github';
+import * as ResultSectionBottomMetadataStories from '../atomic-result-section-bottom-metadata/atomic-result-section-bottom-metadata.new.stories';
+import * as ResultSectionChildrenStories from '../atomic-result-section-children/atomic-result-section-children.new.stories';
+import * as ResultSectionExcerptStories from '../atomic-result-section-excerpt/atomic-result-section-excerpt.new.stories';
+import * as ResultSectionEmphasizedStories from '../atomic-result-section-emphasized/atomic-result-section-emphasized.new.stories';
+import * as ResultSectionTitleMetadataStories from '../atomic-result-section-title-metadata/atomic-result-section-title-metadata.new.stories';
+import * as ResultSectionTitleStories from '../atomic-result-section-title/atomic-result-section-title.new.stories';
+import * as ResultSectionVisualStories from '../atomic-result-section-visual/atomic-result-section-visual.new.stories';
+
+<Meta of={ResultSectionActionsStories} />
+
+# Result Sections
+
+<Subtitle >
+The result section components are the building blocks for creating result templates in search interfaces. Each section handles a specific aspect of result presentation, from visual elements to metadata and actions.
+</Subtitle>
+
+
+## Usage 
+These components are typically used within an `atomic-result-template` to create cohesive result displays.
+They work together to present a complete result view, including images, descriptions, metadata, and actions.
+
+```html
+<atomic-result-template>
+  <template>
+    <atomic-result-section-badges>
+      <span class="badge">NEW</span>
+    </atomic-result-section-badges>
+    
+    <atomic-result-section-visual>
+      <atomic-result-image field="thumbnailurl"></atomic-result-image>
+    </atomic-result-section-visual>
+    
+    <atomic-result-section-title>
+      <atomic-result-text field="title"></atomic-result-text>
+    </atomic-result-section-title>
+    
+    <atomic-result-section-title-metadata>
+      <atomic-result-text field="author"></atomic-result-text>
+      <atomic-result-text field="source"></atomic-result-text>
+    </atomic-result-section-title-metadata>
+    
+    <atomic-result-section-excerpt>
+      <atomic-result-text field="excerpt"></atomic-result-text>
+    </atomic-result-section-excerpt>
+    
+    <atomic-result-section-actions>
+      <button class="more-details">Show more details</button>
+    </atomic-result-section-actions>
+  </template>
+</atomic-result-template>
+```
+
+## Components 
+
+### atomic-result-section-badges
+<CanvasWithGithub of={ResultSectionBadgesStories.Default}  
+  githubPath="search/atomic-result-section-badges/atomic-result-section-badges.ts"
+/>
+
+### atomic-result-section-actions
+<CanvasWithGithub of={ResultSectionActionsStories.Default}  
+  githubPath="search/atomic-result-section-actions/atomic-result-section-actions.ts"
+/>
+
+### atomic-result-section-bottom-metadata
+<CanvasWithGithub of={ResultSectionBottomMetadataStories.Default}  
+  githubPath="search/atomic-result-section-bottom-metadata/atomic-result-section-bottom-metadata.ts"
+/>
+
+### atomic-result-section-children
+<CanvasWithGithub of={ResultSectionChildrenStories.Default}  
+  githubPath="search/atomic-result-section-children/atomic-result-section-children.ts"
+/>
+
+### atomic-result-section-description
+<CanvasWithGithub of={ResultSectionExcerptStories.Default}  
+  githubPath="search/atomic-result-section-description/atomic-result-section-description.ts"
+/>
+
+### atomic-result-section-emphasized
+<CanvasWithGithub of={ResultSectionEmphasizedStories.Default}  
+  githubPath="search/atomic-result-section-emphasized/atomic-result-section-emphasized.ts"
+/>
+
+### atomic-result-section-metadata
+<CanvasWithGithub of={ResultSectionTitleMetadataStories.Default}  
+  githubPath="search/atomic-result-section-metadata/atomic-result-section-metadata.ts"
+/>
+
+### atomic-result-section-name
+<CanvasWithGithub of={ResultSectionTitleStories.Default}  
+  githubPath="search/atomic-result-section-name/atomic-result-section-name.ts"
+/>
+
+### atomic-result-section-visual
+<CanvasWithGithub of={ResultSectionVisualStories.Default}  
+  githubPath="search/atomic-result-section-visual/atomic-result-section-visual.ts"
+/>
+
+

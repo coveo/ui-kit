@@ -1,7 +1,15 @@
 import {buildInstantProducts} from '@coveo/headless/commerce';
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {
+  beforeEach,
+  describe,
+  expect,
+  it,
+  type MockedObject,
+  type MockInstance,
+  vi,
+} from 'vitest';
+import {page} from 'vitest/browser';
 import type {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
@@ -13,13 +21,17 @@ import {
   renderInAtomicCommerceSearchBox,
 } from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-search-box-fixture';
 import {buildFakeInstantProducts} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/instant-products-controller';
+import {mockConsole} from '@/vitest-utils/testing-helpers/testing-utils/mock-console';
 import {AtomicCommerceSearchBoxInstantProducts} from './atomic-commerce-search-box-instant-products';
 import './atomic-commerce-search-box-instant-products';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
 describe('atomic-commerce-search-box-instant-products', () => {
+  let mockedConsole: MockedObject<Console>;
+
   beforeEach(() => {
+    mockedConsole = mockConsole();
     vi.mocked(buildInstantProducts).mockReturnValue(buildFakeInstantProducts());
   });
   const renderElements = async (bindings: Record<string, unknown> = {}) => {
@@ -37,18 +49,16 @@ describe('atomic-commerce-search-box-instant-products', () => {
   };
 
   describe('when outside of a search box', () => {
-    let consoleErrorSpy: MockInstance;
     let element: AtomicCommerceSearchBoxInstantProducts;
 
     beforeEach(async () => {
-      consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       element = await fixture<AtomicCommerceSearchBoxInstantProducts>(
         html`<atomic-commerce-search-box-instant-products></atomic-commerce-search-box-instant-products>`
       );
     });
 
     it('should log an error in the console', async () => {
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect(mockedConsole.error).toHaveBeenCalledWith(
         new Error(
           'The "atomic-commerce-search-box-instant-products" component was not handled, as it is not a child of the following elements: atomic-commerce-search-box'
         ),
@@ -108,10 +118,6 @@ describe('atomic-commerce-search-box-instant-products', () => {
   });
 
   describe('#initialize', () => {
-    beforeEach(() => {
-      vi.spyOn(console, 'warn').mockImplementation(() => {});
-    });
-
     it('should create an instant products controller', async () => {
       const {element} = await renderElements();
 

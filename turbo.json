@@ -90,7 +90,8 @@
   },
   "globalDependencies": [
     "package.json",
-    "package-lock.json",
+    "pnpm-lock.yaml",
+    "pnpm-workspace.yaml",
     ".npmrc",
     "tsconfig.json",
     "biome.jsonc",

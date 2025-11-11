@@ -105,7 +105,6 @@ const legacySearchEngine = buildSearchEngine({
   },
 });
 
-// biome-ignore lint/suspicious/noExportsInTest: <>
 export function assertNextEqualsLegacy(
   call: MockInstance,
   excludedProperties: string[] = excludedBaseProperties
@@ -115,7 +114,6 @@ export function assertNextEqualsLegacy(
   );
 }
 
-// biome-ignore lint/suspicious/noExportsInTest: <>
 export function assertActionCause(
   call: MockInstance,
   callIndex: number,
@@ -131,7 +129,6 @@ export function assertActionCause(
   );
 }
 
-// biome-ignore lint/suspicious/noExportsInTest: <>
 export function extractAndExcludeProperties(
   call: MockInstance,
   callIndex: number,
@@ -156,7 +153,6 @@ function excludeProperties(
   return result;
 }
 
-// biome-ignore lint/suspicious/noExportsInTest: <>
 export const excludedBaseProperties = [
   'clientId',
   'capture',

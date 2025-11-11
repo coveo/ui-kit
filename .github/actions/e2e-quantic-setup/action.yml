@@ -7,13 +7,15 @@ inputs:
   jwtkey:
     description: The SFDX JWT key contents
     required: true
+  lws-status:
+    description: 'Set to "enabled" to deploy the LWS enabled community, and "disabled to deploy the LWS disabled community'
+    required: true
 runs:
   using: composite
   steps:
     - run: |
         echo "${{ inputs.jwtkey }}" > server.key
-        npx --no-install ts-node scripts/build/deploy-community.ts --ci --scratch-org-def-path=./config/lws-disabled-scratch-def.json
-        npx --no-install ts-node scripts/build/deploy-community.ts --ci --scratch-org-def-path=./config/lws-enabled-scratch-def.json
+        pnpm exec ts-node scripts/build/deploy-community.ts --ci --scratch-org-def-path=./config/lws-${{ inputs.lws-status }}-scratch-def.json
         rm server.key
       shell: bash
       working-directory: ./packages/quantic
@@ -25,7 +27,7 @@ runs:
         SFDX_AUTH_JWT_INSTANCE_URL: https://login.salesforce.com
     - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
-        name: quantic-playwright-env
+        name: quantic-playwright-env-lws-${{ inputs.lws-status }}
         path: packages/quantic/.env
         include-hidden-files: true
         retention-days: 1

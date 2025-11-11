@@ -145,7 +145,11 @@ const getFieldTableColumnsFromRenderingFunction = (
 
 const getFieldTableColumnsFromHTMLTemplate = (
   props: Pick<TableLayoutProps, 'templateContentForFirstItem'>
-): Element[] =>
-  Array.from(
+): Element[] => {
+  if (!props.templateContentForFirstItem) {
+    return [];
+  }
+  return Array.from(
     props.templateContentForFirstItem.querySelectorAll(tableElementTagName)
   );
+};

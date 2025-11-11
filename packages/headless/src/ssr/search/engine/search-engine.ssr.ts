@@ -160,18 +160,17 @@ export function defineSearchEngine<
 
   const fetchStaticState: FetchStaticStateFunction = composeFunction(
     async (...params: FetchStaticStateParameters) => {
+      engineOptions.configuration.preprocessRequest =
+        augmentPreprocessRequestWithForwardedFor({
+          preprocessRequest: engineOptions.configuration.preprocessRequest,
+          navigatorContextProvider: engineOptions.navigatorContextProvider,
+          loggerOptions: engineOptions.loggerOptions,
+        });
+
       const buildResult = await build(...params);
       const staticState = await fetchStaticState.fromBuildResult({
         buildResult,
       });
-
-      options.configuration.preprocessRequest =
-        augmentPreprocessRequestWithForwardedFor({
-          preprocessRequest: options.configuration.preprocessRequest,
-          navigatorContextProvider: options.navigatorContextProvider,
-          loggerOptions: options.loggerOptions,
-        });
-
       return staticState;
     },
     {

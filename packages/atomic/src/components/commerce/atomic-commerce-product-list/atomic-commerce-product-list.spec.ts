@@ -5,14 +5,14 @@ import {
   type InteractiveProductProps,
   type Product,
 } from '@coveo/headless/commerce';
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {page} from 'vitest/browser';
 import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
-} from '@/src/components/common/layout/display-options';
+} from '@/src/components/common/layout/item-layout-utils';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
@@ -34,7 +34,7 @@ describe('atomic-commerce-product-list', () => {
   beforeEach(() => {
     summary.mockReturnValue(buildFakeSummary());
 
-    vi.mocked(buildProductListing).mockReturnValue(
+    vi.mocked(buildProductListing).mockImplementation(() =>
       buildFakeProductListing({
         implementation: {
           interactiveProduct,
@@ -44,7 +44,7 @@ describe('atomic-commerce-product-list', () => {
       })
     );
 
-    vi.mocked(buildSearch).mockReturnValue(
+    vi.mocked(buildSearch).mockImplementation(() =>
       buildFakeSearch({
         implementation: {
           interactiveProduct,
@@ -106,17 +106,11 @@ describe('atomic-commerce-product-list', () => {
   });
 
   describe("when interface element type is 'product-listing'", () => {
-    let buildProductListingSpy: MockInstance;
-
-    beforeEach(async () => {
-      buildProductListingSpy = vi.mocked(buildProductListing);
-    });
-
     it('should initialize #searchOrListing as product listing controller', async () => {
       const element = await setupElement({interfaceType: 'product-listing'});
 
       const productListingController =
-        buildProductListingSpy.mock.results[0].value;
+        vi.mocked(buildProductListing).mock.results[0].value;
 
       expect(element.searchOrListing).toBeDefined();
       expect(element.searchOrListing).toBe(productListingController);
@@ -126,8 +120,8 @@ describe('atomic-commerce-product-list', () => {
       const element = await setupElement({interfaceType: 'product-listing'});
 
       const summaryController =
-        buildProductListingSpy.mock.results[0].value.summary.mock.results[0]
-          .value;
+        vi.mocked(buildProductListing).mock.results[0].value.summary.mock
+          .results[0].value;
 
       expect(element.summary).toBeDefined();
       expect(element.summary).toBe(summaryController);
@@ -295,7 +289,7 @@ describe('atomic-commerce-product-list', () => {
   it('should not render when there is an error', async () => {
     summary.mockReturnValue(buildFakeSummary({state: {hasError: true}}));
 
-    vi.mocked(buildProductListing).mockReturnValue(
+    vi.mocked(buildProductListing).mockImplementation(() =>
       buildFakeProductListing({
         implementation: {
           interactiveProduct,
@@ -329,7 +323,7 @@ describe('atomic-commerce-product-list', () => {
   it('should not render when first request was executed & there are no products', async () => {
     summary.mockReturnValue(buildFakeSummary({state: {hasProducts: false}}));
 
-    vi.mocked(buildProductListing).mockReturnValue(
+    vi.mocked(buildProductListing).mockImplementation(() =>
       buildFakeProductListing({
         implementation: {
           interactiveProduct,
@@ -364,7 +358,7 @@ describe('atomic-commerce-product-list', () => {
   });
 
   it("should render 1 result-list-grid-clickable-container part per product when #display is 'grid' & app is loaded", async () => {
-    vi.mocked(buildProductListing).mockReturnValue(
+    vi.mocked(buildProductListing).mockImplementation(() =>
       buildFakeProductListing({
         implementation: {
           interactiveProduct,
@@ -469,7 +463,7 @@ describe('atomic-commerce-product-list', () => {
       });
 
       it('should render 1 outline part per product', async () => {
-        vi.mocked(buildProductListing).mockReturnValue(
+        vi.mocked(buildProductListing).mockImplementation(() =>
           buildFakeProductListing({
             implementation: {
               interactiveProduct,
@@ -724,7 +718,7 @@ describe('atomic-commerce-product-list', () => {
       });
 
       it('should render 1 result-table-row part per product', async () => {
-        vi.mocked(buildProductListing).mockReturnValue(
+        vi.mocked(buildProductListing).mockImplementation(() =>
           buildFakeProductListing({
             implementation: {
               interactiveProduct,
@@ -756,7 +750,7 @@ describe('atomic-commerce-product-list', () => {
       });
 
       it('should render floor(numberOfProducts / 2) result-table-row-even parts', async () => {
-        vi.mocked(buildProductListing).mockReturnValue(
+        vi.mocked(buildProductListing).mockImplementation(() =>
           buildFakeProductListing({
             implementation: {
               interactiveProduct,
@@ -786,7 +780,7 @@ describe('atomic-commerce-product-list', () => {
       });
 
       it('should render ceil(numberOfProducts / 2) result-table-row-odd parts', async () => {
-        vi.mocked(buildProductListing).mockReturnValue(
+        vi.mocked(buildProductListing).mockImplementation(() =>
           buildFakeProductListing({
             implementation: {
               interactiveProduct,
@@ -883,7 +877,7 @@ describe('atomic-commerce-product-list', () => {
 
   const renderAtomicProductTestCases = (display: ItemDisplayLayout) => {
     it('should render correct # of atomic-product', async () => {
-      vi.mocked(buildProductListing).mockReturnValue(
+      vi.mocked(buildProductListing).mockImplementation(() =>
         buildFakeProductListing({
           implementation: {
             interactiveProduct,
@@ -916,7 +910,7 @@ describe('atomic-commerce-product-list', () => {
           const mockProduct1 = buildFakeProduct({permanentid: '123'});
           const mockProduct2 = buildFakeProduct({permanentid: '456'});
 
-          vi.mocked(buildProductListing).mockReturnValue(
+          vi.mocked(buildProductListing).mockImplementation(() =>
             buildFakeProductListing({
               implementation: {
                 interactiveProduct,
@@ -969,7 +963,7 @@ describe('atomic-commerce-product-list', () => {
           const mockProduct1 = buildFakeProduct({permanentid: '123'});
           const mockProduct2 = buildFakeProduct({permanentid: '456'});
 
-          vi.mocked(buildProductListing).mockReturnValue(
+          vi.mocked(buildProductListing).mockImplementation(() =>
             buildFakeProductListing({
               implementation: {
                 interactiveProduct,
@@ -1057,7 +1051,7 @@ describe('atomic-commerce-product-list', () => {
           }
         );
 
-        vi.mocked(buildProductListing).mockReturnValue(
+        vi.mocked(buildProductListing).mockImplementation(() =>
           buildFakeProductListing({
             implementation: {
               interactiveProduct,
@@ -1099,7 +1093,7 @@ describe('atomic-commerce-product-list', () => {
           const mockProduct1 = buildFakeProduct({permanentid: '123'});
           const mockProduct2 = buildFakeProduct({permanentid: '456'});
 
-          vi.mocked(buildProductListing).mockReturnValue(
+          vi.mocked(buildProductListing).mockImplementation(() =>
             buildFakeProductListing({
               implementation: {
                 interactiveProduct,
@@ -1143,12 +1137,8 @@ describe('atomic-commerce-product-list', () => {
         });
       } else {
         it('should pass empty link template to #linkContent', async () => {
-          const mockProduct1 = {
-            permanentid: 123,
-          } as unknown as Product;
-          const mockProduct2 = {
-            permanentid: 456,
-          } as unknown as Product;
+          const mockProduct1 = buildFakeProduct({permanentid: '123'});
+          const mockProduct2 = buildFakeProduct({permanentid: '456'});
 
           const element = await setupElement({display});
 
@@ -1202,7 +1192,7 @@ describe('atomic-commerce-product-list', () => {
         const mockProduct1 = buildFakeProduct({permanentid: '123'});
         const mockProduct2 = buildFakeProduct({permanentid: '456'});
 
-        vi.mocked(buildProductListing).mockReturnValue(
+        vi.mocked(buildProductListing).mockImplementation(() =>
           buildFakeProductListing({
             implementation: {
               interactiveProduct,

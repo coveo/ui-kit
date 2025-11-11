@@ -1,21 +1,24 @@
 {
   "name": "@coveo/create-atomic-component",
-  "version": "1.5.7",
+  "version": "1.5.10",
   "description": "Initialize a Coveo Atomic Component",
   "type": "module",
   "main": "index.js",
   "bin": "index.js",
   "files": [
     "index.js",
-    "template/**/*",
-    "!template/**/project.json",
+    "template/src/components/sample-component/src/**/*",
+    "template/src/components/sample-component/.gitignore",
+    "template/src/components/sample-component/package.json",
+    "template/src/components/sample-component/stencil.config.ts",
+    "template/src/components/sample-component/tsconfig.json",
     "template/.gitignore"
   ],
   "scripts": {
-    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
-    "publish:bump": "npm run-script -w=@coveo/ci bump",
-    "release:phase1": "npm run publish:bump",
-    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
+    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
+    "publish:bump": "pnpm --filter @coveo/ci bump",
+    "release:phase1": "pnpm run publish:bump",
+    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod"
   },
   "keywords": [
     "coveo",
@@ -28,7 +31,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@coveo/create-atomic-component-project": "1.5.7"
+    "@coveo/create-atomic-component-project": "1.5.8"
   },
   "repository": {
     "type": "git",

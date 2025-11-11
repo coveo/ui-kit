@@ -51,7 +51,7 @@ jobs:
         working-directory: ./packages/quantic
         run: |
           echo "${{ secrets.SFDX_AUTH_JWT_KEY }}" > ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
-          npx --no-install ts-node scripts/build/create-package.ts --remove-translations --ci
+          pnpm exec ts-node scripts/build/create-package.ts --remove-translations --ci
           rm ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
         env:
           SFDX_AUTH_JWT_USERNAME: ${{ vars.SFDX_AUTH_JWT_USERNAME }}

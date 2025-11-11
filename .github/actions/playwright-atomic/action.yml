@@ -19,7 +19,7 @@ runs:
   steps:
     - name: Run Playwright tests
       id: playwright
-      run: npx playwright test ${{ inputs.testsToRun }} --shard=${{ inputs.shardIndex }}/${{ inputs.shardTotal }}
+      run: pnpm exec playwright test ${{ inputs.testsToRun }} --shard=${{ inputs.shardIndex }}/${{ inputs.shardTotal }}
       working-directory: packages/atomic
       shell: bash
       continue-on-error: true

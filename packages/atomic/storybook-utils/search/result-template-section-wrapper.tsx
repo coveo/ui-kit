@@ -26,18 +26,38 @@ export const wrapInResultTemplateForSections = (): {
     // Extract the section tag name from the story content.
     const sectionMatch = storyContent.match(/<(atomic-result-section-[\w-]+)/);
     const storySectionTag = sectionMatch ? sectionMatch[1] : null;
+    const slotMatch = storyContent.match(/default-slot="([^"]*)"/s);
+    const encodedSlotContent = slotMatch ? slotMatch[1] : '';
+    
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = encodedSlotContent;
+    const storySectionInnerContent = tempDiv.textContent || '';
+
 
     // Define all available sections with their placeholder content.
     const allSections = [
-      {tag: 'atomic-result-section-title', content: 'title', area: 'title'},
-      {tag: 'atomic-result-section-children', content: 'children', area: 'children'},
-      {tag: 'atomic-result-section-visual', content: '<div style="display: flex; align-items: center; justify-content: center; height: 100%; text-align: center;">visual</div>', area: 'visual'},
-      {tag: 'atomic-result-section-title-metadata', content: 'title metadata', area: 'title-metadata'},
-      {tag: 'atomic-result-section-emphasized', content: 'emphasized', area: 'emphasized'},
-      {tag: 'atomic-result-section-excerpt', content: 'excerpt', area: 'excerpt'},
-      {tag: 'atomic-result-section-actions', content: 'actions', area: 'actions'},
-      {tag: 'atomic-result-section-badges', content: 'badges', area: 'badges'},
-      {tag: 'atomic-result-section-bottom-metadata', content: 'bottom metadata', area: 'bottom-metadata'},
+      {tag: 'atomic-result-section-title', content: `<h3 class="text-lg font-semibold text-gray-900">Palm cockatoo: Why a unique ‘drumming’ bird is in peril - BBC News</h3>`},
+      {tag: 'atomic-result-section-children', content: `<div class="p-3 mt-2 ml-4 border border-gray-200 rounded-lg bg-gray-50">
+        <div class="mb-2 text-sm font-medium text-gray-700">Related Articles:</div>
+        <div class="space-y-1">
+          <div class="text-sm text-gray-600">• How to train for a marathon</div>
+          <div class="text-sm text-gray-600">• Running 101</div>
+        </div>
+      </div>`},
+      {tag: 'atomic-result-section-visual', content: `<img src="https://picsum.photos/200" alt="Result Image" class="w-full h-auto rounded-lg">`},
+      {tag: 'atomic-result-section-title-metadata', content: `<span class="text-sm text-gray-500">fileType:
+txt</span>`},
+      {tag: 'atomic-result-section-emphasized', content: `<span class="text-2xl font-bold">Breaking News!</span>`},
+      {tag: 'atomic-result-section-excerpt', content: `<p class="text-sm text-gray-600">The palm cockatoo is thought to be the only bird species to use tools musically – drumming wood to attract a mate.</p>`},
+      {tag: 'atomic-result-section-actions', content: '<button class="p-1 btn btn-primary">Show Details</button>'},
+      {tag: 'atomic-result-section-badges', content: `<div>
+        <span class="badge badge-primary" style="background: #b21010; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">NEW</span>
+        <span class="badge badge-secondary" style="background: #2f0ab8; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">DOCUMENTATION</span>
+        <span class="badge badge-success" style="background: #096243; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">ARTICLE</span>
+      </div>`},
+      {tag: 'atomic-result-section-bottom-metadata', content: `<div class="text-xs text-gray-500">
+        <span>Author: Mark Twain</span>
+      </div>`},
     ];
 
     // Build the template content.
@@ -45,9 +65,8 @@ export const wrapInResultTemplateForSections = (): {
     
     allSections.forEach(section => {
       if (section.tag === storySectionTag) {
-        // Use the story content for the matching section with purple border.
-        // TODO KIT-5056 use ${storyContent} instead of ${section.content} and remove section.area once atomic-result-list is migrated
-        templateContent += `<${section.tag} style="padding: 0 5px; border-radius: 4px; border: 3px solid mediumpurple; grid-area: ${section.area}" id="code-root">${section.content}</${section.tag}>`;
+        // Use the story's inner content for the matching section with purple border styles.
+        templateContent += `<${section.tag} style="border: 2px dashed mediumpurple; border-radius: 8px; padding: 8px; box-sizing: content-box;">${storySectionInnerContent}</${section.tag}>`;
       } else {
         // Use placeholder content for other sections.
         templateContent += `<${section.tag}>${section.content}</${section.tag}>`;

@@ -5,18 +5,19 @@ import {
   buildProductListing,
   buildSearch,
 } from '@coveo/headless/commerce';
-import {page, userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {page, userEvent} from 'vitest/browser';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/breadcrumb-manager-subcontroller';
 import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
-import './atomic-commerce-breadbox';
+import {mockConsole} from '@/vitest-utils/testing-helpers/testing-utils/mock-console';
 import type {AtomicCommerceBreadbox} from './atomic-commerce-breadbox';
+import './atomic-commerce-breadbox';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 vi.mock('@/src/utils/date-utils', () => {
@@ -37,8 +38,7 @@ describe('atomic-commerce-breadbox', () => {
   const mockedDeselectAll = vi.fn();
 
   beforeEach(() => {
-    vi.spyOn(console, 'error').mockImplementation(() => {});
-    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    mockConsole();
   });
 
   interface RenderBreadboxOptions {
@@ -46,6 +46,7 @@ describe('atomic-commerce-breadbox', () => {
     pathLimit?: number;
     state?: Partial<BreadcrumbManagerState>;
   }
+
   const renderBreadbox = async ({
     interfaceElementType = 'product-listing',
     pathLimit = 3,

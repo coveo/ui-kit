@@ -8,8 +8,8 @@
       href={hrefValue}
       target="_blank"
       rel="noopener"
-      onmouseenter={handleMouseEnter}
-      onmouseleave={handleMouseLeave}
+      onmouseenter={handleCitationMouseEnter}
+      onmouseleave={handleCitationMouseLeave}
       onclick={handleClick}
     >
       <p
@@ -22,6 +22,8 @@
       light-theme
       class="slds-show_medium"
       target={template.host}
+      onmouseenter={handleTooltipMouseEnter}
+      onmouseleave={handleTooltipMouseLeave}
     >
       <div class="citation__tooltip" slot="content">
         <div
@@ -42,7 +44,7 @@
         >
           {text}
         </div>
-        <div class="citation__tooltip-actions" onclick={handleCitationActionClick}>
+        <div class="citation__tooltip-actions">
           <slot name="citation-action" onactionregister={handleCitationActionRegister}></slot>
         </div>
       </div>

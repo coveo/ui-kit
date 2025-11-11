@@ -7,12 +7,6 @@ test.describe('atomic-commerce-search-box-instant-products', () => {
     await searchBox.searchInput.click();
   });
 
-  //TODO: This test should pass once KIT-4449 is addressed
-  test.skip('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should display instant products', async ({instantProduct}) => {
     const products = await instantProduct.instantProducts.all();
     for (let i = 0; i < products.length; i++) {

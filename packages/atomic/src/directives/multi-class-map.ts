@@ -11,7 +11,7 @@ export const tw = <T extends {[x: string]: boolean}>(
  *
  * ### Parameters:
  * - `Word`: The string to be split.
- * - `Separator`: The character used to split the string (e.g., `' '` for spaces).
+ * - `Separator`: The character used to split the string (for example, `' '` for spaces).
  * - `Limit`: The maximum number of splits allowed to avoid a deep recursion (default is 30).
  * - `Count`: An internal parameter used to track the recursion depth (default is an empty array).
  *
@@ -123,7 +123,7 @@ class MultiClassMapDirective extends Directive {
    * by allowing multiple space-separated class names in a single key.
    *
    * ### Behavior:
-   * - If a key contains multiple classes (e.g., `'foo bar'`), all classes in the key are applied if the value is `true`.
+   * - If a key contains multiple classes (for example, `'foo bar'`), all classes in the key are applied if the value is `true`.
    * - If a class appears in multiple keys, the `true` value takes precedence over `false`.
    *
    * ### Example:

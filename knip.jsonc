@@ -17,7 +17,7 @@
     },
     "packages/headless": {
       "entry": ["src/*index.ts", "ponyfills/*.js"],
-      "ignoreDependencies": ["navigator.sendbeacon"]
+      "ignoreDependencies": ["navigator.sendbeacon", "reselect", "node-fetch"]
     },
     "packages/atomic-hosted-page": {
       "entry": [
@@ -25,7 +25,11 @@
         "loader/index.js",
         "dev/vite.config.ts"
       ],
-      "ignore": ["cdn/**"]
+      "ignore": ["cdn/**"],
+      "ignoreDependencies": ["local-web-server"]
+    },
+    "packages/atomic-angular": {
+      "ignoreDependencies": ["rxjs"]
     },
     "packages/atomic-angular/projects/atomic-angular": {
       "entry": ["src/public-api.ts"],
@@ -49,6 +53,9 @@
       "ignore": ["src/components/legacy-field-suggestions/**"],
       "ignoreDependencies": ["jsdom"]
     },
+    "samples/headless-ssr/commerce-express": {
+      "entry": ["src/server.ts", "src/client.ts"]
+    },
     "samples/headless/search-react": {
       "entry": ["server/server.tsx", "src/index.tsx"],
       "ignoreDependencies": ["jsdom"]
@@ -56,11 +63,15 @@
     "utils/ci": {
       "ignoreDependencies": ["@types/conventional-changelog-writer"]
     },
+    "utils/cdn": {
+      "ignoreDependencies": ["@coveo/bueno", "local-web-server"]
+    },
 
     // Projects to enable bunch by bunch.
     // Projects using stencil don't really have a proper entry point because of stencil's magic so they have problems with knip.
     "packages/atomic": {
-      "ignore": ["**/*"]
+      "ignore": ["**/*"],
+      "ignoreDependencies": ["cypress-repeat"]
     },
     "packages/create-atomic": {
       "ignore": ["**/*"]
@@ -72,10 +83,15 @@
       "ignore": ["**/*"]
     },
     "samples/atomic/search-stencil": {
-      "ignore": ["**/*"]
+      "ignore": ["**/*"],
+      "ignoreDependencies": ["cypress-repeat"]
+    },
+    "samples/atomic/search-nextjs-pages-router": {
+      "ignoreDependencies": ["cypress-repeat"]
     },
     "samples/headless-ssr/search-nextjs": {
-      "ignore": ["**/*"]
+      "ignore": ["**/*"],
+      "ignoreDependencies": ["cypress-repeat"]
     },
     "packages/create-atomic-component": {
       "ignore": ["template/**/*"]

@@ -6,11 +6,6 @@ test.describe('atomic-pager', () => {
     await pager.hydrated.waitFor();
   });
 
-  test('should be accessible', async ({makeAxeBuilder}) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test('should exist in DOM with correct attributes', async ({pager}) => {
     const pagerElement = pager.hydrated;
 

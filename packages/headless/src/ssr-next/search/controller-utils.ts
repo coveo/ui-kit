@@ -4,8 +4,10 @@ import type {Controller} from '../../controllers/controller/headless-controller.
 import {clone, mapObject} from '../../utils/utils.js';
 import {ControllerBuilder} from '../common/builders/controller-builder.js';
 import {createStaticControllerBuilder} from '../common/builders/static-controller-builder.js';
-import type {EngineStaticState} from '../common/types/engine.js';
-import type {ControllerDefinitionsMap} from './types/controller-definition.js';
+import type {
+  BakedInSearchControllers,
+  ControllerDefinitionsMap,
+} from './types/controller-definition.js';
 import type {
   InferControllerPropsMapFromDefinitions,
   InferControllerStaticStateMapFromDefinitions,
@@ -44,15 +46,13 @@ export function createStaticState<
   controllers,
 }: {
   searchActions: TSearchAction[];
-  controllers: InferControllersMapFromDefinition<TControllerDefinitions>;
-}): EngineStaticState<
-  TSearchAction,
-  InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
-> {
+  controllers: Record<string, Controller>;
+}) {
   return {
     controllers: mapObject(controllers, (controller) =>
       createStaticControllerBuilder(controller).build()
-    ) as InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>,
+    ) as InferControllerStaticStateMapFromDefinitions<TControllerDefinitions> &
+      BakedInSearchControllers,
     searchActions: clone(searchActions),
   };
 }

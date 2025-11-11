@@ -1,21 +1,24 @@
 {
   "name": "@coveo/create-atomic-result-component",
-  "version": "1.3.7",
+  "version": "1.3.10",
   "description": "Initialize a Coveo Atomic Result Component",
   "type": "module",
   "main": "index.js",
   "bin": "index.js",
   "files": [
     "index.js",
-    "template/**/*",
-    "!template/**/project.json",
+    "template/src/components/sample-result-component/.gitignore",
+    "template/src/components/sample-result-component/package.json",
+    "template/src/components/sample-result-component/stencil.config.ts",
+    "template/src/components/sample-result-component/tsconfig.json",
+    "template/src/components/sample-result-component/src/**/*",
     "template/.gitignore"
   ],
   "scripts": {
-    "release:phase1": "npm run publish:bump",
-    "publish:bump": "npm run-script -w=@coveo/ci bump",
-    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
-    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
+    "release:phase1": "pnpm run publish:bump",
+    "publish:bump": "pnpm --filter @coveo/ci bump",
+    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
+    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod"
   },
   "keywords": [
     "coveo",

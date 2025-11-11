@@ -34,10 +34,10 @@ import {randomID} from '../../../../utils/utils';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
-import {FacetGuard} from '../../../common/facets/facet-guard';
+import {FacetGuard} from '../../../common/facets/stencil-facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
 import {NumberInputType} from '../../../common/facets/facet-number-input/number-input-type';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/stencil-facet-placeholder';
 import {formatHumanReadable} from '../../../common/facets/numeric-facet/formatter';
 import {NumericFacetValueLink} from '../../../common/facets/numeric-facet/stencil-value-link';
 import {NumericFacetValuesContainer} from '../../../common/facets/numeric-facet/stencil-values-container';
@@ -50,7 +50,7 @@ import {
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
- * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., ascending, descending).
+ * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
  * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
  *
  * @part facet - The wrapper for the entire facet.
@@ -131,7 +131,7 @@ export class AtomicNumericFacet implements InitializableComponent {
   /**
    * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.
    *
-   * Set this property as a stringified JSON array, e.g.,
+   * Set this property as a stringified JSON array, for example:
    * ```html
    *  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
    * ```
@@ -144,7 +144,7 @@ export class AtomicNumericFacet implements InitializableComponent {
   /**
    * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.
    *
-   * Set this property as a stringified JSON array, e.g.,
+   * Set this property as a stringified JSON array, for example:
    * ```html
    *  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
    * ```

@@ -1,7 +1,6 @@
 import type {JSX as AtomicJSX} from '@coveo/atomic';
 import type {FoldedResult} from '@coveo/headless';
-// biome-ignore lint/style/useImportType: <React is needed>
-import React, {useEffect, useRef} from 'react';
+import React, {type JSX, useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
 import {AtomicFoldedResultList} from '../stencil-generated/search/index.js';

@@ -1,0 +1,79 @@
+packages:
+  - 'packages/bueno'
+  - 'packages/auth'
+  - 'packages/headless'
+  - 'packages/quantic'
+  - 'packages/headless-react'
+  - 'packages/ssr'
+  - 'packages/atomic-hosted-page'
+  - 'packages/atomic-react'
+  - 'packages/atomic-angular'
+  - 'packages/documentation'
+  - 'packages/atomic-angular/projects/*'
+  - 'packages/atomic'
+  - 'packages/shopify'
+  - 'packages/create-atomic-template'
+  - 'packages/create-atomic'
+  - 'packages/create-atomic-component'
+  - 'packages/create-atomic-component/template/src/components/sample-component'
+  - 'packages/create-atomic-component-project'
+  - 'packages/create-atomic-component-project/template'
+  - 'packages/create-atomic-rollup-plugin'
+  - 'packages/create-atomic-result-component'
+  - 'packages/create-atomic-result-component/template/src/components/sample-result-component'
+  - 'samples/atomic/*'
+  - 'samples/headless/*'
+  - 'samples/headless-ssr/*'
+  - 'samples/headless-ssr/search-nextjs/*'
+  - 'utils/cdn'
+  - 'utils/ci'
+
+catalog:
+  '@coveo/create-atomic-rollup-plugin': 1.2.1
+  '@coveo/relay-event-types': 15.1.0
+  '@playwright/test': 1.56.1
+  '@rollup/plugin-replace': 6.0.2
+  '@rollup/plugin-url': 8.0.2
+  '@stencil/core': 4.20.0
+  '@testing-library/react': 16.3.0
+  '@types/jest': 29.5.14
+  '@types/node': 22.16.5
+  '@types/react': 19.2.2
+  '@types/react-dom': 19.2.2
+  '@vitejs/plugin-react': 5.0.4
+  coveo.analytics: 2.30.49
+  cypress: 13.7.3
+  cypress-repeat: 2.3.9
+  dayjs: 1.11.13
+  esbuild: 0.25.8
+  exponential-backoff: 3.1.2
+  jest: 29.7.0
+  jest-cli: 29.7.0
+  local-web-server: 5.4.0
+  next: 15.5.6
+  prettier: 3.6.2
+  puppeteer: 24.15.0
+  playwright: 1.56.1
+  react: 19.2.0
+  react-dom: 19.2.0
+  rollup-plugin-string: 3.0.0
+  rollup-plugin-node-polyfills: 0.2.1
+  typedoc: 0.28.13
+  typescript: 5.8.3
+  vite: 7.0.5
+  vitest: 4.0.7
+  '@vitest/coverage-v8': 4.0.7
+  '@vitest/browser-playwright': 4.0.7
+
+
+publicHoistPattern:
+  - '*eslint*'
+  - '*prettier*'
+minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+  - '@coveo/*'
+  - '@vitest/*'
+  - vitest 
+  - '@wc-toolkit/storybook-helpers'
+  - '@storybook/*'
+  - storybook

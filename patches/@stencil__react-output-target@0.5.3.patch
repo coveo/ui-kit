@@ -1,0 +1,79 @@
+diff --git a/dist/index.cjs.js b/dist/index.cjs.js
+index fd6fd4cb7f08dab32453d0f78e0c59e683ebb267..e4317eafe230d55a71aed0f00ed4f6f5c81e4456 100644
+--- a/dist/index.cjs.js
++++ b/dist/index.cjs.js
+@@ -142,7 +142,10 @@ async function reactProxyOutput(config, compilerCtx, outputTarget, components) {
+  * @returns the filtered list of components
+  */
+ function getFilteredComponents(excludeComponents = [], cmps) {
+-    return sortBy(cmps, (cmp) => cmp.tagName).filter((c) => !excludeComponents.includes(c.tagName) && !c.internal);
++    // Allow specific internal component families (AtomicCommerce*, AtomicProduct*) to pass through
++    return sortBy(cmps, (cmp) => cmp.tagName).filter(
++        (c) => !excludeComponents.includes(c.tagName) && (!c.internal || ["AtomicCommerce", "AtomicProduct"].some((prefix) => c.componentClassName.startsWith(prefix)))
++    );
+ }
+ /**
+  * Generate the code that will be responsible for creating the Stencil-React bindings
+diff --git a/dist/index.js b/dist/index.js
+index d54a546e573f364e69ce1416e126d661b902ae58..a2a9c418ea12bbc9c593c90d3cc3b80794e099dd 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -133,7 +133,10 @@ async function reactProxyOutput(config, compilerCtx, outputTarget, components) {
+  * @returns the filtered list of components
+  */
+ function getFilteredComponents(excludeComponents = [], cmps) {
+-    return sortBy(cmps, (cmp) => cmp.tagName).filter((c) => !excludeComponents.includes(c.tagName) && !c.internal);
++    // Allow specific internal component families (AtomicCommerce*, AtomicProduct*) to pass through
++    return sortBy(cmps, (cmp) => cmp.tagName).filter(
++        (c) => !excludeComponents.includes(c.tagName) && (!c.internal || ["AtomicCommerce", "AtomicProduct"].some((prefix) => c.componentClassName.startsWith(prefix)))
++    );
+ }
+ /**
+  * Generate the code that will be responsible for creating the Stencil-React bindings
+diff --git a/react-component-lib/createOverlayComponent.tsx b/react-component-lib/createOverlayComponent.tsx
+index 288c38dd54c138fea45127e45acf9d0b96dbf99a..9d0f1246c6d9d2f4c005f6951bbe69c06f46e6d7 100644
+--- a/react-component-lib/createOverlayComponent.tsx
++++ b/react-component-lib/createOverlayComponent.tsx
+@@ -136,7 +136,12 @@ export const createOverlayComponent = <OverlayComponent extends object, OverlayT
+     }
+   }
+ 
+-  return React.forwardRef<OverlayType, Props>((props, ref) => {
+-    return <Overlay {...props} forwardedRef={ref} />;
++  type InternalProps = Props;
++  type ExternalProps = Omit<InternalProps, 'forwardedRef'>;
++
++  const Forwarded = React.forwardRef<OverlayType, ExternalProps>((props, ref) => {
++    return <Overlay {...(props as InternalProps)} forwardedRef={ref} />;
+   });
++  (Forwarded as any).displayName = (Overlay as any).displayName;
++  return Forwarded;
+ };
+diff --git a/react-component-lib/utils/index.tsx b/react-component-lib/utils/index.tsx
+index a66bd02de766a2eaf05a913d6bc9b1984279265c..eed875f9ad84b195ecb832348072ec55aec51a62 100644
+--- a/react-component-lib/utils/index.tsx
++++ b/react-component-lib/utils/index.tsx
+@@ -29,15 +29,14 @@ export const mergeRefs = (
+ };
+ 
+ export const createForwardRef = <PropType, ElementType>(ReactComponent: any, displayName: string) => {
+-  const forwardRef = (
+-    props: StencilReactExternalProps<PropType, ElementType>,
+-    ref: StencilReactForwardedRef<ElementType>
+-  ) => {
+-    return <ReactComponent {...props} forwardedRef={ref} />;
+-  };
+-  forwardRef.displayName = displayName;
+-
+-  return React.forwardRef(forwardRef);
++  type InternalProps = StencilReactExternalProps<PropType, ElementType> & { forwardedRef?: StencilReactForwardedRef<ElementType> };
++  type ExternalProps = Omit<InternalProps, 'forwardedRef'>;
++
++  const Forwarded = React.forwardRef<ElementType, ExternalProps>((props, ref) => {
++    return <ReactComponent {...(props as InternalProps)} forwardedRef={ref} />;
++  });
++  (Forwarded as any).displayName = displayName;
++  return Forwarded;
+ };
+ 
+ export const defineCustomElement = (tagName: string, customElement: any) => {

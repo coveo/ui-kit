@@ -21,8 +21,6 @@ export default function ParameterManager({url}: {url: string | null}) {
    * When the URL fragment changes, this effect deserializes it and synchronizes it into the
    * ParameterManager controller's state.
    */
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <>
   useEffect(() => {
     if (methods === undefined) {
       return;
@@ -44,8 +42,6 @@ export default function ParameterManager({url}: {url: string | null}) {
    * When the ParameterManager controller's state changes, this effect serializes it into the URL fragment and pushes the new URL
    * to the browser history.
    * */
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <>
   useEffect(() => {
     if (methods === undefined) {
       return;

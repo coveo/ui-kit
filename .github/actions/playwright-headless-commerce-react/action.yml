@@ -4,6 +4,6 @@ runs:
   using: composite
   steps:
     - name: Run Playwright tests
-      run: npx playwright test
+      run: pnpm exec playwright test
       working-directory: packages/samples/headless-commerce-react
       shell: bash

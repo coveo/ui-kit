@@ -1,6 +1,6 @@
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
+import {page} from 'vitest/browser';
 import {highlightSearchResult} from '@/src/components/common/facets/facet-search/facet-search-utils';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderFacetValueLabelHighlight} from './facet-value-label-highlight';

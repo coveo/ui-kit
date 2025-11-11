@@ -488,5 +488,28 @@ describe('renderTableData', () => {
         expect(renderItem).toHaveBeenNthCalledWith(2, tableElement2);
       });
     });
+
+    describe('when #templateContentForFirstItem is null', () => {
+      it('should not render any td elements', async () => {
+        const tableData = await tableDataFixture({
+          templateContentForFirstItem: null as unknown as DocumentFragment,
+        });
+
+        const tdElements = tableData.querySelectorAll('td');
+
+        expect(tdElements.length).toBe(0);
+      });
+
+      it('should not call #renderItem', async () => {
+        const renderItem = vi.fn();
+
+        await tableDataFixture({
+          templateContentForFirstItem: null as unknown as DocumentFragment,
+          renderItem,
+        });
+
+        expect(renderItem).not.toHaveBeenCalled();
+      });
+    });
   });
 });

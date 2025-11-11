@@ -1,3 +1,62 @@
+## <small>3.37.3 (2025-11-05)</small>
+
+* test: manage REST API mocking through utilities wrapping MSW (#6177) ([1434a17](https://github.com/coveo/ui-kit/commits/1434a17)), closes [#6177](https://github.com/coveo/ui-kit/issues/6177)
+* chore: do not run a11y automatically on stories (#6220) ([6751e86](https://github.com/coveo/ui-kit/commits/6751e86)), closes [#6220](https://github.com/coveo/ui-kit/issues/6220)
+* chore(atomic): migrate atomic-load-more-results (#6217) ([ffc26c1](https://github.com/coveo/ui-kit/commits/ffc26c1)), closes [#6217](https://github.com/coveo/ui-kit/issues/6217)
+* chore(atomic): migrate atomic-recs-interface (#6337) ([fc956f2](https://github.com/coveo/ui-kit/commits/fc956f2)), closes [#6337](https://github.com/coveo/ui-kit/issues/6337)
+* chore(atomic): migrate atomic-result-text (#6206) ([3521050](https://github.com/coveo/ui-kit/commits/3521050)), closes [#6206](https://github.com/coveo/ui-kit/issues/6206)
+* chore(atomic): migrate atomic-text (#6205) ([bf2294c](https://github.com/coveo/ui-kit/commits/bf2294c)), closes [#6205](https://github.com/coveo/ui-kit/issues/6205)
+* docs:(atomic commerce): Add an intro page for atomic commerce (#6338) ([3bbce15](https://github.com/coveo/ui-kit/commits/3bbce15)), closes [#6338](https://github.com/coveo/ui-kit/issues/6338)
+
+
+
+## <small>3.37.2 (2025-10-30)</small>
+
+* fix(atomic): prevent facets from closing when active values are selected (#6208) ([47d1b97](https://github.com/coveo/ui-kit/commits/47d1b97)), closes [#6208](https://github.com/coveo/ui-kit/issues/6208)
+* chore: improve workspace copilot instructions / prompts & atomic component boilerplates (#6165) ([7b06c77](https://github.com/coveo/ui-kit/commits/7b06c77)), closes [#6165](https://github.com/coveo/ui-kit/issues/6165)
+* chore(atomic): migrate `atomic-html` (#6202) ([d204f17](https://github.com/coveo/ui-kit/commits/d204f17)), closes [#6202](https://github.com/coveo/ui-kit/issues/6202)
+* chore(atomic): migrate atomic-result-list (#6189) ([eace955](https://github.com/coveo/ui-kit/commits/eace955)), closes [#6189](https://github.com/coveo/ui-kit/issues/6189)
+* [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
+* chore (atomic): migrated atomic-result-children-template to lit (#6199) ([c0f6684](https://github.com/coveo/ui-kit/commits/c0f6684)), closes [#6199](https://github.com/coveo/ui-kit/issues/6199)
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
+## <small>3.37.1 (2025-10-29)</small>
+
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+* chore(atomic): migrate `atomic-html` (#6202) ([d204f17](https://github.com/coveo/ui-kit/commits/d204f17)), closes [#6202](https://github.com/coveo/ui-kit/issues/6202)
+
+
+
+## 3.37.0 (2025-10-28)
+
+* chore(atomic): add tests for display-options (#6148) ([b15b00c](https://github.com/coveo/ui-kit/commits/b15b00c)), closes [#6148](https://github.com/coveo/ui-kit/issues/6148)
+* chore(atomic): improve item section stories (#6209) ([cb92e2d](https://github.com/coveo/ui-kit/commits/cb92e2d)), closes [#6209](https://github.com/coveo/ui-kit/issues/6209)
+* chore(atomic): migrate atomic-external to lit (#6184) ([9235b73](https://github.com/coveo/ui-kit/commits/9235b73)), closes [#6184](https://github.com/coveo/ui-kit/issues/6184)
+* chore(atomic): migrate atomic-facet (#5995) ([bbd2ea2](https://github.com/coveo/ui-kit/commits/bbd2ea2)), closes [#5995](https://github.com/coveo/ui-kit/issues/5995)
+* chore(atomic): migrate atomic-result (#6134) ([006e0a8](https://github.com/coveo/ui-kit/commits/006e0a8)), closes [#6134](https://github.com/coveo/ui-kit/issues/6134)
+* chore(atomic): migrate item-list-guard (#6196) ([bd74dc5](https://github.com/coveo/ui-kit/commits/bd74dc5)), closes [#6196](https://github.com/coveo/ui-kit/issues/6196)
+* feat(atomic): accessibility updates (LENS-3853) (#6130) ([75b21af](https://github.com/coveo/ui-kit/commits/75b21af)), closes [#6130](https://github.com/coveo/ui-kit/issues/6130)
+* feat(atomic): accessibility updates (locales) (#6200) ([ab843ee](https://github.com/coveo/ui-kit/commits/ab843ee)), closes [#6200](https://github.com/coveo/ui-kit/issues/6200)
+
+
+
+## 3.36.0 (2025-10-22)
+
+* chore: enable MSW in dev (#6175) ([da90479](https://github.com/coveo/ui-kit/commits/da90479)), closes [#6175](https://github.com/coveo/ui-kit/issues/6175)
+* chore(atomic): add custom lit converter for arrays (#6171) ([59d448c](https://github.com/coveo/ui-kit/commits/59d448c)), closes [#6171](https://github.com/coveo/ui-kit/issues/6171)
+* chore(atomic): add mockConsole testing util (#6132) ([29d2a31](https://github.com/coveo/ui-kit/commits/29d2a31)), closes [#6132](https://github.com/coveo/ui-kit/issues/6132)
+* chore(atomic): allow multiple default and named slots (#6107) ([568c441](https://github.com/coveo/ui-kit/commits/568c441)), closes [#6107](https://github.com/coveo/ui-kit/issues/6107)
+* chore(atomic): migrate atomic-result-section-* (#6113) ([d9eb32d](https://github.com/coveo/ui-kit/commits/d9eb32d)), closes [#6113](https://github.com/coveo/ui-kit/issues/6113)
+* chore(atomic): migrate tab guard (#6197) ([1bc5f19](https://github.com/coveo/ui-kit/commits/1bc5f19)), closes [#6197](https://github.com/coveo/ui-kit/issues/6197)
+* chore(atomic): rename ItemTemplateProvider (#6172) ([fc08bfc](https://github.com/coveo/ui-kit/commits/fc08bfc)), closes [#6172](https://github.com/coveo/ui-kit/issues/6172)
+* chore(storybook): do use play over systematic afterEach (#6176) ([7224e9c](https://github.com/coveo/ui-kit/commits/7224e9c)), closes [#6176](https://github.com/coveo/ui-kit/issues/6176)
+* chore (atomic): migrated atomic-result-template to lit (#6159) ([4b6574d](https://github.com/coveo/ui-kit/commits/4b6574d)), closes [#6159](https://github.com/coveo/ui-kit/issues/6159)
+* feat(atomic): accessibility updates (LENS-3856) (#6160) ([7135cf5](https://github.com/coveo/ui-kit/commits/7135cf5)), closes [#6160](https://github.com/coveo/ui-kit/issues/6160)
+
+
+
 ## <small>3.35.5 (2025-10-16)</small>
 
 * chore: setup MSW with Storybook and replace playwright network mocking (#6000) ([010586c](https://github.com/coveo/ui-kit/commits/010586c)), closes [#6000](https://github.com/coveo/ui-kit/issues/6000)

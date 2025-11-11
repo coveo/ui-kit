@@ -1,157 +1,26 @@
-import {
-  ArrayValue,
-  BooleanValue,
-  isBoolean,
-  NumberValue,
-  Schema,
-  StringValue,
-} from '@coveo/bueno';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
-import {
-  clearRecentQueries,
-  registerRecentQueries,
-} from '../../features/recent-queries/recent-queries-actions.js';
+import {SearchPageEvents} from '../../features/analytics/search-action-cause.js';
 import {
   logClearRecentQueries,
   logRecentQueryClick,
 } from '../../features/recent-queries/recent-queries-analytics-actions.js';
-import {recentQueriesReducer as recentQueries} from '../../features/recent-queries/recent-queries-slice.js';
+import {executeSearch} from '../../features/search/search-actions.js';
 import {
-  executeSearch,
-  type PrepareForSearchWithQueryOptions,
-  prepareForSearchWithQuery,
-} from '../../features/search/search-actions.js';
-import {searchReducer as search} from '../../features/search/search-slice.js';
-import type {UpdateQueryActionCreatorPayload} from '../../ssr.index.js';
-import type {RecentQueriesSection} from '../../state/state-sections.js';
-import {loadReducerError} from '../../utils/errors.js';
-import {
-  validateInitialState,
-  validateOptions,
-} from '../../utils/validate-payload.js';
-import {
-  buildController,
-  type Controller,
-} from '../controller/headless-controller.js';
+  buildCoreRecentQueriesList,
+  type RecentQueriesList,
+  type RecentQueriesListInitialState,
+  type RecentQueriesListOptions,
+  type RecentQueriesListProps,
+  type RecentQueriesState,
+} from '../core/recent-queries-list/headless-core-recent-queries-list.js';
 
-export interface RecentQueriesListProps {
-  /**
-   * The initial state that should be applied to the `RecentQueriesList` controller.
-   */
-  initialState?: RecentQueriesListInitialState;
-  /**
-   * The configuration options that should be applied to the `RecentQueriesList` controller.
-   */
-  options?: RecentQueriesListOptions;
-}
-
-const defaultRecentQueriesState: Required<RecentQueriesListInitialState> = {
-  queries: [],
+export type {
+  RecentQueriesListProps,
+  RecentQueriesListOptions,
+  RecentQueriesList,
+  RecentQueriesState,
+  RecentQueriesListInitialState,
 };
-
-const defaultRecentQueriesOptions: Required<RecentQueriesListOptions> = {
-  maxLength: 10,
-  clearFilters: true,
-};
-
-export interface RecentQueriesListInitialState {
-  /**
-   * The list of recent queries.
-   * @defaultValue `[]`
-   */
-  queries: string[];
-}
-
-const initialStateSchema = new Schema<RecentQueriesListInitialState>({
-  queries: new ArrayValue({required: true}),
-});
-
-export interface RecentQueriesListOptions {
-  /**
-   * The maximum number of queries to retain in the list.
-   * @defaultValue `10`
-   */
-  maxLength: number;
-  /**
-   * Whether to clear all active query filters when the end user submits a new query from the recent queries list.
-   * Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
-   */
-  clearFilters?: boolean;
-}
-
-const optionsSchema = new Schema<RecentQueriesListOptions>({
-  maxLength: new NumberValue({required: true, min: 1}),
-  clearFilters: new BooleanValue(),
-});
-
-/**
- * The `RecentQueriesList` controller manages the user's recent queries.
- *
- * Example: [recent-queries.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/recent-queries/recent-queries.fn.tsx)
- *
- * @group Controllers
- * @category RecentQueriesList
- */
-export interface RecentQueriesList extends Controller {
-  /**
-   * The state of the RecentQueriesList controller.
-   * */
-  state: RecentQueriesState;
-  /**
-   * Clears the recent queries list.
-   */
-  clear(): void;
-  /**
-   * Executes the given recent query.
-   * @param index - The index of the recent query to execute.
-   */
-  executeRecentQuery(index: number): void;
-  /**
-   * Sets the recent queries list to the specified array of queries.
-   * @param queries - The array of queries to set.
-   */
-  updateRecentQueries(queries: string[]): void;
-}
-
-/**
- * A scoped and simplified part of the headless state that is relevant to the `RecentQueriesList` controller.
- *
- * @group Controllers
- * @category RecentQueriesList
- * */
-export interface RecentQueriesState {
-  /**
-   * The list of recent queries.
-   */
-  queries: string[];
-  /**
-   * The maximum number of queries to retain in the list.
-   */
-  maxLength: number;
-  /**
-   * Whether analytics & tracking are enabled.
-   * In the case where it is disabled, it is recommended not to save recent queries.
-   */
-  analyticsEnabled: boolean;
-}
-
-function validateRecentQueriesProps(
-  engine: SearchEngine,
-  props?: RecentQueriesListProps
-) {
-  validateOptions(
-    engine,
-    optionsSchema,
-    props?.options,
-    'buildRecentQueriesList'
-  );
-  validateInitialState(
-    engine,
-    initialStateSchema,
-    props?.initialState,
-    'buildRecentQueriesList'
-  );
-}
 
 /**
  * Creates a `RecentQueriesList` controller instance.
@@ -167,103 +36,29 @@ export function buildRecentQueriesList(
   engine: SearchEngine,
   props?: RecentQueriesListProps
 ): RecentQueriesList {
-  if (!loadRecentQueriesListReducer(engine)) {
-    throw loadReducerError;
-  }
-
-  const controller = buildController(engine);
+  const coreController = buildCoreRecentQueriesList(engine, props);
   const {dispatch} = engine;
-  const getState = () => engine.state;
-
-  const registrationOptions: Required<RecentQueriesListOptions> = {
-    ...defaultRecentQueriesOptions,
-    ...props?.options,
-  };
-  const registrationState: Required<RecentQueriesListInitialState> = {
-    ...defaultRecentQueriesState,
-    ...props?.initialState,
-  };
-
-  validateRecentQueriesProps(engine, {
-    options: registrationOptions,
-    initialState: registrationState,
-  });
-
-  const options = {
-    queries: registrationState.queries,
-    maxLength: registrationOptions.maxLength,
-  };
-
-  dispatch(registerRecentQueries(options));
 
   return {
-    ...controller,
+    ...coreController,
 
     get state() {
-      const state = getState();
-
-      return {
-        ...state.recentQueries,
-        analyticsEnabled: state.configuration.analytics.enabled,
-      };
+      return coreController.state;
     },
 
     clear() {
       dispatch(logClearRecentQueries());
-      dispatch(clearRecentQueries());
-    },
-
-    updateRecentQueries(queries: string[]) {
-      const errorMessage = new ArrayValue({
-        required: true,
-        each: new StringValue({required: true}),
-        min: 1,
-      }).validate(queries);
-      if (errorMessage) {
-        throw new Error(errorMessage);
-      }
-
-      dispatch(
-        registerRecentQueries({
-          queries,
-          maxLength: registrationOptions.maxLength,
-        })
-      );
+      coreController.clear();
     },
 
     executeRecentQuery(index: number) {
-      const errorMessage = new NumberValue({
-        required: true,
-        min: 0,
-        max: this.state.queries.length,
-      }).validate(index);
-      if (errorMessage) {
-        throw new Error(errorMessage);
-      }
-
-      const queryOptions: UpdateQueryActionCreatorPayload &
-        PrepareForSearchWithQueryOptions = {
-        q: this.state.queries[index],
-        clearFilters: registrationOptions.clearFilters,
-      };
-
-      if (isBoolean(engine.state.query?.enableQuerySyntax)) {
-        queryOptions.enableQuerySyntax = engine.state.query.enableQuerySyntax;
-      }
-
-      dispatch(prepareForSearchWithQuery(queryOptions));
+      coreController.executeRecentQuery(index);
       dispatch(
         executeSearch({
           legacy: logRecentQueryClick(),
+          next: {actionCause: SearchPageEvents.recentQueriesClick},
         })
       );
     },
   };
-}
-
-function loadRecentQueriesListReducer(
-  engine: SearchEngine
-): engine is SearchEngine<RecentQueriesSection> {
-  engine.addReducers({search, recentQueries});
-  return true;
 }

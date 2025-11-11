@@ -1,7 +1,7 @@
-diff --git a/node_modules/fix-esm-import-path/fix-esm-import-path.js b/node_modules/fix-esm-import-path/fix-esm-import-path.js
+diff --git a/fix-esm-import-path.js b/fix-esm-import-path.js
 index 2c3a802..1817a82 100644
---- a/node_modules/fix-esm-import-path/fix-esm-import-path.js
-+++ b/node_modules/fix-esm-import-path/fix-esm-import-path.js
+--- a/fix-esm-import-path.js
++++ b/fix-esm-import-path.js
 @@ -162,7 +162,7 @@ function scanImport({ srcFile, importCode, name }) {
            srcFile,
            importCode,

@@ -1,3 +1,42 @@
+## 3.35.0 (2025-11-05)
+
+* Optimize retry strategy for Search API with guaranteed 1s minimum delay plus exponential backoff (#6 ([5e8c454](https://github.com/coveo/ui-kit/commits/5e8c454)), closes [#6439](https://github.com/coveo/ui-kit/issues/6439)
+* chore(headless-ssr): refactor Search Engine SSR (#6212) ([c51b571](https://github.com/coveo/ui-kit/commits/c51b571)), closes [#6212](https://github.com/coveo/ui-kit/issues/6212)
+* feat(headless): started sending response linked event for CRGA with EP (#6211) ([ca919b7](https://github.com/coveo/ui-kit/commits/ca919b7)), closes [#6211](https://github.com/coveo/ui-kit/issues/6211)
+
+
+
+## <small>3.34.2 (2025-10-30)</small>
+
+* fix(headless-ssr): fix `setAccessToken` for ssr commerce (#6181) ([acfc6c5](https://github.com/coveo/ui-kit/commits/acfc6c5)), closes [#6181](https://github.com/coveo/ui-kit/issues/6181)
+* [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
+## <small>3.34.1 (2025-10-29)</small>
+
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
+## 3.34.0 (2025-10-28)
+
+* feat(headless, quantic): recent queries feature made available for the insight use case (#6114) ([3f66527](https://github.com/coveo/ui-kit/commits/3f66527)), closes [#6114](https://github.com/coveo/ui-kit/issues/6114)
+* fix(headless-ssr): avoid `preprocessRequest` function chaining (#6210) ([d56074a](https://github.com/coveo/ui-kit/commits/d56074a)), closes [#6210](https://github.com/coveo/ui-kit/issues/6210)
+* fix(headless-ssr): correctly consume navigator context (#6207) ([39bd231](https://github.com/coveo/ui-kit/commits/39bd231)), closes [#6207](https://github.com/coveo/ui-kit/issues/6207)
+* feat(headless): added logic to send feedback analytics when using crga with answer api (#6179) ([05d7609](https://github.com/coveo/ui-kit/commits/05d7609)), closes [#6179](https://github.com/coveo/ui-kit/issues/6179)
+* feat(headless): creation of the HeadlessAttachedResults controller (#6129) ([96148be](https://github.com/coveo/ui-kit/commits/96148be)), closes [#6129](https://github.com/coveo/ui-kit/issues/6129)
+* chore(headless-ssr): deprecate `FromBuildResult` method (#6147) ([a1bc072](https://github.com/coveo/ui-kit/commits/a1bc072)), closes [#6147](https://github.com/coveo/ui-kit/issues/6147)
+
+
+
+## 3.33.0 (2025-10-22)
+
+* feat(quantic): ux improvements for quantic generated answer (#6186) ([a417c3f](https://github.com/coveo/ui-kit/commits/a417c3f)), closes [#6186](https://github.com/coveo/ui-kit/issues/6186)
+
+
+
 ## 3.32.0 (2025-10-15)
 
 * feat(headless): Include caseContext parameter in CRGA AnswerAPI to match SAPI behavior (#6145) ([13a3e28](https://github.com/coveo/ui-kit/commits/13a3e28)), closes [#6145](https://github.com/coveo/ui-kit/issues/6145)

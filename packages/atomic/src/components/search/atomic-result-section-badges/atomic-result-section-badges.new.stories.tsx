@@ -1,8 +1,11 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
-import {wrapInResultTemplateForSections} from '@/storybook-utils/search/result-template-section-wrapper';
+import {
+  getResultSectionArgs,
+  getResultSectionArgTypes,
+  getResultSectionDecorators,
+} from '@/storybook-utils/search/result-section-story-utils';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -10,16 +13,17 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator: searchInterfaceDecorator, afterEach} = wrapInSearchInterface({
+const {play} = wrapInSearchInterface({
+  config: {
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.numberOfResults = 1;
+      request.body = JSON.stringify(parsed);
+      return request;
+    },
+  },
   includeCodeRoot: false,
 });
-const {decorator: resultListDecorator} = wrapInResultList(
-  'list',
-  false,
-  'max-width: 100%; width: 768px; padding: 2rem;'
-);
-const {decorator: resultTemplateDecorator} = wrapInResultTemplateForSections();
-
 const meta: Meta = {
   component: 'atomic-result-section-badges',
   title: 'Search/Result Sections',
@@ -31,26 +35,28 @@ const meta: Meta = {
       handles: events,
     },
   },
-  args,
-  argTypes,
+  args: {
+    ...args,
+    ...getResultSectionArgs(),
+  },
+  argTypes: {
+    ...argTypes,
+    ...getResultSectionArgTypes(),
+  },
 };
 
 export default meta;
 
 export const Default: Story = {
   name: 'atomic-result-section-badges',
-  decorators: [
-    resultTemplateDecorator,
-    resultListDecorator,
-    searchInterfaceDecorator,
-  ],
-  afterEach,
+  decorators: getResultSectionDecorators(),
+  play,
   args: {
     'default-slot': `
-      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-        <span class="badge badge-primary" style="background: #ef4444; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">NEW</span>
-        <span class="badge badge-secondary" style="background: #f59e0b; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">SALE</span>
-        <span class="badge badge-success" style="background: #10b981; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">BESTSELLER</span>
+      <div>
+        <span class="badge badge-primary" style="background: #b21010; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">NEW</span>
+        <span class="badge badge-secondary" style="background: #2f0ab8; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">DOCUMENTATION</span>
+        <span class="badge badge-success" style="background: #096243; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">ARTICLE</span>
       </div>
     `,
   },

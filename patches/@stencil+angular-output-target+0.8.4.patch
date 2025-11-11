@@ -1,7 +1,7 @@
-diff --git a/node_modules/@stencil/angular-output-target/dist/generate-angular-component.js b/node_modules/@stencil/angular-output-target/dist/generate-angular-component.js
+diff --git a/dist/generate-angular-component.js b/dist/generate-angular-component.js
 index 16b41a9..a88f7b8 100644
---- a/node_modules/@stencil/angular-output-target/dist/generate-angular-component.js
-+++ b/node_modules/@stencil/angular-output-target/dist/generate-angular-component.js
+--- a/dist/generate-angular-component.js
++++ b/dist/generate-angular-component.js
 @@ -134,7 +134,7 @@ export const createComponentTypeDefinition = (outputType, tagNameAsPascal, event
      const eventTypes = publicEvents.map((event) => {
          const comment = createDocComment(event.docs);
@@ -11,10 +11,10 @@ index 16b41a9..a88f7b8 100644
              // If an event name includes a dash, we need to wrap it in quotes.
              // https://github.com/ionic-team/stencil-ds-output-targets/issues/212
              eventName = `'${event.name}'`;
-diff --git a/node_modules/@stencil/angular-output-target/dist/index.cjs.js b/node_modules/@stencil/angular-output-target/dist/index.cjs.js
+diff --git a/dist/index.cjs.js b/dist/index.cjs.js
 index a409a9e..291fa5d 100644
---- a/node_modules/@stencil/angular-output-target/dist/index.cjs.js
-+++ b/node_modules/@stencil/angular-output-target/dist/index.cjs.js
+--- a/dist/index.cjs.js
++++ b/dist/index.cjs.js
 @@ -279,7 +279,7 @@ const createComponentTypeDefinition = (outputType, tagNameAsPascal, events, comp
      const eventTypes = publicEvents.map((event) => {
          const comment = createDocComment(event.docs);
@@ -24,10 +24,10 @@ index a409a9e..291fa5d 100644
              // If an event name includes a dash, we need to wrap it in quotes.
              // https://github.com/ionic-team/stencil-ds-output-targets/issues/212
              eventName = `'${event.name}'`;
-diff --git a/node_modules/@stencil/angular-output-target/dist/index.js b/node_modules/@stencil/angular-output-target/dist/index.js
+diff --git a/dist/index.js b/dist/index.js
 index 66792ef..3ca0509 100644
---- a/node_modules/@stencil/angular-output-target/dist/index.js
-+++ b/node_modules/@stencil/angular-output-target/dist/index.js
+--- a/dist/index.js
++++ b/dist/index.js
 @@ -271,7 +271,7 @@ const createComponentTypeDefinition = (outputType, tagNameAsPascal, events, comp
      const eventTypes = publicEvents.map((event) => {
          const comment = createDocComment(event.docs);
@@ -37,10 +37,10 @@ index 66792ef..3ca0509 100644
              // If an event name includes a dash, we need to wrap it in quotes.
              // https://github.com/ionic-team/stencil-ds-output-targets/issues/212
              eventName = `'${event.name}'`;
-diff --git a/node_modules/@stencil/angular-output-target/angular-component-lib/utils.ts b/node_modules/@stencil/angular-output-target/angular-component-lib/utils.ts
+diff --git a/angular-component-lib/utils.ts b/angular-component-lib/utils.ts
 index b759048..03fd3da 100644
---- a/node_modules/@stencil/angular-output-target/angular-component-lib/utils.ts
-+++ b/node_modules/@stencil/angular-output-target/angular-component-lib/utils.ts
+--- a/angular-component-lib/utils.ts
++++ b/angular-component-lib/utils.ts
 @@ -1,6 +1,33 @@
  /* eslint-disable */
  /* tslint:disable */

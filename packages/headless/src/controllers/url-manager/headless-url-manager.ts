@@ -23,7 +23,7 @@ export interface UrlManagerProps {
 export interface UrlManagerInitialState {
   /**
    * The part of the url that contains search parameters.
-   * E.g., `q=windmill&f[author]=Cervantes`
+   * For example: `q=windmill&f[author]=Cervantes`.
    */
   fragment: string;
 }
@@ -35,7 +35,7 @@ export const initialStateSchema = new Schema<Required<UrlManagerInitialState>>({
 /**
  * The `UrlManager` controller can parse an url fragment to extract search parameters which affect the search response.
  *
- * Example: [url-manager.ts](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/url-manager/url-manager.ts)
+ * Example: [url-manager.ts](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/url-manager/url-manager.ts)
  *
  * @group Controllers
  * @category UrlManager
@@ -47,8 +47,8 @@ export interface UrlManager extends Controller {
   state: UrlManagerState;
 
   /**
-   * Updates the search parameters in state with those from the url & launches a search.
-   * @param fragment The part of the url that contains search parameters.  E.g., `q=windmill&f[author]=Cervantes`
+   * Updates the search parameters in state with those from the url and launches a search.
+   * @param fragment The part of the url that contains search parameters.  For example: `q=windmill&f[author]=Cervantes`.
    */
   synchronize(fragment: string): void;
 }
@@ -62,7 +62,7 @@ export interface UrlManager extends Controller {
 export interface UrlManagerState {
   /**
    * The part of the url that contains search parameters.
-   * E.g., `q=windmill&f[author]=Cervantes`
+   * For example: `q=windmill&f[author]=Cervantes`.
    */
   fragment: string;
 }

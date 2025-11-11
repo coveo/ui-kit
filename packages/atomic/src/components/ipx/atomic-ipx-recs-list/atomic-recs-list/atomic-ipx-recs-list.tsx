@@ -30,7 +30,7 @@ import {FocusTargetController} from '../../../../utils/stencil-accessibility-uti
 import {randomID} from '../../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/stencil-placeholders';
 import {createAppLoadedListener} from '../../../common/interface/store';
-import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
+import {ItemDisplayGuard} from '../../../common/item-list/stencil-item-display-guard';
 import {ResultTemplateProvider} from '../../../common/item-list/result-template-provider';
 import {DisplayGrid} from '../../../common/item-list/stencil-display-grid';
 import {DisplayWrapper} from '../../../common/item-list/stencil-display-wrapper';
@@ -52,7 +52,7 @@ import {RecsBindings} from '../../../recommendations/atomic-recs-interface/atomi
  * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
  *
  * @part result-list - The element containing the list of results.
- * @part result-list-grid-clickable-container - The parent of the result & the clickable link encompassing it.
+ * @part result-list-grid-clickable-container - The parent of the result and the clickable link encompassing it.
  * @part result-list-grid-clickable - The clickable link encompassing the result.
  * @part label - The label of the result list.
  * @part previous-button - The previous button.
@@ -139,7 +139,7 @@ export class AtomicIPXRecsList implements InitializableComponent<RecsBindings> {
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
-   * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
+   * You can use this function while working with web frameworks that don't use plain HTML syntax such as React, Angular, or Vue.
    *
    * Do not use this method if you integrate Atomic in a plain HTML deployment.
    *

@@ -37,8 +37,8 @@ amount.toLocaleString(atomicLocale);       // OK
 # Check with Biome
 npx @biomejs/biome lint packages/atomic/
 
-# Or use npm script
-npm run lint:check
+# Or use pnpm script
+pnpm run lint:check
 ```
 
 The plugin runs automatically as part of the existing lint process and will fail CI if violations are found.

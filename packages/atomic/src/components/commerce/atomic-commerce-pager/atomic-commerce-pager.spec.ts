@@ -3,17 +3,18 @@ import {
   buildSearch,
   type PaginationState,
 } from '@coveo/headless/commerce';
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {
   beforeEach,
   describe,
   expect,
+  it,
   type MockInstance,
   test,
   vi,
 } from 'vitest';
+import {page} from 'vitest/browser';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakePager} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/pager-subcontroller';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
@@ -185,6 +186,7 @@ describe('atomic-commerce-pager', () => {
     let focusSpy: MockInstance;
     let eventSpy: MockInstance;
     let previousSpy: MockInstance;
+    let announcePageLoaded: MockInstance;
 
     beforeEach(async () => {
       const element = await renderPager({state: {page: 2}});
@@ -194,6 +196,7 @@ describe('atomic-commerce-pager', () => {
       );
       eventSpy = vi.spyOn(element, 'dispatchEvent');
       previousSpy = vi.spyOn(element.pager, 'previousPage');
+      announcePageLoaded = vi.spyOn(element, 'announcePageLoaded');
 
       await locators.previous.click();
     });
@@ -211,12 +214,17 @@ describe('atomic-commerce-pager', () => {
     test('should call #pager.previousPage', async () => {
       expect(previousSpy).toHaveBeenCalled();
     });
+
+    it('should announce page loaded with correct page number', async () => {
+      expect(announcePageLoaded).toHaveBeenCalledOnce();
+    });
   });
 
   describe('when clicking on the next button', () => {
     let focusSpy: MockInstance;
     let eventSpy: MockInstance;
     let nextSpy: MockInstance;
+    let announcePageLoadedSpy: MockInstance;
 
     beforeEach(async () => {
       const element = await renderPager({state: {page: 2}});
@@ -226,6 +234,7 @@ describe('atomic-commerce-pager', () => {
       );
       eventSpy = vi.spyOn(element, 'dispatchEvent');
       nextSpy = vi.spyOn(element.pager, 'nextPage');
+      announcePageLoadedSpy = vi.spyOn(element, 'announcePageLoaded');
 
       await locators.next.click();
     });
@@ -242,6 +251,10 @@ describe('atomic-commerce-pager', () => {
 
     test('should call #pager.nextPage', async () => {
       expect(nextSpy).toHaveBeenCalled();
+    });
+
+    it('should announce page loaded with correct page number', async () => {
+      expect(announcePageLoadedSpy).toHaveBeenCalledOnce();
     });
   });
 
@@ -370,7 +383,7 @@ describe('atomic-commerce-pager', () => {
         buttons[buttons.length - 1],
       ];
 
-      await element['handleFocus'](buttons, firstPageButton, lastPageButton);
+      await element.handleFocus(buttons, firstPageButton, lastPageButton);
 
       await expectFocusOnButton(
         locators.previous.element(),
@@ -386,7 +399,7 @@ describe('atomic-commerce-pager', () => {
         buttons[buttons.length - 1],
       ];
 
-      await element['handleFocus'](buttons, lastPageButton, firstPageButton);
+      await element.handleFocus(buttons, lastPageButton, firstPageButton);
 
       await expectFocusOnButton(
         locators.next.element(),
@@ -399,7 +412,7 @@ describe('atomic-commerce-pager', () => {
 
       const [currentButton, nextButton] = buttons;
 
-      await element['handleFocus'](buttons, currentButton, nextButton);
+      await element.handleFocus(buttons, currentButton, nextButton);
 
       await expectFocusOnButton(
         locators.page2.element(),

@@ -62,8 +62,8 @@ export interface DateFacetProps {
  * The `DateFacet` controller makes it possible to create a facet with date ranges.
  *
  * Examples:
- * - [date-facet.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/date-facet/date-facet.fn.tsx)
- * - [relative-date-facet.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/relative-date-facet/relative-date-facet.fn.tsx)
+ * - [date-facet.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/date-facet/date-facet.fn.tsx)
+ * - [relative-date-facet.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/relative-date-facet/relative-date-facet.fn.tsx)
  *
  * @document relative-date-format.md
  *

@@ -5,8 +5,8 @@ runs:
   steps:
     - name: Complementary setup
       run: |
-        npm ci
-        npx turbo build --filter=@coveo/atomic
+        pnpm install --frozen-lockfile
+        pnpm exec turbo build --filter=@coveo/atomic
       shell: bash
     - name: Run tests
       # TODO KIT-3105

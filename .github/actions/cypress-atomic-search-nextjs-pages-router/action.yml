@@ -8,15 +8,15 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: npx cypress install
+    - run: pnpm exec cypress install
       shell: bash
       working-directory: samples/atomic/search-nextjs-pages-router
     - uses: cypress-io/github-action@v5
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: "npx -w @samples/atomic-search-nextjs-pages-router cypress-repeat run -n 3 --until-passes --rerun-failed-only --"
-        start: npx turbo dev --filter=@samples/atomic-search-nextjs-pages-router
+        command-prefix: "pnpm --filter @samples/atomic-search-nextjs-pages-router exec cypress-repeat run -n 3 --until-passes --rerun-failed-only --"
+        start: pnpm exec turbo dev --filter=@samples/atomic-search-nextjs-pages-router
         wait-on: "http://localhost:3000"
         wait-on-timeout: 600000
         install: false

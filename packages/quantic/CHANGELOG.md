@@ -1,3 +1,39 @@
+## <small>3.33.3 (2025-11-05)</small>
+
+* enabled recent queries test for insight use case (#6421) ([73fac60](https://github.com/coveo/ui-kit/commits/73fac60)), closes [#6421](https://github.com/coveo/ui-kit/issues/6421)
+* fix(quantic): fix setup scratch org step in CI (#6449) ([8c148c3](https://github.com/coveo/ui-kit/commits/8c148c3)), closes [#6449](https://github.com/coveo/ui-kit/issues/6449)
+
+
+
+## <small>3.33.2 (2025-10-30)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
+## <small>3.33.1 (2025-10-29)</small>
+
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
+## 3.33.0 (2025-10-28)
+
+* chore(quantic): parallelize scratch org setup (#6169) ([97e664c](https://github.com/coveo/ui-kit/commits/97e664c)), closes [#6169](https://github.com/coveo/ui-kit/issues/6169)
+* feat(quantic): Proposed Spanish Custom Labels for Quantic use. (#5457) ([9b8cae3](https://github.com/coveo/ui-kit/commits/9b8cae3)), closes [#5457](https://github.com/coveo/ui-kit/issues/5457)
+* feat(headless, quantic): recent queries feature made available for the insight use case (#6114) ([3f66527](https://github.com/coveo/ui-kit/commits/3f66527)), closes [#6114](https://github.com/coveo/ui-kit/issues/6114)
+* fix(docs): address missing parameter on insight panel interface (#6198) ([c25378b](https://github.com/coveo/ui-kit/commits/c25378b)), closes [#6198](https://github.com/coveo/ui-kit/issues/6198)
+
+
+
+## 3.32.0 (2025-10-22)
+
+* feat(quantic): ux improvements for quantic generated answer (#6186) ([a417c3f](https://github.com/coveo/ui-kit/commits/a417c3f)), closes [#6186](https://github.com/coveo/ui-kit/issues/6186)
+* fix(quantic): quantic e2e tests fixed (#6187) ([55be436](https://github.com/coveo/ui-kit/commits/55be436)), closes [#6187](https://github.com/coveo/ui-kit/issues/6187)
+
+
+
 ## <small>3.31.3 (2025-10-15)</small>
 
 * chore(quantic): salesforce cli version updated (#6164) ([be6ce9c](https://github.com/coveo/ui-kit/commits/be6ce9c)), closes [#6164](https://github.com/coveo/ui-kit/issues/6164)

@@ -9,8 +9,7 @@
       "@coveo/atomic-angular": [
         "../../../packages/atomic-angular/projects/atomic-angular/dist/"
       ]
-    },
-    "preserveSymlinks": true
+    }
   },
   "files": ["src/main.ts", "src/polyfills.ts"],
   "include": ["src/**/*.d.ts"],

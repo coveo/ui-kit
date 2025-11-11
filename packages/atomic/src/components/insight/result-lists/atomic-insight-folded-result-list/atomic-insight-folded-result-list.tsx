@@ -27,9 +27,9 @@ import {randomID} from '../../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/stencil-placeholders';
 import {extractUnfoldedItem} from '../../../common/item-list/unfolded-item';
 import {createAppLoadedListener} from '../../../common/interface/store';
-import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
+import {ItemDisplayGuard} from '../../../common/item-list/stencil-item-display-guard';
 import {FoldedItemListStateContextEvent} from '../../../common/item-list/item-list-decorators';
-import {ItemListGuard} from '../../../common/item-list/item-list-guard';
+import {ItemListGuard} from '../../../common/item-list/stencil-item-list-guard';
 import {ResultTemplateProvider} from '../../../common/item-list/result-template-provider';
 import {DisplayWrapper} from '../../../common/item-list/stencil-display-wrapper';
 import {
@@ -107,7 +107,7 @@ export class AtomicInsightFoldedResultList
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
-   * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
+   * You can use this function while working with web frameworks that don't use plain HTML syntax such as React, Angular, or Vue.
    *
    * Do not use this method if you integrate Atomic in a plain HTML deployment.
    */

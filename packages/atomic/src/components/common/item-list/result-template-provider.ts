@@ -3,8 +3,8 @@ import {
   type Result,
   type Template,
 } from '@coveo/headless';
+import type {ItemTarget} from '@/src/components/common/layout/item-layout-utils';
 import type {AnyBindings} from '../interface/bindings';
-import type {ItemTarget} from '../layout/display-options';
 import {
   TemplateProvider,
   type TemplateProviderProps,

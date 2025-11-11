@@ -2,7 +2,7 @@
   "name": "@coveo/atomic-react",
   "sideEffects": false,
   "type": "module",
-  "version": "3.3.18",
+  "version": "3.3.22",
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
@@ -10,17 +10,17 @@
     "directory": "packages/atomic-react"
   },
   "scripts": {
-    "gen:lit": "node ./scripts/build-lit.mjs && npm run build:fixLoaderImportPaths && npm run build:fixGeneratedImportPaths",
-    "build": "npm run build:bundles && npm run build:types && npm run build:assets",
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
+    "gen:lit": "node ./scripts/build-lit.mjs && pnpm run build:fixLoaderImportPaths && pnpm run build:fixGeneratedImportPaths",
+    "build": "pnpm run build:bundles && pnpm run build:types && pnpm run build:assets",
     "build:fixLoaderImportPaths": "node ./scripts/fix-loader-import-paths.js",
     "build:fixGeneratedImportPaths": "fix-esm-import-path src/components/stencil-generated",
     "build:bundles": "rollup --config rollup.config.js",
     "build:types": "tsc --project tsconfig.types.json",
-    "release:phase3": "npm run-script -w=@coveo/ci npm-publish",
-    "release:phase1": "npm run-script -w=@coveo/ci bump",
-    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
-    "build:assets": "node ../../utils/ci/copy-files.mjs ../atomic/dist/atomic/assets dist/assets ../atomic/dist/atomic/lang dist/lang"
+    "build:assets": "node ../../utils/ci/copy-files.mjs ../atomic/dist/atomic/assets dist/assets ../atomic/dist/atomic/lang dist/lang",
+    "release:phase3": "pnpm --filter @coveo/ci npm-publish",
+    "release:phase1": "pnpm --filter @coveo/ci bump",
+    "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod"
   },
   "module": "./dist/esm/atomic-react.mjs",
   "main": "./dist/cjs/atomic-react.cjs",
@@ -31,24 +31,25 @@
     "commerce/"
   ],
   "dependencies": {
-    "@coveo/atomic": "3.35.5",
-    "@lit/react": "1.0.6"
+    "@coveo/atomic": "workspace:*",
+    "@lit/react": "1.0.8"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "28.0.6",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "16.0.1",
     "@rollup/plugin-typescript": "12.1.4",
-    "@types/react": "18.3.3",
-    "@types/react-dom": "18.3.0",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "fix-esm-import-path": "1.10.1",
-    "react": "19.1.1",
-    "react-dom": "19.1.1",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "rollup": "4.46.2",
     "rollup-plugin-polyfill-node": "^0.13.0"
   },
   "peerDependencies": {
-    "@coveo/headless": "3.32.0",
+    "@coveo/headless": "workspace:*",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
