@@ -289,17 +289,21 @@ describe('atomic-recs-interface', () => {
             buildRecommendationEngine
           );
 
-          await element.initialize(recommendationEngineConfig);
+          // Use config without searchHub to test that property value is used
+          const {searchHub: _, ...configWithoutSearchHub} =
+            recommendationEngineConfig;
+
+          await element.initialize(configWithoutSearchHub);
 
           expect(getAnalyticsConfig).toHaveBeenCalledExactlyOnceWith(
-            recommendationEngineConfig,
+            configWithoutSearchHub,
             element.analytics
           );
           expect(
             mockedBuildRecommendationEngine
           ).toHaveBeenCalledExactlyOnceWith({
             configuration: {
-              ...recommendationEngineConfig,
+              ...configWithoutSearchHub,
               pipeline: 'test-pipeline',
               searchHub: 'test-hub',
               locale: 'fr',
@@ -324,6 +328,46 @@ describe('atomic-recs-interface', () => {
             expect.objectContaining({
               configuration: expect.objectContaining({
                 searchHub: 'default',
+              }),
+            })
+          );
+        });
+
+        it('should use searchHub from options when both property and options are provided', async () => {
+          const element = await setupElement({searchHub: 'property-hub'});
+          const mockedBuildRecommendationEngine = vi.mocked(
+            buildRecommendationEngine
+          );
+
+          await element.initialize({
+            ...recommendationEngineConfig,
+            searchHub: 'options-hub',
+          });
+
+          expect(mockedBuildRecommendationEngine).toHaveBeenCalledWith(
+            expect.objectContaining({
+              configuration: expect.objectContaining({
+                searchHub: 'options-hub',
+              }),
+            })
+          );
+        });
+
+        it('should use pipeline from options when both property and options are provided', async () => {
+          const element = await setupElement({pipeline: 'property-pipeline'});
+          const mockedBuildRecommendationEngine = vi.mocked(
+            buildRecommendationEngine
+          );
+
+          await element.initialize({
+            ...recommendationEngineConfig,
+            pipeline: 'options-pipeline',
+          });
+
+          expect(mockedBuildRecommendationEngine).toHaveBeenCalledWith(
+            expect.objectContaining({
+              configuration: expect.objectContaining({
+                pipeline: 'options-pipeline',
               }),
             })
           );

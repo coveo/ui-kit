@@ -32,7 +32,7 @@ export interface InstantResultProps {
 /**
  * The `InstantResults` controller allows the end user to manage instant results queries.
  *
- * Example: [instant-results.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/instant-results/instant-results.fn.tsx)
+ * Example: [instant-results.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/instant-results/instant-results.fn.tsx)
  *
  * @group Controllers
  * @category InstantResults

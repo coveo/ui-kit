@@ -103,5 +103,5 @@ export const buildFakeBreadcrumbManager = ({
   ({
     ...defaultImplementation,
     ...implementation,
-    ...(state && {state: {...defaultState, ...state}}),
+    ...{state: {...defaultState, ...(state || {})}},
   }) as BreadcrumbManager;

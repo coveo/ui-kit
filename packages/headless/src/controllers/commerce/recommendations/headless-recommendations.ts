@@ -1,4 +1,3 @@
-import {createSelector} from '@reduxjs/toolkit';
 import type {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
 import type {
   ChildProduct,
@@ -42,7 +41,7 @@ import type {RecommendationsSummaryState} from './summary/headless-recommendatio
 /**
  * The `Recommendations` controller exposes a method for retrieving recommendations content in a commerce interface.
  *
- * Example: [recommendations.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/commerce/recommendations.fn.tsx)
+ * Example: [recommendations.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/commerce/recommendations.fn.tsx)
  *
  * @group Buildable controllers
  * @category Recommendations
@@ -139,10 +138,9 @@ export function buildRecommendations(
   const {slotId, productId} = props.options;
   dispatch(registerRecommendationsSlot({slotId, productId}));
 
-  const recommendationStateSelector = createSelector(
-    (state: CommerceEngineState) => state.recommendations[slotId]!,
-    (recommendations) => recommendations
-  );
+  const recommendationStateSelector = (state: CommerceEngineState) =>
+    state.recommendations[slotId]!;
+
   const subControllers = buildBaseSubControllers<RecommendationsSummaryState>(
     engine,
     {

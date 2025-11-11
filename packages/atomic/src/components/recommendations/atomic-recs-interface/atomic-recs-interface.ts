@@ -315,12 +315,12 @@ export class AtomicRecsInterface
     try {
       this.engine = buildRecommendationEngine({
         configuration: {
-          ...options,
           pipeline: this.pipeline,
           searchHub: this.searchHub ?? 'default',
           locale: this.language,
           timezone: this.timezone,
           analytics: analyticsConfig,
+          ...options,
         },
         loggerOptions: {
           level: this.logLevel,

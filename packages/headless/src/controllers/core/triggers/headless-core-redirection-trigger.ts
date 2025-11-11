@@ -3,7 +3,7 @@ import type {Controller} from '../../controller/headless-controller.js';
 /**
  * The `RedirectionTrigger` controller handles redirection triggers. A [Redirection trigger](https://docs.coveo.com/en/3413#redirect) query pipeline rule lets you define a URL to redirect the user's browser to when a certain condition is met.
  *
- * Example: [redirection-trigger.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/triggers/redirection-trigger.fn.tsx)
+ * Example: [redirection-trigger.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/triggers/redirection-trigger.fn.tsx)
  *
  * @group Controllers
  * @category RedirectionTrigger
