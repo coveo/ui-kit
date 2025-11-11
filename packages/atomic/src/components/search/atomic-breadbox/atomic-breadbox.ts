@@ -7,7 +7,7 @@ import {
   type FacetManager,
   type FacetManagerState,
 } from '@coveo/headless';
-import {type CSSResultGroup, html, LitElement, nothing} from 'lit';
+import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {renderBreadcrumbButton} from '@/src/components/common/breadbox/breadcrumb-button';
 import {renderBreadcrumbClearAll} from '@/src/components/common/breadbox/breadcrumb-clear-all';
@@ -29,7 +29,6 @@ import {
   FocusTargetController,
 } from '@/src/utils/accessibility-utils';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
-import styles from './atomic-breadbox.tw.css';
 
 /**
  * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
@@ -53,7 +52,20 @@ export class AtomicBreadbox
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  static styles: CSSResultGroup = styles;
+  static styles: CSSResultGroup = [
+    css`
+      [part='breadcrumb-label'].excluded,
+      [part='breadcrumb-value'].excluded {
+        text-decoration: line-through;
+        @apply text-error;
+      }
+
+      /* When excluded, strikethrough line must be continuous, so we must prepend empty character instead of margin */
+      [part='breadcrumb-value']::before {
+        content: '\00a0';
+      }
+    `,
+  ];
 
   private resizeObserver?: ResizeObserver;
   private lastRemovedBreadcrumbIndex = 0;
@@ -163,9 +175,8 @@ export class AtomicBreadbox
       html`${this.renderBreadcrumbs(breadcrumbs)}
       ${renderBreadcrumbShowMore({
         props: {
-          refCallback: async (_el) => {
-            // Show more button doesn't need to set focus target
-            // Focus target for breadcrumbShowMoreFocus is set on the breadcrumb buttons themselves
+          refCallback: async (el) => {
+            await this.breadcrumbShowLessFocus.setTarget(el!);
           },
           onShowMore: () => {
             this.firstExpandedBreadcrumbIndex =

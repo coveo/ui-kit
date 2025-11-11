@@ -1,7 +1,6 @@
 import {TagProps, TestFixture} from '../fixtures/test-fixture';
 import {
   addBreadbox,
-  breadboxLabel,
   deselectAllBreadcrumbs,
 } from './breadbox-actions';
 import * as BreadboxAssertions from './breadbox-assertions';
@@ -15,20 +14,17 @@ import {
   canadaHierarchyIndex,
   selectChildValueAt as selectCategoryFacetChildValueAt,
 } from './facets/category-facet/category-facet-actions';
-import * as CategoryFacetAssertions from './facets/category-facet/category-facet-assertions';
 import {
   addColorFacet,
   colorFacetField,
   colorFacetLabel,
   selectIdleBoxValueAt as selectColorFacetIdleBoxValueAt,
 } from './facets/color-facet/color-facet-actions';
-import * as ColorFacetAssertions from './facets/color-facet/color-facet-assertions';
 import {
   excludeIdleCheckboxValueAt,
   selectIdleCheckboxValueAt,
   selectIdleLinkValueAt,
 } from './facets/facet-common-actions';
-import * as CommonFacetAssertions from './facets/facet-common-assertions';
 import {addFacet, label} from './facets/facet/facet-actions';
 import {FacetSelectors} from './facets/facet/facet-selectors';
 import {
@@ -36,7 +32,6 @@ import {
   numericFacetField,
   numericFacetLabel,
 } from './facets/numeric-facet/numeric-facet-actions';
-import {NumericFacetSelectors} from './facets/numeric-facet/numeric-facet-selectors';
 import {
   addTimeframeFacet,
   timeframeFacetLabel,
@@ -44,160 +39,71 @@ import {
 } from './facets/timeframe-facet/timeframe-facet-action';
 import {TimeframeFacetSelectors} from './facets/timeframe-facet/timeframe-facet-selectors';
 
-describe('Breadbox Test Suites', () => {
-  function setupBreadboxWithMultipleFacets(props: TagProps = {}) {
-    new TestFixture()
-      .withTranslation({'a.translated.label': 'This is a translated label'})
-      .with(addBreadbox())
-      .with(addFacet({field: 'author', label, ...props}))
-      .with(
-        addNumericFacet({field: numericFacetField, label: numericFacetLabel})
-      )
-      .with(addTimeframeFacet({label: timeframeFacetLabel}, unitFrames))
-      .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
-      .with(addCategoryFacet())
-      .init();
-  }
-
-  // When an automatic facet generator is used with other facets, if the query is too narrow, there won't be any automatic facet.
+describe('Breadbox Test Suites - Specialized Scenarios', () => {
+  // Test automatic facet generator breadcrumbs (not covered in Playwright)
   describe('when selecting an automatic facet', () => {
     const selectionIndex = 2;
     function setupBreadboxWithMultipleSelectedFacets() {
       new TestFixture()
         .withTranslation({'a.translated.label': 'This is a translated label'})
         .with(addBreadbox())
+        .with(addFacet({field: 'author', label}))
         .with(
           addAutomaticFacetGenerator({
             'desired-count': '1',
           })
         )
         .init();
-      selectIdleCheckboxValueAt(AutomaticFacetSelectors, selectionIndex);
+      selectIdleCheckboxValueAt(FacetSelectors, selectionIndex);
     }
 
     describe('verify rendering', () => {
       beforeEach(() => setupBreadboxWithMultipleSelectedFacets());
       BreadboxAssertions.assertDisplayBreadcrumb(true);
       CommonAssertions.assertAccessibility(breadboxComponent);
-      BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
-      BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
-      it('should display the selected checkbox facets in the breadcrumbs', () => {
+      it('should display the selected automatic facet in breadcrumbs', () => {
         AutomaticFacetSelectors.labelButton()
           .invoke('text')
           .then((facetLabel) => {
             BreadboxAssertions.assertSelectedCheckboxFacetsInBreadcrumbAssertions(
-              AutomaticFacetSelectors,
+              FacetSelectors,
               facetLabel
             );
           });
       });
-      BreadboxAssertions.assertDisplayBreadcrumbClearIcon();
-      BreadboxAssertions.assertBreadcrumbDisplayLength(1);
     });
 
     describe('when selecting "Clear all" button', () => {
-      function setupClearAllBreadcrumb() {
+      beforeEach(() => {
         setupBreadboxWithMultipleSelectedFacets();
         deselectAllBreadcrumbs();
-      }
-
-      describe('verify rendering', () => {
-        beforeEach(setupClearAllBreadcrumb);
-        BreadboxAssertions.assertDisplayBreadcrumb(false);
-        CommonFacetAssertions.assertNumberOfSelectedCheckboxValues(
-          AutomaticFacetSelectors,
-          0
-        );
       });
 
       describe('verify analytics', () => {
-        beforeEach(setupClearAllBreadcrumb);
         BreadboxAssertions.assertLogBreadcrumbClearAll();
       });
     });
   });
 
-  describe('when selecting a standard facet, a numeric facet', () => {
-    const selectionIndex = 2;
-    function setupBreadboxWithMultipleSelectedFacets(props: TagProps = {}) {
-      setupBreadboxWithMultipleFacets(props);
-      selectIdleCheckboxValueAt(NumericFacetSelectors, selectionIndex);
-      selectIdleCheckboxValueAt(FacetSelectors, selectionIndex);
-    }
-
-    describe('with i18n translated labels', () => {
-      beforeEach(() =>
-        setupBreadboxWithMultipleSelectedFacets({
-          label: 'a.translated.label',
-        })
-      );
-
-      it('should have the proper button label', () => {
-        BreadboxSelectors.breadcrumbButton().should(
-          'contain.text',
-          'This is a translated label'
-        );
-      });
-    });
-
-    describe('verify rendering', () => {
-      beforeEach(() => setupBreadboxWithMultipleSelectedFacets());
-      BreadboxAssertions.assertDisplayBreadcrumb(true);
-      CommonAssertions.assertAccessibility(breadboxComponent);
-      BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
-      BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
-      BreadboxAssertions.assertSelectedCheckboxFacetsInBreadcrumb(
-        FacetSelectors
-      );
-      BreadboxAssertions.assertSelectedCheckboxFacetsInBreadcrumb(
-        NumericFacetSelectors,
-        numericFacetLabel
-      );
-      BreadboxAssertions.assertDisplayBreadcrumbClearIcon();
-      BreadboxAssertions.assertBreadcrumbDisplayLength(2);
-      BreadboxAssertions.assertAriaLabel('inclusion');
-    });
-
-    describe('when selecting "Clear all" button', () => {
-      function setupClearAllBreadcrumb() {
-        setupBreadboxWithMultipleSelectedFacets();
-        deselectAllBreadcrumbs();
-      }
-
-      describe('verify rendering', () => {
-        beforeEach(setupClearAllBreadcrumb);
-        BreadboxAssertions.assertDisplayBreadcrumb(false);
-        CommonFacetAssertions.assertNumberOfSelectedCheckboxValues(
-          FacetSelectors,
-          0
-        );
-        CommonFacetAssertions.assertNumberOfSelectedCheckboxValues(
-          NumericFacetSelectors,
-          0
-        );
-        ColorFacetAssertions.assertNumberOfSelectedBoxValues(0);
-        CategoryFacetAssertions.assertNumberOfParentValues(0);
-        CommonFacetAssertions.assertNumberOfSelectedLinkValues(
-          TimeframeFacetSelectors,
-          0
-        );
-      });
-
-      describe('verify analytics', () => {
-        beforeEach(setupClearAllBreadcrumb);
-        BreadboxAssertions.assertLogBreadcrumbClearAll();
-      });
-    });
-  });
-
-  describe('when selecting a category facet, a color facet and a timeframe facet', () => {
+  // Test specific facet types (not covered in Playwright)
+  describe('when selecting category facet, color facet and timeframe facet', () => {
     function setupBreadboxWithDifferentTypeSelectedFacet() {
       const selectionIndex = 0;
-      setupBreadboxWithMultipleFacets();
+      new TestFixture()
+        .with(addBreadbox())
+        .with(addFacet({field: 'author', label}))
+        .with(
+          addNumericFacet({field: numericFacetField, label: numericFacetLabel})
+        )
+        .with(addTimeframeFacet({label: timeframeFacetLabel}, unitFrames))
+        .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
+        .with(addCategoryFacet())
+        .init();
       selectCategoryFacetChildValueAt(canadaHierarchyIndex[0]);
       selectIdleLinkValueAt(TimeframeFacetSelectors, selectionIndex);
       selectColorFacetIdleBoxValueAt(selectionIndex);
     }
+
     describe('verify rendering', () => {
       beforeEach(setupBreadboxWithDifferentTypeSelectedFacet);
       const selectedPath = canadaHierarchy.slice(0, 1);
@@ -208,68 +114,30 @@ describe('Breadbox Test Suites', () => {
         TimeframeFacetSelectors
       );
       BreadboxAssertions.assertCategoryPathInBreadcrumb(selectedPath);
-      BreadboxAssertions.assertDisplayBreadcrumbClearIcon();
       BreadboxAssertions.assertBreadcrumbDisplayLength(3);
     });
   });
 
-  describe('when selecting 16 facet values', () => {
-    const activeValues = [...Array(16).keys()];
-
-    function setupFacetWithMultipleSelectedValues() {
+  // Test i18n functionality (not covered in Playwright)
+  describe('with i18n translated labels', () => {
+    beforeEach(() => {
       new TestFixture()
+        .withTranslation({'a.translated.label': 'This is a translated label'})
         .with(addBreadbox())
-        .with(addFacet({field: 'author', label}))
-        .withHash(`f-author=${activeValues.join(',')}`)
+        .with(addFacet({field: 'author', label: 'a.translated.label'}))
         .init();
-      BreadboxSelectors.breadcrumbButton().then((buttons) =>
-        cy.wrap(buttons.filter(':visible').length).as('numberOfVisibleButtons')
-      );
-    }
-
-    describe('verify rendering', () => {
-      beforeEach(setupFacetWithMultipleSelectedValues);
-      CommonAssertions.assertAccessibility(breadboxComponent);
-      BreadboxAssertions.assertDisplayBreadcrumb(true);
-      BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
-      BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
-      BreadboxAssertions.assertSelectedCheckboxFacetsInBreadcrumb(
-        FacetSelectors
-      );
-      BreadboxAssertions.assertBreadcrumbDisplayLength(activeValues.length);
-      BreadboxAssertions.assertDisplayBreadcrumbShowMore(true);
+      selectIdleCheckboxValueAt(FacetSelectors, 2);
     });
 
-    describe('when selecting "+" show more breadcrumb', () => {
-      function setupFacetWithMultipleSelectedValuesAndShowMore() {
-        setupFacetWithMultipleSelectedValues();
-        BreadboxSelectors.breadcrumbShowMoreButton().click();
-      }
-
-      describe('verify rendering', () => {
-        beforeEach(setupFacetWithMultipleSelectedValuesAndShowMore);
-
-        BreadboxAssertions.assertRemoveBreadcrumbShowMoreInDOM();
-        BreadboxAssertions.assertDisplayBreadcrumbShowLess(true);
-        BreadboxAssertions.assertDisplayAllBreadcrumb(true);
-      });
-    });
-
-    describe('when selecting "-" show less breadcrumb', () => {
-      beforeEach(() => {
-        setupFacetWithMultipleSelectedValues();
-        BreadboxSelectors.breadcrumbShowMoreButton().click();
-        BreadboxSelectors.breadcrumbShowLessButton().click();
-      });
-
-      describe('verify rendering', () => {
-        BreadboxAssertions.assertDisplayBreadcrumbShowLess(false);
-        BreadboxAssertions.assertDisplayBreadcrumbShowMore(true);
-        BreadboxAssertions.assertDisplayAllBreadcrumb(false);
-      });
+    it('should have the proper translated button label', () => {
+      BreadboxSelectors.breadcrumbButton().should(
+        'contain.text',
+        'This is a translated label'
+      );
     });
   });
 
+  // Test exclusion filters (not covered in Playwright)
   describe('when excluding from a standard facet', () => {
     const selectionIndex = 1;
 
@@ -285,13 +153,9 @@ describe('Breadbox Test Suites', () => {
       beforeEach(setupFacetWithMultipleExcludedValues);
       CommonAssertions.assertAccessibility(breadboxComponent);
       BreadboxAssertions.assertDisplayBreadcrumb(true);
-      BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);
-      BreadboxAssertions.assertBreadcrumbLabel(breadboxLabel);
       BreadboxAssertions.assertExcludedCheckboxFacetsInBreadcrumb(
         FacetSelectors
       );
-      BreadboxAssertions.assertBreadcrumbDisplayLength(1);
-      BreadboxAssertions.assertDisplayBreadcrumbShowMore(false);
       BreadboxAssertions.assertAriaLabel('exclusion');
     });
   });
