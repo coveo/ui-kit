@@ -7,7 +7,7 @@ if (!process.env.INIT_CWD) {
 process.chdir(process.env.INIT_CWD);
 
 if (process.argv.length === 3) {
-  execSync(`pnpm ${process.argv[2]}:${process.env.CI ? 'ci' : 'noci'}`, {
+  execSync(`pnpm ${process.argv[2]}:${process.env.CI ? 'ci' : 'no-ci'}`, {
     stdio: 'inherit',
   });
 }

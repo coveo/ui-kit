@@ -171,8 +171,7 @@ describe('InterfaceController', () => {
       await helper.onInitialization(initEngine);
 
       expect(engine.logger.warn).toHaveBeenCalledExactlyOnceWith(
-        'The atomic-commerce-interface component "initialize" has already been called.',
-        atomicInterface
+        'The atomic-commerce-interface component "initialize" has already been called.'
       );
       expect(initEngine).not.toHaveBeenCalled();
     });

@@ -1144,9 +1144,9 @@ describe('atomic-commerce-interface', () => {
         );
         onLanguageChangeSpy.mockClear();
 
-        vi.mocked(loadContextActions).mockReturnValue({
+        vi.mocked(loadContextActions).mockImplementation(() => ({
           setContext: setContextMock,
-        } as unknown as ReturnType<typeof loadContextActions>);
+        }));
       });
 
       it('should call InterfaceController.onLanguageChange when the language parameter is provided', async () => {

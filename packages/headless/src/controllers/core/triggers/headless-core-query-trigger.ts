@@ -3,7 +3,7 @@ import type {Controller} from '../../controller/headless-controller.js';
 /**
  * The `QueryTrigger` controller handles [query trigger](https://docs.coveo.com/en/3413#query) query pipeline rules, which let you define a search query to execute when a certain condition is met.
  *
- * Example: [query-trigger.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/triggers/query-trigger.fn.tsx)
+ * Example: [query-trigger.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/triggers/query-trigger.fn.tsx)
  *
  * @group Controllers
  * @category QueryTrigger

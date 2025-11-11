@@ -27,7 +27,7 @@ export interface FacetManagerPayload<T> {
 /**
  * The `FacetManager` controller helps reorder facets to match the most recent search response.
  *
- * Example: [facet-manager.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/facet-manager/facet-manager.fn.tsx)
+ * Example: [facet-manager.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/facet-manager/facet-manager.fn.tsx)
  *
  * @group Controllers
  * @category FacetManager
