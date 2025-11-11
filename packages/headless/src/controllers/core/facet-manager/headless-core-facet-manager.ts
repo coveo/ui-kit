@@ -19,7 +19,7 @@ export interface FacetManagerPayload<T> {
   facetId: string;
 
   /**
-   * The payload to associate with the facetId. This can be anything e.g., a DOM element, JSX, a string.
+   * The payload to associate with the facetId. This can be anything such as a DOM element, JSX, a string.
    */
   payload: T;
 }
