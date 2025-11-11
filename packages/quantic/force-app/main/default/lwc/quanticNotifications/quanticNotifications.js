@@ -76,6 +76,7 @@ export default class QuanticNotifications extends LightningElement {
     this.notifications =
       this.notifyTrigger?.state?.notifications.map((notification, index) => ({
         value: notification,
+        isHTML: notification.startsWith('test'),
         id: index,
         visible: true,
       })) ?? [];
