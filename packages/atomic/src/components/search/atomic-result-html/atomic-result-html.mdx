@@ -33,32 +33,4 @@ This component is used within `atomic-result-template` components inside the res
 </atomic-search-interface>
 ```
 
-### Basic Usage
-
-To display HTML content from a result field:
-
-```html
-<atomic-result-html field="excerpt"></atomic-result-html>
-```
-
-### With Sanitization
-
-By default, the component sanitizes HTML content using DOMPurify. You can control this behavior:
-
-```html
-<!-- Sanitized (default) -->
-<atomic-result-html field="excerpt" sanitize="true"></atomic-result-html>
-
-<!-- Not sanitized (use only with trusted data) -->
-<atomic-result-html field="excerpt" sanitize="false"></atomic-result-html>
-```
-
-### Supported Fields
-
-The component looks for fields in this order:
-1. First in the Result object properties
-2. Then in the `result.raw` object
-
-If the field has no value, the component will not render anything.
-
 </AtomicDocTemplate>
