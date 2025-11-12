@@ -1,6 +1,6 @@
 <template>
   <li
-    class="citation slds-m-right_xx-small slds-m-vertical_xx-small slds-is-relative"
+    class={citationClasses}
   >
     <a
       class="citation__link slds-badge slds-badge_lightest slds-align_absolute-center slds-text-link_reset slds-p-left_xx-small slds-p-right_x-small"
@@ -12,6 +12,16 @@
       onmouseleave={handleCitationMouseLeave}
       onclick={handleClick}
     >
+      <!-- Attachment indicator icon -->
+      <template if:true={isAttached}>
+        <lightning-icon
+          icon-name="utility:attach"
+          alternative-text="Attached"
+          size="xx-small"
+          class="citation__attached-icon slds-m-right_xx-small"
+        ></lightning-icon>
+      </template>
+
       <p
         class="citation__title slds-m-left_x-small slds-truncate slds-has-flexi-truncate"
       >
@@ -45,7 +55,10 @@
           {text}
         </div>
         <div class="citation__tooltip-actions">
-          <slot name="citation-action" onactionregister={handleCitationActionRegister}></slot>
+          <slot
+            name="citation-action"
+            onactionregister={handleCitationActionRegister}
+          ></slot>
         </div>
       </div>
     </c-quantic-tooltip>

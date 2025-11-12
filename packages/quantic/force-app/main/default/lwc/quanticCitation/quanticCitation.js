@@ -1,6 +1,6 @@
 import {LinkUtils, generateTextFragmentUrl} from 'c/quanticUtils';
 import {NavigationMixin} from 'lightning/navigation';
-import {LightningElement, api} from 'lwc';
+import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").InteractiveCitation} InteractiveCitation */
 
@@ -55,6 +55,9 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
    */
   @api disableCitationAnchoring = false;
 
+  /** @type {boolean} */
+  @track isAttached = false;
+
   /** @type {Object} */
   timeout;
   /** @type {number} */
@@ -74,7 +77,10 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
 
   connectedCallback() {
     // Listens to register event from citation action slot
-    this.template.addEventListener('actionregister', this.handleCitationActionRegister);
+    this.template.addEventListener(
+      'actionregister',
+      this.handleCitationActionRegister
+    );
 
     const fileType = this.citation?.fields?.filetype;
     this.isHrefWithTextFragment =
@@ -112,7 +118,10 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   }
 
   disconnectedCallback() {
-    this.template.removeEventListener('actionregister', this.handleCitationActionRegister);
+    this.template.removeEventListener(
+      'actionregister',
+      this.handleCitationActionRegister
+    );
     this.removeBindings?.();
     clearTimeout(this.timeout);
     this.hideTooltipDebounced?.cancel();
@@ -192,6 +201,10 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       register({
         citation: this.citation,
         interactiveCitation: this.interactiveCitation,
+        onAttachmentStateChange: (isAttached) => {
+          this.isAttached = isAttached;
+          console.log('Citation attachment state updated:', isAttached);
+        },
       });
     }
   }
@@ -263,5 +276,10 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
     return this.isSalesforceLink
       ? this.salesforceRecordUrl
       : (this.clickUri ?? this.citation?.uri);
+  }
+
+  get citationClasses() {
+    const baseClasses = 'citation slds-m-right_xx-small slds-m-vertical_xx-small slds-is-relative';
+    return this.isAttached ? `${baseClasses} is-attached` : baseClasses;
   }
 }
