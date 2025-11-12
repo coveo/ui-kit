@@ -31,7 +31,7 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  * By default, the field name is displayed before the field value to clarify which facet the value is from.
  * You can clear a single selection by clicking the `x` inside of each pill, or clear all selections by using the `Clear` button.
  *
- * @part container - The container of the whole component, list & label.
+ * @part container - The container of the whole component, list, and label.
  * @part breadcrumb-list-container - The container of the list of breadcrumb buttons.
  * @part breadcrumb-list - The list of breadcrumb buttons.
  * @part breadcrumb-button - A single breadcrumb button.

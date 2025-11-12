@@ -10,7 +10,7 @@ import {ResultContext} from '@/src/components/search/result-template-component-u
 
 /**
  * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
- * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (e.g., `isRecommendation`).
+ * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (for example, `isRecommendation`).
  *
  * @slot default - The content to display if the conditions are met.
  *

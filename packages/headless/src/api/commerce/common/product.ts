@@ -34,7 +34,7 @@ export interface BaseProduct {
    */
   ec_brand: string | null;
   /**
-   * The category of the product (e.g., `"Electronics;Electronics|Televisions;Electronics|Televisions|4K Televisions"`).
+   * The category of the product (for example, `"Electronics;Electronics|Televisions;Electronics|Televisions|4K Televisions"`).
    *
    * From the `ec_category` field.
    */
@@ -149,7 +149,7 @@ export interface Product extends BaseProduct {
   /**
    * The 1-based product's position across the non-paginated result set.
    *
-   * E.g., if the product is the third one on the second page, and there are 10 products per page, its position is 13 (not 3).
+   * For example, if the product is the third one on the second page, and there are 10 products per page, its position is 13 (not 3).
    */
   position: number;
 }
