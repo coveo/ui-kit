@@ -217,3 +217,21 @@ render() {
   `;
 }
 ```
+
+## Storybook Integration
+
+**All new and modified Atomic components MUST have Storybook stories.** Use the Storybook MCP tools for story management:
+
+### Story Creation Requirements
+
+- **Always create stories** for new components following the boilerplate pattern in `atomic-name.new.stories.tsx`
+- **Update existing stories** when modifying component APIs or behavior
+- **Use MCP tools** to generate proper story URLs for testing and documentation
+- **Follow Storybook conventions** as outlined in the UI building instructions
+
+### MCP Tool Integration
+
+**After any component changes:**
+1. Use `mcp_storybook_get-story-urls` tool to generate story links for visual inspection
+2. Provide story URLs to users for component validation
+3. Ensure all component variants are covered in stories
