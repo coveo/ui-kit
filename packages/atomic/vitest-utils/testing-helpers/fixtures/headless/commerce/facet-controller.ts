@@ -58,5 +58,5 @@ export const buildFakeRegularFacet = ({
   ({
     ...defaultImplementation,
     ...implementation,
-    ...(state && {state: {...defaultState, ...state}}),
+    ...{state: {...defaultState, ...(state || {})}},
   }) as RegularFacet;

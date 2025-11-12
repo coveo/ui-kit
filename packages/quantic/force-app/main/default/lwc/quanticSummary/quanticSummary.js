@@ -18,7 +18,7 @@ import {LightningElement, track, api} from 'lwc';
 /** @typedef {import("coveo").QuerySummaryState} QuerySummaryState */
 
 /**
- * The `QuanticSummary` component displays information about the current range of results (e.g., "Results 1-10 of 123").
+ * The `QuanticSummary` component displays information about the current range of results (for example, "Results 1-10 of 123").
  * @category Search
  * @category Insight Panel
  * @example

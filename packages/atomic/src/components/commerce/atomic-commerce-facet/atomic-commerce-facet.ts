@@ -71,7 +71,7 @@ import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerc
  *
  * @part show-more - The show more values button.
  * @part show-less - The show less values button.
- * @part show-more-less-icon - The icons of the show more & show less buttons.
+ * @part show-more-less-icon - The icons of the show more and show less buttons.
  */
 @customElement('atomic-commerce-facet')
 @bindings()

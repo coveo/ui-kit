@@ -30,5 +30,5 @@ export const buildFakeRecommendations = ({
   ({
     ...defaultImplementation,
     ...implementation,
-    ...(state && {state: {...defaultState, ...state}}),
+    ...{state: {...defaultState, ...(state || {})}},
   }) as Recommendations;

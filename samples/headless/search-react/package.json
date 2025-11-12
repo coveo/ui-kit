@@ -27,10 +27,10 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && vite build --ssr server/server.tsx --outDir dist/server",
     "serve": "vite preview",
     "test": "vitest run",
-    "prod:ssr": "node ./build/server/server/server.js"
+    "prod:ssr": "node ./dist/server/index.js"
   },
   "browserslist": {
     "production": [

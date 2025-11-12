@@ -4,11 +4,11 @@ interface HostedPage {
    */
   html: string;
   /**
-   * The JavaScript resources appended to the header of a specific hosted page in the target Coveo Cloud organization.
+   * The JavaScript resources appended to the header of a specific hosted page in the target Coveo organization.
    */
   javascript?: HostedPageJavascriptFile[];
   /**
-   * The CSS resources appended to the header, pertaining to a specific hosted page in the target Coveo Cloud organization.
+   * The CSS resources appended to the header, pertaining to a specific hosted page in the target Coveo organization.
    */
   css?: HostedPageCSS[];
 }

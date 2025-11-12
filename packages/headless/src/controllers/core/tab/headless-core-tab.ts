@@ -77,7 +77,7 @@ export interface TabProps {
 /**
  * The `Tab` headless controller offers a high-level interface for designing a common tab UI controller.
  *
- * Example: [tab.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/tab/tab.fn.tsx)
+ * Example: [tab.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/tab/tab.fn.tsx)
  *
  * @group Controllers
  * @category Tab

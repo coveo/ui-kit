@@ -327,9 +327,9 @@ export class AtomicCommerceInterface
    * configuration in your Coveo organization, requests made through the
    * commerce engine will start failing.
    *
-   * @param language - (Optional) The IETF language code tag (e.g., `en`).
-   * @param country - (Optional) The ISO-3166-1 country tag (e.g., `US`).
-   * @param currency - (Optional) The ISO-4217 currency code (e.g., `USD`).
+   * @param language - (Optional) The IETF language code tag (for example, `en`).
+   * @param country - (Optional) The ISO-3166-1 country tag (for example, `US`).
+   * @param currency - (Optional) The ISO-4217 currency code (for example, `USD`).
    *
    * @example
    * ```typescript
