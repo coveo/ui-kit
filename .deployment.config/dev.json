@@ -9,7 +9,7 @@
     "environments_order": {
       "sequential": ["dev"]
     },
-    "start_environment_automatically": false,
+    "start_environment_automatically": false
   },
   "dag_phases": [
     {
