@@ -49,7 +49,7 @@ export interface NumericFacetProps {
 /**
  * The `NumericFacet` controller makes it possible to create a facet with numeric ranges.
  *
- * Example: [numeric-facet.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/numeric-facet/numeric-facet.fn.tsx)
+ * Example: [numeric-facet.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/numeric-facet/numeric-facet.fn.tsx)
  *
  * @group Controllers
  * @category NumericFacet

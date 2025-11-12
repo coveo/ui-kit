@@ -57,7 +57,7 @@ export interface ResultListProps {
 /**
  * The `ResultList` headless controller offers a high-level interface for designing a common result list UI controller.
  *
- * Example: [result-list.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/result-list/result-list.fn.tsx)
+ * Example: [result-list.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/result-list/result-list.fn.tsx)
  *
  * @group Controllers
  * @category ResultList

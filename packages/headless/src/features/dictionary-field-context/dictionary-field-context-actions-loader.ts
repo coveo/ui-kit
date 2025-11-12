@@ -31,7 +31,7 @@ export interface DictionaryFieldContextActionCreators {
   /**
    * Removes a dictionary field context field-key pair.
    *
-   * @param field - The field to remove from the context (e.g., "price").
+   * @param field - The field to remove from the context (for example, "price").
    * @returns A dispatchable action.
    */
   removeContext(field: string): PayloadAction<string>;

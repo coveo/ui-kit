@@ -26,9 +26,9 @@ export class AtomicFormatUnit {
   /**
    * The unit formatting style to use in unit formatting.
    *
-   * * "long" (e.g., 16 litres)
-   * * "short" (e.g., 16 l)
-   * * "narrow" (e.g., 16l)
+   * * "long" (for example, 16 litres)
+   * * "short" (for example, 16 l)
+   * * "narrow" (for example, 16l)
    */
   @Prop({reflect: true}) public unitDisplay?: 'long' | 'short' | 'narrow' =
     'short';

@@ -28,6 +28,9 @@
       "ignore": ["cdn/**"],
       "ignoreDependencies": ["local-web-server"]
     },
+    "packages/atomic-angular": {
+      "ignoreDependencies": ["rxjs"]
+    },
     "packages/atomic-angular/projects/atomic-angular": {
       "entry": ["src/public-api.ts"],
       "ignore": ["src/lib/stencil-generated/**/*.ts"]

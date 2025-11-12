@@ -5,6 +5,7 @@ import {
 // @ts-ignore
 import {createElement} from 'lwc';
 import QuanticCitation from '../quanticCitation';
+import {debounce} from '../quanticCitation';
 
 const functionsMocks = {
   eventHandler: jest.fn((event) => event),
@@ -112,6 +113,67 @@ describe('c-quantic-citation', () => {
     cleanup();
   });
 
+  describe('debounce function', () => {
+    let mockFnToDebounce;
+    const DEBOUNCE_DELAY = 200;
+
+    beforeEach(() => {
+      jest.useFakeTimers();
+      mockFnToDebounce = jest.fn();
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    // Ensures that rapid calls result in only one execution
+    test('should execute once after the delay and use the arguments from the last call', () => {
+      const debouncedFn = debounce(mockFnToDebounce, DEBOUNCE_DELAY);
+
+      debouncedFn('first');
+      expect(mockFnToDebounce).not.toHaveBeenCalled();
+
+      jest.advanceTimersByTime(DEBOUNCE_DELAY - 100);
+      debouncedFn('middle');
+
+      jest.advanceTimersByTime(DEBOUNCE_DELAY - 100);
+      debouncedFn('last');
+
+      expect(mockFnToDebounce).not.toHaveBeenCalled();
+      jest.advanceTimersByTime(DEBOUNCE_DELAY);
+
+      expect(mockFnToDebounce).toHaveBeenCalledTimes(1);
+      expect(mockFnToDebounce).toHaveBeenCalledWith('last');
+    });
+
+    // Ensures calls separated by more than the delay execute independently.
+    test('should execute multiple times if calls are spaced outside the delay', () => {
+      const debouncedFn = debounce(mockFnToDebounce, DEBOUNCE_DELAY);
+
+      debouncedFn(100);
+      jest.advanceTimersByTime(DEBOUNCE_DELAY);
+      expect(mockFnToDebounce).toHaveBeenCalledTimes(1);
+      expect(mockFnToDebounce).toHaveBeenCalledWith(100);
+
+      debouncedFn(200, {data: 'second'});
+      jest.advanceTimersByTime(DEBOUNCE_DELAY);
+      expect(mockFnToDebounce).toHaveBeenCalledTimes(2);
+      expect(mockFnToDebounce).toHaveBeenCalledWith(200, {data: 'second'});
+    });
+
+    // Ensures that the execution can be canceled before the delay expires.
+    test('should not execute the function if cancel is called before the delay', () => {
+      const debouncedFn = debounce(mockFnToDebounce, DEBOUNCE_DELAY);
+
+      debouncedFn('should not run');
+      jest.advanceTimersByTime(DEBOUNCE_DELAY / 2);
+      debouncedFn.cancel();
+
+      jest.advanceTimersByTime(DEBOUNCE_DELAY * 2);
+      expect(mockFnToDebounce).not.toHaveBeenCalled();
+    });
+  });
+
   it('should properly display the citation', async () => {
     const element = createTestComponent();
     await flushPromises();
@@ -160,6 +222,31 @@ describe('c-quantic-citation', () => {
       jest.useRealTimers();
     });
 
+    it('should display the citation tooltip', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const citationLink = element.shadowRoot.querySelector(
+        selectors.citationLink
+      );
+      const citationTooltip = element.shadowRoot.querySelector(
+        selectors.citationTooltip
+      );
+
+      expect(citationLink).not.toBeNull();
+      expect(citationTooltip).not.toBeNull();
+
+      // Spy on the tooltip's showTooltip method to verify it gets called
+      const showTooltipSpy = jest.spyOn(citationTooltip, 'showTooltip');
+
+      await citationLink.dispatchEvent(
+        new CustomEvent('mouseenter', {bubbles: true})
+      );
+      jest.advanceTimersByTime(200);
+
+      expect(showTooltipSpy).toHaveBeenCalledTimes(1);
+    });
+
     it('should dispatch a citation hover event after hovering over the the citation for more than 1200ms, 200ms debounce duration before hover + 1000ms minimum hover duration', async () => {
       const element = createTestComponent();
       await flushPromises();
@@ -173,18 +260,20 @@ describe('c-quantic-citation', () => {
       await citationLink.dispatchEvent(
         new CustomEvent('mouseenter', {bubbles: true})
       );
-      jest.advanceTimersByTime(1200);
+      jest.advanceTimersByTime(1000);
       await citationLink.dispatchEvent(
         new CustomEvent('mouseleave', {bubbles: true})
       );
+      // Additional 200ms delay for the new hide tooltip logic
+      jest.advanceTimersByTime(200);
 
       expect(functionsMocks.eventHandler).toHaveBeenCalledTimes(1);
       expect(functionsMocks.eventHandler).toHaveBeenCalledWith({
-        citationHoverTimeMs: 1000,
+        citationHoverTimeMs: 1200,
       });
     });
 
-    it('should not dispatch a citation hover event after hovering over the the citation for more than 1200ms', async () => {
+    it('should not dispatch a citation hover event after hovering over the citation for less than 1200ms', async () => {
       const element = createTestComponent();
       await flushPromises();
       setupEventDispatchTest('quantic__citationhover');
@@ -201,8 +290,58 @@ describe('c-quantic-citation', () => {
       await citationLink.dispatchEvent(
         new CustomEvent('mouseleave', {bubbles: true})
       );
+      // Additional 200ms delay for the new hide tooltip logic
+      jest.advanceTimersByTime(200);
 
       expect(functionsMocks.eventHandler).toHaveBeenCalledTimes(0);
+    });
+
+    describe('when moving the cursor between the citation link and the tooltip', () => {
+      it('should keep the tooltip displayed', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const citationLink = element.shadowRoot.querySelector(
+          selectors.citationLink
+        );
+        const citationTooltip = element.shadowRoot.querySelector(
+          selectors.citationTooltip
+        );
+
+        expect(citationLink).not.toBeNull();
+        expect(citationTooltip).not.toBeNull();
+
+        const hideTooltipSpy = jest.spyOn(citationTooltip, 'hideTooltip');
+
+        // Hover over the citation
+        await citationLink.dispatchEvent(
+          new CustomEvent('mouseenter', {bubbles: true})
+        );
+        jest.advanceTimersByTime(200);
+
+        // Move cursor to tooltip in less than 200ms
+        await citationLink.dispatchEvent(
+          new CustomEvent('mouseleave', {bubbles: true})
+        );
+        jest.advanceTimersByTime(100);
+        await citationTooltip.dispatchEvent(
+          new CustomEvent('mouseenter', {bubbles: true})
+        );
+
+        // Move cursor back to citation in less than 200ms
+        await citationTooltip.dispatchEvent(
+          new CustomEvent('mouseleave', {bubbles: true})
+        );
+        jest.advanceTimersByTime(100);
+        await citationLink.dispatchEvent(
+          new CustomEvent('mouseenter', {bubbles: true})
+        );
+
+        // Advance time beyond 200ms to see if tooltip is hidden
+        jest.advanceTimersByTime(300);
+
+        expect(hideTooltipSpy).toHaveBeenCalledTimes(0);
+      });
     });
   });
 

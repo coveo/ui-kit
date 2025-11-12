@@ -31,7 +31,7 @@ export default function ParameterManager({url}: {url: string | null}) {
    * we are able to prevent this.
    *
    * For instance, suppose that a user initially navigates to /search?q=test. They then select the next page of results
-   * so that the URL becomes /search?q=test&page=1. Then, they navigate to a product page (e.g., /product/123). At this
+   * so that the URL becomes /search?q=test&page=1. Then, they navigate to a product page (for example, /product/123). At this
    * point, if they use their browser history to go back to the search page, the URL will be /search?q=test&page=1, but
    * the ParameterManager controller's state will have been reset to only include the q=test parameter. Thanks to the
    * flag, however, the navigation event will not cause the URL to be updated, but the useSearchParams hook will cause
