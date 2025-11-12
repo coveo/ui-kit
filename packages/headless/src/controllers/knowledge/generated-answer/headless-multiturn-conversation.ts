@@ -3,12 +3,12 @@ import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-ap
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../../app/engine.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
-
 import {
   generateAnswerBeta,
   updateAnswerConfigurationId,
   updateResponseFormat,
 } from '../../../features/generated-answer/generated-answer-actions.js';
+import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice.js';
 import {multiTurnReducer as multiTurnConversation} from '../../../features/multi-turn-conversation/multi-turn-conversation-slice.js';
 import type {MultiTurnConversationState as MultiTurnConversationStateInterface} from '../../../features/multi-turn-conversation/multi-turn-conversation-state.js';
 import type {
@@ -83,6 +83,7 @@ function loadAnswerApiReducers(
   engine.addReducers({
     [answerApi.reducerPath]: answerApi.reducer,
     multiTurnConversation,
+    generatedAnswer,
   });
   return true;
 }
