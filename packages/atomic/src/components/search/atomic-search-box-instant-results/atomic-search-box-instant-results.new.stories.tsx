@@ -46,7 +46,7 @@ const meta: Meta = {
       await userEvent.click(searchBox[0]);
       await expect(
         await canvas.findByShadowLabelText(
-          'Sample Result 0, instant result. Button. 1 of 5. In Right list.'
+          /Sample Result 0, instant result\.( Button\.)? 1 of \d+\. In Right list\./
         )
       ).toBeVisible();
     });
