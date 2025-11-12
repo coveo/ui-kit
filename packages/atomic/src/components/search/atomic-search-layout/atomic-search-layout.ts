@@ -25,7 +25,7 @@ export class AtomicSearchLayout extends LightDomMixin(
 
   /**
    * The viewport width at which the layout goes from desktop to mobile.
-   * E.g., 800px, 65rem.
+   * For example: 800px, 65rem.
    */
   @property({type: String, reflect: true, attribute: 'mobile-breakpoint'})
   mobileBreakpoint: string = DEFAULT_MOBILE_BREAKPOINT;

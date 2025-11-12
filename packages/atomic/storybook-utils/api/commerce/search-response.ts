@@ -8,6 +8,7 @@ export const baseResponse = {
       clickUri: 'https://example.com/product/1',
       ec_brand: 'Sample Brand',
       ec_category: 'Electronics',
+      children: [],
     },
     {
       permanentid: 'product-2',
@@ -16,6 +17,7 @@ export const baseResponse = {
       clickUri: 'https://example.com/product/2',
       ec_brand: 'Sample Brand',
       ec_category: 'Electronics',
+      children: [],
     },
   ],
   facets: [],
