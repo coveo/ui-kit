@@ -47,6 +47,7 @@ const meta: Meta = {
     const searchBox =
       await context.canvas.findAllByShadowPlaceholderText('Search');
     await userEvent.click(searchBox[0]);
+    await new Promise((resolve) => setTimeout(resolve, 500));
   },
 };
 
