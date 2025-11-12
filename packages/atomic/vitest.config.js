@@ -7,6 +7,7 @@ import {playwright} from '@vitest/browser-playwright';
 import {configDefaults, defineConfig} from 'vitest/config';
 import packageJsonHeadless from '../headless/package.json' with {type: 'json'};
 import packageJson from './package.json' with {type: 'json'};
+import {mockCacheBustPlugin} from './scripts/vite-plugin-mock-cache-bust.mjs';
 
 const port = 63315;
 const resourceUrl = `http://localhost:${port}/`;
@@ -38,6 +39,8 @@ function replace() {
   });
 }
 
+const [mockCacheBustPre, mockCacheBustPost] = mockCacheBustPlugin();
+
 const atomicDefault = defineConfig({
   name: 'atomic-default',
   server: {
@@ -60,9 +63,9 @@ const atomicDefault = defineConfig({
   },
   plugins: [
     replace(),
+    mockCacheBustPre,
     {
       name: 'force-inline-css-imports',
-      enforce: 'pre',
       transform(code, id) {
         if (id.endsWith('.ts')) {
           return {
@@ -77,10 +80,8 @@ const atomicDefault = defineConfig({
         return null;
       },
     },
-    tailwindcss(),
     {
       name: 'svg-transform',
-      enforce: 'pre',
       transform(code, id) {
         if (id.endsWith('.ts')) {
           const transformedCode = svgTransform(code, id);
@@ -92,6 +93,8 @@ const atomicDefault = defineConfig({
         return null;
       },
     },
+    tailwindcss(),
+    mockCacheBustPost,
   ],
   test: {
     name: 'atomic-default',
