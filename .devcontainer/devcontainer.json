@@ -19,7 +19,6 @@
   // postCreateCommand runs AFTER prebuild (fast for users)
   // Used for quick setup tasks after a codespace is created
 
-
   // updateContentCommand runs DURING prebuild (slow but cached)
   // This is where expensive operations like install and build should go
   "updateContentCommand": "bash -c 'CI=true corepack enable pnpm && pnpm install --frozen-lockfile && pnpm run build'",
