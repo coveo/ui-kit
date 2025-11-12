@@ -24,19 +24,19 @@ const originSchemaOnUpdate = () => requiredNonEmptyString;
 
 export interface UpdateBasicConfigurationActionCreatorPayload {
   /**
-   * The access token to use to authenticate requests against the Coveo Cloud endpoints. Typically, this will be an API key or search token that grants the privileges to execute queries and push usage analytics data in the target Coveo Cloud organization.
+   * The access token to use to authenticate requests against the Coveo endpoints. Typically, this will be an API key or search token that grants the privileges to execute queries and push usage analytics data in the target Coveo organization.
    */
   accessToken?: string;
 
   /**
    * The environment in which the organization is hosted.
    *
-   * The `dev` and `stg` environments are only available internally for Coveo employees (e.g., Professional Services).
+   * The `dev` and `stg` environments are only available internally for Coveo employees (for example, Professional Services).
    */
   environment?: PlatformEnvironment;
 
   /**
-   * The unique identifier of the target Coveo Cloud organization (e.g., `mycoveocloudorganizationg8tp8wu3`)
+   * The unique identifier of the target Coveo organization (for example, `mycoveocloudorganizationg8tp8wu3`)
    */
   organizationId?: string;
 }
@@ -56,7 +56,7 @@ export const updateBasicConfiguration = createAction(
 
 export interface UpdateSearchConfigurationActionCreatorPayload {
   /**
-   * The base URL to use to proxy Coveo search requests (e.g., `https://example.com/search`).
+   * The base URL to use to proxy Coveo search requests (for example, `https://example.com/search`).
    *
    * This is an advanced option that you only set if you proxy Coveo searchrequests through your own
    * server. In most cases, you should not set this option.
@@ -66,12 +66,12 @@ export interface UpdateSearchConfigurationActionCreatorPayload {
   proxyBaseUrl?: string;
 
   /**
-   * The name of the query pipeline to use for the query (e.g., `External Search`).
+   * The name of the query pipeline to use for the query (for example, `External Search`).
    */
   pipeline?: string;
 
   /**
-   * The first level of origin of the request, typically the identifier of the graphical search interface from which the request originates (e.g., `ExternalSearch`).
+   * The first level of origin of the request, typically the identifier of the graphical search interface from which the request originates (for example, `ExternalSearch`).
    */
   searchHub?: string;
 
@@ -124,17 +124,17 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
   originContext?: string;
 
   /**
-   * The origin level 2 usage analytics event metadata whose value should typically be the identifier of the tab from which the usage analytics event originates (e.g., `All`).
+   * The origin level 2 usage analytics event metadata whose value should typically be the identifier of the tab from which the usage analytics event originates (for example, `All`).
    */
   originLevel2?: string;
 
   /**
-   * The origin level 3 usage analytics event metadata whose value should typically be the URL of the page that linked to the search interface that’s making the request (e.g., `https://connect.coveo.com/s/`).
+   * The origin level 3 usage analytics event metadata whose value should typically be the URL of the page that linked to the search interface that’s making the request (for example, `https://connect.coveo.com/s/`).
    */
   originLevel3?: string;
 
   /**
-   * The base URL to use to proxy Coveo analytics requests (e.g., `https://example.com/analytics`).
+   * The base URL to use to proxy Coveo analytics requests (for example, `https://example.com/analytics`).
    *
    * This is an advanced option that you only set if you proxy Coveo analytics requests through your own
    * server. In most cases, you should not set this option.
@@ -170,8 +170,8 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
   trackingId?: string;
   /**
    * The analytics client to use.
-   * - `legacy`: The legacy analytics client, i.e., the Coveo Analytics.js library.
-   * - `next`: The next analytics client, i.e., the Coveo Event Protocol with the Relay library.
+   * - `legacy`: The legacy analytics client, that is, the Coveo Analytics.js library.
+   * - `next`: The next analytics client, that is, the Coveo Event Protocol with the Relay library.
    *
    * @default 'next'
    */
@@ -228,7 +228,7 @@ export const enableAnalytics = createAction('configuration/analytics/enable');
 
 export interface SetOriginLevel2ActionCreatorPayload {
   /**
-   * The origin level 2 usage analytics event metadata whose value should typically be the identifier of the tab (e.g., `All`).
+   * The origin level 2 usage analytics event metadata whose value should typically be the identifier of the tab (for example, `All`).
    */
   originLevel2: string;
 }
@@ -241,7 +241,7 @@ export const setOriginLevel2 = createAction(
 
 export interface SetOriginLevel3ActionCreatorPayload {
   /**
-   * The origin level 3 usage analytics event metadata whose value should typically be the URL of the page that linked to the search interface (e.g., `https://connect.coveo.com/s/`).
+   * The origin level 3 usage analytics event metadata whose value should typically be the URL of the page that linked to the search interface (for example, `https://connect.coveo.com/s/`).
    */
   originLevel3: string;
 }

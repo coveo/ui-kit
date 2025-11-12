@@ -58,7 +58,7 @@ Before writing tests:
      export const buildFakeController = ({implementation, state} = {}) => ({
        ...defaultImplementation,
        ...implementation,
-       ...(state && {state: {...defaultState, ...state}}),
+       ...({state: {...defaultState, ...(state || {})}}),
      });
      ```
    - **Result/product templates:** Ensure `atomic-result-fixture.ts` or `atomic-product-fixture.ts` exists (already available)
@@ -108,7 +108,7 @@ describe('atomic-component', () => {
     controllerState?: Partial<ControllerState>;
   } = {}) => {
     mockedController = buildFakeController({state: controllerState});
-    vi.mocked(buildController).mockReturnValue(mockedController);
+    vi.mocked(buildController).mockImplementation(() => mockedController);
 
     const {element} = await renderInAtomicSearchInterface<AtomicComponent>({
       template: html`<atomic-component
@@ -228,6 +228,9 @@ describe('atomic-result-number', () => {
 
 **✅ DO:**
 ```typescript
+// Use mockImplementation for mocked functions
+vi.mocked(buildController).mockImplementation(() => mockedController);
+
 // Render with desired state
 const {element, button} = await renderComponent({
   props: {value: 'test'},
@@ -268,6 +271,9 @@ expect(element).toBeNull(); // Component removed itself
 
 **❌ DON'T:**
 ```typescript
+// Don't use mockReturnValue - use mockImplementation instead
+vi.mocked(buildController).mockReturnValue(mockedController);
+
 // Don't modify props after render unless testing reactivity
 element.property = 'value';
 await element.updateComplete;

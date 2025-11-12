@@ -1164,12 +1164,14 @@ describe('atomic-search-interface', () => {
     });
     describe('when the engine has been created & the language attribute is defined & the context is defined', () => {
       it('should call InterfaceController.onLanguageChange with no argument', async () => {
-        const element = await setupElement({language: 'en'});
-        await element.initialize(searchEngineConfig);
         const onLanguageChangeSpy = vi.spyOn(
           InterfaceController.prototype,
           'onLanguageChange'
         );
+        const element = await setupElement({language: 'en'});
+        await element.initialize(searchEngineConfig);
+        await element.updateComplete;
+        onLanguageChangeSpy.mockClear();
 
         element.language = 'fr';
         await element.updateComplete;
