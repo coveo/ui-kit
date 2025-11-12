@@ -1,0 +1,23 @@
+.container{
+
+}
+
+.header{
+  font-size: 36px;
+  font-weight: 400;
+}
+
+.subheader{
+  color: #80858c;
+  font-weight: 400;
+}
+
+.chat-input {
+  display: flex;
+  height: 48px;
+}
+
+.prompt-input {
+  flex: 1;
+  margin-right: 0.5rem;
+}

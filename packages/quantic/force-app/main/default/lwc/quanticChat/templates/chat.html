@@ -1,0 +1,39 @@
+<template>
+  <div class="chat-container">
+    <!-- Chat Messages -->
+    <template lwc:if={answers.length}>
+      <div class="chat-messages">
+        <template for:each={answers} for:item="answer">
+          <div key={answer.prompt} class="turn">
+            <!-- User prompt -->
+            <div class="message user-message">{answer.prompt}</div>
+            <!-- AI generated answer -->
+            <div class="message ai-message">
+              <c-quantic-generated-answer-content
+                answer-content-format={answer.answerContentFormat}
+                answer={answer.answer}
+                is-streaming={answer.isStreaming}
+              >
+              </c-quantic-generated-answer-content>
+            </div>
+          </div>
+        </template>
+      </div>
+    </template>
+
+    <!-- Input Area -->
+    <div class="chat-input slds-p-top_large slds-m-top_large">
+      <lightning-input
+        variant="label-hidden"
+        class="prompt-input"
+        placeholder="Ask me anything"
+        value={currentPrompt}
+        onchange={handleInputChange}
+        onkeyup={handleKeyUp}
+      >
+      </lightning-input>
+      <lightning-button class="send-button" label="Send" onclick={submitPrompt}>
+      </lightning-button>
+    </div>
+  </div>
+</template>
