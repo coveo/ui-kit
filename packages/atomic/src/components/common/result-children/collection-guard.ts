@@ -11,7 +11,6 @@ import type {FunctionalComponentWithChildren} from '@/src/utils/functional-compo
 interface CollectionGuardProps {
   isLoadingMoreResults: boolean;
   moreResultsAvailable: boolean;
-  hasChildren: boolean;
   numberOfChildren: number;
   density: ItemDisplayDensity;
   imageSize: ItemDisplayImageSize;
@@ -26,24 +25,27 @@ export const renderCollectionGuard: FunctionalComponentWithChildren<
     const {
       isLoadingMoreResults,
       moreResultsAvailable,
-      hasChildren,
       numberOfChildren,
       density,
       imageSize,
       noResultText,
     } = props;
 
+    const hasChildren = numberOfChildren > 0;
+
     if (isLoadingMoreResults) {
-      return renderChildrenWrapper()(
-        renderItemPlaceholders({
-          props: {
-            numberOfPlaceholders: numberOfChildren,
-            density,
-            display: 'list',
-            imageSize,
-          },
-        })
-      );
+      const placeholders = renderItemPlaceholders({
+        props: {
+          numberOfPlaceholders: numberOfChildren,
+          density,
+          display: 'list',
+          imageSize,
+        },
+      });
+
+      return hasChildren
+        ? renderChildrenWrapper()(placeholders)
+        : html`<div part="children-root">${placeholders}</div>`;
     }
 
     if (!moreResultsAvailable && !hasChildren) {

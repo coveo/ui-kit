@@ -7,7 +7,6 @@ describe('#renderCollectionGuard', () => {
   const defaultProps = {
     isLoadingMoreResults: false,
     moreResultsAvailable: true,
-    hasChildren: true,
     numberOfChildren: 3,
     density: 'normal' as const,
     imageSize: 'large' as const,
@@ -76,11 +75,11 @@ describe('#renderCollectionGuard', () => {
       });
     });
 
-    describe('when hasChildren is true', () => {
+    describe('when numberOfChildren is greater than 0', () => {
       it('should render before-children slot', async () => {
         const element = await renderComponent({
           isLoadingMoreResults: true,
-          hasChildren: true,
+          numberOfChildren: 3,
         });
 
         const slots = element.querySelectorAll('slot[name="before-children"]');
@@ -90,20 +89,42 @@ describe('#renderCollectionGuard', () => {
       it('should render after-children slot', async () => {
         const element = await renderComponent({
           isLoadingMoreResults: true,
-          hasChildren: true,
+          numberOfChildren: 3,
         });
 
         const slots = element.querySelectorAll('slot[name="after-children"]');
         expect(slots).toHaveLength(1);
       });
     });
+
+    describe('when numberOfChildren is 0', () => {
+      it('should not render before-children slot', async () => {
+        const element = await renderComponent({
+          isLoadingMoreResults: true,
+          numberOfChildren: 0,
+        });
+
+        const slots = element.querySelectorAll('slot[name="before-children"]');
+        expect(slots).toHaveLength(0);
+      });
+
+      it('should not render after-children slot', async () => {
+        const element = await renderComponent({
+          isLoadingMoreResults: true,
+          numberOfChildren: 0,
+        });
+
+        const slots = element.querySelectorAll('slot[name="after-children"]');
+        expect(slots).toHaveLength(0);
+      });
+    });
   });
 
-  describe('when moreResultsAvailable is false and hasChildren is false', () => {
+  describe('when moreResultsAvailable is false and numberOfChildren is 0', () => {
     it('should render no-result-root paragraph when noResultText has content', async () => {
       const element = await renderComponent({
         moreResultsAvailable: false,
-        hasChildren: false,
+        numberOfChildren: 0,
         noResultText: 'No results found',
       });
 
@@ -115,7 +136,7 @@ describe('#renderCollectionGuard', () => {
     it('should apply the correct classes to no-result-root', async () => {
       const element = await renderComponent({
         moreResultsAvailable: false,
-        hasChildren: false,
+        numberOfChildren: 0,
         noResultText: 'No results',
       });
 
@@ -127,7 +148,7 @@ describe('#renderCollectionGuard', () => {
     it('should not render anything when noResultText is empty', async () => {
       const element = await renderComponent({
         moreResultsAvailable: false,
-        hasChildren: false,
+        numberOfChildren: 0,
         noResultText: '',
       });
 
@@ -138,7 +159,7 @@ describe('#renderCollectionGuard', () => {
     it('should not render anything when noResultText contains only whitespace', async () => {
       const element = await renderComponent({
         moreResultsAvailable: false,
-        hasChildren: false,
+        numberOfChildren: 0,
         noResultText: '   ',
       });
 
@@ -147,11 +168,11 @@ describe('#renderCollectionGuard', () => {
     });
   });
 
-  describe('when hasChildren is false and other conditions do not match', () => {
+  describe('when numberOfChildren is 0 and other conditions do not match', () => {
     it('should not render anything', async () => {
       const element = await renderComponent({
         moreResultsAvailable: true,
-        hasChildren: false,
+        numberOfChildren: 0,
         isLoadingMoreResults: false,
       });
 
@@ -159,13 +180,13 @@ describe('#renderCollectionGuard', () => {
     });
   });
 
-  describe('when hasChildren is true and other conditions do not match', () => {
+  describe('when numberOfChildren is greater than 0 and other conditions do not match', () => {
     it('should render the provided children', async () => {
       const testChildren = html`<div class="custom-child">Custom Content</div>`;
       const element = await renderComponent(
         {
           moreResultsAvailable: true,
-          hasChildren: true,
+          numberOfChildren: 3,
           isLoadingMoreResults: false,
         },
         testChildren
@@ -179,7 +200,7 @@ describe('#renderCollectionGuard', () => {
     it('should not render children-root wrapper', async () => {
       const element = await renderComponent({
         moreResultsAvailable: true,
-        hasChildren: true,
+        numberOfChildren: 3,
         isLoadingMoreResults: false,
       });
 
@@ -190,7 +211,7 @@ describe('#renderCollectionGuard', () => {
     it('should not render placeholders', async () => {
       const element = await renderComponent({
         moreResultsAvailable: true,
-        hasChildren: true,
+        numberOfChildren: 3,
         isLoadingMoreResults: false,
       });
 
@@ -203,7 +224,7 @@ describe('#renderCollectionGuard', () => {
     it('should not render no-result-root', async () => {
       const element = await renderComponent({
         moreResultsAvailable: true,
-        hasChildren: true,
+        numberOfChildren: 3,
         isLoadingMoreResults: false,
       });
 
