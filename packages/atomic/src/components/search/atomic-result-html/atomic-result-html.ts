@@ -86,13 +86,13 @@ export class AtomicResultHtml
     return html`
       ${when(
         this.result && this.field,
-        () => this.renderResultHtmlValue(),
+        () => this.renderResultHtml(),
         () => nothing
       )}
     `;
   }
 
-  private renderResultHtmlValue() {
+  private renderResultHtml() {
     const resultValue = getStringValueFromResultOrNull(this.result, this.field);
 
     if (!resultValue) {
