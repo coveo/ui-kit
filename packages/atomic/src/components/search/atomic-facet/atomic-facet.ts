@@ -52,6 +52,7 @@ import {renderFacetValuesGroup} from '../../common/facets/facet-values-group/fac
 import {initializePopover} from '../../common/facets/popover/popover-type';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import '../../common/atomic-facet-placeholder/atomic-facet-placeholder';
+import {arrayConverter} from '@/src/converters/array-converter';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindings} from '@/src/decorators/bindings';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
@@ -158,9 +159,10 @@ export class AtomicFacet
   @property({
     type: Array,
     attribute: 'tabs-included',
+    converter: arrayConverter,
     reflect: true,
   })
-  public tabsIncluded: string[] | string = [];
+  public tabsIncluded: string[] = [];
 
   /**
    * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.
@@ -174,9 +176,10 @@ export class AtomicFacet
   @property({
     type: Array,
     attribute: 'tabs-excluded',
+    converter: arrayConverter,
     reflect: true,
   })
-  public tabsExcluded: string[] | string = [];
+  public tabsExcluded: string[] = [];
 
   /**
    * The number of values to request for this facet.
@@ -357,6 +360,8 @@ export class AtomicFacet
           ? this.allowedValues
           : [],
         customSort: Array.isArray(this.customSort) ? this.customSort : [],
+        tabsExcluded: this.tabsExcluded,
+        tabsIncluded: this.tabsIncluded,
       }),
       new Schema({
         field: new StringValue({required: true, emptyAllowed: false}),
@@ -391,6 +396,14 @@ export class AtomicFacet
         customSort: new ArrayValue({
           each: new StringValue({emptyAllowed: false}),
           max: 25,
+          required: false,
+        }),
+        tabsExcluded: new ArrayValue({
+          each: new StringValue({emptyAllowed: false}),
+          required: false,
+        }),
+        tabsIncluded: new ArrayValue({
+          each: new StringValue({emptyAllowed: false}),
           required: false,
         }),
       })
