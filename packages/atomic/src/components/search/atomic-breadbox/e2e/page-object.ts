@@ -53,4 +53,72 @@ export class AtomicBreadboxPageObject extends BasePageObject {
   getShowLessButton() {
     return this.page.getByRole('button').filter({hasText: /Show less/});
   }
+
+  getExclusionBreadcrumbButtons(value?: string | RegExp) {
+    const baseLocator = this.page.getByLabel('Remove exclusion filter on', {
+      exact: false,
+    });
+    return value ? baseLocator.filter({hasText: value}) : baseLocator;
+  }
+
+  getCategoryFacetValues(field = 'geographicalhierarchy') {
+    return this.page.locator(
+      `atomic-category-facet[field="${field}"] button[part="value-link"]`
+    );
+  }
+
+  getColorFacetValues(field = 'color') {
+    return this.page.locator(
+      `atomic-color-facet[field="${field}"] button[part="value-box"]`
+    );
+  }
+
+  getTimeframeFacetValues() {
+    return this.page.locator(
+      'atomic-timeframe-facet button[part="value-link"]'
+    );
+  }
+
+  getNumericFacetInputs(field = 'price') {
+    return {
+      min: this.page.locator(
+        `atomic-numeric-facet[field="${field}"] input[part="input-start"]`
+      ),
+      max: this.page.locator(
+        `atomic-numeric-facet[field="${field}"] input[part="input-end"]`
+      ),
+      apply: this.page.locator(
+        `atomic-numeric-facet[field="${field}"] button[part="apply-button"]`
+      ),
+    };
+  }
+
+  async selectFacetValueByIndex(
+    facetType: 'objecttype' | 'filetype' | 'source',
+    index: number
+  ) {
+    const facetValues = this.getFacetValue(facetType);
+    await facetValues.nth(index).waitFor({state: 'visible', timeout: 10000});
+    await facetValues.nth(index).click();
+  }
+
+  async selectCategoryFacetValue(index: number) {
+    const categoryValues = this.getCategoryFacetValues();
+    await categoryValues.nth(index).waitFor({state: 'visible', timeout: 10000});
+    await categoryValues.nth(index).click();
+  }
+
+  async selectColorFacetValue(index: number) {
+    const colorValues = this.getColorFacetValues();
+    await colorValues.nth(index).waitFor({state: 'visible', timeout: 10000});
+    await colorValues.nth(index).click();
+  }
+
+  async selectTimeframeFacetValue(index: number) {
+    const timeframeValues = this.getTimeframeFacetValues();
+    await timeframeValues
+      .nth(index)
+      .waitFor({state: 'visible', timeout: 10000});
+    await timeframeValues.nth(index).click();
+  }
 }

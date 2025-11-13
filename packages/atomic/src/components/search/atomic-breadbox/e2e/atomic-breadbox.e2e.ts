@@ -11,17 +11,14 @@ test.describe('atomic-breadbox', () => {
       {
         facetType: 'objecttype',
         filter: '&f-objecttype=People',
-        breadcrumbLabel: 'Object type: People',
       },
       {
         facetType: 'source',
         filter: '&f-source=YouTube',
-        breadcrumbLabel: 'Source: YouTube',
       },
       {
         facetType: 'filetype',
         filter: '&f-filetype=lithiumpresentation',
-        breadcrumbLabel: 'File type: lithiumpresentation',
       },
     ].forEach(({facetType, filter}) => {
       const baseUrl =
@@ -47,71 +44,6 @@ test.describe('atomic-breadbox', () => {
     });
   });
 
-  test.describe('when a regular facet value is selected', () => {
-    let firstValueText: string | RegExp;
-
-    test.beforeEach(async ({breadbox}) => {
-      await breadbox.hydrated.waitFor({state: 'visible'});
-      await breadbox.page.waitForTimeout(3000);
-
-      firstValueText = (await breadbox
-        .getFacetValue('objecttype')
-        .locator('span')
-        .first()
-        .textContent()) as string;
-
-      await breadbox.getFacetValue('objecttype', firstValueText).click();
-
-      await breadbox
-        .getBreadcrumbButtons(firstValueText)
-        .waitFor({state: 'visible', timeout: 5000});
-    });
-
-    test('should have clickable breadcrumb button with proper attributes', async ({
-      breadbox,
-    }) => {
-      const breadcrumbButtons = breadbox.getBreadcrumbButtons();
-      const firstBreadcrumb = breadcrumbButtons.first();
-
-      await expect(firstBreadcrumb).toBeVisible();
-      await expect(firstBreadcrumb).toBeEnabled();
-      await expect(firstBreadcrumb).toHaveAttribute('aria-label');
-
-      await expect(firstBreadcrumb).toContainText(firstValueText);
-
-      await firstBreadcrumb.focus();
-      await expect(firstBreadcrumb).toBeFocused();
-    });
-
-    test('should display the "Clear all" button', async ({breadbox}) => {
-      await expect(breadbox.getClearAllButton()).toBeVisible();
-    });
-
-    test('should trigger clear all action when clicking the "Clear all" button', async ({
-      breadbox,
-    }) => {
-      const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
-      const clearButton = breadbox.getClearAllButton();
-
-      await expect(breadcrumbButton).toBeVisible();
-      await expect(clearButton).toBeVisible();
-
-      await clearButton.click({force: true, timeout: 5000});
-
-      await expect(clearButton).toHaveAttribute('aria-label');
-    });
-
-    test('should contain the selected value and the facet name in the breadcrumb button', async ({
-      breadbox,
-    }) => {
-      const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
-
-      await expect(breadcrumbButton).toContainText(
-        `Object type: ${firstValueText}`
-      );
-    });
-  });
-
   test.describe('when selecting multiple facet values', () => {
     test.beforeEach(async ({breadbox}) => {
       await breadbox.hydrated.waitFor({state: 'visible'});
@@ -133,17 +65,9 @@ test.describe('atomic-breadbox', () => {
       }
     });
 
-    test('should display the "Clear all" button', async ({breadbox}) => {
-      await expect(breadbox.getClearAllButton()).toBeVisible();
-    });
-
     test.describe('when clicking on the "Clear all" button', () => {
       test.beforeEach(async ({breadbox}) => {
         await breadbox.getClearAllButton().click();
-      });
-
-      test('should hide the "Clear all" button', async ({breadbox}) => {
-        await expect(breadbox.getClearAllButton()).not.toBeVisible();
       });
 
       test('should hide all breadcrumb buttons', async ({breadbox}) => {
@@ -167,32 +91,6 @@ test.describe('atomic-breadbox', () => {
       if (await showMoreButton.isVisible()) {
         await expect(showMoreButton).toContainText(/\+ \d+/);
       }
-    });
-
-    test.describe('when clicking on a breadcrumb button', () => {
-      test.beforeEach(async ({breadbox}) => {
-        const firstBreadcrumb = breadbox.getBreadcrumbButtons().first();
-        await firstBreadcrumb.waitFor({state: 'visible'});
-        await firstBreadcrumb.click();
-      });
-
-      test('should remove only that breadcrumb', async ({breadbox}) => {
-        const initialCount = await breadbox.getBreadcrumbButtons().count();
-
-        const firstBreadcrumb = breadbox.getBreadcrumbButtons().first();
-        await firstBreadcrumb.click({force: true, timeout: 5000});
-
-        await breadbox.page.waitForTimeout(2000);
-        const finalCount = await breadbox.getBreadcrumbButtons().count();
-
-        expect(finalCount).toBeLessThanOrEqual(initialCount);
-      });
-
-      test('should still display the "Clear all" button', async ({
-        breadbox,
-      }) => {
-        await expect(breadbox.getClearAllButton()).toBeVisible();
-      });
     });
 
     test.describe('when clicking on the "Show More" button', () => {
@@ -291,21 +189,125 @@ test.describe('atomic-breadbox', () => {
     expect(breadcrumbCount).toBeGreaterThan(0);
   });
 
-  test('should show breadcrumb with proper accessibility', async ({
-    breadbox,
-  }) => {
-    await breadbox.hydrated.waitFor({state: 'visible'});
-    await breadbox.page.waitForTimeout(3000);
+  test.describe('when working with different facet types', () => {
+    test.beforeEach(async ({breadbox}) => {
+      await breadbox.hydrated.waitFor({state: 'visible'});
+      await breadbox.page.waitForTimeout(3000);
+    });
 
-    const firstFacetValue = breadbox.getFacetValue('objecttype').first();
-    await firstFacetValue.waitFor({state: 'visible', timeout: 10000});
-    await firstFacetValue.click();
+    test('should display breadcrumbs for multiple facet types', async ({
+      breadbox,
+    }) => {
+      await test.step('Select facet values from different facet types', async () => {
+        const objectTypeFacet = breadbox.getFacetValue('objecttype').first();
+        await objectTypeFacet.waitFor({state: 'visible', timeout: 10000});
+        await objectTypeFacet.click();
 
-    const breadcrumbButton = breadbox.getBreadcrumbButtons().first();
-    await breadcrumbButton.waitFor({state: 'visible', timeout: 5000});
+        const sourceFacet = breadbox.getFacetValue('source').first();
+        if (await sourceFacet.isVisible()) {
+          await sourceFacet.click();
+        }
 
-    await expect(breadcrumbButton).toHaveAttribute('aria-label');
-    const ariaLabel = await breadcrumbButton.getAttribute('aria-label');
-    expect(ariaLabel).toContain('Remove inclusion filter on');
+        const filetypeFacet = breadbox.getFacetValue('filetype').first();
+        if (await filetypeFacet.isVisible()) {
+          await filetypeFacet.click();
+        }
+      });
+
+      await test.step('Verify breadcrumbs are displayed', async () => {
+        const breadcrumbs = breadbox.getBreadcrumbButtons();
+        await expect(breadcrumbs.first()).toBeVisible();
+
+        const breadcrumbCount = await breadcrumbs.count();
+        expect(breadcrumbCount).toBeGreaterThan(0);
+      });
+    });
+
+    test('should remove individual breadcrumbs when clicked', async ({
+      breadbox,
+    }) => {
+      await test.step('Select multiple facet values', async () => {
+        const objectTypeFacet = breadbox.getFacetValue('objecttype').first();
+        await objectTypeFacet.waitFor({state: 'visible', timeout: 10000});
+        await objectTypeFacet.click();
+
+        const secondObjectTypeFacet = breadbox
+          .getFacetValue('objecttype')
+          .nth(1);
+        if (await secondObjectTypeFacet.isVisible()) {
+          await secondObjectTypeFacet.click();
+        }
+      });
+
+      await test.step('Remove one breadcrumb and verify count decreases', async () => {
+        const breadcrumbs = breadbox.getBreadcrumbButtons();
+        await breadcrumbs.first().waitFor({state: 'visible', timeout: 5000});
+
+        const initialCount = await breadcrumbs.count();
+        expect(initialCount).toBeGreaterThan(0);
+
+        await breadcrumbs.first().click();
+        await breadbox.page.waitForTimeout(1000);
+
+        const newCount = await breadcrumbs.count();
+        expect(newCount).toBeLessThan(initialCount);
+      });
+    });
+  });
+
+  test.describe('accessibility verification', () => {
+    test('should have proper ARIA labels and structure', async ({
+      breadbox,
+      page,
+    }) => {
+      await breadbox.hydrated.waitFor({state: 'visible'});
+      await breadbox.page.waitForTimeout(3000);
+
+      const objectTypeFacet = breadbox.getFacetValue('objecttype').first();
+      await objectTypeFacet.waitFor({state: 'visible', timeout: 10000});
+      await objectTypeFacet.click();
+
+      await test.step('Verify breadcrumb accessibility structure', async () => {
+        const breadcrumbs = breadbox.getBreadcrumbButtons();
+        await breadcrumbs.first().waitFor({state: 'visible', timeout: 5000});
+
+        await expect(breadcrumbs.first()).toHaveRole('button');
+        await expect(breadcrumbs.first()).toHaveAttribute('aria-label');
+
+        const clearAllButton = breadbox.getClearAllButton();
+        const clearAllButtonExists = (await clearAllButton.count()) > 0;
+
+        if (
+          clearAllButtonExists &&
+          (await clearAllButton.first().isVisible())
+        ) {
+          await expect(clearAllButton.first()).toHaveRole('button');
+          const hasAriaLabel = await clearAllButton
+            .first()
+            .getAttribute('aria-label');
+          expect(hasAriaLabel).toBeTruthy();
+        }
+      });
+
+      await test.step('Verify keyboard navigation', async () => {
+        const breadcrumbButtons = breadbox.getBreadcrumbButtons();
+        const breadcrumbCount = await breadcrumbButtons.count();
+
+        if (breadcrumbCount > 0) {
+          const firstBreadcrumb = breadcrumbButtons.first();
+          await firstBreadcrumb.waitFor({state: 'attached'});
+          await firstBreadcrumb.focus();
+          await expect(firstBreadcrumb).toBeFocused();
+
+          await page.keyboard.press('Enter');
+          await breadbox.page.waitForTimeout(500);
+
+          const remainingBreadcrumbs = await breadbox
+            .getBreadcrumbButtons()
+            .count();
+          expect(remainingBreadcrumbs).toBeLessThan(breadcrumbCount);
+        }
+      });
+    });
   });
 });

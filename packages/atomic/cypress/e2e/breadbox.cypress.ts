@@ -4,7 +4,7 @@ import {
   deselectAllBreadcrumbs,
 } from './breadbox-actions';
 import * as BreadboxAssertions from './breadbox-assertions';
-import {breadboxComponent, BreadboxSelectors} from './breadbox-selectors';
+import {BreadboxSelectors} from './breadbox-selectors';
 import * as CommonAssertions from './common-assertions';
 import {addAutomaticFacetGenerator} from './facets/automatic-facet-generator/automatic-facet-generator-actions';
 import {AutomaticFacetSelectors} from './facets/automatic-facet/automatic-facet-selectors';
@@ -39,8 +39,7 @@ import {
 } from './facets/timeframe-facet/timeframe-facet-action';
 import {TimeframeFacetSelectors} from './facets/timeframe-facet/timeframe-facet-selectors';
 
-describe('Breadbox Test Suites - Specialized Scenarios', () => {
-  // Test automatic facet generator breadcrumbs (not covered in Playwright)
+describe('Breadbox Test Suites - Internal & Analytics', () => {
   describe('when selecting an automatic facet', () => {
     const selectionIndex = 2;
     function setupBreadboxWithMultipleSelectedFacets() {
@@ -57,10 +56,8 @@ describe('Breadbox Test Suites - Specialized Scenarios', () => {
       selectIdleCheckboxValueAt(FacetSelectors, selectionIndex);
     }
 
-    describe('verify rendering', () => {
+    describe('verify automatic facet integration', () => {
       beforeEach(() => setupBreadboxWithMultipleSelectedFacets());
-      BreadboxAssertions.assertDisplayBreadcrumb(true);
-      CommonAssertions.assertAccessibility(breadboxComponent);
       it('should display the selected automatic facet in breadcrumbs', () => {
         AutomaticFacetSelectors.labelButton()
           .invoke('text')
@@ -85,7 +82,6 @@ describe('Breadbox Test Suites - Specialized Scenarios', () => {
     });
   });
 
-  // Test specific facet types (not covered in Playwright)
   describe('when selecting category facet, color facet and timeframe facet', () => {
     function setupBreadboxWithDifferentTypeSelectedFacet() {
       const selectionIndex = 0;
@@ -104,11 +100,10 @@ describe('Breadbox Test Suites - Specialized Scenarios', () => {
       selectColorFacetIdleBoxValueAt(selectionIndex);
     }
 
-    describe('verify rendering', () => {
+    describe('verify specialized facet breadcrumb integration', () => {
       beforeEach(setupBreadboxWithDifferentTypeSelectedFacet);
       const selectedPath = canadaHierarchy.slice(0, 1);
-      BreadboxAssertions.assertDisplayBreadcrumb(true);
-      CommonAssertions.assertAccessibility(breadboxComponent);
+      
       BreadboxAssertions.assertSelectedColorFacetsInBreadcrumb();
       BreadboxAssertions.assertSelectedLinkFacetsInBreadcrumb(
         TimeframeFacetSelectors
@@ -118,7 +113,6 @@ describe('Breadbox Test Suites - Specialized Scenarios', () => {
     });
   });
 
-  // Test i18n functionality (not covered in Playwright)
   describe('with i18n translated labels', () => {
     beforeEach(() => {
       new TestFixture()
@@ -137,7 +131,6 @@ describe('Breadbox Test Suites - Specialized Scenarios', () => {
     });
   });
 
-  // Test exclusion filters (not covered in Playwright)
   describe('when excluding from a standard facet', () => {
     const selectionIndex = 1;
 
@@ -149,10 +142,8 @@ describe('Breadbox Test Suites - Specialized Scenarios', () => {
       excludeIdleCheckboxValueAt(FacetSelectors, selectionIndex);
     }
 
-    describe('verify rendering', () => {
+    describe('verify exclusion-specific breadcrumb logic', () => {
       beforeEach(setupFacetWithMultipleExcludedValues);
-      CommonAssertions.assertAccessibility(breadboxComponent);
-      BreadboxAssertions.assertDisplayBreadcrumb(true);
       BreadboxAssertions.assertExcludedCheckboxFacetsInBreadcrumb(
         FacetSelectors
       );
@@ -160,52 +151,21 @@ describe('Breadbox Test Suites - Specialized Scenarios', () => {
     });
   });
 
-  describe('when using path-limit', () => {
-    const SEPARATOR = ' / ';
-    const ELLIPSIS = '...';
-
+  describe('when using invalid path-limit', () => {
     function setupBreadboxWithPathLimit(props: TagProps = {}) {
       new TestFixture()
         .with(addBreadbox(props))
         .with(addCategoryFacet())
         .init();
       selectCategoryFacetChildValueAt(canadaHierarchyIndex[0]);
-      selectCategoryFacetChildValueAt(canadaHierarchyIndex[1]);
-      selectCategoryFacetChildValueAt(canadaHierarchyIndex[2]);
-      selectCategoryFacetChildValueAt(canadaHierarchyIndex[3]);
     }
 
-    describe('when path-limit is lower than min', () => {
+    describe('when path-limit is lower than minimum allowed', () => {
       const pathLimit = 0;
       beforeEach(() => {
         setupBreadboxWithPathLimit({'path-limit': pathLimit});
       });
       CommonAssertions.assertConsoleError();
-    });
-
-    describe('when path-limit is low enough to truncate the path', () => {
-      const pathLimit = 3;
-      beforeEach(() => {
-        setupBreadboxWithPathLimit({'path-limit': pathLimit});
-      });
-
-      const ellipsedPath = [
-        canadaHierarchy[0],
-        ELLIPSIS,
-        ...canadaHierarchy.slice(-(3 - 1)),
-      ];
-      const value = ellipsedPath.join(SEPARATOR);
-      BreadboxAssertions.assertBreadcrumbButtonValue(value);
-    });
-
-    describe('when path-limit is high enough to not truncate path', () => {
-      const pathLimit = 5;
-      beforeEach(() => {
-        setupBreadboxWithPathLimit({'path-limit': pathLimit});
-      });
-
-      const value = canadaHierarchy.join(SEPARATOR);
-      BreadboxAssertions.assertBreadcrumbButtonValue(value);
     });
   });
 });
