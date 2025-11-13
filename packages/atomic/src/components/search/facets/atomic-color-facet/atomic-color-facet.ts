@@ -60,7 +60,7 @@ import '@/src/components/common/atomic-facet-placeholder/atomic-facet-placeholde
 
 /**
  * The `atomic-color-facet` component displays a facet of the results for the current query as colors.
- * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+ * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -155,7 +155,7 @@ export class AtomicColorFacet
   /**
    * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.
    *
-   * Set this property as a stringified JSON array, e.g.,
+   * Set this property as a stringified JSON array, for example,
    * ```html
    *  <atomic-color-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-color-facet>
    * ```
@@ -171,7 +171,7 @@ export class AtomicColorFacet
   /**
    * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.
    *
-   * Set this property as a stringified JSON array, e.g.,
+   * Set this property as a stringified JSON array, for example,
    * ```html
    *  <atomic-color-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-color-facet>
    * ```
