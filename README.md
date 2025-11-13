@@ -1,5 +1,21 @@
 # Coveo UI Kit
 
+## Quick Start with GitHub Codespaces
+
+Get started in seconds with a fully configured development environment:
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/coveo/ui-kit)
+
+GitHub Codespaces provides a complete, cloud-based development environment with:
+- ✅ All dependencies pre-installed (1.6GB of node_modules)
+- ✅ Full project built and ready (~5 minutes of build time saved)
+- ✅ VS Code extensions automatically installed
+- ✅ Consistent environment across all developers
+
+**First-time setup**: ~5 minutes | **With prebuilds**: ~30 seconds
+
+See [.devcontainer/README.md](.devcontainer/README.md) for details on the devcontainer configuration.
+
 ## Projects
 
 - [Headless](packages/headless): Stateful middle-layer between UI elements and the Coveo Platform.
@@ -8,6 +24,10 @@
 - [Bueno](packages/bueno): A simple schema validator.
 - [Auth](packages/auth): Functions to help authenticate with the Coveo platform.
 - [Headless React Samples](packages/samples/headless-react): Various code samples using Headless inside a React application.
+
+## Samples
+
+Looking for code examples? Check out the [samples](samples/) directory for working examples using Atomic, Headless, and Headless SSR across various frameworks including React, Angular, Vue.js, and Next.js.
 
 ## Install
 

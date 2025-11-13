@@ -134,7 +134,7 @@ export interface NumericFilterState {
 /**
  * The `NumericFilter` controller makes it possible to create a numeric filter.
  *
- * Example: [numeric-filter.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/numeric-filter/numeric-filter.fn.tsx)
+ * Example: [numeric-filter.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/numeric-filter/numeric-filter.fn.tsx)
  *
  * @group Controllers
  * @category NumericFilter

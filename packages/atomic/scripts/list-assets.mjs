@@ -40,5 +40,11 @@ for (const [icons, subpath] of [
   }
 }
 
+// Copy sparkles icon
+copyFileSync(
+  `${salesforceDesignSystem}/assets/icons/utility/sparkles.svg`,
+  `dist/atomic/assets/sparkles.svg`
+);
+
 const files = readdirSync('dist/atomic/assets').toSorted();
 writeFileSync('docs/assets.json', JSON.stringify({assets: files}));

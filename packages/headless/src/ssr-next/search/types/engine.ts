@@ -1,4 +1,4 @@
-import type {AnyAction} from '@reduxjs/toolkit';
+import type {UnknownAction} from '@reduxjs/toolkit';
 import type {CoreEngine, CoreEngineNext} from '../../../app/engine.js';
 import type {SearchEngineOptions} from '../../../app/search-engine/search-engine.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
@@ -7,8 +7,7 @@ import type {
   ControllersPropsMap,
 } from '../../common/types/controllers.js';
 import type {HasKeys} from '../../common/types/utilities.js';
-import type {SSRSearchEngine} from '../engine/search-engine.ssr.js';
-import type {Build} from './build.js';
+import type {SSRSearchEngine} from './build.js';
 import type {ControllerDefinitionsMap} from './controller-definition.js';
 import type {
   InferControllerPropsMapFromDefinitions,
@@ -18,14 +17,13 @@ import type {
 import type {FetchStaticState} from './fetch-static-state.js';
 import type {HydrateStaticState} from './hydrate-static-state.js';
 
-export type EngineBuildResult<
-  TEngine extends CoreEngine | CoreEngineNext,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
-> = Build<
-  TEngine,
-  InferControllersMapFromDefinition<TControllers>,
-  InferControllerPropsMapFromDefinitions<TControllers>
->;
+type ReservedControllerNames = 'parameterManager';
+
+type ValidateControllerNames<T extends SearchControllerDefinitionsMap> = {
+  [K in keyof T]: K extends ReservedControllerNames
+    ? `ERROR: Controller name "${K & string}" is reserved and cannot be used. Please choose a different controller name.`
+    : T[K];
+};
 
 /**
  * The options to create a search engine definition in SSR.
@@ -33,12 +31,12 @@ export type EngineBuildResult<
  * @group Engine
  */
 export type SearchEngineDefinitionOptions<
-  TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
+  TControllers extends SearchControllerDefinitionsMap = {},
 > = SearchEngineOptions & {
   /**
    * The controllers to initialize with the search engine.
    */
-  controllers?: TControllers;
+  controllers?: ValidateControllerNames<TControllers>;
 };
 
 export interface SearchEngineDefinition<
@@ -49,7 +47,7 @@ export interface SearchEngineDefinition<
    * Fetches the static state on the server side using your engine definition.
    */
   fetchStaticState: FetchStaticState<
-    AnyAction,
+    UnknownAction,
     InferControllerStaticStateMapFromDefinitions<TControllers>,
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
@@ -59,9 +57,19 @@ export interface SearchEngineDefinition<
   hydrateStaticState: HydrateStaticState<
     TEngine,
     InferControllersMapFromDefinition<TControllers>,
-    AnyAction,
+    UnknownAction,
     InferControllerPropsMapFromDefinitions<TControllers>
   >;
+  /**
+   * Returns the access token.
+   */
+  getAccessToken: () => string;
+
+  /**
+   * Updates the access token.
+   * @param accessToken - The access token to update.
+   */
+  setAccessToken: (accessToken: string) => void;
 }
 
 /**
@@ -82,3 +90,27 @@ export interface SearchEngineDefinitionBuildResult<
   engine: TEngine;
   controllers: TControllers;
 }
+
+export type SearchControllerDefinitionsMap = ControllerDefinitionsMap<
+  SSRSearchEngine,
+  Controller
+>;
+
+type Definition<TControllerDefinitions extends SearchControllerDefinitionsMap> =
+  SearchEngineDefinition<SSRSearchEngine, TControllerDefinitions>;
+
+export type FetchStaticStateFunction<
+  TControllerDefinitions extends SearchControllerDefinitionsMap,
+> = Definition<TControllerDefinitions>['fetchStaticState'];
+
+export type HydrateStaticStateFunction<
+  TControllerDefinitions extends SearchControllerDefinitionsMap,
+> = Definition<TControllerDefinitions>['hydrateStaticState'];
+
+export type FetchStaticStateParameters<
+  TControllerDefinitions extends SearchControllerDefinitionsMap,
+> = Parameters<FetchStaticStateFunction<TControllerDefinitions>>[0];
+
+export type HydrateStaticStateParameters<
+  TControllerDefinitions extends SearchControllerDefinitionsMap,
+> = Parameters<HydrateStaticStateFunction<TControllerDefinitions>>[0];

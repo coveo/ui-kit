@@ -13,7 +13,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/stencil-facet-placeholder';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**

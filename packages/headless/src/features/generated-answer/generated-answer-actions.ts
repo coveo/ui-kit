@@ -32,7 +32,10 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload.js';
-import {logGeneratedAnswerStreamEnd} from './generated-answer-analytics-actions.js';
+import {
+  logGeneratedAnswerResponseLinked,
+  logGeneratedAnswerStreamEnd,
+} from './generated-answer-analytics-actions.js';
 import {
   buildStreamingRequest,
   constructAnswerAPIQueryParams,
@@ -264,6 +267,7 @@ export const streamAnswer = createAsyncThunk<
         dispatch(setIsStreaming(false));
         dispatch(setIsAnswerGenerated(isAnswerGenerated));
         dispatch(logGeneratedAnswerStreamEnd(isAnswerGenerated));
+        dispatch(logGeneratedAnswerResponseLinked());
         break;
       }
       default:
@@ -327,8 +331,9 @@ export const streamAnswer = createAsyncThunk<
  * instead of the regular search pipeline.
  *
  * Flow:
- * 1. Construct the Answer API query parameters based on the current state.
- * 2. Fetch a new answer from the Answer API using the provided configuration.
+ * 1. Reset the current generated answer state.
+ * 2. Construct the Answer API query parameters based on the current state.
+ * 3. Fetch a new answer from the Answer API using the provided configuration.
  */
 export const generateAnswer = createAsyncThunk<
   void,
@@ -337,6 +342,8 @@ export const generateAnswer = createAsyncThunk<
 >(
   'generatedAnswer/generateAnswer',
   async (_, {getState, dispatch, extra: {navigatorContext, logger}}) => {
+    dispatch(resetAnswer());
+
     const state = getState() as StreamAnswerAPIState;
     if (state.generatedAnswer.answerConfigurationId) {
       const answerApiQueryParams = constructAnswerAPIQueryParams(

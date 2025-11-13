@@ -1,9 +1,8 @@
 import {provide} from '@lit/context';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-
+import {bindingsContext} from '@/src/components/common/context/bindings-context';
 import type {AnyBindings} from '@/src/components/common/interface/bindings';
-import {bindingsContext} from '@/src/components/context/bindings-context';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {buildCustomEvent} from '@/src/utils/event-utils';

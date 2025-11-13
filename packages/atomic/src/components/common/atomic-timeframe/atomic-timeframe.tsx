@@ -28,7 +28,7 @@ export class AtomicTimeframe implements Timeframe {
   /**
    * The amount of units from which to count.
    *
-   * E.g., 10 days, 1 year, etc.
+   * For example, 10 days, 1 year, etc.
    */
   @Prop({reflect: true}) public amount = 1;
 

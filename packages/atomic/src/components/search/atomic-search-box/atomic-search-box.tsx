@@ -172,14 +172,14 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
 
   /**
    * Whether to clear all active query filters when the end user submits a new query from the search box.
-   * Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
+   * Setting this option to "false" is not recommended and can lead to an increasing number of queries returning no results.
    */
   @Prop({reflect: true}) public clearFilters = true;
 
   /**
-   * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query.
+   * Whether to interpret advanced [Coveo query syntax](https://docs.coveo.com/en/1552/) in the query.
    * You should only enable query syntax in the search box if you have good reasons to do so, as it
-   * requires end users to be familiar with Coveo Cloud query syntax, otherwise they will likely be surprised
+   * requires end users to be familiar with Coveo query syntax, otherwise they will likely be surprised
    * by the search box behaviour.
    *
    * When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.

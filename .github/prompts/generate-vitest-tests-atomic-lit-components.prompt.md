@@ -1,388 +1,334 @@
 ---
 mode: 'agent'
-description: 'Generate comprehensive Vitest test suites for Lit components in the Atomic package'
+description: 'Generate Vitest test suites for a Lit component in the Atomic package'
 ---
 
-# Generate Vitest Tests for Atomic Lit Components
+# Generate Vitest Tests for an Atomic Lit Component
 
-You are a senior web developer with expertise in the Atomic Lit framework and Vitest testing library. You understand the structure and conventions of the UI Kit project, particularly how to write unit tests for Lit components. Your goal is to create comprehensive Vitest unit tests for an existing Atomic Lit component following the established patterns and conventions in the UI Kit project.
+Generate comprehensive unit tests for an Atomic Lit component using established patterns from `../instructions/tests-atomic.instructions.md`.
 
-**Note: All commands in this guide should be run from the `packages/atomic` directory.**
+**All commands run from `packages/atomic` directory.**
 
-## Task Overview
+## Prerequisites
 
-You will be asked to add unit tests for a specific Atomic Lit component. Follow the guidelines from the [atomic testing instructions](../instructions/tests-atomic.instructions.md) and create a complete test suite that covers all functionality.
+Read `../instructions/tests-atomic.instructions.md` before starting.
 
-## Prerequisites and Context
+**Component structure knowledge:**
+- Molecules - Integrate with Headless controllers (search-box, facets, pager)
+- Result/Product templates - Get data from parent context (`atomic-result`, `atomic-product`)
+- Atoms - Basic UI elements (buttons, icons)
+- Enzymes - Complex business logic components
 
-### Required Knowledge
+## Result Template Component Detection
 
-- **Vitest testing framework** - Modern, fast unit testing
-- **Lit web components** - Component lifecycle, properties, and rendering
-- **Web Components API** - Shadow DOM, custom elements, and events
-- **Atomic package architecture** - Commerce components and headless integration
-- **TypeScript** - Strong typing and interface definitions
+**Result template components** (e.g., `atomic-result-*`, `atomic-field-*`, commerce `atomic-product-*`) don't integrate with Headless controllers directly. They:
+- Get data from parent context via `createResultContextController` or `createItemContextController`
+- May use `ResultTemplatesHelpers.getResultProperty` for field access
+- Live in `result-template-components/` or `product-template-components/` directories
 
-### Project Context
+**Fixtures available:**
+- Search: `renderInAtomicResult` from `atomic-result-fixture.ts`
+- Commerce: `renderInAtomicProduct` from `atomic-product-fixture.ts`
 
-The Atomic package is part of a larger UI kit that provides commerce-focused web components. Components integrate with headless controllers and follow specific naming conventions and architectural patterns.
+**Example usage:** See `atomic-product-price.spec.ts` (commerce) or `atomic-result-number.spec.ts` (search)
 
-### Component Types
+**Continue with this prompt if component is a molecule, enzyme, or result/product template component.**
 
-- **Atoms** - Basic building blocks (buttons, inputs, icons)
-- **Molecules** - Composed components (search boxes, facets, pagination)
-- **Enzymes** - Complex business logic components
-- **Utils** - Utility functions and helper classes
+## Analysis Phase
 
-## Step-by-Step Instructions
+Before writing tests:
 
-### 1. Analyze the Component
+1. **Identify component category and find reference tests:**
+   - **Molecules/enzymes:** Find equivalent in other use cases (search/commerce/insight/recommendations)
+     - Extract base name: `atomic-[use-case-]component-name` → `component-name`
+     - Search: `atomic-*{base-name}*.spec.ts` in other use case folders
+     - Verify Lit tests: imports from `.ts` (not `.tsx`), uses `renderInAtomic*Interface`
+   - **Result/product templates:** Find similar template component tests
+     - Check `atomic-product-price.spec.ts`, `atomic-result-number.spec.ts`
+   - **Analyze reference test for:** render helper structure, locator patterns, mocking strategy, test organization
+   - **If no similar tests found:** Ask user if they know of one to reference
+2. **Verify test fixtures exist:**
+   - **Molecules/enzymes:** Check `vitest-utils/testing-helpers/fixtures/headless/{interface}/` for `buildFake{ControllerName}`. If missing, create following pattern from similar fixture (e.g., `summary-controller.ts`):
+     ```typescript
+     export const defaultState = {...} satisfies ControllerState;
+     export const defaultImplementation = {
+       subscribe: genericSubscribe,
+       state: defaultState,
+     } satisfies Controller;
+     export const buildFakeController = ({implementation, state} = {}) => ({
+       ...defaultImplementation,
+       ...implementation,
+       ...({state: {...defaultState, ...(state || {})}}),
+     });
+     ```
+   - **Result/product templates:** Ensure `atomic-result-fixture.ts` or `atomic-product-fixture.ts` exists (already available)
+3. Read component implementation
+4. Identify public API: properties, methods, events
+5. Note dependencies:
+   - **Molecules/enzymes:** Headless controller dependencies
+   - **Result/product templates:** Result/product fields accessed, custom events
+6. Check for i18n or custom styling requirements
+8. **Identify console logging scenarios:**
+   - `@bindStateToController` decorator (logs errors on missing initialize/controller)
+   - Parent element requirements (logs errors when rendered outside required parent)
+   - Prop validation with console warnings
+   - Deprecated prop usage
 
-Before writing tests, understand the component:
+## Test File Patterns
 
-- Read the component's TypeScript implementation
-- Identify public properties, methods, and events
-- Understand the component's role (atom, molecule, enzyme)
-- Note any headless controller dependencies
-- Check for i18n requirements or custom styling
+### Molecule/Enzyme Pattern
 
-### 2. Set Up Test File Structure
-
-Create a `.spec.ts` file with this structure:
+Reference: `packages/atomic/scripts/generate-component-templates/component.spec.ts.hbs`
 
 ```typescript
-// Required imports - adjust based on component needs
-import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
-import {buildFake*} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/*-controller';
-import {vi, describe, it, expect, beforeEach} from 'vitest';
-import {page} from '@vitest/browser/context';
+import {buildController, type ControllerState} from '@coveo/headless';
+import {page} from 'vitest/browser';
 import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
+import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
+import {buildFakeController} from '@/vitest-utils/testing-helpers/fixtures/headless/search/controller';
+import type {AtomicComponent} from './atomic-component';
+import './atomic-component';
 
-// Component import
-import {ComponentName} from './component-name';
-import './component-name';
+vi.mock('@coveo/headless', {spy: true});
 
-// Mock headless at the top level
-vi.mock('@coveo/headless/commerce', {spy: true});
+describe('atomic-component', () => {
+  const mockedEngine = buildFakeSearchEngine();
+  let mockedController: ReturnType<typeof buildController>;
 
-describe('ComponentName', () => {
-  // Test implementation
+  const renderComponent = async ({
+    props = {},
+    slottedContent,
+    controllerState = {},
+  }: {
+    props?: Partial<{someProp: string}>;
+    slottedContent?: TemplateResult;
+    controllerState?: Partial<ControllerState>;
+  } = {}) => {
+    mockedController = buildFakeController({state: controllerState});
+    vi.mocked(buildController).mockImplementation(() => mockedController);
+
+    const {element} = await renderInAtomicSearchInterface<AtomicComponent>({
+      template: html`<atomic-component
+        some-prop=${ifDefined(props.someProp)}
+      >${ifDefined(slottedContent)}</atomic-component>`,
+      selector: 'atomic-component',
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
+
+    return {
+      element,
+      button: page.getByRole('button'),
+      parts: (el: AtomicComponent) => ({
+        container: el.shadowRoot?.querySelector('[part="container"]'),
+      }),
+    };
+  };
+
+  describe('#initialize', () => {
+    it('should not set error with valid props', async () => {
+      const {element} = await renderComponent({props: {someProp: 'value'}});
+      expect(element.error).toBeUndefined();
+    });
+
+    it('should set error with invalid props', async () => {
+      const {element} = await renderComponent({props: {someProp: ''}});
+      expect(element.error).toBeInstanceOf(Error);
+      expect(element.error.message).toContain('someProp: value is an empty string');
+    });
+
+    it('should build controller with engine', async () => {
+      const {element} = await renderComponent();
+      expect(buildController).toHaveBeenCalledWith(mockedEngine);
+      expect(element.controller).toBe(mockedController);
+    });
+
+    it('should bind state to controller', async () => {
+      const {element} = await renderComponent({
+        controllerState: {someValue: 'test'},
+      });
+      expect(element.controllerState.someValue).toBe('test');
+    });
+  });
+
+  // Additional test groups...
 });
 ```
 
-### 3. Create Render Functions
+### Result/Product Template Pattern
 
-For **Commerce Components** (molecules/enzymes):
+For result/product template components, use context fixtures:
 
+**✅ DO:**
 ```typescript
-const renderComponent = async (options = {}) => {
-  const mockedController = vi
-    .fn()
-    .mockReturnValue(buildFakeController(options));
-  vi.mocked(buildHeadlessFunction).mockReturnValue(
-    buildFakeController({
-      implementation: {
-        subController: mockedController,
-      },
-    })
-  );
+import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
+import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
+import {describe, expect, it, vi} from 'vitest';
+import {renderInAtomicResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-result-fixture';
+import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
+import type {AtomicResultNumber} from './atomic-result-number';
+import './atomic-result-number';
 
-  const {element} = await renderInAtomicCommerceInterface<ComponentType>({
-    template: html`<component-tag .prop=${options.prop}></component-tag>`,
-    selector: 'component-tag',
-    bindings: (bindings) => {
-      bindings.interfaceElement.type = 'product-listing';
-      bindings.store.onChange = vi.fn();
-      return bindings;
+vi.mock('@coveo/headless', async () => {
+  const actual = await vi.importActual<typeof import('@coveo/headless')>('@coveo/headless');
+  return {
+    ...actual,
+    ResultTemplatesHelpers: {
+      getResultProperty: vi.fn(),
     },
-  });
+  };
+});
 
-  return element;
-};
+describe('atomic-result-number', () => {
+  const mockedEngine = buildFakeSearchEngine();
+  const mockResult: Partial<Result> = {
+    raw: {size: 1024} as Result['raw'],
+  };
+
+  const renderComponent = async ({
+    props = {},
+    result = mockResult,
+  }: {
+    props?: Partial<{field: string}>;
+    result?: Partial<Result>;
+  } = {}) => {
+    const {element} = await renderInAtomicResult<AtomicResultNumber>({
+      template: html`<atomic-result-number field=${ifDefined(props.field)}></atomic-result-number>`,
+      selector: 'atomic-result-number',
+      result: result as Result,
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
+    return {element};
+  };
+  
+  // Tests...
+});
 ```
 
-For **Basic Components** (atoms/utils):
+**Note:** Commerce components use `renderInAtomicProduct` with `product` prop instead of `result`.
 
+**Key patterns from actual codebase:**
+- Return `{element, locators, parts}` from render function for clean test access
+- Use `page.getByRole()` for semantic locators
+- Define `parts()` function for shadow DOM queries
+- Mock headless controllers with `vi.mock('@coveo/headless', {spy: true})`
+- Mock `ResultTemplatesHelpers` with partial import for result/product templates
+- Use `ifDefined()` for optional props/content
+
+## Critical Patterns
+
+**✅ DO:**
 ```typescript
-const renderComponent = async (props = {}) => {
-  return await fixture<ComponentType>(
-    html`<component-tag .prop=${props.prop}></component-tag>`
-  );
-};
+// Use mockImplementation for mocked functions
+vi.mocked(buildController).mockImplementation(() => mockedController);
+
+// Render with desired state
+const {element, button} = await renderComponent({
+  props: {value: 'test'},
+  controllerState: {isActive: true}
+});
+
+// Use semantic locators from page object
+await userEvent.click(button);
+await expect.element(button).toBeDisabled();
+
+// Mock console in nested describe blocks that test error conditions
+describe('when component encounters an error', () => {
+  let consoleErrorSpy: MockInstance;
+
+  beforeEach(() => {
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  it('should log error to console', async () => {
+    const {element} = await renderComponent({/* error-triggering config */});
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect.stringContaining('expected error message')
+    );
+  });
+});
+
+// Test parts when conditionally rendered
+it('should render button when enabled', async () => {
+  const {parts} = await renderComponent({enabled: true});
+  await expect.element(parts.button).toBeInTheDocument();
+});
+
+// Test components that self-remove on error/null
+const {atomicResult} = await renderComponent({props: {field: 'nonexistent'}});
+const element = atomicResult.querySelector('atomic-result-number');
+expect(element).toBeNull(); // Component removed itself
 ```
 
-### 4. Define Page Locators
-
-Create reusable locators for consistent element selection:
-
+**❌ DON'T:**
 ```typescript
-const locators = {
-  // Use semantic selectors when possible
-  mainButton: page.getByRole('button'),
-  submitButton: page.getByRole('button', {name: 'Submit'}),
-  textInput: page.getByLabelText('Search'),
-  errorMessage: page.getByText('Error occurred'),
+// Don't use mockReturnValue - use mockImplementation instead
+vi.mocked(buildController).mockReturnValue(mockedController);
 
-  // Shadow DOM parts accessor
-  parts: (element: ComponentType) => {
-    const qs = (part: string) =>
-      element.shadowRoot?.querySelector(`[part="${part}"]`);
-    return {
-      container: qs('container'),
-      button: qs('button'),
-      input: qs('input'),
-    };
-  },
-};
-```
+// Don't modify props after render unless testing reactivity
+element.property = 'value';
+await element.updateComplete;
 
-### 5. Write Test Cases
-
-Follow this structure and naming conventions:
-
-```typescript
-describe('ComponentName', () => {
-  // Basic rendering tests
-  it('should render correctly', async () => {
-    const element = await renderComponent();
-    expect(element).toBeDefined();
-  });
-
-  it('should render with default properties', async () => {
-    const element = await renderComponent();
-    expect(element.property).toBe('defaultValue');
-  });
-
-  // Property testing
-  it('should update when property changes', async () => {
-    const element = await renderComponent({property: 'newValue'});
-    expect(element.property).toBe('newValue');
-  });
-
-  // Interaction testing
-  it('should handle click when button is pressed', async () => {
-    await renderComponent();
-    await locators.mainButton.click();
-    // Assert expected behavior
-  });
-
-  // Conditional rendering
-  describe('when specific condition is met', () => {
-    beforeEach(async () => {
-      await renderComponent({condition: true});
-    });
-
-    it('should display conditional content', async () => {
-      await expect.element(locators.conditionalElement).toBeVisible();
-    });
-
-    it('should hide default content', async () => {
-      await expect.element(locators.defaultElement).not.toBeVisible();
-    });
-  });
-
-  // Public method testing
-  describe('#publicMethod', () => {
-    it('should return expected result', async () => {
-      const element = await renderComponent();
-      const result = element.publicMethod('input');
-      expect(result).toBe('expected');
-    });
-
-    it('should handle error when invalid input provided', async () => {
-      const element = await renderComponent();
-      expect(() => element.publicMethod('invalid')).toThrow();
-    });
-
-    describe('when method has preconditions', () => {
-      beforeEach(async () => {
-        await renderComponent({precondition: true});
-      });
-
-      it('should behave differently with precondition', async () => {
-        const element = await renderComponent({precondition: true});
-        const result = element.publicMethod('input');
-        expect(result).toBe('conditionalResult');
-      });
-    });
-  });
-
-  // Error state testing
-  it('should render error state when error occurs', async () => {
-    const element = await renderComponent();
-    element.error = new Error('Test error');
-    await expect.element(locators.errorMessage).toBeVisible();
-  });
-
-  // Shadow DOM parts testing
-  it('should render all expected parts', async () => {
-    const element = await renderComponent();
-    const parts = locators.parts(element);
-
-    expect(parts.container).toBeInTheDocument();
-    expect(parts.button).toBeInTheDocument();
-    expect(parts.input).toBeInTheDocument();
-  });
-};
-```
-
-## Common Patterns and Best Practices
-
-### Test Organization
-
-- **Single `describe` block** per spec file with component name
-- **Use `it` function** (not `test`) for individual test cases
-- **Start descriptions with "should"** for consistent language
-- **Nest `describe` blocks** for conditional testing scenarios
-- **Use `describe('#methodName')`** for public method testing
-
-### Mocking and Setup
-
-- **Mock headless at top level** with `vi.mock('@coveo/headless/commerce', {spy: true})`
-- **Use `beforeEach` for setup** (not `afterEach` - cleanup is automatic)
-- **Mock external dependencies** that are not part of the test scope
-- **Use `buildFake*` utilities** for headless controller mocking
-
-### Assertions and Expectations
-
-- **Use semantic assertions** - `toBeVisible()`, `toBeDisabled()`, `toHaveTextContent()`
-- **Test component state** - properties, internal state, DOM structure
-- **Verify interactions** - event handling, method calls, state changes
-- **Check error conditions** - invalid inputs, network failures, edge cases
-
-### Performance and Reliability
-
-- **Use page locators** for better test reliability
-- **Avoid hardcoded selectors** when semantic options exist
-- **Test async operations** properly with appropriate awaits
-- **Keep tests focused** - one behavior per test case
-
-## Common Pitfalls and Corrections
-
-### ❌ Incorrect Approaches
-
-```typescript
-// Don't use test() function
+// Don't use test() - use it()
 test('should work', () => {});
 
-// Don't use afterEach for cleanup
-afterEach(() => {
-  // cleanup code
+// Don't mock console at top level - this hides unexpected errors in other tests
+beforeEach(() => {
+  vi.spyOn(console, 'error').mockImplementation(() => {});
 });
 
-// Don't create manual mocks for headless
-const mockController = {
-  state: {},
-  subscribe: vi.fn(),
-};
-```
-
-### ✅ Correct Approaches
-
-```typescript
-// Use it() function with "should"
-it('should work correctly', () => {});
-
-// Use beforeEach for setup
-beforeEach(async () => {
-  await renderComponent();
+// Don't test all parts together when rendering logic differs
+it('should render all parts', async () => {
+  // When some parts are conditional, split into separate tests
 });
 
-// Use buildFake* utilities
-const mockedController = buildFakeController({
-  state: customState,
-});
+// Don't manually create controller mocks - use buildFake* helpers
+const mockController = {state: {}, subscribe: vi.fn()};
+
+// Don't test error properties on components that self-remove
+const {element} = await renderComponent({/* triggers removal */});
+expect(element.error).toBe(...); // Element is null, can't access properties
 ```
 
-### Error Handling
+## Test Coverage Checklist
 
-- **Mock console.error** when testing error states to keep logs clean
-- **Test both success and failure paths** for methods that can fail
-- **Verify error messages** are user-friendly and helpful
+**Pattern Analysis:**
+- [ ] Found and analyzed reference component's test file (similar component in other use case or equivalent template component)
 
-### Component Integration
+**Properties:**
+- [ ] Valid props → no error
+- [ ] Invalid props → error with specific message
 
-- **Test controller integration** for commerce components
-- **Verify event dispatching** and listening
-- **Test property binding** and updates
+**Controller Integration (Molecules/Enzymes):**
+- [ ] Controller built with engine
+- [ ] State bound via `@bindStateToController`
+- [ ] Methods called on user interaction
 
-## Constraints and Limitations
+**Result/Product Template Components:**
+- [ ] Mock `ResultTemplatesHelpers.getResultProperty` for field access
+- [ ] Test with valid result/product data
+- [ ] Test field value parsing (if applicable)
+- [ ] Test self-removal behavior for null/invalid values (if applicable)
+- [ ] Test custom event handling (if component dispatches/listens)
 
-### What to Focus On
+**Rendering:**
+- [ ] Shadow parts present/conditional
+- [ ] Slotted content
+- [ ] Event handlers
+- [ ] Error state variations (if component handles errors)
 
-- **Public API testing** - properties, methods, events
-- **User interaction flows** - clicks, form submissions, navigation
-- **Error states and edge cases** - invalid inputs, network failures
-- **Accessibility** - proper ARIA labels, keyboard navigation
+**Lifecycle:**
+- [ ] Event listener cleanup (if component adds listeners)
 
-### What to Avoid Unless Requested
+## Post-Execution Summary
 
-- **Internal implementation details** - private methods, internal state
-- **Complex integration scenarios** - these belong in E2E tests
-- **Performance micro-optimizations** - focus on correctness first
-- **Styling details** - unless functional requirements
-
-### Testing Scope
-
-- **Unit tests** should test components in isolation
-- **Mock external dependencies** to control test environment
-- **Focus on component behavior** not implementation details
-- **Test public contracts** that other components depend on
-
-## Validation Checklist
-
-### Structure and Organization
-
-- [ ] Single `describe` block with component name
-- [ ] All imports are correctly specified
-- [ ] Headless mocking is at top level
-- [ ] Render functions are reusable and configurable
-
-### Test Coverage
-
-- [ ] Basic rendering and property tests
-- [ ] User interaction scenarios
-- [ ] Error states and edge cases
-- [ ] Public method testing (if applicable)
-- [ ] Conditional rendering scenarios
-
-### Code Quality
-
-- [ ] All test descriptions start with "should"
-- [ ] Tests are focused on single behaviors
-- [ ] Proper use of page locators
-- [ ] Consistent mocking patterns
-- [ ] Clean test setup in `beforeEach`
-
-### Compliance
-
-- [ ] Follows Atomic package testing guidelines
-- [ ] Uses established testing utilities
-- [ ] Proper TypeScript typing
-- [ ] Semantic assertions and expectations
-
-## Example Commands
-
-Run tests for a specific component:
-
-```bash
-# From packages/atomic directory
-npx vitest --config vitest.config.ts ./src/components/**/*component-name*.spec.ts --run
-```
-
-Run tests in watch mode during development:
-
-```bash
-npx vitest --config vitest.config.ts ./src/components/**/*component-name*.spec.ts
-```
-
-## Important Notes
-
-- **Always analyze the component first** - understand its purpose, dependencies, and public API
-- **Follow established patterns** from existing test files in the codebase
-- **Use appropriate render utilities** - `renderInAtomicCommerceInterface` for commerce components, `fixture` for basic components
-- **Test user scenarios** not just technical functionality
-- **Keep tests maintainable** with clear descriptions and focused assertions
-- **Mock external dependencies** to ensure test isolation and reliability
-
-The goal is to create comprehensive, maintainable test suites that verify component behavior, catch regressions, and serve as living documentation of component functionality.
+Generate execution summary at `.github/prompts/.executions/generate-vitest-tests-[component]-[YYYY-MM-DD-HHmmss].prompt-execution.md` following `TEMPLATE.prompt-execution.md`. Include reference component used, issues encountered, ambiguities requiring interpretation, and concrete improvement suggestions. Inform user of summary location.

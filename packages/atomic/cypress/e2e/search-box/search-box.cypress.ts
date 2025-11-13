@@ -319,12 +319,12 @@ describe('Search Box Test Suites', () => {
 
           Array.from(Array(firstSuggestionsLen).keys()).forEach((i) => {
             SearchBoxSelectors.shadow()
-              .find('button[part~="suggestion-with-query"]')
+              .find('div[part~="suggestion-with-query"]')
               .should('contain.text', `${firstSuggestionsText}_${i}`);
           });
           Array.from(Array(secondSuggestionsLen).keys()).forEach((i) => {
             SearchBoxSelectors.shadow()
-              .find('button[part~="suggestion-with-query"]')
+              .find('div[part~="suggestion-with-query"]')
               .should('contain.text', `${secondSuggestionsText}_${i}`);
           });
         });
@@ -693,7 +693,7 @@ describe('Search Box Test Suites', () => {
     it('uses the query syntax', () => {
       SearchBoxSelectors.textArea().type('@urihash=Wl1SZoqFsR8bpsbG');
       SearchBoxSelectors.submitButton().click();
-      ResultTextSelectors.firstInResult().should('have.text', 'bushy lichens');
+      ResultTextSelectors.firstInResult().find('atomic-text').shadow().should('have.text', 'bushy lichens');
     });
   });
 });

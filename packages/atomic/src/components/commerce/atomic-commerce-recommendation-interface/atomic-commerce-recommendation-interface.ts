@@ -18,13 +18,13 @@ import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin.js';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
+import {bindingsContext} from '../../common/context/bindings-context.js';
 import {augmentAnalyticsConfigWithAtomicVersion} from '../../common/interface/analytics-config.js';
 import type {CommonBindings} from '../../common/interface/bindings.js';
 import {
   type BaseAtomicInterface,
   InterfaceController,
 } from '../../common/interface/interface-controller.js';
-import {bindingsContext} from '../../context/bindings-context.js';
 import {
   type CommerceRecommendationStore,
   createCommerceRecommendationStore,
@@ -187,9 +187,9 @@ export class AtomicCommerceRecommendationInterface
    * configuration in your Coveo organization, requests made through the
    * commerce engine will start failing.
    *
-   * @param language - (Optional) The IETF language code tag (e.g., `en`).
-   * @param country - (Optional) The ISO-3166-1 country tag (e.g., `US`).
-   * @param currency - (Optional) The ISO-4217 currency code (e.g., `USD`).
+   * @param language - (Optional) The IETF language code tag (for example, `en`).
+   * @param country - (Optional) The ISO-3166-1 country tag (for example, `US`).
+   * @param currency - (Optional) The ISO-4217 currency code (for example, `USD`).
    *
    * @example
    * ```typescript

@@ -35,7 +35,7 @@ import {ResultContext} from '@/src/components/search/result-template-component-u
  * @part result-badge-element - The decorative outer-most element with the background color and text color.
  * @part result-badge-icon - The icon displayed at the left-end of the badge, if present.
  * @part result-badge-label - The wrapper around the contents at the right-end of the badge. This may be text, a field or slotted elements depending on which was configured.
- * @slot default - The element(s) to display inside the badge, instead of a field or label.
+ * @slot default - The elements to display inside the badge, instead of a field or label.
  */
 @Component({
   tag: 'atomic-result-badge',
