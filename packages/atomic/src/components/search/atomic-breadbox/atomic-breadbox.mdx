@@ -11,30 +11,16 @@ import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/ato
   className="AtomicBreadbox"
 >
 
-This component is typically placed within the "status" section of the layout, above the search results.
+This component is typically placed within the "status" section of the layout.
 
 ```html
 <atomic-search-interface>
   ...
-  <atomic-layout-section section="search">
-    <atomic-search-box></atomic-search-box>
-  </atomic-layout-section>
-  
-  <atomic-layout-section section="facets">
-    <atomic-facet field="objecttype" label="Object type"></atomic-facet>
-    <atomic-facet field="filetype" label="File type"></atomic-facet>
-    <atomic-facet field="source" label="Source"></atomic-facet>
-  </atomic-layout-section>
-  
   <atomic-layout-section section="main">
     <atomic-layout-section section="status">
       
       <atomic-breadbox></atomic-breadbox>
       
-    </atomic-layout-section>
-    
-    <atomic-layout-section section="results">
-      <atomic-result-list></atomic-result-list>
     </atomic-layout-section>
   </atomic-layout-section>
 </atomic-search-interface>
