@@ -123,7 +123,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
   /**
    * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.
    *
-   * Set this property as a stringified JSON array, e.g.,
+   * Set this property as a stringified JSON array, for example:
    * ```html
    *  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet>
    * ```
@@ -136,7 +136,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
   /**
    * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.
    *
-   * Set this property as a stringified JSON array, e.g.,
+   * Set this property as a stringified JSON array, for example:
    * ```html
    *  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet>
    * ```

@@ -56,7 +56,7 @@ type AnyFacetValue =
 /**
  * The `atomic-commerce-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
  *
- * @part container - The container of the whole component, list & label.
+ * @part container - The container of the whole component, list, and label.
  * @part breadcrumb-list-container - The container of the list of breadcrumb buttons.
  * @part breadcrumb-list - The list of breadcrumb buttons.
  * @part breadcrumb-button - A single breadcrumb button.
