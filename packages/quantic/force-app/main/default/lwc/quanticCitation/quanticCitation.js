@@ -55,8 +55,10 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
    */
   @api disableCitationAnchoring = false;
 
-  /** @type {boolean} */
-  @track isAttached = false;
+  /** @type {Map<string, Object>} */
+  @track actionStates = new Map();
+  /** @type {Array<Object>} */
+  @track actionIndicators = [];
 
   /** @type {Object} */
   timeout;
@@ -195,17 +197,29 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   handleCitationActionRegister(event) {
     console.log('Handle citation action register event:', event);
     event.stopPropagation();
-    // Child component provides a function we can call to give it the citation data
-    const register = event?.detail?.register;
-    if (typeof register === 'function') {
-      register({
-        citation: this.citation,
-        interactiveCitation: this.interactiveCitation,
-        onAttachmentStateChange: (isAttached) => {
-          this.isAttached = isAttached;
-          console.log('Citation attachment state updated:', isAttached);
+    const {
+      actionType,
+      onStateChange,
+      stateClassPrefix = actionType,
+    } = event.detail;
+
+    if (onStateChange) {
+      const actionInterface = {
+        updateState: (newState) => {
+          this.actionStates.set(actionType, {
+            ...newState,
+            classPrefix: stateClassPrefix,
+          });
+          this.updateIndicators();
+          this.requestUpdate();
         },
-      });
+        getCitationContext: () => ({
+          citation: this.citation,
+          element: this.template.host,
+          interactiveCitation: this.interactiveCitation,
+        }),
+      };
+      onStateChange(actionInterface);
     }
   }
 
@@ -279,7 +293,36 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   }
 
   get citationClasses() {
-    const baseClasses = 'citation slds-m-right_xx-small slds-m-vertical_xx-small slds-is-relative';
-    return this.isAttached ? `${baseClasses} is-attached` : baseClasses;
+    const baseClasses =
+      'citation slds-m-right_xx-small slds-m-vertical_xx-small slds-is-relative';
+
+    const stateClasses = Array.from(this.actionStates.values())
+      .filter((state) => state.active && state.classPrefix)
+      .map((state) => `is-${state.classPrefix}`)
+      .join(' ');
+
+    return stateClasses ? `${baseClasses} ${stateClasses}` : baseClasses;
+  }
+
+  /**
+   * Updates the list of action indicators based on current action states.
+   */
+  updateIndicators() {
+    this.actionIndicators = Array.from(this.actionStates.entries())
+      .filter(([, state]) => state.showIndicator)
+      .map(([actionType, state]) => ({
+        key: actionType,
+        iconName: state.indicatorIcon,
+        altText: state.indicatorText,
+        classes: `citation__action-indicator citation__${actionType}-indicator slds-m-right_xx-small`,
+      }));
+  }
+
+  /**
+   * Triggers a re-render by updating a tracked property.
+   */
+  requestUpdate() {
+    // Force re-render by updating actionIndicators reference
+    this.actionIndicators = [...this.actionIndicators];
   }
 }

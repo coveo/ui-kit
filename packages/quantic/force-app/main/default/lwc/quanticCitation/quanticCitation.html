@@ -12,13 +12,14 @@
       onmouseleave={handleCitationMouseLeave}
       onclick={handleClick}
     >
-      <!-- Attachment indicator icon -->
-      <template if:true={isAttached}>
+      <!-- Dynamic action indicators -->
+      <template for:each={actionIndicators} for:item="indicator">
         <lightning-icon
-          icon-name="utility:attach"
-          alternative-text="Attached"
+          key={indicator.key}
+          icon-name={indicator.iconName}
+          alternative-text={indicator.altText}
           size="xx-small"
-          class="citation__attached-icon slds-m-right_xx-small"
+          class={indicator.classes}
         ></lightning-icon>
       </template>
 

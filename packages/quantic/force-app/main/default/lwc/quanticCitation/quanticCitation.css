@@ -38,11 +38,3 @@
   color: rgb(26, 27, 30);
   cursor: default;
 }
-
-.citation.is-attached .citation__link {
-  color: var(--lwc-brandAccessible, #0176d3);
-}
-
-.citation.is-attached .citation__title {
-  color: var(--lwc-brandAccessible, #0176d3);
-}
