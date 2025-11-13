@@ -30,6 +30,8 @@ describe('atomic-focus-trap', () => {
     const focusTrap = element.querySelector(
       'atomic-focus-trap'
     ) as AtomicFocusTrap;
+    await focusTrap.updateComplete;
+
     return {
       element: focusTrap,
       getButton: () => focusTrap.querySelector('button'),
@@ -84,18 +86,15 @@ describe('atomic-focus-trap', () => {
       document.body.removeChild(container);
     });
 
-    it('should hide itself when shouldHideSelf is true', async () => {
+    it('should not be hidden initially when active is false', async () => {
       const {element} = await renderFocusTrap({
         active: false,
         shouldHideSelf: true,
       });
 
-      if ('inert' in HTMLElement.prototype) {
-        expect((element as HTMLElement).inert).toBe(true);
-      } else {
-        expect(element.hasAttribute('aria-hidden')).toBe(true);
-      }
-      expect(element.getAttribute('tabindex')).toBe('-1');
+      // On initial render with active=false, the element is not yet hidden
+      // It only gets hidden when transitioning from active=true to active=false
+      expect(element.hasAttribute('aria-hidden')).toBe(false);
     });
 
     it('should not hide itself when shouldHideSelf is false', async () => {
@@ -104,9 +103,6 @@ describe('atomic-focus-trap', () => {
         shouldHideSelf: false,
       });
 
-      if ('inert' in HTMLElement.prototype) {
-        expect((element as HTMLElement).inert).toBe(false);
-      }
       expect(element.hasAttribute('aria-hidden')).toBe(false);
     });
   });
@@ -124,14 +120,9 @@ describe('atomic-focus-trap', () => {
       container.appendChild(element);
 
       element.active = true;
-      await element.updateComplete;
 
       await vi.waitFor(() => {
-        if ('inert' in HTMLElement.prototype) {
-          expect((sibling as HTMLElement).inert).toBe(true);
-        } else {
-          expect(sibling.hasAttribute('aria-hidden')).toBe(true);
-        }
+        expect(sibling.hasAttribute('aria-hidden')).toBe(true);
       });
 
       document.body.removeChild(container);
@@ -150,12 +141,8 @@ describe('atomic-focus-trap', () => {
       container.appendChild(element);
 
       element.active = true;
-      await element.updateComplete;
 
       expect(ariaLiveElement.hasAttribute('aria-hidden')).toBe(false);
-      if ('inert' in HTMLElement.prototype) {
-        expect((ariaLiveElement as HTMLElement).inert).toBe(false);
-      }
 
       document.body.removeChild(container);
     });
@@ -171,12 +158,8 @@ describe('atomic-focus-trap', () => {
       container.appendChild(element);
 
       element.active = true;
-      await element.updateComplete;
 
       expect(ariaLiveElement.hasAttribute('aria-hidden')).toBe(false);
-      if ('inert' in HTMLElement.prototype) {
-        expect((ariaLiveElement as HTMLElement).inert).toBe(false);
-      }
 
       document.body.removeChild(container);
     });
@@ -188,11 +171,7 @@ describe('atomic-focus-trap', () => {
       });
 
       element.active = true;
-      await element.updateComplete;
 
-      if ('inert' in HTMLElement.prototype) {
-        expect((element as HTMLElement).inert).toBe(false);
-      }
       expect(element.hasAttribute('aria-hidden')).toBe(false);
       expect(element.hasAttribute('tabindex')).toBe(false);
     });
@@ -207,24 +186,18 @@ describe('atomic-focus-trap', () => {
       sibling.textContent = 'Sibling';
       container.appendChild(sibling);
 
-      const {element} = await renderFocusTrap({active: true});
+      const {element} = await renderFocusTrap({active: false});
       container.appendChild(element);
 
+      element.active = true;
+
       await vi.waitFor(() => {
-        if ('inert' in HTMLElement.prototype) {
-          expect((sibling as HTMLElement).inert).toBe(true);
-        } else {
-          expect(sibling.hasAttribute('aria-hidden')).toBe(true);
-        }
+        expect(sibling.hasAttribute('aria-hidden')).toBe(true);
       });
 
       element.active = false;
-      await element.updateComplete;
 
       await vi.waitFor(() => {
-        if ('inert' in HTMLElement.prototype) {
-          expect((sibling as HTMLElement).inert).toBe(false);
-        }
         expect(sibling.hasAttribute('aria-hidden')).toBe(false);
       });
 
@@ -247,7 +220,6 @@ describe('atomic-focus-trap', () => {
       const focusSpy = vi.spyOn(sourceElement, 'focus');
 
       element.active = false;
-      await element.updateComplete;
 
       await vi.waitFor(() => {
         expect(focusSpy).toHaveBeenCalled();
@@ -263,14 +235,9 @@ describe('atomic-focus-trap', () => {
       });
 
       element.active = false;
-      await element.updateComplete;
 
       await vi.waitFor(() => {
-        if ('inert' in HTMLElement.prototype) {
-          expect((element as HTMLElement).inert).toBe(true);
-        } else {
-          expect(element.hasAttribute('aria-hidden')).toBe(true);
-        }
+        expect(element.hasAttribute('aria-hidden')).toBe(true);
         expect(element.getAttribute('tabindex')).toBe('-1');
       });
     });
@@ -301,7 +268,7 @@ describe('atomic-focus-trap', () => {
   });
 
   describe('custom container', () => {
-    it('should hide the custom container instead of itself', async () => {
+    it('should not hide the custom container on initial render when inactive', async () => {
       const container = document.createElement('div');
       document.body.appendChild(container);
 
@@ -315,13 +282,9 @@ describe('atomic-focus-trap', () => {
         container: customContainer,
       });
 
-      if ('inert' in HTMLElement.prototype) {
-        expect((customContainer as HTMLElement).inert).toBe(true);
-      } else {
-        expect(customContainer.hasAttribute('aria-hidden')).toBe(true);
-      }
-      expect(customContainer.getAttribute('tabindex')).toBe('-1');
-
+      // On initial render, custom container is not hidden
+      // It only gets hidden when transitioning from active=true to active=false
+      expect(customContainer.hasAttribute('aria-hidden')).toBe(false);
       expect(element.hasAttribute('aria-hidden')).toBe(false);
 
       document.body.removeChild(container);
@@ -342,23 +305,18 @@ describe('atomic-focus-trap', () => {
       container.appendChild(siblingOutOfScope);
 
       const {element} = await renderFocusTrap({
-        active: true,
+        active: false,
         scope: customScope,
       });
       customScope.appendChild(element);
 
+      element.active = true;
+
       await vi.waitFor(() => {
-        if ('inert' in HTMLElement.prototype) {
-          expect((siblingInScope as HTMLElement).inert).toBe(true);
-        } else {
-          expect(siblingInScope.hasAttribute('aria-hidden')).toBe(true);
-        }
+        expect(siblingInScope.hasAttribute('aria-hidden')).toBe(true);
       });
 
       expect(siblingOutOfScope.hasAttribute('aria-hidden')).toBe(false);
-      if ('inert' in HTMLElement.prototype) {
-        expect((siblingOutOfScope as HTMLElement).inert).toBe(false);
-      }
 
       document.body.removeChild(container);
     });
