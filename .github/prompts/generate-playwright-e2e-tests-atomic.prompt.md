@@ -344,6 +344,6 @@ After completing test generation, generate execution summary:
 - Concrete suggestions for prompt improvements
 - If migration: Note whether existing tests were comprehensive or required updates
 
-**3. Inform user** about summary location and next steps (switch to "Prompt Engineer" chatmode for optimization)
+**3. Inform user** about summary location and next steps (switch to "Prompt Engineer" agent for optimization)
 
 **4. Mark complete** only after file created and user informed.

@@ -9,7 +9,7 @@ Execution summaries provide structured feedback about:
 - What didn't work as expected
 - Opportunities for prompt optimization
 
-This feedback is used by the "Prompt Engineer" chatmode to iteratively improve prompt quality.
+This feedback is used by the "Prompt Engineer" agent to iteratively improve prompt quality.
 
 ## File Format
 
@@ -34,7 +34,7 @@ When a workspace prompt completes, an execution summary is automatically created
 ### 3. Review & Optimization
 Periodically, a DX UI team maintainer will:
 1. Review accumulated execution summaries
-2. Feed each summary to the Prompt Engineer chatmode
+2. Feed each summary to the Prompt Engineer agent
 3. Ask the Prompt Engineer to evaluate whether prompt improvements are needed
 4. Apply suggested optimizations to the original prompt files
 

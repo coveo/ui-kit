@@ -94,7 +94,7 @@ Multiple "CRITICAL/MANDATORY" sections, "FINAL REMINDER" boxes, caps for emphasi
 
 ## Self-Optimization: Pre-Edit Workflow (MANDATORY)
 
-**Before editing any instruction/prompt/chatmode file:**
+**Before editing any instruction/prompt/agent file:**
 
 ### 1. State Start
 
@@ -122,7 +122,7 @@ Concise format: "Added [X] tokens (optimized from [Y])" OR "Net [X] tokens (adde
 
 ### 6. Verify Alignment
 
-- [ ] Correct file type (instruction vs prompt vs chatmode)
+- [ ] Correct file type (instruction vs prompt vs agent)
 - [ ] Follows core principles (correctness, token economy, actionability)
 - [ ] No conflicts with hierarchy
 - [ ] Structural enforcement not just warnings
@@ -131,7 +131,7 @@ Concise format: "Added [X] tokens (optimized from [Y])" OR "Net [X] tokens (adde
 
 Only after steps 1-6: Invoke edit tools.
 
-**Scope:** `.github/instructions/*.instructions.md`, `.github/prompts/*.prompt.md`, `.github/prompts/.executions/*.prompt-execution.md`, `.github/chatmodes/*.chatmode.md`
+**Scope:** `.github/instructions/*.instructions.md`, `.github/prompts/*.prompt.md`, `.github/prompts/.executions/*.prompt-execution.md`, `.github/agents/*.agent.md`
 
 **No exceptions:** Analysis mode, implementation mode, template creation, "small" changes—workflow always applies. If caught skipping: stop, run retroactively, present findings, proceed if valid.
 

@@ -42,7 +42,6 @@ ui-kit/
 ├── .github/
 │   ├── instructions/    # Coding standards and conventions
 │   ├── agents/          # Custom agent definitions
-│   ├── chatmodes/       # Specialized AI personas
 │   └── prompts/         # Task-specific workflows
 └── samples/             # Example implementations
 ```
@@ -90,13 +89,15 @@ These instructions are automatically applied by GitHub Copilot based on file pat
   - Uses dedicated prompts for each migration step
   - Identifies and documents blocking dependencies
 
-## Chatmodes (VS Code Copilot)
+## Custom Agents (VS Code Copilot)
 
-- **accessibility.chatmode.md** - WCAG compliance review
-- **typescript-mcp-expert.chatmode.md** - TypeScript MCP server development
-- **refine-issue.chatmode.md** - Issue refinement with acceptance criteria
-- **research-technical-spike.chatmode.md** - Technical investigation
-- **task-researcher.chatmode.md** - Deep codebase analysis
+Located in `.github/agents/`:
+- **accessibility.agent.md** - WCAG compliance review
+- **typescript-mcp-expert.agent.md** - TypeScript MCP server development
+- **refine-issue.agent.md** - Issue refinement with acceptance criteria
+- **research-technical-spike.agent.md** - Technical investigation
+- **task-researcher.agent.md** - Deep codebase analysis
+- **prompt-engineer.agent.md** - Optimize instruction/prompt/agent files
 
 ## Prompts (Task Templates)
 

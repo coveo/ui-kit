@@ -465,7 +465,7 @@ After completing test generation, generate execution summary:
 - Missing instructions or unclear testing requirements
 - Concrete suggestions for prompt improvements
 
-**3. Inform user** about summary location and next steps (switch to "Prompt Engineer" chatmode for optimization)
+**3. Inform user** about summary location and next steps (switch to "Prompt Engineer" agent for optimization)
 
 **4. Mark complete** only after file created and user informed.
 

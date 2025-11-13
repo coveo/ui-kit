@@ -322,4 +322,4 @@ After completing documentation, generate execution summary:
 - Missing instructions or unclear requirements
 - Concrete suggestions for prompt improvements
 
-**3. Inform user** about summary location and next steps (switch to "Prompt Engineer" chatmode for optimization)
+**3. Inform user** about summary location and next steps (switch to "Prompt Engineer" agent for optimization)

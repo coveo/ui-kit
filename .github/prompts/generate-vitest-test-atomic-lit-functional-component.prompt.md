@@ -176,4 +176,4 @@ describe('when disabled', () => {
 
 **Include:** Reference components used, type selection issues, ambiguous instructions, time-consuming operations, missing guidance, concrete improvement suggestions.
 
-**Inform user** of summary location and suggest "Prompt Engineer" chatmode for optimization. Mark complete only after file created and user informed.
+**Inform user** of summary location and suggest "Prompt Engineer" agent for optimization. Mark complete only after file created and user informed.
