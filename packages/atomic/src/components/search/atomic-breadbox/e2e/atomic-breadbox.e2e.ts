@@ -178,14 +178,12 @@ test.describe('atomic-breadbox', () => {
 
       test('should remove only that breadcrumb', async ({breadbox}) => {
         const initialCount = await breadbox.getBreadcrumbButtons().count();
-        console.log(`Initial breadcrumb count: ${initialCount}`);
 
         const firstBreadcrumb = breadbox.getBreadcrumbButtons().first();
         await firstBreadcrumb.click({force: true, timeout: 5000});
 
         await breadbox.page.waitForTimeout(2000);
         const finalCount = await breadbox.getBreadcrumbButtons().count();
-        console.log(`Final breadcrumb count: ${finalCount}`);
 
         expect(finalCount).toBeLessThanOrEqual(initialCount);
       });
