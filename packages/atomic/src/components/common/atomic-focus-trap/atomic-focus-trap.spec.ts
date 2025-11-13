@@ -15,7 +15,7 @@ describe('atomic-focus-trap', () => {
       children?: string;
     } = {}
   ) => {
-    const element = await renderFunctionFixture(
+    const wrapper = await renderFunctionFixture(
       html`<atomic-focus-trap
         .active=${options.active ?? false}
         .source=${options.source}
@@ -27,27 +27,17 @@ describe('atomic-focus-trap', () => {
       </atomic-focus-trap>`
     );
 
-    const focusTrap = element.querySelector(
+    const element = wrapper.querySelector(
       'atomic-focus-trap'
     ) as AtomicFocusTrap;
-    await focusTrap.updateComplete;
+    await element.updateComplete;
 
-    return {
-      element: focusTrap,
-      getButton: () => focusTrap.querySelector('button'),
-    };
+    return element;
   };
 
-  it('should be defined', () => {
-    const element = document.createElement(
-      'atomic-focus-trap'
-    ) as AtomicFocusTrap;
-    expect(element).toBeDefined();
-  });
-
-  describe('properties', () => {
+  describe('when rendered', () => {
     it('should have default property values', async () => {
-      const {element} = await renderFocusTrap();
+      const element = await renderFocusTrap();
       expect(element.active).toBe(false);
       expect(element.shouldHideSelf).toBe(true);
       expect(element.scope).toBe(document.body);
@@ -56,7 +46,7 @@ describe('atomic-focus-trap', () => {
     it('should accept custom property values', async () => {
       const customScope = document.createElement('div');
       const customSource = document.createElement('button');
-      const {element} = await renderFocusTrap({
+      const element = await renderFocusTrap({
         active: true,
         shouldHideSelf: false,
         scope: customScope,
@@ -87,7 +77,7 @@ describe('atomic-focus-trap', () => {
     });
 
     it('should not be hidden initially when active is false', async () => {
-      const {element} = await renderFocusTrap({
+      const element = await renderFocusTrap({
         active: false,
         shouldHideSelf: true,
       });
@@ -98,7 +88,7 @@ describe('atomic-focus-trap', () => {
     });
 
     it('should not hide itself when shouldHideSelf is false', async () => {
-      const {element} = await renderFocusTrap({
+      const element = await renderFocusTrap({
         active: false,
         shouldHideSelf: false,
       });
@@ -116,7 +106,7 @@ describe('atomic-focus-trap', () => {
       sibling.textContent = 'Sibling';
       container.appendChild(sibling);
 
-      const {element} = await renderFocusTrap({active: false});
+      const element = await renderFocusTrap({active: false});
       container.appendChild(element);
 
       element.active = true;
@@ -137,7 +127,7 @@ describe('atomic-focus-trap', () => {
       ariaLiveElement.textContent = 'Live Region';
       container.appendChild(ariaLiveElement);
 
-      const {element} = await renderFocusTrap({active: false});
+      const element = await renderFocusTrap({active: false});
       container.appendChild(element);
 
       element.active = true;
@@ -154,7 +144,7 @@ describe('atomic-focus-trap', () => {
       const ariaLiveElement = document.createElement('atomic-aria-live');
       container.appendChild(ariaLiveElement);
 
-      const {element} = await renderFocusTrap({active: false});
+      const element = await renderFocusTrap({active: false});
       container.appendChild(element);
 
       element.active = true;
@@ -165,7 +155,7 @@ describe('atomic-focus-trap', () => {
     });
 
     it('should show itself', async () => {
-      const {element} = await renderFocusTrap({
+      const element = await renderFocusTrap({
         active: false,
         shouldHideSelf: true,
       });
@@ -186,7 +176,7 @@ describe('atomic-focus-trap', () => {
       sibling.textContent = 'Sibling';
       container.appendChild(sibling);
 
-      const {element} = await renderFocusTrap({active: false});
+      const element = await renderFocusTrap({active: false});
       container.appendChild(element);
 
       element.active = true;
@@ -212,7 +202,7 @@ describe('atomic-focus-trap', () => {
       sourceElement.textContent = 'Source';
       container.appendChild(sourceElement);
 
-      const {element} = await renderFocusTrap({
+      const element = await renderFocusTrap({
         active: true,
         source: sourceElement,
       });
@@ -229,7 +219,7 @@ describe('atomic-focus-trap', () => {
     });
 
     it('should hide itself again when shouldHideSelf is true', async () => {
-      const {element} = await renderFocusTrap({
+      const element = await renderFocusTrap({
         active: true,
         shouldHideSelf: true,
       });
@@ -243,8 +233,8 @@ describe('atomic-focus-trap', () => {
     });
   });
 
-  describe('focus management', () => {
-    it('should add focusin event listener on connect', async () => {
+  describe('when added to the DOM (#connectedCallback)', () => {
+    it('should add focusin event listener', async () => {
       const addEventListenerSpy = vi.spyOn(document, 'addEventListener');
       await renderFocusTrap();
 
@@ -253,10 +243,12 @@ describe('atomic-focus-trap', () => {
         expect.any(Function)
       );
     });
+  });
 
-    it('should remove focusin event listener on disconnect', async () => {
+  describe('when removed from the DOM (#disconnectedCallback)', () => {
+    it('should remove focusin event listener', async () => {
       const removeEventListenerSpy = vi.spyOn(document, 'removeEventListener');
-      const {element} = await renderFocusTrap();
+      const element = await renderFocusTrap();
 
       element.remove();
 
@@ -267,7 +259,7 @@ describe('atomic-focus-trap', () => {
     });
   });
 
-  describe('custom container', () => {
+  describe('when using a custom container', () => {
     it('should not hide the custom container on initial render when inactive', async () => {
       const container = document.createElement('div');
       document.body.appendChild(container);
@@ -276,7 +268,7 @@ describe('atomic-focus-trap', () => {
       customContainer.textContent = 'Custom Container';
       container.appendChild(customContainer);
 
-      const {element} = await renderFocusTrap({
+      const element = await renderFocusTrap({
         active: false,
         shouldHideSelf: true,
         container: customContainer,
@@ -291,7 +283,7 @@ describe('atomic-focus-trap', () => {
     });
   });
 
-  describe('custom scope', () => {
+  describe('when using a custom scope', () => {
     it('should only hide siblings within the custom scope', async () => {
       const container = document.createElement('div');
       document.body.appendChild(container);
@@ -304,7 +296,7 @@ describe('atomic-focus-trap', () => {
       container.appendChild(customScope);
       container.appendChild(siblingOutOfScope);
 
-      const {element} = await renderFocusTrap({
+      const element = await renderFocusTrap({
         active: false,
         scope: customScope,
       });
