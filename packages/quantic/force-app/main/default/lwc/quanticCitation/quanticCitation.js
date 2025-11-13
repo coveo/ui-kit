@@ -324,7 +324,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
    */
   updateIndicators() {
     this.actionIndicators = Array.from(this.actionStates.entries())
-      .filter(([, state]) => state.showIndicator)
+      .filter(([, state]) => state.active)
       .map(([actionType, state]) => ({
         key: actionType,
         iconName: state.indicatorIcon,
