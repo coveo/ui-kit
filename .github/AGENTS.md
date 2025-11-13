@@ -146,6 +146,30 @@ WCAG 2.2 Level AA compliance review and accessibility guidance agent.
 - Fixing WCAG violations
 - Guidance on ARIA attributes, keyboard navigation, or screen reader support
 
+### Maintenance Agent
+
+**File:** `.github/agents/maintenance-v1.agent.md`
+
+Technical investigation assistant for diagnosing and responding to reported issues in the ui-kit repository. Provides systematic investigation support through hypothesis formation, verification, and response preparation.
+
+**Capabilities:**
+- Systematic issue investigation workflow (intake, hypothesis, investigation, determination)
+- Pattern-based root cause analysis
+- Minimal reproduction creation
+- Bug identification and documentation (without implementing fixes)
+- Targeted follow-up question generation
+- Copy-ready response preparation for issue reporters
+- Common issue pattern matching
+
+**Use Cases:**
+- Investigating technical issues reported by internal colleagues or partners
+- Diagnosing component rendering, search behavior, or integration problems
+- Triaging user errors vs. actual bugs
+- Preparing clear, actionable responses for issue reporters
+- Identifying version compatibility issues
+
+**Primary Usage:** Local chatmode for issue investigation; may be assigned to public GitHub issues
+
 ### Multi-Agent Swarm Simulator
 
 **File:** `.github/agents/multi-agent-swarm-simulator-v1.agent.md`
