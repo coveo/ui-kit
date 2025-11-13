@@ -139,14 +139,30 @@ describe('atomic-breadbox', () => {
   });
 
   describe('#initialize', () => {
-    it('should call buildBreadcrumbManager', async () => {
-      await renderBreadbox();
-      expect(buildBreadcrumbManager).toHaveBeenCalledWith(mockedEngine);
+    it('should set breadcrumbManager public property', async () => {
+      const {element} = await renderBreadbox();
+
+      expect(element.breadcrumbManager).toBe(mockedBreadcrumbManager);
     });
 
-    it('should call buildFacetManager', async () => {
-      await renderBreadbox();
-      expect(buildFacetManager).toHaveBeenCalledWith(mockedEngine);
+    it('should set facetManager public property', async () => {
+      const {element} = await renderBreadbox();
+
+      expect(element.facetManager).toBe(mockedFacetManager);
+    });
+
+    it('should sync breadcrumbManagerState to controller state', async () => {
+      const {element} = await renderBreadbox();
+
+      expect(element.breadcrumbManagerState).toEqual(
+        mockedBreadcrumbManager.state
+      );
+    });
+
+    it('should sync facetManagerState to controller state', async () => {
+      const {element} = await renderBreadbox();
+
+      expect(element.facetManagerState).toEqual(mockedFacetManager.state);
     });
 
     it.each([
@@ -274,7 +290,7 @@ describe('atomic-breadbox', () => {
         .toBeInTheDocument();
     });
 
-    it('should render show more part when component has collapsed state', async () => {
+    it('should render show more part in shadow DOM even when not visible', async () => {
       const {element, parts} = await renderBreadbox({
         breadcrumbState: {
           facetBreadcrumbs: [
@@ -302,8 +318,8 @@ describe('atomic-breadbox', () => {
         pathLimit: 2,
       });
 
-      // The show-more part should exist in shadow DOM even if not visible
-      expect(parts(element).showMore).toBeTruthy();
+      const showMorePart = parts(element).showMore;
+      expect(showMorePart).toBeInTheDocument();
     });
 
     it('should not render show less part when component is collapsed', async () => {
@@ -334,7 +350,6 @@ describe('atomic-breadbox', () => {
         pathLimit: 2,
       });
 
-      // The show-less part should not exist when collapsed
       expect(parts(element).showLess).toBeNull();
     });
 
@@ -384,113 +399,110 @@ describe('atomic-breadbox', () => {
     });
   });
 
-  describe('user interactions', () => {
-    it('should call deselect when a breadcrumb is clicked', async () => {
-      const mockedDeselect = vi.fn();
-      await renderBreadbox({
-        breadcrumbState: {
-          facetBreadcrumbs: [
-            {
-              facetId: 'test-facet',
-              field: 'test-field',
-              values: [
-                {
-                  value: {
-                    value: 'test-value',
-                    state: 'selected',
-                    numberOfResults: 1,
-                  },
-                  deselect: mockedDeselect,
+  it('should call deselect when a breadcrumb is clicked', async () => {
+    const mockedDeselect = vi.fn();
+    await renderBreadbox({
+      breadcrumbState: {
+        facetBreadcrumbs: [
+          {
+            facetId: 'test-facet',
+            field: 'test-field',
+            values: [
+              {
+                value: {
+                  value: 'test-value',
+                  state: 'selected',
+                  numberOfResults: 1,
                 },
-              ],
-            },
-          ],
-        },
-      });
-
-      // Find any button first to debug what's available
-      const breadcrumbButton = page.getByRole('button', {
-        name: /test-value/i,
-      });
-      await userEvent.click(breadcrumbButton);
-
-      expect(mockedDeselect).toHaveBeenCalled();
+                deselect: mockedDeselect,
+              },
+            ],
+          },
+        ],
+      },
     });
 
-    it('should call the deselectAll method when the clear all button is clicked', async () => {
-      const {clearAll} = await renderBreadbox({
-        breadcrumbState: {
-          facetBreadcrumbs: [
-            {
-              facetId: 'test-facet',
-              field: 'test-field',
-              values: [
-                {
-                  value: {
-                    value: 'test-value',
-                    state: 'selected',
-                    numberOfResults: 1,
-                  },
-                  deselect: vi.fn(),
-                },
-              ],
-            },
-          ],
-        },
-      });
-      await userEvent.click(clearAll());
-      expect(mockedDeselectAll).toHaveBeenCalled();
+    const breadcrumbButton = page.getByRole('button', {
+      name: /test-value/i,
     });
+    await userEvent.click(breadcrumbButton);
 
-    it('should have the correct text on the clear all button', async () => {
-      const {clearAll} = await renderBreadbox({
-        breadcrumbState: {
-          facetBreadcrumbs: [
-            {
-              facetId: 'test-facet',
-              field: 'test-field',
-              values: [
-                {
-                  value: {
-                    value: 'test-value',
-                    state: 'selected',
-                    numberOfResults: 1,
-                  },
-                  deselect: vi.fn(),
-                },
-              ],
-            },
-          ],
-        },
-      });
-      await expect.element(clearAll()).toHaveTextContent('Clear');
-    });
+    expect(mockedDeselect).toHaveBeenCalled();
+  });
 
-    it('should have the correct aria-label on the clear all button', async () => {
-      const {clearAll} = await renderBreadbox({
-        breadcrumbState: {
-          facetBreadcrumbs: [
-            {
-              facetId: 'test-facet',
-              field: 'test-field',
-              values: [
-                {
-                  value: {
-                    value: 'test-value',
-                    state: 'selected',
-                    numberOfResults: 1,
-                  },
-                  deselect: vi.fn(),
+  it('should call the deselectAll method when the clear all button is clicked', async () => {
+    const {clearAll} = await renderBreadbox({
+      breadcrumbState: {
+        facetBreadcrumbs: [
+          {
+            facetId: 'test-facet',
+            field: 'test-field',
+            values: [
+              {
+                value: {
+                  value: 'test-value',
+                  state: 'selected',
+                  numberOfResults: 1,
                 },
-              ],
-            },
-          ],
-        },
-      });
-      await expect
-        .element(clearAll())
-        .toHaveAttribute('aria-label', 'Clear All Filters');
+                deselect: vi.fn(),
+              },
+            ],
+          },
+        ],
+      },
     });
+    await userEvent.click(clearAll());
+    expect(mockedDeselectAll).toHaveBeenCalled();
+  });
+
+  it('should have the correct text on the clear all button', async () => {
+    const {clearAll} = await renderBreadbox({
+      breadcrumbState: {
+        facetBreadcrumbs: [
+          {
+            facetId: 'test-facet',
+            field: 'test-field',
+            values: [
+              {
+                value: {
+                  value: 'test-value',
+                  state: 'selected',
+                  numberOfResults: 1,
+                },
+                deselect: vi.fn(),
+              },
+            ],
+          },
+        ],
+      },
+    });
+    await expect.element(clearAll()).toHaveTextContent('Clear');
+  });
+
+  it('should have the correct aria-label on the clear all button', async () => {
+    const {clearAll} = await renderBreadbox({
+      breadcrumbState: {
+        facetBreadcrumbs: [
+          {
+            facetId: 'test-facet',
+            field: 'test-field',
+            values: [
+              {
+                value: {
+                  value: 'test-value',
+                  state: 'selected',
+                  numberOfResults: 1,
+                },
+                deselect: vi.fn(),
+              },
+            ],
+          },
+        ],
+      },
+    });
+    await expect
+      .element(clearAll())
+      .toHaveAttribute('aria-label', 'Clear All Filters');
   });
 
   describe('#disconnectedCallback', () => {
