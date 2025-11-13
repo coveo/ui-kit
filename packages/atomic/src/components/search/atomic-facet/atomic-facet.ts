@@ -232,7 +232,7 @@ export class AtomicFacet
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
    */
-  @property({type: Number, attribute: 'heading-level', reflect: true})
+  @property({type: Number, attribute: 'heading-level'})
   public headingLevel = 0;
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
