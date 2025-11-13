@@ -17,12 +17,18 @@ if (!process.env.INIT_CWD) {
 process.chdir(process.env.INIT_CWD);
 
 // Commit, tag and push
+if (!process.env.GITHUB_INSTALLATION_TOKEN) {
+  throw new Error(
+    'Missing required GITHUB_INSTALLATION_TOKEN environment variable. Cannot proceed with GitHub operations.'
+  );
+}
 const octokit = new Octokit({
   auth: process.env.GITHUB_INSTALLATION_TOKEN,
 });
 
 // Find all packages that have been released in this release.
-const packagesReleased = existsSync('.git-message')
+const gitMessageExists = existsSync('.git-message');
+const packagesReleased = gitMessageExists
   ? readFileSync('.git-message', {
       encoding: 'utf-8',
     }).trim()
@@ -37,6 +43,7 @@ const commitMessage = dedent`
   **/CHANGELOG.md
   CHANGELOG.md
   package.json
+  **/package.json
 `;
 
 // Setup Git with the bot user
@@ -46,8 +53,11 @@ await setupGit();
 const commit = await commitChanges(commitMessage, octokit);
 
 // Add the tags locally...
-if (packagesReleased) {
-  for (const tag of packagesReleased.split('\n')) {
+if (gitMessageExists) {
+  for (const tag of packagesReleased
+    .split('\n')
+    .map((t) => t.trim())
+    .filter((t) => t)) {
     await gitTag(tag, commit);
   }
 }
@@ -61,7 +71,6 @@ await octokit.rest.git.updateRef({
   repo: REPO_NAME,
   ref: `heads/${REPO_RELEASE_BRANCH}`,
   sha: commit,
-  force: false,
 });
 // Unlock the main branch
 await removeWriteAccessRestrictions();

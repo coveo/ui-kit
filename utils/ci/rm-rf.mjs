@@ -51,7 +51,7 @@ function expandGlob(pattern) {
 
 /**
  * Remove files and directories recursively (equivalent to rm -rf)
- * Supports simple glob patterns (e.g., dist/*, *.tmp)
+ * Supports simple glob patterns (for example, dist/*, *.tmp)
  *
  * @param {string[]} paths - Paths to remove (can include simple glob patterns)
  */

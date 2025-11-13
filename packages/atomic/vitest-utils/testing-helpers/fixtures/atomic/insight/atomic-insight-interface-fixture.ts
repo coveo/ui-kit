@@ -4,8 +4,8 @@ import type {i18n} from 'i18next';
 import {html, LitElement, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {vi} from 'vitest';
+import {bindingsContext} from '@/src/components/common/context/bindings-context.js';
 import type {BaseAtomicInterface} from '@/src/components/common/interface/interface-controller.js';
-import {bindingsContext} from '@/src/components/context/bindings-context.js';
 import type {
   AtomicInsightInterface,
   InsightBindings,

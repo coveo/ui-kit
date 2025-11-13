@@ -57,5 +57,5 @@ export const buildFakeNumericFacet = ({
   ({
     ...defaultImplementation,
     ...implementation,
-    ...(state && {state: {...defaultState, ...state}}),
+    ...{state: {...defaultState, ...(state || {})}},
   }) as NumericFacet;

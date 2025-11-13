@@ -1,3 +1,32 @@
+## 3.8.0 (2025-11-12)
+
+* chore: remove stencil-generated build artifacts from git tracking (#6500) ([e9f418f](https://github.com/coveo/ui-kit/commits/e9f418f)), closes [#6500](https://github.com/coveo/ui-kit/issues/6500)
+* chore(atomic): migrate atomic-result-number (#6188) ([4baa234](https://github.com/coveo/ui-kit/commits/4baa234)), closes [#6188](https://github.com/coveo/ui-kit/issues/6188)
+* chore (atomic): migrated atomic query error to lit (#6334) ([b57d672](https://github.com/coveo/ui-kit/commits/b57d672)), closes [#6334](https://github.com/coveo/ui-kit/issues/6334)
+* Migrate atomic-numeric-range from Stencil to Lit (#6430) ([df456c9](https://github.com/coveo/ui-kit/commits/df456c9)), closes [#6430](https://github.com/coveo/ui-kit/issues/6430)
+* feat(atomic): create placeholder Generate Answer button for builder preview (#6201) ([70f384f](https://github.com/coveo/ui-kit/commits/70f384f)), closes [#6201](https://github.com/coveo/ui-kit/issues/6201)
+
+
+
+## <small>3.7.17 (2025-11-05)</small>
+
+* chore(atomic): migrate atomic-load-more-results (#6217) ([ffc26c1](https://github.com/coveo/ui-kit/commits/ffc26c1)), closes [#6217](https://github.com/coveo/ui-kit/issues/6217)
+* chore(atomic): migrate atomic-recs-interface (#6337) ([fc956f2](https://github.com/coveo/ui-kit/commits/fc956f2)), closes [#6337](https://github.com/coveo/ui-kit/issues/6337)
+* chore(atomic): migrate atomic-result-text (#6206) ([3521050](https://github.com/coveo/ui-kit/commits/3521050)), closes [#6206](https://github.com/coveo/ui-kit/issues/6206)
+* chore(atomic): migrate atomic-text (#6205) ([bf2294c](https://github.com/coveo/ui-kit/commits/bf2294c)), closes [#6205](https://github.com/coveo/ui-kit/issues/6205)
+
+
+
+## <small>3.7.16 (2025-10-30)</small>
+
+* chore(atomic): migrate `atomic-html` (#6202) ([d204f17](https://github.com/coveo/ui-kit/commits/d204f17)), closes [#6202](https://github.com/coveo/ui-kit/issues/6202)
+* chore(atomic): migrate atomic-result-list (#6189) ([eace955](https://github.com/coveo/ui-kit/commits/eace955)), closes [#6189](https://github.com/coveo/ui-kit/issues/6189)
+* [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
+* chore (atomic): migrated atomic-result-children-template to lit (#6199) ([c0f6684](https://github.com/coveo/ui-kit/commits/c0f6684)), closes [#6199](https://github.com/coveo/ui-kit/issues/6199)
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
 ## <small>3.7.16 (2025-10-29)</small>
 
 * ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)

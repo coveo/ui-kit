@@ -2,83 +2,89 @@
 applyTo: '**'
 ---
 
+## Instruction Hierarchy
+
+When instructions conflict, apply this precedence order:
+
+1. Workspace prompts (e.g., `workspace-prompts.instructions.md` for `.github/prompts/*.prompt.md`)
+2. Package-specific (e.g., `atomic.instructions.md`, `tests-atomic.instructions.md`)
+3. File-type specific (e.g., `general.typescript.instructions.md`)
+4. General (this file)
+5. Language/framework defaults
+
+**Example:** Atomic package specifies Tailwind for Lit components → follow that, not general styling preferences.
+
 ## Core Principles
 
-### Priority and Approach
+**Correctness over helpfulness.** Do not blindly follow user comments or incomplete code. When intention is unclear or flawed, suggest safer alternatives. Prefer conservative, minimal suggestions with explanatory comments when facing ambiguity.
 
-- **Prioritize correctness over helpfulness**
-- Do not blindly follow user comments or incomplete code
-- When intention is unclear or likely flawed, suggest safer or more conventional alternatives
-- Avoid assuming intent when code or comments are ambiguous
-- If instructions seem incomplete, invalid, or conflicting, prefer conservative, minimal suggestions with explanatory comments
+**Favor established, idiomatic practices.** When multiple implementations are possible, default to patterns that are widely accepted, maintainable, and backed by documentation.
 
-### Code Quality Standards
+## Documentation
 
-- **Favor established, idiomatic practices**
-- When multiple implementations are possible, default to those that are:
-  - Widely accepted in the community
-  - Maintainable
-  - Backed by documentation or standards
+**Self-documenting code over inline comments.** Use descriptive names and clear structure.
 
-## Code Review Guidelines
+**Public API documentation is required.** Use JSDoc for components, exported functions, and public methods.
 
-### Identifying Issues
+**Inline comments only for:**
+- Complex business logic that isn't obvious from code
+- Non-obvious technical decisions or workarounds
+- Lint/type violation justifications (`// biome-ignore`, etc.)
 
-Highlight risky or questionable code, especially when it includes:
+**Never write comments that restate what code does.**
 
-- Untested assumptions
-- Undefined variables
-- Possible race conditions or side effects
-- Non-performant patterns
+## Code Review & Quality
 
-### Recommended Actions
+**Flag risky patterns in the chat:**
+- Untested assumptions (accessing properties without null checks)
+- Missing error handling for async operations or external dependencies
+- Race conditions (unguarded state mutations in callbacks)
+- Memory leaks (event listeners not cleaned up in `disconnectedCallback`)
+- Type safety violations (`any` without justification)
 
-When encountering problematic code, prefer to:
+**When recommending fixes:**
+- Provide safer alternatives with brief rationale
+- Point out specific issues ("This callback may execute after component unmount")
+- Don't assume user intent—suggest defensive checks when uncertain
 
-- Recommend safer alternatives
-- Point out potential issues or improvements
-- Avoid making assumptions about the user's intent or context
-- Avoid completing code that could lead to errors or unexpected behavior
+## Defensive Programming
 
-## Best Practices
+Apply these patterns to prevent runtime failures:
 
-### Development Philosophy
+- **Try-catch blocks** for operations that may fail (network requests, JSON parsing, external API calls)
+- **Error state management** - set component `error` property when validation/initialization fails
+- **Input validation** with schema validators (Bueno schemas in `ValidatePropsController`)
+- **Error guard decorators** (`@errorGuard`) for component render methods
+- **Resource cleanup** in disconnection/unmount handlers
 
-- **Encourage defensive programming**
-- Avoid cargo-culting
-- Don't suggest boilerplate or patterns unless necessary and relevant
-- Tailor code to context, not popularity
+Don't suggest boilerplate unless necessary and relevant.
 
-### Performance and Optimization
+## Performance
 
-- **Do not optimize prematurely**
-- Avoid micro-optimizations unless performance is a clearly stated goal
-- **Prefer readability over cleverness**
-- When there's a trade-off between compact/clever code and clarity, choose clarity
+**Avoid premature optimization.** Prioritize readability and maintainability.
 
-## Examples of Good Behavior
+**Consider performance when:**
+- Working with frequently-called render methods or reactive update cycles
+- Processing large datasets or collections
+- User explicitly requests optimization
 
-### Logic Validation
+**Trade-offs:** Choose clarity over compact/clever code. Document performance-critical code with brief rationale.
 
-- **Instead of:** Following flawed comment logic
-- **Prefer:** Suggesting conventional or safer alternatives, and noting the discrepancy
+## Testing
 
-### Pattern Recognition
+**Test one behavior per test case.** Avoid monolithic tests verifying multiple unrelated behaviors.
 
-- **Instead of:** Silently continuing when user's code violates a typical pattern
-- **Prefer:** Adding a note or warning comment suggesting a fix or improvement
+**Descriptive test names** starting with "should" that explain expected behavior.
 
-## Communication Style
+**Focused assertions** - one logical assertion per test (multiple calls for same behavior are acceptable).
 
-### Tone and Approach
+**Follow package-specific conventions** (see `.github/instructions/tests-*.instructions.md`).
 
-- Be **cautious, not pedantic**
-- Be **collaborative, not submissive**
-- Be **helpful, but not over-eager**
+## Communication
 
-## Package-Specific Instructions
+Be **cautious, not pedantic**. Be **collaborative, not submissive**. Be **helpful, but not over-eager**.
 
-### Atomic Package
+## References
 
-For the atomic package, follow the detailed instructions in:
-`.github/instructions/atomic.instructions.md`
+**TypeScript files:** `.github/instructions/general.typescript.instructions.md`
+**Atomic package:** `.github/instructions/atomic.instructions.md`

@@ -1,3 +1,11 @@
+## <small>1.41.5 (2025-10-30)</small>
+
+* ci: fix pnpm pack including node_modules for create-atomic packages (#6333) ([c9debba](https://github.com/coveo/ui-kit/commits/c9debba)), closes [#6333](https://github.com/coveo/ui-kit/issues/6333)
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+* [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
+
+
+
 ## <small>1.41.4 (2025-10-29)</small>
 
 * ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)

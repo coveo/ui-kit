@@ -1,3 +1,32 @@
+## <small>3.35.1 (2025-11-12)</small>
+
+* docs: correct JSDoc grammar and terminology across packages (#6531) ([356975a](https://github.com/coveo/ui-kit/commits/356975a)), closes [#6531](https://github.com/coveo/ui-kit/issues/6531)
+* fix(docs): address broken sample links for Typedoc (#6483) ([e4b05b3](https://github.com/coveo/ui-kit/commits/e4b05b3)), closes [#6483](https://github.com/coveo/ui-kit/issues/6483)
+* fix(headless): added missing action cause for ep (#6317) ([4f7340d](https://github.com/coveo/ui-kit/commits/4f7340d)), closes [#6317](https://github.com/coveo/ui-kit/issues/6317)
+* fix(headless): reset answer logic added before generating a new answer (#6433) ([6062a76](https://github.com/coveo/ui-kit/commits/6062a76)), closes [#6433](https://github.com/coveo/ui-kit/issues/6433)
+* chore: address security vulnerability by updating pino to version 10 (#6315) ([df9a0de](https://github.com/coveo/ui-kit/commits/df9a0de)), closes [#6315](https://github.com/coveo/ui-kit/issues/6315)
+* chore: update to Vitest 4 (#6327) ([344847a](https://github.com/coveo/ui-kit/commits/344847a)), closes [#6327](https://github.com/coveo/ui-kit/issues/6327)
+* chore(headless): improved coverage of generated answer request unit tests (#6488) ([afce16f](https://github.com/coveo/ui-kit/commits/afce16f)), closes [#6488](https://github.com/coveo/ui-kit/issues/6488)
+* Fix all identity selector warnings by removing unnecessary memoization (#6478) ([9c2902c](https://github.com/coveo/ui-kit/commits/9c2902c)), closes [#6478](https://github.com/coveo/ui-kit/issues/6478)
+
+
+
+## 3.35.0 (2025-11-05)
+
+* Optimize retry strategy for Search API with guaranteed 1s minimum delay plus exponential backoff (#6 ([5e8c454](https://github.com/coveo/ui-kit/commits/5e8c454)), closes [#6439](https://github.com/coveo/ui-kit/issues/6439)
+* chore(headless-ssr): refactor Search Engine SSR (#6212) ([c51b571](https://github.com/coveo/ui-kit/commits/c51b571)), closes [#6212](https://github.com/coveo/ui-kit/issues/6212)
+* feat(headless): started sending response linked event for CRGA with EP (#6211) ([ca919b7](https://github.com/coveo/ui-kit/commits/ca919b7)), closes [#6211](https://github.com/coveo/ui-kit/issues/6211)
+
+
+
+## <small>3.34.2 (2025-10-30)</small>
+
+* fix(headless-ssr): fix `setAccessToken` for ssr commerce (#6181) ([acfc6c5](https://github.com/coveo/ui-kit/commits/acfc6c5)), closes [#6181](https://github.com/coveo/ui-kit/issues/6181)
+* [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
+* ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)
+
+
+
 ## <small>3.34.1 (2025-10-29)</small>
 
 * ci: migrate to pnpm (#6135) ([00e44cd](https://github.com/coveo/ui-kit/commits/00e44cd)), closes [#6135](https://github.com/coveo/ui-kit/issues/6135)

@@ -1,61 +1,70 @@
 ---
 mode: 'agent'
-description: 'Migrate an atomic Stencil component to Lit with functional components/utils migration'
+description: 'Migrate an Atomic Stencil component to Lit with functional components/utils migration'
 ---
 
 # Migrate Stencil Component to Lit
 
-You are a senior web developer with extensive experience in modern web component frameworks, particularly Lit and Stencil. You have deep knowledge of:
+Migrate an existing Atomic Stencil component to Lit while preserving all functionality and maintaining project coding standards.
 
-- **Web Components Standards**: Custom elements, shadow DOM, and component lifecycle management
-- **Lit Framework**: Reactive properties, templating with `html` tagged templates, decorators, and reactive controllers
-- **Stencil Framework**: JSX templating, decorators, and component architecture patterns
-- **Modern CSS**: Tailwind CSS utility classes, PostCSS, and CSS-in-JS patterns
-- **TypeScript**: Advanced type definitions, decorators, and module systems
-- **Component Architecture**: Separation of concerns, functional components, and reusable utility patterns
-- **Testing**: Unit testing with modern frameworks, E2E testing, and component testing strategies
-- **Build Systems**: Module bundling, TypeScript compilation, and development tooling
-
-Your expertise includes understanding the nuances of migrating between component frameworks while maintaining:
-
-- API compatibility and consumer-facing contracts
-- Accessibility standards and ARIA implementations
-- Performance characteristics and bundle optimization
-- Development workflow and testing infrastructure
-
-You approach migrations systematically, considering both technical debt reduction and maintaining stability for existing consumers. You understand the importance of preserving functionality while modernizing the underlying implementation.
-
-Your goal is to migrate an existing atomic Stencil component to a modern Lit-based component while preserving all functionality and maintaining the project's coding standards.
-
-**Note: All commands in this guide should be run from the `packages/atomic` directory.**
+**Working directory:** `packages/atomic`
 
 ## Migration Requirements
 
-Follow the guidelines from [atomic component instructions](../instructions/atomic.instructions.md) for proper structure and conventions.
+Follow the guidelines from [Atomic component instructions](../instructions/atomic.instructions.md) for proper structure and conventions.
 
 **Important:** Follow the migration steps in the exact order specified below. Do not skip ahead or reorder steps.
+
+## Find Similar Migrated Components
+
+**First, find equivalent components in other use cases (search/commerce/insight/recommendations) that were already migrated to Lit.**
+
+**Example:** Migrating `atomic-query-error` (search) → look for `atomic-commerce-query-error` (commerce)
+
+**How to identify:**
+- Extract base name: `atomic-[use-case-]component-name` → `component-name`
+- Search other use case folders for `atomic-*{base-name}*.ts` (`.ts` = Lit, `.tsx` = Stencil)
+- Verify Lit migration: `@customElement` decorator present
+
+**Analyze similar component for:**
+- Path alias patterns (`@/src/...` vs relative imports) — **verify no `../` imports exist**
+- Functional component usage (double invocation, render prefix)
+- Controller/state binding patterns
+- Tailwind CSS approach
+- Template rendering (`html`, `nothing` vs `null`)
+
+**If no similar component found:** Ask user if they know of one to reference.
+
+## Pre-Migration: Analyze Import Paths
+
+**Before starting migration, identify all imports that need path alias conversion:**
+
+Use grep to find all relative imports in the target component:
+```bash
+grep -E "from '\.\./|from \"\.\\./" atomic-{name}.tsx
+```
+
+**Every import with `../` must be converted to `@/src/...` pattern.**
+
+**Verification:** After migration, run the same grep on the new `.ts` file — should return zero matches.
+
+**Include pattern discovery as a todo item:**
+- [ ] Find and analyze similar migrated component in other use cases
 
 ### 1. First: Migrate Functional Components/Utils
 
 **Before migrating the main component, handle any functional components or utilities it depends on:**
 
-1. **Create Lit versions:**
+Use the dedicated prompt for functional component migration:
+`.github/prompts/migrate-stencil-functional-component-to-lit.prompt.md`
 
-   - Migrate the functional logic to work with Lit (functional components are always in separate files, never inline them in the main component)
-   - Follow Lit patterns and best practices
-   - Make sure to use the correct FunctionalComponentX type for each component
+**Quick checklist:**
+- [ ] Rename original files with `stencil-` prefix
+- [ ] Create new Lit versions with correct `FunctionalComponent*` types
+- [ ] Update ALL Stencil component imports to use prefixed versions
+- [ ] Verify no broken imports across all packages
 
-2. **Preserve Stencil versions:**
-
-   - Rename original files with `stencil-` prefix
-   - Example: `utils/helper.ts` → `utils/stencil-helper.ts`
-   - **Update ALL Stencil components across ALL use cases** (commerce, search, headless, etc.) that import these utilities to use the prefixed versions
-   - Search the entire codebase for imports of the renamed utilities
-
-3. **Update import statements:**
-   - **Search across all packages and use cases** for any imports that need updating
-   - Verify no circular dependencies are introduced
-   - Use global search to find all references: `grep -r "import.*helper" packages/` (replace with actual utility name)
+For detailed guidance, patterns, and common pitfalls, refer to the dedicated prompt.
 
 ### 2. Generate New Lit Component Structure
 
@@ -92,7 +101,56 @@ Migrate files according to this mapping:
 - Convert lifecycle methods (componentWillLoad → willUpdate, etc.)
 - Replace CSS classes with Tailwind CSS utilities
 - **Use Lit reactive controllers instead of Stencil context providers** (e.g., ProductContext should be a reactive controller)
+- **Result template components:** Replace Stencil `@ResultContext()` decorator with `createResultContextController`:
+  ```typescript
+  import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
+  
+  private resultContext = createResultContextController(this);
+  private get result(): Result {
+    return this.resultContext.item as Result;
+  }
+  ```
 - **Use Lit's `nothing` directive instead of `null` for conditional rendering**
+
+**Light DOM Components:**
+
+Light DOM components render without Shadow DOM for styling integration. Use `LightDomMixin` for this pattern.
+
+```typescript
+import {LightDomMixin} from '@/src/mixins/light-dom';
+
+// Basic light DOM component
+@customElement('atomic-result-number')
+@bindings()
+export class AtomicResultNumber
+  extends LightDomMixin(LitElement)
+  implements InitializableComponent<Bindings>
+
+// Light DOM component requiring bindings initialization
+@customElement('atomic-icon')
+export class AtomicIcon
+  extends LightDomMixin(InitializeBindingsMixin(LitElement))
+  implements InitializableComponent<AnyBindings>
+```
+
+**When to use:**
+- `LightDomMixin(LitElement)` - Most light DOM components with `@bindings()` decorator
+- `LightDomMixin(InitializeBindingsMixin(LitElement))` - Components needing binding initialization logic (e.g., components without use case-specific bindings)
+
+**Import Path Migration (CRITICAL):**
+
+**Rule:** Replace ALL `../` imports with `@/src/` path aliases.
+
+**Conversion:** `../` → `@/src/` + full path from `src/` directory. Keep `./` (same-dir) imports.
+
+**Examples:**
+```typescript
+'../../../utils/initialization-utils' → '@/src/utils/initialization-utils'
+'../../common/query-error/details' → '@/src/components/common/query-error/details'
+'./local-helper' → './local-helper' // ✅ Same-dir OK
+```
+
+**Verify after migration:** `grep -E "from '\.\./|from \"\.\\./" atomic-{name}.ts` → zero matches
 
 **Template Rendering:**
 
@@ -160,15 +218,7 @@ export class AtomicCommercePager
 }
 ```
 
-**❌ Removing global type declaration:**
-
-```typescript
-// DON'T: Remove this declaration even if there are errors
-// export class AtomicCommercePager extends LitElement { }
-// (missing global declaration)
-```
-
-**✅ Keep global type declaration:**
+**✅ Always keep global type declaration:**
 
 ```typescript
 declare global {
@@ -178,21 +228,27 @@ declare global {
 }
 ```
 
-_Note: TypeScript errors are normal until rebuilding atomic package_
+**Why:** During migration, both Stencil and Lit components coexist. The Stencil-generated types in `components.d.ts` will conflict, causing duplicate declaration errors. **This is expected and required.** The declaration ensures type safety for the new Lit component. Errors resolve after removing the Stencil component and rebuilding.
 
-**❌ Missing CSS file references:**
+_Note: Duplicate declaration TypeScript errors are expected during migration—do not remove this block to "fix" them._
 
-```css
-/* DON'T: Forget to include required Tailwind utilities */
-/* Missing @reference for custom utils */
+**❌ Missing or unnecessary CSS references:**
+
+```typescript
+// DON'T: Import styles if CSS only contains @reference directives
+import styles from './atomic-component.tw.css?inline';
 ```
 
-**✅ Include all required CSS references:**
+**✅ Include CSS references only when needed:**
 
 ```css
+/* Include @reference if using custom Tailwind utilities */
 @reference '../../../utils/coveo.tw.css';
-/* Include this if component uses custom Tailwind utilities */
+
+/* Then add actual component styles... */
 ```
+
+Remove styles import if CSS file only has `@reference` (already via `@withTailwindStyles`)
 
 **❌ Incorrect functional component method naming:**
 
@@ -220,18 +276,14 @@ return renderPagerGuard({
     hasItems: this.searchStatusState.hasResults,
     isAppLoaded: this.isAppLoaded,
   },
-  children: html`
-    ${renderPagerNavigation({
-      props: {
-        i18n: this.bindings.i18n,
-      },
-    })}
+  children: html`<div>Content</div>`, // ❌ Wrong: children as property
+});
 ```
 
 **✅ Correct functional component usage with children:**
 
 ```typescript
-// DO: Use function call pattern with children passed as template
+// DO: Double invocation - call returns function, then call that with children
 return renderPagerGuard({
   props: {
     hasError: this.searchStatusState.hasError,
@@ -243,8 +295,27 @@ return renderPagerGuard({
     props: {
       i18n: this.bindings.i18n,
     },
-   }))
+  })(html`<div>Navigation content</div>`)}
+`);
 ```
+
+**❌ Forgot to convert relative imports:**
+
+```typescript
+// Migration incomplete - still has relative paths
+import {renderButton} from '../../../common/button';
+import {bindings} from '../../../../decorators/bindings';
+```
+
+**✅ All imports use path aliases:**
+
+```typescript
+import {renderButton} from '@/src/components/common/button';
+import {bindings} from '@/src/decorators/bindings';
+import {localHelper} from './local-helper'; // Same-dir OK
+```
+
+Verify: `grep -E "from '\.\./|from \"\.\\./" atomic-{name}.ts` → zero matches
 
 **❌ Including empty styles:**
 
@@ -252,16 +323,14 @@ return renderPagerGuard({
 // DON'T: Import styles if only global imports exist
 import styles from './atomic-component.tw.css?inline';
 
-// In CSS file:
-/* @reference '../../../utils/coveo.tw.css'; */
-/* No actual styles defined */
+// In CSS file with only: /* @reference '../../../utils/coveo.tw.css'; */
 ```
 
 **✅ Remove empty styles imports:**
 
 ```typescript
-// DO: Remove styles import if CSS file only contains global utils references, since these are already included through the withTailwindStyles decorator
-// No styles import needed
+// DO: Omit styles import if CSS only contains @reference directives
+// (already included through @withTailwindStyles decorator)
 ```
 
 **❌ Wrong bindStateToController import:**
@@ -281,47 +350,41 @@ import {bindStateToController} from '@/src/decorators/bind-state';
 **❌ Incorrect conditional rendering:**
 
 ```typescript
-// DON'T: Use null, undefined, or empty templates for "nothing"
+// DON'T: Use null, undefined, or empty templates
 return condition ? html`<div>Content</div>` : null;
-return condition ? html`<div>Content</div>` : undefined;
 return condition ? html`<div>Content</div>` : html``;
-
-// DON'T: Use empty strings or comments
-return condition ? html`<div>Content</div>` : '';
-return condition ? html`<div>Content</div>` : html`<!-- empty -->`;
 ```
 
 **✅ Correct conditional rendering with nothing:**
 
 ```typescript
-// DO: Use Lit's nothing directive
 import {nothing} from 'lit';
 
 return condition ? html`<div>Content</div>` : nothing;
+html`<div>${shouldShow ? html`<span>Content</span>` : nothing}</div>`;
+```
 
-// DO: Use nothing in template expressions
-html`
-  <div>
-    ${shouldShow ? html`<span>Conditional content</span>` : nothing}
-  </div>
-`;
+**❌ Missing result context controller:**
+
+```typescript
+// DON'T: Try to access result without controller
+@ResultContext() result!: Result;  // Stencil pattern
+```
+
+**✅ Correct result context setup:**
+
+```typescript
+import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
+
+private resultContext = createResultContextController(this);
+private get result(): Result {
+  return this.resultContext.item as Result;
+}
 ```
 
 ## Important Constraints
 
-**Do not do the following unless explicitly asked by the user:**
-
-- Do not build the atomic package
-- Do not run tests or generate new tests
-- Do not fix linting issues (save linting fixes for after migration is complete)
-- Do not modify existing test files (`.spec.ts`, `e2e/` files)
-- Do not check if generation scripts succeeded or look for generated files
-
-**Focus only on:**
-
-- Code migration from Stencil to Lit
-- Style migration from PostCSS to Tailwind
-- Functional component/utility migration
+Focus on code/style/functional migration only. Do not: build, test, lint, modify test files, or verify generation script outputs (unless user requests).
 
 ## Migration Checklist
 
@@ -329,21 +392,24 @@ html`
 
 **Follow this exact order:**
 
+- [ ] **Step 0:** Find and analyze similar migrated component in other use cases for pattern reference
 - [ ] **Step 1:** Migrate functional components/utils with stencil- prefixing
-- [ ] **Step 1:** Update ALL imports across ALL use cases (commerce, search, headless, etc.) when renaming utilities
-- [ ] **Step 1:** Verify no broken imports remain in any package using global search
-- [ ] **Step 2:** Generate new Lit component structure using generate-component.mjs
-- [ ] **Step 3:** Migrate main component from .tsx to .ts
-- [ ] **Step 3:** Convert PostCSS styles to Tailwind CSS
-- [ ] **Step 3:** Verify correct InitializableComponent import and implementation
-- [ ] **Step 3:** Add @bindings() decorator and bindings state property
-- [ ] **Step 3:** Keep global HTMLElementTagNameMap declaration (ignore TS errors until rebuild)
-- [ ] **Step 3:** Include all required CSS references (e.g., @reference '../../../utils/coveo.tw.css')
-- [ ] **Step 3:** Ensure functional component methods start with 'render' prefix
-- [ ] **Step 3:** Use correct functional component pattern (function call with children, not children property)
-- [ ] **Step 3:** Remove styles import if CSS file only contains global references
-- [ ] **Step 3:** Use correct bindStateToController import from decorators
-- [ ] **Step 3:** Use Lit reactive controllers instead of Stencil context providers
+- [ ] **Step 2:** Update ALL imports across ALL use cases (commerce, search, headless, etc.) when renaming utilities
+- [ ] **Step 3:** Verify no broken imports remain in any package using global search
+- [ ] **Step 4:** Generate new Lit component structure using generate-component.mjs
+- [ ] **Step 5:** Migrate main component from .tsx to .ts
+- [ ] **Step 6:** Convert PostCSS styles to Tailwind CSS
+- [ ] **Step 7:** Verify correct InitializableComponent import and implementation
+- [ ] **Step 8:** Add @bindings() decorator and bindings state property
+- [ ] **Step 9:** Add global HTMLElementTagNameMap declaration (duplicate declaration errors expected until Stencil removal)
+- [ ] **Step 10:** Use `type` imports for type-only imports (e.g., `import type {Bindings}` or `import {type QueryError}`)
+- [ ] **Step 11:** Include CSS @reference if using custom Tailwind utilities; omit styles import if CSS only has @reference
+- [ ] **Step 12:** Ensure functional component methods start with 'render' prefix
+- [ ] **Step 13:** Use correct functional component pattern (double invocation with children)
+- [ ] **Step 14:** Use correct bindStateToController import from decorators
+- [ ] **Step 15:** Use Lit reactive controllers instead of Stencil context providers
+- [ ] **Step 16:** Use Lit's `nothing` directive for conditional rendering (not `null`/`undefined`)
+- [ ] **Step 17:** Verify path aliases: run `grep -E "from '\.\./|from \"\.\\./" atomic-{name}.ts` → expect zero matches
 
 ## Important Notes
 
@@ -354,3 +420,27 @@ html`
 - **Step order matters:** Always follow the numbered steps in sequence
 
 Ask me for the component name and directory if not provided, then proceed with the migration following these steps systematically.
+
+## Post-Execution: Generate Summary
+
+After completing migration, generate execution summary:
+
+**1. Create summary file:**
+- **Location:** `.github/prompts/.executions/migrate-stencil-to-lit-{component}-[YYYY-MM-DD-HHmmss].prompt-execution.md`
+- **Structure:** Follow `.github/prompts/.executions/TEMPLATE.prompt-execution.md`
+
+**2. Include in summary:**
+- Which similar migrated component was used as reference
+- Actual issues encountered (not expected behaviors like duplicate type declaration errors)
+- Ambiguities requiring interpretation or decisions made
+- Time-consuming operations
+- Missing or unclear instructions
+- Concrete improvement suggestions
+
+**3. Expected behaviors (not issues):**
+- TypeScript duplicate declaration errors for `HTMLElementTagNameMap` during migration
+- Compiler warnings resolved by using `type` imports
+
+**4. Inform user** about summary location
+
+**5. Mark complete** only after file created and user informed.

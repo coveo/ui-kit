@@ -7,7 +7,10 @@ import {createInteractiveResultContextController} from './interactive-result-con
 vi.mock(
   '@/src/components/common/item-list/context/interactive-item-context-controller',
   () => ({
-    InteractiveItemContextController: vi.fn().mockImplementation(() => ({})),
+    InteractiveItemContextController: vi
+      .fn()
+      // biome-ignore lint/complexity/useArrowFunction: https://vitest.dev/guide/migration.html#spyon-and-fn-support-constructors
+      .mockImplementation(function () {}),
   })
 );
 
@@ -37,9 +40,11 @@ describe('result-template-controllers', () => {
     it('should return InteractiveItemContextController instance', () => {
       const mockController =
         {} as InteractiveItemContextController<InteractiveResult>;
-      vi.mocked(InteractiveItemContextController).mockReturnValue(
-        mockController
-      );
+      vi.mocked(InteractiveItemContextController).mockImplementation(function (
+        this: unknown
+      ) {
+        return mockController;
+      });
       const hostWithError = mockHost as LitElement & {error: Error};
 
       const result = createInteractiveResultContextController(hostWithError);
