@@ -122,7 +122,7 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
     this.hideSiblingsRecursively(this);
   }
 
-  @watch('active', {waitUntilFirstUpdate: false})
+  @watch('active', {waitUntilFirstUpdate: true})
   async handleActiveChange(_prev?: boolean, next?: boolean) {
     const isInitialLoad = next === _prev;
     if (next) {
@@ -134,7 +134,6 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
 
   connectedCallback() {
     super.connectedCallback();
-    this.handleActiveChange(this.active, this.active);
     document.addEventListener('focusin', this.onFocusChanged);
   }
 
