@@ -66,7 +66,7 @@ export interface Search extends Controller, SearchSubControllers {
    *
    * This method is useful when leveraging the product grouping feature to allow users to select nested products.
    *
-   * E.g., if a product has children (such as color variations), you can call this method when the user selects a child
+   * For example, if a product has children (such as color variations), you can call this method when the user selects a child
    * to make that child the new parent product, and re-render the product as such in the storefront.
    *
    * **Note:** In the controller state, a product that has children will always include itself as its own child so that

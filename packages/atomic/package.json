@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.37.3",
+  "version": "3.38.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -62,9 +62,7 @@
     "prod": "npx serve www -l 3333 --no-request-logging",
     "test": "pnpm run test:lit",
     "test:stencil": "stencil test --spec -- src/utils/initialization-utils.spec.ts",
-    "test:lit": "pnpm --filter @coveo/ci if-ci test:lit",
-    "test:lit:no-ci": "vitest run --project=atomic-default",
-    "test:lit:ci": "pnpm test:lit:no-ci --shard=1/2 && pnpm test:lit:no-ci --shard=2/2",
+    "test:lit": "vitest run --project=atomic-default",
     "test:watch": "vitest --project=atomic-default",
     "test:storybook": "vitest run --project=storybook",
     "e2e": "cypress run --browser chrome",
@@ -116,6 +114,7 @@
     "@stencil/react-output-target": "0.5.3",
     "@storybook/addon-a11y": "10.0.5",
     "@storybook/addon-docs": "10.0.5",
+    "@storybook/addon-mcp": "0.1.3",
     "@storybook/addon-vitest": "10.0.5",
     "@storybook/icons": "1.6.0",
     "@storybook/web-components-vite": "10.0.5",

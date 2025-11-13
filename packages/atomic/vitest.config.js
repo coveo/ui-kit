@@ -102,11 +102,7 @@ const atomicDefault = defineConfig({
       'src/**/initialization-utils.spec.ts',
       'src/**/search-layout.spec.ts',
     ],
-    restoreMocks: true,
     setupFiles: ['./vitest-utils/setup.ts'],
-    deps: {
-      moduleDirectories: ['node_modules', path.resolve('../../packages')],
-    },
     browser: {
       provider: playwright(),
       enabled: true,
