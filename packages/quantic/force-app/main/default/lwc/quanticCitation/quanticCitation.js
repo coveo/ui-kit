@@ -305,6 +305,21 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   }
 
   /**
+   * Gets the dynamic CSS classes for the citation title based on active action states.
+   * @returns {string} CSS class string
+   */
+  get citationTitleClasses() {
+    const baseClasses =
+      'citation__title slds-m-left_x-small slds-truncate slds-has-flexi-truncate';
+
+    // Check if any action is active
+    const hasActiveAction = Array.from(this.actionStates.values())
+      .some((state) => state.active);
+
+    return hasActiveAction ? `${baseClasses} citation__title--active` : baseClasses;
+  }
+
+  /**
    * Updates the list of action indicators based on current action states.
    */
   updateIndicators() {
