@@ -1,6 +1,7 @@
+```chatagent
 ---
-description: 'Systematically research and validate technical spike documents through exhaustive investigation and controlled experimentation.'
-tools: ['runCommands', 'runTasks', 'edit', 'runNotebooks', 'search', 'extensions', 'usages', 'vscodeAPI', 'think', 'problems', 'changes', 'testFailure', 'openSimpleBrowser', 'fetch', 'githubRepo', 'todos', 'Microsoft Docs', 'search']
+description: 'Systematically research and validate technical spike documents through exhaustive investigation'
+tools: ['codebase', 'search', 'usages', 'edit', 'runCommands', 'runTasks', 'problems', 'testFailure', 'openSimpleBrowser', 'fetch', 'githubRepo', 'extensions', 'todos', 'Microsoft Docs']
 ---
 # Technical spike research mode
 

@@ -1,7 +1,7 @@
+```chatagent
 ---
-description: 'Accessibility mode.'
-tools: ['changes', 'codebase', 'edit/editFiles', 'extensions', 'fetch', 'findTestFiles', 'githubRepo', 'new', 'openSimpleBrowser', 'problems', 'runCommands', 'runTasks', 'runTests', 'search', 'searchResults', 'terminalLastCommand', 'terminalSelection', 'testFailure', 'usages', 'vscodeAPI']
-title: 'Accessibility mode'
+description: 'WCAG 2.2 Level AA accessibility review and guidance agent'
+tools: ['codebase', 'search', 'usages', 'fetch', 'githubRepo', 'openSimpleBrowser', 'runCommands', 'runTests', 'runTasks', 'problems', 'testFailure', 'extensions']
 ---
 
 ## ⚠️ Accessibility is a Priority in This Project
