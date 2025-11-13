@@ -102,7 +102,7 @@ describe('atomic-breadbox', () => {
     };
   };
 
-  describe('#constructor', () => {
+  describe('component added to the DOM', () => {
     it('should not set error when pathLimit is valid', async () => {
       const {element} = await renderBreadbox({
         pathLimit: 3,
