@@ -1,5 +1,7 @@
 import {LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
+import {booleanConverter} from '@/src/converters/boolean-converter';
+import {watch} from '@/src/decorators/watch';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {getFirstFocusableDescendant} from '@/src/utils/accessibility-utils';
 import {
@@ -20,7 +22,7 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
   /**
    * Whether the focus trap is active.
    */
-  @property({type: Boolean}) active = false;
+  @property({type: Boolean, converter: booleanConverter}) active = false;
 
   /**
    * The source element to focus when the focus trap becomes inactive.
@@ -35,7 +37,11 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
   /**
    * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
    */
-  @property({type: Boolean, attribute: 'should-hide-self'})
+  @property({
+    type: Boolean,
+    attribute: 'should-hide-self',
+    converter: booleanConverter,
+  })
   shouldHideSelf = true;
 
   /**
@@ -45,67 +51,29 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
 
   private readonly hiddenElements: Element[] = [];
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.activeChanged(this.active, this.active);
-    document.addEventListener('focusin', this.onFocusChanged);
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.showAll();
-    document.removeEventListener('focusin', this.onFocusChanged);
-  }
-
-  updated(changedProperties: Map<PropertyKey, unknown>) {
-    super.updated(changedProperties);
-    if (changedProperties.has('active')) {
-      const wasActive = changedProperties.get('active') as boolean | undefined;
-      this.activeChanged(this.active, wasActive ?? this.active);
+  hide(element: Element) {
+    // aria-hidden -> already hidden
+    // aria-live or atomic-aria-live -> must not be hidden otherwise it won't announce dynamic changes in the live region
+    if (
+      element.hasAttribute('aria-hidden') ||
+      element.hasAttribute('aria-live') ||
+      element.tagName.toLowerCase() === 'atomic-aria-live'
+    ) {
+      return;
     }
+    element.setAttribute('aria-hidden', 'true');
+    this.hiddenElements.push(element);
   }
 
-  private hide(element: Element) {
-    if ('inert' in HTMLElement.prototype) {
-      if ((element as HTMLElement).inert) {
-        return;
-      }
-      if (
-        element.hasAttribute('aria-live') ||
-        element.tagName.toLowerCase() === 'atomic-aria-live'
-      ) {
-        return;
-      }
-      (element as HTMLElement).inert = true;
-      this.hiddenElements.push(element);
-    } else {
-      // Fallback to aria-hidden for older browsers
-      // aria-hidden -> already hidden
-      // aria-live or atomic-aria-live -> must not be hidden otherwise it won't announce dynamic changes in the live region
-      if (
-        element.hasAttribute('aria-hidden') ||
-        element.hasAttribute('aria-live') ||
-        element.tagName.toLowerCase() === 'atomic-aria-live'
-      ) {
-        return;
-      }
-      element.setAttribute('aria-hidden', 'true');
-      this.hiddenElements.push(element);
-    }
-  }
-
-  private showAll() {
-    let el = this.hiddenElements.pop();
+  showAll() {
+    let el: Element | undefined = this.hiddenElements.pop();
     while (el) {
-      if ('inert' in HTMLElement.prototype) {
-        (el as HTMLElement).inert = false;
-      }
       el.removeAttribute('aria-hidden');
       el = this.hiddenElements.pop();
     }
   }
 
-  private hideSiblingsRecursively(element: Element | ShadowRoot) {
+  hideSiblingsRecursively(element: Element | ShadowRoot) {
     const parent = getParent(element);
     if (parent === null) {
       return;
@@ -124,26 +92,19 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
     }
   }
 
-  private showSelf() {
+  showSelf() {
     this.parentToHide.removeAttribute('aria-hidden');
     this.parentToHide.removeAttribute('tabindex');
-    if ('inert' in HTMLElement.prototype) {
-      (this.parentToHide as HTMLElement).inert = false;
-    }
   }
 
-  private hideSelf() {
+  hideSelf() {
     if (this.shouldHideSelf) {
-      if ('inert' in HTMLElement.prototype) {
-        (this.parentToHide as HTMLElement).inert = true;
-      } else {
-        this.parentToHide.setAttribute('aria-hidden', 'true');
-      }
+      this.parentToHide.setAttribute('aria-hidden', 'true');
       this.parentToHide.setAttribute('tabindex', '-1');
     }
   }
 
-  private async onDeactivated(isInitialLoad: boolean) {
+  async onDeactivated(isInitialLoad: boolean) {
     this.showAll();
     if (!isInitialLoad) {
       await defer();
@@ -152,7 +113,7 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
     this.hideSelf();
   }
 
-  private async onActivated(isInitialLoad: boolean) {
+  async onActivated(isInitialLoad: boolean) {
     this.showSelf();
     if (!isInitialLoad) {
       await defer();
@@ -161,13 +122,26 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
     this.hideSiblingsRecursively(this);
   }
 
-  private async activeChanged(active: boolean, wasActive: boolean) {
-    const isInitialLoad = active === wasActive;
-    if (active) {
+  @watch('active', {waitUntilFirstUpdate: false})
+  async handleActiveChange(_prev?: boolean, next?: boolean) {
+    const isInitialLoad = next === _prev;
+    if (next) {
       await this.onActivated(isInitialLoad);
     } else {
       await this.onDeactivated(isInitialLoad);
     }
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.handleActiveChange(this.active, this.active);
+    document.addEventListener('focusin', this.onFocusChanged);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.showAll();
+    document.removeEventListener('focusin', this.onFocusChanged);
   }
 
   private onFocusChanged = (e: FocusEvent) => {
