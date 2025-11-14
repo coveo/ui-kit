@@ -20,7 +20,7 @@ import {getQuerySummaryI18nParameters} from '../../common/query-summary/utils';
 import type {Bindings} from '../atomic-search-interface/interfaces';
 
 /**
- * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+ * The `atomic-query-summary` component displays information about the current range of results and the request duration (for example, "Results 1-10 of 123 in 0.47 seconds").
  *
  * @part container - The container for the whole summary.
  * @part duration - The container for the duration.

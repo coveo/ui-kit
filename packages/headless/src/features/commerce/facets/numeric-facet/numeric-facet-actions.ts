@@ -17,7 +17,7 @@ import {validateManualNumericRanges} from '../../../facets/range-facets/numeric-
 
 export interface ToggleSelectNumericFacetValuePayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
   /**
@@ -59,7 +59,7 @@ export const toggleExcludeNumericFacetValue = createAction(
 
 export interface UpdateNumericFacetValuesPayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
   /**
@@ -88,7 +88,7 @@ export const updateNumericFacetValues = createAction(
 
 export type UpdateManualNumericFacetRangePayload = {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
 } & Omit<NumericRangeRequest, 'previousState'>;
