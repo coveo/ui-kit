@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {
@@ -28,10 +28,6 @@ describe('#renderShowHideButton', () => {
       return page.getByRole('button');
     },
   };
-
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
 
   it('should render a button', async () => {
     await renderComponent();
