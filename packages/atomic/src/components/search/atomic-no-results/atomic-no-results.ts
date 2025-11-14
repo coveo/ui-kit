@@ -46,34 +46,10 @@ export class AtomicNoResults
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  @state()
-  bindings!: Bindings;
-
-  public searchStatus!: SearchStatus;
-  public history!: HistoryManager;
-  public querySummary!: QuerySummary;
-
-  @bindStateToController('searchStatus')
-  @state()
-  private searchStatusState!: SearchStatusState;
-
-  @bindStateToController('history')
-  @state()
-  private historyState!: HistoryManagerState;
-
-  @bindStateToController('querySummary')
-  @state()
-  private querySummaryState!: QuerySummaryState;
-
-  @state()
-  public error!: Error;
-
-  protected ariaMessage = new AriaLiveRegionController(this, 'no-results');
-
   // TODO - (v4) KIT-4823: Remove.
   /**
    * Whether to display a button which cancels the last available action.
-   * @deprecated - replaced by `disable-cancel-last-action` (this defaults to `true`, while the replacement defaults to `false`).
+   * @deprecated - replaced by `hide-cancel-last-action` (this defaults to `true`, while the replacement defaults to `false`).
    */
   @property({
     type: Boolean,
@@ -84,15 +60,38 @@ export class AtomicNoResults
   enableCancelLastAction = true;
 
   /**
-   * Whether to disable the button which cancels the last available action.
+   * Whether to hide the button that would let the user cancel the action that yielded no results.
    */
   @property({
     type: Boolean,
     reflect: true,
-    attribute: 'disable-cancel-last-action',
+    attribute: 'hide-cancel-last-action',
     useDefault: true,
   })
-  disableCancelLastAction = false;
+  hideCancelLastAction = false;
+
+  @state()
+  bindings!: Bindings;
+
+  @state()
+  public error!: Error;
+
+  @bindStateToController('searchStatus')
+  @state()
+  private searchStatusState!: SearchStatusState;
+  public searchStatus!: SearchStatus;
+
+  @bindStateToController('history')
+  @state()
+  private historyState!: HistoryManagerState;
+  public history!: HistoryManager;
+
+  @bindStateToController('querySummary')
+  @state()
+  private querySummaryState!: QuerySummaryState;
+  public querySummary!: QuerySummary;
+
+  protected ariaMessage = new AriaLiveRegionController(this, 'no-results');
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -150,7 +149,7 @@ export class AtomicNoResults
 
   private renderCancelButton() {
     if (
-      this.disableCancelLastAction ||
+      this.hideCancelLastAction ||
       !this.enableCancelLastAction ||
       !this.historyState.past.length
     ) {

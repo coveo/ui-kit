@@ -36,7 +36,7 @@ describe('atomic-no-results', () => {
   }: {
     props?: {
       enableCancelLastAction?: boolean;
-      disableCancelLastAction?: boolean;
+      hideCancelLastAction?: boolean;
     };
     searchStatusState?: Partial<SearchStatusState>;
     querySummaryState?: Partial<QuerySummaryState>;
@@ -83,8 +83,8 @@ describe('atomic-no-results', () => {
     if (props.enableCancelLastAction !== undefined) {
       element.enableCancelLastAction = props.enableCancelLastAction;
     }
-    if (props.disableCancelLastAction !== undefined) {
-      element.disableCancelLastAction = props.disableCancelLastAction;
+    if (props.hideCancelLastAction !== undefined) {
+      element.hideCancelLastAction = props.hideCancelLastAction;
     }
     await element.updateComplete;
 
@@ -109,34 +109,36 @@ describe('atomic-no-results', () => {
     vi.clearAllMocks();
   });
 
-  it('should call buildSearchStatus with engine', async () => {
-    await renderNoResults();
-    expect(buildSearchStatus).toHaveBeenCalledWith(mockedEngine);
-  });
+  describe('#initialize', () => {
+    it('should call buildSearchStatus with engine', async () => {
+      await renderNoResults();
+      expect(buildSearchStatus).toHaveBeenCalledWith(mockedEngine);
+    });
 
-  it('should call buildQuerySummary with engine', async () => {
-    await renderNoResults();
-    expect(buildQuerySummary).toHaveBeenCalledWith(mockedEngine);
-  });
+    it('should call buildQuerySummary with engine', async () => {
+      await renderNoResults();
+      expect(buildQuerySummary).toHaveBeenCalledWith(mockedEngine);
+    });
 
-  it('should call buildHistoryManager with engine', async () => {
-    await renderNoResults();
-    expect(buildHistoryManager).toHaveBeenCalledWith(mockedEngine);
-  });
+    it('should call buildHistoryManager with engine', async () => {
+      await renderNoResults();
+      expect(buildHistoryManager).toHaveBeenCalledWith(mockedEngine);
+    });
 
-  it('should set searchStatus to the controller', async () => {
-    const {element} = await renderNoResults();
-    expect(element.searchStatus).toBe(mockedSearchStatus);
-  });
+    it('should set searchStatus to the controller', async () => {
+      const {element} = await renderNoResults();
+      expect(element.searchStatus).toBe(mockedSearchStatus);
+    });
 
-  it('should set querySummary to the controller', async () => {
-    const {element} = await renderNoResults();
-    expect(element.querySummary).toBe(mockedQuerySummary);
-  });
+    it('should set querySummary to the controller', async () => {
+      const {element} = await renderNoResults();
+      expect(element.querySummary).toBe(mockedQuerySummary);
+    });
 
-  it('should set history to the controller', async () => {
-    const {element} = await renderNoResults();
-    expect(element.history).toBe(mockedHistory);
+    it('should set history to the controller', async () => {
+      const {element} = await renderNoResults();
+      expect(element.history).toBe(mockedHistory);
+    });
   });
 
   it('should render nothing when firstSearchExecuted is false', async () => {
@@ -172,86 +174,83 @@ describe('atomic-no-results', () => {
     expect(element).toBeEmptyDOMElement();
   });
 
-  it('should render a slot', async () => {
-    const {element, parts} = await renderNoResults({
-      searchStatusState: {
-        firstSearchExecuted: true,
-        isLoading: false,
-        hasResults: false,
-      },
-    });
-    expect(parts(element).slot).toBeInTheDocument();
-  });
-
-  it('should render the correct part attribute on the icon', async () => {
-    const {element, parts} = await renderNoResults();
-    expect(parts(element).icon).toHaveAttribute('part', 'icon');
-  });
-
-  it('should render an icon', async () => {
-    const {element, parts} = await renderNoResults();
-    expect(parts(element).icon).toBeInTheDocument();
-    expect(parts(element).icon).toHaveAttribute('icon', MagnifyingGlassIcon);
-  });
-
-  it('should render the correct part attribute on the "no results" text', async () => {
-    const {element, parts} = await renderNoResults();
-    expect(parts(element).noResults).toHaveAttribute('part', 'no-results');
-  });
-
-  it('should render the correct text when there is a query', async () => {
-    const query = 'test query';
-    const {element, parts} = await renderNoResults({
-      querySummaryState: {
-        query,
-      },
+  describe('when firstSearchExecuted is true, isLoading is false, and hasResults is false', () => {
+    it('should render a slot', async () => {
+      const {element, parts} = await renderNoResults();
+      expect(parts(element).slot).toBeInTheDocument();
     });
 
-    expect(parts(element).noResults).toHaveTextContent(
-      `We couldn't find anything for “${query}”`
-    );
-  });
-
-  it('should highlight the query in the "no results" text', async () => {
-    const query = 'test query';
-    const {element, parts} = await renderNoResults({
-      querySummaryState: {
-        query,
-      },
+    it('should render the correct part attribute on the icon', async () => {
+      const {element, parts} = await renderNoResults();
+      expect(parts(element).icon).toHaveAttribute('part', 'icon');
     });
 
-    expect(parts(element).highlight).toHaveTextContent(query);
-  });
-
-  it('should render the correct part attribute for the highlighted query', async () => {
-    const query = 'test query';
-    const {element, parts} = await renderNoResults({
-      querySummaryState: {
-        query,
-      },
+    it('should render an icon', async () => {
+      const {element, parts} = await renderNoResults();
+      expect(parts(element).icon).toBeInTheDocument();
+      expect(parts(element).icon).toHaveAttribute('icon', MagnifyingGlassIcon);
     });
 
-    expect(parts(element).highlight).toHaveAttribute('part', 'highlight');
+    it('should render the correct part attribute on the "no results" text', async () => {
+      const {element, parts} = await renderNoResults();
+      expect(parts(element).noResults).toHaveAttribute('part', 'no-results');
+    });
+
+    it('should render the correct text when there is a query', async () => {
+      const query = 'test query';
+      const {element, parts} = await renderNoResults({
+        querySummaryState: {
+          query,
+        },
+      });
+
+      expect(parts(element).noResults).toHaveTextContent(
+        `We couldn't find anything for “${query}”`
+      );
+    });
+
+    it('should highlight the query in the "no results" text', async () => {
+      const query = 'test query';
+      const {element, parts} = await renderNoResults({
+        querySummaryState: {
+          query,
+        },
+      });
+
+      expect(parts(element).highlight).toHaveTextContent(query);
+    });
+
+    it('should render the correct part attribute for the highlighted query', async () => {
+      const query = 'test query';
+      const {element, parts} = await renderNoResults({
+        querySummaryState: {
+          query,
+        },
+      });
+
+      expect(parts(element).highlight).toHaveAttribute('part', 'highlight');
+    });
+
+    it('should render the correct text when there is no query', async () => {
+      const {element, parts} = await renderNoResults();
+      expect(parts(element).noResults).toHaveTextContent('No results');
+    });
+
+    it('should render the correct part attribute for the search tips', async () => {
+      const {element, parts} = await renderNoResults();
+      expect(parts(element).searchTips).toHaveAttribute('part', 'search-tips');
+    });
+
+    it('should render the correct text in the search tips', async () => {
+      const {element, parts} = await renderNoResults();
+
+      expect(parts(element).searchTips).toHaveTextContent(
+        'You may want to try using different keywords, deselecting filters, or checking for spelling mistakes.'
+      );
+    });
   });
 
-  it('should render the correct text when there is no query', async () => {
-    const {element, parts} = await renderNoResults();
-    expect(parts(element).noResults).toHaveTextContent('No results');
-  });
-
-  it('should render the correct part attribute for the search tips', async () => {
-    const {element, parts} = await renderNoResults();
-    expect(parts(element).searchTips).toHaveAttribute('part', 'search-tips');
-  });
-
-  it('should render the correct text in the search tips', async () => {
-    const {element, parts} = await renderNoResults();
-
-    expect(parts(element).searchTips).toHaveTextContent(
-      'You may want to try using different keywords, deselecting filters, or checking for spelling mistakes.'
-    );
-  });
-
+  // TODO (v4): adjust the enable/hide cancel last action tests when we remove the enableCancelLastAction prop altogether.
   describe('when enableCancelLastAction is true', () => {
     it('should render cancel button when history has past actions', async () => {
       const {element, parts} = await renderNoResults({
