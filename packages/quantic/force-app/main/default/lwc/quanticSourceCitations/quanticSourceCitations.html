@@ -5,9 +5,8 @@
     >
     <ol class="slds-list_horizontal slds-wrap">
       <template for:each={indexedCitations} for:item="citation">
-        <slot name="citation-component">
+        <slot key={citation.data.id} name="citation-component">
           <c-quantic-citation
-            key={citation.data.id}
             citation={citation.data}
             interactive-citation={citation.interactiveCitation}
             onquantic__citationhover={citation.handleCitationHover}
