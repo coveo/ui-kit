@@ -12,7 +12,7 @@
     "dist/"
   ],
   "scripts": {
-    "dev": "concurrently \"pnpm run build:definitions -- -w\" \"pnpm run build:bundles -- dev\"",
+    "dev": "node scripts/dev.mjs",
     "build": "pnpm run build:bundles && pnpm run build:definitions",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache --silent=false",

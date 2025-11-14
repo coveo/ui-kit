@@ -73,7 +73,7 @@
     "dist/"
   ],
   "scripts": {
-    "dev": "concurrently \"pnpm run build:definitions -- -w\" \"pnpm run build:bundles -- dev\"",
+    "dev": "node scripts/dev.mjs",
     "build": "pnpm run build:definitions && pnpm run build:bundles && pnpm run build:esm",
     "build:bundles": "node esbuild.mjs",
     "build:esm": "node ./scripts/build.mjs --config=tsconfig.build-esm.json",
@@ -86,7 +86,7 @@
     "release:phase3": "pnpm --filter @coveo/ci npm-publish",
     "release:phase1": "pnpm --filter @coveo/ci bump",
     "build:typedoc": "pnpm run build:typedoc:docs && pnpm run build:typedoc:merge",
-    "build:typedoc:docs": "concurrently \"pnpm run build:typedoc:search\" \"pnpm run build:typedoc:commerce\" \"pnpm run build:typedoc:case-assist\" \"pnpm run build:typedoc:insight\" \"pnpm run build:typedoc:recommendation\" \"pnpm run build:typedoc:ssr\" \"pnpm run build:typedoc:ssr-commerce\"",
+    "build:typedoc:docs": "node scripts/build-typedoc-docs.mjs",
     "build:typedoc:merge": "typedoc --tsconfig tsconfig.typedoc.json",
     "build:typedoc:search": "typedoc --json ./temp/index.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/index.typedoc.json",
     "build:typedoc:commerce": "typedoc --json ./temp/commerce.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/commerce.typedoc.json",

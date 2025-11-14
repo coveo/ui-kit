@@ -23,7 +23,7 @@
     }
   },
   "scripts": {
-    "dev": "concurrently \"pnpm run build:definitions -- -w\" \"pnpm run build:bundles -- dev\"",
+    "dev": "node scripts/dev.mjs",
     "build": "pnpm run build:bundles && pnpm run build:definitions",
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -p tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
