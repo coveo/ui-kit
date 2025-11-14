@@ -34,7 +34,6 @@
     "release:phase1": "pnpm --filter @coveo/ci bump",
     "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
     "build:typedoc": "pnpm run build:typedoc:docs && pnpm run build:typedoc:merge",
-    "build:typedoc:docs": "turbo build:typedoc:ssr build:typedoc:ssr-commerce",
     "build:typedoc:ssr": "typedoc --json ./temp/ssr.json --tsconfig tsconfig.json --options typedoc-configs/ssr.typedoc.json",
     "build:typedoc:ssr-commerce": "typedoc --json ./temp/ssr-commerce.json --tsconfig tsconfig.json --options typedoc-configs/ssr-commerce.typedoc.json",
     "build:typedoc:merge": "typedoc --tsconfig tsconfig.typedoc.json",

@@ -88,7 +88,6 @@
     "release:phase3": "pnpm --filter @coveo/ci npm-publish",
     "release:phase1": "pnpm --filter @coveo/ci bump",
     "build:typedoc": "pnpm run build:typedoc:docs && pnpm run build:typedoc:merge",
-    "build:typedoc:docs": "turbo build:typedoc:search build:typedoc:commerce build:typedoc:case-assist build:typedoc:insight build:typedoc:recommendation build:typedoc:ssr build:typedoc:ssr-commerce",
     "build:typedoc:merge": "typedoc --tsconfig tsconfig.typedoc.json",
     "build:typedoc:search": "typedoc --json ./temp/index.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/index.typedoc.json",
     "build:typedoc:commerce": "typedoc --json ./temp/commerce.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/commerce.typedoc.json",

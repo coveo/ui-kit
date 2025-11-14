@@ -25,6 +25,17 @@
     "build:typedoc": {
       "outputs": ["docs/**", "temp/**"]
     },
+    "build:typedoc:docs": {
+      "dependsOn": [
+        "build:typedoc:search",
+        "build:typedoc:commerce",
+        "build:typedoc:case-assist",
+        "build:typedoc:insight",
+        "build:typedoc:recommendation",
+        "build:typedoc:ssr",
+        "build:typedoc:ssr-commerce"
+      ]
+    },
     "build:typedoc:search": {
       "outputs": ["temp/index.json"]
     },
