@@ -113,6 +113,16 @@ const atomicDefault = defineConfig({
             actionTimeout: 3000,
           },
         },
+        ...(process.env.CI
+          ? [
+              {
+                browser: 'webkit',
+                context: {
+                  actionTimeout: 3000,
+                },
+              },
+            ]
+          : []),
       ],
     },
   },
@@ -138,7 +148,10 @@ const storybook = defineConfig({
       enabled: true,
       headless: true,
       provider: playwright(),
-      instances: [{browser: 'chromium'}],
+      instances: [
+        {browser: 'chromium'},
+        ...(process.env.CI ? [{browser: 'webkit'}] : []),
+      ],
       context: {
         actionTimeout: 3000,
       },
