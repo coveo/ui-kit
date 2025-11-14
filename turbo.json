@@ -16,7 +16,50 @@
         "**/*.tsbuildinfo"
       ]
     },
+    "build:definitions": {
+      "outputs": ["dist/definitions/**"]
+    },
+    "build:bundles": {
+      "outputs": ["dist/**"]
+    },
+    "build:typedoc": {
+      "outputs": ["docs/**", "temp/**"]
+    },
+    "build:typedoc:search": {
+      "outputs": ["temp/index.json"]
+    },
+    "build:typedoc:commerce": {
+      "outputs": ["temp/commerce.json"]
+    },
+    "build:typedoc:case-assist": {
+      "outputs": ["temp/case-assist.json"]
+    },
+    "build:typedoc:insight": {
+      "outputs": ["temp/insight.json"]
+    },
+    "build:typedoc:recommendation": {
+      "outputs": ["temp/recommendation.json"]
+    },
+    "build:typedoc:ssr": {
+      "outputs": ["temp/ssr.json"]
+    },
+    "build:typedoc:ssr-commerce": {
+      "outputs": ["temp/ssr-commerce.json"]
+    },
+    "build:typedoc:merge": {
+      "outputs": ["docs/**"]
+    },
     "dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "dev:definitions": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "dev:bundles": {
       "dependsOn": ["^build"],
       "cache": false,
       "persistent": true

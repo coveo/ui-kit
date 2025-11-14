@@ -23,7 +23,9 @@
     }
   },
   "scripts": {
-    "dev": "node scripts/dev.mjs",
+    "dev": "turbo dev:definitions dev:bundles",
+    "dev:definitions": "tsc -p tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions -w",
+    "dev:bundles": "node esbuild.mjs dev",
     "build": "pnpm run build:bundles && pnpm run build:definitions",
     "build:bundles": "node esbuild.mjs",
     "build:definitions": "tsc -p tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
