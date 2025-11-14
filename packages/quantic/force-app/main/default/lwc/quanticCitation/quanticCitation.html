@@ -12,11 +12,8 @@
       onmouseleave={handleCitationMouseLeave}
       onclick={handleClick}
     >
-      <p
-        class="citation__title slds-m-left_x-small slds-truncate slds-has-flexi-truncate"
-      >
-        {citationTitle}
-      </p>
+      <slot name="icon"></slot>
+      <p class={citationTitleClasses}>{citationTitle}</p>
     </a>
     <c-quantic-tooltip
       light-theme
@@ -26,9 +23,27 @@
       onmouseleave={handleTooltipMouseLeave}
     >
       <div class="citation__tooltip" slot="content">
-        <div data-testid="citation__tooltip-uri" class="slds-text-body_small slds-text-color_weak slds-truncate slds-var-p-vertical_xxx-small">{hrefValue}</div>
-        <div data-testid="citation__tooltip-title" class="slds-text-title_bold slds-var-p-vertical_xx-small">{citationTitle}</div>
-        <div data-testid="citation__tooltip-text" class="citation__tooltip-text slds-text-body_small slds-var-p-vertical_xxx-small">{text}</div>
+        <div
+          data-testid="citation__tooltip-uri"
+          class="slds-text-body_small slds-text-color_weak slds-truncate slds-var-p-vertical_xxx-small"
+        >
+          {hrefValue}
+        </div>
+        <div
+          data-testid="citation__tooltip-title"
+          class="slds-text-title_bold slds-var-p-vertical_xx-small"
+        >
+          {citationTitle}
+        </div>
+        <div
+          data-testid="citation__tooltip-text"
+          class="citation__tooltip-text slds-text-body_small slds-var-p-vertical_xxx-small"
+        >
+          {text}
+        </div>
+        <div>
+          <slot name="action"></slot>
+        </div>
       </div>
     </c-quantic-tooltip>
   </li>
