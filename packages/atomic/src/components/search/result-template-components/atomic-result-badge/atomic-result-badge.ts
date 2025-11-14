@@ -5,9 +5,9 @@ import {customElement, property} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import '../../../common/atomic-icon/atomic-icon';
-import '../../../common/atomic-text/atomic-text';
-import '../../atomic-result-text/atomic-result-text';
+import '@/src/components/common/atomic-icon/atomic-icon';
+import '@/src/components/search/atomic-text/atomic-text';
+import '@/src/components/search/atomic-result-text/atomic-result-text';
 import styles from './atomic-result-badge.tw.css';
 
 /**
