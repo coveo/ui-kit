@@ -124,13 +124,6 @@ To customize the devcontainer:
 - Verify extension IDs in `devcontainer.json` are correct
 - Some extensions may require additional configuration
 
-### Permission denied errors during initialization
-If you encounter errors like "mkdir: cannot create directory '/home/node': Permission denied":
-- The devcontainer is configured to run as the `node` user (non-root)
-- Both `remoteUser` and `containerUser` are explicitly set to `node` in `devcontainer.json`
-- This ensures VS Code properly handles home directory initialization and config files
-- The base image (`mcr.microsoft.com/devcontainers/typescript-node`) uses the `node` user by default
-
 ## Resources
 
 - [GitHub Codespaces Documentation](https://docs.github.com/en/codespaces)
