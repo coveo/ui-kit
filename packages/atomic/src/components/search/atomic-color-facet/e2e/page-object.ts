@@ -1,7 +1,7 @@
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
-export class AtomicColorFacetPageObject extends BasePageObject<'atomic-color-facet'> {
+export class AtomicColorFacetPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-color-facet');
   }
