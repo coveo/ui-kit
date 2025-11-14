@@ -42,6 +42,7 @@ import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-value
 import {initializePopover} from '@/src/components/common/facets/popover/popover-type';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {renderColorFacetCheckbox} from '@/src/components/search/facets/color-facet-checkbox/color-facet-checkbox';
+import {arrayConverter} from '@/src/converters/array-converter';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -170,9 +171,10 @@ export class AtomicColorFacet
   @property({
     type: Array,
     attribute: 'tabs-included',
+    converter: arrayConverter,
     reflect: true,
   })
-  public tabsIncluded: string[] | string = [];
+  public tabsIncluded: string[] = [];
 
   /**
    * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.
@@ -186,9 +188,10 @@ export class AtomicColorFacet
   @property({
     type: Array,
     attribute: 'tabs-excluded',
+    converter: arrayConverter,
     reflect: true,
   })
-  public tabsExcluded: string[] | string = [];
+  public tabsExcluded: string[] = [];
 
   /**
    * The number of values to request for this facet.
@@ -308,8 +311,9 @@ export class AtomicColorFacet
   @property({
     type: Array,
     attribute: 'allowed-values',
+    converter: arrayConverter,
   })
-  public allowedValues: string[] | string = [];
+  public allowedValues: string[] = [];
 
   /**
    * The facet values that must appear at the top, in the specified order.
@@ -333,8 +337,9 @@ export class AtomicColorFacet
   @property({
     type: Array,
     attribute: 'custom-sort',
+    converter: arrayConverter,
   })
-  public customSort: string[] | string = [];
+  public customSort: string[] = [];
 
   private showLessFocus?: FocusTargetController;
   private showMoreFocus?: FocusTargetController;
@@ -344,10 +349,7 @@ export class AtomicColorFacet
   private resultIndexToFocusOnShowMore = 0;
 
   public initialize() {
-    if (
-      [...this.tabsIncluded].length > 0 &&
-      [...this.tabsExcluded].length > 0
-    ) {
+    if (this.tabsIncluded.length > 0 && this.tabsExcluded.length > 0) {
       console.warn(
         'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behaviors.'
       );
@@ -387,7 +389,9 @@ export class AtomicColorFacet
 
   private shouldRenderFacet() {
     return (
+      this.searchStatusState &&
       !this.searchStatusState.hasError &&
+      this.facetState &&
       this.facetState.enabled &&
       (!this.searchStatusState.firstSearchExecuted ||
         this.facetState.values.length > 0)
@@ -648,13 +652,11 @@ export class AtomicColorFacet
       facetSearch: {numberOfValues: this.numberOfValues},
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
-      allowedValues: this.allowedValues.length
-        ? [...this.allowedValues]
-        : undefined,
-      customSort: this.customSort.length ? [...this.customSort] : undefined,
+      allowedValues: this.allowedValues.length ? this.allowedValues : undefined,
+      customSort: this.customSort.length ? this.customSort : undefined,
       tabs: {
-        included: [...this.tabsIncluded],
-        excluded: [...this.tabsExcluded],
+        included: this.tabsIncluded,
+        excluded: this.tabsExcluded,
       },
     };
   }
