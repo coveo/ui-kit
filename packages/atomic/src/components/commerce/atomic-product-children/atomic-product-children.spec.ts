@@ -162,51 +162,54 @@ describe('atomic-product-children', () => {
     });
   });
 
-  describe('when a child product is touched', () => {
-    const touchChild = async () => {
-      const {childProducts} = await renderProductChildren();
-      childProducts[3].dispatchEvent(
-        new TouchEvent('touchstart', {
-          touches: [
-            new Touch({
-              identifier: 0,
-              target: childProducts[3],
-              clientX: 100,
-              clientY: 100,
-              screenX: 100,
-              screenY: 100,
-              pageX: 100,
-              pageY: 100,
-              radiusX: 10,
-              radiusY: 10,
-              rotationAngle: 0,
-              force: 0.5,
-            }),
-          ],
-        })
-      );
-      return childProducts;
-    };
+  describe.skipIf(typeof Touch === 'undefined')(
+    'when a child product is touched',
+    () => {
+      const touchChild = async () => {
+        const {childProducts} = await renderProductChildren();
+        childProducts[3].dispatchEvent(
+          new TouchEvent('touchstart', {
+            touches: [
+              new Touch({
+                identifier: 0,
+                target: childProducts[3],
+                clientX: 100,
+                clientY: 100,
+                screenX: 100,
+                screenY: 100,
+                pageX: 100,
+                pageY: 100,
+                radiusX: 10,
+                radiusY: 10,
+                rotationAngle: 0,
+                force: 0.5,
+              }),
+            ],
+          })
+        );
+        return childProducts;
+      };
 
-    it('should change the active child product', async () => {
-      const childProducts = await touchChild();
-      await expect
-        .poll(() => childProducts[3])
-        .toHaveClass('box-border rounded border border-primary');
-      await expect
-        .poll(() => childProducts[0])
-        .not.toHaveClass('box-border rounded border border-primary');
-    });
+      it('should change the active child product', async () => {
+        const childProducts = await touchChild();
+        await expect
+          .poll(() => childProducts[3])
+          .toHaveClass('box-border rounded border border-primary');
+        await expect
+          .poll(() => childProducts[0])
+          .not.toHaveClass('box-border rounded border border-primary');
+      });
 
-    it('should dispatch the "atomic/selectChildProduct" event', async () => {
-      const dispatchSpy = vi.spyOn(
-        AtomicProductChildren.prototype,
-        'dispatchEvent'
-      );
-      await touchChild();
-      expect(dispatchSpy).toHaveBeenCalled();
-    });
-  });
+      it('should dispatch the "atomic/selectChildProduct" event', async () => {
+        const dispatchSpy = vi.spyOn(
+          AtomicProductChildren.prototype,
+          'dispatchEvent'
+        );
+        await touchChild();
+        expect(dispatchSpy).toHaveBeenCalled();
+      });
+    }
+  );
 
   describe('when a child product is clicked', () => {
     it('should stop propagation if the parent element is an <a> tag', async () => {

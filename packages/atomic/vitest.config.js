@@ -148,10 +148,7 @@ const storybook = defineConfig({
       enabled: true,
       headless: true,
       provider: playwright(),
-      instances: [
-        {browser: 'chromium'},
-        ...(process.env.CI ? [{browser: 'webkit'}] : []),
-      ],
+      instances: [{browser: 'chromium'}],
       context: {
         actionTimeout: 3000,
       },
