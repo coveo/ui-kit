@@ -3,5 +3,3 @@ dist
 
 # Stencil generated files
 stencil-generated/
-src/components/search/components.ts
-src/components/commerce/components.ts
