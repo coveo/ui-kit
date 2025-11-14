@@ -105,9 +105,6 @@ describe('atomic-no-results', () => {
     };
   };
 
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
 
   describe('#initialize', () => {
     it('should call buildSearchStatus with engine', async () => {
