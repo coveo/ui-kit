@@ -1,5 +1,6 @@
 import {
   AtomicAriaLive as LitAtomicAriaLive,
+  AtomicColorFacet as LitAtomicColorFacet,
   AtomicComponentError as LitAtomicComponentError,
   AtomicExternal as LitAtomicExternal,
   AtomicFacet as LitAtomicFacet,
@@ -43,6 +44,12 @@ export const AtomicAriaLive = createComponent({
   tagName: 'atomic-aria-live',
   react: React,
   elementClass: LitAtomicAriaLive,
+});
+
+export const AtomicColorFacet = createComponent({
+  tagName: 'atomic-color-facet',
+  react: React,
+  elementClass: LitAtomicColorFacet,
 });
 
 export const AtomicComponentError = createComponent({
