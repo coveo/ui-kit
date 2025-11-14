@@ -78,17 +78,19 @@ export class AtomicFieldCondition
     ];
   }
 
+  private getResult(): Result | undefined {
+    const item = this.resultController.item;
+    if (!item) {
+      return undefined;
+    }
+    return 'result' in item ? item.result : item;
+  }
+
   @errorGuard()
   render() {
-    const result = this.resultController.item;
+    const result = this.getResult();
 
-    const actualResult =
-      result && 'result' in result && result.result ? result.result : result;
-
-    if (
-      !actualResult ||
-      !this.conditions.every((condition) => condition(actualResult as Result))
-    ) {
+    if (!result || !this.conditions.every((condition) => condition(result))) {
       this.remove();
     }
 

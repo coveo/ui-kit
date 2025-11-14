@@ -1,19 +1,21 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
+const searchApiHarness = new MockSearchApi();
+
+searchApiHarness.searchEndpoint.mock((response) => ({
+  ...response,
+  results: response.results.slice(0, 1),
+  totalCount: 1,
+  totalCountFiltered: 1,
+}));
+
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
-  config: {
-    preprocessRequest: (request) => {
-      const parsed = JSON.parse(request.body as string);
-      parsed.numberOfResults = 1;
-      request.body = JSON.stringify(parsed);
-      return request;
-    },
-  },
   includeCodeRoot: false,
 });
 const {decorator: resultListDecorator} = wrapInResultList('list', false);
@@ -37,6 +39,9 @@ const meta: Meta = {
   ],
   parameters: {
     ...parameters,
+    msw: {
+      handlers: [...searchApiHarness.handlers],
+    },
     actions: {
       handles: events,
     },
