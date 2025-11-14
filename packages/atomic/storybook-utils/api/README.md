@@ -9,6 +9,7 @@ The API harness system provides a wrapper around MSW that simplifies mocking RES
 - Base response modification for test variations
 - Network error simulation
 - Streaming response support (e.g., for RGA)
+- **Request capture and assertion** for validating API calls (especially useful for analytics)
 
 ## Directory Structure
 
@@ -30,9 +31,12 @@ storybook-utils/api/
 ├── answer/                     # Answer API (RGA) mocking
 │   ├── mock.ts                # MockAnswerApi class
 │   └── generate-response.ts   # Streaming response builder
-└── machinelearning/            # ML API mocking
-    ├── mock.ts                # MockMachineLearningApi class
-    └── user-actions-response.ts
+├── machinelearning/            # ML API mocking
+│   ├── mock.ts                # MockMachineLearningApi class
+│   └── user-actions-response.ts
+└── analytics/                  # Analytics/UA API mocking
+    ├── mock.ts                # MockAnalyticsApi class
+    └── analytics-response.ts  # Analytics response data
 ```
 
 ## Naming Conventions
@@ -55,6 +59,7 @@ storybook-utils/api/
   - `search-response.ts` - Main search endpoint responses
   - `querySuggest-response.ts` - Query suggestion responses
   - `user-actions-response.ts` - User actions endpoint responses
+  - `analytics-response.ts` - Analytics event responses
 
 ### Class Names
 
@@ -66,6 +71,7 @@ storybook-utils/api/
   - `MockCommerceApi`
   - `MockAnswerApi`
   - `MockMachineLearningApi`
+  - `MockAnalyticsApi`
 
 #### Endpoint Property Names
 - **Pattern:** `[endpointName]Endpoint`
@@ -306,6 +312,91 @@ harness.searchEndpoint.mock((response) => ({
   totalCount: 100,
   results: response.results.slice(0, 100),
 }));
+```
+
+## Request Tracking and Assertions
+
+All `EndpointHarness` instances automatically capture requests made to their endpoints. This is particularly useful for asserting on analytics calls or verifying that specific API requests are made.
+
+### Capturing Requests
+
+Every request made to a mocked endpoint is automatically captured with:
+- Full URL
+- HTTP method
+- Headers
+- Request body (parsed as JSON when possible)
+- Timestamp
+
+### Available Methods
+
+```typescript
+// Clear captured requests (call in beforeEach)
+harness.searchEndpoint.clearCapturedRequests();
+
+// Get all captured requests
+const requests = harness.searchEndpoint.getCapturedRequests();
+
+// Get the most recent request
+const lastRequest = harness.searchEndpoint.getLastCapturedRequest();
+
+// Get the count of requests
+const count = harness.searchEndpoint.getCapturedRequestCount();
+
+// Wait for the next request (useful in async tests)
+const request = await harness.searchEndpoint.waitForNextRequest(5000);
+```
+
+### Example: Asserting on Analytics Calls
+
+```typescript
+import { MockAnalyticsApi } from '@/storybook-utils/api/analytics/mock';
+import { userEvent } from '@storybook/test';
+
+const analyticsHarness = new MockAnalyticsApi();
+
+export const TracksClick: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    
+    // Clear any previous requests
+    analyticsHarness.eventsEndpoint.clearCapturedRequests();
+    
+    // Trigger an action that sends analytics
+    await userEvent.click(canvas.getByRole('button'));
+    
+    // Wait for and verify the analytics call
+    const request = await analyticsHarness.eventsEndpoint.waitForNextRequest();
+    
+    expect(request.body).toMatchObject({
+      eventType: 'click',
+      eventValue: 'my-button',
+    });
+    
+    expect(request.headers['content-type']).toBe('application/json');
+  },
+};
+```
+
+### Example: Verifying Request Count
+
+```typescript
+export const SendsMultipleRequests: Story = {
+  play: async () => {
+    harness.searchEndpoint.clearCapturedRequests();
+    
+    // Perform actions that trigger multiple searches
+    await performSearch('query1');
+    await performSearch('query2');
+    
+    // Verify exactly 2 search requests were made
+    expect(harness.searchEndpoint.getCapturedRequestCount()).toBe(2);
+    
+    // Verify the queries
+    const requests = harness.searchEndpoint.getCapturedRequests();
+    expect(requests[0].body.q).toBe('query1');
+    expect(requests[1].body.q).toBe('query2');
+  },
+};
 ```
 
 ## Migration Notes

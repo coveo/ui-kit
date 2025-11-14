@@ -502,6 +502,198 @@ mockOnce(() => ({
 - **MockMachineLearningApi** - Machine Learning API
   - `userActionsEndpoint`
 
+- **MockAnalyticsApi** - Analytics/UA API
+  - `eventsEndpoint`
+
+## Asserting on Analytics Requests
+
+The `MockAnalyticsApi` provides special capabilities for capturing and asserting on analytics/UA calls in your tests.
+
+### Basic Analytics Assertion
+
+```typescript
+import { MockAnalyticsApi } from '@/storybook-utils/api/analytics/mock';
+import { userEvent } from '@storybook/test';
+
+const analyticsHarness = new MockAnalyticsApi();
+
+const meta: Meta = {
+  parameters: {
+    msw: {
+      handlers: [...analyticsHarness.handlers],
+    },
+  },
+};
+
+export const TracksAnalytics: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    
+    // Clear any previous requests
+    analyticsHarness.clearAllRequests();
+    
+    // Perform action that triggers analytics
+    await userEvent.click(canvas.getByRole('link', { name: 'Product' }));
+    
+    // Wait for the analytics call
+    const request = await analyticsHarness.eventsEndpoint.waitForNextRequest();
+    
+    // Assert on the request
+    expect(request.body).toMatchObject({
+      eventType: 'ec.productClick',
+      eventValue: 'barca',
+    });
+  },
+};
+```
+
+### Checking Request Count
+
+```typescript
+export const SendsMultipleAnalytics: Story = {
+  play: async ({ canvasElement }) => {
+    analyticsHarness.clearAllRequests();
+    
+    // Perform actions that trigger multiple analytics calls
+    await userEvent.click(element1);
+    await userEvent.click(element2);
+    
+    // Check that exactly 2 analytics calls were made
+    expect(analyticsHarness.eventsEndpoint.getCapturedRequestCount()).toBe(2);
+  },
+};
+```
+
+### Accessing All Captured Requests
+
+```typescript
+export const AnalyticsSequence: Story = {
+  play: async ({ canvasElement }) => {
+    analyticsHarness.clearAllRequests();
+    
+    // Perform multiple actions
+    await userEvent.click(element1);
+    await userEvent.type(searchBox, 'query');
+    await userEvent.click(element2);
+    
+    // Get all captured requests
+    const requests = analyticsHarness.eventsEndpoint.getCapturedRequests();
+    
+    // Assert on the sequence of events
+    expect(requests).toHaveLength(3);
+    expect(requests[0].body).toMatchObject({ eventType: 'click' });
+    expect(requests[1].body).toMatchObject({ eventType: 'search' });
+    expect(requests[2].body).toMatchObject({ eventType: 'click' });
+  },
+};
+```
+
+### Accessing Request Headers
+
+```typescript
+export const AnalyticsHeaders: Story = {
+  play: async () => {
+    analyticsHarness.clearAllRequests();
+    
+    await triggerAnalyticsEvent();
+    
+    const request = await analyticsHarness.eventsEndpoint.waitForNextRequest();
+    
+    // Check headers
+    expect(request.headers['content-type']).toBe('application/json');
+    expect(request.headers['authorization']).toBeDefined();
+  },
+};
+```
+
+### Using with Multiple APIs
+
+Combine analytics tracking with other API mocks:
+
+```typescript
+import { MockCommerceApi } from '@/storybook-utils/api/commerce/mock';
+import { MockAnalyticsApi } from '@/storybook-utils/api/analytics/mock';
+
+const commerceHarness = new MockCommerceApi();
+const analyticsHarness = new MockAnalyticsApi();
+
+const meta: Meta = {
+  parameters: {
+    msw: {
+      handlers: [
+        ...commerceHarness.handlers,
+        ...analyticsHarness.handlers,
+      ],
+    },
+  },
+};
+
+export const ProductClickTracking: Story = {
+  play: async ({ canvasElement }) => {
+    analyticsHarness.clearAllRequests();
+    
+    // Wait for products to load
+    await waitFor(() => {
+      expect(canvas.getByRole('link', { name: /product/i })).toBeInTheDocument();
+    });
+    
+    // Click product
+    await userEvent.click(canvas.getByRole('link', { name: /product/i }));
+    
+    // Verify analytics was sent
+    const request = await analyticsHarness.eventsEndpoint.waitForNextRequest();
+    expect(request.body).toMatchObject({
+      eventType: 'ec.productClick',
+    });
+  },
+};
+```
+
+### Pattern: Reset in beforeEach
+
+Always clear captured requests before each story to ensure clean state:
+
+```typescript
+const meta: Meta = {
+  beforeEach: () => {
+    analyticsHarness.clearAllRequests();
+  },
+  parameters: {
+    msw: {
+      handlers: [...analyticsHarness.handlers],
+    },
+  },
+};
+```
+
+### Troubleshooting Analytics Assertions
+
+**Problem:** `waitForNextRequest` times out
+
+**Possible causes:**
+1. Analytics is disabled - Check that `analytics="true"` on interface components (or remove `analytics="false"`)
+2. Wrong endpoint path - Verify the analytics URL pattern matches what the application sends
+3. Event not triggered - Ensure the user action actually triggers an analytics call
+
+**Solution:** Add logging to debug:
+
+```typescript
+export const Debug: Story = {
+  play: async () => {
+    analyticsHarness.clearAllRequests();
+    
+    await triggerAction();
+    
+    // Log all captured requests
+    console.log('Captured requests:', analyticsHarness.eventsEndpoint.getCapturedRequests());
+    
+    // Check if any requests were made
+    const count = analyticsHarness.eventsEndpoint.getCapturedRequestCount();
+    console.log(`Total analytics calls: ${count}`);
+  },
+};
+```
+
 ## See Also
 
 - [Structure Guide](./README.md) - File structure and naming conventions
