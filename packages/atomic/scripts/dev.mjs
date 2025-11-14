@@ -137,11 +137,6 @@ async function startServers() {
 
   exec('npx vite serve dev', {stdio: 'ignore'});
 
-  // Run headless in dev as well
-  exec('npx turbo run dev --filter=@coveo/headless', {
-    stdio: 'ignore',
-  });
-
   console.log(
     colors.yellow('⌛ Waiting for Storybook (4400) and Vite (3333)...')
   );

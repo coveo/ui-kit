@@ -10,13 +10,13 @@ const processes = [
   {
     name: 'build:definitions',
     command: 'pnpm',
-    args: ['run', 'build:definitions', '--', '-w'],
+    args: ['run', 'build:definitions', '-w'],
     color: '\x1b[36m', // cyan
   },
   {
     name: 'build:bundles',
     command: 'pnpm',
-    args: ['run', 'build:bundles', '--', 'dev'],
+    args: ['run', 'build:bundles', 'dev'],
     color: '\x1b[35m', // magenta
   },
 ];
