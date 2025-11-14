@@ -451,7 +451,7 @@ jobs:
   cypress-atomic-screenshots:
     name: "Run e2e screenshots tests on Atomic"
     needs: affected
-    if: contains(needs.affected.outputs.projects, '@coveo/atomic') && github.event_name != 'merge_group'
+    if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -508,7 +508,7 @@ jobs:
   cypress-atomic-search-nextjs-pages-router-test:
     name: "Run e2e tests on Atomic Search NextJS Pages Router"
     needs: affected
-    if: contains(needs.affected.outputs.projects, '@samples/atomic-search-nextjs-pages-router') && github.event_name != 'merge_group'
+    if: contains(needs.affected.outputs.projects, '@samples/atomic-search-nextjs-pages-router')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -539,7 +539,7 @@ jobs:
   cypress-atomic-search-stencil-test:
     name: "Run e2e tests on Atomic Search Stencil.js"
     needs: affected
-    if: contains(needs.affected.outputs.projects, '@samples/atomic-search-stencil') && github.event_name != 'merge_group'
+    if: contains(needs.affected.outputs.projects, '@samples/atomic-search-stencil')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -587,7 +587,7 @@ jobs:
   cypress-atomic-insight-panel-test:
     name: "Run e2e tests on Atomic insight panel"
     needs: affected
-    if: contains(needs.affected.outputs.projects, '@coveo/atomic') && github.event_name != 'merge_group'
+    if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -601,7 +601,7 @@ jobs:
   cypress-headless-ssr-search-nextjs-app-router-test:
     name: "Run e2e tests on Headless SSR Search NextJS App Router"
     needs: affected
-    if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-search-nextjs-app-router') && github.event_name != 'merge_group'
+    if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-search-nextjs-app-router')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -615,7 +615,7 @@ jobs:
   cypress-headless-ssr-search-nextjs-pages-router-test:
     name: "Run e2e tests on Headless SSR Search NextJS Pages Router"
     needs: affected
-    if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-search-nextjs-pages-router') && github.event_name != 'merge_group'
+    if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-search-nextjs-pages-router')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -756,8 +756,14 @@ jobs:
       - "playwright-atomic-hosted-page-test"
       - "playwright-headless-ssr-commerce-nextjs-test"
       - "e2e-quantic"
+      - "cypress-atomic-screenshots"
       - "playwright-atomic-search-commerce-react-test"
+      - "cypress-atomic-search-nextjs-pages-router-test"
       - "playwright-atomic-search-commerce-angular-test"
+      - "cypress-atomic-search-stencil-test"
+      - "cypress-atomic-insight-panel-test"
+      - "cypress-headless-ssr-search-nextjs-app-router-test"
+      - "cypress-headless-ssr-search-nextjs-pages-router-test"
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
