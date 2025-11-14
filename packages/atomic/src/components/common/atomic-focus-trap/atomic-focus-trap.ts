@@ -51,7 +51,18 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
 
   private readonly hiddenElements: Element[] = [];
 
-  hide(element: Element) {
+  connectedCallback() {
+    super.connectedCallback();
+    document.addEventListener('focusin', this.onFocusChanged);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.showAll();
+    document.removeEventListener('focusin', this.onFocusChanged);
+  }
+
+  private hide(element: Element) {
     // aria-hidden -> already hidden
     // aria-live or atomic-aria-live -> must not be hidden otherwise it won't announce dynamic changes in the live region
     if (
@@ -65,7 +76,7 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
     this.hiddenElements.push(element);
   }
 
-  showAll() {
+  private showAll() {
     let el: Element | undefined = this.hiddenElements.pop();
     while (el) {
       el.removeAttribute('aria-hidden');
@@ -73,7 +84,7 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
     }
   }
 
-  hideSiblingsRecursively(element: Element | ShadowRoot) {
+  private hideSiblingsRecursively(element: Element | ShadowRoot) {
     const parent = getParent(element);
     if (parent === null) {
       return;
@@ -92,12 +103,12 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
     }
   }
 
-  showSelf() {
+  private showSelf() {
     this.parentToHide.removeAttribute('aria-hidden');
     this.parentToHide.removeAttribute('tabindex');
   }
 
-  hideSelf() {
+  private hideSelf() {
     if (this.shouldHideSelf) {
       this.parentToHide.setAttribute('aria-hidden', 'true');
       this.parentToHide.setAttribute('tabindex', '-1');
@@ -130,17 +141,6 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
     } else {
       await this.onDeactivated(isInitialLoad);
     }
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    document.addEventListener('focusin', this.onFocusChanged);
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.showAll();
-    document.removeEventListener('focusin', this.onFocusChanged);
   }
 
   private onFocusChanged = (e: FocusEvent) => {
