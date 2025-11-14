@@ -108,16 +108,22 @@ export class AtomicColorFacet
     facetValueBoxStyles,
     css`
       .box-color-container {
-        @apply grid px-2;
+        display: grid;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
         grid-template-columns: repeat(
-          var(--atomic-facet-color-boxes-per-row, 3),
-          minmax(0, 1fr)
-        );
+            var(--atomic-facet-color-boxes-per-row, 3),
+            minmax(0, 1fr)
+          );
         gap: var(--atomic-facet-color-boxes-gap, 0.5rem);
       }
 
       .value-box-color {
-        @apply bg-neutral-dark mb-2 h-12 w-full rounded-md;
+        background-color: var(--atomic-neutral-dark);
+        margin-bottom: 0.5rem;
+        height: 3rem;
+        width: 100%;
+        border-radius: 0.375rem;
       }
     `,
   ];
@@ -500,6 +506,7 @@ export class AtomicColorFacet
             isSelected,
             i18n: this.bindings.i18n,
             onClick,
+            buttonRef,
           },
         })(
           renderFacetValueLabelHighlight({
