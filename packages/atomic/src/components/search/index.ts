@@ -1,4 +1,5 @@
 // Auto-generated file
+export {AtomicColorFacet} from './atomic-color-facet/atomic-color-facet.js';
 export {AtomicExternal} from './atomic-external/atomic-external.js';
 export {AtomicFacet} from './atomic-facet/atomic-facet.js';
 export {AtomicHtml} from './atomic-html/atomic-html.js';
