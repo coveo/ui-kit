@@ -351,7 +351,7 @@ describe('atomic-no-results', () => {
     });
   });
 
-  describe('when disableCancelLastAction is false', () => {
+  describe('when hideCancelLastAction is false', () => {
     it('should render cancel button when enableCancelLastAction is true and history has past actions', async () => {
       const {element, parts} = await renderNoResults({
         props: {
