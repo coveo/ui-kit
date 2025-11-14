@@ -6,6 +6,7 @@
     "postinstall": "husky install",
     "reset:install": "git checkout origin/main pnpm-lock.yaml && pnpm install",
     "clean:install": "git clean -xfd && pnpm run reset:install",
+    "dev:atomic": "node scripts/dev-parallel.mjs @coveo/headless @coveo/atomic",
     "build": "turbo build",
     "test": "turbo test",
     "e2e": "turbo e2e",
