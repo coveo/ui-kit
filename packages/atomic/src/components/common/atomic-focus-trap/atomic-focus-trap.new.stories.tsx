@@ -24,4 +24,6 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {};
+export const Default: Story = {
+  tags: ['!dev'],
+};
