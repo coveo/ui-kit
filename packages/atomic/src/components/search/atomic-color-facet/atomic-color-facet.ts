@@ -60,8 +60,7 @@ import {mapProperty} from '@/src/utils/props-utils';
 import '@/src/components/common/atomic-facet-placeholder/atomic-facet-placeholder';
 
 /**
- * The `atomic-color-facet` component displays a facet of the results for the current query as colors.
- * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
+ * The `atomic-color-facet` component displays facet values as color boxes or checkboxes with color indicators.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
