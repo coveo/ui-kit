@@ -30,7 +30,8 @@ export class AtomicFocusTrap extends LightDomMixin(LitElement) {
   @property({type: Object}) source?: HTMLElement;
 
   /**
-   * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
+   * The container to hide (instead of the focus trap element itself) from the tabindex and accessibility DOM
+   * when the focus trap becomes inactive and `shouldHideSelf` is true.
    */
   @property({type: Object}) container?: HTMLElement;
 
