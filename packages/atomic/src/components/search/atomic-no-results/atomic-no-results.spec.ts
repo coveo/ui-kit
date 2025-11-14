@@ -105,7 +105,6 @@ describe('atomic-no-results', () => {
     };
   };
 
-
   describe('#initialize', () => {
     it('should call buildSearchStatus with engine', async () => {
       await renderNoResults();
