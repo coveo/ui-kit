@@ -2,6 +2,7 @@ import type {ChildProduct} from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, expect, it, vi} from 'vitest';
+import {server} from 'vitest/browser';
 import type {AtomicProduct} from '@/src/components/commerce/atomic-product/atomic-product';
 import {closest} from '@/src/utils/dom-utils';
 import {renderInAtomicProduct} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-product-fixture';
@@ -162,7 +163,7 @@ describe('atomic-product-children', () => {
     });
   });
 
-  describe.skipIf(typeof Touch === 'undefined')(
+  describe.skipIf(server.browser === 'webkit')(
     'when a child product is touched',
     () => {
       const touchChild = async () => {
