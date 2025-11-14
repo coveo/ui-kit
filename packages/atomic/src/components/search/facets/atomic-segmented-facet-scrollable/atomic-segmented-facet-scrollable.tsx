@@ -24,8 +24,8 @@ type ArrowDirection = 'right' | 'left';
  *
  * @part scrollable-container - The wrapper for the entire component including the horizontal-scroll container and the arrow buttons.
  * @part horizontal-scroll - The scrollable container for the segmented facets.
- * @part left-arrow-wrapper - The wrapper for the arrow button & fade on the left.
- * @part right-arrow-wrapper - The wrapper for the arrow button & fade on the right.
+ * @part left-arrow-wrapper - The wrapper for the arrow button and fade on the left.
+ * @part right-arrow-wrapper - The wrapper for the arrow button and fade on the right.
  * @part left-arrow-button - The arrow button used to scroll on the left.
  * @part right-arrow-button - The arrow button used to scroll on the right.
  * @part left-arrow-icon - The arrow icon on the left.

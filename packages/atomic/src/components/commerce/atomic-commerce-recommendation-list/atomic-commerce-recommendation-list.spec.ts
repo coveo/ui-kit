@@ -31,7 +31,7 @@ describe('atomic-commerce-recommendation-list', () => {
   beforeEach(() => {
     summary.mockReturnValue(buildFakeSummary());
 
-    vi.mocked(buildRecommendations).mockReturnValue(
+    vi.mocked(buildRecommendations).mockImplementation(() =>
       buildFakeRecommendations({
         implementation: {
           interactiveProduct,
@@ -188,7 +188,7 @@ describe('atomic-commerce-recommendation-list', () => {
   });
 
   it('should not render when there is an error', async () => {
-    vi.mocked(buildRecommendations).mockReturnValue(
+    vi.mocked(buildRecommendations).mockImplementation(() =>
       buildFakeRecommendations({
         implementation: {
           interactiveProduct,
@@ -221,7 +221,7 @@ describe('atomic-commerce-recommendation-list', () => {
   });
 
   it('should not render when first request was executed & there are no products', async () => {
-    vi.mocked(buildRecommendations).mockReturnValue(
+    vi.mocked(buildRecommendations).mockImplementation(() =>
       buildFakeRecommendations({
         implementation: {
           interactiveProduct,
@@ -321,7 +321,7 @@ describe('atomic-commerce-recommendation-list', () => {
       });
 
       it('should render 1 outline part per product', async () => {
-        vi.mocked(buildRecommendations).mockReturnValue(
+        vi.mocked(buildRecommendations).mockImplementation(() =>
           buildFakeRecommendations({
             implementation: {
               interactiveProduct,
@@ -442,7 +442,7 @@ describe('atomic-commerce-recommendation-list', () => {
         });
 
         it('should have the correct part for the active carousel indicator', async () => {
-          vi.mocked(buildRecommendations).mockReturnValue(
+          vi.mocked(buildRecommendations).mockImplementation(() =>
             buildFakeRecommendations({
               implementation: {
                 interactiveProduct,
@@ -473,7 +473,7 @@ describe('atomic-commerce-recommendation-list', () => {
     it('should render correct # of atomic-product', async () => {
       const numberOfProducts = 9;
 
-      vi.mocked(buildRecommendations).mockReturnValue(
+      vi.mocked(buildRecommendations).mockImplementation(() =>
         buildFakeRecommendations({
           implementation: {
             interactiveProduct,
@@ -506,7 +506,7 @@ describe('atomic-commerce-recommendation-list', () => {
         const mockProduct1 = buildFakeProduct({permanentid: '123'});
         const mockProduct2 = buildFakeProduct({permanentid: '456'});
 
-        vi.mocked(buildRecommendations).mockReturnValue(
+        vi.mocked(buildRecommendations).mockImplementation(() =>
           buildFakeRecommendations({
             implementation: {
               interactiveProduct,
@@ -597,7 +597,7 @@ describe('atomic-commerce-recommendation-list', () => {
           }
         );
 
-        vi.mocked(buildRecommendations).mockReturnValue(
+        vi.mocked(buildRecommendations).mockImplementation(() =>
           buildFakeRecommendations({
             implementation: {
               interactiveProduct,
@@ -637,7 +637,7 @@ describe('atomic-commerce-recommendation-list', () => {
           const mockProduct1 = buildFakeProduct({permanentid: '123'});
           const mockProduct2 = buildFakeProduct({permanentid: '456'});
 
-          vi.mocked(buildRecommendations).mockReturnValue(
+          vi.mocked(buildRecommendations).mockImplementation(() =>
             buildFakeRecommendations({
               implementation: {
                 interactiveProduct,
@@ -732,7 +732,7 @@ describe('atomic-commerce-recommendation-list', () => {
         const mockProduct1 = buildFakeProduct({permanentid: '123'});
         const mockProduct2 = buildFakeProduct({permanentid: '456'});
 
-        vi.mocked(buildRecommendations).mockReturnValue(
+        vi.mocked(buildRecommendations).mockImplementation(() =>
           buildFakeRecommendations({
             implementation: {
               interactiveProduct,

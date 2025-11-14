@@ -34,5 +34,5 @@ export const buildFakeSummary = <T extends SummaryState>({
   ({
     ...defaultImplementation,
     ...implementation,
-    ...(state && {state: {...defaultState, ...state}}),
+    ...{state: {...defaultState, ...(state || {})}},
   }) as Summary<T>;
