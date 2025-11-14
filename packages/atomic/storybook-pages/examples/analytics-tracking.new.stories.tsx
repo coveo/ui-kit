@@ -67,7 +67,14 @@ const meta: Meta = {
     },
   },
   render: () => html`<atomic-product-link></atomic-product-link>`,
-  play: basePlay,
+  play: async (context) => {
+    // Expose the analytics harness to window for Playwright e2e tests
+    if (typeof window !== 'undefined') {
+      // biome-ignore lint/suspicious/noExplicitAny: window augmentation for Playwright e2e test access
+      (window as any).__mswAnalyticsHarness = analyticsHarness;
+    }
+    await basePlay(context);
+  },
 };
 
 export default meta;

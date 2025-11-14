@@ -1,31 +1,36 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {MockAnalyticsApi} from '@/storybook-utils/api/analytics/mock';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
 import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
-const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
-  type: 'product-listing',
-  engineConfig: {
-    context: {
-      view: {
-        url: 'https://sports.barca.group/browse/promotions/ui-kit-testing',
+// Create analytics harness for e2e test support
+const analyticsHarness = new MockAnalyticsApi();
+
+const {decorator: commerceInterfaceDecorator, play: basePlay} =
+  wrapInCommerceInterface({
+    type: 'product-listing',
+    engineConfig: {
+      context: {
+        view: {
+          url: 'https://sports.barca.group/browse/promotions/ui-kit-testing',
+        },
+        language: 'en',
+        country: 'US',
+        currency: 'USD',
       },
-      language: 'en',
-      country: 'US',
-      currency: 'USD',
+      preprocessRequest: (request) => {
+        const parsed = JSON.parse(request.body as string);
+        parsed.perPage = 1;
+        request.body = JSON.stringify(parsed);
+        return request;
+      },
     },
-    preprocessRequest: (request) => {
-      const parsed = JSON.parse(request.body as string);
-      parsed.perPage = 1;
-      request.body = JSON.stringify(parsed);
-      return request;
-    },
-  },
-  includeCodeRoot: false,
-});
+    includeCodeRoot: false,
+  });
 const {decorator: commerceProductListDecorator} = wrapInCommerceProductList(
   'list',
   false
@@ -51,11 +56,21 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
+    msw: {
+      handlers: [...analyticsHarness.handlers],
+    },
   },
   args,
   argTypes,
 
-  play,
+  play: async (context) => {
+    // Expose analytics harness to window for Playwright e2e tests
+    if (typeof window !== 'undefined') {
+      // biome-ignore lint/suspicious/noExplicitAny: window augmentation for Playwright e2e test access
+      (window as any).__mswAnalyticsHarness = analyticsHarness;
+    }
+    await basePlay(context);
+  },
 };
 
 export default meta;

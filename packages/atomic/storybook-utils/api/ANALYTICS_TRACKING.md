@@ -9,7 +9,10 @@ When testing components in Storybook with Playwright, we need to validate that a
 
 ## Solution
 
-We've enhanced the MSW API harness infrastructure to automatically capture all requests made to mocked endpoints. This provides full access to request details including payload, headers, and timing information.
+We've enhanced the MSW API harness infrastructure to automatically capture all requests made to mocked endpoints. This solution works in two contexts:
+
+1. **Storybook play functions** - For Storybook interaction testing
+2. **Playwright e2e tests** - For tests that load stories in an iframe
 
 ## Key Features
 
@@ -35,7 +38,13 @@ New methods on `EndpointHarness`:
 - `getCapturedRequestCount()` - Get the count of requests
 - `waitForNextRequest(timeout)` - Async wait for next request (useful in async tests)
 
-## Usage Example
+### 4. AnalyticsHelper for Playwright
+A new helper class for accessing captured requests in Playwright e2e tests:
+- Bridges between MSW harness in iframe and Playwright test context
+- Provides async methods to query captured requests
+- Works with the standard Playwright page object pattern
+
+## Usage: Storybook Play Functions
 
 ```typescript
 import { MockAnalyticsApi } from '@/storybook-utils/api/analytics/mock';
@@ -89,12 +98,97 @@ export const TracksProductClick: Story = {
 };
 ```
 
+## Usage: Playwright E2E Tests (Iframe Context)
+
+For Playwright e2e tests that load stories in an iframe, use the `AnalyticsHelper`:
+
+### Step 1: Add Analytics Mock to Your Story
+
+```typescript
+import { MockAnalyticsApi } from '@/storybook-utils/api/analytics/mock';
+
+const analyticsHarness = new MockAnalyticsApi();
+
+const meta: Meta = {
+  parameters: {
+    msw: {
+      handlers: [...analyticsHarness.handlers],
+    },
+  },
+  play: async (context) => {
+    // Expose the harness to window for Playwright access
+    if (typeof window !== 'undefined') {
+      (window as any).__mswAnalyticsHarness = analyticsHarness;
+    }
+    await basePlay(context);
+  },
+};
+```
+
+### Step 2: Use AnalyticsHelper in Your E2E Test
+
+```typescript
+import { expect, test } from './fixture';
+import { AnalyticsHelper } from '@/playwright-utils/analytics-helper';
+
+test('should send analytics with full payload access', async ({ productLink, page }) => {
+  await productLink.load();
+  await productLink.hydrated.first().waitFor({state: 'visible'});
+
+  const analyticsHelper = new AnalyticsHelper(page);
+
+  // Clear any previous requests
+  await analyticsHelper.clearRequests();
+
+  // Trigger action
+  await productLink.anchor().first().click();
+
+  // Wait for and verify the analytics request
+  const request = await analyticsHelper.waitForRequest();
+
+  // Now we have full payload access!
+  expect(request).toBeDefined();
+  expect(request.method).toBe('POST');
+  expect(request.url).toMatch(/analytics\.org\.coveo\.com/);
+
+  const payload = request.body as Record<string, unknown>;
+  expect(payload).toMatchObject({
+    eventType: 'ec.productClick',
+  });
+});
+```
+
+### AnalyticsHelper API
+
+The `AnalyticsHelper` class provides methods to access captured requests from the iframe:
+
+```typescript
+class AnalyticsHelper {
+  constructor(page: Page);
+  
+  // Clear all captured requests
+  async clearRequests(): Promise<void>;
+  
+  // Get all captured requests
+  async getRequests(): Promise<CapturedRequest[]>;
+  
+  // Get the most recent request
+  async getLastRequest(): Promise<CapturedRequest | undefined>;
+  
+  // Get the count of requests
+  async getRequestCount(): Promise<number>;
+  
+  // Wait for the next request (with timeout)
+  async waitForRequest(timeout?: number): Promise<CapturedRequest>;
+}
+```
+
 ## Advantages Over Previous Approach
 
 1. **Full Payload Access**: No longer limited by Chromium bug - can access complete request payload
 2. **Type-Safe Assertions**: Assert on the full structure of analytics events with TypeScript support
 3. **Consistent Patterns**: Uses the same MSW-based approach as other API mocks
-4. **Better Testability**: Works seamlessly in Storybook environment
+4. **Better Testability**: Works in both Storybook play functions and Playwright e2e tests
 5. **Flexible Assertions**: Check count, timing, headers, and payload content
 6. **No External Dependencies**: Works entirely within MSW, no need for Playwright request interception
 
