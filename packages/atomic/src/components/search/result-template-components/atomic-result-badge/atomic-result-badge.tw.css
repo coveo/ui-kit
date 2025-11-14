@@ -1,0 +1,7 @@
+@reference '../../../../global/global.pcss';
+
+:host {
+  @apply inline-flex place-items-center;
+  height: var(--row-height, auto);
+  word-break: break-word;
+}
