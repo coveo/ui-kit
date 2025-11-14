@@ -9,7 +9,7 @@ import type {LocationFacetValue} from '../facet-set/interfaces/response.js';
 
 export interface ToggleSelectLocationFacetValuePayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
 

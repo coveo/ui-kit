@@ -1,3 +1,29 @@
+## 3.38.0 (2025-11-12)
+
+* docs: correct JSDoc grammar and terminology across packages (#6531) ([356975a](https://github.com/coveo/ui-kit/commits/356975a)), closes [#6531](https://github.com/coveo/ui-kit/issues/6531)
+* chore: address security vulnerability by updating pino to version 10 (#6315) ([df9a0de](https://github.com/coveo/ui-kit/commits/df9a0de)), closes [#6315](https://github.com/coveo/ui-kit/issues/6315)
+* chore: refactor Storybook shadow DOM queries using beforeEach hook to augment canvas (#6420) ([cb14e17](https://github.com/coveo/ui-kit/commits/cb14e17)), closes [#6420](https://github.com/coveo/ui-kit/issues/6420)
+* chore: remove stencil-generated build artifacts from git tracking (#6500) ([e9f418f](https://github.com/coveo/ui-kit/commits/e9f418f)), closes [#6500](https://github.com/coveo/ui-kit/issues/6500)
+* chore: shard ut in ci (#6505) ([9191ae8](https://github.com/coveo/ui-kit/commits/9191ae8)), closes [#6505](https://github.com/coveo/ui-kit/issues/6505)
+* chore: solve `vi.mock(...).mockReturnValue()` is not a function. (#6520) ([c445ff7](https://github.com/coveo/ui-kit/commits/c445ff7)), closes [#6520](https://github.com/coveo/ui-kit/issues/6520)
+* chore: update to Vitest 4 (#6327) ([344847a](https://github.com/coveo/ui-kit/commits/344847a)), closes [#6327](https://github.com/coveo/ui-kit/issues/6327)
+* chore(atomic): migrate atomic-result-number (#6188) ([4baa234](https://github.com/coveo/ui-kit/commits/4baa234)), closes [#6188](https://github.com/coveo/ui-kit/issues/6188)
+* chore(atomic): migrate ChildrenWrapper (#6446) ([439295d](https://github.com/coveo/ui-kit/commits/439295d)), closes [#6446](https://github.com/coveo/ui-kit/issues/6446)
+* chore(atomic): migrate ResultChildrenGuard (#6447) ([101d727](https://github.com/coveo/ui-kit/commits/101d727)), closes [#6447](https://github.com/coveo/ui-kit/issues/6447)
+* fix(atomic): allow multiple slotted components in atomic-commerce-search-box (#6461) ([7e8f726](https://github.com/coveo/ui-kit/commits/7e8f726)), closes [#6461](https://github.com/coveo/ui-kit/issues/6461)
+* fix(atomic): searchHub/originLevel1 ignored in atomic-recs-interface initialize options (#6503) ([5e749f8](https://github.com/coveo/ui-kit/commits/5e749f8)), closes [#6503](https://github.com/coveo/ui-kit/issues/6503)
+* chore (atomic): migrated atomic query error to lit (#6334) ([b57d672](https://github.com/coveo/ui-kit/commits/b57d672)), closes [#6334](https://github.com/coveo/ui-kit/issues/6334)
+* Fix aside landmark accessibility: Add unique aria-labels to all aside elements (#6509) ([e4d8bfc](https://github.com/coveo/ui-kit/commits/e4d8bfc)), closes [#6509](https://github.com/coveo/ui-kit/issues/6509)
+* Migrate atomic-numeric-range from Stencil to Lit (#6430) ([df456c9](https://github.com/coveo/ui-kit/commits/df456c9)), closes [#6430](https://github.com/coveo/ui-kit/issues/6430)
+* Migrate ColorFacetCheckbox from Stencil to Lit (#6459) ([1ca729e](https://github.com/coveo/ui-kit/commits/1ca729e)), closes [#6459](https://github.com/coveo/ui-kit/issues/6459)
+* Migrate SortContainer functional component from Stencil to Lit (#6458) ([5da7d61](https://github.com/coveo/ui-kit/commits/5da7d61)), closes [#6458](https://github.com/coveo/ui-kit/issues/6458)
+* test: move a11y from playwright to storybook exclusively (#6474) ([8178da1](https://github.com/coveo/ui-kit/commits/8178da1)), closes [#6474](https://github.com/coveo/ui-kit/issues/6474)
+* test: setup msw for atomic-commerce-search-box-instant-products (#6510) ([4a152cf](https://github.com/coveo/ui-kit/commits/4a152cf)), closes [#6510](https://github.com/coveo/ui-kit/issues/6510)
+* test(atomic): replace potentially dangerous test URL with safe dummy domain (#6445) ([42837e2](https://github.com/coveo/ui-kit/commits/42837e2)), closes [#6445](https://github.com/coveo/ui-kit/issues/6445)
+* feat(atomic): create placeholder Generate Answer button for builder preview (#6201) ([70f384f](https://github.com/coveo/ui-kit/commits/70f384f)), closes [#6201](https://github.com/coveo/ui-kit/issues/6201)
+
+
+
 ## <small>3.37.3 (2025-11-05)</small>
 
 * test: manage REST API mocking through utilities wrapping MSW (#6177) ([1434a17](https://github.com/coveo/ui-kit/commits/1434a17)), closes [#6177](https://github.com/coveo/ui-kit/issues/6177)

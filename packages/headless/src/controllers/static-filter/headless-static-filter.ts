@@ -65,7 +65,7 @@ export interface StaticFilterOptions {
 /**
  * The `StaticFilter` controller manages a collection of filter values.
  *
- * Example: [static-filter.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/static-filter/static-filter.fn.tsx)
+ * Example: [static-filter.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/static-filter/static-filter.fn.tsx)
  *
  * @group Controllers
  * @category StaticFilter

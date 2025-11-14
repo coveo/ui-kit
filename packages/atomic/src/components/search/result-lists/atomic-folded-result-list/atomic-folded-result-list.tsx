@@ -53,7 +53,7 @@ import {Hidden} from '../../../common/stencil-hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
- * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
+ * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
  * @slot default - The default slot where the result templates are inserted.
  * @part result-list - The element containing every result of a result list
  * @part outline - The element displaying an outline or a divider around a result
@@ -102,7 +102,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
   /**
    * The tabs on which the folded result list can be displayed. This property should not be used at the same time as `tabs-excluded`.
    *
-   * Set this property as a stringified JSON array, e.g.,
+   * Set this property as a stringified JSON array, for example:
    * ```html
    *  <atomic-folded-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-folded-result-list snippet>
    * ```
@@ -115,7 +115,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
   /**
    * The tabs on which this folded result list must not be displayed. This property should not be used at the same time as `tabs-included`.
    *
-   * Set this property as a stringified JSON array, e.g.,
+   * Set this property as a stringified JSON array, for example:
    * ```html
    *  <atomic-folded-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-folded-result-list>
    * ```
@@ -149,14 +149,14 @@ export class AtomicFoldedResultList implements InitializableComponent {
    * @defaultValue `2`
    *
    * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message.
-   * The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date).
+   * The user can then click to expand the collection and see the remaining messages that match the current query (that is, not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (that is, not necessarily by date).
    * For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
    **/
   @Prop({reflect: true}) public numberOfFoldedResults = 2;
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
-   * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
+   * You can use this function while working with web frameworks that don't use plain HTML syntax such as React, Angular, or Vue.
    *
    * Do not use this method if you integrate Atomic in a plain HTML deployment.
    */

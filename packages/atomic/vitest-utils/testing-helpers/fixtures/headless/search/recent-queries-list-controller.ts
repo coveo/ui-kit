@@ -22,5 +22,5 @@ export const buildFakeRecentQueriesList = (
 ): RecentQueriesList =>
   ({
     ...defaultImplementation,
-    ...(state && {state: {...defaultState, ...state}}),
+    ...{state: {...defaultState, ...(state || {})}},
   }) as RecentQueriesList;
