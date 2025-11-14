@@ -6,6 +6,7 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderFacetSegmentedValue} from './facet-segmented-value';
 
 describe('renderFacetSegmentedValue', () => {
+  // createTestI18n provides stable English locale for predictable formatting
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
   const locators = {
@@ -60,8 +61,7 @@ describe('renderFacetSegmentedValue', () => {
 
   it('should format count using compact notation', async () => {
     await setupElement({numberOfResults: 1234});
-    const {valueCount} = locators;
-    // The compact format should show something like (1.2K) or (1K) depending on locale
+    const valueCount = page.getByText('(1.2K)');
     await expect.element(valueCount).toBeInTheDocument();
   });
 
@@ -211,20 +211,9 @@ describe('renderFacetSegmentedValue', () => {
       .toHaveAccessibleName('Inclusion filter on Test Value; 988M results');
   });
 
-  it('should render with different number formats based on i18n language', async () => {
-    // The Intl.NumberFormat and toLocaleString use the i18n.language
-    // This test verifies the function uses i18n.language for formatting
-    const customI18n = await createTestI18n();
-    await setupElement({i18n: customI18n, numberOfResults: 1234567});
-    const {valueCount} = locators;
-    // Just verify it renders, specific format depends on locale
+  it('should format numbers consistently with i18n locale', async () => {
+    await setupElement({numberOfResults: 1234567});
+    const valueCount = page.getByText('(1.2M)');
     await expect.element(valueCount).toBeInTheDocument();
-  });
-
-  it('should set key property on list item', async () => {
-    const element = await setupElement({displayValue: 'Unique Key'});
-    const listItem = element.querySelector('li');
-    expect(listItem).toBeTruthy();
-    // The keyed directive uses the displayValue as key
   });
 });
