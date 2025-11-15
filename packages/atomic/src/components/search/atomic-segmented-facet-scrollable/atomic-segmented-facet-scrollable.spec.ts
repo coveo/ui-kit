@@ -4,6 +4,7 @@ import {describe, expect, it, vi} from 'vitest';
 import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/fake-search-status';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/interface/render-in-interface';
 import type {AtomicSegmentedFacetScrollable} from './atomic-segmented-facet-scrollable';
+import './atomic-segmented-facet-scrollable';
 
 vi.mock('@coveo/headless', {spy: true});
 
