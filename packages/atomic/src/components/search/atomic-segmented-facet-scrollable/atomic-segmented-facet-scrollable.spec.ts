@@ -1,70 +1,99 @@
 import {buildSearchStatus} from '@coveo/headless';
-import {html} from 'lit';
-import {describe, expect, it, vi} from 'vitest';
-import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/fake-search-status';
-import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/interface/render-in-interface';
+import {html, type TemplateResult} from 'lit';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
+import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
+import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
 import type {AtomicSegmentedFacetScrollable} from './atomic-segmented-facet-scrollable';
 import './atomic-segmented-facet-scrollable';
 
 vi.mock('@coveo/headless', {spy: true});
 
 describe('atomic-segmented-facet-scrollable', () => {
-  const renderComponent = async ({
-    searchStatusState = {},
-    slottedContent = html`<atomic-segmented-facet
-      field="author"
-    ></atomic-segmented-facet>`,
-  } = {}) => {
-    vi.mocked(buildSearchStatus).mockReturnValue(
-      buildFakeSearchStatus({state: searchStatusState})
-    );
+  const mockedEngine = buildFakeSearchEngine();
 
-    const {element} =
+  const renderComponent = async (
+    options: {value?: string; count?: number; children?: TemplateResult} = {
+      children: html`
+        <atomic-segmented-facet field="author"></atomic-segmented-facet>
+        <atomic-segmented-facet field="language"></atomic-segmented-facet>
+      `,
+    }
+  ) => {
+    const {element, atomicInterface} =
       await renderInAtomicSearchInterface<AtomicSegmentedFacetScrollable>({
-        template: html`<atomic-segmented-facet-scrollable
-        >${slottedContent}</atomic-segmented-facet-scrollable
-      >`,
+        template: html`<atomic-segmented-facet-scrollable>
+          ${options.children}
+            .value=${options.value || ''}
+            .count=${options.count}
+          ></atomic-segmented-facet-scrollable>`,
         selector: 'atomic-segmented-facet-scrollable',
+        bindings: (bindings) => {
+          bindings.engine = mockedEngine;
+          return bindings;
+        },
       });
 
-    return {
-      element,
-      parts: {
-        scrollableContainer: element.shadowRoot?.querySelector(
+    await atomicInterface.updateComplete;
+    await element.updateComplete;
+
+    const parts = {
+      get scrollableContainer() {
+        return element.shadowRoot?.querySelector(
           '[part="scrollable-container"]'
-        ),
-        horizontalScroll: element.shadowRoot?.querySelector(
-          '[part="horizontal-scroll"]'
-        ),
-        leftArrowWrapper: element.shadowRoot?.querySelector(
-          '[part="left-arrow-wrapper"]'
-        ),
-        rightArrowWrapper: element.shadowRoot?.querySelector(
+        );
+      },
+      get horizontalScroll() {
+        return element.shadowRoot?.querySelector('[part="horizontal-scroll"]');
+      },
+      get leftArrowWrapper() {
+        return element.shadowRoot?.querySelector('[part="left-arrow-wrapper"]');
+      },
+      get rightArrowWrapper() {
+        return element.shadowRoot?.querySelector(
           '[part="right-arrow-wrapper"]'
-        ),
-        leftArrowButton: element.shadowRoot?.querySelector(
+        );
+      },
+      get leftArrowButton() {
+        return element.shadowRoot?.querySelector(
           '[part="left-arrow-button"]'
-        ) as HTMLButtonElement | null,
-        rightArrowButton: element.shadowRoot?.querySelector(
+        ) as HTMLButtonElement | null;
+      },
+      get rightArrowButton() {
+        return element.shadowRoot?.querySelector(
           '[part="right-arrow-button"]'
-        ) as HTMLButtonElement | null,
-        leftArrowIcon: element.shadowRoot?.querySelector(
-          '[part="left-arrow-icon"]'
-        ),
-        rightArrowIcon: element.shadowRoot?.querySelector(
-          '[part="right-arrow-icon"]'
-        ),
-        leftFade: element.shadowRoot?.querySelector('[part="left-fade"]'),
-        rightFade: element.shadowRoot?.querySelector('[part="right-fade"]'),
+        ) as HTMLButtonElement | null;
+      },
+      get leftArrowIcon() {
+        return element.shadowRoot?.querySelector('[part="left-arrow-icon"]');
+      },
+      get rightArrowIcon() {
+        return element.shadowRoot?.querySelector('[part="right-arrow-icon"]');
+      },
+      get leftFade() {
+        return element.shadowRoot?.querySelector('[part="left-fade"]');
+      },
+      get rightFade() {
+        return element.shadowRoot?.querySelector('[part="right-fade"]');
       },
     };
+
+    return {element, parts, atomicInterface};
   };
+
+  beforeEach(() => {
+    vi.mocked(buildSearchStatus).mockImplementation(() =>
+      buildFakeSearchStatus({
+        hasError: false,
+      })
+    );
+  });
 
   describe('#initialize', () => {
     it('should build the SearchStatus controller', async () => {
-      const {element} = await renderComponent();
+      await renderComponent();
 
-      expect(buildSearchStatus).toHaveBeenCalledWith(element.bindings.engine);
+      expect(vi.mocked(buildSearchStatus)).toHaveBeenCalledWith(mockedEngine);
     });
   });
 
@@ -85,9 +114,12 @@ describe('atomic-segmented-facet-scrollable', () => {
     });
 
     it('should render nothing when search has error', async () => {
-      const {element} = await renderComponent({
-        searchStatusState: {hasError: true},
-      });
+      vi.mocked(buildSearchStatus).mockImplementation(() =>
+        buildFakeSearchStatus({
+          hasError: true,
+        })
+      );
+      const {element} = await renderComponent();
 
       expect(element.shadowRoot?.children.length).toBe(0);
     });
@@ -117,7 +149,7 @@ describe('atomic-segmented-facet-scrollable', () => {
     describe('when scrollable', () => {
       it('should show right arrow when content overflows', async () => {
         const {parts, element} = await renderComponent({
-          slottedContent: html`
+          children: html`
             <atomic-segmented-facet field="author"></atomic-segmented-facet>
             <atomic-segmented-facet field="language"></atomic-segmented-facet>
             <atomic-segmented-facet field="source"></atomic-segmented-facet>
@@ -324,7 +356,7 @@ describe('atomic-segmented-facet-scrollable', () => {
     it('should observe all child elements', async () => {
       const observeSpy = vi.spyOn(ResizeObserver.prototype, 'observe');
       const {element} = await renderComponent({
-        slottedContent: html`
+        children: html`
           <atomic-segmented-facet field="author"></atomic-segmented-facet>
           <atomic-segmented-facet field="language"></atomic-segmented-facet>
         `,

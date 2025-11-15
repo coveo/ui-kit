@@ -5,7 +5,7 @@ import {
 } from '@coveo/headless';
 import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {createRef, type Ref} from 'lit/directives/ref.js';
+import {createRef, type Ref, ref} from 'lit/directives/ref.js';
 import {renderButton} from '@/src/components/common/button';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {bindStateToController} from '@/src/decorators/bind-state';
@@ -185,7 +185,7 @@ export class AtomicSegmentedFacetScrollable
   @errorGuard()
   @bindingGuard()
   render() {
-    if (this.searchStatus.state.hasError) {
+    if (this.searchStatusState.hasError) {
       return html`${nothing}`;
     }
 
@@ -195,7 +195,7 @@ export class AtomicSegmentedFacetScrollable
         <div
           part="horizontal-scroll"
           class="wrapper-segmented flex flex-row overflow-x-scroll scroll-smooth"
-          ${this.horizontalScrollRef}
+          ${ref(this.horizontalScrollRef)}
         >
           <slot></slot>
         </div>
