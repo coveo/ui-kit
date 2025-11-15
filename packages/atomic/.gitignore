@@ -46,17 +46,3 @@ dist-storybook/
 
 # Generated Tailwind CSS files
 *.tw.css.ts
-
-# Generated index files
-src/components/commerce/index.ts
-src/components/commerce/lazy-index.ts
-src/components/common/index.ts
-src/components/common/lazy-index.ts
-src/components/insight/index.ts
-src/components/insight/lazy-index.ts
-src/components/ipx/index.ts
-src/components/ipx/lazy-index.ts
-src/components/recommendations/index.ts
-src/components/recommendaions/lazy-index.ts
-src/components/search/index.ts
-src/components/search/lazy-index.ts
