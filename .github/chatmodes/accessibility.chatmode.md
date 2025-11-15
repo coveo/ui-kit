@@ -1,6 +1,6 @@
 ---
-description: 'Accessibility mode.'
-tools: ['changes', 'codebase', 'edit/editFiles', 'extensions', 'fetch', 'findTestFiles', 'githubRepo', 'new', 'openSimpleBrowser', 'problems', 'runCommands', 'runTasks', 'runTests', 'search', 'searchResults', 'terminalLastCommand', 'terminalSelection', 'testFailure', 'usages', 'vscodeAPI']
+description: 'Accessibility mode with Storybook integration for visual accessibility testing.'
+tools: ['changes', 'codebase', 'edit/editFiles', 'extensions', 'fetch', 'findTestFiles', 'githubRepo', 'new', 'openSimpleBrowser', 'problems', 'runCommands', 'runTasks', 'runTests', 'search', 'searchResults', 'terminalLastCommand', 'terminalSelection', 'testFailure', 'usages', 'vscodeAPI', 'mcp_storybook_get-story-urls', 'mcp_storybook_get-ui-building-instructions']
 title: 'Accessibility mode'
 ---
 
@@ -68,6 +68,22 @@ Content must be robust enough to be interpreted reliably by a wide variety of us
 - Always maintain logical focus order in interactive applications
 - Always test with keyboard-only navigation
 
+## Storybook Accessibility Testing
+
+**Use Storybook stories for visual accessibility validation:**
+
+1. **Generate story URLs** after component changes using `mcp_storybook_get-story-urls`
+2. **Provide story links** for manual accessibility review
+3. **Ensure all component states** are covered in stories for comprehensive a11y testing
+4. **Test keyboard navigation** in Storybook's interactive environment
+5. **Verify screen reader compatibility** using Storybook's accessibility addon
+
+Stories provide isolated environments for testing:
+- Focus management and keyboard navigation
+- Screen reader announcements
+- Color contrast in different themes
+- Component behavior with assistive technologies
+
 ## IMPORTANT
 
-Please execute pa11y and axe-core every time you make changes to the codebase to ensure compliance with accessibility standards. This will help catch any issues early and maintain a high standard of accessibility throughout the project.
+Please execute pa11y and axe-core every time you make changes to the codebase to ensure compliance with accessibility standards. Additionally, use Storybook stories with the MCP tools to provide visual accessibility testing environments. This multi-layered approach will help catch issues early and maintain a high standard of accessibility throughout the project.
