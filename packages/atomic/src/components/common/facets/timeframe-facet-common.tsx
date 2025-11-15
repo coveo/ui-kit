@@ -28,6 +28,9 @@ import {FacetValueLink} from './facet-value-link/stencil-facet-value-link';
 import {FacetValuesGroup} from './facet-values-group/stencil-facet-values-group';
 import {initializePopover} from './popover/popover-type';
 import {shouldDisplayInputForFacetRange} from './stencil-facet-common';
+// Import the Lit component so it's available for use in JSX
+import '../../common/atomic-facet-date-input/atomic-facet-date-input';
+import type {FacetDateInputEventDetails} from '../../common/atomic-facet-date-input/atomic-facet-date-input';
 
 export interface Timeframe {
   period: RelativeDatePeriod;
@@ -370,23 +373,26 @@ export class TimeframeFacetCommon {
   }
 
   private setupDateInputRef(el: HTMLElement | undefined) {
-    if (!el || this.dateInputRef === el) {
-      return;
-    }
-    
-    // Clean up previous listener if any
+    // Clean up previous listener if we had one
     if (this.dateInputRef && this.dateInputHandler) {
       this.dateInputRef.removeEventListener('atomic-date-input-apply', this.dateInputHandler);
+      this.dateInputRef = undefined;
+      this.dateInputHandler = undefined;
+    }
+    
+    // If no element (unmount), we're done
+    if (!el) {
+      return;
     }
     
     this.dateInputRef = el;
     
-    // Create and store the event handler
-    this.dateInputHandler = ((event: CustomEvent<DateRangeRequest>) => {
-      this.filter!.setRange(event.detail);
+    this.dateInputHandler = ((event: CustomEvent<FacetDateInputEventDetails>) => {
+      if (this.filter) {
+        this.filter.setRange(event.detail);
+      }
     }) as EventListener;
     
-    // Add event listener for the date input apply event
     this.dateInputRef.addEventListener('atomic-date-input-apply', this.dateInputHandler);
   }
 
