@@ -359,7 +359,7 @@ export class TimeframeFacetCommon {
   private renderDateInput() {
     return (
       <atomic-facet-date-input
-        ref={(el) => this.setupDateInputRef(el)}
+        ref={(el?: HTMLElement) => this.setupDateInputRef(el)}
         min={this.props.min}
         max={this.props.max}
         label={this.props.label}
