@@ -28,8 +28,6 @@ import {FacetValueLink} from './facet-value-link/stencil-facet-value-link';
 import {FacetValuesGroup} from './facet-values-group/stencil-facet-values-group';
 import {initializePopover} from './popover/popover-type';
 import {shouldDisplayInputForFacetRange} from './stencil-facet-common';
-// Import the Lit component so it's available for use in JSX
-import '../../common/atomic-facet-date-input/atomic-facet-date-input';
 
 export interface Timeframe {
   period: RelativeDatePeriod;
