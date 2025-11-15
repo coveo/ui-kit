@@ -13,6 +13,7 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import ArrowLeftIcon from '@/src/images/arrow-left-rounded.svg';
 import ArrowRightIcon from '@/src/images/arrow-right-rounded.svg';
 import '@/src/components/common/atomic-icon/atomic-icon';
@@ -37,6 +38,7 @@ type ArrowDirection = 'right' | 'left';
  */
 @customElement('atomic-segmented-facet-scrollable')
 @bindings()
+@withTailwindStyles
 export class AtomicSegmentedFacetScrollable
   extends LitElement
   implements InitializableComponent<Bindings>
