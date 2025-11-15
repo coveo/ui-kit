@@ -33,27 +33,40 @@ function toPascalCase(name) {
     .join('');
 }
 
+function findLitComponentsRecursively(dirPath, basePath = dirPath) {
+  const entries = fs.readdirSync(dirPath, {withFileTypes: true});
+  const litComponents = [];
+
+  for (const entry of entries) {
+    if (entry.isDirectory()) {
+      const fullPath = path.join(dirPath, entry.name);
+      const componentPath = path.join(fullPath, `${entry.name}.ts`);
+
+      if (fs.existsSync(componentPath) && isLitComponent(componentPath)) {
+        // Found a Lit component
+        const relativePath = path.relative(basePath, fullPath);
+        litComponents.push({
+          name: entry.name,
+          relativePath: relativePath.split(path.sep).join('/'),
+        });
+      } else {
+        // Recursively search subdirectories
+        litComponents.push(...findLitComponentsRecursively(fullPath, basePath));
+      }
+    }
+  }
+
+  return litComponents;
+}
+
 async function generateLitExportsForDir(dir) {
   const componentsDir = path.join(baseComponentsDir, dir);
   const outputIndexFile = path.join(componentsDir, 'index.ts');
   const outputLazyIndexFile = path.join(componentsDir, 'lazy-index.ts');
 
-  const files = fs.readdirSync(componentsDir, {withFileTypes: true});
-  const litComponents = files
-    .filter((file) => {
-      const componentPath = path.join(
-        componentsDir,
-        file.name,
-        `${file.name}.ts`
-      );
-      return (
-        file.isDirectory() &&
-        fs.existsSync(componentPath) &&
-        isLitComponent(componentPath)
-      );
-    })
-    .map((file) => file.name)
-    .sort();
+  const litComponents = findLitComponentsRecursively(componentsDir).sort(
+    (a, b) => a.name.localeCompare(b.name)
+  );
 
   const indexFileContent = `
     // Auto-generated file
@@ -62,7 +75,7 @@ async function generateLitExportsForDir(dir) {
         ? litComponents
             .map(
               (component) =>
-                `export {${toPascalCase(component)}} from './${component}/${component}.js';`
+                `export {${toPascalCase(component.name)}} from './${component.relativePath}/${component.name}.js';`
             )
             .join('\n')
         : 'export {};'
@@ -74,7 +87,7 @@ async function generateLitExportsForDir(dir) {
        ${litComponents
          .map(
            (component) =>
-             `'${component}': async () => await import('./${component}/${component}.js'),`
+             `'${component.name}': async () => await import('./${component.relativePath}/${component.name}.js'),`
          )
          .join('\n  ')}
     } as Record<string, () => Promise<unknown>>;

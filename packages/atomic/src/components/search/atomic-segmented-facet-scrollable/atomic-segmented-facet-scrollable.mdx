@@ -1,0 +1,71 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+import * as AtomicSegmentedFacetScrollableStories from './atomic-segmented-facet-scrollable.new.stories';
+import {AtomicDocTemplate} from '../../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicSegmentedFacetScrollableStories} />
+
+<AtomicDocTemplate
+  stories={AtomicSegmentedFacetScrollableStories}
+  githubPath="search/facets/atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.ts"
+  tagName="atomic-segmented-facet-scrollable"
+  className="AtomicSegmentedFacetScrollable"
+>
+
+The `atomic-segmented-facet-scrollable` component wraps around one or several `atomic-segmented-facet` components to provide horizontal scrolling capabilities.
+
+This component is useful when you have multiple segmented facets that need to be displayed horizontally but may not fit in the available space. The component automatically shows arrow buttons when the content overflows, allowing users to scroll through the facets.
+
+## Key Features
+
+- **Automatic Arrow Display**: Shows left and right arrow buttons only when content is scrollable
+- **Smooth Scrolling**: Provides smooth horizontal scrolling animations
+- **Responsive**: Adapts to different viewport sizes and content widths
+- **Accessibility**: Arrow buttons are properly hidden from screen readers since they're purely decorative
+
+## Usage
+
+This component is typically placed within the "horizontal-facets" section of the layout. Place one or more `atomic-segmented-facet` components inside it.
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="horizontal-facets">
+      <atomic-segmented-facet-scrollable>
+        <atomic-segmented-facet
+          field="objecttype"
+          label="Object Type"
+        ></atomic-segmented-facet>
+        <atomic-segmented-facet
+          field="author"
+          label="Author"
+        ></atomic-segmented-facet>
+        <atomic-segmented-facet
+          field="language"
+          label="Language"
+        ></atomic-segmented-facet>
+      </atomic-segmented-facet-scrollable>
+    </atomic-layout-section>
+    ...
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+## Related Components
+
+- [atomic-segmented-facet](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-segmented-facet/) - The segmented facet component that this wrapper contains
+- [atomic-facet-manager](https://docs.coveo.com/en/2918) - Manages facets and enables Dynamic Navigation Experience (DNE)
+
+## Styling
+
+The component exposes several CSS parts for custom styling:
+
+- `scrollable-container` - The main container
+- `horizontal-scroll` - The scrollable area containing the facets
+- `left-arrow-wrapper`, `right-arrow-wrapper` - Wrappers for the arrow buttons
+- `left-arrow-button`, `right-arrow-button` - The clickable arrow buttons
+- `left-arrow-icon`, `right-arrow-icon` - The arrow icons
+- `left-fade`, `right-fade` - The gradient overlays on each side
+
+</AtomicDocTemplate>
