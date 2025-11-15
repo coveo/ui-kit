@@ -11,11 +11,11 @@ import {
 } from '@coveo/headless';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
-import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
-import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common';
-import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
-import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
-import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/search/summary-controller';
+import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture.js';
+import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
+import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine.js';
+import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller.js';
+import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/search/summary-controller.js';
 import MagnifyingGlassIcon from '../../../images/magnifying-glass.svg';
 import type {AtomicNoResults} from './atomic-no-results';
 import './atomic-no-results';
@@ -325,7 +325,7 @@ describe('atomic-no-results', () => {
     it('should not render cancel button even when history has past actions', async () => {
       const {element, parts} = await renderNoResults({
         props: {
-          disableCancelLastAction: true,
+          hideCancelLastAction: true,
         },
         historyState: {
           past: [{name: 'action1', value: 'value1'}],
@@ -339,7 +339,7 @@ describe('atomic-no-results', () => {
       const {element, parts} = await renderNoResults({
         props: {
           enableCancelLastAction: true,
-          disableCancelLastAction: true,
+          hideCancelLastAction: true,
         },
         historyState: {
           past: [{name: 'action1', value: 'value1'}],
@@ -355,7 +355,7 @@ describe('atomic-no-results', () => {
       const {element, parts} = await renderNoResults({
         props: {
           enableCancelLastAction: true,
-          disableCancelLastAction: false,
+          hideCancelLastAction: false,
         },
         historyState: {
           past: [{name: 'action1', value: 'value1'}],
@@ -369,7 +369,7 @@ describe('atomic-no-results', () => {
       const {element, parts} = await renderNoResults({
         props: {
           enableCancelLastAction: false,
-          disableCancelLastAction: false,
+          hideCancelLastAction: false,
         },
         historyState: {
           past: [{name: 'action1', value: 'value1'}],
