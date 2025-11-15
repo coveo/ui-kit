@@ -4,6 +4,7 @@ import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-result-fixture';
 import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
+import {mockConsole} from '@/vitest-utils/testing-helpers/testing-utils/mock-console';
 import type {AtomicResultHtml} from './atomic-result-html';
 import './atomic-result-html';
 
@@ -18,7 +19,7 @@ describe('atomic-result-html', () => {
   };
 
   beforeEach(async () => {
-    console.error = vi.fn();
+    mockConsole();
 
     mockResult = buildFakeResult({
       title: 'Test <b>HTML</b> Title',

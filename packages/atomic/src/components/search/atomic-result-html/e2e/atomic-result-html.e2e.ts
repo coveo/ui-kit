@@ -10,7 +10,7 @@ test.describe('atomic-result-html', () => {
     await resultHtml.load({args: {field: 'title'}});
     await resultHtml.hydrated.first().waitFor();
 
-    const htmlElement = await resultHtml.getHtmlElement();
+    const htmlElement = resultHtml.htmlElement;
     await htmlElement.waitFor({state: 'visible'});
   });
 });
