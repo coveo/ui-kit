@@ -1,4 +1,8 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import type {
+  Decorator,
+  Meta,
+  StoryObj as Story,
+} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -6,6 +10,12 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 
 const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
+
+const withNarrowContainer: Decorator = (story) => {
+  return html` <div style="width: 400px; border: 1px solid lightgray; padding: 8px;">
+    ${story()}
+  </div>`;
+};
 
 const meta: Meta = {
   component: 'atomic-segmented-facet-scrollable',
@@ -19,7 +29,7 @@ const meta: Meta = {
       ></atomic-segmented-facet>
     </atomic-segmented-facet-scrollable>
   `,
-  decorators: [decorator],
+  decorators: [decorator, withNarrowContainer],
   parameters: {
     ...parameters,
     msw: {
