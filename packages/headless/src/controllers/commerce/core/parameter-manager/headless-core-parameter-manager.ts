@@ -73,7 +73,7 @@ const initialStateSchema = <T extends Parameters>(
   });
 
 /**
- * The `ParameterManager` sub-controller allows restoring parameters that affect the results (e.g., from the URL).
+ * The `ParameterManager` sub-controller allows restoring parameters that affect the results (for example, from the URL).
  *
  * @group Sub-controllers
  * @category ParameterManager

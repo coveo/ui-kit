@@ -113,6 +113,7 @@ export class AtomicInsightUserActionsModal
           style={{height: '100%'}}
           slot="body"
           class="flex flex-col w-full px-2"
+          aria-label={this.bindings.i18n.t('user-actions-content')}
         >
           <atomic-insight-user-actions-timeline
             userId={this.userId}

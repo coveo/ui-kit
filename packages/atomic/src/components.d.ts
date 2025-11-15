@@ -71,7 +71,10 @@ export namespace Components {
         "updateCollapseFacetsDependingOnFacetsVisibility": (collapseAfter: number, numberOfVisibleFacets: number) => Promise<void>;
     }
     /**
-     * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     * The `atomic-breadbox` component helps the user keep track of the navigational state of the currently active facet values, located in a single place on the search page.
+     * In most cases, these are on the top of a page between the search bar and the results.
+     * By default, the field name is displayed before the field value to clarify which facet the value is from.
+     * You can clear a single selection by clicking the `x` inside of each pill, or clear all selections by using the `Clear` button.
      */
     interface AtomicBreadbox {
         /**
@@ -81,7 +84,7 @@ export namespace Components {
         "pathLimit": number;
     }
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
      * An `atomic-category-facet` displays a facet of values in a browsable, hierarchical fashion.
      */
     interface AtomicCategoryFacet {
@@ -138,11 +141,11 @@ export namespace Components {
          */
         "sortCriteria": CategoryFacetSortCriterion;
         /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
          */
         "tabsExcluded": string[] | string;
         /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded": string[] | string;
         /**
@@ -177,7 +180,7 @@ export namespace Components {
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
     }
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
      * An `atomic-color-facet` displays a facet of the results for the current query as colors.
      */
     interface AtomicColorFacet {
@@ -238,11 +241,11 @@ export namespace Components {
          */
         "sortCriteria": FacetSortCriterion;
         /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
          */
         "tabsExcluded": string[] | string;
         /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded": string[] | string;
         /**
@@ -284,7 +287,7 @@ export namespace Components {
     }
     /**
      * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
-     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (e.g., `isRecommendation`).
+     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (for example, `isRecommendation`).
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -308,27 +311,8 @@ export namespace Components {
          */
         "mustNotMatch": Record<string, string[]>;
     }
-    interface AtomicFocusTrap {
-        "active": boolean;
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
-         */
-        "container"?: HTMLElement;
-        /**
-          * The common ancestor of the focus trap and of all the elements that should be inaccessible when inside the focus trap.
-         */
-        "scope": HTMLElement;
-        /**
-          * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
-         */
-        "shouldHideSelf": boolean;
-        /**
-          * The source to focus when the focus trap becomes inactive.
-         */
-        "source"?: HTMLElement;
-    }
     /**
-     * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
+     * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
      */
     interface AtomicFoldedResultList {
         /**
@@ -352,7 +336,7 @@ export namespace Components {
         /**
           * The initial number of child results to request for each folded collection, before expansion.
           * @defaultValue `2`
-          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
+          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (that is, not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (that is, not necessarily by date). For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
          */
         "numberOfFoldedResults": number;
         /**
@@ -361,15 +345,15 @@ export namespace Components {
          */
         "parentField"?: string;
         /**
-          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax such as React, Angular, or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
         /**
-          * The tabs on which this folded result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-folded-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-folded-result-list> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list won't be displayed on any of the specified tabs.
+          * The tabs on which this folded result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-folded-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-folded-result-list> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list won't be displayed on any of the specified tabs.
          */
         "tabsExcluded": string[] | string;
         /**
-          * The tabs on which the folded result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-folded-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-folded-result-list snippet> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list can only be displayed on the specified tabs.
+          * The tabs on which the folded result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-folded-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-folded-result-list snippet> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list can only be displayed on the specified tabs.
          */
         "tabsIncluded": string[] | string;
     }
@@ -419,7 +403,7 @@ export namespace Components {
          */
         "unit": string;
         /**
-          * The unit formatting style to use in unit formatting.  * "long" (e.g., 16 litres) * "short" (e.g., 16 l) * "narrow" (e.g., 16l)
+          * The unit formatting style to use in unit formatting.  * "long" (for example, 16 litres) * "short" (for example, 16 l) * "narrow" (for example, 16l)
          */
         "unitDisplay"?: 'long' | 'short' | 'narrow';
     }
@@ -451,11 +435,11 @@ export namespace Components {
          */
         "maxCollapsedHeight": number;
         /**
-          * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
+          * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
          */
         "tabsExcluded": string[] | string;
         /**
-          * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-generated-answer tabs-included='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer can only be displayed on the specified tabs.
+          * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-generated-answer tabs-included='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer can only be displayed on the specified tabs.
          */
         "tabsIncluded": string[] | string;
         /**
@@ -560,7 +544,7 @@ export namespace Components {
          */
         "parentField"?: string;
         /**
-          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax such as React, Angular, or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
@@ -790,7 +774,7 @@ export namespace Components {
          */
         "imageSize": ItemDisplayImageSize;
         /**
-          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax such as React, Angular, or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
@@ -1088,7 +1072,7 @@ export namespace Components {
          */
         "recommendation": string;
         /**
-          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax such as React, Angular, or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
@@ -1159,7 +1143,7 @@ export namespace Components {
         "icon"?: string;
     }
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., ascending, descending).
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
      * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
      */
     interface AtomicNumericFacet {
@@ -1212,11 +1196,11 @@ export namespace Components {
          */
         "sortCriteria": RangeFacetSortCriterion;
         /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
          */
         "tabsExcluded": string[] | string;
         /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded": string[] | string;
         /**
@@ -1232,7 +1216,7 @@ export namespace Components {
     /**
      * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
      * about a result.
-     * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (e.g., custom styles and embedded
+     * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (for example, custom styles and embedded
      * images/links may not work as expected in an `atomic-quickview`).
      */
     interface AtomicQuickview {
@@ -1242,7 +1226,7 @@ export namespace Components {
         "sandbox": string;
     }
     /**
-     * The modal opened when clicking on a quickview button.
+     * The modal opened when clicking a quickview button.
      * Do not use this component directly; use `atomic-quickview` instead.
      */
     interface AtomicQuickviewModal {
@@ -1255,7 +1239,7 @@ export namespace Components {
         "total"?: number;
     }
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
      * An `atomic-rating-facet` displays a facet of the results for the current query as ratings.
      * It only supports numeric fields.
      */
@@ -1313,16 +1297,16 @@ export namespace Components {
          */
         "numberOfIntervals": number;
         /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
          */
         "tabsExcluded": string[] | string;
         /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded": string[] | string;
     }
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
      * An `atomic-rating-range-facet` displays a facet of the results for the current query as ratings.
      * It only supports numeric fields.
      */
@@ -1376,11 +1360,11 @@ export namespace Components {
          */
         "numberOfIntervals": number;
         /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
          */
         "tabsExcluded": string[] | string;
         /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded": string[] | string;
     }
@@ -1434,7 +1418,7 @@ export namespace Components {
          */
         "recommendation": string;
         /**
-          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax such as React, Angular, or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
@@ -1790,7 +1774,7 @@ export namespace Components {
      */
     interface AtomicSearchBox {
         /**
-          * Whether to clear all active query filters when the end user submits a new query from the search box. Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
+          * Whether to clear all active query filters when the end user submits a new query from the search box. Setting this option to "false" is not recommended and can lead to an increasing number of queries returning no results.
          */
         "clearFilters": boolean;
         /**
@@ -1798,7 +1782,7 @@ export namespace Components {
          */
         "disableSearch": boolean;
         /**
-          * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo Cloud query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
+          * Whether to interpret advanced [Coveo query syntax](https://docs.coveo.com/en/1552/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
          */
         "enableQuerySyntax": boolean;
         /**
@@ -1867,11 +1851,11 @@ export namespace Components {
          */
         "sortCriteria": FacetSortCriterion;
         /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
          */
         "tabsExcluded": string[] | string;
         /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded": string[] | string;
     }
@@ -1915,11 +1899,11 @@ export namespace Components {
          */
         "snippetStyle"?: string;
         /**
-          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
+          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
          */
         "tabsExcluded": string[] | string;
         /**
-          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
+          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
          */
         "tabsIncluded": string[] | string;
     }
@@ -2002,11 +1986,11 @@ export namespace Components {
          */
         "label": string;
         /**
-          * The tabs on which the sort expression must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-sort-expression tabs-excluded='["tabIDA", "tabIDB"]'></atomic-sort-expression> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression won't be displayed on any of the specified tabs.
+          * The tabs on which the sort expression must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-sort-expression tabs-excluded='["tabIDA", "tabIDB"]'></atomic-sort-expression> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression won't be displayed on any of the specified tabs.
          */
         "tabsExcluded": string[] | string;
         /**
-          * The tabs on which the sort expression can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-sort-expression tabs-included='["tabIDA", "tabIDB"]'></atomic-sort-expression snippet> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression can only be displayed on the specified tabs.
+          * The tabs on which the sort expression can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-sort-expression tabs-included='["tabIDA", "tabIDB"]'></atomic-sort-expression snippet> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression can only be displayed on the specified tabs.
          */
         "tabsIncluded": string[] | string;
     }
@@ -2106,7 +2090,7 @@ export namespace Components {
      */
     interface AtomicTimeframe {
         /**
-          * The amount of units from which to count.  E.g., 10 days, 1 year, etc.
+          * The amount of units from which to count.  For example, 10 days, 1 year, etc.
          */
         "amount": number;
         /**
@@ -2172,11 +2156,11 @@ export namespace Components {
          */
         "sortCriteria": RangeFacetSortCriterion;
         /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
          */
         "tabsExcluded": string[] | string;
         /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded": string[] | string;
         /**
@@ -2279,7 +2263,10 @@ declare global {
         new (): HTMLAtomicAutomaticFacetGeneratorElement;
     };
     /**
-     * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     * The `atomic-breadbox` component helps the user keep track of the navigational state of the currently active facet values, located in a single place on the search page.
+     * In most cases, these are on the top of a page between the search bar and the results.
+     * By default, the field name is displayed before the field value to clarify which facet the value is from.
+     * You can clear a single selection by clicking the `x` inside of each pill, or clear all selections by using the `Clear` button.
      */
     interface HTMLAtomicBreadboxElement extends Components.AtomicBreadbox, HTMLStencilElement {
     }
@@ -2288,7 +2275,7 @@ declare global {
         new (): HTMLAtomicBreadboxElement;
     };
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
      * An `atomic-category-facet` displays a facet of values in a browsable, hierarchical fashion.
      */
     interface HTMLAtomicCategoryFacetElement extends Components.AtomicCategoryFacet, HTMLStencilElement {
@@ -2307,7 +2294,7 @@ declare global {
         new (): HTMLAtomicCitationElement;
     };
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
      * An `atomic-color-facet` displays a facet of the results for the current query as colors.
      */
     interface HTMLAtomicColorFacetElement extends Components.AtomicColorFacet, HTMLStencilElement {
@@ -2356,7 +2343,7 @@ declare global {
     };
     /**
      * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
-     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (e.g., `isRecommendation`).
+     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (for example, `isRecommendation`).
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -2366,14 +2353,8 @@ declare global {
         prototype: HTMLAtomicFieldConditionElement;
         new (): HTMLAtomicFieldConditionElement;
     };
-    interface HTMLAtomicFocusTrapElement extends Components.AtomicFocusTrap, HTMLStencilElement {
-    }
-    var HTMLAtomicFocusTrapElement: {
-        prototype: HTMLAtomicFocusTrapElement;
-        new (): HTMLAtomicFocusTrapElement;
-    };
     /**
-     * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
+     * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
      */
     interface HTMLAtomicFoldedResultListElement extends Components.AtomicFoldedResultList, HTMLStencilElement {
     }
@@ -2830,7 +2811,7 @@ declare global {
         new (): HTMLAtomicNotificationsElement;
     };
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., ascending, descending).
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
      * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
      */
     interface HTMLAtomicNumericFacetElement extends Components.AtomicNumericFacet, HTMLStencilElement {
@@ -2851,7 +2832,7 @@ declare global {
     /**
      * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
      * about a result.
-     * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (e.g., custom styles and embedded
+     * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (for example, custom styles and embedded
      * images/links may not work as expected in an `atomic-quickview`).
      */
     interface HTMLAtomicQuickviewElement extends Components.AtomicQuickview, HTMLStencilElement {
@@ -2865,7 +2846,7 @@ declare global {
         "atomic/quickview/previous": any;
     }
     /**
-     * The modal opened when clicking on a quickview button.
+     * The modal opened when clicking a quickview button.
      * Do not use this component directly; use `atomic-quickview` instead.
      */
     interface HTMLAtomicQuickviewModalElement extends Components.AtomicQuickviewModal, HTMLStencilElement {
@@ -2883,7 +2864,7 @@ declare global {
         new (): HTMLAtomicQuickviewModalElement;
     };
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
      * An `atomic-rating-facet` displays a facet of the results for the current query as ratings.
      * It only supports numeric fields.
      */
@@ -2894,7 +2875,7 @@ declare global {
         new (): HTMLAtomicRatingFacetElement;
     };
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
      * An `atomic-rating-range-facet` displays a facet of the results for the current query as ratings.
      * It only supports numeric fields.
      */
@@ -3437,7 +3418,6 @@ declare global {
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
-        "atomic-focus-trap": HTMLAtomicFocusTrapElement;
         "atomic-folded-result-list": HTMLAtomicFoldedResultListElement;
         "atomic-format-currency": HTMLAtomicFormatCurrencyElement;
         "atomic-format-number": HTMLAtomicFormatNumberElement;
@@ -3579,7 +3559,10 @@ declare namespace LocalJSX {
         "numberOfValues"?: number;
     }
     /**
-     * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     * The `atomic-breadbox` component helps the user keep track of the navigational state of the currently active facet values, located in a single place on the search page.
+     * In most cases, these are on the top of a page between the search bar and the results.
+     * By default, the field name is displayed before the field value to clarify which facet the value is from.
+     * You can clear a single selection by clicking the `x` inside of each pill, or clear all selections by using the `Clear` button.
      */
     interface AtomicBreadbox {
         /**
@@ -3589,7 +3572,7 @@ declare namespace LocalJSX {
         "pathLimit"?: number;
     }
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
      * An `atomic-category-facet` displays a facet of values in a browsable, hierarchical fashion.
      */
     interface AtomicCategoryFacet {
@@ -3646,11 +3629,11 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: CategoryFacetSortCriterion;
         /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
          */
         "tabsExcluded"?: string[] | string;
         /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded"?: string[] | string;
         /**
@@ -3685,7 +3668,7 @@ declare namespace LocalJSX {
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
     }
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
      * An `atomic-color-facet` displays a facet of the results for the current query as colors.
      */
     interface AtomicColorFacet {
@@ -3746,11 +3729,11 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: FacetSortCriterion;
         /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
          */
         "tabsExcluded"?: string[] | string;
         /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded"?: string[] | string;
         /**
@@ -3793,7 +3776,7 @@ declare namespace LocalJSX {
     }
     /**
      * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
-     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (e.g., `isRecommendation`).
+     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (for example, `isRecommendation`).
      * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
      * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
      */
@@ -3817,27 +3800,8 @@ declare namespace LocalJSX {
          */
         "mustNotMatch"?: Record<string, string[]>;
     }
-    interface AtomicFocusTrap {
-        "active"?: boolean;
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
-         */
-        "container"?: HTMLElement;
-        /**
-          * The common ancestor of the focus trap and of all the elements that should be inaccessible when inside the focus trap.
-         */
-        "scope"?: HTMLElement;
-        /**
-          * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
-         */
-        "shouldHideSelf"?: boolean;
-        /**
-          * The source to focus when the focus trap becomes inactive.
-         */
-        "source"?: HTMLElement;
-    }
     /**
-     * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
+     * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
      */
     interface AtomicFoldedResultList {
         /**
@@ -3861,7 +3825,7 @@ declare namespace LocalJSX {
         /**
           * The initial number of child results to request for each folded collection, before expansion.
           * @defaultValue `2`
-          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (i.e., not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (i.e., not necessarily by date). For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
+          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (that is, not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (that is, not necessarily by date). For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
          */
         "numberOfFoldedResults"?: number;
         /**
@@ -3870,11 +3834,11 @@ declare namespace LocalJSX {
          */
         "parentField"?: string;
         /**
-          * The tabs on which this folded result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-folded-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-folded-result-list> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list won't be displayed on any of the specified tabs.
+          * The tabs on which this folded result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-folded-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-folded-result-list> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list won't be displayed on any of the specified tabs.
          */
         "tabsExcluded"?: string[] | string;
         /**
-          * The tabs on which the folded result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-folded-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-folded-result-list snippet> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list can only be displayed on the specified tabs.
+          * The tabs on which the folded result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-folded-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-folded-result-list snippet> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list can only be displayed on the specified tabs.
          */
         "tabsIncluded"?: string[] | string;
     }
@@ -3924,7 +3888,7 @@ declare namespace LocalJSX {
          */
         "unit": string;
         /**
-          * The unit formatting style to use in unit formatting.  * "long" (e.g., 16 litres) * "short" (e.g., 16 l) * "narrow" (e.g., 16l)
+          * The unit formatting style to use in unit formatting.  * "long" (for example, 16 litres) * "short" (for example, 16 l) * "narrow" (for example, 16l)
          */
         "unitDisplay"?: 'long' | 'short' | 'narrow';
     }
@@ -3956,11 +3920,11 @@ declare namespace LocalJSX {
          */
         "maxCollapsedHeight"?: number;
         /**
-          * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
+          * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
          */
         "tabsExcluded"?: string[] | string;
         /**
-          * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-generated-answer tabs-included='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer can only be displayed on the specified tabs.
+          * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-generated-answer tabs-included='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer can only be displayed on the specified tabs.
          */
         "tabsIncluded"?: string[] | string;
         /**
@@ -4635,7 +4599,7 @@ declare namespace LocalJSX {
         "icon"?: string;
     }
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., ascending, descending).
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
      * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
      */
     interface AtomicNumericFacet {
@@ -4688,11 +4652,11 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: RangeFacetSortCriterion;
         /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
          */
         "tabsExcluded"?: string[] | string;
         /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded"?: string[] | string;
         /**
@@ -4708,7 +4672,7 @@ declare namespace LocalJSX {
     /**
      * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
      * about a result.
-     * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (e.g., custom styles and embedded
+     * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (for example, custom styles and embedded
      * images/links may not work as expected in an `atomic-quickview`).
      */
     interface AtomicQuickview {
@@ -4718,7 +4682,7 @@ declare namespace LocalJSX {
         "sandbox"?: string;
     }
     /**
-     * The modal opened when clicking on a quickview button.
+     * The modal opened when clicking a quickview button.
      * Do not use this component directly; use `atomic-quickview` instead.
      */
     interface AtomicQuickviewModal {
@@ -4732,7 +4696,7 @@ declare namespace LocalJSX {
         "total"?: number;
     }
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
      * An `atomic-rating-facet` displays a facet of the results for the current query as ratings.
      * It only supports numeric fields.
      */
@@ -4790,16 +4754,16 @@ declare namespace LocalJSX {
          */
         "numberOfIntervals"?: number;
         /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
          */
         "tabsExcluded"?: string[] | string;
         /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded"?: string[] | string;
     }
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
      * An `atomic-rating-range-facet` displays a facet of the results for the current query as ratings.
      * It only supports numeric fields.
      */
@@ -4853,11 +4817,11 @@ declare namespace LocalJSX {
          */
         "numberOfIntervals"?: number;
         /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
          */
         "tabsExcluded"?: string[] | string;
         /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded"?: string[] | string;
     }
@@ -5250,7 +5214,7 @@ declare namespace LocalJSX {
      */
     interface AtomicSearchBox {
         /**
-          * Whether to clear all active query filters when the end user submits a new query from the search box. Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
+          * Whether to clear all active query filters when the end user submits a new query from the search box. Setting this option to "false" is not recommended and can lead to an increasing number of queries returning no results.
          */
         "clearFilters"?: boolean;
         /**
@@ -5258,7 +5222,7 @@ declare namespace LocalJSX {
          */
         "disableSearch"?: boolean;
         /**
-          * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo Cloud query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
+          * Whether to interpret advanced [Coveo query syntax](https://docs.coveo.com/en/1552/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
          */
         "enableQuerySyntax"?: boolean;
         /**
@@ -5331,11 +5295,11 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: FacetSortCriterion;
         /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
          */
         "tabsExcluded"?: string[] | string;
         /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded"?: string[] | string;
     }
@@ -5379,11 +5343,11 @@ declare namespace LocalJSX {
          */
         "snippetStyle"?: string;
         /**
-          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
+          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
          */
         "tabsExcluded"?: string[] | string;
         /**
-          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
+          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
          */
         "tabsIncluded"?: string[] | string;
     }
@@ -5479,11 +5443,11 @@ declare namespace LocalJSX {
          */
         "label": string;
         /**
-          * The tabs on which the sort expression must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-sort-expression tabs-excluded='["tabIDA", "tabIDB"]'></atomic-sort-expression> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression won't be displayed on any of the specified tabs.
+          * The tabs on which the sort expression must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-sort-expression tabs-excluded='["tabIDA", "tabIDB"]'></atomic-sort-expression> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression won't be displayed on any of the specified tabs.
          */
         "tabsExcluded"?: string[] | string;
         /**
-          * The tabs on which the sort expression can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-sort-expression tabs-included='["tabIDA", "tabIDB"]'></atomic-sort-expression snippet> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression can only be displayed on the specified tabs.
+          * The tabs on which the sort expression can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-sort-expression tabs-included='["tabIDA", "tabIDB"]'></atomic-sort-expression snippet> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression can only be displayed on the specified tabs.
          */
         "tabsIncluded"?: string[] | string;
     }
@@ -5581,7 +5545,7 @@ declare namespace LocalJSX {
      */
     interface AtomicTimeframe {
         /**
-          * The amount of units from which to count.  E.g., 10 days, 1 year, etc.
+          * The amount of units from which to count.  For example, 10 days, 1 year, etc.
          */
         "amount"?: number;
         /**
@@ -5647,11 +5611,11 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: RangeFacetSortCriterion;
         /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
          */
         "tabsExcluded"?: string[] | string;
         /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
+          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded"?: string[] | string;
         /**
@@ -5670,7 +5634,6 @@ declare namespace LocalJSX {
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-number-input": AtomicFacetNumberInput;
         "atomic-field-condition": AtomicFieldCondition;
-        "atomic-focus-trap": AtomicFocusTrap;
         "atomic-folded-result-list": AtomicFoldedResultList;
         "atomic-format-currency": AtomicFormatCurrency;
         "atomic-format-number": AtomicFormatNumber;
@@ -5798,11 +5761,14 @@ declare module "@stencil/core" {
              */
             "atomic-automatic-facet-generator": LocalJSX.AtomicAutomaticFacetGenerator & JSXBase.HTMLAttributes<HTMLAtomicAutomaticFacetGeneratorElement>;
             /**
-             * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+             * The `atomic-breadbox` component helps the user keep track of the navigational state of the currently active facet values, located in a single place on the search page.
+             * In most cases, these are on the top of a page between the search bar and the results.
+             * By default, the field name is displayed before the field value to clarify which facet the value is from.
+             * You can clear a single selection by clicking the `x` inside of each pill, or clear all selections by using the `Clear` button.
              */
             "atomic-breadbox": LocalJSX.AtomicBreadbox & JSXBase.HTMLAttributes<HTMLAtomicBreadboxElement>;
             /**
-             * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+             * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
              * An `atomic-category-facet` displays a facet of values in a browsable, hierarchical fashion.
              */
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
@@ -5811,7 +5777,7 @@ declare module "@stencil/core" {
              */
             "atomic-citation": LocalJSX.AtomicCitation & JSXBase.HTMLAttributes<HTMLAtomicCitationElement>;
             /**
-             * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+             * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
              * An `atomic-color-facet` displays a facet of the results for the current query as colors.
              */
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
@@ -5829,14 +5795,13 @@ declare module "@stencil/core" {
             "atomic-facet-number-input": LocalJSX.AtomicFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicFacetNumberInputElement>;
             /**
              * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
-             * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (e.g., `isRecommendation`).
+             * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (for example, `isRecommendation`).
              * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
              * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
              */
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
-            "atomic-focus-trap": LocalJSX.AtomicFocusTrap & JSXBase.HTMLAttributes<HTMLAtomicFocusTrapElement>;
             /**
-             * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
+             * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
              */
             "atomic-folded-result-list": LocalJSX.AtomicFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicFoldedResultListElement>;
             /**
@@ -5939,7 +5904,7 @@ declare module "@stencil/core" {
              */
             "atomic-notifications": LocalJSX.AtomicNotifications & JSXBase.HTMLAttributes<HTMLAtomicNotificationsElement>;
             /**
-             * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., ascending, descending).
+             * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
              * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
              */
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
@@ -5950,23 +5915,23 @@ declare module "@stencil/core" {
             /**
              * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
              * about a result.
-             * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (e.g., custom styles and embedded
+             * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (for example, custom styles and embedded
              * images/links may not work as expected in an `atomic-quickview`).
              */
             "atomic-quickview": LocalJSX.AtomicQuickview & JSXBase.HTMLAttributes<HTMLAtomicQuickviewElement>;
             /**
-             * The modal opened when clicking on a quickview button.
+             * The modal opened when clicking a quickview button.
              * Do not use this component directly; use `atomic-quickview` instead.
              */
             "atomic-quickview-modal": LocalJSX.AtomicQuickviewModal & JSXBase.HTMLAttributes<HTMLAtomicQuickviewModalElement>;
             /**
-             * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+             * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
              * An `atomic-rating-facet` displays a facet of the results for the current query as ratings.
              * It only supports numeric fields.
              */
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;
             /**
-             * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+             * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
              * An `atomic-rating-range-facet` displays a facet of the results for the current query as ratings.
              * It only supports numeric fields.
              */

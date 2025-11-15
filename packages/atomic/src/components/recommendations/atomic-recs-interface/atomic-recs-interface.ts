@@ -209,7 +209,7 @@ export class AtomicRecsInterface
   }
   /**
    * Initializes the interface using the provided [headless recommendation engine](https://docs.coveo.com/en/headless/latest/reference/modules/Recommendation.html), as opposed to the `initialize` method which internally builds a recommendation engine instance.
-   * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
+   * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone, and logLevel.
    */
   public initializeWithRecommendationEngine(engine: RecommendationEngine) {
     if (this.pipeline && this.pipeline !== engine.state.pipeline) {
@@ -315,12 +315,12 @@ export class AtomicRecsInterface
     try {
       this.engine = buildRecommendationEngine({
         configuration: {
-          ...options,
           pipeline: this.pipeline,
           searchHub: this.searchHub ?? 'default',
           locale: this.language,
           timezone: this.timezone,
           analytics: analyticsConfig,
+          ...options,
         },
         loggerOptions: {
           level: this.logLevel,

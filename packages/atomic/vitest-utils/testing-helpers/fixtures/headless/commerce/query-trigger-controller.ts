@@ -19,5 +19,5 @@ export const buildFakeQueryTrigger = (
 ): QueryTrigger =>
   ({
     ...defaultImplementation,
-    ...(state && {state: {...defaultState, ...state}}),
+    ...{state: {...defaultState, ...(state || {})}},
   }) as QueryTrigger;

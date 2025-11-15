@@ -130,14 +130,37 @@ describe('generated answer', () => {
   });
 
   describe('#generateAnswer', () => {
-    it('should dispatch setAnswerApiQueryParams with constructed parameters when answerConfigurationId is present', async () => {
-      const mockDispatch = vi.fn().mockImplementation((action) => {
-        if (typeof action === 'function') {
-          return Promise.resolve({type: 'mock/resolved'});
-        }
-        return action;
-      });
+    const mockDispatch = vi.fn().mockImplementation((action) => {
+      if (typeof action === 'function') {
+        return Promise.resolve({type: 'mock/resolved'});
+      }
+      return action;
+    });
 
+    it('should dispatch resetAnswer', async () => {
+      const mockGetState = vi.fn(() => ({
+        generatedAnswer: {
+          answerConfigurationId: 'test-config-id',
+        },
+      }));
+
+      const mockNavigatorContext = {};
+      const mockLogger = {warn: vi.fn()};
+      const mockExtra = {
+        navigatorContext: mockNavigatorContext,
+        logger: mockLogger,
+      };
+
+      const thunk = generateAnswer();
+      await thunk(mockDispatch, mockGetState, mockExtra);
+
+      const resetAnswerCall = mockDispatch.mock.calls.find(
+        (call) => call[0]?.type === 'generatedAnswer/resetAnswer'
+      );
+      expect(resetAnswerCall).toBeDefined();
+    });
+
+    it('should dispatch setAnswerApiQueryParams with constructed parameters when answerConfigurationId is present', async () => {
       const mockGetState = vi.fn(() => ({
         generatedAnswer: {
           answerConfigurationId: 'test-config-id',
@@ -158,7 +181,7 @@ describe('generated answer', () => {
         (call) => call[0]?.type === 'generatedAnswer/setAnswerApiQueryParams'
       );
       expect(setAnswerApiQueryParamsCall).toBeDefined();
-      expect(setAnswerApiQueryParamsCall[0].payload).toHaveProperty(
+      expect(setAnswerApiQueryParamsCall?.[0].payload).toHaveProperty(
         'q',
         'test query'
       );
