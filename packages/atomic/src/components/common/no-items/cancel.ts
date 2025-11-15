@@ -14,7 +14,7 @@ export const renderCancel: FunctionalComponent<CancelProps> = ({props}) =>
       style: 'primary',
       part: 'cancel-button',
       text: props.i18n.t('cancel-last-action'),
-      onClick: () => props.onClick(),
+      onClick: props.onClick,
       class: 'my-3 px-2.5 py-3 font-bold',
     },
   })(nothing);
