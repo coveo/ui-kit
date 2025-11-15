@@ -11,11 +11,11 @@ import {
 } from '@coveo/headless';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
-import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture.js';
-import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
-import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine.js';
-import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller.js';
-import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/search/summary-controller.js';
+import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
+import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common';
+import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
+import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
+import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/search/summary-controller';
 import MagnifyingGlassIcon from '../../../images/magnifying-glass.svg';
 import type {AtomicNoResults} from './atomic-no-results';
 import './atomic-no-results';
