@@ -13,49 +13,19 @@ import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/ato
 >
 
 
-This component is used within `atomic-result-template` components inside the result list:
+The `atomic-result-link` component automatically transforms a search result **title** into a clickable link that points to the original item. This component is used within `atomic-result-template` components inside the result list:
 
 ```html
 <atomic-search-interface>
   ...
   <atomic-result-list>
     <atomic-result-template>
-      <atomic-result-link></atomic-result-link>
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
     </atomic-result-template>
   </atomic-result-list>
 </atomic-search-interface>
-```
-
-## Default Behavior
-
-By default, the component renders the result's title field as the link text. The link automatically logs analytics events when clicked.
-
-## Custom Content
-
-You can provide custom content in the default slot to override the default title display:
-
-```html
-<atomic-result-link>
-  <span class="custom-style">View Document</span>
-</atomic-result-link>
-```
-
-## Custom Href Template
-
-Use the `href-template` attribute to customize the generated link URL:
-
-```html
-<atomic-result-link href-template="${clickUri}?source=${raw.source}"></atomic-result-link>
-```
-
-## Custom Link Attributes
-
-Use the attributes slot to pass custom attributes to the anchor element:
-
-```html
-<atomic-result-link>
-  <a slot="attributes" target="_blank" rel="noopener"></a>
-</atomic-result-link>
 ```
 
 </AtomicDocTemplate>

@@ -12,9 +12,12 @@ import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {LightDomMixin} from '@/src/mixins/light-dom';
+import {
+  type LightDOMWithSlots,
+  SlotsForNoShadowDOMMixin,
+} from '@/src/mixins/slots-for-no-shadow-dom-mixin';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import {buildStringTemplateFromResult} from '@/src/utils/result-utils';
-import {getDefaultSlotContent} from '@/src/utils/slot-utils';
 import '@/src/components/search/atomic-result-text/atomic-result-text';
 
 /**
@@ -26,7 +29,7 @@ import '@/src/components/search/atomic-result-text/atomic-result-text';
 @bindings()
 @withTailwindStyles
 export class AtomicResultLink
-  extends LightDomMixin(LitElement)
+  extends LightDomMixin(SlotsForNoShadowDOMMixin(LitElement))
   implements InitializableComponent<Bindings>
 {
   static styles: CSSResultGroup =
@@ -52,7 +55,6 @@ atomic-result-link {
   @property({reflect: true, attribute: 'href-template'})
   public hrefTemplate?: string;
 
-  @state() private hasDefaultSlot = false;
   @state() private linkAttributes?: Attr[];
   @state() private stopPropagation?: boolean;
 
@@ -77,7 +79,6 @@ atomic-result-link {
   connectedCallback() {
     super.connectedCallback();
     const slotName = 'attributes';
-    this.hasDefaultSlot = getDefaultSlotContent(this).length > 0;
     this.linkAttributes = getAttributesFromLinkSlotContent(this, slotName);
   }
 
@@ -102,15 +103,13 @@ atomic-result-link {
         className: 'link-style',
       },
     })(html`
-      ${
-        this.hasDefaultSlot
-          ? html`<slot></slot>`
-          : html`<atomic-result-text
-            field="title"
-            default="no-title"
-          ></atomic-result-text>`
-      }
-    `);
+        ${this.renderDefaultSlotContent(
+          html`<atomic-result-text
+          field="title"
+          default="no-title"
+        ></atomic-result-text>`
+        )}
+      `);
   }
 
   private get result(): AnyUnfoldedItem {
@@ -121,6 +120,8 @@ atomic-result-link {
     return this.interactiveResultContext.interactiveItem as InteractiveResult;
   }
 }
+
+export interface AtomicResultLink extends LightDOMWithSlots {}
 
 declare global {
   interface HTMLElementTagNameMap {
