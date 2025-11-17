@@ -2,13 +2,16 @@ import {isUndefined} from '@coveo/bueno';
 import type {InteractiveResult} from '@coveo/headless';
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 import {getAttributesFromLinkSlotContent} from '@/src/components/common/item-link/attributes-slot';
 import {renderLinkWithItemAnalytics} from '@/src/components/common/item-link/item-link';
 import type {AnyUnfoldedItem} from '@/src/components/common/item-list/unfolded-item';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {createInteractiveResultContextController} from '@/src/components/search/result-template-component-utils/context/interactive-result-context-controller';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {LightDomMixin} from '@/src/mixins/light-dom';
@@ -82,34 +85,40 @@ atomic-result-link {
     this.linkAttributes = getAttributesFromLinkSlotContent(this, slotName);
   }
 
+  @bindingGuard()
+  @errorGuard()
   render() {
-    const href = isUndefined(this.hrefTemplate)
-      ? this.result.clickUri
-      : buildStringTemplateFromResult(
-          this.hrefTemplate,
-          this.result,
-          this.bindings
-        );
+    return html`${when(this.result && this.interactiveResult, () => {
+      const result = this.result!;
+      const interactiveResult = this.interactiveResult!;
 
-    return renderLinkWithItemAnalytics({
-      props: {
-        href,
-        onSelect: () => this.interactiveResult.select(),
-        onBeginDelayedSelect: () => this.interactiveResult.beginDelayedSelect(),
-        onCancelPendingSelect: () =>
-          this.interactiveResult.cancelPendingSelect(),
-        attributes: this.linkAttributes,
-        stopPropagation: this.stopPropagation,
-        className: 'link-style',
-      },
-    })(html`
-        ${this.renderDefaultSlotContent(
-          html`<atomic-result-text
-          field="title"
-          default="no-title"
-        ></atomic-result-text>`
-        )}
-      `);
+      const href = isUndefined(this.hrefTemplate)
+        ? result.clickUri
+        : buildStringTemplateFromResult(
+            this.hrefTemplate,
+            result,
+            this.bindings
+          );
+
+      return renderLinkWithItemAnalytics({
+        props: {
+          href,
+          onSelect: () => interactiveResult.select(),
+          onBeginDelayedSelect: () => interactiveResult.beginDelayedSelect(),
+          onCancelPendingSelect: () => interactiveResult.cancelPendingSelect(),
+          attributes: this.linkAttributes,
+          stopPropagation: this.stopPropagation,
+          className: 'link-style',
+        },
+      })(html`
+          ${this.renderDefaultSlotContent(
+            html`<atomic-result-text
+            field="title"
+            default="no-title"
+          ></atomic-result-text>`
+          )}
+        `);
+    })}`;
   }
 
   private get result(): AnyUnfoldedItem {
