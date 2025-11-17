@@ -6,15 +6,16 @@
     <ol class="slds-list_horizontal slds-wrap">
       <template for:each={indexedCitations} for:item="citation">
         <slot key={citation.data.id} name="citation-component">
+          <!-- DEFAULT: Render default quanticCitation if no slot content provided -->
           <c-quantic-citation
             citation={citation.data}
             interactive-citation={citation.interactiveCitation}
             onquantic__citationhover={citation.handleCitationHover}
             disable-citation-anchoring={disableCitationAnchoring}
           >
-          <slot name="icon"></slot>
-          <slot name="action"></slot>
-        </c-quantic-citation>
+            <slot name="icon"></slot>
+            <slot name="actions"></slot>
+          </c-quantic-citation>
         </slot>
       </template>
     </ol>
