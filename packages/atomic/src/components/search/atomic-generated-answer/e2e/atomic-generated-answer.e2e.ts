@@ -2,53 +2,113 @@ import {expect, test} from './fixture';
 
 test.describe('atomic-generated-answer', () => {
   test.describe('citations', () => {
-    test.describe('with citation anchoring enabled', () => {
-      test.beforeEach(async ({generatedAnswer}) => {
-        await generatedAnswer.load({story: 'default'});
-        await generatedAnswer.waitForCitations();
+    test.beforeEach(async ({generatedAnswer}) => {
+      await generatedAnswer.load({story: 'default'});
+      await generatedAnswer.waitForCitations();
+    });
+
+    test('should show popover when hovering over citation', async ({
+      generatedAnswer,
+    }) => {
+      await test.step('Verify first citation popover', async () => {
+        await generatedAnswer.citation.first().hover();
+
+        const popover = await generatedAnswer.getCitationPopover(0);
+        await popover.waitFor({state: 'visible', timeout: 1000});
+
+        const text = await popover.textContent();
+        expect(text).toContain(
+          'https://coveodemo.atlassian.net/wiki/TV/How To Resolve Netflix Connection With Tivo on XB Family Smart TVs'
+        );
+        expect(text).toContain(
+          'How To Resolve Netflix Connection With Tivo on XB Family Smart TVs'
+        );
+        expect(text).toContain(
+          'Tivo can cause some problems with the Netflix App on your XBR6 Smart TV'
+        );
       });
 
-      test('should render citation when available', async ({
-        generatedAnswer,
-      }) => {
-        const citationCount = await generatedAnswer.getCitationCount();
-        expect(citationCount).toBeGreaterThan(0);
-        await generatedAnswer.citation.first().screenshot();
-      });
+      await test.step('Verify second citation popover', async () => {
+        await generatedAnswer.citation.nth(1).hover();
 
-      test('should only append text fragment to HTML citations', async ({
-        generatedAnswer,
-      }) => {
-        const citationCount = await generatedAnswer.getCitationCount();
+        const popover = await generatedAnswer.getCitationPopover(1);
+        await popover.waitFor({state: 'visible', timeout: 1000});
 
-        for (let i = 0; i < citationCount; i++) {
-          const filetype = await generatedAnswer.getCitationFiletype(i);
-          const href = await generatedAnswer.getCitationHref(i);
-
-          expect(href).toBeTruthy();
-
-          if (filetype === 'html') {
-            expect(href).toMatch(/#:~:text=/);
-          } else {
-            expect(href).not.toMatch(/#:~:text=/);
-          }
-        }
+        const text = await popover.textContent();
+        expect(text).toContain(
+          'https://coveodemo.atlassian.net/wiki/TV/How To Resolve Netflix Playback Errors on Besttech XB Smart TVs'
+        );
+        expect(text).toContain(
+          'How To Resolve Netflix Playback Errors on Besttech XB Smart TVs'
+        );
+        expect(text).toContain(
+          'the problem by eliminating the router or wireless connectivity problems as a possible cause'
+        );
       });
     });
 
-    test.describe('with citation anchoring disabled', () => {
-      test.beforeEach(async ({generatedAnswer}) => {
-        await generatedAnswer.load({story: 'disable-citation-anchoring'});
+    test.describe('citation anchoring', () => {
+      test.describe('with citation anchoring enabled', () => {
+        test('should render citation when available', async ({
+          generatedAnswer,
+        }) => {
+          const citationCount = await generatedAnswer.getCitationCount();
+          expect(citationCount).toBeGreaterThan(0);
+          await generatedAnswer.citation.first().screenshot();
+        });
+
+        test('should navigate to citation URL with text fragment on click', async ({
+          generatedAnswer,
+        }) => {
+          const citationCount = await generatedAnswer.getCitationCount();
+
+          for (let i = 0; i < citationCount; i++) {
+            const filetype = await generatedAnswer.getCitationFiletype(i);
+
+            // Listen for popup event (citations open in new tab with target="_blank")
+            const popupPromise = generatedAnswer.page.waitForEvent('popup');
+
+            await generatedAnswer.citation.nth(i).click();
+
+            const popup = await popupPromise;
+            const popupUrl = popup.url();
+
+            expect(popupUrl).toBeTruthy();
+
+            if (filetype === 'html') {
+              expect(popupUrl).toMatch(/#:~:text=/);
+            } else {
+              expect(popupUrl).not.toMatch(/#:~:text=/);
+            }
+
+            await popup.close();
+          }
+        });
       });
 
-      test('should not have text fragment when citation anchoring is disabled', async ({
-        generatedAnswer,
-      }) => {
-        await generatedAnswer.waitForCitations();
-        const href = await generatedAnswer.getCitationHref(0);
+      test.describe('with citation anchoring disabled', () => {
+        test.beforeEach(async ({generatedAnswer}) => {
+          await generatedAnswer.load({story: 'disable-citation-anchoring'});
+        });
 
-        expect(href).toBeTruthy();
-        expect(href).not.toContain('#:~:text=');
+        test('should not have text fragment when citation anchoring is disabled', async ({
+          generatedAnswer,
+        }) => {
+          await generatedAnswer.waitForCitations();
+
+          // Listen for popup event (citations open in new tab with target="_blank")
+          const popupPromise = generatedAnswer.page.waitForEvent('popup');
+
+          await generatedAnswer.citation.first().click();
+
+          const popup = await popupPromise;
+          const popupUrl = popup.url();
+
+          expect(popupUrl).toBeTruthy();
+          expect(popupUrl).not.toContain('#:~:text=');
+
+          await popup.close();
+        });
       });
     });
   });
