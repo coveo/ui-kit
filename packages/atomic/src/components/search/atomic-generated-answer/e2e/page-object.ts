@@ -19,6 +19,10 @@ export class GeneratedAnswerPageObject extends BasePageObject<'atomic-generated-
     return this.page.locator('atomic-citation [part="citation"]');
   }
 
+  get citationPopovers() {
+    return this.page.locator('atomic-citation [part="citation-popover"]');
+  }
+
   get answerContent() {
     return this.page.locator('atomic-generated-answer [part="answer-content"]');
   }
@@ -98,5 +102,19 @@ export class GeneratedAnswerPageObject extends BasePageObject<'atomic-generated-
 
   async getTableTexts(): Promise<string[]> {
     return await this.tables.allTextContents();
+  }
+
+  async getCitationPopover(index: number = 0) {
+    return this.citationPopovers.nth(index);
+  }
+
+  async isCitationPopoverVisible(index: number = 0): Promise<boolean> {
+    const popover = await this.getCitationPopover(index);
+    return await popover.isVisible();
+  }
+
+  async getCitationPopoverText(index: number = 0): Promise<string> {
+    const popover = await this.getCitationPopover(index);
+    return (await popover.textContent()) || '';
   }
 }
