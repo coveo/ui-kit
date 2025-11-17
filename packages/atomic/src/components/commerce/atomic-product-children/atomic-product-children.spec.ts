@@ -166,7 +166,7 @@ describe('atomic-product-children', () => {
   describe.skipIf(server.browser === 'webkit')(
     'when a child product is touched',
     () => {
-      const touchChild = async () => {
+      const touchChildProduct = async () => {
         const {childProducts} = await renderProductChildren();
         childProducts[3].dispatchEvent(
           new TouchEvent('touchstart', {
@@ -192,7 +192,7 @@ describe('atomic-product-children', () => {
       };
 
       it('should change the active child product', async () => {
-        const childProducts = await touchChild();
+        const childProducts = await touchChildProduct();
         await expect
           .poll(() => childProducts[3])
           .toHaveClass('box-border rounded border border-primary');
@@ -206,7 +206,7 @@ describe('atomic-product-children', () => {
           AtomicProductChildren.prototype,
           'dispatchEvent'
         );
-        await touchChild();
+        await touchChildProduct();
         expect(dispatchSpy).toHaveBeenCalled();
       });
     }
