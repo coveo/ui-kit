@@ -1,0 +1,20 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicFacetManagerStories from './atomic-facet-manager.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicFacetManagerStories} />
+
+<AtomicDocTemplate
+  stories={AtomicFacetManagerStories}
+  githubPath="search/atomic-facet-manager/atomic-facet-manager.ts"
+  tagName="atomic-facet-manager"
+  className="AtomicFacetManager"
+>
+The `atomic-facet-manager` is designed to handle the removal and re-attachment of <a href="?path=/story/atomic-facet--default">facet</a> components
+to the DOM.
+This means that the [Stencil lifecycle](https://stenciljs.com/docs/component-lifecycle#component-lifecycle-methods) applies to the slotted facets.
+
+If you <a href="https://docs.coveo.com/en/atomic/latest/usage/custom-web-components#custom-component-example">create your own custom facet component</a> and slot it inside of the `atomic-facet-manager`, it will have to be able to handle the Stencil reattachment lifecycle.
+Alternately, you can place your custom component outside of the `atomic-facet-manager`, in which case the Stencil lifecycle won’t apply.
+
+</AtomicDocTemplate>
