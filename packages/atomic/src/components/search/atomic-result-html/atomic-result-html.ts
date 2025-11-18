@@ -30,11 +30,11 @@ export class AtomicResultHtml
 {
   /**
    * The result field which the component should use.
-   * If set, Atomic searches for the specified field in the `Result` object first.
-   * If there's no such a field, Atomic searches through the `Result.raw` object.
+   * Searches for the specified field in the property of `Result` then `Result.raw`.
+   * If unset, the component will not render.
    * It's important to include the necessary field in the `ResultList` component.
    */
-  @property({type: String, reflect: true}) field!: string;
+  @property({type: String, reflect: true}) field?: string;
   /**
    * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
    */
@@ -93,7 +93,10 @@ export class AtomicResultHtml
   }
 
   private renderResultHtml() {
-    const resultValue = getStringValueFromResultOrNull(this.result, this.field);
+    const resultValue = getStringValueFromResultOrNull(
+      this.result,
+      this.field!
+    );
 
     if (!resultValue) {
       this.remove();
