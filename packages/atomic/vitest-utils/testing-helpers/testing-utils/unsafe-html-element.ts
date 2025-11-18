@@ -8,5 +8,9 @@ export function unsafeHTMLElement(
   const container = doc.createElement('div');
   const template = html`${unsafeHTML(raw)}`;
   render(template, container);
-  return container.firstElementChild as HTMLElement;
+  const element = container.firstElementChild as HTMLElement | null;
+  if (!element) {
+    throw new Error('Failed to create element from HTML string');
+  }
+  return element;
 }
