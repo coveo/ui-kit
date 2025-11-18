@@ -15,8 +15,8 @@ import {LightDomMixin} from '@/src/mixins/light-dom';
 import {mapProperty} from '@/src/utils/props-utils';
 
 /**
- * The `atomic-field-condition` component renders its children only when all of the conditions specified through its props are satisfied.
- * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (e.g., `isRecommendation`).
+ * The `atomic-field-condition` component conditionally renders content based on result properties.
+ * Supports checking if fields are defined/undefined or match/don't match specific values.
  *
  * @slot default - The content to display if the conditions are met.
  */
