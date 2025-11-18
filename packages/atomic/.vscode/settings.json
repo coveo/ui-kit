@@ -4,5 +4,6 @@
   },
   "chat.instructionsFilesLocations": {
     "../../.github/instructions": true
-  }
+  },
+  "vitest.rootConfig": "packages/atomic/vitest.config.js"
 }
