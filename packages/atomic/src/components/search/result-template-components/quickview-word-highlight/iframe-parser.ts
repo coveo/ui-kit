@@ -35,7 +35,7 @@ export class IframeParser {
     for (const element of elements) {
       const identifier = this.parseIdentifier(element);
       if (!identifier) {
-        throw 'Invalid keyword identifier for quickview';
+        throw new Error('Invalid keyword identifier for quickview');
       }
 
       const text = this.textParser.parse(element);
