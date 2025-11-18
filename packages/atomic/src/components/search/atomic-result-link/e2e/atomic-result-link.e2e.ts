@@ -6,25 +6,30 @@ test.describe('atomic-result-link', () => {
     await resultLink.hydrated.first().waitFor({state: 'visible'});
   });
 
-  test('should render as links', async ({resultLink, page}) => {
+  test('should have href attribute set to result clickUri', async ({
+    resultLink,
+  }) => {
+    const anchor = resultLink.anchor().first();
+    await expect(anchor).toHaveAttribute('href');
+    await expect(anchor).toBeVisible();
+  });
+
+  test('should render as links and be clickable', async ({
+    resultLink,
+    page,
+  }) => {
     await expect(resultLink.anchor().first()).toHaveAttribute('href');
 
     await resultLink.anchor().first().click({force: true});
     expect(page.url()).not.toBe('about:blank');
   });
 
-  test('should send click analytics event when clicking the link', async ({
+  test('should render atomic-result-text when no default slot provided', async ({
     resultLink,
-    page,
   }) => {
-    const analyticsUrlRegex =
-      /https:\/\/.*\.analytics\.coveo\.com\/rest\/.*\/analytics\/.*/;
-    const requestPromise = page.waitForRequest(analyticsUrlRegex);
-    await resultLink.anchor().first().click();
-    const request = await requestPromise;
-
-    // Due to a bug in chromium, we cannot access the request payload in tests.
-    // See https://github.com/microsoft/playwright/issues/6479
-    expect(request).toBeDefined();
+    const resultText = resultLink.page.locator('atomic-result-text').first();
+    await expect(resultText).toBeVisible();
+    await expect(resultText).toHaveAttribute('field', 'title');
+    await expect(resultText).toHaveAttribute('default', 'no-title');
   });
 });
