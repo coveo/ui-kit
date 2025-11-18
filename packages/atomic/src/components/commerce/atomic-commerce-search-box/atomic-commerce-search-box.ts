@@ -247,7 +247,7 @@ export class AtomicCommerceSearchBox
     const storage = new SafeStorage();
     storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
 
-    this.searchBox.afterRedirection();
+    (this.searchBox as StandaloneSearchBox).afterRedirection();
 
     const event = new CustomEvent<RedirectionPayload>('redirect');
     this.dispatchEvent(event);
@@ -312,7 +312,7 @@ export class AtomicCommerceSearchBox
   private isStandaloneSearchboxState(
     state: SearchBoxState | StandaloneSearchBoxState
   ): state is StandaloneSearchBoxState {
-    return Object.hasOwn(this.searchBoxState, 'redirectTo');
+    return Object.hasOwn(state, 'redirectTo');
   }
 
   private updateBreakpoints = once(() => updateBreakpoints(this));

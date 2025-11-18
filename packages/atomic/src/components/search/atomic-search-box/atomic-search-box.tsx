@@ -212,11 +212,6 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   @AriaLiveRegion('search-suggestions', true)
   protected suggestionsAriaMessage!: string;
 
-  private isStandaloneSearchBoxState(): this is (AtomicSearchBox & {
-    searchBoxState: StandaloneSearchBoxState}) {
-    return Object.hasOwn(this.searchBoxState, 'redirectTo');
-    }
-
   private isStandaloneSearchBox(
     searchBox: SearchBox | StandaloneSearchBox
   ): searchBox is StandaloneSearchBox {
@@ -258,7 +253,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   }
 
   private isStandaloneSearchboxState(state: SearchBoxState | StandaloneSearchBoxState): state is StandaloneSearchBoxState {
-    return Object.hasOwn(this.searchBoxState, 'redirectTo')
+    return Object.hasOwn(state, 'redirectTo')
   }
 
   public componentWillUpdate() {
@@ -282,7 +277,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     const storage = new SafeStorage();
     storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
 
-    this.searchBox.afterRedirection();
+    (this.searchBox as StandaloneSearchBox).afterRedirection();
     const event = this.redirect.emit({redirectTo, value});
     if (!event.defaultPrevented) {
       window.location.href = redirectTo;
