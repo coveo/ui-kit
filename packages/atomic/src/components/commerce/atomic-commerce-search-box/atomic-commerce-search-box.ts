@@ -229,8 +229,8 @@ export class AtomicCommerceSearchBox
       return;
     }
     if (
-      !('redirectTo' in this.searchBoxState) ||
-      !('afterRedirection' in this.searchBox)
+      !Object.hasOwn(this.searchBoxState, 'redirectTo') ||
+      !Object.hasOwn(this.searchBox, 'afterRedirection')
     ) {
       return;
     }
@@ -306,7 +306,7 @@ export class AtomicCommerceSearchBox
   private isStandaloneSearchBox(
     searchBox: SearchBox | StandaloneSearchBox
   ): searchBox is StandaloneSearchBox {
-    return 'updateRedirectUrl' in searchBox;
+    return Object.hasOwn(searchBox, 'updateRedirectUrl');
   }
 
   private updateBreakpoints = once(() => updateBreakpoints(this));

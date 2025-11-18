@@ -215,7 +215,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   private isStandaloneSearchBox(
     searchBox: SearchBox | StandaloneSearchBox
   ): searchBox is StandaloneSearchBox {
-    return 'redirectTo' in searchBox;
+    return Object.hasOwn(searchBox, 'redirectTo');
   }
 
   public initialize() {
@@ -254,8 +254,8 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
 
   public componentWillUpdate() {
     if (
-      !('redirectTo' in this.searchBoxState) ||
-      !('afterRedirection' in this.searchBox)
+      !Object.hasOwn(this.searchBoxState, 'redirectTo') ||
+      !Object.hasOwn(this.searchBox, 'afterRedirection')
     ) {
       return;
     }

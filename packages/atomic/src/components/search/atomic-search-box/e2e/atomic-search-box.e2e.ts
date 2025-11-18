@@ -1,7 +1,8 @@
 import {expect, test} from './fixture';
 
 test.describe('default', () => {
-  test.beforeEach(async ({searchBox}) => {
+  test.beforeEach(async ({searchBox, browser}) => {
+    browser;
     await searchBox.load({args: {suggestionTimeout: 5000}});
   });
 
