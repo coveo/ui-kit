@@ -71,7 +71,10 @@ export namespace Components {
         "updateCollapseFacetsDependingOnFacetsVisibility": (collapseAfter: number, numberOfVisibleFacets: number) => Promise<void>;
     }
     /**
-     * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     * The `atomic-breadbox` component helps the user keep track of the navigational state of the currently active facet values, located in a single place on the search page.
+     * In most cases, these are on the top of a page between the search bar and the results.
+     * By default, the field name is displayed before the field value to clarify which facet the value is from.
+     * You can clear a single selection by clicking the `x` inside of each pill, or clear all selections by using the `Clear` button.
      */
     interface AtomicBreadbox {
         /**
@@ -307,25 +310,6 @@ export namespace Components {
           * @type {Record<string, string[]>}
          */
         "mustNotMatch": Record<string, string[]>;
-    }
-    interface AtomicFocusTrap {
-        "active": boolean;
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
-         */
-        "container"?: HTMLElement;
-        /**
-          * The common ancestor of the focus trap and of all the elements that should be inaccessible when inside the focus trap.
-         */
-        "scope": HTMLElement;
-        /**
-          * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
-         */
-        "shouldHideSelf": boolean;
-        /**
-          * The source to focus when the focus trap becomes inactive.
-         */
-        "source"?: HTMLElement;
     }
     /**
      * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
@@ -2264,7 +2248,10 @@ declare global {
         new (): HTMLAtomicAutomaticFacetGeneratorElement;
     };
     /**
-     * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     * The `atomic-breadbox` component helps the user keep track of the navigational state of the currently active facet values, located in a single place on the search page.
+     * In most cases, these are on the top of a page between the search bar and the results.
+     * By default, the field name is displayed before the field value to clarify which facet the value is from.
+     * You can clear a single selection by clicking the `x` inside of each pill, or clear all selections by using the `Clear` button.
      */
     interface HTMLAtomicBreadboxElement extends Components.AtomicBreadbox, HTMLStencilElement {
     }
@@ -2350,12 +2337,6 @@ declare global {
     var HTMLAtomicFieldConditionElement: {
         prototype: HTMLAtomicFieldConditionElement;
         new (): HTMLAtomicFieldConditionElement;
-    };
-    interface HTMLAtomicFocusTrapElement extends Components.AtomicFocusTrap, HTMLStencilElement {
-    }
-    var HTMLAtomicFocusTrapElement: {
-        prototype: HTMLAtomicFocusTrapElement;
-        new (): HTMLAtomicFocusTrapElement;
     };
     /**
      * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
@@ -3411,7 +3392,6 @@ declare global {
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
-        "atomic-focus-trap": HTMLAtomicFocusTrapElement;
         "atomic-folded-result-list": HTMLAtomicFoldedResultListElement;
         "atomic-format-currency": HTMLAtomicFormatCurrencyElement;
         "atomic-format-number": HTMLAtomicFormatNumberElement;
@@ -3552,7 +3532,10 @@ declare namespace LocalJSX {
         "numberOfValues"?: number;
     }
     /**
-     * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     * The `atomic-breadbox` component helps the user keep track of the navigational state of the currently active facet values, located in a single place on the search page.
+     * In most cases, these are on the top of a page between the search bar and the results.
+     * By default, the field name is displayed before the field value to clarify which facet the value is from.
+     * You can clear a single selection by clicking the `x` inside of each pill, or clear all selections by using the `Clear` button.
      */
     interface AtomicBreadbox {
         /**
@@ -3789,25 +3772,6 @@ declare namespace LocalJSX {
           * @type {Record<string, string[]>}
          */
         "mustNotMatch"?: Record<string, string[]>;
-    }
-    interface AtomicFocusTrap {
-        "active"?: boolean;
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
-         */
-        "container"?: HTMLElement;
-        /**
-          * The common ancestor of the focus trap and of all the elements that should be inaccessible when inside the focus trap.
-         */
-        "scope"?: HTMLElement;
-        /**
-          * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
-         */
-        "shouldHideSelf"?: boolean;
-        /**
-          * The source to focus when the focus trap becomes inactive.
-         */
-        "source"?: HTMLElement;
     }
     /**
      * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
@@ -5628,7 +5592,6 @@ declare namespace LocalJSX {
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-number-input": AtomicFacetNumberInput;
         "atomic-field-condition": AtomicFieldCondition;
-        "atomic-focus-trap": AtomicFocusTrap;
         "atomic-folded-result-list": AtomicFoldedResultList;
         "atomic-format-currency": AtomicFormatCurrency;
         "atomic-format-number": AtomicFormatNumber;
@@ -5755,7 +5718,10 @@ declare module "@stencil/core" {
              */
             "atomic-automatic-facet-generator": LocalJSX.AtomicAutomaticFacetGenerator & JSXBase.HTMLAttributes<HTMLAtomicAutomaticFacetGeneratorElement>;
             /**
-             * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+             * The `atomic-breadbox` component helps the user keep track of the navigational state of the currently active facet values, located in a single place on the search page.
+             * In most cases, these are on the top of a page between the search bar and the results.
+             * By default, the field name is displayed before the field value to clarify which facet the value is from.
+             * You can clear a single selection by clicking the `x` inside of each pill, or clear all selections by using the `Clear` button.
              */
             "atomic-breadbox": LocalJSX.AtomicBreadbox & JSXBase.HTMLAttributes<HTMLAtomicBreadboxElement>;
             /**
@@ -5791,7 +5757,6 @@ declare module "@stencil/core" {
              * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
              */
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
-            "atomic-focus-trap": LocalJSX.AtomicFocusTrap & JSXBase.HTMLAttributes<HTMLAtomicFocusTrapElement>;
             /**
              * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
              */

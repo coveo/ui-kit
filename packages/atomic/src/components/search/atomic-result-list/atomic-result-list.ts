@@ -204,7 +204,9 @@ export class AtomicResultList
           each: new StringValue({}),
           required: false,
         }),
-      })
+      }),
+      // TODO V4: KIT-5197 - Remove false
+      false
     );
   }
 
@@ -326,9 +328,9 @@ export class AtomicResultList
                     () => this.renderGrid(),
                     () =>
                       html`${when(
-                        this.display === 'list',
-                        () => this.renderList(),
-                        () => this.renderTable()
+                        this.display === 'table',
+                        () => this.renderTable(),
+                        () => this.renderList()
                       )}`
                   )}`
                 )
