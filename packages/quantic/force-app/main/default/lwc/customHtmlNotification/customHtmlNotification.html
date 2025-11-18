@@ -1,6 +1,34 @@
 <template>
-    <h1>customHtmlNotification</h1>
-    <span>I can now create anything for that notification</span>
-    <p>hello from custom html notify!</p>
-    <div>{notificationText}</div>
+  <template for:each={notifications} for:item="notification">
+    <template lwc:if={notification.visible}>
+      <div
+        key={notification.id}
+        data-testid="notification"
+        class="slds-notify_container slds-is-relative notification-container"
+      >
+        <div class="slds-notify slds-notify_toast notification" role="status">
+          <lightning-icon
+            icon-name="utility:info_alt"
+            alternative-text="info"
+            title="info"
+            size="small"
+          ></lightning-icon>
+          <div class="slds-notify__content slds-var-m-left_small">
+            <div style="background-color: yellow">{notification.value}</div>
+          </div>
+          <div class="slds-notify__close">
+            <lightning-button-icon
+              icon-name="utility:close"
+              alternative-text={labels.closeNotification}
+              size="small"
+              variant="bare"
+              title={labels.closeNotification}
+              onclick={handleNotificationClose}
+              data-id={notification.id}
+            ></lightning-button-icon>
+          </div>
+        </div>
+      </div>
+    </template>
+  </template>
 </template>

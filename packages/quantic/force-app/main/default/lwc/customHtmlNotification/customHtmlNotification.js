@@ -1,26 +1,43 @@
-import { LightningElement, track } from 'lwc';
+// @ts-nocheck
+import { LightningElement, api } from 'lwc';
+import closeNotification from '@salesforce/label/c.quantic_CloseNotification';
 
 export default class CustomHtmlNotification extends LightningElement {
+  labels = {
+    closeNotification,
+  };
 
-  @track notificationContent;
-
-  connectedCallback() {
-    console.log('CustomHtmlNotification connectedCallback');
-    const registerEvent = new CustomEvent('htmlnotificationregister', {
-      detail: {
-        register: (content) => {
-          console.log('CustomHtmlNotification register called with content:', content);
-          // Parent called us back with content
-          this.notificationContent = content;
-        },
-      },
-      bubbles: true,
-      composed: true,
-    });
-    this.dispatchEvent(registerEvent);
+  _notifications = [];
+  @api 
+  set notifications(value) {
+    console.log('CustomHtmlNotification set notifications called with value:', value);
+    try {
+      this._notifications = JSON.parse(value);
+    } catch (err) {
+      this._notifications = [];
+    }
+  }
+  get notifications() {
+    return this._notifications;
   }
 
-  get notificationText() {
-    return this?.notificationContent?.content;
+  @api
+  setNotifications(notifications) {
+    console.log('CustomHtmlNotification setNotifications called with notifications:', notifications);
+    try {
+      this._notifications = JSON.parse(notifications);
+    } catch (err) {
+      this._notifications = [];
+    }
+  }
+
+  handleNotificationClose(event) {
+    const currentNotificationId = event.currentTarget.dataset.id;
+    this._notifications = this._notifications.map((notification) => {
+      if (notification.id.toString() === currentNotificationId) {
+        return {...notification, visible: false};
+      }
+      return notification;
+    });
   }
 }

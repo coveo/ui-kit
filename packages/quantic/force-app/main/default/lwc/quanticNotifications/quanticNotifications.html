@@ -4,44 +4,13 @@
     </c-quantic-component-error>
   </template>
   <template lwc:else>
-    <template for:each={notifications} for:item="notification">
-      <template lwc:if={notification.visible}>
-        <div
-          key={notification.id}
-          data-testid="notification"
-          class="slds-notify_container slds-is-relative notification-container"
-        >
-          <div class="slds-notify slds-notify_toast notification" role="status">
-            <template lwc:if={notification.isHTML}>
-              <c-quantic-html-notification
-                notification-content={notification.value}
-              >
-                <slot
-                  name="html-notification-template"
-                  slot="html-notification-template"
-                ></slot>
-              </c-quantic-html-notification>
-              <div class="slds-notify__close">
-                <lightning-button-icon
-                  icon-name="utility:close"
-                  alternative-text={labels.closeNotification}
-                  size="small"
-                  variant="bare"
-                  title={labels.closeNotification}
-                  onclick={handleNotificationClose}
-                  data-id={notification.id}
-                >
-                 <label class="slds-assistive-text">{notification.value}</label>
-                </lightning-button-icon>
-              </div>
-            </template>
-            <template lwc:else>
-              <lightning-icon
-                icon-name="utility:info_alt"
-                alternative-text="info"
-                title="info"
-                size="small"
-              ></lightning-icon>
+    <slot onslotchange={handleSlotChange} name="notification-renderer">
+      <template for:each={notifications} for:item="notification">
+        <template lwc:if={notification.visible}>
+          <div key={notification.id} data-testid="notification" class="slds-notify_container slds-is-relative notification-container">
+            <div class="slds-notify slds-notify_toast notification" role="status">
+              <lightning-icon icon-name="utility:info_alt" alternative-text="info" title="info"
+                size="small"></lightning-icon>
               <div class="slds-notify__content slds-var-m-left_small">
                 {notification.value}
               </div>
@@ -56,10 +25,10 @@
                   data-id={notification.id}
                 ></lightning-button-icon>
               </div>
-            </template>
+            </div>
           </div>
-        </div>
+        </template>
       </template>
-    </template>
+    </slot>
   </template>
 </template>

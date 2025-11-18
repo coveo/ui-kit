@@ -1,0 +1,11 @@
+.notification {
+  background-color: var(---lwc-colorBackgroundAlt, white);
+  border: 1px solid var(--lwc-colorBackgroundToast, rgb(116, 116, 116));
+  margin-right: 0;
+  margin-left: 0;
+  width: 100%;
+}
+
+.notification-container {
+  z-index: 2;
+}

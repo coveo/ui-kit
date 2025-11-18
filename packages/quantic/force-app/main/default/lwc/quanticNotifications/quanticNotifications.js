@@ -51,6 +51,13 @@ export default class QuanticNotifications extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
+    // Covers initial render and any time the DOM changes
+    this._sendNotificationsToCustomRenderer();
+  }
+
+  handleSlotChange() {
+    // Fires when consumer adds/removes/reorders slotted content
+    this._sendNotificationsToCustomRenderer();
   }
 
   /**
@@ -115,6 +122,27 @@ export default class QuanticNotifications extends LightningElement {
         return `${value} Notification ${notification.id + 1}: ${notification.value}`;
       }, '')
     );
+  }
+
+  _sendNotificationsToCustomRenderer() {
+    debugger;
+    const slotEl = this.template.querySelector('slot[name="notification-renderer"]');
+    if (!slotEl) return;
+
+    // If nothing assigned, fallback is showing — don't push to it
+    const assigned = slotEl.assignedElements({ flatten: true });
+    if (assigned.length === 0) {
+      return; // using fallback content
+    }
+
+     // Push to each custom slotted child that exposes a public API
+    assigned.forEach((el) => {
+      if ('notifications' in el) {
+        el.notifications = JSON.stringify(this.notifications);
+      } else if (typeof el.setNotifications === 'function') {
+        el.setNotifications(JSON.stringify(this.notifications));
+      }
+    });
   }
 
   /**
