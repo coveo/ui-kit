@@ -212,6 +212,11 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   @AriaLiveRegion('search-suggestions', true)
   protected suggestionsAriaMessage!: string;
 
+  private isStandaloneSearchBoxState(): this is (AtomicSearchBox & {
+    searchBoxState: StandaloneSearchBoxState}) {
+    return Object.hasOwn(this.searchBoxState, 'redirectTo');
+    }
+
   private isStandaloneSearchBox(
     searchBox: SearchBox | StandaloneSearchBox
   ): searchBox is StandaloneSearchBox {
@@ -252,9 +257,13 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
         });
   }
 
+  private isStandaloneSearchboxState(state: SearchBoxState | StandaloneSearchBoxState): state is StandaloneSearchBoxState {
+    return Object.hasOwn(this.searchBoxState, 'redirectTo')
+  }
+
   public componentWillUpdate() {
     if (
-      !Object.hasOwn(this.searchBoxState, 'redirectTo') ||
+      !this.isStandaloneSearchboxState(this.searchBoxState) ||
       !Object.hasOwn(this.searchBox, 'afterRedirection')
     ) {
       return;
