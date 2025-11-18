@@ -1,6 +1,6 @@
 import type {Result, ResultTemplateCondition} from '@coveo/headless';
 import {ResultTemplatesHelpers} from '@coveo/headless';
-import {type CSSResultGroup, css, html, LitElement} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {
   makeDefinedConditions,
@@ -54,12 +54,6 @@ export class AtomicFieldCondition
    */
   @mapProperty({splitValues: true, attributePrefix: 'must-not-match'})
   mustNotMatch!: Record<string, string[]>;
-
-  static styles: CSSResultGroup = css`
-    :host {
-      max-width: 100%;
-    }
-  `;
 
   initialize() {}
 
