@@ -45,13 +45,11 @@ export class AtomicResultHtml
   })
   sanitize = true;
 
-  @state() private result!: Result;
+  @state() private result?: Result;
+  @state() public bindings!: Bindings;
+  @state() public error!: Error;
 
   private resultController = createResultContextController(this);
-
-  @state() public bindings!: Bindings;
-
-  @state() public error!: Error;
 
   constructor() {
     super();
@@ -94,7 +92,7 @@ export class AtomicResultHtml
 
   private renderResultHtml() {
     const resultValue = getStringValueFromResultOrNull(
-      this.result,
+      this.result!,
       this.field!
     );
 

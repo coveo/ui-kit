@@ -7,10 +7,6 @@ export class AtomicResultHtmlPageObject extends BasePageObject {
   }
 
   get htmlElement() {
-    return this.page.locator('atomic-result-html atomic-html').first();
-  }
-
-  async getHtmlElement() {
-    return this.htmlElement;
+    return this.hydrated.locator('atomic-html');
   }
 }
