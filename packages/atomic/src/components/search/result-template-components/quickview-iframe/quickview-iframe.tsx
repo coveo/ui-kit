@@ -59,7 +59,7 @@ export const QuickviewIframe: FunctionalComponent<{
   // When a document is written with document.open/document.write/document.close
   // it is not synchronous and the content of the iframe is only available to be queried at the end of the current call stack.
   // This add a "wait" (setTimeout 0) before calling the `onSetIframeRef` from the parent modal quickview
-  const waitForIframeContentToBeWritten = () => {
+  const flushMicrotasks = () => {
     return new Promise((resolve) => setTimeout(resolve));
   };
 
@@ -74,6 +74,10 @@ export const QuickviewIframe: FunctionalComponent<{
 
         if (!uniqueIdentifier || !content) {
           return;
+        }
+
+        if(iframeRef.isConnected === false) {
+          await flushMicrotasks();
         }
 
         const documentWriter = iframeRef.contentDocument;
@@ -97,7 +101,7 @@ export const QuickviewIframe: FunctionalComponent<{
         writeDocument(documentWriter, content);
         ensureSameResultIsNotOverwritten(documentWriter, uniqueIdentifier);
 
-        await waitForIframeContentToBeWritten();
+        await flushMicrotasks();
         onSetIframeRef(iframeRef);
       }}
     ></iframe>
