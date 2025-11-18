@@ -42,12 +42,12 @@ describe('atomic-field-condition', () => {
     };
   };
 
-  it('should render when no conditions are defined', async () => {
+  it('should render its content when no conditions are defined', async () => {
     const {content} = await renderFieldCondition();
     expect(content).toBeInTheDocument();
   });
 
-  it('should render when an if-defined condition is met', async () => {
+  it('should render its content when an if-defined condition is met', async () => {
     const {content} = await renderFieldCondition({
       ifDefined: 'author',
       resultState: {raw: {author: 'John Doe'}},
@@ -56,7 +56,7 @@ describe('atomic-field-condition', () => {
     expect(content).toBeInTheDocument();
   });
 
-  it('should not render when an if-defined condition is not met', async () => {
+  it('should not render its content when an if-defined condition is not met', async () => {
     const {content} = await renderFieldCondition({
       ifDefined: 'author',
       resultState: {raw: {}},
@@ -65,7 +65,7 @@ describe('atomic-field-condition', () => {
     expect(content).toBeUndefined();
   });
 
-  it('should render when an if-not-defined condition is met', async () => {
+  it('should render its content when an if-not-defined condition is met', async () => {
     const {content} = await renderFieldCondition({
       ifNotDefined: 'author',
       resultState: {raw: {}},
@@ -74,7 +74,7 @@ describe('atomic-field-condition', () => {
     expect(content).toBeInTheDocument();
   });
 
-  it('should not render when an if-not-defined condition is not met', async () => {
+  it('should not render its content when an if-not-defined condition is not met', async () => {
     const {content} = await renderFieldCondition({
       ifNotDefined: 'author',
       resultState: {raw: {author: 'John Doe'}},
@@ -83,7 +83,7 @@ describe('atomic-field-condition', () => {
     expect(content).toBeUndefined();
   });
 
-  it('should render when a must-match condition is met', async () => {
+  it('should render its content when a must-match condition is met', async () => {
     const {content} = await renderFieldCondition({
       mustMatch: {filetype: ['pdf']},
       resultState: {raw: {filetype: 'pdf'}},
@@ -92,7 +92,7 @@ describe('atomic-field-condition', () => {
     expect(content).toBeInTheDocument();
   });
 
-  it('should not render when a must-match condition is not met', async () => {
+  it('should not render its content when a must-match condition is not met', async () => {
     const {content} = await renderFieldCondition({
       mustMatch: {filetype: ['pdf']},
       resultState: {raw: {filetype: 'docx'}},
@@ -101,7 +101,7 @@ describe('atomic-field-condition', () => {
     expect(content).toBeUndefined();
   });
 
-  it('should render when a must-not-match condition is met', async () => {
+  it('should render its content when a must-not-match condition is met', async () => {
     const {content} = await renderFieldCondition({
       mustNotMatch: {filetype: ['docx']},
       resultState: {raw: {filetype: 'pdf'}},
@@ -110,7 +110,7 @@ describe('atomic-field-condition', () => {
     expect(content).toBeInTheDocument();
   });
 
-  it('should not render when a must-not-match condition is not met', async () => {
+  it('should not render its content when a must-not-match condition is not met', async () => {
     const {content} = await renderFieldCondition({
       mustNotMatch: {filetype: ['docx']},
       resultState: {raw: {filetype: 'docx'}},

@@ -6,7 +6,7 @@ test.describe('atomic-product-field-condition', () => {
     await productFieldCondition.hydrated.first().waitFor();
   });
 
-  test('should render content when if-defined condition is met', async ({
+  test('should render its content when if-defined condition is met', async ({
     productFieldCondition,
   }) => {
     await productFieldCondition.load({args: {'if-defined': 'ec_name'}});
@@ -16,7 +16,7 @@ test.describe('atomic-product-field-condition', () => {
     expect(visibleCount).toBeGreaterThan(0);
   });
 
-  test('should render content when must-match condition is met', async ({
+  test('should render its content when must-match condition is met', async ({
     productFieldCondition,
   }) => {
     await productFieldCondition.load({
@@ -28,7 +28,7 @@ test.describe('atomic-product-field-condition', () => {
     expect(visibleCount).toBeGreaterThan(0);
   });
 
-  test('should not render when if-not-defined condition is not met', async ({
+  test('should not render its content when if-not-defined condition is not met', async ({
     productFieldCondition,
     page,
   }) => {

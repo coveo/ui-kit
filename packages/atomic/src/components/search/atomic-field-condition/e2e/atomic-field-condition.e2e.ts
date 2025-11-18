@@ -6,7 +6,7 @@ test.describe('atomic-field-condition', () => {
     await fieldCondition.hydrated.first().waitFor();
   });
 
-  test('should render content when if-defined condition is met', async ({
+  test('should render its content when if-defined condition is met', async ({
     fieldCondition,
   }) => {
     await fieldCondition.load({args: {'if-defined': 'excerpt'}});
@@ -16,7 +16,7 @@ test.describe('atomic-field-condition', () => {
     expect(visibleCount).toBeGreaterThan(0);
   });
 
-  test('should render content when must-match condition is met', async ({
+  test('should render its content when must-match condition is met', async ({
     fieldCondition,
   }) => {
     await fieldCondition.load({args: {'must-match-filetype': 'pdf'}});
@@ -26,7 +26,7 @@ test.describe('atomic-field-condition', () => {
     expect(visibleCount).toBeGreaterThan(0);
   });
 
-  test('should not render when if-not-defined condition is not met', async ({
+  test('should not render its content when if-not-defined condition is not met', async ({
     fieldCondition,
   }) => {
     await fieldCondition.load({args: {'if-not-defined': 'title'}});
