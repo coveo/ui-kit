@@ -1,4 +1,4 @@
-import {html, type LitElement, nothing} from 'lit';
+import {type LitElement, nothing} from 'lit';
 import type {TemplateResultType} from 'lit/directive-helpers.js';
 import type {
   GenericRender,
@@ -46,7 +46,7 @@ export function bindingGuard<
     descriptor.value = function (this: Component) {
       return this.bindings
         ? originalMethod?.call(this)
-        : (html`${nothing}` as GenericRender<T>);
+        : (nothing as GenericRender<T>);
     };
     return descriptor;
   };

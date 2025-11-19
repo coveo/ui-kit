@@ -387,7 +387,7 @@ export class AtomicCommerceBreadbox
     );
 
     if (!breadcrumbs.length) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     return html`${renderBreadcrumbContainer({
