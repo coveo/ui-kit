@@ -1,6 +1,7 @@
 import {execSync} from 'node:child_process';
+import {existsSync} from 'node:fs';
+import {mkdir, readFile, writeFile} from 'node:fs/promises';
 import path from 'node:path';
-import fs from 'fs-extra';
 import handlebars from 'handlebars';
 
 const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
@@ -48,12 +49,12 @@ async function generateFiles(name, outputDir) {
     outputPaths.push(outputPath);
 
     // Does not overwrite existing files
-    if (await fs.pathExists(outputPath)) {
+    if (existsSync(outputPath)) {
       console.log(`Skipped (already exists): ${outputPath}`);
       continue;
     }
 
-    const templateContent = await fs.readFile(templatePath, 'utf8');
+    const templateContent = await readFile(templatePath, 'utf8');
     const compiled = handlebars.compile(templateContent);
     const content = compiled({
       name,
@@ -63,8 +64,8 @@ async function generateFiles(name, outputDir) {
       githubPath,
     });
 
-    await fs.ensureDir(path.dirname(outputPath));
-    await fs.writeFile(outputPath, content, 'utf8');
+    await mkdir(path.dirname(outputPath), {recursive: true});
+    await writeFile(outputPath, content, 'utf8');
     console.log(`Created: ${outputPath}`);
   }
   execSync(`npx @biomejs/biome check --write ${outputPaths.join(' ')}`);
