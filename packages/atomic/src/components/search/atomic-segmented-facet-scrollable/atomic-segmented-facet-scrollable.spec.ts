@@ -13,7 +13,7 @@ describe('atomic-segmented-facet-scrollable', () => {
   const mockedEngine = buildFakeSearchEngine();
 
   const renderComponent = async (
-    options: {value?: string; count?: number; children?: TemplateResult} = {
+    options: {children?: TemplateResult} = {
       children: html`
         <atomic-segmented-facet field="author"></atomic-segmented-facet>
         <atomic-segmented-facet field="language"></atomic-segmented-facet>
@@ -24,9 +24,7 @@ describe('atomic-segmented-facet-scrollable', () => {
       await renderInAtomicSearchInterface<AtomicSegmentedFacetScrollable>({
         template: html`<atomic-segmented-facet-scrollable>
           ${options.children}
-            .value=${options.value || ''}
-            .count=${options.count}
-          ></atomic-segmented-facet-scrollable>`,
+          </atomic-segmented-facet-scrollable>`,
         selector: 'atomic-segmented-facet-scrollable',
         bindings: (bindings) => {
           bindings.engine = mockedEngine;
