@@ -28,6 +28,7 @@ export class AtomicCitationList extends LitElement {
       gap: 1rem;
       padding: 1.5rem;
       background-color: #efeff9;
+      border-radius: 1rem;
     }
 
     .citation-list-title {
