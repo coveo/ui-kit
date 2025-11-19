@@ -1,14 +1,15 @@
 import type {Result} from '@coveo/headless';
 import {ResultTemplatesHelpers} from '@coveo/headless';
-import {html, LitElement} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
+import {css, html, LitElement} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import '@/src/components/common/atomic-icon/atomic-icon';
 import '@/src/components/search/atomic-text/atomic-text';
 import '@/src/components/search/atomic-result-text/atomic-result-text';
-import styles from './atomic-result-badge.tw.css';
+import type {InitializableComponent} from '@/src/decorators/types';
+import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-result-badge` element renders a badge to highlight special features of a result.
@@ -47,8 +48,23 @@ import styles from './atomic-result-badge.tw.css';
  */
 @customElement('atomic-result-badge')
 @withTailwindStyles
-export class AtomicResultBadge extends LitElement {
-  static styles = [styles];
+export class AtomicResultBadge
+  extends LitElement
+  implements InitializableComponent<Bindings>
+{
+  @state() bindings!: Bindings;
+  public error!: Error;
+
+  initialize() {}
+
+  static styles = css`
+    :host {
+      display: inline-flex;
+      place-items: center;
+      height: var(--row-height, auto);
+      word-break: break-word;
+    }
+  `;
 
   private resultContext = createResultContextController(this);
 
