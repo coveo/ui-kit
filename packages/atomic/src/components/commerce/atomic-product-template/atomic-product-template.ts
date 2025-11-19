@@ -3,7 +3,7 @@ import type {
   ProductTemplateCondition,
 } from '@coveo/headless/commerce';
 import {ProductTemplatesHelpers} from '@coveo/headless/commerce';
-import {LitElement, nothing} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ProductTemplateController} from '@/src/components/common/product-template/product-template-controller';
 import {makeMatchConditions} from '@/src/components/common/template-controller/template-utils';
@@ -93,7 +93,7 @@ export class AtomicProductTemplate
 
   @errorGuard()
   render() {
-    return nothing;
+    return html`${nothing}`;
   }
 }
 

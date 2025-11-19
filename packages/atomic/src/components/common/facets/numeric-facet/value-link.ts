@@ -1,4 +1,4 @@
-import {nothing} from 'lit';
+import {html, nothing} from 'lit';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderFacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {renderFacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
@@ -53,6 +53,6 @@ export const renderNumericFacetValue: FunctionalComponent<
         })
       );
     default:
-      return nothing;
+      return html`${nothing}`;
   }
 };

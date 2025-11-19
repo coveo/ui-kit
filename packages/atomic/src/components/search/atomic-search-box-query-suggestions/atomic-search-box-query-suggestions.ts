@@ -4,7 +4,7 @@ import {
   type SearchEngine,
   type Suggestion,
 } from '@coveo/headless';
-import {LitElement, nothing} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {
   getPartialSearchBoxSuggestionElement,
@@ -147,7 +147,7 @@ export class AtomicSearchBoxQuerySuggestions
 
   @errorGuard()
   render() {
-    return nothing;
+    return html`${nothing}`;
   }
 }
 

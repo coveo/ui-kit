@@ -177,7 +177,7 @@ export class AtomicProductChildren
   @errorGuard()
   render() {
     if (this.childProducts.length === 0) {
-      return nothing;
+      return html`${nothing}`;
     }
 
     const visibleChildren = this.childProducts.slice(

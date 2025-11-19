@@ -33,7 +33,7 @@ export const renderFacetShowMoreLess: FunctionalComponent<
   const btnClasses = 'flex items-baseline text-left p-2 text-sm max-w-full';
   const iconClasses = 'w-2 h-2 mr-1';
   if (!props.canShowLessValues && !props.canShowMoreValues) {
-    return nothing;
+    return html`${nothing}`;
   }
 
   return html`<div class="mt-2">

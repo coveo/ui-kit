@@ -4,7 +4,7 @@ import {
   type SearchBox,
   type Suggestion,
 } from '@coveo/headless/commerce';
-import {LitElement, nothing} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {
   getPartialSearchBoxSuggestionElement,
@@ -141,7 +141,7 @@ export class AtomicCommerceSearchBoxQuerySuggestions
 
   @errorGuard()
   render() {
-    return nothing;
+    return html`${nothing}`;
   }
 }
 

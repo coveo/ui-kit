@@ -187,7 +187,7 @@ export class AtomicProductMultiValueText
   @errorGuard()
   render() {
     if (this.sortedValues.length === 0) {
-      return nothing;
+      return html`${nothing}`;
     }
 
     return html`

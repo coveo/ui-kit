@@ -1,6 +1,6 @@
 import type {ResultTemplate, ResultTemplateCondition} from '@coveo/headless';
 import {ResultTemplatesHelpers} from '@coveo/headless';
-import {LitElement, nothing} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ResultTemplateController} from '@/src/components/common/result-templates/result-template-controller';
 import {makeMatchConditions} from '@/src/components/common/template-controller/template-utils';
@@ -83,7 +83,7 @@ export class AtomicResultTemplate
 
   @errorGuard()
   render() {
-    return nothing;
+    return html`${nothing}`;
   }
 
   /**
