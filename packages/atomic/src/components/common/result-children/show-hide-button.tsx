@@ -29,9 +29,7 @@ export const ShowHideButton: FunctionalComponent<ShowHideButtonProps> = ({
       onClick={() => {
         if (moreResultsAvailable) {
           loadFullCollection();
-          toggleShowInitialChildren();
         }
-
         toggleShowInitialChildren();
       }}
     >

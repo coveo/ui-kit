@@ -113,4 +113,10 @@ describe('#renderQuerySuggestion', () => {
     expect(text).toHaveAttribute('part', 'query-suggestion-text');
     expect(text).toHaveTextContent('raw');
   });
+
+  it('container should have pointer-events-none class to allow clicks on parent', async () => {
+    const suggestion = await renderSuggestion();
+
+    expect(suggestion).toHaveClass('pointer-events-none');
+  });
 });
