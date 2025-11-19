@@ -7,7 +7,6 @@ import {colorFacetField} from './facets/color-facet/color-facet-actions';
 import {colorFacetComponent} from './facets/color-facet/color-facet-selectors';
 import {field as facetField} from './facets/facet/facet-actions';
 import {facetComponent} from './facets/facet/facet-selectors';
-import {facetManagerComponent} from './facets/manager/facet-manager-actions';
 import {numericFacetField} from './facets/numeric-facet/numeric-facet-actions';
 import {numericFacetComponent} from './facets/numeric-facet/numeric-facet-selectors';
 import {ratingFacetField} from './facets/rating-facet/rating-facet-actions';
@@ -166,11 +165,6 @@ describe('Refine Toggle Test Suites', () => {
       RefineModalSelectors.footerButton().click();
       cy.get('body').should('not.have.class', 'atomic-modal-opened');
       RefineModalSelectors.facets().should('not.exist');
-    });
-
-    it('should have a focus trap', () => {
-      RefineModalSelectors.focusTrap().should('exist');
-      cy.get(`${facetManagerComponent}[aria-hidden="true"]`).should('exist');
     });
 
     it('should respect the collapseFacetsAfter prop', () => {

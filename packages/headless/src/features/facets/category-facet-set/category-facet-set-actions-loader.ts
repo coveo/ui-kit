@@ -38,7 +38,7 @@ export interface CategoryFacetSetActionCreators {
   /**
    * Deselects all values of a category facet.
    *
-   * @param facetId - The unique identifier of the facet (e.g., "1").
+   * @param facetId - The unique identifier of the facet (for example, "1").
    * @returns A dispatchable action.
    */
   deselectAllCategoryFacetValues(facetId: string): PayloadAction<string>;

@@ -146,7 +146,7 @@ export const registerFacet = createAction(
 
 export interface ToggleSelectFacetValueActionCreatorPayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
 
@@ -181,7 +181,7 @@ export const deselectAllFacetValues = createAction(
 
 export interface UpdateFacetSortCriterionActionCreatorPayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
 
@@ -202,12 +202,12 @@ export const updateFacetSortCriterion = createAction(
 
 export interface UpdateFacetNumberOfValuesActionCreatorPayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
 
   /**
-   * The new number of facet values (e.g., `10`).
+   * The new number of facet values (for example, `10`).
    */
   numberOfValues: number;
 }
@@ -223,7 +223,7 @@ export const updateFacetNumberOfValues = createAction(
 
 export interface UpdateFacetIsFieldExpandedActionCreatorPayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
 
@@ -244,7 +244,7 @@ export const updateFacetIsFieldExpanded = createAction(
 
 export interface UpdateFreezeCurrentValuesActionCreatorPayload {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
 
