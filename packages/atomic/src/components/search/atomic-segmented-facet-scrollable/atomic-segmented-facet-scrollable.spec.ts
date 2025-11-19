@@ -155,7 +155,6 @@ describe('atomic-segmented-facet-scrollable', () => {
           `,
         });
 
-        // Simulate scrollable content by setting scroll width
         if (parts.horizontalScroll) {
           Object.defineProperty(parts.horizontalScroll, 'scrollWidth', {
             value: 1000,
@@ -171,7 +170,6 @@ describe('atomic-segmented-facet-scrollable', () => {
           });
         }
 
-        // Trigger handleScroll
         element.dispatchEvent(new WheelEvent('wheel'));
         await element.updateComplete;
 
@@ -190,7 +188,6 @@ describe('atomic-segmented-facet-scrollable', () => {
       const {parts, element} = await renderComponent();
 
       if (parts.horizontalScroll && parts.leftArrowButton) {
-        // Set up scrollable state
         Object.defineProperty(parts.horizontalScroll, 'scrollWidth', {
           value: 1000,
           configurable: true,
@@ -208,7 +205,6 @@ describe('atomic-segmented-facet-scrollable', () => {
           configurable: true,
         });
 
-        // Mock arrow ref width
         if (parts.leftArrowButton) {
           Object.defineProperty(parts.leftArrowButton, 'clientWidth', {
             value: 40,
@@ -228,7 +224,6 @@ describe('atomic-segmented-facet-scrollable', () => {
       const {parts, element} = await renderComponent();
 
       if (parts.horizontalScroll && parts.rightArrowButton) {
-        // Set up scrollable state
         Object.defineProperty(parts.horizontalScroll, 'scrollWidth', {
           value: 1000,
           configurable: true,
@@ -246,7 +241,6 @@ describe('atomic-segmented-facet-scrollable', () => {
           configurable: true,
         });
 
-        // Mock arrow ref width
         if (parts.rightArrowButton) {
           Object.defineProperty(parts.rightArrowButton, 'clientWidth', {
             value: 40,
@@ -332,7 +326,6 @@ describe('atomic-segmented-facet-scrollable', () => {
     it('should disconnect ResizeObserver when disconnected', async () => {
       const {element} = await renderComponent();
 
-      // Trigger firstUpdated to create the observer
       await element.updateComplete;
 
       const disconnectSpy = vi.spyOn(ResizeObserver.prototype, 'disconnect');
@@ -362,7 +355,6 @@ describe('atomic-segmented-facet-scrollable', () => {
 
       await element.updateComplete;
 
-      // Should observe each child element plus the horizontal scroll container
       expect(observeSpy).toHaveBeenCalled();
     });
   });
