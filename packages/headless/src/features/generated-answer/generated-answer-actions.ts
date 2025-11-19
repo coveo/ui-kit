@@ -344,6 +344,8 @@ export const generateAnswer = createAsyncThunk<
 >(
   'generatedAnswer/generateAnswer',
   async (_, {getState, dispatch, extra: {navigatorContext, logger}}) => {
+    dispatch(resetAnswer());
+
     const state = getState() as StreamAnswerAPIState;
     if (state.generatedAnswer.answerConfigurationId) {
       const answerApiQueryParams = constructAnswerAPIQueryParams(
