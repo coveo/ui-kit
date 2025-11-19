@@ -185,6 +185,23 @@ describe('atomic-result-link', () => {
     });
   });
 
+  describe('#disconnectedCallback', () => {
+    it('should call cleanup function when component is disconnected', async () => {
+      const cleanupSpy = vi.fn();
+      const {element} = await renderComponent();
+
+      // @ts-expect-error private property access for testing
+      element.removeLinkEventHandlers = cleanupSpy;
+
+      element?.disconnectedCallback();
+
+      expect(cleanupSpy).toHaveBeenCalledOnce();
+
+      // @ts-expect-error private property access for testing
+      expect(element.removeLinkEventHandlers).toBeUndefined();
+    });
+  });
+
   describe('#render', () => {
     it('should use result clickUri as href when hrefTemplate is not provided', async () => {
       const {link} = await renderComponent({

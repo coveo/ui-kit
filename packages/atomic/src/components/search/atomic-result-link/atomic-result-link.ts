@@ -13,7 +13,6 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {
   type LightDOMWithSlots,
@@ -30,7 +29,6 @@ import '@/src/components/search/atomic-result-text/atomic-result-text';
  */
 @customElement('atomic-result-link')
 @bindings()
-@withTailwindStyles
 export class AtomicResultLink
   extends LightDomMixin(SlotsForNoShadowDOMMixin(LitElement))
   implements InitializableComponent<Bindings>
@@ -60,6 +58,7 @@ atomic-result-link {
 
   @state() private linkAttributes?: Attr[];
   @state() private stopPropagation?: boolean;
+  private removeLinkEventHandlers?: () => void;
 
   private resultContext = createResultContextController(this);
   private interactiveResultContext =
@@ -83,6 +82,14 @@ atomic-result-link {
     super.connectedCallback();
     const slotName = 'attributes';
     this.linkAttributes = getAttributesFromLinkSlotContent(this, slotName);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this.removeLinkEventHandlers) {
+      this.removeLinkEventHandlers();
+      this.removeLinkEventHandlers = undefined;
+    }
   }
 
   @bindingGuard()
@@ -109,6 +116,12 @@ atomic-result-link {
           attributes: this.linkAttributes,
           stopPropagation: this.stopPropagation,
           className: 'link-style',
+          onInitializeLink: (cleanupCallback) => {
+            if (this.removeLinkEventHandlers) {
+              this.removeLinkEventHandlers();
+            }
+            this.removeLinkEventHandlers = cleanupCallback;
+          },
         },
       })(html`
           ${this.renderDefaultSlotContent(
