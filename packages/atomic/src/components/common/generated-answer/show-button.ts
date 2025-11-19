@@ -2,11 +2,11 @@ import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {when} from 'lit/directives/when.js';
 import {renderButton} from '@/src/components/common/button';
-import ArrowBottomIcon from '@/src/images/arrow-bottom-rounded.svg';
-import ArrowTopIcon from '@/src/images/arrow-top-rounded.svg';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import ArrowBottomIcon from '../../../images/arrow-bottom-rounded.svg';
+import ArrowTopIcon from '../../../images/arrow-top-rounded.svg';
 
-interface ShowButtonProps {
+export interface ShowButtonProps {
   i18n: i18n;
   isCollapsed: boolean;
   onClick: () => void;
