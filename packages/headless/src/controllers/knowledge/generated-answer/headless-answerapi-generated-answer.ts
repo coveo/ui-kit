@@ -95,7 +95,7 @@ const parseEvaluationArguments = ({
   question: query,
 });
 
-const subscribeToSearchRequest = (
+export const subscribeToSearchRequest = (
   engine: SearchEngine<StreamAnswerAPIState>
 ) => {
   let lastRequestId = '';
@@ -205,5 +205,8 @@ function loadAnswerApiReducers(
     QuerySection & {answer: ReturnType<typeof answerApi.reducer>}
 > {
   engine.addReducers({[answerApi.reducerPath]: answerApi.reducer, query});
+  engine.addReducers({
+    [answerEvaluation.reducerPath]: answerEvaluation.reducer,
+  });
   return true;
 }
