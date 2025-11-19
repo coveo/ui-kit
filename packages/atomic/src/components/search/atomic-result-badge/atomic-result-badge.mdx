@@ -1,0 +1,113 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicResultBadgeStories from './atomic-result-badge.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicResultBadgeStories} />
+
+<AtomicDocTemplate
+  stories={AtomicResultBadgeStories}
+  githubPath="search/atomic-result-badge/atomic-result-badge.ts"
+  tagName="atomic-result-badge"
+  className="AtomicResultBadge"
+>
+
+The `atomic-result-badge` component renders a badge to highlight special features of a result.
+
+This component is used within `atomic-result-template` components inside the result list to display badges that emphasize important result attributes.
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-result-list>
+    <atomic-result-template>
+      <template>
+        <atomic-result-section-badges>
+          <atomic-result-badge field="filetype"></atomic-result-badge>
+          <atomic-result-badge label="trending"></atomic-result-badge>
+          <atomic-result-badge icon="assets://star" label="featured"></atomic-result-badge>
+        </atomic-result-section-badges>
+      </template>
+    </atomic-result-template>
+  </atomic-result-list>
+  ...
+</atomic-search-interface>
+```
+
+### Display a Field Value
+
+Display the value of a single-value result field:
+
+```html
+<atomic-result-badge field="filetype"></atomic-result-badge>
+```
+
+### Display a Label
+
+Display static localized text:
+
+```html
+<atomic-result-badge label="trending"></atomic-result-badge>
+```
+
+### Display with an Icon
+
+Add an icon to the badge for visual emphasis:
+
+```html
+<atomic-result-badge icon="assets://star" label="featured"></atomic-result-badge>
+```
+
+You can specify icons in different ways:
+- **URL**: `icon="https://my-website.fake/star.svg"` for external icons
+- **Asset path**: `icon="assets://star"` for icons from the Atomic package
+- **Inline SVG**: Pass a stringified SVG to display it directly
+
+### Display with Slotted Content
+
+Use slotted content for dynamic or complex badge content:
+
+```html
+<atomic-result-badge icon="assets://stopwatch">
+  Deal ends in <my-dynamic-countdown></my-dynamic-countdown>
+</atomic-result-badge>
+```
+
+### Display Multi-Value Fields
+
+Display multiple values from a field:
+
+```html
+<atomic-result-badge icon="assets://language">
+  <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
+</atomic-result-badge>
+```
+
+### Styling
+
+The component exposes the following CSS shadow parts for customization:
+
+- `result-badge-element` - The outer container with background color and text color
+- `result-badge-icon` - The icon element, if present
+- `result-badge-label` - The text/content wrapper
+
+```css
+atomic-result-badge::part(result-badge-element) {
+  background-color: #1372ec;
+  color: white;
+  border-radius: 4px;
+}
+
+atomic-result-badge::part(result-badge-icon) {
+  fill: white;
+}
+```
+
+### Notes
+
+- The `field` property is not compatible with `label` or slotted elements
+- The `label` property is not compatible with `field` or slotted elements  
+- The `icon` property can be used in conjunction with `field`, `label`, or slotted elements
+- If the specified field has no value for a result, the badge will not be rendered
+
+</AtomicDocTemplate>
