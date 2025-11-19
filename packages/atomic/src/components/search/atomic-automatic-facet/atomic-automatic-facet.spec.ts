@@ -253,6 +253,40 @@ describe('atomic-automatic-facet', () => {
       await userEvent.click(clearButton);
       expect(deselectAllSpy).toHaveBeenCalled();
     });
+
+    it('should focus header after clearing filters', async () => {
+      const {element} = await renderComponent({
+        facetState: {
+          values: [
+            {
+              value: 'selected_value',
+              numberOfResults: 10,
+              state: 'selected',
+            },
+          ],
+        },
+      });
+
+      // Create a mock focus controller
+      const focusAfterSearchSpy = vi.fn();
+      const mockFocusController = {
+        focusAfterSearch: focusAfterSearchSpy,
+        setTarget: vi.fn(),
+        focus: vi.fn(),
+        registerFocusCallback: vi.fn(),
+      };
+
+      // Replace the headerFocus with our mock
+      // biome-ignore lint/suspicious/noExplicitAny: Accessing private property for testing
+      (element as any).headerFocus = mockFocusController;
+
+      const clearButton = element.shadowRoot?.querySelector(
+        '[part~="clear-button"]'
+      ) as HTMLElement;
+      await userEvent.click(clearButton);
+
+      expect(focusAfterSearchSpy).toHaveBeenCalled();
+    });
   });
 
   describe('accessibility', () => {
