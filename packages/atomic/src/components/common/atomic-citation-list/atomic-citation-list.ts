@@ -1,6 +1,7 @@
 import type {GeneratedAnswerCitation} from '@coveo/headless';
 import {css, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 
 /**
  * The `atomic-citation-list` component displays a list of citations for a generated answer in the context of a multiturn conversation.
@@ -12,6 +13,7 @@ import {customElement, property} from 'lit/decorators.js';
  * @part citation-link - The clickable link element
  */
 @customElement('atomic-citation-list')
+@withTailwindStyles
 export class AtomicCitationList extends LitElement {
   static styles = css`
     :host {
