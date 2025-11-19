@@ -20,6 +20,8 @@ export default {
     ),
   'atomic-result-html': async () =>
     await import('./atomic-result-html/atomic-result-html.js'),
+  'atomic-result-link': async () =>
+    await import('./atomic-result-link/atomic-result-link.js'),
   'atomic-result-list': async () =>
     await import('./atomic-result-list/atomic-result-list.js'),
   'atomic-result-number': async () =>
