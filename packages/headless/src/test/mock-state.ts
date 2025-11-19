@@ -20,6 +20,7 @@ import {getFoldingInitialState} from '../features/folding/folding-state.js';
 import {getGeneratedAnswerInitialState} from '../features/generated-answer/generated-answer-state.js';
 import {getHistoryInitialState} from '../features/history/history-state.js';
 import {getInstantResultsInitialState} from '../features/instant-results/instant-results-state.js';
+import {getMultiTurnConversationInitialState} from '../features/multi-turn-conversation/multi-turn-conversation-state.js';
 import {getPaginationInitialState} from '../features/pagination/pagination-state.js';
 import {getPipelineInitialState} from '../features/pipeline/pipeline-state.js';
 import {getQueryInitialState} from '../features/query/query-state.js';
@@ -86,6 +87,7 @@ export function createMockState(
     excerptLength: getExcerptLengthInitialState(),
     automaticFacetSet: getAutomaticFacetSetInitialState(),
     generatedAnswer: getGeneratedAnswerInitialState(),
+    multiTurnConversation: getMultiTurnConversationInitialState(),
     ...config,
   };
 }

@@ -12,6 +12,12 @@ import {
   logGeneratedAnswerStreamEnd,
 } from '../../features/generated-answer/generated-answer-analytics-actions.js';
 import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
+import {
+  addAnswer,
+  updateActiveAnswer,
+  updateActiveAnswerMessage,
+  updateCitationsToActiveAnswer,
+} from '../../features/multi-turn-conversation/multi-turn-conversation-actions.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
 import type {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
@@ -102,6 +108,14 @@ export const updateCacheWithEvent = (
   const message: Required<MessageType> = JSON.parse(event.data);
   if (message.finishReason === 'ERROR' && message.errorMessage) {
     handleError(draft, message);
+    const errorMessage = message.errorMessage || 'Unknown error occurred';
+    dispatch(
+      updateActiveAnswer({
+        isStreaming: false,
+        isLoading: false,
+        error: errorMessage,
+      })
+    );
   }
 
   const parsedPayload: StreamPayload = message.payload.length
@@ -112,6 +126,13 @@ export const updateCacheWithEvent = (
     case 'genqa.headerMessageType':
       if (parsedPayload.contentFormat) {
         handleHeaderMessage(draft, parsedPayload);
+        dispatch(
+          updateActiveAnswer({
+            isStreaming: true,
+            isLoading: false,
+            answerContentFormat: parsedPayload.contentFormat,
+          })
+        );
         dispatch(setAnswerContentFormat(parsedPayload.contentFormat));
       }
       break;
@@ -119,20 +140,90 @@ export const updateCacheWithEvent = (
       if (parsedPayload.textDelta) {
         handleMessage(draft, parsedPayload);
         dispatch(updateMessage({textDelta: parsedPayload.textDelta}));
+        dispatch(
+          updateActiveAnswerMessage({textDelta: parsedPayload.textDelta})
+        );
       }
       break;
     case 'genqa.citationsType':
       if (parsedPayload.citations) {
         handleCitations(draft, parsedPayload);
         dispatch(updateCitations({citations: parsedPayload.citations}));
+        dispatch(updateCitationsToActiveAnswer(parsedPayload.citations));
       }
       break;
     case 'genqa.endOfStreamType':
       handleEndOfStream(draft, parsedPayload);
       dispatch(
+        updateActiveAnswer({isStreaming: false, cannotAnswer: !draft.generated})
+      );
+      dispatch(
         logGeneratedAnswerStreamEnd(parsedPayload.answerGenerated ?? false)
       );
       dispatch(logGeneratedAnswerResponseLinked());
+      break;
+  }
+};
+
+const updateCacheWithEventBeta = (
+  event: EventSourceMessage,
+  draft: GeneratedAnswerStream,
+  dispatch: ThunkDispatch<StreamAnswerAPIState, unknown, UnknownAction>
+) => {
+  const message: Required<MessageType> = JSON.parse(event.data);
+  if (message.finishReason === 'ERROR' && message.errorMessage) {
+    handleError(draft, message);
+    const errorMessage = message.errorMessage || 'Unknown error occurred';
+    dispatch(
+      updateActiveAnswer({
+        isStreaming: false,
+        isLoading: false,
+        error: errorMessage,
+      })
+    );
+  }
+
+  const parsedPayload: StreamPayload = message.payload.length
+    ? JSON.parse(message.payload)
+    : {};
+
+  switch (message.payloadType) {
+    case 'genqa.headerMessageType':
+      if (parsedPayload.contentFormat) {
+        handleHeaderMessage(draft, parsedPayload);
+        dispatch(
+          updateActiveAnswer({
+            isStreaming: true,
+            isLoading: false,
+            answerContentFormat: parsedPayload.contentFormat,
+          })
+        );
+        // dispatch(setAnswerContentFormat(parsedPayload.contentFormat));
+      }
+      break;
+    case 'genqa.messageType':
+      if (parsedPayload.textDelta) {
+        handleMessage(draft, parsedPayload);
+        dispatch(
+          updateActiveAnswerMessage({textDelta: parsedPayload.textDelta})
+        );
+      }
+      break;
+    case 'genqa.citationsType':
+      if (parsedPayload.citations) {
+        handleCitations(draft, parsedPayload);
+        dispatch(updateCitationsToActiveAnswer(parsedPayload.citations));
+      }
+      break;
+    case 'genqa.endOfStreamType':
+      handleEndOfStream(draft, parsedPayload);
+      dispatch(
+        updateActiveAnswer({isStreaming: false, cannotAnswer: !draft.generated})
+      );
+      // dispatch(
+      //   logGeneratedAnswerStreamEnd(parsedPayload.answerGenerated ?? false)
+      // );
+      // dispatch(logGeneratedAnswerResponseLinked());
       break;
   }
 };
@@ -157,17 +248,20 @@ export const answerApi = answerSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     getAnswer: builder.query<GeneratedAnswerStream, AnswerApiQueryParams>({
-      queryFn: () => ({
-        data: {
-          contentFormat: undefined,
-          answer: undefined,
-          citations: undefined,
-          error: undefined,
-          generated: false,
-          isStreaming: true,
-          isLoading: true,
-        },
-      }),
+      queryFn: (args, {dispatch}) => {
+        dispatch(addAnswer({prompt: args.q!}));
+        return {
+          data: {
+            contentFormat: undefined,
+            answer: undefined,
+            citations: undefined,
+            error: undefined,
+            generated: false,
+            isStreaming: true,
+            isLoading: true,
+          },
+        };
+      },
       serializeQueryArgs: ({endpointName, queryArgs}) => {
         // RTK Query serialize our endpoints and they're serialized state arguments as the key in the store.
         // Keys must match, because if anything in the query changes, it's not the same query anymore.
@@ -236,11 +330,98 @@ export const answerApi = answerSlice.injectEndpoints({
         });
       },
     }),
+    getNewTurn: builder.query<GeneratedAnswerStream, AnswerApiQueryParams>({
+      queryFn: (args, {dispatch}) => {
+        dispatch(addAnswer({prompt: args.q!}));
+        return {
+          data: {
+            contentFormat: undefined,
+            answer: undefined,
+            citations: undefined,
+            error: undefined,
+            generated: false,
+            isStreaming: true,
+            isLoading: true,
+          },
+        };
+      },
+      serializeQueryArgs: ({endpointName, queryArgs}) => {
+        // RTK Query serialize our endpoints and they're serialized state arguments as the key in the store.
+        // Keys must match, because if anything in the query changes, it's not the same query anymore.
+        // Analytics data is excluded entirely as it contains volatile fields that change during streaming.
+        const {analytics: _analytics, ...queryArgsWithoutAnalytics} = queryArgs;
+
+        // Standard RTK key, with analytics excluded
+        return `${endpointName}(${JSON.stringify(queryArgsWithoutAnalytics)})`;
+      },
+      async onCacheEntryAdded(
+        args,
+        {getState, cacheDataLoaded, updateCachedData, dispatch}
+      ) {
+        await cacheDataLoaded;
+        /**
+         * createApi has to be called prior to creating the redux store and is used as part of the store setup sequence.
+         * It cannot use the inferred state used by Redux, thus the casting.
+         * https://redux-toolkit.js.org/rtk-query/usage-with-typescript#typing-dispatch-and-getstate
+         */
+        const {configuration, generatedAnswer, insightConfiguration} =
+          getState() as unknown as StreamAnswerAPIState;
+        const {organizationId, environment, accessToken} = configuration;
+        const platformEndpoint = getOrganizationEndpoint(
+          organizationId,
+          environment
+        );
+        const answerEndpoint = buildAnswerEndpoint(
+          platformEndpoint,
+          organizationId,
+          generatedAnswer.answerConfigurationId!,
+          insightConfiguration?.insightId
+        );
+
+        await fetchEventSource(answerEndpoint, {
+          method: 'POST',
+          body: JSON.stringify(args),
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Accept-Encoding': '*',
+          },
+          fetch,
+          onopen: async (res) => {
+            const answerId = res.headers.get('x-answer-id');
+            if (answerId) {
+              updateCachedData((draft) => {
+                draft.answerId = answerId;
+                dispatch(updateActiveAnswer({answerId}));
+              });
+            }
+          },
+          onmessage: (event) => {
+            updateCachedData((draft) => {
+              updateCacheWithEventBeta(event, draft, dispatch);
+            });
+          },
+          onerror: (error) => {
+            throw error;
+          },
+          onclose: () => {
+            updateCachedData((draft) => {
+              dispatch(updateActiveAnswer({cannotAnswer: !draft.generated}));
+            });
+          },
+        });
+      },
+    }),
   }),
 });
 
 export const fetchAnswer = (fetchAnswerParams: AnswerApiQueryParams) => {
   return answerApi.endpoints.getAnswer.initiate(fetchAnswerParams);
+};
+
+export const fetchNewTurn = (fetchAnswerParams: AnswerApiQueryParams) => {
+  return answerApi.endpoints.getNewTurn.initiate(fetchAnswerParams);
 };
 
 // Select answer state from RTK endpoint state

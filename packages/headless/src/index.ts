@@ -252,6 +252,12 @@ export type {
 } from './controllers/instant-results/instant-results.js';
 export {buildInstantResults} from './controllers/instant-results/instant-results.js';
 export type {
+  MultiturnConversation,
+  MultiturnConversationProps,
+  MultiturnConversationState,
+} from './controllers/knowledge/generated-answer/headless-multiturn-conversation.js';
+export {buildMultiturnConversation} from './controllers/knowledge/generated-answer/headless-multiturn-conversation.js';
+export type {
   Pager,
   PagerInitialState,
   PagerOptions,
