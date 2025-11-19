@@ -1,0 +1,58 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Coveo Multi-turn conversation</title>
+
+    <script type="module">
+      if (import.meta.env) {
+        const {defineCustomElements} = await import('@coveo/atomic/loader');
+        import('@coveo/atomic/themes/coveo.css');
+        defineCustomElements();
+      } else {
+        import('http://localhost:3000/atomic/v0.0.0/atomic.esm.js');
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'http://localhost:3000/atomic/v0.0.0/themes/coveo.css';
+        document.head.appendChild(link);
+      }
+    </script>
+
+    <!-- <script type="module">
+      await customElements.whenDefined('atomic-search-interface');
+      const searchInterface = document.querySelector('atomic-search-interface');
+
+      // Initialization
+      await searchInterface.initialize({
+        accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+        organizationId: 'searchuisamples',
+        search: {
+          pipeline: 'genqatest',
+        },
+      });
+
+      // Trigger a first search
+      searchInterface.executeFirstSearch();
+    </script> -->
+    <style>
+      body {
+        margin: 0;
+      }
+
+      .header-bg {
+        background-color: var(--atomic-neutral-light);
+        grid-area: 1 / -1 / 1 / 1;
+      }
+
+      atomic-search-layout {
+        row-gap: var(--atomic-layout-spacing-y);
+      }
+    </style>
+  </head>
+
+  <body>
+    <script src="../header.js" type="text/javascript"></script>
+    Multi-turn conversation example coming soon!
+  </body>
+</html>
