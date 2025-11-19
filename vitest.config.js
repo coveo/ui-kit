@@ -1,11 +1,6 @@
 import {defineConfig} from 'vitest/config';
 
 export default defineConfig({
-  resolve: {
-    alias: [
-      {find: '@/', replacement: `${path.resolve(import.meta.dirname, './')}/`},
-    ],
-  },
   test: {
     projects: [
       './packages/atomic/vitest.config.js',

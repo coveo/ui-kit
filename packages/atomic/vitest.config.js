@@ -4,7 +4,7 @@ import replacePlugin from '@rollup/plugin-replace';
 import {storybookTest} from '@storybook/addon-vitest/vitest-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import {playwright} from '@vitest/browser-playwright';
-import {configDefaults, defineConfig} from 'vitest/config';
+import {configDefaults, defineConfig, mergeConfig} from 'vitest/config';
 import packageJsonHeadless from '../headless/package.json' with {type: 'json'};
 import packageJson from './package.json' with {type: 'json'};
 
@@ -67,7 +67,8 @@ const storybook = defineConfig({
   },
 });
 
-export default defineConfig({
+const atomicDefault = defineConfig({
+  name: 'atomic-default',
   server: {
     port: port,
   },
@@ -143,6 +144,9 @@ export default defineConfig({
         },
       ],
     },
-    projects: [storybook],
   },
+});
+
+export default mergeConfig(atomicDefault, {
+  test: {projects: [atomicDefault, storybook]},
 });
