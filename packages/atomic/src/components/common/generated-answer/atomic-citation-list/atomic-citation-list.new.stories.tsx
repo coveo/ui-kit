@@ -1,11 +1,9 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import type {
-  AtomicCitationList,
-  GeneratedAnswerCitation,
-} from './atomic-citation-list';
+import type {AtomicCitationList} from './atomic-citation-list';
 import './atomic-citation-list';
+import type {GeneratedAnswerCitation} from '@coveo/headless';
 
 const sampleCitations: GeneratedAnswerCitation[] = [
   {
@@ -51,21 +49,5 @@ export default meta;
 
 export const Default: Story = {
   name: 'atomic-citation-list',
-  decorators: [(story) => html`${story()}`],
-};
-
-export const WithCustomCitations: Story = {
-  name: 'Custom Citations',
-  args: {
-    citations: [
-      {
-        id: 'custom-1',
-        title: 'Custom Citation Title',
-        uri: 'https://example.com/citation1',
-        permanentid: 'custom-citation-1',
-        source: 'Example Source',
-      },
-    ],
-  },
   decorators: [(story) => html`${story()}`],
 };

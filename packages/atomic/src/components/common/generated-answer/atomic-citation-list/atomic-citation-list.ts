@@ -3,7 +3,7 @@ import {css, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 
 /**
- * The `atomic-citation-list` component displays a list of citations for a generated answer.
+ * The `atomic-citation-list` component displays a list of citations for a generated answer in the context of a multiturn conversation.
  *
  * @part citation-list - The container for the citation list
  * @part citation-item - Each individual citation item
