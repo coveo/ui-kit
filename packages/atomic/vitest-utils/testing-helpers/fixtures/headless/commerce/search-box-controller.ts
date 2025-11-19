@@ -22,6 +22,6 @@ export const buildFakeSearchBox = (
 ): SearchBox =>
   ({
     ...defaultImplementation,
-    ...(state && {state: {...defaultState, ...state}}),
+    ...{state: {...defaultState, ...(state || {})}},
     ...(methods && {...methods}),
   }) as SearchBox;

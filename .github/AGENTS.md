@@ -81,12 +81,14 @@ These instructions are automatically applied by GitHub Copilot based on file pat
 
 ## Custom Agents
 
-- **component-migration-agent.md** - Specialized agent for Stencil → Lit component migrations
-  - Location: `.github/agents/component-migration-agent.md`
-  - Performs complete migrations: component code, unit tests, Storybook stories, E2E tests, and MDX documentation
+- **stencil-to-lit-migration-agent.md** - Specialized agent for Stencil → Lit migrations (components, functional components, utils)
+  - Location: `.github/agents/stencil-to-lit-migration-agent.md`
+  - Detects migration type and applies appropriate workflow
+  - For components: complete migrations including code, tests, Storybook stories, E2E tests, and MDX documentation
+  - For functional components: migration and unit test generation
+  - For utils: unit test generation only
   - Uses dedicated prompts for each migration step
   - Identifies and documents blocking dependencies
-  - Uses `.github/PULL_REQUEST_TEMPLATE/atomic-stencil-lit-migration.md` template for PRs
 
 ## Chatmodes (VS Code Copilot)
 

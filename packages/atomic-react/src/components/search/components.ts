@@ -3,6 +3,7 @@ import {
   AtomicComponentError as LitAtomicComponentError,
   AtomicExternal as LitAtomicExternal,
   AtomicFacet as LitAtomicFacet,
+  AtomicFocusTrap as LitAtomicFocusTrap,
   AtomicHtml as LitAtomicHtml,
   AtomicIcon as LitAtomicIcon,
   AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
@@ -16,7 +17,7 @@ import {
   AtomicRecsInterface as LitAtomicRecsInterface,
   AtomicResult as LitAtomicResult,
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
-  AtomicResultLink as LitAtomicResultLink,
+  AtomicResultHtml as LitAtomicResultHtml,
   AtomicResultList as LitAtomicResultList,
   AtomicResultNumber as LitAtomicResultNumber,
   AtomicResultSectionActions as LitAtomicResultSectionActions,
@@ -62,6 +63,12 @@ export const AtomicFacet = createComponent({
   tagName: 'atomic-facet',
   react: React,
   elementClass: LitAtomicFacet,
+});
+
+export const AtomicFocusTrap = createComponent({
+  tagName: 'atomic-focus-trap',
+  react: React,
+  elementClass: LitAtomicFocusTrap,
 });
 
 export const AtomicHtml = createComponent({
@@ -142,10 +149,10 @@ export const AtomicResultChildrenTemplate = createComponent({
   elementClass: LitAtomicResultChildrenTemplate,
 });
 
-export const AtomicResultLink = createComponent({
-  tagName: 'atomic-result-link',
+export const AtomicResultHtml = createComponent({
+  tagName: 'atomic-result-html',
   react: React,
-  elementClass: LitAtomicResultLink,
+  elementClass: LitAtomicResultHtml,
 });
 
 export const AtomicResultList = createComponent({
