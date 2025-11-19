@@ -1,3 +1,10 @@
+## <small>3.4.1 (2025-11-19)</small>
+
+* chore (atomic): migrated atomic-result-html to lit (#6538) ([b76337c](https://github.com/coveo/ui-kit/commits/b76337c)), closes [#6538](https://github.com/coveo/ui-kit/issues/6538)
+* chore(atomic): migrate atomic-focus-trap from Stencil to Lit (#6450) ([1a56993](https://github.com/coveo/ui-kit/commits/1a56993)), closes [#6450](https://github.com/coveo/ui-kit/issues/6450)
+
+
+
 ## 3.4.0 (2025-11-12)
 
 * chore: remove stencil-generated build artifacts from git tracking (#6500) ([e9f418f](https://github.com/coveo/ui-kit/commits/e9f418f)), closes [#6500](https://github.com/coveo/ui-kit/issues/6500)

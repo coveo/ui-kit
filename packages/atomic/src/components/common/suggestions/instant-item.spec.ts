@@ -106,5 +106,14 @@ describe('instant-item', () => {
         'instant-results-show-all-button'
       );
     });
+
+    it('should have pointer-events-none class to allow clicks on parent', () => {
+      const button = renderInstantItemShowAllButton({
+        i18n,
+        i18nKey: 'show-all-products',
+      });
+
+      expect(button.classList.contains('pointer-events-none')).toBe(true);
+    });
   });
 });

@@ -285,24 +285,31 @@ export namespace Components {
         "label": string;
         "type": NumberInputType;
     }
-    interface AtomicFocusTrap {
-        "active": boolean;
+    /**
+     * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (for example, `isRecommendation`).
+     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
+     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
+     */
+    interface AtomicFieldCondition {
         /**
-          * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
+          * Verifies whether the specified fields are defined.
          */
-        "container"?: HTMLElement;
+        "ifDefined"?: string;
         /**
-          * The common ancestor of the focus trap and of all the elements that should be inaccessible when inside the focus trap.
+          * Verifies whether the specified fields are not defined.
          */
-        "scope": HTMLElement;
+        "ifNotDefined"?: string;
         /**
-          * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
+          * Verifies whether the specified fields match the specified values.
+          * @type {Record<string, string[]>}
          */
-        "shouldHideSelf": boolean;
+        "mustMatch": Record<string, string[]>;
         /**
-          * The source to focus when the focus trap becomes inactive.
+          * Verifies whether the specified fields do not match the specified values.
+          * @type {Record<string, string[]>}
          */
-        "source"?: HTMLElement;
+        "mustNotMatch": Record<string, string[]>;
     }
     /**
      * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
@@ -1612,21 +1619,6 @@ export namespace Components {
     interface AtomicResultFieldsList {
     }
     /**
-     * The `atomic-result-html` component renders the HTML value of a string result field.
-     * There is an inherent XSS security concern associated with the usage of this component.
-     * Use only with fields for which you are certain the data is harmless.
-     */
-    interface AtomicResultHtml {
-        /**
-          * The result field which the component should use. If set, Atomic searches for the specified field in the `Result` object first. If there's no such a field, Atomic searches through the `Result.raw` object. It's important to include the necessary field in the `ResultList` component.
-         */
-        "field": string;
-        /**
-          * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
-         */
-        "sanitize": boolean;
-    }
-    /**
      * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
      * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
      */
@@ -2334,11 +2326,17 @@ declare global {
         prototype: HTMLAtomicFacetNumberInputElement;
         new (): HTMLAtomicFacetNumberInputElement;
     };
-    interface HTMLAtomicFocusTrapElement extends Components.AtomicFocusTrap, HTMLStencilElement {
+    /**
+     * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (for example, `isRecommendation`).
+     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
+     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
+     */
+    interface HTMLAtomicFieldConditionElement extends Components.AtomicFieldCondition, HTMLStencilElement {
     }
-    var HTMLAtomicFocusTrapElement: {
-        prototype: HTMLAtomicFocusTrapElement;
-        new (): HTMLAtomicFocusTrapElement;
+    var HTMLAtomicFieldConditionElement: {
+        prototype: HTMLAtomicFieldConditionElement;
+        new (): HTMLAtomicFieldConditionElement;
     };
     /**
      * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
@@ -2996,17 +2994,6 @@ declare global {
         new (): HTMLAtomicResultFieldsListElement;
     };
     /**
-     * The `atomic-result-html` component renders the HTML value of a string result field.
-     * There is an inherent XSS security concern associated with the usage of this component.
-     * Use only with fields for which you are certain the data is harmless.
-     */
-    interface HTMLAtomicResultHtmlElement extends Components.AtomicResultHtml, HTMLStencilElement {
-    }
-    var HTMLAtomicResultHtmlElement: {
-        prototype: HTMLAtomicResultHtmlElement;
-        new (): HTMLAtomicResultHtmlElement;
-    };
-    /**
      * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
      * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
      */
@@ -3404,7 +3391,7 @@ declare global {
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
-        "atomic-focus-trap": HTMLAtomicFocusTrapElement;
+        "atomic-field-condition": HTMLAtomicFieldConditionElement;
         "atomic-folded-result-list": HTMLAtomicFoldedResultListElement;
         "atomic-format-currency": HTMLAtomicFormatCurrencyElement;
         "atomic-format-number": HTMLAtomicFormatNumberElement;
@@ -3474,7 +3461,6 @@ declare global {
         "atomic-result-children": HTMLAtomicResultChildrenElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
-        "atomic-result-html": HTMLAtomicResultHtmlElement;
         "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
@@ -3761,24 +3747,31 @@ declare namespace LocalJSX {
         "onAtomic/numberInputApply"?: (event: AtomicFacetNumberInputCustomEvent<any>) => void;
         "type": NumberInputType;
     }
-    interface AtomicFocusTrap {
-        "active"?: boolean;
+    /**
+     * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (for example, `isRecommendation`).
+     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
+     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
+     */
+    interface AtomicFieldCondition {
         /**
-          * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
+          * Verifies whether the specified fields are defined.
          */
-        "container"?: HTMLElement;
+        "ifDefined"?: string;
         /**
-          * The common ancestor of the focus trap and of all the elements that should be inaccessible when inside the focus trap.
+          * Verifies whether the specified fields are not defined.
          */
-        "scope"?: HTMLElement;
+        "ifNotDefined"?: string;
         /**
-          * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
+          * Verifies whether the specified fields match the specified values.
+          * @type {Record<string, string[]>}
          */
-        "shouldHideSelf"?: boolean;
+        "mustMatch"?: Record<string, string[]>;
         /**
-          * The source to focus when the focus trap becomes inactive.
+          * Verifies whether the specified fields do not match the specified values.
+          * @type {Record<string, string[]>}
          */
-        "source"?: HTMLElement;
+        "mustNotMatch"?: Record<string, string[]>;
     }
     /**
      * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
@@ -5039,21 +5032,6 @@ declare namespace LocalJSX {
     interface AtomicResultFieldsList {
     }
     /**
-     * The `atomic-result-html` component renders the HTML value of a string result field.
-     * There is an inherent XSS security concern associated with the usage of this component.
-     * Use only with fields for which you are certain the data is harmless.
-     */
-    interface AtomicResultHtml {
-        /**
-          * The result field which the component should use. If set, Atomic searches for the specified field in the `Result` object first. If there's no such a field, Atomic searches through the `Result.raw` object. It's important to include the necessary field in the `ResultList` component.
-         */
-        "field": string;
-        /**
-          * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
-         */
-        "sanitize"?: boolean;
-    }
-    /**
      * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
      * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
      */
@@ -5613,7 +5591,7 @@ declare namespace LocalJSX {
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-number-input": AtomicFacetNumberInput;
-        "atomic-focus-trap": AtomicFocusTrap;
+        "atomic-field-condition": AtomicFieldCondition;
         "atomic-folded-result-list": AtomicFoldedResultList;
         "atomic-format-currency": AtomicFormatCurrency;
         "atomic-format-number": AtomicFormatNumber;
@@ -5683,7 +5661,6 @@ declare namespace LocalJSX {
         "atomic-result-children": AtomicResultChildren;
         "atomic-result-date": AtomicResultDate;
         "atomic-result-fields-list": AtomicResultFieldsList;
-        "atomic-result-html": AtomicResultHtml;
         "atomic-result-icon": AtomicResultIcon;
         "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
@@ -5773,7 +5750,13 @@ declare module "@stencil/core" {
              * Internal component made to be integrated in a NumericFacet.
              */
             "atomic-facet-number-input": LocalJSX.AtomicFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicFacetNumberInputElement>;
-            "atomic-focus-trap": LocalJSX.AtomicFocusTrap & JSXBase.HTMLAttributes<HTMLAtomicFocusTrapElement>;
+            /**
+             * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+             * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (for example, `isRecommendation`).
+             * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
+             * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
+             */
+            "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
             /**
              * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
              */
@@ -5983,12 +5966,6 @@ declare module "@stencil/core" {
              * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
              */
             "atomic-result-fields-list": LocalJSX.AtomicResultFieldsList & JSXBase.HTMLAttributes<HTMLAtomicResultFieldsListElement>;
-            /**
-             * The `atomic-result-html` component renders the HTML value of a string result field.
-             * There is an inherent XSS security concern associated with the usage of this component.
-             * Use only with fields for which you are certain the data is harmless.
-             */
-            "atomic-result-html": LocalJSX.AtomicResultHtml & JSXBase.HTMLAttributes<HTMLAtomicResultHtmlElement>;
             /**
              * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
              * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.

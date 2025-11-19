@@ -123,6 +123,12 @@ describe('#renderRecentQuery', () => {
       expect(span).toHaveTextContent('test-value');
     });
   });
+
+  it('container should have pointer-events-none class to allow clicks on parent', async () => {
+    const element = await renderQuery();
+
+    expect(element).toHaveClass('pointer-events-none');
+  });
 });
 
 describe('#renderRecentQueryClear', () => {
@@ -163,5 +169,11 @@ describe('#renderRecentQueryClear', () => {
     const element = await renderQueryClear();
     const span = element.querySelector('span:nth-of-type(2)');
     expect(span).toHaveTextContent('Clear');
+  });
+
+  it('container should have pointer-events-none class to allow clicks on parent', async () => {
+    const element = await renderQueryClear();
+
+    expect(element).toHaveClass('pointer-events-none');
   });
 });
