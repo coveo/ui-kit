@@ -11,7 +11,9 @@ import facetValueCheckboxStyles from '@/src/components/common/facets/facet-value
 import {renderFacetValueLabelHighlight} from '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-values-group/facet-values-group';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
@@ -91,10 +93,7 @@ export class AtomicAutomaticFacet
 
   private headerFocus?: FocusTargetController;
 
-  public initialize() {
-    // This component is initialized by the automatic-facet-generator component
-    // and doesn't need to build controllers itself
-  }
+  public initialize() {}
 
   private get focusTarget() {
     if (!this.headerFocus) {
@@ -181,9 +180,11 @@ export class AtomicAutomaticFacet
     })}`;
   }
 
+  @bindingGuard()
+  @errorGuard()
   render() {
     if (this.searchStatus.state.hasError) {
-      return nothing;
+      return html`${nothing}`;
     }
 
     return renderFacetContainer()(html`
@@ -192,9 +193,6 @@ export class AtomicAutomaticFacet
   }
 }
 
-// NOTE: This declaration conflicts with the Stencil-generated type in components.d.ts
-// This is expected during migration. The conflict will be resolved when the Stencil
-// component is removed and the project is rebuilt.
 declare global {
   interface HTMLElementTagNameMap {
     'atomic-automatic-facet': AtomicAutomaticFacet;
