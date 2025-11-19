@@ -165,7 +165,7 @@ export const updateCacheWithEvent = (
   }
 };
 
-export const updateCacheWithEventBeta = (
+const updateCacheWithEventBeta = (
   event: EventSourceMessage,
   draft: GeneratedAnswerStream,
   dispatch: ThunkDispatch<StreamAnswerAPIState, unknown, UnknownAction>
