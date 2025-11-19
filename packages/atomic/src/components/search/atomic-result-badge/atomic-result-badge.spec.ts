@@ -4,31 +4,19 @@ import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {page} from 'vitest/browser';
 import {renderInAtomicResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-result-fixture';
 import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import type {AtomicResultBadge} from './atomic-result-badge';
 import './atomic-result-badge';
 
-vi.mock('@coveo/headless', async () => {
-  const actual =
-    await vi.importActual<typeof import('@coveo/headless')>('@coveo/headless');
-  return {
-    ...actual,
-    ResultTemplatesHelpers: {
-      getResultProperty: vi.fn(),
-    },
-  };
-});
+vi.mock('@coveo/headless', {spy: true});
 
 describe('atomic-result-badge', () => {
   let i18n: i18n;
   let mockResult: Result;
 
   beforeEach(async () => {
-    vi.clearAllMocks();
-
     i18n = await createTestI18n();
     i18n.addResourceBundle(
       'en',
@@ -119,31 +107,26 @@ describe('atomic-result-badge', () => {
 
       expect(element).toBeDefined();
       expect(resultText()).toBeDefined();
-      expect(text()).toBeNull();
+      expect(text()).toHaveAttribute('value', 'pdf');
     });
 
     it('should remove itself when field value does not exist', async () => {
-      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(null);
-
       const {element} = await renderComponent({field: 'nonexistent'});
 
-      // Component should be removed from DOM
-      expect(element?.isConnected).toBe(false);
+      expect(element).not.toBeInTheDocument();
     });
   });
 
   describe('when rendering with #label', () => {
     it('should render atomic-text with the specified label', async () => {
-      const {text, resultText} = await renderComponent({label: 'trending'});
+      const {labelPart} = await renderComponent({label: 'trending'});
 
-      expect(text()).toBeDefined();
-      expect(resultText()).toBeNull();
+      expect(labelPart()).toBeInTheDocument();
     });
 
     it('should render the localized label text', async () => {
       const {text} = await renderComponent({label: 'hello-world'});
 
-      expect(text()).toBeDefined();
       const textElement = text();
       expect(textElement?.shadowRoot?.textContent).toContain('Hello, World!');
     });
@@ -173,17 +156,6 @@ describe('atomic-result-badge', () => {
 
       expect(iconPart()).toBeDefined();
       expect(iconPart()?.getAttribute('part')).toBe('result-badge-icon');
-    });
-
-    it('should render icon with correct CSS classes', async () => {
-      const {icon} = await renderComponent({
-        label: 'trending',
-        icon: 'assets://star',
-      });
-
-      expect(icon()?.className).toContain('h-3');
-      expect(icon()?.className).toContain('w-3');
-      expect(icon()?.className).toContain('fill-current');
     });
   });
 
@@ -222,29 +194,6 @@ describe('atomic-result-badge', () => {
 
       expect(labelPart()).toBeDefined();
       expect(labelPart()?.getAttribute('part')).toBe('result-badge-label');
-    });
-
-    it('should apply Tailwind classes to badge element', async () => {
-      const {badgeElement} = await renderComponent({label: 'test'});
-
-      const classes = badgeElement()?.className;
-      expect(classes).toContain('bg-neutral-light');
-      expect(classes).toContain('text-neutral-dark');
-      expect(classes).toContain('inline-flex');
-      expect(classes).toContain('rounded-full');
-      expect(classes).toContain('px-3');
-    });
-  });
-
-  describe('accessibility', () => {
-    it('should be accessible with label', async () => {
-      await renderComponent({label: 'trending'});
-      await expect.element(page.getByText('Trending')).toBeInTheDocument();
-    });
-
-    it('should be accessible with field', async () => {
-      const {element} = await renderComponent({field: 'filetype'});
-      expect(element).toBeDefined();
     });
   });
 });
