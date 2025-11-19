@@ -19,6 +19,10 @@ const links = [
   {href: '/examples/genqa.html', label: 'Gen Q&A'},
   {href: '/examples/tabs.html', label: 'Tabs'},
   {href: '/examples/commerce-website/homepage.html', label: 'Commerce Website'},
+  {
+    href: '/examples/multiturn-conversation.html',
+    label: 'Multi-turn conversation',
+  },
 ];
 
 const header = document.createElement('header');
