@@ -91,6 +91,11 @@ export class AtomicAutomaticFacet
 
   private headerFocus?: FocusTargetController;
 
+  public initialize() {
+    // This component is initialized by the automatic-facet-generator component
+    // and doesn't need to build controllers itself
+  }
+
   private get focusTarget() {
     if (!this.headerFocus) {
       this.headerFocus = new FocusTargetController(this, this.bindings);
@@ -187,6 +192,9 @@ export class AtomicAutomaticFacet
   }
 }
 
+// NOTE: This declaration conflicts with the Stencil-generated type in components.d.ts
+// This is expected during migration. The conflict will be resolved when the Stencil
+// component is removed and the project is rebuilt.
 declare global {
   interface HTMLElementTagNameMap {
     'atomic-automatic-facet': AtomicAutomaticFacet;
