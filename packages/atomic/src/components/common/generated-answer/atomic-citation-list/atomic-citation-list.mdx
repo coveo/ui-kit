@@ -1,0 +1,22 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+import * as AtomicCitationListStories from './atomic-citation-list.new.stories';
+import {AtomicDocTemplate} from '../../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicCitationListStories} />
+
+<AtomicDocTemplate
+  stories={AtomicCitationListStories}
+  githubPath="common/generated-answer/atomic-citation-list/atomic-citation-list.ts"
+  tagName="atomic-citation-list"
+  className="AtomicCitationList"
+>
+
+The `atomic-citation-list` component displays a list of citations for a generated answer.
+
+## Usage
+
+```html
+<atomic-citation-list></atomic-citation-list>
+```
+
+</AtomicDocTemplate>

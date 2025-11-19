@@ -15,6 +15,7 @@ import {getGeneratedAnswerInitialState} from '../features/generated-answer/gener
 import {getInsightConfigurationInitialState} from '../features/insight-configuration/insight-configuration-state.js';
 import {getInsightInterfaceInitialState} from '../features/insight-interface/insight-interface-state.js';
 import {getInsightUserActionsInitialState} from '../features/insight-user-actions/insight-user-actions-state.js';
+import {getMultiTurnConversationInitialState} from '../features/multi-turn-conversation/multi-turn-conversation-state.js';
 import {getPaginationInitialState} from '../features/pagination/pagination-state.js';
 import {getQueryInitialState} from '../features/query/query-state.js';
 import {getQuerySetInitialState} from '../features/query-set/query-set-state.js';
@@ -65,6 +66,7 @@ export function buildMockInsightState(
     insightUserActions: getInsightUserActionsInitialState(),
     triggers: getTriggerInitialState(),
     recentQueries: getRecentQueriesInitialState(),
+    multiTurnConversation: getMultiTurnConversationInitialState(),
     ...config,
   };
 }

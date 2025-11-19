@@ -320,6 +320,12 @@ export type {
 export {buildUserActions} from './controllers/insight/user-actions/headless-user-actions.js';
 export type {InsightInterface} from './controllers/insight-interface/insight-interface.js';
 export {buildInsightInterface} from './controllers/insight-interface/insight-interface.js';
+export type {
+  MultiturnConversation,
+  MultiturnConversationProps,
+  MultiturnConversationState,
+} from './controllers/knowledge/generated-answer/headless-multiturn-conversation.js';
+export {buildMultiturnConversation} from './controllers/knowledge/generated-answer/headless-multiturn-conversation.js';
 export * from './features/analytics/generic-analytics-actions-loader.js';
 export * from './features/analytics/insight-analytics-actions-loader.js';
 export * from './features/attached-results/attached-results-actions-loader.js';
