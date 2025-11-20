@@ -70,6 +70,8 @@ export default {
     await import('./atomic-result-text/atomic-result-text.js'),
   'atomic-results-per-page': async () =>
     await import('./atomic-results-per-page/atomic-results-per-page.js'),
+  'atomic-search-box': async () =>
+    await import('./atomic-search-box/atomic-search-box.js'),
   'atomic-search-box-instant-results': async () =>
     await import(
       './atomic-search-box-instant-results/atomic-search-box-instant-results.js'
