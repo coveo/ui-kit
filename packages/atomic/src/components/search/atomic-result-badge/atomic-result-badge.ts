@@ -9,6 +9,7 @@ import '@/src/components/common/atomic-icon/atomic-icon';
 import '@/src/components/search/atomic-text/atomic-text';
 import '@/src/components/search/atomic-result-text/atomic-result-text';
 import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
@@ -50,6 +51,7 @@ import type {Bindings} from '../atomic-search-interface/atomic-search-interface'
  */
 @customElement('atomic-result-badge')
 @withTailwindStyles
+@bindings()
 export class AtomicResultBadge
   extends LitElement
   implements InitializableComponent<Bindings>
