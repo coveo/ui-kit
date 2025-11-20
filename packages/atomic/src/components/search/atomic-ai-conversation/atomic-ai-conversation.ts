@@ -4,17 +4,18 @@ import {
   type MultiturnConversation,
   type MultiturnConversationState,
 } from '@coveo/headless';
-import {css, html, LitElement} from 'lit';
+import {css, html, LitElement, nothing} from 'lit';
 import {customElement, property, query, state} from 'lit/decorators.js';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {bindStateToController} from '@/src/decorators/bind-state';
-import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
-import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import '../atomic-ai-citation-list/atomic-ai-citation-list';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {errorGuard} from '@/src/decorators/error-guard';
+import {renderGeneratedAnswerActions} from '../../common/generated-answer/atomic-generated-answer-actions/atomic-generated-answer-actions';
 import {renderAtomicGeneratedContent} from '../../common/generated-answer/generated-content/lit/atomic-generated-content';
 
 /**
@@ -120,6 +121,19 @@ export class AtomicAiConversation
           answerContentFormat: answer.answerContentFormat,
         },
       })}
+      ${
+        !answer.isStreaming
+          ? renderGeneratedAnswerActions({
+              props: {
+                answer: answer.answer,
+                isLiked: false,
+                onLike: () => {},
+                isDisliked: false,
+                onDislike: () => {},
+              },
+            })
+          : nothing
+      }
     </div>`;
   }
 
