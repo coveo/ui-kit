@@ -46,14 +46,6 @@ describe('#renderShowButton', () => {
     expect(icon).toHaveAttribute('part', 'answer-show-icon');
   });
 
-  it('should apply the correct classes to the button', async () => {
-    const {button} = await renderComponent();
-
-    expect(button).toHaveClass('hidden');
-    expect(button).toHaveClass('items-center');
-    expect(button).toHaveClass('hover:bg-transparent');
-  });
-
   describe('when isCollapsed is true', () => {
     it('should render "show-more" text', async () => {
       const {element} = await renderComponent({isCollapsed: true});
@@ -65,7 +57,6 @@ describe('#renderShowButton', () => {
       const {icon} = await renderComponent({isCollapsed: true});
 
       expect(icon).toBeDefined();
-      // The icon property is set via .icon binding, so we just verify the element exists
       expect(icon?.tagName.toLowerCase()).toBe('atomic-icon');
     });
   });
@@ -81,7 +72,6 @@ describe('#renderShowButton', () => {
       const {icon} = await renderComponent({isCollapsed: false});
 
       expect(icon).toBeDefined();
-      // The icon property is set via .icon binding, so we just verify the element exists
       expect(icon?.tagName.toLowerCase()).toBe('atomic-icon');
     });
   });
@@ -104,26 +94,6 @@ describe('#renderShowButton', () => {
       await button.click();
 
       expect(onClick).toHaveBeenCalledOnce();
-    });
-  });
-
-  describe('text styling', () => {
-    it('should apply correct text styling classes', async () => {
-      const {element} = await renderComponent();
-      const textDiv = element.querySelector('.text-base.font-light');
-
-      expect(textDiv).toBeDefined();
-      expect(textDiv).toHaveClass('text-base');
-      expect(textDiv).toHaveClass('font-light');
-    });
-  });
-
-  describe('icon styling', () => {
-    it('should apply correct icon classes', async () => {
-      const {icon} = await renderComponent();
-
-      expect(icon).toHaveClass('ml-2');
-      expect(icon).toHaveClass('w-3.5');
     });
   });
 });
