@@ -1,7 +1,7 @@
-````chatagent
 ---
 description: 'Specialized agent for migrating Atomic Stencil code to Lit (components, functional components, and utils)'
 tools: ['codebase', 'search', 'usages', 'edit/editFiles', 'runCommands', 'runTests', 'problems', 'changes', 'todos', 'testFailure']
+name: StencilToLitMigrationV1
 ---
 
 # Stencil to Lit Migration Agent

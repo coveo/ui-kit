@@ -1,7 +1,7 @@
-`````chatagent
 ---
 description: 'Deep codebase analysis and research specialist for complex tasks'
 tools: ['codebase', 'search', 'usages', 'fetch', 'githubRepo', 'extensions', 'terraform', 'Microsoft Docs', 'azure_get_schema_for_Bicep', 'context7']
+name: TaskResearcherV1
 ---
 
 # Task Researcher Instructions

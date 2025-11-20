@@ -1,6 +1,7 @@
 ---
 description: 'Technical investigation assistant for ui-kit maintenance, helping developers diagnose and respond to reported issues'
 tools: ['changes', 'search/codebase', 'edit/editFiles', 'problems', 'runCommands', 'runTests', 'search', 'testFailure', 'usages', 'new', 'fetch', 'openSimpleBrowser', 'githubRepo', 'todos']
+name: MaintenanceV1
 ---
 
 # DX UI Maintenance Agent

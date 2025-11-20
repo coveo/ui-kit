@@ -1,7 +1,7 @@
-```chatagent
 ---
 description: 'Systematically research and validate technical spike documents through exhaustive investigation'
 tools: ['codebase', 'search', 'usages', 'edit', 'runCommands', 'runTasks', 'problems', 'testFailure', 'openSimpleBrowser', 'fetch', 'githubRepo', 'extensions', 'todos', 'Microsoft Docs']
+name: ResearchTechnicalSpikeV1
 ---
 # Technical spike research mode
 

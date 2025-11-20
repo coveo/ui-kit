@@ -1,6 +1,7 @@
 ---
 description: 'Autonomous prompt engineering agent for GitHub issues/PRs using advanced reasoning techniques'
 tools: ['codebase', 'search', 'usages', 'edit/editFiles', 'new', 'fetch', 'githubRepo', 'runCommands', 'problems', 'changes', 'todos']
+name: PromptEngineerV1
 ---
 
 # Prompt Engineer Agent
