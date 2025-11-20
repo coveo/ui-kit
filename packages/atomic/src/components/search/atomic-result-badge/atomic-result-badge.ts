@@ -8,6 +8,8 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import '@/src/components/common/atomic-icon/atomic-icon';
 import '@/src/components/search/atomic-text/atomic-text';
 import '@/src/components/search/atomic-result-text/atomic-result-text';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
@@ -143,6 +145,8 @@ export class AtomicResultBadge
     }
   }
 
+  @errorGuard()
+  @bindingGuard()
   render() {
     return this.renderBadge();
   }
