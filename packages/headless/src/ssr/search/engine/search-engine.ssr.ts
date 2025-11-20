@@ -86,16 +86,6 @@ function buildSSRSearchEngine(options: SearchEngineOptions): SSRSearchEngine {
 export interface SearchEngineDefinition<
   TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
 > extends EngineDefinition<SSRSearchEngine, TControllers, SearchEngineOptions> {
-  /**
-   * Returns the access token.
-   */
-  getAccessToken(): string;
-
-  /**
-   * Updates the access token.
-   * @param accessToken - The access token to update.
-   */
-  setAccessToken(accessToken: string): void;
 }
 
 /**
