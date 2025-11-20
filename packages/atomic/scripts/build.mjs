@@ -13,6 +13,7 @@ import {
 } from 'typescript';
 import colors from '../../../utils/ci/colors.mjs';
 import resourceUrlTransformer from './asset-path-transformer.mjs';
+import {generateCustomElementTags} from './generate-custom-element-tags.mjs';
 import {generateLitExports} from './generate-lit-exports.mjs';
 import pathTransformer from './path-transform.mjs';
 import {processAllCss} from './process-css.mjs';
@@ -129,6 +130,9 @@ try {
   const outDir = options.outDir;
 
   console.log(colors.blue('Starting build process'));
+  console.log(colors.blue('Generating custom element tags'));
+  generateCustomElementTags();
+
   console.log(colors.blue('Generating Lit exports'));
   await generateLitExports();
 
