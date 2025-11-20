@@ -16,6 +16,7 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import '../atomic-ai-citation-list/atomic-ai-citation-list';
 import {renderAtomicGeneratedContent} from '../../common/generated-answer/generated-content/lit/atomic-generated-content';
+import {renderGeneratedTextStatus} from '../../common/generated-answer/generated-content/lit/generated-text-status';
 
 /**
  * The `atomic-ai-conversation` provides buttons that allow the end user to navigate through the different result pages.
@@ -53,6 +54,9 @@ export class AtomicAiConversation
   public multiTurnConversationState!: MultiturnConversationState;
 
   @state() currentPrompt = '';
+  @state() isLoading = true;
+  @state() isOptimizing = false;
+  @state() isStreaming = false;
 
   /**
    * The answer configuration ID.
@@ -104,9 +108,26 @@ export class AtomicAiConversation
     }
   }
 
+  simulateAnswerStreaming() {
+    setTimeout(() => {
+      this.isLoading = false;
+      this.isOptimizing = true;
+    }, 1500);
+
+    setTimeout(() => {
+      this.isOptimizing = false;
+      this.isStreaming = true;
+    }, 3000);
+
+    setTimeout(() => {
+      this.isStreaming = false;
+    }, 5000);
+  }
+
   submitPrompt() {
     this.multiTurnConversation.generateAnswerForPrompt(this.currentPrompt);
     this.currentPrompt = '';
+    this.simulateAnswerStreaming();
   }
 
   renderAnswer(answer: MultiturnConversation['state']['answers'][0]) {
@@ -190,16 +211,21 @@ export class AtomicAiConversation
                 <div class="flex-col flex-3 p-4">
                   ${this.renderPrompt(answer)}
                   ${
-                    answer.answer?.length
+                    answer.answer?.length &&
+                    !this.isStreaming &&
+                    !this.isLoading &&
+                    !this.isOptimizing
                       ? this.renderAnswer(answer)
-                      : answer.isLoading
-                        ? html`<p
-                          part="generated-text"
-                          class="text-on-background mb-0"
-                        >
-                          Thinking…
-                        </p>`
-                        : html``
+                      : html`<p
+                        part="generated-text"
+                        class="text-on-background mb-0 mt-4"
+                      >
+                        ${renderGeneratedTextStatus({
+                          isLoading: this.isLoading,
+                          isStreaming: this.isStreaming,
+                          isOptimizing: this.isOptimizing,
+                        })}
+                      </p>`
                   }
                 </div>
                 <div class="flex-col flex-1 p-4">
