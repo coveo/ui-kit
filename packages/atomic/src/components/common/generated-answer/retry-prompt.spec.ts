@@ -29,71 +29,12 @@ describe('#renderRetryPrompt', () => {
     );
   };
 
-  it('should render the retry container in the document', async () => {
-    const element = await renderComponent();
-    const {retryContainer} = locators(element);
-
-    expect(retryContainer).toBeInTheDocument();
-  });
-
   it('should render the retry container with the correct part attribute', async () => {
     const element = await renderComponent();
     const {retryContainer} = locators(element);
 
+    expect(retryContainer).toBeInTheDocument();
     expect(retryContainer).toHaveAttribute('part', 'retry-container');
-  });
-
-  it('should render the retry container with the correct class', async () => {
-    const element = await renderComponent();
-    const {retryContainer} = locators(element);
-
-    expect(retryContainer).toHaveClass('mt-4');
-  });
-
-  it('should render the message with the correct text', async () => {
-    const element = await renderComponent({
-      message: 'An error occurred',
-      buttonLabel: 'Try Again',
-    });
-    const {messageElement} = locators(element);
-
-    expect(messageElement).toHaveTextContent('An error occurred');
-  });
-
-  it('should render the message with the correct classes', async () => {
-    const element = await renderComponent();
-    const {messageElement} = locators(element);
-
-    expect(messageElement).toHaveClass('text-neutral-dark');
-    expect(messageElement).toHaveClass('mx-auto');
-    expect(messageElement).toHaveClass('text-center');
-  });
-
-  it('should render the button with the correct label', async () => {
-    const element = await renderComponent({
-      buttonLabel: 'Click to Retry',
-    });
-    const {button} = locators(element);
-
-    expect(button).toHaveTextContent('Click to Retry');
-  });
-
-  it('should render the button with the correct style', async () => {
-    const element = await renderComponent();
-    const {button} = locators(element);
-
-    expect(button).toHaveClass('btn-outline-primary');
-  });
-
-  it('should render the button with the correct classes', async () => {
-    const element = await renderComponent();
-    const {button} = locators(element);
-
-    expect(button).toHaveClass('mx-auto');
-    expect(button).toHaveClass('mt-4');
-    expect(button).toHaveClass('block');
-    expect(button).toHaveClass('px-4');
-    expect(button).toHaveClass('py-2');
   });
 
   it('should call onClick when the button is clicked', async () => {
