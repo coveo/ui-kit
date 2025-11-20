@@ -10,16 +10,6 @@ import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/hea
 import type {AtomicAutomaticFacet} from './atomic-automatic-facet';
 
 vi.mock('@coveo/headless', {spy: true});
-vi.mock('@/src/mixins/bindings-mixin', () => ({
-  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
-    return class extends superClass {
-      // biome-ignore lint/complexity/noUselessConstructor: <mocking the mixin for testing>
-      constructor(...args: unknown[]) {
-        super(...args);
-      }
-    };
-  }),
-}));
 
 describe('atomic-automatic-facet', () => {
   const mockEngine = buildFakeSearchEngine();
