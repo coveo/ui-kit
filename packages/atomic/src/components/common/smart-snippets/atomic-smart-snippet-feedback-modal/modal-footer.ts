@@ -20,7 +20,7 @@ export const renderModalFooter: FunctionalComponent<ModalFooterProps> = ({
         class: 'text-primary',
         onClick,
       },
-    })(i18n.t('cancel'))}
+    })(html`${i18n.t('cancel')}`)}
     ${renderButton({
       props: {
         part: 'submit-button',
@@ -28,5 +28,5 @@ export const renderModalFooter: FunctionalComponent<ModalFooterProps> = ({
         type: 'submit',
         form: formId,
       },
-    })(i18n.t('feedback-send'))}
+    })(html`${i18n.t('feedback-send')}`)}
   </div>`;
