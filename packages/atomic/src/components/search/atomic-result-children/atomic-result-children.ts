@@ -209,7 +209,6 @@ export class AtomicResultChildren
   };
 
   willUpdate() {
-    // Resolve contexts via event dispatching before rendering
     if (!this.result) {
       const resultEvent = buildCustomEvent(
         'atomic/resolveResult',
@@ -363,7 +362,7 @@ export class AtomicResultChildren
   @bindingGuard()
   @errorGuard()
   render() {
-    return renderResultChildrenGuard({
+    return html`${renderResultChildrenGuard({
       props: {
         inheritTemplates: this.inheritTemplates,
         resultTemplateRegistered: this.resultTemplateRegistered,
@@ -375,7 +374,7 @@ export class AtomicResultChildren
         () => this.renderCollection(),
         () => this.renderFoldedResult()
       )}`
-    );
+    )}`;
   }
 }
 
