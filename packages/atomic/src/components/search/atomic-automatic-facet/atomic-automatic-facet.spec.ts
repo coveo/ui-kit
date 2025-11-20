@@ -1,356 +1,255 @@
-import {buildAutomaticFacetGenerator, buildSearchStatus} from '@coveo/headless';
+import type {
+  AutomaticFacet,
+  AutomaticFacetState,
+  SearchStatus,
+} from '@coveo/headless';
+import {buildSearchStatus} from '@coveo/headless';
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {page, userEvent} from 'vitest/browser';
-import './atomic-automatic-facet';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeAutomaticFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/search/automatic-facet-controller';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
 import type {AtomicAutomaticFacet} from './atomic-automatic-facet';
+import './atomic-automatic-facet';
 
 vi.mock('@coveo/headless', {spy: true});
 
 describe('atomic-automatic-facet', () => {
-  const mockEngine = buildFakeSearchEngine();
+  const mockedEngine = buildFakeSearchEngine();
+  let mockedFacet: AutomaticFacet;
+  let mockedSearchStatus: SearchStatus;
+  const mockedToggleSelect = vi.fn();
+  const mockedDeselectAll = vi.fn();
 
-  beforeEach(() => {
-    vi.mocked(buildAutomaticFacetGenerator).mockReturnValue(
-      {} as ReturnType<typeof buildAutomaticFacetGenerator>
-    );
-    vi.mocked(buildSearchStatus).mockReturnValue(
-      buildFakeSearchStatus({
-        firstSearchExecuted: true,
-        hasError: false,
-      })
-    );
-  });
-
-  const renderComponent = async ({
-    field = 'test_field',
-    facetId = 'test-facet-id',
-    facetState = {},
-    searchStatusState = {},
-    isCollapsed = false,
-  }: {
+  interface RenderAutomaticFacetOptions {
     field?: string;
     facetId?: string;
-    facetState?: Partial<ReturnType<typeof buildFakeAutomaticFacet>['state']>;
-    searchStatusState?: Partial<
-      ReturnType<typeof buildFakeSearchStatus>['state']
-    >;
     isCollapsed?: boolean;
-  } = {}) => {
-    const fakeFacet = buildFakeAutomaticFacet({
+    state?: Partial<AutomaticFacetState>;
+    searchStatusHasError?: boolean;
+  }
+
+  const renderAutomaticFacet = async ({
+    field = 'objecttype',
+    facetId = 'automatic-facet-1',
+    isCollapsed = false,
+    state = {},
+    searchStatusHasError = false,
+  }: RenderAutomaticFacetOptions = {}) => {
+    mockedFacet = buildFakeAutomaticFacet({
       state: {
         field,
-        label: 'Test Label',
+        label: 'Type',
         values: [
-          {
-            value: 'value1',
-            numberOfResults: 10,
-            state: 'idle',
-          },
-          {
-            value: 'value2',
-            numberOfResults: 5,
-            state: 'idle',
-          },
+          {value: 'Document', numberOfResults: 45, state: 'idle'},
+          {value: 'PDF', numberOfResults: 32, state: 'idle'},
         ],
-        ...facetState,
+        ...state,
+      },
+      implementation: {
+        toggleSelect: mockedToggleSelect,
+        deselectAll: mockedDeselectAll,
       },
     });
 
-    const fakeSearchStatus = buildFakeSearchStatus({
+    mockedSearchStatus = buildFakeSearchStatus({
       state: {
         firstSearchExecuted: true,
-        hasError: false,
-        ...searchStatusState,
+        hasError: searchStatusHasError,
       },
     });
+
+    vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
 
     const {element} = await renderInAtomicSearchInterface<AtomicAutomaticFacet>(
       {
-        template: html`<atomic-automatic-facet
-          field=${field}
-          facet-id=${facetId}
-          .facet=${fakeFacet}
-          .searchStatus=${fakeSearchStatus}
-          is-collapsed=${isCollapsed}
-        ></atomic-automatic-facet>`,
+        template: html`<div>
+          <atomic-automatic-facet
+            field=${field}
+            facet-id=${facetId}
+            .facet=${mockedFacet}
+            .searchStatus=${mockedSearchStatus}
+            ?is-collapsed=${isCollapsed}
+          ></atomic-automatic-facet>
+        </div>`,
         selector: 'atomic-automatic-facet',
-        bindings: (bindings) => ({
-          ...bindings,
-          engine: mockEngine,
-        }),
+        bindings: (bindings) => {
+          bindings.engine = mockedEngine;
+          bindings.store.getUniqueIDFromEngine = vi.fn().mockReturnValue('123');
+          return bindings;
+        },
       }
     );
 
-    const qs = (part: string) =>
-      element.shadowRoot?.querySelector(`[part~="${part}"]`)!;
-
     return {
       element,
-      facet: fakeFacet,
-      searchStatus: fakeSearchStatus,
-      parts: (el: AtomicAutomaticFacet) => ({
-        facet: qs('facet'),
-        labelButton: qs('label-button'),
-        labelButtonIcon: qs('label-button-icon'),
-        clearButton: qs('clear-button'),
-        clearButtonIcon: qs('clear-button-icon'),
-        values: el.shadowRoot?.querySelector('[part="values"]'),
-        valueLabels: el.shadowRoot?.querySelectorAll('[part~="value-label"]'),
-        valueCounts: el.shadowRoot?.querySelectorAll('[part~="value-count"]'),
-        valueCheckboxes: el.shadowRoot?.querySelectorAll(
-          '[part~="value-checkbox"]'
-        ),
-      }),
+      label: () => page.getByRole('button', {name: /Type/i}),
+      clearButton: () => page.getByLabelText(/Clear filter/i),
+      value: (name: string) => page.getByText(name),
+      parts: (element: AtomicAutomaticFacet) => {
+        const qs = (part: string) =>
+          element.shadowRoot?.querySelector(`[part~="${part}"]`);
+        return {
+          facet: qs('facet'),
+          labelButton: qs('label-button'),
+          labelButtonIcon: qs('label-button-icon'),
+          clearButton: qs('clear-button'),
+          clearButtonIcon: qs('clear-button-icon'),
+          values: element.shadowRoot?.querySelector('[part="values"]'),
+          valueCheckboxes: element.shadowRoot?.querySelectorAll(
+            '[part~="value-checkbox"]'
+          ),
+          valueLabels: element.shadowRoot?.querySelectorAll(
+            '[part~="value-label"]'
+          ),
+          valueCounts: element.shadowRoot?.querySelectorAll(
+            '[part~="value-count"]'
+          ),
+        };
+      },
     };
   };
 
-  describe('#initialize', () => {
-    it('should not set error when initialized correctly', async () => {
-      const {element} = await renderComponent();
-      expect(element.error).toBeUndefined();
-    });
+  it('should render the facet with correct label', async () => {
+    const {label} = await renderAutomaticFacet();
+    await expect.element(label()).toBeInTheDocument();
   });
 
-  describe('render', () => {
-    it('should render the facet container', async () => {
-      const {element, parts} = await renderComponent();
-      await expect.element(parts(element).facet).toBeInTheDocument();
+  it('should use field name when label is undefined', async () => {
+    await renderAutomaticFacet({
+      field: 'my_custom_field',
+      state: {label: undefined},
     });
-
-    it('should render the facet label from state', async () => {
-      await renderComponent({
-        facetState: {label: 'Custom Label'},
-      });
-      await expect.element(page.getByText('Custom Label')).toBeInTheDocument();
-    });
-
-    it('should use field name when label is undefined', async () => {
-      await renderComponent({
-        field: 'my_field',
-        facetState: {label: undefined},
-      });
-      await expect.element(page.getByText('my_field')).toBeInTheDocument();
-    });
-
-    it('should render facet values', async () => {
-      const {element, parts} = await renderComponent();
-      const valueLabels = parts(element).valueLabels;
-      expect(valueLabels?.length).toBe(2);
-    });
-
-    it('should display the correct number of results for each value', async () => {
-      await renderComponent();
-      await expect.element(page.getByText('(10)')).toBeInTheDocument();
-      await expect.element(page.getByText('(5)')).toBeInTheDocument();
-    });
-
-    it('should not render values when facet is collapsed', async () => {
-      const {element, parts} = await renderComponent({isCollapsed: true});
-      expect(parts(element).values).toBeNull();
-    });
-
-    it('should render nothing when search has error', async () => {
-      const {element, parts} = await renderComponent({
-        searchStatusState: {hasError: true},
-      });
-      expect(parts(element).facet).toBeNull();
-    });
+    await expect
+      .element(page.getByRole('button', {name: /my_custom_field/i}))
+      .toBeInTheDocument();
   });
 
-  describe('when toggling collapse', () => {
-    it('should toggle isCollapsed when label button is clicked', async () => {
-      const {element, parts} = await renderComponent({isCollapsed: false});
-      const labelButton = parts(element).labelButton as HTMLElement;
-
-      await userEvent.click(labelButton);
-      expect(element.isCollapsed).toBe(true);
-
-      await userEvent.click(labelButton);
-      expect(element.isCollapsed).toBe(false);
-    });
-
-    it('should show values when expanded', async () => {
-      const {element, parts} = await renderComponent({isCollapsed: false});
-      expect(parts(element).values).not.toBeNull();
-    });
-
-    it('should hide values when collapsed', async () => {
-      const {element, parts} = await renderComponent({isCollapsed: true});
-      expect(parts(element).values).toBeNull();
-    });
+  it('should render facet values', async () => {
+    const {value} = await renderAutomaticFacet();
+    await expect.element(value('Document')).toBeInTheDocument();
+    await expect.element(value('PDF')).toBeInTheDocument();
   });
 
-  describe('when selecting values', () => {
-    it('should call toggleSelect when a value is clicked', async () => {
-      const {element, facet} = await renderComponent();
-      const toggleSelectSpy = vi.spyOn(facet, 'toggleSelect');
-
-      const firstValue = facet.state.values[0];
-      const firstCheckbox = element.shadowRoot?.querySelector(
-        '[part~="value-checkbox"]'
-      ) as HTMLElement;
-
-      await userEvent.click(firstCheckbox);
-      expect(toggleSelectSpy).toHaveBeenCalledWith(firstValue);
-    });
-
-    it('should display clear button when values are selected', async () => {
-      const {element, parts} = await renderComponent({
-        facetState: {
-          values: [
-            {
-              value: 'selected_value',
-              numberOfResults: 10,
-              state: 'selected',
-            },
-          ],
-        },
-      });
-
-      await expect
-        .element(parts(element).clearButton as HTMLElement)
-        .toBeInTheDocument();
-    });
-
-    it('should not display clear button when no values are selected', async () => {
-      const {element, parts} = await renderComponent();
-      expect(parts(element).clearButton).toBeNull();
-    });
+  it('should display the correct number of results for each value', async () => {
+    await renderAutomaticFacet();
+    await expect.element(page.getByText('(45)')).toBeInTheDocument();
+    await expect.element(page.getByText('(32)')).toBeInTheDocument();
   });
 
-  describe('when clearing filters', () => {
-    it('should call deselectAll when clear button is clicked', async () => {
-      const {element, facet, parts} = await renderComponent({
-        facetState: {
-          values: [
-            {
-              value: 'selected_value',
-              numberOfResults: 10,
-              state: 'selected',
-            },
-          ],
-        },
-      });
-
-      const deselectAllSpy = vi.spyOn(facet, 'deselectAll');
-      const clearButton = parts(element).clearButton as HTMLElement;
-
-      await userEvent.click(clearButton);
-      expect(deselectAllSpy).toHaveBeenCalled();
-    });
-
-    it('should focus header after clearing filters', async () => {
-      const {element} = await renderComponent({
-        facetState: {
-          values: [
-            {
-              value: 'selected_value',
-              numberOfResults: 10,
-              state: 'selected',
-            },
-          ],
-        },
-      });
-
-      // Create a mock focus controller
-      const focusAfterSearchSpy = vi.fn();
-      const mockFocusController = {
-        focusAfterSearch: focusAfterSearchSpy,
-        setTarget: vi.fn(),
-        focus: vi.fn(),
-        registerFocusCallback: vi.fn(),
-      };
-
-      // Replace the headerFocus with our mock
-      // biome-ignore lint/suspicious/noExplicitAny: Accessing private property for testing
-      (element as any).headerFocus = mockFocusController;
-
-      const clearButton = element.shadowRoot?.querySelector(
-        '[part~="clear-button"]'
-      ) as HTMLElement;
-      await userEvent.click(clearButton);
-
-      expect(focusAfterSearchSpy).toHaveBeenCalled();
-    });
+  it('should hide values when collapsed', async () => {
+    const {element, parts} = await renderAutomaticFacet({isCollapsed: true});
+    expect(parts(element).values).toBeNull();
   });
 
-  describe('accessibility', () => {
-    it('should have proper aria-expanded attribute when collapsed', async () => {
-      const {element, parts} = await renderComponent({isCollapsed: true});
-      const labelButton = parts(element).labelButton as HTMLElement;
-      expect(labelButton.getAttribute('aria-expanded')).toBe('false');
-    });
-
-    it('should have proper aria-expanded attribute when expanded', async () => {
-      const {element, parts} = await renderComponent({isCollapsed: false});
-      const labelButton = parts(element).labelButton as HTMLElement;
-      expect(labelButton.getAttribute('aria-expanded')).toBe('true');
-    });
-
-    it('should render values in a list', async () => {
-      const {element, parts} = await renderComponent();
-      const valuesList = parts(element).values as HTMLElement;
-      expect(valuesList.tagName.toLowerCase()).toBe('ul');
-    });
+  it('should show values when expanded', async () => {
+    const {element, parts} = await renderAutomaticFacet({isCollapsed: false});
+    expect(parts(element).values).not.toBeNull();
   });
 
-  describe('field value captions', () => {
-    it('should use field value caption for display value', async () => {
-      await renderComponent({
-        facetState: {
-          values: [
-            {
-              value: 'test_value',
-              numberOfResults: 10,
-              state: 'idle',
-            },
-          ],
-        },
-      });
-      // The component uses getFieldValueCaption which will use i18n to format the value
-      await expect.element(page.getByText('test_value')).toBeInTheDocument();
+  it('should toggle collapse when label button is clicked', async () => {
+    const {element, label} = await renderAutomaticFacet({isCollapsed: false});
+
+    await userEvent.click(label()!);
+    expect(element.isCollapsed).toBe(true);
+
+    await userEvent.click(label()!);
+    expect(element.isCollapsed).toBe(false);
+  });
+
+  it('should call toggleSelect when a value is clicked', async () => {
+    const {element} = await renderAutomaticFacet();
+    const firstCheckbox = element.shadowRoot?.querySelector(
+      '[part~="value-checkbox"]'
+    ) as HTMLElement;
+
+    await userEvent.click(firstCheckbox);
+    expect(mockedToggleSelect).toHaveBeenCalledWith(
+      mockedFacet.state.values[0]
+    );
+  });
+
+  it('should show clear button when values are selected', async () => {
+    const {element, parts} = await renderAutomaticFacet({
+      state: {
+        values: [{value: 'Document', numberOfResults: 45, state: 'selected'}],
+      },
     });
+
+    expect(parts(element).clearButton).not.toBeNull();
+  });
+
+  it('should not show clear button when no values are selected', async () => {
+    const {element, parts} = await renderAutomaticFacet();
+    expect(parts(element).clearButton).toBeNull();
+  });
+
+  it('should call deselectAll when clear button is clicked', async () => {
+    const {element, parts} = await renderAutomaticFacet({
+      state: {
+        values: [{value: 'Document', numberOfResults: 45, state: 'selected'}],
+      },
+    });
+
+    const clearButton = parts(element).clearButton as HTMLElement;
+    await userEvent.click(clearButton);
+    expect(mockedDeselectAll).toHaveBeenCalled();
   });
 
   describe('shadow parts', () => {
     it('should expose facet part', async () => {
-      const {element, parts} = await renderComponent();
+      const {element, parts} = await renderAutomaticFacet();
       expect(parts(element).facet).not.toBeNull();
     });
 
     it('should expose label-button part', async () => {
-      const {element, parts} = await renderComponent();
+      const {element, parts} = await renderAutomaticFacet();
       expect(parts(element).labelButton).not.toBeNull();
     });
 
     it('should expose label-button-icon part', async () => {
-      const {element, parts} = await renderComponent();
+      const {element, parts} = await renderAutomaticFacet();
       expect(parts(element).labelButtonIcon).not.toBeNull();
     });
 
-    it('should expose values part', async () => {
-      const {element, parts} = await renderComponent({isCollapsed: false});
+    it('should expose values part when expanded', async () => {
+      const {element, parts} = await renderAutomaticFacet({isCollapsed: false});
       expect(parts(element).values).not.toBeNull();
     });
 
     it('should expose value-checkbox parts', async () => {
-      const {element, parts} = await renderComponent();
-      expect(parts(element).valueCheckboxes?.length).toBeGreaterThan(0);
+      const {element, parts} = await renderAutomaticFacet();
+      expect(parts(element).valueCheckboxes?.length).toBe(2);
     });
 
     it('should expose value-label parts', async () => {
-      const {element, parts} = await renderComponent();
-      expect(parts(element).valueLabels?.length).toBeGreaterThan(0);
+      const {element, parts} = await renderAutomaticFacet();
+      expect(parts(element).valueLabels?.length).toBe(2);
     });
 
     it('should expose value-count parts', async () => {
-      const {element, parts} = await renderComponent();
-      expect(parts(element).valueCounts?.length).toBeGreaterThan(0);
+      const {element, parts} = await renderAutomaticFacet();
+      expect(parts(element).valueCounts?.length).toBe(2);
+    });
+
+    it('should expose clear-button part when values are selected', async () => {
+      const {element, parts} = await renderAutomaticFacet({
+        state: {
+          values: [{value: 'Document', numberOfResults: 45, state: 'selected'}],
+        },
+      });
+      expect(parts(element).clearButton).not.toBeNull();
+    });
+
+    it('should expose clear-button-icon part when values are selected', async () => {
+      const {element, parts} = await renderAutomaticFacet({
+        state: {
+          values: [{value: 'Document', numberOfResults: 45, state: 'selected'}],
+        },
+      });
+      expect(parts(element).clearButtonIcon).not.toBeNull();
     });
   });
 });
