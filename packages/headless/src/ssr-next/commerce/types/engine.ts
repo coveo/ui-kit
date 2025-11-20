@@ -80,7 +80,7 @@ export interface CommerceEngineDefinition<
    * // For recommendations
    * const staticState = await recommendationEngineDefinition.fetchStaticState({
    *   navigatorContext: { ... },
-   *   context: { .... },
+   *   context: { ... },
    *   recommendations: ['popularProducts'],
    *   productId: 'abc123'
    * });
