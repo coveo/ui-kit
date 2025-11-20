@@ -13,11 +13,27 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import '../atomic-ai-citation-list/atomic-ai-citation-list';
+import '../atomic-ai-related-questions/atomic-ai-related-questions';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {renderGeneratedAnswerActions} from '../../common/generated-answer/atomic-generated-answer-actions/atomic-generated-answer-actions';
 import {renderAtomicGeneratedContent} from '../../common/generated-answer/generated-content/lit/atomic-generated-content';
 import {renderGeneratedTextStatus} from '../../common/generated-answer/generated-content/lit/generated-text-status';
+
+const sampleRelatedQuestions = [
+  {
+    id: '1',
+    question: 'What is a query pipeline?',
+  },
+  {
+    id: '2',
+    question: 'What is a query?',
+  },
+  {
+    id: '3',
+    question: 'What is Coveo Relevance Index?',
+  },
+];
 
 /**
  * The `atomic-ai-conversation` provides buttons that allow the end user to navigate through the different result pages.
@@ -58,6 +74,8 @@ export class AtomicAiConversation
   @state() isLoading = true;
   @state() isOptimizing = false;
   @state() isStreaming = false;
+
+  @state() relatedQuestions = sampleRelatedQuestions;
 
   /**
    * The answer configuration ID.
@@ -252,6 +270,10 @@ export class AtomicAiConversation
           )}
         </div>
         <div class="bottom w-full ">
+          <atomic-ai-related-questions 
+            .questions=${this.relatedQuestions}
+            answer-configuration-id=${this.answerConfigurationId}
+          ></atomic-ai-related-questions>
           <div class="w-2/3 p-4">${this.renderConversationInput()}</div>
         </div>
       </div>

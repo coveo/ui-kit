@@ -59,6 +59,7 @@ import { getDefaultSlotContent } from '@/src/utils/slot-utils';
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
  *
  * @slot default - The default slot where you can add child components to the search box.
+ * @slot ai-conversation-toggle - Slot for the AI conversation toggle button that appears next to the submit button.
  *
  * @part wrapper - The search box wrapper.
  * @part input - The search box input.
@@ -67,6 +68,7 @@ import { getDefaultSlotContent } from '@/src/utils/slot-utils';
  * @part clear-icon - The clear button's icon.
  * @part submit-button - The search box submit button.
  * @part submit-icon - The search box submit button's icon.
+ * @part ai-toggle-wrapper - The wrapper for the AI conversation toggle slot.
  * @part suggestions - A list of suggested query corrections on each panel.
  * @part suggestions-left - A list of suggested query corrections on the left panel.
  * @part suggestions-right - A list of suggested query corrections on the right panel.
@@ -725,6 +727,14 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     ];
   }
 
+  private renderAiConversationToggle() {
+    return (
+      <div part="ai-toggle-wrapper" class="flex items-center justify-center px-2">
+        <slot name="ai-conversation-toggle"></slot>
+      </div>
+    );
+  }
+
   public render() {
     this.updateBreakpoints();
 
@@ -758,7 +768,8 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
                 this.searchBox.submit();
                 this.suggestionManager.clearSuggestions();
               }}
-            />
+              />
+            {this.renderAiConversationToggle()}
             {this.renderSuggestions()}
           </SearchBoxWrapper>,
           this.renderSlotContent(),

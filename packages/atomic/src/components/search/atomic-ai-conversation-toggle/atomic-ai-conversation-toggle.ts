@@ -161,9 +161,13 @@ export class AtomicAiConversationToggle
         title: '✨ AI MODE!',
         openButton: this.openButton,
       },
-    })(html`<div slot="body">
-      <atomic-ai-conversation answer-configuration-id="04a30433-667b-4988-ba59-e9a585e41c0e"></atomic-ai-conversation>
-    </div>`)}
+    })(
+      html`<div slot="body">
+        <atomic-ai-conversation
+          answer-configuration-id="fc581be0-6e61-4039-ab26-a3f2f52f308f"
+        ></atomic-ai-conversation>
+      </div>`
+    )}
     ${renderButton({
       props: {
         style: 'primary',

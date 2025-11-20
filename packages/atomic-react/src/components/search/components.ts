@@ -2,6 +2,7 @@ import {
   AtomicAiCitationList as LitAtomicAiCitationList,
   AtomicAiConversation as LitAtomicAiConversation,
   AtomicAiConversationToggle as LitAtomicAiConversationToggle,
+  AtomicAiRelatedQuestions as LitAtomicAiRelatedQuestions,
   AtomicAriaLive as LitAtomicAriaLive,
   AtomicComponentError as LitAtomicComponentError,
   AtomicExternal as LitAtomicExternal,
@@ -61,6 +62,12 @@ export const AtomicAiConversationToggle = createComponent({
   tagName: 'atomic-ai-conversation-toggle',
   react: React,
   elementClass: LitAtomicAiConversationToggle,
+});
+
+export const AtomicAiRelatedQuestions = createComponent({
+  tagName: 'atomic-ai-related-questions',
+  react: React,
+  elementClass: LitAtomicAiRelatedQuestions,
 });
 
 export const AtomicAriaLive = createComponent({
