@@ -21,7 +21,7 @@ export const wrapInSearchInterface = ({
   play: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
-    <atomic-search-interface ${spreadProps(includeCodeRoot ? { id: 'code-root' } : {})}>
+    <atomic-search-interface ${spreadProps(includeCodeRoot ? { id: 'code-root' } : {})} pipeline="RGA Coveo Docs">
       ${story()}
     </atomic-search-interface>
   `,
@@ -34,6 +34,9 @@ export const wrapInSearchInterface = ({
     await step('Render the Search Interface', async () => {
       await searchInterface!.initialize({
         ...getSampleSearchEngineConfiguration(),
+        organizationId: 'lbergeronsfdevt1z2624x',
+        environment: 'dev',
+        accessToken: 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyR3JvdXBzIjpbIlN5c3RlbSBBZG1pbmlzdHJhdG9yIl0sInY4Ijp0cnVlLCJ0b2tlbklkIjoidnZtbzVtZW5vcXhhdnRmazJtbzIyYjJkZWEiLCJvcmdhbml6YXRpb24iOiJsYmVyZ2Vyb25zZmRldnQxejI2MjR4IiwidXNlcklkcyI6W3sidHlwZSI6IlVzZXIiLCJuYW1lIjoibW1pdGljaGVAY292ZW8uY29tIiwicHJvdmlkZXIiOiJFbWFpbCBTZWN1cml0eSBQcm92aWRlciJ9XSwicm9sZXMiOlsicXVlcnlFeGVjdXRvciJdLCJpc3MiOiJTZWFyY2hBcGkiLCJleHAiOjE3NjM2ODU2MzUsImlhdCI6MTc2MzU5OTIzNX0.je-dhhYQcnjgdbtMsVVIx4JuRuMub2eOT5eoN7c-K00',
         ...config,
       });
     });
