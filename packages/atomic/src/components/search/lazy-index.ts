@@ -16,6 +16,8 @@ export default {
   'atomic-relevance-inspector': async () =>
     await import('./atomic-relevance-inspector/atomic-relevance-inspector.js'),
   'atomic-result': async () => await import('./atomic-result/atomic-result.js'),
+  'atomic-result-badge': async () =>
+    await import('./atomic-result-badge/atomic-result-badge.js'),
   'atomic-result-children-template': async () =>
     await import(
       './atomic-result-children-template/atomic-result-children-template.js'
