@@ -43,14 +43,6 @@ function extractCustomElementTags() {
         for (const match of litMatches) {
           tags.add(match[1]);
         }
-
-        // Match Stencil decorator: @Component({tag: 'tag-name', ...})
-        const stencilMatches = content.matchAll(
-          /@Component\([^)]*tag:\s*['"]([^'"]+)['"]/g
-        );
-        for (const stencilMatch of stencilMatches) {
-          tags.add(stencilMatch[1]);
-        }
       }
     }
   }
