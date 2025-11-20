@@ -174,6 +174,7 @@ export interface CommonBuildConfig {
    * // Setting cart state during static state fetch
    * const staticState = await engineDefinition.fetchStaticState({
    *   cart: {
+   *     // This is a simplified example. The actual item structure may require additional properties.
    *     items: [{ productId: 'abc123', quantity: 1 }]
    *   },
    *   // ...other config
