@@ -91,7 +91,7 @@ Execute this workflow **autonomously** for every prompt engineering request:
 
 **Determine what type of artifact to create:**
 
-#### Four Prompt Types
+#### Three Prompt Types
 
 **a) Basic Prompt** - One-time task for direct copy-paste
 - **Use when:** Single-use task, no future reuse expected
