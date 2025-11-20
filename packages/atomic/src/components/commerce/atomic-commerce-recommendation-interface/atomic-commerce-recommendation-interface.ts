@@ -17,6 +17,7 @@ import {errorGuard} from '@/src/decorators/error-guard.js';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin.js';
+import {ATOMIC_CUSTOM_ELEMENT_TAGS} from '@/src/utils/custom-element-tags';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
 import {bindingsContext} from '../../common/context/bindings-context.js';
 import {augmentAnalyticsConfigWithAtomicVersion} from '../../common/interface/analytics-config.js';
@@ -303,7 +304,9 @@ export class AtomicCommerceRecommendationInterface
   private async waitForAllVanillaChildrenComponentsToBeDefined() {
     await Promise.all(
       Array.from(this.querySelectorAll('*'))
-        .filter((el) => el.tagName.startsWith('ATOMIC-'))
+        .filter((el) =>
+          ATOMIC_CUSTOM_ELEMENT_TAGS.has(el.tagName.toLowerCase())
+        )
         .map((el) => customElements.whenDefined(el.tagName.toLowerCase()))
     );
   }
