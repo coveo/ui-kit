@@ -54,6 +54,7 @@ import {
   AtomicProductSectionName as LitAtomicProductSectionName,
   AtomicProductSectionVisual as LitAtomicProductSectionVisual,
   AtomicProductText as LitAtomicProductText,
+  GeneratedMarkdownContent as LitGeneratedMarkdownContent,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
@@ -386,4 +387,10 @@ export const AtomicProductText = createComponent({
   tagName: 'atomic-product-text',
   react: React,
   elementClass: LitAtomicProductText,
+});
+
+export const GeneratedMarkdownContent = createComponent({
+  tagName: 'generated-markdown-content',
+  react: React,
+  elementClass: LitGeneratedMarkdownContent,
 });

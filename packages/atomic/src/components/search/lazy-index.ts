@@ -4,6 +4,10 @@ export default {
     await import('./atomic-ai-citation-list/atomic-ai-citation-list.js'),
   'atomic-ai-conversation': async () =>
     await import('./atomic-ai-conversation/atomic-ai-conversation.js'),
+  'atomic-ai-conversation-toggle': async () =>
+    await import(
+      './atomic-ai-conversation-toggle/atomic-ai-conversation-toggle.js'
+    ),
   'atomic-external': async () =>
     await import('./atomic-external/atomic-external.js'),
   'atomic-facet': async () => await import('./atomic-facet/atomic-facet.js'),

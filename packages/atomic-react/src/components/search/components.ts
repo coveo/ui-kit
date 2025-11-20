@@ -1,6 +1,7 @@
 import {
   AtomicAiCitationList as LitAtomicAiCitationList,
   AtomicAiConversation as LitAtomicAiConversation,
+  AtomicAiConversationToggle as LitAtomicAiConversationToggle,
   AtomicAriaLive as LitAtomicAriaLive,
   AtomicComponentError as LitAtomicComponentError,
   AtomicExternal as LitAtomicExternal,
@@ -39,6 +40,7 @@ import {
   AtomicSearchInterface as LitAtomicSearchInterface,
   AtomicSearchLayout as LitAtomicSearchLayout,
   AtomicText as LitAtomicText,
+  GeneratedMarkdownContent as LitGeneratedMarkdownContent,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
@@ -53,6 +55,12 @@ export const AtomicAiConversation = createComponent({
   tagName: 'atomic-ai-conversation',
   react: React,
   elementClass: LitAtomicAiConversation,
+});
+
+export const AtomicAiConversationToggle = createComponent({
+  tagName: 'atomic-ai-conversation-toggle',
+  react: React,
+  elementClass: LitAtomicAiConversationToggle,
 });
 
 export const AtomicAriaLive = createComponent({
@@ -281,4 +289,10 @@ export const AtomicText = createComponent({
   tagName: 'atomic-text',
   react: React,
   elementClass: LitAtomicText,
+});
+
+export const GeneratedMarkdownContent = createComponent({
+  tagName: 'generated-markdown-content',
+  react: React,
+  elementClass: LitGeneratedMarkdownContent,
 });
