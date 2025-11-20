@@ -1,0 +1,53 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+import * as AtomicPagerStories from './atomic-ai-conversation.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicPagerStories} />
+
+<AtomicDocTemplate
+  stories={AtomicPagerStories}
+  githubPath="search/atomic-ai-conversation/atomic-ai-conversation.ts"
+  tagName="atomic-ai-conversation"
+  className="AtomicAiConversation"
+>
+
+The `atomic-ai-conversation` component provides buttons that allow the end user to navigate through the different result pages.
+
+This component should be placed within an `atomic-search-interface` component, usually in the "pagination" section of the layout.
+
+**Note:** Use either `atomic-ai-conversation` OR `atomic-load-more-results` for pagination, but not both. These components provide alternative pagination approaches:
+- `atomic-ai-conversation`: Provides traditional page-based navigation with numbered pages. It is often used along with the `atomic-results-per-page` component.
+- `atomic-load-more-results`: Allows users to incrementally load additional results with a "Load More" button.
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+      <atomic-layout-section section="pagination">
+        <div style="background: green; width: 1000px">
+        <atomic-ai-conversation></atomic-ai-conversation>
+        </div>
+
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+## Customization
+
+You can customize the number of page buttons displayed and the icons used for the previous/next buttons:
+
+```html
+<atomic-ai-conversation 
+  answer-configuration-id="04a30433-667b-4988-ba59-e9a585e41c0e" >
+</atomic-ai-conversation>
+```
+
+The component automatically hides when there are no search results or when there's an error state.
+
+</AtomicDocTemplate>

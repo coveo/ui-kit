@@ -1,4 +1,6 @@
 import {
+  AtomicAiCitationList as LitAtomicAiCitationList,
+  AtomicAiConversation as LitAtomicAiConversation,
   AtomicAriaLive as LitAtomicAriaLive,
   AtomicComponentError as LitAtomicComponentError,
   AtomicExternal as LitAtomicExternal,
@@ -40,6 +42,18 @@ import {
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
+
+export const AtomicAiCitationList = createComponent({
+  tagName: 'atomic-ai-citation-list',
+  react: React,
+  elementClass: LitAtomicAiCitationList,
+});
+
+export const AtomicAiConversation = createComponent({
+  tagName: 'atomic-ai-conversation',
+  react: React,
+  elementClass: LitAtomicAiConversation,
+});
 
 export const AtomicAriaLive = createComponent({
   tagName: 'atomic-aria-live',
