@@ -17,6 +17,7 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
+import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 import {getStringValueFromResultOrNull} from '@/src/utils/result-utils';
@@ -28,7 +29,7 @@ import '../atomic-text/atomic-text';
 @customElement('atomic-result-text')
 @bindings()
 export class AtomicResultText
-  extends LightDomMixin(LitElement)
+  extends LightDomMixin(InitializeBindingsMixin(LitElement))
   implements InitializableComponent<Bindings>
 {
   /**

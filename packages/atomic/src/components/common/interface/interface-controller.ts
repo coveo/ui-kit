@@ -2,10 +2,15 @@ import type {LogLevel} from '@coveo/headless';
 import type {i18n, TFunction} from 'i18next';
 import Backend from 'i18next-http-backend';
 import type {LitElement, ReactiveController} from 'lit';
+import elementMap from '@/src/components/lazy-index';
 import {setCoveoGlobal} from '@/src/global/environment';
 import {loadDayjsLocale} from '@/src/utils/dayjs-locales';
 import type {AnyBindings, AnyEngineType} from './bindings';
 import {i18nBackendOptions, i18nTranslationNamespace, init18n} from './i18n';
+
+const upperCaseElementMap = new Set(
+  Object.keys(elementMap).map((key) => key.toUpperCase())
+);
 
 export type InitializeEventHandler = (bindings: AnyBindings) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
@@ -135,6 +140,29 @@ export class InterfaceController<EngineType extends AnyEngineType>
   private initComponents() {
     this.hangingComponentsInitialization.forEach((event) =>
       event.detail(this.host.bindings)
+    );
+  }
+
+  /**
+   * Waits for all child Atomic components to be defined by the autoloader.
+   * Uses the lazy-index elementMap to determine which elements are Atomic components.
+   *
+   * @returns A promise that resolves when all Atomic components are defined.
+   */
+  public async waitForAllCustomElementDefined(): Promise<void> {
+    const uniqueAtomicTags = new Set<string>();
+
+    for (const element of Array.from(this.host.querySelectorAll('*'))) {
+      const tagName = element.tagName;
+      if (tagName.includes('-') && upperCaseElementMap.has(tagName)) {
+        uniqueAtomicTags.add(tagName);
+      }
+    }
+
+    await Promise.all(
+      Array.from(uniqueAtomicTags).map((tagName) =>
+        window.customElements.whenDefined(tagName.toLowerCase())
+      )
     );
   }
 

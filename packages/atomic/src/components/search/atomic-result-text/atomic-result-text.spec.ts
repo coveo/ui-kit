@@ -10,6 +10,16 @@ import {AtomicResultText} from './atomic-result-text';
 import './atomic-result-text';
 
 vi.mock('@coveo/headless', {spy: true});
+vi.mock('@/src/mixins/bindings-mixin', () => ({
+  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
+    return class extends superClass {
+      // biome-ignore lint/complexity/noUselessConstructor: <mocking the mixin for testing>
+      constructor(...args: unknown[]) {
+        super(...args);
+      }
+    };
+  }),
+}));
 
 describe('atomic-result-text', () => {
   let i18n: i18n;

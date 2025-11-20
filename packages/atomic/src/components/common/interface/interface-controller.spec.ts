@@ -29,6 +29,13 @@ vi.mock('i18next-http-backend', () => {
     default: mockBackend,
   };
 });
+vi.mock('@/src/components/lazy-index.js', () => ({
+  default: {
+    'atomic-test-element': vi.fn(),
+    'atomic-another-element': vi.fn(),
+    'atomic-facet': vi.fn(),
+  } as Record<string, () => Promise<unknown>>,
+}));
 
 describe('InterfaceController', () => {
   const setupElement = async () => {
@@ -285,6 +292,35 @@ describe('InterfaceController', () => {
           atomicInterface.bindings
         );
       });
+    });
+  });
+
+  describe('#waitForAllCustomElementDefined', () => {
+    it('should wait for Atomic components to be defined', async () => {
+      const atomicInterface = await setupElement();
+      const atomicElement1 = document.createElement('atomic-test-element');
+      const atomicElement2 = document.createElement('atomic-another-element');
+      const nonAtomicElement = document.createElement('other-custom-element');
+      atomicInterface.appendChild(atomicElement1);
+      atomicInterface.appendChild(atomicElement2);
+      atomicInterface.appendChild(nonAtomicElement);
+
+      const helper = new InterfaceController(
+        atomicInterface,
+        'CoveoAtomic',
+        VERSION
+      );
+      const whenDefinedSpy = vi
+        .spyOn(window.customElements, 'whenDefined')
+        .mockResolvedValue(undefined as never);
+
+      await helper.waitForAllCustomElementDefined();
+
+      // Should be called for both atomic elements (which are in elementMap)
+      expect(whenDefinedSpy).toHaveBeenCalledWith('atomic-test-element');
+      expect(whenDefinedSpy).toHaveBeenCalledWith('atomic-another-element');
+      // Should NOT be called for other-custom-element (not in elementMap)
+      expect(whenDefinedSpy).not.toHaveBeenCalledWith('other-custom-element');
     });
   });
 

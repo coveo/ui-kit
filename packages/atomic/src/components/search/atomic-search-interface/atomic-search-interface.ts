@@ -591,22 +591,6 @@ export class AtomicSearchInterface
     window.addEventListener('hashchange', this.onHashChange);
   }
 
-  private async internalInitialization(initEngine: () => void) {
-    await Promise.all([
-      this.interfaceController.onInitialization(initEngine),
-      this.i18Initialized,
-    ]);
-    this.updateLanguage();
-    this.bindings = this.getBindings();
-    markParentAsReady(this);
-    this.pipeline = this.engine!.state.pipeline;
-    this.searchHub = this.engine!.state.searchHub;
-    this.initSearchStatus();
-    await this.getUpdateComplete();
-    this.initUrlManager();
-    this.initialized = true;
-  }
-
   private initSearchStatus() {
     this.searchStatus = buildSearchStatus(this.engine!);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => {
@@ -650,6 +634,24 @@ export class AtomicSearchInterface
   private onHashChange = () => {
     this.urlManager.synchronize(this.fragment);
   };
+
+  private async internalInitialization(initEngine: () => void) {
+    await Promise.all([
+      this.interfaceController.onInitialization(initEngine),
+      this.i18Initialized,
+    ]);
+    this.updateLanguage();
+    this.bindings = this.getBindings();
+    markParentAsReady(this);
+    this.pipeline = this.engine!.state.pipeline;
+    this.searchHub = this.engine!.state.searchHub;
+    this.initSearchStatus();
+    await this.interfaceController.waitForAllCustomElementDefined();
+    await this.getUpdateComplete();
+
+    this.initUrlManager();
+    this.initialized = true;
+  }
 }
 
 declare global {

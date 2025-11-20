@@ -6,6 +6,17 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {AtomicText} from './atomic-text';
 import './atomic-text';
 
+vi.mock('@/src/mixins/bindings-mixin', () => ({
+  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
+    return class extends superClass {
+      // biome-ignore lint/complexity/noUselessConstructor: <mocking the mixin for testing>
+      constructor(...args: unknown[]) {
+        super(...args);
+      }
+    };
+  }),
+}));
+
 describe('atomic-text', () => {
   let i18n: i18n;
 
