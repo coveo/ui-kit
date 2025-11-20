@@ -72,10 +72,6 @@ export class AtomicResultBadge
 
   private resultContext = createResultContextController(this);
 
-  private get result(): Result {
-    return this.resultContext.item as Result;
-  }
-
   /**
    * The field to display in the badge.
    *
@@ -137,10 +133,11 @@ export class AtomicResultBadge
   }
 
   willUpdate() {
-    if (this.field && this.result) {
+    if (this.field && this.resultContext.item) {
+      const result = this.resultContext.item as Result;
+
       const hasValue =
-        ResultTemplatesHelpers.getResultProperty(this.result, this.field) !==
-        null;
+        ResultTemplatesHelpers.getResultProperty(result, this.field) !== null;
       if (!hasValue) {
         this.remove();
       }
