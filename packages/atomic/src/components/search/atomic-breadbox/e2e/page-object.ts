@@ -19,13 +19,14 @@ export class AtomicBreadboxPageObject extends BasePageObject {
   }
 
   getFacetValue(
-    facetType: 'objecttype' | 'filetype' | 'source',
+    facetType: 'objecttype' | 'filetype' | 'source' | 'author',
     value?: string | RegExp
   ) {
     const facetTypeLocators = {
       objecttype: 'atomic-facet[field="objecttype"]',
       filetype: 'atomic-facet[field="filetype"]',
       source: 'atomic-facet[field="source"]',
+      author: 'atomic-facet[field="author"]',
     };
 
     const facetSelector = facetTypeLocators[facetType];
@@ -94,12 +95,42 @@ export class AtomicBreadboxPageObject extends BasePageObject {
   }
 
   async selectFacetValueByIndex(
-    facetType: 'objecttype' | 'filetype' | 'source',
+    facetType: 'objecttype' | 'filetype' | 'source' | 'author',
     index: number
   ) {
     const facetValues = this.getFacetValue(facetType);
     await facetValues.nth(index).waitFor({state: 'visible', timeout: 10000});
     await facetValues.nth(index).click();
+  }
+
+  getAutomaticFacetValues() {
+    return this.page.locator(
+      'atomic-automatic-facet button[part="value-checkbox"]'
+    );
+  }
+
+  async selectAutomaticFacetValue(index: number) {
+    const automaticValues = this.getAutomaticFacetValues();
+    await automaticValues
+      .nth(index)
+      .waitFor({state: 'visible', timeout: 10000});
+    await automaticValues.nth(index).click();
+  }
+
+  getExcludeButtons(facetType?: string) {
+    const selector = facetType
+      ? `atomic-facet[field="${facetType}"] button[aria-label*="Exclude"]`
+      : 'button[aria-label*="Exclude"]';
+    return this.page.locator(selector);
+  }
+
+  async excludeFacetValue(
+    facetType: 'objecttype' | 'filetype' | 'source' | 'author',
+    index: number
+  ) {
+    const excludeButtons = this.getExcludeButtons(facetType);
+    await excludeButtons.nth(index).waitFor({state: 'visible', timeout: 10000});
+    await excludeButtons.nth(index).click();
   }
 
   async selectCategoryFacetValue(index: number) {

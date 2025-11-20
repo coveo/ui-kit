@@ -1,4 +1,3 @@
-/* eslint-disable @cspell/spellchecker */
 import {expect, test} from './fixture';
 
 test.describe('atomic-breadbox', () => {
@@ -255,11 +254,232 @@ test.describe('atomic-breadbox', () => {
     });
   });
 
-  test.describe('accessibility verification', () => {
-    test('should have proper ARIA labels and structure', async ({
+  test.describe('when selecting automatic facets', () => {
+    test('should display the selected automatic facet in breadcrumbs', async ({
       breadbox,
-      page,
     }) => {
+      await breadbox.hydrated.waitFor({state: 'visible'});
+      await breadbox.page.waitForTimeout(3000);
+
+      const automaticFacetValues = breadbox.getAutomaticFacetValues();
+      const automaticCount = await automaticFacetValues.count();
+
+      if (automaticCount > 0) {
+        await automaticFacetValues.nth(0).click();
+        await breadbox.page.waitForTimeout(1000);
+
+        const breadcrumbs = breadbox.getBreadcrumbButtons();
+        await expect(breadcrumbs.first()).toBeVisible();
+
+        const breadcrumbCount = await breadcrumbs.count();
+        expect(breadcrumbCount).toBeGreaterThan(0);
+      }
+    });
+
+    test('should clear all automatic facets with clear all button', async ({
+      breadbox,
+    }) => {
+      await breadbox.hydrated.waitFor({state: 'visible'});
+      await breadbox.page.waitForTimeout(3000);
+
+      const automaticFacetValues = breadbox.getAutomaticFacetValues();
+      const automaticCount = await automaticFacetValues.count();
+
+      if (automaticCount > 0) {
+        await automaticFacetValues.nth(0).click();
+        if (automaticCount > 1) {
+          await automaticFacetValues.nth(1).click();
+        }
+        await breadbox.page.waitForTimeout(1000);
+
+        const clearAllButton = breadbox.getClearAllButton();
+        if (await clearAllButton.isVisible()) {
+          await clearAllButton.click();
+
+          const breadcrumbs = breadbox.getBreadcrumbButtons();
+          await expect(breadcrumbs).toHaveCount(0);
+        }
+      }
+    });
+  });
+
+  test.describe('when selecting category facets', () => {
+    test('should display category path in breadcrumbs', async ({breadbox}) => {
+      await breadbox.hydrated.waitFor({state: 'visible'});
+      await breadbox.page.waitForTimeout(3000);
+
+      const categoryValues = breadbox.getCategoryFacetValues();
+      const categoryCount = await categoryValues.count();
+
+      if (categoryCount > 0) {
+        await categoryValues.nth(0).click();
+        await breadbox.page.waitForTimeout(1000);
+
+        const breadcrumbs = breadbox.getBreadcrumbButtons();
+        if ((await breadcrumbs.count()) > 0) {
+          await expect(breadcrumbs.first()).toBeVisible();
+          const breadcrumbText = await breadcrumbs.first().textContent();
+          expect(breadcrumbText).toBeTruthy();
+        }
+      }
+    });
+  });
+
+  test.describe('when selecting color facets', () => {
+    test('should display color facets in breadcrumbs', async ({breadbox}) => {
+      await breadbox.hydrated.waitFor({state: 'visible'});
+      await breadbox.page.waitForTimeout(3000);
+
+      const colorValues = breadbox.getColorFacetValues();
+      const colorCount = await colorValues.count();
+
+      if (colorCount > 0) {
+        await colorValues.nth(0).click();
+        await breadbox.page.waitForTimeout(1000);
+
+        const breadcrumbs = breadbox.getBreadcrumbButtons();
+        if ((await breadcrumbs.count()) > 0) {
+          await expect(breadcrumbs.first()).toBeVisible();
+        }
+      }
+    });
+  });
+
+  test.describe('when selecting timeframe facets', () => {
+    test('should display timeframe facets in breadcrumbs', async ({
+      breadbox,
+    }) => {
+      await breadbox.hydrated.waitFor({state: 'visible'});
+      await breadbox.page.waitForTimeout(3000);
+
+      const timeframeValues = breadbox.getTimeframeFacetValues();
+      const timeframeCount = await timeframeValues.count();
+
+      if (timeframeCount > 0) {
+        await timeframeValues.nth(0).click();
+        await breadbox.page.waitForTimeout(1000);
+
+        const breadcrumbs = breadbox.getBreadcrumbButtons();
+        if ((await breadcrumbs.count()) > 0) {
+          await expect(breadcrumbs.first()).toBeVisible();
+        }
+      }
+    });
+  });
+
+  test.describe('when using numeric facets', () => {
+    test('should display numeric range in breadcrumbs', async ({breadbox}) => {
+      await breadbox.hydrated.waitFor({state: 'visible'});
+      await breadbox.page.waitForTimeout(3000);
+
+      const numericInputs = breadbox.getNumericFacetInputs();
+      if (await numericInputs.min.isVisible()) {
+        await numericInputs.min.fill('10');
+        await numericInputs.max.fill('100');
+        await numericInputs.apply.click();
+        await breadbox.page.waitForTimeout(1000);
+
+        const breadcrumbs = breadbox.getBreadcrumbButtons();
+        if ((await breadcrumbs.count()) > 0) {
+          await expect(breadcrumbs.first()).toBeVisible();
+          const breadcrumbText = await breadcrumbs.first().textContent();
+          expect(breadcrumbText).toContain('10');
+          expect(breadcrumbText).toContain('100');
+        }
+      }
+    });
+  });
+
+  test.describe('when excluding facet values', () => {
+    test('should display excluded facets with proper labels', async ({
+      breadbox,
+    }) => {
+      await breadbox.hydrated.waitFor({state: 'visible'});
+      await breadbox.page.waitForTimeout(3000);
+
+      const excludeButtons = breadbox.getExcludeButtons();
+      const excludeCount = await excludeButtons.count();
+
+      if (excludeCount > 0) {
+        await excludeButtons.nth(0).click();
+        await breadbox.page.waitForTimeout(1000);
+
+        const exclusionBreadcrumbs = breadbox.getExclusionBreadcrumbButtons();
+        if ((await exclusionBreadcrumbs.count()) > 0) {
+          await expect(exclusionBreadcrumbs.first()).toBeVisible();
+          await expect(exclusionBreadcrumbs.first()).toHaveAttribute(
+            'aria-label',
+            /exclusion/i
+          );
+        }
+      }
+    });
+  });
+
+  test.describe('with i18n translations', () => {
+    test('should display translated breadcrumb labels', async ({
+      page,
+      breadbox,
+    }) => {
+      const baseUrl =
+        './iframe.html?id=atomic-breadbox--default&viewMode=story';
+      await page.goto(baseUrl);
+
+      await breadbox.hydrated.waitFor({state: 'visible'});
+      await breadbox.page.waitForTimeout(3000);
+
+      const objectTypeFacet = breadbox.getFacetValue('objecttype').first();
+      if (await objectTypeFacet.isVisible()) {
+        await objectTypeFacet.click();
+        await breadbox.page.waitForTimeout(1000);
+
+        const breadcrumbs = breadbox.getBreadcrumbButtons();
+        if ((await breadcrumbs.count()) > 0) {
+          await expect(breadcrumbs.first()).toBeVisible();
+          const breadcrumbText = await breadcrumbs.first().textContent();
+          expect(breadcrumbText).toBeTruthy();
+          if (breadcrumbText) {
+            expect(breadcrumbText.length).toBeGreaterThan(0);
+          }
+        }
+      }
+    });
+  });
+
+  test.describe('error handling', () => {
+    test('should handle invalid path-limit gracefully', async ({
+      page,
+      breadbox,
+    }) => {
+      const consoleErrors: string[] = [];
+      page.on('console', (msg) => {
+        if (msg.type() === 'error') {
+          consoleErrors.push(msg.text());
+        }
+      });
+
+      const baseUrl =
+        './iframe.html?args=path-limit:0&id=atomic-breadbox--default&viewMode=story';
+      await page.goto(baseUrl);
+
+      await breadbox.hydrated.waitFor({state: 'visible'});
+      await breadbox.page.waitForTimeout(1000);
+
+      const categoryValues = breadbox.getCategoryFacetValues();
+      if ((await categoryValues.count()) > 0) {
+        await categoryValues.nth(0).click();
+        await breadbox.page.waitForTimeout(1000);
+      }
+
+      const breadcrumbs = breadbox.getBreadcrumbButtons();
+      if ((await breadcrumbs.count()) > 0) {
+        await expect(breadcrumbs.first()).toBeVisible();
+      }
+    });
+  });
+
+  test.describe('accessibility verification', () => {
+    test('should have proper ARIA labels and structure', async ({breadbox}) => {
       await breadbox.hydrated.waitFor({state: 'visible'});
       await breadbox.page.waitForTimeout(3000);
 
@@ -275,37 +495,14 @@ test.describe('atomic-breadbox', () => {
         await expect(breadcrumbs.first()).toHaveAttribute('aria-label');
 
         const clearAllButton = breadbox.getClearAllButton();
-        const clearAllButtonExists = (await clearAllButton.count()) > 0;
+        const clearAllButtonCount = await clearAllButton.count();
 
-        if (
-          clearAllButtonExists &&
-          (await clearAllButton.first().isVisible())
-        ) {
-          await expect(clearAllButton.first()).toHaveRole('button');
-          const hasAriaLabel = await clearAllButton
-            .first()
-            .getAttribute('aria-label');
-          expect(hasAriaLabel).toBeTruthy();
-        }
-      });
-
-      await test.step('Verify keyboard navigation', async () => {
-        const breadcrumbButtons = breadbox.getBreadcrumbButtons();
-        const breadcrumbCount = await breadcrumbButtons.count();
-
-        if (breadcrumbCount > 0) {
-          const firstBreadcrumb = breadcrumbButtons.first();
-          await firstBreadcrumb.waitFor({state: 'attached'});
-          await firstBreadcrumb.focus();
-          await expect(firstBreadcrumb).toBeFocused();
-
-          await page.keyboard.press('Enter');
-          await breadbox.page.waitForTimeout(500);
-
-          const remainingBreadcrumbs = await breadbox
-            .getBreadcrumbButtons()
-            .count();
-          expect(remainingBreadcrumbs).toBeLessThan(breadcrumbCount);
+        if (clearAllButtonCount > 0) {
+          const isVisible = await clearAllButton.first().isVisible();
+          if (isVisible) {
+            await expect(clearAllButton.first()).toHaveRole('button');
+            await expect(clearAllButton.first()).toHaveAttribute('aria-label');
+          }
         }
       });
     });

@@ -83,7 +83,7 @@ export class AtomicCommerceBreadbox
         @apply text-error;
       }
 
-      /* When excluded, strikethrough line must be continuous, so we must prepend empty character instead of margin */
+      /* Prepend non-breaking space to all breadcrumb values for consistent spacing */
       [part='breadcrumb-value']::before {
         content: '\00a0';
       }

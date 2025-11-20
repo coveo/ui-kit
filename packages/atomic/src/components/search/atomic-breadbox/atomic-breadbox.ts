@@ -59,11 +59,6 @@ export class AtomicBreadbox
         text-decoration: line-through;
         @apply text-error;
       }
-
-      /* When excluded, strikethrough line must be continuous, so we must prepend empty character instead of margin */
-      [part='breadcrumb-value']::before {
-        content: '\00a0';
-      }
     `,
   ];
 
