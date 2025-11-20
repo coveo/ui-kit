@@ -1,3 +1,4 @@
+import {execSync} from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -150,6 +151,11 @@ export async function waitForAtomicChildrenToBeDefined(
 
   fs.writeFileSync(outputFile, fileContent, 'utf-8');
   console.log(colors.green(`Generated ${outputFile}`));
+
+  // Format the generated file with biome
+  console.log(colors.blue('Formatting with biome...'));
+  execSync(`npx @biomejs/biome format --write ${outputFile}`);
+  console.log(colors.green('Formatting complete'));
 }
 
 // Run if executed directly
