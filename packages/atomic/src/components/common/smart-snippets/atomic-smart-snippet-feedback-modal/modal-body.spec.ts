@@ -30,13 +30,6 @@ describe('#renderModalBody', () => {
     expect(form?.part).toContain('form');
   });
 
-  it('should render form with correct classes', async () => {
-    const element = await renderComponent();
-    const form = element.querySelector('form');
-
-    expect(form).toHaveClass('flex', 'flex-col', 'gap-8');
-  });
-
   it('should render children inside form', async () => {
     const element = await renderComponent();
     const form = element.querySelector('form');

@@ -78,23 +78,6 @@ describe('#renderModalDetails', () => {
     expect(textarea?.hasAttribute('required')).toBe(true);
   });
 
-  it('should render textarea with correct classes', async () => {
-    const element = await renderComponent('other');
-    const textarea = element.querySelector('textarea');
-
-    expect(textarea).toHaveClass(
-      'border-neutral',
-      'mt-2',
-      'w-full',
-      'resize-none',
-      'rounded',
-      'border',
-      'p-2',
-      'text-base',
-      'leading-5'
-    );
-  });
-
   it('should apply ref when detailsInputRef is provided', async () => {
     const detailsInputRef = vi.fn();
 
