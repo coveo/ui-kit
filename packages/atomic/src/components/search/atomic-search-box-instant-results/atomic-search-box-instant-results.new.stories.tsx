@@ -1,20 +1,14 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
-import {within} from 'shadow-dom-testing-library';
-import {userEvent} from 'storybook/test';
+import {expect, userEvent} from 'storybook/test';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
-  config: {
-    accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-    organizationId: 'searchuisamples',
-    search: {
-      searchHub: 'MainSearch',
-    },
-  },
-});
+const mockSearchApi = new MockSearchApi();
+
+const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface();
 
 const searchBoxDecorator = (story: () => unknown) =>
   html`<atomic-search-box>
@@ -38,15 +32,24 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
+    msw: {handlers: [...mockSearchApi.handlers]},
   },
+  tags: ['!test'],
   args,
   argTypes,
 
   play: async (context) => {
+    const {canvas, step} = context;
     await play(context);
-    const canvas = within(context.canvasElement);
     const searchBox = await canvas.findAllByShadowPlaceholderText('Search');
-    await userEvent.click(searchBox[0]);
+    await step('Click on the search box to show instant results', async () => {
+      await userEvent.click(searchBox[0]);
+      await expect(
+        await canvas.findByShadowLabelText(
+          /Sample Result 0, instant result\.( Button\.)? 1 of \d+\. In Right list\./
+        )
+      ).toBeVisible();
+    });
   },
 };
 

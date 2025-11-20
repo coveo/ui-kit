@@ -7,9 +7,9 @@ import {
   type InteractiveResultProps,
   type Result,
 } from '@coveo/headless';
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {page} from 'vitest/browser';
 import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
@@ -74,7 +74,8 @@ describe('atomic-result-list', () => {
     expect(element).toBeInstanceOf(AtomicResultList);
   });
 
-  it.each<{
+  // TODO V4: KIT-5197 - Remove skip
+  it.skip.each<{
     prop: 'density' | 'display' | 'imageSize';
     invalidValue: string | number;
   }>([
@@ -106,7 +107,57 @@ describe('atomic-result-list', () => {
     }
   );
 
+  // TODO V4: KIT-5197 - Remove this test
   it.each<{
+    prop: 'density' | 'display' | 'imageSize';
+    validValue: ItemDisplayDensity | ItemDisplayLayout | ItemDisplayImageSize;
+    invalidValue: string | number;
+  }>([
+    {
+      prop: 'density',
+      validValue: 'normal',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'display',
+      validValue: 'list',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'imageSize',
+      validValue: 'small',
+      invalidValue: 'invalid',
+    },
+  ])(
+    'should log validation warning when #$prop is updated to invalid value',
+    async ({prop, validValue, invalidValue}) => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+
+      const element = await setupElement({[prop]: validValue});
+
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
+
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'Prop validation failed for component atomic-result-list'
+        ),
+        element
+      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(prop),
+        element
+      );
+
+      consoleWarnSpy.mockRestore();
+    }
+  );
+
+  // TODO V4: KIT-5197 - Remove skip
+  it.skip.each<{
     prop: 'density' | 'display' | 'imageSize';
     validValue: ItemDisplayDensity | ItemDisplayLayout | ItemDisplayImageSize;
     invalidValue: string | number;

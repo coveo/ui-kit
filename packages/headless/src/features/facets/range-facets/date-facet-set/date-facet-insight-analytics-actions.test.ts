@@ -1,3 +1,4 @@
+import {CoveoInsightClient} from 'coveo.analytics';
 import type {ThunkExtraArguments} from '../../../../app/thunk-extra-arguments.js';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request.js';
 import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice.js';
@@ -9,16 +10,10 @@ import {logDateFacetBreadcrumb} from './date-facet-insight-analytics-actions.js'
 
 const mockLogBreadcrumbFacet = vi.fn();
 
-vi.mock('coveo.analytics', () => {
-  const mockCoveoInsightClient = vi.fn(() => ({
-    disable: () => {},
-    logBreadcrumbFacet: mockLogBreadcrumbFacet,
-  }));
-
-  return {
-    CoveoInsightClient: mockCoveoInsightClient,
-    history: {HistoryStore: vi.fn()},
-  };
+vi.mock('coveo.analytics');
+vi.mocked(CoveoInsightClient).mockImplementation(function () {
+  this.disable = () => {};
+  this.logBreadcrumbFacet = mockLogBreadcrumbFacet;
 });
 
 describe('date facet insight analytics actions', () => {

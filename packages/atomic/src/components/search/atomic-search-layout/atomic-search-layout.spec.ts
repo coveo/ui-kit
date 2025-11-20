@@ -1,9 +1,9 @@
 import {beforeAll, describe, expect, it} from 'vitest';
 import './atomic-search-layout';
 import '@/src/components/common/atomic-layout-section/atomic-layout-section';
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
+import {page} from 'vitest/browser';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {AtomicSearchLayout} from './atomic-search-layout';
 

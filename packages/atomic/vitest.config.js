@@ -1,7 +1,10 @@
 import {readFileSync} from 'node:fs';
 import path, {dirname, resolve} from 'node:path';
+import replacePlugin from '@rollup/plugin-replace';
+import {storybookTest} from '@storybook/addon-vitest/vitest-plugin';
 import tailwindcss from '@tailwindcss/vite';
-import {configDefaults, defineConfig} from 'vitest/config';
+import {playwright} from '@vitest/browser-playwright';
+import {configDefaults, defineConfig, mergeConfig} from 'vitest/config';
 import packageJsonHeadless from '../headless/package.json' with {type: 'json'};
 import packageJson from './package.json' with {type: 'json'};
 
@@ -23,32 +26,57 @@ function svgTransform(code, id) {
   );
 }
 
-export default defineConfig({
-  define: {
-    'import.meta.env.RESOURCE_URL': `"${resourceUrl}"`,
-    __ATOMIC_VERSION__: `"${packageJson.version}"`,
-    __HEADLESS_VERSION__: `"${packageJsonHeadless.version}"`,
-    'process.env': {},
+function replace() {
+  return replacePlugin({
+    values: {
+      'process.env.VERSION': `"0.0.0"`,
+      'import.meta.env.RESOURCE_URL': `"${resourceUrl}"`,
+      __ATOMIC_VERSION__: `"${packageJson.version}"`,
+      __HEADLESS_VERSION__: `"${packageJsonHeadless.version}"`,
+    },
+    preventAssignment: true,
+  });
+}
+
+// More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
+const storybook = defineConfig({
+  name: 'storybook',
+  plugins: [
+    // The plugin will run tests for the stories defined in your Storybook config
+    // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
+    storybookTest({
+      configDir: path.join(import.meta.dirname, '.storybook'),
+      storybookUrl: 'http://localhost:4400',
+      storybookScript: 'npx storybook dev -p 4400 --no-open',
+    }),
+  ],
+  test: {
+    name: 'storybook',
+    fileParallelism: false,
+    browser: {
+      fileParallelism: false,
+      enabled: true,
+      headless: true,
+      provider: playwright(),
+      instances: [{browser: 'chromium'}],
+      context: {
+        actionTimeout: 3000,
+      },
+    },
+    setupFiles: ['./vitest-utils/setup.ts', '.storybook/vitest.setup.ts'],
   },
+});
+
+const atomicDefault = defineConfig({
+  name: 'atomic-default',
   server: {
     port: port,
   },
   resolve: {
     alias: [
-      {find: '@/', replacement: `${path.resolve(import.meta.dirname, './')}/`},
       {
-        find: /^@coveo\/headless\/(.*)$/,
-        replacement: path.resolve(
-          import.meta.dirname,
-          '../headless/cdn/$1/headless.esm.js'
-        ),
-      },
-      {
-        find: '@coveo/headless',
-        replacement: path.resolve(
-          import.meta.dirname,
-          '../headless/cdn/headless.esm.js'
-        ),
+        find: '@/',
+        replacement: `${path.resolve(import.meta.dirname, './')}/`,
       },
       {
         find: '../components/components/lazy-index.js',
@@ -60,6 +88,7 @@ export default defineConfig({
     ],
   },
   plugins: [
+    replace(),
     {
       name: 'force-inline-css-imports',
       enforce: 'pre',
@@ -94,6 +123,7 @@ export default defineConfig({
     },
   ],
   test: {
+    name: 'atomic-default',
     css: true,
     include: ['src/**/*.spec.ts', 'scripts/stencil-proxy.spec.mjs'],
     exclude: [
@@ -101,13 +131,9 @@ export default defineConfig({
       'src/**/initialization-utils.spec.ts',
       'src/**/search-layout.spec.ts',
     ],
-    restoreMocks: true,
     setupFiles: ['./vitest-utils/setup.ts'],
-    deps: {
-      moduleDirectories: ['node_modules', path.resolve('../../packages')],
-    },
     browser: {
-      provider: 'playwright',
+      provider: playwright(),
       enabled: true,
       instances: [
         {
@@ -119,4 +145,8 @@ export default defineConfig({
       ],
     },
   },
+});
+
+export default mergeConfig(atomicDefault, {
+  test: {projects: [atomicDefault, storybook]},
 });

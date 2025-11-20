@@ -153,7 +153,7 @@ export interface SearchAnalyticsActionCreators {
   logInterfaceChange(): LegacySearchAction;
 
   /**
-   * The event to log when a user triggers a search by clicking on a did-you-mean suggestion.
+   * The event to log when a user triggers a search by clicking a did-you-mean suggestion.
    *
    * @returns A dispatchable action.
    */

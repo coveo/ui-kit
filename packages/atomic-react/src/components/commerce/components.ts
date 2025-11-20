@@ -27,9 +27,12 @@ import {
   AtomicCommerceText as LitAtomicCommerceText,
   AtomicCommerceTimeframeFacet as LitAtomicCommerceTimeframeFacet,
   AtomicComponentError as LitAtomicComponentError,
+  AtomicFocusTrap as LitAtomicFocusTrap,
   AtomicIcon as LitAtomicIcon,
+  AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
   AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicLayoutSection as LitAtomicLayoutSection,
+  AtomicNumericRange as LitAtomicNumericRange,
   AtomicProduct as LitAtomicProduct,
   AtomicProductChildren as LitAtomicProductChildren,
   AtomicProductDescription as LitAtomicProductDescription,
@@ -223,10 +226,22 @@ export const AtomicComponentError = createComponent({
   elementClass: LitAtomicComponentError,
 });
 
+export const AtomicFocusTrap = createComponent({
+  tagName: 'atomic-focus-trap',
+  react: React,
+  elementClass: LitAtomicFocusTrap,
+});
+
 export const AtomicIcon = createComponent({
   tagName: 'atomic-icon',
   react: React,
   elementClass: LitAtomicIcon,
+});
+
+export const AtomicInsightGenerateAnswerButton = createComponent({
+  tagName: 'atomic-insight-generate-answer-button',
+  react: React,
+  elementClass: LitAtomicInsightGenerateAnswerButton,
 });
 
 export const AtomicInsightInterface = createComponent({
@@ -239,6 +254,12 @@ export const AtomicLayoutSection = createComponent({
   tagName: 'atomic-layout-section',
   react: React,
   elementClass: LitAtomicLayoutSection,
+});
+
+export const AtomicNumericRange = createComponent({
+  tagName: 'atomic-numeric-range',
+  react: React,
+  elementClass: LitAtomicNumericRange,
 });
 
 export const AtomicProduct = createComponent({

@@ -3,10 +3,11 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
-import {HttpResponse, http} from 'msw';
-import {baseSearchResponse} from '@/storybook-utils/api/search';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+
+const mockSearchApi = new MockSearchApi();
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -29,10 +30,13 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
+    msw: {handlers: [...mockSearchApi.handlers]},
   },
   args,
   argTypes,
-
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.clear();
+  },
   play,
 };
 
@@ -46,50 +50,38 @@ export const QueryTrigger: Story = {};
 
 export const WithAutomaticQueryCorrection: Story = {
   name: 'With automatic query correction',
-  parameters: {
-    msw: {
-      handlers: [
-        http.post('**/search/v2', () => {
-          return HttpResponse.json({
-            ...baseSearchResponse,
-            queryCorrection: {
-              correctedQuery: 'coveo',
-              originalQuery: 'coveoo',
-              corrections: [],
-            },
-          });
-        }),
-      ],
-    },
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mockOnce((response) => ({
+      ...response,
+      queryCorrection: {
+        correctedQuery: 'coveo',
+        originalQuery: 'coveoo',
+        corrections: [],
+      },
+    }));
   },
 };
 
 export const WithoutAutomaticQueryCorrection: Story = {
   name: 'Without automatic query correction',
-  parameters: {
-    msw: {
-      handlers: [
-        http.post('**/search/v2', () => {
-          return HttpResponse.json({
-            ...baseSearchResponse,
-            queryCorrection: {
-              corrections: [
-                {
-                  correctedQuery: 'coveo',
-                  wordCorrections: [
-                    {
-                      offset: 0,
-                      length: 5,
-                      originalWord: 'ceveo',
-                      correctedWord: 'coveo',
-                    },
-                  ],
-                },
-              ],
-            },
-          });
-        }),
-      ],
-    },
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mockOnce((response) => ({
+      ...response,
+      queryCorrection: {
+        corrections: [
+          {
+            correctedQuery: 'coveo',
+            wordCorrections: [
+              {
+                offset: 0,
+                length: 5,
+                originalWord: 'ceveo',
+                correctedWord: 'coveo',
+              },
+            ],
+          },
+        ],
+      },
+    }));
   },
 };

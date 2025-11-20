@@ -1,4 +1,5 @@
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
+import {SearchPageEvents} from '../../features/analytics/search-action-cause.js';
 import {
   logClearRecentQueries,
   logRecentQueryClick,
@@ -55,6 +56,7 @@ export function buildRecentQueriesList(
       dispatch(
         executeSearch({
           legacy: logRecentQueryClick(),
+          next: {actionCause: SearchPageEvents.recentQueriesClick},
         })
       );
     },
