@@ -1,118 +1,123 @@
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {renderShowHideButton} from './show-hide-button';
+import {
+  renderShowHideButton,
+  type ShowHideButtonProps,
+} from './show-hide-button';
 
 describe('#renderShowHideButton', () => {
-  let loadFullCollectionSpy: MockInstance;
-  let toggleShowInitialChildrenSpy: MockInstance;
-
-  beforeEach(() => {
-    loadFullCollectionSpy = vi.fn();
-    toggleShowInitialChildrenSpy = vi.fn();
-  });
-
-  const renderComponent = async (props = {}) => {
-    const defaultProps = {
-      moreResultsAvailable: false,
-      loadFullCollection: loadFullCollectionSpy,
-      showInitialChildren: false,
-      toggleShowInitialChildren: toggleShowInitialChildrenSpy,
-      loadAllResults: 'Load all results',
-      collapseResults: 'Collapse results',
-    };
-
-    const element = await renderFunctionFixture(
-      html`${renderShowHideButton({props: {...defaultProps, ...props}})}`
-    );
-
-    return {
-      button: page.getByRole('button'),
-      element,
-    };
+  const defaultProps: ShowHideButtonProps = {
+    moreResultsAvailable: false,
+    loadFullCollection: vi.fn(),
+    showInitialChildren: true,
+    toggleShowInitialChildren: vi.fn(),
+    loadAllResults: 'Load all results',
+    collapseResults: 'Collapse results',
   };
 
-  it('should render a button with part "show-hide-button"', async () => {
-    const {element} = await renderComponent();
-    const button = element.querySelector('button[part="show-hide-button"]');
+  const renderComponent = async (props: Partial<ShowHideButtonProps> = {}) => {
+    return await renderFunctionFixture(
+      html`${renderShowHideButton({props: {...defaultProps, ...props}})}`
+    );
+  };
 
-    expect(button).toBeTruthy();
+  const locators = {
+    get button() {
+      return page.getByRole('button');
+    },
+  };
+
+  it('should render a button', async () => {
+    await renderComponent();
+    await expect.element(locators.button).toBeInTheDocument();
   });
 
-  it('should render a button with class "show-hide-button"', async () => {
-    const {element} = await renderComponent();
-    const button = element.querySelector('button.show-hide-button');
-
-    expect(button).toBeTruthy();
+  it('should apply the correct part attribute', async () => {
+    const element = await renderComponent();
+    const button = element.querySelector('button');
+    expect(button).toHaveAttribute('part', 'show-hide-button');
   });
 
-  describe('when moreResultsAvailable is true and showInitialChildren is false', () => {
-    it('should display loadAllResults text', async () => {
-      const {button} = await renderComponent({
-        moreResultsAvailable: true,
-        showInitialChildren: false,
-      });
-
-      await expect.element(button).toHaveTextContent('Load all results');
-    });
-
-    it('should call loadFullCollection and toggleShowInitialChildren when clicked', async () => {
-      const {button} = await renderComponent({
-        moreResultsAvailable: true,
-        showInitialChildren: false,
-      });
-
-      await button.click();
-
-      expect(loadFullCollectionSpy).toHaveBeenCalled();
-      expect(toggleShowInitialChildrenSpy).toHaveBeenCalled();
-    });
+  it('should apply the correct class', async () => {
+    const element = await renderComponent();
+    const button = element.querySelector('button');
+    expect(button).toHaveClass('show-hide-button');
   });
 
-  describe('when showInitialChildren is true and moreResultsAvailable is false', () => {
-    it('should display loadAllResults text', async () => {
-      const {button} = await renderComponent({
-        moreResultsAvailable: false,
-        showInitialChildren: true,
-      });
-
-      await expect.element(button).toHaveTextContent('Load all results');
+  it('should display loadAllResults text when showInitialChildren is true', async () => {
+    await renderComponent({
+      showInitialChildren: true,
+      moreResultsAvailable: false,
     });
-
-    it('should only call toggleShowInitialChildren when clicked', async () => {
-      const {button} = await renderComponent({
-        moreResultsAvailable: false,
-        showInitialChildren: true,
-      });
-
-      await button.click();
-
-      expect(loadFullCollectionSpy).not.toHaveBeenCalled();
-      expect(toggleShowInitialChildrenSpy).toHaveBeenCalled();
-    });
+    await expect.element(locators.button).toHaveTextContent('Load all results');
   });
 
-  describe('when showInitialChildren is false and moreResultsAvailable is false', () => {
-    it('should display collapseResults text', async () => {
-      const {button} = await renderComponent({
-        moreResultsAvailable: false,
-        showInitialChildren: false,
-      });
+  it('should display collapseResults text when showInitialChildren is false and moreResultsAvailable is false', async () => {
+    await renderComponent({
+      showInitialChildren: false,
+      moreResultsAvailable: false,
+    });
+    await expect.element(locators.button).toHaveTextContent('Collapse results');
+  });
 
-      await expect.element(button).toHaveTextContent('Collapse results');
+  it('should display loadAllResults text when moreResultsAvailable is true', async () => {
+    await renderComponent({
+      showInitialChildren: false,
+      moreResultsAvailable: true,
+    });
+    await expect.element(locators.button).toHaveTextContent('Load all results');
+  });
+
+  it('should call loadFullCollection and toggleShowInitialChildren once when button is clicked and moreResultsAvailable is true', async () => {
+    const loadFullCollection = vi.fn();
+    const toggleShowInitialChildren = vi.fn();
+
+    await renderComponent({
+      moreResultsAvailable: true,
+      loadFullCollection,
+      toggleShowInitialChildren,
     });
 
-    it('should only call toggleShowInitialChildren when clicked', async () => {
-      const {button} = await renderComponent({
-        moreResultsAvailable: false,
-        showInitialChildren: false,
-      });
+    await locators.button.click();
 
-      await button.click();
+    expect(loadFullCollection).toHaveBeenCalledOnce();
+    expect(toggleShowInitialChildren).toHaveBeenCalledOnce();
+  });
 
-      expect(loadFullCollectionSpy).not.toHaveBeenCalled();
-      expect(toggleShowInitialChildrenSpy).toHaveBeenCalled();
+  it('should call toggleShowInitialChildren once when button is clicked and moreResultsAvailable is false', async () => {
+    const loadFullCollection = vi.fn();
+    const toggleShowInitialChildren = vi.fn();
+
+    await renderComponent({
+      moreResultsAvailable: false,
+      loadFullCollection,
+      toggleShowInitialChildren,
     });
+
+    await locators.button.click();
+
+    expect(loadFullCollection).not.toHaveBeenCalled();
+    expect(toggleShowInitialChildren).toHaveBeenCalledOnce();
+  });
+
+  it('should render custom loadAllResults text', async () => {
+    await renderComponent({
+      showInitialChildren: true,
+      loadAllResults: 'Custom load text',
+    });
+    await expect.element(locators.button).toHaveTextContent('Custom load text');
+  });
+
+  it('should render custom collapseResults text', async () => {
+    await renderComponent({
+      showInitialChildren: false,
+      moreResultsAvailable: false,
+      collapseResults: 'Custom collapse text',
+    });
+    await expect
+      .element(locators.button)
+      .toHaveTextContent('Custom collapse text');
   });
 });
