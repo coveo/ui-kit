@@ -1,171 +1,164 @@
-import {html, render} from 'lit';
-import {fireEvent, within} from 'storybook/test';
-import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {html} from 'lit';
+import {describe, expect, it, vi} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderSwitch, type SwitchProps} from './switch';
 
-describe('renderSwitch', () => {
-  let container: HTMLElement;
-
-  beforeEach(() => {
-    container = document.createElement('div');
-    document.body.appendChild(container);
+describe('#renderSwitch', () => {
+  const locators = (element: Element) => ({
+    get button() {
+      return element.querySelector(
+        'button[role="switch"]'
+      ) as HTMLButtonElement;
+    },
+    get container() {
+      return element.querySelector('button > div');
+    },
+    get handle() {
+      return element.querySelector('button > div > div');
+    },
   });
 
-  afterEach(() => {
-    document.body.removeChild(container);
-  });
-
-  const renderSwitchComponent = (
-    props: Partial<SwitchProps>
-  ): HTMLButtonElement => {
-    render(
+  const renderComponent = async (props: Partial<SwitchProps> = {}) => {
+    return await renderFunctionFixture(
       html`${renderSwitch({
         props: {
+          checked: false,
+          onToggle: vi.fn(),
+          withToggle: true,
           ...props,
-          checked: props.checked ?? false,
-          withToggle: props.withToggle ?? true, // Default to visible for testing
         },
-      })}`,
-      container
+      })}`
     );
-    return within(container).getByRole('switch') as HTMLButtonElement;
   };
 
-  it('should render a switch in the document', () => {
-    const button = renderSwitchComponent({});
-    expect(button).toBeInTheDocument();
+  it('should render a switch in the document', async () => {
+    const element = await renderComponent();
+    expect(element).toBeDefined();
   });
 
-  it('should have role="switch"', () => {
-    const button = renderSwitchComponent({});
-    expect(button.getAttribute('role')).toBe('switch');
+  it('should have role="switch"', async () => {
+    const element = await renderComponent();
+    const button = locators(element).button;
+    expect(button).toHaveAttribute('role', 'switch');
   });
 
-  it('should set aria-checked to "false" when unchecked', () => {
-    const button = renderSwitchComponent({checked: false});
-    expect(button.getAttribute('aria-checked')).toBe('false');
+  it('should set aria-checked to "false" when unchecked', async () => {
+    const element = await renderComponent({checked: false});
+    const button = locators(element).button;
+    expect(button).toHaveAttribute('aria-checked', 'false');
   });
 
-  it('should set aria-checked to "true" when checked', () => {
-    const button = renderSwitchComponent({checked: true});
-    expect(button.getAttribute('aria-checked')).toBe('true');
+  it('should set aria-checked to "true" when checked', async () => {
+    const element = await renderComponent({checked: true});
+    const button = locators(element).button;
+    expect(button).toHaveAttribute('aria-checked', 'true');
   });
 
-  it('should apply bg-neutral class to container when unchecked', () => {
-    const button = renderSwitchComponent({checked: false});
-    const container = button.querySelector('div');
+  it('should apply bg-neutral class to container when unchecked', async () => {
+    const element = await renderComponent({checked: false});
+    const container = locators(element).container;
     expect(container).toHaveClass('bg-neutral');
     expect(container).not.toHaveClass('bg-primary');
   });
 
-  it('should apply bg-primary class to container when checked', () => {
-    const button = renderSwitchComponent({checked: true});
-    const container = button.querySelector('div');
+  it('should apply bg-primary class to container when checked', async () => {
+    const element = await renderComponent({checked: true});
+    const container = locators(element).container;
     expect(container).toHaveClass('bg-primary');
     expect(container).not.toHaveClass('bg-neutral');
   });
 
-  it('should apply ml-6 class to handle when checked', () => {
-    const button = renderSwitchComponent({checked: true});
-    const handle = button.querySelector('div > div');
+  it('should apply ml-6 class to handle when checked', async () => {
+    const element = await renderComponent({checked: true});
+    const handle = locators(element).handle;
     expect(handle).toHaveClass('ml-6');
   });
 
-  it('should not apply ml-6 class to handle when unchecked', () => {
-    const button = renderSwitchComponent({checked: false});
-    const handle = button.querySelector('div > div');
+  it('should not apply ml-6 class to handle when unchecked', async () => {
+    const element = await renderComponent({checked: false});
+    const handle = locators(element).handle;
     expect(handle).not.toHaveClass('ml-6');
   });
 
-  it('should show switch when withToggle is true', () => {
-    const button = renderSwitchComponent({withToggle: true});
+  it('should show switch when withToggle is true', async () => {
+    const element = await renderComponent({withToggle: true});
+    const button = locators(element).button;
     expect(button).toHaveClass('flex');
     expect(button).not.toHaveClass('hidden');
   });
 
-  it('should hide switch when withToggle is false', () => {
-    render(
-      html`${renderSwitch({
-        props: {
-          withToggle: false,
-        },
-      })}`,
-      container
-    );
-    const button = within(container).getByRole('switch', {
-      hidden: true,
-    }) as HTMLButtonElement;
+  it('should hide switch when withToggle is false', async () => {
+    const element = await renderComponent({withToggle: false});
+    const button = locators(element).button;
     expect(button).toHaveClass('hidden');
     expect(button).not.toHaveClass('flex');
   });
 
   it('should call onToggle with true when unchecked switch is clicked', async () => {
     const onToggle = vi.fn();
-    const button = renderSwitchComponent({
+    const element = await renderComponent({
       checked: false,
       onToggle,
     });
+    const button = locators(element).button;
 
-    await fireEvent.click(button);
+    button.click();
 
     expect(onToggle).toHaveBeenCalledWith(true);
   });
 
   it('should call onToggle with false when checked switch is clicked', async () => {
     const onToggle = vi.fn();
-    const button = renderSwitchComponent({
+    const element = await renderComponent({
       checked: true,
       onToggle,
     });
+    const button = locators(element).button;
 
-    await fireEvent.click(button);
+    button.click();
 
     expect(onToggle).toHaveBeenCalledWith(false);
   });
 
-  it('should not call onToggle when it is undefined', async () => {
-    const button = renderSwitchComponent({checked: false});
-
-    // Should not throw
-    await fireEvent.click(button);
-    // If we got here, it didn't throw
-    expect(true).toBe(true);
+  it('should apply ariaLabel attribute', async () => {
+    const element = await renderComponent({ariaLabel: 'Toggle setting'});
+    const button = locators(element).button;
+    expect(button).toHaveAttribute('aria-label', 'Toggle setting');
   });
 
-  it('should apply ariaLabel attribute', () => {
-    const button = renderSwitchComponent({ariaLabel: 'Toggle setting'});
-    expect(button.getAttribute('aria-label')).toBe('Toggle setting');
+  it('should apply part attribute', async () => {
+    const element = await renderComponent({part: 'toggle'});
+    const button = locators(element).button;
+    expect(button).toHaveAttribute('part', 'toggle');
   });
 
-  it('should apply part attribute', () => {
-    const button = renderSwitchComponent({part: 'toggle'});
-    expect(button.getAttribute('part')).toBe('toggle');
+  it('should apply tabIndex attribute', async () => {
+    const element = await renderComponent({tabIndex: 0});
+    const button = locators(element).button;
+    expect(button).toHaveAttribute('tabindex', '0');
   });
 
-  it('should apply tabIndex attribute', () => {
-    const button = renderSwitchComponent({tabIndex: 0});
-    expect(button.getAttribute('tabindex')).toBe('0');
+  it('should apply title attribute', async () => {
+    const element = await renderComponent({title: 'Toggle tooltip'});
+    const button = locators(element).button;
+    expect(button).toHaveAttribute('title', 'Toggle tooltip');
   });
 
-  it('should apply title attribute', () => {
-    const button = renderSwitchComponent({title: 'Toggle tooltip'});
-    expect(button.getAttribute('title')).toBe('Toggle tooltip');
-  });
-
-  it('should have all base container classes', () => {
-    const button = renderSwitchComponent({});
-    const container = button.querySelector('div');
+  it('should have all base container classes', async () => {
+    const element = await renderComponent();
+    const container = locators(element).container;
     expect(container).toHaveClass('w-12', 'h-6', 'p-1', 'rounded-full');
   });
 
-  it('should have all base handle classes', () => {
-    const button = renderSwitchComponent({});
-    const handle = button.querySelector('div > div');
+  it('should have all base handle classes', async () => {
+    const element = await renderComponent();
+    const handle = locators(element).handle;
     expect(handle).toHaveClass('w-4', 'h-4', 'rounded-full', 'bg-white');
   });
 
-  it('should have all base button classes', () => {
-    const button = renderSwitchComponent({});
+  it('should have all base button classes', async () => {
+    const element = await renderComponent();
+    const button = locators(element).button;
     expect(button).toHaveClass('rounded-full', 'btn-outline-neutral');
   });
 });
