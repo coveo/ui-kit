@@ -51,10 +51,10 @@ import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stenci
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {Hidden} from '../../../common/stencil-hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {ColorFacetCheckbox} from '../color-facet-checkbox/color-facet-checkbox';
+import {ColorFacetCheckbox} from '../color-facet-checkbox/stencil-color-facet-checkbox';
 
 /**
- * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+ * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
  * An `atomic-color-facet` displays a facet of the results for the current query as colors.
  *
  * @part facet - The wrapper for the entire facet.
@@ -88,7 +88,7 @@ import {ColorFacetCheckbox} from '../color-facet-checkbox/color-facet-checkbox';
  *
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
- * @part show-more-less-icon - The icons of the show more & show less buttons.
+ * @part show-more-less-icon - The icons of the show more and show less buttons.
  */
 @Component({
   tag: 'atomic-color-facet',
@@ -131,7 +131,7 @@ export class AtomicColorFacet implements InitializableComponent {
   /**
    * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.
    *
-   * Set this property as a stringified JSON array, e.g.,
+   * Set this property as a stringified JSON array, for example:
    * ```html
    *  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
    * ```
@@ -144,7 +144,7 @@ export class AtomicColorFacet implements InitializableComponent {
   /**
    * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.
    *
-   * Set this property as a stringified JSON array, e.g.,
+   * Set this property as a stringified JSON array, for example:
    * ```html
    *  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
    * ```

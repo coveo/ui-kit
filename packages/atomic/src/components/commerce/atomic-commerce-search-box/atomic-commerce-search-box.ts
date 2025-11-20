@@ -194,7 +194,7 @@ export class AtomicCommerceSearchBox
 
   /**
    * Whether to clear all active query filters when the end user submits a new query from the search box.
-   * Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no products.
+   * Setting this option to "false" is not recommended and can lead to an increasing number of queries returning no products.
    */
   @property({
     type: Boolean,
@@ -698,12 +698,9 @@ export class AtomicCommerceSearchBox
   }
 
   private renderSlotContent() {
-    const slots = getDefaultSlotContent(this);
-    if (slots.length > 1) {
-      console.warn('Element should only have 1 default slot.', this);
-    }
+    const hasDefaultSlot = getDefaultSlotContent(this).length > 0;
 
-    if (slots.length === 1) {
+    if (hasDefaultSlot) {
       return html`<slot></slot>`;
     }
 

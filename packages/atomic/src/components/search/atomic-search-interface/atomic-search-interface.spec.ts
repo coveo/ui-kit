@@ -602,6 +602,44 @@ describe('atomic-search-interface', () => {
           });
         });
 
+        it('should use searchHub from options.search when both property and options.search are provided', async () => {
+          const element = await setupElement({searchHub: 'property-hub'});
+
+          await element.initialize({
+            ...searchEngineConfig,
+            search: {searchHub: 'options-hub'},
+          });
+
+          expect(buildSearchEngine).toHaveBeenCalledWith(
+            expect.objectContaining({
+              configuration: expect.objectContaining({
+                search: expect.objectContaining({
+                  searchHub: 'options-hub',
+                }),
+              }),
+            })
+          );
+        });
+
+        it('should use pipeline from options.search when both property and options.search are provided', async () => {
+          const element = await setupElement({pipeline: 'property-pipeline'});
+
+          await element.initialize({
+            ...searchEngineConfig,
+            search: {pipeline: 'options-pipeline'},
+          });
+
+          expect(buildSearchEngine).toHaveBeenCalledWith(
+            expect.objectContaining({
+              configuration: expect.objectContaining({
+                search: expect.objectContaining({
+                  pipeline: 'options-pipeline',
+                }),
+              }),
+            })
+          );
+        });
+
         it('should set the error when #buildSearchEngine throws', async () => {
           vi.spyOn(console, 'error').mockImplementation(() => {});
           const element = await setupElement();
@@ -740,15 +778,15 @@ describe('atomic-search-interface', () => {
 
     it('should subscribe to the search status state updates', async () => {
       const element = await setupElement();
-      const mockSearchStatus = buildFakeSearchStatus();
-      const subscribeSpy = vi.spyOn(mockSearchStatus, 'subscribe');
-      vi.mocked(buildSearchStatus).mockReturnValue(mockSearchStatus);
+      const subscribe = vi.fn();
+      vi.mocked(buildSearchStatus).mockImplementationOnce(() => ({
+        ...buildFakeSearchStatus(),
+        subscribe,
+      }));
 
       await callTestedInitMethod(element);
 
-      expect(subscribeSpy).toHaveBeenCalledExactlyOnceWith(
-        expect.any(Function)
-      );
+      expect(subscribe).toHaveBeenCalledExactlyOnceWith(expect.any(Function));
     });
 
     describe('when the search status state changes', () => {
@@ -952,6 +990,7 @@ describe('atomic-search-interface', () => {
   // #toggleAnalytics
   it('should call InterfaceController.onAnalyticsChange when the analytics attribute changes', async () => {
     const element = await setupElement();
+    await element.initialize(searchEngineConfig);
     const onAnalyticsChangeSpy = vi.spyOn(
       InterfaceController.prototype,
       'onAnalyticsChange'
@@ -1125,12 +1164,14 @@ describe('atomic-search-interface', () => {
     });
     describe('when the engine has been created & the language attribute is defined & the context is defined', () => {
       it('should call InterfaceController.onLanguageChange with no argument', async () => {
-        const element = await setupElement({language: 'en'});
-        await element.initialize(searchEngineConfig);
         const onLanguageChangeSpy = vi.spyOn(
           InterfaceController.prototype,
           'onLanguageChange'
         );
+        const element = await setupElement({language: 'en'});
+        await element.initialize(searchEngineConfig);
+        await element.updateComplete;
+        onLanguageChangeSpy.mockClear();
 
         element.language = 'fr';
         await element.updateComplete;

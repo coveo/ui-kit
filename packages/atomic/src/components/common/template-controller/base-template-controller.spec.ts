@@ -317,7 +317,7 @@ describe('BaseTemplateController', () => {
         </test-element>`
       );
 
-      const linkElement = controller.getLinkTemplateElement(controller['host']);
+      const linkElement = controller.getLinkTemplateElement(controller.host);
       expect(linkElement.innerHTML.trim()).toBe('<custom-link></custom-link>');
     });
 
@@ -330,7 +330,7 @@ describe('BaseTemplateController', () => {
         </test-element>`
       );
 
-      const linkElement = controller.getLinkTemplateElement(controller['host']);
+      const linkElement = controller.getLinkTemplateElement(controller.host);
       expect(linkElement.innerHTML).toBe('<test-link></test-link>');
     });
 
@@ -346,7 +346,7 @@ describe('BaseTemplateController', () => {
         parent
       );
 
-      const linkElement = controller.getLinkTemplateElement(controller['host']);
+      const linkElement = controller.getLinkTemplateElement(controller.host);
       expect(linkElement.innerHTML).toContain('target="_blank"');
     });
   });

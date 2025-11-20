@@ -4,9 +4,9 @@ import {
   buildSearchStatus,
   buildTabManager,
 } from '@coveo/headless';
-import {page, userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
+import {page, userEvent} from 'vitest/browser';
 import './atomic-facet';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
@@ -61,6 +61,7 @@ describe('atomic-facet', () => {
       withSearch?: boolean;
       enableExclusion?: boolean;
       facetId?: string;
+      headingLevel?: number;
     } = {}
   ) => {
     const {element} = await renderInAtomicSearchInterface<AtomicFacet>({
@@ -73,6 +74,7 @@ describe('atomic-facet', () => {
         number-of-values=${ifDefined(props.numberOfValues)}
         results-must-match=${ifDefined(props.resultsMustMatch)}
         injection-depth=${ifDefined(props.injectionDepth)}
+        heading-level=${ifDefined(props.headingLevel)}
         .allowedValues=${props.allowedValues || []}
         .customSort=${props.customSort || []}
         .tabsIncluded=${props.tabsIncluded || []}
@@ -1004,6 +1006,134 @@ describe('atomic-facet', () => {
           element,
         })
       );
+    });
+
+    describe('#numberOfValues', () => {
+      it('should not set error when numberOfValues is valid', async () => {
+        const {element} = await setupElement({numberOfValues: 10});
+        expect(element.error).toBeUndefined();
+      });
+
+      it('should set error when numberOfValues is less than 1', async () => {
+        const {element} = await setupElement({numberOfValues: 0});
+        expect(element.error).toBeInstanceOf(Error);
+      });
+
+      it('should set error when numberOfValues is negative', async () => {
+        const {element} = await setupElement({numberOfValues: -1});
+        expect(element.error).toBeInstanceOf(Error);
+      });
+    });
+
+    describe('#headingLevel', () => {
+      it('should not set error when headingLevel is valid', async () => {
+        const {element} = await setupElement({headingLevel: 3});
+        expect(element.error).toBeUndefined();
+      });
+
+      it('should set error when headingLevel is greater than 6', async () => {
+        const {element} = await setupElement({headingLevel: 7});
+        expect(element.error).toBeInstanceOf(Error);
+      });
+
+      it('should set error when headingLevel is negative', async () => {
+        const {element} = await setupElement({headingLevel: -1});
+        expect(element.error).toBeInstanceOf(Error);
+      });
+    });
+
+    describe('#injectionDepth', () => {
+      it('should not set error when injectionDepth is valid', async () => {
+        const {element} = await setupElement({injectionDepth: 500});
+        expect(element.error).toBeUndefined();
+      });
+
+      it('should not set error when injectionDepth is 0', async () => {
+        const {element} = await setupElement({injectionDepth: 0});
+        expect(element.error).toBeUndefined();
+      });
+
+      it('should set error when injectionDepth is negative', async () => {
+        const {element} = await setupElement({injectionDepth: -1});
+        expect(element.error).toBeInstanceOf(Error);
+      });
+    });
+
+    describe('#sortCriteria', () => {
+      it('should not set error when sortCriteria is valid', async () => {
+        const {element} = await setupElement({sortCriteria: 'alphanumeric'});
+        expect(element.error).toBeUndefined();
+      });
+
+      it('should set error when sortCriteria is invalid', async () => {
+        const {element} = await setupElement({
+          // @ts-expect-error: testing invalid value
+          sortCriteria: 'invalid',
+        });
+        expect(element.error).toBeInstanceOf(Error);
+      });
+    });
+
+    describe('#resultsMustMatch', () => {
+      it('should not set error when resultsMustMatch is valid', async () => {
+        const {element} = await setupElement({resultsMustMatch: 'allValues'});
+        expect(element.error).toBeUndefined();
+      });
+
+      it('should set error when resultsMustMatch is invalid', async () => {
+        const {element} = await setupElement({
+          // @ts-expect-error: testing invalid value
+          resultsMustMatch: 'invalid',
+        });
+        expect(element.error).toBeInstanceOf(Error);
+      });
+    });
+
+    describe('#displayValuesAs', () => {
+      it('should not set error when displayValuesAs is valid', async () => {
+        const {element} = await setupElement({displayValuesAs: 'link'});
+        expect(element.error).toBeUndefined();
+      });
+
+      it('should set error when displayValuesAs is invalid', async () => {
+        const {element} = await setupElement({
+          // @ts-expect-error: testing invalid value
+          displayValuesAs: 'invalid',
+        });
+        expect(element.error).toBeInstanceOf(Error);
+      });
+    });
+
+    describe('#allowedValues', () => {
+      it('should not set error when allowedValues has 25 or fewer items', async () => {
+        const {element} = await setupElement({
+          allowedValues: Array.from({length: 25}, (_, i) => `value${i}`),
+        });
+        expect(element.error).toBeUndefined();
+      });
+
+      it('should set error when allowedValues has more than 25 items', async () => {
+        const {element} = await setupElement({
+          allowedValues: Array.from({length: 26}, (_, i) => `value${i}`),
+        });
+        expect(element.error).toBeInstanceOf(Error);
+      });
+    });
+
+    describe('#customSort', () => {
+      it('should not set error when customSort has 25 or fewer items', async () => {
+        const {element} = await setupElement({
+          customSort: Array.from({length: 25}, (_, i) => `value${i}`),
+        });
+        expect(element.error).toBeUndefined();
+      });
+
+      it('should set error when customSort has more than 25 items', async () => {
+        const {element} = await setupElement({
+          customSort: Array.from({length: 26}, (_, i) => `value${i}`),
+        });
+        expect(element.error).toBeInstanceOf(Error);
+      });
     });
   });
 

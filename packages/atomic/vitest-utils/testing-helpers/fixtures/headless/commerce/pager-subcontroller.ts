@@ -29,5 +29,5 @@ export const buildFakePager = ({
   ({
     ...defaultImplementation,
     ...implementation,
-    ...(state && {state: {...defaultState, ...state}}),
+    ...{state: {...defaultState, ...(state || {})}},
   }) as Pagination;

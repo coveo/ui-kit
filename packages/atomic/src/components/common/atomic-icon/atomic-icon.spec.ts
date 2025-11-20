@@ -1,7 +1,7 @@
-import {page} from '@vitest/browser/context';
 import DOMPurify from 'dompurify';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {page} from 'vitest/browser';
 import * as assetPathUtils from '@/src/utils/asset-path-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {AtomicIcon} from './atomic-icon';
@@ -26,7 +26,7 @@ vi.mock('@/src/mixins/bindings-mixin', () => ({
 }));
 
 describe('atomic-icon', () => {
-  let fetchMock: MockInstance;
+  const fetchMock = vi.fn();
   let parseAssetURLMock: MockInstance;
   let sanitizeMock: MockInstance;
   const locators = {
@@ -42,7 +42,7 @@ describe('atomic-icon', () => {
   } as Response;
 
   beforeEach(() => {
-    fetchMock = vi.spyOn(window, 'fetch');
+    vi.stubGlobal('fetch', fetchMock);
     parseAssetURLMock = vi.mocked(assetPathUtils.parseAssetURL);
     sanitizeMock = vi.spyOn(DOMPurify, 'sanitize');
   });
@@ -52,13 +52,14 @@ describe('atomic-icon', () => {
       html` <atomic-icon icon=${icon}></atomic-icon>`
     );
 
-    element.initialize();
-
+    await element.initialize();
+    // The atomic-icon runs asynchronous operation behind a guard, meaning the first render is _not_ the one we ought to assert on
+    await new Promise((resolve) => setTimeout(resolve, 0));
     return element;
   };
 
-  it('is defined', () => {
-    const el = document.createElement('atomic-icon');
+  it('is defined', async () => {
+    const el = await setupElement('assets://user.svg');
     expect(el).toBeInstanceOf(AtomicIcon);
   });
 
