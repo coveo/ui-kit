@@ -102,26 +102,22 @@ describe('#renderShowHideButton', () => {
     expect(toggleShowInitialChildren).toHaveBeenCalledOnce();
   });
 
-  describe('button text variations', () => {
-    it('should render custom loadAllResults text', async () => {
-      await renderComponent({
-        showInitialChildren: true,
-        loadAllResults: 'Custom load text',
-      });
-      await expect
-        .element(locators.button)
-        .toHaveTextContent('Custom load text');
+  it('should render custom loadAllResults text', async () => {
+    await renderComponent({
+      showInitialChildren: true,
+      loadAllResults: 'Custom load text',
     });
+    await expect.element(locators.button).toHaveTextContent('Custom load text');
+  });
 
-    it('should render custom collapseResults text', async () => {
-      await renderComponent({
-        showInitialChildren: false,
-        moreResultsAvailable: false,
-        collapseResults: 'Custom collapse text',
-      });
-      await expect
-        .element(locators.button)
-        .toHaveTextContent('Custom collapse text');
+  it('should render custom collapseResults text', async () => {
+    await renderComponent({
+      showInitialChildren: false,
+      moreResultsAvailable: false,
+      collapseResults: 'Custom collapse text',
     });
+    await expect
+      .element(locators.button)
+      .toHaveTextContent('Custom collapse text');
   });
 });
