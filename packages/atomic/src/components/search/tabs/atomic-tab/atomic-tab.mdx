@@ -1,0 +1,42 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicTabManagerStories from '../atomic-tab-manager/atomic-tab-manager.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta title="Search/Tabs/atomic-tab" />
+
+# atomic-tab
+
+The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
+It must be used as a child of the `atomic-tab-manager` component to function correctly.
+
+## Usage
+
+This component is not used standalone. It must be a child of `atomic-tab-manager`.
+
+See the [atomic-tab-manager documentation](?path=/docs/atomic-tab-manager--docs) for usage examples.
+
+## Properties
+
+- **label** (required): The label to display on the tab button
+- **name** (required): The internal name/identifier of the tab
+- **expression**: The constant query expression (`cq`) to apply when the tab is active
+
+## Example
+
+```html
+<atomic-search-interface>
+  <!-- other components -->
+  
+  <atomic-tab-manager>
+    <atomic-tab name="all" label="All"></atomic-tab>
+    <atomic-tab name="documentation" label="Documentation" expression="@objecttype==Documentation"></atomic-tab>
+    <atomic-tab name="articles" label="Articles" expression="@objecttype==Article"></atomic-tab>
+  </atomic-tab-manager>
+
+  <!-- other components -->
+</atomic-search-interface>
+```
+
+## Related Components
+
+- [atomic-tab-manager](?path=/docs/atomic-tab-manager--docs): Manages a collection of tabs and allows users to switch between them

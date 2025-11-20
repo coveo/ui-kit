@@ -1,6 +1,6 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {html, LitElement} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
+import {customElement, property, state} from 'lit/decorators.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 
@@ -24,6 +24,8 @@ export class AtomicTab extends LightDomMixin(LitElement) {
    * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
    */
   @property({type: String, reflect: true}) public expression: string = '';
+
+  @state() public error!: Error;
 
   constructor() {
     super();
