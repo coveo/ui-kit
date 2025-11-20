@@ -54,7 +54,7 @@ describe('ResultTemplateController', () => {
           <template><div>content</div></template>
         </test-result-element>`
       );
-      const linkElement = controller.getLinkTemplateElement(controller['host']);
+      const linkElement = controller.getLinkTemplateElement(controller.host);
 
       expect(linkElement).toBeInstanceOf(HTMLTemplateElement);
       expect(linkElement.innerHTML).toBe(

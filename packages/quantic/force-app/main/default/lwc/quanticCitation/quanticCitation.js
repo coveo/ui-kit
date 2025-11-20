@@ -5,9 +5,27 @@ import {LightningElement, api} from 'lwc';
 /** @typedef {import("coveo").InteractiveCitation} InteractiveCitation */
 
 const minimumTooltipDisplayDurationMs = 1000;
-const debounceDurationBeforeHoverMs = 200;
-
+const tooltipHideDelayMs = 200;
 const supportedFileTypesForTextFragment = ['html', 'SalesforceItem'];
+
+/**
+ * Debounce function that delays invoking func until after wait milliseconds
+ * have elapsed since the last time the debounced function was invoked.
+ * Includes a cancel method to clear any pending timeout.
+ * @param {Function} fn - The function to debounce
+ * @param {number} delay - The number of milliseconds to delay
+ * @returns {Function} The debounced function with cancel method
+ */
+export function debounce(fn, delay) {
+  let timeout;
+  const debounced = (...args) => {
+    clearTimeout(timeout);
+    // eslint-disable-next-line @lwc/lwc/no-async-operation
+    timeout = setTimeout(() => fn(...args), delay);
+  };
+  debounced.cancel = () => clearTimeout(timeout);
+  return debounced;
+}
 
 /**
  * The `QuanticCitation` component renders an individual citation.
@@ -42,8 +60,6 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   /** @type {number} */
   hoverStartTimestamp;
   /** @type {boolean} */
-  shouldShowTooltipAfterDelay = false;
-  /** @type {boolean} */
   tooltipIsDisplayed = false;
   /** @type {function} */
   removeBindings;
@@ -53,6 +69,8 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   salesforceRecordUrl;
   /** @type {boolean} */
   isHrefWithTextFragment = false;
+  /** @type {Object} */
+  hideTooltipDebounced;
 
   connectedCallback() {
     const fileType = this.citation?.fields?.filetype;
@@ -60,6 +78,15 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       !this.disableCitationAnchoring &&
       supportedFileTypesForTextFragment.includes(fileType) &&
       !!this.text;
+
+    // Initialize the debounced hide tooltip function
+    this.hideTooltipDebounced = debounce(() => {
+      if (this.tooltipIsDisplayed) {
+        this.dispatchCitationHoverEvent();
+      }
+      this.tooltipIsDisplayed = false;
+      this.tooltipComponent?.hideTooltip();
+    }, tooltipHideDelayMs);
   }
 
   renderedCallback() {
@@ -83,39 +110,53 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
 
   disconnectedCallback() {
     this.removeBindings?.();
-  }
-
-  handleMouseEnter() {
-    this.shouldShowTooltipAfterDelay = true;
-    // eslint-disable-next-line @lwc/lwc/no-async-operation
-    this.timeout = setTimeout(() => {
-      if (this.shouldShowTooltipAfterDelay) {
-        this.hoverStartTimestamp = Date.now();
-        this.tooltipIsDisplayed = true;
-        this.tooltipComponent.showTooltip();
-      }
-    }, debounceDurationBeforeHoverMs);
-  }
-
-  handleMouseLeave() {
     clearTimeout(this.timeout);
-    if (this.tooltipIsDisplayed) {
-      const tooltipDisplayDuration = Date.now() - this.hoverStartTimestamp;
-      if (tooltipDisplayDuration >= minimumTooltipDisplayDurationMs) {
-        this.dispatchEvent(
-          new CustomEvent('quantic__citationhover', {
-            detail: {
-              citationHoverTimeMs: Date.now() - this.hoverStartTimestamp,
-            },
-            bubbles: true,
-          })
-        );
-      }
-    }
+    this.hideTooltipDebounced?.cancel();
+  }
 
-    this.tooltipIsDisplayed = false;
-    this.shouldShowTooltipAfterDelay = false;
-    this.tooltipComponent.hideTooltip();
+  handleCitationMouseEnter() {
+    this.showTooltip();
+  }
+
+  handleCitationMouseLeave() {
+    this.hideTooltipDebounced();
+  }
+
+  handleTooltipMouseEnter() {
+    this.hideTooltipDebounced.cancel();
+  }
+
+  handleTooltipMouseLeave() {
+    this.hideTooltipDebounced();
+  }
+
+  /**
+   * Shows the tooltip immediately and cancels any pending hide.
+   */
+  showTooltip() {
+    this.hideTooltipDebounced.cancel();
+    if (!this.tooltipIsDisplayed) {
+      this.hoverStartTimestamp = Date.now();
+      this.tooltipIsDisplayed = true;
+      this.tooltipComponent?.showTooltip();
+    }
+  }
+
+  /**
+   * Dispatches the citation hover analytics event if minimum display duration was met.
+   */
+  dispatchCitationHoverEvent() {
+    const tooltipDisplayDuration = Date.now() - this.hoverStartTimestamp;
+    if (tooltipDisplayDuration >= minimumTooltipDisplayDurationMs) {
+      this.dispatchEvent(
+        new CustomEvent('quantic__citationhover', {
+          detail: {
+            citationHoverTimeMs: tooltipDisplayDuration,
+          },
+          bubbles: true,
+        })
+      );
+    }
   }
 
   /**

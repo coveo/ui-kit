@@ -2,7 +2,7 @@
  * Express server for Coveo Headless Commerce SSR sample.
  *
  * Server-side SSR lifecycle:
- * 1. Receives a request for the root route (e.g., / or /?q=...)
+ * 1. Receives a request for the root route (for example, / or /?q=...)
  * 2. Sets up navigation context (user agent, referrer, etc.) for analytics/personalization
  * 3. Extracts the search query from the request
  * 4. Fetches static state from the Coveo engine using the query and context fields

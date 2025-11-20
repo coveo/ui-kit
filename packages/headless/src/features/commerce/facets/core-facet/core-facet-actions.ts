@@ -48,7 +48,7 @@ export const deleteAllCoreFacets = createAction(
 
 export type DeselectAllValuesInCoreFacetPayload = {
   /**
-   * The unique identifier of the facet (e.g., `"1"`).
+   * The unique identifier of the facet (for example, `"1"`).
    */
   facetId: string;
 };

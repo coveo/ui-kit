@@ -47,7 +47,7 @@ const isUserTrackingAllowedByClient = async (request: Request) => {
 };
 
 /**
- * Returns the Coveo analytics context (i.e., `clientId` and `capture` values) for the given request.
+ * Returns the Coveo analytics context (that is, `clientId` and `capture` values) for the given request.
  *
  * @param request - The request object.
  * @returns The Coveo analytics context.

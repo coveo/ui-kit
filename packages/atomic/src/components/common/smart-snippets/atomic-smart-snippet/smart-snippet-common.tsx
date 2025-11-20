@@ -10,7 +10,7 @@ export const SmartSnippetWrapper: FunctionalComponent<{
   i18n: i18n;
 }> = ({headingLevel, i18n}, children) => {
   return (
-    <aside>
+    <aside aria-label={i18n.t('smart-snippet')}>
       <Heading level={headingLevel ?? 0} class="sr-only">
         {i18n.t('smart-snippet')}
       </Heading>

@@ -1,3 +1,17 @@
+## <small>3.33.4 (2025-11-12)</small>
+
+* docs: correct JSDoc grammar and terminology across packages (#6531) ([356975a](https://github.com/coveo/ui-kit/commits/356975a)), closes [#6531](https://github.com/coveo/ui-kit/issues/6531)
+* fix(quantic): making the citation tooltip hoverable  (#6436) ([021a156](https://github.com/coveo/ui-kit/commits/021a156)), closes [#6436](https://github.com/coveo/ui-kit/issues/6436)
+
+
+
+## <small>3.33.3 (2025-11-05)</small>
+
+* enabled recent queries test for insight use case (#6421) ([73fac60](https://github.com/coveo/ui-kit/commits/73fac60)), closes [#6421](https://github.com/coveo/ui-kit/issues/6421)
+* fix(quantic): fix setup scratch org step in CI (#6449) ([8c148c3](https://github.com/coveo/ui-kit/commits/8c148c3)), closes [#6449](https://github.com/coveo/ui-kit/issues/6449)
+
+
+
 ## <small>3.33.2 (2025-10-30)</small>
 
 * [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))

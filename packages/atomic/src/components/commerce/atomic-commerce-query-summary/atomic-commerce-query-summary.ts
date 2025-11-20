@@ -21,7 +21,7 @@ import {getProductQuerySummaryI18nParameters} from '../../common/query-summary/u
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * The `atomic-commerce-query-summary` component displays information about the current range of products (e.g., "Products 1-10 of 123").
+ * The `atomic-commerce-query-summary` component displays information about the current range of products (for example, "Products 1-10 of 123").
  *
  * @part container - The container for the whole summary.
  * @part highlight - The summary highlights.

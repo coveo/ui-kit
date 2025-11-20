@@ -55,9 +55,9 @@ export const Default: Story = {
   args: {
     'default-slot': `
       <div>
-        <span class="badge badge-primary" style="background: #ef4444; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">NEW</span>
-        <span class="badge badge-secondary" style="background: #f59e0b; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">SALE</span>
-        <span class="badge badge-success" style="background: #10b981; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">BESTSELLER</span>
+        <span class="badge badge-primary" style="background: #b21010; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">NEW</span>
+        <span class="badge badge-secondary" style="background: #2f0ab8; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">SALE</span>
+        <span class="badge badge-success" style="background: #096243; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">BESTSELLER</span>
       </div>
     `,
   },

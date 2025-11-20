@@ -1,13 +1,11 @@
 import {test as base} from '@playwright/test';
-import {type AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {AtomicCommerceRecsListPageObject as RecsList} from './page-object';
 
 type MyFixtures = {
   recsList: RecsList;
 };
 
-export const test = base.extend<MyFixtures & AxeFixture>({
-  makeAxeBuilder,
+export const test = base.extend<MyFixtures>({
   recsList: async ({page}, use) => {
     await use(new RecsList(page));
   },

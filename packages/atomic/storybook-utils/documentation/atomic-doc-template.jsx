@@ -14,9 +14,9 @@ import {CanvasWithGithub} from './canvas-with-github';
  * Reusable documentation template for Atomic Commerce components
  * @param {Object} props - Component props
  * @param {Object} props.stories - The stories object to be used for Meta and Canvas
- * @param {string} props.githubPath - The GitHub path for the component (e.g., "commerce/atomic-commerce-pager/atomic-commerce-pager.ts")
- * @param {string} props.tagName - The custom element tag name (e.g., "atomic-commerce-pager")
- * @param {string} props.className - The class name (e.g., "AtomicCommercePager")
+ * @param {string} props.githubPath - The GitHub path for the component (for example, "commerce/atomic-commerce-pager/atomic-commerce-pager.ts")
+ * @param {string} props.tagName - The custom element tag name (for example, "atomic-commerce-pager")
+ * @param {string} props.className - The class name (for example, "AtomicCommercePager")
  * @param {string} [props.defaultStory] - The name of the default story to use (defaults to "Default")
  */
 export const AtomicDocTemplate = ({
