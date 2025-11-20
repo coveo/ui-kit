@@ -14,9 +14,8 @@ const outputFile = path.resolve(
 
 /**
  * Extracts custom element tag names from component files using TypeScript AST.
- * Supports both:
- * - Lit components: @customElement('tag-name')
- * - Stencil components: @Component({tag: 'tag-name'})
+ * Only extracts Lit components: @customElement('tag-name')
+ * Stencil components are skipped as they lazy-load and don't require tracking.
  *
  * Uses AST parsing to avoid picking up decorator usage in JSDoc comments.
  */
@@ -82,27 +81,6 @@ function extractCustomElementTags() {
       }
     }
 
-    // Handle @Component({tag: 'tag-name', ...})
-    if (
-      ts.isCallExpression(expression) &&
-      ts.isIdentifier(expression.expression) &&
-      expression.expression.text === 'Component'
-    ) {
-      const arg = expression.arguments[0];
-      if (arg && ts.isObjectLiteralExpression(arg)) {
-        for (const property of arg.properties) {
-          if (
-            ts.isPropertyAssignment(property) &&
-            ts.isIdentifier(property.name) &&
-            property.name.text === 'tag' &&
-            ts.isStringLiteral(property.initializer)
-          ) {
-            return property.initializer.text;
-          }
-        }
-      }
-    }
-
     return null;
   }
 
@@ -125,7 +103,8 @@ export function generateCustomElementTags() {
 
 /**
  * Set of all custom element tags defined in the Atomic library.
- * This is generated at build time from @customElement and @Component decorators.
+ * This is generated at build time from @customElement decorators (Lit components only).
+ * Stencil components are excluded as they lazy-load.
  */
 export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
 ${tags.map((tag) => `  '${tag}',`).join('\n')}
