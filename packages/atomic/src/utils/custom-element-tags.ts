@@ -3,7 +3,8 @@
 
 /**
  * Set of all custom element tags defined in the Atomic library.
- * This is generated at build time from @customElement and @Component decorators.
+ * This is generated at build time from @customElement decorators (Lit components only).
+ * Stencil components are excluded as they lazy-load.
  */
 export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-aria-live',
@@ -98,6 +99,21 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-search-interface',
   'atomic-search-layout',
   'atomic-text',
-  'my-interactive-product-component',
-  'my-product-component',
 ]);
+
+/**
+ * Waits for all Atomic custom element children to be defined.
+ * This ensures that all vanilla (non-framework) Atomic components have been
+ * registered with the custom elements registry before proceeding.
+ *
+ * @param host - The host element to scan for Atomic children
+ */
+export async function waitForAtomicChildrenToBeDefined(
+  host: Element
+): Promise<void> {
+  await Promise.all(
+    Array.from(host.querySelectorAll('*'))
+      .filter((el) => ATOMIC_CUSTOM_ELEMENT_TAGS.has(el.tagName.toLowerCase()))
+      .map((el) => customElements.whenDefined(el.tagName.toLowerCase()))
+  );
+}

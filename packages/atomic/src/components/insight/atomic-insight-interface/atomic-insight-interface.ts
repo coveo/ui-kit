@@ -26,7 +26,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
-import {ATOMIC_CUSTOM_ELEMENT_TAGS} from '@/src/utils/custom-element-tags';
+import {waitForAtomicChildrenToBeDefined} from '@/src/utils/custom-element-tags';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
 import {getAnalyticsConfig} from './analytics-config.js';
 import {createInsightStore, type InsightStore} from './store.js';
@@ -300,19 +300,9 @@ export class AtomicInsightInterface
     this.initResultsPerPage();
     this.registerFieldsToInclude();
     this.store.unsetLoadingFlag(FirstInsightRequestExecutedFlag);
-    await this.waitForAllVanillaChildrenComponentsToBeDefined();
+    await waitForAtomicChildrenToBeDefined(this);
     await this.getUpdateComplete();
     this.initialized = true;
-  }
-
-  private async waitForAllVanillaChildrenComponentsToBeDefined() {
-    await Promise.all(
-      Array.from(this.querySelectorAll('*'))
-        .filter((el) =>
-          ATOMIC_CUSTOM_ELEMENT_TAGS.has(el.tagName.toLowerCase())
-        )
-        .map((el) => customElements.whenDefined(el.tagName.toLowerCase()))
-    );
   }
 
   // TODO - (v4) KIT-5008: Make private

@@ -1,6 +1,8 @@
+import {execSync} from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import ts from 'typescript';
 import colors from '../../../utils/ci/colors.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -11,10 +13,11 @@ const outputFile = path.resolve(
 );
 
 /**
- * Extracts custom element tag names from component files.
- * Supports both:
- * - Lit components: @customElement('tag-name')
- * - Stencil components: @Component({tag: 'tag-name'})
+ * Extracts custom element tag names from component files using TypeScript AST.
+ * Only extracts Lit components: @customElement('tag-name')
+ * Stencil components are skipped as they lazy-load and don't require tracking.
+ *
+ * Uses AST parsing to avoid picking up decorator usage in JSDoc comments.
  */
 function extractCustomElementTags() {
   const tags = new Set();
@@ -35,16 +38,50 @@ function extractCustomElementTags() {
         !entry.name.includes('.e2e.')
       ) {
         const content = fs.readFileSync(fullPath, 'utf-8');
-
-        // Match Lit decorator: @customElement('tag-name')
-        const litMatches = content.matchAll(
-          /@customElement\(['"]([^'"]+)['"]\)/g
+        const sourceFile = ts.createSourceFile(
+          fullPath,
+          content,
+          ts.ScriptTarget.Latest,
+          true
         );
-        for (const match of litMatches) {
-          tags.add(match[1]);
+
+        visitNode(sourceFile);
+      }
+    }
+  }
+
+  function visitNode(node) {
+    // Check if this is a class declaration with decorators
+    if (ts.isClassDeclaration(node) && node.modifiers) {
+      for (const modifier of node.modifiers) {
+        if (ts.isDecorator(modifier)) {
+          const tagName = extractTagFromDecorator(modifier);
+          if (tagName) {
+            tags.add(tagName);
+          }
         }
       }
     }
+
+    ts.forEachChild(node, visitNode);
+  }
+
+  function extractTagFromDecorator(decorator) {
+    const expression = decorator.expression;
+
+    // Handle @customElement('tag-name')
+    if (
+      ts.isCallExpression(expression) &&
+      ts.isIdentifier(expression.expression) &&
+      expression.expression.text === 'customElement'
+    ) {
+      const arg = expression.arguments[0];
+      if (arg && ts.isStringLiteral(arg)) {
+        return arg.text;
+      }
+    }
+
+    return null;
   }
 
   scanDirectory(componentsDir);
@@ -66,15 +103,38 @@ export function generateCustomElementTags() {
 
 /**
  * Set of all custom element tags defined in the Atomic library.
- * This is generated at build time from @customElement and @Component decorators.
+ * This is generated at build time from @customElement decorators (Lit components only).
+ * Stencil components are excluded as they lazy-load.
  */
 export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
 ${tags.map((tag) => `  '${tag}',`).join('\n')}
 ]);
+
+/**
+ * Waits for all Atomic custom element children to be defined.
+ * This ensures that all vanilla (non-framework) Atomic components have been
+ * registered with the custom elements registry before proceeding.
+ * 
+ * @param host - The host element to scan for Atomic children
+ */
+export async function waitForAtomicChildrenToBeDefined(
+  host: Element
+): Promise<void> {
+  await Promise.all(
+    Array.from(host.querySelectorAll('*'))
+      .filter((el) => ATOMIC_CUSTOM_ELEMENT_TAGS.has(el.tagName.toLowerCase()))
+      .map((el) => customElements.whenDefined(el.tagName.toLowerCase()))
+  );
+}
 `;
 
   fs.writeFileSync(outputFile, fileContent, 'utf-8');
   console.log(colors.green(`Generated ${outputFile}`));
+
+  // Format the generated file with biome
+  console.log(colors.blue('Formatting with biome...'));
+  execSync(`npx @biomejs/biome format --write ${outputFile}`);
+  console.log(colors.green('Formatting complete'));
 }
 
 // Run if executed directly

@@ -30,7 +30,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
-import {ATOMIC_CUSTOM_ELEMENT_TAGS} from '@/src/utils/custom-element-tags';
+import {waitForAtomicChildrenToBeDefined} from '@/src/utils/custom-element-tags';
 import {markParentAsReady} from '@/src/utils/init-queue';
 import {getAnalyticsConfig} from './analytics-config';
 import {createRecsStore, type RecsStore} from './store';
@@ -355,19 +355,9 @@ export class AtomicRecsInterface
     this.pipeline = this.engine!.state.pipeline;
     this.searchHub = this.engine!.state.searchHub;
     this.store.unsetLoadingFlag(FirstRecommendationExecutedFlag);
-    await this.waitForAllVanillaChildrenComponentsToBeDefined();
+    await waitForAtomicChildrenToBeDefined(this);
     await this.getUpdateComplete();
     this.initialized = true;
-  }
-
-  private async waitForAllVanillaChildrenComponentsToBeDefined() {
-    await Promise.all(
-      Array.from(this.querySelectorAll('*'))
-        .filter((el) =>
-          ATOMIC_CUSTOM_ELEMENT_TAGS.has(el.tagName.toLowerCase())
-        )
-        .map((el) => customElements.whenDefined(el.tagName.toLowerCase()))
-    );
   }
 }
 
