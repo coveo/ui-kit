@@ -1,5 +1,4 @@
 ---
-mode: 'agent'
 description: 'Perform rigorous comparative analysis between a Lit-migrated Atomic component and its original Stencil version to ensure functional equivalence'
 ---
 
@@ -314,7 +313,7 @@ When the developer provides a component path:
 After completing the review, generate an execution summary:
 
 **1. Create summary file:**
-- **Location:** `.github/prompts/.executions/review-component-migration-stencil-to-lit-[component]-[YYYY-MM-DD-HHmmss].prompt-execution.md`
+- **Location:** `.github/agents/.executions/review-component-migration-v1-[component]-[YYYY-MM-DD-HHmmss].agent-execution.md`
 - **Structure:** Follow `.github/prompts/.executions/TEMPLATE.prompt-execution.md`
 
 **2. Include in summary:**
@@ -322,7 +321,7 @@ After completing the review, generate an execution summary:
 - Any difficulties in comparing versions
 - Ambiguities requiring interpretation or decisions made
 - Time-consuming operations
-- Missing or unclear instructions in this prompt
+- Missing or unclear instructions in this agent
 - Concrete improvement suggestions
 
 **3. Expected behaviors (not issues):**
