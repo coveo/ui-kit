@@ -13,13 +13,13 @@ import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/ato
 
 Use this component within `atomic-result-template` to conditionally render content based on result properties. It evaluates conditions and only displays its children when all conditions are satisfied. Conditions can target any top-level result property, not just fields (e.g., `isRecommendation`).
 
-You can specify multiple `must-match-*` and `must-not-match-*` attributes, each targeting a different field. Each attribute accepts multiple comma-separated values.
+You can specify multiple `must-match-*` and `must-not-match-*` attributes, each targeting a different field. Each attribute accepts multiple comma-separated values. The `if-defined` and `if-not-defined` attributes also support comma-separated field names.
 
-**Comma represents OR:** Within a single attribute, comma-separated values represent a logical OR. For example, `must-match-filetype="pdf,docx"` means the filetype must be pdf OR docx.
+**Comma represents OR:** Within a single attribute, comma-separated values represent a logical OR. For example, `must-match-filetype="pdf,docx"` means the filetype must be pdf OR docx. Similarly, `if-defined="author,editor"` means author OR editor must be defined.
 
 **Multiple attributes represent AND:** All conditions from different attributes must be met (logical AND) for content to render.
 
-If you set both `must-match-*` and `must-not-match-*` for the same field with overlapping values, the condition will never be satisfied.
+If you set both `must-match-*` and `must-not-match-*` for the same field with overlapping values, the condition will never be satisfied. Similarly, setting both `if-defined` and `if-not-defined` for the same field will make the condition impossible to satisfy.
 
 ```html
 <atomic-result-template>
