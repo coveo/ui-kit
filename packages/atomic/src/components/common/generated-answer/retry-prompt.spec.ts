@@ -1,134 +1,93 @@
-import {html, render} from 'lit';
-import {fireEvent, within} from 'storybook/test';
-import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {html} from 'lit';
+import {describe, expect, it, vi} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {type RetryPromptProps, renderRetryPrompt} from './retry-prompt';
 
 describe('#renderRetryPrompt', () => {
-  let container: HTMLElement;
-
-  beforeEach(() => {
-    container = document.createElement('div');
-    document.body.appendChild(container);
+  const locators = (element: Element) => ({
+    get retryContainer() {
+      return element.querySelector('[part="retry-container"]');
+    },
+    get messageElement() {
+      return element.querySelector('.text-neutral-dark');
+    },
+    get button() {
+      return element.querySelector('button');
+    },
   });
 
-  afterEach(() => {
-    document.body.removeChild(container);
-  });
-
-  const renderRetry = (
-    props: RetryPromptProps
-  ): {
-    retryContainer: HTMLElement;
-    messageElement: HTMLElement;
-    button: HTMLButtonElement;
-  } => {
-    render(html`${renderRetryPrompt({props})}`, container);
-
-    const retryContainer = container.querySelector(
-      '[part="retry-container"]'
-    ) as HTMLElement;
-    const messageElement = retryContainer?.querySelector(
-      '.text-neutral-dark'
-    ) as HTMLElement;
-    const button = within(container).getByRole('button') as HTMLButtonElement;
-
-    return {retryContainer, messageElement, button};
+  const renderComponent = async (props: Partial<RetryPromptProps> = {}) => {
+    return await renderFunctionFixture(
+      html`${renderRetryPrompt({
+        props: {
+          message: 'Something went wrong',
+          buttonLabel: 'Retry',
+          onClick: vi.fn(),
+          ...props,
+        },
+      })}`
+    );
   };
 
-  it('should render the retry container in the document', () => {
-    const props: RetryPromptProps = {
-      message: 'Something went wrong',
-      buttonLabel: 'Retry',
-      onClick: vi.fn(),
-    };
-
-    const {retryContainer} = renderRetry(props);
+  it('should render the retry container in the document', async () => {
+    const element = await renderComponent();
+    const {retryContainer} = locators(element);
 
     expect(retryContainer).toBeInTheDocument();
   });
 
-  it('should render the retry container with the correct part attribute', () => {
-    const props: RetryPromptProps = {
-      message: 'Something went wrong',
-      buttonLabel: 'Retry',
-      onClick: vi.fn(),
-    };
+  it('should render the retry container with the correct part attribute', async () => {
+    const element = await renderComponent();
+    const {retryContainer} = locators(element);
 
-    const {retryContainer} = renderRetry(props);
-
-    expect(retryContainer.getAttribute('part')).toBe('retry-container');
+    expect(retryContainer).toHaveAttribute('part', 'retry-container');
   });
 
-  it('should render the retry container with the correct class', () => {
-    const props: RetryPromptProps = {
-      message: 'Something went wrong',
-      buttonLabel: 'Retry',
-      onClick: vi.fn(),
-    };
-
-    const {retryContainer} = renderRetry(props);
+  it('should render the retry container with the correct class', async () => {
+    const element = await renderComponent();
+    const {retryContainer} = locators(element);
 
     expect(retryContainer).toHaveClass('mt-4');
   });
 
-  it('should render the message with the correct text', () => {
-    const props: RetryPromptProps = {
+  it('should render the message with the correct text', async () => {
+    const element = await renderComponent({
       message: 'An error occurred',
       buttonLabel: 'Try Again',
-      onClick: vi.fn(),
-    };
+    });
+    const {messageElement} = locators(element);
 
-    const {messageElement} = renderRetry(props);
-
-    expect(messageElement.textContent).toBe('An error occurred');
+    expect(messageElement).toHaveTextContent('An error occurred');
   });
 
-  it('should render the message with the correct classes', () => {
-    const props: RetryPromptProps = {
-      message: 'Something went wrong',
-      buttonLabel: 'Retry',
-      onClick: vi.fn(),
-    };
-
-    const {messageElement} = renderRetry(props);
+  it('should render the message with the correct classes', async () => {
+    const element = await renderComponent();
+    const {messageElement} = locators(element);
 
     expect(messageElement).toHaveClass('text-neutral-dark');
     expect(messageElement).toHaveClass('mx-auto');
     expect(messageElement).toHaveClass('text-center');
   });
 
-  it('should render the button with the correct label', () => {
-    const props: RetryPromptProps = {
-      message: 'Something went wrong',
+  it('should render the button with the correct label', async () => {
+    const element = await renderComponent({
       buttonLabel: 'Click to Retry',
-      onClick: vi.fn(),
-    };
+    });
+    const {button} = locators(element);
 
-    const {button} = renderRetry(props);
-
-    expect(button.textContent?.trim()).toBe('Click to Retry');
+    expect(button).toHaveTextContent('Click to Retry');
   });
 
-  it('should render the button with the correct style', () => {
-    const props: RetryPromptProps = {
-      message: 'Something went wrong',
-      buttonLabel: 'Retry',
-      onClick: vi.fn(),
-    };
-
-    const {button} = renderRetry(props);
+  it('should render the button with the correct style', async () => {
+    const element = await renderComponent();
+    const {button} = locators(element);
 
     expect(button).toHaveClass('btn-outline-primary');
   });
 
-  it('should render the button with the correct classes', () => {
-    const props: RetryPromptProps = {
-      message: 'Something went wrong',
-      buttonLabel: 'Retry',
-      onClick: vi.fn(),
-    };
-
-    const {button} = renderRetry(props);
+  it('should render the button with the correct classes', async () => {
+    const element = await renderComponent();
+    const {button} = locators(element);
 
     expect(button).toHaveClass('mx-auto');
     expect(button).toHaveClass('mt-4');
@@ -139,40 +98,33 @@ describe('#renderRetryPrompt', () => {
 
   it('should call onClick when the button is clicked', async () => {
     const handleClick = vi.fn();
-    const props: RetryPromptProps = {
-      message: 'Something went wrong',
-      buttonLabel: 'Retry',
+    const element = await renderComponent({
       onClick: handleClick,
-    };
+    });
+    const {button} = locators(element);
 
-    const {button} = renderRetry(props);
-
-    await fireEvent.click(button);
+    (button as HTMLButtonElement).click();
 
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 
-  it('should render with different message text', () => {
-    const props: RetryPromptProps = {
+  it('should render with different message text', async () => {
+    const element = await renderComponent({
       message: 'Network error. Please try again.',
-      buttonLabel: 'Retry',
-      onClick: vi.fn(),
-    };
+    });
+    const {messageElement} = locators(element);
 
-    const {messageElement} = renderRetry(props);
-
-    expect(messageElement.textContent).toBe('Network error. Please try again.');
+    expect(messageElement).toHaveTextContent(
+      'Network error. Please try again.'
+    );
   });
 
-  it('should render with different button label', () => {
-    const props: RetryPromptProps = {
-      message: 'Something went wrong',
+  it('should render with different button label', async () => {
+    const element = await renderComponent({
       buttonLabel: 'Reload',
-      onClick: vi.fn(),
-    };
+    });
+    const {button} = locators(element);
 
-    const {button} = renderRetry(props);
-
-    expect(button.textContent?.trim()).toBe('Reload');
+    expect(button).toHaveTextContent('Reload');
   });
 });
