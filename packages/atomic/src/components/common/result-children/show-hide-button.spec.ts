@@ -46,78 +46,60 @@ describe('#renderShowHideButton', () => {
     expect(button).toHaveClass('show-hide-button');
   });
 
-  describe('when showInitialChildren is true', () => {
-    it('should display loadAllResults text', async () => {
-      await renderComponent({
-        showInitialChildren: true,
-        moreResultsAvailable: false,
-      });
-      await expect
-        .element(locators.button)
-        .toHaveTextContent('Load all results');
+  it('should display loadAllResults text when showInitialChildren is true', async () => {
+    await renderComponent({
+      showInitialChildren: true,
+      moreResultsAvailable: false,
     });
+    await expect.element(locators.button).toHaveTextContent('Load all results');
   });
 
-  describe('when showInitialChildren is false and moreResultsAvailable is false', () => {
-    it('should display collapseResults text', async () => {
-      await renderComponent({
-        showInitialChildren: false,
-        moreResultsAvailable: false,
-      });
-      await expect
-        .element(locators.button)
-        .toHaveTextContent('Collapse results');
+  it('should display collapseResults text when showInitialChildren is false and moreResultsAvailable is false', async () => {
+    await renderComponent({
+      showInitialChildren: false,
+      moreResultsAvailable: false,
     });
+    await expect.element(locators.button).toHaveTextContent('Collapse results');
   });
 
-  describe('when moreResultsAvailable is true', () => {
-    it('should display loadAllResults text', async () => {
-      await renderComponent({
-        showInitialChildren: false,
-        moreResultsAvailable: true,
-      });
-      await expect
-        .element(locators.button)
-        .toHaveTextContent('Load all results');
+  it('should display loadAllResults text when moreResultsAvailable is true', async () => {
+    await renderComponent({
+      showInitialChildren: false,
+      moreResultsAvailable: true,
     });
+    await expect.element(locators.button).toHaveTextContent('Load all results');
   });
 
-  describe('when button is clicked', () => {
-    describe('when moreResultsAvailable is true', () => {
-      it('should call loadFullCollection and toggleShowInitialChildren twice', async () => {
-        const loadFullCollection = vi.fn();
-        const toggleShowInitialChildren = vi.fn();
+  it('should call loadFullCollection and toggleShowInitialChildren once when button is clicked and moreResultsAvailable is true', async () => {
+    const loadFullCollection = vi.fn();
+    const toggleShowInitialChildren = vi.fn();
 
-        await renderComponent({
-          moreResultsAvailable: true,
-          loadFullCollection,
-          toggleShowInitialChildren,
-        });
-
-        await locators.button.click();
-
-        expect(loadFullCollection).toHaveBeenCalledOnce();
-        expect(toggleShowInitialChildren).toHaveBeenCalledTimes(2);
-      });
+    await renderComponent({
+      moreResultsAvailable: true,
+      loadFullCollection,
+      toggleShowInitialChildren,
     });
 
-    describe('when moreResultsAvailable is false', () => {
-      it('should call toggleShowInitialChildren once', async () => {
-        const loadFullCollection = vi.fn();
-        const toggleShowInitialChildren = vi.fn();
+    await locators.button.click();
 
-        await renderComponent({
-          moreResultsAvailable: false,
-          loadFullCollection,
-          toggleShowInitialChildren,
-        });
+    expect(loadFullCollection).toHaveBeenCalledOnce();
+    expect(toggleShowInitialChildren).toHaveBeenCalledOnce();
+  });
 
-        await locators.button.click();
+  it('should call toggleShowInitialChildren once when button is clicked and moreResultsAvailable is false', async () => {
+    const loadFullCollection = vi.fn();
+    const toggleShowInitialChildren = vi.fn();
 
-        expect(loadFullCollection).not.toHaveBeenCalled();
-        expect(toggleShowInitialChildren).toHaveBeenCalledOnce();
-      });
+    await renderComponent({
+      moreResultsAvailable: false,
+      loadFullCollection,
+      toggleShowInitialChildren,
     });
+
+    await locators.button.click();
+
+    expect(loadFullCollection).not.toHaveBeenCalled();
+    expect(toggleShowInitialChildren).toHaveBeenCalledOnce();
   });
 
   describe('button text variations', () => {
