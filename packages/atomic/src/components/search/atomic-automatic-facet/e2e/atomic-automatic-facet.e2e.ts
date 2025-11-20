@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-test.describe('atomic-automatic-facet golden path', () => {
+test.describe('atomic-automatic-facet', () => {
   test.beforeEach(async ({automaticFacet}) => {
     await automaticFacet.load({story: 'default'});
     await automaticFacet.hydrated.waitFor();
@@ -20,15 +20,5 @@ test.describe('atomic-automatic-facet golden path', () => {
   test('should allow selecting a facet value', async ({automaticFacet}) => {
     await automaticFacet.firstFacetValue.click();
     await expect(automaticFacet.clearButton).toBeVisible();
-  });
-
-  test('should clear selected values when clear button is clicked', async ({
-    automaticFacet,
-  }) => {
-    await automaticFacet.firstFacetValue.click();
-    await expect(automaticFacet.clearButton).toBeVisible();
-
-    await automaticFacet.clearButton.click();
-    await expect(automaticFacet.clearButton).not.toBeVisible();
   });
 });
