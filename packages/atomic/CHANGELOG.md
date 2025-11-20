@@ -1,3 +1,18 @@
+## 3.39.0 (2025-11-19)
+
+* fix:  atomic-result-list display prop validation to warn instead of error (#6437) ([26b6fd1](https://github.com/coveo/ui-kit/commits/26b6fd1)), closes [#6437](https://github.com/coveo/ui-kit/issues/6437)
+* fix(a11y): fix nested-interactive elements for instant items (#6535) ([c3acb1f](https://github.com/coveo/ui-kit/commits/c3acb1f)), closes [#6535](https://github.com/coveo/ui-kit/issues/6535)
+* fix(atomic): Safari click event propagation for query suggestions (#6554) ([9dddc1a](https://github.com/coveo/ui-kit/commits/9dddc1a)), closes [#6554](https://github.com/coveo/ui-kit/issues/6554)
+* chore (atomic): migrated atomic-result-html to lit (#6538) ([b76337c](https://github.com/coveo/ui-kit/commits/b76337c)), closes [#6538](https://github.com/coveo/ui-kit/issues/6538)
+* Migrate CollectionGuard functional component from Stencil to Lit (#6448) ([b05f128](https://github.com/coveo/ui-kit/commits/b05f128)), closes [#6448](https://github.com/coveo/ui-kit/issues/6448)
+* chore: add Storybook MCP addon for AI agent integration (#6530) ([0d8ab1d](https://github.com/coveo/ui-kit/commits/0d8ab1d)), closes [#6530](https://github.com/coveo/ui-kit/issues/6530)
+* chore: typo in vi.mock (#6537) ([7e801d8](https://github.com/coveo/ui-kit/commits/7e801d8)), closes [#6537](https://github.com/coveo/ui-kit/issues/6537)
+* chore(atomic): add prop validation to atomic-facet (#6320) ([ffb79d5](https://github.com/coveo/ui-kit/commits/ffb79d5)), closes [#6320](https://github.com/coveo/ui-kit/issues/6320)
+* chore(atomic): migrate atomic-focus-trap from Stencil to Lit (#6450) ([1a56993](https://github.com/coveo/ui-kit/commits/1a56993)), closes [#6450](https://github.com/coveo/ui-kit/issues/6450)
+* feat: migrating handwritten documentation from docs.coveo.com (#6528) ([f5400d6](https://github.com/coveo/ui-kit/commits/f5400d6)), closes [#6528](https://github.com/coveo/ui-kit/issues/6528)
+
+
+
 ## 3.38.0 (2025-11-12)
 
 * docs: correct JSDoc grammar and terminology across packages (#6531) ([356975a](https://github.com/coveo/ui-kit/commits/356975a)), closes [#6531](https://github.com/coveo/ui-kit/issues/6531)

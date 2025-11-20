@@ -4,7 +4,7 @@ import replacePlugin from '@rollup/plugin-replace';
 import {storybookTest} from '@storybook/addon-vitest/vitest-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import {playwright} from '@vitest/browser-playwright';
-import {configDefaults, defineConfig} from 'vitest/config';
+import {configDefaults, defineConfig, mergeConfig} from 'vitest/config';
 import packageJsonHeadless from '../headless/package.json' with {type: 'json'};
 import packageJson from './package.json' with {type: 'json'};
 
@@ -37,6 +37,35 @@ function replace() {
     preventAssignment: true,
   });
 }
+
+// More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
+const storybook = defineConfig({
+  name: 'storybook',
+  plugins: [
+    // The plugin will run tests for the stories defined in your Storybook config
+    // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
+    storybookTest({
+      configDir: path.join(import.meta.dirname, '.storybook'),
+      storybookUrl: 'http://localhost:4400',
+      storybookScript: 'npx storybook dev -p 4400 --no-open',
+    }),
+  ],
+  test: {
+    name: 'storybook',
+    fileParallelism: false,
+    browser: {
+      fileParallelism: false,
+      enabled: true,
+      headless: true,
+      provider: playwright(),
+      instances: [{browser: 'chromium'}],
+      context: {
+        actionTimeout: 3000,
+      },
+    },
+    setupFiles: ['./vitest-utils/setup.ts', '.storybook/vitest.setup.ts'],
+  },
+});
 
 const atomicDefault = defineConfig({
   name: 'atomic-default',
@@ -118,33 +147,6 @@ const atomicDefault = defineConfig({
   },
 });
 
-// More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
-const storybook = defineConfig({
-  name: 'storybook',
-  plugins: [
-    // The plugin will run tests for the stories defined in your Storybook config
-    // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
-    storybookTest({
-      configDir: path.join(import.meta.dirname, '.storybook'),
-      storybookUrl: 'http://localhost:4400',
-      storybookScript: 'npx storybook dev -p 4400 --no-open',
-    }),
-  ],
-  test: {
-    name: 'storybook',
-    fileParallelism: false,
-    browser: {
-      fileParallelism: false,
-      enabled: true,
-      headless: true,
-      provider: playwright(),
-      instances: [{browser: 'chromium'}],
-      context: {
-        actionTimeout: 3000,
-      },
-    },
-    setupFiles: ['./vitest-utils/setup.ts', '.storybook/vitest.setup.ts'],
-  },
+export default mergeConfig(atomicDefault, {
+  test: {projects: [atomicDefault, storybook]},
 });
-
-export default defineConfig({test: {projects: [atomicDefault, storybook]}});
