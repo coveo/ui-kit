@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import ts from 'typescript';
 import colors from '../../../utils/ci/colors.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -11,10 +12,12 @@ const outputFile = path.resolve(
 );
 
 /**
- * Extracts custom element tag names from component files.
+ * Extracts custom element tag names from component files using TypeScript AST.
  * Supports both:
  * - Lit components: @customElement('tag-name')
  * - Stencil components: @Component({tag: 'tag-name'})
+ *
+ * Uses AST parsing to avoid picking up decorator usage in JSDoc comments.
  */
 function extractCustomElementTags() {
   const tags = new Set();
@@ -35,16 +38,71 @@ function extractCustomElementTags() {
         !entry.name.includes('.e2e.')
       ) {
         const content = fs.readFileSync(fullPath, 'utf-8');
-
-        // Match Lit decorator: @customElement('tag-name')
-        const litMatches = content.matchAll(
-          /@customElement\(['"]([^'"]+)['"]\)/g
+        const sourceFile = ts.createSourceFile(
+          fullPath,
+          content,
+          ts.ScriptTarget.Latest,
+          true
         );
-        for (const match of litMatches) {
-          tags.add(match[1]);
+
+        visitNode(sourceFile);
+      }
+    }
+  }
+
+  function visitNode(node) {
+    // Check if this is a class declaration with decorators
+    if (ts.isClassDeclaration(node) && node.modifiers) {
+      for (const modifier of node.modifiers) {
+        if (ts.isDecorator(modifier)) {
+          const tagName = extractTagFromDecorator(modifier);
+          if (tagName) {
+            tags.add(tagName);
+          }
         }
       }
     }
+
+    ts.forEachChild(node, visitNode);
+  }
+
+  function extractTagFromDecorator(decorator) {
+    const expression = decorator.expression;
+
+    // Handle @customElement('tag-name')
+    if (
+      ts.isCallExpression(expression) &&
+      ts.isIdentifier(expression.expression) &&
+      expression.expression.text === 'customElement'
+    ) {
+      const arg = expression.arguments[0];
+      if (arg && ts.isStringLiteral(arg)) {
+        return arg.text;
+      }
+    }
+
+    // Handle @Component({tag: 'tag-name', ...})
+    if (
+      ts.isCallExpression(expression) &&
+      ts.isIdentifier(expression.expression) &&
+      expression.expression.text === 'Component'
+    ) {
+      const arg = expression.arguments[0];
+      if (arg && ts.isObjectLiteralExpression(arg)) {
+        for (const property of arg.properties) {
+          if (
+            ts.isPropertyAssignment(property) &&
+            ts.isIdentifier(property.name) &&
+            property.name.text === 'tag' &&
+            ts.isStringLiteral(property.initializer)
+          ) {
+            return property.initializer.text;
+          }
+        }
+      }
+    }
+
+    return null;
   }
 
   scanDirectory(componentsDir);
@@ -71,6 +129,23 @@ export function generateCustomElementTags() {
 export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
 ${tags.map((tag) => `  '${tag}',`).join('\n')}
 ]);
+
+/**
+ * Waits for all Atomic custom element children to be defined.
+ * This ensures that all vanilla (non-framework) Atomic components have been
+ * registered with the custom elements registry before proceeding.
+ * 
+ * @param host - The host element to scan for Atomic children
+ */
+export async function waitForAtomicChildrenToBeDefined(
+  host: Element
+): Promise<void> {
+  await Promise.all(
+    Array.from(host.querySelectorAll('*'))
+      .filter((el) => ATOMIC_CUSTOM_ELEMENT_TAGS.has(el.tagName.toLowerCase()))
+      .map((el) => customElements.whenDefined(el.tagName.toLowerCase()))
+  );
+}
 `;
 
   fs.writeFileSync(outputFile, fileContent, 'utf-8');

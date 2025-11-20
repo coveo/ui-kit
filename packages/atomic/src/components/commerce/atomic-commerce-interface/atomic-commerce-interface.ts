@@ -42,7 +42,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
-import {ATOMIC_CUSTOM_ELEMENT_TAGS} from '@/src/utils/custom-element-tags';
+import {waitForAtomicChildrenToBeDefined} from '@/src/utils/custom-element-tags';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
 import {
   SafeStorage,
@@ -507,20 +507,10 @@ export class AtomicCommerceInterface
     this.initRequestStatus();
     this.initSummary();
     this.initLanguage();
-    await this.waitForAllVanillaChildrenComponentsToBeDefined();
+    await waitForAtomicChildrenToBeDefined(this);
     await this.getUpdateComplete();
     this.initUrlManager();
     this.initialized = true;
-  }
-
-  private async waitForAllVanillaChildrenComponentsToBeDefined() {
-    await Promise.all(
-      Array.from(this.querySelectorAll('*'))
-        .filter((el) =>
-          ATOMIC_CUSTOM_ELEMENT_TAGS.has(el.tagName.toLowerCase())
-        )
-        .map((el) => customElements.whenDefined(el.tagName.toLowerCase()))
-    );
   }
 
   private isNewLocale(language?: string, country?: string, currency?: string) {
