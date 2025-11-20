@@ -230,7 +230,10 @@ export class AtomicAiConversation
           )}
         </div>
         <div class="bottom w-full ">
-          <atomic-ai-related-questions .questions=${this.relatedQuestions}></atomic-ai-related-questions>
+          <atomic-ai-related-questions 
+            .questions=${this.relatedQuestions}
+            answer-configuration-id=${this.answerConfigurationId}
+          ></atomic-ai-related-questions>
           <div class="w-2/3 p-4">${this.renderConversationInput()}</div>
         </div>
       </div>

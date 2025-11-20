@@ -188,29 +188,34 @@ export class AtomicAiRelatedQuestions
       return html``;
     }
 
-    // Check if any answer is currently loading
-    const isLoading =
-      this.conversationState?.answers?.some((answer) => answer.isLoading) ||
-      false;
+    // Check if any answer is currently loading or streaming
+    const isStreaming =
+      this.conversationState?.answers?.some(
+        (answer) => answer.isLoading || answer.isStreaming
+      ) || false;
+
+    // Only show related questions when no answer is streaming
+    if (isStreaming) {
+      return html``;
+    }
 
     return html`
       <div part="questions-container" class="questions-container">
         <h3 part="questions-title" class="questions-title">Related questions</h3>
         <div>
-          ${questionsToRender.map((question) => this.renderQuestion(question, isLoading))}
+          ${questionsToRender.map((question) => this.renderQuestion(question))}
         </div>
       </div>
     `;
   }
 
-  private renderQuestion(question: RelatedQuestion, isLoading: boolean) {
+  private renderQuestion(question: RelatedQuestion) {
     return html`
       <div part="question-item" class="question-item">
         <button
           part="question-button"
           class="question-button"
           @click=${() => this.handleQuestionClick(question)}
-          ?disabled=${isLoading}
           aria-label="Ask question: ${question.question}"
         >
           <span part="question-text" class="question-text">
