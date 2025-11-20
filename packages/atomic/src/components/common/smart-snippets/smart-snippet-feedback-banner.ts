@@ -23,9 +23,9 @@ export interface SmartSnippetFeedbackBannerProps {
 export const renderSmartSnippetFeedbackBanner: FunctionalComponent<
   SmartSnippetFeedbackBannerProps
 > = ({props}) => {
-  const inquiryId = 'feedback-inquiry-' + props.id;
-  const thankYouId = 'feedback-thank-you-' + props.id;
-  const radioGroupName = 'feedback-options-' + props.id;
+  const inquiryId = `feedback-inquiry-${props.id}`;
+  const thankYouId = `feedback-thank-you-${props.id}`;
+  const radioGroupName = `feedback-options-${props.id}`;
 
   const renderInquiry = () =>
     html`<span id=${inquiryId} part="feedback-inquiry" class="shrink-0">
