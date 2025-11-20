@@ -48,7 +48,7 @@ export const renderInstantItemShowAllButton = ({
 }: InstantItemShowAllButtonProps): HTMLElement => {
   const template = html`<div
     part="instant-results-show-all-button"
-    class=${getClassNameForButtonStyle('text-primary')}
+    class="pointer-events-none ${getClassNameForButtonStyle('text-primary')}"
   >
     ${i18n.t(i18nKey)}
   </div>`;

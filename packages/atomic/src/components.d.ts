@@ -71,7 +71,10 @@ export namespace Components {
         "updateCollapseFacetsDependingOnFacetsVisibility": (collapseAfter: number, numberOfVisibleFacets: number) => Promise<void>;
     }
     /**
-     * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     * The `atomic-breadbox` component helps the user keep track of the navigational state of the currently active facet values, located in a single place on the search page.
+     * In most cases, these are on the top of a page between the search bar and the results.
+     * By default, the field name is displayed before the field value to clarify which facet the value is from.
+     * You can clear a single selection by clicking the `x` inside of each pill, or clear all selections by using the `Clear` button.
      */
     interface AtomicBreadbox {
         /**
@@ -281,51 +284,6 @@ export namespace Components {
         "filterState": NumericFilterState;
         "label": string;
         "type": NumberInputType;
-    }
-    /**
-     * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
-     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (for example, `isRecommendation`).
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface AtomicFieldCondition {
-        /**
-          * Verifies whether the specified fields are defined.
-         */
-        "ifDefined"?: string;
-        /**
-          * Verifies whether the specified fields are not defined.
-         */
-        "ifNotDefined"?: string;
-        /**
-          * Verifies whether the specified fields match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustMatch": Record<string, string[]>;
-        /**
-          * Verifies whether the specified fields do not match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustNotMatch": Record<string, string[]>;
-    }
-    interface AtomicFocusTrap {
-        "active": boolean;
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
-         */
-        "container"?: HTMLElement;
-        /**
-          * The common ancestor of the focus trap and of all the elements that should be inaccessible when inside the focus trap.
-         */
-        "scope": HTMLElement;
-        /**
-          * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
-         */
-        "shouldHideSelf": boolean;
-        /**
-          * The source to focus when the focus trap becomes inactive.
-         */
-        "source"?: HTMLElement;
     }
     /**
      * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
@@ -1552,48 +1510,6 @@ export namespace Components {
         "collapseFacetsAfter": number;
     }
     /**
-     * The `atomic-result-badge` element renders a badge to highlight special features of a result.
-     * A badge can either display:
-     * * Text:
-     * ```html
-     * <atomic-result-badge label="trending"></atomic-result-badge>
-     * ```
-     * * The contents of a single-value field:
-     * ```html
-     * <atomic-result-badge field="objecttype"></atomic-result-badge>
-     * ```
-     * * An icon:
-     * ```html
-     * <atomic-result-badge icon="https://my-website.fake/star.svg"></atomic-result-badge>
-     * ```
-     * * Slotted elements:
-     * ```html
-     * <atomic-result-badge icon="https://my-website.fake/stopwatch.svg">
-     *     Deal ends in <my-dynamic-countdown></my-dynamic-countdown>
-     * </atomic-result-badge>
-     * ```
-     * The contents of a multi-value field can be displayed as in the following example:
-     * ```html
-     * <atomic-result-badge icon="https://my-website.fake/language.svg">
-     *    <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
-     * </atomic-result-badge>
-     * ```
-     */
-    interface AtomicResultBadge {
-        /**
-          * The field to display in the badge.  Not compatible with `label`, slotted elements nor multi-value fields.
-         */
-        "field"?: string;
-        /**
-          * Specifies an icon to display at the left-end of the badge. This can be used in conjunction with `field`, `label` or slotted elements.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
-         */
-        "icon"?: string;
-        /**
-          * The text to display in the badge.  Not compatible with `field` nor slotted elements.
-         */
-        "label"?: string;
-    }
-    /**
      * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.
      * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,
      * only when children exist.
@@ -1633,21 +1549,6 @@ export namespace Components {
      * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
      */
     interface AtomicResultFieldsList {
-    }
-    /**
-     * The `atomic-result-html` component renders the HTML value of a string result field.
-     * There is an inherent XSS security concern associated with the usage of this component.
-     * Use only with fields for which you are certain the data is harmless.
-     */
-    interface AtomicResultHtml {
-        /**
-          * The result field which the component should use. If set, Atomic searches for the specified field in the `Result` object first. If there's no such a field, Atomic searches through the `Result.raw` object. It's important to include the necessary field in the `ResultList` component.
-         */
-        "field": string;
-        /**
-          * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
-         */
-        "sanitize": boolean;
     }
     /**
      * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
@@ -2279,7 +2180,10 @@ declare global {
         new (): HTMLAtomicAutomaticFacetGeneratorElement;
     };
     /**
-     * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     * The `atomic-breadbox` component helps the user keep track of the navigational state of the currently active facet values, located in a single place on the search page.
+     * In most cases, these are on the top of a page between the search bar and the results.
+     * By default, the field name is displayed before the field value to clarify which facet the value is from.
+     * You can clear a single selection by clicking the `x` inside of each pill, or clear all selections by using the `Clear` button.
      */
     interface HTMLAtomicBreadboxElement extends Components.AtomicBreadbox, HTMLStencilElement {
     }
@@ -2353,24 +2257,6 @@ declare global {
     var HTMLAtomicFacetNumberInputElement: {
         prototype: HTMLAtomicFacetNumberInputElement;
         new (): HTMLAtomicFacetNumberInputElement;
-    };
-    /**
-     * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
-     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (for example, `isRecommendation`).
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface HTMLAtomicFieldConditionElement extends Components.AtomicFieldCondition, HTMLStencilElement {
-    }
-    var HTMLAtomicFieldConditionElement: {
-        prototype: HTMLAtomicFieldConditionElement;
-        new (): HTMLAtomicFieldConditionElement;
-    };
-    interface HTMLAtomicFocusTrapElement extends Components.AtomicFocusTrap, HTMLStencilElement {
-    }
-    var HTMLAtomicFocusTrapElement: {
-        prototype: HTMLAtomicFocusTrapElement;
-        new (): HTMLAtomicFocusTrapElement;
     };
     /**
      * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
@@ -2965,40 +2851,6 @@ declare global {
         new (): HTMLAtomicRefineToggleElement;
     };
     /**
-     * The `atomic-result-badge` element renders a badge to highlight special features of a result.
-     * A badge can either display:
-     * * Text:
-     * ```html
-     * <atomic-result-badge label="trending"></atomic-result-badge>
-     * ```
-     * * The contents of a single-value field:
-     * ```html
-     * <atomic-result-badge field="objecttype"></atomic-result-badge>
-     * ```
-     * * An icon:
-     * ```html
-     * <atomic-result-badge icon="https://my-website.fake/star.svg"></atomic-result-badge>
-     * ```
-     * * Slotted elements:
-     * ```html
-     * <atomic-result-badge icon="https://my-website.fake/stopwatch.svg">
-     *     Deal ends in <my-dynamic-countdown></my-dynamic-countdown>
-     * </atomic-result-badge>
-     * ```
-     * The contents of a multi-value field can be displayed as in the following example:
-     * ```html
-     * <atomic-result-badge icon="https://my-website.fake/language.svg">
-     *    <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
-     * </atomic-result-badge>
-     * ```
-     */
-    interface HTMLAtomicResultBadgeElement extends Components.AtomicResultBadge, HTMLStencilElement {
-    }
-    var HTMLAtomicResultBadgeElement: {
-        prototype: HTMLAtomicResultBadgeElement;
-        new (): HTMLAtomicResultBadgeElement;
-    };
-    /**
      * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.
      * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,
      * only when children exist.
@@ -3026,17 +2878,6 @@ declare global {
     var HTMLAtomicResultFieldsListElement: {
         prototype: HTMLAtomicResultFieldsListElement;
         new (): HTMLAtomicResultFieldsListElement;
-    };
-    /**
-     * The `atomic-result-html` component renders the HTML value of a string result field.
-     * There is an inherent XSS security concern associated with the usage of this component.
-     * Use only with fields for which you are certain the data is harmless.
-     */
-    interface HTMLAtomicResultHtmlElement extends Components.AtomicResultHtml, HTMLStencilElement {
-    }
-    var HTMLAtomicResultHtmlElement: {
-        prototype: HTMLAtomicResultHtmlElement;
-        new (): HTMLAtomicResultHtmlElement;
     };
     /**
      * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
@@ -3436,8 +3277,6 @@ declare global {
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
-        "atomic-field-condition": HTMLAtomicFieldConditionElement;
-        "atomic-focus-trap": HTMLAtomicFocusTrapElement;
         "atomic-folded-result-list": HTMLAtomicFoldedResultListElement;
         "atomic-format-currency": HTMLAtomicFormatCurrencyElement;
         "atomic-format-number": HTMLAtomicFormatNumberElement;
@@ -3503,11 +3342,9 @@ declare global {
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
-        "atomic-result-badge": HTMLAtomicResultBadgeElement;
         "atomic-result-children": HTMLAtomicResultChildrenElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
-        "atomic-result-html": HTMLAtomicResultHtmlElement;
         "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
@@ -3579,7 +3416,10 @@ declare namespace LocalJSX {
         "numberOfValues"?: number;
     }
     /**
-     * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+     * The `atomic-breadbox` component helps the user keep track of the navigational state of the currently active facet values, located in a single place on the search page.
+     * In most cases, these are on the top of a page between the search bar and the results.
+     * By default, the field name is displayed before the field value to clarify which facet the value is from.
+     * You can clear a single selection by clicking the `x` inside of each pill, or clear all selections by using the `Clear` button.
      */
     interface AtomicBreadbox {
         /**
@@ -3790,51 +3630,6 @@ declare namespace LocalJSX {
         "label": string;
         "onAtomic/numberInputApply"?: (event: AtomicFacetNumberInputCustomEvent<any>) => void;
         "type": NumberInputType;
-    }
-    /**
-     * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
-     * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (for example, `isRecommendation`).
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface AtomicFieldCondition {
-        /**
-          * Verifies whether the specified fields are defined.
-         */
-        "ifDefined"?: string;
-        /**
-          * Verifies whether the specified fields are not defined.
-         */
-        "ifNotDefined"?: string;
-        /**
-          * Verifies whether the specified fields match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustMatch"?: Record<string, string[]>;
-        /**
-          * Verifies whether the specified fields do not match the specified values.
-          * @type {Record<string, string[]>}
-         */
-        "mustNotMatch"?: Record<string, string[]>;
-    }
-    interface AtomicFocusTrap {
-        "active"?: boolean;
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
-         */
-        "container"?: HTMLElement;
-        /**
-          * The common ancestor of the focus trap and of all the elements that should be inaccessible when inside the focus trap.
-         */
-        "scope"?: HTMLElement;
-        /**
-          * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
-         */
-        "shouldHideSelf"?: boolean;
-        /**
-          * The source to focus when the focus trap becomes inactive.
-         */
-        "source"?: HTMLElement;
     }
     /**
      * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
@@ -5012,48 +4807,6 @@ declare namespace LocalJSX {
         "collapseFacetsAfter"?: number;
     }
     /**
-     * The `atomic-result-badge` element renders a badge to highlight special features of a result.
-     * A badge can either display:
-     * * Text:
-     * ```html
-     * <atomic-result-badge label="trending"></atomic-result-badge>
-     * ```
-     * * The contents of a single-value field:
-     * ```html
-     * <atomic-result-badge field="objecttype"></atomic-result-badge>
-     * ```
-     * * An icon:
-     * ```html
-     * <atomic-result-badge icon="https://my-website.fake/star.svg"></atomic-result-badge>
-     * ```
-     * * Slotted elements:
-     * ```html
-     * <atomic-result-badge icon="https://my-website.fake/stopwatch.svg">
-     *     Deal ends in <my-dynamic-countdown></my-dynamic-countdown>
-     * </atomic-result-badge>
-     * ```
-     * The contents of a multi-value field can be displayed as in the following example:
-     * ```html
-     * <atomic-result-badge icon="https://my-website.fake/language.svg">
-     *    <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
-     * </atomic-result-badge>
-     * ```
-     */
-    interface AtomicResultBadge {
-        /**
-          * The field to display in the badge.  Not compatible with `label`, slotted elements nor multi-value fields.
-         */
-        "field"?: string;
-        /**
-          * Specifies an icon to display at the left-end of the badge. This can be used in conjunction with `field`, `label` or slotted elements.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
-         */
-        "icon"?: string;
-        /**
-          * The text to display in the badge.  Not compatible with `field` nor slotted elements.
-         */
-        "label"?: string;
-    }
-    /**
      * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.
      * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,
      * only when children exist.
@@ -5093,21 +4846,6 @@ declare namespace LocalJSX {
      * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
      */
     interface AtomicResultFieldsList {
-    }
-    /**
-     * The `atomic-result-html` component renders the HTML value of a string result field.
-     * There is an inherent XSS security concern associated with the usage of this component.
-     * Use only with fields for which you are certain the data is harmless.
-     */
-    interface AtomicResultHtml {
-        /**
-          * The result field which the component should use. If set, Atomic searches for the specified field in the `Result` object first. If there's no such a field, Atomic searches through the `Result.raw` object. It's important to include the necessary field in the `ResultList` component.
-         */
-        "field": string;
-        /**
-          * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
-         */
-        "sanitize"?: boolean;
     }
     /**
      * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
@@ -5669,8 +5407,6 @@ declare namespace LocalJSX {
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-number-input": AtomicFacetNumberInput;
-        "atomic-field-condition": AtomicFieldCondition;
-        "atomic-focus-trap": AtomicFocusTrap;
         "atomic-folded-result-list": AtomicFoldedResultList;
         "atomic-format-currency": AtomicFormatCurrency;
         "atomic-format-number": AtomicFormatNumber;
@@ -5736,11 +5472,9 @@ declare namespace LocalJSX {
         "atomic-recs-result-template": AtomicRecsResultTemplate;
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
-        "atomic-result-badge": AtomicResultBadge;
         "atomic-result-children": AtomicResultChildren;
         "atomic-result-date": AtomicResultDate;
         "atomic-result-fields-list": AtomicResultFieldsList;
-        "atomic-result-html": AtomicResultHtml;
         "atomic-result-icon": AtomicResultIcon;
         "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
@@ -5798,7 +5532,10 @@ declare module "@stencil/core" {
              */
             "atomic-automatic-facet-generator": LocalJSX.AtomicAutomaticFacetGenerator & JSXBase.HTMLAttributes<HTMLAtomicAutomaticFacetGeneratorElement>;
             /**
-             * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+             * The `atomic-breadbox` component helps the user keep track of the navigational state of the currently active facet values, located in a single place on the search page.
+             * In most cases, these are on the top of a page between the search bar and the results.
+             * By default, the field name is displayed before the field value to clarify which facet the value is from.
+             * You can clear a single selection by clicking the `x` inside of each pill, or clear all selections by using the `Clear` button.
              */
             "atomic-breadbox": LocalJSX.AtomicBreadbox & JSXBase.HTMLAttributes<HTMLAtomicBreadboxElement>;
             /**
@@ -5827,14 +5564,6 @@ declare module "@stencil/core" {
              * Internal component made to be integrated in a NumericFacet.
              */
             "atomic-facet-number-input": LocalJSX.AtomicFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicFacetNumberInputElement>;
-            /**
-             * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
-             * The condition properties can be based on any top-level result property of the `result` object, not restricted to fields (for example, `isRecommendation`).
-             * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-             * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-             */
-            "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
-            "atomic-focus-trap": LocalJSX.AtomicFocusTrap & JSXBase.HTMLAttributes<HTMLAtomicFocusTrapElement>;
             /**
              * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
              */
@@ -6002,35 +5731,6 @@ declare module "@stencil/core" {
              */
             "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
             /**
-             * The `atomic-result-badge` element renders a badge to highlight special features of a result.
-             * A badge can either display:
-             * * Text:
-             * ```html
-             * <atomic-result-badge label="trending"></atomic-result-badge>
-             * ```
-             * * The contents of a single-value field:
-             * ```html
-             * <atomic-result-badge field="objecttype"></atomic-result-badge>
-             * ```
-             * * An icon:
-             * ```html
-             * <atomic-result-badge icon="https://my-website.fake/star.svg"></atomic-result-badge>
-             * ```
-             * * Slotted elements:
-             * ```html
-             * <atomic-result-badge icon="https://my-website.fake/stopwatch.svg">
-             *     Deal ends in <my-dynamic-countdown></my-dynamic-countdown>
-             * </atomic-result-badge>
-             * ```
-             * The contents of a multi-value field can be displayed as in the following example:
-             * ```html
-             * <atomic-result-badge icon="https://my-website.fake/language.svg">
-             *    <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
-             * </atomic-result-badge>
-             * ```
-             */
-            "atomic-result-badge": LocalJSX.AtomicResultBadge & JSXBase.HTMLAttributes<HTMLAtomicResultBadgeElement>;
-            /**
              * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.
              * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,
              * only when children exist.
@@ -6044,12 +5744,6 @@ declare module "@stencil/core" {
              * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
              */
             "atomic-result-fields-list": LocalJSX.AtomicResultFieldsList & JSXBase.HTMLAttributes<HTMLAtomicResultFieldsListElement>;
-            /**
-             * The `atomic-result-html` component renders the HTML value of a string result field.
-             * There is an inherent XSS security concern associated with the usage of this component.
-             * Use only with fields for which you are certain the data is harmless.
-             */
-            "atomic-result-html": LocalJSX.AtomicResultHtml & JSXBase.HTMLAttributes<HTMLAtomicResultHtmlElement>;
             /**
              * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
              * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
