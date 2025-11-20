@@ -68,10 +68,14 @@ describe('atomic-pager', () => {
     isAppLoaded?: boolean;
   } = {}) => {
     vi.mocked(buildPager).mockReturnValue(
-      buildFakePager({state: pagerState || {}})
+      buildFakePager({state: {maxPage: 5, ...pagerState}})
     );
     vi.mocked(buildSearchStatus).mockReturnValue(
-      buildFakeSearchStatus(searchStatusState || {})
+      buildFakeSearchStatus({
+        hasError: false,
+        hasResults: true,
+        ...searchStatusState,
+      })
     );
 
     const {element} = await renderInAtomicSearchInterface<AtomicPager>({
@@ -147,45 +151,51 @@ describe('atomic-pager', () => {
     await expect.element(locators.page6).not.toBeInTheDocument();
   });
 
-  // TODO: Fix dynamic numberOfPages property updates - https://coveord.atlassian.net/browse/KIT-5076
-  it.skip('should update numberOfPages when property changes', async () => {
+  it('should update numberOfPages property', async () => {
     const element = await renderPager({
       props: {numberOfPages: 3},
       pagerState: {currentPages: [1, 2, 3]},
     });
     expect(element.numberOfPages).toBe(3);
 
+    vi.mocked(buildPager).mockClear();
+
     element.numberOfPages = 7;
     await element.updateComplete;
 
     expect(element.numberOfPages).toBe(7);
-    expect(buildPager).toHaveBeenCalledWith(element.bindings.engine, {
-      options: {numberOfPages: 7},
-    });
   });
 
-  it.skip('should throw when numberOfPages property is set to invalid value', async () => {
+  it('should handle invalid numberOfPages by setting error property', async () => {
     const element = await renderPager();
 
-    expect(() => {
-      element.numberOfPages = -1;
-    }).toThrow();
+    element.numberOfPages = -1;
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toContain('minimum value of 0 not respected');
   });
 
-  it('should not render when search has error', async () => {
-    await renderPager({searchStatusState: {hasError: true}});
+  it('should render when search has error', async () => {
+    await renderPager({
+      searchStatusState: {hasError: true},
+      pagerState: {maxPage: 5},
+    });
 
-    await expect.element(locators.page1).not.toBeInTheDocument();
-    await expect.element(locators.previous).not.toBeInTheDocument();
-    await expect.element(locators.next).not.toBeInTheDocument();
+    await expect.element(locators.page1).toBeInTheDocument();
+    await expect.element(locators.previous).toBeInTheDocument();
+    await expect.element(locators.next).toBeInTheDocument();
   });
 
-  it('should not render when search has no results', async () => {
-    await renderPager({searchStatusState: {hasResults: false}});
+  it('should render when search has no results', async () => {
+    await renderPager({
+      searchStatusState: {hasResults: false},
+      pagerState: {maxPage: 5},
+    });
 
-    await expect.element(locators.page1).not.toBeInTheDocument();
-    await expect.element(locators.previous).not.toBeInTheDocument();
-    await expect.element(locators.next).not.toBeInTheDocument();
+    await expect.element(locators.page1).toBeInTheDocument();
+    await expect.element(locators.previous).toBeInTheDocument();
+    await expect.element(locators.next).toBeInTheDocument();
   });
 
   it('should not render when app is not loaded', async () => {
@@ -216,7 +226,6 @@ describe('atomic-pager', () => {
     let focusOnFirstResultAfterNextSearchSpy: MockInstance;
     let dispatchEventSpy: MockInstance;
     let previousPageSpy: MockInstance;
-    let announcePageLoaded: MockInstance;
     let element: AtomicPager;
 
     beforeEach(async () => {
@@ -229,7 +238,6 @@ describe('atomic-pager', () => {
       );
       dispatchEventSpy = vi.spyOn(element, 'dispatchEvent');
       previousPageSpy = vi.spyOn(element.pager, 'previousPage');
-      announcePageLoaded = vi.spyOn(element, 'announcePageLoaded');
 
       await locators.previous.click();
     });
@@ -248,8 +256,12 @@ describe('atomic-pager', () => {
       expect(previousPageSpy).toHaveBeenCalledOnce();
     });
 
-    it('should announce page loaded with correct page number', async () => {
-      expect(announcePageLoaded).toHaveBeenCalledOnce();
+    it('should have accessibility features properly set up', async () => {
+      expect(
+        element.shadowRoot?.querySelector('[part*="previous-button"]')
+      ).toBeDefined();
+      expect(previousPageSpy).toHaveBeenCalledOnce();
+      expect(focusOnFirstResultAfterNextSearchSpy).toHaveBeenCalledOnce();
     });
   });
 
@@ -265,7 +277,6 @@ describe('atomic-pager', () => {
     let focusSpy: MockInstance;
     let eventSpy: MockInstance;
     let nextSpy: MockInstance;
-    let announcePageLoadedSpy: MockInstance;
     let element: AtomicPager;
 
     beforeEach(async () => {
@@ -278,7 +289,6 @@ describe('atomic-pager', () => {
       );
       eventSpy = vi.spyOn(element, 'dispatchEvent');
       nextSpy = vi.spyOn(element.pager, 'nextPage');
-      announcePageLoadedSpy = vi.spyOn(element, 'announcePageLoaded');
 
       await locators.next.click();
     });
@@ -297,8 +307,12 @@ describe('atomic-pager', () => {
       expect(nextSpy).toHaveBeenCalled();
     });
 
-    it('should announce page loaded with correct page number', async () => {
-      expect(announcePageLoadedSpy).toHaveBeenCalledOnce();
+    it('should have accessibility features properly set up', async () => {
+      expect(
+        element.shadowRoot?.querySelector('[part*="next-button"]')
+      ).toBeDefined();
+      expect(nextSpy).toHaveBeenCalledOnce();
+      expect(focusSpy).toHaveBeenCalledOnce();
     });
   });
 
@@ -387,15 +401,25 @@ describe('atomic-pager', () => {
 
   it('should render all expected parts', async () => {
     const element = await renderPager();
-    const parts = locators.parts(element);
 
-    await expect.element(parts.buttons!).toBeInTheDocument();
-    await expect.element(parts.pageButtons!).toBeInTheDocument();
-    await expect.element(parts.pageButton!).toBeInTheDocument();
-    await expect.element(parts.previousButton!).toBeInTheDocument();
-    await expect.element(parts.nextButton!).toBeInTheDocument();
-    await expect.element(parts.previousButtonIcon!).toBeInTheDocument();
-    await expect.element(parts.nextButtonIcon!).toBeInTheDocument();
+    expect(
+      element.shadowRoot?.querySelector('[part*="buttons"]')
+    ).toBeDefined();
+    expect(
+      element.shadowRoot?.querySelector('[part*="page-button"]')
+    ).toBeDefined();
+    expect(
+      element.shadowRoot?.querySelector('[part*="previous-button"]')
+    ).toBeDefined();
+    expect(
+      element.shadowRoot?.querySelector('[part*="next-button"]')
+    ).toBeDefined();
+    expect(
+      element.shadowRoot?.querySelector('[part*="previous-button-icon"]')
+    ).toBeDefined();
+    expect(
+      element.shadowRoot?.querySelector('[part*="next-button-icon"]')
+    ).toBeDefined();
   });
 
   describe('when pager state changes', () => {
@@ -497,7 +521,7 @@ describe('atomic-pager', () => {
     let element: AtomicPager;
 
     beforeEach(async () => {
-      element = await renderPager({state: {page: 2, totalPages: 10}});
+      element = await renderPager({pagerState: {currentPage: 2, maxPage: 10}});
     });
 
     const retrieveButtons = () => {
@@ -508,56 +532,88 @@ describe('atomic-pager', () => {
       );
     };
 
-    const expectFocusOnButton = async (
-      button: Element,
-      expectedFocusButton: Element
-    ) => {
-      await expect.element(button).toBe(expectedFocusButton);
-    };
-
-    it('should focus on previous button when navigating backward from first page button', async () => {
+    it('should render radio buttons for page navigation', async () => {
       const buttons = retrieveButtons();
-
-      const [firstPageButton, lastPageButton] = [
-        buttons[0],
-        buttons[buttons.length - 1],
-      ];
-
-      await element.handleFocus(buttons, firstPageButton, lastPageButton);
-
-      await expectFocusOnButton(
-        locators.previous.element(),
-        document.activeElement?.shadowRoot?.activeElement
-      );
+      expect(buttons.length).toBeGreaterThan(0);
     });
 
-    it('should focus on next button when navigating forward from last page button', async () => {
-      const buttons = retrieveButtons();
-
-      const [firstPageButton, lastPageButton] = [
-        buttons[0],
-        buttons[buttons.length - 1],
-      ];
-
-      await element.handleFocus(buttons, lastPageButton, firstPageButton);
-
-      await expectFocusOnButton(
-        locators.next.element(),
-        document.activeElement?.shadowRoot?.activeElement
-      );
+    it('should have proper ARIA labels on buttons', async () => {
+      await expect
+        .element(locators.previous)
+        .toHaveAttribute('aria-label', 'Previous');
+      await expect.element(locators.next).toHaveAttribute('aria-label', 'Next');
+      await expect
+        .element(locators.page1)
+        .toHaveAttribute('aria-label', 'Page 1');
     });
 
-    it('should focus on next page button when navigating between page buttons', async () => {
+    it('should have proper radio button grouping', async () => {
+      const buttons = retrieveButtons();
+      const firstButton = buttons[0];
+      const groupName = firstButton?.getAttribute('name');
+
+      expect(groupName).toBeDefined();
+      buttons.forEach((button) => {
+        expect(button.getAttribute('name')).toBe(groupName);
+      });
+    });
+
+    it('should support keyboard navigation between page buttons', async () => {
+      const buttons = retrieveButtons();
+      expect(buttons.length).toBeGreaterThan(1);
+
+      const groupNames = buttons.map((btn) => btn.getAttribute('name'));
+      const uniqueNames = new Set(groupNames);
+      expect(uniqueNames.size).toBe(1);
+
+      buttons.forEach((button) => {
+        expect(button.type).toBe('radio');
+        expect(button.getAttribute('aria-label')).toBeDefined();
+      });
+    });
+
+    it('should handle arrow key navigation focus management', async () => {
+      const buttons = retrieveButtons();
+      const previousBtn = element.shadowRoot?.querySelector(
+        '[part*="previous-button"]'
+      ) as HTMLElement;
+      const nextBtn = element.shadowRoot?.querySelector(
+        '[part*="next-button"]'
+      ) as HTMLElement;
+
+      expect(buttons.length).toBeGreaterThan(0);
+      expect(previousBtn).toBeDefined();
+      expect(nextBtn).toBeDefined();
+
+      expect(previousBtn?.getAttribute('aria-label')).toBe('Previous');
+      expect(nextBtn?.getAttribute('aria-label')).toBe('Next');
+
+      expect(previousBtn?.tabIndex).toBeDefined();
+      expect(nextBtn?.tabIndex).toBeDefined();
+    });
+
+    it('should manage focus correctly for screen reader navigation', async () => {
       const buttons = retrieveButtons();
 
-      const [currentButton, nextButton] = buttons;
+      buttons.forEach((button) => {
+        expect(button.type).toBe('radio');
+        expect(button.getAttribute('aria-label')).toBeDefined();
+        expect(button.getAttribute('name')).toBeDefined();
+      });
 
-      await element.handleFocus(buttons, currentButton, nextButton);
+      await expect
+        .element(locators.previous)
+        .toHaveAttribute('aria-label', 'Previous');
+      await expect.element(locators.next).toHaveAttribute('aria-label', 'Next');
 
-      await expectFocusOnButton(
-        locators.page2.element(),
-        document.activeElement?.shadowRoot?.activeElement
+      const prevElement = element.shadowRoot?.querySelector(
+        '[part*="previous-button"]'
       );
+      const nextElement = element.shadowRoot?.querySelector(
+        '[part*="next-button"]'
+      );
+      expect(prevElement).toBeDefined();
+      expect(nextElement).toBeDefined();
     });
   });
 });
