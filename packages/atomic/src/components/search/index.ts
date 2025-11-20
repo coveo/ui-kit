@@ -31,4 +31,5 @@ export {AtomicSearchBoxQuerySuggestions} from './atomic-search-box-query-suggest
 export {AtomicSearchBoxRecentQueries} from './atomic-search-box-recent-queries/atomic-search-box-recent-queries.js';
 export {AtomicSearchInterface} from './atomic-search-interface/atomic-search-interface.js';
 export {AtomicSearchLayout} from './atomic-search-layout/atomic-search-layout.js';
+export {AtomicTab} from './atomic-tab/atomic-tab.js';
 export {AtomicText} from './atomic-text/atomic-text.js';
