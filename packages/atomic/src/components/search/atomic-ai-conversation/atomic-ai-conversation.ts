@@ -66,8 +66,8 @@ export class AtomicAiConversation
 
   static styles = css`
     .container {
-      width: 1050px;
-      height: 800px;
+      /* width: 1050px; */
+      /* height: 800px; */
       display: flex;
       flex-direction: column;
     }

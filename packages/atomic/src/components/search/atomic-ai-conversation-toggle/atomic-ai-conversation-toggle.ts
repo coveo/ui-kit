@@ -15,6 +15,7 @@ import '@/src/components/common/atomic-modal/atomic-modal';
 // import { ATOMIC_MODAL_EXPORT_PARTS } from "../../common/atomic-modal/export-parts.js";
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {renderAIConversationModal} from '../../common/ai-conversation-modal/modal';
+import '../atomic-ai-conversation/atomic-ai-conversation';
 
 /**
  * The `atomic-ai-conversation-toggle` component displays a simple greeting message and
@@ -160,7 +161,9 @@ export class AtomicAiConversationToggle
         title: '✨ AI MODE!',
         openButton: this.openButton,
       },
-    })(html`<slot></slot>`)}
+    })(html`<div slot="body">
+      <atomic-ai-conversation answer-configuration-id="04a30433-667b-4988-ba59-e9a585e41c0e"></atomic-ai-conversation>
+    </div>`)}
     ${renderButton({
       props: {
         style: 'primary',
