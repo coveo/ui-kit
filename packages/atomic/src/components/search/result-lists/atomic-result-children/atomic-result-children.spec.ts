@@ -1,327 +1,175 @@
-import {buildQuerySummary, type QuerySummaryState} from '@coveo/headless';
-import {html, type TemplateResult} from 'lit';
+import {buildFoldedResultList, type FoldedResult} from '@coveo/headless';
+import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {within} from 'shadow-dom-testing-library';
-import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
-import {page} from 'vitest/browser';
+import {describe, expect, it, type MockInstance, vi} from 'vitest';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
-import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/search/summary-controller';
+import {buildFakeFoldedResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/folded-result';
+import {buildFakeFoldedResultList} from '@/vitest-utils/testing-helpers/fixtures/headless/search/folded-result-list-controller';
 import type {AtomicResultChildren} from './atomic-result-children';
 import './atomic-result-children';
+import '@/src/components/search/atomic-result-children-template/atomic-result-children-template';
 
 vi.mock('@coveo/headless', {spy: true});
 
 describe('atomic-result-children', () => {
   const mockedEngine = buildFakeSearchEngine();
-  let mockedQuerySummary: ReturnType<typeof buildQuerySummary>;
+  let mockedFoldedResultList: ReturnType<typeof buildFoldedResultList>;
 
   const renderAtomicResultChildren = async ({
     props = {},
-    slottedContent,
-    querySummaryState = {hasQuery: true, query: 'test query'},
+    result,
+    hasTemplate = true,
   }: {
-    props?: Partial<{entityToGreet: string; isVulcan: boolean}>;
-    slottedContent?: TemplateResult;
-    querySummaryState?: Partial<QuerySummaryState>;
+    props?: Partial<{
+      inheritTemplates: boolean;
+      imageSize: string;
+      noResultText: string;
+    }>;
+    result?: FoldedResult;
+    hasTemplate?: boolean;
   } = {}) => {
-    mockedQuerySummary = buildFakeSummary({state: querySummaryState});
+    const defaultResult =
+      result ||
+      buildFakeFoldedResult({
+        children: [
+          buildFakeFoldedResult({title: 'Child 1'}),
+          buildFakeFoldedResult({title: 'Child 2'}),
+        ],
+      });
 
-    vi.mocked(buildQuerySummary).mockImplementation(() => mockedQuerySummary);
+    mockedFoldedResultList = buildFakeFoldedResultList();
+    vi.mocked(buildFoldedResultList).mockImplementation(
+      () => mockedFoldedResultList
+    );
+
+    const templateContent = hasTemplate
+      ? html`<atomic-result-children-template>
+          <template>
+            <div class="child-template">Child Template</div>
+          </template>
+        </atomic-result-children-template>`
+      : html``;
 
     const {element} = await renderInAtomicSearchInterface<AtomicResultChildren>(
       {
-        template: html`<atomic-result-children
-        entity-to-greet=${ifDefined(props.entityToGreet)}
-        ?is-vulcan=${props.isVulcan}
-      >${ifDefined(slottedContent)}
-      </atomic-result-children>`,
+        template: html`
+          <atomic-folded-result-list>
+            <atomic-result-template>
+              <template>
+                <atomic-result>
+                  <atomic-result-children
+                    ?inherit-templates=${props.inheritTemplates}
+                    image-size=${ifDefined(props.imageSize)}
+                    no-result-text=${ifDefined(props.noResultText)}
+                  >
+                    ${templateContent}
+                  </atomic-result-children>
+                </atomic-result>
+              </template>
+            </atomic-result-template>
+          </atomic-folded-result-list>
+        `,
         selector: 'atomic-result-children',
         bindings: (bindings) => {
           bindings.engine = mockedEngine;
           return bindings;
         },
+        result: defaultResult,
       }
     );
 
     return {
       element,
-      toggleRevealQueryButton: () => page.getByRole('button'),
       parts: (element: AtomicResultChildren) => {
         const qs = (part: string) =>
           element.shadowRoot?.querySelector(`[part="${part}"]`);
         return {
-          container: qs('container'),
-          message: qs('message'),
-          queryContainer: qs('query-container'),
-          toggleRevealQueryButton: qs('toggle-reveal-query-button'),
-          query: qs('query'),
+          childrenRoot: qs('children-root'),
+          noResultRoot: qs('no-result-root'),
+          showHideButton: qs('show-hide-button'),
         };
       },
     };
   };
 
   describe('#initialize', () => {
-    it('should not set the error when using the default props', async () => {
+    it('should not set the error when using the default props with a template', async () => {
       const {element} = await renderAtomicResultChildren();
 
       expect(element.error).toBeUndefined();
     });
 
-    it('should not set the error when receiving valid props', async () => {
-      const {element} = await renderAtomicResultChildren({
-        props: {
-          entityToGreet: 'Mr Spock',
-          isVulcan: true,
-        },
-      });
+    it('should set the error when no child template is provided and inheritTemplates is false', async () => {
+      const consoleErrorSpy: MockInstance = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
 
-      expect(element.error).toBeUndefined();
-    });
-
-    it('should set the error when received entityToGreet is an empty string', async () => {
       const {element} = await renderAtomicResultChildren({
-        props: {
-          entityToGreet: '',
-        },
+        hasTemplate: false,
       });
 
       expect(element.error).toBeInstanceOf(Error);
       expect(element.error.message).toContain(
-        'entityToGreet: value is an empty string.'
+        'requires at least one "atomic-result-children-template"'
       );
+
+      consoleErrorSpy.mockRestore();
     });
 
-    it('should set the querySummary with buildQuerySummary', async () => {
-      const {element} = await renderAtomicResultChildren();
-
-      expect(buildQuerySummary).toHaveBeenCalledWith(mockedEngine);
-      expect(element.querySummary).toBe(mockedQuerySummary);
-    });
-
-    it('should bind the querySummaryState to the state of query summary controller', async () => {
+    it('should not set the error when inheritTemplates is true', async () => {
       const {element} = await renderAtomicResultChildren({
-        querySummaryState: {hasQuery: true, query: 'test new query'},
+        props: {inheritTemplates: true},
+        hasTemplate: false,
       });
 
-      expect(element.querySummaryState.hasQuery).toBe(true);
-      expect(element.querySummaryState.query).toBe('test new query');
-    });
-
-    it('should add an "atomic/redden" event listener to the element', async () => {
-      const {element} = await renderAtomicResultChildren();
-      const addEventListenerSpy = vi.spyOn(element, 'addEventListener');
-
-      element.initialize();
-
-      expect(addEventListenerSpy).toHaveBeenCalledExactlyOnceWith(
-        'atomic/redden',
-        expect.any(Function)
-      );
-    });
-  });
-
-  describe('when the "atomic/redden" event is dispatched', () => {
-    let consoleLogSpy: MockInstance;
-
-    beforeEach(() => {
-      // Mock the console to avoid polluting the test logs.
-      consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-    });
-
-    it('should add the "text-red-600" class to the message paragraph', async () => {
-      const {element, parts} = await renderAtomicResultChildren();
-      expect(parts(element).message?.classList.contains('text-red-600')).toBe(
-        false
-      );
-
-      element?.dispatchEvent(new CustomEvent('atomic/redden'));
-
-      expect(parts(element).message?.classList.contains('text-red-600')).toBe(
-        true
-      );
-    });
-
-    it('should log to the console', async () => {
-      const {element} = await renderAtomicResultChildren();
-
-      element?.dispatchEvent(new CustomEvent('atomic/redden'));
-
-      expect(consoleLogSpy).toHaveBeenCalledWith(
-        'The greeting has been reddened!'
-      );
-    });
-  });
-
-  describe('before updating (#willUpdate)', () => {
-    it('should not set the error when entityToGreet has not been updated', async () => {
-      const {element} = await renderAtomicResultChildren();
-
-      element.isVulcan = true;
-      await element.updateComplete;
-
       expect(element.error).toBeUndefined();
-    });
-
-    it('should not set the error when entityToGreet has been updated to a valid value', async () => {
-      const {element} = await renderAtomicResultChildren();
-
-      element.entityToGreet = 'Mr LaForge';
-      await element.updateComplete;
-
-      expect(element.error).toBeUndefined();
-    });
-
-    it('should set the error when entityToGreet has been updated to an invalid value', async () => {
-      const {element} = await renderAtomicResultChildren();
-
-      element.entityToGreet = '';
-      await element.updateComplete;
-
-      expect(element.error).toBeInstanceOf(Error);
-      expect(element.error.message).toContain(
-        'entityToGreet: value is an empty string.'
-      );
     });
   });
 
   describe('when rendering (#render)', () => {
-    it('should render every part except the query initially', async () => {
+    it('should render the children-root part when there are children', async () => {
       const {element, parts} = await renderAtomicResultChildren();
       const partsElements = parts(element);
 
-      await expect.element(partsElements.container!).toBeInTheDocument();
-      await expect.element(partsElements.message!).toBeInTheDocument();
-      await expect.element(partsElements.query!).not.toBeInTheDocument();
-      await expect.element(partsElements.queryContainer!).toBeInTheDocument();
-      await expect
-        .element(partsElements.toggleRevealQueryButton!)
-        .toBeInTheDocument();
+      await expect.element(partsElements.childrenRoot!).toBeInTheDocument();
     });
 
-    it('should render content in the "before" slot before the message part', async () => {
-      const {element, parts} = await renderAtomicResultChildren({
-        slottedContent: html`<div slot="before" class='test-class'>Before</div>`,
-      });
-      const slot = parts(element).container?.querySelector(
-        'slot[name="before"]'
-      ) as HTMLSlotElement;
-
-      expect(within(slot).getByShadowText('Before')?.tagName).toBe('DIV');
-      expect(within(slot).getByShadowText('Before').classList).toContain(
-        'test-class'
-      );
-    });
-
-    it('should render content in the default slot between the message part and the query container part', async () => {
-      const {element, parts} = await renderAtomicResultChildren({
-        slottedContent: html`<div class='test-class'>Default</div>`,
-      });
-      const slot = parts(element).container?.querySelector(
-        'slot:not([name])'
-      ) as HTMLSlotElement;
-
-      expect(within(slot).getByShadowText('Default')?.tagName).toBe('DIV');
-      expect(within(slot).getByShadowText('Default').classList).toContain(
-        'test-class'
-      );
-    });
-
-    it('should render content in the "after" slot after the query container part', async () => {
-      const {element, parts} = await renderAtomicResultChildren({
-        slottedContent: html`<div slot="after" class='test-class'>After</div>`,
-      });
-      const slot = parts(element).container?.querySelector(
-        'slot[name="after"]'
-      ) as HTMLSlotElement;
-
-      expect(within(slot).getByShadowText('After')?.tagName).toBe('DIV');
-      expect(within(slot).getByShadowText('After').classList).toContain(
-        'test-class'
-      );
-    });
-
-    it('should render the Vulcan greeting when isVulcan is true', async () => {
-      const {element, parts} = await renderAtomicResultChildren({
-        props: {isVulcan: true},
+    it('should not render when there are no children', async () => {
+      const {element} = await renderAtomicResultChildren({
+        result: buildFakeFoldedResult({children: []}),
       });
 
-      expect(parts(element).message).toHaveTextContent('🖖 Mr LaForge!');
+      expect(element.shadowRoot?.children.length).toBe(0);
     });
 
-    it('should render the non-Vulcan greeting when isVulcan is false', async () => {
-      const {element, parts} = await renderAtomicResultChildren({
-        props: {isVulcan: false},
-      });
-      const partsElements = parts(element);
+    it('should render child results using the template', async () => {
+      const {element} = await renderAtomicResultChildren();
 
-      expect(partsElements.message).toHaveTextContent('👋 Mr LaForge!');
-    });
-
-    it('should render the button with the correct style', async () => {
-      const {element, parts} = await renderAtomicResultChildren();
-
-      expect(parts(element).toggleRevealQueryButton).toHaveClass('btn-primary');
-    });
-
-    it('should render the button with the correct text when the query is not revealed', async () => {
-      const {element, parts} = await renderAtomicResultChildren();
-
-      expect(parts(element).toggleRevealQueryButton).toHaveTextContent(
-        'Show more'
-      );
-    });
-
-    it('should render the button with the correct text when the query is revealed', async () => {
-      const {element, parts, toggleRevealQueryButton} =
-        await renderAtomicResultChildren();
-
-      await toggleRevealQueryButton().click();
-
-      expect(parts(element).toggleRevealQueryButton).toHaveTextContent(
-        'Show less'
-      );
-    });
-
-    it('should enable the button when there is a query', async () => {
-      const {element, parts} = await renderAtomicResultChildren({
-        querySummaryState: {hasQuery: true, query: 'test query'},
-      });
-
-      expect(parts(element).toggleRevealQueryButton).toBeEnabled();
-    });
-
-    it('should disable the button when there is no query', async () => {
-      const {element, parts} = await renderAtomicResultChildren({
-        querySummaryState: {hasQuery: false, query: ''},
-      });
-
-      expect(parts(element).toggleRevealQueryButton).toBeDisabled();
-    });
-
-    it('should render the query part with the correct content when the button is clicked', async () => {
-      const {element, parts, toggleRevealQueryButton} =
-        await renderAtomicResultChildren();
-      expect(parts(element).query).not.toBeInTheDocument();
-
-      await toggleRevealQueryButton().click();
-
-      expect(parts(element).query).toBeInTheDocument();
-      expect(parts(element).query).toHaveTextContent('test query');
+      const childResults =
+        element.shadowRoot?.querySelectorAll('atomic-result');
+      expect(childResults?.length).toBeGreaterThan(0);
     });
   });
 
-  describe('when removed from the DOM (#disconnectedCallback)', () => {
-    it('should remove the "atomic/redden" event listener from the element', async () => {
-      const {element} = await renderAtomicResultChildren();
-      const removeEventListenerSpy = vi.spyOn(element!, 'removeEventListener');
+  describe('when imageSize prop is set', () => {
+    it('should pass the imageSize to child results', async () => {
+      const {element} = await renderAtomicResultChildren({
+        props: {imageSize: 'large'},
+      });
 
-      element.remove();
+      const childResult = element.shadowRoot?.querySelector('atomic-result');
+      expect(childResult?.imageSize).toBe('large');
+    });
+  });
 
-      expect(removeEventListenerSpy).toHaveBeenCalledExactlyOnceWith(
-        'atomic/redden',
-        expect.any(Function)
-      );
+  describe('when noResultText prop is set', () => {
+    it('should use the custom noResultText value', async () => {
+      const {element} = await renderAtomicResultChildren({
+        props: {noResultText: 'custom-no-result-text'},
+      });
+
+      expect(element.noResultText).toBe('custom-no-result-text');
     });
   });
 });
