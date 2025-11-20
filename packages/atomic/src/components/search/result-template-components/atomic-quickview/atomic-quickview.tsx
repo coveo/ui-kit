@@ -24,7 +24,7 @@ import {ResultContext} from '@/src/components/search/result-template-component-u
  * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
  * about a result.
  *
- * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (e.g., custom styles and embedded
+ * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (for example, custom styles and embedded
  * images/links may not work as expected in an `atomic-quickview`).
  *
  * @part button - The button that opens the quickview modal on click.

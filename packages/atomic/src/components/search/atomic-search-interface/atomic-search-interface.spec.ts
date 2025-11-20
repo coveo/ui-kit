@@ -602,6 +602,44 @@ describe('atomic-search-interface', () => {
           });
         });
 
+        it('should use searchHub from options.search when both property and options.search are provided', async () => {
+          const element = await setupElement({searchHub: 'property-hub'});
+
+          await element.initialize({
+            ...searchEngineConfig,
+            search: {searchHub: 'options-hub'},
+          });
+
+          expect(buildSearchEngine).toHaveBeenCalledWith(
+            expect.objectContaining({
+              configuration: expect.objectContaining({
+                search: expect.objectContaining({
+                  searchHub: 'options-hub',
+                }),
+              }),
+            })
+          );
+        });
+
+        it('should use pipeline from options.search when both property and options.search are provided', async () => {
+          const element = await setupElement({pipeline: 'property-pipeline'});
+
+          await element.initialize({
+            ...searchEngineConfig,
+            search: {pipeline: 'options-pipeline'},
+          });
+
+          expect(buildSearchEngine).toHaveBeenCalledWith(
+            expect.objectContaining({
+              configuration: expect.objectContaining({
+                search: expect.objectContaining({
+                  pipeline: 'options-pipeline',
+                }),
+              }),
+            })
+          );
+        });
+
         it('should set the error when #buildSearchEngine throws', async () => {
           vi.spyOn(console, 'error').mockImplementation(() => {});
           const element = await setupElement();
@@ -1126,12 +1164,14 @@ describe('atomic-search-interface', () => {
     });
     describe('when the engine has been created & the language attribute is defined & the context is defined', () => {
       it('should call InterfaceController.onLanguageChange with no argument', async () => {
-        const element = await setupElement({language: 'en'});
-        await element.initialize(searchEngineConfig);
         const onLanguageChangeSpy = vi.spyOn(
           InterfaceController.prototype,
           'onLanguageChange'
         );
+        const element = await setupElement({language: 'en'});
+        await element.initialize(searchEngineConfig);
+        await element.updateComplete;
+        onLanguageChangeSpy.mockClear();
 
         element.language = 'fr';
         await element.updateComplete;

@@ -46,7 +46,7 @@ export interface HighlightKeywords {
 }
 
 /**
- * The modal opened when clicking on a quickview button.
+ * The modal opened when clicking a quickview button.
  * Do not use this component directly; use `atomic-quickview` instead.
  *
  * @part backdrop - The transparent backdrop hiding the content behind the modal.

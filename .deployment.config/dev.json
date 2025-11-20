@@ -9,10 +9,7 @@
     "environments_order": {
       "sequential": ["dev"]
     },
-    "start_environment_automatically": false,
-    "notifications": {
-      "slack_channels": ["#dxui-deployments"]
-    }
+    "start_environment_automatically": false
   },
   "dag_phases": [
     {

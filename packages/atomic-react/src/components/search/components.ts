@@ -3,18 +3,24 @@ import {
   AtomicComponentError as LitAtomicComponentError,
   AtomicExternal as LitAtomicExternal,
   AtomicFacet as LitAtomicFacet,
+  AtomicFocusTrap as LitAtomicFocusTrap,
   AtomicHtml as LitAtomicHtml,
   AtomicIcon as LitAtomicIcon,
   AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
   AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
+  AtomicNumericRange as LitAtomicNumericRange,
   AtomicPager as LitAtomicPager,
+  AtomicQueryError as LitAtomicQueryError,
   AtomicQuerySummary as LitAtomicQuerySummary,
   AtomicRecsInterface as LitAtomicRecsInterface,
   AtomicResult as LitAtomicResult,
+  AtomicResultBadge as LitAtomicResultBadge,
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
+  AtomicResultHtml as LitAtomicResultHtml,
   AtomicResultList as LitAtomicResultList,
+  AtomicResultNumber as LitAtomicResultNumber,
   AtomicResultSectionActions as LitAtomicResultSectionActions,
   AtomicResultSectionBadges as LitAtomicResultSectionBadges,
   AtomicResultSectionBottomMetadata as LitAtomicResultSectionBottomMetadata,
@@ -60,6 +66,12 @@ export const AtomicFacet = createComponent({
   elementClass: LitAtomicFacet,
 });
 
+export const AtomicFocusTrap = createComponent({
+  tagName: 'atomic-focus-trap',
+  react: React,
+  elementClass: LitAtomicFocusTrap,
+});
+
 export const AtomicHtml = createComponent({
   tagName: 'atomic-html',
   react: React,
@@ -96,10 +108,22 @@ export const AtomicLoadMoreResults = createComponent({
   elementClass: LitAtomicLoadMoreResults,
 });
 
+export const AtomicNumericRange = createComponent({
+  tagName: 'atomic-numeric-range',
+  react: React,
+  elementClass: LitAtomicNumericRange,
+});
+
 export const AtomicPager = createComponent({
   tagName: 'atomic-pager',
   react: React,
   elementClass: LitAtomicPager,
+});
+
+export const AtomicQueryError = createComponent({
+  tagName: 'atomic-query-error',
+  react: React,
+  elementClass: LitAtomicQueryError,
 });
 
 export const AtomicQuerySummary = createComponent({
@@ -120,16 +144,34 @@ export const AtomicResult = createComponent({
   elementClass: LitAtomicResult,
 });
 
+export const AtomicResultBadge = createComponent({
+  tagName: 'atomic-result-badge',
+  react: React,
+  elementClass: LitAtomicResultBadge,
+});
+
 export const AtomicResultChildrenTemplate = createComponent({
   tagName: 'atomic-result-children-template',
   react: React,
   elementClass: LitAtomicResultChildrenTemplate,
 });
 
+export const AtomicResultHtml = createComponent({
+  tagName: 'atomic-result-html',
+  react: React,
+  elementClass: LitAtomicResultHtml,
+});
+
 export const AtomicResultList = createComponent({
   tagName: 'atomic-result-list',
   react: React,
   elementClass: LitAtomicResultList,
+});
+
+export const AtomicResultNumber = createComponent({
+  tagName: 'atomic-result-number',
+  react: React,
+  elementClass: LitAtomicResultNumber,
 });
 
 export const AtomicResultSectionActions = createComponent({

@@ -1,4 +1,3 @@
-import {createSelector} from '@reduxjs/toolkit';
 import type {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
 import type {
   ChildProduct,
@@ -42,7 +41,7 @@ import type {RecommendationsSummaryState} from './summary/headless-recommendatio
 /**
  * The `Recommendations` controller exposes a method for retrieving recommendations content in a commerce interface.
  *
- * Example: [recommendations.fn.tsx](https://github.com/coveo/ui-kit/blob/main/packages/samples/headless-react/src/components/commerce/recommendations.fn.tsx)
+ * Example: [recommendations.fn.tsx](https://github.com/coveo/ui-kit/blob/main/samples/headless/search-react/src/components/commerce/recommendations.fn.tsx)
  *
  * @group Buildable controllers
  * @category Recommendations
@@ -62,7 +61,7 @@ export interface Recommendations
    *
    * This method is useful when leveraging the product grouping feature to allow users to select nested products.
    *
-   * E.g., if a product has children (such as color variations), you can call this method when the user selects a child
+   * For example, if a product has children (such as color variations), you can call this method when the user selects a child
    * to make that child the new parent product, and re-render the product as such in the storefront.
    *
    * **Note:** In the controller state, a product that has children will always include itself as its own child so that
@@ -92,7 +91,7 @@ export interface RecommendationsState {
 
 export interface RecommendationsOptions {
   /**
-   * The unique identifier of the recommendations slot (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
+   * The unique identifier of the recommendations slot (for example, `b953ab2e-022b-4de4-903f-68b2c0682942`).
    */
   slotId: string;
   /**
@@ -139,10 +138,9 @@ export function buildRecommendations(
   const {slotId, productId} = props.options;
   dispatch(registerRecommendationsSlot({slotId, productId}));
 
-  const recommendationStateSelector = createSelector(
-    (state: CommerceEngineState) => state.recommendations[slotId]!,
-    (recommendations) => recommendations
-  );
+  const recommendationStateSelector = (state: CommerceEngineState) =>
+    state.recommendations[slotId]!;
+
   const subControllers = buildBaseSubControllers<RecommendationsSummaryState>(
     engine,
     {

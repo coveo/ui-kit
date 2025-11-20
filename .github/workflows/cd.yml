@@ -52,6 +52,7 @@ jobs:
         with:
           load-cache: false
           save-cache: true
+          cache-retention-days: 7
       - name: Generate a token
         id: generate-token
         uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2

@@ -29,6 +29,6 @@ export const buildFakeStandaloneSearchBox = (
 ): StandaloneSearchBox =>
   ({
     ...defaultImplementation,
-    ...(state && {state: {...defaultState, ...state}}),
+    ...{state: {...defaultState, ...(state || {})}},
     ...(methods && {...methods}),
   }) as StandaloneSearchBox;
