@@ -64,7 +64,7 @@ export class AtomicResultChildren
   @State()
   private foldedResultListState!: InsightFoldedResultListState;
   @State()
-  private showInitialChildren = false;
+  private showInitialChildren = true;
 
   /**
    * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
