@@ -1,3 +1,7 @@
+---
+applyTo: 'packages/atomic/**/*.stories.tsx'
+---
+
 # AI Instructions: MSW API Mocking in Atomic Storybook
 
 ## Overview
