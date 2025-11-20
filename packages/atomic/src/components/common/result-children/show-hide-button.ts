@@ -17,9 +17,7 @@ export const renderShowHideButton: FunctionalComponent<ShowHideButtonProps> = ({
   const handleClick = () => {
     if (props.moreResultsAvailable) {
       props.loadFullCollection();
-      props.toggleShowInitialChildren();
     }
-
     props.toggleShowInitialChildren();
   };
 
