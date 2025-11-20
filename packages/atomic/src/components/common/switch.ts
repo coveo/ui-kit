@@ -6,10 +6,10 @@ import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 export interface SwitchProps {
   checked: boolean;
   onToggle(checked: boolean): void;
-  ariaLabel?: string;
-  part?: string;
-  tabIndex?: number;
-  title?: string;
+  ariaLabel: string;
+  part: string;
+  tabIndex: number;
+  title: string;
   withToggle: boolean;
 }
 

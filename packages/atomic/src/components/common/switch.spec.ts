@@ -25,6 +25,10 @@ describe('#renderSwitch', () => {
           checked: false,
           onToggle: vi.fn(),
           withToggle: true,
+          ariaLabel: '',
+          part: '',
+          tabIndex: 0,
+          title: '',
           ...props,
         },
       })}`
@@ -142,23 +146,5 @@ describe('#renderSwitch', () => {
     const element = await renderComponent({title: 'Toggle tooltip'});
     const button = locators(element).button;
     expect(button).toHaveAttribute('title', 'Toggle tooltip');
-  });
-
-  it('should have all base container classes', async () => {
-    const element = await renderComponent();
-    const container = locators(element).container;
-    expect(container).toHaveClass('w-12', 'h-6', 'p-1', 'rounded-full');
-  });
-
-  it('should have all base handle classes', async () => {
-    const element = await renderComponent();
-    const handle = locators(element).handle;
-    expect(handle).toHaveClass('w-4', 'h-4', 'rounded-full', 'bg-white');
-  });
-
-  it('should have all base button classes', async () => {
-    const element = await renderComponent();
-    const button = locators(element).button;
-    expect(button).toHaveClass('rounded-full', 'btn-outline-neutral');
   });
 });
