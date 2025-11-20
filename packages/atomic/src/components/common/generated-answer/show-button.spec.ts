@@ -76,24 +76,12 @@ describe('#renderShowButton', () => {
     });
   });
 
-  describe('onClick behavior', () => {
-    it('should call the onClick handler when clicked', async () => {
-      const onClick = vi.fn();
-      await renderComponent({onClick});
+  it('should call the onClick handler when clicked', async () => {
+    const onClick = vi.fn();
+    const {button} = await renderComponent({onClick});
+    button?.classList.remove('hidden');
+    await page.getByRole('button').click();
 
-      await page.getByRole('button').click();
-
-      expect(onClick).toHaveBeenCalledOnce();
-    });
-
-    it('should call onClick when button is activated', async () => {
-      const onClick = vi.fn();
-      await renderComponent({onClick});
-
-      const button = page.getByRole('button');
-      await button.click();
-
-      expect(onClick).toHaveBeenCalledOnce();
-    });
+    expect(onClick).toHaveBeenCalledOnce();
   });
 });
