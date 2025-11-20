@@ -354,8 +354,17 @@ export class AtomicRecsInterface
     this.pipeline = this.engine!.state.pipeline;
     this.searchHub = this.engine!.state.searchHub;
     this.store.unsetLoadingFlag(FirstRecommendationExecutedFlag);
+    await this.waitForAllVanillaChildrenComponentsToBeDefined();
     await this.getUpdateComplete();
     this.initialized = true;
+  }
+
+  private async waitForAllVanillaChildrenComponentsToBeDefined() {
+    await Promise.all(
+      Array.from(this.querySelectorAll('*'))
+        .filter((el) => el.tagName.startsWith('ATOMIC-'))
+        .map((el) => customElements.whenDefined(el.tagName.toLowerCase()))
+    );
   }
 }
 

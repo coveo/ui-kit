@@ -299,8 +299,17 @@ export class AtomicInsightInterface
     this.initResultsPerPage();
     this.registerFieldsToInclude();
     this.store.unsetLoadingFlag(FirstInsightRequestExecutedFlag);
+    await this.waitForAllVanillaChildrenComponentsToBeDefined();
     await this.getUpdateComplete();
     this.initialized = true;
+  }
+
+  private async waitForAllVanillaChildrenComponentsToBeDefined() {
+    await Promise.all(
+      Array.from(this.querySelectorAll('*'))
+        .filter((el) => el.tagName.startsWith('ATOMIC-'))
+        .map((el) => customElements.whenDefined(el.tagName.toLowerCase()))
+    );
   }
 
   // TODO - (v4) KIT-5008: Make private

@@ -297,6 +297,15 @@ export class AtomicCommerceRecommendationInterface
     this.bindings = this.getBindings();
     markParentAsReady(this);
     this.initLanguage();
+    await this.waitForAllVanillaChildrenComponentsToBeDefined();
+  }
+
+  private async waitForAllVanillaChildrenComponentsToBeDefined() {
+    await Promise.all(
+      Array.from(this.querySelectorAll('*'))
+        .filter((el) => el.tagName.startsWith('ATOMIC-'))
+        .map((el) => customElements.whenDefined(el.tagName.toLowerCase()))
+    );
   }
 
   private initContext() {

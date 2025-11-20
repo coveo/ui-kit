@@ -602,9 +602,18 @@ export class AtomicSearchInterface
     this.pipeline = this.engine!.state.pipeline;
     this.searchHub = this.engine!.state.searchHub;
     this.initSearchStatus();
+    await this.waitForAllVanillaChildrenComponentsToBeDefined();
     await this.getUpdateComplete();
     this.initUrlManager();
     this.initialized = true;
+  }
+
+  private async waitForAllVanillaChildrenComponentsToBeDefined() {
+    await Promise.all(
+      Array.from(this.querySelectorAll('*'))
+        .filter((el) => el.tagName.startsWith('ATOMIC-'))
+        .map((el) => customElements.whenDefined(el.tagName.toLowerCase()))
+    );
   }
 
   private initSearchStatus() {

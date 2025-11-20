@@ -506,9 +506,18 @@ export class AtomicCommerceInterface
     this.initRequestStatus();
     this.initSummary();
     this.initLanguage();
+    await this.waitForAllVanillaChildrenComponentsToBeDefined();
     await this.getUpdateComplete();
     this.initUrlManager();
     this.initialized = true;
+  }
+
+  private async waitForAllVanillaChildrenComponentsToBeDefined() {
+    await Promise.all(
+      Array.from(this.querySelectorAll('*'))
+        .filter((el) => el.tagName.startsWith('ATOMIC-'))
+        .map((el) => customElements.whenDefined(el.tagName.toLowerCase()))
+    );
   }
 
   private isNewLocale(language?: string, country?: string, currency?: string) {
