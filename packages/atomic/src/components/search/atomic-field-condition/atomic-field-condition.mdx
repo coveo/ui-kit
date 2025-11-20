@@ -1,0 +1,48 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicFieldConditionStories from './atomic-field-condition.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={ AtomicFieldConditionStories } />
+
+<AtomicDocTemplate
+  stories={ AtomicFieldConditionStories }
+  githubPath="search/result-template-components/atomic-field-condition/atomic-field-condition.ts"
+  tagName="atomic-field-condition"
+  className="AtomicFieldCondition"
+>
+
+Use this component within `atomic-result-template` to conditionally render content based on result properties. It evaluates conditions and only displays its children when all conditions are satisfied. Conditions can target any top-level result property, not just fields (e.g., `isRecommendation`).
+
+You can specify multiple `must-match-*` and `must-not-match-*` attributes, each targeting a different field. Each attribute accepts multiple comma-separated values. The `if-defined` and `if-not-defined` attributes also support comma-separated field names.
+
+**Comma represents OR:** Within a single attribute, comma-separated values represent a logical OR. For example, `must-match-filetype="pdf,docx"` means the filetype must be pdf OR docx. Similarly, `if-defined="author,editor"` means author OR editor must be defined.
+
+**Multiple attributes represent AND:** All conditions from different attributes must be met (logical AND) for content to render.
+
+If you set both `must-match-*` and `must-not-match-*` for the same field with overlapping values, the condition will never be satisfied. Similarly, setting both `if-defined` and `if-not-defined` for the same field will make the condition impossible to satisfy.
+
+```html
+<atomic-result-template>
+  <!-- Show only if author field exists -->
+  <atomic-field-condition if-defined="author">
+    <span>Written by: <atomic-result-text field="author"></atomic-result-text></span>
+  </atomic-field-condition>
+  
+  <!-- Show badge for PDF or Word documents -->
+  <atomic-field-condition must-match-filetype="pdf,docx">
+    <span class="document-badge">Document</span>
+  </atomic-field-condition>
+  
+  <!-- Show if author exists AND source is not internal -->
+  <atomic-field-condition if-defined="author" must-not-match-source="internal">
+    <span>External author: <atomic-result-text field="author"></atomic-result-text></span>
+  </atomic-field-condition>
+  
+  <!-- This will never render (conflicting conditions) -->
+  <atomic-field-condition must-match-filetype="pdf" must-not-match-filetype="pdf">
+    <span>Impossible</span>
+  </atomic-field-condition>
+</atomic-result-template>
+```
+
+</AtomicDocTemplate>

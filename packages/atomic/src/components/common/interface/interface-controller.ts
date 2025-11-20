@@ -6,6 +6,7 @@ import {setCoveoGlobal} from '@/src/global/environment';
 import {loadDayjsLocale} from '@/src/utils/dayjs-locales';
 import type {AnyBindings, AnyEngineType} from './bindings';
 import {i18nBackendOptions, i18nTranslationNamespace, init18n} from './i18n';
+import '@/src/components/common/atomic-aria-live/atomic-aria-live';
 
 export type InitializeEventHandler = (bindings: AnyBindings) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;

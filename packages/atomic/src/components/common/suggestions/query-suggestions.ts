@@ -37,7 +37,7 @@ export const renderQuerySuggestion = ({
   hasMultipleKindOfSuggestions,
 }: RenderQuerySuggestionOptions): HTMLElement => {
   const template = html`
-    <div part="query-suggestion-content" class="flex items-center">${
+    <div part="query-suggestion-content" class="pointer-events-none flex items-center">${
       hasMultipleKindOfSuggestions
         ? html`<atomic-icon
           part="query-suggestion-icon"
