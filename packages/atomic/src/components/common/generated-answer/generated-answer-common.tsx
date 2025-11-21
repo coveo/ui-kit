@@ -19,7 +19,7 @@ import {Switch} from '../switch';
 import {CopyButton} from './copy-button';
 import {FeedbackButton} from './feedback-button';
 import {GeneratedContentContainer} from './generated-content-container';
-import {RetryPrompt} from './retry-prompt';
+import {RetryPrompt} from './stencil-retry-prompt';
 import {ShowButton} from './show-button';
 import {SourceCitations} from './source-citations';
 
