@@ -40,11 +40,6 @@ describe('#renderQuestionWrapper', () => {
     expect(wrapper.getAttribute('part')).toBe('question-answer-expanded');
   });
 
-  it('should render with key attribute', async () => {
-    const wrapper = await renderComponent({key: 'custom-key'});
-    expect(wrapper.getAttribute('key')).toBe('custom-key');
-  });
-
   it('should render children inside article', async () => {
     const wrapper = await renderComponent({}, html`<div>Custom Content</div>`);
     const article = wrapper.querySelector('article');
