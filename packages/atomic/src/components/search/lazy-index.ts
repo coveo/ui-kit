@@ -8,6 +8,8 @@ export default {
   'atomic-html': async () => await import('./atomic-html/atomic-html.js'),
   'atomic-load-more-results': async () =>
     await import('./atomic-load-more-results/atomic-load-more-results.js'),
+  'atomic-no-results': async () =>
+    await import('./atomic-no-results/atomic-no-results.js'),
   'atomic-pager': async () => await import('./atomic-pager/atomic-pager.js'),
   'atomic-query-error': async () =>
     await import('./atomic-query-error/atomic-query-error.js'),
