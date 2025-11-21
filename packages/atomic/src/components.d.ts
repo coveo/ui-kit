@@ -1510,25 +1510,6 @@ export namespace Components {
         "collapseFacetsAfter": number;
     }
     /**
-     * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.
-     * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,
-     * only when children exist.
-     */
-    interface AtomicResultChildren {
-        /**
-          * The expected size of the image displayed in the children results.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
-         */
-        "inheritTemplates": boolean;
-        /**
-          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
-         */
-        "noResultText": string;
-    }
-    /**
      * The `atomic-result-date` component renders the value of a date result field.
      */
     interface AtomicResultDate {
@@ -2851,17 +2832,6 @@ declare global {
         new (): HTMLAtomicRefineToggleElement;
     };
     /**
-     * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.
-     * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,
-     * only when children exist.
-     */
-    interface HTMLAtomicResultChildrenElement extends Components.AtomicResultChildren, HTMLStencilElement {
-    }
-    var HTMLAtomicResultChildrenElement: {
-        prototype: HTMLAtomicResultChildrenElement;
-        new (): HTMLAtomicResultChildrenElement;
-    };
-    /**
      * The `atomic-result-date` component renders the value of a date result field.
      */
     interface HTMLAtomicResultDateElement extends Components.AtomicResultDate, HTMLStencilElement {
@@ -3342,7 +3312,6 @@ declare global {
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
-        "atomic-result-children": HTMLAtomicResultChildrenElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
         "atomic-result-icon": HTMLAtomicResultIconElement;
@@ -4807,25 +4776,6 @@ declare namespace LocalJSX {
         "collapseFacetsAfter"?: number;
     }
     /**
-     * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.
-     * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,
-     * only when children exist.
-     */
-    interface AtomicResultChildren {
-        /**
-          * The expected size of the image displayed in the children results.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
-         */
-        "inheritTemplates"?: boolean;
-        /**
-          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
-         */
-        "noResultText"?: string;
-    }
-    /**
      * The `atomic-result-date` component renders the value of a date result field.
      */
     interface AtomicResultDate {
@@ -5472,7 +5422,6 @@ declare namespace LocalJSX {
         "atomic-recs-result-template": AtomicRecsResultTemplate;
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
-        "atomic-result-children": AtomicResultChildren;
         "atomic-result-date": AtomicResultDate;
         "atomic-result-fields-list": AtomicResultFieldsList;
         "atomic-result-icon": AtomicResultIcon;
@@ -5730,12 +5679,6 @@ declare module "@stencil/core" {
              * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
              */
             "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
-            /**
-             * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.
-             * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,
-             * only when children exist.
-             */
-            "atomic-result-children": LocalJSX.AtomicResultChildren & JSXBase.HTMLAttributes<HTMLAtomicResultChildrenElement>;
             /**
              * The `atomic-result-date` component renders the value of a date result field.
              */

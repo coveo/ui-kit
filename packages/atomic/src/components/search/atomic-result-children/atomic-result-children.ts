@@ -1,5 +1,5 @@
 import {buildInteractiveResult, type FoldedResult} from '@coveo/headless';
-import {html, LitElement, nothing} from 'lit';
+import {css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ChildTemplatesContextController} from '@/src/components/common/item-list/context/child-templates-context-controller';
 import {FoldedItemListContextController} from '@/src/components/common/item-list/context/folded-item-list-context-controller';
@@ -19,7 +19,8 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import {elementHasAncestorTag} from '@/src/utils/utils';
-import '@/src/components/search/result-lists/atomic-result/atomic-result';
+import '@/src/components/search/atomic-result/atomic-result';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 
 const childTemplateComponent = 'atomic-result-children-template';
 const componentTag = 'atomic-result-children';
@@ -41,6 +42,14 @@ export class AtomicResultChildren
   extends LitElement
   implements InitializableComponent<Bindings>
 {
+  static styles = css`
+  .show-hide-button {
+  @apply set-font-size-sm;
+}
+
+.no-result-root {
+  @apply text-neutral-dark;
+}`;
   /**
    * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
    */
@@ -143,8 +152,9 @@ export class AtomicResultChildren
   }
 
   @errorGuard()
+  @bindingGuard()
   render() {
-    return renderResultChildrenGuard({
+    return html`${renderResultChildrenGuard({
       props: {
         inheritTemplates: this.inheritTemplates,
         resultTemplateRegistered: this.resultTemplateRegistered,
@@ -152,7 +162,7 @@ export class AtomicResultChildren
       },
     })(
       html`${this.collection ? this.renderCollection() : this.renderFoldedResult()}`
-    );
+    )}`;
   }
 
   private handleResolveChildTemplates(event: CustomEvent) {
@@ -231,7 +241,7 @@ export class AtomicResultChildren
 
     const displayConfig = this.displayConfigContext.config;
     if (!displayConfig) {
-      return nothing;
+      return html`${nothing}`;
     }
 
     return html`
@@ -276,12 +286,6 @@ export class AtomicResultChildren
     return renderChildrenWrapper()(
       html`${children.map((child, i) => this.renderChild(child, i === children.length - 1))}`
     );
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'atomic-result-children': AtomicResultChildren;
   }
 }
 
