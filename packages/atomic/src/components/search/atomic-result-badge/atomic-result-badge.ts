@@ -1,6 +1,18 @@
-import {Result, ResultTemplatesHelpers} from '@coveo/headless';
-import {Component, Element, Prop, h} from '@stencil/core';
-import {ResultContext} from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
+import type {Result} from '@coveo/headless';
+import {ResultTemplatesHelpers} from '@coveo/headless';
+import {css, html, LitElement} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
+import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import '@/src/components/common/atomic-icon/atomic-icon';
+import '@/src/components/search/atomic-text/atomic-text';
+import '@/src/components/search/atomic-result-text/atomic-result-text';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {InitializableComponent} from '@/src/decorators/types';
+import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-result-badge` element renders a badge to highlight special features of a result.
@@ -37,27 +49,42 @@ import {ResultContext} from '@/src/components/search/result-template-component-u
  * @part result-badge-label - The wrapper around the contents at the right-end of the badge. This may be text, a field or slotted elements depending on which was configured.
  * @slot default - The elements to display inside the badge, instead of a field or label.
  */
-@Component({
-  tag: 'atomic-result-badge',
-  styleUrl: 'atomic-result-badge.pcss',
-  shadow: true,
-})
-export class AtomicResultBadge {
-  @ResultContext() private result!: Result;
-  @Element() host!: HTMLElement;
+@customElement('atomic-result-badge')
+@withTailwindStyles
+@bindings()
+export class AtomicResultBadge
+  extends LitElement
+  implements InitializableComponent<Bindings>
+{
+  @state() bindings!: Bindings;
+  public error!: Error;
+
+  initialize() {}
+
+  static styles = css`
+    :host {
+      display: inline-flex;
+      place-items: center;
+      height: var(--row-height, auto);
+      word-break: break-word;
+    }
+  `;
+
+  private resultContext = createResultContextController(this);
+
   /**
    * The field to display in the badge.
    *
    * Not compatible with `label`, slotted elements nor multi-value fields.
    */
-  @Prop({reflect: true}) public field?: string;
+  @property({type: String, reflect: true}) public field?: string;
 
   /**
    * The text to display in the badge.
    *
    * Not compatible with `field` nor slotted elements.
    */
-  @Prop({reflect: true}) public label?: string;
+  @property({type: String, reflect: true}) public label?: string;
 
   /**
    * Specifies an icon to display at the left-end of the badge.
@@ -67,56 +94,65 @@ export class AtomicResultBadge {
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly
    */
-  @Prop({reflect: true}) public icon?: string;
+  @property({type: String, reflect: true}) public icon?: string;
 
   private renderIcon() {
-    return (
+    return html`
       <atomic-icon
         part="result-badge-icon"
-        icon={this.icon!}
+        .icon=${this.icon!}
         class="h-3 w-3 fill-current"
       ></atomic-icon>
-    );
+    `;
   }
 
   private getTextContent() {
     if (this.field !== undefined) {
-      return <atomic-result-text field={this.field}></atomic-result-text>;
+      return html`<atomic-result-text .field=${this.field}></atomic-result-text>`;
     }
     if (this.label !== undefined) {
-      return <atomic-text value={this.label}></atomic-text>;
+      return html`<atomic-text .value=${this.label}></atomic-text>`;
     }
-    return <slot></slot>;
+    return html`<slot></slot>`;
   }
 
   private renderText() {
-    return <span part="result-badge-label">{this.getTextContent()}</span>;
+    return html`<span part="result-badge-label">${this.getTextContent()}</span>`;
   }
 
   private renderBadge() {
-    return (
+    return html`
       <div
         part="result-badge-element"
         class="bg-neutral-light text-neutral-dark inline-flex h-full place-items-center space-x-1.5 rounded-full px-3"
       >
-        {this.icon && this.renderIcon()}
-        {this.renderText()}
+        ${when(this.icon, () => this.renderIcon())}
+        ${this.renderText()}
       </div>
-    );
+    `;
   }
 
-  componentWillRender() {
-    if (this.field) {
+  willUpdate() {
+    if (this.field && this.resultContext.item) {
+      const result = this.resultContext.item as Result;
+
       const hasValue =
-        ResultTemplatesHelpers.getResultProperty(this.result, this.field) !==
-        null;
+        ResultTemplatesHelpers.getResultProperty(result, this.field) !== null;
       if (!hasValue) {
-        this.host.remove();
+        this.remove();
       }
     }
   }
 
+  @errorGuard()
+  @bindingGuard()
   render() {
     return this.renderBadge();
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-result-badge': AtomicResultBadge;
   }
 }
