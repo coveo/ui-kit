@@ -10,12 +10,14 @@ import {
   AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
+  AtomicNoResults as LitAtomicNoResults,
   AtomicNumericRange as LitAtomicNumericRange,
   AtomicPager as LitAtomicPager,
   AtomicQueryError as LitAtomicQueryError,
   AtomicQuerySummary as LitAtomicQuerySummary,
   AtomicRecsInterface as LitAtomicRecsInterface,
   AtomicResult as LitAtomicResult,
+  AtomicResultBadge as LitAtomicResultBadge,
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
   AtomicResultHtml as LitAtomicResultHtml,
   AtomicResultLink as LitAtomicResultLink,
@@ -108,6 +110,12 @@ export const AtomicLoadMoreResults = createComponent({
   elementClass: LitAtomicLoadMoreResults,
 });
 
+export const AtomicNoResults = createComponent({
+  tagName: 'atomic-no-results',
+  react: React,
+  elementClass: LitAtomicNoResults,
+});
+
 export const AtomicNumericRange = createComponent({
   tagName: 'atomic-numeric-range',
   react: React,
@@ -142,6 +150,12 @@ export const AtomicResult = createComponent({
   tagName: 'atomic-result',
   react: React,
   elementClass: LitAtomicResult,
+});
+
+export const AtomicResultBadge = createComponent({
+  tagName: 'atomic-result-badge',
+  react: React,
+  elementClass: LitAtomicResultBadge,
 });
 
 export const AtomicResultChildrenTemplate = createComponent({
