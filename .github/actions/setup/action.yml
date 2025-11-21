@@ -18,6 +18,10 @@ inputs:
     description: 'Skip the build step'
     required: false
     default: 'false'
+  cache-retention-days:
+    description: 'Number of days to retain the cache artifact'
+    required: false
+    default: '1'
 #endregion
 runs:
   using: composite
@@ -63,6 +67,6 @@ runs:
         name: ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo
         path: .turbo
         include-hidden-files: true
-        retention-days: 1
+        retention-days: ${{ inputs.cache-retention-days }}
         if-no-files-found: error
 #endregion
