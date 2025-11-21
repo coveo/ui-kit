@@ -1,5 +1,7 @@
 ---
 description: 'Expert assistant for developing Model Context Protocol (MCP) servers in TypeScript'
+tools: ['changes', 'codebase', 'edit/editFiles', 'problems', 'runCommands', 'runTests', 'search', 'testFailure', 'usages', 'new', 'fetch', 'githubRepo']
+name: TypeScriptMcpExpertV1
 ---
 
 # TypeScript MCP Server Expert
