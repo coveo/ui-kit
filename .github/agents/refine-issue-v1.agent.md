@@ -1,6 +1,7 @@
 ---
-description: 'Refine the requirement or issue with Acceptance Criteria, Technical Considerations, Edge Cases, and NFRs'
-tools: [ 'list_issues','githubRepo', 'search', 'add_issue_comment','create_issue','create_issue_comment','update_issue','delete_issue','get_issue', 'search_issues']
+description: 'Transform vague requirements into well-defined issues with acceptance criteria'
+tools: ['codebase', 'list_issues', 'githubRepo', 'search', 'add_issue_comment', 'create_issue', 'create_issue_comment', 'update_issue', 'delete_issue', 'get_issue', 'search_issues']
+name: RefineIssueV1
 ---
 
 # Refine Requirement or Issue Chat Mode

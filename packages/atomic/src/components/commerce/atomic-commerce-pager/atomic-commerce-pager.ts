@@ -7,10 +7,20 @@ import {
   type ProductListing,
   type Search,
 } from '@coveo/headless/commerce';
-import {html, LitElement, type PropertyValues} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {when} from 'lit/directives/when.js';
+import {createAppLoadedListener} from '@/src/components/common/interface/store';
+import {
+  renderPageButtons,
+  renderPagerNextButton,
+  renderPagerPageButton,
+  renderPagerPreviousButton,
+} from '@/src/components/common/pager/pager-buttons';
+import {renderPagerNavigation} from '@/src/components/common/pager/pager-navigation';
+import {getCurrentPagesRange} from '@/src/components/common/pager/pager-utils';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -24,16 +34,7 @@ import {
 import {randomID} from '@/src/utils/utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
-import {createAppLoadedListener} from '../../common/interface/store';
-import {
-  renderPageButtons,
-  renderPagerNextButton,
-  renderPagerPageButton,
-  renderPagerPreviousButton,
-} from '../../common/pager/pager-buttons';
-import {renderPagerNavigation} from '../../common/pager/pager-navigation';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import {getCurrentPagesRange} from './commerce-pager-utils';
 
 /**
  * The `atomic-commerce-pager` component enables users to navigate through paginated products.
@@ -56,16 +57,12 @@ export class AtomicCommercePager
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  private static propsSchema = new Schema({
-    numberOfPages: new NumberValue({min: 0}),
-  });
-
-  private radioGroupName = randomID('atomic-commerce-pager-');
-
-  @state()
-  bindings!: CommerceBindings;
-  @state() error!: Error;
+  @state() public bindings!: CommerceBindings;
+  @state() public error!: Error;
   @state() private isAppLoaded = false;
+
+  public pager!: Pagination;
+  public listingOrSearch!: ProductListing | Search;
 
   @bindStateToController('pager')
   @state()
@@ -85,7 +82,7 @@ export class AtomicCommercePager
    * - Use a stringified SVG to display it directly.
    */
   @property({reflect: true, attribute: 'previous-button-icon', type: String})
-  previousButtonIcon = ArrowLeftIcon;
+  previousButtonIcon: string = ArrowLeftIcon;
 
   /**
    * The SVG icon to use to display the Next button.
@@ -95,18 +92,30 @@ export class AtomicCommercePager
    * - Use a stringified SVG to display it directly.
    */
   @property({reflect: true, attribute: 'next-button-icon', type: String})
-  nextButtonIcon = ArrowRightIcon;
+  nextButtonIcon: string = ArrowRightIcon;
 
   protected ariaMessage = new AriaLiveRegionController(this, 'atomic-pager');
 
-  public pager!: Pagination;
-  public listingOrSearch!: ProductListing | Search;
+  private radioGroupName = randomID('atomic-commerce-pager-');
 
   private previousButton!: FocusTargetController;
   private nextButton!: FocusTargetController;
 
+  constructor() {
+    super();
+
+    new ValidatePropsController(
+      this,
+      () => ({
+        numberOfPages: this.numberOfPages,
+      }),
+      new Schema({
+        numberOfPages: new NumberValue({min: 0}),
+      })
+    );
+  }
+
   public initialize() {
-    this.validateProps();
     this.initFocusTargets();
     if (this.bindings.interfaceElement.type === 'product-listing') {
       this.listingOrSearch = buildProductListing(this.bindings.engine);
@@ -117,12 +126,6 @@ export class AtomicCommercePager
     createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
       this.isAppLoaded = isAppLoaded;
     });
-  }
-
-  willUpdate(changedProperties: PropertyValues) {
-    if (changedProperties.has('numberOfPages')) {
-      this.validateProps();
-    }
   }
 
   @bindingGuard()
@@ -228,17 +231,6 @@ export class AtomicCommercePager
       newFocus.focus();
     }
   };
-
-  private validateProps() {
-    try {
-      AtomicCommercePager.propsSchema.validate({
-        numberOfPages: this.numberOfPages,
-      });
-    } catch (error) {
-      this.error = error as Error;
-      return;
-    }
-  }
 
   private async focusOnFirstResultAndScrollToTop() {
     await this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();

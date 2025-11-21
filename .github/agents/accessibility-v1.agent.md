@@ -1,7 +1,7 @@
 ---
 description: 'Accessibility mode with Storybook integration for visual accessibility testing.'
 tools: ['changes', 'codebase', 'edit/editFiles', 'extensions', 'fetch', 'findTestFiles', 'githubRepo', 'new', 'openSimpleBrowser', 'problems', 'runCommands', 'runTasks', 'runTests', 'search', 'searchResults', 'terminalLastCommand', 'terminalSelection', 'testFailure', 'usages', 'vscodeAPI', 'mcp_storybook_get-story-urls', 'mcp_storybook_get-ui-building-instructions']
-title: 'Accessibility mode'
+name: 'Accessibility-V1'
 ---
 
 ## ⚠️ Accessibility is a Priority in This Project

@@ -1510,48 +1510,6 @@ export namespace Components {
         "collapseFacetsAfter": number;
     }
     /**
-     * The `atomic-result-badge` element renders a badge to highlight special features of a result.
-     * A badge can either display:
-     * * Text:
-     * ```html
-     * <atomic-result-badge label="trending"></atomic-result-badge>
-     * ```
-     * * The contents of a single-value field:
-     * ```html
-     * <atomic-result-badge field="objecttype"></atomic-result-badge>
-     * ```
-     * * An icon:
-     * ```html
-     * <atomic-result-badge icon="https://my-website.fake/star.svg"></atomic-result-badge>
-     * ```
-     * * Slotted elements:
-     * ```html
-     * <atomic-result-badge icon="https://my-website.fake/stopwatch.svg">
-     *     Deal ends in <my-dynamic-countdown></my-dynamic-countdown>
-     * </atomic-result-badge>
-     * ```
-     * The contents of a multi-value field can be displayed as in the following example:
-     * ```html
-     * <atomic-result-badge icon="https://my-website.fake/language.svg">
-     *    <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
-     * </atomic-result-badge>
-     * ```
-     */
-    interface AtomicResultBadge {
-        /**
-          * The field to display in the badge.  Not compatible with `label`, slotted elements nor multi-value fields.
-         */
-        "field"?: string;
-        /**
-          * Specifies an icon to display at the left-end of the badge. This can be used in conjunction with `field`, `label` or slotted elements.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
-         */
-        "icon"?: string;
-        /**
-          * The text to display in the badge.  Not compatible with `field` nor slotted elements.
-         */
-        "label"?: string;
-    }
-    /**
      * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.
      * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,
      * only when children exist.
@@ -2893,40 +2851,6 @@ declare global {
         new (): HTMLAtomicRefineToggleElement;
     };
     /**
-     * The `atomic-result-badge` element renders a badge to highlight special features of a result.
-     * A badge can either display:
-     * * Text:
-     * ```html
-     * <atomic-result-badge label="trending"></atomic-result-badge>
-     * ```
-     * * The contents of a single-value field:
-     * ```html
-     * <atomic-result-badge field="objecttype"></atomic-result-badge>
-     * ```
-     * * An icon:
-     * ```html
-     * <atomic-result-badge icon="https://my-website.fake/star.svg"></atomic-result-badge>
-     * ```
-     * * Slotted elements:
-     * ```html
-     * <atomic-result-badge icon="https://my-website.fake/stopwatch.svg">
-     *     Deal ends in <my-dynamic-countdown></my-dynamic-countdown>
-     * </atomic-result-badge>
-     * ```
-     * The contents of a multi-value field can be displayed as in the following example:
-     * ```html
-     * <atomic-result-badge icon="https://my-website.fake/language.svg">
-     *    <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
-     * </atomic-result-badge>
-     * ```
-     */
-    interface HTMLAtomicResultBadgeElement extends Components.AtomicResultBadge, HTMLStencilElement {
-    }
-    var HTMLAtomicResultBadgeElement: {
-        prototype: HTMLAtomicResultBadgeElement;
-        new (): HTMLAtomicResultBadgeElement;
-    };
-    /**
      * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.
      * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,
      * only when children exist.
@@ -3418,7 +3342,6 @@ declare global {
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
-        "atomic-result-badge": HTMLAtomicResultBadgeElement;
         "atomic-result-children": HTMLAtomicResultChildrenElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
@@ -4884,48 +4807,6 @@ declare namespace LocalJSX {
         "collapseFacetsAfter"?: number;
     }
     /**
-     * The `atomic-result-badge` element renders a badge to highlight special features of a result.
-     * A badge can either display:
-     * * Text:
-     * ```html
-     * <atomic-result-badge label="trending"></atomic-result-badge>
-     * ```
-     * * The contents of a single-value field:
-     * ```html
-     * <atomic-result-badge field="objecttype"></atomic-result-badge>
-     * ```
-     * * An icon:
-     * ```html
-     * <atomic-result-badge icon="https://my-website.fake/star.svg"></atomic-result-badge>
-     * ```
-     * * Slotted elements:
-     * ```html
-     * <atomic-result-badge icon="https://my-website.fake/stopwatch.svg">
-     *     Deal ends in <my-dynamic-countdown></my-dynamic-countdown>
-     * </atomic-result-badge>
-     * ```
-     * The contents of a multi-value field can be displayed as in the following example:
-     * ```html
-     * <atomic-result-badge icon="https://my-website.fake/language.svg">
-     *    <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
-     * </atomic-result-badge>
-     * ```
-     */
-    interface AtomicResultBadge {
-        /**
-          * The field to display in the badge.  Not compatible with `label`, slotted elements nor multi-value fields.
-         */
-        "field"?: string;
-        /**
-          * Specifies an icon to display at the left-end of the badge. This can be used in conjunction with `field`, `label` or slotted elements.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
-         */
-        "icon"?: string;
-        /**
-          * The text to display in the badge.  Not compatible with `field` nor slotted elements.
-         */
-        "label"?: string;
-    }
-    /**
      * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.
      * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,
      * only when children exist.
@@ -5591,7 +5472,6 @@ declare namespace LocalJSX {
         "atomic-recs-result-template": AtomicRecsResultTemplate;
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
-        "atomic-result-badge": AtomicResultBadge;
         "atomic-result-children": AtomicResultChildren;
         "atomic-result-date": AtomicResultDate;
         "atomic-result-fields-list": AtomicResultFieldsList;
@@ -5850,35 +5730,6 @@ declare module "@stencil/core" {
              * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
              */
             "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
-            /**
-             * The `atomic-result-badge` element renders a badge to highlight special features of a result.
-             * A badge can either display:
-             * * Text:
-             * ```html
-             * <atomic-result-badge label="trending"></atomic-result-badge>
-             * ```
-             * * The contents of a single-value field:
-             * ```html
-             * <atomic-result-badge field="objecttype"></atomic-result-badge>
-             * ```
-             * * An icon:
-             * ```html
-             * <atomic-result-badge icon="https://my-website.fake/star.svg"></atomic-result-badge>
-             * ```
-             * * Slotted elements:
-             * ```html
-             * <atomic-result-badge icon="https://my-website.fake/stopwatch.svg">
-             *     Deal ends in <my-dynamic-countdown></my-dynamic-countdown>
-             * </atomic-result-badge>
-             * ```
-             * The contents of a multi-value field can be displayed as in the following example:
-             * ```html
-             * <atomic-result-badge icon="https://my-website.fake/language.svg">
-             *    <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
-             * </atomic-result-badge>
-             * ```
-             */
-            "atomic-result-badge": LocalJSX.AtomicResultBadge & JSXBase.HTMLAttributes<HTMLAtomicResultBadgeElement>;
             /**
              * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.
              * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,

@@ -16,6 +16,7 @@ import {
   AtomicQuerySummary as LitAtomicQuerySummary,
   AtomicRecsInterface as LitAtomicRecsInterface,
   AtomicResult as LitAtomicResult,
+  AtomicResultBadge as LitAtomicResultBadge,
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
   AtomicResultHtml as LitAtomicResultHtml,
   AtomicResultList as LitAtomicResultList,
@@ -141,6 +142,12 @@ export const AtomicResult = createComponent({
   tagName: 'atomic-result',
   react: React,
   elementClass: LitAtomicResult,
+});
+
+export const AtomicResultBadge = createComponent({
+  tagName: 'atomic-result-badge',
+  react: React,
+  elementClass: LitAtomicResultBadge,
 });
 
 export const AtomicResultChildrenTemplate = createComponent({
