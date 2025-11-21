@@ -168,4 +168,4 @@ If you’re setting the `proxyBaseUrl` option in your recommendation engine conf
 * `POST` `/querySuggest` to proxy requests to `POST` [`<ORGANIZATION_ID>.org<ENVIRONMENT|>.coveo.com/rest/search/v2/querySuggest`](https://docs.coveo.com/en/13#tag/Search-V2/operation/querySuggestPost)
 * `POST` `/facet` to proxy requests to `POST` [`<ORGANIZATION_ID>.org<ENVIRONMENT|>.coveo.com/rest/search/v2/facet`](https://docs.coveo.com/en/13#tag/Search-V2/operation/facetSearch)
 * `POST` `/html` to proxy requests to `POST` [`<ORGANIZATION_ID>.org<ENVIRONMENT|>.coveo.com/rest/search/v2/html`](https://docs.coveo.com/en/13#tag/Search-V2/operation/htmlPost)
-* `GET` `/fields` to proxy requests to `GET` link:https://docs.coveo.com/en/13#tag/Search-V2/operation/fields[`&lt;ORGANIZATION_ID>.org&lt;ENVIRONMENT|>.coveo.com/rest/search/v2/fields
+* `GET` `/fields` to proxy requests to `GET` [`<ORGANIZATION_ID>.org<ENVIRONMENT|>.coveo.com/rest/search/v2/fields`](https://docs.coveo.com/en/13#tag/Search-V2/operation/fields)

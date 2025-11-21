@@ -218,7 +218,7 @@ nonPubliclyDocumentedFunction();
 Also, it means you need to set `moduleResolution": "bundler"` in your `tsconfig.json` file to access secondary entry points such as `@coveo/headless/commerce` or `@coveo/headless/ssr`.
 See [TypeScript module resolution](https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution) for more information.
 
-### `moduleResolution` in `tsconfig.json` when installing via link:https://www.npmjs.com/[npm]
+### `moduleResolution` in `tsconfig.json` when installing via [npm](https://www.npmjs.com/)
 
 If you use Typescript, note that the `node10`/`node` module resolution is no longer supported.
 The `classic` module resolution, which was never supported, remains unsupported.
@@ -247,7 +247,7 @@ If you’re using them, import then directly from Redux.
 The [`queryCorrectionMode`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.DidYouMeanOptions.html) default value is now `next` rather than `legacy`.
 This means that the default behavior of the `didYouMean` controller will be to use a [query suggestions](https://docs.coveo.com/en/1015/) [model](https://docs.coveo.com/en/1012/) for query correction rather than the legacy [index](https://docs.coveo.com/en/204/) mechanism.
 
-### GeneratedAnswer link:https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.GeneratedAnswer.html#sendfeedback[`sendFeedback`]
+### GeneratedAnswer [`sendFeedback`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.GeneratedAnswer.html#sendfeedback)
 
 The `feedback` parameter of the `sendFeedback` method was changed.
 In v2, it could have either the `GeneratedAnswerFeedback` or `GeneratedAnswerFeedbackV2` type, which were defined as follows:
@@ -478,7 +478,7 @@ Use `valuesAsTrees` and `selectedValueAncestry` instead.
 
 ### Actions
 
-#### link:https://docs.coveo.com/en/headless/latest/reference/interfaces/Insight.InsightSearchAnalyticsActionCreators.html#logexpandtofullui[`logExpandToFullUI` parameters]
+#### [`logExpandToFullUI` parameters](https://docs.coveo.com/en/headless/latest/reference/interfaces/Insight.InsightSearchAnalyticsActionCreators.html#logexpandtofullui)
 
 The `LogExpandToFullUI` action no longer uses the `caseId` and `caseNumber` parameters.
 They are rather fetched automatically from the Headless engine state.

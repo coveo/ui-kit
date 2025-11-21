@@ -62,7 +62,7 @@ or
 <script type="module" src="https://static.cloud.coveo.com/headless/v2/headless.esm.js"></script>
 ```
 
-### link:https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.FieldSuggestionsOptions.html[`FieldSuggestionsOptions`]
+### [`FieldSuggestionsOptions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.FieldSuggestionsOptions.html)
 
 Except for the `delimitingCharacter` option, which had no effect and has been removed completely, the options exposed through `FieldSuggestionsOptions` have been removed.
 They must now be set by passing a [`FacetOptions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.FacetOptions.html) object.
@@ -94,7 +94,7 @@ controller = buildFieldSuggestions(engine, {field: 'author', facetId: 'author-2'
 controller = buildFieldSuggestions(engine, {facet: {field: 'author', facetId: 'author-2', facetSearch: {query: "herman"}}});
 ```
 
-### link:https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.CategoryFieldSuggestionsOptions.html[`CategoryFieldSuggestionsOptions`]
+### [`CategoryFieldSuggestionsOptions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.CategoryFieldSuggestionsOptions.html)
 
 Except for the `delimitingCharacter` option, which had no effect and has been removed completely, the options exposed through `CategoryFieldSuggestionsOptions` have been removed and must now be set by passing a [`CategoryFacetOptions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.CategoryFacetOptions.html) object.
 
@@ -151,7 +151,7 @@ controller = buildCategoryFieldSuggestions(engine, {
 });
 ```
 
-### link:https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.UrlManager.html[`UrlManager`]
+### [`UrlManager`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.UrlManager.html)
 
 The `UrlManager` now serializes facets with a dash instead of brackets.
 
@@ -172,7 +172,7 @@ In that case, adjust to the new serialization.
 <a href="https://mysite.com/search/#f-country=canada"></a>
 ```
 
-### link:https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.BreadcrumbActionCreators.html[`BreadcrumbActionCreator`]
+### [`BreadcrumbActionCreator`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.BreadcrumbActionCreators.html)
 
 `deselectAllFacets` has been removed.
 Instead, use `deselectAllBreadcrumbs`.
@@ -201,7 +201,7 @@ const action = breadcrumbActionCreators.deselectAllBreadcrumbs();
 headlessEngine.dispatch(action);
 ```
 
-### link:https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.DateRangeOptions.html[`DateRangeOptions`]
+### [`DateRangeOptions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.DateRangeOptions.html)
 
 The `useLocalTime` option was removed.
 
@@ -247,7 +247,7 @@ export const headlessEngine = buildSearchEngine({
 });
 ```
 
-### link:https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SmartSnippetRelatedQuestion.html[`SmartSnippetRelatedQuestion`]
+### [`SmartSnippetRelatedQuestion`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SmartSnippetRelatedQuestion.html)
 
 The `documentId` property has been removed.
 Use `questionAnswerId` instead.
@@ -361,7 +361,7 @@ export const SmartSnippetQuestionsList: FunctionComponent<
 };
 ```
 
-### link:https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.ClickAnalyticsActionCreators.html#logopensmartsnippetsource[`logOpenSmartSnippetSource`]
+### [`logOpenSmartSnippetSource`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.ClickAnalyticsActionCreators.html#logopensmartsnippetsource)
 
 This action no longer requires the `source` parameter to be specified.
 Headless infers it automatically.
@@ -380,7 +380,7 @@ engine.dispatch(logOpenSmartSnippetSource(result));
 engine.dispatch(logOpenSmartSnippetSource());
 ```
 
-### link:https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.NotifyTrigger.html[`NotifyTrigger`]
+### [`NotifyTrigger`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.NotifyTrigger.html)
 
 The controller state `notification` property has been replaced by the `notifications` property, which is an array that could contain multiple notifications.
 
@@ -404,7 +404,7 @@ const notify = () => {
 };
 ```
 
-### link:https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.ExecuteTrigger.html[`ExecuteTrigger`]
+### [`ExecuteTrigger`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.ExecuteTrigger.html)
 
 `engine.state.triggers.executed` has been replaced by `engine.state.triggers.executions`, which is an array that could contain multiple executions.
 Also, `functionName` and `params` have been removed from `engine.state.triggers` and moved to the executions in the `engine.state.triggers.executions` array.
@@ -469,7 +469,7 @@ export class ExecuteTrigger extends Component<{}, ExecuteTriggerState> {
 }
 ```
 
-### link:https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.QuerySuggestActionCreators.html[`querySuggest`]
+### [`querySuggest`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.QuerySuggestActionCreators.html)
 
 `engine.state.querySuggest.q` has been removed.
 Instead, use the more general `engine.state.querySet`, which is also a set of [queries](https://docs.coveo.com/en/231/) (strings) available using the `id` of the target search box (see [`QuerySetActions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.QuerySetActionCreators.html)).
@@ -496,7 +496,7 @@ lastQuery = engine.state.querySet['123']
 // ...
 ```
 
-### link:https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.FacetSetActionCreators.html[`facetSet`] and link:https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.NumericFacetSetActionCreators.html[`NumericFacetSet`]
+### [`facetSet`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.FacetSetActionCreators.html) and [`NumericFacetSet`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.NumericFacetSetActionCreators.html)
 
 The type of `engine.state.facetSet` has changed from `{ [facetId: string]: FacetRequest }` to `{ [facetId: string]: FacetSlice }`.
 
@@ -551,12 +551,12 @@ The following internal controllers have been removed:
 The `engine.state.redirection` reducer (not documented) and the related actions (not documented either) have been removed.
 If you were using them previously, see [`StandaloneSearchBox`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.StandaloneSearchBox.html) and [`StandaloneSearchBoxSetActions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Commerce.StandaloneSearchBoxSetActionCreators.html) instead.
 
-### link:https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.FacetOptions.html[`FacetOptions`]
+### [`FacetOptions`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.FacetOptions.html)
 
 The `delimitingCharacter` option was removed.
 It wasn’t doing anything, since delimiting characters are only relevant in category [facets](https://docs.coveo.com/en/198/).
 
-### link:https://docs.coveo.com/en/headless/latest/usage/result-templates/[Result template manager]
+### [Result template manager](https://docs.coveo.com/en/headless/latest/usage/result-templates/)
 
 Registering an invalid template now throws an error rather than just logging it.
 Previously, the invalid template wouldn’t work, but it wouldn’t throw an error.
