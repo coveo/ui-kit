@@ -4,6 +4,8 @@ import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
+import ArrowBottomIcon from '../../../images/arrow-bottom-rounded.svg';
+import ArrowTopIcon from '../../../images/arrow-top-rounded.svg';
 import {renderShowButton, type ShowButtonProps} from './show-button';
 
 describe('#renderShowButton', () => {
@@ -56,8 +58,7 @@ describe('#renderShowButton', () => {
     it('should render the arrow-bottom icon', async () => {
       const {icon} = await renderComponent({isCollapsed: true});
 
-      expect(icon).toBeDefined();
-      expect(icon?.tagName.toLowerCase()).toBe('atomic-icon');
+      expect(icon?.getAttribute('icon')).toBe(ArrowBottomIcon);
     });
   });
 
@@ -71,8 +72,7 @@ describe('#renderShowButton', () => {
     it('should render the arrow-top icon', async () => {
       const {icon} = await renderComponent({isCollapsed: false});
 
-      expect(icon).toBeDefined();
-      expect(icon?.tagName.toLowerCase()).toBe('atomic-icon');
+      expect(icon?.getAttribute('icon')).toBe(ArrowTopIcon);
     });
   });
 
