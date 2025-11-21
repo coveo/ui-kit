@@ -1,22 +1,124 @@
 import {cpSync} from 'node:fs';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
-// following docs https://typedoc.org/guides/development/#plugins
-// eslint-disable-next-line n/no-unpublished-import
-import {type Application, Converter, JSX, RendererEvent} from 'typedoc';
+import {
+  type Application,
+  Converter,
+  type DefaultTheme,
+  JSX,
+  type NavigationElement,
+  ParameterType,
+  type ProjectReflection,
+  RendererEvent,
+} from 'typedoc';
 import {formatTypeDocToolbar} from './formatTypeDocToolbar.js';
+import {hoistOtherCategoryInArray, hoistOtherCategoryInNav} from './hoist.js';
 import {insertAtomicSearchBox} from './insertAtomicSearchBox.js';
 import {insertBetaNote} from './insertBetaNote.js';
 import {insertCustomComments} from './insertCustomComments.js';
 import {insertMetaTags} from './insertMetaTags.js';
 import {insertSiteHeaderBar} from './insertSiteHeaderBar.js';
+import {
+  applyNestedOrderingArray,
+  applyNestedOrderingNode,
+  applyTopLevelOrderingArray,
+  applyTopLevelOrderingNode,
+} from './sortNodes.js';
+import type {NavNode} from './types.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
  * Called by TypeDoc when loaded as a plugin.
  */
-export function load(app: Application) {
+export const load = (app: Application) => {
+  app.options.addDeclaration({
+    name: 'hoistOther.fallbackCategory',
+    help: "Name of the fallback category to hoist (defaults to defaultCategory or 'Other').",
+    type: ParameterType.String,
+  });
+  app.options.addDeclaration({
+    name: 'hoistOther.topLevelGroup',
+    help: "Name of the top-level group whose children should be promoted to root (default 'Documents').",
+    type: ParameterType.String,
+  });
+  app.options.addDeclaration({
+    name: 'hoistOther.topLevelOrder',
+    help: 'An array to sort the top level nav by.',
+    type: ParameterType.Array,
+  });
+  app.options.addDeclaration({
+    name: 'hoistOther.nestedOrder',
+    help: "Object mapping parent title -> ordering array for its children. Use '*' for a default. If omitted, children are sorted alphabetically.",
+    type: ParameterType.Mixed,
+  });
+
+  let originalMethodName: 'getNavigation' | null = null;
+  let originalMethod: (
+    project: ProjectReflection
+  ) => NavigationElement[] | null = null;
+  app.renderer.on('beginRender', () => {
+    const theme = app.renderer.theme as DefaultTheme | undefined;
+    if (!theme) return;
+
+    originalMethodName = 'getNavigation';
+    originalMethod = theme.getNavigation;
+
+    if (!originalMethodName || !originalMethod) return;
+
+    const opts = app.options;
+    const fallback =
+      (opts.getValue('hoistOther.fallbackCategory') as string) ||
+      (opts.getValue('defaultCategory') as string) ||
+      'Other';
+
+    const topLevelGroup =
+      (opts.getValue('hoistOther.topLevelGroup') as string) || 'Documents';
+
+    const topLevelOrder =
+      (opts.getValue('hoistOther.topLevelOrder') as string[] | undefined) ||
+      undefined;
+
+    let nestedOrder = opts.getValue('hoistOther.nestedOrder') as
+      | Record<string, string[]>
+      | string
+      | undefined;
+    if (typeof nestedOrder === 'string') {
+      try {
+        nestedOrder = JSON.parse(nestedOrder);
+      } catch {}
+    }
+
+    const typedNestedOrder = nestedOrder as Record<string, string[]>;
+
+    theme.getNavigation = function wrappedNavigation(
+      this: unknown,
+      ...args: unknown[]
+    ) {
+      const nav = originalMethod!.apply(this, args);
+
+      // The nav shape can be an array of nodes or a single root with children
+      if (Array.isArray(nav)) {
+        hoistOtherCategoryInArray(nav as NavNode[], fallback, topLevelGroup);
+        if (topLevelOrder?.length) {
+          applyTopLevelOrderingArray(nav as NavNode[], topLevelOrder);
+        }
+        applyNestedOrderingArray(nav as NavNode[], typedNestedOrder);
+      } else if (nav && typeof nav === 'object') {
+        hoistOtherCategoryInNav(nav as NavNode, fallback);
+        if (
+          (nav as NavNode).children &&
+          topLevelOrder &&
+          topLevelOrder.length
+        ) {
+          applyTopLevelOrderingNode(nav as NavNode, topLevelOrder);
+        }
+        applyNestedOrderingNode(nav as NavNode, typedNestedOrder);
+      }
+      return nav;
+    };
+  });
+
   // Need the Meta Tags to be inserted first, or it causes issues with the navigation sidebar
   app.renderer.hooks.on('head.begin', () => (
     <>
@@ -119,14 +221,8 @@ export function load(app: Application) {
     </>
   ));
 
-  const baseAssetsPath = '../../documentation/assets';
-
-  const createFileCopyEntry = (sourcePath: string) => ({
-    from: resolve(__dirname, `${baseAssetsPath}/${sourcePath}`),
-    to: resolve(app.options.getValue('out'), `assets/${sourcePath}`),
-  });
-
-  const onRenderEnd = () => {
+  app.renderer.on(RendererEvent.END, () => {
+    const baseAssetsPath = '../../documentation/assets';
     const filesToCopy = [
       'css/docs-style.css',
       'css/main-new.css',
@@ -145,7 +241,10 @@ export function load(app: Application) {
     ];
 
     filesToCopy.forEach((filePath) => {
-      const file = createFileCopyEntry(filePath);
+      const file = {
+        from: resolve(__dirname, `${baseAssetsPath}/${filePath}`),
+        to: resolve(app.options.getValue('out'), `assets/${filePath}`),
+      };
       cpSync(file.from, file.to);
     });
 
@@ -153,11 +252,16 @@ export function load(app: Application) {
       from: resolve(__dirname, '../../documentation/dist/dark-mode.js'),
       to: resolve(app.options.getValue('out'), 'assets/vars/dark-mode.js'),
     };
+    // Restore original to avoid side effects
+    const theme = app.renderer.theme as DefaultTheme | undefined;
+    if (theme && originalMethodName && originalMethod) {
+      theme[originalMethodName] = originalMethod;
+    }
+    originalMethodName = null;
+    originalMethod = null;
 
     cpSync(darkModeJs.from, darkModeJs.to);
-  };
-
-  app.renderer.on(RendererEvent.END, onRenderEnd);
+  });
 
   app.converter.on(Converter.EVENT_CREATE_DECLARATION, insertCustomComments);
-}
+};

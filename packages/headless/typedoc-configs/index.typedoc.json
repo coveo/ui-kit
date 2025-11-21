@@ -6,11 +6,13 @@
   },
   "categorizeByGroup": true,
   "groupOrder": [
+    "Home",
     "Engine",
     "Controllers",
     "Buildable controllers",
     "Sub-controllers",
     "Actions",
+    "Contributing",
     "*"
   ],
   "name": "Search",
