@@ -204,4 +204,4 @@ export default async function Search({searchParams}) {
 }
 
 export const dynamic = 'force-dynamic';
---
+```

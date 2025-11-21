@@ -53,7 +53,7 @@ export const load = (app: Application) => {
     type: ParameterType.Mixed,
   });
 
-  let originalMethodName: 'getNavigation' | null = null;
+  const originalMethodName = 'getNavigation';
   let originalMethod: (
     project: ProjectReflection
   ) => NavigationElement[] | null = null;
@@ -61,10 +61,9 @@ export const load = (app: Application) => {
     const theme = app.renderer.theme as DefaultTheme | undefined;
     if (!theme) return;
 
-    originalMethodName = 'getNavigation';
     originalMethod = theme.getNavigation;
 
-    if (!originalMethodName || !originalMethod) return;
+    if (!originalMethod) return;
 
     const opts = app.options;
     const fallback =
@@ -257,7 +256,6 @@ export const load = (app: Application) => {
     if (theme && originalMethodName && originalMethod) {
       theme[originalMethodName] = originalMethod;
     }
-    originalMethodName = null;
     originalMethod = null;
 
     cpSync(darkModeJs.from, darkModeJs.to);

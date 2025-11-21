@@ -23,7 +23,7 @@ You’ll need it when creating your Headless interface.
 
 The code example below is a sample [SAML page built with Headless](https://github.com/coveo/ui-kit/blob/master/samples/headless/search-react/src/pages/SamlPage.tsx) and [React](https://reactjs.org/).
 
-```jsx
+```tsx
 import {buildSamlClient, SamlClient, SamlClientOptions} from '@coveo/auth';
 import {buildSearchEngine} from '@coveo/headless';
 import {
@@ -36,23 +36,23 @@ import {
 } from 'react';
 import {AppContext} from '../context/engine';
 
-const samlClientOptions: SamlClientOptions = { --<1>
+const samlClientOptions: SamlClientOptions = { <1>
   organizationId: '<ORGANIZATION_ID>',
   provider: '<PROVIDER_ID>',
 };
 
 export const SamlPage: FunctionComponent<PropsWithChildren> = ({children}) => {
-  const [initialAccessToken, setInitialAccessToken] = useState(''); --<2>
-  const samlClient = useRef<SamlClient | null>(null); --<3>
-  useEffect(() => { --<4>
+  const [initialAccessToken, setInitialAccessToken] = useState(''); <2>
+  const samlClient = useRef<SamlClient | null>(null); <3>
+  useEffect(() => { <4>
     if (samlClient.current) {
-      return; --<5>
+      return; <5>
     }
-    samlClient.current = buildSamlClient(samlClientOptions); --<6>
+    samlClient.current = buildSamlClient(samlClientOptions); <6>
     samlClient.current.authenticate().then(setInitialAccessToken);
   }, []);
 
-  const engine = useMemo( --<7>
+  const engine = useMemo( <7>
     () =>
       initialAccessToken && samlClient.current
         ? buildSearchEngine({
@@ -70,7 +70,7 @@ export const SamlPage: FunctionComponent<PropsWithChildren> = ({children}) => {
     return null;
   }
 
-  return <AppContext.Provider value={{engine}}>{children}</AppContext.Provider>; --<8>
+  return <AppContext.Provider value={{engine}}>{children}</AppContext.Provider>; <8>
 };
 ```
 

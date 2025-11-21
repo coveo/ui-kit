@@ -15,7 +15,7 @@ The latest version of the Headless library can be downloaded from [npm](https://
 Links to older versions are also available, but support is limited as stated in the following table and as provided under the Coveo Support and Service-Level Policies.
 
 | Version number | Release date | Development end date | Bug fix end date | Support end date |
-| --- | --- | --- | --- |  | --- | 
+| --- | --- | --- | ---  | --- | 
 | v3 | September 2024 | - | - | - |
 | v2 | December 2022 | September 2024 | - | - |
 | v1 | June 2021 | December 2022 | December 2022 | June 2024 |
@@ -45,4 +45,6 @@ As of `@coveo/headless` v3.11.0, the following technologies versions are support
 
 Support for newer versions of these technologies may be added in either major or minor updates.
 Support for older versions may be removed in major updates.
-The wrappers may come with limitations compared to the version of Headless that uses native component
+The wrappers may come with limitations compared to the version of Atomic that uses native components.
+
+If the `peerDependencies` restrictions of one of these packages are more restrictive than those listed here, the `peerDependencies` restrictions are to be considered the source of truth.
