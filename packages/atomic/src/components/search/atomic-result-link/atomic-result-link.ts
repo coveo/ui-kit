@@ -80,8 +80,6 @@ atomic-result-link {
 
   connectedCallback() {
     super.connectedCallback();
-    const slotName = 'attributes';
-    this.linkAttributes = getAttributesFromLinkSlotContent(this, slotName);
   }
 
   disconnectedCallback() {
@@ -106,6 +104,11 @@ atomic-result-link {
             result,
             this.bindings
           );
+
+      this.linkAttributes = getAttributesFromLinkSlotContent(
+        this,
+        'attributes'
+      );
 
       return renderLinkWithItemAnalytics({
         props: {
