@@ -1,6 +1,5 @@
 import {TestFixture} from '../fixtures/test-fixture';
 import * as CommonAssertions from './common-assertions';
-import {automaticFacetGeneratorComponent} from './facets/automatic-facet-generator/automatic-facet-generator-assertions';
 import {hierarchicalField} from './facets/category-facet/category-facet-actions';
 import {categoryFacetComponent} from './facets/category-facet/category-facet-selectors';
 import {colorFacetField} from './facets/color-facet/color-facet-actions';
@@ -16,9 +15,7 @@ import {ratingRangeFacetComponent} from './facets/rating-range-facet/rating-rang
 import {timeframeFacetField} from './facets/timeframe-facet/timeframe-facet-action';
 import {timeframeFacetComponent} from './facets/timeframe-facet/timeframe-facet-selectors';
 import {
-  addFacetManagerWithBothTypesOfFacets,
   addRefineToggleRangeVariations,
-  addRefineToggleWithAutomaticFacets,
   addRefineToggleWithDependsOnFacetAndNumerical,
   addRefineToggleWithStaticFacets,
   addRefineToggleWithStaticFacetsAndNoManager,
@@ -172,130 +169,6 @@ describe('Refine Toggle Test Suites', () => {
         .children()
         .each(($child, index) => {
           if (index + 1 > collapseFacetsAfter) {
-            cy.wrap($child).should('have.attr', 'is-collapsed');
-            return;
-          }
-          cy.wrap($child).should('not.have.attr', 'is-collapsed');
-        });
-    });
-  });
-
-  describe('when the modal is opened with automatic facets only', () => {
-    const collapseFacetsAfter = 2;
-    beforeEach(() => {
-      new TestFixture()
-        .with(
-          addRefineToggleWithAutomaticFacets({
-            'collapse-facets-after': collapseFacetsAfter,
-          })
-        )
-        .withMobileViewport()
-        .init();
-      RefineToggleSelectors.buttonOpen().click();
-    });
-
-    it('should render the modal', () => {
-      CommonAssertions.assertContainsComponentErrorWithoutIt(
-        RefineModalSelectors,
-        false
-      );
-      CommonAssertions.assertContainsComponentErrorWithoutIt(
-        RefineModalSelectors,
-        false
-      );
-      CommonAssertions.assertAccessibilityWithoutIt(refineModalComponent);
-      CommonAssertions.assertWCAG2_5_3();
-    });
-
-    it('should display the filter section', () => {
-      RefineModalSelectors.filterSection().should('exist');
-    });
-
-    it('should display the automatic facets', () => {
-      const automaticFacetAmount = 3;
-      RefineModalSelectors.automaticFacets()
-        .children()
-        .should('have.length', automaticFacetAmount);
-    });
-
-    it('should respect the collapseFacetsAfter prop', () => {
-      RefineModalSelectors.facets()
-        .find(automaticFacetGeneratorComponent)
-        .children()
-        .each(($child, index) => {
-          if (index + 1 > collapseFacetsAfter) {
-            cy.wrap($child).should('have.attr', 'is-collapsed');
-            return;
-          }
-          cy.wrap($child).should('not.have.attr', 'is-collapsed');
-        });
-    });
-  });
-
-  describe('when the modal is opened with both facets type', () => {
-    const collapseFacetsAfter = 4;
-    const staticFacetAmount = 1;
-    const automaticFacetAmount = 1;
-    beforeEach(() => {
-      new TestFixture()
-        .with(
-          addFacetManagerWithBothTypesOfFacets({
-            'collapse-facets-after': collapseFacetsAfter,
-          })
-        )
-        .withMobileViewport()
-        .init();
-      RefineToggleSelectors.buttonOpen().click();
-    });
-
-    it('should render the modal', () => {
-      CommonAssertions.assertContainsComponentErrorWithoutIt(
-        RefineModalSelectors,
-        false
-      );
-      CommonAssertions.assertContainsComponentErrorWithoutIt(
-        RefineModalSelectors,
-        false
-      );
-      CommonAssertions.assertAccessibilityWithoutIt(refineModalComponent);
-      CommonAssertions.assertWCAG2_5_3();
-    });
-
-    it('should display the filter section', () => {
-      RefineModalSelectors.filterSection().should('exist');
-    });
-
-    it('should display the automatic facets', () => {
-      RefineModalSelectors.automaticFacets().should('exist');
-    });
-
-    it('should display both facet types', () => {
-      RefineModalSelectors.automaticFacets()
-        .children()
-        .should('have.length', automaticFacetAmount);
-
-      const allStaticFacet = [facetComponent];
-      RefineModalSelectors.facets()
-        .children()
-        .should('have.length', allStaticFacet.length + 1);
-    });
-
-    it('should respect the collapseFacetsAfter prop', () => {
-      RefineModalSelectors.facets()
-        .children()
-        .each(($child, index) => {
-          if (index + 1 > collapseFacetsAfter) {
-            cy.wrap($child).should('have.attr', 'is-collapsed');
-            return;
-          }
-          cy.wrap($child).should('not.have.attr', 'is-collapsed');
-        });
-
-      RefineModalSelectors.facets()
-        .find(automaticFacetGeneratorComponent)
-        .children()
-        .each(($child, index) => {
-          if (index + 1 > collapseFacetsAfter - staticFacetAmount) {
             cy.wrap($child).should('have.attr', 'is-collapsed');
             return;
           }

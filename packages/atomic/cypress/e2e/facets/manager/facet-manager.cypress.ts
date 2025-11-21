@@ -4,14 +4,11 @@ import {
   assertContainsComponentError,
 } from '../../common-assertions';
 import {
-  addFacetManagerWithAutomaticFacets,
-  addFacetManagerWithBothTypesOfFacets,
   addFacetManagerWithStaticFacets,
   facetManagerComponent,
 } from './facet-manager-actions';
 import {
   assertFacetsNoCollapsedAttribute,
-  assertHasNumberOfExpandedAutomaticFacets,
   assertHasNumberOfExpandedFacets,
 } from './facet-manager-assertions';
 
@@ -51,55 +48,6 @@ describe('Facet Manager Test Suite', () => {
         .init();
 
       assertFacetsNoCollapsedAttribute();
-    });
-  });
-
-  describe('with automatic facets only', () => {
-    it('should only keep the first 4 facets expanded by default', () => {
-      new TestFixture().with(addFacetManagerWithAutomaticFacets()).init();
-      assertHasNumberOfExpandedAutomaticFacets(4);
-    });
-
-    it('should respect the collapseFacetsAfter prop when set', () => {
-      new TestFixture()
-        .with(addFacetManagerWithAutomaticFacets({'collapse-facets-after': 1}))
-        .init();
-      assertHasNumberOfExpandedAutomaticFacets(1);
-    });
-
-    it('should disable the collapseFacetsAfter prop when set to -1', () => {
-      new TestFixture()
-        .with(addFacetManagerWithAutomaticFacets({'collapse-facets-after': -1}))
-        .init();
-      assertHasNumberOfExpandedAutomaticFacets(3);
-    });
-  });
-
-  describe('with both types of facets', () => {
-    it('should only keep the first 4 facets expanded by default', () => {
-      new TestFixture().with(addFacetManagerWithBothTypesOfFacets()).init();
-      assertHasNumberOfExpandedFacets(3);
-      assertHasNumberOfExpandedAutomaticFacets(1);
-    });
-
-    it('should respect the collapseFacetsAfter prop when set', () => {
-      new TestFixture()
-        .with(
-          addFacetManagerWithBothTypesOfFacets({'collapse-facets-after': 2})
-        )
-        .init();
-      assertHasNumberOfExpandedFacets(2);
-      assertHasNumberOfExpandedAutomaticFacets(0);
-    });
-
-    it('should disable the collapseFacetsAfter prop when set to -1', () => {
-      new TestFixture()
-        .with(
-          addFacetManagerWithBothTypesOfFacets({'collapse-facets-after': -1})
-        )
-        .init();
-      assertHasNumberOfExpandedAutomaticFacets(3);
-      assertHasNumberOfExpandedAutomaticFacets(3);
     });
   });
 });

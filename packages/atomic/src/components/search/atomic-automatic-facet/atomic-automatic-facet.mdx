@@ -1,0 +1,30 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+import * as AtomicAutomaticFacetStories from './atomic-automatic-facet.new.stories';
+
+<Meta of={AtomicAutomaticFacetStories} />
+
+<AtomicDocTemplate
+  stories={AtomicAutomaticFacetStories}
+  githubPath="search/atomic-automatic-facet/atomic-automatic-facet.ts"
+  tagName="atomic-automatic-facet"
+  className="AtomicAutomaticFacet"
+>
+
+To use automatic facets, add the `atomic-automatic-facet-generator` component within the "facets" section of the layout.
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="facets">
+      <atomic-automatic-facet-generator></atomic-automatic-facet-generator>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+Learn more about automatic facets: [About the Facet Generator](https://docs.coveo.com/en/n9sd0159/).
+
+</AtomicDocTemplate>
