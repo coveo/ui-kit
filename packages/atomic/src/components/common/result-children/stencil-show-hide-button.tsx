@@ -1,7 +1,7 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {Button} from '../stencil-button';
 
-interface ShowHideButtonProps {
+ interface ShowHideButtonProps {
   moreResultsAvailable: boolean;
   loadFullCollection: () => void;
   showInitialChildren: boolean;
@@ -29,9 +29,7 @@ export const ShowHideButton: FunctionalComponent<ShowHideButtonProps> = ({
       onClick={() => {
         if (moreResultsAvailable) {
           loadFullCollection();
-          toggleShowInitialChildren();
         }
-
         toggleShowInitialChildren();
       }}
     >

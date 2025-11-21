@@ -15,12 +15,12 @@ import {
 import {getNamedSlotContent} from '../../../utils/slot-utils';
 import {AnyBindings} from '../interface/bindings';
 import {Heading} from '../stencil-heading';
-import {Switch} from '../switch';
+import {Switch} from '../stencil-switch';
 import {CopyButton} from './copy-button';
-import {FeedbackButton} from './feedback-button';
+import {FeedbackButton} from './stencil-feedback-button';
 import {GeneratedContentContainer} from './generated-content-container';
-import {RetryPrompt} from './retry-prompt';
 import {ShowButton} from './stencil-show-button';
+import {RetryPrompt} from './stencil-retry-prompt';
 import {SourceCitations} from './source-citations';
 
 interface GeneratedAnswerCommonOptions {
