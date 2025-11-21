@@ -20,6 +20,7 @@ import {
   AtomicResultBadge as LitAtomicResultBadge,
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
   AtomicResultHtml as LitAtomicResultHtml,
+  AtomicResultLink as LitAtomicResultLink,
   AtomicResultList as LitAtomicResultList,
   AtomicResultNumber as LitAtomicResultNumber,
   AtomicResultSectionActions as LitAtomicResultSectionActions,
@@ -167,6 +168,12 @@ export const AtomicResultHtml = createComponent({
   tagName: 'atomic-result-html',
   react: React,
   elementClass: LitAtomicResultHtml,
+});
+
+export const AtomicResultLink = createComponent({
+  tagName: 'atomic-result-link',
+  react: React,
+  elementClass: LitAtomicResultLink,
 });
 
 export const AtomicResultList = createComponent({
