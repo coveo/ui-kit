@@ -58,7 +58,7 @@ describe('#renderShowButton', () => {
     it('should render the arrow-bottom icon', async () => {
       const {icon} = await renderComponent({isCollapsed: true});
 
-      expect(icon?.getAttribute('icon')).toBe(ArrowBottomIcon);
+      expect(icon).toHaveAttribute('icon', ArrowBottomIcon);
     });
   });
 
@@ -72,7 +72,7 @@ describe('#renderShowButton', () => {
     it('should render the arrow-top icon', async () => {
       const {icon} = await renderComponent({isCollapsed: false});
 
-      expect(icon?.getAttribute('icon')).toBe(ArrowTopIcon);
+      expect(icon).toHaveAttribute('icon', ArrowTopIcon);
     });
   });
 

@@ -33,7 +33,7 @@ export const renderShowButton: FunctionalComponent<ShowButtonProps> = ({
     <atomic-icon
       part="answer-show-icon"
       class="ml-2 w-3.5"
-      .icon=${props.isCollapsed ? ArrowBottomIcon : ArrowTopIcon}
+      icon=${props.isCollapsed ? ArrowBottomIcon : ArrowTopIcon}
     ></atomic-icon>
   `)}`;
 };
