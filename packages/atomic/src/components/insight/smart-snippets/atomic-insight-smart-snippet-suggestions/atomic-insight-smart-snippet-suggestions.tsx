@@ -23,7 +23,7 @@ import {
   SmartSnippetSuggestionsQuestion,
   SmartSnippetSuggestionsQuestionWrapper,
   SmartSnippetSuggestionsWrapper,
-} from '../../../common/smart-snippets/atomic-smart-snippet-suggestions/smart-snippet-suggestions-common';
+} from '@/src/components/common/smart-snippets/atomic-smart-snippet-suggestions/stencil-smart-snippet-suggestions-common';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
