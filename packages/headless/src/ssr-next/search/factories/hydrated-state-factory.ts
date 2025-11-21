@@ -32,7 +32,10 @@ export function hydratedStaticStateFactory<
       engine.dispatch(action);
     });
 
-    await engine.waitForSearchCompletedAction();
+    // Only wait for search completion if there are search actions to replay
+    if (params.searchActions.length > 0) {
+      await engine.waitForSearchCompletedAction();
+    }
 
     return {engine, controllers};
   };

@@ -24,6 +24,7 @@ import type {
  *
  * @example
  * ```ts
+ * // Basic usage - executes search on server
  * const searchEngineDefinition = defineSearchEngine(config);
  *
  * const staticState = await searchEngineDefinition.fetchStaticState({
@@ -32,6 +33,15 @@ import type {
  *
  * type SearchStaticState = InferStaticState<typeof searchEngineDefinition>;
  * type SearchHydratedState = InferHydratedState<typeof searchEngineDefinition>;
+ * ```
+ *
+ * @example
+ * ```ts
+ * // Skip search execution - useful for standalone search boxes
+ * const staticState = await searchEngineDefinition.fetchStaticState({
+ *   navigatorContext: {/*...* /},
+ *   skipSearch: true, // No search executed on server
+ * });
  * ```
  *
  * @group Engine
