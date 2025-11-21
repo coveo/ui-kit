@@ -12,7 +12,7 @@ const {events, argTypes} = getStorybookHelpers('atomic-tab', {
 
 const meta: Meta = {
   component: 'atomic-tab',
-  title: 'Search/Tab/atomic-tab',
+  title: 'Search/Tab',
   id: 'atomic-tab',
   render: () => html`<atomic-tab-manager>
           <atomic-tab
