@@ -8,12 +8,12 @@
     "node": "^20.9.0 || ^22.11.0"
   },
   "dependencies": {
-    "@coveo/auth": "2.1.1",
+    "@coveo/auth": "2.1.4",
     "@coveo/headless": "workspace:*",
-    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/jest-dom": "6.9.1",
     "@testing-library/react": "catalog:",
     "@types/escape-html": "1.0.4",
-    "@types/express": "5.0.3",
+    "@types/express": "5.0.5",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
