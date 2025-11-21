@@ -1,4 +1,5 @@
 import {html} from 'lit';
+import {keyed} from 'lit/directives/keyed.js';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 
 export interface QuestionWrapperProps {
@@ -17,11 +18,13 @@ export const renderQuestionWrapper: FunctionalComponentWithChildren<
 > =
   ({props}) =>
   (children) => {
-    return html`<li
-      key=${props.key}
-      part=${`question-answer-${props.expanded ? 'expanded' : 'collapsed'}`}
-      class="flex flex-col"
-    >
-      <article class="contents">${children}</article>
-    </li>`;
+    return html`${keyed(
+      props.key,
+      html`<li
+        part=${`question-answer-${props.expanded ? 'expanded' : 'collapsed'}`}
+        class="flex flex-col"
+      >
+        <article class="contents">${children}</article>
+      </li>`
+    )}`;
   };

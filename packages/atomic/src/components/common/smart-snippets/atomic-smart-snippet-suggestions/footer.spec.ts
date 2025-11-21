@@ -41,10 +41,7 @@ describe('#renderFooter', () => {
 
   it('should have correct aria-label with translated text', async () => {
     const footer = await renderComponent();
-    const translatedText = i18n.t('smart-snippet-source');
-    expect(footer.getAttribute('aria-label')).toBe(translatedText);
-    // Verify the translation is not empty
-    expect(translatedText).toBeTruthy();
+    expect(footer.getAttribute('aria-label')).toBe('Source of the answer');
   });
 
   it('should render children', async () => {
