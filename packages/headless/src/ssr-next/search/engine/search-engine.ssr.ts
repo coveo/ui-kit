@@ -3,6 +3,7 @@
  */
 import {defineSearchParameterManager} from '../controllers/search-parameter-manager/headless-search-parameter-manager.ssr.js';
 import {hydratedStaticStateFactory} from '../factories/hydrated-state-factory.js';
+import {fetchStandaloneStaticStateFactory} from '../factories/standalone-static-state-factory.js';
 import {fetchStaticStateFactory} from '../factories/static-state-factory.js';
 import type {SSRSearchEngine} from '../types/build.js';
 import type {AugmentedControllerDefinition} from '../types/controller-definition.js';
@@ -16,17 +17,26 @@ import type {
  * Initializes a Search engine definition in SSR with given controllers definitions and search engine config.
  *
  * @param options - The search engine definition
- * @returns Two utility functions to fetch the initial state of the engine in SSR and hydrate the state in CSR.
+ * @returns An object containing two engine definitions:
+ * - `searchEngineDefinition`: For pages with search results (executes server-side search)
+ * - `standaloneEngineDefinition`: For pages with standalone components only (no server-side search execution)
  *
  * @remarks
- * You can use the {@link InferStaticState} and {@link InferHydratedState} utility types with the returned engine definition
+ * You can use the {@link InferStaticState} and {@link InferHydratedState} utility types with the returned engine definitions
  * to infer the types of static and hydrated state for your controllers.
  *
  * @example
  * ```ts
- * const searchEngineDefinition = defineSearchEngine(config);
+ * const {searchEngineDefinition, standaloneEngineDefinition} = defineSearchEngine(config);
  *
- * const staticState = await searchEngineDefinition.fetchStaticState({
+ * // For search results pages
+ * const searchState = await searchEngineDefinition.fetchStaticState({
+ *   navigatorContext: {/*...* /},
+ *   searchParams: {q: 'query'}
+ * });
+ *
+ * // For pages with standalone search box only (e.g., homepage)
+ * const standaloneState = await standaloneEngineDefinition.fetchStaticState({
  *   navigatorContext: {/*...* /},
  * });
  *
@@ -40,7 +50,16 @@ export function defineSearchEngine<
   TControllerDefinitions extends SearchControllerDefinitionsMap = {},
 >(
   options: SearchEngineDefinitionOptions<TControllerDefinitions>
-): SearchEngineDefinition<SSRSearchEngine, TControllerDefinitions> {
+): {
+  searchEngineDefinition: SearchEngineDefinition<
+    SSRSearchEngine,
+    TControllerDefinitions
+  >;
+  standaloneEngineDefinition: SearchEngineDefinition<
+    SSRSearchEngine,
+    TControllerDefinitions
+  >;
+} {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
   const getOptions = () => engineOptions;
@@ -62,15 +81,32 @@ export function defineSearchEngine<
     getOptions()
   );
 
+  const fetchStandaloneStaticState =
+    fetchStandaloneStaticStateFactory<TControllerDefinitions>(
+      augmentedControllerDefinition,
+      getOptions()
+    );
+
   const hydrateStaticState = hydratedStaticStateFactory<TControllerDefinitions>(
     augmentedControllerDefinition,
     getOptions()
   );
 
-  return {
-    fetchStaticState,
-    hydrateStaticState,
+  const commonMethods = {
     getAccessToken,
     setAccessToken,
+  };
+
+  return {
+    searchEngineDefinition: {
+      fetchStaticState,
+      hydrateStaticState,
+      ...commonMethods,
+    },
+    standaloneEngineDefinition: {
+      fetchStaticState: fetchStandaloneStaticState,
+      hydrateStaticState,
+      ...commonMethods,
+    },
   };
 }
