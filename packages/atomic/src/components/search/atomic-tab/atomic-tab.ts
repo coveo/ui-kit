@@ -7,6 +7,8 @@ import {LightDomMixin} from '@/src/mixins/light-dom';
 /**
  * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
  * It must be used as a child of the `atomic-tab-manager` component to function correctly.
+ *
+ * @slot default - The default slot for any additional content within the tab (rarely used).
  */
 @customElement('atomic-tab')
 export class AtomicTab extends LightDomMixin(LitElement) {
