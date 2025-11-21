@@ -1,5 +1,4 @@
 import {html} from 'lit';
-import {ifDefined} from 'lit/directives/if-defined.js';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import Thumbs from '../../../images/thumbs.svg';
@@ -38,7 +37,7 @@ export const renderFeedbackButton: FunctionalComponent<FeedbackButtonProps> = ({
 
   return html`<button
     type="button"
-    title=${ifDefined(props.title)}
+    title=${props.title}
     part="feedback-button"
     class=${classNames}
     aria-pressed=${props.active ? 'true' : 'false'}
