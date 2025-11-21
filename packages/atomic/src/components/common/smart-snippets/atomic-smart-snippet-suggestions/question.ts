@@ -38,8 +38,8 @@ export const renderQuestion: FunctionalComponentWithChildren<QuestionProps> =
       part: getQuestionPart('button', props.expanded),
       onClick: props.onClick,
       class: 'flex items-center px-4',
-      ariaExpanded: props.expanded ? 'true' : undefined,
-      ariaControls: props.expanded ? props.ariaControls : undefined,
+      ariaExpanded: props.expanded ? 'true' : 'false',
+      ariaControls: props.ariaControls,
     };
 
     const headingProps: HeadingProps = {

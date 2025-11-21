@@ -14,7 +14,6 @@ describe('#renderAnswerAndSourceWrapper', () => {
     const element = await renderFunctionFixture(
       html`${renderAnswerAndSourceWrapper({
         props: {
-          expanded: false,
           id: 'answer-1',
           ...props,
         },

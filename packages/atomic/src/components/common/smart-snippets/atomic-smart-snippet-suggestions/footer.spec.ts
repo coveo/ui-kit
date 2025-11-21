@@ -39,11 +39,12 @@ describe('#renderFooter', () => {
     expect(footer.getAttribute('part')).toBe('footer');
   });
 
-  it('should have correct aria-label', async () => {
+  it('should have correct aria-label with translated text', async () => {
     const footer = await renderComponent();
-    expect(footer.getAttribute('aria-label')).toBe(
-      i18n.t('smart-snippet-source')
-    );
+    const translatedText = i18n.t('smart-snippet-source');
+    expect(footer.getAttribute('aria-label')).toBe(translatedText);
+    // Verify the translation is not empty
+    expect(translatedText).toBeTruthy();
   });
 
   it('should render children', async () => {

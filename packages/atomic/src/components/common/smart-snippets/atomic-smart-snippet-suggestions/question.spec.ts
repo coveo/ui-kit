@@ -72,9 +72,9 @@ describe('#renderQuestion', () => {
     expect(button.getAttribute('aria-expanded')).toBe('true');
   });
 
-  it('should not have aria-expanded when not expanded', async () => {
+  it('should have aria-expanded set to false when not expanded', async () => {
     const button = await renderComponent({expanded: false});
-    expect(button.getAttribute('aria-expanded')).toBeNull();
+    expect(button.getAttribute('aria-expanded')).toBe('false');
   });
 
   it('should have aria-controls when expanded', async () => {
@@ -85,12 +85,12 @@ describe('#renderQuestion', () => {
     expect(button.getAttribute('aria-controls')).toBe('custom-id');
   });
 
-  it('should not have aria-controls when not expanded', async () => {
+  it('should have aria-controls when not expanded', async () => {
     const button = await renderComponent({
       expanded: false,
       ariaControls: 'custom-id',
     });
-    expect(button.getAttribute('aria-controls')).toBeNull();
+    expect(button.getAttribute('aria-controls')).toBe('custom-id');
   });
 
   it('should render children before question text', async () => {
