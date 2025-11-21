@@ -22,7 +22,6 @@ import {GeneratedContentContainer} from './generated-content-container';
 import {ShowButton} from './stencil-show-button';
 import {RetryPrompt} from './stencil-retry-prompt';
 import {SourceCitations} from './source-citations';
-import { ShowButton } from './show-button';
 
 interface GeneratedAnswerCommonOptions {
   host: HTMLElement;
