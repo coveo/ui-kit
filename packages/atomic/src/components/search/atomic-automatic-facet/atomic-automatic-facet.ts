@@ -161,7 +161,7 @@ export class AtomicAutomaticFacet
   }
 
   private renderHeader() {
-    return html`${renderFacetHeader({
+    return renderFacetHeader({
       props: {
         i18n: this.bindings.i18n,
         label: this.label,
@@ -177,7 +177,7 @@ export class AtomicAutomaticFacet
         },
         headerRef: (el) => this.focusTarget.setTarget(el),
       },
-    })}`;
+    });
   }
 
   @bindingGuard()

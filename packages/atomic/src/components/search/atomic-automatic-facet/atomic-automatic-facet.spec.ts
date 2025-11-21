@@ -3,7 +3,6 @@ import type {
   AutomaticFacetState,
   SearchStatus,
 } from '@coveo/headless';
-import {buildSearchStatus} from '@coveo/headless';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {page, userEvent} from 'vitest/browser';
@@ -60,8 +59,6 @@ describe('atomic-automatic-facet', () => {
         hasError: searchStatusHasError,
       },
     });
-
-    vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
 
     const {element} = await renderInAtomicSearchInterface<AtomicAutomaticFacet>(
       {

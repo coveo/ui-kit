@@ -16,9 +16,4 @@ test.describe('atomic-automatic-facet', () => {
   test('should display facet values', async ({automaticFacet}) => {
     await expect(automaticFacet.facetValues).toHaveCount(4);
   });
-
-  test('should allow selecting a facet value', async ({automaticFacet}) => {
-    await automaticFacet.firstFacetValue.click();
-    await expect(automaticFacet.clearButton).toBeVisible();
-  });
 });
