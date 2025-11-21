@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {
   facetDecorator,
@@ -14,6 +15,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
+const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
@@ -26,6 +28,9 @@ const meta: Meta = {
     ...parameters,
     actions: {
       handles: events,
+    },
+    msw: {
+      handlers: [...searchApiHarness.handlers],
     },
   },
   argTypes,
@@ -68,5 +73,44 @@ export const WithDependsOn: Story = {
       );
       button.ariaChecked === 'false' ? button.click() : null;
     });
+  },
+};
+
+export const WithNumericInput: Story = {
+  name: 'atomic-numeric-facet-with-numeric-input',
+  decorators: [facetDecorator],
+  args: {
+    label: 'Price Range',
+    field: 'price',
+    'with-input': 'integer',
+  },
+};
+
+export const AsLinks: Story = {
+  name: 'atomic-numeric-facet-as-links',
+  decorators: [facetDecorator],
+  args: {
+    label: 'View Count',
+    field: 'ytviewcount',
+    'display-values-as': 'link',
+  },
+};
+
+export const Collapsed: Story = {
+  name: 'atomic-numeric-facet-collapsed',
+  decorators: [facetDecorator],
+  args: {
+    field: 'ytviewcount',
+    'is-collapsed': true,
+  },
+};
+
+export const WithDecimalInput: Story = {
+  name: 'atomic-numeric-facet-with-decimal-input',
+  decorators: [facetDecorator],
+  args: {
+    label: 'Rating',
+    field: 'rating',
+    'with-input': 'decimal',
   },
 };
