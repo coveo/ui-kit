@@ -75,7 +75,47 @@ export const baseResponse: Response = {
   termsToHighlight: {},
   phrasesToHighlight: {},
   groupByResults: [],
-  facets: [],
+  facets: [
+    {
+      facetId: 'objecttype',
+      field: 'objecttype',
+      moreValuesAvailable: true,
+      values: [
+        {
+          value: 'People',
+          state: 'idle',
+          numberOfResults: 126786,
+        },
+        {
+          value: 'Contact',
+          state: 'idle',
+          numberOfResults: 179426,
+        },
+        {
+          value: 'Variant',
+          state: 'idle',
+          numberOfResults: 30827,
+        },
+        {
+          value: 'Message',
+          state: 'idle',
+          numberOfResults: 26868,
+        },
+        {
+          value: 'Thread',
+          state: 'idle',
+          numberOfResults: 7112,
+        },
+        {
+          value: 'Account',
+          state: 'idle',
+          numberOfResults: 4721,
+        },
+      ],
+      indexScore: 0.08949005905806505,
+      label: 'Object type',
+    },
+  ],
   suggestedFacets: [],
   categoryFacets: [],
   results: Array.from({length: 120}, (_, n) => getNthResult(n)),
