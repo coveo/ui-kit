@@ -19,6 +19,7 @@ import {CopyButton} from './stencil-copy-button';
 import {Switch} from '../stencil-switch';
 import {FeedbackButton} from './stencil-feedback-button';
 import {GeneratedContentContainer} from './generated-content-container';
+import {ShowButton} from './stencil-show-button';
 import {RetryPrompt} from './stencil-retry-prompt';
 import {SourceCitations} from './source-citations';
 import { ShowButton } from './show-button';
