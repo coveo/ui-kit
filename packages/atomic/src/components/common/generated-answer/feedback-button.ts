@@ -3,13 +3,13 @@ import {ifDefined} from 'lit/directives/if-defined.js';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import Thumbs from '../../../images/thumbs.svg';
-import {createRipple} from '../../../utils/ripple-utils';
 import {
   type ButtonStyle,
   getClassNameForButtonStyle,
   getRippleColorForButtonStyle,
 } from '../button-style';
 import '../atomic-icon/atomic-icon';
+import {createRipple} from '@/src/utils/ripple-utils';
 
 type FeedbackVariant = 'like' | 'dislike';
 

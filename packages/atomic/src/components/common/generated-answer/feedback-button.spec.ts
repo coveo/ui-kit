@@ -1,6 +1,7 @@
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import Thumbs from '../../../images/thumbs.svg';
 import {
   type FeedbackButtonProps,
   renderFeedbackButton,
@@ -70,7 +71,7 @@ describe('#renderFeedbackButton', () => {
   it('should render an atomic-icon inside the button', async () => {
     const button = await renderComponent({});
     const icon = button.querySelector('atomic-icon');
-    expect(icon).toBeInTheDocument();
+    expect(icon?.getAttribute('icon')).toBe(Thumbs);
   });
 
   it('should call onClick when the button is clicked', async () => {
