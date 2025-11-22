@@ -94,7 +94,9 @@ it('should handle click', async () => {
 
 ### 5. Essential Coverage
 
-Test: (1) Basic rendering, (2) All props/defaults, (3) User interactions, (4) Visual attributes (classes, ARIA), (5) Children if applicable, (6) Error conditions.
+Test: (1) Basic rendering, (2) All props/defaults, (3) User interactions, (4) Conditional visual attributes (CSS classes, ARIA), (5) Children if applicable, (6) Error conditions.
+
+**Note:** Static CSS classes and attributes are covered by visual regression tests. Focus unit tests on conditional logic.
 
 ### 6. Key Patterns
 
@@ -135,6 +137,25 @@ it('should render localized text', async () => {
 });
 ```
 
+**Icon properties:**
+When components accept icon props (from `@/src/components/common/icon/icon`), test using bracket notation:
+```typescript
+it('should render with correct icon', async () => {
+  const element = await renderComponent({icon: ArrowUp});
+  const iconElement = element.querySelector('atomic-icon');
+  expect(iconElement?.['icon']).toBe(ArrowUp);
+});
+```
+
+**Children content:**
+Verify children via text content. DOM structure verification is optional:
+```typescript
+it('should render children', async () => {
+  const element = await renderComponent({}, html`<span>Child content</span>`);
+  expect(element).toHaveTextContent('Child content'); // Sufficient
+});
+```
+
 ### 7. Run Tests
 
 ```bash
@@ -168,6 +189,38 @@ await element.updateComplete;
 describe('when disabled', () => {
   // All disabled-related tests
 });
+```
+
+**Conditional CSS classes:**
+Test classes that change based on props/state. Skip static classes:
+```typescript
+// ✅ Test conditional classes
+it('should apply active class when selected', async () => {
+  const element = await renderComponent({selected: true});
+  expect(element.querySelector('button')).toHaveClass('bg-primary');
+});
+
+it('should not apply active class when not selected', async () => {
+  const element = await renderComponent({selected: false});
+  expect(element.querySelector('button')).not.toHaveClass('bg-primary');
+});
+
+// ❌ Skip static classes (covered by visual tests)
+it('should have rounded corners', async () => {
+  const element = await renderComponent();
+  expect(element.querySelector('button')).toHaveClass('rounded-lg'); // Unnecessary
+});
+```
+
+**Avoid tw/multiClassMap in test helpers:**
+When creating test fixtures, use plain class strings. Reserve `tw`/`multiClassMap` for testing the component's conditional logic, not test setup:
+```typescript
+// ✅ Good - plain strings in tests
+const element = await renderComponent({class: 'test-class'});
+
+// ❌ Avoid - unnecessary complexity in tests
+const classNames = tw({'test-class': true});
+const element = await renderComponent({class: multiClassMap(classNames)});
 ```
 
 ## Post-Execution Summary

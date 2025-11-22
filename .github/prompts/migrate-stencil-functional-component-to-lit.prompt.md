@@ -84,18 +84,42 @@ html`<input ${props.ref ? ref(props.ref) : nothing} />`
 
 ## Tailwind Classes
 
-**Use `tw` + `multiClassMap` for conditional classes:**
+**Use `tw` + `multiClassMap` only for conditional or dynamic classes.** For components with only static classes, use plain class strings.
+
+**Conditional classes (use tw/multiClassMap):**
 ```typescript
 import {multiClassMap, tw} from '@/src/directives/multi-class-map';
 
 const classNames = tw({
-  'rounded-lg border p-4': true,
   'border-primary bg-primary-50': props.isHighlighted,
   'border-neutral-dark bg-white': !props.isHighlighted,
-  [props.class ?? '']: Boolean(props.class),
+  [props.class ?? '']: Boolean(props.class), // Dynamic user classes
 });
 
+return html`<div class="rounded-lg border p-4 ${multiClassMap(classNames)}">Content</div>`;
+```
+
+**Static classes only (plain strings):**
+```typescript
+// ✅ Good - no conditional logic
+return html`<div class="flex items-center gap-2">Content</div>`;
+
+// ❌ Avoid - unnecessary tw/multiClassMap
+const classNames = tw({'flex items-center gap-2': true});
 return html`<div class=${multiClassMap(classNames)}>Content</div>`;
+```
+
+**Mixed static and conditional:**
+```typescript
+const dynamicClasses = tw({
+  'bg-primary': props.isPrimary,
+  'bg-secondary': !props.isPrimary,
+});
+
+// Static classes in string, conditional via multiClassMap
+return html`<button class="px-4 py-2 rounded ${multiClassMap(dynamicClasses)}">
+  ${props.label}
+</button>`;
 ```
 
 ## Naming Conventions
