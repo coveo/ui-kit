@@ -19,6 +19,7 @@ import type {
   GeneratedAnswerSection,
   HistorySection,
   InstantResultSection,
+  MultiTurnConversationSection,
   NumericFacetSection,
   PaginationSection,
   PipelineSection,
@@ -78,4 +79,5 @@ export type SearchAppState = SearchParametersState &
   RecentQueriesSection &
   ExcerptLengthSection &
   GeneratedAnswerSection &
-  InstantResultSection;
+  InstantResultSection &
+  MultiTurnConversationSection;

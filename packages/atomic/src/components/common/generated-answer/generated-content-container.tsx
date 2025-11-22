@@ -1,6 +1,6 @@
-import {FunctionalComponent, h} from '@stencil/core';
-import {GeneratedMarkdownContent} from './generated-content/generated-markdown-content';
-import {GeneratedTextContent} from './generated-content/generated-text-content';
+import { FunctionalComponent, h } from "@stencil/core";
+import { GeneratedMarkdownContent } from "./generated-content/stencil-generated-markdown-content";
+import { GeneratedTextContent } from "./generated-content/stencil-generated-text-content";
 
 interface GeneratedContentContainerProps {
   answer?: string;
@@ -16,7 +16,7 @@ export const GeneratedContentContainer: FunctionalComponent<
 > = (props, children) => {
   return (
     <div part="generated-container" class="mt-6">
-      {props.answerContentFormat === 'text/markdown' ? (
+      {props.answerContentFormat === "text/markdown" ? (
         <GeneratedMarkdownContent
           answer={props.answer}
           isStreaming={props.isStreaming}

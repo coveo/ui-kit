@@ -1,4 +1,5 @@
 import {
+  AtomicAiConversationToggle as LitAtomicAiConversationToggle,
   AtomicAriaLive as LitAtomicAriaLive,
   AtomicComponentError as LitAtomicComponentError,
   AtomicExternal as LitAtomicExternal,
@@ -42,6 +43,12 @@ import {
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
+
+export const AtomicAiConversationToggle = createComponent({
+  tagName: 'atomic-ai-conversation-toggle',
+  react: React,
+  elementClass: LitAtomicAiConversationToggle,
+});
 
 export const AtomicAriaLive = createComponent({
   tagName: 'atomic-aria-live',

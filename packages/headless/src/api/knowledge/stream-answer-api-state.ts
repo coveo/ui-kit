@@ -5,6 +5,7 @@ import type {
   GetAnswerQuerySection,
   InsightCaseContextSection,
   InsightConfigurationSection,
+  MultiTurnConversationSection,
   TabSection,
 } from '../../state/state-sections.js';
 
@@ -17,4 +18,5 @@ export type StreamAnswerAPIState = {
   Partial<InsightConfigurationSection> &
   GeneratedAnswerSection &
   Partial<TabSection> &
-  Partial<InsightCaseContextSection>;
+  Partial<InsightCaseContextSection> &
+  Partial<MultiTurnConversationSection>;

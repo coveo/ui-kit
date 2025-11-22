@@ -15,6 +15,7 @@ import type {
   InsightConfigurationSection,
   InsightInterfaceSection,
   InsightUserActionsSection,
+  MultiTurnConversationSection,
   NumericFacetSection,
   PaginationSection,
   QuerySection,
@@ -66,4 +67,5 @@ export type InsightAppState = InsightSearchParametersState &
   ContextSection &
   InsightUserActionsSection &
   TriggerSection &
-  RecentQueriesSection;
+  RecentQueriesSection &
+  MultiTurnConversationSection;

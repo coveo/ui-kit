@@ -54,6 +54,7 @@ import type {InsightConfigurationState} from '../features/insight-configuration/
 import type {InsightInterfaceState} from '../features/insight-interface/insight-interface-state.js';
 import type {UserActionsState} from '../features/insight-user-actions/insight-user-actions-state.js';
 import type {InstantResultsState} from '../features/instant-results/instant-results-state.js';
+import type {MultiTurnConversationState} from '../features/multi-turn-conversation/multi-turn-conversation-state.js';
 import type {PaginationState} from '../features/pagination/pagination-state.js';
 import type {QueryState} from '../features/query/query-state.js';
 import type {QuerySetState} from '../features/query-set/query-set-state.js';
@@ -69,6 +70,13 @@ import type {StandaloneSearchBoxSetState} from '../features/standalone-search-bo
 import type {StaticFilterSetState} from '../features/static-filter-set/static-filter-set-state.js';
 import type {TabSetState} from '../features/tab-set/tab-set-state.js';
 import type {TriggerState} from '../features/triggers/triggers-state.js';
+
+export interface MultiTurnConversationSection {
+  /**
+   * The state of the multi-turn conversation.
+   */
+  multiTurnConversation: MultiTurnConversationState;
+}
 
 export interface QuerySection {
   /**
