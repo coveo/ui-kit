@@ -17,7 +17,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-color-facet',
-  title: 'Search/ColorFacet',
+  title: 'Search/Facet (Color)',
   id: 'atomic-color-facet',
   render: (args) => template(args),
   decorators: [decorator],
@@ -133,6 +133,26 @@ export const Default: Story = {
     ...facetValueArgs,
     field: 'filetype',
     numberOfValues: 9,
+  },
+  decorators: [facetDecorator],
+};
+
+export const BoxDisplay: Story = {
+  name: 'Box Display Mode',
+  args: {
+    field: 'filetype',
+    'display-values-as': 'box',
+    numberOfValues: 8,
+  },
+  decorators: [facetDecorator],
+};
+
+export const CheckboxDisplay: Story = {
+  name: 'Checkbox Display Mode',
+  args: {
+    field: 'filetype',
+    'display-values-as': 'checkbox',
+    numberOfValues: 8,
   },
   decorators: [facetDecorator],
 };
