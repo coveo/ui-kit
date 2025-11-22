@@ -1,10 +1,10 @@
-import {SmartSnippetFeedbackBanner} from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-banner';
+import {SmartSnippetFeedbackBanner} from '@/src/components/common/smart-snippets/stencil-smart-snippet-feedback-banner';
 import {
   SmartSnippetTruncatedAnswer,
   SmartSnippetWrapper,
   SmartSnippetFooter,
   SmartSnippetQuestion,
-} from '@/src/components/common/smart-snippets/atomic-smart-snippet/smart-snippet-common';
+} from '@/src/components/common/smart-snippets/atomic-smart-snippet/stencil-smart-snippet-common';
 import {randomID} from '@/src/utils/utils';
 import {
   buildSmartSnippet,
