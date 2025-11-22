@@ -1,0 +1,55 @@
+# Git
+.git
+.gitignore
+.github
+
+# Dependencies
+node_modules
+
+# Build outputs
+dist
+reports
+sarifs
+
+# IDE
+.vscode
+.idea
+
+# Dev tools
+.devcontainer
+.husky
+
+# Logs
+npm-debug.log
+*.log
+
+# Cache
+.turbo
+.dccache
+.cspellcache
+.nx
+
+# Test files
+**/*.spec.*
+**/*.test.*
+**/*.cy.ts
+**.cy.ts.mp4
+
+# Storybook
+**/*.stories.tsx
+.storybook
+
+# Documentation
+internal-docs
+
+# Temporary files
+.size-snapshot.json
+topology.json
+topology-raw.json
+.git-message
+packages/atomic/custom-elements.json
+scripts/translation-gpt/temporary.json
+
+# Environment
+.env
+.env.local
