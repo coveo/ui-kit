@@ -1,0 +1,10 @@
+@reference '../../../../utils/tailwind-utilities/set-font-size.css';
+@reference '../../../../utils/coveo.tw.css';
+
+.show-hide-button {
+  @apply set-font-size-sm;
+}
+
+.no-result-root {
+  @apply text-neutral-dark my-3;
+}
