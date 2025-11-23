@@ -1,5 +1,4 @@
 import nMore from '@salesforce/label/c.quantic_NMore';
-import {getBueno} from 'c/quanticHeadlessLoader';
 import {I18nUtils} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
@@ -59,25 +58,23 @@ export default class QuanticResultMultiValueText extends LightningElement {
   };
 
   connectedCallback() {
-    getBueno(this).then(() => {
-      if (!this.result || !this.field || !Bueno.isString(this.field)) {
-        console.error(
-          `The ${this.template.host.localName} requires a result and a multi-value field to be specified.`
-        );
-        this.setError();
-      }
-      if (this.label && !Bueno.isString(this.label)) {
-        console.error(`The "${this.label}" label is not a valid string.`);
-        this.setError();
-      }
-      if (!this.fieldValue) {
-        console.error(
-          `Could not parse value from field "${this.field}" as a string array.`
-        );
-        this.setError();
-      }
-      this.validated = true;
-    });
+    if (!this.result || !this.field || !Bueno.isString(this.field)) {
+      console.error(
+        `The ${this.template.host.localName} requires a result and a multi-value field to be specified.`
+      );
+      this.setError();
+    }
+    if (this.label && !Bueno.isString(this.label)) {
+      console.error(`The "${this.label}" label is not a valid string.`);
+      this.setError();
+    }
+    if (!this.fieldValue) {
+      console.error(
+        `Could not parse value from field "${this.field}" as a string array.`
+      );
+      this.setError();
+    }
+    this.validated = true;
   }
 
   setError() {

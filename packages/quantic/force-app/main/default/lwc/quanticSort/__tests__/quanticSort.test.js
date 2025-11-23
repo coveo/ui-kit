@@ -40,26 +40,22 @@ jest.mock(
 
 function mockBueno(shouldError = false) {
   // @ts-ignore
-  mockHeadlessLoader.getBueno = () => {
-    // @ts-ignore
-    global.Bueno = {
-      isString: jest
-        .fn()
-        .mockImplementation(
-          (value) => Object.prototype.toString.call(value) === '[object String]'
-        ),
-      StringValue: jest.fn(),
-      RecordValue: jest.fn(),
-      Schema: jest.fn(() => ({
-        validate: () => {
-          if (shouldError) {
-            throw new Error();
-          }
-          jest.fn();
-        },
-      })),
-    };
-    return new Promise((resolve) => resolve());
+  global.Bueno = {
+    isString: jest
+      .fn()
+      .mockImplementation(
+        (value) => Object.prototype.toString.call(value) === '[object String]'
+      ),
+    StringValue: jest.fn(),
+    RecordValue: jest.fn(),
+    Schema: jest.fn(() => ({
+      validate: () => {
+        if (shouldError) {
+          throw new Error();
+        }
+        jest.fn();
+      },
+    })),
   };
 }
 

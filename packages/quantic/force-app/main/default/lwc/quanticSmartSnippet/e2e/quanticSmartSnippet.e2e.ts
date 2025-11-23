@@ -83,13 +83,7 @@ useCaseTestCases.forEach((useCase) => {
         test.describe('when opening the feedback modal and providing feedback', () => {
           test('should send the smart snippet reason analytics events', async ({
             smartSnippet,
-          }, testInfo) => {
-            // Todo - remove .skip when the feedback modal of Smart Snippet opens in SF with LWS disabled (SFINT-6407)
-            test.skip(
-              testInfo.project.name === 'LWS-disabled',
-              'Feedback modal not available when LWS is disabled (SFINT-6407)'
-            );
-
+          }) => {
             const expectedReason = 'does_not_answer';
 
             const openFeedbackModalAnalyticsPromise =
@@ -110,13 +104,7 @@ useCaseTestCases.forEach((useCase) => {
         test.describe('when closing the feedback modal', () => {
           test('should send the correct close feedback modal analytics event', async ({
             smartSnippet,
-          }, testInfo) => {
-            // Todo - remove .skip when the feedback modal of Smart Snippet opens in SF with LWS disabled (SFINT-6407)
-            test.skip(
-              testInfo.project.name === 'LWS-disabled',
-              'Feedback modal not available when LWS is disabled (SFINT-6407)'
-            );
-
+          }) => {
             await smartSnippet.clickDislikeButton();
             await smartSnippet.clickExplainWhyButton();
             const closeFeedbackModalAnalyticsPromise =
@@ -131,13 +119,7 @@ useCaseTestCases.forEach((useCase) => {
         test('should not allow to open the feedback modal', async ({
           smartSnippet,
           search,
-        }, testInfo) => {
-          // Todo - remove .skip when the feedback modal of Smart Snippet opens in SF with LWS disabled (SFINT-6407)
-          test.skip(
-            testInfo.project.name === 'LWS-disabled',
-            'Feedback modal not available when LWS is disabled (SFINT-6407)'
-          );
-
+        }) => {
           await smartSnippet.clickDislikeButton();
           await smartSnippet.clickExplainWhyButton();
           await smartSnippet.selectFirstFeedbackOptionLabel();
@@ -159,13 +141,7 @@ useCaseTestCases.forEach((useCase) => {
         test('should allow to open the feedback modal', async ({
           smartSnippet,
           search,
-        }, testInfo) => {
-          // Todo - remove .skip when the feedback modal of Smart Snippet opens in SF with LWS disabled (SFINT-6407)
-          test.skip(
-            testInfo.project.name === 'LWS-disabled',
-            'Feedback modal not available when LWS is disabled (SFINT-6407)'
-          );
-
+        }) => {
           await smartSnippet.clickDislikeButton();
           await smartSnippet.clickExplainWhyButton();
           await smartSnippet.selectFirstFeedbackOptionLabel();
