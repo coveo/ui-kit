@@ -27,6 +27,15 @@
   font-size: var(--slds-g-font-size-base, 13px);
 }
 
+.citation__title--active {
+  color: var(--lwc-brandAccessible, #0176d3);
+}
+
+/* Make action indicator icons blue when active */
+.citation__action-indicator {
+  --slds-c-icon-color-foreground-default: var(--lwc-brandAccessible, #0176d3);
+}
+
 .citation__tooltip-text {
   display: -webkit-box;
   -webkit-line-clamp: 6;

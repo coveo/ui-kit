@@ -1,6 +1,6 @@
 import {LinkUtils, generateTextFragmentUrl} from 'c/quanticUtils';
 import {NavigationMixin} from 'lightning/navigation';
-import {LightningElement, api} from 'lwc';
+import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").InteractiveCitation} InteractiveCitation */
 
@@ -55,6 +55,11 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
    */
   @api disableCitationAnchoring = false;
 
+  /** @type {Map<string, Object>} */
+  @track actionStates = new Map();
+  /** @type {Array<Object>} */
+  @track actionIndicators = [];
+
   /** @type {Object} */
   timeout;
   /** @type {number} */
@@ -73,6 +78,12 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   hideTooltipDebounced;
 
   connectedCallback() {
+    // Listens to register event from citation action slot
+    this.template.addEventListener(
+      'actionregister',
+      this.handleCitationActionRegister
+    );
+
     const fileType = this.citation?.fields?.filetype;
     this.isHrefWithTextFragment =
       !this.disableCitationAnchoring &&
@@ -109,6 +120,10 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   }
 
   disconnectedCallback() {
+    this.template.removeEventListener(
+      'actionregister',
+      this.handleCitationActionRegister
+    );
     this.removeBindings?.();
     clearTimeout(this.timeout);
     this.hideTooltipDebounced?.cancel();
@@ -179,6 +194,35 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
     }
   }
 
+  handleCitationActionRegister(event) {
+    console.log('Handle citation action register event:', event);
+    event.stopPropagation();
+    const {
+      actionType,
+      onStateChange,
+      stateClassPrefix = actionType,
+    } = event.detail;
+
+    if (onStateChange) {
+      const actionInterface = {
+        updateState: (newState) => {
+          this.actionStates.set(actionType, {
+            ...newState,
+            classPrefix: stateClassPrefix,
+          });
+          this.updateIndicators();
+          this.requestUpdate();
+        },
+        getCitationContext: () => ({
+          citation: this.citation,
+          element: this.template.host,
+          interactiveCitation: this.interactiveCitation,
+        }),
+      };
+      onStateChange(actionInterface);
+    }
+  }
+
   navigateToSalesforceRecord(event) {
     event.stopPropagation();
     const targetPageRef = {
@@ -246,5 +290,54 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
     return this.isSalesforceLink
       ? this.salesforceRecordUrl
       : (this.clickUri ?? this.citation?.uri);
+  }
+
+  get citationClasses() {
+    const baseClasses =
+      'citation slds-m-right_xx-small slds-m-vertical_xx-small slds-is-relative';
+
+    const stateClasses = Array.from(this.actionStates.values())
+      .filter((state) => state.active && state.classPrefix)
+      .map((state) => `is-${state.classPrefix}`)
+      .join(' ');
+
+    return stateClasses ? `${baseClasses} ${stateClasses}` : baseClasses;
+  }
+
+  /**
+   * Gets the dynamic CSS classes for the citation title based on active action states.
+   * @returns {string} CSS class string
+   */
+  get citationTitleClasses() {
+    const baseClasses =
+      'citation__title slds-m-left_x-small slds-truncate slds-has-flexi-truncate';
+
+    // Check if any action is active
+    const hasActiveAction = Array.from(this.actionStates.values())
+      .some((state) => state.active);
+
+    return hasActiveAction ? `${baseClasses} citation__title--active` : baseClasses;
+  }
+
+  /**
+   * Updates the list of action indicators based on current action states.
+   */
+  updateIndicators() {
+    this.actionIndicators = Array.from(this.actionStates.entries())
+      .filter(([, state]) => state.active)
+      .map(([actionType, state]) => ({
+        key: actionType,
+        iconName: state.indicatorIcon,
+        altText: state.indicatorText,
+        classes: `citation__action-indicator citation__${actionType}-indicator slds-m-right_xx-small`,
+      }));
+  }
+
+  /**
+   * Triggers a re-render by updating a tracked property.
+   */
+  requestUpdate() {
+    // Force re-render by updating actionIndicators reference
+    this.actionIndicators = [...this.actionIndicators];
   }
 }
