@@ -57,13 +57,36 @@ describe('atomic-result-number', () => {
     slottedContent,
     result = {},
   }: {
-    props?: Partial<{field: string}>;
+    props?: Partial<{
+      field: string;
+      currency?: string;
+      minimumIntegerDigits?: number;
+      minimumFractionDigits?: number;
+      maximumFractionDigits?: number;
+      minimumSignificantDigits?: number;
+      maximumSignificantDigits?: number;
+      unit?: string;
+      unitDisplay?: 'long' | 'short' | 'narrow';
+    }>;
     slottedContent?: TemplateResult;
     result?: Partial<Result>;
   } = {}) => {
     const {element, atomicResult} =
       await renderInAtomicResult<AtomicResultNumber>({
-        template: html`<atomic-result-number field=${ifDefined(props.field)}
+        template: html`<atomic-result-number
+          field=${ifDefined(props.field)}
+          currency=${ifDefined(props.currency)}
+          minimum-integer-digits=${ifDefined(props.minimumIntegerDigits)}
+          minimum-fraction-digits=${ifDefined(props.minimumFractionDigits)}
+          maximum-fraction-digits=${ifDefined(props.maximumFractionDigits)}
+          minimum-significant-digits=${ifDefined(
+            props.minimumSignificantDigits
+          )}
+          maximum-significant-digits=${ifDefined(
+            props.maximumSignificantDigits
+          )}
+          unit=${ifDefined(props.unit)}
+          unit-display=${ifDefined(props.unitDisplay)}
         >${ifDefined(slottedContent)}</atomic-result-number>`,
         selector: 'atomic-result-number',
         result: result as Result,
@@ -292,5 +315,132 @@ describe('atomic-result-number', () => {
     expect(element!.error.message).toBe(
       'The "atomic-result-number" element must be the child of an "atomic-result" element.'
     );
+  });
+
+  describe('when using format properties', () => {
+    it('should format currency when currency prop is set', async () => {
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
+        1234.56
+      );
+
+      const {element} = await renderResultNumber({
+        props: {field: 'price', currency: 'USD'},
+      });
+
+      expect(element).toHaveTextContent('$1,234.56');
+    });
+
+    it('should format unit when unit prop is set', async () => {
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(16);
+
+      const {element} = await renderResultNumber({
+        props: {field: 'volume', unit: 'liter', unitDisplay: 'long'},
+      });
+
+      expect(element).toHaveTextContent('16 liters');
+    });
+
+    it('should apply minimumFractionDigits', async () => {
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(100);
+
+      const {element} = await renderResultNumber({
+        props: {field: 'price', minimumFractionDigits: 2},
+      });
+
+      expect(element).toHaveTextContent('100.00');
+    });
+
+    it('should apply maximumFractionDigits', async () => {
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
+        1234.567
+      );
+
+      const {element} = await renderResultNumber({
+        props: {field: 'price', maximumFractionDigits: 1},
+      });
+
+      expect(element).toHaveTextContent('1,234.6');
+    });
+
+    it('should prioritize currency prop over slotted formatter', async () => {
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
+        1234.56
+      );
+
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+
+      const {element} = await renderResultNumber({
+        props: {field: 'price', currency: 'EUR'},
+        slottedContent: html`<test-formatter></test-formatter>`,
+      });
+
+      // Should use currency format (EUR), not the slotted formatter
+      expect(element.textContent).toContain('1,234.56');
+      expect(element.textContent).not.toContain('000');
+
+      // Should show deprecation warning
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('atomic-format-* components')
+      );
+
+      consoleWarnSpy.mockRestore();
+    });
+
+    it('should fall back to slotted formatter when no format props are set', async () => {
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
+        1234.56
+      );
+
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+
+      const {element} = await renderResultNumber({
+        props: {field: 'price'},
+        slottedContent: html`<test-formatter></test-formatter>`,
+      });
+
+      // Should use the slotted formatter
+      expect(element).toHaveTextContent('0001234.56000');
+
+      // Should show deprecation warning
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('deprecated')
+      );
+
+      consoleWarnSpy.mockRestore();
+    });
+
+    it('should combine currency with other format options', async () => {
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(100);
+
+      const {element} = await renderResultNumber({
+        props: {
+          field: 'price',
+          currency: 'USD',
+          minimumFractionDigits: 3,
+        },
+      });
+
+      expect(element).toHaveTextContent('$100.000');
+    });
+
+    it('should combine unit with other format options', async () => {
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
+        1234.567
+      );
+
+      const {element} = await renderResultNumber({
+        props: {
+          field: 'distance',
+          unit: 'meter',
+          maximumFractionDigits: 1,
+        },
+      });
+
+      expect(element).toHaveTextContent('1,234.6 m');
+    });
   });
 });
