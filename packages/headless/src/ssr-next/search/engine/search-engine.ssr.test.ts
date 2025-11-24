@@ -36,29 +36,29 @@ describe('Search Engine SSR', () => {
   });
 
   it('should return the expected search engine definition structure', () => {
-    const engineDefinition = defineSearchEngine(definitionOptions);
-    expect(engineDefinition).toHaveProperty('fetchStaticState');
-    expect(engineDefinition).toHaveProperty('hydrateStaticState');
-    expect(engineDefinition).toHaveProperty('getAccessToken');
-    expect(engineDefinition).toHaveProperty('setAccessToken');
+    const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+    expect(searchEngineDefinition).toHaveProperty('fetchStaticState');
+    expect(searchEngineDefinition).toHaveProperty('hydrateStaticState');
+    expect(searchEngineDefinition).toHaveProperty('getAccessToken');
+    expect(searchEngineDefinition).toHaveProperty('setAccessToken');
   });
 
   it('#getAccessToken should return the access token', () => {
-    const engineDefinition = defineSearchEngine(definitionOptions);
-    const {getAccessToken} = engineDefinition;
+    const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+    const {getAccessToken} = searchEngineDefinition;
     expect(getAccessToken()).toBe('some-token');
   });
 
   it('#setAccessToken should update the access token', () => {
-    const engineDefinition = defineSearchEngine(definitionOptions);
-    const {getAccessToken, setAccessToken} = engineDefinition;
+    const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+    const {getAccessToken, setAccessToken} = searchEngineDefinition;
     setAccessToken('new-access-token');
     expect(getAccessToken()).toBe('new-access-token');
   });
 
   it('should always return parameter manager controller as well as the ones provided', async () => {
-    const engineDefinition = defineSearchEngine(definitionOptions);
-    const staticState = await engineDefinition.fetchStaticState({
+    const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+    const staticState = await searchEngineDefinition.fetchStaticState({
       navigatorContext: mockNavigatorContext,
       searchParams: {q: 'test'},
     });
@@ -68,8 +68,8 @@ describe('Search Engine SSR', () => {
   });
 
   it('should fetch static state successfully', async () => {
-    const engineDefinition = defineSearchEngine(definitionOptions);
-    const staticState = await engineDefinition.fetchStaticState({
+    const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+    const staticState = await searchEngineDefinition.fetchStaticState({
       navigatorContext: mockNavigatorContext,
       searchParams: {q: 'test query'},
     });
@@ -78,14 +78,14 @@ describe('Search Engine SSR', () => {
   });
 
   it('should hydrate static state successfully', async () => {
-    const engineDefinition = defineSearchEngine(definitionOptions);
-    const staticState = await engineDefinition.fetchStaticState({
+    const {searchEngineDefinition} = defineSearchEngine(definitionOptions);
+    const staticState = await searchEngineDefinition.fetchStaticState({
       navigatorContext: mockNavigatorContext,
       searchParams: {q: 'test'},
     });
 
     const hydratedState =
-      await engineDefinition.hydrateStaticState(staticState);
+      await searchEngineDefinition.hydrateStaticState(staticState);
     expect(hydratedState).toBeTruthy();
     expect(hydratedState.engine).toBeDefined();
     expect(hydratedState.controllers).toBeDefined();

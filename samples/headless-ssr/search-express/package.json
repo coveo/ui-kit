@@ -24,7 +24,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@coveo/headless": "3.33.0",
+    "@coveo/headless": "workspace:*",
     "express": "^4.18.2"
   },
   "devDependencies": {
