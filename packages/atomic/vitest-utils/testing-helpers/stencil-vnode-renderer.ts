@@ -13,7 +13,8 @@ import type {VNode} from '@stencil/core';
  * text nodes, elements, attributes, children, fragments, and ref callbacks.
  *
  * **Limitations:**
- * - Does not handle event listeners (use DOM APIs directly in tests)
+ * - Only handles event listeners attached via on* props (e.g., onClick, onChange).
+ * - Does not handle custom event dispatching, event modifiers, or capture phase listeners.
  * - Does not handle property vs attribute distinction (uses setAttribute)
  * - Does not handle slot projection or shadow DOM
  * - Does not handle all VNode edge cases that Stencil's internal renderer handles
@@ -73,6 +74,17 @@ export async function renderStencilVNode(
         element.className = value as string;
       } else if (key === 'ref') {
         refCallback = value as (el: Element) => void | Promise<void>;
+      } else if (
+        key.startsWith('on') &&
+        typeof value === 'function' &&
+        key.length > 2
+      ) {
+        const eventName = key.slice(2).toLowerCase();
+        element.addEventListener(eventName, value as EventListener);
+      } else if (typeof value === 'boolean') {
+        if (value) {
+          element.setAttribute(key, '');
+        }
       } else if (value !== undefined && value !== null) {
         element.setAttribute(key, String(value));
       }
