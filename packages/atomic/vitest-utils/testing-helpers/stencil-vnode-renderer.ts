@@ -21,7 +21,7 @@ import type {VNode} from '@stencil/core';
  *
  * This takes the JSX output from a Stencil functional component and renders it in the DOM.
  *
- * @param vnode - The VNode returned by a Stencil functional component (must not be null or undefined)
+ * @param vnode - The VNode or VNode[] returned by a Stencil functional component
  * @param container - The container element to render the VNode into
  * @returns The created element (not the container). If operating on a fragment or text node, returns null.
  *
@@ -35,9 +35,21 @@ import type {VNode} from '@stencil/core';
  * ```
  */
 export async function renderStencilVNode(
-  vnode: NonNullable<VNode>,
+  vnode: VNode | VNode[],
   container: HTMLElement
 ): Promise<void> {
+  if (!vnode) {
+    return;
+  }
+
+  // Handle arrays of children (common when components return fragments)
+  if (Array.isArray(vnode)) {
+    for (const child of vnode) {
+      await renderStencilVNode(child, container);
+    }
+    return;
+  }
+
   const doc = container.ownerDocument;
 
   // Handle text nodes
