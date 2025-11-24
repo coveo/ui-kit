@@ -1,12 +1,11 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
-import {LitElement} from 'lit';
+import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
-import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
-import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {mapProperty} from '@/src/utils/props-utils';
@@ -42,7 +41,7 @@ export class AtomicResultLocalizedText
    * The field from which to extract the target string and the variable used to map it to the target i18n parameter.
    * For example, the following configuration extracts the value of `author` from a result, and assigns it to the i18n parameter `name`: `field-author="name"`.
    */
-  @mapProperty()
+  @mapProperty({attributePrefix: 'field'})
   @property({type: Object})
   public field: Record<string, string> = {};
 
@@ -71,13 +70,18 @@ export class AtomicResultLocalizedText
     }
   }
 
-  @bindingGuard()
-  @errorGuard()
   render() {
-    return this.bindings.i18n.t(this.localeKey, {
-      ...this.parseFieldValues(),
-      ...this.parseFieldCount(),
-    });
+    return when(
+      this.bindings && this.result,
+      () => {
+        const localizedText = this.bindings.i18n.t(this.localeKey, {
+          ...this.parseFieldValues(),
+          ...this.parseFieldCount(),
+        });
+        return localizedText;
+      },
+      () => nothing
+    );
   }
 
   private parseFieldValues() {
