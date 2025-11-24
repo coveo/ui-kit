@@ -1,3 +1,33 @@
+/**
+ * FoldedItemListContextController - A Lit reactive controller for managing folded item list context
+ *
+ * This controller replaces the Stencil-based `FoldedItemListContext` and `FoldedItemListStateContext` decorators.
+ * It handles fetching folded item list controllers and/or state from parent components via custom events.
+ *
+ * @example
+ * ```typescript
+ * import {FoldedItemListContextController} from '@/src/components/common/item-list/context/folded-item-list-context-controller';
+ * import type {FoldedResultList, FoldedResultListState} from '@coveo/headless';
+ *
+ * class MyComponent extends LitElement {
+ *   private foldedItemListContext = new FoldedItemListContextController<
+ *     FoldedResultList,
+ *     FoldedResultListState
+ *   >(this);
+ *
+ *   render() {
+ *     const controller = this.foldedItemListContext.foldedItemList;
+ *     const state = this.foldedItemListContext.foldedItemListState;
+ *     // Use controller methods and state as needed
+ *   }
+ * }
+ * ```
+ *
+ * The controller supports three usage patterns:
+ * 1. Controller only - parent provides just the FoldedResultList controller
+ * 2. State with subscription - parent provides a subscribable state object
+ * 3. Combined - parent provides both controller and state together
+ */
 import type {ReactiveController, ReactiveControllerHost} from 'lit';
 import type {LitElementWithError} from '@/src/decorators/types';
 import {buildCustomEvent} from '@/src/utils/event-utils';
