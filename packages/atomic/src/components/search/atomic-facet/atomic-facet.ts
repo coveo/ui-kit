@@ -1,3 +1,4 @@
+import {ArrayValue, NumberValue, Schema, StringValue} from '@coveo/bueno';
 import {
   buildFacet,
   buildFacetConditionsManager,
@@ -51,6 +52,7 @@ import {renderFacetValuesGroup} from '../../common/facets/facet-values-group/fac
 import {initializePopover} from '../../common/facets/popover/popover-type';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import '../../common/atomic-facet-placeholder/atomic-facet-placeholder';
+import {arrayConverter} from '@/src/converters/array-converter';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindings} from '@/src/decorators/bindings';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
@@ -59,6 +61,7 @@ import facetSearchStyles from '../../common/facets/facet-search/facet-search.tw.
 import facetValueBoxStyles from '../../common/facets/facet-value-box/facet-value-box.tw.css';
 import facetValueCheckboxStyles from '../../common/facets/facet-value-checkbox/facet-value-checkbox.tw.css';
 import facetValueExcludeStyles from '../../common/facets/facet-value-exclude/facet-value-exclude.tw.css';
+import {ValidatePropsController} from '../../common/validate-props-controller/validate-props-controller';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
@@ -156,9 +159,10 @@ export class AtomicFacet
   @property({
     type: Array,
     attribute: 'tabs-included',
+    converter: arrayConverter,
     reflect: true,
   })
-  public tabsIncluded: string[] | string = [];
+  public tabsIncluded: string[] = [];
 
   /**
    * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.
@@ -172,9 +176,10 @@ export class AtomicFacet
   @property({
     type: Array,
     attribute: 'tabs-excluded',
+    converter: arrayConverter,
     reflect: true,
   })
-  public tabsExcluded: string[] | string = [];
+  public tabsExcluded: string[] = [];
 
   /**
    * The number of values to request for this facet.
@@ -227,7 +232,7 @@ export class AtomicFacet
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
    */
-  @property({type: Number, attribute: 'heading-level', reflect: true})
+  @property({type: Number, attribute: 'heading-level'})
   public headingLevel = 0;
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
@@ -338,6 +343,72 @@ export class AtomicFacet
   private headerFocus?: FocusTargetController;
   private facetConditionsManager?: FacetConditionsManager;
   private facetSearchAriaLive?: AriaLiveRegionController;
+
+  constructor() {
+    super();
+    new ValidatePropsController(
+      this,
+      () => ({
+        field: this.field,
+        numberOfValues: this.numberOfValues,
+        headingLevel: this.headingLevel,
+        injectionDepth: this.injectionDepth,
+        sortCriteria: this.sortCriteria,
+        resultsMustMatch: this.resultsMustMatch,
+        displayValuesAs: this.displayValuesAs,
+        allowedValues: Array.isArray(this.allowedValues)
+          ? this.allowedValues
+          : [],
+        customSort: Array.isArray(this.customSort) ? this.customSort : [],
+        tabsExcluded: this.tabsExcluded,
+        tabsIncluded: this.tabsIncluded,
+      }),
+      new Schema({
+        field: new StringValue({required: true, emptyAllowed: false}),
+        numberOfValues: new NumberValue({min: 1, required: false}),
+        headingLevel: new NumberValue({min: 0, max: 6, required: false}),
+        injectionDepth: new NumberValue({min: 0, required: false}),
+        sortCriteria: new StringValue({
+          constrainTo: [
+            'score',
+            'alphanumeric',
+            'alphanumericDescending',
+            'occurrences',
+            'alphanumericNatural',
+            'alphanumericNaturalDescending',
+            'automatic',
+          ],
+          required: false,
+        }),
+        resultsMustMatch: new StringValue({
+          constrainTo: ['atLeastOneValue', 'allValues'],
+          required: false,
+        }),
+        displayValuesAs: new StringValue({
+          constrainTo: ['checkbox', 'link', 'box'],
+          required: false,
+        }),
+        allowedValues: new ArrayValue({
+          each: new StringValue({emptyAllowed: false}),
+          max: 25,
+          required: false,
+        }),
+        customSort: new ArrayValue({
+          each: new StringValue({emptyAllowed: false}),
+          max: 25,
+          required: false,
+        }),
+        tabsExcluded: new ArrayValue({
+          each: new StringValue({emptyAllowed: false}),
+          required: false,
+        }),
+        tabsIncluded: new ArrayValue({
+          each: new StringValue({emptyAllowed: false}),
+          required: false,
+        }),
+      })
+    );
+  }
 
   public initialize() {
     if (
