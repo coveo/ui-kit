@@ -1,0 +1,14 @@
+@reference '@/src/utils/coveo.tw.css';
+
+:host > ul {
+  @apply flex list-none m-0 p-0;
+
+  li {
+    @apply inline-block;
+  }
+}
+
+.separator::before {
+  @apply inline;
+  content: ',\00a0';
+}
