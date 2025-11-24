@@ -56,7 +56,7 @@ const headlessBundles = {
  * @returns {Promise<Bueno>}
  */
 const getBueno = (element) => {
-  if (!!window.Bueno) {
+  if (window.Bueno) {
     return Promise.resolve(window.Bueno);
   }
   return loadScript(element, BuenoPath + '/browser/bueno.js');
