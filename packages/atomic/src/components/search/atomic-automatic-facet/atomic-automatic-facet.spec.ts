@@ -168,16 +168,6 @@ describe('atomic-automatic-facet', () => {
     );
   });
 
-  it('should show clear button when values are selected', async () => {
-    const {element, parts} = await renderAutomaticFacet({
-      state: {
-        values: [{value: 'Document', numberOfResults: 45, state: 'selected'}],
-      },
-    });
-
-    expect(parts(element).clearButton).not.toBeNull();
-  });
-
   it('should not show clear button when no values are selected', async () => {
     const {element, parts} = await renderAutomaticFacet();
     expect(parts(element).clearButton).toBeNull();
@@ -231,22 +221,28 @@ describe('atomic-automatic-facet', () => {
       expect(parts(element).valueCounts?.length).toBe(2);
     });
 
-    it('should expose clear-button part when values are selected', async () => {
-      const {element, parts} = await renderAutomaticFacet({
-        state: {
-          values: [{value: 'Document', numberOfResults: 45, state: 'selected'}],
-        },
+    describe('when values are selected', () => {
+      it('should expose clear-button part', async () => {
+        const {element, parts} = await renderAutomaticFacet({
+          state: {
+            values: [
+              {value: 'Document', numberOfResults: 45, state: 'selected'},
+            ],
+          },
+        });
+        expect(parts(element).clearButton).not.toBeNull();
       });
-      expect(parts(element).clearButton).not.toBeNull();
-    });
 
-    it('should expose clear-button-icon part when values are selected', async () => {
-      const {element, parts} = await renderAutomaticFacet({
-        state: {
-          values: [{value: 'Document', numberOfResults: 45, state: 'selected'}],
-        },
+      it('should expose clear-button-icon part', async () => {
+        const {element, parts} = await renderAutomaticFacet({
+          state: {
+            values: [
+              {value: 'Document', numberOfResults: 45, state: 'selected'},
+            ],
+          },
+        });
+        expect(parts(element).clearButtonIcon).not.toBeNull();
       });
-      expect(parts(element).clearButtonIcon).not.toBeNull();
     });
   });
 });
