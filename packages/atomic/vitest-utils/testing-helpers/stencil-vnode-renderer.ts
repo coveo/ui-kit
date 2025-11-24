@@ -86,6 +86,8 @@ export async function renderStencilVNode(
         element.className = value as string;
       } else if (key === 'ref') {
         refCallback = value as (el: Element) => void | Promise<void>;
+      } else if (key === 'htmlFor') {
+        element.setAttribute('for', String(value));
       } else if (
         key.startsWith('on') &&
         typeof value === 'function' &&
