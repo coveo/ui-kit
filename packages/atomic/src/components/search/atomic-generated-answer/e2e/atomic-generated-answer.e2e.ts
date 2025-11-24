@@ -71,7 +71,10 @@ test.describe('atomic-generated-answer', () => {
 
       for (const expectedItem of expectedList) {
         const foundItem = listItems.find((item) => item.includes(expectedItem));
-        expect(foundItem).toBeTruthy();
+        expect(
+          foundItem,
+          `Expected to find "${expectedItem}" in list items, but it was not found.`
+        ).toBeTruthy();
       }
     });
 
