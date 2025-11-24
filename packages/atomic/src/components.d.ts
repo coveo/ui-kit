@@ -252,7 +252,10 @@ export namespace Components {
         "queryCorrectionMode": 'legacy' | 'next';
     }
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
+     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
+     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
+     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
+     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
      */
     interface AtomicFacetManager {
         /**
@@ -2174,7 +2177,10 @@ declare global {
         new (): HTMLAtomicDidYouMeanElement;
     };
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
+     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
+     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
+     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
+     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
      */
     interface HTMLAtomicFacetManagerElement extends Components.AtomicFacetManager, HTMLStencilElement {
     }
@@ -3519,7 +3525,10 @@ declare namespace LocalJSX {
         "queryCorrectionMode"?: 'legacy' | 'next';
     }
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
+     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
+     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
+     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
+     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
      */
     interface AtomicFacetManager {
         /**
@@ -5425,7 +5434,10 @@ declare module "@stencil/core" {
              */
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             /**
-             * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
+             * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
+             * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
+             * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
+             * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
              */
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             /**
