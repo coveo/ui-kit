@@ -5,30 +5,24 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
-import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-import { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
-export { CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
-export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-export { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 export { i18n } from "i18next";
@@ -1559,34 +1553,6 @@ export namespace Components {
         "hrefTemplate"?: string;
     }
     /**
-     * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
-     * Given this i18n configuration:
-     * ```
-     * searchInterface.i18n.addResourceBundle('en', 'translation', {
-     *    classic_book_advert: 'Classic book from {{name}}',
-     * });
-     * ```
-     * The component could be configured in such a way to replace `{{name}}` with the `author` field value from the result item:
-     * ```
-     * <atomic-result-localized-text locale-key="classic_book_advert" field-author="name"></atomic-result-localized-text>
-     * ```
-     * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
-     */
-    interface AtomicResultLocalizedText {
-        /**
-          * The field value to dynamically evaluate.
-         */
-        "field": Record<string, string>;
-        /**
-          * The numerical field value used to determine whether to use the singular or plural value of a translation.
-         */
-        "fieldCount"?: string;
-        /**
-          * The i18n translation key.
-         */
-        "localeKey": string;
-    }
-    /**
      * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
      */
     interface AtomicResultMultiValueText {
@@ -2843,26 +2809,6 @@ declare global {
         new (): HTMLAtomicResultLinkElement;
     };
     /**
-     * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
-     * Given this i18n configuration:
-     * ```
-     * searchInterface.i18n.addResourceBundle('en', 'translation', {
-     *    classic_book_advert: 'Classic book from {{name}}',
-     * });
-     * ```
-     * The component could be configured in such a way to replace `{{name}}` with the `author` field value from the result item:
-     * ```
-     * <atomic-result-localized-text locale-key="classic_book_advert" field-author="name"></atomic-result-localized-text>
-     * ```
-     * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
-     */
-    interface HTMLAtomicResultLocalizedTextElement extends Components.AtomicResultLocalizedText, HTMLStencilElement {
-    }
-    var HTMLAtomicResultLocalizedTextElement: {
-        prototype: HTMLAtomicResultLocalizedTextElement;
-        new (): HTMLAtomicResultLocalizedTextElement;
-    };
-    /**
      * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
      */
     interface HTMLAtomicResultMultiValueTextElement extends Components.AtomicResultMultiValueText, HTMLStencilElement {
@@ -3271,7 +3217,6 @@ declare global {
         "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
-        "atomic-result-localized-text": HTMLAtomicResultLocalizedTextElement;
         "atomic-result-multi-value-text": HTMLAtomicResultMultiValueTextElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
@@ -4778,34 +4723,6 @@ declare namespace LocalJSX {
         "hrefTemplate"?: string;
     }
     /**
-     * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
-     * Given this i18n configuration:
-     * ```
-     * searchInterface.i18n.addResourceBundle('en', 'translation', {
-     *    classic_book_advert: 'Classic book from {{name}}',
-     * });
-     * ```
-     * The component could be configured in such a way to replace `{{name}}` with the `author` field value from the result item:
-     * ```
-     * <atomic-result-localized-text locale-key="classic_book_advert" field-author="name"></atomic-result-localized-text>
-     * ```
-     * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
-     */
-    interface AtomicResultLocalizedText {
-        /**
-          * The field value to dynamically evaluate.
-         */
-        "field"?: Record<string, string>;
-        /**
-          * The numerical field value used to determine whether to use the singular or plural value of a translation.
-         */
-        "fieldCount"?: string;
-        /**
-          * The i18n translation key.
-         */
-        "localeKey": string;
-    }
-    /**
      * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
      */
     interface AtomicResultMultiValueText {
@@ -5356,7 +5273,6 @@ declare namespace LocalJSX {
         "atomic-result-icon": AtomicResultIcon;
         "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
-        "atomic-result-localized-text": AtomicResultLocalizedText;
         "atomic-result-multi-value-text": AtomicResultMultiValueText;
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
@@ -5621,21 +5537,6 @@ declare module "@stencil/core" {
              * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
              */
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
-            /**
-             * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
-             * Given this i18n configuration:
-             * ```
-             * searchInterface.i18n.addResourceBundle('en', 'translation', {
-             *    classic_book_advert: 'Classic book from {{name}}',
-             * });
-             * ```
-             * The component could be configured in such a way to replace `{{name}}` with the `author` field value from the result item:
-             * ```
-             * <atomic-result-localized-text locale-key="classic_book_advert" field-author="name"></atomic-result-localized-text>
-             * ```
-             * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
-             */
-            "atomic-result-localized-text": LocalJSX.AtomicResultLocalizedText & JSXBase.HTMLAttributes<HTMLAtomicResultLocalizedTextElement>;
             /**
              * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
              */
