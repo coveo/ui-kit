@@ -1,4 +1,5 @@
 // Auto-generated file
+export {AtomicAutomaticFacet} from './atomic-automatic-facet/atomic-automatic-facet.js';
 export {AtomicExternal} from './atomic-external/atomic-external.js';
 export {AtomicFacet} from './atomic-facet/atomic-facet.js';
 export {AtomicFieldCondition} from './atomic-field-condition/atomic-field-condition.js';
