@@ -9,127 +9,146 @@ import {
 @customElement('test-element')
 class TestElement extends LitElement {
   @state() error: Error | null = null;
+
   requestUpdate = vi.fn();
 }
 
-describe('#FoldedItemListContextController', () => {
-  let mockElement: TestElement;
-  let controller: FoldedItemListContextController;
-
+describe('folded-item-list-context', () => {
   beforeEach(() => {
-    mockElement = new TestElement();
-    vi.spyOn(mockElement, 'addController');
-    vi.spyOn(mockElement, 'requestUpdate');
-    vi.spyOn(mockElement, 'dispatchEvent');
-
-    controller = new FoldedItemListContextController(mockElement);
+    vi.clearAllMocks();
   });
 
-  it('should register itself as a controller with the host', () => {
-    expect(mockElement.addController).toHaveBeenCalledWith(controller);
-  });
+  describe('#MissingParentError', () => {
+    it('should create error with correct message when provided element name', () => {
+      const error = new MissingParentError('child-element');
 
-  describe('initial state', () => {
-    it('should return null for foldedItemList initially', () => {
-      expect(controller.foldedItemList).toBeNull();
-    });
-
-    it('should return null for error initially', () => {
-      expect(controller.error).toBeNull();
-    });
-
-    it('should return false for hasError initially', () => {
-      expect(controller.hasError).toBe(false);
-    });
-  });
-
-  describe('#hostConnected', () => {
-    it('should dispatch the resolveFoldedResultList event', () => {
-      controller.hostConnected();
-
-      expect(mockElement.dispatchEvent).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: 'atomic/resolveFoldedResultList',
-        })
+      expect(error.message).toBe(
+        'The "child-element" element must be the child of an "atomic-folded-result-list" or "atomic-insight-folded-result-list" element.'
       );
     });
+  });
 
-    describe('when parent responds with folded item list', () => {
-      it('should set the folded item list', () => {
+  describe('#FoldedItemListContextController', () => {
+    let mockElement: TestElement;
+    let controller: FoldedItemListContextController;
+
+    beforeEach(() => {
+      mockElement = new TestElement();
+      vi.spyOn(mockElement, 'addController');
+      vi.spyOn(mockElement, 'dispatchEvent');
+    });
+
+    it('should register itself as a controller with the host', () => {
+      controller = new FoldedItemListContextController(mockElement);
+
+      expect(mockElement.addController).toHaveBeenCalledWith(controller);
+    });
+
+    describe('when controller is connected', () => {
+      beforeEach(() => {
+        controller = new FoldedItemListContextController(mockElement);
+      });
+
+      it('should dispatch the resolveFoldedResultList event in #hostConnected', () => {
+        vi.spyOn(mockElement, 'dispatchEvent').mockReturnValue(false);
+
+        controller.hostConnected();
+
+        expect(mockElement.dispatchEvent).toHaveBeenCalledWith(
+          expect.objectContaining({
+            type: 'atomic/resolveFoldedResultList',
+          })
+        );
+      });
+
+      describe('when event is not canceled', () => {
+        beforeEach(() => {
+          vi.spyOn(mockElement, 'dispatchEvent').mockImplementation((event) => {
+            const customEvent = event as CustomEvent;
+            const handler = customEvent.detail;
+            if (typeof handler === 'function') {
+              handler({
+                logShowMoreFoldedResults: vi.fn(),
+                logShowLessFoldedResults: vi.fn(),
+              });
+            }
+            return false;
+          });
+        });
+
+        it('should set folded item list data and clear error', () => {
+          controller.hostConnected();
+
+          expect(controller.foldedItemList).toEqual({
+            logShowMoreFoldedResults: expect.any(Function),
+            logShowLessFoldedResults: expect.any(Function),
+          });
+          expect(controller.error).toBeNull();
+          expect(controller.hasError).toBe(false);
+          expect(mockElement.error).toBeNull();
+          expect(mockElement.requestUpdate).toHaveBeenCalled();
+        });
+      });
+
+      describe('when event is canceled', () => {
+        beforeEach(() => {
+          vi.spyOn(mockElement, 'dispatchEvent').mockReturnValue(true);
+          Object.defineProperty(mockElement, 'nodeName', {
+            value: 'TEST-ELEMENT',
+            configurable: true,
+          });
+        });
+
+        it('should set error and clear folded item list data', () => {
+          controller.hostConnected();
+
+          expect(controller.foldedItemList).toBeNull();
+          expect(controller.error).toBeInstanceOf(MissingParentError);
+          expect(controller.hasError).toBe(true);
+          expect(controller.error?.message).toBe(
+            'The "test-element" element must be the child of an "atomic-folded-result-list" or "atomic-insight-folded-result-list" element.'
+          );
+          expect(mockElement.error).toBe(controller.error);
+          expect(mockElement.requestUpdate).toHaveBeenCalled();
+        });
+      });
+    });
+
+    describe('#foldedItemList getter', () => {
+      beforeEach(() => {
+        controller = new FoldedItemListContextController(mockElement);
+      });
+
+      it('should return null when there is an error', () => {
+        vi.spyOn(mockElement, 'dispatchEvent').mockReturnValue(true);
+        Object.defineProperty(mockElement, 'nodeName', {
+          value: 'TEST-ELEMENT',
+          configurable: true,
+        });
+
+        controller.hostConnected();
+
+        expect(controller.foldedItemList).toBeNull();
+      });
+
+      it('should return folded item list data when there is no error', () => {
         const mockFoldedItemList = {
           logShowMoreFoldedResults: vi.fn(),
           logShowLessFoldedResults: vi.fn(),
         };
 
-        vi.mocked(mockElement.dispatchEvent).mockImplementation((event) => {
+        vi.spyOn(mockElement, 'dispatchEvent').mockImplementation((event) => {
           const customEvent = event as CustomEvent;
-          customEvent.detail(mockFoldedItemList);
-          return false; // Event was not canceled
-        });
-
-        controller.hostConnected();
-
-        expect(controller.foldedItemList).toBe(mockFoldedItemList);
-        expect(controller.error).toBeNull();
-        expect(controller.hasError).toBe(false);
-        expect(mockElement.error).toBeNull();
-        expect(mockElement.requestUpdate).toHaveBeenCalled();
-      });
-    });
-
-    describe('when no parent responds', () => {
-      it('should set error state', () => {
-        vi.mocked(mockElement.dispatchEvent).mockReturnValue(true); // Event was canceled
-
-        controller.hostConnected();
-
-        expect(controller.foldedItemList).toBeNull();
-        expect(controller.error).toBeInstanceOf(MissingParentError);
-        expect(controller.hasError).toBe(true);
-        expect(mockElement.error).toBeInstanceOf(MissingParentError);
-        expect(mockElement.requestUpdate).toHaveBeenCalled();
-      });
-
-      it('should include element name in error message', () => {
-        vi.mocked(mockElement.dispatchEvent).mockReturnValue(true);
-
-        controller.hostConnected();
-
-        expect(controller.error?.message).toContain('test-element');
-        expect(controller.error?.message).toContain(
-          'atomic-folded-result-list'
-        );
-        expect(controller.error?.message).toContain(
-          'atomic-insight-folded-result-list'
-        );
-      });
-    });
-
-    describe('when error is cleared after successful connection', () => {
-      it('should clear previous error state', () => {
-        const mockFoldedItemList = {
-          logShowMoreFoldedResults: vi.fn(),
-        };
-
-        // First connection fails
-        vi.mocked(mockElement.dispatchEvent).mockReturnValue(true);
-        controller.hostConnected();
-        expect(controller.hasError).toBe(true);
-
-        // Second connection succeeds
-        vi.mocked(mockElement.dispatchEvent).mockImplementation((event) => {
-          const customEvent = event as CustomEvent;
-          customEvent.detail(mockFoldedItemList);
+          const handler = customEvent.detail;
+          if (typeof handler === 'function') {
+            handler(mockFoldedItemList);
+          }
           return false;
         });
 
-        vi.mocked(mockElement.requestUpdate).mockClear();
         controller.hostConnected();
 
         expect(controller.foldedItemList).toBe(mockFoldedItemList);
-        expect(controller.error).toBeNull();
-        expect(controller.hasError).toBe(false);
-        expect(mockElement.error).toBeNull();
       });
     });
   });
