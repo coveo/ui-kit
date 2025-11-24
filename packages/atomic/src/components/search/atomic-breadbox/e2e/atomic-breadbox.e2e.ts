@@ -39,21 +39,17 @@ test.describe('atomic-breadbox', () => {
     await breadbox.hydrated.waitFor({state: 'visible'});
     await breadbox.page.waitForTimeout(3000);
 
-    // Select a facet value
     const objectTypeFacet = breadbox.getFacetValue('objecttype').first();
     await objectTypeFacet.waitFor({state: 'visible', timeout: 10000});
     await objectTypeFacet.click();
 
-    // Wait for breadcrumb to appear
     await breadbox
       .getBreadcrumbButtons()
       .first()
       .waitFor({state: 'visible', timeout: 5000});
 
-    // Click clear all
     await breadbox.getClearAllButton().click();
 
-    // Verify breadcrumbs are cleared
     const breadcrumbs = breadbox.getBreadcrumbButtons();
     await expect(breadcrumbs).toHaveCount(0);
   });
@@ -65,7 +61,6 @@ test.describe('atomic-breadbox', () => {
     await breadbox.hydrated.waitFor({state: 'visible'});
     await breadbox.page.waitForTimeout(3000);
 
-    // Select multiple facets to create many breadcrumbs
     const objectTypeFacets = breadbox.getFacetValue('objecttype');
     await objectTypeFacets.first().waitFor({state: 'visible', timeout: 10000});
 
@@ -74,7 +69,6 @@ test.describe('atomic-breadbox', () => {
     if (objectTypeCount > 1) await objectTypeFacets.nth(1).click();
     if (objectTypeCount > 2) await objectTypeFacets.nth(2).click();
 
-    // Reduce viewport to trigger show more button
     await page.setViewportSize({width: 320, height: 480});
     await breadbox.page.waitForTimeout(500);
 
@@ -82,7 +76,6 @@ test.describe('atomic-breadbox', () => {
     if (await showMoreButton.isVisible()) {
       await expect(showMoreButton).toContainText(/\+ \d+/);
 
-      // Test expand/collapse cycle
       await showMoreButton.click();
       await expect(breadbox.getShowLessButton()).toBeVisible();
 
