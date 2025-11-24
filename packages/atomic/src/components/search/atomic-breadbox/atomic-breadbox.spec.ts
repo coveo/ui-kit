@@ -102,7 +102,7 @@ describe('atomic-breadbox', () => {
     };
   };
 
-  describe('component added to the DOM', () => {
+  describe('constructor', () => {
     it('should not set error when pathLimit is valid', async () => {
       const {element} = await renderBreadbox({
         pathLimit: 3,
@@ -138,7 +138,7 @@ describe('atomic-breadbox', () => {
     });
   });
 
-  describe('#initialize', () => {
+  describe('initialize', () => {
     it('should set breadcrumbManager public property', async () => {
       const {element} = await renderBreadbox();
 
@@ -200,7 +200,7 @@ describe('atomic-breadbox', () => {
     );
   });
 
-  describe('#render', () => {
+  describe('render', () => {
     it('should render nothing when there are no breadcrumbs', async () => {
       const {element} = await renderBreadbox({
         breadcrumbState: {
@@ -505,7 +505,7 @@ describe('atomic-breadbox', () => {
       .toHaveAttribute('aria-label', 'Clear All Filters');
   });
 
-  describe('#disconnectedCallback', () => {
+  describe('disconnectedCallback', () => {
     it('should disconnect the resize observer when disconnected', async () => {
       const {element} = await renderBreadbox({
         breadcrumbState: {
@@ -530,6 +530,191 @@ describe('atomic-breadbox', () => {
       const disconnectSpy = vi.spyOn(ResizeObserver.prototype, 'disconnect');
       element.disconnectedCallback();
       expect(disconnectSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('user interactions', () => {
+    it('should call individual breadcrumb deselect when clicked', async () => {
+      const mockedDeselect = vi.fn();
+      await renderBreadbox({
+        breadcrumbState: {
+          facetBreadcrumbs: [
+            {
+              facetId: 'test-facet',
+              field: 'test-field',
+              values: [
+                {
+                  value: {
+                    value: 'test-value',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: mockedDeselect,
+                },
+              ],
+            },
+          ],
+        },
+      });
+
+      const breadcrumbButton = page.getByRole('button', {
+        name: /test-value/i,
+      });
+      await userEvent.click(breadcrumbButton);
+
+      expect(mockedDeselect).toHaveBeenCalled();
+    });
+
+    it('should handle exclusion breadcrumbs', async () => {
+      const mockedDeselectExclusion = vi.fn();
+      const {element} = await renderBreadbox({
+        breadcrumbState: {
+          facetBreadcrumbs: [
+            {
+              facetId: 'test-facet',
+              field: 'test-field',
+              values: [
+                {
+                  value: {
+                    value: 'excluded-value',
+                    state: 'excluded',
+                    numberOfResults: 1,
+                  },
+                  deselect: mockedDeselectExclusion,
+                },
+              ],
+            },
+          ],
+        },
+      });
+
+      expect(
+        element.shadowRoot?.querySelector('[part="container"]')
+      ).not.toBeNull();
+    });
+  });
+
+  describe('accessibility', () => {
+    it('should have proper ARIA attributes on breadcrumb buttons', async () => {
+      await renderBreadbox({
+        breadcrumbState: {
+          facetBreadcrumbs: [
+            {
+              facetId: 'test-facet',
+              field: 'test-field',
+              values: [
+                {
+                  value: {
+                    value: 'test-value',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+        },
+      });
+
+      const breadcrumbButton = page.getByRole('button', {
+        name: /test-value/i,
+      });
+      await expect.element(breadcrumbButton).toHaveRole('button');
+      await expect.element(breadcrumbButton).toHaveAttribute('aria-label');
+    });
+
+    it('should have proper ARIA attributes on clear all button', async () => {
+      const {clearAll} = await renderBreadbox({
+        breadcrumbState: {
+          facetBreadcrumbs: [
+            {
+              facetId: 'test-facet',
+              field: 'test-field',
+              values: [
+                {
+                  value: {
+                    value: 'test-value',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+        },
+      });
+
+      await expect.element(clearAll()).toHaveRole('button');
+      await expect
+        .element(clearAll())
+        .toHaveAttribute('aria-label', 'Clear All Filters');
+    });
+  });
+
+  describe('updated', () => {
+    it('should handle rendering with many breadcrumbs', async () => {
+      const {element} = await renderBreadbox({
+        breadcrumbState: {
+          facetBreadcrumbs: [
+            {
+              facetId: 'test-facet',
+              field: 'test-field',
+              values: Array.from({length: 10}, (_, i) => ({
+                value: {
+                  value: `test-value-${i}`,
+                  state: 'selected' as const,
+                  numberOfResults: 1,
+                },
+                deselect: vi.fn(),
+              })),
+            },
+          ],
+        },
+      });
+
+      expect(
+        element.shadowRoot?.querySelector('[part="container"]')
+      ).not.toBeNull();
+
+      const breadcrumbButtons = element.shadowRoot?.querySelectorAll(
+        '[part="breadcrumb-button"]'
+      );
+      expect(breadcrumbButtons?.length).toBeGreaterThan(0);
+
+      expect(element.isConnected).toBe(true);
+    });
+
+    it('should handle when ResizeObserver is not available during initialization', async () => {
+      const originalResizeObserver = window.ResizeObserver;
+      // @ts-expect-error - Intentionally setting to undefined for testing
+      window.ResizeObserver = undefined;
+
+      const {element} = await renderBreadbox({
+        breadcrumbState: {
+          facetBreadcrumbs: [
+            {
+              facetId: 'test-facet',
+              field: 'test-field',
+              values: [
+                {
+                  value: {
+                    value: 'test-value',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+        },
+      });
+
+      expect(element).toBeDefined();
+
+      window.ResizeObserver = originalResizeObserver;
     });
   });
 });
