@@ -5,7 +5,7 @@ import {
   type Result,
   ResultTemplatesHelpers,
 } from '@coveo/headless';
-import {html, LitElement, nothing} from 'lit';
+import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
@@ -18,7 +18,6 @@ import {withTailwindStyles} from '@/src/decorators/tailwind-styles';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 import {titleToKebab} from '@/src/utils/utils';
-import styles from './atomic-result-multi-value-text.tw.css?inline';
 
 /**
  * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
@@ -35,7 +34,25 @@ export class AtomicResultMultiValueText
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  static styles = [styles];
+  static styles: CSSResultGroup = [
+    css`
+      :host > ul {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+          display: inline-block;
+        }
+      }
+
+      .separator::before {
+        display: inline;
+        content: ',\\00a0';
+      }
+    `,
+  ];
 
   public breadcrumbManager!: BreadcrumbManager;
 
