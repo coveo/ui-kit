@@ -1918,24 +1918,6 @@ export namespace Components {
         "side": 'left' | 'right';
         "suggestion": SearchBoxSuggestionElement;
     }
-    /**
-     * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
-     * It must be used as a child of the `atomic-tab-manager` component to function correctly.
-     */
-    interface AtomicTab {
-        /**
-          * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
-         */
-        "expression": string;
-        /**
-          * The label to display on the tab.
-         */
-        "label": string;
-        /**
-          * The internal name of the atomic tab.
-         */
-        "name": string;
-    }
     interface AtomicTabBar {
     }
     interface AtomicTabButton {
@@ -3152,16 +3134,6 @@ declare global {
         prototype: HTMLAtomicSuggestionRendererElement;
         new (): HTMLAtomicSuggestionRendererElement;
     };
-    /**
-     * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
-     * It must be used as a child of the `atomic-tab-manager` component to function correctly.
-     */
-    interface HTMLAtomicTabElement extends Components.AtomicTab, HTMLStencilElement {
-    }
-    var HTMLAtomicTabElement: {
-        prototype: HTMLAtomicTabElement;
-        new (): HTMLAtomicTabElement;
-    };
     interface HTMLAtomicTabBarElement extends Components.AtomicTabBar, HTMLStencilElement {
     }
     var HTMLAtomicTabBarElement: {
@@ -3320,7 +3292,6 @@ declare global {
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
-        "atomic-tab": HTMLAtomicTabElement;
         "atomic-tab-bar": HTMLAtomicTabBarElement;
         "atomic-tab-button": HTMLAtomicTabButtonElement;
         "atomic-tab-manager": HTMLAtomicTabManagerElement;
@@ -5184,24 +5155,6 @@ declare namespace LocalJSX {
         "side": 'left' | 'right';
         "suggestion": SearchBoxSuggestionElement;
     }
-    /**
-     * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
-     * It must be used as a child of the `atomic-tab-manager` component to function correctly.
-     */
-    interface AtomicTab {
-        /**
-          * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
-         */
-        "expression"?: string;
-        /**
-          * The label to display on the tab.
-         */
-        "label": string;
-        /**
-          * The internal name of the atomic tab.
-         */
-        "name": string;
-    }
     interface AtomicTabBar {
     }
     interface AtomicTabButton {
@@ -5424,7 +5377,6 @@ declare namespace LocalJSX {
         "atomic-sort-expression": AtomicSortExpression;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
-        "atomic-tab": AtomicTab;
         "atomic-tab-bar": AtomicTabBar;
         "atomic-tab-button": AtomicTabButton;
         "atomic-tab-manager": AtomicTabManager;
@@ -5781,11 +5733,6 @@ declare module "@stencil/core" {
              * use native Elements.
              */
             "atomic-suggestion-renderer": LocalJSX.AtomicSuggestionRenderer & JSXBase.HTMLAttributes<HTMLAtomicSuggestionRendererElement>;
-            /**
-             * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
-             * It must be used as a child of the `atomic-tab-manager` component to function correctly.
-             */
-            "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
             "atomic-tab-bar": LocalJSX.AtomicTabBar & JSXBase.HTMLAttributes<HTMLAtomicTabBarElement>;
             "atomic-tab-button": LocalJSX.AtomicTabButton & JSXBase.HTMLAttributes<HTMLAtomicTabButtonElement>;
             /**
