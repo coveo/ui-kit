@@ -2,6 +2,7 @@ import type {i18n} from 'i18next';
 import {html} from 'lit';
 import type {RefOrCallback} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
+import {multiClassMap} from '@/src/directives/multi-class-map';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import Checkmark from '../../../images/checkmark.svg';
 import Cross from '../../../images/cross.svg';
@@ -36,11 +37,14 @@ export const renderSmartSnippetFeedbackBanner: FunctionalComponent<
     html`<div part="feedback-buttons" class="flex gap-x-4">
       <label
         part="feedback-like-button"
-        class=${
-          props.liked
-            ? 'flex items-center gap-x-1.5 text-success'
-            : 'flex items-center gap-x-1.5 cursor-pointer hover:underline'
-        }
+        class=${multiClassMap({
+          flex: true,
+          'items-center': true,
+          'gap-x-1.5': true,
+          'text-success': props.liked,
+          'cursor-pointer': !props.liked,
+          'hover:underline': !props.liked,
+        })}
       >
         <atomic-icon icon=${Checkmark} class="w-3.5"></atomic-icon>
         ${renderRadioButton({
@@ -55,11 +59,14 @@ export const renderSmartSnippetFeedbackBanner: FunctionalComponent<
       </label>
       <label
         part="feedback-dislike-button"
-        class=${
-          props.disliked
-            ? 'flex items-center gap-x-1.5 text-error'
-            : 'flex items-center gap-x-1.5 cursor-pointer hover:underline'
-        }
+        class=${multiClassMap({
+          flex: true,
+          'items-center': true,
+          'gap-x-1.5': true,
+          'text-error': props.disliked,
+          'cursor-pointer': !props.disliked,
+          'hover:underline': !props.disliked,
+        })}
       >
         <atomic-icon icon=${Cross} class="w-3.5"></atomic-icon>
         ${renderRadioButton({
