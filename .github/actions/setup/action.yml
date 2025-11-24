@@ -40,7 +40,9 @@ runs:
         cache: 'pnpm'
     # Workaround for PNPM catalog bug: ensure lockfile is sane before installing
     # https://github.com/pnpm/pnpm/issues/9112
-    - run: pnpm dedupe --check
+    # If this fails, run `pnpm dedupe` locally and commit the updated lockfile
+    - name: Check lockfile deduplication
+      run: pnpm dedupe --check
       shell: bash
     - run: pnpm install --frozen-lockfile --prefer-offline
       shell: bash
