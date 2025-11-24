@@ -22,6 +22,9 @@ interface QuickviewSidebarProps {
   onMinimize: (minimize: boolean) => void;
 }
 
+/**
+ * @deprecated should only be used for Stencil components.
+ */
 export const QuickviewSidebar: FunctionalComponent<QuickviewSidebarProps> = (
   props
 ) => {
