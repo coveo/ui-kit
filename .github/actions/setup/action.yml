@@ -38,6 +38,10 @@ runs:
         node-version-file: '.nvmrc'
         registry-url: 'https://registry.npmjs.org'
         cache: 'pnpm'
+    # Workaround for PNPM catalog bug: ensure lockfile is sane before installing
+    # https://github.com/pnpm/pnpm/issues/9112
+    - run: pnpm dedupe --check
+      shell: bash
     - run: pnpm install --frozen-lockfile --prefer-offline
       shell: bash
 #endregion
