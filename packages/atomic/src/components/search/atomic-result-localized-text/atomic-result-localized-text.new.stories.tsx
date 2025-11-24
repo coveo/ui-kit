@@ -1,34 +1,30 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-result-localized-text',
-  {excludeCategories: ['methods']}
-);
+const searchApiHarness = new MockSearchApi();
+
+searchApiHarness.searchEndpoint.mock((response) => ({
+  ...response,
+  results: response.results.slice(0, 1).map((r) => ({
+    ...r,
+    raw: {
+      ...r.raw,
+      author: 'Isaac Asimov',
+      bookcount: 1,
+      multiplebookscount: 5,
+    },
+  })),
+  totalCount: 1,
+  totalCountFiltered: 1,
+}));
 
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
-  config: {
-    preprocessRequest: (request) => {
-      const parsed = JSON.parse(request.body as string);
-      parsed.numberOfResults = 1;
-      request.body = JSON.stringify(parsed);
-      return request;
-    },
-    search: {
-      preprocessSearchResponseMiddleware: (res) => {
-        res.body.results.forEach((r) => {
-          r.raw.author = 'Isaac Asimov';
-          r.raw.bookcount = 1;
-          r.raw.multiplebookscount = 5;
-        });
-        return res;
-      },
-    },
-  },
+  includeCodeRoot: false,
   i18n: (i18n) => {
     i18n.addResourceBundle('en', 'translation', {
       book_by_author: 'Book by {{name}}',
@@ -38,13 +34,19 @@ const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
   },
 });
 
-const {decorator: resultListDecorator} = wrapInResultList(undefined, false);
+const {decorator: resultListDecorator} = wrapInResultList('list', false);
 const {decorator: resultTemplateDecorator} = wrapInResultTemplate();
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-result-localized-text',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-result-localized-text',
   title: 'Search/Result Localized Text',
   id: 'atomic-result-localized-text',
+
   render: (args) => template(args),
   decorators: [
     resultTemplateDecorator,
@@ -53,11 +55,18 @@ const meta: Meta = {
   ],
   parameters: {
     ...parameters,
+    msw: {
+      handlers: [...searchApiHarness.handlers],
+    },
     actions: {
       handles: events,
     },
   },
-  args,
+  args: {
+    ...args,
+    'locale-key': 'book_by_author',
+    'field-author': 'name',
+  },
   argTypes,
 
   play,
@@ -65,26 +74,4 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {
-  name: 'atomic-result-localized-text',
-  args: {
-    'locale-key': 'book_by_author',
-    'field-author': 'name',
-  },
-};
-
-export const WithPluralForm: Story = {
-  name: 'with plural form',
-  args: {
-    'locale-key': 'book_count',
-    'field-count': 'multiplebookscount',
-  },
-};
-
-export const WithSingularForm: Story = {
-  name: 'with singular form',
-  args: {
-    'locale-key': 'book_count',
-    'field-count': 'bookcount',
-  },
-};
+export const Default: Story = {};

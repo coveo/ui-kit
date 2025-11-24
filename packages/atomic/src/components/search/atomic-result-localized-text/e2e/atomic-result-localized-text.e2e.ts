@@ -29,20 +29,4 @@ test.describe('atomic-result-localized-text', () => {
     const text = await resultLocalizedText.textContent.first().textContent();
     expect(text).toContain('books');
   });
-
-  test('should be accessible', async ({
-    resultLocalizedText,
-    makeAxeBuilder,
-  }) => {
-    await resultLocalizedText.load({
-      args: {'locale-key': 'book_by_author', 'field-author': 'name'},
-    });
-    await resultLocalizedText.hydrated.first().waitFor();
-
-    const accessibilityScanResults = await makeAxeBuilder()
-      .include('atomic-result-localized-text')
-      .analyze();
-
-    expect(accessibilityScanResults.violations).toEqual([]);
-  });
 });

@@ -5,7 +5,9 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {mapProperty} from '@/src/utils/props-utils';
@@ -70,9 +72,11 @@ export class AtomicResultLocalizedText
     }
   }
 
+  @bindingGuard()
+  @errorGuard()
   render() {
     return when(
-      this.bindings && this.result,
+      this.result,
       () => {
         const localizedText = this.bindings.i18n.t(this.localeKey, {
           ...this.parseFieldValues(),
