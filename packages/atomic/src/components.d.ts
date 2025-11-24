@@ -319,6 +319,7 @@ export namespace Components {
     /**
      * The `atomic-format-currency` component is used for formatting currencies.
      * The numerical format of compatible parents will be set according to the currency property of this component.
+     * @deprecated Use the format properties (currency, minimumFractionDigits, etc.) directly on the parent component instead of using this component.
      */
     interface AtomicFormatCurrency {
         /**
@@ -329,6 +330,7 @@ export namespace Components {
     /**
      * The `atomic-format-number` component is used for number formatting.
      * The numerical format of compatible parents will be set according to the properties of this component.
+     * @deprecated Use the format properties (minimumIntegerDigits, maximumFractionDigits, etc.) directly on the parent component instead of using this component.
      */
     interface AtomicFormatNumber {
         /**
@@ -355,6 +357,7 @@ export namespace Components {
     /**
      * The `atomic-format-unit` component is used for formatting numbers with units.
      * The numerical format of compatible parents will be set according to the properties of this component.
+     * @deprecated Use the format properties (unit, unitDisplay, minimumFractionDigits, etc.) directly on the parent component instead of using this component.
      */
     interface AtomicFormatUnit {
         /**
@@ -550,6 +553,10 @@ export namespace Components {
     }
     interface AtomicInsightNumericFacet {
         /**
+          * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
+         */
+        "currency"?: string;
+        /**
           * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc   ... ></atomic-insight-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc="doc"   ... ></atomic-insight-numeric-facet> ```
          */
         "dependsOn": Record<string, string>;
@@ -586,6 +593,26 @@ export namespace Components {
          */
         "label": string;
         /**
+          * The maximum number of fraction digits to use.
+         */
+        "maximumFractionDigits"?: number;
+        /**
+          * The maximum number of significant digits to use.
+         */
+        "maximumSignificantDigits"?: number;
+        /**
+          * The minimum number of fraction digits to use.
+         */
+        "minimumFractionDigits"?: number;
+        /**
+          * The minimum number of integer digits to use.
+         */
+        "minimumIntegerDigits"?: number;
+        /**
+          * The minimum number of significant digits to use.
+         */
+        "minimumSignificantDigits"?: number;
+        /**
           * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
          */
         "numberOfValues": number;
@@ -597,6 +624,14 @@ export namespace Components {
           * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
          */
         "sortCriteria": InsightRangeFacetSortCriterion;
+        /**
+          * The unit to use in unit formatting. Must be a sanctioned unit identifier.
+         */
+        "unit"?: string;
+        /**
+          * The unit formatting style to use. - "long" (for example, 16 litres) - "short" (for example, 16 l) - "narrow" (for example, 16l)
+         */
+        "unitDisplay"?: 'long' | 'short' | 'narrow';
         /**
           * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
@@ -1098,6 +1133,10 @@ export namespace Components {
      */
     interface AtomicNumericFacet {
         /**
+          * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
+         */
+        "currency"?: string;
+        /**
           * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc   ... ></atomic-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc="doc"   ... ></atomic-numeric-facet> ```
          */
         "dependsOn": Record<string, string>;
@@ -1134,6 +1173,26 @@ export namespace Components {
          */
         "label": string;
         /**
+          * The maximum number of fraction digits to use.
+         */
+        "maximumFractionDigits"?: number;
+        /**
+          * The maximum number of significant digits to use.
+         */
+        "maximumSignificantDigits"?: number;
+        /**
+          * The minimum number of fraction digits to use.
+         */
+        "minimumFractionDigits"?: number;
+        /**
+          * The minimum number of integer digits to use.
+         */
+        "minimumIntegerDigits"?: number;
+        /**
+          * The minimum number of significant digits to use.
+         */
+        "minimumSignificantDigits"?: number;
+        /**
           * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
          */
         "numberOfValues": number;
@@ -1153,6 +1212,14 @@ export namespace Components {
           * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded": string[] | string;
+        /**
+          * The unit to use in unit formatting. Must be a sanctioned unit identifier.
+         */
+        "unit"?: string;
+        /**
+          * The unit formatting style to use. - "long" (for example, 16 litres) - "short" (for example, 16 l) - "narrow" (for example, 16l)
+         */
+        "unitDisplay"?: 'long' | 'short' | 'narrow';
         /**
           * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
@@ -2214,6 +2281,7 @@ declare global {
     /**
      * The `atomic-format-currency` component is used for formatting currencies.
      * The numerical format of compatible parents will be set according to the currency property of this component.
+     * @deprecated Use the format properties (currency, minimumFractionDigits, etc.) directly on the parent component instead of using this component.
      */
     interface HTMLAtomicFormatCurrencyElement extends Components.AtomicFormatCurrency, HTMLStencilElement {
     }
@@ -2224,6 +2292,7 @@ declare global {
     /**
      * The `atomic-format-number` component is used for number formatting.
      * The numerical format of compatible parents will be set according to the properties of this component.
+     * @deprecated Use the format properties (minimumIntegerDigits, maximumFractionDigits, etc.) directly on the parent component instead of using this component.
      */
     interface HTMLAtomicFormatNumberElement extends Components.AtomicFormatNumber, HTMLStencilElement {
     }
@@ -2234,6 +2303,7 @@ declare global {
     /**
      * The `atomic-format-unit` component is used for formatting numbers with units.
      * The numerical format of compatible parents will be set according to the properties of this component.
+     * @deprecated Use the format properties (unit, unitDisplay, minimumFractionDigits, etc.) directly on the parent component instead of using this component.
      */
     interface HTMLAtomicFormatUnitElement extends Components.AtomicFormatUnit, HTMLStencilElement {
     }
@@ -3583,6 +3653,7 @@ declare namespace LocalJSX {
     /**
      * The `atomic-format-currency` component is used for formatting currencies.
      * The numerical format of compatible parents will be set according to the currency property of this component.
+     * @deprecated Use the format properties (currency, minimumFractionDigits, etc.) directly on the parent component instead of using this component.
      */
     interface AtomicFormatCurrency {
         /**
@@ -3593,6 +3664,7 @@ declare namespace LocalJSX {
     /**
      * The `atomic-format-number` component is used for number formatting.
      * The numerical format of compatible parents will be set according to the properties of this component.
+     * @deprecated Use the format properties (minimumIntegerDigits, maximumFractionDigits, etc.) directly on the parent component instead of using this component.
      */
     interface AtomicFormatNumber {
         /**
@@ -3619,6 +3691,7 @@ declare namespace LocalJSX {
     /**
      * The `atomic-format-unit` component is used for formatting numbers with units.
      * The numerical format of compatible parents will be set according to the properties of this component.
+     * @deprecated Use the format properties (unit, unitDisplay, minimumFractionDigits, etc.) directly on the parent component instead of using this component.
      */
     interface AtomicFormatUnit {
         /**
@@ -3811,6 +3884,10 @@ declare namespace LocalJSX {
     }
     interface AtomicInsightNumericFacet {
         /**
+          * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
+         */
+        "currency"?: string;
+        /**
           * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc   ... ></atomic-insight-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc="doc"   ... ></atomic-insight-numeric-facet> ```
          */
         "dependsOn"?: Record<string, string>;
@@ -3847,6 +3924,26 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
+          * The maximum number of fraction digits to use.
+         */
+        "maximumFractionDigits"?: number;
+        /**
+          * The maximum number of significant digits to use.
+         */
+        "maximumSignificantDigits"?: number;
+        /**
+          * The minimum number of fraction digits to use.
+         */
+        "minimumFractionDigits"?: number;
+        /**
+          * The minimum number of integer digits to use.
+         */
+        "minimumIntegerDigits"?: number;
+        /**
+          * The minimum number of significant digits to use.
+         */
+        "minimumSignificantDigits"?: number;
+        /**
           * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
          */
         "numberOfValues"?: number;
@@ -3858,6 +3955,14 @@ declare namespace LocalJSX {
           * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
          */
         "sortCriteria"?: InsightRangeFacetSortCriterion;
+        /**
+          * The unit to use in unit formatting. Must be a sanctioned unit identifier.
+         */
+        "unit"?: string;
+        /**
+          * The unit formatting style to use. - "long" (for example, 16 litres) - "short" (for example, 16 l) - "narrow" (for example, 16l)
+         */
+        "unitDisplay"?: 'long' | 'short' | 'narrow';
         /**
           * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
@@ -4333,6 +4438,10 @@ declare namespace LocalJSX {
      */
     interface AtomicNumericFacet {
         /**
+          * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
+         */
+        "currency"?: string;
+        /**
           * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc   ... ></atomic-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc="doc"   ... ></atomic-numeric-facet> ```
          */
         "dependsOn"?: Record<string, string>;
@@ -4369,6 +4478,26 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
+          * The maximum number of fraction digits to use.
+         */
+        "maximumFractionDigits"?: number;
+        /**
+          * The maximum number of significant digits to use.
+         */
+        "maximumSignificantDigits"?: number;
+        /**
+          * The minimum number of fraction digits to use.
+         */
+        "minimumFractionDigits"?: number;
+        /**
+          * The minimum number of integer digits to use.
+         */
+        "minimumIntegerDigits"?: number;
+        /**
+          * The minimum number of significant digits to use.
+         */
+        "minimumSignificantDigits"?: number;
+        /**
           * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
          */
         "numberOfValues"?: number;
@@ -4388,6 +4517,14 @@ declare namespace LocalJSX {
           * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded"?: string[] | string;
+        /**
+          * The unit to use in unit formatting. Must be a sanctioned unit identifier.
+         */
+        "unit"?: string;
+        /**
+          * The unit formatting style to use. - "long" (for example, 16 litres) - "short" (for example, 16 l) - "narrow" (for example, 16l)
+         */
+        "unitDisplay"?: 'long' | 'short' | 'narrow';
         /**
           * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
@@ -5439,16 +5576,19 @@ declare module "@stencil/core" {
             /**
              * The `atomic-format-currency` component is used for formatting currencies.
              * The numerical format of compatible parents will be set according to the currency property of this component.
+             * @deprecated Use the format properties (currency, minimumFractionDigits, etc.) directly on the parent component instead of using this component.
              */
             "atomic-format-currency": LocalJSX.AtomicFormatCurrency & JSXBase.HTMLAttributes<HTMLAtomicFormatCurrencyElement>;
             /**
              * The `atomic-format-number` component is used for number formatting.
              * The numerical format of compatible parents will be set according to the properties of this component.
+             * @deprecated Use the format properties (minimumIntegerDigits, maximumFractionDigits, etc.) directly on the parent component instead of using this component.
              */
             "atomic-format-number": LocalJSX.AtomicFormatNumber & JSXBase.HTMLAttributes<HTMLAtomicFormatNumberElement>;
             /**
              * The `atomic-format-unit` component is used for formatting numbers with units.
              * The numerical format of compatible parents will be set according to the properties of this component.
+             * @deprecated Use the format properties (unit, unitDisplay, minimumFractionDigits, etc.) directly on the parent component instead of using this component.
              */
             "atomic-format-unit": LocalJSX.AtomicFormatUnit & JSXBase.HTMLAttributes<HTMLAtomicFormatUnitElement>;
             /**
