@@ -7,6 +7,10 @@
     "github": {
       "type": "http",
       "url": "https://api.githubcopilot.com/mcp/"
+    },
+    "storybook": {
+      "type": "http",
+      "url": "http://localhost:4400/mcp"
     }
   }
 }

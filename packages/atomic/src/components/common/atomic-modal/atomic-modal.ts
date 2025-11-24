@@ -13,6 +13,7 @@ import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {listenOnce} from '@/src/utils/event-utils.js';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {once, randomID} from '@/src/utils/utils.js';
+import type {AtomicFocusTrap} from '../atomic-focus-trap/atomic-focus-trap.js';
 import type {AnyBindings} from '../interface/bindings.js';
 
 /**
@@ -111,7 +112,7 @@ export class AtomicModal
 
   private animatableContainer: Ref<HTMLElement> = createRef();
   private currentWatchToggleOpenExecution = 0;
-  private focusTrap: Ref<HTMLAtomicFocusTrapElement> = createRef();
+  private focusTrap: Ref<AtomicFocusTrap> = createRef();
   private headerId = randomID('atomic-modal-header-');
   private shouldRender = false;
   private updateBreakpoints = once(() => updateBreakpoints(this));

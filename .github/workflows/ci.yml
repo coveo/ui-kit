@@ -398,10 +398,9 @@ jobs:
   cypress-atomic-test:
     name: "Run Cypress tests on Atomic"
     needs: affected
-    if: contains(needs.affected.outputs.projects, '@coveo/atomic')
+    if: contains(needs.affected.outputs.projects, '@coveo/atomic') && github.event_name != 'merge_group'
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: ${{ github.event_name == 'merge_group' }}
       matrix:
         containers:
           [
@@ -712,6 +711,7 @@ jobs:
       - "build"
       - "lint-check"
       - "unit-test"
+      - "storybook-atomic"
       - "playwright-atomic"
       - "playwright-atomic-theming"
       - "playwright-atomic-hosted-page-test"
@@ -752,11 +752,11 @@ jobs:
       - "build"
       - "lint-check"
       - "unit-test"
+      - "storybook-atomic"
       - "playwright-atomic"
       - "playwright-atomic-theming"
       - "playwright-atomic-hosted-page-test"
       - "playwright-headless-ssr-commerce-nextjs-test"
-      - "cypress-atomic-test"
       - "e2e-quantic"
       - "cypress-atomic-screenshots"
       - "playwright-atomic-search-commerce-react-test"
