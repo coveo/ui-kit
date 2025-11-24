@@ -34,9 +34,21 @@ import type {VNode} from '@stencil/core';
  * ```
  */
 export async function renderStencilVNode(
-  vnode: NonNullable<VNode>,
+  vnode: VNode | VNode[],
   container: HTMLElement
 ): Promise<void> {
+  if (!vnode) {
+    return;
+  }
+
+  // Handle arrays of children (common when components return fragments)
+  if (Array.isArray(vnode)) {
+    for (const child of vnode) {
+      await renderStencilVNode(child, container);
+    }
+    return;
+  }
+
   const doc = container.ownerDocument;
 
   // Handle text nodes
