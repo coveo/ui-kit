@@ -119,7 +119,7 @@ export class AtomicSearchBox
     SearchBox | StandaloneSearchBox
   >;
   public searchBox!: SearchBox | StandaloneSearchBox;
-  private id!: string;
+  id!: string;
 
   protected searchBoxAriaMessage = new AriaLiveRegionController(
     this,
