@@ -7,6 +7,8 @@ import {
 /**
  * The `atomic-format-number` component is used for number formatting.
  * The numerical format of compatible parents will be set according to the properties of this component.
+ *
+ * @deprecated Use the format properties (minimumIntegerDigits, maximumFractionDigits, etc.) directly on the parent component instead of using this component.
  */
 @Component({
   tag: 'atomic-format-number',

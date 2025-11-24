@@ -7,6 +7,8 @@ import {
 /**
  * The `atomic-format-unit` component is used for formatting numbers with units.
  * The numerical format of compatible parents will be set according to the properties of this component.
+ *
+ * @deprecated Use the format properties (unit, unitDisplay, minimumFractionDigits, etc.) directly on the parent component instead of using this component.
  */
 @Component({
   tag: 'atomic-format-unit',

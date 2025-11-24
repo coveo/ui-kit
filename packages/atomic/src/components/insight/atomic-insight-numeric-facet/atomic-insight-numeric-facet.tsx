@@ -44,6 +44,11 @@ import {
   defaultNumberFormatter,
   NumberFormatter,
 } from '../../common/formats/format-common';
+import {
+  formatCurrency,
+  formatNumber,
+  formatUnit,
+} from '@/src/utils/number-format-utils';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -66,7 +71,6 @@ export class AtomicInsightNumericFacet
   private dependenciesManager?: InsightFacetConditionsManager;
 
   @Element() private host!: HTMLElement;
-  private formatter: NumberFormatter = defaultNumberFormatter;
   @BindStateToController('facetForRange')
   @State()
   public facetState!: InsightNumericFacetState;
@@ -165,6 +169,53 @@ export class AtomicInsightNumericFacet
    */
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
+  /**
+   * The currency to use in currency formatting.
+   * Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
+   */
+  @Prop({reflect: true}) public currency?: string;
+
+  /**
+   * The minimum number of integer digits to use.
+   */
+  @Prop({reflect: true}) public minimumIntegerDigits?: number;
+
+  /**
+   * The minimum number of fraction digits to use.
+   */
+  @Prop({reflect: true}) public minimumFractionDigits?: number;
+
+  /**
+   * The maximum number of fraction digits to use.
+   */
+  @Prop({reflect: true}) public maximumFractionDigits?: number;
+
+  /**
+   * The minimum number of significant digits to use.
+   */
+  @Prop({reflect: true}) public minimumSignificantDigits?: number;
+
+  /**
+   * The maximum number of significant digits to use.
+   */
+  @Prop({reflect: true}) public maximumSignificantDigits?: number;
+
+  /**
+   * The unit to use in unit formatting.
+   * Must be a sanctioned unit identifier.
+   */
+  @Prop({reflect: true}) public unit?: string;
+
+  /**
+   * The unit formatting style to use.
+   * - "long" (for example, 16 litres)
+   * - "short" (for example, 16 l)
+   * - "narrow" (for example, 16l)
+   */
+  @Prop({reflect: true}) public unitDisplay?: 'long' | 'short' | 'narrow';
+
+  private formatterFromSlot: NumberFormatter = defaultNumberFormatter;
+  private hasSlottedFormatter = false;
   private headerFocus?: FocusTargetController;
 
   public initialize() {
@@ -308,7 +359,67 @@ export class AtomicInsightNumericFacet
   public setFormat(event: CustomEvent<NumberFormatter>) {
     event.preventDefault();
     event.stopPropagation();
-    this.formatter = event.detail;
+    this.formatterFromSlot = event.detail;
+    this.hasSlottedFormatter = true;
+
+    // Show deprecation warning if using slotted formatter
+    console.warn(
+      'Using atomic-format-* components inside atomic-insight-numeric-facet is deprecated. ' +
+        'Please use the format properties (currency, unit, minimumFractionDigits, etc.) directly on atomic-insight-numeric-facet instead.'
+    );
+  }
+
+  private get formatter(): NumberFormatter {
+    // Prioritize own props over slotted formatter
+    if (this.currency !== undefined) {
+      return (value, languages) =>
+        formatCurrency(value, languages, {
+          currency: this.currency!,
+          minimumIntegerDigits: this.minimumIntegerDigits,
+          minimumFractionDigits: this.minimumFractionDigits,
+          maximumFractionDigits: this.maximumFractionDigits,
+          minimumSignificantDigits: this.minimumSignificantDigits,
+          maximumSignificantDigits: this.maximumSignificantDigits,
+        });
+    }
+
+    if (this.unit !== undefined) {
+      return (value, languages) =>
+        formatUnit(value, languages, {
+          unit: this.unit!,
+          unitDisplay: this.unitDisplay,
+          minimumIntegerDigits: this.minimumIntegerDigits,
+          minimumFractionDigits: this.minimumFractionDigits,
+          maximumFractionDigits: this.maximumFractionDigits,
+          minimumSignificantDigits: this.minimumSignificantDigits,
+          maximumSignificantDigits: this.maximumSignificantDigits,
+        });
+    }
+
+    if (
+      this.minimumIntegerDigits !== undefined ||
+      this.minimumFractionDigits !== undefined ||
+      this.maximumFractionDigits !== undefined ||
+      this.minimumSignificantDigits !== undefined ||
+      this.maximumSignificantDigits !== undefined
+    ) {
+      return (value, languages) =>
+        formatNumber(value, languages, {
+          minimumIntegerDigits: this.minimumIntegerDigits,
+          minimumFractionDigits: this.minimumFractionDigits,
+          maximumFractionDigits: this.maximumFractionDigits,
+          minimumSignificantDigits: this.minimumSignificantDigits,
+          maximumSignificantDigits: this.maximumSignificantDigits,
+        });
+    }
+
+    // Fall back to slotted formatter if no props are set
+    if (this.hasSlottedFormatter) {
+      return this.formatterFromSlot;
+    }
+
+    // Default formatter
+    return defaultNumberFormatter;
   }
 
   @Listen('atomic/numberInputApply')

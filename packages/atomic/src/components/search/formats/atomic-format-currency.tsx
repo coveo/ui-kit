@@ -8,6 +8,8 @@ import {
 /**
  * The `atomic-format-currency` component is used for formatting currencies.
  * The numerical format of compatible parents will be set according to the currency property of this component.
+ *
+ * @deprecated Use the format properties (currency, minimumFractionDigits, etc.) directly on the parent component instead of using this component.
  */
 @Component({
   tag: 'atomic-format-currency',
