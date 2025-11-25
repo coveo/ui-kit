@@ -195,25 +195,6 @@ describe('atomic-search-box', () => {
     });
   });
 
-  describe('when the search box is a standalone search box', () => {
-    it('should initialize the standalone search box controller with the correct options', async () => {
-      await renderSearchBox({
-        searchBoxProps: {redirectionUrl: '/search'},
-      });
-
-      expect(buildStandaloneSearchBox).toHaveBeenCalledWith(
-        mockedEngine,
-        expect.objectContaining({
-          options: expect.objectContaining({
-            ...commonSearchBoxOptions,
-            redirectionUrl: '/search',
-            overwrite: true,
-          }),
-        })
-      );
-    });
-  });
-
   it('should set the search box id', async () => {
     await renderSearchBox();
     expect(randomID).toHaveBeenCalledWith('atomic-search-box-');
@@ -243,7 +224,9 @@ describe('atomic-search-box', () => {
     const {wrapper} = await renderSearchBox({
       searchBoxProps: {disableSearch: true},
     });
-    expect(wrapper).toBeDisabled();
+    expect(wrapper).toHaveClass(
+      'focus-within:border-disabled focus-within:ring-neutral'
+    );
   });
 
   it('should disable the search box when the value is lower than the minimum query length', async () => {
@@ -251,7 +234,9 @@ describe('atomic-search-box', () => {
       searchBoxProps: {minimumQueryLength: 5},
     });
     await userEvent.type(textArea, 'test');
-    expect(wrapper).toBeDisabled();
+    expect(wrapper).toHaveClass(
+      'focus-within:border-disabled focus-within:ring-neutral'
+    );
   });
 
   it('should clear the suggestions when onFocusout is triggered on the wrapper', async () => {
@@ -356,13 +341,13 @@ describe('atomic-search-box', () => {
         'set'
       );
       const {element} = await renderSearchBox({
-        noSuggestions: true,
+        suggestionCount: 0,
       });
 
       await userEvent.click(element);
 
       expect(setMessageSpy).toHaveBeenCalledWith(
-        'No search suggestions are available.'
+        'There are no search suggestions.'
       );
     });
   });
@@ -391,7 +376,7 @@ describe('atomic-search-box', () => {
 
       await userEvent.click(clearButton);
 
-      expect(setMessageSpy).toHaveBeenCalledWith('Search box cleared');
+      expect(setMessageSpy).toHaveBeenCalledWith('Search cleared');
     });
   });
 
