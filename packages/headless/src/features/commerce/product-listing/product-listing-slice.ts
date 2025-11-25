@@ -93,6 +93,7 @@ export const productListingReducer = createReducer(
 
         const newParent: Product = {
           ...(childToPromote as ChildProduct),
+          resultType: ResultType.PRODUCT,
           children,
           totalNumberOfChildren,
           position,
