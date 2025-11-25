@@ -6,9 +6,9 @@ import {when} from 'lit/directives/when.js';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
 export interface ModalDetailsProps {
-  currentAnswer?: SmartSnippetFeedback | 'other';
+  currentAnswer: SmartSnippetFeedback | 'other';
   i18n: i18n;
-  detailsInputRef?: RefOrCallback;
+  detailsInputRef: RefOrCallback;
 }
 
 export const renderModalDetails: FunctionalComponent<ModalDetailsProps> = ({
@@ -27,9 +27,9 @@ export const renderModalDetails: FunctionalComponent<ModalDetailsProps> = ({
         <textarea
           part="details-input"
           name="answer-details"
-          ${detailsInputRef ? ref(detailsInputRef) : ''}
+          ${ref(detailsInputRef)}
           class="border-neutral mt-2 w-full resize-none rounded border p-2 text-base leading-5"
-          rows="4"
+          rows=${4}
           required
         ></textarea>
       </fieldset>`
