@@ -18,7 +18,7 @@ import {
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
-import {type CSSResultGroup, html, LitElement, nothing} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import Star from '@/images/star.svg';
@@ -42,7 +42,6 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {ArrayProp, MapProp} from '@/src/utils/props-utils';
-import ratingFacetStyles from './atomic-rating-facet.tw.css';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
@@ -75,7 +74,6 @@ export class AtomicRatingFacet
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
-  static styles: CSSResultGroup = [ratingFacetStyles];
   @state() public bindings!: Bindings;
   @state() public error!: Error;
 
