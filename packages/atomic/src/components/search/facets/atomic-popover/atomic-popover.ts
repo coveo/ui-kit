@@ -137,6 +137,39 @@ export class AtomicPopover
     });
   }
 
+  @errorGuard()
+  render() {
+    if (this.searchStatus.state.hasError) {
+      return nothing;
+    }
+
+    if (!this.searchStatus.state.firstSearchExecuted) {
+      return html`
+        <div
+          part="placeholder"
+          aria-hidden="true"
+          class="bg-neutral h-8 w-32 animate-pulse rounded"
+        ></div>
+      `;
+    }
+
+    if (!this.searchStatus.state.hasResults || !this.childFacet?.hasValues()) {
+      return nothing;
+    }
+
+    return html`
+      <atomic-focus-trap
+        .source=${this.buttonRef.value}
+        .container=${this.popupRef.value}
+        ?active=${this.isOpen}
+        should-hide-self="false"
+      >
+        ${this.renderPopover()}
+      </atomic-focus-trap>
+      ${when(this.isOpen, () => this.renderBackdrop())}
+    `;
+  }
+
   // Event handlers
 
   private handleInitializePopover = (event: CustomEvent<PopoverChildFacet>) => {
@@ -167,8 +200,6 @@ export class AtomicPopover
   private togglePopover() {
     this.isOpen = !this.isOpen;
   }
-
-  // Render methods
 
   private renderDropdownButton() {
     const label = this.label;
@@ -277,39 +308,6 @@ export class AtomicPopover
           <slot></slot>
         </div>
       </div>
-    `;
-  }
-
-  @errorGuard()
-  render() {
-    if (this.searchStatus.state.hasError) {
-      return nothing;
-    }
-
-    if (!this.searchStatus.state.firstSearchExecuted) {
-      return html`
-        <div
-          part="placeholder"
-          aria-hidden="true"
-          class="bg-neutral h-8 w-32 animate-pulse rounded"
-        ></div>
-      `;
-    }
-
-    if (!this.searchStatus.state.hasResults || !this.childFacet?.hasValues()) {
-      return nothing;
-    }
-
-    return html`
-      <atomic-focus-trap
-        .source=${this.buttonRef.value}
-        .container=${this.popupRef.value}
-        ?active=${this.isOpen}
-        should-hide-self="false"
-      >
-        ${this.renderPopover()}
-      </atomic-focus-trap>
-      ${when(this.isOpen, () => this.renderBackdrop())}
     `;
   }
 }

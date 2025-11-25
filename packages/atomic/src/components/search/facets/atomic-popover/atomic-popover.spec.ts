@@ -79,13 +79,42 @@ describe('atomic-popover', () => {
     };
   };
 
-  describe('when component is rendered', () => {
+  describe('#initialize', () => {
     it('should build search status controller', async () => {
       await renderPopover();
 
       expect(buildSearchStatus).toHaveBeenCalledWith(mockEngine);
     });
 
+    describe('when no child is provided', () => {
+      it('should set error', async () => {
+        const {element} = await renderPopover({slottedContent: ''});
+
+        expect(element.error).toBeTruthy();
+        expect(element.error.message).toContain(
+          'One child is required inside a set of popover tags.'
+        );
+      });
+    });
+
+    describe('when multiple children are provided', () => {
+      it('should set error', async () => {
+        const {element} = await renderPopover({
+          slottedContent: `
+            <atomic-facet field="objecttype" label="Object type"></atomic-facet>
+            <atomic-facet field="filetype" label="File type"></atomic-facet>
+          `,
+        });
+
+        expect(element.error).toBeTruthy();
+        expect(element.error.message).toContain(
+          'Cannot have more than one child inside a set of popover tags.'
+        );
+      });
+    });
+  });
+
+  describe('#render', () => {
     it('should render popover button with label', async () => {
       const {parts, element} = await renderPopover();
 
@@ -111,36 +140,96 @@ describe('atomic-popover', () => {
       expect(valueCount).toBeTruthy();
       expect(valueCount?.classList.contains('hidden')).toBe(true);
     });
-  });
 
-  describe('when no child is provided', () => {
-    it('should set error', async () => {
-      const {element} = await renderPopover({slottedContent: ''});
+    describe('when search has error', () => {
+      it('should render nothing', async () => {
+        vi.mocked(buildSearchStatus).mockReturnValue(
+          buildFakeSearchStatus({
+            state: {
+              hasError: true,
+              firstSearchExecuted: true,
+              hasResults: false,
+              isLoading: false,
+            },
+          })
+        );
 
-      expect(element.error).toBeTruthy();
-      expect(element.error.message).toContain(
-        'One child is required inside a set of popover tags.'
-      );
-    });
-  });
+        const {parts, element} = await renderPopover();
 
-  describe('when multiple children are provided', () => {
-    it('should set error', async () => {
-      const {element} = await renderPopover({
-        slottedContent: `
-          <atomic-facet field="objecttype" label="Object type"></atomic-facet>
-          <atomic-facet field="filetype" label="File type"></atomic-facet>
-        `,
+        expect(parts(element).popoverButton).toBeNull();
       });
+    });
 
-      expect(element.error).toBeTruthy();
-      expect(element.error.message).toContain(
-        'Cannot have more than one child inside a set of popover tags.'
+    describe('when first search is not executed', () => {
+      it('should render placeholder', async () => {
+        vi.mocked(buildSearchStatus).mockReturnValue(
+          buildFakeSearchStatus({
+            state: {
+              hasError: false,
+              firstSearchExecuted: false,
+              hasResults: false,
+              isLoading: true,
+            },
+          })
+        );
+
+        const {parts, element} = await renderPopover();
+
+        await expect.element(parts(element).placeholder).toBeInTheDocument();
+      });
+    });
+
+    describe('when search has no results', () => {
+      it('should render nothing', async () => {
+        vi.mocked(buildSearchStatus).mockReturnValue(
+          buildFakeSearchStatus({
+            state: {
+              hasError: false,
+              firstSearchExecuted: true,
+              hasResults: false,
+              isLoading: false,
+            },
+          })
+        );
+
+        const {parts, element} = await renderPopover();
+
+        expect(parts(element).popoverButton).toBeNull();
+      });
+    });
+
+    describe('when child facet has no values', () => {
+      it('should render nothing', async () => {
+        const {parts, element} = await renderPopover({
+          controllerState: {
+            hasValues: () => false,
+          },
+        });
+
+        expect(parts(element).popoverButton).toBeNull();
+      });
+    });
+  });
+
+  describe('#disconnectedCallback', () => {
+    it('should clean up event listeners on disconnect', async () => {
+      const {element} = await renderPopover();
+      const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
+
+      element.disconnectedCallback();
+
+      expect(removeEventListenerSpy).toHaveBeenCalledWith(
+        'atomic/initializePopover',
+        expect.any(Function)
+      );
+      expect(removeEventListenerSpy).toHaveBeenCalledWith(
+        'keydown',
+        expect.any(Function)
       );
     });
   });
 
-  describe('when popover button is clicked', () => {
+  describe('#togglePopover (when button is clicked)', () => {
     it('should open the popover', async () => {
       const {popoverButton, parts, element} = await renderPopover();
 
@@ -171,132 +260,45 @@ describe('atomic-popover', () => {
         .element(popoverButton)
         .toHaveAttribute('aria-expanded', 'true');
     });
-  });
 
-  describe('when popover is open and backdrop is clicked', () => {
-    it('should close the popover', async () => {
-      const {popoverButton, parts, element} = await renderPopover();
+    describe('when popover is open and backdrop is clicked', () => {
+      it('should close the popover', async () => {
+        const {popoverButton, parts, element} = await renderPopover();
 
-      // Open popover
-      await userEvent.click(popoverButton);
-      await element.updateComplete;
+        // Open popover
+        await userEvent.click(popoverButton);
+        await element.updateComplete;
 
-      // Click backdrop
-      const backdrop = parts(element).backdrop;
-      expect(backdrop).toBeTruthy();
-      await userEvent.click(backdrop!);
-      await element.updateComplete;
+        // Click backdrop
+        const backdrop = parts(element).backdrop;
+        expect(backdrop).toBeTruthy();
+        await userEvent.click(backdrop!);
+        await element.updateComplete;
 
-      // Verify closed
-      const facet = parts(element).facet;
-      expect(facet).toBeTruthy();
-      expect(facet?.classList.contains('hidden')).toBe(true);
-    });
-  });
-
-  describe('when popover is open and Escape key is pressed', () => {
-    it('should close the popover', async () => {
-      const {popoverButton, parts, element} = await renderPopover();
-
-      // Open popover
-      await userEvent.click(popoverButton);
-      await element.updateComplete;
-
-      // Press Escape
-      await page.keyboard.press('Escape');
-      await element.updateComplete;
-
-      // Verify closed
-      const facet = parts(element).facet;
-      expect(facet).toBeTruthy();
-      expect(facet?.classList.contains('hidden')).toBe(true);
-    });
-  });
-
-  describe('when search has error', () => {
-    it('should render nothing', async () => {
-      vi.mocked(buildSearchStatus).mockReturnValue(
-        buildFakeSearchStatus({
-          state: {
-            hasError: true,
-            firstSearchExecuted: true,
-            hasResults: false,
-            isLoading: false,
-          },
-        })
-      );
-
-      const {parts, element} = await renderPopover();
-
-      expect(parts(element).popoverButton).toBeNull();
-    });
-  });
-
-  describe('when first search is not executed', () => {
-    it('should render placeholder', async () => {
-      vi.mocked(buildSearchStatus).mockReturnValue(
-        buildFakeSearchStatus({
-          state: {
-            hasError: false,
-            firstSearchExecuted: false,
-            hasResults: false,
-            isLoading: true,
-          },
-        })
-      );
-
-      const {parts, element} = await renderPopover();
-
-      await expect.element(parts(element).placeholder).toBeInTheDocument();
-    });
-  });
-
-  describe('when search has no results', () => {
-    it('should render nothing', async () => {
-      vi.mocked(buildSearchStatus).mockReturnValue(
-        buildFakeSearchStatus({
-          state: {
-            hasError: false,
-            firstSearchExecuted: true,
-            hasResults: false,
-            isLoading: false,
-          },
-        })
-      );
-
-      const {parts, element} = await renderPopover();
-
-      expect(parts(element).popoverButton).toBeNull();
-    });
-  });
-
-  describe('when child facet has no values', () => {
-    it('should render nothing', async () => {
-      const {parts, element} = await renderPopover({
-        controllerState: {
-          hasValues: () => false,
-        },
+        // Verify closed
+        const facet = parts(element).facet;
+        expect(facet).toBeTruthy();
+        expect(facet?.classList.contains('hidden')).toBe(true);
       });
-
-      expect(parts(element).popoverButton).toBeNull();
     });
-  });
 
-  describe('lifecycle', () => {
-    it('should clean up event listeners on disconnect', async () => {
-      const {element} = await renderPopover();
-      const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
+    describe('when popover is open and Escape key is pressed', () => {
+      it('should close the popover', async () => {
+        const {popoverButton, parts, element} = await renderPopover();
 
-      element.disconnectedCallback();
+        // Open popover
+        await userEvent.click(popoverButton);
+        await element.updateComplete;
 
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'atomic/initializePopover',
-        expect.any(Function)
-      );
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'keydown',
-        expect.any(Function)
-      );
+        // Press Escape
+        await page.keyboard.press('Escape');
+        await element.updateComplete;
+
+        // Verify closed
+        const facet = parts(element).facet;
+        expect(facet).toBeTruthy();
+        expect(facet?.classList.contains('hidden')).toBe(true);
+      });
     });
   });
 });
