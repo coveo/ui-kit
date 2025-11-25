@@ -5,7 +5,7 @@ import {
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client.js';
 import type {ChildProduct} from '../../../api/commerce/common/product.js';
-import type {CommerceSuccessResponse} from '../../../api/commerce/common/response.js';
+import type {ListingCommerceSuccessResponse} from '../../../api/commerce/listing/response.js';
 import type {ProductListingSection} from '../../../state/state-sections.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
 import {
@@ -20,7 +20,7 @@ import {
 
 export interface QueryCommerceAPIThunkReturn {
   /** The successful response. */
-  response: CommerceSuccessResponse;
+  response: ListingCommerceSuccessResponse;
 }
 
 export type StateNeededByFetchProductListing =

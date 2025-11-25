@@ -5,7 +5,8 @@ import type {
   ChildProduct,
   Product,
 } from '../../../api/commerce/common/product.js';
-import type {CommerceSuccessResponse} from '../../../api/commerce/common/response.js';
+import {ResultType} from '../../../api/commerce/common/result.js';
+import type {ListingCommerceSuccessResponse} from '../../../api/commerce/listing/response.js';
 import {setError} from '../../error/error-actions.js';
 import {setContext, setView} from '../context/context-actions.js';
 import {
@@ -33,13 +34,14 @@ export const productListingReducer = createReducer(
       .addCase(fetchProductListing.fulfilled, (state, action) => {
         const paginationOffset = getPaginationOffset(action.payload);
         handleFullfilled(state, action.payload.response);
-        state.products = action.payload.response.products.map(
-          (product, index) =>
-            preprocessProduct(
-              product,
-              paginationOffset + index + 1,
-              action.payload.response.responseId
-            )
+        state.results = action.payload.response.results.map((result, index) =>
+          result.resultType === ResultType.SPOTLIGHT
+            ? result
+            : preprocessProduct(
+                result,
+                paginationOffset + index + 1,
+                action.payload.response.responseId
+              )
         );
       })
       .addCase(fetchMoreProducts.fulfilled, (state, action) => {
@@ -48,13 +50,15 @@ export const productListingReducer = createReducer(
         }
         const paginationOffset = getPaginationOffset(action.payload);
         handleFullfilled(state, action.payload.response);
-        state.products = state.products.concat(
-          action.payload.response.products.map((product, index) =>
-            preprocessProduct(
-              product,
-              paginationOffset + index + 1,
-              action.payload?.response.responseId
-            )
+        state.results = state.results.concat(
+          action.payload.response.results.map((result, index) =>
+            result.resultType === ResultType.SPOTLIGHT
+              ? result
+              : preprocessProduct(
+                  result,
+                  paginationOffset + index + 1,
+                  action.payload.response.responseId
+                )
           )
         );
       })
@@ -65,10 +69,13 @@ export const productListingReducer = createReducer(
         handlePending(state, action.meta.requestId);
       })
       .addCase(promoteChildToParent, (state, action) => {
-        const {products} = state;
+        const {results} = state;
         let childToPromote: ChildProduct | undefined;
-        const currentParentIndex = products.findIndex((product) => {
-          childToPromote = product.children.find(
+        const currentParentIndex = results.findIndex((result) => {
+          if (result.resultType === ResultType.SPOTLIGHT) {
+            return false;
+          }
+          childToPromote = result.children.find(
             (child) => child.permanentid === action.payload.child.permanentid
           );
           return !!childToPromote;
@@ -78,9 +85,11 @@ export const productListingReducer = createReducer(
           return;
         }
 
-        const responseId = products[currentParentIndex].responseId;
-        const position = products[currentParentIndex].position;
-        const {children, totalNumberOfChildren} = products[currentParentIndex];
+        const currentParent = results[currentParentIndex] as Product;
+
+        const responseId = currentParent.responseId;
+        const position = currentParent.position;
+        const {children, totalNumberOfChildren} = currentParent;
 
         const newParent: Product = {
           ...(childToPromote as ChildProduct),
@@ -90,7 +99,7 @@ export const productListingReducer = createReducer(
           responseId,
         };
 
-        products.splice(currentParentIndex, 1, newParent);
+        results.splice(currentParentIndex, 1, newParent);
       })
       .addCase(setView, () => getProductListingInitialState())
       .addCase(setContext, () => getProductListingInitialState())
@@ -110,7 +119,7 @@ function handleError(
 
 function handleFullfilled(
   state: ProductListingState,
-  response: CommerceSuccessResponse
+  response: ListingCommerceSuccessResponse
 ) {
   state.error = null;
   state.facets = response.facets;

@@ -23,6 +23,7 @@ import type {
   CommerceFacetSearchRequest,
   FacetSearchType,
 } from './facet-search/facet-search-request.js';
+import type {ListingCommerceSuccessResponse} from './listing/response.js';
 import {
   buildRecommendationsRequest,
   type CommerceRecommendationsRequest,
@@ -75,9 +76,14 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
 
   async getProductListing(
     req: FilterableCommerceAPIRequest
-  ): Promise<CommerceAPIResponse<CommerceSuccessResponse>> {
+  ): Promise<CommerceAPIResponse<ListingCommerceSuccessResponse>> {
+    const requestOptions = getRequestOptions(req, 'listing');
     return this.query({
-      ...getRequestOptions(req, 'listing'),
+      ...requestOptions,
+      requestParams: {
+        ...requestOptions.requestParams,
+        enableResults: true,
+      },
       ...this.options,
     });
   }

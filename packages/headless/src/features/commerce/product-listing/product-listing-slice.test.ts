@@ -1,4 +1,13 @@
-import type {ChildProduct} from '../../../api/commerce/common/product.js';
+import type {
+  BaseProduct,
+  ChildProduct,
+  Product,
+} from '../../../api/commerce/common/product.js';
+import {
+  type BaseResult,
+  type Result,
+  ResultType,
+} from '../../../api/commerce/common/result.js';
 import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce-facet-response.js';
 import {
   buildMockBaseProduct,
@@ -36,17 +45,21 @@ describe('product-listing-slice', () => {
       const facet = buildMockCommerceRegularFacetResponse();
       const responseId = 'some-response-id';
       const response = buildFetchProductListingResponse({
-        products: [result],
+        results: [result],
         facets: [facet],
         responseId,
       });
 
       const action = fetchProductListing.fulfilled(response, '');
       const finalState = productListingReducer(state, action);
+      const finalStateProducts = getProductsFromResults(finalState.results);
+      const responseProducts = getBaseProductsFromBaseResults(
+        response.response.results
+      );
 
-      expect(finalState.products).toEqual(
-        response.response.products.map((p) =>
-          buildMockProduct({ec_name: p.ec_name, responseId})
+      expect(finalStateProducts).toEqual(
+        responseProducts.map((p) =>
+          buildMockProduct({ec_name: p?.ec_name, responseId})
         )
       );
       expect(finalState.facets[0]).toEqual(facet);
@@ -56,7 +69,7 @@ describe('product-listing-slice', () => {
 
     it('sets the #position of each product to its 1-based position in the unpaginated list', () => {
       const response = buildFetchProductListingResponse({
-        products: [
+        results: [
           buildMockBaseProduct({ec_name: 'product1'}),
           buildMockBaseProduct({ec_name: 'product2'}),
         ],
@@ -70,27 +83,29 @@ describe('product-listing-slice', () => {
 
       const action = fetchProductListing.fulfilled(response, '');
       const finalState = productListingReducer(state, action);
+      const products = getProductsFromResults(finalState.results);
 
-      expect(finalState.products[0].position).toBe(21);
-      expect(finalState.products[1].position).toBe(22);
+      expect(products[0]?.position).toBe(21);
+      expect(products[1]?.position).toBe(22);
     });
 
     it('sets the responseId on each product', () => {
-      const products = [
+      const results = [
         buildMockBaseProduct({ec_name: 'product1'}),
         buildMockBaseProduct({ec_name: 'product2'}),
       ];
       const responseId = 'some-response-id';
       const response = buildFetchProductListingResponse({
-        products,
+        results,
         responseId,
       });
 
       const action = fetchProductListing.fulfilled(response, '');
       const finalState = productListingReducer(state, action);
 
-      expect(finalState.products[0].responseId).toBe(responseId);
-      expect(finalState.products[1].responseId).toBe(responseId);
+      const products = getProductsFromResults(finalState.results);
+      expect(products[0]?.responseId).toBe(responseId);
+      expect(products[1]?.responseId).toBe(responseId);
     });
 
     it('set #error to null ', () => {
@@ -107,7 +122,7 @@ describe('product-listing-slice', () => {
 
   describe('on #fetchMoreProducts.fulfilled', () => {
     it('appends the received products to the product listing state', () => {
-      state.products = [
+      state.results = [
         buildMockProduct({ec_name: 'product1', responseId: 'old-response-id'}),
         buildMockProduct({ec_name: 'product2', responseId: 'old-response-id'}),
       ];
@@ -115,15 +130,16 @@ describe('product-listing-slice', () => {
       const facet = buildMockCommerceRegularFacetResponse();
       const responseId = 'some-response-id';
       const response = buildFetchProductListingResponse({
-        products: [result],
+        results: [result],
         facets: [facet],
         responseId,
       });
 
       const action = fetchMoreProducts.fulfilled(response, '');
       const finalState = productListingReducer(state, action);
+      const products = getProductsFromResults(finalState.results);
 
-      expect(finalState.products.map((p) => p.ec_name)).toEqual([
+      expect(products.map((p) => p?.ec_name)).toEqual([
         'product1',
         'product2',
         'product3',
@@ -134,7 +150,7 @@ describe('product-listing-slice', () => {
     });
 
     it('sets the #position of each product to its 1-based position in the unpaginated list', () => {
-      state.products = [
+      state.results = [
         buildMockProduct({
           ec_name: 'product1',
           position: 1,
@@ -145,7 +161,7 @@ describe('product-listing-slice', () => {
         }),
       ];
       const response = buildFetchProductListingResponse({
-        products: [buildMockBaseProduct({ec_name: 'product3'})],
+        results: [buildMockBaseProduct({ec_name: 'product3'})],
         pagination: {
           page: 1,
           perPage: 2,
@@ -156,14 +172,15 @@ describe('product-listing-slice', () => {
 
       const action = fetchMoreProducts.fulfilled(response, '');
       const finalState = productListingReducer(state, action);
+      const products = getProductsFromResults(finalState.results);
 
-      expect(finalState.products[0].position).toBe(1);
-      expect(finalState.products[1].position).toBe(2);
-      expect(finalState.products[2].position).toBe(3);
+      expect(products[0]?.position).toBe(1);
+      expect(products[1]?.position).toBe(2);
+      expect(products[2]?.position).toBe(3);
     });
 
     it('sets the responseId on new products while preserving existing products responseId', () => {
-      state.products = [
+      state.results = [
         buildMockProduct({
           ec_name: 'product1',
           position: 1,
@@ -178,7 +195,7 @@ describe('product-listing-slice', () => {
       const newProduct = buildMockBaseProduct({ec_name: 'product3'});
       const responseId = 'new-response-id';
       const response = buildFetchProductListingResponse({
-        products: [newProduct],
+        results: [newProduct],
         responseId,
         pagination: {
           page: 1,
@@ -190,12 +207,13 @@ describe('product-listing-slice', () => {
 
       const action = fetchMoreProducts.fulfilled(response, '');
       const finalState = productListingReducer(state, action);
+      const products = getProductsFromResults(finalState.results);
 
       // Original products keep their responseId
-      expect(finalState.products[0].responseId).toBe('old-response-id');
-      expect(finalState.products[1].responseId).toBe('old-response-id');
+      expect(products[0]?.responseId).toBe('old-response-id');
+      expect(products[1]?.responseId).toBe('old-response-id');
       // New products get the new responseId
-      expect(finalState.products[2].responseId).toBe(responseId);
+      expect(products[2]?.responseId).toBe(responseId);
     });
 
     it('set #error to null', () => {
@@ -319,7 +337,7 @@ describe('product-listing-slice', () => {
     });
 
     it('when child does not exist, it does not change the state', () => {
-      state.products = [
+      state.results = [
         buildMockProduct({permanentid: parentPermanentId, children: []}),
       ];
 
@@ -357,11 +375,11 @@ describe('product-listing-slice', () => {
         responseId: 'test-response-id',
       });
 
-      state.products = [parentProduct];
+      state.results = [parentProduct];
 
       const finalState = productListingReducer(state, action);
 
-      expect(finalState.products).toEqual([
+      expect(finalState.results).toEqual([
         buildMockProduct({
           ...childProduct,
           children: parentProduct.children,
@@ -376,7 +394,7 @@ describe('product-listing-slice', () => {
     state = {
       error: {message: 'error', statusCode: 500, type: 'type'},
       isLoading: true,
-      products: [buildMockProduct({ec_name: 'product1'})],
+      results: [buildMockProduct({ec_name: 'product1'})],
       facets: [buildMockCommerceRegularFacetResponse()],
       responseId: 'response-id',
       requestId: 'request-id',
@@ -391,7 +409,7 @@ describe('product-listing-slice', () => {
     state = {
       error: {message: 'error', statusCode: 500, type: 'type'},
       isLoading: true,
-      products: [buildMockProduct({ec_name: 'product1'})],
+      results: [buildMockProduct({ec_name: 'product1'})],
       facets: [buildMockCommerceRegularFacetResponse()],
       responseId: 'response-id',
       requestId: 'request-id',
@@ -427,3 +445,19 @@ describe('product-listing-slice', () => {
     });
   });
 });
+
+const getProductsFromResults = (results: Result[]) => {
+  const products: Array<Product | null> = [];
+  for (const result of results) {
+    products.push(result.resultType !== ResultType.SPOTLIGHT ? result : null);
+  }
+  return products;
+};
+
+const getBaseProductsFromBaseResults = (results: BaseResult[]) => {
+  const products: Array<BaseProduct | null> = [];
+  for (const result of results) {
+    products.push(result.resultType !== ResultType.SPOTLIGHT ? result : null);
+  }
+  return products;
+};

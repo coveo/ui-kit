@@ -21,6 +21,10 @@ export interface ClientIdParam {
   clientId?: string;
 }
 
+export interface EnableResultsParam {
+  enableResults?: boolean;
+}
+
 export interface ContextParam {
   context: ContextParams;
 }

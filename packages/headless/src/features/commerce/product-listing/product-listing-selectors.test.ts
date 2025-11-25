@@ -16,7 +16,7 @@ describe('commerce product listing selectors', () => {
     const state = buildMockCommerceState({
       productListing: {
         responseId: 'some-response-id',
-        products: [],
+        results: [],
         isLoading: false,
         error: null,
         facets: [],
@@ -30,7 +30,7 @@ describe('commerce product listing selectors', () => {
     const state = buildMockCommerceState({
       productListing: {
         responseId: 'some-response-id',
-        products: [],
+        results: [],
         isLoading: false,
         error: null,
         facets: [],
@@ -51,7 +51,7 @@ describe('commerce product listing selectors', () => {
     const state = buildMockCommerceState({
       productListing: {
         responseId: 'some-response-id',
-        products: [],
+        results: [],
         isLoading: false,
         error: null,
         facets: [],
@@ -70,7 +70,7 @@ describe('commerce product listing selectors', () => {
     const state = buildMockCommerceState({
       productListing: {
         responseId: 'some-response-id',
-        products: [buildMockProduct(), buildMockProduct()],
+        results: [buildMockProduct(), buildMockProduct()],
         isLoading: false,
         error: null,
         facets: [],
@@ -89,7 +89,7 @@ describe('commerce product listing selectors', () => {
     const state = buildMockCommerceState({
       productListing: {
         responseId: 'some-response-id',
-        products: [buildMockProduct(), buildMockProduct()],
+        results: [buildMockProduct(), buildMockProduct()],
         isLoading: false,
         error: null,
         facets: [],
@@ -107,7 +107,7 @@ describe('commerce product listing selectors', () => {
     const state = buildMockCommerceState({
       productListing: {
         responseId: 'some-response-id',
-        products: [buildMockProduct(), buildMockProduct()],
+        results: [buildMockProduct(), buildMockProduct()],
         isLoading: false,
         error: null,
         facets: [],
@@ -125,7 +125,7 @@ describe('commerce product listing selectors', () => {
     const state = buildMockCommerceState({
       productListing: {
         responseId: 'some-response-id',
-        products: [buildMockProduct(), buildMockProduct()],
+        results: [buildMockProduct(), buildMockProduct()],
         isLoading: false,
         error: null,
         facets: [],
@@ -143,7 +143,7 @@ describe('commerce product listing selectors', () => {
     const state = buildMockCommerceState({
       productListing: {
         responseId: 'some-response-id',
-        products: [buildMockProduct(), buildMockProduct()],
+        results: [buildMockProduct(), buildMockProduct()],
         isLoading: false,
         error: null,
         facets: [],
@@ -157,7 +157,7 @@ describe('commerce product listing selectors', () => {
     const state = buildMockCommerceState({
       productListing: {
         responseId: 'some-response-id',
-        products: [],
+        results: [],
         isLoading: true,
         error: null,
         facets: [],
@@ -176,7 +176,7 @@ describe('commerce product listing selectors', () => {
     const state = buildMockCommerceState({
       productListing: {
         responseId: 'some-response-id',
-        products: [],
+        results: [],
         isLoading: false,
         error: {message: 'some-error', statusCode: 500, type: 'some-type'},
         facets: [],
