@@ -6,7 +6,7 @@ import {
   SmartSnippetSuggestionsQuestion,
   SmartSnippetSuggestionsQuestionWrapper,
   SmartSnippetSuggestionsWrapper,
-} from '@/src/components/common/smart-snippets/atomic-smart-snippet-suggestions/smart-snippet-suggestions-common';
+} from '@/src/components/common/smart-snippets/atomic-smart-snippet-suggestions/stencil-smart-snippet-suggestions-common';
 import {Hidden} from '@/src/components/common/stencil-hidden';
 import {randomID} from '@/src/utils/utils';
 import {

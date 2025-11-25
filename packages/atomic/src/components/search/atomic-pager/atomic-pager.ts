@@ -7,12 +7,20 @@ import {
   type SearchStatus,
   type SearchStatusState,
 } from '@coveo/headless';
-import {html, LitElement, type PropertyValues} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {when} from 'lit/directives/when.js';
 import {createAppLoadedListener} from '@/src/components/common/interface/store';
+import {
+  renderPageButtons,
+  renderPagerNextButton,
+  renderPagerPageButton,
+  renderPagerPreviousButton,
+} from '@/src/components/common/pager/pager-buttons';
 import {renderPagerNavigation} from '@/src/components/common/pager/pager-navigation';
+import {getCurrentPagesRange} from '@/src/components/common/pager/pager-utils';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -28,12 +36,6 @@ import {
 import {randomID} from '@/src/utils/utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
-import {
-  renderPageButtons,
-  renderPagerNextButton,
-  renderPagerPageButton,
-  renderPagerPreviousButton,
-} from '../../common/pager/pager-buttons';
 
 /**
  * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
@@ -51,19 +53,13 @@ import {
  */
 @customElement('atomic-pager')
 @bindings()
-
 @withTailwindStyles
 export class AtomicPager
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
-  private static propsSchema = new Schema({
-    numberOfPages: new NumberValue({min: 0}),
-  });
-
-  @state()
-  bindings!: Bindings;
-  @state() error!: Error;
+  @state() public bindings!: Bindings;
+  @state() public error!: Error;
   @state() private isAppLoaded = false;
 
   public pager!: Pager;
@@ -80,7 +76,12 @@ export class AtomicPager
   /**
    * The maximum number of page buttons to display in the pager.
    */
-  @property({reflect: true, attribute: 'number-of-pages', type: Number})
+  @property({
+    reflect: true,
+    useDefault: true,
+    attribute: 'number-of-pages',
+    type: Number,
+  })
   numberOfPages: number = 5;
 
   /**
@@ -110,8 +111,21 @@ export class AtomicPager
   private previousButton!: FocusTargetController;
   private nextButton!: FocusTargetController;
 
+  constructor() {
+    super();
+
+    new ValidatePropsController(
+      this,
+      () => ({
+        numberOfPages: this.numberOfPages,
+      }),
+      new Schema({
+        numberOfPages: new NumberValue({min: 0}),
+      })
+    );
+  }
+
   public initialize() {
-    this.validateProps();
     this.initFocusTargets();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.pager = buildPager(this.bindings.engine, {
@@ -122,22 +136,20 @@ export class AtomicPager
     });
   }
 
-  willUpdate(changedProperties: PropertyValues) {
-    if (changedProperties.has('numberOfPages')) {
-      this.validateProps();
-    }
-  }
-
   @bindingGuard()
   @errorGuard()
   render() {
     const currentGroupName = `${this.radioGroupName}-${this.pagerState.currentPages.join('-')}`;
+
+    const pagesRange = getCurrentPagesRange(
+      this.pagerState.currentPage - 1,
+      this.numberOfPages,
+      this.pagerState.maxPage
+    );
+
     return html`${when(
-      !this.searchStatusState.hasError &&
-        this.searchStatusState.hasResults &&
-        this.isAppLoaded,
-      () =>
-        html`
+      this.pagerState.maxPage > 1 && this.isAppLoaded,
+      () => html`
       ${renderPagerNavigation({
         props: {
           i18n: this.bindings.i18n,
@@ -148,9 +160,9 @@ export class AtomicPager
               icon: this.previousButtonIcon,
               disabled: !this.pagerState.hasPreviousPage,
               i18n: this.bindings.i18n,
-              onClick: () => {
+              onClick: async () => {
                 this.pager.previousPage();
-                this.focusOnFirstResultAndScrollToTop();
+                await this.focusOnFirstResultAndScrollToTop();
               },
               ref: (el) => this.previousButton.setTarget(el as HTMLElement),
             },
@@ -159,56 +171,44 @@ export class AtomicPager
             props: {
               i18n: this.bindings.i18n,
             },
-          })(
-            html`${this.pagerState.currentPages.map((pageNumber, index) =>
+          })(html`
+            ${pagesRange.map((pageNumber, index) =>
               keyed(
                 `page-${pageNumber}-${index}`,
                 renderPagerPageButton({
                   props: {
-                    isSelected: this.pager.isCurrentPage(pageNumber),
+                    isSelected: pageNumber === this.pager.state.currentPage - 1,
                     ariaLabel: this.bindings.i18n.t('page-number', {
-                      pageNumber,
+                      pageNumber: pageNumber + 1,
                     }),
-                    onChecked: () => {
-                      this.pager.selectPage(pageNumber);
-                      this.focusOnFirstResultAndScrollToTop();
+                    onChecked: async () => {
+                      this.pager.selectPage(pageNumber + 1);
+                      await this.focusOnFirstResultAndScrollToTop();
                     },
                     page: pageNumber,
                     groupName: currentGroupName,
-                    text: pageNumber.toLocaleString(
+                    text: (pageNumber + 1).toLocaleString(
                       this.bindings.i18n.language
                     ),
                     onFocusCallback: this.handleFocus,
                   },
                 })
               )
-            )}`
-          )}
+            )}`)}
           ${renderPagerNextButton({
             props: {
               icon: this.nextButtonIcon,
               disabled: !this.pagerState.hasNextPage,
               i18n: this.bindings.i18n,
-              onClick: () => {
+              onClick: async () => {
                 this.pager.nextPage();
-                this.focusOnFirstResultAndScrollToTop();
+                await this.focusOnFirstResultAndScrollToTop();
               },
               ref: (el) => this.nextButton.setTarget(el as HTMLElement),
             },
           })}
         `)}`
     )}`;
-  }
-
-  private validateProps() {
-    try {
-      AtomicPager.propsSchema.validate({
-        numberOfPages: this.numberOfPages,
-      });
-    } catch (error) {
-      this.error = error as Error;
-      return;
-    }
   }
 
   private initFocusTargets() {
