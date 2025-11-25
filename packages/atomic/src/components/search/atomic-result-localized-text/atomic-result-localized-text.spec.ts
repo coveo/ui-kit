@@ -118,7 +118,7 @@ describe('atomic-result-localized-text', () => {
         localeKey: 'classic_book_advert',
       });
 
-      // Set field directly for test (mapProperty decorator not working in tests)
+      // mapProperty decorator doesn't work in test environment, set directly
       element.field = {author: 'name'};
       await element.updateComplete;
 
@@ -131,7 +131,7 @@ describe('atomic-result-localized-text', () => {
         localeKey: 'multi_field_test',
       });
 
-      // Set fields directly for test (mapProperty decorator not working in tests)
+      // mapProperty decorator doesn't work in test environment, set directly
       element.field = {author: 'author', booktitle: 'title'};
       await element.updateComplete;
 
@@ -199,34 +199,6 @@ describe('atomic-result-localized-text', () => {
         // i18n leaves placeholder as-is when value is missing
         expect(element.textContent?.trim()).toBe('Classic book from {{name}}');
       });
-    });
-  });
-
-  describe('field property mapping', () => {
-    it('should map field attributes to field property when set directly', async () => {
-      const element = await renderComponent({
-        localeKey: 'classic_book_advert',
-      });
-
-      // Set the property directly
-      element.field = {author: 'name'};
-      await element.updateComplete;
-
-      expect(element).toBeDefined();
-      expect(element.field).toEqual({author: 'name'});
-    });
-
-    it('should handle multiple field mappings when set directly', async () => {
-      const element = await renderComponent({
-        localeKey: 'multi_field_test',
-      });
-
-      // Set the property directly
-      element.field = {author: 'author', booktitle: 'title'};
-      await element.updateComplete;
-
-      expect(element).toBeDefined();
-      expect(element.field).toEqual({author: 'author', booktitle: 'title'});
     });
   });
 });

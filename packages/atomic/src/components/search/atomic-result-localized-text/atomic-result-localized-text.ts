@@ -89,7 +89,7 @@ export class AtomicResultLocalizedText
 
   private parseFieldValues() {
     const ret: Record<string, unknown> = {};
-    if (Object.keys(this.field).length === 0) {
+    if (!this.field || Object.keys(this.field).length === 0) {
       return ret;
     }
     Object.entries(this.field).forEach(([fieldName, i18nParameter]) => {
