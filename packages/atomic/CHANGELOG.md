@@ -1,3 +1,17 @@
+## <small>3.39.1 (2025-11-20)</small>
+
+* fix: ensure vanilla children components are all defined prior to allow initialization to proceed (#6 ([67f0854](https://github.com/coveo/ui-kit/commits/67f0854)), closes [#6592](https://github.com/coveo/ui-kit/issues/6592)
+* fix(atomic): double analytics on show-more button in result-children components (#6574) ([c26507d](https://github.com/coveo/ui-kit/commits/c26507d)), closes [#6574](https://github.com/coveo/ui-kit/issues/6574)
+* bug: reactive rendering for atomic pager documentation (#6213) ([b104b03](https://github.com/coveo/ui-kit/commits/b104b03)), closes [#6213](https://github.com/coveo/ui-kit/issues/6213)
+* refactor(atomic): migrate ShowHideButton functional component to Lit (#6551) ([1d6ca46](https://github.com/coveo/ui-kit/commits/1d6ca46)), closes [#6551](https://github.com/coveo/ui-kit/issues/6551)
+* chore: add vitest.rootConfig to VS Code settings for Atomic (#6565) ([21c9f57](https://github.com/coveo/ui-kit/commits/21c9f57)), closes [#6565](https://github.com/coveo/ui-kit/issues/6565)
+* chore: update storybook (#6570) ([ae22902](https://github.com/coveo/ui-kit/commits/ae22902)), closes [#6570](https://github.com/coveo/ui-kit/issues/6570)
+* chore(atomic): migrate atomic-field-condition (#6451) ([1262a14](https://github.com/coveo/ui-kit/commits/1262a14)), closes [#6451](https://github.com/coveo/ui-kit/issues/6451)
+* chore(atomic): migrate atomic-result-badge to Lit (#6552) ([0b1d2f9](https://github.com/coveo/ui-kit/commits/0b1d2f9)), closes [#6552](https://github.com/coveo/ui-kit/issues/6552)
+* chore(atomic): Refactor quickview-word-highlight (#6555) ([42014bd](https://github.com/coveo/ui-kit/commits/42014bd)), closes [#6555](https://github.com/coveo/ui-kit/issues/6555)
+
+
+
 ## 3.39.0 (2025-11-19)
 
 * fix:  atomic-result-list display prop validation to warn instead of error (#6437) ([26b6fd1](https://github.com/coveo/ui-kit/commits/26b6fd1)), closes [#6437](https://github.com/coveo/ui-kit/issues/6437)
