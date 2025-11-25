@@ -9,13 +9,6 @@ import './atomic-segmented-facet-scrollable';
 
 vi.mock('@coveo/headless', {spy: true});
 
-const ResizeObserverMock = vi.fn(() => ({
-  observe: vi.fn(),
-  disconnect: vi.fn(),
-  unobserve: vi.fn(),
-}));
-vi.stubGlobal('ResizeObserver', ResizeObserverMock);
-
 describe('atomic-segmented-facet-scrollable', () => {
   const mockedEngine = buildFakeSearchEngine();
 
