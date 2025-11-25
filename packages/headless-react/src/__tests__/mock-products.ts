@@ -24,7 +24,7 @@ const createMockProduct = (overrides: Partial<Product> = {}): Product => ({
   permanentid: randomUUID(),
   position: 1,
   totalNumberOfChildren: 0,
-  resultType: 'product', // todo: figure out how to import enum
+  resultType: 'product', // todo: figure out how to import enum. Do i need string literal?
   ...overrides,
 });
 
