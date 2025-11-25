@@ -53,9 +53,12 @@ const headlessBundles = {
 /**
  * Loads the Bueno library dependency.
  * @param element The Lightning element to use to load dependencies.
- * @returns {Promise<Bueno>}
+ * @returns {Promise}
  */
 const getBueno = (element) => {
+  if (window.Bueno) {
+    return Promise.resolve();
+  }
   return loadScript(element, BuenoPath + '/browser/bueno.js');
 };
 
