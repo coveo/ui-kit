@@ -149,6 +149,7 @@ interface BaseSubControllerProps<S extends SummaryState> {
   fetchMoreProductsActionCreator: FetchProductsActionCreator;
   enrichSummary?: (state: CommerceEngineState) => Partial<S>;
   slotId?: string;
+  enableResults?: boolean;
 }
 
 export interface SearchAndListingSubControllerProps<
@@ -240,6 +241,7 @@ export function buildSearchAndListingsSubControllers<
 ): SearchAndListingSubControllers<P, S> {
   const {
     fetchProductsActionCreator,
+    fetchMoreProductsActionCreator,
     facetResponseSelector,
     isFacetLoadingResponseSelector,
     requestIdSelector,
@@ -248,18 +250,31 @@ export function buildSearchAndListingsSubControllers<
     activeParametersSelector,
     restoreActionCreator,
     facetSearchType,
+    enableResults,
   } = subControllerProps;
+
+  // TODO: check what this wrapping is doing
+  // Wrap action creators to include enableResults
+  const wrappedFetchProducts = () =>
+    fetchProductsActionCreator({enableResults});
+  const wrappedFetchMoreProducts = () =>
+    fetchMoreProductsActionCreator({enableResults});
+
   return {
-    ...buildBaseSubControllers(engine, subControllerProps),
+    ...buildBaseSubControllers(engine, {
+      ...subControllerProps,
+      fetchProductsActionCreator: wrappedFetchProducts,
+      fetchMoreProductsActionCreator: wrappedFetchMoreProducts,
+    }),
     sort(props?: SortProps) {
       return buildCoreSort(engine, {
         ...props,
-        fetchProductsActionCreator,
+        fetchProductsActionCreator: wrappedFetchProducts,
       });
     },
     facetGenerator() {
       const commonOptions = {
-        fetchProductsActionCreator,
+        fetchProductsActionCreator: wrappedFetchProducts,
         facetResponseSelector,
         isFacetLoadingResponseSelector,
         facetSearch: {type: facetSearchType},
@@ -275,13 +290,13 @@ export function buildSearchAndListingsSubControllers<
           buildCategoryFacet(engine, {...options, ...commonOptions}),
         buildLocationFacet: (_engine, options) =>
           buildCommerceLocationFacet(engine, {...options, ...commonOptions}),
-        fetchProductsActionCreator,
+        fetchProductsActionCreator: wrappedFetchProducts,
       });
     },
     breadcrumbManager() {
       return buildCoreBreadcrumbManager(engine, {
         facetResponseSelector,
-        fetchProductsActionCreator,
+        fetchProductsActionCreator: wrappedFetchProducts,
       });
     },
     urlManager(props: UrlManagerProps) {
@@ -299,7 +314,7 @@ export function buildSearchAndListingsSubControllers<
         parametersDefinition,
         activeParametersSelector,
         restoreActionCreator,
-        fetchProductsActionCreator,
+        fetchProductsActionCreator: wrappedFetchProducts,
       });
     },
   };

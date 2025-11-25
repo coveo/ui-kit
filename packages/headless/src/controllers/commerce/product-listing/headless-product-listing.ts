@@ -17,8 +17,8 @@ import {parametersDefinition} from '../../../features/commerce/parameters/parame
 import {activeParametersSelector} from '../../../features/commerce/parameters/parameters-selectors.js';
 import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
 import {
-  createFetchMoreProductsThunk,
-  createFetchProductListingThunk,
+  fetchMoreProducts,
+  fetchProductListing,
   promoteChildToParent,
 } from '../../../features/commerce/product-listing/product-listing-actions.js';
 import {
@@ -134,11 +134,12 @@ export function buildProductListing(
   const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine[stateKey];
+  const enableResults = options.enableResults ?? false;
 
   const subControllers = buildProductListingSubControllers(engine, {
     responseIdSelector,
-    fetchProductsActionCreator: createFetchProductListingThunk(options),
-    fetchMoreProductsActionCreator: createFetchMoreProductsThunk(options),
+    fetchProductsActionCreator: () => fetchProductListing({enableResults}),
+    fetchMoreProductsActionCreator: () => fetchMoreProducts({enableResults}),
     facetResponseSelector,
     isFacetLoadingResponseSelector,
     requestIdSelector,
@@ -152,6 +153,7 @@ export function buildProductListing(
     perPageSelector: perPagePrincipalSelector,
     totalEntriesSelector: totalEntriesPrincipalSelector,
     numberOfProductsSelector,
+    enableResults,
   });
 
   return {
@@ -173,7 +175,7 @@ export function buildProductListing(
       dispatch(promoteChildToParent({child}));
     },
 
-    refresh: () => dispatch(createFetchProductListingThunk(options)()),
+    refresh: () => dispatch(fetchProductListing({enableResults})),
 
     executeFirstRequest() {
       const firstRequestExecuted = responseIdSelector(getState()) !== '';
@@ -182,7 +184,7 @@ export function buildProductListing(
         return;
       }
 
-      dispatch(createFetchProductListingThunk(options)());
+      dispatch(fetchProductListing({enableResults}));
     },
   };
 }

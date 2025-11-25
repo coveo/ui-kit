@@ -6,7 +6,6 @@ import {
 } from '../../../api/commerce/commerce-api-client.js';
 import type {ChildProduct} from '../../../api/commerce/common/product.js';
 import type {ListingCommerceSuccessResponse} from '../../../api/commerce/listing/response.js';
-import type {ProductListingOptions} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
 import type {ProductListingSection} from '../../../state/state-sections.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
 import {
@@ -27,84 +26,76 @@ export interface QueryCommerceAPIThunkReturn {
 export type StateNeededByFetchProductListing =
   StateNeededForFilterableCommerceAPIRequest & ProductListingSection;
 
-/**
- * Creates a fetch product listing thunk with the specified options.
- * @param options - The product listing options
- * @returns An async thunk action creator
- */
-export const createFetchProductListingThunk = (
-  options: ProductListingOptions
-) =>
-  createAsyncThunk<
-    QueryCommerceAPIThunkReturn,
-    void,
-    AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
-  >(
-    'commerce/productListing/fetch',
-    async (
-      _action,
-      {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
-    ) => {
-      const state = getState();
-      const request = buildFilterableCommerceAPIRequest(
-        state,
-        navigatorContext
-      );
-      const fetched = await apiClient.getProductListing({
-        ...request,
-        enableResults: Boolean(options.enableResults),
-      });
+export type FetchProductListingPayload = {
+  /**
+   * When set to true, fills the `results` field rather than the `products` field
+   * in the response. It may also include Spotlight Content in the results.
+   * @default false
+   */
+  enableResults?: boolean;
+};
 
-      if (isErrorResponse(fetched)) {
-        return rejectWithValue(fetched.error);
-      }
+export const fetchProductListing = createAsyncThunk<
+  QueryCommerceAPIThunkReturn,
+  FetchProductListingPayload,
+  AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
+>(
+  'commerce/productListing/fetch',
+  async (
+    arg,
+    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
+  ) => {
+    const state = getState();
+    const request = buildFilterableCommerceAPIRequest(state, navigatorContext);
+    const fetched = await apiClient.getProductListing({
+      ...request,
+      enableResults: Boolean(arg?.enableResults),
+    });
 
-      return {
-        response: fetched.success,
-      };
+    if (isErrorResponse(fetched)) {
+      return rejectWithValue(fetched.error);
     }
-  );
 
-/**
- * Creates a fetch more products thunk with the specified options.
- * @param options - The product listing options
- * @returns An async thunk action creator
- */
-export const createFetchMoreProductsThunk = (options: ProductListingOptions) =>
-  createAsyncThunk<
-    QueryCommerceAPIThunkReturn | null,
-    void,
-    AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
-  >(
-    'commerce/productListing/fetchMoreProducts',
-    async (
-      _action,
-      {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
-    ) => {
-      const state = getState();
-      const moreProductsAvailable = moreProductsAvailableSelector(state);
-      if (!moreProductsAvailable) {
-        return null;
-      }
-      const perPage = perPagePrincipalSelector(state);
-      const numberOfProducts = numberOfProductsSelector(state);
-      const nextPageToRequest = numberOfProducts / perPage;
+    return {
+      response: fetched.success,
+    };
+  }
+);
 
-      const fetched = await apiClient.getProductListing({
-        ...buildFilterableCommerceAPIRequest(state, navigatorContext),
-        enableResults: Boolean(options.enableResults),
-        page: nextPageToRequest,
-      });
-
-      if (isErrorResponse(fetched)) {
-        return rejectWithValue(fetched.error);
-      }
-
-      return {
-        response: fetched.success,
-      };
+export const fetchMoreProducts = createAsyncThunk<
+  QueryCommerceAPIThunkReturn | null,
+  FetchProductListingPayload,
+  AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
+>(
+  'commerce/productListing/fetchMoreProducts',
+  async (
+    arg,
+    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
+  ) => {
+    const state = getState();
+    const moreProductsAvailable = moreProductsAvailableSelector(state);
+    if (!moreProductsAvailable) {
+      return null;
     }
-  );
+    const perPage = perPagePrincipalSelector(state);
+    const numberOfProducts = numberOfProductsSelector(state);
+    const nextPageToRequest = numberOfProducts / perPage;
+
+    const fetched = await apiClient.getProductListing({
+      ...buildFilterableCommerceAPIRequest(state, navigatorContext),
+      enableResults: Boolean(arg?.enableResults),
+      page: nextPageToRequest,
+    });
+
+    if (isErrorResponse(fetched)) {
+      return rejectWithValue(fetched.error);
+    }
+
+    return {
+      response: fetched.success,
+    };
+  }
+);
 
 export interface PromoteChildToParentPayload {
   child: ChildProduct;
