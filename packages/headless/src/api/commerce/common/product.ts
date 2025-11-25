@@ -1,4 +1,5 @@
 import type {HighlightKeyword} from '../../../utils/highlight.js';
+import type {ResultType} from './result.js';
 
 export type ChildProduct = Omit<
   BaseProduct,
@@ -143,6 +144,10 @@ export interface BaseProduct {
    * The ID of the response that returned the product.
    */
   responseId?: string;
+  /**
+   * The result type of the product.
+   */
+  resultType: ResultType.PRODUCT | ResultType.CHILD_PRODUCT;
 }
 
 export interface Product extends BaseProduct {

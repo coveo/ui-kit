@@ -102,16 +102,31 @@ export interface ProductListingState {
   responseId: string;
 }
 
+export interface ProductListingOptions {
+  /**
+   * When set to true, fills the `results` field rather than the `products` field
+   * in the controller state. It may also include Spotlight Content in the results.
+   * @default false
+   */
+  enableResults?: boolean;
+}
+
 /**
  * Creates a `ProductListing` controller instance.
  *
  * @param engine - The headless commerce engine.
+ * @param options - The configurable `ProductListing` controller options.
  * @returns A `ProductListing` controller instance.
  *
  * @group Buildable controllers
  * @category ProductListing
  */
-export function buildProductListing(engine: CommerceEngine): ProductListing {
+export function buildProductListing(
+  engine: CommerceEngine,
+  options: ProductListingOptions = {
+    enableResults: false,
+  }
+): ProductListing {
   if (!loadBaseProductListingReducers(engine)) {
     throw loadReducerError;
   }
@@ -157,7 +172,7 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
       dispatch(promoteChildToParent({child}));
     },
 
-    refresh: () => dispatch(fetchProductListing()),
+    refresh: () => dispatch(fetchProductListing(options)),
 
     executeFirstRequest() {
       const firstRequestExecuted = responseIdSelector(getState()) !== '';
@@ -166,7 +181,7 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
         return;
       }
 
-      dispatch(fetchProductListing());
+      dispatch(fetchProductListing(options));
     },
   };
 }
