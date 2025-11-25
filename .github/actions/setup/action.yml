@@ -18,6 +18,10 @@ inputs:
     description: 'Skip the build step'
     required: false
     default: 'false'
+  cache-retention-days:
+    description: 'Number of days to retain the cache artifact'
+    required: false
+    default: '1'
 #endregion
 runs:
   using: composite
@@ -34,6 +38,12 @@ runs:
         node-version-file: '.nvmrc'
         registry-url: 'https://registry.npmjs.org'
         cache: 'pnpm'
+    # Workaround for PNPM catalog bug: ensure lockfile is sane before installing
+    # https://github.com/pnpm/pnpm/issues/9112
+    # If this fails, run `pnpm dedupe` locally and commit the updated lockfile
+    - name: Check lockfile deduplication
+      run: pnpm dedupe --check
+      shell: bash
     - run: pnpm install --frozen-lockfile --prefer-offline
       shell: bash
 #endregion
@@ -63,6 +73,6 @@ runs:
         name: ${{ runner.os }}-${{ inputs.cache-prefix }}-turbo
         path: .turbo
         include-hidden-files: true
-        retention-days: 1
+        retention-days: ${{ inputs.cache-retention-days }}
         if-no-files-found: error
 #endregion

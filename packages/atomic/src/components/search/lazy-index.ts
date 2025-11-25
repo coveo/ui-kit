@@ -1,5 +1,7 @@
 // Auto-generated file
 export default {
+  'atomic-automatic-facet': async () =>
+    await import('./atomic-automatic-facet/atomic-automatic-facet.js'),
   'atomic-external': async () =>
     await import('./atomic-external/atomic-external.js'),
   'atomic-facet': async () => await import('./atomic-facet/atomic-facet.js'),
@@ -8,6 +10,8 @@ export default {
   'atomic-html': async () => await import('./atomic-html/atomic-html.js'),
   'atomic-load-more-results': async () =>
     await import('./atomic-load-more-results/atomic-load-more-results.js'),
+  'atomic-no-results': async () =>
+    await import('./atomic-no-results/atomic-no-results.js'),
   'atomic-pager': async () => await import('./atomic-pager/atomic-pager.js'),
   'atomic-query-error': async () =>
     await import('./atomic-query-error/atomic-query-error.js'),
@@ -86,6 +90,7 @@ export default {
     await import('./atomic-search-interface/atomic-search-interface.js'),
   'atomic-search-layout': async () =>
     await import('./atomic-search-layout/atomic-search-layout.js'),
+  'atomic-tab': async () => await import('./atomic-tab/atomic-tab.js'),
   'atomic-text': async () => await import('./atomic-text/atomic-text.js'),
 } as Record<string, () => Promise<unknown>>;
 
