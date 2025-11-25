@@ -118,7 +118,6 @@ describe('atomic-result-localized-text', () => {
         localeKey: 'classic_book_advert',
       });
 
-      // mapProperty decorator doesn't work in test environment, set directly
       element.field = {author: 'name'};
       await element.updateComplete;
 
@@ -131,7 +130,6 @@ describe('atomic-result-localized-text', () => {
         localeKey: 'multi_field_test',
       });
 
-      // mapProperty decorator doesn't work in test environment, set directly
       element.field = {author: 'author', booktitle: 'title'};
       await element.updateComplete;
 
@@ -179,12 +177,10 @@ describe('atomic-result-localized-text', () => {
           localeKey: 'classic_book_advert',
         });
 
-        // Set field with non-existent field name
         element.field = {nonexistent: 'name'};
         await element.updateComplete;
 
         expect(element).toBeDefined();
-        // i18n leaves placeholder as-is when value is missing
         expect(element.textContent?.trim()).toBe('Classic book from {{name}}');
       });
     });
@@ -196,7 +192,6 @@ describe('atomic-result-localized-text', () => {
         });
 
         expect(element).toBeDefined();
-        // i18n leaves placeholder as-is when value is missing
         expect(element.textContent?.trim()).toBe('Classic book from {{name}}');
       });
     });
