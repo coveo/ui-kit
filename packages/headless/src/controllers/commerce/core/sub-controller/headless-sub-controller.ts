@@ -149,7 +149,6 @@ interface BaseSubControllerProps<S extends SummaryState> {
   fetchMoreProductsActionCreator: FetchProductsActionCreator;
   enrichSummary?: (state: CommerceEngineState) => Partial<S>;
   slotId?: string;
-  enableResults?: boolean;
 }
 
 export interface SearchAndListingSubControllerProps<
@@ -250,7 +249,6 @@ export function buildSearchAndListingsSubControllers<
     restoreActionCreator,
     facetSearchType,
   } = subControllerProps;
-
   return {
     ...buildBaseSubControllers(engine, subControllerProps),
     sort(props?: SortProps) {
