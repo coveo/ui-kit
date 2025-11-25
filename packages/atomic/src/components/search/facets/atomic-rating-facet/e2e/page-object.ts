@@ -26,4 +26,27 @@ export class AtomicRatingFacetPageObject extends BasePageObject<'atomic-rating-f
   get facetValues() {
     return this.page.getByRole('listitem');
   }
+
+  /**
+   * Wait for component to be stable before screenshot
+   */
+  async waitForVisualStability() {
+    await this.hydrated.waitFor();
+    await this.page.waitForTimeout(500); // Wait for animations
+    await this.page.evaluate(() => document.fonts.ready); // Wait for fonts
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  async captureScreenshot(options?: {animations?: 'disabled' | 'allow'}) {
+    await this.waitForVisualStability();
+
+    const element = await this.component.elementHandle();
+    if (!element) {
+      throw new Error('Component element not found');
+    }
+
+    return await element.screenshot({
+      animations: options?.animations ?? 'disabled',
+    });
+  }
 }

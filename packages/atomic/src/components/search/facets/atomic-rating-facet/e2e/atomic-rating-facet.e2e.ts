@@ -31,3 +31,38 @@ test.describe('with facet values as link', () => {
     });
   });
 });
+
+test.describe('Visual Regression', () => {
+  test('should match baseline in default state', async ({facet}) => {
+    await facet.load({story: 'default'});
+    await facet.hydrated.waitFor();
+
+    const screenshot = await facet.captureScreenshot();
+    expect(screenshot).toMatchSnapshot('rating-facet-default.png', {
+      maxDiffPixelRatio: 0.01,
+    });
+  });
+
+  test('should match baseline with display-as-link', async ({facet}) => {
+    await facet.load({story: 'display-as-link'});
+    await facet.hydrated.waitFor();
+
+    const screenshot = await facet.captureScreenshot();
+    expect(screenshot).toMatchSnapshot('rating-facet-display-as-link.png', {
+      maxDiffPixelRatio: 0.01,
+    });
+  });
+
+  test('should match baseline after selecting a value', async ({facet}) => {
+    await facet.load({story: 'default'});
+    await facet.hydrated.waitFor();
+
+    await facet.getFacetValueButtonByPosition(0).click();
+    await facet.page.waitForTimeout(300);
+
+    const screenshot = await facet.captureScreenshot();
+    expect(screenshot).toMatchSnapshot('rating-facet-after-selection.png', {
+      maxDiffPixelRatio: 0.01,
+    });
+  });
+});
