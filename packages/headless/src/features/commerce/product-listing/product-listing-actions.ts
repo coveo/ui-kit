@@ -26,14 +26,14 @@ export interface QueryCommerceAPIThunkReturn {
 export type StateNeededByFetchProductListing =
   StateNeededForFilterableCommerceAPIRequest & ProductListingSection;
 
-export type FetchProductListingPayload = {
+export interface FetchProductListingPayload {
   /**
    * When set to true, fills the `results` field rather than the `products` field
    * in the response. It may also include Spotlight Content in the results.
    * @default false
    */
   enableResults?: boolean;
-};
+}
 
 export const fetchProductListing = createAsyncThunk<
   QueryCommerceAPIThunkReturn,
@@ -42,14 +42,14 @@ export const fetchProductListing = createAsyncThunk<
 >(
   'commerce/productListing/fetch',
   async (
-    arg,
+    payload,
     {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
   ) => {
     const state = getState();
     const request = buildFilterableCommerceAPIRequest(state, navigatorContext);
     const fetched = await apiClient.getProductListing({
       ...request,
-      enableResults: Boolean(arg?.enableResults),
+      enableResults: Boolean(payload?.enableResults),
     });
 
     if (isErrorResponse(fetched)) {
@@ -69,7 +69,7 @@ export const fetchMoreProducts = createAsyncThunk<
 >(
   'commerce/productListing/fetchMoreProducts',
   async (
-    arg,
+    payload,
     {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
   ) => {
     const state = getState();
@@ -83,7 +83,7 @@ export const fetchMoreProducts = createAsyncThunk<
 
     const fetched = await apiClient.getProductListing({
       ...buildFilterableCommerceAPIRequest(state, navigatorContext),
-      enableResults: Boolean(arg?.enableResults),
+      enableResults: Boolean(payload?.enableResults),
       page: nextPageToRequest,
     });
 
