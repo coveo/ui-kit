@@ -18,7 +18,9 @@ import {activeParametersSelector} from '../../../features/commerce/parameters/pa
 import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
 import {
   fetchMoreProducts,
+  fetchMoreResults,
   fetchProductListing,
+  fetchResultsListing,
   promoteChildToParent,
 } from '../../../features/commerce/product-listing/product-listing-actions.js';
 import {
@@ -136,8 +138,12 @@ export function buildProductListing(
   const getState = () => engine[stateKey];
   const subControllers = buildProductListingSubControllers(engine, {
     responseIdSelector,
-    fetchProductsActionCreator: fetchProductListing,
-    fetchMoreProductsActionCreator: fetchMoreProducts,
+    fetchProductsActionCreator: options.enableResults
+      ? fetchResultsListing
+      : fetchProductListing,
+    fetchMoreProductsActionCreator: options.enableResults
+      ? fetchMoreResults
+      : fetchMoreProducts,
     facetResponseSelector,
     isFacetLoadingResponseSelector,
     requestIdSelector,
@@ -172,7 +178,10 @@ export function buildProductListing(
       dispatch(promoteChildToParent({child}));
     },
 
-    refresh: () => dispatch(fetchProductListing(options)),
+    refresh: () =>
+      dispatch(
+        options.enableResults ? fetchResultsListing() : fetchProductListing()
+      ),
 
     executeFirstRequest() {
       const firstRequestExecuted = responseIdSelector(getState()) !== '';
@@ -181,7 +190,9 @@ export function buildProductListing(
         return;
       }
 
-      dispatch(fetchProductListing(options));
+      dispatch(
+        options.enableResults ? fetchResultsListing() : fetchProductListing()
+      );
     },
   };
 }

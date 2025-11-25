@@ -6,7 +6,6 @@ import {
 } from '../../../api/commerce/commerce-api-client.js';
 import type {ChildProduct} from '../../../api/commerce/common/product.js';
 import type {ListingCommerceSuccessResponse} from '../../../api/commerce/listing/response.js';
-import type {ProductListingOptions} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
 import type {ProductListingSection} from '../../../state/state-sections.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
 import {
@@ -29,19 +28,46 @@ export type StateNeededByFetchProductListing =
 
 export const fetchProductListing = createAsyncThunk<
   QueryCommerceAPIThunkReturn,
-  ProductListingOptions,
+  void,
   AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
 >(
   'commerce/productListing/fetch',
   async (
-    options,
+    _action,
     {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
   ) => {
     const state = getState();
     const request = buildFilterableCommerceAPIRequest(state, navigatorContext);
     const fetched = await apiClient.getProductListing({
       ...request,
-      enableResults: Boolean(options?.enableResults),
+      enableResults: false,
+    });
+
+    if (isErrorResponse(fetched)) {
+      return rejectWithValue(fetched.error);
+    }
+
+    return {
+      response: fetched.success,
+    };
+  }
+);
+
+export const fetchResultsListing = createAsyncThunk<
+  QueryCommerceAPIThunkReturn,
+  void,
+  AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
+>(
+  'commerce/productListing/fetch',
+  async (
+    _action,
+    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
+  ) => {
+    const state = getState();
+    const request = buildFilterableCommerceAPIRequest(state, navigatorContext);
+    const fetched = await apiClient.getProductListing({
+      ...request,
+      enableResults: true,
     });
 
     if (isErrorResponse(fetched)) {
@@ -56,12 +82,12 @@ export const fetchProductListing = createAsyncThunk<
 
 export const fetchMoreProducts = createAsyncThunk<
   QueryCommerceAPIThunkReturn | null,
-  ProductListingOptions,
+  void,
   AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
 >(
   'commerce/productListing/fetchMoreProducts',
   async (
-    options,
+    _actions,
     {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
   ) => {
     const state = getState();
@@ -75,7 +101,42 @@ export const fetchMoreProducts = createAsyncThunk<
 
     const fetched = await apiClient.getProductListing({
       ...buildFilterableCommerceAPIRequest(state, navigatorContext),
-      enableResults: Boolean(options?.enableResults),
+      enableResults: false,
+      page: nextPageToRequest,
+    });
+
+    if (isErrorResponse(fetched)) {
+      return rejectWithValue(fetched.error);
+    }
+
+    return {
+      response: fetched.success,
+    };
+  }
+);
+
+export const fetchMoreResults = createAsyncThunk<
+  QueryCommerceAPIThunkReturn | null,
+  void,
+  AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
+>(
+  'commerce/productListing/fetchMoreProducts',
+  async (
+    _action,
+    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
+  ) => {
+    const state = getState();
+    const moreProductsAvailable = moreProductsAvailableSelector(state);
+    if (!moreProductsAvailable) {
+      return null;
+    }
+    const perPage = perPagePrincipalSelector(state);
+    const numberOfProducts = numberOfProductsSelector(state);
+    const nextPageToRequest = numberOfProducts / perPage;
+
+    const fetched = await apiClient.getProductListing({
+      ...buildFilterableCommerceAPIRequest(state, navigatorContext),
+      enableResults: true,
       page: nextPageToRequest,
     });
 
