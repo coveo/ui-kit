@@ -446,7 +446,7 @@ describe('product-listing-slice', () => {
   });
 });
 
-const getProductsFromResults = (results: Result[]) => {
+const getProductsFromResults = (results: Result[]): Array<Product | null> => {
   const products: Array<Product | null> = [];
   for (const result of results) {
     products.push(result.resultType !== ResultType.SPOTLIGHT ? result : null);
@@ -454,7 +454,9 @@ const getProductsFromResults = (results: Result[]) => {
   return products;
 };
 
-const getBaseProductsFromBaseResults = (results: BaseResult[]) => {
+const getBaseProductsFromBaseResults = (
+  results: BaseResult[]
+): Array<BaseProduct | null> => {
   const products: Array<BaseProduct | null> = [];
   for (const result of results) {
     products.push(result.resultType !== ResultType.SPOTLIGHT ? result : null);
