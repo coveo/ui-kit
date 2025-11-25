@@ -11,7 +11,9 @@ import {
 } from '../../../app/search-engine/search-engine.js';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {LegacySearchAction} from '../../../features/analytics/analytics-utils.js';
+import {loadConfigurationActions} from '../../../features/configuration/configuration-actions-loader.js';
 import {createWaitForActionMiddleware} from '../../../utils/utils.js';
+import {createAccessTokenManager} from '../../common/access-token-manager.js';
 import {augmentPreprocessRequestWithForwardedFor} from '../../common/augment-preprocess-request.js';
 import {
   buildControllerDefinitions,
@@ -123,6 +125,10 @@ export function defineSearchEngine<
   type HydrateStaticStateFromBuildResultParameters =
     Parameters<HydrateStaticStateFromBuildResultFunction>;
 
+  const tokenManager = createAccessTokenManager(
+    engineOptions.configuration.accessToken
+  );
+
   const getOptions = () => {
     return engineOptions;
   };
@@ -131,6 +137,13 @@ export function defineSearchEngine<
     navigatorContextProvider: NavigatorContextProvider
   ) => {
     engineOptions.navigatorContextProvider = navigatorContextProvider;
+  };
+
+  const getAccessToken = () => tokenManager.getAccessToken();
+
+  const setAccessToken = (accessToken: string) => {
+    engineOptions.configuration.accessToken = accessToken;
+    tokenManager.setAccessToken(accessToken);
   };
 
   const build: BuildFunction = async (...[buildOptions]: BuildParameters) => {
@@ -145,6 +158,18 @@ export function defineSearchEngine<
         ? await buildOptions.extend(getOptions())
         : getOptions()
     );
+
+    const updateEngineConfiguration = (accessToken: string) => {
+      const {updateBasicConfiguration} = loadConfigurationActions(engine);
+      engine.dispatch(
+        updateBasicConfiguration({
+          accessToken,
+        })
+      );
+    };
+
+    tokenManager.registerCallback(updateEngineConfiguration);
+
     const controllers = buildControllerDefinitions({
       definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
       engine,
@@ -226,5 +251,7 @@ export function defineSearchEngine<
     fetchStaticState,
     hydrateStaticState,
     setNavigatorContextProvider,
+    getAccessToken,
+    setAccessToken,
   };
 }
