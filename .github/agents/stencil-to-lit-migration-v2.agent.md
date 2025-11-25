@@ -122,9 +122,29 @@ export class ComponentPageObject extends BasePageObject {
 
 #### 0.2: Add Visual Tests Section
 
-Add visual tests at the end of the E2E file (or create if file is new):
+Add visual tests at the end of the E2E file. First, ensure the proper fixture setup exists:
 
+**fixture.ts** (if not already present):
 ```typescript
+import {test as base} from '@playwright/test';
+import {ComponentPageObject} from './page-object';
+
+type MyFixtures = {
+  component: ComponentPageObject;
+};
+
+export const test = base.extend<MyFixtures>({
+  component: async ({page}, use) => {
+    await use(new ComponentPageObject(page));
+  },
+});
+export {expect} from '@playwright/test';
+```
+
+**E2E test file** - add visual tests at the end:
+```typescript
+import {expect, test} from './fixture'; // Import from local fixture, NOT @playwright/test
+
 test.describe('Visual Regression', () => {
   test('should match baseline in default state', async ({component}) => {
     await component.load({story: 'default'});
@@ -152,7 +172,12 @@ test.describe('Visual Regression', () => {
 });
 ```
 
-**Important**: Add minimal visual tests (default state + 1-2 key interactions).
+**Important notes:**
+- Import `test` and `expect` from `./fixture`, NOT from `@playwright/test`
+- The `{component}` parameter comes from the fixture setup
+- Replace `component` with your component's fixture name (e.g., `{pager}`, `{searchBox}`)
+- Add minimal visual tests (default state + 1-2 key interactions)
+- See `packages/atomic/src/components/search/atomic-pager/e2e/` for complete example
 
 #### 0.3: Generate Baseline Snapshots from Stencil
 
