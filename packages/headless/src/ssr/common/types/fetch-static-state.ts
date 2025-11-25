@@ -12,7 +12,18 @@ import type {
 import type {FromBuildResult} from './from-build-result.js';
 import type {OptionsTuple} from './utilities.js';
 
-type FetchStaticStateOptions = {};
+type FetchStaticStateOptions = {
+  /**
+   * Whether to skip executing the search on the server side.
+   * When true, the engine initializes without executing a search.
+   *
+   * @deprecated This option will be removed in the next major version.
+   * Use separate engine definitions for search and standalone pages instead.
+   *
+   * @defaultValue `false`
+   */
+  skipSearch?: boolean;
+};
 
 export type FetchStaticState<
   TEngine extends CoreEngine | CoreEngineNext,
@@ -23,6 +34,11 @@ export type FetchStaticState<
 > = {
   /**
    * Executes only the initial search for a given configuration, then returns a resumable snapshot of engine state along with the state of the controllers.
+   *
+   * Set `skipSearch: true` in the parameters to skip search execution and only initialize controllers.
+   * This is useful for standalone search boxes that don't need search results on initial load.
+   *
+   * Note: The `skipSearch` option is deprecated and will be removed in the next major version.
    *
    * Useful for static generation and server-side rendering.
    */

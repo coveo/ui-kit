@@ -21,23 +21,6 @@ export function fetchStaticStateFactory<
       options
     )(params);
 
-    // Skip search execution if skipSearch parameter is true
-    if (params.skipSearch) {
-      const staticState = createStaticState<
-        SearchCompletedAction,
-        TControllerDefinitions
-      >({
-        searchActions: [],
-        controllers,
-      });
-
-      return {
-        ...params,
-        ...staticState,
-      };
-    }
-
-    // Default behavior: execute search
     engine.executeFirstSearch();
     const searchActions = [await engine.waitForSearchCompletedAction()];
 

@@ -293,5 +293,66 @@ describe('SSR', () => {
         });
       });
     });
+
+    describe('when skipSearch parameter is used', () => {
+      it('should skip search execution when skipSearch is true', async () => {
+        const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
+        const staticState = await fetchStaticState({skipSearch: true});
+
+        expect(staticState).toBeTruthy();
+        expect(staticState.searchAction).toBeUndefined();
+        expect(staticState.controllers).toBeDefined();
+      });
+
+      it('should execute search when skipSearch is false', async () => {
+        const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
+        const staticState = await fetchStaticState({skipSearch: false});
+
+        expect(staticState).toBeTruthy();
+        expect(staticState.searchAction).toBeDefined();
+        expect(staticState.controllers).toBeDefined();
+      });
+
+      it('should execute search when skipSearch is undefined (default behavior)', async () => {
+        const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
+        const staticState = await fetchStaticState();
+
+        expect(staticState).toBeTruthy();
+        expect(staticState.searchAction).toBeDefined();
+        expect(staticState.controllers).toBeDefined();
+      });
+
+      it('should be able to hydrate static state that was created with skipSearch: true', async () => {
+        const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
+        const staticState = await fetchStaticState({skipSearch: true});
+
+        const hydrateStaticState = vi.mocked(
+          engineDefinition.hydrateStaticState
+        );
+        const hydratedState = await hydrateStaticState(staticState);
+
+        expect(hydratedState).toBeTruthy();
+        expect(hydratedState.engine).toBeDefined();
+        expect(hydratedState.controllers).toBeDefined();
+        expect(hydratedState.engine.state.configuration.organizationId).toBe(
+          getSampleSearchEngineConfiguration().organizationId
+        );
+      });
+
+      it('should skip search execution in fromBuildResult when skipSearch is true', async () => {
+        const fetchStaticState = vi.mocked(engineDefinition.fetchStaticState);
+        const build = vi.mocked(engineDefinition.build);
+        const buildResult = await build();
+
+        const staticState = await fetchStaticState.fromBuildResult({
+          buildResult,
+          skipSearch: true,
+        });
+
+        expect(staticState).toBeTruthy();
+        expect(staticState.searchAction).toBeUndefined();
+        expect(staticState.controllers).toBeDefined();
+      });
+    });
   });
 });

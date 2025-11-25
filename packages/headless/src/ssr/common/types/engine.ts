@@ -103,7 +103,7 @@ export interface EngineStaticState<
   TSearchAction extends UnknownAction,
   TControllers extends ControllerStaticStateMap,
 > {
-  searchAction: TSearchAction;
+  searchAction: TSearchAction | undefined;
   controllers: TControllers;
 }
 

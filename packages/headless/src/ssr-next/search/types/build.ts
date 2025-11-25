@@ -22,11 +22,4 @@ export type SearchCompletedAction = ReturnType<
 export type BuildConfig = {
   navigatorContext: NavigatorContext;
   searchParams?: SearchParameterManagerInitialState['parameters'];
-  /**
-   * Whether to skip executing the search on the server side.
-   * When true, the engine initializes without executing a search,
-   * useful for standalone search boxes that only need query suggestions.
-   * @defaultValue `false`
-   */
-  skipSearch?: boolean;
 };

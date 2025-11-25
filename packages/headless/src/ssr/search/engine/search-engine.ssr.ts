@@ -96,6 +96,21 @@ export interface SearchEngineDefinition<
  * @returns Three utility functions to fetch the initial state of the engine in SSR, hydrate the state in CSR,
  *  and a build function that can be used for edge cases requiring more control.
  *
+ * @example
+ * ```ts
+ * // Basic usage - executes search on server
+ * const engineDefinition = defineSearchEngine(config);
+ * const staticState = await engineDefinition.fetchStaticState();
+ * ```
+ *
+ * @example
+ * ```ts
+ * // Skip search execution (deprecated - use separate engine definitions instead)
+ * const staticState = await engineDefinition.fetchStaticState({
+ *   skipSearch: true,
+ * });
+ * ```
+ *
  * @group Engine
  */
 export function defineSearchEngine<
@@ -167,9 +182,20 @@ export function defineSearchEngine<
           loggerOptions: engineOptions.loggerOptions,
         });
 
-      const buildResult = await build(...params);
+      const skipSearch = params[0]?.skipSearch;
+      // Remove skipSearch from params before passing to build
+      const buildParams = params[0]
+        ? [
+            Object.fromEntries(
+              Object.entries(params[0]).filter(([key]) => key !== 'skipSearch')
+            ),
+          ]
+        : [];
+
+      const buildResult = await build(...(buildParams as BuildParameters));
       const staticState = await fetchStaticState.fromBuildResult({
         buildResult,
+        skipSearch,
       });
       return staticState;
     },
@@ -180,9 +206,22 @@ export function defineSearchEngine<
         const [
           {
             buildResult: {engine, controllers},
+            skipSearch,
           },
         ] = params;
 
+        // Skip search execution if skipSearch parameter is true
+        if (skipSearch) {
+          return createStaticState({
+            searchAction: undefined,
+            controllers,
+          }) as EngineStaticState<
+            UnknownAction,
+            InferControllerStaticStateMapFromDefinitions<TControllerDefinitions>
+          >;
+        }
+
+        // Default behavior: execute search
         engine.executeFirstSearch();
         return createStaticState({
           searchAction: await engine.waitForSearchCompletedAction(),
@@ -214,8 +253,13 @@ export function defineSearchEngine<
             searchAction,
           },
         ] = params;
-        engine.dispatch(searchAction);
-        await engine.waitForSearchCompletedAction();
+
+        // Only dispatch and wait if searchAction is defined (not skipped)
+        if (searchAction) {
+          engine.dispatch(searchAction);
+          await engine.waitForSearchCompletedAction();
+        }
+
         return {engine, controllers};
       },
     }
