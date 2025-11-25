@@ -356,7 +356,8 @@ Before completing a component migration, verify:
 - [ ] Component migrated to Lit with proper decorators and lifecycle
 - [ ] All imports use `@/*` path aliases (no `../` imports)
 - [ ] Unit tests pass: `cd packages/atomic && pnpm test`
-- [ ] E2E tests pass: `cd packages/atomic && pnpm e2e`
+- [ ] Cypress E2E tests pass: `cd packages/atomic && pnpm e2e`
+- [ ] Playwright E2E tests pass: `cd packages/atomic && pnpm exec playwright test`
 - [ ] **Visual tests pass**: Lit component matches Stencil baseline snapshots (from Step 0)
 - [ ] Storybook stories work with MSW mocks
 - [ ] MDX documentation complete
@@ -619,8 +620,8 @@ pnpm e2e
 cd packages/atomic
 pnpm test              # Run unit tests
 pnpm test:watch        # Watch mode for tests
-pnpm e2e               # Run E2E tests (includes visual regression)
-pnpm e2e --debug       # Debug E2E tests
+pnpm exec playwright test               # Run all Playwright E2E tests (includes visual regression)
+pnpm exec playwright test component-name.e2e.ts  # Run E2E tests for a specific component (includes visual regression)
 pnpm build:stencil-lit # Build atomic package
 
 # Update visual snapshots after intentional changes
