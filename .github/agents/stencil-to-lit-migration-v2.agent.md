@@ -83,7 +83,7 @@ The visual tests must exist first so we can generate baseline snapshots from the
 
 If `e2e/{component-name}/page-object.ts` doesn't exist yet, create it with basic structure (or update it with this structure):
 ```typescript
-import {test as base} from '@playwright/test';
+import type {Page} from '@playwright/test';
 import {BasePageObject} from '@/playwright-utils/base-page-object'; // or lit-base-page-object
 
 export class ComponentPageObject extends BasePageObject {
