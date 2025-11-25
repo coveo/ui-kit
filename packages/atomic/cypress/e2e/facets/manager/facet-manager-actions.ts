@@ -3,7 +3,6 @@ import {
   TagProps,
   TestFixture,
 } from '../../../fixtures/test-fixture';
-import {automaticFacetGeneratorComponent} from '../automatic-facet-generator/automatic-facet-generator-assertions';
 import {hierarchicalField} from '../category-facet/category-facet-actions';
 import {categoryFacetComponent} from '../category-facet/category-facet-selectors';
 import {colorFacetField} from '../color-facet/color-facet-actions';
@@ -50,42 +49,6 @@ export const addFacetManagerWithStaticFacets =
     const timeframeFacet = generateComponentHTML(timeframeFacetComponent);
     timeframeFacet.append(...createTimeframeElements());
     manager.append(timeframeFacet);
-
-    env.withElement(manager);
-  };
-
-export const addFacetManagerWithAutomaticFacets =
-  (props: TagProps = {}) =>
-  (env: TestFixture) => {
-    const manager = generateComponentHTML(facetManagerComponent, props);
-    manager.append(
-      generateComponentHTML(automaticFacetGeneratorComponent, {
-        'desired-count': '3',
-      })
-    );
-
-    env.withElement(manager);
-  };
-
-export const addFacetManagerWithBothTypesOfFacets =
-  (props: TagProps = {}, generatorCollapseFacetsAfter = 3) =>
-  (env: TestFixture) => {
-    const manager = generateComponentHTML(facetManagerComponent, props);
-
-    manager.append(generateComponentHTML(facetComponent, {field: facetField}));
-    manager.append(
-      generateComponentHTML(numericFacetComponent, {field: numericFacetField})
-    );
-    manager.append(
-      generateComponentHTML(categoryFacetComponent, {field: hierarchicalField})
-    );
-
-    manager.append(
-      generateComponentHTML(automaticFacetGeneratorComponent, {
-        'desired-count': '3',
-        collapseFacetsAfter: generatorCollapseFacetsAfter,
-      })
-    );
 
     env.withElement(manager);
   };

@@ -3,7 +3,6 @@ import {
   TagProps,
   TestFixture,
 } from '../fixtures/test-fixture';
-import {automaticFacetGeneratorComponent} from './facets/automatic-facet-generator/automatic-facet-generator-assertions';
 import {hierarchicalField} from './facets/category-facet/category-facet-actions';
 import {categoryFacetComponent} from './facets/category-facet/category-facet-selectors';
 import {colorFacetField} from './facets/color-facet/color-facet-actions';
@@ -72,34 +71,6 @@ export const addRefineToggleWithStaticFacets =
 export const addRefineToggleWithStaticFacetsAndNoManager =
   addRefineToggleWithStaticFacetsWithSpecificParent('div');
 
-export const addRefineToggleWithAutomaticFacets =
-  (props: TagProps = {}) =>
-  (env: TestFixture) => {
-    const automaticFacetGenerator = generateComponentHTML(
-      automaticFacetGeneratorComponent,
-      {'desired-count': '3'}
-    );
-    const refineToggle = generateComponentHTML(refineToggleComponent, props);
-
-    env.withElement(automaticFacetGenerator).withElement(refineToggle);
-  };
-
-export const addFacetManagerWithBothTypesOfFacets =
-  (props: TagProps = {}) =>
-  (env: TestFixture) => {
-    const manager = generateComponentHTML(facetManagerComponent);
-    manager.append(generateComponentHTML(facetComponent, {field: facetField}));
-    const automaticFacetGenerator = generateComponentHTML(
-      automaticFacetGeneratorComponent,
-      {'desired-count': '1'}
-    );
-    const refineToggle = generateComponentHTML(refineToggleComponent, props);
-
-    env
-      .withElement(manager)
-      .withElement(automaticFacetGenerator)
-      .withElement(refineToggle);
-  };
 
 export const addRefineToggleRangeVariations =
   (props: TagProps = {}) =>

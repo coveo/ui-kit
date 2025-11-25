@@ -1,5 +1,6 @@
 import {
   AtomicAriaLive as LitAtomicAriaLive,
+  AtomicAutomaticFacet as LitAtomicAutomaticFacet,
   AtomicComponentError as LitAtomicComponentError,
   AtomicExternal as LitAtomicExternal,
   AtomicFacet as LitAtomicFacet,
@@ -38,7 +39,7 @@ import {
   AtomicSearchBoxRecentQueries as LitAtomicSearchBoxRecentQueries,
   AtomicSearchInterface as LitAtomicSearchInterface,
   AtomicSearchLayout as LitAtomicSearchLayout,
-  AtomicSegmentedFacetScrollable as LitAtomicSegmentedFacetScrollable,
+  AtomicTab as LitAtomicTab,
   AtomicText as LitAtomicText,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
@@ -48,6 +49,12 @@ export const AtomicAriaLive = createComponent({
   tagName: 'atomic-aria-live',
   react: React,
   elementClass: LitAtomicAriaLive,
+});
+
+export const AtomicAutomaticFacet = createComponent({
+  tagName: 'atomic-automatic-facet',
+  react: React,
+  elementClass: LitAtomicAutomaticFacet,
 });
 
 export const AtomicComponentError = createComponent({
@@ -278,10 +285,10 @@ export const AtomicSearchLayout = createComponent({
   elementClass: LitAtomicSearchLayout,
 });
 
-export const AtomicSegmentedFacetScrollable = createComponent({
-  tagName: 'atomic-segmented-facet-scrollable',
+export const AtomicTab = createComponent({
+  tagName: 'atomic-tab',
   react: React,
-  elementClass: LitAtomicSegmentedFacetScrollable,
+  elementClass: LitAtomicTab,
 });
 
 export const AtomicText = createComponent({
