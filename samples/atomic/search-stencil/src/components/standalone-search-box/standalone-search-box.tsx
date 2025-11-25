@@ -23,6 +23,7 @@ export class StandaloneSearchBox {
       <atomic-search-interface id="searchbox" reflect-state-in-url="false">
         <atomic-search-box
           redirection-url="/search"
+          //@ts-expect-error error
           onRedirect={(e) => {
             e.preventDefault();
             const {redirectTo, value} = e.detail;
