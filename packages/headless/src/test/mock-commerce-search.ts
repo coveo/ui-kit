@@ -10,6 +10,7 @@ export function buildSearchResponse(
   return {
     response: {
       ...buildFetchProductsCoreResponse(response).response,
+      products: response.products ?? [],
       queryCorrection: response.queryCorrection,
     },
     originalQuery,

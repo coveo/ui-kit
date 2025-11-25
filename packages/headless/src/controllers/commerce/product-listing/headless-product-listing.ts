@@ -1,8 +1,6 @@
 import type {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
-import type {
-  ChildProduct,
-  Product,
-} from '../../../api/commerce/common/product.js';
+import type {ChildProduct} from '../../../api/commerce/common/product.js';
+import type {Result} from '../../../api/commerce/common/result.js';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {configuration} from '../../../app/common-reducers.js';
 import {stateKey} from '../../../app/state-key.js';
@@ -96,7 +94,7 @@ export interface ProductListing
  * @category ProductListing
  */
 export interface ProductListingState {
-  products: Product[];
+  results: Result[];
   error: CommerceAPIErrorStatusResponse | null;
   isLoading: boolean;
   responseId: string;
@@ -143,10 +141,9 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
     ...subControllers,
 
     get state() {
-      const {products, error, isLoading, responseId} =
-        getState().productListing;
+      const {results, error, isLoading, responseId} = getState().productListing;
       return {
-        products,
+        results,
         error,
         isLoading,
         responseId,

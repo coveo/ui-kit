@@ -57,7 +57,7 @@ export const productListingReducer = createReducer(
               : preprocessProduct(
                   result,
                   paginationOffset + index + 1,
-                  action.payload.response.responseId
+                  action.payload!.response.responseId
                 )
           )
         );
