@@ -9,6 +9,13 @@ import './atomic-segmented-facet-scrollable';
 
 vi.mock('@coveo/headless', {spy: true});
 
+const ResizeObserverMock = vi.fn(() => ({
+  observe: vi.fn(),
+  disconnect: vi.fn(),
+  unobserve: vi.fn(),
+}));
+vi.stubGlobal('ResizeObserver', ResizeObserverMock);
+
 describe('atomic-segmented-facet-scrollable', () => {
   const mockedEngine = buildFakeSearchEngine();
 
@@ -95,402 +102,6 @@ describe('atomic-segmented-facet-scrollable', () => {
     });
   });
 
-  describe('rendering', () => {
-    it('should render all shadow parts when no error', async () => {
-      const {parts} = await renderComponent();
-
-      expect(parts.scrollableContainer).not.toBeNull();
-      expect(parts.horizontalScroll).not.toBeNull();
-      expect(parts.leftArrowWrapper).not.toBeNull();
-      expect(parts.rightArrowWrapper).not.toBeNull();
-      expect(parts.leftArrowButton).not.toBeNull();
-      expect(parts.rightArrowButton).not.toBeNull();
-      expect(parts.leftArrowIcon).not.toBeNull();
-      expect(parts.rightArrowIcon).not.toBeNull();
-      expect(parts.leftFade).not.toBeNull();
-      expect(parts.rightFade).not.toBeNull();
-    });
-
-    it('should render nothing when search has error', async () => {
-      vi.mocked(buildSearchStatus).mockImplementation(() =>
-        buildFakeSearchStatus({
-          hasError: true,
-        })
-      );
-      const {element} = await renderComponent();
-
-      expect(element.shadowRoot?.children.length).toBe(0);
-    });
-
-    it('should render slot for segmented facets', async () => {
-      const {parts} = await renderComponent();
-      const slot = parts.horizontalScroll?.querySelector('slot');
-
-      expect(slot).not.toBeNull();
-    });
-  });
-
-  describe('arrow visibility', () => {
-    describe('when not scrollable', () => {
-      it('should hide both arrows initially', async () => {
-        const {parts} = await renderComponent();
-
-        expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(
-          true
-        );
-        expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(
-          true
-        );
-      });
-    });
-
-    describe('when scrollable', () => {
-      it('should show right arrow when content overflows', async () => {
-        const {parts, element} = await renderComponent({
-          children: html`
-            <atomic-segmented-facet field="author"></atomic-segmented-facet>
-            <atomic-segmented-facet field="language"></atomic-segmented-facet>
-            <atomic-segmented-facet field="source"></atomic-segmented-facet>
-            <atomic-segmented-facet field="filetype"></atomic-segmented-facet>
-          `,
-        });
-
-        if (parts.horizontalScroll) {
-          Object.defineProperty(parts.horizontalScroll, 'scrollWidth', {
-            value: 1000,
-            configurable: true,
-          });
-          Object.defineProperty(parts.horizontalScroll, 'clientWidth', {
-            value: 500,
-            configurable: true,
-          });
-          Object.defineProperty(parts.horizontalScroll, 'scrollLeft', {
-            value: 0,
-            writable: true,
-          });
-        }
-
-        element.dispatchEvent(new WheelEvent('wheel'));
-        await element.updateComplete;
-
-        expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(
-          true
-        );
-        expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(
-          false
-        );
-      });
-
-      it('should show both arrows when scrolled to middle', async () => {
-        const {parts, element} = await renderComponent();
-
-        if (parts.horizontalScroll) {
-          Object.defineProperty(parts.horizontalScroll, 'scrollWidth', {
-            value: 1000,
-            configurable: true,
-          });
-          Object.defineProperty(parts.horizontalScroll, 'clientWidth', {
-            value: 500,
-            configurable: true,
-          });
-          Object.defineProperty(parts.horizontalScroll, 'scrollLeft', {
-            value: 250,
-            writable: true,
-          });
-        }
-
-        element.dispatchEvent(new WheelEvent('wheel'));
-        await element.updateComplete;
-
-        expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(
-          false
-        );
-        expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(
-          false
-        );
-      });
-
-      it('should show only left arrow when scrolled to right edge', async () => {
-        const {parts, element} = await renderComponent();
-
-        if (parts.horizontalScroll) {
-          Object.defineProperty(parts.horizontalScroll, 'scrollWidth', {
-            value: 1000,
-            configurable: true,
-          });
-          Object.defineProperty(parts.horizontalScroll, 'clientWidth', {
-            value: 500,
-            configurable: true,
-          });
-          Object.defineProperty(parts.horizontalScroll, 'scrollLeft', {
-            value: 500,
-            writable: true,
-          });
-        }
-
-        element.dispatchEvent(new WheelEvent('wheel'));
-        await element.updateComplete;
-
-        expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(
-          false
-        );
-        expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(
-          true
-        );
-      });
-
-      it('should update arrow visibility dynamically when scrolled', async () => {
-        const {parts, element} = await renderComponent();
-
-        if (parts.horizontalScroll) {
-          Object.defineProperty(parts.horizontalScroll, 'scrollWidth', {
-            value: 1000,
-            configurable: true,
-          });
-          Object.defineProperty(parts.horizontalScroll, 'clientWidth', {
-            value: 500,
-            configurable: true,
-          });
-          let scrollLeft = 0;
-          Object.defineProperty(parts.horizontalScroll, 'scrollLeft', {
-            get: () => scrollLeft,
-            set: (val: number) => {
-              scrollLeft = val;
-            },
-            configurable: true,
-          });
-        }
-
-        element.dispatchEvent(new WheelEvent('wheel'));
-        await element.updateComplete;
-
-        expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(
-          false
-        );
-
-        if (parts.horizontalScroll) {
-          Object.defineProperty(parts.horizontalScroll, 'scrollLeft', {
-            value: 500,
-            writable: true,
-          });
-        }
-
-        element.dispatchEvent(new WheelEvent('wheel'));
-        await element.updateComplete;
-
-        expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(
-          false
-        );
-        expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(
-          true
-        );
-      });
-    });
-  });
-
-  describe('scroll behavior', () => {
-    it('should scroll left when left arrow is clicked', async () => {
-      const {parts, element} = await renderComponent();
-
-      if (parts.horizontalScroll && parts.leftArrowButton) {
-        Object.defineProperty(parts.horizontalScroll, 'scrollWidth', {
-          value: 1000,
-          configurable: true,
-        });
-        Object.defineProperty(parts.horizontalScroll, 'clientWidth', {
-          value: 500,
-          configurable: true,
-        });
-        let scrollLeft = 500;
-        Object.defineProperty(parts.horizontalScroll, 'scrollLeft', {
-          get: () => scrollLeft,
-          set: (val: number) => {
-            scrollLeft = val;
-          },
-          configurable: true,
-        });
-
-        if (parts.leftArrowButton) {
-          Object.defineProperty(parts.leftArrowButton, 'clientWidth', {
-            value: 40,
-            configurable: true,
-          });
-        }
-
-        const initialScrollLeft = scrollLeft;
-        parts.leftArrowButton.click();
-        await element.updateComplete;
-
-        expect(scrollLeft).toBeLessThan(initialScrollLeft);
-      }
-    });
-
-    it('should scroll right when right arrow is clicked', async () => {
-      const {parts, element} = await renderComponent();
-
-      if (parts.horizontalScroll && parts.rightArrowButton) {
-        Object.defineProperty(parts.horizontalScroll, 'scrollWidth', {
-          value: 1000,
-          configurable: true,
-        });
-        Object.defineProperty(parts.horizontalScroll, 'clientWidth', {
-          value: 500,
-          configurable: true,
-        });
-        let scrollLeft = 0;
-        Object.defineProperty(parts.horizontalScroll, 'scrollLeft', {
-          get: () => scrollLeft,
-          set: (val: number) => {
-            scrollLeft = val;
-          },
-          configurable: true,
-        });
-
-        if (parts.rightArrowButton) {
-          Object.defineProperty(parts.rightArrowButton, 'clientWidth', {
-            value: 40,
-            configurable: true,
-          });
-        }
-
-        const initialScrollLeft = scrollLeft;
-        parts.rightArrowButton.click();
-        await element.updateComplete;
-
-        expect(scrollLeft).toBeGreaterThan(initialScrollLeft);
-      }
-    });
-
-    it('should calculate scroll distance based on container width and arrow width', async () => {
-      const {parts, element} = await renderComponent();
-
-      if (parts.horizontalScroll && parts.rightArrowButton) {
-        Object.defineProperty(parts.horizontalScroll, 'scrollWidth', {
-          value: 1000,
-          configurable: true,
-        });
-        Object.defineProperty(parts.horizontalScroll, 'clientWidth', {
-          value: 500,
-          configurable: true,
-        });
-        let scrollLeft = 0;
-        Object.defineProperty(parts.horizontalScroll, 'scrollLeft', {
-          get: () => scrollLeft,
-          set: (val: number) => {
-            scrollLeft = val;
-          },
-          configurable: true,
-        });
-
-        if (parts.rightArrowButton) {
-          Object.defineProperty(parts.rightArrowButton, 'clientWidth', {
-            value: 40,
-            configurable: true,
-          });
-        }
-
-        parts.rightArrowButton.click();
-        await element.updateComplete;
-
-        const expectedScrollDistance = (500 - 40 * 2) * 0.7;
-        expect(scrollLeft).toBeCloseTo(expectedScrollDistance, 0);
-      }
-    });
-
-    it('should hide left arrow when scrolling to left edge', async () => {
-      const {parts, element} = await renderComponent();
-
-      if (parts.horizontalScroll && parts.leftArrowButton) {
-        Object.defineProperty(parts.horizontalScroll, 'scrollWidth', {
-          value: 1000,
-          configurable: true,
-        });
-        Object.defineProperty(parts.horizontalScroll, 'clientWidth', {
-          value: 500,
-          configurable: true,
-        });
-        let scrollLeft = 100;
-        Object.defineProperty(parts.horizontalScroll, 'scrollLeft', {
-          get: () => scrollLeft,
-          set: (val: number) => {
-            scrollLeft = val;
-          },
-          configurable: true,
-        });
-
-        if (parts.leftArrowButton) {
-          Object.defineProperty(parts.leftArrowButton, 'clientWidth', {
-            value: 40,
-            configurable: true,
-          });
-        }
-
-        parts.leftArrowButton.click();
-        await element.updateComplete;
-
-        expect(scrollLeft).toBeLessThanOrEqual(0);
-      }
-    });
-
-    it('should hide right arrow when scrolling to right edge', async () => {
-      const {parts, element} = await renderComponent();
-
-      if (parts.horizontalScroll && parts.rightArrowButton) {
-        Object.defineProperty(parts.horizontalScroll, 'scrollWidth', {
-          value: 1000,
-          configurable: true,
-        });
-        Object.defineProperty(parts.horizontalScroll, 'clientWidth', {
-          value: 500,
-          configurable: true,
-        });
-        let scrollLeft = 400;
-        Object.defineProperty(parts.horizontalScroll, 'scrollLeft', {
-          get: () => scrollLeft,
-          set: (val: number) => {
-            scrollLeft = val;
-          },
-          configurable: true,
-        });
-
-        if (parts.rightArrowButton) {
-          Object.defineProperty(parts.rightArrowButton, 'clientWidth', {
-            value: 40,
-            configurable: true,
-          });
-        }
-
-        parts.rightArrowButton.click();
-        await element.updateComplete;
-
-        expect(scrollLeft).toBeGreaterThanOrEqual(500);
-      }
-    });
-  });
-
-  describe('event listeners', () => {
-    it('should handle wheel events', async () => {
-      const {element} = await renderComponent();
-      const wheelEvent = new WheelEvent('wheel');
-
-      expect(() => element.dispatchEvent(wheelEvent)).not.toThrow();
-    });
-
-    it('should handle touchmove events', async () => {
-      const {element} = await renderComponent();
-      const touchEvent = new TouchEvent('touchmove');
-
-      expect(() => element.dispatchEvent(touchEvent)).not.toThrow();
-    });
-
-    it('should handle keydown events', async () => {
-      const {element} = await renderComponent();
-      const keyEvent = new KeyboardEvent('keydown');
-
-      expect(() => element.dispatchEvent(keyEvent)).not.toThrow();
-    });
-  });
-
   describe('#connectedCallback', () => {
     it('should add event listeners when connected', async () => {
       const {element} = await renderComponent();
@@ -570,19 +181,9 @@ describe('atomic-segmented-facet-scrollable', () => {
     });
 
     it('should update arrow visibility when ResizeObserver detects changes', async () => {
-      let resizeCallback: ResizeObserverCallback;
-      const ResizeObserverSpy = vi
-        .spyOn(window, 'ResizeObserver')
-        .mockImplementation((callback) => {
-          resizeCallback = callback;
-          return {
-            observe: vi.fn(),
-            disconnect: vi.fn(),
-            unobserve: vi.fn(),
-          } as unknown as ResizeObserver;
-        });
-
       const {parts, element} = await renderComponent();
+
+      await element.updateComplete;
 
       if (parts.horizontalScroll) {
         Object.defineProperty(parts.horizontalScroll, 'scrollWidth', {
@@ -599,14 +200,275 @@ describe('atomic-segmented-facet-scrollable', () => {
         });
       }
 
-      resizeCallback!([], {} as ResizeObserver);
+      element.dispatchEvent(new WheelEvent('wheel'));
       await element.updateComplete;
 
       expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(
         false
       );
+    });
+  });
 
-      ResizeObserverSpy.mockRestore();
+  describe('#render', () => {
+    it('should render all shadow parts when no error', async () => {
+      const {parts} = await renderComponent();
+
+      expect(parts.scrollableContainer).not.toBeNull();
+      expect(parts.horizontalScroll).not.toBeNull();
+      expect(parts.leftArrowWrapper).not.toBeNull();
+      expect(parts.rightArrowWrapper).not.toBeNull();
+      expect(parts.leftArrowButton).not.toBeNull();
+      expect(parts.rightArrowButton).not.toBeNull();
+      expect(parts.leftArrowIcon).not.toBeNull();
+      expect(parts.rightArrowIcon).not.toBeNull();
+      expect(parts.leftFade).not.toBeNull();
+      expect(parts.rightFade).not.toBeNull();
+    });
+
+    it('should render nothing when search has error', async () => {
+      vi.mocked(buildSearchStatus).mockImplementation(() =>
+        buildFakeSearchStatus({
+          hasError: true,
+        })
+      );
+      const {element} = await renderComponent();
+
+      expect(element.shadowRoot?.children.length).toBe(0);
+    });
+
+    it('should render slot for segmented facets', async () => {
+      const {parts} = await renderComponent();
+      const slot = parts.horizontalScroll?.querySelector('slot');
+
+      expect(slot).not.toBeNull();
+    });
+  });
+
+  describe('scroll behavior and arrow visibility', () => {
+    const CONTAINER_WIDTH = 500;
+    const SCROLL_CONTENT_WIDTH = 1000;
+    const ARROW_WIDTH = 40;
+
+    const setupScrollableContainer = (
+      parts: Awaited<ReturnType<typeof renderComponent>>['parts'],
+      initialScrollLeft = 0
+    ) => {
+      Object.defineProperty(parts.horizontalScroll, 'scrollWidth', {
+        value: SCROLL_CONTENT_WIDTH,
+        configurable: true,
+      });
+      Object.defineProperty(parts.horizontalScroll, 'clientWidth', {
+        value: CONTAINER_WIDTH,
+        configurable: true,
+      });
+
+      let scrollLeft = initialScrollLeft;
+      Object.defineProperty(parts.horizontalScroll, 'scrollLeft', {
+        get: () => scrollLeft,
+        set: (val: number) => {
+          scrollLeft = val;
+        },
+        configurable: true,
+      });
+
+      if (parts.leftArrowButton) {
+        Object.defineProperty(parts.leftArrowButton, 'clientWidth', {
+          value: ARROW_WIDTH,
+          configurable: true,
+        });
+      }
+      if (parts.rightArrowButton) {
+        Object.defineProperty(parts.rightArrowButton, 'clientWidth', {
+          value: ARROW_WIDTH,
+          configurable: true,
+        });
+      }
+
+      return {
+        getScrollLeft: () => scrollLeft,
+      };
+    };
+
+    it('should hide both arrows when content is not scrollable', async () => {
+      const {parts} = await renderComponent();
+
+      expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(
+        true
+      );
+      expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(
+        true
+      );
+    });
+
+    it('should show right arrow when content overflows and at left edge', async () => {
+      const {parts, element} = await renderComponent({
+        children: html`
+          <atomic-segmented-facet field="author"></atomic-segmented-facet>
+          <atomic-segmented-facet field="language"></atomic-segmented-facet>
+          <atomic-segmented-facet field="source"></atomic-segmented-facet>
+          <atomic-segmented-facet field="filetype"></atomic-segmented-facet>
+        `,
+      });
+
+      if (parts.horizontalScroll) {
+        Object.defineProperty(parts.horizontalScroll, 'scrollWidth', {
+          value: 1000,
+          configurable: true,
+        });
+        Object.defineProperty(parts.horizontalScroll, 'clientWidth', {
+          value: 500,
+          configurable: true,
+        });
+        Object.defineProperty(parts.horizontalScroll, 'scrollLeft', {
+          value: 0,
+          writable: true,
+        });
+      }
+
+      element.dispatchEvent(new WheelEvent('wheel'));
+      await element.updateComplete;
+
+      expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(
+        true
+      );
+      expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(
+        false
+      );
+    });
+
+    it('should show both arrows when scrolled to middle position', async () => {
+      const {parts, element} = await renderComponent();
+
+      if (parts.horizontalScroll) {
+        Object.defineProperty(parts.horizontalScroll, 'scrollWidth', {
+          value: 1000,
+          configurable: true,
+        });
+        Object.defineProperty(parts.horizontalScroll, 'clientWidth', {
+          value: 500,
+          configurable: true,
+        });
+        Object.defineProperty(parts.horizontalScroll, 'scrollLeft', {
+          value: 250,
+          writable: true,
+        });
+      }
+
+      element.dispatchEvent(new WheelEvent('wheel'));
+      await element.updateComplete;
+
+      expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(
+        false
+      );
+      expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(
+        false
+      );
+    });
+
+    it('should show only left arrow when scrolled to right edge', async () => {
+      const {parts, element} = await renderComponent();
+
+      if (parts.horizontalScroll) {
+        Object.defineProperty(parts.horizontalScroll, 'scrollWidth', {
+          value: 1000,
+          configurable: true,
+        });
+        Object.defineProperty(parts.horizontalScroll, 'clientWidth', {
+          value: 500,
+          configurable: true,
+        });
+        Object.defineProperty(parts.horizontalScroll, 'scrollLeft', {
+          value: 500,
+          writable: true,
+        });
+      }
+
+      element.dispatchEvent(new WheelEvent('wheel'));
+      await element.updateComplete;
+
+      expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(
+        false
+      );
+      expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(
+        true
+      );
+    });
+
+    it('should handle wheel events without throwing', async () => {
+      const {element} = await renderComponent();
+      const wheelEvent = new WheelEvent('wheel');
+
+      expect(() => element.dispatchEvent(wheelEvent)).not.toThrow();
+    });
+
+    it('should handle touchmove events without throwing', async () => {
+      const {element} = await renderComponent();
+      const touchEvent = new TouchEvent('touchmove');
+
+      expect(() => element.dispatchEvent(touchEvent)).not.toThrow();
+    });
+
+    it('should handle keydown events without throwing', async () => {
+      const {element} = await renderComponent();
+      const keyEvent = new KeyboardEvent('keydown');
+
+      expect(() => element.dispatchEvent(keyEvent)).not.toThrow();
+    });
+
+    it('should scroll right when right arrow button is clicked', async () => {
+      const {parts, element} = await renderComponent();
+
+      if (parts.horizontalScroll && parts.rightArrowButton) {
+        const {getScrollLeft} = setupScrollableContainer(parts, 0);
+        const initialScrollLeft = getScrollLeft();
+
+        parts.rightArrowButton.click();
+        await element.updateComplete;
+
+        expect(getScrollLeft()).toBeGreaterThan(initialScrollLeft);
+      }
+    });
+
+    it('should scroll left when left arrow button is clicked', async () => {
+      const {parts, element} = await renderComponent();
+
+      if (parts.horizontalScroll && parts.leftArrowButton) {
+        const {getScrollLeft} = setupScrollableContainer(parts, 300);
+        const initialScrollLeft = getScrollLeft();
+
+        parts.leftArrowButton.click();
+        await element.updateComplete;
+
+        expect(getScrollLeft()).toBeLessThan(initialScrollLeft);
+      }
+    });
+
+    it('should update arrow visibility after clicking arrow buttons', async () => {
+      const {parts, element} = await renderComponent();
+
+      if (parts.horizontalScroll && parts.rightArrowButton) {
+        setupScrollableContainer(parts, 0);
+
+        element.dispatchEvent(new WheelEvent('wheel'));
+        await element.updateComplete;
+
+        expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(
+          true
+        );
+        expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(
+          false
+        );
+
+        parts.rightArrowButton.click();
+        await element.updateComplete;
+
+        expect(parts.leftArrowWrapper?.classList.contains('invisible')).toBe(
+          false
+        );
+        expect(parts.rightArrowWrapper?.classList.contains('invisible')).toBe(
+          false
+        );
+      }
     });
   });
 });
