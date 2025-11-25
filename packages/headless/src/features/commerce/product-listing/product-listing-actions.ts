@@ -26,129 +26,82 @@ export interface QueryCommerceAPIThunkReturn {
 export type StateNeededByFetchProductListing =
   StateNeededForFilterableCommerceAPIRequest & ProductListingSection;
 
-export const fetchProductListing = createAsyncThunk<
-  QueryCommerceAPIThunkReturn,
-  void,
-  AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
->(
-  'commerce/productListing/fetch',
-  async (
-    _action,
-    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
-  ) => {
-    const state = getState();
-    const request = buildFilterableCommerceAPIRequest(state, navigatorContext);
-    const fetched = await apiClient.getProductListing({
-      ...request,
-      enableResults: false,
-    });
+/**
+ * Creates a fetch product listing thunk with the specified enableResults flag.
+ * @param enableResults - Whether to enable results mode (includes spotlight content)
+ * @returns An async thunk action creator
+ */
+export const createFetchProductListingThunk = (enableResults: boolean) =>
+  createAsyncThunk<
+    QueryCommerceAPIThunkReturn,
+    void,
+    AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
+  >(
+    'commerce/productListing/fetch',
+    async (
+      _action,
+      {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
+    ) => {
+      const state = getState();
+      const request = buildFilterableCommerceAPIRequest(
+        state,
+        navigatorContext
+      );
+      const fetched = await apiClient.getProductListing({
+        ...request,
+        enableResults,
+      });
 
-    if (isErrorResponse(fetched)) {
-      return rejectWithValue(fetched.error);
+      if (isErrorResponse(fetched)) {
+        return rejectWithValue(fetched.error);
+      }
+
+      return {
+        response: fetched.success,
+      };
     }
+  );
 
-    return {
-      response: fetched.success,
-    };
-  }
-);
+/**
+ * Creates a fetch more products thunk with the specified enableResults flag.
+ * @param enableResults - Whether to enable results mode (includes spotlight content)
+ * @returns An async thunk action creator
+ */
+export const createFetchMoreProductsThunk = (enableResults: boolean) =>
+  createAsyncThunk<
+    QueryCommerceAPIThunkReturn | null,
+    void,
+    AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
+  >(
+    'commerce/productListing/fetchMoreProducts',
+    async (
+      _action,
+      {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
+    ) => {
+      const state = getState();
+      const moreProductsAvailable = moreProductsAvailableSelector(state);
+      if (!moreProductsAvailable) {
+        return null;
+      }
+      const perPage = perPagePrincipalSelector(state);
+      const numberOfProducts = numberOfProductsSelector(state);
+      const nextPageToRequest = numberOfProducts / perPage;
 
-export const fetchResultsListing = createAsyncThunk<
-  QueryCommerceAPIThunkReturn,
-  void,
-  AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
->(
-  'commerce/productListing/fetch',
-  async (
-    _action,
-    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
-  ) => {
-    const state = getState();
-    const request = buildFilterableCommerceAPIRequest(state, navigatorContext);
-    const fetched = await apiClient.getProductListing({
-      ...request,
-      enableResults: true,
-    });
+      const fetched = await apiClient.getProductListing({
+        ...buildFilterableCommerceAPIRequest(state, navigatorContext),
+        enableResults,
+        page: nextPageToRequest,
+      });
 
-    if (isErrorResponse(fetched)) {
-      return rejectWithValue(fetched.error);
+      if (isErrorResponse(fetched)) {
+        return rejectWithValue(fetched.error);
+      }
+
+      return {
+        response: fetched.success,
+      };
     }
-
-    return {
-      response: fetched.success,
-    };
-  }
-);
-
-export const fetchMoreProducts = createAsyncThunk<
-  QueryCommerceAPIThunkReturn | null,
-  void,
-  AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
->(
-  'commerce/productListing/fetchMoreProducts',
-  async (
-    _actions,
-    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
-  ) => {
-    const state = getState();
-    const moreProductsAvailable = moreProductsAvailableSelector(state);
-    if (!moreProductsAvailable) {
-      return null;
-    }
-    const perPage = perPagePrincipalSelector(state);
-    const numberOfProducts = numberOfProductsSelector(state);
-    const nextPageToRequest = numberOfProducts / perPage;
-
-    const fetched = await apiClient.getProductListing({
-      ...buildFilterableCommerceAPIRequest(state, navigatorContext),
-      enableResults: false,
-      page: nextPageToRequest,
-    });
-
-    if (isErrorResponse(fetched)) {
-      return rejectWithValue(fetched.error);
-    }
-
-    return {
-      response: fetched.success,
-    };
-  }
-);
-
-export const fetchMoreResults = createAsyncThunk<
-  QueryCommerceAPIThunkReturn | null,
-  void,
-  AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
->(
-  'commerce/productListing/fetchMoreProducts',
-  async (
-    _action,
-    {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
-  ) => {
-    const state = getState();
-    const moreProductsAvailable = moreProductsAvailableSelector(state);
-    if (!moreProductsAvailable) {
-      return null;
-    }
-    const perPage = perPagePrincipalSelector(state);
-    const numberOfProducts = numberOfProductsSelector(state);
-    const nextPageToRequest = numberOfProducts / perPage;
-
-    const fetched = await apiClient.getProductListing({
-      ...buildFilterableCommerceAPIRequest(state, navigatorContext),
-      enableResults: true,
-      page: nextPageToRequest,
-    });
-
-    if (isErrorResponse(fetched)) {
-      return rejectWithValue(fetched.error);
-    }
-
-    return {
-      response: fetched.success,
-    };
-  }
-);
+  );
 
 export interface PromoteChildToParentPayload {
   child: ChildProduct;

@@ -17,10 +17,8 @@ import {parametersDefinition} from '../../../features/commerce/parameters/parame
 import {activeParametersSelector} from '../../../features/commerce/parameters/parameters-selectors.js';
 import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
 import {
-  fetchMoreProducts,
-  fetchMoreResults,
-  fetchProductListing,
-  fetchResultsListing,
+  createFetchMoreProductsThunk,
+  createFetchProductListingThunk,
   promoteChildToParent,
 } from '../../../features/commerce/product-listing/product-listing-actions.js';
 import {
@@ -136,14 +134,12 @@ export function buildProductListing(
   const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine[stateKey];
+  const enableResults = options.enableResults ?? false;
+
   const subControllers = buildProductListingSubControllers(engine, {
     responseIdSelector,
-    fetchProductsActionCreator: options.enableResults
-      ? fetchResultsListing
-      : fetchProductListing,
-    fetchMoreProductsActionCreator: options.enableResults
-      ? fetchMoreResults
-      : fetchMoreProducts,
+    fetchProductsActionCreator: createFetchProductListingThunk(enableResults),
+    fetchMoreProductsActionCreator: createFetchMoreProductsThunk(enableResults),
     facetResponseSelector,
     isFacetLoadingResponseSelector,
     requestIdSelector,
@@ -178,10 +174,7 @@ export function buildProductListing(
       dispatch(promoteChildToParent({child}));
     },
 
-    refresh: () =>
-      dispatch(
-        options.enableResults ? fetchResultsListing() : fetchProductListing()
-      ),
+    refresh: () => dispatch(createFetchProductListingThunk(enableResults)()),
 
     executeFirstRequest() {
       const firstRequestExecuted = responseIdSelector(getState()) !== '';
@@ -190,9 +183,7 @@ export function buildProductListing(
         return;
       }
 
-      dispatch(
-        options.enableResults ? fetchResultsListing() : fetchProductListing()
-      );
+      dispatch(createFetchProductListingThunk(enableResults)());
     },
   };
 }
