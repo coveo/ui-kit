@@ -241,7 +241,6 @@ export function buildSearchAndListingsSubControllers<
 ): SearchAndListingSubControllers<P, S> {
   const {
     fetchProductsActionCreator,
-    fetchMoreProductsActionCreator,
     facetResponseSelector,
     isFacetLoadingResponseSelector,
     requestIdSelector,
@@ -250,31 +249,19 @@ export function buildSearchAndListingsSubControllers<
     activeParametersSelector,
     restoreActionCreator,
     facetSearchType,
-    enableResults,
   } = subControllerProps;
 
-  // TODO: check what this wrapping is doing
-  // Wrap action creators to include enableResults
-  const wrappedFetchProducts = () =>
-    fetchProductsActionCreator({enableResults});
-  const wrappedFetchMoreProducts = () =>
-    fetchMoreProductsActionCreator({enableResults});
-
   return {
-    ...buildBaseSubControllers(engine, {
-      ...subControllerProps,
-      fetchProductsActionCreator: wrappedFetchProducts,
-      fetchMoreProductsActionCreator: wrappedFetchMoreProducts,
-    }),
+    ...buildBaseSubControllers(engine, subControllerProps),
     sort(props?: SortProps) {
       return buildCoreSort(engine, {
         ...props,
-        fetchProductsActionCreator: wrappedFetchProducts,
+        fetchProductsActionCreator,
       });
     },
     facetGenerator() {
       const commonOptions = {
-        fetchProductsActionCreator: wrappedFetchProducts,
+        fetchProductsActionCreator,
         facetResponseSelector,
         isFacetLoadingResponseSelector,
         facetSearch: {type: facetSearchType},
@@ -290,13 +277,13 @@ export function buildSearchAndListingsSubControllers<
           buildCategoryFacet(engine, {...options, ...commonOptions}),
         buildLocationFacet: (_engine, options) =>
           buildCommerceLocationFacet(engine, {...options, ...commonOptions}),
-        fetchProductsActionCreator: wrappedFetchProducts,
+        fetchProductsActionCreator,
       });
     },
     breadcrumbManager() {
       return buildCoreBreadcrumbManager(engine, {
         facetResponseSelector,
-        fetchProductsActionCreator: wrappedFetchProducts,
+        fetchProductsActionCreator,
       });
     },
     urlManager(props: UrlManagerProps) {
@@ -314,7 +301,7 @@ export function buildSearchAndListingsSubControllers<
         parametersDefinition,
         activeParametersSelector,
         restoreActionCreator,
-        fetchProductsActionCreator: wrappedFetchProducts,
+        fetchProductsActionCreator,
       });
     },
   };
