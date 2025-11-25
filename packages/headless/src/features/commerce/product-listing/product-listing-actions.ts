@@ -6,6 +6,7 @@ import {
 } from '../../../api/commerce/commerce-api-client.js';
 import type {ChildProduct} from '../../../api/commerce/common/product.js';
 import type {ListingCommerceSuccessResponse} from '../../../api/commerce/listing/response.js';
+import type {ProductListingOptions} from '../../../controllers/commerce/product-listing/headless-product-listing.js';
 import type {ProductListingSection} from '../../../state/state-sections.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
 import {
@@ -27,11 +28,13 @@ export type StateNeededByFetchProductListing =
   StateNeededForFilterableCommerceAPIRequest & ProductListingSection;
 
 /**
- * Creates a fetch product listing thunk with the specified enableResults flag.
- * @param enableResults - Whether to enable results mode (includes spotlight content)
+ * Creates a fetch product listing thunk with the specified options.
+ * @param options - The product listing options
  * @returns An async thunk action creator
  */
-export const createFetchProductListingThunk = (enableResults: boolean) =>
+export const createFetchProductListingThunk = (
+  options: ProductListingOptions
+) =>
   createAsyncThunk<
     QueryCommerceAPIThunkReturn,
     void,
@@ -49,7 +52,7 @@ export const createFetchProductListingThunk = (enableResults: boolean) =>
       );
       const fetched = await apiClient.getProductListing({
         ...request,
-        enableResults,
+        enableResults: Boolean(options.enableResults),
       });
 
       if (isErrorResponse(fetched)) {
@@ -63,11 +66,11 @@ export const createFetchProductListingThunk = (enableResults: boolean) =>
   );
 
 /**
- * Creates a fetch more products thunk with the specified enableResults flag.
- * @param enableResults - Whether to enable results mode (includes spotlight content)
+ * Creates a fetch more products thunk with the specified options.
+ * @param options - The product listing options
  * @returns An async thunk action creator
  */
-export const createFetchMoreProductsThunk = (enableResults: boolean) =>
+export const createFetchMoreProductsThunk = (options: ProductListingOptions) =>
   createAsyncThunk<
     QueryCommerceAPIThunkReturn | null,
     void,
@@ -89,7 +92,7 @@ export const createFetchMoreProductsThunk = (enableResults: boolean) =>
 
       const fetched = await apiClient.getProductListing({
         ...buildFilterableCommerceAPIRequest(state, navigatorContext),
-        enableResults,
+        enableResults: Boolean(options.enableResults),
         page: nextPageToRequest,
       });
 

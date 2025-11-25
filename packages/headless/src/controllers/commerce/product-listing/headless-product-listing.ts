@@ -134,12 +134,11 @@ export function buildProductListing(
   const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine[stateKey];
-  const enableResults = options.enableResults ?? false;
 
   const subControllers = buildProductListingSubControllers(engine, {
     responseIdSelector,
-    fetchProductsActionCreator: createFetchProductListingThunk(enableResults),
-    fetchMoreProductsActionCreator: createFetchMoreProductsThunk(enableResults),
+    fetchProductsActionCreator: createFetchProductListingThunk(options),
+    fetchMoreProductsActionCreator: createFetchMoreProductsThunk(options),
     facetResponseSelector,
     isFacetLoadingResponseSelector,
     requestIdSelector,
@@ -174,7 +173,7 @@ export function buildProductListing(
       dispatch(promoteChildToParent({child}));
     },
 
-    refresh: () => dispatch(createFetchProductListingThunk(enableResults)()),
+    refresh: () => dispatch(createFetchProductListingThunk(options)()),
 
     executeFirstRequest() {
       const firstRequestExecuted = responseIdSelector(getState()) !== '';
@@ -183,7 +182,7 @@ export function buildProductListing(
         return;
       }
 
-      dispatch(createFetchProductListingThunk(enableResults)());
+      dispatch(createFetchProductListingThunk(options)());
     },
   };
 }
