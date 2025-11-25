@@ -27,8 +27,6 @@ export function fetchStandaloneStaticStateFactory<
       options
     )(params);
 
-    // Note: We do NOT call engine.executeFirstSearch() for standalone
-    // This avoids unnecessary API requests for pages with standalone components only
     const searchActions: SearchCompletedAction[] = [];
 
     const staticState = createStaticState<

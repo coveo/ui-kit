@@ -32,8 +32,6 @@ export function hydratedStaticStateFactory<
       engine.dispatch(action);
     });
 
-    // Only wait for search completion if there are searchActions
-    // For standalone components, searchActions will be empty and we don't need to wait
     if (params.searchActions.length > 0) {
       await engine.waitForSearchCompletedAction();
     }
