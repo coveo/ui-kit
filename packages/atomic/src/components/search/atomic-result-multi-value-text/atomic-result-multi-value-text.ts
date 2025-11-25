@@ -5,7 +5,7 @@ import {
   type Result,
   ResultTemplatesHelpers,
 } from '@coveo/headless';
-import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
@@ -14,8 +14,8 @@ import {createResultContextController} from '@/src/components/search/result-temp
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {withTailwindStyles} from '@/src/decorators/tailwind-styles';
 import type {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 import {titleToKebab} from '@/src/utils/utils';
 
@@ -34,26 +34,6 @@ export class AtomicResultMultiValueText
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  static styles: CSSResultGroup = [
-    css`
-      :host > ul {
-        display: flex;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-
-        li {
-          display: inline-block;
-        }
-      }
-
-      .separator::before {
-        display: inline;
-        content: ',\\00a0';
-      }
-    `,
-  ];
-
   public breadcrumbManager!: BreadcrumbManager;
 
   /**
@@ -134,6 +114,9 @@ export class AtomicResultMultiValueText
 
   private get facetSelectedValues() {
     const values: string[] = [];
+    if (!this.breadcrumbManager) {
+      return values;
+    }
     this.breadcrumbManager.state.facetBreadcrumbs
       .filter((facet) => facet.field === this.field)
       .forEach((facet) => {
@@ -179,20 +162,19 @@ export class AtomicResultMultiValueText
     `;
   }
 
-  private renderSeparator(beforeValue: string, afterValue: string) {
+  private renderSeparator() {
     return html`
       <li
         aria-hidden="true"
         part="result-multi-value-text-separator"
-        key=${`${beforeValue}~${afterValue}`}
-        class="separator"
+               class="${String.raw`inline-block before:inline before:content-[',\00a0']`}"
       ></li>
     `;
   }
 
   private renderMoreLabel(value: number) {
     return html`
-      <li key="more-field-values" part="result-multi-value-text-value-more">
+      <li  part="result-multi-value-text-value-more">
         ${this.bindings.i18n.t('n-more', {value})}
       </li>
     `;
@@ -204,17 +186,12 @@ export class AtomicResultMultiValueText
     const nodes = [];
     for (let i = 0; i < numberOfValuesToDisplay; i++) {
       if (i > 0) {
-        nodes.push(this.renderSeparator(values[i - 1], values[i]));
+        nodes.push(this.renderSeparator());
       }
       nodes.push(this.renderValue(values[i]));
     }
     if (this.getShouldDisplayLabel(values)) {
-      nodes.push(
-        this.renderSeparator(
-          values[numberOfValuesToDisplay - 1],
-          'more-field-values'
-        )
-      );
+      nodes.push(this.renderSeparator());
       nodes.push(this.renderMoreLabel(values.length - numberOfValuesToDisplay));
     }
     return nodes;
@@ -227,15 +204,14 @@ export class AtomicResultMultiValueText
   @bindingGuard()
   @errorGuard()
   render() {
-    return when(
-      this.sortedValues !== null,
+    return html`${when(
+      this.sortedValues,
       () => html`
-        <ul part="result-multi-value-text-list">
+        <ul part="result-multi-value-text-list" class="m-0 flex list-none p-0">
           ${this.renderListItems(this.sortedValues!)}
         </ul>
-      `,
-      () => nothing
-    );
+      `
+    )}`;
   }
 }
 

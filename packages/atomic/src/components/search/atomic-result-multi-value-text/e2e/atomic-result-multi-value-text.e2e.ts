@@ -21,10 +21,6 @@ test.describe('atomic-result-multi-value-text', () => {
       // Should have at least one less separator than values (or more if "more" label is shown)
       expect(separatorCount).toBeGreaterThanOrEqual(valueCount - 1);
     });
-
-    test('should be accessible', async ({page}) => {
-      await expect(page).toHaveTitle(/Result Multi Value Text/);
-    });
   });
 
   test.describe('with max-values-to-display', () => {

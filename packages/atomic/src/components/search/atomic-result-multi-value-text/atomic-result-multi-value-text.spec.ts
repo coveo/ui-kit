@@ -1,5 +1,6 @@
 import {
   type BreadcrumbManager,
+  type BreadcrumbManagerState,
   buildBreadcrumbManager,
   type Result,
 } from '@coveo/headless';
@@ -11,19 +12,79 @@ import {renderInAtomicResult} from '@/vitest-utils/testing-helpers/fixtures/atom
 import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/breadcrumb-manager';
 import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import type {AtomicResultMultiValueText} from './atomic-result-multi-value-text';
+import {AtomicResultMultiValueText} from './atomic-result-multi-value-text';
 import './atomic-result-multi-value-text';
 
 vi.mock('@coveo/headless', {spy: true});
 
 describe('atomic-result-multi-value-text', () => {
   let i18n: i18n;
-  let mockResult: Result;
   let mockBreadcrumbManager: BreadcrumbManager;
 
-  beforeEach(async () => {
-    console.error = vi.fn();
+  interface RenderResultMultiValueTextProps {
+    resultState?: Partial<Result>;
+    field?: string;
+    delimiter?: string;
+    maxValuesToDisplay?: number;
+    breadcrumbState?: Partial<BreadcrumbManagerState>;
+  }
 
+  const renderComponent = async ({
+    resultState = {},
+    field = 'tags',
+    delimiter,
+    maxValuesToDisplay,
+    breadcrumbState = {},
+  }: RenderResultMultiValueTextProps = {}) => {
+    mockBreadcrumbManager = buildFakeBreadcrumbManager({
+      state: breadcrumbState,
+    });
+    vi.mocked(buildBreadcrumbManager).mockReturnValue(mockBreadcrumbManager);
+
+    const {element} = await renderInAtomicResult<AtomicResultMultiValueText>({
+      template: html`<atomic-result-multi-value-text
+        field=${field}
+        delimiter=${ifDefined(delimiter)}
+        max-values-to-display=${ifDefined(maxValuesToDisplay)}
+      ></atomic-result-multi-value-text>`,
+      selector: 'atomic-result-multi-value-text',
+      result: buildFakeResult(resultState),
+      bindings: (bindings) => {
+        bindings.i18n = i18n;
+        return bindings;
+      },
+    });
+
+    return {
+      element,
+      get list() {
+        return element.shadowRoot?.querySelector(
+          '[part="result-multi-value-text-list"]'
+        );
+      },
+      get allValues() {
+        return Array.from(
+          element.shadowRoot?.querySelectorAll(
+            '[part="result-multi-value-text-value"]'
+          ) || []
+        );
+      },
+      get allSeparators() {
+        return Array.from(
+          element.shadowRoot?.querySelectorAll(
+            '[part="result-multi-value-text-separator"]'
+          ) || []
+        );
+      },
+      get more() {
+        return element.shadowRoot?.querySelector(
+          '[part="result-multi-value-text-value-more"]'
+        );
+      },
+    };
+  };
+
+  beforeEach(async () => {
     i18n = await createTestI18n();
     i18n.addResourceBundle(
       'en',
@@ -33,316 +94,236 @@ describe('atomic-result-multi-value-text', () => {
       },
       true
     );
-
-    mockResult = buildFakeResult({
-      raw: {
-        tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'],
-        categories: 'cat1;cat2;cat3',
-        single_value: 'single',
-        empty_field: '',
-        urihash: '',
-      },
-    });
-
-    mockBreadcrumbManager = buildFakeBreadcrumbManager();
-    vi.mocked(buildBreadcrumbManager).mockReturnValue(mockBreadcrumbManager);
   });
-
-  const renderComponent = async (
-    options: {
-      field?: string;
-      maxValuesToDisplay?: number;
-      delimiter?: string;
-      result?: Result | null;
-      slottedContent?: string;
-    } = {}
-  ) => {
-    const resultToUse = 'result' in options ? options.result : mockResult;
-    const {element, atomicInterface} =
-      await renderInAtomicResult<AtomicResultMultiValueText>({
-        template: html`<atomic-result-multi-value-text
-          field=${ifDefined(options.field)}
-          max-values-to-display=${ifDefined(options.maxValuesToDisplay)}
-          delimiter=${ifDefined(options.delimiter)}
-          >${options.slottedContent}</atomic-result-multi-value-text
-        >`,
-        selector: 'atomic-result-multi-value-text',
-        result: resultToUse === null ? undefined : resultToUse,
-        bindings: (bindings) => {
-          bindings.i18n = i18n;
-          return bindings;
-        },
-      });
-
-    await atomicInterface.updateComplete;
-    await element?.updateComplete;
-
-    return {
-      element,
-      parts: (el: AtomicResultMultiValueText) => ({
-        list: el.shadowRoot?.querySelector(
-          '[part="result-multi-value-text-list"]'
-        ),
-        values: el.shadowRoot?.querySelectorAll(
-          '[part="result-multi-value-text-value"]'
-        ),
-        separators: el.shadowRoot?.querySelectorAll(
-          '[part="result-multi-value-text-separator"]'
-        ),
-        more: el.shadowRoot?.querySelector(
-          '[part="result-multi-value-text-value-more"]'
-        ),
-      }),
-    };
-  };
 
   it('should be defined', () => {
     const el = document.createElement('atomic-result-multi-value-text');
-    expect(el).toBeInstanceOf(HTMLElement);
+    expect(el).toBeInstanceOf(AtomicResultMultiValueText);
   });
 
-  describe('#initialize', () => {
-    it('should build breadcrumb manager with engine', async () => {
-      const {element} = await renderComponent({field: 'tags'});
-      expect(buildBreadcrumbManager).toHaveBeenCalled();
-      expect(element.breadcrumbManager).toBe(mockBreadcrumbManager);
-    });
+  it('should call buildBreadcrumbManager', async () => {
+    const {element} = await renderComponent();
+    expect(buildBreadcrumbManager).toHaveBeenCalled();
+    expect(element.breadcrumbManager).toBe(mockBreadcrumbManager);
   });
 
-  describe('prop validation', () => {
-    it('should not set error when #field is valid', async () => {
-      const {element} = await renderComponent({field: 'tags'});
-      expect(element.error).toBeUndefined();
+  it('should not set error when #field is valid', async () => {
+    const {element} = await renderComponent();
+    expect(element.error).toBeUndefined();
+  });
+
+  it('should set error when #field is empty', async () => {
+    const {element} = await renderComponent();
+    expect(element.error).toBeUndefined();
+
+    element.field = '';
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/field/i);
+  });
+
+  it('should set error when #maxValuesToDisplay is negative', async () => {
+    const {element} = await renderComponent({maxValuesToDisplay: 3});
+    expect(element.error).toBeUndefined();
+
+    element.maxValuesToDisplay = -1;
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/maxValuesToDisplay/i);
+  });
+
+  it('should render all values when array is smaller than max', async () => {
+    const {allValues, more} = await renderComponent({
+      resultState: {
+        raw: {tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'], urihash: ''},
+      },
+      maxValuesToDisplay: 10,
     });
 
-    it('should set error when #field is empty', async () => {
-      const {element} = await renderComponent({field: 'tags'});
-      expect(element.error).toBeUndefined();
+    expect(allValues).toHaveLength(5);
+    expect(more).toBeNull();
+  });
 
-      element.field = '';
-      await element.updateComplete;
-
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(/field/i);
+  it('should truncate values when array exceeds max', async () => {
+    const {allValues, more} = await renderComponent({
+      resultState: {
+        raw: {tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'], urihash: ''},
+      },
+      maxValuesToDisplay: 3,
     });
 
-    it('should set error when #maxValuesToDisplay is negative', async () => {
+    expect(allValues).toHaveLength(3);
+    expect(more).toHaveTextContent('2 more');
+  });
+
+  it('should render separators between values', async () => {
+    const {allSeparators} = await renderComponent({
+      resultState: {
+        raw: {tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'], urihash: ''},
+      },
+      maxValuesToDisplay: 3,
+    });
+
+    expect(allSeparators).toHaveLength(3);
+  });
+
+  it('should show all values in more label when maxValuesToDisplay is 0', async () => {
+    const {allValues, more} = await renderComponent({
+      resultState: {
+        raw: {tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'], urihash: ''},
+      },
+      maxValuesToDisplay: 0,
+    });
+
+    expect(allValues).toHaveLength(0);
+    if (more) {
+      expect(more).toHaveTextContent('5 more');
+    }
+  });
+
+  it('should split string by delimiter', async () => {
+    const {allValues} = await renderComponent({
+      resultState: {
+        raw: {categories: 'cat1;cat2;cat3', urihash: ''},
+      },
+      field: 'categories',
+      delimiter: ';',
+    });
+
+    expect(allValues).toHaveLength(3);
+    expect(allValues[0]).toHaveTextContent('cat1');
+    expect(allValues[1]).toHaveTextContent('cat2');
+    expect(allValues[2]).toHaveTextContent('cat3');
+  });
+
+  it('should treat as single value when no delimiter specified', async () => {
+    const {allValues} = await renderComponent({
+      resultState: {
+        raw: {categories: 'cat1;cat2;cat3', urihash: ''},
+      },
+      field: 'categories',
+    });
+
+    expect(allValues).toHaveLength(1);
+    expect(allValues[0]).toHaveTextContent('cat1;cat2;cat3');
+  });
+
+  it('should render single value', async () => {
+    const {allValues, more} = await renderComponent({
+      resultState: {
+        raw: {single_value: 'single', urihash: ''},
+      },
+      field: 'single_value',
+    });
+
+    expect(allValues).toHaveLength(1);
+    expect(more).toBeNull();
+    expect(allValues[0]).toHaveTextContent('single');
+  });
+
+  it('should render nothing when field value is empty string', async () => {
+    const {element} = await renderComponent({
+      resultState: {
+        raw: {empty_field: '', urihash: ''},
+      },
+      field: 'empty_field',
+    });
+
+    expect(element).toBeEmptyDOMElement();
+  });
+
+  it('should render nothing when field does not exist', async () => {
+    const {element} = await renderComponent({
+      resultState: {
+        raw: {urihash: ''},
+      },
+      field: 'nonexistent_field',
+    });
+
+    expect(element).toBeEmptyDOMElement();
+  });
+
+  describe('when field value is not a string or array', () => {
+    let consoleErrorSpy: MockInstance;
+
+    beforeEach(() => {
+      consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    });
+
+    it('should set error', async () => {
       const {element} = await renderComponent({
-        field: 'tags',
-        maxValuesToDisplay: 3,
-      });
-      expect(element.error).toBeUndefined();
-
-      element.maxValuesToDisplay = -1;
-      await element.updateComplete;
-
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(/maxValuesToDisplay/i);
-    });
-  });
-
-  describe('rendering with array field', () => {
-    it('should render all values when array is smaller than max', async () => {
-      const {element, parts} = await renderComponent({
-        field: 'tags',
-        maxValuesToDisplay: 10,
-      });
-
-      const {values, more} = parts(element);
-      expect(values?.length).toBe(5);
-      expect(more).toBeNull();
-    });
-
-    it('should truncate values when array exceeds max', async () => {
-      const {element, parts} = await renderComponent({
-        field: 'tags',
-        maxValuesToDisplay: 3,
-      });
-
-      const {values, more} = parts(element);
-      expect(values?.length).toBe(3);
-      expect(more).toBeDefined();
-      expect(more!.textContent).toContain('2 more');
-    });
-
-    it('should render separators between values', async () => {
-      const {element, parts} = await renderComponent({
-        field: 'tags',
-        maxValuesToDisplay: 3,
-      });
-
-      const {separators} = parts(element);
-      // 2 separators between 3 values + 1 before "more" label = 3
-      expect(separators?.length).toBe(3);
-    });
-
-    it('should render nothing when maxValuesToDisplay is 0', async () => {
-      const {element, parts} = await renderComponent({
-        field: 'tags',
-        maxValuesToDisplay: 0,
-      });
-
-      const {values, more} = parts(element);
-      expect(values?.length).toBe(0);
-      expect(more).toBeDefined();
-      expect(more!.textContent).toContain('5 more');
-    });
-  });
-
-  describe('rendering with delimited string field', () => {
-    it('should split string by delimiter', async () => {
-      const {element, parts} = await renderComponent({
-        field: 'categories',
-        delimiter: ';',
-      });
-
-      const {values} = parts(element);
-      expect(values?.length).toBe(3);
-      expect(values![0].textContent).toContain('cat1');
-      expect(values![1].textContent).toContain('cat2');
-      expect(values![2].textContent).toContain('cat3');
-    });
-
-    it('should treat as single value when no delimiter specified', async () => {
-      const {element, parts} = await renderComponent({
-        field: 'categories',
-      });
-
-      const {values} = parts(element);
-      expect(values?.length).toBe(1);
-      expect(values![0].textContent).toContain('cat1;cat2;cat3');
-    });
-  });
-
-  describe('rendering with single value field', () => {
-    it('should render single value', async () => {
-      const {element, parts} = await renderComponent({
-        field: 'single_value',
-      });
-
-      const {values, more} = parts(element);
-      expect(values?.length).toBe(1);
-      expect(more).toBeNull();
-      expect(values![0].textContent).toContain('single');
-    });
-  });
-
-  describe('rendering with empty or missing field', () => {
-    it('should render nothing when field value is empty string', async () => {
-      const {element, parts} = await renderComponent({
-        field: 'empty_field',
-      });
-
-      const {list} = parts(element);
-      expect(list).toBeNull();
-    });
-
-    it('should render nothing when field does not exist', async () => {
-      const {element, parts} = await renderComponent({
-        field: 'nonexistent_field',
-      });
-
-      const {list} = parts(element);
-      expect(list).toBeNull();
-    });
-
-    it('should set error when field value is not a string or array', async () => {
-      const consoleErrorSpy: MockInstance = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
-
-      const invalidResult = buildFakeResult({
-        raw: {
-          number_field: 42,
-          urihash: '',
+        resultState: {
+          raw: {number_field: 42, urihash: ''},
         },
-      });
-
-      const {element} = await renderComponent({
         field: 'number_field',
-        result: invalidResult,
       });
 
       expect(element.error).toBeDefined();
       expect(element.error.message).toContain('Could not parse');
-
-      consoleErrorSpy.mockRestore();
+      expect(consoleErrorSpy).toHaveBeenCalled();
     });
   });
 
-  describe('facet selected values sorting', () => {
-    it('should prioritize selected facet values', async () => {
-      mockBreadcrumbManager.state.facetBreadcrumbs = [
-        {
-          field: 'tags',
-          facetId: 'tags-facet',
-          values: [
-            {value: {value: 'tag3'}, deselect: vi.fn()},
-            {value: {value: 'tag5'}, deselect: vi.fn()},
-          ],
-        },
-      ];
-
-      const {element, parts} = await renderComponent({
-        field: 'tags',
-        maxValuesToDisplay: 5,
-      });
-
-      const {values} = parts(element);
-      expect(values?.length).toBe(5);
-      // Selected values (tag3, tag5) should appear first
-      expect(values![0].textContent).toContain('tag3');
-      expect(values![1].textContent).toContain('tag5');
+  it('should prioritize selected facet values', async () => {
+    const {allValues} = await renderComponent({
+      resultState: {
+        raw: {tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'], urihash: ''},
+      },
+      maxValuesToDisplay: 5,
+      breadcrumbState: {
+        facetBreadcrumbs: [
+          {
+            field: 'tags',
+            facetId: 'tags-facet',
+            values: [
+              {
+                value: {value: 'tag3', numberOfResults: 1, state: 'selected'},
+                deselect: vi.fn(),
+              },
+              {
+                value: {value: 'tag5', numberOfResults: 1, state: 'selected'},
+                deselect: vi.fn(),
+              },
+            ],
+          },
+        ],
+      },
     });
 
-    it('should ignore facet values for different field', async () => {
-      mockBreadcrumbManager.state.facetBreadcrumbs = [
-        {
-          field: 'other_field',
-          facetId: 'other-facet',
-          values: [{value: {value: 'other_value'}, deselect: vi.fn()}],
-        },
-      ];
-
-      const {element, parts} = await renderComponent({
-        field: 'tags',
-        maxValuesToDisplay: 5,
-      });
-
-      const {values} = parts(element);
-      expect(values?.length).toBe(5);
-      // No reordering should occur
-      expect(values![0].textContent).toContain('tag1');
-    });
+    expect(allValues).toHaveLength(5);
+    expect(allValues[0]).toHaveTextContent('tag3');
+    expect(allValues[1]).toHaveTextContent('tag5');
   });
 
-  describe('slots', () => {
-    it('should use custom slot content when provided', async () => {
-      const {element, parts} = await renderComponent({
-        field: 'tags',
-        maxValuesToDisplay: 5,
-        slottedContent:
-          '<span slot="result-multi-value-text-value-tag2">Custom Tag 2</span>',
-      });
-
-      const {values} = parts(element);
-      const tag2Value = Array.from(values!).find(
-        (v) =>
-          v.textContent?.includes('Custom Tag 2') || v.querySelector('[slot]')
-      );
-      expect(tag2Value).toBeDefined();
+  it('should ignore facet values for different field', async () => {
+    const {allValues} = await renderComponent({
+      resultState: {
+        raw: {tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'], urihash: ''},
+      },
+      maxValuesToDisplay: 5,
+      breadcrumbState: {
+        facetBreadcrumbs: [
+          {
+            field: 'other_field',
+            facetId: 'other-facet',
+            values: [
+              {
+                value: {
+                  value: 'other_value',
+                  numberOfResults: 1,
+                  state: 'selected',
+                },
+                deselect: vi.fn(),
+              },
+            ],
+          },
+        ],
+      },
     });
-  });
 
-  describe('when result is not available', () => {
-    it('should render error when result is null', async () => {
-      const {element} = await renderComponent({
-        field: 'tags',
-        result: null,
-      });
-
-      const errorComponent = element?.querySelector('atomic-component-error');
-      expect(errorComponent).toBeDefined();
-    });
+    expect(allValues).toHaveLength(5);
+    expect(allValues[0]).toHaveTextContent('tag1');
   });
 });

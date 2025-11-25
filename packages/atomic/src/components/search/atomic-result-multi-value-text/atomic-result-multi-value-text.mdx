@@ -31,47 +31,4 @@ This component is used within `atomic-result-template` components inside the res
 </atomic-search-interface>
 ```
 
-### Basic Usage
-
-To display all values from a multi-value field:
-
-```html
-<atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
-```
-
-### Limiting Displayed Values
-
-When a field has many values, you can limit how many are shown:
-
-```html
-<atomic-result-multi-value-text field="tags" max-values-to-display="3"></atomic-result-multi-value-text>
-```
-
-When the number of values exceeds the limit, the component displays "_n_ more..." after the limited values.
-
-### With Delimiter
-
-For fields that aren't indexed as multi-value but contain delimited values:
-
-```html
-<atomic-result-multi-value-text field="categories" delimiter=";"></atomic-result-multi-value-text>
-```
-
-### Custom Value Display
-
-You can customize how specific values are displayed using slots:
-
-```html
-<atomic-result-multi-value-text field="language">
-  <span slot="result-multi-value-text-value-french">Français</span>
-  <span slot="result-multi-value-text-value-spanish">Español</span>
-</atomic-result-multi-value-text>
-```
-
-The slot name follows the pattern `result-multi-value-text-value-{kebab-case-value}`.
-
-### Facet Integration
-
-When used with facets, the component automatically prioritizes displaying values that are currently selected in the corresponding facet, showing them first in the list.
-
 </AtomicDocTemplate>
