@@ -29,6 +29,12 @@ export function createSearchPage(page: Page) {
         (noResults && noResults.style.display !== 'none')
       );
     });
+
+    // Wait for loading state to finish
+    await page.waitForFunction(() => {
+      const summary = document.querySelector('#query-summary');
+      return summary && !summary.textContent?.includes('Loading...');
+    });
   }
 
   async function getSearchSummary(): Promise<string> {
