@@ -5,6 +5,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import type {AtomicSearchInterface} from '../atomic-search-interface/atomic-search-interface';
 
 const searchApiHarness = new MockSearchApi();
 
@@ -25,13 +26,6 @@ searchApiHarness.searchEndpoint.mock((response) => ({
 
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
   includeCodeRoot: false,
-  i18n: (i18n) => {
-    i18n.addResourceBundle('en', 'translation', {
-      book_by_author: 'Book by {{name}}',
-      book_count: 'You have {{count}} book',
-      book_count_other: 'You have {{count}} books',
-    });
-  },
 });
 
 const {decorator: resultListDecorator} = wrapInResultList('list', false);
@@ -69,7 +63,16 @@ const meta: Meta = {
   },
   argTypes,
 
-  play,
+  play: async (context) => {
+    await play(context);
+    const searchInterface =
+      context.canvasElement.querySelector<AtomicSearchInterface>(
+        'atomic-search-interface'
+      )!;
+    searchInterface.i18n.addResourceBundle('en', 'translation', {
+      book_by_author: 'Book by {{name}}',
+    });
+  },
 };
 
 export default meta;

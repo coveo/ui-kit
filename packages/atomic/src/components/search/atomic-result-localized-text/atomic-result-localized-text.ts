@@ -1,6 +1,6 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
-import {LitElement, nothing} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
@@ -44,8 +44,7 @@ export class AtomicResultLocalizedText
    * For example, the following configuration extracts the value of `author` from a result, and assigns it to the i18n parameter `name`: `field-author="name"`.
    */
   @mapProperty({attributePrefix: 'field'})
-  @property({type: Object})
-  public field: Record<string, string> = {};
+  public field!: Record<string, string>;
 
   /**
    * The numerical field value used to determine whether to use the singular or plural value of a translation.
@@ -75,7 +74,7 @@ export class AtomicResultLocalizedText
   @bindingGuard()
   @errorGuard()
   render() {
-    return when(
+    return html`${when(
       this.result,
       () => {
         const localizedText = this.bindings.i18n.t(this.localeKey, {
@@ -85,7 +84,7 @@ export class AtomicResultLocalizedText
         return localizedText;
       },
       () => nothing
-    );
+    )}`;
   }
 
   private parseFieldValues() {
