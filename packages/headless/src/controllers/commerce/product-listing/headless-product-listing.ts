@@ -17,6 +17,7 @@ import {parametersDefinition} from '../../../features/commerce/parameters/parame
 import {activeParametersSelector} from '../../../features/commerce/parameters/parameters-selectors.js';
 import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
 import {
+  type FetchProductListingPayload,
   fetchMoreProducts,
   fetchProductListing,
   promoteChildToParent,
@@ -102,14 +103,7 @@ export interface ProductListingState {
   responseId: string;
 }
 
-export interface ProductListingOptions {
-  /**
-   * When set to true, fills the `results` field rather than the `products` field
-   * in the controller state. It may also include Spotlight Content in the results.
-   * @default false
-   */
-  enableResults?: boolean;
-}
+export interface ProductListingOptions extends FetchProductListingPayload {}
 
 /**
  * Creates a `ProductListing` controller instance.
@@ -152,7 +146,6 @@ export function buildProductListing(
     perPageSelector: perPagePrincipalSelector,
     totalEntriesSelector: totalEntriesPrincipalSelector,
     numberOfProductsSelector,
-    enableResults,
   });
 
   return {
