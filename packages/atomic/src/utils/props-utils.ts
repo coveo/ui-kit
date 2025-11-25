@@ -20,11 +20,6 @@ export function mapProperty<Element extends ReactiveElement>(
   ) => {
     const ctor = proto.constructor as typeof ReactiveElement;
 
-    // IMPORTANT: Register the property as reactive with Lit.
-    // Without this, updates to the property won't trigger re-renders.
-    // This is necessary because @mapProperty is used alongside @property decorator,
-    // but we need to ensure the property is tracked for reactivity even when
-    // attributes are mapped during initialization.
     ctor.createProperty(propertyKey, {type: Object});
 
     ctor.addInitializer((instance) => {
