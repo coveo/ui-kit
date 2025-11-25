@@ -141,6 +141,79 @@ describe('atomic-popover', () => {
       expect(valueCount?.classList.contains('hidden')).toBe(true);
     });
 
+    describe('when button is clicked', () => {
+      it('should open the popover', async () => {
+        const {popoverButton, parts, element} = await renderPopover();
+
+        await userEvent.click(popoverButton);
+        await element.updateComplete;
+
+        const facet = parts(element).facet;
+        expect(facet).toBeTruthy();
+        expect(facet?.classList.contains('hidden')).toBe(false);
+      });
+
+      it('should display backdrop when open', async () => {
+        const {popoverButton, parts, element} = await renderPopover();
+
+        await userEvent.click(popoverButton);
+        await element.updateComplete;
+
+        await expect.element(parts(element).backdrop).toBeInTheDocument();
+      });
+
+      it('should set aria-expanded to true', async () => {
+        const {popoverButton, element} = await renderPopover();
+
+        await userEvent.click(popoverButton);
+        await element.updateComplete;
+
+        await expect
+          .element(popoverButton)
+          .toHaveAttribute('aria-expanded', 'true');
+      });
+    });
+
+    describe('when backdrop is clicked', () => {
+      it('should close the popover', async () => {
+        const {popoverButton, parts, element} = await renderPopover();
+
+        // Open popover
+        await userEvent.click(popoverButton);
+        await element.updateComplete;
+
+        // Click backdrop
+        const backdrop = parts(element).backdrop;
+        expect(backdrop).toBeTruthy();
+        await userEvent.click(backdrop!);
+        await element.updateComplete;
+
+        // Verify closed
+        const facet = parts(element).facet;
+        expect(facet).toBeTruthy();
+        expect(facet?.classList.contains('hidden')).toBe(true);
+      });
+    });
+
+    describe('when Escape key is pressed', () => {
+      it('should close the popover', async () => {
+        const {popoverButton, parts, element} = await renderPopover();
+
+        // Open popover
+        await userEvent.click(popoverButton);
+        await element.updateComplete;
+
+        // Press Escape
+        await page.keyboard.press('Escape');
+        await element.updateComplete;
+
+        // Verify closed
+        const facet = parts(element).facet;
+        expect(facet).toBeTruthy();
+        expect(facet?.classList.contains('hidden')).toBe(true);
+      });
+    });
+
     describe('when search has error', () => {
       it('should render nothing', async () => {
         vi.mocked(buildSearchStatus).mockReturnValue(
@@ -226,79 +299,6 @@ describe('atomic-popover', () => {
         'keydown',
         expect.any(Function)
       );
-    });
-  });
-
-  describe('#togglePopover (when button is clicked)', () => {
-    it('should open the popover', async () => {
-      const {popoverButton, parts, element} = await renderPopover();
-
-      await userEvent.click(popoverButton);
-      await element.updateComplete;
-
-      const facet = parts(element).facet;
-      expect(facet).toBeTruthy();
-      expect(facet?.classList.contains('hidden')).toBe(false);
-    });
-
-    it('should display backdrop when open', async () => {
-      const {popoverButton, parts, element} = await renderPopover();
-
-      await userEvent.click(popoverButton);
-      await element.updateComplete;
-
-      await expect.element(parts(element).backdrop).toBeInTheDocument();
-    });
-
-    it('should set aria-expanded to true', async () => {
-      const {popoverButton, element} = await renderPopover();
-
-      await userEvent.click(popoverButton);
-      await element.updateComplete;
-
-      await expect
-        .element(popoverButton)
-        .toHaveAttribute('aria-expanded', 'true');
-    });
-
-    describe('when popover is open and backdrop is clicked', () => {
-      it('should close the popover', async () => {
-        const {popoverButton, parts, element} = await renderPopover();
-
-        // Open popover
-        await userEvent.click(popoverButton);
-        await element.updateComplete;
-
-        // Click backdrop
-        const backdrop = parts(element).backdrop;
-        expect(backdrop).toBeTruthy();
-        await userEvent.click(backdrop!);
-        await element.updateComplete;
-
-        // Verify closed
-        const facet = parts(element).facet;
-        expect(facet).toBeTruthy();
-        expect(facet?.classList.contains('hidden')).toBe(true);
-      });
-    });
-
-    describe('when popover is open and Escape key is pressed', () => {
-      it('should close the popover', async () => {
-        const {popoverButton, parts, element} = await renderPopover();
-
-        // Open popover
-        await userEvent.click(popoverButton);
-        await element.updateComplete;
-
-        // Press Escape
-        await page.keyboard.press('Escape');
-        await element.updateComplete;
-
-        // Verify closed
-        const facet = parts(element).facet;
-        expect(facet).toBeTruthy();
-        expect(facet?.classList.contains('hidden')).toBe(true);
-      });
     });
   });
 });
