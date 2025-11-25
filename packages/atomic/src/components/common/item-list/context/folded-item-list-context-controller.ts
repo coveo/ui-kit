@@ -1,14 +1,6 @@
-import type {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
-import type {InitializableComponent} from '@/src/decorators/types.js';
+import type {ReactiveController, ReactiveControllerHost} from 'lit';
+import type {LitElementWithError} from '@/src/decorators/types.js';
 import {buildCustomEvent} from '@/src/utils/event-utils';
-
-type LitElementWithError = Omit<
-  Pick<InitializableComponent, 'error'>,
-  'error'
-> &
-  LitElement & {
-    error: Error | null;
-  };
 
 const foldedItemListContextEventName = 'atomic/resolveFoldedResultList';
 
@@ -57,8 +49,6 @@ export class FoldedItemListContextController<T = unknown>
       foldedItemListContextEventName,
       (foldedItemList: T) => {
         this._foldedItemList = foldedItemList;
-        this._error = null;
-        this.host.error = null;
         this.host.requestUpdate();
       }
     );
