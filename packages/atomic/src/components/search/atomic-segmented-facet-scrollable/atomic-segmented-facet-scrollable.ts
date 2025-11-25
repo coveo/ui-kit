@@ -98,6 +98,28 @@ export class AtomicSegmentedFacetScrollable
     }
   }
 
+  @errorGuard()
+  @bindingGuard()
+  render() {
+    if (this.searchStatusState.hasError) {
+      return html`${nothing}`;
+    }
+
+    return html`
+      <div part="scrollable-container" class="relative flex">
+        ${this.renderArrow('left')}
+        <div
+          part="horizontal-scroll"
+          class="wrapper-segmented flex flex-row overflow-x-scroll scroll-smooth"
+          ${ref(this.horizontalScrollRef)}
+        >
+          <slot></slot>
+        </div>
+        ${this.renderArrow('right')}
+      </div>
+    `;
+  }
+
   private handleScroll = () => {
     if (!this.horizontalScrollRef.value) {
       return;
@@ -178,28 +200,6 @@ export class AtomicSegmentedFacetScrollable
               : 'right-0 bg-linear-to-l'
           }"
         ></div>
-      </div>
-    `;
-  }
-
-  @errorGuard()
-  @bindingGuard()
-  render() {
-    if (this.searchStatusState.hasError) {
-      return html`${nothing}`;
-    }
-
-    return html`
-      <div part="scrollable-container" class="relative flex">
-        ${this.renderArrow('left')}
-        <div
-          part="horizontal-scroll"
-          class="wrapper-segmented flex flex-row overflow-x-scroll scroll-smooth"
-          ${ref(this.horizontalScrollRef)}
-        >
-          <slot></slot>
-        </div>
-        ${this.renderArrow('right')}
       </div>
     `;
   }
