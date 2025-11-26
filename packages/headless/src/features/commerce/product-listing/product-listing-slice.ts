@@ -1,6 +1,10 @@
 import {createReducer} from '@reduxjs/toolkit';
 import type {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
-import type {BaseProduct, ChildProduct, Product,} from '../../../api/commerce/common/product.js';
+import type {
+  BaseProduct,
+  ChildProduct,
+  Product,
+} from '../../../api/commerce/common/product.js';
 import {ResultType} from '../../../api/commerce/common/result.js';
 import type {ListingCommerceSuccessResponse} from '../../../api/commerce/listing/response.js';
 import {setError} from '../../error/error-actions.js';
@@ -11,7 +15,10 @@ import {
   promoteChildToParent,
   type QueryCommerceAPIThunkReturn,
 } from './product-listing-actions.js';
-import {getProductListingInitialState, type ProductListingState,} from './product-listing-state.js';
+import {
+  getProductListingInitialState,
+  type ProductListingState,
+} from './product-listing-state.js';
 
 export const productListingReducer = createReducer(
   getProductListingInitialState(),
@@ -79,7 +86,8 @@ export const productListingReducer = createReducer(
         handlePending(state, action.meta.requestId);
       })
       .addCase(promoteChildToParent, (state, action) => {
-        const productsOrResults = state.results.length > 0 ? state.results : state.products;
+        const productsOrResults =
+          state.products.length > 0 ? state.products : state.results;
         let childToPromote: ChildProduct | undefined;
         const currentParentIndex = productsOrResults.findIndex((result) => {
           if (result.resultType === ResultType.SPOTLIGHT) {
