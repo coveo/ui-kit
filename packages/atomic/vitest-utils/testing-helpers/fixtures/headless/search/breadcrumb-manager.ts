@@ -18,7 +18,8 @@ export const defaultImplementation = {
   },
   state: defaultState,
   deselectAll: vi.fn(),
-};
+  deselectBreadcrumb: vi.fn(),
+} satisfies BreadcrumbManager;
 
 export const buildFakeBreadcrumbManager = ({
   implementation,
