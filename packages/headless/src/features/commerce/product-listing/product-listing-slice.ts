@@ -87,7 +87,7 @@ export const productListingReducer = createReducer(
       })
       .addCase(promoteChildToParent, (state, action) => {
         const productsOrResults =
-          state.products.length > 0 ? state.products : state.results;
+          state.results.length > 0 ? state.results : state.products;
         let childToPromote: ChildProduct | undefined;
         const currentParentIndex = productsOrResults.findIndex((result) => {
           if (result.resultType === ResultType.SPOTLIGHT) {
