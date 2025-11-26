@@ -328,5 +328,3 @@ expect(element.error).toBe(...); // Element is null, can't access properties
 
 **Lifecycle:**
 - [ ] Event listener cleanup (if component adds listeners)
-
-````

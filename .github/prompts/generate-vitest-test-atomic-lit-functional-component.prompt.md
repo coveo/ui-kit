@@ -221,5 +221,3 @@ const element = await renderComponent({class: 'test-class'});
 const classNames = tw({'test-class': true});
 const element = await renderComponent({class: multiClassMap(classNames)});
 ```
-
-````

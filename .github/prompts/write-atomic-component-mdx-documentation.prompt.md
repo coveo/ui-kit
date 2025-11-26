@@ -303,6 +303,3 @@ Follow these steps systematically:
 7. **Verify quality** using the checklist above
 
 Complete all workflow steps before finishing.
-
-
-````
