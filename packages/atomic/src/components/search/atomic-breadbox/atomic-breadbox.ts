@@ -1,25 +1,14 @@
 import {NumberValue, Schema} from '@coveo/bueno';
 import {
-  type Breadcrumb,
   type BreadcrumbManager,
   type BreadcrumbManagerState,
-  type BreadcrumbValue,
-  buildContext,
-  buildProductListing,
-  buildSearch,
-  type CategoryFacetValue,
-  type Context,
-  type ContextState,
-  type DateFacetValue,
-  type LocationFacetValue,
-  type NumericFacetValue,
-  type ProductListing,
-  type RegularFacetValue,
-  type Search,
-} from '@coveo/headless/commerce';
+  buildBreadcrumbManager,
+  buildFacetManager,
+  type FacetManager,
+  type FacetManagerState,
+} from '@coveo/headless';
 import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
 import {renderBreadcrumbButton} from '@/src/components/common/breadbox/breadcrumb-button';
 import {renderBreadcrumbClearAll} from '@/src/components/common/breadbox/breadcrumb-clear-all';
 import {renderBreadcrumbContainer} from '@/src/components/common/breadbox/breadcrumb-container';
@@ -27,12 +16,8 @@ import {renderBreadcrumbContent} from '@/src/components/common/breadbox/breadcru
 import {renderBreadcrumbShowLess} from '@/src/components/common/breadbox/breadcrumb-show-less';
 import {renderBreadcrumbShowMore} from '@/src/components/common/breadbox/breadcrumb-show-more';
 import type {Breadcrumb as BreadboxBreadcrumb} from '@/src/components/common/breadbox/breadcrumb-types';
-import {formatHumanReadable} from '@/src/components/common/facets/numeric-facet/formatter';
-import {
-  defaultCurrencyFormatter,
-  defaultNumberFormatter,
-} from '@/src/components/common/formats/format-common';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
+import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -43,20 +28,12 @@ import {
   AriaLiveRegionController,
   FocusTargetController,
 } from '@/src/utils/accessibility-utils';
-import {parseDate} from '@/src/utils/date-utils';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 
-type AnyFacetValue =
-  | RegularFacetValue
-  | LocationFacetValue
-  | NumericFacetValue
-  | DateFacetValue
-  | CategoryFacetValue;
-
 /**
- * The `atomic-commerce-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
+ * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
  *
- * @part container - The container of the whole component, list, and label.
+ * @part container - The container of the whole component, list & label.
  * @part breadcrumb-list-container - The container of the list of breadcrumb buttons.
  * @part breadcrumb-list - The list of breadcrumb buttons.
  * @part breadcrumb-button - A single breadcrumb button.
@@ -68,12 +45,12 @@ type AnyFacetValue =
  * @part label - The "Filters" label.
  * @part clear - The button to clear all filters.
  */
-@customElement('atomic-commerce-breadbox')
+@customElement('atomic-breadbox')
 @bindings()
 @withTailwindStyles
-export class AtomicCommerceBreadbox
+export class AtomicBreadbox
   extends LitElement
-  implements InitializableComponent<CommerceBindings>
+  implements InitializableComponent<Bindings>
 {
   static styles: CSSResultGroup = [
     css`
@@ -81,11 +58,6 @@ export class AtomicCommerceBreadbox
       [part='breadcrumb-value'].excluded {
         text-decoration: line-through;
         @apply text-error;
-      }
-
-      /* Prepend non-breaking space to all breadcrumb values for consistent spacing */
-      [part='breadcrumb-value']::before {
-        content: '\00a0';
       }
     `,
   ];
@@ -99,17 +71,17 @@ export class AtomicCommerceBreadbox
   private breadcrumbShowMoreFocus!: FocusTargetController;
   private breadcrumbShowLessFocus!: FocusTargetController;
 
-  public bindings!: CommerceBindings;
+  public bindings!: Bindings;
   public breadcrumbManager!: BreadcrumbManager;
-  public context!: Context;
-  @bindStateToController('context')
-  @state()
-  public contextState!: ContextState;
-  private searchOrListing!: Search | ProductListing;
+  public facetManager!: FacetManager;
 
   @bindStateToController('breadcrumbManager')
   @state()
   public breadcrumbManagerState!: BreadcrumbManagerState;
+
+  @bindStateToController('facetManager')
+  @state()
+  public facetManagerState!: FacetManagerState;
 
   @state() public error!: Error;
   @state() private isCollapsed = true;
@@ -154,13 +126,8 @@ export class AtomicCommerceBreadbox
   }
 
   public initialize() {
-    if (this.bindings.interfaceElement.type === 'product-listing') {
-      this.searchOrListing = buildProductListing(this.bindings.engine);
-    } else {
-      this.searchOrListing = buildSearch(this.bindings.engine);
-    }
-    this.context = buildContext(this.bindings.engine);
-    this.breadcrumbManager = this.searchOrListing.breadcrumbManager();
+    this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
+    this.facetManager = buildFacetManager(this.bindings.engine);
 
     if (window.ResizeObserver && this.parentElement) {
       this.resizeObserver = new ResizeObserver(() => this.adaptBreadcrumbs());
@@ -181,11 +148,79 @@ export class AtomicCommerceBreadbox
     );
   }
 
-  updated() {
+  public updated() {
     this.adaptBreadcrumbs();
   }
 
+  @bindingGuard()
+  @errorGuard()
+  render() {
+    const breadcrumbs = this.allBreadcrumbs;
+
+    if (!breadcrumbs.length) {
+      return html`${nothing}`;
+    }
+
+    return html`${renderBreadcrumbContainer({
+      props: {
+        isCollapsed: this.isCollapsed,
+        i18n: this.bindings.i18n,
+      },
+    })(
+      html`${this.renderBreadcrumbs(breadcrumbs)}
+      ${renderBreadcrumbShowMore({
+        props: {
+          refCallback: async (el) => {
+            await this.breadcrumbShowLessFocus.setTarget(el!);
+          },
+          onShowMore: () => {
+            this.firstExpandedBreadcrumbIndex =
+              this.numberOfBreadcrumbs - this.numberOfCollapsedBreadcrumbs;
+            this.breadcrumbShowMoreFocus.focusOnNextTarget();
+            this.isCollapsed = false;
+          },
+          isCollapsed: this.isCollapsed,
+          i18n: this.bindings.i18n,
+          numberOfCollapsedBreadcrumbs: this.numberOfCollapsedBreadcrumbs,
+          value: this.showMoreText,
+          ariaLabel: this.bindings.i18n.t('show-n-more-filters', {
+            value: this.numberOfCollapsedBreadcrumbs,
+          }),
+        },
+      })}
+      ${renderBreadcrumbShowLess({
+        props: {
+          onShowLess: () => {
+            this.breadcrumbShowLessFocus.focusOnNextTarget();
+            this.isCollapsed = true;
+          },
+          isCollapsed: this.isCollapsed,
+          i18n: this.bindings.i18n,
+        },
+      })}
+      ${renderBreadcrumbClearAll({
+        props: {
+          refCallback: async (ref) => {
+            const isFocusTarget =
+              this.lastRemovedBreadcrumbIndex === this.numberOfBreadcrumbs;
+
+            if (isFocusTarget) {
+              await this.breadcrumbRemovedFocus.setTarget(ref);
+            }
+          },
+          onClick: () => {
+            this.breadcrumbManager.deselectAll();
+            this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
+          },
+          isCollapsed: this.isCollapsed,
+          i18n: this.bindings.i18n,
+        },
+      })} `
+    )}`;
+  }
+
   public disconnectedCallback() {
+    super.disconnectedCallback();
     this.resizeObserver?.disconnect();
   }
 
@@ -274,82 +309,107 @@ export class AtomicCommerceBreadbox
     )}`;
   }
 
-  private getNumberFormatter(field: string) {
-    if (field === 'ec_price' || field === 'ec_promo_price') {
-      return defaultCurrencyFormatter(this.contextState.currency);
-    }
-    return defaultNumberFormatter;
+  private get facetBreadcrumbs(): BreadboxBreadcrumb[] {
+    return this.breadcrumbManagerState.facetBreadcrumbs
+      .flatMap(({facetId, field, values}) =>
+        values.map((value) => ({value, facetId, field}))
+      )
+      .filter(({facetId}) => this.bindings.store.state.facets[facetId])
+      .map(({value, facetId, field}) => ({
+        facetId,
+        label: this.bindings.store.state.facets[facetId]?.label(),
+        state: value.value.state,
+        deselect: value.deselect,
+        formattedValue: [
+          getFieldValueCaption(field, value.value.value, this.bindings.i18n),
+        ],
+      }));
   }
 
-  private valueForFacetType = (
-    type: string,
-    field: string,
-    value: BreadcrumbValue<AnyFacetValue>
-  ): string[] => {
-    switch (type) {
-      case 'numericalRange':
-        return [
-          formatHumanReadable({
-            facetValue: value.value as NumericFacetValue,
-            logger: this.bindings.engine.logger,
-            i18n: this.bindings.i18n,
-            field: field,
-            manualRanges: [],
-            formatter: this.getNumberFormatter(field),
-          }),
-        ];
-      case 'dateRange':
-        return [
-          this.bindings.i18n.t('to', {
-            start: parseDate((value.value as DateFacetValue).start).format(
-              'YYYY-MM-DD'
-            ),
-            end: parseDate((value.value as DateFacetValue).end).format(
-              'YYYY-MM-DD'
-            ),
-          }),
-        ];
-      case 'hierarchical':
-        return (value.value as CategoryFacetValue).path.map(
-          (pathValue: string) =>
-            getFieldValueCaption(field, pathValue, this.bindings.i18n)
-        );
-      case 'regular':
-        return [
-          getFieldValueCaption(
-            field,
-            (value.value as RegularFacetValue).value,
-            this.bindings.i18n
-          ),
-        ];
-      default: {
-        // TODO COMHUB-291 support location breadcrumb
-        this.bindings.engine.logger.warn('Unexpected breadcrumb type.');
-        return [];
-      }
-    }
-  };
-
-  private buildBreadcrumb(breadcrumb: Breadcrumb<AnyFacetValue>) {
-    return breadcrumb.values.map((value: BreadcrumbValue<AnyFacetValue>) => {
-      return {
-        facetId: breadcrumb.facetId,
-        label: breadcrumb.facetDisplayName ?? this.bindings.i18n.t('no-label'),
-        deselect: value.deselect,
-        formattedValue: this.valueForFacetType(
-          breadcrumb.type,
-          breadcrumb.facetId,
-          value
+  private get categoryFacetBreadcrumbs(): BreadboxBreadcrumb[] {
+    return this.breadcrumbManagerState.categoryFacetBreadcrumbs.map(
+      ({facetId, field, path, deselect}) => ({
+        facetId,
+        label: this.bindings.store.state.categoryFacets[facetId].label(),
+        deselect: deselect,
+        formattedValue: path.map((pathValue) =>
+          getFieldValueCaption(field, pathValue.value, this.bindings.i18n)
         ),
-      };
-    });
+      })
+    );
+  }
+
+  private get numericFacetBreadcrumbs(): BreadboxBreadcrumb[] {
+    return this.breadcrumbManagerState.numericFacetBreadcrumbs
+      .flatMap(({facetId, field, values}) =>
+        values.map((value) => ({value, facetId, field}))
+      )
+      .map(({value, facetId}) => ({
+        facetId,
+        label: this.bindings.store.state.numericFacets[facetId].label(),
+        state: value.value.state,
+        deselect: value.deselect,
+        formattedValue: [
+          this.bindings.store.state.numericFacets[facetId].format(value.value),
+        ],
+        content: this.bindings.store.state.numericFacets[facetId].content?.(
+          value.value
+        ),
+      }));
+  }
+
+  private get dateFacetBreadcrumbs(): BreadboxBreadcrumb[] {
+    return this.breadcrumbManagerState.dateFacetBreadcrumbs
+      .flatMap(({facetId, field, values}) =>
+        values.map((value) => ({value, facetId, field}))
+      )
+      .map(({value, facetId}) => ({
+        facetId,
+        label: this.bindings.store.state.dateFacets[facetId].label(),
+        state: value.value.state,
+        deselect: value.deselect,
+        formattedValue: [
+          this.bindings.store.state.dateFacets[facetId].format(value.value),
+        ],
+      }));
+  }
+
+  private get automaticFacetBreadcrumbs(): BreadboxBreadcrumb[] {
+    return this.breadcrumbManagerState.automaticFacetBreadcrumbs
+      .flatMap(({facetId, field, label, values}) =>
+        values.map((value) => ({value, facetId, field, label}))
+      )
+      .map(({value, facetId, field, label}) => ({
+        facetId,
+        state: value.value.state,
+        label: label ? label : field,
+        deselect: value.deselect,
+        formattedValue: [
+          getFieldValueCaption(field, value.value.value, this.bindings.i18n),
+        ],
+      }));
+  }
+
+  private get allBreadcrumbs(): BreadboxBreadcrumb[] {
+    return [
+      ...this.facetBreadcrumbs,
+      ...this.categoryFacetBreadcrumbs,
+      ...this.numericFacetBreadcrumbs,
+      ...this.dateFacetBreadcrumbs,
+      ...this.automaticFacetBreadcrumbs,
+    ];
   }
 
   private renderBreadcrumbs(breadcrumbs: BreadboxBreadcrumb[]) {
-    this.numberOfBreadcrumbs = breadcrumbs.length;
+    const sortedBreadcrumbs = breadcrumbs.sort((a, b) => {
+      const indexA = this.facetManagerState.facetIds.indexOf(a.facetId);
+      const indexB = this.facetManagerState.facetIds.indexOf(b.facetId);
+      return indexA - indexB;
+    });
+    this.numberOfBreadcrumbs = sortedBreadcrumbs.length;
 
-    return breadcrumbs.map((breadcrumb, index) => {
-      const isLastBreadcrumb = breadcrumbs.length === 1;
+    return sortedBreadcrumbs.map((breadcrumb, index) => {
+      const isLastBreadcrumb = this.allBreadcrumbs.length === 1;
 
       return html`${renderBreadcrumbButton({
         props: {
@@ -388,81 +448,10 @@ export class AtomicCommerceBreadbox
       )}`;
     });
   }
-
-  @bindingGuard()
-  @errorGuard()
-  render() {
-    const breadcrumbs = this.breadcrumbManagerState.facetBreadcrumbs.flatMap(
-      (breadcrumb) => {
-        return this.buildBreadcrumb(breadcrumb);
-      }
-    );
-
-    if (!breadcrumbs.length) {
-      return html`${nothing}`;
-    }
-
-    return html`${renderBreadcrumbContainer({
-      props: {
-        isCollapsed: this.isCollapsed,
-        i18n: this.bindings.i18n,
-      },
-    })(
-      html`${this.renderBreadcrumbs(breadcrumbs)}
-      ${renderBreadcrumbShowMore({
-        props: {
-          refCallback: async (el) => {
-            await this.breadcrumbShowLessFocus.setTarget(el!);
-          },
-          onShowMore: () => {
-            this.firstExpandedBreadcrumbIndex =
-              this.numberOfBreadcrumbs - this.numberOfCollapsedBreadcrumbs;
-            this.breadcrumbShowMoreFocus.focusOnNextTarget();
-            this.isCollapsed = false;
-          },
-          isCollapsed: this.isCollapsed,
-          i18n: this.bindings.i18n,
-          numberOfCollapsedBreadcrumbs: this.numberOfCollapsedBreadcrumbs,
-          value: this.showMoreText,
-          ariaLabel: this.bindings.i18n.t('show-n-more-filters', {
-            value: this.showMoreText,
-          }),
-        },
-      })}
-      ${renderBreadcrumbShowLess({
-        props: {
-          onShowLess: () => {
-            this.breadcrumbShowLessFocus.focusOnNextTarget();
-            this.isCollapsed = true;
-          },
-          isCollapsed: this.isCollapsed,
-          i18n: this.bindings.i18n,
-        },
-      })}
-      ${renderBreadcrumbClearAll({
-        props: {
-          refCallback: async (ref) => {
-            const isFocusTarget =
-              this.lastRemovedBreadcrumbIndex === this.numberOfBreadcrumbs;
-
-            if (isFocusTarget) {
-              await this.breadcrumbRemovedFocus.setTarget(ref);
-            }
-          },
-          onClick: () => {
-            this.breadcrumbManager.deselectAll();
-            this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
-          },
-          isCollapsed: this.isCollapsed,
-          i18n: this.bindings.i18n,
-        },
-      })} `
-    )}`;
-  }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'atomic-commerce-breadbox': AtomicCommerceBreadbox;
+    'atomic-breadbox': AtomicBreadbox;
   }
 }
