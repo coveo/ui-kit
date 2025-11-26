@@ -8,10 +8,10 @@ export const buildFakeFacetManager = ({
   state?: Partial<FacetManagerState>;
   implementation?: Partial<FacetManager>;
 } = {}): FacetManager => {
-  const defaultState: FacetManagerState = {
+  const defaultState = {
     facetIds: [],
     ...state,
-  };
+  } satisfies FacetManagerState;
 
   return {
     subscribe: vi.fn((callback) => {

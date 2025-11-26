@@ -8,7 +8,7 @@ export const buildFakeBreadcrumbManager = ({
   state?: Partial<BreadcrumbManagerState>;
   implementation?: Partial<BreadcrumbManager>;
 } = {}): BreadcrumbManager => {
-  const defaultState: BreadcrumbManagerState = {
+  const defaultState = {
     facetBreadcrumbs: [],
     categoryFacetBreadcrumbs: [],
     numericFacetBreadcrumbs: [],
@@ -17,7 +17,7 @@ export const buildFakeBreadcrumbManager = ({
     automaticFacetBreadcrumbs: [],
     hasBreadcrumbs: false,
     ...state,
-  };
+  } satisfies BreadcrumbManagerState;
 
   return {
     subscribe: vi.fn((callback) => {
