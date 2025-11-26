@@ -1,5 +1,5 @@
 ---
-agent: agent
+agent: 'agent'
 description: 'Migrate an Atomic Stencil functional component to Lit functional component'
 ---
 
