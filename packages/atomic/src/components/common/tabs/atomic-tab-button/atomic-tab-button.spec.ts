@@ -1,0 +1,325 @@
+import {buildQuerySummary, type QuerySummaryState} from '@coveo/headless';
+import {html, type TemplateResult} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
+import {within} from 'shadow-dom-testing-library';
+import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {page} from 'vitest/browser';
+import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
+import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
+import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/search/summary-controller';
+import type {AtomicTabButton} from './atomic-tab-button';
+import './atomic-tab-button';
+
+vi.mock('@coveo/headless', {spy: true});
+
+describe('atomic-tab-button', () => {
+  const mockedEngine = buildFakeSearchEngine();
+  let mockedQuerySummary: ReturnType<typeof buildQuerySummary>;
+
+  const renderAtomicTabButton = async ({
+    props = {},
+    slottedContent,
+    querySummaryState = {hasQuery: true, query: 'test query'},
+  }: {
+    props?: Partial<{entityToGreet: string; isVulcan: boolean}>;
+    slottedContent?: TemplateResult;
+    querySummaryState?: Partial<QuerySummaryState>;
+  } = {}) => {
+    mockedQuerySummary = buildFakeSummary({state: querySummaryState});
+
+    vi.mocked(buildQuerySummary).mockImplementation(() => mockedQuerySummary);
+
+    const {element} = await renderInAtomicSearchInterface<AtomicTabButton>({
+      template: html`<atomic-tab-button
+        entity-to-greet=${ifDefined(props.entityToGreet)}
+        ?is-vulcan=${props.isVulcan}
+      >${ifDefined(slottedContent)}
+      </atomic-tab-button>`,
+      selector: 'atomic-tab-button',
+      bindings: (bindings) => {
+        bindings.engine = mockedEngine;
+        return bindings;
+      },
+    });
+
+    return {
+      element,
+      toggleRevealQueryButton: () => page.getByRole('button'),
+      parts: (element: AtomicTabButton) => {
+        const qs = (part: string) =>
+          element.shadowRoot?.querySelector(`[part="${part}"]`);
+        return {
+          container: qs('container'),
+          message: qs('message'),
+          queryContainer: qs('query-container'),
+          toggleRevealQueryButton: qs('toggle-reveal-query-button'),
+          query: qs('query'),
+        };
+      },
+    };
+  };
+
+  describe('#initialize', () => {
+    it('should not set the error when using the default props', async () => {
+      const {element} = await renderAtomicTabButton();
+
+      expect(element.error).toBeUndefined();
+    });
+
+    it('should not set the error when receiving valid props', async () => {
+      const {element} = await renderAtomicTabButton({
+        props: {
+          entityToGreet: 'Mr Spock',
+          isVulcan: true,
+        },
+      });
+
+      expect(element.error).toBeUndefined();
+    });
+
+    it('should set the error when received entityToGreet is an empty string', async () => {
+      const {element} = await renderAtomicTabButton({
+        props: {
+          entityToGreet: '',
+        },
+      });
+
+      expect(element.error).toBeInstanceOf(Error);
+      expect(element.error.message).toContain(
+        'entityToGreet: value is an empty string.'
+      );
+    });
+
+    it('should set the querySummary with buildQuerySummary', async () => {
+      const {element} = await renderAtomicTabButton();
+
+      expect(buildQuerySummary).toHaveBeenCalledWith(mockedEngine);
+      expect(element.querySummary).toBe(mockedQuerySummary);
+    });
+
+    it('should bind the querySummaryState to the state of query summary controller', async () => {
+      const {element} = await renderAtomicTabButton({
+        querySummaryState: {hasQuery: true, query: 'test new query'},
+      });
+
+      expect(element.querySummaryState.hasQuery).toBe(true);
+      expect(element.querySummaryState.query).toBe('test new query');
+    });
+
+    it('should add an "atomic/redden" event listener to the element', async () => {
+      const {element} = await renderAtomicTabButton();
+      const addEventListenerSpy = vi.spyOn(element, 'addEventListener');
+
+      element.initialize();
+
+      expect(addEventListenerSpy).toHaveBeenCalledExactlyOnceWith(
+        'atomic/redden',
+        expect.any(Function)
+      );
+    });
+  });
+
+  describe('when the "atomic/redden" event is dispatched', () => {
+    let consoleLogSpy: MockInstance;
+
+    beforeEach(() => {
+      // Mock the console to avoid polluting the test logs.
+      consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    });
+
+    it('should add the "text-red-600" class to the message paragraph', async () => {
+      const {element, parts} = await renderAtomicTabButton();
+      expect(parts(element).message?.classList.contains('text-red-600')).toBe(
+        false
+      );
+
+      element?.dispatchEvent(new CustomEvent('atomic/redden'));
+
+      expect(parts(element).message?.classList.contains('text-red-600')).toBe(
+        true
+      );
+    });
+
+    it('should log to the console', async () => {
+      const {element} = await renderAtomicTabButton();
+
+      element?.dispatchEvent(new CustomEvent('atomic/redden'));
+
+      expect(consoleLogSpy).toHaveBeenCalledWith(
+        'The greeting has been reddened!'
+      );
+    });
+  });
+
+  describe('before updating (#willUpdate)', () => {
+    it('should not set the error when entityToGreet has not been updated', async () => {
+      const {element} = await renderAtomicTabButton();
+
+      element.isVulcan = true;
+      await element.updateComplete;
+
+      expect(element.error).toBeUndefined();
+    });
+
+    it('should not set the error when entityToGreet has been updated to a valid value', async () => {
+      const {element} = await renderAtomicTabButton();
+
+      element.entityToGreet = 'Mr LaForge';
+      await element.updateComplete;
+
+      expect(element.error).toBeUndefined();
+    });
+
+    it('should set the error when entityToGreet has been updated to an invalid value', async () => {
+      const {element} = await renderAtomicTabButton();
+
+      element.entityToGreet = '';
+      await element.updateComplete;
+
+      expect(element.error).toBeInstanceOf(Error);
+      expect(element.error.message).toContain(
+        'entityToGreet: value is an empty string.'
+      );
+    });
+  });
+
+  describe('when rendering (#render)', () => {
+    it('should render every part except the query initially', async () => {
+      const {element, parts} = await renderAtomicTabButton();
+      const partsElements = parts(element);
+
+      await expect.element(partsElements.container!).toBeInTheDocument();
+      await expect.element(partsElements.message!).toBeInTheDocument();
+      await expect.element(partsElements.query!).not.toBeInTheDocument();
+      await expect.element(partsElements.queryContainer!).toBeInTheDocument();
+      await expect
+        .element(partsElements.toggleRevealQueryButton!)
+        .toBeInTheDocument();
+    });
+
+    it('should render content in the "before" slot before the message part', async () => {
+      const {element, parts} = await renderAtomicTabButton({
+        slottedContent: html`<div slot="before" class='test-class'>Before</div>`,
+      });
+      const slot = parts(element).container?.querySelector(
+        'slot[name="before"]'
+      ) as HTMLSlotElement;
+
+      expect(within(slot).getByShadowText('Before')?.tagName).toBe('DIV');
+      expect(within(slot).getByShadowText('Before').classList).toContain(
+        'test-class'
+      );
+    });
+
+    it('should render content in the default slot between the message part and the query container part', async () => {
+      const {element, parts} = await renderAtomicTabButton({
+        slottedContent: html`<div class='test-class'>Default</div>`,
+      });
+      const slot = parts(element).container?.querySelector(
+        'slot:not([name])'
+      ) as HTMLSlotElement;
+
+      expect(within(slot).getByShadowText('Default')?.tagName).toBe('DIV');
+      expect(within(slot).getByShadowText('Default').classList).toContain(
+        'test-class'
+      );
+    });
+
+    it('should render content in the "after" slot after the query container part', async () => {
+      const {element, parts} = await renderAtomicTabButton({
+        slottedContent: html`<div slot="after" class='test-class'>After</div>`,
+      });
+      const slot = parts(element).container?.querySelector(
+        'slot[name="after"]'
+      ) as HTMLSlotElement;
+
+      expect(within(slot).getByShadowText('After')?.tagName).toBe('DIV');
+      expect(within(slot).getByShadowText('After').classList).toContain(
+        'test-class'
+      );
+    });
+
+    it('should render the Vulcan greeting when isVulcan is true', async () => {
+      const {element, parts} = await renderAtomicTabButton({
+        props: {isVulcan: true},
+      });
+
+      expect(parts(element).message).toHaveTextContent('🖖 Mr LaForge!');
+    });
+
+    it('should render the non-Vulcan greeting when isVulcan is false', async () => {
+      const {element, parts} = await renderAtomicTabButton({
+        props: {isVulcan: false},
+      });
+      const partsElements = parts(element);
+
+      expect(partsElements.message).toHaveTextContent('👋 Mr LaForge!');
+    });
+
+    it('should render the button with the correct style', async () => {
+      const {element, parts} = await renderAtomicTabButton();
+
+      expect(parts(element).toggleRevealQueryButton).toHaveClass('btn-primary');
+    });
+
+    it('should render the button with the correct text when the query is not revealed', async () => {
+      const {element, parts} = await renderAtomicTabButton();
+
+      expect(parts(element).toggleRevealQueryButton).toHaveTextContent(
+        'Show more'
+      );
+    });
+
+    it('should render the button with the correct text when the query is revealed', async () => {
+      const {element, parts, toggleRevealQueryButton} =
+        await renderAtomicTabButton();
+
+      await toggleRevealQueryButton().click();
+
+      expect(parts(element).toggleRevealQueryButton).toHaveTextContent(
+        'Show less'
+      );
+    });
+
+    it('should enable the button when there is a query', async () => {
+      const {element, parts} = await renderAtomicTabButton({
+        querySummaryState: {hasQuery: true, query: 'test query'},
+      });
+
+      expect(parts(element).toggleRevealQueryButton).toBeEnabled();
+    });
+
+    it('should disable the button when there is no query', async () => {
+      const {element, parts} = await renderAtomicTabButton({
+        querySummaryState: {hasQuery: false, query: ''},
+      });
+
+      expect(parts(element).toggleRevealQueryButton).toBeDisabled();
+    });
+
+    it('should render the query part with the correct content when the button is clicked', async () => {
+      const {element, parts, toggleRevealQueryButton} =
+        await renderAtomicTabButton();
+      expect(parts(element).query).not.toBeInTheDocument();
+
+      await toggleRevealQueryButton().click();
+
+      expect(parts(element).query).toBeInTheDocument();
+      expect(parts(element).query).toHaveTextContent('test query');
+    });
+  });
+
+  describe('when removed from the DOM (#disconnectedCallback)', () => {
+    it('should remove the "atomic/redden" event listener from the element', async () => {
+      const {element} = await renderAtomicTabButton();
+      const removeEventListenerSpy = vi.spyOn(element!, 'removeEventListener');
+
+      element.remove();
+
+      expect(removeEventListenerSpy).toHaveBeenCalledExactlyOnceWith(
+        'atomic/redden',
+        expect.any(Function)
+      );
+    });
+  });
+});

@@ -8,7 +8,7 @@ import {TabCommonElement} from './tab-common';
 @Component({
   tag: 'atomic-tab-bar',
   shadow: true,
-  styleUrl: 'tab-bar.pcss',
+  styleUrl: 'stencil-tab-bar.pcss',
 })
 export class TabBar {
   @Element() private host!: HTMLElement;

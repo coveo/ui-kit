@@ -26,7 +26,7 @@ import {Button} from '../stencil-button';
 @Component({
   tag: 'atomic-tab-popover',
   shadow: true,
-  styleUrl: 'tab-popover.pcss',
+  styleUrl: 'stencil-tab-popover.pcss',
 })
 export class TabPopover implements InitializableComponent {
   @Element() private host!: HTMLElement;
