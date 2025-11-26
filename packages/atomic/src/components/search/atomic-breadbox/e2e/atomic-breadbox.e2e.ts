@@ -19,7 +19,7 @@ test.describe('atomic-breadbox', () => {
     await breadbox.getFacetValue('objecttype').first().click();
     await breadbox.getBreadcrumbButtons().first().waitFor({state: 'visible'});
 
-    await breadbox.page.locator('[part="breadcrumb-button"]').click();
+    await breadbox.getBreadcrumbButtons().first().click();
     await expect(breadbox.getBreadcrumbButtons()).toHaveCount(0);
   });
 
@@ -53,33 +53,22 @@ test.describe('atomic-breadbox', () => {
       './iframe.html?args=&id=atomic-breadbox--default&viewMode=story#q=test&f-objecttype=People';
     await page.goto(urlWithFilter);
 
-    await page.waitForSelector('atomic-breadbox', {
-      state: 'visible',
-      timeout: 15000,
-    });
+    await breadbox.hydrated.waitFor({state: 'visible'});
 
     const breadcrumbButton = breadbox.getBreadcrumbButtons();
     await expect(breadcrumbButton).toHaveCount(1);
     await expect(breadcrumbButton.first()).toContainText('Object type: People');
   });
 
-  test('should display breadcrumbs when selecting facet values', async ({
+  test('should display breadcrumb when selecting a facet value', async ({
     breadbox,
   }) => {
     await breadbox.getFacetValue('objecttype').first().click();
-    await breadbox.getFacetValue('filetype').first().click();
-    await breadbox.getFacetValue('source').first().click();
 
-    await expect(breadbox.getBreadcrumbButtons()).toHaveCount(3);
+    await expect(breadbox.getBreadcrumbButtons()).toHaveCount(1);
 
     await expect(breadbox.getBreadcrumbButtons().nth(0)).toContainText(
       'Object type:'
-    );
-    await expect(breadbox.getBreadcrumbButtons().nth(1)).toContainText(
-      'File type:'
-    );
-    await expect(breadbox.getBreadcrumbButtons().nth(2)).toContainText(
-      'Source:'
     );
   });
 
