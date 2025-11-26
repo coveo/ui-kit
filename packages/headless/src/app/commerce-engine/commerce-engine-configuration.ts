@@ -39,12 +39,6 @@ export interface CommerceEngineConfiguration extends EngineConfiguration {
    * See [Headless proxy: Commerce](https://docs.coveo.com/en/headless/latest/usage/proxy#commerce).
    **/
   proxyBaseUrl?: string;
-  /**
-   * When set to true, fills the `results` field rather than the `products` field
-   * in the controller state. It may also include Spotlight Content in the results.
-   * @default false
-   */
-  enableResults?: boolean;
 }
 
 export const commerceEngineConfigurationSchema =
