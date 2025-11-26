@@ -48,7 +48,11 @@ export const productListingReducer = createReducer(
         );
         state.results = action.payload.response.results.map((result, index) =>
           result.resultType === ResultType.SPOTLIGHT
-            ? preprocessSpotlightContent(result, paginationOffset + index + 1)
+            ? preprocessSpotlightContent(
+                result,
+                paginationOffset + index + 1,
+                action.payload.response.responseId
+              )
             : preprocessProduct(
                 result,
                 paginationOffset + index + 1,
@@ -74,7 +78,11 @@ export const productListingReducer = createReducer(
         state.results = state.results.concat(
           action.payload.response.results.map((result, index) =>
             result.resultType === ResultType.SPOTLIGHT
-              ? preprocessSpotlightContent(result, paginationOffset + index + 1)
+              ? preprocessSpotlightContent(
+                  result,
+                  paginationOffset + index + 1,
+                  action.payload?.response.responseId
+                )
               : preprocessProduct(
                   result,
                   paginationOffset + index + 1,
@@ -187,10 +195,12 @@ function preprocessProduct(
 
 function preprocessSpotlightContent(
   spotlight: BaseSpotlightContent,
-  position: number
+  position: number,
+  responseId?: string
 ): SpotlightContent {
   return {
     ...spotlight,
     position,
+    responseId,
   };
 }

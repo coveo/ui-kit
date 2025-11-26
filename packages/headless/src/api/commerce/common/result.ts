@@ -28,6 +28,10 @@ export interface BaseSpotlightContent {
    */
   description?: string;
   /**
+   * The ID of the response that returned the spotlight content.
+   */
+  responseId?: string;
+  /**
    * The result type identifier, always SPOTLIGHT for spotlight content.
    */
   resultType: ResultType.SPOTLIGHT;

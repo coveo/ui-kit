@@ -127,11 +127,15 @@ describe('product-listing-slice', () => {
         buildMockProduct({ec_name: 'product1', position: 1, responseId})
       );
       expect(finalState.results[1]).toEqual(
-        buildMockSpotlightContent({name: 'Spotlight 1', position: 2})
+        buildMockSpotlightContent({
+          name: 'Spotlight 1',
+          position: 2,
+          responseId,
+        })
       );
     });
 
-    it('sets the #position of each product in results to its 1-based position', () => {
+    it('sets the #position of each result in results to its 1-based position', () => {
       const product1 = buildMockBaseProduct({ec_name: 'product1'});
       const spotlight = buildMockBaseSpotlightContent({name: 'Spotlight 1'});
       const product2 = buildMockBaseProduct({ec_name: 'product2'});
@@ -153,7 +157,7 @@ describe('product-listing-slice', () => {
       expect(finalState.results[2].position).toBe(13);
     });
 
-    it('sets the responseId on each product in results but not on spotlight content', () => {
+    it('sets the responseId on each result in results', () => {
       const product = buildMockBaseProduct({ec_name: 'product1'});
       const spotlight = buildMockBaseSpotlightContent({name: 'Spotlight 1'});
       const responseId = 'test-response-id';
@@ -165,8 +169,8 @@ describe('product-listing-slice', () => {
       const action = fetchProductListing.fulfilled(response, '', {});
       const finalState = productListingReducer(state, action);
 
-      expect((finalState.results[0] as Product).responseId).toBe(responseId);
-      expect(finalState.results[1]).not.toHaveProperty('responseId');
+      expect(finalState.results[0].responseId).toBe(responseId);
+      expect(finalState.results[1].responseId).toBe(responseId);
     });
 
     it('keeps results empty when response.results is empty', () => {
@@ -322,7 +326,11 @@ describe('product-listing-slice', () => {
         buildMockProduct({ec_name: 'product2', position: 3, responseId})
       );
       expect(finalState.results[3]).toEqual(
-        buildMockSpotlightContent({name: 'Spotlight 2', position: 4})
+        buildMockSpotlightContent({
+          name: 'Spotlight 2',
+          position: 4,
+          responseId,
+        })
       );
     });
 
@@ -353,13 +361,19 @@ describe('product-listing-slice', () => {
       expect((finalState.results[2] as Product).position).toBe(3);
     });
 
-    it('sets the responseId on new products in results while preserving existing products responseId', () => {
+    it('sets the responseId on new results in results while preserving the responseId of the existing ones', () => {
+      const oldResponseId = 'old-response-id';
       const product1 = buildMockProduct({
         ec_name: 'product1',
         position: 1,
-        responseId: 'old-response-id',
+        responseId: oldResponseId,
       });
-      state.results = [product1];
+      const spotlight1 = buildMockSpotlightContent({
+        name: 'spotlight1',
+        position: 1,
+        responseId: oldResponseId,
+      });
+      state.results = [product1, spotlight1];
 
       const product2 = buildMockBaseProduct({ec_name: 'product2'});
       const spotlight = buildMockBaseSpotlightContent({name: 'Spotlight 1'});
@@ -378,14 +392,10 @@ describe('product-listing-slice', () => {
       const action = fetchMoreProducts.fulfilled(response, '', {});
       const finalState = productListingReducer(state, action);
 
-      // Original product keeps its responseId
-      expect((finalState.results[0] as Product).responseId).toBe(
-        'old-response-id'
-      );
-      // New product gets the new responseId
-      expect((finalState.results[1] as Product).responseId).toBe(responseId);
-      // Spotlight content doesn't have responseId
-      expect(finalState.results[2]).not.toHaveProperty('responseId');
+      expect(finalState.results[0].responseId).toBe(oldResponseId);
+      expect(finalState.results[1].responseId).toBe(oldResponseId);
+      expect(finalState.results[2].responseId).toBe(responseId);
+      expect(finalState.results[3].responseId).toBe(responseId);
     });
   });
 
