@@ -25,7 +25,7 @@ export interface ProductListingActionCreators {
    * @returns A dispatchable action.
    */
   fetchProductListing(
-    payload: FetchProductListingPayload
+    payload?: FetchProductListingPayload
   ): AsyncThunkAction<
     QueryCommerceAPIThunkReturn,
     FetchProductListingPayload,
@@ -38,7 +38,7 @@ export interface ProductListingActionCreators {
    * @returns A dispatchable action.
    */
   fetchMoreProducts(
-    payload: FetchProductListingPayload
+    payload?: FetchProductListingPayload
   ): AsyncThunkAction<
     QueryCommerceAPIThunkReturn | null,
     FetchProductListingPayload,
