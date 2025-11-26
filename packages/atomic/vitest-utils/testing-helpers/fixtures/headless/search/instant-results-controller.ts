@@ -5,7 +5,7 @@ import type {
 } from '@coveo/headless';
 import {vi} from 'vitest';
 
-export const defaultState: InstantResultsState = {
+export const defaultState = {
   q: 'the query',
   results: [
     {
@@ -44,7 +44,7 @@ export const defaultState: InstantResultsState = {
   ],
   isLoading: false,
   error: null,
-};
+} satisfies InstantResultsState;
 
 export const buildFakeInstantResults = (
   config: Partial<InstantResultsState> = {}

@@ -27,7 +27,7 @@ const defaultValues: NumericFacetValue[] = [
   },
 ];
 
-export const defaultState: NumericFacetState = {
+export const defaultState = {
   canShowLessValues: true,
   canShowMoreValues: true,
   facetId: 'some-facet-id',
@@ -38,14 +38,14 @@ export const defaultState: NumericFacetState = {
   field: 'field',
   type: 'numericalRange',
   hasActiveValues: false,
-};
+} satisfies NumericFacetState;
 
 export const defaultImplementation = {
   subscribe: (subscribedFunction: () => void) => {
     subscribedFunction();
   },
   state: defaultState,
-};
+} satisfies NumericFacet;
 
 export const buildFakeNumericFacet = ({
   implementation,

@@ -9,12 +9,12 @@ export const defaultState = {
   results: [],
   searchResponseId: 'test-search-response-id',
   moreResultsAvailable: false,
-};
+} satisfies ResultListState;
 
 export const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
-};
+} satisfies ResultList;
 
 export const buildFakeResultList = ({
   implementation,

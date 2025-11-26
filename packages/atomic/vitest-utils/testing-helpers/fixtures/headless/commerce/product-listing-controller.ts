@@ -10,11 +10,11 @@ export const defaultState = {
   products: [buildFakeProduct()],
   isLoading: false,
   error: null,
-};
+} satisfies ProductListingState;
 export const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
-};
+} satisfies ProductListing;
 
 export const buildFakeProductListing = ({
   implementation,

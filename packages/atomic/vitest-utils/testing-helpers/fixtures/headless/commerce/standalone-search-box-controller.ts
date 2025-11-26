@@ -11,7 +11,7 @@ export const defaultState = {
   isLoadingSuggestions: false,
   searchBoxId: 'search-box-id',
   redirectTo: '',
-};
+} satisfies StandaloneSearchBoxState;
 
 export const defaultImplementation = {
   subscribe: vi.fn((subscribedFunction: () => void) => {
@@ -21,7 +21,7 @@ export const defaultImplementation = {
   updateRedirectUrl: vi.fn() as StandaloneSearchBox['updateRedirectUrl'],
   afterRedirection: vi.fn() as StandaloneSearchBox['afterRedirection'],
   state: defaultState,
-};
+} satisfies StandaloneSearchBox;
 
 export const buildFakeStandaloneSearchBox = (
   state?: Partial<StandaloneSearchBoxState>,

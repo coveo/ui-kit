@@ -5,7 +5,7 @@ export const defaultState = {
   queries: ['query1', 'query2', 'query3'],
   maxLength: 5,
   analyticsEnabled: true,
-};
+} satisfies RecentQueriesState;
 
 export const defaultImplementation = {
   clear: vi.fn() as unknown as RecentQueriesList['clear'],
@@ -15,7 +15,7 @@ export const defaultImplementation = {
     subscribedFunction();
   }) as unknown as RecentQueriesList['subscribe'],
   state: defaultState,
-};
+} satisfies RecentQueriesList;
 
 export const buildFakeRecentQueriesList = (
   state?: Partial<RecentQueriesState>

@@ -7,11 +7,11 @@ export const defaultState = {
   products: [buildFakeProduct()],
   isLoading: false,
   error: null,
-};
+} satisfies SearchState;
 export const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
-};
+} satisfies Search;
 
 export const buildFakeSearch = ({
   implementation,

@@ -35,7 +35,7 @@ export const defaultState = {
   isLoading: false,
   error: null,
   totalCount: 3,
-};
+} satisfies InstantProductsState;
 
 export const defaultImplementation = {
   updateQuery: vi.fn(),
@@ -47,7 +47,7 @@ export const defaultImplementation = {
     return vi.fn();
   }) as unknown as InstantProducts['subscribe'],
   state: defaultState,
-};
+} satisfies InstantProducts;
 
 export const buildFakeInstantProducts = (
   state?: Partial<InstantProductsState>

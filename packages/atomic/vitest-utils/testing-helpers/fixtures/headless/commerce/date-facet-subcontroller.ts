@@ -28,7 +28,7 @@ const defaultValues: DateFacetValue[] = [
   },
 ];
 
-export const defaultState: DateFacetState = {
+export const defaultState = {
   canShowLessValues: true,
   canShowMoreValues: true,
   facetId: 'some-date-facet-id',
@@ -38,7 +38,7 @@ export const defaultState: DateFacetState = {
   field: 'date',
   type: 'dateRange',
   hasActiveValues: false,
-};
+} satisfies DateFacetState;
 
 export const defaultImplementation = {
   toggleSingleSelect: vi.fn(),
@@ -49,7 +49,7 @@ export const defaultImplementation = {
     return vi.fn(); // Return unsubscribe function
   }),
   state: defaultState,
-};
+} satisfies DateFacet;
 
 export const buildFakeDateFacet = ({
   implementation,

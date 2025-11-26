@@ -7,14 +7,14 @@ export const defaultState = {
   isLoading: false,
   isLoadingSuggestions: false,
   searchBoxId: 'search-box-id',
-};
+} satisfies SearchBoxState;
 
 export const defaultImplementation = {
   subscribe: vi.fn((subscribedFunction: () => void) => {
     subscribedFunction();
   }) as unknown as SearchBox['subscribe'],
   state: defaultState,
-};
+} satisfies SearchBox;
 
 export const buildFakeSearchBox = (
   state?: Partial<SearchBoxState>,

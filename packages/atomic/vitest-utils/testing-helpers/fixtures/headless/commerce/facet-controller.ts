@@ -23,7 +23,7 @@ const defaultValues: RegularFacetValue[] = [
   },
 ];
 
-export const defaultState: RegularFacetState = {
+export const defaultState = {
   canShowLessValues: true,
   canShowMoreValues: true,
   facetId: 'some-facet-id',
@@ -39,14 +39,14 @@ export const defaultState: RegularFacetState = {
   field: 'field',
   type: 'regular',
   hasActiveValues: false,
-};
+} satisfies RegularFacetState;
 
 export const defaultImplementation = {
   subscribe: (subscribedFunction: () => void) => {
     subscribedFunction();
   },
   state: defaultState,
-};
+} satisfies RegularFacet;
 
 export const buildFakeRegularFacet = ({
   implementation,

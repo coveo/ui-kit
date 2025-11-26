@@ -75,7 +75,7 @@ const defaultValues: CategoryFacetValue[] = [
   },
 ];
 
-export const defaultState: CategoryFacetState = {
+export const defaultState = {
   canShowLessValues: true,
   canShowMoreValues: true,
   facetId: 'some-category-facet-id',
@@ -93,14 +93,14 @@ export const defaultState: CategoryFacetState = {
   hasActiveValues: false,
   selectedValueAncestry: [],
   activeValue: undefined,
-};
+} satisfies CategoryFacetState;
 
 export const defaultImplementation = {
   subscribe: (subscribedFunction: () => void) => {
     subscribedFunction();
   },
   state: defaultState,
-};
+} satisfies CategoryFacet;
 
 export const buildFakeCategoryFacet = ({
   implementation,

@@ -13,7 +13,7 @@ const defaultValues: FacetValue[] = [
   },
 ];
 
-export const defaultState: FacetState = {
+export const defaultState = {
   canShowLessValues: true,
   canShowMoreValues: true,
   facetId: 'some-facet-id',
@@ -28,14 +28,14 @@ export const defaultState: FacetState = {
   },
   isLoading: false,
   hasActiveValues: false,
-};
+} satisfies FacetState;
 
 export const defaultImplementation = {
   subscribe: (subscribedFunction: () => void) => {
     subscribedFunction();
   },
   state: defaultState,
-};
+} satisfies Facet;
 
 export const buildFakeFacet = ({
   implementation,
