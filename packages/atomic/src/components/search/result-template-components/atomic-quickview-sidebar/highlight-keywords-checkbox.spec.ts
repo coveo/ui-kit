@@ -1,20 +1,12 @@
-import type {VNode} from '@stencil/core';
 import type {i18n} from 'i18next';
-import {
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vitest';
+import {html} from 'lit';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {renderStencilVNode} from '@/vitest-utils/testing-helpers/stencil-vnode-renderer';
 import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
-import {HighlightKeywordsCheckbox} from './stencil-highlight-keywords-checkbox';
+import {renderHighlightKeywordsCheckbox} from './highlight-keywords-checkbox';
 
-describe('HighlightKeywordsCheckbox (Stencil)', () => {
+describe('HighlightKeywordsCheckbox (Lit)', () => {
   let container: HTMLElement;
   let i18n: i18n;
 
@@ -22,26 +14,11 @@ describe('HighlightKeywordsCheckbox (Stencil)', () => {
     i18n = await createTestI18n();
   });
 
-  beforeEach(() => {
-    container = document.createElement('div');
-    document.body.appendChild(container);
-  });
-
-  afterEach(() => {
-    container.remove();
-  });
-
   const baseHighlightKeywords: HighlightKeywords = {
     highlightNone: false,
     keywords: {},
   };
 
-  /**
-   * Helper to render the Stencil functional component into the DOM.
-   *
-   * For Lit migration: replace this with a helper that renders the Lit
-   * component directly (e.g., renderFunctionFixture).
-   */
   const renderComponent = async (props?: {
     highlightKeywords?: HighlightKeywords;
     onHighlightKeywords?: (highlight: HighlightKeywords) => void;
@@ -50,19 +27,16 @@ describe('HighlightKeywordsCheckbox (Stencil)', () => {
     const onHighlightKeywords = props?.onHighlightKeywords ?? vi.fn();
     const highlightKeywords = props?.highlightKeywords ?? baseHighlightKeywords;
 
-    const vnode = HighlightKeywordsCheckbox(
-      {
-        i18n,
-        highlightKeywords,
-        onHighlightKeywords,
-        minimized: props?.minimized ?? false,
-      },
-      [],
-      // biome-ignore lint/suspicious/noExplicitAny: Stencil FunctionalComponent requires utils parameter but it's not used
-      {} as any
-    ) as VNode;
-
-    await renderStencilVNode(vnode, container);
+    container = await renderFunctionFixture(
+      html`${renderHighlightKeywordsCheckbox({
+        props: {
+          i18n,
+          highlightKeywords,
+          onHighlightKeywords,
+          minimized: props?.minimized ?? false,
+        },
+      })}`
+    );
 
     return {onHighlightKeywords};
   };

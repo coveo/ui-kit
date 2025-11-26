@@ -1,35 +1,47 @@
-import {FunctionalComponent, h} from '@stencil/core';
-import {i18n} from 'i18next';
-import {StencilCheckbox} from '../../../common/stencil-checkbox';
+import type {i18n} from 'i18next';
+import {html} from 'lit';
+import {when} from 'lit/directives/when.js';
+import {renderCheckbox} from '@/src/components/common/checkbox';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
 
-/**
- * @internal
- */
-export const HighlightKeywordsCheckbox: FunctionalComponent<{
+const highlightKeywordsCheckboxId =
+  'atomic-quickview-sidebar-highlight-keywords';
+
+export interface HighlightKeywordsCheckboxProps {
   i18n: i18n;
   highlightKeywords: HighlightKeywords;
   onHighlightKeywords: (highlight: HighlightKeywords) => void;
   minimized: boolean;
-}> = ({i18n, highlightKeywords, onHighlightKeywords, minimized}) => [
-  <StencilCheckbox
-    text={i18n.t('keywords-highlight')}
-    class="mr-2"
-    id="atomic-quickview-sidebar-highlight-keywords"
-    checked={!highlightKeywords.highlightNone}
-    onToggle={(checked) =>
-      onHighlightKeywords({
-        ...highlightKeywords,
-        highlightNone: !checked,
-      })
-    }
-  ></StencilCheckbox>,
-  !minimized && (
-    <label
-      class="cursor-pointer font-bold whitespace-nowrap"
-      htmlFor="atomic-quickview-sidebar-highlight-keywords"
-    >
-      {i18n.t('keywords-highlight')}
-    </label>
-  ),
-];
+}
+
+export const renderHighlightKeywordsCheckbox: FunctionalComponent<
+  HighlightKeywordsCheckboxProps
+> = ({props}) => {
+  const label = props.i18n.t('keywords-highlight');
+
+  return html`
+    ${renderCheckbox({
+      props: {
+        text: label,
+        class: 'mr-2',
+        id: highlightKeywordsCheckboxId,
+        checked: !props.highlightKeywords.highlightNone,
+        onToggle: (checked) =>
+          props.onHighlightKeywords({
+            ...props.highlightKeywords,
+            highlightNone: !checked,
+          }),
+      },
+    })}
+    ${when(
+      !props.minimized,
+      () => html`
+        <label
+          class="cursor-pointer font-bold whitespace-nowrap"
+          for=${highlightKeywordsCheckboxId}
+        >${label}</label>
+      `
+    )}
+  `;
+};
