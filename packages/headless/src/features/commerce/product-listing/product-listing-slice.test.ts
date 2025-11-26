@@ -1,4 +1,7 @@
-import type {BaseProduct, ChildProduct} from '../../../api/commerce/common/product.js';
+import type {
+  ChildProduct,
+  Product,
+} from '../../../api/commerce/common/product.js';
 import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce-facet-response.js';
 import {
   buildMockBaseProduct,
@@ -6,6 +9,7 @@ import {
   buildMockProduct,
 } from '../../../test/mock-product.js';
 import {buildFetchProductListingResponse} from '../../../test/mock-product-listing.js';
+import {buildMockSpotlightContent} from '../../../test/mock-spotlight-content.js';
 import {setError} from '../../error/error-actions.js';
 import {setContext, setView} from '../context/context-actions.js';
 import {
@@ -18,10 +22,6 @@ import {
   getProductListingInitialState,
   type ProductListingState,
 } from './product-listing-state.js';
-import {ResultType, Result, BaseResult} from '../../../api/commerce/common/result.js';
-import {
-Product
-} from '../../../api/commerce/common/product.js';
 
 describe('product-listing-slice', () => {
   let state: ProductListingState;
@@ -98,14 +98,86 @@ describe('product-listing-slice', () => {
     });
 
     it('set #error to null ', () => {
-      const err = {message: 'message', statusCode: 500, type: 'type'};
-      state.error = err;
+      state.error = {message: 'message', statusCode: 500, type: 'type'};
 
       const response = buildFetchProductListingResponse();
 
       const action = fetchProductListing.fulfilled(response, '', {});
       const finalState = productListingReducer(state, action);
       expect(finalState.error).toBeNull();
+    });
+
+    it('updates the results field with products and spotlight content', () => {
+      const product = buildMockBaseProduct({ec_name: 'product1'});
+      const spotlight = buildMockSpotlightContent({name: 'Spotlight 1'});
+      const responseId = 'some-response-id';
+      const response = buildFetchProductListingResponse({
+        results: [product, spotlight],
+        responseId,
+      });
+
+      const action = fetchProductListing.fulfilled(response, '', {});
+      const finalState = productListingReducer(state, action);
+
+      expect(finalState.results).toHaveLength(2);
+      expect(finalState.results[0]).toMatchObject({
+        ec_name: 'product1',
+        position: 1,
+        responseId,
+      });
+      expect(finalState.results[1]).toEqual(spotlight);
+    });
+
+    it('sets the #position of each product in results to its 1-based position', () => {
+      const product1 = buildMockBaseProduct({ec_name: 'product1'});
+      const spotlight = buildMockSpotlightContent({name: 'Spotlight 1'});
+      const product2 = buildMockBaseProduct({ec_name: 'product2'});
+      const response = buildFetchProductListingResponse({
+        results: [product1, spotlight, product2],
+        pagination: {
+          page: 1,
+          perPage: 10,
+          totalEntries: 23,
+          totalPages: 3,
+        },
+      });
+
+      const action = fetchProductListing.fulfilled(response, '', {});
+      const finalState = productListingReducer(state, action);
+
+      expect((finalState.results[0] as Product).position).toBe(11);
+      expect(finalState.results[1]).toEqual(spotlight);
+      expect((finalState.results[2] as Product).position).toBe(13);
+    });
+
+    it('sets the responseId on each product in results but not on spotlight content', () => {
+      const product = buildMockBaseProduct({ec_name: 'product1'});
+      const spotlight = buildMockSpotlightContent({name: 'Spotlight 1'});
+      const responseId = 'test-response-id';
+      const response = buildFetchProductListingResponse({
+        results: [product, spotlight],
+        responseId,
+      });
+
+      const action = fetchProductListing.fulfilled(response, '', {});
+      const finalState = productListingReducer(state, action);
+
+      expect((finalState.results[0] as Product).responseId).toBe(responseId);
+      expect(finalState.results[1]).not.toHaveProperty('responseId');
+    });
+
+    it('keeps results empty when response.results is empty', () => {
+      const product = buildMockBaseProduct({ec_name: 'product1'});
+      const response = buildFetchProductListingResponse({
+        products: [product],
+        results: [],
+      });
+
+      const action = fetchProductListing.fulfilled(response, '', {});
+      const finalState = productListingReducer(state, action);
+
+      expect(finalState.products).toHaveLength(1);
+      expect(finalState.results).toHaveLength(0);
     });
   });
 
@@ -203,13 +275,107 @@ describe('product-listing-slice', () => {
     });
 
     it('set #error to null', () => {
-      const err = {message: 'message', statusCode: 500, type: 'type'};
-      state.error = err;
+      state.error = {message: 'message', statusCode: 500, type: 'type'};
 
       const response = buildFetchProductListingResponse();
       const action = fetchMoreProducts.fulfilled(response, '', {});
       const finalState = productListingReducer(state, action);
       expect(finalState.error).toBeNull();
+    });
+
+    it('appends the received results (products and spotlight content) to the results state', () => {
+      const product1 = buildMockProduct({
+        ec_name: 'product1',
+        responseId: 'old-response-id',
+        position: 1,
+      });
+      const spotlight1 = buildMockSpotlightContent({name: 'Spotlight 1'});
+      state.results = [product1, spotlight1];
+
+      const product2 = buildMockBaseProduct({ec_name: 'product2'});
+      const spotlight2 = buildMockSpotlightContent({name: 'Spotlight 2'});
+      const responseId = 'new-response-id';
+      const response = buildFetchProductListingResponse({
+        results: [product2, spotlight2],
+        responseId,
+        pagination: {
+          page: 1,
+          perPage: 2,
+          totalEntries: 4,
+          totalPages: 2,
+        },
+      });
+
+      const action = fetchMoreProducts.fulfilled(response, '', {});
+      const finalState = productListingReducer(state, action);
+
+      expect(finalState.results).toHaveLength(4);
+      expect((finalState.results[0] as Product).ec_name).toBe('product1');
+      expect(finalState.results[1]).toEqual(spotlight1);
+      expect((finalState.results[2] as Product).ec_name).toBe('product2');
+      expect(finalState.results[3]).toEqual(spotlight2);
+    });
+
+    it('sets the #position of each product in results to its 1-based position in the unpaginated list', () => {
+      const product1 = buildMockProduct({
+        ec_name: 'product1',
+        position: 1,
+      });
+      const spotlight = buildMockSpotlightContent({name: 'Spotlight 1'});
+      state.results = [product1, spotlight];
+
+      const product2 = buildMockBaseProduct({ec_name: 'product2'});
+      const response = buildFetchProductListingResponse({
+        results: [product2],
+        pagination: {
+          page: 1,
+          perPage: 2,
+          totalEntries: 3,
+          totalPages: 2,
+        },
+      });
+
+      const action = fetchMoreProducts.fulfilled(response, '', {});
+      const finalState = productListingReducer(state, action);
+
+      expect((finalState.results[0] as Product).position).toBe(1);
+      expect(finalState.results[1]).toEqual(spotlight);
+      expect((finalState.results[2] as Product).position).toBe(3);
+    });
+
+    it('sets the responseId on new products in results while preserving existing products responseId', () => {
+      const product1 = buildMockProduct({
+        ec_name: 'product1',
+        position: 1,
+        responseId: 'old-response-id',
+      });
+      state.results = [product1];
+
+      const product2 = buildMockBaseProduct({ec_name: 'product2'});
+      const spotlight = buildMockSpotlightContent({name: 'Spotlight 1'});
+      const responseId = 'new-response-id';
+      const response = buildFetchProductListingResponse({
+        results: [product2, spotlight],
+        responseId,
+        pagination: {
+          page: 1,
+          perPage: 1,
+          totalEntries: 3,
+          totalPages: 3,
+        },
+      });
+
+      const action = fetchMoreProducts.fulfilled(response, '', {});
+      const finalState = productListingReducer(state, action);
+
+      // Original product keeps its responseId
+      expect((finalState.results[0] as Product).responseId).toBe(
+        'old-response-id'
+      );
+      // New product gets the new responseId
+      expect((finalState.results[1] as Product).responseId).toBe(responseId);
+      // Spotlight content doesn't have responseId
+      expect(finalState.results[2]).not.toHaveProperty('responseId');
     });
   });
 
@@ -375,7 +541,79 @@ describe('product-listing-slice', () => {
         }),
       ]);
     });
+
+    it('when both parent and child exist in results, promotes the child to parent', () => {
+      const childProduct = buildMockChildProduct({
+        permanentid,
+        additionalFields: {test: 'test'},
+        clickUri: 'child-uri',
+        ec_brand: 'child brand',
+        ec_category: ['child category'],
+        ec_description: 'child description',
+        ec_gender: 'child gender',
+        ec_images: ['child image'],
+        ec_in_stock: false,
+        ec_item_group_id: 'child item group id',
+        ec_name: 'child name',
+        ec_product_id: 'child product id',
+        ec_promo_price: 1,
+        ec_rating: 1,
+        ec_shortdesc: 'child short description',
+        ec_thumbnails: ['child thumbnail'],
+        ec_price: 2,
+      });
+
+      const parentProduct = buildMockProduct({
+        permanentid: parentPermanentId,
+        children: [childProduct],
+        totalNumberOfChildren: 1,
+        position: 3,
+        responseId: 'test-response-id',
+      });
+
+      const spotlight = buildMockSpotlightContent({name: 'Spotlight 1'});
+      state.results = [parentProduct, spotlight];
+
+      const finalState = productListingReducer(state, action);
+
+      expect(finalState.results).toHaveLength(2);
+      expect(finalState.results[0]).toEqual(
+        buildMockProduct({
+          ...childProduct,
+          children: parentProduct.children,
+          totalNumberOfChildren: parentProduct.totalNumberOfChildren,
+          position: parentProduct.position,
+          responseId: parentProduct.responseId,
+        })
+      );
+      expect(finalState.results[1]).toEqual(spotlight);
+    });
+
+    it('when results contain spotlight content, skips spotlight when searching for parent', () => {
+      const childProduct = buildMockChildProduct({
+        permanentid,
+        ec_name: 'child name',
+      });
+
+      const parentProduct = buildMockProduct({
+        permanentid: parentPermanentId,
+        children: [childProduct],
+        totalNumberOfChildren: 1,
+        position: 2,
+        responseId: 'test-response-id',
+      });
+
+      const spotlight = buildMockSpotlightContent({name: 'Spotlight 1'});
+      state.results = [spotlight, parentProduct];
+
+      const finalState = productListingReducer(state, action);
+
+      expect(finalState.results).toHaveLength(2);
+      expect(finalState.results[0]).toEqual(spotlight);
+      expect((finalState.results[1] as Product).permanentid).toBe(permanentid);
+    });
   });
+
   it('on #setView, restores the initial state', () => {
     state = {
       error: {message: 'error', statusCode: 500, type: 'type'},
@@ -433,23 +671,3 @@ describe('product-listing-slice', () => {
     });
   });
 });
-
-/*
-const getProductsFromResults = (results: Result[]): Array<Product | null> => {
-  const products: Array<Product | null> = [];
-  for (const result of results) {
-    products.push(result.resultType !== ResultType.SPOTLIGHT ? result : null);
-  }
-  return products;
-};
-
-const getBaseProductsFromBaseResults = (
-    results: BaseResult[]
-): Array<BaseProduct | null> => {
-  const products: Array<BaseProduct | null> = [];
-  for (const result of results) {
-    products.push(result.resultType !== ResultType.SPOTLIGHT ? result : null);
-  }
-  return products;
-};
-*/
