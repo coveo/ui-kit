@@ -3,7 +3,6 @@ import type {
   InstantProductsState,
 } from '@coveo/headless/commerce';
 import {vi} from 'vitest';
-import {genericSubscribe} from '../common';
 
 export const defaultState = {
   query: 'the query',
@@ -91,7 +90,10 @@ export const defaultImplementation = {
   clearExpired: vi.fn(),
   promoteChildToParent: vi.fn(),
   interactiveProduct: vi.fn(),
-  subscribe: genericSubscribe as unknown as InstantProducts['subscribe'],
+  subscribe: vi.fn((subscribedFunction: () => void) => {
+    setTimeout(subscribedFunction, 0);
+    return vi.fn();
+  }) as unknown as InstantProducts['subscribe'],
   state: defaultState,
 } satisfies InstantProducts;
 
