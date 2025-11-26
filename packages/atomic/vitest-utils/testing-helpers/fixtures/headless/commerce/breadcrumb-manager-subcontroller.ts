@@ -3,6 +3,7 @@ import type {
   BreadcrumbManagerState,
 } from '@coveo/headless/commerce';
 import {vi} from 'vitest';
+import {genericSubscribe} from '../common';
 
 export const defaultState = {
   facetBreadcrumbs: [
@@ -86,9 +87,7 @@ export const defaultState = {
 } satisfies BreadcrumbManagerState;
 
 export const defaultImplementation = {
-  subscribe: (subscribedFunction: () => void) => {
-    subscribedFunction();
-  },
+  subscribe: genericSubscribe,
   state: defaultState,
   deselectAll: vi.fn(),
 };
