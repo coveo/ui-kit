@@ -4,6 +4,7 @@ import type {
   DateFacetValue,
 } from '@coveo/headless/commerce';
 import {vi} from 'vitest';
+import {genericSubscribe} from '../common';
 
 const defaultValues: DateFacetValue[] = [
   {
@@ -41,13 +42,18 @@ export const defaultState = {
 } satisfies DateFacetState;
 
 export const defaultImplementation = {
+  type: 'dateRange' as const,
+  toggleSelect: vi.fn(),
+  toggleExclude: vi.fn(),
   toggleSingleSelect: vi.fn(),
+  toggleSingleExclude: vi.fn(),
+  isValueSelected: vi.fn(),
+  isValueExcluded: vi.fn(),
   deselectAll: vi.fn(),
   setRanges: vi.fn(),
-  subscribe: vi.fn((subscribedFunction: () => void) => {
-    subscribedFunction();
-    return vi.fn(); // Return unsubscribe function
-  }),
+  showLessValues: vi.fn(),
+  showMoreValues: vi.fn(),
+  subscribe: genericSubscribe,
   state: defaultState,
 } satisfies DateFacet;
 

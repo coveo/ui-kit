@@ -18,6 +18,10 @@ export const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
   refresh: vi.fn(),
+  promoteChildToParent: vi.fn(),
+  interactiveProduct: vi.fn(),
+  pagination: vi.fn(),
+  summary: vi.fn(),
 } satisfies Recommendations;
 
 export const buildFakeRecommendations = ({

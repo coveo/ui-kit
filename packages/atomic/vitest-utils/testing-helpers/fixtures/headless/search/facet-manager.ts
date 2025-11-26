@@ -1,5 +1,6 @@
 import type {FacetManager, FacetManagerState} from '@coveo/headless';
 import {vi} from 'vitest';
+import {genericSubscribe} from '../common';
 
 export const buildFakeFacetManager = ({
   state = {},
@@ -14,10 +15,7 @@ export const buildFakeFacetManager = ({
   } satisfies FacetManagerState;
 
   return {
-    subscribe: vi.fn((callback) => {
-      callback();
-      return vi.fn();
-    }),
+    subscribe: genericSubscribe,
     state: defaultState,
     sort: vi.fn(),
     ...implementation,

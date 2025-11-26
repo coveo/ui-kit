@@ -3,6 +3,8 @@ import type {
   RegularFacetState,
   RegularFacetValue,
 } from '@coveo/headless/commerce';
+import {vi} from 'vitest';
+import {genericSubscribe} from '../common';
 
 const defaultValues: RegularFacetValue[] = [
   {
@@ -42,10 +44,28 @@ export const defaultState = {
 } satisfies RegularFacetState;
 
 export const defaultImplementation = {
-  subscribe: (subscribedFunction: () => void) => {
-    subscribedFunction();
-  },
+  subscribe: genericSubscribe,
   state: defaultState,
+  deselectAll: vi.fn(),
+  showLessValues: vi.fn(),
+  showMoreValues: vi.fn(),
+  toggleSelect: vi.fn(),
+  toggleExclude: vi.fn(),
+  toggleSingleSelect: vi.fn(),
+  toggleSingleExclude: vi.fn(),
+  isValueSelected: vi.fn(),
+  isValueExcluded: vi.fn(),
+  facetSearch: {
+    updateText: vi.fn(),
+    search: vi.fn(),
+    select: vi.fn(),
+    singleSelect: vi.fn(),
+    exclude: vi.fn(),
+    singleExclude: vi.fn(),
+    showMoreResults: vi.fn(),
+    clear: vi.fn(),
+  },
+  type: 'regular' as const,
 } satisfies RegularFacet;
 
 export const buildFakeRegularFacet = ({

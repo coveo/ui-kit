@@ -1,4 +1,6 @@
 import type {Facet, FacetState, FacetValue} from '@coveo/headless';
+import {vi} from 'vitest';
+import {genericSubscribe} from '../common';
 
 const defaultValues: FacetValue[] = [
   {
@@ -31,10 +33,32 @@ export const defaultState = {
 } satisfies FacetState;
 
 export const defaultImplementation = {
-  subscribe: (subscribedFunction: () => void) => {
-    subscribedFunction();
-  },
+  subscribe: genericSubscribe,
   state: defaultState,
+  facetSearch: {
+    updateText: vi.fn(),
+    search: vi.fn(),
+    select: vi.fn(),
+    singleSelect: vi.fn(),
+    exclude: vi.fn(),
+    singleExclude: vi.fn(),
+    showMoreResults: vi.fn(),
+    clear: vi.fn(),
+    updateCaptions: vi.fn(),
+  },
+  toggleSelect: vi.fn(),
+  toggleExclude: vi.fn(),
+  toggleSingleSelect: vi.fn(),
+  toggleSingleExclude: vi.fn(),
+  isValueSelected: vi.fn(),
+  isValueExcluded: vi.fn(),
+  deselectAll: vi.fn(),
+  sortBy: vi.fn(),
+  isSortedBy: vi.fn(),
+  showMoreValues: vi.fn(),
+  showLessValues: vi.fn(),
+  enable: vi.fn(),
+  disable: vi.fn(),
 } satisfies Facet;
 
 export const buildFakeFacet = ({

@@ -3,6 +3,8 @@ import type {
   CategoryFacetState,
   CategoryFacetValue,
 } from '@coveo/headless/commerce';
+import {vi} from 'vitest';
+import {genericSubscribe} from '../common';
 
 const defaultValues: CategoryFacetValue[] = [
   {
@@ -96,10 +98,21 @@ export const defaultState = {
 } satisfies CategoryFacetState;
 
 export const defaultImplementation = {
-  subscribe: (subscribedFunction: () => void) => {
-    subscribedFunction();
-  },
+  subscribe: genericSubscribe,
   state: defaultState,
+  deselectAll: vi.fn(),
+  showLessValues: vi.fn(),
+  showMoreValues: vi.fn(),
+  toggleSelect: vi.fn(),
+  isValueSelected: vi.fn(() => false),
+  type: 'hierarchical' as const,
+  facetSearch: {
+    updateText: vi.fn(),
+    showMoreResults: vi.fn(),
+    search: vi.fn(),
+    select: vi.fn(),
+    clear: vi.fn(),
+  },
 } satisfies CategoryFacet;
 
 export const buildFakeCategoryFacet = ({

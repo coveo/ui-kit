@@ -1,4 +1,5 @@
 import type {Search, SearchState} from '@coveo/headless/commerce';
+import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 import {buildFakeProduct} from './product';
 
@@ -11,6 +12,17 @@ export const defaultState = {
 export const defaultImplementation = {
   subscribe: genericSubscribe,
   state: defaultState,
+  executeFirstSearch: vi.fn(),
+  promoteChildToParent: vi.fn(),
+  didYouMean: vi.fn(),
+  sort: vi.fn(),
+  facetGenerator: vi.fn(),
+  breadcrumbManager: vi.fn(),
+  urlManager: vi.fn(),
+  parameterManager: vi.fn(),
+  interactiveProduct: vi.fn(),
+  pagination: vi.fn(),
+  summary: vi.fn(),
 } satisfies Search;
 
 export const buildFakeSearch = ({
