@@ -261,7 +261,7 @@ export class AtomicRatingRangeFacet
 
   private get focusTarget() {
     if (!this.headerFocus) {
-      this.headerFocus = new FocusTargetController(this);
+      this.headerFocus = new FocusTargetController(this, this.bindings);
     }
     return this.headerFocus;
   }
@@ -300,7 +300,6 @@ export class AtomicRatingRangeFacet
     this.bindings.store.registerFacet('numericFacets', {
       ...facetInfo,
       format: (value) => this.formatFacetValue(value),
-      content: (value) => this.ratingContent(value),
     });
     initializePopover(this, {
       ...facetInfo,
@@ -416,8 +415,7 @@ export class AtomicRatingRangeFacet
         i18n: this.bindings.i18n,
         onClick,
       },
-      children: this.ratingContent(facetValue),
-    });
+    })(this.ratingContent(facetValue));
   }
 
   private renderValuesContainer(children: unknown) {
@@ -426,10 +424,9 @@ export class AtomicRatingRangeFacet
         i18n: this.bindings.i18n,
         label: this.label,
       },
-      children: html`<ul class="mt-3" part="values">
-        ${children}
-      </ul>`,
-    });
+    })(html`<ul class="mt-3" part="values">
+      ${children}
+    </ul>`);
   }
 
   private renderValues() {
@@ -449,26 +446,25 @@ export class AtomicRatingRangeFacet
   @bindingGuard()
   @errorGuard()
   render() {
-    if (this.searchStatusState.hasError || !this.facet.state.enabled) {
-      return nothing;
-    }
+    return html`${when(
+      !this.searchStatusState.hasError && this.facet.state.enabled,
+      () => {
+        if (!this.searchStatusState.firstSearchExecuted) {
+          return renderFacetPlaceholder({
+            props: {
+              numberOfValues: this.numberOfIntervals,
+              isCollapsed: this.isCollapsed,
+            },
+          });
+        }
 
-    if (!this.searchStatusState.firstSearchExecuted) {
-      return renderFacetPlaceholder({
-        props: {
-          numberOfValues: this.numberOfIntervals,
-          isCollapsed: this.isCollapsed,
-        },
-      });
-    }
+        if (!this.valuesToRender.length) {
+          return nothing;
+        }
 
-    if (!this.valuesToRender.length) {
-      return nothing;
-    }
-
-    return renderFacetContainer({
-      children: html`${this.renderHeader()}
-        ${when(!this.isCollapsed, () => this.renderValues())}`,
-    });
+        return renderFacetContainer()(html`${this.renderHeader()}
+          ${when(!this.isCollapsed, () => this.renderValues())}`);
+      }
+    )}`;
   }
 }
