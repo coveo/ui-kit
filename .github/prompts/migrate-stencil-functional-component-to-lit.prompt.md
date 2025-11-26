@@ -1,5 +1,5 @@
 ---
-mode: 'agent'
+agent: agent
 description: 'Migrate an Atomic Stencil functional component to Lit functional component'
 ---
 
@@ -144,7 +144,7 @@ export const renderbutton = ... // lowercase after 'render'
 
 ## Migration Checklist
 
-**Use `manage_todo_list` tool:** Write todos from items below, mark ONE in-progress before working, mark completed immediately after.
+**Track your progress systematically:** Break down the migration into these sequential tasks, work on ONE at a time, and mark each complete before proceeding to the next.
 
 **Phase 1: Analyze**
 - [ ] Analyze existing component (signature, children, dependencies)
@@ -166,14 +166,5 @@ export const renderbutton = ... // lowercase after 'render'
 **Phase 4: Verify Isolation**
 - [ ] Original file exists with original name
 - [ ] New Lit version not imported anywhere (dead code)
-- [ ] Generate execution summary (mandatory final todo)
 
 Ask for file path if not provided, then execute systematically.
-
-## Post-Execution Summary
-
-**Mandatory final todo:** Generate `.github/prompts/.executions/migrate-stencil-functional-component-to-lit-[YYYY-MM-DD-HHmmss].prompt-execution.md` following `TEMPLATE.prompt-execution.md`.
-
-**Include:** Reference components used, type selection issues, ambiguous instructions, time-consuming operations, missing guidance, concrete improvement suggestions.
-
-**Inform user** of summary location and suggest "Prompt Engineer" chatmode for optimization. Mark complete only after file created and user informed.

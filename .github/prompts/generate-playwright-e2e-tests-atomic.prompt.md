@@ -1,5 +1,5 @@
 ---
-mode: 'agent'
+agent: 'agent'
 description: 'Generate Playwright e2e test suite for an Atomic component'
 ---
 
@@ -43,7 +43,6 @@ Find variant component in other use cases with e2e tests (e.g., `atomic-search-b
 
 **After implementation:**
 1. Verify no unexpected TypeScript errors (BasePageObject generic errors are expected)
-2. Generate execution summary (see Post-Execution section)
 
 ## File Structure
 
@@ -326,24 +325,4 @@ await page.route('**/v2/search/querySuggest', async (route) => {
 
 **Empty states:** Call `component.noProducts()` or `noRecommendations()` before `load()`, verify empty message visibility
 
-## Post-Execution: Generate Summary
-
-After completing test generation, generate execution summary:
-
-**1. Create summary file:**
-- **Location:** `.github/prompts/.executions/generate-playwright-e2e-tests-atomic-[YYYY-MM-DD-HHmmss].prompt-execution.md`
-- **Structure:** Follow `.github/prompts/.executions/TEMPLATE.prompt-execution.md`
-- **Purpose:** Structured feedback for prompt optimization
-
-**2. Include in summary:**
-- Which similar component was used as reference
-- Issues with pattern matching or test structure decisions
-- Ambiguities in prompt instructions that required interpretation
-- Time-consuming operations (finding similar tests, reading multiple files)
-- Missing instructions or unclear testing requirements
-- Concrete suggestions for prompt improvements
-- If migration: Note whether existing tests were comprehensive or required updates
-
-**3. Inform user** about summary location and next steps (switch to "Prompt Engineer" chatmode for optimization)
-
-**4. Mark complete** only after file created and user informed.
+````
