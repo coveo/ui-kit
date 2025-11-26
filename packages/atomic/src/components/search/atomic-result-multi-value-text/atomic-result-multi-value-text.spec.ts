@@ -7,7 +7,7 @@ import {
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-result-fixture';
 import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/breadcrumb-manager';
 import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
@@ -245,25 +245,21 @@ describe('atomic-result-multi-value-text', () => {
     expect(element).toBeEmptyDOMElement();
   });
 
-  describe('when field value is not a string or array', () => {
-    let consoleErrorSpy: MockInstance;
+  it('should set error when field value is not a string or array', async () => {
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
 
-    beforeEach(() => {
-      consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const {element} = await renderComponent({
+      resultState: {
+        raw: {number_field: 42, urihash: ''},
+      },
+      field: 'number_field',
     });
 
-    it('should set error', async () => {
-      const {element} = await renderComponent({
-        resultState: {
-          raw: {number_field: 42, urihash: ''},
-        },
-        field: 'number_field',
-      });
-
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toContain('Could not parse');
-      expect(consoleErrorSpy).toHaveBeenCalled();
-    });
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toContain('Could not parse');
+    expect(consoleErrorSpy).toHaveBeenCalled();
   });
 
   it('should prioritize selected facet values', async () => {
