@@ -172,64 +172,62 @@ const hydratedState = await hydrateStaticState({
 });
 ```
 
-<dl><dt><strong>⚠️ WARNING</strong></dt><dd>
-
-Avoid doing something like the following code samples.
-
-In `common/engine-definition.ts`:
-
-```ts
-import {
-  defineSearchEngine,
-  defineSearchBox,
-  defineResultList,
-  defineFacet,
-  getSampleSearchEngineConfiguration,
-} from '@coveo/headless-react/ssr';
-
-export const engineDefinition = defineSearchEngine({
-  configuration: {
-    ...getSampleSearchEngineConfiguration(),
-    analytics: { enabled: false },
-  },
-  controllers: {
-    searchBox: defineSearchBox(),
-    resultList: defineResultList(),
-    authorFacet: defineFacet({ field: "author" }),
-    sourceFacet: defineFacet({ field: "source" }),
-  },
-});
-```
-
-In `server.ts`:
-
-```ts
-import { engineDefinition } from './common/engine-definition.ts';
-import { loadQueryActions } from '@coveo/headless-react/ssr';
-
-// ...
-
-const buildResult = await engineDefinition.build();
-const { updateQuery } = loadQueryActions(buildResult.engine);
-buildResult.engine.dispatch(updateQuery({ q: "I like trains" }));
-
-const staticState = await engineDefinition.fetchStaticState.fromBuildResult({
-  buildResult,
-});
-// ...
-```
-
-In `client.ts`:
-
-```ts
-import { engineDefinition } from './common/engine-definition.ts';
-
-const buildResult = await engineDefinition.build();
-const hydratedState = await engineDefinition.hydrateStaticState.fromBuildResult(
-  {
-    buildResult,
-    searchAction: staticState.searchAction,
-  }
-);
-```
-</dd></dl>
+> [!WARNING]
+> Avoid doing something like the following code samples.
+> 
+> In `common/engine-definition.ts`:
+> 
+> ```ts
+> import {
+>   defineSearchEngine,
+>   defineSearchBox,
+>   defineResultList,
+>   defineFacet,
+>   getSampleSearchEngineConfiguration,
+> } from '@coveo/headless-react/ssr';
+> 
+> export const engineDefinition = defineSearchEngine({
+>   configuration: {
+>     ...getSampleSearchEngineConfiguration(),
+>     analytics: { enabled: false },
+>   },
+>   controllers: {
+>     searchBox: defineSearchBox(),
+>     resultList: defineResultList(),
+>     authorFacet: defineFacet({ field: "author" }),
+>     sourceFacet: defineFacet({ field: "source" }),
+>   },
+> });
+> ```
+> 
+> In `server.ts`:
+> 
+> ```ts
+> import { engineDefinition } from './common/engine-definition.ts';
+> import { loadQueryActions } from '@coveo/headless-react/ssr';
+> 
+> // ...
+> 
+> const buildResult = await engineDefinition.build();
+> const { updateQuery } = loadQueryActions(buildResult.engine);
+> buildResult.engine.dispatch(updateQuery({ q: "I like trains" }));
+> 
+> const staticState = await engineDefinition.fetchStaticState.fromBuildResult({
+>   buildResult,
+> });
+> // ...
+> ```
+> 
+> In `client.ts`:
+> 
+> ```ts
+> import { engineDefinition } from './common/engine-definition.ts';
+> 
+> const buildResult = await engineDefinition.build();
+> const hydratedState = await engineDefinition.hydrateStaticState.fromBuildResult(
+>   {
+>     buildResult,
+>     searchAction: staticState.searchAction,
+>   }
+> );
+> ```

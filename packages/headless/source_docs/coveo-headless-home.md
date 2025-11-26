@@ -9,6 +9,10 @@ It works as a middle layer for applications, opening a line of communication bet
 
 For example, the [Coveo Atomic](https://docs.coveo.com/en/atomic/latest/) library relies on Headless to handle interactions between the application state and Coveo. Platform.
 
+> [!NOTE]
+> Coveo also provide a version of the Headless Library for use with React Projects. 
+> See the [Headless-React reference documentation](https://docs.coveo.com/en/headless-react/latest/reference/index.html).
+
 At its core, Headless consists of an _engine_ whose main property is its _state_ (that is, a [Redux store](https://redux.js.org/api/store)).
 The engine’s state depends on a set of _features_ (that is, [reducers](https://redux.js.org/basics/reducers)).
 To interact with these features, Headless provides a collection of _controllers_.

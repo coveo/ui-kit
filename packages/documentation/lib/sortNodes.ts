@@ -22,15 +22,18 @@ export const applyTopLevelOrderingNode = (root: TNavNode, order: string[]) => {
 // otherwise sort alphabetically by `text`. Always recurse into children.
 export const applyNestedOrderingNode = (
   root: TNavNode,
-  orderMap?: Record<string, string[]>
+  orderMap?: Record<string, string[]>,
+  keyPrefix?: string
 ) => {
   if (!root) return;
   if (Array.isArray(root.children) && root.children.length) {
-    const key = normalize(String(root.text ?? ''));
+    const key = [keyPrefix, normalize(String(root.text ?? ''))]
+      .join(' ')
+      .trim();
     const spec = orderMap && (orderMap[key] || orderMap['*']);
     if (spec?.length) applyOrderingArray(root.children, spec);
     else root.children.sort(alphaByText);
-    for (const c of root.children) applyNestedOrderingNode(c, orderMap);
+    for (const c of root.children) applyNestedOrderingNode(c, orderMap, key);
   }
 };
 
