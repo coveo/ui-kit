@@ -1,10 +1,12 @@
-import {FunctionalComponent, h} from '@stencil/core';
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
+import {html, nothing} from 'lit';
+import {when} from 'lit/directives/when.js';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
-import {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
-import {HighlightKeywordsCheckbox} from './stencil-highlight-keywords-checkbox';
-import {Keywords} from './stencil-keywords';
-import {MinimizeButton} from './stencil-minimize-button';
+import type {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
+import {renderHighlightKeywordsCheckbox} from './highlight-keywords-checkbox';
+import {renderKeywords} from './keywords';
+import {renderMinimizeButton} from './minimize-button';
 
 interface QuickviewSidebarProps {
   words: Record<string, QuickviewWordHighlight>;
@@ -15,34 +17,60 @@ interface QuickviewSidebarProps {
   onMinimize: (minimize: boolean) => void;
 }
 
-/**
- * @deprecated should only be used for Stencil components.
- */
-export const QuickviewSidebar: FunctionalComponent<QuickviewSidebarProps> = (
-  props
-) => {
-  const {words, minimized} = props;
-  const numberOfWords = Object.values(words).length;
+export const renderQuickviewSidebar: FunctionalComponent<
+  QuickviewSidebarProps
+> = ({props}) => {
+  const numberOfWords = Object.values(props.words).length;
 
   if (numberOfWords === 0) {
-    return;
+    return nothing;
   }
 
-  const minimizeButton = (
-    <MinimizeButton {...props} wordsLength={numberOfWords} />
-  );
-
-  return (
+  return html`
     <div class="border-neutral h-full border-r p-4">
-      {minimized && minimizeButton}
+      ${when(props.minimized, () =>
+        renderMinimizeButton({
+          props: {
+            i18n: props.i18n,
+            minimized: props.minimized,
+            onMinimize: props.onMinimize,
+            highlightKeywords: props.highlightKeywords,
+            wordsLength: numberOfWords,
+          },
+        })
+      )}
       <div class="flex items-center justify-between">
         <div class="flex items-center">
-          <HighlightKeywordsCheckbox {...props} />
+          ${renderHighlightKeywordsCheckbox({props})}
         </div>
-        {!minimized && <div>{minimizeButton}</div>}
+        ${when(
+          !props.minimized,
+          () => html`
+            <div>
+              ${renderMinimizeButton({
+                props: {
+                  i18n: props.i18n,
+                  minimized: props.minimized,
+                  onMinimize: props.onMinimize,
+                  highlightKeywords: props.highlightKeywords,
+                  wordsLength: numberOfWords,
+                },
+              })}
+            </div>
+          `
+        )}
       </div>
 
-      {!minimized && <Keywords {...props} words={words} />}
+      ${when(!props.minimized, () =>
+        renderKeywords({
+          props: {
+            i18n: props.i18n,
+            highlightKeywords: props.highlightKeywords,
+            onHighlightKeywords: props.onHighlightKeywords,
+            words: props.words,
+          },
+        })
+      )}
     </div>
-  );
+  `;
 };

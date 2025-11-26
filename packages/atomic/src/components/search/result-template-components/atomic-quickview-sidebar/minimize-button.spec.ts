@@ -1,20 +1,13 @@
-import type {VNode} from '@stencil/core';
 import type {i18n} from 'i18next';
-import {
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vitest';
+import {html} from 'lit';
+import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {renderStencilVNode} from '@/vitest-utils/testing-helpers/stencil-vnode-renderer';
-import {identifierKeywordsSection} from './stencil-keywords';
-import {MinimizeButton} from './stencil-minimize-button';
+import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
+import {identifierKeywordsSection} from './keywords';
+import {renderMinimizeButton} from './minimize-button';
 
-describe('MinimizeButton (Stencil)', () => {
+describe('MinimizeButton (Lit)', () => {
   let container: HTMLElement;
   let i18n: i18n;
 
@@ -27,11 +20,7 @@ describe('MinimizeButton (Stencil)', () => {
     document.body.appendChild(container);
   });
 
-  afterEach(() => {
-    container.remove();
-  });
-
-  const baseHighlightKeywords = {
+  const baseHighlightKeywords: HighlightKeywords = {
     highlightNone: false,
     keywords: {
       example: {
@@ -41,13 +30,6 @@ describe('MinimizeButton (Stencil)', () => {
     },
   };
 
-  /**
-   * Helper to render the Stencil functional component into the DOM.
-   *
-   * For Lit migration: replace this with a helper that renders the Lit
-   * component directly (e.g., renderFunctionFixture) and remove the VNode
-   * click handler extraction once native events are wired by the renderer.
-   */
   const renderComponent = async (props?: {
     minimized?: boolean;
     onMinimize?: (minimize: boolean) => void;
@@ -63,17 +45,14 @@ describe('MinimizeButton (Stencil)', () => {
       wordsLength: props?.wordsLength ?? 3,
     };
 
-    const vnode = MinimizeButton(
-      allProps,
-      [],
-      // biome-ignore lint/suspicious/noExplicitAny: Stencil FunctionalComponent requires utils parameter but it's not used
-      {} as any
-    ) as VNode;
+    await renderFunctionFixture(
+      html`${renderMinimizeButton({props: allProps})}`,
+      container
+    );
 
-    await renderStencilVNode(vnode, container);
-
-    const wrapper = container.firstChild as HTMLElement;
-    const button = wrapper.firstChild as HTMLButtonElement;
+    const button = container.querySelector(
+      '[part="sidebar-minimize-button"]'
+    ) as HTMLButtonElement | null;
 
     return {button};
   };

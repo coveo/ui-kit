@@ -1,32 +1,39 @@
-import {FunctionalComponent, h} from '@stencil/core';
-import {i18n} from 'i18next';
+import type {i18n} from 'i18next';
+import {html} from 'lit';
+import {renderIconButton} from '@/src/components/common/icon-button';
+import type {HighlightKeywords} from '@/src/components/search/result-template-components/atomic-quickview-modal/atomic-quickview-modal';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import MinimizeIcon from '../../../../images/menu.svg';
-import {IconButton} from '../../../common/stencil-iconButton';
-import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
-import {identifierKeywordsSection} from './stencil-keywords';
+import {identifierKeywordsSection} from './keywords';
 
-/**
- * @internal
- */
-export const MinimizeButton: FunctionalComponent<{
+export interface MinimizeButtonProps {
   i18n: i18n;
   minimized: boolean;
   onMinimize: (minimize: boolean) => void;
   highlightKeywords: HighlightKeywords;
   wordsLength: number;
-}> = ({i18n, minimized, onMinimize, highlightKeywords, wordsLength}) => (
-  <IconButton
-    partPrefix="sidebar-minimize"
-    icon={MinimizeIcon}
-    style="text-transparent"
-    title={i18n.t('quickview-toggle-navigation')}
-    ariaLabel={i18n.t('quickview-toggle-navigation')}
-    onClick={() => onMinimize(!minimized)}
-    badge={
-      highlightKeywords && minimized ? <slot>{wordsLength}</slot> : undefined
-    }
-    class={`w-fit ${minimized ? '' : 'ml-auto'}`}
-    ariaExpanded={(!minimized).toString()}
-    ariaControls={identifierKeywordsSection}
-  />
-);
+}
+
+export const renderMinimizeButton: FunctionalComponent<MinimizeButtonProps> = ({
+  props,
+}) => {
+  const className = props.minimized ? 'w-fit' : 'ml-auto w-fit';
+
+  return renderIconButton({
+    props: {
+      partPrefix: 'sidebar-minimize',
+      icon: MinimizeIcon,
+      style: 'text-transparent',
+      title: props.i18n.t('quickview-toggle-navigation'),
+      ariaLabel: props.i18n.t('quickview-toggle-navigation'),
+      onClick: () => props.onMinimize(!props.minimized),
+      badge:
+        props.highlightKeywords && props.minimized
+          ? html`<slot>${props.wordsLength}</slot>`
+          : undefined,
+      class: className,
+      ariaExpanded: (!props.minimized).toString() as 'true' | 'false',
+      ariaControls: identifierKeywordsSection,
+    },
+  });
+};

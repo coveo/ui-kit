@@ -1,19 +1,12 @@
 import type {i18n} from 'i18next';
-import {
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vitest';
+import {html} from 'lit';
+import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {renderStencilVNode} from '@/vitest-utils/testing-helpers/stencil-vnode-renderer';
 import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
 import {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
-import {QuickviewSidebar} from './stencil-atomic-quickview-sidebar';
-import {identifierKeywordsSection} from './stencil-keywords';
+import {renderQuickviewSidebar} from './atomic-quickview-sidebar';
+import {identifierKeywordsSection} from './keywords';
 
 describe('QuickviewSidebar (Stencil)', () => {
   let container: HTMLElement;
@@ -28,10 +21,6 @@ describe('QuickviewSidebar (Stencil)', () => {
     document.body.appendChild(container);
   });
 
-  afterEach(() => {
-    container.remove();
-  });
-
   const createWord = (text: string) => {
     const element = document.createElement('span');
     element.scrollIntoView = vi.fn();
@@ -44,10 +33,7 @@ describe('QuickviewSidebar (Stencil)', () => {
   };
 
   /**
-   * Helper to render the Stencil functional component into the DOM.
-   *
-   * For Lit migration: replace this with a helper that renders the Lit
-   * component directly (e.g., renderFunctionFixture).
+   * Helper to render the Lit functional component into the DOM.
    */
   const renderComponent = async (props?: {
     minimized?: boolean;
@@ -61,21 +47,20 @@ describe('QuickviewSidebar (Stencil)', () => {
       beta: createWord('beta'),
     };
 
-    const vnode = QuickviewSidebar(
-      {
-        i18n,
-        words,
-        minimized: props?.minimized ?? false,
-        highlightKeywords: props?.highlightKeywords ?? baseHighlightKeywords,
-        onHighlightKeywords: props?.onHighlightKeywords ?? vi.fn(),
-        onMinimize: props?.onMinimize ?? vi.fn(),
-      },
-      [],
-      // biome-ignore lint/suspicious/noExplicitAny: Stencil FunctionalComponent requires utils parameter but it's not used
-      {} as any
+    const element = await renderFunctionFixture(
+      html`${renderQuickviewSidebar({
+        props: {
+          i18n,
+          words,
+          minimized: props?.minimized ?? false,
+          highlightKeywords: props?.highlightKeywords ?? baseHighlightKeywords,
+          onHighlightKeywords: props?.onHighlightKeywords ?? vi.fn(),
+          onMinimize: props?.onMinimize ?? vi.fn(),
+        },
+      })}`,
+      container
     );
 
-    const element = await renderStencilVNode(vnode!, container);
     return {element};
   };
 
@@ -92,7 +77,8 @@ describe('QuickviewSidebar (Stencil)', () => {
 
     expect(keywordsSection).toBeTruthy();
     expect(minimizeButton).toBeTruthy();
-    expect(highlightLabel?.textContent).toBe(i18n.t('keywords-highlight'));
+    expect(highlightLabel).not.toBeNull();
+    expect(highlightLabel).toHaveTextContent(i18n.t('keywords-highlight'));
   });
 
   it('hides keywords when minimized', async () => {
