@@ -8,6 +8,7 @@ export const defaultState = {
   dateFacetBreadcrumbs: [],
   staticFilterBreadcrumbs: [],
   hasBreadcrumbs: false,
+  automaticFacetBreadcrumbs: [],
 } satisfies BreadcrumbManagerState;
 
 export const defaultImplementation = {
