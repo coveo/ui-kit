@@ -1,7 +1,7 @@
 import type {Locator, Page} from '@playwright/test';
 import {BasePageObject} from '@/playwright-utils/base-page-object';
 
-export class RatingRangeFacetPageObject extends BasePageObject {
+export class RatingRangeFacetPageObject extends BasePageObject<'atomic-rating-range-facet'> {
   constructor(page: Page) {
     super(page, 'atomic-rating-range-facet');
   }
@@ -30,7 +30,7 @@ export class RatingRangeFacetPageObject extends BasePageObject {
 
   get selectedValues(): Locator {
     return this.page.locator(
-      'atomic-rating-range-facet [part="value-link-selected"]'
+      'atomic-rating-range-facet [part~="value-link-selected"]'
     );
   }
 
