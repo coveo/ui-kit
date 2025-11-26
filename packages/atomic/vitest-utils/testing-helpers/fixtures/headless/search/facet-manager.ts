@@ -1,5 +1,6 @@
 import type {FacetManager, FacetManagerState} from '@coveo/headless';
 import {vi} from 'vitest';
+import {genericSubscribe} from '../common';
 
 export const buildFakeFacetManager = ({
   state = {},
@@ -8,16 +9,13 @@ export const buildFakeFacetManager = ({
   state?: Partial<FacetManagerState>;
   implementation?: Partial<FacetManager>;
 } = {}): FacetManager => {
-  const defaultState: FacetManagerState = {
+  const defaultState = {
     facetIds: [],
     ...state,
-  };
+  } satisfies FacetManagerState;
 
   return {
-    subscribe: vi.fn((callback) => {
-      callback();
-      return vi.fn();
-    }),
+    subscribe: genericSubscribe,
     state: defaultState,
     sort: vi.fn(),
     ...implementation,

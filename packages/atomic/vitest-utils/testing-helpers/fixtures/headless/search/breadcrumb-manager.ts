@@ -1,5 +1,6 @@
 import type {BreadcrumbManager, BreadcrumbManagerState} from '@coveo/headless';
 import {vi} from 'vitest';
+import {genericSubscribe} from '../common';
 
 export const buildFakeBreadcrumbManager = ({
   state = {},
@@ -8,7 +9,7 @@ export const buildFakeBreadcrumbManager = ({
   state?: Partial<BreadcrumbManagerState>;
   implementation?: Partial<BreadcrumbManager>;
 } = {}): BreadcrumbManager => {
-  const defaultState: BreadcrumbManagerState = {
+  const defaultState = {
     facetBreadcrumbs: [],
     categoryFacetBreadcrumbs: [],
     numericFacetBreadcrumbs: [],
@@ -17,13 +18,10 @@ export const buildFakeBreadcrumbManager = ({
     automaticFacetBreadcrumbs: [],
     hasBreadcrumbs: false,
     ...state,
-  };
+  } satisfies BreadcrumbManagerState;
 
   return {
-    subscribe: vi.fn((callback) => {
-      callback();
-      return vi.fn();
-    }),
+    subscribe: genericSubscribe,
     state: defaultState,
     deselectAll: vi.fn(),
     ...implementation,

@@ -4,8 +4,9 @@ import type {
   Result,
 } from '@coveo/headless';
 import {vi} from 'vitest';
+import {genericSubscribe} from '../common';
 
-export const defaultState: InstantResultsState = {
+export const defaultState = {
   q: 'the query',
   results: [
     {
@@ -44,7 +45,7 @@ export const defaultState: InstantResultsState = {
   ],
   isLoading: false,
   error: null,
-};
+} satisfies InstantResultsState;
 
 export const buildFakeInstantResults = (
   config: Partial<InstantResultsState> = {}
@@ -58,9 +59,6 @@ export const buildFakeInstantResults = (
     state: fakeState,
     updateQuery: vi.fn(),
     clearExpired: vi.fn(),
-    subscribe: vi.fn((callback) => {
-      callback();
-      return vi.fn(); // return unsubscribe function
-    }),
+    subscribe: genericSubscribe,
   };
 };
