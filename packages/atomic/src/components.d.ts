@@ -5,24 +5,30 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
+import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
+import { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
+export { CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
+export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
+export { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 export { i18n } from "i18next";
@@ -1627,23 +1633,6 @@ export namespace Components {
         "rows": number;
     }
     /**
-     * The `atomic-result-timespan` component renders a target result number field value as a duration.
-     */
-    interface AtomicResultTimespan {
-        /**
-          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * The format to apply to the result field value.  By default, the format is HH:mm:ss when the duration is under a day, and it is an approximation when longer (days, months or years).  The string displayed when there is an approximation can be modified with [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).  Available formats: https://day.js.org/docs/en/durations/format
-         */
-        "format"?: string;
-        /**
-          * The unit of measurement of the field value. Available units: https://day.js.org/docs/en/durations/creating
-         */
-        "unit": string;
-    }
-    /**
      * The `atomic-search-box` component creates a search box with built-in support for suggestions.
      */
     interface AtomicSearchBox {
@@ -2876,15 +2865,6 @@ declare global {
         prototype: HTMLAtomicResultTablePlaceholderElement;
         new (): HTMLAtomicResultTablePlaceholderElement;
     };
-    /**
-     * The `atomic-result-timespan` component renders a target result number field value as a duration.
-     */
-    interface HTMLAtomicResultTimespanElement extends Components.AtomicResultTimespan, HTMLStencilElement {
-    }
-    var HTMLAtomicResultTimespanElement: {
-        prototype: HTMLAtomicResultTimespanElement;
-        new (): HTMLAtomicResultTimespanElement;
-    };
     interface HTMLAtomicSearchBoxElementEventMap {
         "redirect": RedirectionPayload;
     }
@@ -3245,7 +3225,6 @@ declare global {
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-rating": HTMLAtomicResultRatingElement;
         "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
-        "atomic-result-timespan": HTMLAtomicResultTimespanElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
         "atomic-segmented-facet-scrollable": HTMLAtomicSegmentedFacetScrollableElement;
@@ -4820,23 +4799,6 @@ declare namespace LocalJSX {
         "rows": number;
     }
     /**
-     * The `atomic-result-timespan` component renders a target result number field value as a duration.
-     */
-    interface AtomicResultTimespan {
-        /**
-          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * The format to apply to the result field value.  By default, the format is HH:mm:ss when the duration is under a day, and it is an approximation when longer (days, months or years).  The string displayed when there is an approximation can be modified with [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).  Available formats: https://day.js.org/docs/en/durations/format
-         */
-        "format"?: string;
-        /**
-          * The unit of measurement of the field value. Available units: https://day.js.org/docs/en/durations/creating
-         */
-        "unit"?: string;
-    }
-    /**
      * The `atomic-search-box` component creates a search box with built-in support for suggestions.
      */
     interface AtomicSearchBox {
@@ -5316,7 +5278,6 @@ declare namespace LocalJSX {
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-rating": AtomicResultRating;
         "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
-        "atomic-result-timespan": AtomicResultTimespan;
         "atomic-search-box": AtomicSearchBox;
         "atomic-segmented-facet": AtomicSegmentedFacet;
         "atomic-segmented-facet-scrollable": AtomicSegmentedFacetScrollable;
@@ -5603,10 +5564,6 @@ declare module "@stencil/core" {
              * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
-            /**
-             * The `atomic-result-timespan` component renders a target result number field value as a duration.
-             */
-            "atomic-result-timespan": LocalJSX.AtomicResultTimespan & JSXBase.HTMLAttributes<HTMLAtomicResultTimespanElement>;
             /**
              * The `atomic-search-box` component creates a search box with built-in support for suggestions.
              */
