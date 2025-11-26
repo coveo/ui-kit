@@ -324,5 +324,3 @@ await page.route('**/v2/search/querySuggest', async (route) => {
 **Pagination/carousels:** Test next/prev navigation, verify active indicator changes using `part` attribute
 
 **Empty states:** Call `component.noProducts()` or `noRecommendations()` before `load()`, verify empty message visibility
-
-````

@@ -422,5 +422,3 @@ Work on ONE step at a time, marking each complete before proceeding to the next.
 - **Step order matters:** Always follow the numbered steps in sequence
 
 Ask me for the component name and directory if not provided, then proceed with the migration following these steps systematically.
-
-````

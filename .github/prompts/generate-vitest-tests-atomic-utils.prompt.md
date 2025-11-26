@@ -447,5 +447,3 @@ npx vitest --config vitest.config.ts ./src/utils/your-utility.spec.ts
 - **Consider performance** - mock expensive operations to keep tests fast
 
 The goal is to create a comprehensive test suite that validates the utility functions work correctly across all scenarios while maintaining the high quality standards of the UI Kit project.
-
-````
