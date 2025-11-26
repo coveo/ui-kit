@@ -1,10 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import type {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
-import type {
-  BaseProduct,
-  ChildProduct,
-  Product,
-} from '../../../api/commerce/common/product.js';
+import type {BaseProduct, ChildProduct, Product,} from '../../../api/commerce/common/product.js';
 import {ResultType} from '../../../api/commerce/common/result.js';
 import type {ListingCommerceSuccessResponse} from '../../../api/commerce/listing/response.js';
 import {setError} from '../../error/error-actions.js';
@@ -15,10 +11,7 @@ import {
   promoteChildToParent,
   type QueryCommerceAPIThunkReturn,
 } from './product-listing-actions.js';
-import {
-  getProductListingInitialState,
-  type ProductListingState,
-} from './product-listing-state.js';
+import {getProductListingInitialState, type ProductListingState,} from './product-listing-state.js';
 
 export const productListingReducer = createReducer(
   getProductListingInitialState(),
@@ -86,8 +79,7 @@ export const productListingReducer = createReducer(
         handlePending(state, action.meta.requestId);
       })
       .addCase(promoteChildToParent, (state, action) => {
-        const {products, results} = state;
-        const productsOrResults = results.length > 0 ? results : products;
+        const productsOrResults = state.results.length > 0 ? state.results : state.products;
         let childToPromote: ChildProduct | undefined;
         const currentParentIndex = productsOrResults.findIndex((result) => {
           if (result.resultType === ResultType.SPOTLIGHT) {
@@ -103,13 +95,14 @@ export const productListingReducer = createReducer(
           return;
         }
 
-        const currentParent = results[currentParentIndex] as Product;
+        const currentParent = productsOrResults[currentParentIndex] as Product;
         const responseId = currentParent.responseId;
         const position = currentParent.position;
         const {children, totalNumberOfChildren} = currentParent;
 
         const newParent: Product = {
           ...(childToPromote as ChildProduct),
+          resultType: ResultType.PRODUCT,
           children,
           totalNumberOfChildren,
           position,

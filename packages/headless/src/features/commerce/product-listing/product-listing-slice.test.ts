@@ -1,4 +1,4 @@
-import type {ChildProduct} from '../../../api/commerce/common/product.js';
+import type {BaseProduct, ChildProduct} from '../../../api/commerce/common/product.js';
 import {buildMockCommerceRegularFacetResponse} from '../../../test/mock-commerce-facet-response.js';
 import {
   buildMockBaseProduct,
@@ -18,6 +18,10 @@ import {
   getProductListingInitialState,
   type ProductListingState,
 } from './product-listing-state.js';
+import {ResultType, Result, BaseResult} from '../../../api/commerce/common/result.js';
+import {
+Product
+} from '../../../api/commerce/common/product.js';
 
 describe('product-listing-slice', () => {
   let state: ProductListingState;
@@ -41,7 +45,7 @@ describe('product-listing-slice', () => {
         responseId,
       });
 
-      const action = fetchProductListing.fulfilled(response, '');
+      const action = fetchProductListing.fulfilled(response, '', {});
       const finalState = productListingReducer(state, action);
 
       expect(finalState.products).toEqual(
@@ -68,7 +72,7 @@ describe('product-listing-slice', () => {
         },
       });
 
-      const action = fetchProductListing.fulfilled(response, '');
+      const action = fetchProductListing.fulfilled(response, '', {});
       const finalState = productListingReducer(state, action);
 
       expect(finalState.products[0].position).toBe(21);
@@ -86,7 +90,7 @@ describe('product-listing-slice', () => {
         responseId,
       });
 
-      const action = fetchProductListing.fulfilled(response, '');
+      const action = fetchProductListing.fulfilled(response, '', {});
       const finalState = productListingReducer(state, action);
 
       expect(finalState.products[0].responseId).toBe(responseId);
@@ -99,7 +103,7 @@ describe('product-listing-slice', () => {
 
       const response = buildFetchProductListingResponse();
 
-      const action = fetchProductListing.fulfilled(response, '');
+      const action = fetchProductListing.fulfilled(response, '', {});
       const finalState = productListingReducer(state, action);
       expect(finalState.error).toBeNull();
     });
@@ -120,7 +124,7 @@ describe('product-listing-slice', () => {
         responseId,
       });
 
-      const action = fetchMoreProducts.fulfilled(response, '');
+      const action = fetchMoreProducts.fulfilled(response, '', {});
       const finalState = productListingReducer(state, action);
 
       expect(finalState.products.map((p) => p.ec_name)).toEqual([
@@ -154,7 +158,7 @@ describe('product-listing-slice', () => {
         },
       });
 
-      const action = fetchMoreProducts.fulfilled(response, '');
+      const action = fetchMoreProducts.fulfilled(response, '', {});
       const finalState = productListingReducer(state, action);
 
       expect(finalState.products[0].position).toBe(1);
@@ -188,7 +192,7 @@ describe('product-listing-slice', () => {
         },
       });
 
-      const action = fetchMoreProducts.fulfilled(response, '');
+      const action = fetchMoreProducts.fulfilled(response, '', {});
       const finalState = productListingReducer(state, action);
 
       // Original products keep their responseId
@@ -203,7 +207,7 @@ describe('product-listing-slice', () => {
       state.error = err;
 
       const response = buildFetchProductListingResponse();
-      const action = fetchMoreProducts.fulfilled(response, '');
+      const action = fetchMoreProducts.fulfilled(response, '', {});
       const finalState = productListingReducer(state, action);
       expect(finalState.error).toBeNull();
     });
@@ -275,13 +279,13 @@ describe('product-listing-slice', () => {
 
   describe('on #fetchProductListing.pending', () => {
     it('sets #isLoading to true', () => {
-      const pendingAction = fetchProductListing.pending('');
+      const pendingAction = fetchProductListing.pending('', {});
       const finalState = productListingReducer(state, pendingAction);
       expect(finalState.isLoading).toBe(true);
     });
 
     it('sets #requestId', () => {
-      const pendingAction = fetchProductListing.pending('request-id');
+      const pendingAction = fetchProductListing.pending('request-id', {});
       const finalState = productListingReducer(state, pendingAction);
       expect(finalState.requestId).toBe('request-id');
     });
@@ -289,13 +293,13 @@ describe('product-listing-slice', () => {
 
   describe('on #fetchMoreProducts.pending', () => {
     it('sets #isLoading to true', () => {
-      const pendingAction = fetchMoreProducts.pending('');
+      const pendingAction = fetchMoreProducts.pending('', {});
       const finalState = productListingReducer(state, pendingAction);
       expect(finalState.isLoading).toBe(true);
     });
 
     it('sets #requestId', () => {
-      const pendingAction = fetchMoreProducts.pending('request-id');
+      const pendingAction = fetchMoreProducts.pending('request-id', {});
       const finalState = productListingReducer(state, pendingAction);
       expect(finalState.requestId).toBe('request-id');
     });
@@ -377,6 +381,7 @@ describe('product-listing-slice', () => {
       error: {message: 'error', statusCode: 500, type: 'type'},
       isLoading: true,
       products: [buildMockProduct({ec_name: 'product1'})],
+      results: [],
       facets: [buildMockCommerceRegularFacetResponse()],
       responseId: 'response-id',
       requestId: 'request-id',
@@ -392,6 +397,7 @@ describe('product-listing-slice', () => {
       error: {message: 'error', statusCode: 500, type: 'type'},
       isLoading: true,
       products: [buildMockProduct({ec_name: 'product1'})],
+      results: [],
       facets: [buildMockCommerceRegularFacetResponse()],
       responseId: 'response-id',
       requestId: 'request-id',
@@ -427,3 +433,21 @@ describe('product-listing-slice', () => {
     });
   });
 });
+
+const getProductsFromResults = (results: Result[]): Array<Product | null> => {
+  const products: Array<Product | null> = [];
+  for (const result of results) {
+    products.push(result.resultType !== ResultType.SPOTLIGHT ? result : null);
+  }
+  return products;
+};
+
+const getBaseProductsFromBaseResults = (
+    results: BaseResult[]
+): Array<BaseProduct | null> => {
+  const products: Array<BaseProduct | null> = [];
+  for (const result of results) {
+    products.push(result.resultType !== ResultType.SPOTLIGHT ? result : null);
+  }
+  return products;
+};
