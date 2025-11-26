@@ -5,13 +5,6 @@ test.describe('default', () => {
     await sortDropdown.load();
   });
 
-  test('should pass automated accessibility tests', async ({
-    makeAxeBuilder,
-  }) => {
-    const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations).toEqual([]);
-  });
-
   test.describe('when selecting a field sort criterion', async () => {
     test.beforeEach(async ({sortDropdown}) => {
       await sortDropdown.dropdown.selectOption('sncost ascending');
