@@ -40,6 +40,7 @@ import {
   AtomicSearchBoxRecentQueries as LitAtomicSearchBoxRecentQueries,
   AtomicSearchInterface as LitAtomicSearchInterface,
   AtomicSearchLayout as LitAtomicSearchLayout,
+  AtomicSortExpression as LitAtomicSortExpression,
   AtomicTab as LitAtomicTab,
   AtomicText as LitAtomicText,
 } from '@coveo/atomic/components';
@@ -290,6 +291,12 @@ export const AtomicSearchLayout = createComponent({
   tagName: 'atomic-search-layout',
   react: React,
   elementClass: LitAtomicSearchLayout,
+});
+
+export const AtomicSortExpression = createComponent({
+  tagName: 'atomic-sort-expression',
+  react: React,
+  elementClass: LitAtomicSortExpression,
 });
 
 export const AtomicTab = createComponent({

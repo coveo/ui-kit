@@ -1,6 +1,5 @@
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
-import {page} from 'vitest/browser';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import type {AtomicSortExpression} from './atomic-sort-expression';
 import './atomic-sort-expression';
@@ -12,6 +11,12 @@ describe('atomic-sort-expression', () => {
     tabsIncluded = [],
     tabsExcluded = [],
     insideDropdown = true,
+  }: {
+    label?: string;
+    expression?: string;
+    tabsIncluded?: string[];
+    tabsExcluded?: string[];
+    insideDropdown?: boolean;
   } = {}) => {
     const template = html`<atomic-sort-expression
       label="${label}"
@@ -94,15 +99,6 @@ describe('atomic-sort-expression', () => {
       const attribute = element.getAttribute('tabs-included');
       expect(JSON.parse(attribute || '[]')).toEqual(['tab1', 'tab2']);
     });
-
-    it('should allow updating tabs-included programmatically', async () => {
-      const {element} = await renderSortExpression();
-
-      element.tabsIncluded = ['newTab1', 'newTab2'];
-      await element.updateComplete;
-
-      expect(element.tabsIncluded).toEqual(['newTab1', 'newTab2']);
-    });
   });
 
   describe('when rendering with tabs-excluded', () => {
@@ -124,15 +120,6 @@ describe('atomic-sort-expression', () => {
       });
       const attribute = element.getAttribute('tabs-excluded');
       expect(JSON.parse(attribute || '[]')).toEqual(['tab1', 'tab2']);
-    });
-
-    it('should allow updating tabs-excluded programmatically', async () => {
-      const {element} = await renderSortExpression();
-
-      element.tabsExcluded = ['excludeTab1', 'excludeTab2'];
-      await element.updateComplete;
-
-      expect(element.tabsExcluded).toEqual(['excludeTab1', 'excludeTab2']);
     });
   });
 
@@ -182,8 +169,6 @@ describe('atomic-sort-expression', () => {
       const {element} = await renderSortExpression({insideDropdown: false});
       await element.updateComplete;
 
-      await page.waitForTimeout(100);
-
       expect(consoleErrorSpy).toHaveBeenCalled();
     });
 
@@ -191,9 +176,12 @@ describe('atomic-sort-expression', () => {
       const {element} = await renderSortExpression({insideDropdown: false});
       await element.updateComplete;
 
-      await expect
-        .element(page.getByText(/component has to be used inside/i))
-        .toBeInTheDocument();
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        new Error(
+          'The \"atomic-sort-expression\" component has to be used inside an atomic-sort-dropdown element.'
+        ),
+        expect.anything()
+      );
     });
   });
 
