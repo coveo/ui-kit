@@ -2,6 +2,10 @@ name: CI
 on:
   pull_request:
   merge_group:
+
+permissions:
+  contents: read
+
 env:
   CYPRESS_VERIFY_TIMEOUT: 60000
 jobs:

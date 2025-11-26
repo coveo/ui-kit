@@ -11,6 +11,10 @@ on:
         required: true
       SFDX_AUTH_JWT_KEY:
         required: true
+
+permissions:
+  contents: read
+
 jobs:
   e2e-quantic-setup:
     name: 'Setup e2e tests on Quantic'
