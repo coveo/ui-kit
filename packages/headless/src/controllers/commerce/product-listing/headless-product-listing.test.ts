@@ -31,23 +31,20 @@ import {
 } from './facets/headless-product-listing-facet-options.js';
 import {
   buildProductListing,
-  type ProductListing,
 } from './headless-product-listing.js';
 
 describe('headless product-listing', () => {
-  let productListing: ProductListing;
   let engine: MockedCommerceEngine;
 
   beforeEach(() => {
     engine = buildMockCommerceEngine(buildMockCommerceState());
-    productListing = buildProductListing(engine);
   });
 
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  it('uses sub-controllers', () => {
+  it('uses sub-controllers with default enableResults=false', () => {
     const buildProductListingSubControllers = vi.spyOn(
       SubControllers,
       'buildProductListingSubControllers'
@@ -57,8 +54,8 @@ describe('headless product-listing', () => {
 
     expect(buildProductListingSubControllers).toHaveBeenCalledWith(engine, {
       responseIdSelector,
-      fetchProductsActionCreator: ProductListingActions.fetchProductListing,
-      fetchMoreProductsActionCreator: ProductListingActions.fetchMoreProducts,
+      fetchProductsActionCreator: expect.any(Function),
+      fetchMoreProductsActionCreator: expect.any(Function),
       facetResponseSelector,
       isFacetLoadingResponseSelector,
       requestIdSelector,
@@ -76,6 +73,7 @@ describe('headless product-listing', () => {
   });
 
   it('adds the correct reducers to engine', () => {
+    buildProductListing(engine);
     expect(engine.addReducers).toHaveBeenCalledWith({
       productListing: productListingReducer,
       commerceContext: contextReducer,
@@ -90,6 +88,7 @@ describe('headless product-listing', () => {
     );
     const child = {permanentid: 'childPermanentId'} as ChildProduct;
 
+    const productListing = buildProductListing(engine);
     productListing.promoteChildToParent(child);
 
     expect(promoteChildToParent).toHaveBeenCalledWith({
@@ -97,25 +96,54 @@ describe('headless product-listing', () => {
     });
   });
 
-  it('#refresh dispatches #fetchProductListing', () => {
+  it('#refresh dispatches #fetchProductListing with enableResults=false by default', () => {
     const fetchProductListing = vi.spyOn(
       ProductListingActions,
       'fetchProductListing'
     );
 
+    const productListing = buildProductListing(engine);
     productListing.refresh();
 
-    expect(fetchProductListing).toHaveBeenCalled();
+    expect(fetchProductListing).toHaveBeenCalledWith({enableResults: false});
   });
 
-  it('#executeFirstRequest dispatches #fetchProductListing', () => {
+  it('#refresh dispatches #fetchProductListing with enableResults=true when specified', () => {
+    const fetchProductListing = vi.spyOn(
+      ProductListingActions,
+      'fetchProductListing'
+    );
+    const productListingWithResults = buildProductListing(engine, {
+      enableResults: true,
+    });
+
+    productListingWithResults.refresh();
+
+    expect(fetchProductListing).toHaveBeenCalledWith({enableResults: true});
+  });
+
+  it('#executeFirstRequest dispatches #fetchProductListing with enableResults=false by default', () => {
     const executeRequest = vi.spyOn(
       ProductListingActions,
       'fetchProductListing'
     );
-
+    const productListing = buildProductListing(engine);
     productListing.executeFirstRequest();
 
-    expect(executeRequest).toHaveBeenCalled();
+    expect(executeRequest).toHaveBeenCalledWith({enableResults: false});
+  });
+
+  it('#executeFirstRequest dispatches #fetchProductListing with enableResults=true when specified', () => {
+    const executeRequest = vi.spyOn(
+      ProductListingActions,
+      'fetchProductListing'
+    );
+    const productListingWithResults = buildProductListing(engine, {
+      enableResults: true,
+    });
+
+    productListingWithResults.executeFirstRequest();
+
+    expect(executeRequest).toHaveBeenCalledWith({enableResults: true});
   });
 });

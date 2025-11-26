@@ -434,6 +434,7 @@ describe('product-listing-slice', () => {
   });
 });
 
+/*
 const getProductsFromResults = (results: Result[]): Array<Product | null> => {
   const products: Array<Product | null> = [];
   for (const result of results) {
@@ -451,3 +452,4 @@ const getBaseProductsFromBaseResults = (
   }
   return products;
 };
+*/
