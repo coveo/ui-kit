@@ -1,4 +1,7 @@
-export function promiseTimeout<T>(prom: T | Promise<T>, ms: number) {
+export function promiseTimeout<T>(
+  prom: T | Promise<T>,
+  ms: number
+): Promise<T> {
   let id: NodeJS.Timeout;
   const timeout = new Promise((_, reject) => {
     id = setTimeout(() => {
@@ -7,5 +10,5 @@ export function promiseTimeout<T>(prom: T | Promise<T>, ms: number) {
   });
   return Promise.race([prom, timeout]).then(() => {
     clearTimeout(id);
-  });
+  }) as Promise<T>;
 }
