@@ -9,7 +9,10 @@ import {
   buildMockProduct,
 } from '../../../test/mock-product.js';
 import {buildFetchProductListingResponse} from '../../../test/mock-product-listing.js';
-import {buildMockSpotlightContent} from '../../../test/mock-spotlight-content.js';
+import {
+  buildMockBaseSpotlightContent,
+  buildMockSpotlightContent,
+} from '../../../test/mock-spotlight-content.js';
 import {setError} from '../../error/error-actions.js';
 import {setContext, setView} from '../context/context-actions.js';
 import {
@@ -109,7 +112,7 @@ describe('product-listing-slice', () => {
 
     it('updates the results field with products and spotlight content', () => {
       const product = buildMockBaseProduct({ec_name: 'product1'});
-      const spotlight = buildMockSpotlightContent({name: 'Spotlight 1'});
+      const spotlight = buildMockBaseSpotlightContent({name: 'Spotlight 1'});
       const responseId = 'some-response-id';
       const response = buildFetchProductListingResponse({
         results: [product, spotlight],
@@ -120,17 +123,17 @@ describe('product-listing-slice', () => {
       const finalState = productListingReducer(state, action);
 
       expect(finalState.results).toHaveLength(2);
-      expect(finalState.results[0]).toMatchObject({
-        ec_name: 'product1',
-        position: 1,
-        responseId,
-      });
-      expect(finalState.results[1]).toEqual(spotlight);
+      expect(finalState.results[0]).toEqual(
+        buildMockProduct({ec_name: 'product1', position: 1, responseId})
+      );
+      expect(finalState.results[1]).toEqual(
+        buildMockSpotlightContent({name: 'Spotlight 1', position: 2})
+      );
     });
 
     it('sets the #position of each product in results to its 1-based position', () => {
       const product1 = buildMockBaseProduct({ec_name: 'product1'});
-      const spotlight = buildMockSpotlightContent({name: 'Spotlight 1'});
+      const spotlight = buildMockBaseSpotlightContent({name: 'Spotlight 1'});
       const product2 = buildMockBaseProduct({ec_name: 'product2'});
       const response = buildFetchProductListingResponse({
         results: [product1, spotlight, product2],
@@ -145,14 +148,14 @@ describe('product-listing-slice', () => {
       const action = fetchProductListing.fulfilled(response, '', {});
       const finalState = productListingReducer(state, action);
 
-      expect((finalState.results[0] as Product).position).toBe(11);
-      expect(finalState.results[1]).toEqual(spotlight);
-      expect((finalState.results[2] as Product).position).toBe(13);
+      expect(finalState.results[0].position).toBe(11);
+      expect(finalState.results[1].position).toBe(12);
+      expect(finalState.results[2].position).toBe(13);
     });
 
     it('sets the responseId on each product in results but not on spotlight content', () => {
       const product = buildMockBaseProduct({ec_name: 'product1'});
-      const spotlight = buildMockSpotlightContent({name: 'Spotlight 1'});
+      const spotlight = buildMockBaseSpotlightContent({name: 'Spotlight 1'});
       const responseId = 'test-response-id';
       const response = buildFetchProductListingResponse({
         results: [product, spotlight],
@@ -289,11 +292,14 @@ describe('product-listing-slice', () => {
         responseId: 'old-response-id',
         position: 1,
       });
-      const spotlight1 = buildMockSpotlightContent({name: 'Spotlight 1'});
+      const spotlight1 = buildMockSpotlightContent({
+        name: 'Spotlight 1',
+        position: 2,
+      });
       state.results = [product1, spotlight1];
 
       const product2 = buildMockBaseProduct({ec_name: 'product2'});
-      const spotlight2 = buildMockSpotlightContent({name: 'Spotlight 2'});
+      const spotlight2 = buildMockBaseSpotlightContent({name: 'Spotlight 2'});
       const responseId = 'new-response-id';
       const response = buildFetchProductListingResponse({
         results: [product2, spotlight2],
@@ -310,10 +316,14 @@ describe('product-listing-slice', () => {
       const finalState = productListingReducer(state, action);
 
       expect(finalState.results).toHaveLength(4);
-      expect((finalState.results[0] as Product).ec_name).toBe('product1');
+      expect(finalState.results[0]).toEqual(product1);
       expect(finalState.results[1]).toEqual(spotlight1);
-      expect((finalState.results[2] as Product).ec_name).toBe('product2');
-      expect(finalState.results[3]).toEqual(spotlight2);
+      expect(finalState.results[2]).toEqual(
+        buildMockProduct({ec_name: 'product2', position: 3, responseId})
+      );
+      expect(finalState.results[3]).toEqual(
+        buildMockSpotlightContent({name: 'Spotlight 2', position: 4})
+      );
     });
 
     it('sets the #position of each product in results to its 1-based position in the unpaginated list', () => {
@@ -352,7 +362,7 @@ describe('product-listing-slice', () => {
       state.results = [product1];
 
       const product2 = buildMockBaseProduct({ec_name: 'product2'});
-      const spotlight = buildMockSpotlightContent({name: 'Spotlight 1'});
+      const spotlight = buildMockBaseSpotlightContent({name: 'Spotlight 1'});
       const responseId = 'new-response-id';
       const response = buildFetchProductListingResponse({
         results: [product2, spotlight],

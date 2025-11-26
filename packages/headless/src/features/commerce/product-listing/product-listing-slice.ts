@@ -5,6 +5,10 @@ import type {
   ChildProduct,
   Product,
 } from '../../../api/commerce/common/product.js';
+import type {
+  BaseSpotlightContent,
+  SpotlightContent,
+} from '../../../api/commerce/common/result.js';
 import {ResultType} from '../../../api/commerce/common/result.js';
 import type {ListingCommerceSuccessResponse} from '../../../api/commerce/listing/response.js';
 import {setError} from '../../error/error-actions.js';
@@ -44,7 +48,7 @@ export const productListingReducer = createReducer(
         );
         state.results = action.payload.response.results.map((result, index) =>
           result.resultType === ResultType.SPOTLIGHT
-            ? result
+            ? preprocessSpotlightContent(result, paginationOffset + index + 1)
             : preprocessProduct(
                 result,
                 paginationOffset + index + 1,
@@ -70,11 +74,11 @@ export const productListingReducer = createReducer(
         state.results = state.results.concat(
           action.payload.response.results.map((result, index) =>
             result.resultType === ResultType.SPOTLIGHT
-              ? result
+              ? preprocessSpotlightContent(result, paginationOffset + index + 1)
               : preprocessProduct(
                   result,
                   paginationOffset + index + 1,
-                  action.payload!.response.responseId
+                  action.payload?.response.responseId
                 )
           )
         );
@@ -178,5 +182,15 @@ function preprocessProduct(
     children: [restOfProduct, ...children],
     position,
     responseId,
+  };
+}
+
+function preprocessSpotlightContent(
+  spotlight: BaseSpotlightContent,
+  position: number
+): SpotlightContent {
+  return {
+    ...spotlight,
+    position,
   };
 }

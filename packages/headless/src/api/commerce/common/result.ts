@@ -6,7 +6,7 @@ export enum ResultType {
   SPOTLIGHT = 'spotlight',
 }
 
-export interface SpotlightContent {
+export interface BaseSpotlightContent {
   /**
    * The URI to navigate to when the spotlight content is clicked.
    */
@@ -33,5 +33,18 @@ export interface SpotlightContent {
   resultType: ResultType.SPOTLIGHT;
 }
 
-export type BaseResult = BaseProduct | SpotlightContent;
+export interface ResultPosition {
+  /**
+   * The 1-based result's position across the non-paginated result set.
+   *
+   * For example, if the result is the third one on the second page, and there are 10 results per page, its position is 13 (not 3).
+   */
+  position: number;
+}
+
+export interface SpotlightContent
+  extends ResultPosition,
+    BaseSpotlightContent {}
+
+export type BaseResult = BaseProduct | BaseSpotlightContent;
 export type Result = Product | SpotlightContent;
