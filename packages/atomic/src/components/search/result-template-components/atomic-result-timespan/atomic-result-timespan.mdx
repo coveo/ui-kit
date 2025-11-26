@@ -1,0 +1,103 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicResultTimespanStories from './atomic-result-timespan.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicResultTimespanStories} />
+
+<AtomicDocTemplate
+  stories={AtomicResultTimespanStories}
+  githubPath="search/result-template-components/atomic-result-timespan/atomic-result-timespan.ts"
+  tagName="atomic-result-timespan"
+  className="AtomicResultTimespan"
+>
+
+The `atomic-result-timespan` component renders a numeric result field value as a formatted duration.
+
+This component is used within `atomic-result-template` components inside the result list:
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-result-list>
+    <atomic-result-template>
+      <template>
+        <atomic-result-timespan field="duration" unit="ms"></atomic-result-timespan>
+        <atomic-result-timespan field="videolength" unit="s"></atomic-result-timespan>
+      </template>
+    </atomic-result-template>
+  </atomic-result-list>
+  ...
+</atomic-search-interface>
+```
+
+### Basic Usage
+
+To display a duration field in milliseconds (default):
+
+```html
+<atomic-result-timespan field="duration"></atomic-result-timespan>
+```
+
+### Specifying Units
+
+You can specify the unit of measurement for the field value:
+
+```html
+<!-- Field value is in seconds -->
+<atomic-result-timespan field="videolength" unit="s"></atomic-result-timespan>
+
+<!-- Field value is in minutes -->
+<atomic-result-timespan field="duration" unit="m"></atomic-result-timespan>
+
+<!-- Field value is in hours -->
+<atomic-result-timespan field="duration" unit="h"></atomic-result-timespan>
+
+<!-- Field value is in days -->
+<atomic-result-timespan field="duration" unit="d"></atomic-result-timespan>
+```
+
+Available units: `ms` (milliseconds), `s` (seconds), `m` (minutes), `h` (hours), `d` (days), and other units supported by [Day.js duration](https://day.js.org/docs/en/durations/creating).
+
+### Default Formatting
+
+By default:
+- Durations under a day are displayed in `HH:mm:ss` format (e.g., "01:23:45")
+- Durations of a day or longer are displayed as approximations:
+  - "About a day", "About 3 days"
+  - "About a month", "About 5 months"
+  - "About a year", "About 10 years"
+
+The approximation strings can be customized using [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
+
+### Custom Format
+
+You can specify a custom format using [Day.js duration format](https://day.js.org/docs/en/durations/format):
+
+```html
+<atomic-result-timespan 
+  field="duration" 
+  unit="ms" 
+  format="H [hours,] m [minutes and] s [seconds]">
+</atomic-result-timespan>
+```
+
+This would display "1 hours, 23 minutes and 45 seconds" instead of "01:23:45".
+
+### Important Configuration
+
+Make sure to include the field in the `fieldsToInclude` property of the `atomic-search-interface` component:
+
+```html
+<atomic-search-interface fields-to-include='["duration", "videolength"]'>
+  ...
+</atomic-search-interface>
+```
+
+### Field Resolution
+
+The component looks for fields in this order:
+1. First in the Result object properties
+2. Then in the `result.raw` object
+
+</AtomicDocTemplate>
