@@ -1,6 +1,6 @@
 # @coveo/documentation
 
-This is a typedoc plugin. It ensure that the documentation generated adheres to our styling guidelines. 
+This is a typedoc plugin. It ensures that the documentation generated adheres to our styling guidelines. 
 
 It is used by
 - `@coveo/headless`
