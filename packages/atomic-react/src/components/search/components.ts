@@ -16,6 +16,7 @@ import {
   AtomicPager as LitAtomicPager,
   AtomicQueryError as LitAtomicQueryError,
   AtomicQuerySummary as LitAtomicQuerySummary,
+  AtomicRatingFacet as LitAtomicRatingFacet,
   AtomicRecsInterface as LitAtomicRecsInterface,
   AtomicResult as LitAtomicResult,
   AtomicResultBadge as LitAtomicResultBadge,
@@ -145,6 +146,12 @@ export const AtomicQuerySummary = createComponent({
   tagName: 'atomic-query-summary',
   react: React,
   elementClass: LitAtomicQuerySummary,
+});
+
+export const AtomicRatingFacet = createComponent({
+  tagName: 'atomic-rating-facet',
+  react: React,
+  elementClass: LitAtomicRatingFacet,
 });
 
 export const AtomicRecsInterface = createComponent({
