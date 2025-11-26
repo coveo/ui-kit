@@ -103,7 +103,7 @@ export interface ProductListingState {
   responseId: string;
 }
 
-export interface ProductListingOptions extends FetchProductListingPayload {}
+interface ProductListingOptions extends FetchProductListingPayload {}
 
 /**
  * Creates a `ProductListing` controller instance.

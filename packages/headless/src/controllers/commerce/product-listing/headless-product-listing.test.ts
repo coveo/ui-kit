@@ -29,9 +29,7 @@ import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 } from './facets/headless-product-listing-facet-options.js';
-import {
-  buildProductListing,
-} from './headless-product-listing.js';
+import {buildProductListing} from './headless-product-listing.js';
 
 describe('headless product-listing', () => {
   let engine: MockedCommerceEngine;
