@@ -37,7 +37,7 @@ class KebabRouter extends KindRouter {
   protected getIdealBaseName(refl: Models.Reflection): string {
     const name = refl.getFullName?.() ?? refl.name ?? '';
     if (!(refl as DocumentReflection)?.frontmatter?.slug)
-      return this.getUrlSafeName(name);
+      return `documents/${this.getUrlSafeName(name)}`;
     const {slug} = (refl as DocumentReflection).frontmatter as TFrontMatter;
 
     return `documents/${slug}`;
