@@ -103,7 +103,12 @@ export interface ProductListingState {
   responseId: string;
 }
 
-interface ProductListingOptions extends FetchProductListingPayload {}
+/**
+ * Options for configuring the `ProductListing` controller.
+ * @group Buildable controllers
+ * @category ProductListing
+ */
+export interface ProductListingOptions extends FetchProductListingPayload {}
 
 /**
  * Creates a `ProductListing` controller instance.
