@@ -634,6 +634,9 @@ jobs:
     name: "Run Quantic E2E tests"
     needs: affected
     if: contains(needs.affected.outputs.projects, '@coveo/quantic') && !(github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'skip-quantic'))
+    permissions:
+      contents: read
+      pull-requests: write
     uses: ./.github/workflows/e2e-quantic.yml
     with:
       event_name: ${{ github.event_name }}
