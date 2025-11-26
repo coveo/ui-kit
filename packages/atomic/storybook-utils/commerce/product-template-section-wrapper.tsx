@@ -53,9 +53,9 @@ export const wrapInProductTemplateForSections = (): {
       {tag: 'atomic-product-section-actions', content: `<button class="p-1 btn btn-primary">Add to Cart</button>`},
       {tag: 'atomic-product-section-badges', content: `
       <div>
-        <span class="badge badge-primary" style="background: #ef4444; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">NEW</span>
-        <span class="badge badge-secondary" style="background: #f59e0b; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">SALE</span>
-        <span class="badge badge-success" style="background: #10b981; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">BESTSELLER</span>
+        <span class="badge badge-primary" style="background: #0F0F0F; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">NEW</span>
+        <span class="badge badge-secondary" style="background: #0F0F0F; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">SALE</span>
+        <span class="badge badge-success" style="background: #0F0F0F; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">BESTSELLER</span>
       </div>
     `},
       {tag: 'atomic-product-section-bottom-metadata', content: `<div class="text-xs text-gray-500">
