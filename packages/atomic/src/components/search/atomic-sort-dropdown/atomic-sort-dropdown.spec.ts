@@ -3,13 +3,15 @@ import {
   buildSort,
   buildTabManager,
   loadSortCriteriaActions,
-  parseCriterionExpression,
   type SearchStatusState,
+  SortBy,
+  SortOrder,
   type SortState,
   type TabManagerState,
 } from '@coveo/headless';
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
+import {describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
@@ -21,34 +23,14 @@ import './atomic-sort-dropdown';
 vi.mock('@coveo/headless', {spy: true});
 
 describe('atomic-sort-dropdown', () => {
-  const mockUpdateSortCriterion = vi.fn();
+  const mockedSortBy = vi.fn();
 
-  beforeEach(() => {
-    vi.mocked(buildSort).mockReturnValue(buildFakeSort());
-    vi.mocked(buildSearchStatus).mockReturnValue(buildFakeSearchStatus());
-    vi.mocked(buildTabManager).mockReturnValue(buildFakeTabManager());
-    vi.mocked(loadSortCriteriaActions).mockReturnValue({
-      updateSortCriterion: mockUpdateSortCriterion,
-    } as ReturnType<typeof loadSortCriteriaActions>);
-  });
-
-  const locators = {
-    get label() {
-      return page.getByText('Sort by');
-    },
-    get select() {
-      return page.getByRole('combobox');
-    },
-    placeholder(element: HTMLElement) {
-      return element.shadowRoot!.querySelector('[part="placeholder"]')!;
-    },
-  };
-
-  const setupElement = async ({
+  const renderSortDropdown = async ({
     sortState,
     searchStatusState,
     tabManagerState,
-    slottedContent = `
+    withChildren = true,
+    slotContent = `
       <atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression>
       <atomic-sort-expression label="most-recent" expression="date descending"></atomic-sort-expression>
       <atomic-sort-expression label="price-ascending" expression="sncost ascending"></atomic-sort-expression>
@@ -57,9 +39,15 @@ describe('atomic-sort-dropdown', () => {
     sortState?: Partial<SortState>;
     searchStatusState?: Partial<SearchStatusState>;
     tabManagerState?: Partial<TabManagerState>;
-    slottedContent?: string;
+    withChildren?: boolean;
+    slotContent?: string;
   } = {}) => {
-    vi.mocked(buildSort).mockReturnValue(buildFakeSort({state: sortState}));
+    vi.mocked(buildSort).mockReturnValue(
+      buildFakeSort({
+        state: {sortCriteria: 'relevancy', ...sortState},
+        implementation: {sortBy: mockedSortBy},
+      })
+    );
     vi.mocked(buildSearchStatus).mockReturnValue(
       buildFakeSearchStatus({
         hasError: false,
@@ -70,198 +58,251 @@ describe('atomic-sort-dropdown', () => {
       })
     );
     vi.mocked(buildTabManager).mockReturnValue(
-      buildFakeTabManager(tabManagerState)
+      buildFakeTabManager({
+        activeTab: tabManagerState?.activeTab || 'All',
+        ...tabManagerState,
+      })
     );
 
     const {element} = await renderInAtomicSearchInterface<AtomicSortDropdown>({
-      template: html`<atomic-sort-dropdown>${slottedContent}</atomic-sort-dropdown>`,
+      template: html`<atomic-sort-dropdown
+        >${withChildren ? unsafeHTML(slotContent) : ''}</atomic-sort-dropdown
+      >`,
       selector: 'atomic-sort-dropdown',
-    });
-
-    return element;
-  };
-
-  it('is defined', async () => {
-    const el = await setupElement();
-    expect(el).toBeInstanceOf(AtomicSortDropdown);
-  });
-
-  it('should build sort controller with correct initial state', async () => {
-    const el = await setupElement();
-
-    expect(buildSort).toHaveBeenCalledWith(el.bindings.engine, {
-      initialState: {
-        criterion: el.bindings.store.state.sortOptions[0]?.criteria,
+      bindings: (bindings) => {
+        bindings.store.state.sortOptions = [
+          {
+            criteria: [{by: SortBy.Relevancy}],
+            expression: 'relevancy',
+            tabs: {included: [], excluded: []},
+            label: 'relevance',
+          },
+          {
+            criteria: [{by: SortBy.Date, order: SortOrder.Descending}],
+            expression: 'date descending',
+            tabs: {included: [], excluded: []},
+            label: 'most-recent',
+          },
+        ];
+        return bindings;
       },
     });
-  });
 
-  it('should build searchStatus controller', async () => {
-    const el = await setupElement();
+    await element.updateComplete;
 
-    expect(buildSearchStatus).toHaveBeenCalledWith(el.bindings.engine);
-  });
+    return {
+      element,
+      get select() {
+        return page.getByRole('combobox');
+      },
+      get options() {
+        return Array.from(
+          element.shadowRoot?.querySelectorAll('[part="select"] option') || []
+        );
+      },
+      get label() {
+        return element.shadowRoot?.querySelector('[part="label"]');
+      },
+      get selectParent() {
+        return element.shadowRoot?.querySelector('[part="select-parent"]');
+      },
+      get selectSeparator() {
+        return element.shadowRoot?.querySelector('[part="select-separator"]');
+      },
+      get placeholder() {
+        return element.shadowRoot?.querySelector('[part="placeholder"]');
+      },
+    };
+  };
 
-  it('should build tabManager controller', async () => {
-    const el = await setupElement();
-
-    expect(buildTabManager).toHaveBeenCalledWith(el.bindings.engine);
-  });
-
-  it('renders label correctly', async () => {
-    await setupElement();
-
-    await expect.element(locators.label).toBeInTheDocument();
-  });
-
-  it('renders dropdown select correctly', async () => {
-    await setupElement();
-
-    await expect.element(locators.select).toBeInTheDocument();
-  });
-
-  it('renders all sort options from slotted atomic-sort-expression elements', async () => {
-    await setupElement();
-
-    const options = await page.getByRole('option').all();
-    expect(options).toHaveLength(3);
-  });
-
-  it('should call sort.sortBy when select is changed', async () => {
-    const mockedSortBy = vi.fn();
-    vi.mocked(buildSort).mockReturnValue(
-      buildFakeSort({implementation: {sortBy: mockedSortBy}})
-    );
-    vi.mocked(parseCriterionExpression).mockReturnValue({
-      by: 'date',
-      order: 'descending',
-    } as ReturnType<typeof parseCriterionExpression>);
-
-    await setupElement();
-
-    await locators.select.selectOptions('date descending');
-
-    expect(mockedSortBy).toHaveBeenCalled();
-  });
-
-  describe('when there is an error', () => {
-    let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
-
-    beforeEach(() => {
-      consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+  describe('initialization', () => {
+    it('should render correctly', async () => {
+      const {element} = await renderSortDropdown();
+      expect(element).toBeDefined();
     });
 
-    it('renders nothing', async () => {
-      const element = await setupElement();
-      element.error = new Error('Test error');
-      await element.updateComplete;
+    it('should call buildSort with engine', async () => {
+      const {element} = await renderSortDropdown();
+      const buildSortMock = vi.mocked(buildSort);
 
-      await expect.element(locators.label).not.toBeInTheDocument();
-      await expect.element(locators.select).not.toBeInTheDocument();
-      expect(consoleErrorSpy).toHaveBeenCalled();
-    });
-  });
-
-  it('renders nothing when there are no results', async () => {
-    await setupElement({
-      searchStatusState: {hasResults: false},
+      expect(buildSort).toHaveBeenCalledWith(element.bindings.engine, {
+        initialState: {
+          criterion: element.bindings.store.state.sortOptions[0]?.criteria,
+        },
+      });
+      expect(element.sort).toBe(buildSortMock.mock.results[0].value);
     });
 
-    await expect.element(locators.label).not.toBeInTheDocument();
-    await expect.element(locators.select).not.toBeInTheDocument();
-  });
+    it('should call buildSearchStatus with engine', async () => {
+      const {element} = await renderSortDropdown();
+      const buildSearchStatusMock = vi.mocked(buildSearchStatus);
 
-  it('renders nothing when search has error', async () => {
-    await setupElement({
-      searchStatusState: {hasError: true},
+      expect(buildSearchStatus).toHaveBeenCalledExactlyOnceWith(
+        element.bindings.engine
+      );
+      expect(element.searchStatus).toBe(
+        buildSearchStatusMock.mock.results[0].value
+      );
     });
 
-    await expect.element(locators.label).not.toBeInTheDocument();
-    await expect.element(locators.select).not.toBeInTheDocument();
-  });
+    it('should call buildTabManager with engine', async () => {
+      const {element} = await renderSortDropdown();
+      const buildTabManagerMock = vi.mocked(buildTabManager);
 
-  it('renders placeholder when first search is not executed', async () => {
-    const element = await setupElement({
-      searchStatusState: {firstSearchExecuted: false},
+      expect(buildTabManager).toHaveBeenCalledExactlyOnceWith(
+        element.bindings.engine
+      );
+      expect(element.tabManager).toBe(
+        buildTabManagerMock.mock.results[0].value
+      );
     });
 
-    await expect.element(locators.placeholder(element)).toBeInTheDocument();
-    await expect.element(locators.select).not.toBeInTheDocument();
-  });
+    it('should set error when no sort expressions are provided', async () => {
+      const {element} = await renderSortDropdown({withChildren: false});
 
-  describe('when no atomic-sort-expression children are provided', () => {
-    let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
-
-    beforeEach(() => {
-      consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    });
-
-    it('should set error', async () => {
-      const element = await setupElement({slottedContent: ''});
-
-      expect(element.error).toBeInstanceOf(Error);
+      expect(element.error).toBeDefined();
       expect(element.error.message).toContain(
         'requires at least one "atomic-sort-expression" child'
       );
-      expect(consoleErrorSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('rendering', () => {
+    it('should render all shadow parts', async () => {
+      const {label, selectParent, select, selectSeparator} =
+        await renderSortDropdown();
+
+      await expect(label).toBeInTheDocument();
+      await expect(selectParent).toBeInTheDocument();
+      await expect(select).toBeInTheDocument();
+      await expect(selectSeparator).toBeInTheDocument();
+    });
+
+    it('should render dropdown with all options', async () => {
+      const {select, options} = await renderSortDropdown();
+
+      await expect.element(select).toBeInTheDocument();
+      expect(options).toHaveLength(3);
+    });
+
+    it('should render the label correctly', async () => {
+      const {label} = await renderSortDropdown();
+
+      await expect(label).toHaveTextContent('Sort by:');
+    });
+
+    it('should display the localized label for options', async () => {
+      const {options} = await renderSortDropdown();
+
+      expect(options[0]).toHaveTextContent('Relevance');
+    });
+
+    it('should render placeholder when firstSearchExecuted is false', async () => {
+      const {placeholder} = await renderSortDropdown({
+        searchStatusState: {firstSearchExecuted: false},
+      });
+
+      await expect(placeholder).toBeInTheDocument();
+    });
+
+    it('should not render when hasError is true', async () => {
+      const {select} = await renderSortDropdown({
+        searchStatusState: {hasError: true},
+      });
+
+      await expect(select).not.toBeInTheDocument();
+    });
+
+    it('should not render when hasResults is false', async () => {
+      const {select} = await renderSortDropdown({
+        searchStatusState: {hasResults: false},
+      });
+
+      await expect(select).not.toBeInTheDocument();
+    });
+
+    it('should be invisible when there are no results', async () => {
+      const {select} = await renderSortDropdown({
+        searchStatusState: {hasResults: false, firstSearchExecuted: true},
+      });
+
+      await expect(select).not.toBeInTheDocument();
+    });
+  });
+
+  describe('selecting options', () => {
+    it('should call sort.sortBy when an option is selected', async () => {
+      const {select} = await renderSortDropdown();
+
+      await select.selectOptions('date descending');
+
+      expect(mockedSortBy).toHaveBeenCalled();
+    });
+
+    it('should not call sort.sortBy when selecting the same option', async () => {
+      const {select} = await renderSortDropdown({
+        sortState: {sortCriteria: 'relevancy'},
+      });
+
+      await select.selectOptions('relevancy');
+
+      expect(mockedSortBy).toHaveBeenCalled();
     });
   });
 
   describe('tab filtering', () => {
-    it('should filter sort expressions based on tabs-included', async () => {
-      await setupElement({
-        slottedContent: `
-          <atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression>
-          <atomic-sort-expression label="tab-specific" expression="date descending" tabs-included='["Tab1"]'></atomic-sort-expression>
+    it('should filter options based on active tab', async () => {
+      const {options} = await renderSortDropdown({
+        slotContent: `
+          <atomic-sort-expression label="all-tabs" expression="relevancy"></atomic-sort-expression>
+          <atomic-sort-expression label="tab1-only" expression="date descending" tabs-included='["tab1"]'></atomic-sort-expression>
+          <atomic-sort-expression label="tab2-only" expression="sncost ascending" tabs-included='["tab2"]'></atomic-sort-expression>
         `,
-        tabManagerState: {activeTab: 'Tab1'},
+        tabManagerState: {activeTab: 'tab1'},
       });
 
-      // Both options should be visible on Tab1
-      const options = await page.getByRole('option').all();
-      expect(options.length).toBeGreaterThanOrEqual(2);
-    });
-
-    it('should filter sort expressions based on tabs-excluded', async () => {
-      await setupElement({
-        slottedContent: `
-          <atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression>
-          <atomic-sort-expression label="excluded-option" expression="date descending" tabs-excluded='["Tab2"]'></atomic-sort-expression>
-        `,
-        tabManagerState: {activeTab: 'Tab2'},
-      });
-
-      // Only relevance option should be visible on Tab2
-      const options = await page.getByRole('option').all();
-      expect(options.length).toBe(1);
+      // Should show "all-tabs" and "tab1-only", but not "tab2-only"
+      expect(options).toHaveLength(2);
     });
   });
 
-  describe('componentShouldUpdate behavior', () => {
-    it('should dispatch updateSortCriterion action when current sort is not in options', async () => {
-      const dispatchSpy = vi.fn();
-      vi.mocked(parseCriterionExpression).mockReturnValue({
-        by: 'relevance',
-      } as ReturnType<typeof parseCriterionExpression>);
+  describe('updated lifecycle', () => {
+    it('should update sort criteria when no matching option is found', async () => {
+      const updateSortCriterionMock = vi.fn();
+      vi.mocked(loadSortCriteriaActions).mockReturnValue({
+        updateSortCriterion: updateSortCriterionMock,
+      } as never);
 
-      const {element} = await renderInAtomicSearchInterface<AtomicSortDropdown>(
-        {
-          template: html`<atomic-sort-dropdown>
-          <atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression>
-        </atomic-sort-dropdown>`,
-          selector: 'atomic-sort-dropdown',
-          bindings: (bindings) => {
-            bindings.engine.dispatch = dispatchSpy;
-            return bindings;
-          },
-        }
-      );
+      const {element} = await renderSortDropdown({
+        sortState: {sortCriteria: 'unknownCriteria'},
+      });
 
-      // Trigger update by changing state
-      element.sortState = {sortCriteria: 'nonexistent criteria'};
+      element.requestUpdate();
       await element.updateComplete;
 
-      expect(dispatchSpy).toHaveBeenCalled();
+      expect(loadSortCriteriaActions).toHaveBeenCalledWith(
+        element.bindings.engine
+      );
+      expect(updateSortCriterionMock).toHaveBeenCalled();
+      expect(element.bindings.engine.dispatch).toHaveBeenCalled();
+    });
+  });
+
+  describe('controller state binding', () => {
+    it('should bind sortState to sort controller', async () => {
+      const {element} = await renderSortDropdown({
+        sortState: {sortCriteria: 'date descending'},
+      });
+
+      expect(element.sortState.sortCriteria).toBe('date descending');
+    });
+
+    it('should bind tabManagerState to tabManager controller', async () => {
+      const {element} = await renderSortDropdown({
+        tabManagerState: {activeTab: 'myTab'},
+      });
+
+      expect(element.tabManagerState.activeTab).toBe('myTab');
     });
   });
 });

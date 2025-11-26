@@ -17,7 +17,9 @@ import {customElement, state} from 'lit/decorators.js';
 import {guard} from 'lit/directives/guard.js';
 import {map} from 'lit/directives/map.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
@@ -137,6 +139,10 @@ export class AtomicSortDropdown
   }
 
   updated() {
+    if (!this.bindings || !this.sortState) {
+      return;
+    }
+
     if (
       this.options.some(
         (option) =>
@@ -191,6 +197,8 @@ export class AtomicSortDropdown
     );
   }
 
+  @errorGuard()
+  @bindingGuard()
   render() {
     const {hasError, hasResults, firstSearchExecuted, isLoading} =
       this.searchStatusState;
