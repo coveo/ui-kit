@@ -1,5 +1,6 @@
 import {randomUUID} from 'node:crypto';
 import type {Product} from '@coveo/headless/ssr-commerce';
+import {ResultType} from '@coveo/headless/ssr-commerce';
 
 const createMockProduct = (overrides: Partial<Product> = {}): Product => ({
   additionalFields: {},
@@ -24,7 +25,7 @@ const createMockProduct = (overrides: Partial<Product> = {}): Product => ({
   permanentid: randomUUID(),
   position: 1,
   totalNumberOfChildren: 0,
-  resultType: 'product', // todo: figure out how to import enum. Do i need string literal?
+  resultType: ResultType.PRODUCT,
   ...overrides,
 });
 

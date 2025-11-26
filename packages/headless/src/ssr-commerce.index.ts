@@ -1,5 +1,5 @@
 /**
- * The Coveo Headless SSR Commerce sub-package exposes exposes the engine, definers, controllers, actions, and utility functions to build a server side rendered commerce experience.
+ * The Coveo Headless SSR Commerce sub-package exposes the engine, definers, controllers, actions, and utility functions to build a server side rendered commerce experience.
  *
  * @example
  * ```typescript
@@ -353,6 +353,7 @@ export type {
   ChildProduct,
   Product,
 } from './api/commerce/common/product.js';
+export {ResultType} from './api/commerce/common/result.js';
 export {
   getAnalyticsNextApiBaseUrl,
   getOrganizationEndpoint,
