@@ -36,7 +36,7 @@ export class AtomicResultLocalizedText
   /**
    * The i18n translation key.
    */
-  @property({type: String, reflect: true, attribute: 'locale-key'})
+  @property({type: String, attribute: 'locale-key'})
   public localeKey!: string;
 
   /**
@@ -49,7 +49,7 @@ export class AtomicResultLocalizedText
   /**
    * The numerical field value used to determine whether to use the singular or plural value of a translation.
    */
-  @property({type: String, reflect: true, attribute: 'field-count'})
+  @property({type: String, attribute: 'field-count'})
   public fieldCount?: string;
 
   @state() private result!: Result;
@@ -113,7 +113,7 @@ export class AtomicResultLocalizedText
       count:
         (ResultTemplatesHelpers.getResultProperty(
           this.result,
-          this.fieldCount!
+          this.fieldCount
         ) as number) ?? 1,
     };
   }
