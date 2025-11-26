@@ -369,7 +369,7 @@ describe('product-listing-slice', () => {
         responseId: oldResponseId,
       });
       const spotlight1 = buildMockSpotlightContent({
-        name: 'spotlight1',
+        name: 'Spotlight 1',
         position: 1,
         responseId: oldResponseId,
       });
@@ -392,6 +392,7 @@ describe('product-listing-slice', () => {
       const action = fetchMoreProducts.fulfilled(response, '', {});
       const finalState = productListingReducer(state, action);
 
+      expect(finalState.results).toHaveLength(4);
       expect(finalState.results[0].responseId).toBe(oldResponseId);
       expect(finalState.results[1].responseId).toBe(oldResponseId);
       expect(finalState.results[2].responseId).toBe(responseId);
