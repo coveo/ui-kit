@@ -1,5 +1,4 @@
 // Auto-generated file
-
 export {AtomicAutomaticFacet} from './atomic-automatic-facet/atomic-automatic-facet.js';
 export {AtomicBreadbox} from './atomic-breadbox/atomic-breadbox.js';
 export {AtomicColorFacet} from './atomic-color-facet/atomic-color-facet.js';
