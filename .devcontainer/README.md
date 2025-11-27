@@ -36,6 +36,13 @@ The devcontainer uses a Docker volume (`ui-kit-pnpm-store`) to persist the pnpm 
 - First install: Downloads all dependencies
 - Subsequent installs: Reuses cached packages from the volume
 
+### Turbo Cache
+
+A separate Docker volume (`ui-kit-turbo-cache`) persists turbo's build cache across container rebuilds. Combined with the prebuild running `pnpm run build`:
+
+- First build: Compiles all packages
+- Subsequent builds: Skips unchanged packages using cached outputs
+
 ### Optimized Lifecycle
 
 The devcontainer uses GitHub Codespaces prebuild lifecycle:
@@ -52,8 +59,9 @@ This separation ensures expensive operations are cached in the prebuild, while c
 ## What's Included
 
 ### Pre-installed Tools
-- Node.js 22.17.1
+- Node.js 22.x
 - pnpm 10.18.1
+- turbo 2.5.5
 - git
 - GitHub CLI
 

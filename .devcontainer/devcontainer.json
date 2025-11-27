@@ -10,8 +10,11 @@
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
 
-  // Mount the pnpm store as a volume for better caching
-  "mounts": ["source=ui-kit-pnpm-store,target=/pnpm/store,type=volume"],
+  // Mount volumes for pnpm store and turbo cache
+  "mounts": [
+    "source=ui-kit-pnpm-store,target=/pnpm/store,type=volume",
+    "source=ui-kit-turbo-cache,target=/home/node/.cache/turbo,type=volume"
+  ],
 
   // Lifecycle commands optimized for GitHub Codespaces
   // updateContentCommand runs during prebuild (expensive operations cached)
