@@ -8,6 +8,8 @@
  */
 export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-aria-live',
+  'atomic-automatic-facet',
+  'atomic-breadbox',
   'atomic-commerce-breadbox',
   'atomic-commerce-category-facet',
   'atomic-commerce-did-you-mean',
@@ -49,6 +51,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-layout-section',
   'atomic-load-more-results',
   'atomic-modal',
+  'atomic-no-results',
   'atomic-numeric-range',
   'atomic-pager',
   'atomic-product',
@@ -82,6 +85,8 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-result-children-template',
   'atomic-result-html',
   'atomic-result-list',
+  'atomic-result-localized-text',
+  'atomic-result-multi-value-text',
   'atomic-result-number',
   'atomic-result-section-actions',
   'atomic-result-section-badges',
@@ -100,6 +105,8 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-search-box-recent-queries',
   'atomic-search-interface',
   'atomic-search-layout',
+  'atomic-segmented-facet-scrollable',
+  'atomic-tab',
   'atomic-text',
 ]);
 

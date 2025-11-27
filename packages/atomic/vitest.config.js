@@ -13,12 +13,19 @@ const resourceUrl = `http://localhost:${port}/`;
 
 /**
  * Custom SVG transformer to handle .svg imports.
+ * Resolves @/ alias to the package root directory.
  */
 function svgTransform(code, id) {
+  const packageRoot = import.meta.dirname;
   return code.replace(
     /import\s+([a-zA-Z]+)\s+from\s+['"]([^'"]+\.svg)['"]/g,
     (_, importName, importPath) => {
-      const svgContent = readFileSync(resolve(dirname(id), importPath), 'utf8')
+      // Resolve @/ alias to package root
+      const resolvedPath = importPath.startsWith('@/')
+        ? resolve(packageRoot, importPath.replace('@/', './'))
+        : resolve(dirname(id), importPath);
+
+      const svgContent = readFileSync(resolvedPath, 'utf8')
         .replace(/'/g, "\\'")
         .replace(/\n/g, '');
       return `const ${importName} = '${svgContent}'`;
