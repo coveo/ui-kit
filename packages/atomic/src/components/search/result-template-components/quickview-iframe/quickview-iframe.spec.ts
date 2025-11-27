@@ -1,11 +1,10 @@
 import type {SearchEngine} from '@coveo/headless';
-import type {VNode} from '@stencil/core';
+import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {fixtureWrapper} from '@/vitest-utils/testing-helpers/fixture-wrapper';
-import {renderStencilVNode} from '@/vitest-utils/testing-helpers/stencil-vnode-renderer';
-import {QuickviewIframe} from './quickview-iframe';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {renderQuickviewIframe} from './quickview-iframe';
 
-describe('QuickviewIframe (Stencil)', () => {
+describe('#renderQuickviewIframe', () => {
   let mockOnSetIframeRef: (ref: HTMLIFrameElement) => void;
   let mockLogger: SearchEngine['logger'];
 
@@ -16,13 +15,6 @@ describe('QuickviewIframe (Stencil)', () => {
     } as unknown as SearchEngine['logger'];
   });
 
-  /**
-   * Helper function to render the QuickviewIframe component.
-   * This calls the actual Stencil functional component and renders its output.
-   *
-   * For Lit migration: Replace this with a helper that uses renderFunctionFixture
-   * with the Lit component.
-   */
   const renderComponent = async (props: {
     title: string;
     content?: string;
@@ -32,18 +24,14 @@ describe('QuickviewIframe (Stencil)', () => {
     src?: string;
     logger?: SearchEngine['logger'];
   }): Promise<HTMLIFrameElement> => {
-    // Call the actual Stencil functional component with required parameters
-    const vnode = QuickviewIframe(
-      props,
-      [], // children
-      // biome-ignore lint/suspicious/noExplicitAny: Stencil FunctionalComponent requires utils parameter but it's not used
-      {} as any
-    ) as VNode;
+    const container = await renderFunctionFixture(
+      html`${renderQuickviewIframe({props})}`
+    );
 
-    const container = document.createElement('div');
-    fixtureWrapper(container);
+    // Twice because renderQuickviewIframe has 2 nested async updates
+    await new Promise((resolve) => setTimeout(resolve));
+    await new Promise((resolve) => setTimeout(resolve));
 
-    await renderStencilVNode(vnode, container);
     return container.firstElementChild as HTMLIFrameElement;
   };
 
