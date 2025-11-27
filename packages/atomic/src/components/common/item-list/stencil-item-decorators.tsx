@@ -147,7 +147,7 @@ interface AtomicItemChildren {
 }
 
 /**
- * @deprecated should only be used for Stencil components. For Lit components, use `ChildTemplatesContext` from \@/src/decorators/item-list/child-templates-context.js.
+ * @deprecated should only be used for Stencil components. For Lit components, use `ChildTemplatesContextController` from @/src/decorators/item-list/child-templates-context-controller.ts.
  */
 export function ChildTemplatesContext() {
   return (component: ComponentInterface, itemTemplateProviderProp: string) => {
