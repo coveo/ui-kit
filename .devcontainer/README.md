@@ -24,7 +24,7 @@ With prebuilds enabled, your codespace will be ready in ~30 seconds instead of 5
 
 Following [pnpm Docker best practices](https://pnpm.io/docker), we use a custom Dockerfile that:
 
-- Uses Node.js 22 (matching `.nvmrc` and `package.json` engines)
+- Uses Node.js 22 LTS (jod) via the `node:jod-bookworm` image
 - Enables pnpm 10.18.1 via corepack (matching `packageManager` in `package.json`)
 - Runs as the `node` user to avoid permission issues
 - Includes git and essential development tools
