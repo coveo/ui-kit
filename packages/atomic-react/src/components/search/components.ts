@@ -21,6 +21,7 @@ import {
   AtomicResult as LitAtomicResult,
   AtomicResultBadge as LitAtomicResultBadge,
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
+  AtomicResultFieldsList as LitAtomicResultFieldsList,
   AtomicResultHtml as LitAtomicResultHtml,
   AtomicResultList as LitAtomicResultList,
   AtomicResultLocalizedText as LitAtomicResultLocalizedText,
@@ -180,6 +181,12 @@ export const AtomicResultChildrenTemplate = createComponent({
   tagName: 'atomic-result-children-template',
   react: React,
   elementClass: LitAtomicResultChildrenTemplate,
+});
+
+export const AtomicResultFieldsList = createComponent({
+  tagName: 'atomic-result-fields-list',
+  react: React,
+  elementClass: LitAtomicResultFieldsList,
 });
 
 export const AtomicResultHtml = createComponent({

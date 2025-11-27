@@ -1509,11 +1509,6 @@ export namespace Components {
         "relativeTime"?: boolean;
     }
     /**
-     * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
-     */
-    interface AtomicResultFieldsList {
-    }
-    /**
      * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
      * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
      */
@@ -2726,15 +2721,6 @@ declare global {
         new (): HTMLAtomicResultDateElement;
     };
     /**
-     * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
-     */
-    interface HTMLAtomicResultFieldsListElement extends Components.AtomicResultFieldsList, HTMLStencilElement {
-    }
-    var HTMLAtomicResultFieldsListElement: {
-        prototype: HTMLAtomicResultFieldsListElement;
-        new (): HTMLAtomicResultFieldsListElement;
-    };
-    /**
      * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
      * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
      */
@@ -3139,7 +3125,6 @@ declare global {
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-result-children": HTMLAtomicResultChildrenElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
-        "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
         "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
@@ -4596,11 +4581,6 @@ declare namespace LocalJSX {
         "relativeTime"?: boolean;
     }
     /**
-     * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
-     */
-    interface AtomicResultFieldsList {
-    }
-    /**
      * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
      * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
      */
@@ -5151,7 +5131,6 @@ declare namespace LocalJSX {
         "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-result-children": AtomicResultChildren;
         "atomic-result-date": AtomicResultDate;
-        "atomic-result-fields-list": AtomicResultFieldsList;
         "atomic-result-icon": AtomicResultIcon;
         "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
@@ -5392,10 +5371,6 @@ declare module "@stencil/core" {
              * The `atomic-result-date` component renders the value of a date result field.
              */
             "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
-            /**
-             * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
-             */
-            "atomic-result-fields-list": LocalJSX.AtomicResultFieldsList & JSXBase.HTMLAttributes<HTMLAtomicResultFieldsListElement>;
             /**
              * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
              * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
