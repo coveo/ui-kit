@@ -32,6 +32,14 @@ export default {
     await import('./atomic-result-html/atomic-result-html.js'),
   'atomic-result-list': async () =>
     await import('./atomic-result-list/atomic-result-list.js'),
+  'atomic-result-localized-text': async () =>
+    await import(
+      './atomic-result-localized-text/atomic-result-localized-text.js'
+    ),
+  'atomic-result-multi-value-text': async () =>
+    await import(
+      './atomic-result-multi-value-text/atomic-result-multi-value-text.js'
+    ),
   'atomic-result-number': async () =>
     await import('./atomic-result-number/atomic-result-number.js'),
   'atomic-result-section-actions': async () =>
@@ -92,6 +100,12 @@ export default {
     await import('./atomic-search-interface/atomic-search-interface.js'),
   'atomic-search-layout': async () =>
     await import('./atomic-search-layout/atomic-search-layout.js'),
+  'atomic-segmented-facet-scrollable': async () =>
+    await import(
+      './atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.js'
+    ),
+  'atomic-sort-dropdown': async () =>
+    await import('./atomic-sort-dropdown/atomic-sort-dropdown.js'),
   'atomic-tab': async () => await import('./atomic-tab/atomic-tab.js'),
   'atomic-text': async () => await import('./atomic-text/atomic-text.js'),
 } as Record<string, () => Promise<unknown>>;
