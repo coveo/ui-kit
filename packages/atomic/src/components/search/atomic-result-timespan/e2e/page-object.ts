@@ -1,7 +1,7 @@
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
-export class ResultTimespanPageObject extends BasePageObject<'atomic-result-timespan'> {
+export class ResultTimespanPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-result-timespan');
   }

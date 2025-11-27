@@ -2,7 +2,7 @@ import {expect, test} from './fixture';
 
 test.describe('atomic-result-timespan', () => {
   test.beforeEach(async ({resultTimespan}) => {
-    await resultTimespan.load({story: 'default'});
+    await resultTimespan.load();
     await resultTimespan.hydrated.waitFor();
   });
 
