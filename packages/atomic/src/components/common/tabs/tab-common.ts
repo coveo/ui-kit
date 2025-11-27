@@ -1,6 +1,6 @@
 import {buildCustomEvent} from '../../../utils/event-utils.js';
 
-export const tabLoadedEventName = 'atomic/tabRendered';
+const tabLoadedEventName = 'atomic/tabRendered';
 
 export const dispatchTabLoaded = (element: HTMLElement) => {
   const event = buildCustomEvent(tabLoadedEventName, {});
