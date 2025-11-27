@@ -23,7 +23,7 @@ import {
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
   AtomicResultHtml as LitAtomicResultHtml,
   AtomicResultList as LitAtomicResultList,
-  AtomicResultMultiValueText as LitAtomicResultMultiValueText,
+  AtomicResultLocalizedText as LitAtomicResultLocalizedText,
   AtomicResultNumber as LitAtomicResultNumber,
   AtomicResultSectionActions as LitAtomicResultSectionActions,
   AtomicResultSectionBadges as LitAtomicResultSectionBadges,
@@ -192,10 +192,10 @@ export const AtomicResultList = createComponent({
   elementClass: LitAtomicResultList,
 });
 
-export const AtomicResultMultiValueText = createComponent({
-  tagName: 'atomic-result-multi-value-text',
+export const AtomicResultLocalizedText = createComponent({
+  tagName: 'atomic-result-localized-text',
   react: React,
-  elementClass: LitAtomicResultMultiValueText,
+  elementClass: LitAtomicResultLocalizedText,
 });
 
 export const AtomicResultNumber = createComponent({
