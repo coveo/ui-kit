@@ -65,7 +65,7 @@ import {ValidatePropsController} from '../../common/validate-props-controller/va
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
- * An `atomic-facet` displays a facet of the results for the current query.
+ * An `atomic-facet` displays a facet of the results for the current query. Adding an optional search box to a facet can help find specific values inside larger sets.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -230,7 +230,7 @@ export class AtomicFacet
   })
   public isCollapsed = false;
   /**
-   * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+   * The <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements" target="_blank">heading level</a> to use for the heading over the facet, from 1 to 6.
    */
   @property({type: Number, attribute: 'heading-level'})
   public headingLevel = 0;

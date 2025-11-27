@@ -14,7 +14,7 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
 This component is typically placed within the "facets" section of the layout.
 
 You can also place facets inside an `atomic-facet-manager` component to ensure the effective functioning of DNE (Dynamic Navigation Experience). 
-More info here: [atomic-facet-manager](https://docs.coveo.com/en/2918).
+More info here: <a href="https://docs.coveo.com/en/2918" target="_blank">atomic-facet-manager</a>
 
 ```html
 <atomic-search-interface>
@@ -29,4 +29,28 @@ More info here: [atomic-facet-manager](https://docs.coveo.com/en/2918).
   </atomic-search-layout>
 </atomic-search-interface>
 ```
+
+### Display Options
+
+The facet component supports three different display modes:
+
+- **Checkboxes** (default): The most commonly used display, allows multiple selections
+- **Links**: Single selection only, behave like navigational links
+- **Boxes**: Multi-select with a more visual appearance, presents more values in compact space
+
+## UX Best Practices
+
+- Don’t use boxes if your facet values are long, it won’t provide a good experience for your users and you risk truncating values.
+- Place facets on the left side of the search page; this is the most natural place for them and is where users expect to see them.
+- Positioning facets on the right side results in lower adoption and decreases the usability of the search page.
+
+### Common Use Cases
+
+Facets are useful for large indexes because they provide multiple filters, one for every specific aspect of the content. 
+Faceted navigation helps the user get an overview of the content available, helping them understand how to search for it.
+
+## Reference
+
+<a href="https://source.coveo.com/2018/04/18/facets/" target="_blank">Don’t Lose Face with Facets</a>
+
 </AtomicDocTemplate>
