@@ -83,16 +83,20 @@ The visual tests must exist first so we can generate baseline snapshots from the
 
 **CRITICAL:** The page-object file must be fully type-safe to avoid TypeScript compilation errors.
 
-If `e2e/page-object.ts` doesn't exist yet, create it with this complete, type-safe structure:
+If `e2e/page-object.ts` doesn't exist yet, create it with this complete, type-safe structure.
+
+**IMPORTANT:** At Step 0, the component is still Stencil, so use `base-page-object` (which looks for the `hydrated` class). After migrating to Lit (Step 4), update the import to use `lit-base-page-object`.
 
 ```typescript
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
+// Use base-page-object for Stencil components (Step 0)
+// After migration to Lit (Step 4), change to: '@/playwright-utils/lit-base-page-object'
+import {BasePageObject} from '@/playwright-utils/base-page-object';
 
 /**
  * Page object for atomic-component-name E2E tests
  */
-export class ComponentNamePageObject extends BasePageObject {
+export class ComponentNamePageObject extends BasePageObject<'atomic-component-name'> {
   constructor(page: Page) {
     super(page, 'atomic-component-name');
   }
@@ -155,7 +159,8 @@ export class ComponentNamePageObject extends BasePageObject {
 
 **Key TypeScript requirements:**
 - ✅ Import `Page` type from `@playwright/test`
-- ✅ Extend `BasePageObject` from `@/playwright-utils/lit-base-page-object`
+- ✅ Use `@/playwright-utils/base-page-object` at Step 0 (Stencil), switch to `@/playwright-utils/lit-base-page-object` after Step 4 (Lit migration)
+- ✅ For Stencil: extend `BasePageObject<'atomic-component-name'>` with the tag name as type parameter
 - ✅ Add explicit return type annotations (`: Promise<void>`, `: Promise<Buffer>`)
 - ✅ Type all method parameters and options
 - ✅ Use `await` properly in async methods
@@ -379,11 +384,25 @@ Create Storybook stories with MSW API mocking:
 **Prompt:** `.github/prompts/generate-playwright-e2e-tests-atomic.prompt.md`
 
 Enhance the existing E2E test file with **functional tests** (visual tests already exist from Step 0):
+- **Update page-object import**: Change from `base-page-object` to `lit-base-page-object` now that component is Lit
 - Enhance page object model in `e2e/page-object.ts` with additional locators
 - Enhance test fixtures in `e2e/fixture.ts` if needed
 - Add functional test cases to `e2e/{component-name}.e2e.ts`
 - Test happy path, user interactions, and accessibility
 - Follow `playwright-typescript.instructions.md` conventions
+
+**IMPORTANT - Update Page Object for Lit:**
+Since the component is now Lit (migrated in Step 1), update the page-object import:
+
+```typescript
+// Before (Stencil - uses hydrated class selector):
+import {BasePageObject} from '@/playwright-utils/base-page-object';
+export class ComponentPageObject extends BasePageObject<'atomic-component-name'> { ... }
+
+// After (Lit - uses tag selector):
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
+export class ComponentPageObject extends BasePageObject { ... }
+```
 
 **CRITICAL - Proper Test Synchronization:**
 
@@ -885,16 +904,22 @@ return await this.page.screenshot({...}); // Type mismatch
 return await this.hydrated.screenshot({...}); // Use locator.screenshot()
 ```
 
-#### Issue 3: Wrong BasePageObject Import
+#### Issue 3: Wrong BasePageObject Import for Migration Stage
 
-❌ **Error:**
+The base class depends on whether the component is Stencil or Lit:
+
+**At Step 0 (Stencil component - before migration):**
 ```typescript
+// Correct for Stencil - uses hydrated class selector
 import {BasePageObject} from '@/playwright-utils/base-page-object';
+export class ComponentPageObject extends BasePageObject<'atomic-component-name'> { ... }
 ```
 
-✅ **Fix:**
+**After Step 4 (Lit component - after migration):**
 ```typescript
+// Correct for Lit - uses tag selector
 import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
+export class ComponentPageObject extends BasePageObject { ... }
 ```
 
 #### Issue 4: Generic Class Name in Fixture
