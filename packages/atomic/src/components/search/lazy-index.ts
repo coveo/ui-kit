@@ -104,8 +104,8 @@ export default {
     await import(
       './atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.js'
     ),
-  'atomic-sort-expression': async () =>
-    await import('./atomic-sort-expression/atomic-sort-expression.js'),
+  'atomic-sort-dropdown': async () =>
+    await import('./atomic-sort-dropdown/atomic-sort-dropdown.js'),
   'atomic-tab': async () => await import('./atomic-tab/atomic-tab.js'),
   'atomic-text': async () => await import('./atomic-text/atomic-text.js'),
 } as Record<string, () => Promise<unknown>>;

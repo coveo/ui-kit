@@ -37,6 +37,6 @@ export {AtomicSearchBoxRecentQueries} from './atomic-search-box-recent-queries/a
 export {AtomicSearchInterface} from './atomic-search-interface/atomic-search-interface.js';
 export {AtomicSearchLayout} from './atomic-search-layout/atomic-search-layout.js';
 export {AtomicSegmentedFacetScrollable} from './atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.js';
-export {AtomicSortExpression} from './atomic-sort-expression/atomic-sort-expression.js';
+export {AtomicSortDropdown} from './atomic-sort-dropdown/atomic-sort-dropdown.js';
 export {AtomicTab} from './atomic-tab/atomic-tab.js';
 export {AtomicText} from './atomic-text/atomic-text.js';

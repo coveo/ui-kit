@@ -1799,9 +1799,25 @@ export namespace Components {
         "snippetStyle"?: string;
     }
     /**
-     * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
+     * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
      */
-    interface AtomicSortDropdown {
+    interface AtomicSortExpression {
+        /**
+          * One or more sort criteria that the end user can select or toggle between.  The available sort criteria are:  * `relevancy` * `date ascending`/`date descending` * `qre` * `<FIELD> ascending`/`<FIELD> descending`, where you replace `<FIELD>` with the name of a sortable field in your index (`criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (`criteria="size ascending, date ascending"`).  You can specify a list of comma-separated sort criteria which will be applied sequentially. For example, if there's a tie on the 1st criterion, the API uses the 2nd criterion to break the tie. However, this only works when combining: * a relevancy criterion followed by one or more field or date criteria. * a qre criterion followed by one or more field or date criteria. * two or more field criteria (`<FIELD>` descending, `<FIELD>` descending). * a single date criterion and one or more field criteria in any order (`<FIELD>` descending, date ascending).  Examples: * `relevancy`, `<FIELD> descending` * `qre`, `<FIELD> ascending` * `date descending`, `<FIELD> descending`, `<FIELD> ascending`
+         */
+        "expression": string;
+        /**
+          * The non-localized label to display for this expression.
+         */
+        "label": string;
+        /**
+          * The tabs on which the sort expression must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-sort-expression tabs-excluded='["tabIDA", "tabIDB"]'></atomic-sort-expression> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the sort expression can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-sort-expression tabs-included='["tabIDA", "tabIDB"]'></atomic-sort-expression snippet> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
     }
     /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
@@ -2950,13 +2966,13 @@ declare global {
         new (): HTMLAtomicSmartSnippetSuggestionsElement;
     };
     /**
-     * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
+     * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
      */
-    interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
+    interface HTMLAtomicSortExpressionElement extends Components.AtomicSortExpression, HTMLStencilElement {
     }
-    var HTMLAtomicSortDropdownElement: {
-        prototype: HTMLAtomicSortDropdownElement;
-        new (): HTMLAtomicSortDropdownElement;
+    var HTMLAtomicSortExpressionElement: {
+        prototype: HTMLAtomicSortExpressionElement;
+        new (): HTMLAtomicSortExpressionElement;
     };
     interface HTMLAtomicStencilFacetDateInputElementEventMap {
         "atomic/dateInputApply": any;
@@ -3141,7 +3157,7 @@ declare global {
         "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
         "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
-        "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
+        "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
         "atomic-tab-bar": HTMLAtomicTabBarElement;
@@ -4887,9 +4903,25 @@ declare namespace LocalJSX {
         "snippetStyle"?: string;
     }
     /**
-     * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
+     * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
      */
-    interface AtomicSortDropdown {
+    interface AtomicSortExpression {
+        /**
+          * One or more sort criteria that the end user can select or toggle between.  The available sort criteria are:  * `relevancy` * `date ascending`/`date descending` * `qre` * `<FIELD> ascending`/`<FIELD> descending`, where you replace `<FIELD>` with the name of a sortable field in your index (`criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (`criteria="size ascending, date ascending"`).  You can specify a list of comma-separated sort criteria which will be applied sequentially. For example, if there's a tie on the 1st criterion, the API uses the 2nd criterion to break the tie. However, this only works when combining: * a relevancy criterion followed by one or more field or date criteria. * a qre criterion followed by one or more field or date criteria. * two or more field criteria (`<FIELD>` descending, `<FIELD>` descending). * a single date criterion and one or more field criteria in any order (`<FIELD>` descending, date ascending).  Examples: * `relevancy`, `<FIELD> descending` * `qre`, `<FIELD> ascending` * `date descending`, `<FIELD> descending`, `<FIELD> ascending`
+         */
+        "expression": string;
+        /**
+          * The non-localized label to display for this expression.
+         */
+        "label": string;
+        /**
+          * The tabs on which the sort expression must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-sort-expression tabs-excluded='["tabIDA", "tabIDB"]'></atomic-sort-expression> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the sort expression can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-sort-expression tabs-included='["tabIDA", "tabIDB"]'></atomic-sort-expression snippet> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
     }
     /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
@@ -5137,7 +5169,7 @@ declare namespace LocalJSX {
         "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
         "atomic-smart-snippet-source": AtomicSmartSnippetSource;
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
-        "atomic-sort-dropdown": AtomicSortDropdown;
+        "atomic-sort-expression": AtomicSortExpression;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
         "atomic-tab-bar": AtomicTabBar;
@@ -5447,9 +5479,9 @@ declare module "@stencil/core" {
              */
             "atomic-smart-snippet-suggestions": LocalJSX.AtomicSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSuggestionsElement>;
             /**
-             * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
+             * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
              */
-            "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
+            "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             /**
              * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
              * Internal component made to be integrated in a TimeframeFacet.
