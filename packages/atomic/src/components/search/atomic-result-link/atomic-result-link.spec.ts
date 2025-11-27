@@ -149,28 +149,22 @@ describe('atomic-result-link', () => {
   });
 
   describe('#connectedCallback', () => {
-    describe('when component has no slotted content', () => {
-      it('should render with default behavior', async () => {
-        const {element} = await renderComponent();
-        expect(element).toBeDefined();
-      });
+    it('should render with default behavior when component has no slotted content', async () => {
+      const {element} = await renderComponent();
+      expect(element).toBeDefined();
     });
 
-    describe('when component has default slotted content', () => {
-      it('should render with custom content', async () => {
-        const {element} = await renderComponent({
-          slottedContent: 'Custom Link Text',
-        });
-        expect(element.textContent).toContain('Custom Link Text');
+    it('should render with custom content when component has default slotted content', async () => {
+      const {element} = await renderComponent({
+        slottedContent: 'Custom Link Text',
       });
+      expect(element.textContent).toContain('Custom Link Text');
     });
 
-    describe('when component has attributes slot content', () => {
-      it('should handle attributes slot content', async () => {
-        const {element} = await renderComponent();
+    it('should handle attributes slot content when component has attributes slot content', async () => {
+      const {element} = await renderComponent();
 
-        expect(element).toBeDefined();
-      });
+      expect(element).toBeDefined();
     });
 
     it('should call super.connectedCallback', async () => {
@@ -246,28 +240,29 @@ describe('atomic-result-link', () => {
         .toHaveAttribute('href', 'https://example.com/test?title=Test Title');
     });
 
-    it('should render atomic-result-text with title field when hasDefaultSlot is false', async () => {
+    it('should render atomic-result-text with title field when no slotted content is provided', async () => {
       const {element} = await renderComponent();
 
-      await new Promise((resolve) => setTimeout(resolve, 10));
-      const atomicResultText = element.querySelector('atomic-result-text');
-      expect(atomicResultText).toBeDefined();
+      await vi.waitFor(() => {
+        const atomicResultText = element.querySelector('atomic-result-text');
+        expect(atomicResultText).toBeDefined();
 
-      if (atomicResultText) {
-        expect(atomicResultText.getAttribute('field')).toBe('title');
-        expect(atomicResultText.getAttribute('default')).toBe('no-title');
-      }
+        if (atomicResultText) {
+          expect(atomicResultText.getAttribute('field')).toBe('title');
+          expect(atomicResultText.getAttribute('default')).toBe('no-title');
+        }
+      });
     });
 
-    it('should render slotted content when hasDefaultSlot is true', async () => {
+    it('should render slotted content when custom content is provided', async () => {
       const {element} = await renderComponent({
         slottedContent: 'Custom Link Text',
       });
 
       await element.updateComplete;
-      await new Promise((resolve) => setTimeout(resolve, 10));
-
-      expect(element.textContent?.trim()).toBe('Custom Link Text');
+      await vi.waitFor(() => {
+        expect(element.textContent?.trim()).toBe('Custom Link Text');
+      });
 
       expect(element).toBeDefined();
     });
@@ -297,11 +292,6 @@ describe('atomic-result-link', () => {
     it('should render as a link with proper role', async () => {
       const {link} = await renderComponent();
       await expect.element(link).toHaveRole('link');
-    });
-
-    it('should be accessible', async () => {
-      const {link} = await renderComponent();
-      await expect.element(link).toBeInTheDocument();
     });
 
     it('should handle missing result context gracefully', async () => {

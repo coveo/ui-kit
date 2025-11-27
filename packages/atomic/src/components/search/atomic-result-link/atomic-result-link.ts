@@ -1,11 +1,10 @@
 import {isUndefined} from '@coveo/bueno';
-import type {InteractiveResult} from '@coveo/headless';
+import type {InteractiveResult, Result} from '@coveo/headless';
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {getAttributesFromLinkSlotContent} from '@/src/components/common/item-link/attributes-slot';
 import {renderLinkWithItemAnalytics} from '@/src/components/common/item-link/item-link';
-import type {AnyUnfoldedItem} from '@/src/components/common/item-list/unfolded-item';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {createInteractiveResultContextController} from '@/src/components/search/result-template-component-utils/context/interactive-result-context-controller';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
@@ -58,6 +57,8 @@ atomic-result-link {
 
   @state() private linkAttributes?: Attr[];
   @state() private stopPropagation?: boolean;
+  @state() private result!: Result;
+  @state() private interactiveResult!: InteractiveResult;
   private removeLinkEventHandlers?: () => void;
 
   private resultContext = createResultContextController(this);
@@ -68,6 +69,22 @@ atomic-result-link {
   @state() public error!: Error;
 
   public initialize() {
+    if (!this.result && this.resultContext.item) {
+      const item = this.resultContext.item;
+      if ('result' in item) {
+        this.result = item.result;
+      } else {
+        this.result = item;
+      }
+    }
+
+    if (
+      !this.interactiveResult &&
+      this.interactiveResultContext.interactiveItem
+    ) {
+      this.interactiveResult = this.interactiveResultContext.interactiveItem;
+    }
+
     this.dispatchEvent(
       buildCustomEvent(
         'atomic/resolveStopPropagation',
@@ -135,14 +152,6 @@ atomic-result-link {
           )}
         `);
     })}`;
-  }
-
-  private get result(): AnyUnfoldedItem {
-    return this.resultContext.item as AnyUnfoldedItem;
-  }
-
-  private get interactiveResult(): InteractiveResult {
-    return this.interactiveResultContext.interactiveItem as InteractiveResult;
   }
 }
 
