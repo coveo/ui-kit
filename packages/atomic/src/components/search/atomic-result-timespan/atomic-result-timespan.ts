@@ -3,7 +3,7 @@ import {type Result, ResultTemplatesHelpers} from '@coveo/headless';
 import dayjs from 'dayjs';
 import type {DurationUnitType} from 'dayjs/plugin/duration';
 import duration from 'dayjs/plugin/duration';
-import {LitElement} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
@@ -86,28 +86,28 @@ export class AtomicResultTimespan
     );
 
     if (this.format) {
-      return durationValue.format(this.format);
+      return html`${durationValue.format(this.format)}`;
     }
 
     if (durationValue.asYears() >= 1) {
-      return this.bindings.i18n.t('approx_year', {
+      return html`${this.bindings.i18n.t('approx_year', {
         count: Math.round(durationValue.asYears()),
-      });
+      })}`;
     }
 
     if (durationValue.asMonths() >= 1) {
-      return this.bindings.i18n.t('approx_month', {
+      return html`${this.bindings.i18n.t('approx_month', {
         count: Math.round(durationValue.asMonths()),
-      });
+      })}`;
     }
 
     if (durationValue.asDays() >= 1) {
-      return this.bindings.i18n.t('approx_day', {
+      return html`${this.bindings.i18n.t('approx_day', {
         count: Math.round(durationValue.asDays()),
-      });
+      })}`;
     }
 
-    return durationValue.format('HH:mm:ss');
+    return html`${durationValue.format('HH:mm:ss')}`;
   }
 
   private get value() {

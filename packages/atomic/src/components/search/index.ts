@@ -28,6 +28,7 @@ export {AtomicResultSectionTitleMetadata} from './atomic-result-section-title-me
 export {AtomicResultSectionVisual} from './atomic-result-section-visual/atomic-result-section-visual.js';
 export {AtomicResultTemplate} from './atomic-result-template/atomic-result-template.js';
 export {AtomicResultText} from './atomic-result-text/atomic-result-text.js';
+export {AtomicResultTimespan} from './atomic-result-timespan/atomic-result-timespan.js';
 export {AtomicResultsPerPage} from './atomic-results-per-page/atomic-results-per-page.js';
 export {AtomicSearchBoxInstantResults} from './atomic-search-box-instant-results/atomic-search-box-instant-results.js';
 export {AtomicSearchBoxQuerySuggestions} from './atomic-search-box-query-suggestions/atomic-search-box-query-suggestions.js';

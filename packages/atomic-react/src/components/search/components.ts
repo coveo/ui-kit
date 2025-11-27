@@ -35,6 +35,7 @@ import {
   AtomicResultSectionVisual as LitAtomicResultSectionVisual,
   AtomicResultsPerPage as LitAtomicResultsPerPage,
   AtomicResultText as LitAtomicResultText,
+  AtomicResultTimespan as LitAtomicResultTimespan,
   AtomicSearchBoxInstantResults as LitAtomicSearchBoxInstantResults,
   AtomicSearchBoxQuerySuggestions as LitAtomicSearchBoxQuerySuggestions,
   AtomicSearchBoxRecentQueries as LitAtomicSearchBoxRecentQueries,
@@ -260,6 +261,12 @@ export const AtomicResultText = createComponent({
   tagName: 'atomic-result-text',
   react: React,
   elementClass: LitAtomicResultText,
+});
+
+export const AtomicResultTimespan = createComponent({
+  tagName: 'atomic-result-timespan',
+  react: React,
+  elementClass: LitAtomicResultTimespan,
 });
 
 export const AtomicSearchBoxInstantResults = createComponent({
