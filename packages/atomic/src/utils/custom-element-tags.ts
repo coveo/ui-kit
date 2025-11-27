@@ -86,6 +86,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-result-html',
   'atomic-result-list',
   'atomic-result-localized-text',
+  'atomic-result-multi-value-text',
   'atomic-result-number',
   'atomic-result-section-actions',
   'atomic-result-section-badges',

@@ -1546,23 +1546,6 @@ export namespace Components {
         "hrefTemplate"?: string;
     }
     /**
-     * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
-     */
-    interface AtomicResultMultiValueText {
-        /**
-          * The delimiter used to separate values when the field isn't indexed as a multi value field.
-         */
-        "delimiter": string | null;
-        /**
-          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
-         */
-        "maxValuesToDisplay": number;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
@@ -2785,15 +2768,6 @@ declare global {
         new (): HTMLAtomicResultLinkElement;
     };
     /**
-     * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
-     */
-    interface HTMLAtomicResultMultiValueTextElement extends Components.AtomicResultMultiValueText, HTMLStencilElement {
-    }
-    var HTMLAtomicResultMultiValueTextElement: {
-        prototype: HTMLAtomicResultMultiValueTextElement;
-        new (): HTMLAtomicResultMultiValueTextElement;
-    };
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface HTMLAtomicResultPlaceholderElement extends Components.AtomicResultPlaceholder, HTMLStencilElement {
@@ -3183,7 +3157,6 @@ declare global {
         "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
-        "atomic-result-multi-value-text": HTMLAtomicResultMultiValueTextElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-rating": HTMLAtomicResultRatingElement;
@@ -4675,23 +4648,6 @@ declare namespace LocalJSX {
         "hrefTemplate"?: string;
     }
     /**
-     * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
-     */
-    interface AtomicResultMultiValueText {
-        /**
-          * The delimiter used to separate values when the field isn't indexed as a multi value field.
-         */
-        "delimiter"?: string | null;
-        /**
-          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
-         */
-        "maxValuesToDisplay"?: number;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
@@ -5219,7 +5175,6 @@ declare namespace LocalJSX {
         "atomic-result-icon": AtomicResultIcon;
         "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
-        "atomic-result-multi-value-text": AtomicResultMultiValueText;
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-rating": AtomicResultRating;
@@ -5475,10 +5430,6 @@ declare module "@stencil/core" {
              * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
              */
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
-            /**
-             * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
-             */
-            "atomic-result-multi-value-text": LocalJSX.AtomicResultMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicResultMultiValueTextElement>;
             /**
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
