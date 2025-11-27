@@ -32,6 +32,7 @@ export const renderTabButton: FunctionalComponentWithChildren<TabButtonProps> =
       'px-2',
       'pb-1',
       'text-xl',
+      'sm:px-6',
       'hover:text-primary',
       !props.active && 'text-neutral-dark',
     ]
