@@ -26,6 +26,7 @@ import {
   AtomicResultLocalizedText as LitAtomicResultLocalizedText,
   AtomicResultMultiValueText as LitAtomicResultMultiValueText,
   AtomicResultNumber as LitAtomicResultNumber,
+  AtomicResultPrintableUri as LitAtomicResultPrintableUri,
   AtomicResultSectionActions as LitAtomicResultSectionActions,
   AtomicResultSectionBadges as LitAtomicResultSectionBadges,
   AtomicResultSectionBottomMetadata as LitAtomicResultSectionBottomMetadata,
@@ -210,6 +211,12 @@ export const AtomicResultNumber = createComponent({
   tagName: 'atomic-result-number',
   react: React,
   elementClass: LitAtomicResultNumber,
+});
+
+export const AtomicResultPrintableUri = createComponent({
+  tagName: 'atomic-result-printable-uri',
+  react: React,
+  elementClass: LitAtomicResultPrintableUri,
 });
 
 export const AtomicResultSectionActions = createComponent({
