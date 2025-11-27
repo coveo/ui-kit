@@ -16,6 +16,10 @@ import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {guard} from 'lit/directives/guard.js';
 import {map} from 'lit/directives/map.js';
+import {renderSortLabel} from '@/src/components/common/sort/label';
+import {renderSortOption} from '@/src/components/common/sort/option';
+import {renderSortSelect} from '@/src/components/common/sort/select';
+import {sortGuard} from '@/src/components/common/sort/sort-guard';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -24,10 +28,6 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
 import {randomID} from '@/src/utils/utils';
-import {renderSortLabel} from '../../common/sort/label';
-import {renderSortOption} from '../../common/sort/option';
-import {renderSortSelect} from '../../common/sort/select';
-import {sortGuard} from '../../common/sort/sort-guard';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**

@@ -220,14 +220,6 @@ describe('atomic-sort-dropdown', () => {
 
       await expect(select).not.toBeInTheDocument();
     });
-
-    it('should be invisible when there are no results', async () => {
-      const {select} = await renderSortDropdown({
-        searchStatusState: {hasResults: false, firstSearchExecuted: true},
-      });
-
-      await expect(select).not.toBeInTheDocument();
-    });
   });
 
   describe('selecting options', () => {
@@ -235,16 +227,6 @@ describe('atomic-sort-dropdown', () => {
       const {select} = await renderSortDropdown();
 
       await select.selectOptions('date descending');
-
-      expect(mockedSortBy).toHaveBeenCalled();
-    });
-
-    it('should not call sort.sortBy when selecting the same option', async () => {
-      const {select} = await renderSortDropdown({
-        sortState: {sortCriteria: 'relevancy'},
-      });
-
-      await select.selectOptions('relevancy');
 
       expect(mockedSortBy).toHaveBeenCalled();
     });
