@@ -49,7 +49,9 @@ export const buildBaseCommerceAPIRequest = (
           : {}),
       },
       capture:
-        navigatorContext.capture ?? state.configuration.analytics.enabled,
+        navigatorContext.capture ??
+        (state.configuration.analytics.enabled &&
+          navigatorContext.clientId !== ''),
       cart: getProductsFromCartState(state.cart),
       source: getAnalyticsSource(state.configuration.analytics),
     },

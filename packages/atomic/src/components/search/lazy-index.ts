@@ -2,12 +2,20 @@
 export default {
   'atomic-color-facet': async () =>
     await import('./atomic-color-facet/atomic-color-facet.js'),
+  'atomic-automatic-facet': async () =>
+    await import('./atomic-automatic-facet/atomic-automatic-facet.js'),
+  'atomic-breadbox': async () =>
+    await import('./atomic-breadbox/atomic-breadbox.js'),
   'atomic-external': async () =>
     await import('./atomic-external/atomic-external.js'),
   'atomic-facet': async () => await import('./atomic-facet/atomic-facet.js'),
+  'atomic-field-condition': async () =>
+    await import('./atomic-field-condition/atomic-field-condition.js'),
   'atomic-html': async () => await import('./atomic-html/atomic-html.js'),
   'atomic-load-more-results': async () =>
     await import('./atomic-load-more-results/atomic-load-more-results.js'),
+  'atomic-no-results': async () =>
+    await import('./atomic-no-results/atomic-no-results.js'),
   'atomic-pager': async () => await import('./atomic-pager/atomic-pager.js'),
   'atomic-query-error': async () =>
     await import('./atomic-query-error/atomic-query-error.js'),
@@ -16,6 +24,8 @@ export default {
   'atomic-relevance-inspector': async () =>
     await import('./atomic-relevance-inspector/atomic-relevance-inspector.js'),
   'atomic-result': async () => await import('./atomic-result/atomic-result.js'),
+  'atomic-result-badge': async () =>
+    await import('./atomic-result-badge/atomic-result-badge.js'),
   'atomic-result-children-template': async () =>
     await import(
       './atomic-result-children-template/atomic-result-children-template.js'
@@ -84,6 +94,11 @@ export default {
     await import('./atomic-search-interface/atomic-search-interface.js'),
   'atomic-search-layout': async () =>
     await import('./atomic-search-layout/atomic-search-layout.js'),
+  'atomic-segmented-facet-scrollable': async () =>
+    await import(
+      './atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.js'
+    ),
+  'atomic-tab': async () => await import('./atomic-tab/atomic-tab.js'),
   'atomic-text': async () => await import('./atomic-text/atomic-text.js'),
 } as Record<string, () => Promise<unknown>>;
 

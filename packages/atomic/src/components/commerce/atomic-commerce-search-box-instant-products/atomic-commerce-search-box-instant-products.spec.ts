@@ -155,14 +155,15 @@ describe('atomic-commerce-search-box-instant-products', () => {
 
     describe('when returning the onSuggestedQueryChange function', () => {
       it('should update the query in the instant products controller', async () => {
+        const fakeController = buildFakeInstantProducts();
+        vi.mocked(buildInstantProducts).mockReturnValue(fakeController);
+
         const {element} = await renderElements();
         const object = element.initialize();
 
         const newQuery = 'new query';
         await object.onSuggestedQueryChange?.(newQuery);
-        expect(buildFakeInstantProducts().updateQuery).toHaveBeenCalledWith(
-          newQuery
-        );
+        expect(fakeController.updateQuery).toHaveBeenCalledWith(newQuery);
       });
 
       it('should return a promise function that resolves to undefined', async () => {
@@ -221,7 +222,7 @@ describe('atomic-commerce-search-box-instant-products', () => {
           expect(items[0]).toEqual(
             expect.objectContaining({
               part: 'instant-results-item',
-              ariaLabel: ', instant product',
+              ariaLabel: 'Product 1, instant product',
               key: 'instant-result-12345',
             })
           );

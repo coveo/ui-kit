@@ -1,3 +1,10 @@
+## <small>3.35.2 (2025-11-20)</small>
+
+* chore(headless): fix pnpm `pnpm run dev` in Headless (#6335) ([a5e4e95](https://github.com/coveo/ui-kit/commits/a5e4e95)), closes [#6335](https://github.com/coveo/ui-kit/issues/6335)
+* doc(headless-ssr): document config and ssr methods (#6319) ([b493d98](https://github.com/coveo/ui-kit/commits/b493d98)), closes [#6319](https://github.com/coveo/ui-kit/issues/6319)
+
+
+
 ## <small>3.35.1 (2025-11-12)</small>
 
 * docs: correct JSDoc grammar and terminology across packages (#6531) ([356975a](https://github.com/coveo/ui-kit/commits/356975a)), closes [#6531](https://github.com/coveo/ui-kit/issues/6531)

@@ -56,7 +56,8 @@ declare global {
         bundle: AnyHeadless;
       };
     };
-    coveoQuanticVersion: string
+    coveoQuanticVersion: string;
+    Bueno?: typeof BuenoTypes;
   }
 }
 
