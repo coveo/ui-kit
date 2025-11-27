@@ -1520,23 +1520,6 @@ export namespace Components {
     interface AtomicResultIcon {
     }
     /**
-     * The `atomic-result-image` component renders an image from a result field.
-     */
-    interface AtomicResultImage {
-        /**
-          * An optional fallback image URL that will be used in case the specified image field is not available or encounters an error.
-         */
-        "fallback"?: string;
-        /**
-          * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * The result field that contains the alt text for the image. This will look for the field in the Result object first, then in the Result.raw object  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image for {productName}".
-         */
-        "imageAltField"?: string;
-    }
-    /**
      * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
      */
     interface AtomicResultLink {
@@ -2745,15 +2728,6 @@ declare global {
         new (): HTMLAtomicResultIconElement;
     };
     /**
-     * The `atomic-result-image` component renders an image from a result field.
-     */
-    interface HTMLAtomicResultImageElement extends Components.AtomicResultImage, HTMLStencilElement {
-    }
-    var HTMLAtomicResultImageElement: {
-        prototype: HTMLAtomicResultImageElement;
-        new (): HTMLAtomicResultImageElement;
-    };
-    /**
      * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
      */
     interface HTMLAtomicResultLinkElement extends Components.AtomicResultLink, HTMLStencilElement {
@@ -3141,7 +3115,6 @@ declare global {
         "atomic-result-date": HTMLAtomicResultDateElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
         "atomic-result-icon": HTMLAtomicResultIconElement;
-        "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
@@ -4607,23 +4580,6 @@ declare namespace LocalJSX {
     interface AtomicResultIcon {
     }
     /**
-     * The `atomic-result-image` component renders an image from a result field.
-     */
-    interface AtomicResultImage {
-        /**
-          * An optional fallback image URL that will be used in case the specified image field is not available or encounters an error.
-         */
-        "fallback"?: string;
-        /**
-          * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * The result field that contains the alt text for the image. This will look for the field in the Result object first, then in the Result.raw object  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image for {productName}".
-         */
-        "imageAltField"?: string;
-    }
-    /**
      * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
      */
     interface AtomicResultLink {
@@ -5153,7 +5109,6 @@ declare namespace LocalJSX {
         "atomic-result-date": AtomicResultDate;
         "atomic-result-fields-list": AtomicResultFieldsList;
         "atomic-result-icon": AtomicResultIcon;
-        "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
@@ -5401,10 +5356,6 @@ declare module "@stencil/core" {
              * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
              */
             "atomic-result-icon": LocalJSX.AtomicResultIcon & JSXBase.HTMLAttributes<HTMLAtomicResultIconElement>;
-            /**
-             * The `atomic-result-image` component renders an image from a result field.
-             */
-            "atomic-result-image": LocalJSX.AtomicResultImage & JSXBase.HTMLAttributes<HTMLAtomicResultImageElement>;
             /**
              * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
              */
