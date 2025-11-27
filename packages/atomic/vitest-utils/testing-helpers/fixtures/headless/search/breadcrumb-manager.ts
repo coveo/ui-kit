@@ -1,29 +1,35 @@
 import type {BreadcrumbManager, BreadcrumbManagerState} from '@coveo/headless';
 import {vi} from 'vitest';
-import {genericSubscribe} from '../common';
+
+export const defaultState = {
+  facetBreadcrumbs: [],
+  categoryFacetBreadcrumbs: [],
+  numericFacetBreadcrumbs: [],
+  dateFacetBreadcrumbs: [],
+  staticFilterBreadcrumbs: [],
+  hasBreadcrumbs: false,
+  automaticFacetBreadcrumbs: [],
+} satisfies BreadcrumbManagerState;
+
+export const defaultImplementation = {
+  subscribe: (subscribedFunction: () => void) => {
+    subscribedFunction();
+    return vi.fn();
+  },
+  state: defaultState,
+  deselectAll: vi.fn(),
+  deselectBreadcrumb: vi.fn(),
+} satisfies BreadcrumbManager;
 
 export const buildFakeBreadcrumbManager = ({
-  state = {},
-  implementation = {},
-}: {
-  state?: Partial<BreadcrumbManagerState>;
+  implementation,
+  state,
+}: Partial<{
   implementation?: Partial<BreadcrumbManager>;
-} = {}): BreadcrumbManager => {
-  const defaultState = {
-    facetBreadcrumbs: [],
-    categoryFacetBreadcrumbs: [],
-    numericFacetBreadcrumbs: [],
-    dateFacetBreadcrumbs: [],
-    staticFilterBreadcrumbs: [],
-    automaticFacetBreadcrumbs: [],
-    hasBreadcrumbs: false,
-    ...state,
-  } satisfies BreadcrumbManagerState;
-
-  return {
-    subscribe: genericSubscribe,
-    state: defaultState,
-    deselectAll: vi.fn(),
+  state?: Partial<BreadcrumbManagerState>;
+}> = {}): BreadcrumbManager =>
+  ({
+    ...defaultImplementation,
     ...implementation,
-  } as BreadcrumbManager;
-};
+    ...{state: {...defaultState, ...(state || {})}},
+  }) as BreadcrumbManager;
