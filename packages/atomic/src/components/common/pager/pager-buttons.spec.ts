@@ -1,6 +1,6 @@
 import type {i18n as I18n} from 'i18next';
 import {html} from 'lit';
-import {beforeAll, describe, expect, test, vi} from 'vitest';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
@@ -20,7 +20,7 @@ describe('pagerButtons', () => {
   });
 
   describe('pagerPreviousButton', () => {
-    test('should render the button with the correct attributes', async () => {
+    it('should render the button with the correct attributes', async () => {
       const element = await renderFunctionFixture(
         html`
           ${renderPagerPreviousButton({
@@ -38,7 +38,7 @@ describe('pagerButtons', () => {
       expect(button).toHaveAttribute('part', 'previous-button');
     });
 
-    test('should render the icon with the correct attributes', async () => {
+    it('should render the icon with the correct attributes', async () => {
       const element = await renderFunctionFixture(
         html`
           ${renderPagerPreviousButton({
@@ -56,7 +56,7 @@ describe('pagerButtons', () => {
   });
 
   describe('pagerNextButton', () => {
-    test('should render the button with the correct attributes', async () => {
+    it('should render the button with the correct attributes', async () => {
       const element = await renderFunctionFixture(
         html`
           ${renderPagerNextButton({
@@ -74,7 +74,7 @@ describe('pagerButtons', () => {
       expect(button).toHaveAttribute('part', 'next-button');
     });
 
-    test('should render the icon with the correct attributes', async () => {
+    it('should render the icon with the correct attributes', async () => {
       const element = await renderFunctionFixture(
         html`
           ${renderPagerNextButton({
@@ -92,7 +92,7 @@ describe('pagerButtons', () => {
   });
 
   describe('pagerPageButton', () => {
-    test('should render the button with the correct attributes', async () => {
+    it('should render the button with the correct attributes', async () => {
       const element = await renderFunctionFixture(
         html`
           ${renderPagerPageButton({
@@ -113,7 +113,7 @@ describe('pagerButtons', () => {
       expect(input).toHaveAttribute('value', '1');
     });
 
-    test('should render with the correct attributes when not selected', async () => {
+    it('should render with the correct attributes when not selected', async () => {
       const element = await renderFunctionFixture(
         html`
           ${renderPagerPageButton({
@@ -132,7 +132,7 @@ describe('pagerButtons', () => {
       expect(input).toHaveAttribute('part', 'page-button');
     });
 
-    test('should render with the correct attributes when selected', async () => {
+    it('should render with the correct attributes when selected', async () => {
       const element = await renderFunctionFixture(
         html`
           ${renderPagerPageButton({
@@ -153,7 +153,7 @@ describe('pagerButtons', () => {
   });
 
   describe('pagerPageButtons', () => {
-    test('should render the list of buttons with the correct attributes', async () => {
+    it('should render the list of buttons with the correct attributes', async () => {
       const element = await renderFunctionFixture(
         html`
           ${renderPageButtons({
@@ -182,7 +182,7 @@ describe('pagerButtons', () => {
       expect(div).toHaveAttribute('part', 'page-buttons');
     });
 
-    test('should render the list of children', async () => {
+    it('should render the list of children', async () => {
       const element = await renderFunctionFixture(
         html`
           ${renderPageButtons({
@@ -211,7 +211,7 @@ describe('pagerButtons', () => {
   });
 
   describe('accessibility', () => {
-    test('should render with aria-roledescription set to link', async () => {
+    it('should render with aria-roledescription set to link', async () => {
       const element = await renderFunctionFixture(
         html`
           ${renderPagerPageButton({
@@ -229,7 +229,7 @@ describe('pagerButtons', () => {
       expect(input).toHaveAttribute('aria-roledescription', 'link');
     });
 
-    test('should change focus target when input is tab', async () => {
+    it('should change focus target when input is tab', async () => {
       const onFocusCallback = vi.fn().mockResolvedValue(undefined);
 
       const element = await renderFunctionFixture(
@@ -268,7 +268,7 @@ describe('pagerButtons', () => {
         );
       });
     });
-    test('should change focus target when input is shift + tab', async () => {
+    it('should change focus target when input is shift + tab', async () => {
       const onFocusCallback = vi.fn().mockResolvedValue(undefined);
 
       const element = await renderFunctionFixture(

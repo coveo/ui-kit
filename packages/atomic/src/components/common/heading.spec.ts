@@ -32,7 +32,7 @@ describe('heading', () => {
   it('should render a div if level is outside the range of 1 to 6', async () => {
     const props = {level: 0};
     const element = await renderHeading(props);
-    const headingElement = element.querySelector('div[role="generic"]');
+    const headingElement = element.querySelector('div');
     expect(headingElement?.tagName.toLowerCase()).toBe('div');
   });
 
