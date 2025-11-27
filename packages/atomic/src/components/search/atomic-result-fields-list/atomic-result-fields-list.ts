@@ -6,15 +6,17 @@ import {createResultContextController} from '@/src/components/search/result-temp
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
+import {SlotsForNoShadowDOMMixin} from '@/src/mixins/slots-for-no-shadow-dom-mixin';
+import '../atomic-result-text/atomic-result-text';
 
 /**
  * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
- * @slot (default) - The children to render.
+ * @slot default - The children to render.
  */
 @customElement('atomic-result-fields-list')
 @bindings()
 export class AtomicResultFieldsList
-  extends LightDomMixin(LitElement)
+  extends LightDomMixin(SlotsForNoShadowDOMMixin(LitElement))
   implements InitializableComponent<Bindings>
 {
   static styles = css`
@@ -122,6 +124,7 @@ export class AtomicResultFieldsList
   }
 
   private showChildren() {
+    console.log(this.hostChildren);
     this.hostChildren.forEach((child) => this.show(child));
   }
 

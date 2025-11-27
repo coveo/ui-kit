@@ -101,7 +101,6 @@ const meta: Meta = {
 
       <span class="field">
         <span class="field-label">Date:</span>
-        <atomic-result-date></atomic-result-date>
       </span>
     `,
   },
