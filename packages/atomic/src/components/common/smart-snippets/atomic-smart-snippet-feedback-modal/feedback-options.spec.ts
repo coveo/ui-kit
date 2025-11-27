@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'vitest';
 import {feedbackOptions} from './feedback-options';
 
-describe('feedbackOptions', () => {
+describe('#feedbackOptions', () => {
   it('should export feedback options array', () => {
     expect(feedbackOptions).toBeDefined();
     expect(Array.isArray(feedbackOptions)).toBe(true);

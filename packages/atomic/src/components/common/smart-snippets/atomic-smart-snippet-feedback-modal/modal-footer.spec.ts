@@ -5,8 +5,6 @@ import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderModalFooter} from './modal-footer';
 
-vi.mock('@/src/utils/ripple-utils', {spy: true});
-
 describe('#renderModalFooter', () => {
   let i18n: i18n;
 
