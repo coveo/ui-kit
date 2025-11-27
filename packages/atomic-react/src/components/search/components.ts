@@ -23,6 +23,8 @@ import {
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
   AtomicResultHtml as LitAtomicResultHtml,
   AtomicResultList as LitAtomicResultList,
+  AtomicResultLocalizedText as LitAtomicResultLocalizedText,
+  AtomicResultMultiValueText as LitAtomicResultMultiValueText,
   AtomicResultNumber as LitAtomicResultNumber,
   AtomicResultSectionActions as LitAtomicResultSectionActions,
   AtomicResultSectionBadges as LitAtomicResultSectionBadges,
@@ -40,7 +42,7 @@ import {
   AtomicSearchBoxRecentQueries as LitAtomicSearchBoxRecentQueries,
   AtomicSearchInterface as LitAtomicSearchInterface,
   AtomicSearchLayout as LitAtomicSearchLayout,
-  AtomicSortExpression as LitAtomicSortExpression,
+  AtomicSegmentedFacetScrollable as LitAtomicSegmentedFacetScrollable,
   AtomicTab as LitAtomicTab,
   AtomicText as LitAtomicText,
 } from '@coveo/atomic/components';
@@ -191,6 +193,18 @@ export const AtomicResultList = createComponent({
   elementClass: LitAtomicResultList,
 });
 
+export const AtomicResultLocalizedText = createComponent({
+  tagName: 'atomic-result-localized-text',
+  react: React,
+  elementClass: LitAtomicResultLocalizedText,
+});
+
+export const AtomicResultMultiValueText = createComponent({
+  tagName: 'atomic-result-multi-value-text',
+  react: React,
+  elementClass: LitAtomicResultMultiValueText,
+});
+
 export const AtomicResultNumber = createComponent({
   tagName: 'atomic-result-number',
   react: React,
@@ -293,10 +307,10 @@ export const AtomicSearchLayout = createComponent({
   elementClass: LitAtomicSearchLayout,
 });
 
-export const AtomicSortExpression = createComponent({
-  tagName: 'atomic-sort-expression',
+export const AtomicSegmentedFacetScrollable = createComponent({
+  tagName: 'atomic-segmented-facet-scrollable',
   react: React,
-  elementClass: LitAtomicSortExpression,
+  elementClass: LitAtomicSegmentedFacetScrollable,
 });
 
 export const AtomicTab = createComponent({

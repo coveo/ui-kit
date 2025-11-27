@@ -1546,51 +1546,6 @@ export namespace Components {
         "hrefTemplate"?: string;
     }
     /**
-     * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
-     * Given this i18n configuration:
-     * ```
-     * searchInterface.i18n.addResourceBundle('en', 'translation', {
-     *    classic_book_advert: 'Classic book from {{name}}',
-     * });
-     * ```
-     * The component could be configured in such a way to replace `{{name}}` with the `author` field value from the result item:
-     * ```
-     * <atomic-result-localized-text locale-key="classic_book_advert" field-author="name"></atomic-result-localized-text>
-     * ```
-     * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
-     */
-    interface AtomicResultLocalizedText {
-        /**
-          * The field value to dynamically evaluate.
-         */
-        "field": Record<string, string>;
-        /**
-          * The numerical field value used to determine whether to use the singular or plural value of a translation.
-         */
-        "fieldCount"?: string;
-        /**
-          * The i18n translation key.
-         */
-        "localeKey": string;
-    }
-    /**
-     * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
-     */
-    interface AtomicResultMultiValueText {
-        /**
-          * The delimiter used to separate values when the field isn't indexed as a multi value field.
-         */
-        "delimiter": string | null;
-        /**
-          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
-         */
-        "maxValuesToDisplay": number;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
@@ -1738,11 +1693,6 @@ export namespace Components {
           * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded": string[] | string;
-    }
-    /**
-     * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
-     */
-    interface AtomicSegmentedFacetScrollable {
     }
     /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
@@ -2797,35 +2747,6 @@ declare global {
         new (): HTMLAtomicResultLinkElement;
     };
     /**
-     * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
-     * Given this i18n configuration:
-     * ```
-     * searchInterface.i18n.addResourceBundle('en', 'translation', {
-     *    classic_book_advert: 'Classic book from {{name}}',
-     * });
-     * ```
-     * The component could be configured in such a way to replace `{{name}}` with the `author` field value from the result item:
-     * ```
-     * <atomic-result-localized-text locale-key="classic_book_advert" field-author="name"></atomic-result-localized-text>
-     * ```
-     * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
-     */
-    interface HTMLAtomicResultLocalizedTextElement extends Components.AtomicResultLocalizedText, HTMLStencilElement {
-    }
-    var HTMLAtomicResultLocalizedTextElement: {
-        prototype: HTMLAtomicResultLocalizedTextElement;
-        new (): HTMLAtomicResultLocalizedTextElement;
-    };
-    /**
-     * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
-     */
-    interface HTMLAtomicResultMultiValueTextElement extends Components.AtomicResultMultiValueText, HTMLStencilElement {
-    }
-    var HTMLAtomicResultMultiValueTextElement: {
-        prototype: HTMLAtomicResultMultiValueTextElement;
-        new (): HTMLAtomicResultMultiValueTextElement;
-    };
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface HTMLAtomicResultPlaceholderElement extends Components.AtomicResultPlaceholder, HTMLStencilElement {
@@ -2898,15 +2819,6 @@ declare global {
     var HTMLAtomicSegmentedFacetElement: {
         prototype: HTMLAtomicSegmentedFacetElement;
         new (): HTMLAtomicSegmentedFacetElement;
-    };
-    /**
-     * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
-     */
-    interface HTMLAtomicSegmentedFacetScrollableElement extends Components.AtomicSegmentedFacetScrollable, HTMLStencilElement {
-    }
-    var HTMLAtomicSegmentedFacetScrollableElement: {
-        prototype: HTMLAtomicSegmentedFacetScrollableElement;
-        new (): HTMLAtomicSegmentedFacetScrollableElement;
     };
     /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
@@ -3215,8 +3127,6 @@ declare global {
         "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
-        "atomic-result-localized-text": HTMLAtomicResultLocalizedTextElement;
-        "atomic-result-multi-value-text": HTMLAtomicResultMultiValueTextElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-rating": HTMLAtomicResultRatingElement;
@@ -3224,7 +3134,6 @@ declare global {
         "atomic-result-timespan": HTMLAtomicResultTimespanElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
-        "atomic-segmented-facet-scrollable": HTMLAtomicSegmentedFacetScrollableElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
         "atomic-smart-snippet-collapse-wrapper": HTMLAtomicSmartSnippetCollapseWrapperElement;
@@ -4708,51 +4617,6 @@ declare namespace LocalJSX {
         "hrefTemplate"?: string;
     }
     /**
-     * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
-     * Given this i18n configuration:
-     * ```
-     * searchInterface.i18n.addResourceBundle('en', 'translation', {
-     *    classic_book_advert: 'Classic book from {{name}}',
-     * });
-     * ```
-     * The component could be configured in such a way to replace `{{name}}` with the `author` field value from the result item:
-     * ```
-     * <atomic-result-localized-text locale-key="classic_book_advert" field-author="name"></atomic-result-localized-text>
-     * ```
-     * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
-     */
-    interface AtomicResultLocalizedText {
-        /**
-          * The field value to dynamically evaluate.
-         */
-        "field"?: Record<string, string>;
-        /**
-          * The numerical field value used to determine whether to use the singular or plural value of a translation.
-         */
-        "fieldCount"?: string;
-        /**
-          * The i18n translation key.
-         */
-        "localeKey": string;
-    }
-    /**
-     * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
-     */
-    interface AtomicResultMultiValueText {
-        /**
-          * The delimiter used to separate values when the field isn't indexed as a multi value field.
-         */
-        "delimiter"?: string | null;
-        /**
-          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
-         */
-        "maxValuesToDisplay"?: number;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
@@ -4904,11 +4768,6 @@ declare namespace LocalJSX {
           * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded"?: string[] | string;
-    }
-    /**
-     * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
-     */
-    interface AtomicSegmentedFacetScrollable {
     }
     /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
@@ -5264,8 +5123,6 @@ declare namespace LocalJSX {
         "atomic-result-icon": AtomicResultIcon;
         "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
-        "atomic-result-localized-text": AtomicResultLocalizedText;
-        "atomic-result-multi-value-text": AtomicResultMultiValueText;
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-rating": AtomicResultRating;
@@ -5273,7 +5130,6 @@ declare namespace LocalJSX {
         "atomic-result-timespan": AtomicResultTimespan;
         "atomic-search-box": AtomicSearchBox;
         "atomic-segmented-facet": AtomicSegmentedFacet;
-        "atomic-segmented-facet-scrollable": AtomicSegmentedFacetScrollable;
         "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
         "atomic-smart-snippet-collapse-wrapper": AtomicSmartSnippetCollapseWrapper;
@@ -5522,25 +5378,6 @@ declare module "@stencil/core" {
              */
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             /**
-             * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
-             * Given this i18n configuration:
-             * ```
-             * searchInterface.i18n.addResourceBundle('en', 'translation', {
-             *    classic_book_advert: 'Classic book from {{name}}',
-             * });
-             * ```
-             * The component could be configured in such a way to replace `{{name}}` with the `author` field value from the result item:
-             * ```
-             * <atomic-result-localized-text locale-key="classic_book_advert" field-author="name"></atomic-result-localized-text>
-             * ```
-             * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
-             */
-            "atomic-result-localized-text": LocalJSX.AtomicResultLocalizedText & JSXBase.HTMLAttributes<HTMLAtomicResultLocalizedTextElement>;
-            /**
-             * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
-             */
-            "atomic-result-multi-value-text": LocalJSX.AtomicResultMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicResultMultiValueTextElement>;
-            /**
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
@@ -5568,10 +5405,6 @@ declare module "@stencil/core" {
              * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
              */
             "atomic-segmented-facet": LocalJSX.AtomicSegmentedFacet & JSXBase.HTMLAttributes<HTMLAtomicSegmentedFacetElement>;
-            /**
-             * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
-             */
-            "atomic-segmented-facet-scrollable": LocalJSX.AtomicSegmentedFacetScrollable & JSXBase.HTMLAttributes<HTMLAtomicSegmentedFacetScrollableElement>;
             /**
              * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
              * You can style the snippet by inserting a template element as follows:

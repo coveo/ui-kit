@@ -75,7 +75,7 @@ Every MDX file should follow this structure:
 ```mdx
 import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicComponentNameStories from './atomic-component-name.new.stories';
-import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicComponentNameStories} />
 
