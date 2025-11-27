@@ -31,7 +31,7 @@ export class AtomicTabButton {
   }
 
   private get activeTabTextClass() {
-    return this.active ? '' : 'text-neutral-dark hover:text-primary-light';
+    return this.active ? '' : 'text-neutral-dark';
   }
 
   render() {
@@ -44,7 +44,7 @@ export class AtomicTabButton {
         part={'button-container' + (this.active ? '-active' : '')}
       >
         <Button
-          class={`w-full truncate px-2 pb-1 text-xl sm:px-6 ${this.activeTabTextClass}`}
+          class={`w-full truncate px-2 pb-1 text-xl sm:px-6 hover:text-primary ${this.activeTabTextClass}`}
           part={'tab-button' + (this.active ? '-active' : '')}
           onClick={this.select}
           style="text-transparent"

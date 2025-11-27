@@ -17,6 +17,7 @@ import {errorGuard} from '@/src/decorators/error-guard.js';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin.js';
+import {waitForAtomicChildrenToBeDefined} from '@/src/utils/custom-element-tags';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
 import {bindingsContext} from '../../common/context/bindings-context.js';
 import {augmentAnalyticsConfigWithAtomicVersion} from '../../common/interface/analytics-config.js';
@@ -297,6 +298,8 @@ export class AtomicCommerceRecommendationInterface
     this.bindings = this.getBindings();
     markParentAsReady(this);
     this.initLanguage();
+    await waitForAtomicChildrenToBeDefined(this);
+    await this.getUpdateComplete();
   }
 
   private initContext() {

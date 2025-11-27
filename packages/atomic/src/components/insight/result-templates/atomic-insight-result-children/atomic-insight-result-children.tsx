@@ -28,7 +28,7 @@ import {ItemDisplayImageSize} from '../../../common/layout/display-options';
 import {ChildrenWrapper} from '../../../common/result-children/stencil-children-wrapper';
 import {CollectionGuard} from '../../../common/result-children/stencil-collection-guard';
 import {ResultChildrenGuard} from '../../../common/result-children/stencil-guard';
-import {ShowHideButton} from '../../../common/result-children/show-hide-button';
+import {ShowHideButton} from '../../../common/result-children/stencil-show-hide-button';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 const childTemplateComponent = 'atomic-insight-result-children-template';
@@ -64,7 +64,7 @@ export class AtomicResultChildren
   @State()
   private foldedResultListState!: InsightFoldedResultListState;
   @State()
-  private showInitialChildren = false;
+  private showInitialChildren = true;
 
   /**
    * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
