@@ -10,37 +10,41 @@ import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/ato
   tagName="atomic-did-you-mean"
   className="AtomicDidYouMean"
 >
-# UX notes
+This component is typically placed within the "status" section of the layout.
 
-## Introduction
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+      <atomic-layout-section section="status">
+        
+        <atomic-did-you-mean></atomic-commerce-did-you-mean>
 
-The _Did You Mean_ component detects and corrects spelling errors in queries and provides suggestions when a similar term with more results is available.
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
 
-## User Experience and Best Practices
-
+Using the _Did You Mean_ component is with your search page is a best practice, especially if your index has search terms that can be misinterpreted as an error.
 The relevance of the corrections improves with the size of the index, as more terms become available for comparison.
-It’s possible to define certain phrases or terms in an organization’s thesaurus, which will expand or replace the query expression before executing the query.
-However, the Did You Mean component won’t process queries expanded by the thesaurus.
 
-### Usage Notes
+It's possible to define certain phrases or terms in an organization’s thesaurus, which will expand or replace the query expression before executing the query.
+However, the _Did You Mean_ component won’t process queries expanded by the thesaurus.
 
-* When a query returns no results but finds a possible query correction, the component automatically triggers a new query with the suggested term.
-This prevents the user having to rewrite their query, which saves them time.
-* If the current query returns results but the index has more frequently occurring terms with similar spelling, the component presents a link containing the new terms.
+
+### Common Use Cases
+* The current query returns results, but the index has more frequently occurring terms with similar spelling, the component presents a link containing the new terms.
 When clicked, the link triggers a new query using the corrected keywords.
-* A soft nudge asking them if that’s what they meant can direct them to the most relevant results.
+* A soft nudge asking them if that's what they meant can direct them to the most relevant results.
 
-### Guidelines
+## Reference
 
-Using the Did You Mean component is good practice, especially if your index has search terms that can be misinterpreted as an error.
-
-## Use Cases and Examples
-
-When submitting a misspelled search of "guitr" in Google it’s automatically corrected, displaying the results for "guitar" and a message indicating that the correction occurred.
-
-### Reference
-[Designing Search: Staying on Track](https://uxmag.com/articles/designing-search-staying-on-track)
-
-[Searching "guitr" with Google](https://www.google.com/search?q=guitr&oq=guitr&aqs=chrome..69i57j0i10i433l3j69i60j69i65j69i60l2.538j0j7&sourceid=chrome&ie=UTF-8)
+<a href="https://uxmag.com/articles/designing-search-staying-on-track" target="_blank">Designing Search: Staying on Track</a>
+<br/>
+<a href="https://www.google.com/search?q=guitr&oq=guitr&aqs=chrome..69i57j0i10i433l3j69i60j69i65j69i60l2.538j0j7&sourceid=chrome&ie=UTF-8" target="_blank">Searching "guitr" with Google</a>
 
 </AtomicDocTemplate>
