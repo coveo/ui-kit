@@ -30,7 +30,7 @@ describe('renderCheckbox', () => {
     await expect.element(locators.checkbox).toBeInTheDocument();
   });
 
-  it('should render a checkbox with the correct text attributes', async () => {
+  it('should set the correct id attribute', async () => {
     const props = {
       id: 'some_id',
     };
@@ -41,7 +41,7 @@ describe('renderCheckbox', () => {
     expect(button?.id).toBe('some_id');
   });
 
-  it('should render a checkbox with the correct text attributes', async () => {
+  it('should use text as aria-label and value when ariaLabel is not provided', async () => {
     const props = {
       text: 'Test Checkbox',
     };
@@ -53,7 +53,7 @@ describe('renderCheckbox', () => {
     expect((button as HTMLButtonElement).value).toBe('Test Checkbox');
   });
 
-  it('should render a checkbox with the correct text attributes', async () => {
+  it('should prioritize ariaLabel over text for aria-label attribute', async () => {
     const props = {
       text: 'Test Checkbox',
       ariaLabel: 'Aria Label Value',
