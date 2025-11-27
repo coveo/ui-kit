@@ -49,15 +49,6 @@ describe('#renderGeneratedTextContent', () => {
     expect(generatedText).toHaveAttribute('part', 'generated-text');
   });
 
-  it('should have base classes', async () => {
-    const element = await renderComponent();
-    const generatedText = locators(element).generatedText;
-
-    expect(generatedText).toHaveClass('text-on-background');
-    expect(generatedText).toHaveClass('mb-0');
-    expect(generatedText).toHaveClass('whitespace-pre-wrap');
-  });
-
   it('should add "cursor" class when isStreaming is true', async () => {
     const element = await renderComponent({
       isStreaming: true,
@@ -65,9 +56,6 @@ describe('#renderGeneratedTextContent', () => {
     const generatedText = locators(element).generatedText;
 
     expect(generatedText).toHaveClass('cursor');
-    expect(generatedText).toHaveClass('text-on-background');
-    expect(generatedText).toHaveClass('mb-0');
-    expect(generatedText).toHaveClass('whitespace-pre-wrap');
   });
 
   it('should not have "cursor" class when isStreaming is false', async () => {

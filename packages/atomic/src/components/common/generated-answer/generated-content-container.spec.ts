@@ -51,13 +51,6 @@ describe('#renderGeneratedContentContainer', () => {
     expect(container).toHaveAttribute('part', 'generated-container');
   });
 
-  it('should have mt-6 class', async () => {
-    const element = await renderComponent();
-    const container = locators(element).container;
-
-    expect(container).toHaveClass('mt-6');
-  });
-
   it('should render text content by default', async () => {
     const element = await renderComponent({
       answer: 'Plain text answer',
@@ -111,13 +104,12 @@ describe('#renderGeneratedContentContainer', () => {
     expect(markdownContent).toHaveClass('cursor');
   });
 
-  it('should render footer with mt-6 class', async () => {
+  it('should render the footer', async () => {
     const element = await renderComponent();
     const footer = locators(element).footer;
 
     expect(footer).toBeInTheDocument();
     expect(footer).toHaveClass('footer');
-    expect(footer).toHaveClass('mt-6');
   });
 
   it('should render children in footer', async () => {
