@@ -43,79 +43,84 @@ describe('atomic-field-condition', () => {
   };
 
   it('should render its content when no conditions are defined', async () => {
-    const {content} = await renderFieldCondition();
+    const {element, content} = await renderFieldCondition();
+    expect(element?.hidden).toBe(false);
     expect(content).toBeInTheDocument();
   });
 
   it('should render its content when an if-defined condition is met', async () => {
-    const {content} = await renderFieldCondition({
+    const {element, content} = await renderFieldCondition({
       ifDefined: 'author',
       resultState: {raw: {author: 'John Doe'}},
     });
 
+    expect(element?.hidden).toBe(false);
     expect(content).toBeInTheDocument();
   });
 
   it('should not render its content when an if-defined condition is not met', async () => {
-    const {content} = await renderFieldCondition({
+    const {element} = await renderFieldCondition({
       ifDefined: 'author',
       resultState: {raw: {}},
     });
 
-    expect(content).toBeUndefined();
+    expect(element?.hidden).toBe(true);
   });
 
   it('should render its content when an if-not-defined condition is met', async () => {
-    const {content} = await renderFieldCondition({
+    const {element, content} = await renderFieldCondition({
       ifNotDefined: 'author',
       resultState: {raw: {}},
     });
 
+    expect(element?.hidden).toBe(false);
     expect(content).toBeInTheDocument();
   });
 
   it('should not render its content when an if-not-defined condition is not met', async () => {
-    const {content} = await renderFieldCondition({
+    const {element} = await renderFieldCondition({
       ifNotDefined: 'author',
       resultState: {raw: {author: 'John Doe'}},
     });
 
-    expect(content).toBeUndefined();
+    expect(element?.hidden).toBe(true);
   });
 
   it('should render its content when a must-match condition is met', async () => {
-    const {content} = await renderFieldCondition({
+    const {element, content} = await renderFieldCondition({
       mustMatch: {filetype: ['pdf']},
       resultState: {raw: {filetype: 'pdf'}},
     });
 
+    expect(element?.hidden).toBe(false);
     expect(content).toBeInTheDocument();
   });
 
   it('should not render its content when a must-match condition is not met', async () => {
-    const {content} = await renderFieldCondition({
+    const {element} = await renderFieldCondition({
       mustMatch: {filetype: ['pdf']},
       resultState: {raw: {filetype: 'docx'}},
     });
 
-    expect(content).toBeUndefined();
+    expect(element?.hidden).toBe(true);
   });
 
   it('should render its content when a must-not-match condition is met', async () => {
-    const {content} = await renderFieldCondition({
+    const {element, content} = await renderFieldCondition({
       mustNotMatch: {filetype: ['docx']},
       resultState: {raw: {filetype: 'pdf'}},
     });
 
+    expect(element?.hidden).toBe(false);
     expect(content).toBeInTheDocument();
   });
 
   it('should not render its content when a must-not-match condition is not met', async () => {
-    const {content} = await renderFieldCondition({
+    const {element} = await renderFieldCondition({
       mustNotMatch: {filetype: ['docx']},
       resultState: {raw: {filetype: 'docx'}},
     });
 
-    expect(content).toBeUndefined();
+    expect(element?.hidden).toBe(true);
   });
 });
