@@ -43,6 +43,7 @@ import {
   AtomicSearchInterface as LitAtomicSearchInterface,
   AtomicSearchLayout as LitAtomicSearchLayout,
   AtomicSegmentedFacetScrollable as LitAtomicSegmentedFacetScrollable,
+  AtomicSortDropdown as LitAtomicSortDropdown,
   AtomicTab as LitAtomicTab,
   AtomicText as LitAtomicText,
 } from '@coveo/atomic/components';
@@ -311,6 +312,12 @@ export const AtomicSegmentedFacetScrollable = createComponent({
   tagName: 'atomic-segmented-facet-scrollable',
   react: React,
   elementClass: LitAtomicSegmentedFacetScrollable,
+});
+
+export const AtomicSortDropdown = createComponent({
+  tagName: 'atomic-sort-dropdown',
+  react: React,
+  elementClass: LitAtomicSortDropdown,
 });
 
 export const AtomicTab = createComponent({
