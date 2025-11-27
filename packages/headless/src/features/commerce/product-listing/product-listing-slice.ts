@@ -7,6 +7,7 @@ import type {
 } from '../../../api/commerce/common/product.js';
 import type {
   BaseSpotlightContent,
+  Result,
   SpotlightContent,
 } from '../../../api/commerce/common/result.js';
 import {ResultType} from '../../../api/commerce/common/result.js';
@@ -46,18 +47,19 @@ export const productListingReducer = createReducer(
               action.payload.response.responseId
             )
         );
-        state.results = action.payload.response.results.map((result, index) =>
-          result.resultType === ResultType.SPOTLIGHT
-            ? preprocessSpotlightContent(
-                result,
-                paginationOffset + index + 1,
-                action.payload.response.responseId
-              )
-            : preprocessProduct(
-                result,
-                paginationOffset + index + 1,
-                action.payload.response.responseId
-              )
+        state.results = action.payload.response.results.map(
+          (result, index): Result =>
+            result.resultType === ResultType.SPOTLIGHT
+              ? preprocessSpotlightContent(
+                  result,
+                  paginationOffset + index + 1,
+                  action.payload.response.responseId
+                )
+              : preprocessProduct(
+                  result,
+                  paginationOffset + index + 1,
+                  action.payload.response.responseId
+                )
         );
       })
       .addCase(fetchMoreProducts.fulfilled, (state, action) => {
@@ -76,18 +78,19 @@ export const productListingReducer = createReducer(
           )
         );
         state.results = state.results.concat(
-          action.payload.response.results.map((result, index) =>
-            result.resultType === ResultType.SPOTLIGHT
-              ? preprocessSpotlightContent(
-                  result,
-                  paginationOffset + index + 1,
-                  action.payload?.response.responseId
-                )
-              : preprocessProduct(
-                  result,
-                  paginationOffset + index + 1,
-                  action.payload?.response.responseId
-                )
+          action.payload.response.results.map(
+            (result, index): Result =>
+              result.resultType === ResultType.SPOTLIGHT
+                ? preprocessSpotlightContent(
+                    result,
+                    paginationOffset + index + 1,
+                    action.payload?.response.responseId
+                  )
+                : preprocessProduct(
+                    result,
+                    paginationOffset + index + 1,
+                    action.payload?.response.responseId
+                  )
           )
         );
       })
