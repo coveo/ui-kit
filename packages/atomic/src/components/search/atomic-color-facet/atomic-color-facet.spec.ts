@@ -14,6 +14,7 @@ import {buildFakeFacetConditionsManager} from '@/vitest-utils/testing-helpers/fi
 import {buildFakeFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/search/facet-controller';
 import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
 import {buildFakeTabManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/tab-manager-controller';
+import {mockConsole} from '@/vitest-utils/testing-helpers/testing-utils/mock-console';
 import type {AtomicColorFacet} from './atomic-color-facet';
 
 vi.mock('@coveo/headless', {spy: true});
@@ -30,8 +31,10 @@ vi.mock('@/src/mixins/bindings-mixin', () => ({
 
 describe('atomic-color-facet', () => {
   let mockedRegisterFacet: Mock;
+  let mockedConsole: ReturnType<typeof mockConsole>;
 
   beforeEach(() => {
+    mockedConsole = mockConsole();
     mockedRegisterFacet = vi.fn();
     vi.mocked(buildFacet).mockReturnValue(buildFakeFacet({}));
     vi.mocked(buildSearchStatus).mockReturnValue(
@@ -147,7 +150,7 @@ describe('atomic-color-facet', () => {
     return {element, locators};
   };
 
-  describe('render', () => {
+  describe('#render', () => {
     it('should render the title', async () => {
       const {locators} = await setupElement();
       const title = locators.title;
@@ -156,7 +159,9 @@ describe('atomic-color-facet', () => {
 
     it('should render the first facet value', async () => {
       const {locators} = await setupElement();
-      await expect.element(locators.values[0]).toBeInTheDocument();
+      await expect
+        .element(locators.values[0] as HTMLElement)
+        .toBeInTheDocument();
     });
 
     it('should render facet values when available', async () => {
@@ -164,44 +169,100 @@ describe('atomic-color-facet', () => {
       const valueLabel = locators.valueLabel;
 
       expect(valueLabel!.length).toBe(2);
-      await expect.element(valueLabel[0]).toHaveTextContent('value-1');
-      await expect.element(valueLabel[1]).toHaveTextContent('value-2');
+      await expect
+        .element(valueLabel[0] as HTMLElement)
+        .toHaveTextContent('value-1');
+      await expect
+        .element(valueLabel[1] as HTMLElement)
+        .toHaveTextContent('value-2');
     });
 
     it('should render all parts for box display', async () => {
       const {locators} = await setupElement({displayValuesAs: 'box'});
-      await expect.element(locators.labelButton).toBeInTheDocument();
-      await expect.element(locators.labelButtonIcon).toBeInTheDocument();
-      await expect.element(locators.searchWrapper).toBeInTheDocument();
-      await expect.element(locators.searchInput).toBeInTheDocument();
-      await expect.element(locators.searchIcon).toBeInTheDocument();
-      await expect.element(locators.values[0]).toBeInTheDocument();
-      await expect.element(locators.valueLabel[0]).toBeInTheDocument();
-      await expect.element(locators.valueCount[0]).toBeInTheDocument();
-      await expect.element(locators.showMore).toBeInTheDocument();
-      await expect.element(locators.showLess).toBeInTheDocument();
-      await expect.element(locators.showMoreLessIcon).toBeInTheDocument();
-      await expect.element(locators.valueBox[0]).toBeInTheDocument();
-      await expect.element(locators.defaultColorValue[0]).toBeInTheDocument();
-      await expect.element(locators.facet).toBeInTheDocument();
+      await expect
+        .element(locators.labelButton as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.labelButtonIcon as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.searchWrapper as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.searchInput as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.searchIcon as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.values[0] as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.valueLabel[0] as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.valueCount[0] as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.showMore as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.showLess as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.showMoreLessIcon as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.valueBox[0] as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.defaultColorValue[0] as HTMLElement)
+        .toBeInTheDocument();
+      await expect.element(locators.facet as HTMLElement).toBeInTheDocument();
     });
 
     it('should render all parts for checkbox display', async () => {
       const {locators} = await setupElement({displayValuesAs: 'checkbox'});
-      await expect.element(locators.labelButton).toBeInTheDocument();
-      await expect.element(locators.labelButtonIcon).toBeInTheDocument();
-      await expect.element(locators.searchWrapper).toBeInTheDocument();
-      await expect.element(locators.searchInput).toBeInTheDocument();
-      await expect.element(locators.searchIcon).toBeInTheDocument();
-      await expect.element(locators.values[0]).toBeInTheDocument();
-      await expect.element(locators.valueLabel[0]).toBeInTheDocument();
-      await expect.element(locators.valueCount[0]).toBeInTheDocument();
-      await expect.element(locators.showMore).toBeInTheDocument();
-      await expect.element(locators.showLess).toBeInTheDocument();
-      await expect.element(locators.showMoreLessIcon).toBeInTheDocument();
-      await expect.element(locators.valueCheckbox[0]).toBeInTheDocument();
-      await expect.element(locators.valueCheckboxLabel[0]).toBeInTheDocument();
-      await expect.element(locators.facet).toBeInTheDocument();
+      await expect
+        .element(locators.labelButton as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.labelButtonIcon as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.searchWrapper as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.searchInput as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.searchIcon as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.values[0] as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.valueLabel[0] as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.valueCount[0] as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.showMore as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.showLess as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.showMoreLessIcon as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.valueCheckbox[0] as HTMLElement)
+        .toBeInTheDocument();
+      await expect
+        .element(locators.valueCheckboxLabel[0] as HTMLElement)
+        .toBeInTheDocument();
+      await expect.element(locators.facet as HTMLElement).toBeInTheDocument();
     });
 
     it('should not render search parts when search is disabled', async () => {
@@ -221,7 +282,12 @@ describe('atomic-color-facet', () => {
 
     it('should not render facet when no values are available', async () => {
       vi.mocked(buildFacet).mockReturnValue(
-        buildFakeFacet({values: [], enabled: true})
+        buildFakeFacet({
+          state: {
+            values: [],
+            enabled: true,
+          },
+        })
       );
 
       const {locators} = await setupElement();
@@ -231,11 +297,13 @@ describe('atomic-color-facet', () => {
     it('should not render facet when disabled', async () => {
       vi.mocked(buildFacet).mockReturnValue(
         buildFakeFacet({
-          values: [
-            {value: 'value-1', state: 'idle', numberOfResults: 10},
-            {value: 'value-2', state: 'idle', numberOfResults: 5},
-          ],
-          enabled: false,
+          state: {
+            values: [
+              {value: 'value-1', state: 'idle', numberOfResults: 10},
+              {value: 'value-2', state: 'idle', numberOfResults: 5},
+            ],
+            enabled: false,
+          },
         })
       );
 
@@ -293,25 +361,18 @@ describe('atomic-color-facet', () => {
       expect(element.tabManagerState).toBeDefined();
     });
 
-    describe('when both tabs-included and tabs-excluded are provided', () => {
-      let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
-
-      beforeEach(() => {
-        consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    it('should log a warning when both tabs-included and tabs-excluded are provided', async () => {
+      await setupElement({
+        tabsIncluded: ['tab1'],
+        tabsExcluded: ['tab2'],
       });
 
-      it('should log a warning', async () => {
-        await setupElement({
-          tabsIncluded: ['tab1'],
-          tabsExcluded: ['tab2'],
-        });
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          expect.stringContaining('tabs-included')
-        );
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          expect.stringContaining('tabs-excluded')
-        );
-      });
+      expect(mockedConsole.warn).toHaveBeenCalledWith(
+        expect.stringContaining('tabs-included')
+      );
+      expect(mockedConsole.warn).toHaveBeenCalledWith(
+        expect.stringContaining('tabs-excluded')
+      );
     });
   });
 
@@ -320,7 +381,7 @@ describe('atomic-color-facet', () => {
       const mockStopWatching = vi.fn();
       vi.mocked(buildFacetConditionsManager).mockReturnValue(
         buildFakeFacetConditionsManager({
-          implementation: {stopWatching: mockStopWatching},
+          stopWatching: mockStopWatching,
         })
       );
 
@@ -330,216 +391,194 @@ describe('atomic-color-facet', () => {
     });
   });
 
-  describe('props', () => {
-    describe('field', () => {
-      it('should pass field to facet controller', async () => {
-        await setupElement({field: 'author'});
-        expect(buildFacet).toHaveBeenCalledWith(
-          expect.any(Object),
-          expect.objectContaining({
-            options: expect.objectContaining({field: 'author'}),
-          })
-        );
-      });
-    });
-
-    describe('numberOfValues', () => {
-      it('should pass numberOfValues to facet controller', async () => {
-        await setupElement({numberOfValues: 10});
-        expect(buildFacet).toHaveBeenCalledWith(
-          expect.any(Object),
-          expect.objectContaining({
-            options: expect.objectContaining({numberOfValues: 10}),
-          })
-        );
-      });
-    });
-
-    describe('sortCriteria', () => {
-      it('should pass sortCriteria to facet controller', async () => {
-        await setupElement({sortCriteria: 'alphanumeric'});
-        expect(buildFacet).toHaveBeenCalledWith(
-          expect.any(Object),
-          expect.objectContaining({
-            options: expect.objectContaining({sortCriteria: 'alphanumeric'}),
-          })
-        );
-      });
-    });
-
-    describe('resultsMustMatch', () => {
-      it('should pass resultsMustMatch to facet controller', async () => {
-        await setupElement({resultsMustMatch: 'allValues'});
-        expect(buildFacet).toHaveBeenCalledWith(
-          expect.any(Object),
-          expect.objectContaining({
-            options: expect.objectContaining({resultsMustMatch: 'allValues'}),
-          })
-        );
-      });
-    });
-
-    describe('displayValuesAs', () => {
-      it('should render box display when displayValuesAs is box', async () => {
-        const {locators} = await setupElement({displayValuesAs: 'box'});
-        await expect.element(locators.valueBox[0]).toBeInTheDocument();
-      });
-
-      it('should render checkbox display when displayValuesAs is checkbox', async () => {
-        const {locators} = await setupElement({displayValuesAs: 'checkbox'});
-        await expect.element(locators.valueCheckbox[0]).toBeInTheDocument();
-      });
-    });
-
-    describe('isCollapsed', () => {
-      it('should not render values when collapsed', async () => {
-        const {locators} = await setupElement({isCollapsed: true});
-        expect(locators.values[0]).toBeNull();
-      });
-
-      it('should render values when not collapsed', async () => {
-        const {locators} = await setupElement({isCollapsed: false});
-        await expect.element(locators.values[0]).toBeInTheDocument();
-      });
-    });
-
-    describe('withSearch', () => {
-      it('should render search input when withSearch is true', async () => {
-        const {locators} = await setupElement({withSearch: true});
-        await expect.element(locators.searchInput).toBeInTheDocument();
-      });
-
-      it('should not render search input when withSearch is false', async () => {
-        const {locators} = await setupElement({withSearch: false});
-        expect(locators.searchWrapper).toBeNull();
-      });
-    });
-
-    describe('filterFacetCount', () => {
-      it('should pass filterFacetCount to facet controller', async () => {
-        await setupElement({filterFacetCount: false});
-        expect(buildFacet).toHaveBeenCalledWith(
-          expect.any(Object),
-          expect.objectContaining({
-            options: expect.objectContaining({filterFacetCount: false}),
-          })
-        );
-      });
-    });
-
-    describe('injectionDepth', () => {
-      it('should pass injectionDepth to facet controller', async () => {
-        await setupElement({injectionDepth: 2000});
-        expect(buildFacet).toHaveBeenCalledWith(
-          expect.any(Object),
-          expect.objectContaining({
-            options: expect.objectContaining({injectionDepth: 2000}),
-          })
-        );
-      });
-    });
-
-    describe('allowedValues', () => {
-      it('should pass allowedValues to facet controller', async () => {
-        await setupElement({allowedValues: ['pdf', 'doc']});
-        expect(buildFacet).toHaveBeenCalledWith(
-          expect.any(Object),
-          expect.objectContaining({
-            options: expect.objectContaining({
-              allowedValues: ['pdf', 'doc'],
-            }),
-          })
-        );
-      });
-
-      it('should not pass allowedValues when empty', async () => {
-        await setupElement({allowedValues: []});
-        expect(buildFacet).toHaveBeenCalledWith(
-          expect.any(Object),
-          expect.objectContaining({
-            options: expect.objectContaining({
-              allowedValues: undefined,
-            }),
-          })
-        );
-      });
-    });
-
-    describe('customSort', () => {
-      it('should pass customSort to facet controller', async () => {
-        await setupElement({customSort: ['pdf', 'doc']});
-        expect(buildFacet).toHaveBeenCalledWith(
-          expect.any(Object),
-          expect.objectContaining({
-            options: expect.objectContaining({
-              customSort: ['pdf', 'doc'],
-            }),
-          })
-        );
-      });
-
-      it('should not pass customSort when empty', async () => {
-        await setupElement({customSort: []});
-        expect(buildFacet).toHaveBeenCalledWith(
-          expect.any(Object),
-          expect.objectContaining({
-            options: expect.objectContaining({
-              customSort: undefined,
-            }),
-          })
-        );
-      });
-    });
-
-    describe('tabsIncluded', () => {
-      it('should pass tabsIncluded to facet controller', async () => {
-        await setupElement({tabsIncluded: ['tab1', 'tab2']});
-        expect(buildFacet).toHaveBeenCalledWith(
-          expect.any(Object),
-          expect.objectContaining({
-            options: expect.objectContaining({
-              tabs: expect.objectContaining({included: ['tab1', 'tab2']}),
-            }),
-          })
-        );
-      });
-    });
-
-    describe('tabsExcluded', () => {
-      it('should pass tabsExcluded to facet controller', async () => {
-        await setupElement({tabsExcluded: ['tab3', 'tab4']});
-        expect(buildFacet).toHaveBeenCalledWith(
-          expect.any(Object),
-          expect.objectContaining({
-            options: expect.objectContaining({
-              tabs: expect.objectContaining({excluded: ['tab3', 'tab4']}),
-            }),
-          })
-        );
-      });
-    });
+  it('should pass field to facet controller', async () => {
+    await setupElement({field: 'author'});
+    expect(buildFacet).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({
+        options: expect.objectContaining({field: 'author'}),
+      })
+    );
   });
 
-  describe('interactions', () => {
-    it('should toggle facet value selection when clicked', async () => {
-      const mockToggleSelect = vi.fn();
-      vi.mocked(buildFacet).mockReturnValue(
-        buildFakeFacet({
-          implementation: {toggleSelect: mockToggleSelect},
-        })
-      );
+  it('should pass numberOfValues to facet controller', async () => {
+    await setupElement({numberOfValues: 10});
+    expect(buildFacet).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({
+        options: expect.objectContaining({numberOfValues: 10}),
+      })
+    );
+  });
 
-      const {locators} = await setupElement({displayValuesAs: 'box'});
-      const firstValue = locators.valueBox[0] as HTMLElement;
-      await firstValue.click();
+  it('should pass sortCriteria to facet controller', async () => {
+    await setupElement({sortCriteria: 'alphanumeric'});
+    expect(buildFacet).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({
+        options: expect.objectContaining({sortCriteria: 'alphanumeric'}),
+      })
+    );
+  });
 
-      expect(mockToggleSelect).toHaveBeenCalled();
-    });
+  it('should pass resultsMustMatch to facet controller', async () => {
+    await setupElement({resultsMustMatch: 'allValues'});
+    expect(buildFacet).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({
+        options: expect.objectContaining({resultsMustMatch: 'allValues'}),
+      })
+    );
+  });
 
-    it('should clear all selections when clear button is clicked', async () => {
-      const mockDeselectAll = vi.fn();
-      vi.mocked(buildFacet).mockReturnValue(
-        buildFakeFacet({
+  it('should render box display when displayValuesAs is box', async () => {
+    const {locators} = await setupElement({displayValuesAs: 'box'});
+    await expect
+      .element(locators.valueBox[0] as HTMLElement)
+      .toBeInTheDocument();
+  });
+
+  it('should render checkbox display when displayValuesAs is checkbox', async () => {
+    const {locators} = await setupElement({displayValuesAs: 'checkbox'});
+    await expect
+      .element(locators.valueCheckbox[0] as HTMLElement)
+      .toBeInTheDocument();
+  });
+
+  it('should not render values when isCollapsed is true', async () => {
+    const {locators} = await setupElement({isCollapsed: true});
+    expect(locators.values[0]).toBeUndefined();
+  });
+
+  it('should render values when isCollapsed is false', async () => {
+    const {locators} = await setupElement({isCollapsed: false});
+    await expect.element(locators.values[0] as HTMLElement).toBeInTheDocument();
+  });
+
+  it('should render search input when withSearch is true', async () => {
+    const {locators} = await setupElement({withSearch: true});
+    await expect
+      .element(locators.searchInput as HTMLElement)
+      .toBeInTheDocument();
+  });
+
+  it('should not render search input when withSearch is false', async () => {
+    const {locators} = await setupElement({withSearch: false});
+    expect(locators.searchWrapper).toBeNull();
+  });
+
+  it('should pass filterFacetCount to facet controller', async () => {
+    await setupElement({filterFacetCount: false});
+    expect(buildFacet).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({
+        options: expect.objectContaining({filterFacetCount: false}),
+      })
+    );
+  });
+
+  it('should pass injectionDepth to facet controller', async () => {
+    await setupElement({injectionDepth: 2000});
+    expect(buildFacet).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({
+        options: expect.objectContaining({injectionDepth: 2000}),
+      })
+    );
+  });
+
+  it('should pass allowedValues to facet controller when not empty', async () => {
+    await setupElement({allowedValues: ['pdf', 'doc']});
+    expect(buildFacet).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({
+        options: expect.objectContaining({
+          allowedValues: ['pdf', 'doc'],
+        }),
+      })
+    );
+  });
+
+  it('should not pass allowedValues when empty', async () => {
+    await setupElement({allowedValues: []});
+    expect(buildFacet).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({
+        options: expect.objectContaining({
+          allowedValues: undefined,
+        }),
+      })
+    );
+  });
+
+  it('should pass customSort to facet controller when not empty', async () => {
+    await setupElement({customSort: ['pdf', 'doc']});
+    expect(buildFacet).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({
+        options: expect.objectContaining({
+          customSort: ['pdf', 'doc'],
+        }),
+      })
+    );
+  });
+
+  it('should not pass customSort when empty', async () => {
+    await setupElement({customSort: []});
+    expect(buildFacet).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({
+        options: expect.objectContaining({
+          customSort: undefined,
+        }),
+      })
+    );
+  });
+
+  it('should pass tabsIncluded to facet controller', async () => {
+    await setupElement({tabsIncluded: ['tab1', 'tab2']});
+    expect(buildFacet).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({
+        options: expect.objectContaining({
+          tabs: expect.objectContaining({included: ['tab1', 'tab2']}),
+        }),
+      })
+    );
+  });
+
+  it('should pass tabsExcluded to facet controller', async () => {
+    await setupElement({tabsExcluded: ['tab3', 'tab4']});
+    expect(buildFacet).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({
+        options: expect.objectContaining({
+          tabs: expect.objectContaining({excluded: ['tab3', 'tab4']}),
+        }),
+      })
+    );
+  });
+
+  it('should toggle facet value selection when clicked', async () => {
+    const mockToggleSelect = vi.fn();
+    vi.mocked(buildFacet).mockReturnValue(
+      buildFakeFacet({
+        implementation: {toggleSelect: mockToggleSelect},
+      })
+    );
+
+    const {locators} = await setupElement({displayValuesAs: 'box'});
+    const firstValue = locators.valueBox[0] as HTMLElement;
+    firstValue.click();
+
+    expect(mockToggleSelect).toHaveBeenCalled();
+  });
+
+  it('should clear all selections when clear button is clicked', async () => {
+    const mockDeselectAll = vi.fn();
+    vi.mocked(buildFacet).mockReturnValue(
+      buildFakeFacet({
+        state: {
           values: [
             {
               value: 'value-1',
@@ -547,118 +586,137 @@ describe('atomic-color-facet', () => {
               numberOfResults: 10,
             },
           ],
-          implementation: {deselectAll: mockDeselectAll},
-        })
-      );
+        },
+        implementation: {deselectAll: mockDeselectAll},
+      })
+    );
 
-      const {locators} = await setupElement();
-      const clearButton = locators.clearButton as HTMLElement;
-      await clearButton.click();
+    const {locators} = await setupElement();
+    const clearButton = locators.clearButton as HTMLElement;
+    clearButton.click();
 
-      expect(mockDeselectAll).toHaveBeenCalled();
-    });
-
-    it('should toggle collapse when label button is clicked', async () => {
-      const {element, locators} = await setupElement({isCollapsed: false});
-      const labelButton = locators.labelButton as HTMLElement;
-
-      await labelButton.click();
-      await element.updateComplete;
-
-      expect(element.isCollapsed).toBe(true);
-    });
-
-    it('should show more values when show more is clicked', async () => {
-      const mockShowMoreValues = vi.fn();
-      vi.mocked(buildFacet).mockReturnValue(
-        buildFakeFacet({
-          canShowMoreValues: true,
-          implementation: {showMoreValues: mockShowMoreValues},
-        })
-      );
-
-      const {locators} = await setupElement();
-      const showMore = locators.showMore as HTMLElement;
-      await showMore.click();
-
-      expect(mockShowMoreValues).toHaveBeenCalled();
-    });
-
-    it('should show less values when show less is clicked', async () => {
-      const mockShowLessValues = vi.fn();
-      vi.mocked(buildFacet).mockReturnValue(
-        buildFakeFacet({
-          canShowLessValues: true,
-          implementation: {showLessValues: mockShowLessValues},
-        })
-      );
-
-      const {locators} = await setupElement();
-      const showLess = locators.showLess as HTMLElement;
-      await showLess.click();
-
-      expect(mockShowLessValues).toHaveBeenCalled();
-    });
+    expect(mockDeselectAll).toHaveBeenCalled();
   });
 
-  describe('facet search', () => {
-    it('should display search results when query is entered', async () => {
-      const mockSearch = vi.fn();
-      const mockUpdateText = vi.fn();
-      const mockUpdateCaptions = vi.fn();
-      vi.mocked(buildFacet).mockReturnValue(
-        buildFakeFacet({
+  it('should toggle collapse when label button is clicked', async () => {
+    const {element, locators} = await setupElement({isCollapsed: false});
+    const labelButton = locators.labelButton as HTMLElement;
+
+    labelButton.click();
+    await element.updateComplete;
+
+    expect(element.isCollapsed).toBe(true);
+  });
+
+  it('should show more values when show more is clicked', async () => {
+    const mockShowMoreValues = vi.fn();
+    vi.mocked(buildFacet).mockReturnValue(
+      buildFakeFacet({
+        state: {canShowMoreValues: true},
+        implementation: {showMoreValues: mockShowMoreValues},
+      })
+    );
+
+    const {locators} = await setupElement();
+    const showMore = locators.showMore as HTMLElement;
+    showMore.click();
+
+    expect(mockShowMoreValues).toHaveBeenCalled();
+  });
+
+  it('should show less values when show less is clicked', async () => {
+    const mockShowLessValues = vi.fn();
+    vi.mocked(buildFacet).mockReturnValue(
+      buildFakeFacet({
+        state: {canShowMoreValues: true},
+        implementation: {showLessValues: mockShowLessValues},
+      })
+    );
+
+    const {locators} = await setupElement();
+    const showLess = locators.showLess as HTMLElement;
+    showLess.click();
+
+    expect(mockShowLessValues).toHaveBeenCalled();
+  });
+
+  it('should display search results when query is entered', async () => {
+    const mockSearch = vi.fn();
+    const mockUpdateText = vi.fn();
+    const mockUpdateCaptions = vi.fn();
+    vi.mocked(buildFacet).mockReturnValue(
+      buildFakeFacet({
+        state: {
           facetSearch: {
             query: 'pdf',
             values: [{rawValue: 'pdf', count: 5, displayValue: 'PDF'}],
+            isLoading: false,
+            moreValuesAvailable: false,
           },
-          implementation: {
-            facetSearch: {
-              search: mockSearch,
-              updateText: mockUpdateText,
-              updateCaptions: mockUpdateCaptions,
-            },
+        },
+        implementation: {
+          facetSearch: {
+            search: mockSearch,
+            updateText: mockUpdateText,
+            updateCaptions: mockUpdateCaptions,
+            clear: vi.fn(),
+            exclude: vi.fn(),
+            singleExclude: vi.fn(),
+            select: vi.fn(),
+            singleSelect: vi.fn(),
+            showMoreResults: vi.fn(),
           },
-        })
-      );
+        },
+      })
+    );
 
-      await setupElement();
-      expect(mockUpdateText).not.toHaveBeenCalled();
-    });
+    await setupElement();
+    expect(mockUpdateText).not.toHaveBeenCalled();
+  });
 
-    it('should clear search when clear button is clicked', async () => {
-      const mockClear = vi.fn();
-      vi.mocked(buildFacet).mockReturnValue(
-        buildFakeFacet({
+  it('should clear search when clear button is clicked', async () => {
+    const mockClear = vi.fn();
+    vi.mocked(buildFacet).mockReturnValue(
+      buildFakeFacet({
+        state: {
           facetSearch: {
             query: 'test',
             values: [{rawValue: 'test', count: 5, displayValue: 'Test'}],
+            isLoading: false,
+            moreValuesAvailable: false,
           },
-          implementation: {
-            facetSearch: {
-              clear: mockClear,
-            },
+        },
+        implementation: {
+          facetSearch: {
+            clear: mockClear,
+            search: vi.fn(),
+            updateText: vi.fn(),
+            updateCaptions: vi.fn(),
+            exclude: vi.fn(),
+            singleExclude: vi.fn(),
+            select: vi.fn(),
+            singleSelect: vi.fn(),
+            showMoreResults: vi.fn(),
           },
-        })
-      );
+        },
+      })
+    );
 
-      const {locators} = await setupElement();
-      const clearButton = locators.searchClearButton as HTMLElement;
-      if (clearButton) {
-        await clearButton.click();
-        expect(mockClear).toHaveBeenCalled();
-      }
-    });
+    const {locators} = await setupElement();
+    const clearButton = locators.searchClearButton as HTMLElement;
+    if (clearButton) {
+      clearButton.click();
+      expect(mockClear).toHaveBeenCalled();
+    }
   });
 
-  describe('error handling', () => {
-    it('should set error when invalid sort criteria is provided', async () => {
-      const {element} = await setupElement({
-        // @ts-expect-error Testing invalid value
-        sortCriteria: 'invalidOption',
-      });
-
-      expect(element.error).toBeInstanceOf(Error);
+  it('should set error when invalid sort criteria is provided', async () => {
+    const {element} = await setupElement({
+      // @ts-expect-error Testing invalid value
+      sortCriteria: 'invalidOption',
     });
+
+    expect(element.error).toBeInstanceOf(Error);
+    expect(element.error.message).toContain('sortCriteria');
   });
 });
