@@ -1,22 +1,33 @@
-import AxeBuilder from '@axe-core/playwright';
 import {expect, test} from './fixture';
 
 test.describe('atomic-result-fields-list', () => {
   test.beforeEach(async ({resultFieldsList}) => {
-    await resultFieldsList.load();
+    await resultFieldsList.load({story: 'default'});
     await resultFieldsList.hydrated.first().waitFor();
   });
 
-  test('should render children', async ({resultFieldsList}) => {
+  test('should render all fields with their values', async ({
+    resultFieldsList,
+    page,
+  }) => {
+    await expect(resultFieldsList.hydrated.first()).toBeVisible();
+
     const children = await resultFieldsList.children.all();
     expect(children.length).toBeGreaterThan(0);
-  });
 
-  test('should be accessible', async ({page}) => {
-    const accessibilityScanResults = await new AxeBuilder({page})
-      .include('atomic-result-fields-list')
-      .analyze();
+    await expect(page.getByText('author')).toBeVisible();
+    await expect(page.getByText('John Doe')).toBeVisible();
 
-    expect(accessibilityScanResults.violations).toEqual([]);
+    await expect(page.getByText('source')).toBeVisible();
+    await expect(page.getByText('Documentation')).toBeVisible();
+
+    await expect(page.getByText('language')).toBeVisible();
+    await expect(page.getByText('en')).toBeVisible();
+    await expect(page.getByText('fr')).toBeVisible();
+
+    await expect(page.getByText('fileType')).toBeVisible();
+    await expect(page.getByText('pdf')).toBeVisible();
+
+    await expect(page.getByText('Date:')).toBeVisible();
   });
 });

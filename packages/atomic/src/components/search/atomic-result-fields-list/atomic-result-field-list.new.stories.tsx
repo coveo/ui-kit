@@ -1,42 +1,72 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {wrapInResult} from '@/storybook-utils/search/result-wrapper';
+import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
+import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+
+const searchApiHarness = new MockSearchApi();
+
+searchApiHarness.searchEndpoint.mock((response) => {
+  if ('error' in response) {
+    return response;
+  }
+  const searchResponse =
+    response as typeof import('@/storybook-utils/api/search/search-response').baseResponse;
+  return {
+    ...searchResponse,
+    results: searchResponse.results
+      .map((result) => ({
+        ...result,
+        raw: {
+          ...result.raw,
+          author: 'John Doe',
+          source: 'Documentation',
+          language: ['en', 'fr'],
+          filetype: 'pdf',
+          date: Date.now(),
+        },
+      }))
+      .slice(0, 1),
+    totalCount: 1,
+    totalCountFiltered: 1,
+  };
+});
+
+const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
+  includeCodeRoot: false,
+});
+const {decorator: resultListDecorator} = wrapInResultList('list', false);
+const {decorator: resultTemplateDecorator} = wrapInResultTemplate();
 
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-result-fields-list',
   {excludeCategories: ['methods']}
 );
 
-const {decorator: resultDecorator, engineConfig} = wrapInResult();
-const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
-  config: engineConfig,
-});
-
 const meta: Meta = {
   component: 'atomic-result-fields-list',
-  title: 'Search/ResultList/ResultFieldsList',
+  title: 'Search/Result Fields List',
   id: 'atomic-result-fields-list',
+
   render: (args) => template(args),
-  decorators: [resultDecorator, searchInterfaceDecorator],
+  decorators: [
+    resultTemplateDecorator,
+    resultListDecorator,
+    searchInterfaceDecorator,
+  ],
   parameters: {
     ...parameters,
+    msw: {
+      handlers: [...searchApiHarness.handlers],
+    },
     actions: {
       handles: events,
     },
   },
-  args,
-  argTypes,
-
-  play,
-};
-
-export default meta;
-
-export const Default: Story = {
-  name: 'atomic-result-fields-list',
   args: {
+    ...args,
     'default-slot': `
       <style>
         .field {
@@ -49,42 +79,25 @@ export const Default: Story = {
           margin-right: 0.25rem;
         }
       </style>
-      <atomic-field-condition class="field" if-defined="author">
-        <span class="field-label"
-          ><atomic-text value="author"></atomic-text>:</span
-        >
+      <span class="field">
+        <span class="field-label"><atomic-text value="author"></atomic-text>:</span>
         <atomic-result-text field="author"></atomic-result-text>
-      </atomic-field-condition>
+      </span>
 
-      <atomic-field-condition class="field" if-defined="source">
-        <span class="field-label"
-          ><atomic-text value="source"></atomic-text>:</span
-        >
+      <span class="field">
+        <span class="field-label"><atomic-text value="source"></atomic-text>:</span>
         <atomic-result-text field="source"></atomic-result-text>
-      </atomic-field-condition>
+      </span>
 
-      <atomic-field-condition class="field" if-defined="language">
-        <span class="field-label"
-          ><atomic-text value="language"></atomic-text>:</span
-        >
-        <atomic-result-multi-value-text
-          field="language"
-        ></atomic-result-multi-value-text>
-      </atomic-field-condition>
+      <span class="field">
+        <span class="field-label"><atomic-text value="language"></atomic-text>:</span>
+        <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
+      </span>
 
-      <atomic-field-condition class="field" if-defined="filetype">
-        <span class="field-label"
-          ><atomic-text value="fileType"></atomic-text>:</span
-        >
+      <span class="field">
+        <span class="field-label"><atomic-text value="fileType"></atomic-text>:</span>
         <atomic-result-text field="filetype"></atomic-result-text>
-      </atomic-field-condition>
-
-      <atomic-field-condition class="field" if-defined="sncost">
-        <span class="field-label">Cost:</span>
-        <atomic-result-number field="sncost">
-          <atomic-format-currency currency="CAD"></atomic-format-currency>
-        </atomic-result-number>
-      </atomic-field-condition>
+      </span>
 
       <span class="field">
         <span class="field-label">Date:</span>
@@ -92,4 +105,11 @@ export const Default: Story = {
       </span>
     `,
   },
+  argTypes,
+
+  play,
 };
+
+export default meta;
+
+export const Default: Story = {};
