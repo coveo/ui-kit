@@ -54,12 +54,6 @@ export const AtomicAriaLive = createComponent({
   elementClass: LitAtomicAriaLive,
 });
 
-export const AtomicColorFacet = createComponent({
-  tagName: 'atomic-color-facet',
-  react: React,
-  elementClass: LitAtomicColorFacet,
-});
-
 export const AtomicAutomaticFacet = createComponent({
   tagName: 'atomic-automatic-facet',
   react: React,
@@ -70,6 +64,12 @@ export const AtomicBreadbox = createComponent({
   tagName: 'atomic-breadbox',
   react: React,
   elementClass: LitAtomicBreadbox,
+});
+
+export const AtomicColorFacet = createComponent({
+  tagName: 'atomic-color-facet',
+  react: React,
+  elementClass: LitAtomicColorFacet,
 });
 
 export const AtomicComponentError = createComponent({
