@@ -95,7 +95,7 @@ export function defineSearchEngine<
   const fetchStandaloneStaticState =
     fetchStandaloneStaticStateFactory<TControllerDefinitions>(
       augmentedControllerDefinition,
-      getOptions()
+      definitionOptions
     );
 
   const hydrateStaticState = hydratedStaticStateFactory<TControllerDefinitions>(
