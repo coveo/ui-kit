@@ -21,7 +21,7 @@
   "updateContentCommand": "pnpm install --frozen-lockfile && pnpm run build",
 
   // postStartCommand runs every time the codespace starts
-  "postStartCommand": "echo '✓ Codespace ready! Run pnpm run dev:atomic to start development.'",
+  "postStartCommand": "echo '✓ Codespace ready!'",
 
   // Configure tool-specific properties
   "customizations": {
