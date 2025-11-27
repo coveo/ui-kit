@@ -1882,11 +1882,6 @@ export namespace Components {
          */
         "clearFiltersOnTabChange"?: boolean;
     }
-    interface AtomicTabPopover {
-        "closePopoverOnFocusOut": (event: FocusEvent) => Promise<void>;
-        "setButtonVisibility": (isVisible: boolean) => Promise<void>;
-        "toggle": () => Promise<void>;
-    }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
      */
@@ -3044,12 +3039,6 @@ declare global {
         prototype: HTMLAtomicTabManagerElement;
         new (): HTMLAtomicTabManagerElement;
     };
-    interface HTMLAtomicTabPopoverElement extends Components.AtomicTabPopover, HTMLStencilElement {
-    }
-    var HTMLAtomicTabPopoverElement: {
-        prototype: HTMLAtomicTabPopoverElement;
-        new (): HTMLAtomicTabPopoverElement;
-    };
     /**
      * The `atomic-table-element` element defines a table column in a result list.
      */
@@ -3178,7 +3167,6 @@ declare global {
         "atomic-tab-bar": HTMLAtomicTabBarElement;
         "atomic-tab-button": HTMLAtomicTabButtonElement;
         "atomic-tab-manager": HTMLAtomicTabManagerElement;
-        "atomic-tab-popover": HTMLAtomicTabPopoverElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
@@ -5002,8 +4990,6 @@ declare namespace LocalJSX {
          */
         "clearFiltersOnTabChange"?: boolean;
     }
-    interface AtomicTabPopover {
-    }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
      */
@@ -5196,7 +5182,6 @@ declare namespace LocalJSX {
         "atomic-tab-bar": AtomicTabBar;
         "atomic-tab-button": AtomicTabButton;
         "atomic-tab-manager": AtomicTabManager;
-        "atomic-tab-popover": AtomicTabPopover;
         "atomic-table-element": AtomicTableElement;
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
@@ -5527,7 +5512,6 @@ declare module "@stencil/core" {
              * individual tab within the manager.
              */
             "atomic-tab-manager": LocalJSX.AtomicTabManager & JSXBase.HTMLAttributes<HTMLAtomicTabManagerElement>;
-            "atomic-tab-popover": LocalJSX.AtomicTabPopover & JSXBase.HTMLAttributes<HTMLAtomicTabPopoverElement>;
             /**
              * The `atomic-table-element` element defines a table column in a result list.
              */
