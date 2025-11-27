@@ -36,6 +36,10 @@ export default {
     await import(
       './atomic-result-localized-text/atomic-result-localized-text.js'
     ),
+  'atomic-result-multi-value-text': async () =>
+    await import(
+      './atomic-result-multi-value-text/atomic-result-multi-value-text.js'
+    ),
   'atomic-result-number': async () =>
     await import('./atomic-result-number/atomic-result-number.js'),
   'atomic-result-section-actions': async () =>

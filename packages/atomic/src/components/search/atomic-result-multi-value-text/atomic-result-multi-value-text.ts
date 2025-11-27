@@ -1,15 +1,24 @@
+import {NumberValue, Schema, StringValue} from '@coveo/bueno';
 import {
-  BreadcrumbManager,
+  type BreadcrumbManager,
   buildBreadcrumbManager,
-  Result,
+  type Result,
   ResultTemplatesHelpers,
 } from '@coveo/headless';
-import {Component, Element, Prop, h, State, VNode} from '@stencil/core';
-import {getFieldValueCaption} from '../../../../utils/field-utils';
-import {InitializeBindings} from '../../../../utils/initialization-utils';
-import {titleToKebab} from '../../../../utils/utils';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {ResultContext} from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
+import {html, LitElement} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {keyed} from 'lit/directives/keyed.js';
+import {when} from 'lit/directives/when.js';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
+import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
+import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {getFieldValueCaption} from '@/src/utils/field-utils';
+import {titleToKebab} from '@/src/utils/utils';
 
 /**
  * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
@@ -19,40 +28,60 @@ import {ResultContext} from '@/src/components/search/result-template-component-u
  * @part result-multi-value-text-value-more - A label indicating some values were omitted.
  * @slot result-multi-value-text-value-* - A custom caption value that's specified for a given part of a multi-text field value. For example, if you want to use `Off-Campus Resident` as a caption value for `Off-campus apartment` in `Off-campus apartment;On-campus apartment`, you'd use `<span slot="result-multi-value-text-value-off-campus-apartment">Off-Campus Resident</span>`). The suffix of this slot corresponds with the field value, written in kebab case.
  */
-@Component({
-  tag: 'atomic-result-multi-value-text',
-  styleUrl: 'atomic-result-multi-value-text.pcss',
-  shadow: true,
-})
-export class AtomicResultMultiValueText {
+@customElement('atomic-result-multi-value-text')
+@bindings()
+@withTailwindStyles
+export class AtomicResultMultiValueText
+  extends LitElement
+  implements InitializableComponent<Bindings>
+{
   public breadcrumbManager!: BreadcrumbManager;
-
-  @InitializeBindings() public bindings!: Bindings;
-  @ResultContext() private result!: Result;
-
-  @Element() host!: HTMLElement;
-
-  @State() public error!: Error;
 
   /**
    * The field that the component should use.
    * The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first.
    * Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
    */
-  @Prop({reflect: true}) public field!: string;
+  @property({type: String, reflect: true}) public field!: string;
 
   /**
    * The maximum number of field values to display.
    * If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
    */
-  @Prop({reflect: true}) public maxValuesToDisplay = 3;
+  @property({type: Number, reflect: true, attribute: 'max-values-to-display'})
+  public maxValuesToDisplay = 3;
 
   /**
    * The delimiter used to separate values when the field isn't indexed as a multi value field.
    */
-  @Prop({reflect: true}) public delimiter: string | null = null;
+  @property({type: String, reflect: true}) public delimiter: string | null =
+    null;
 
-  private sortedValues: string[] | null = null;
+  @state() public bindings!: Bindings;
+  @state() public error!: Error;
+  @state() private sortedValues: string[] | null = null;
+
+  private resultContext = createResultContextController(this);
+
+  private get result(): Result {
+    return this.resultContext.item as Result;
+  }
+
+  constructor() {
+    super();
+
+    new ValidatePropsController(
+      this,
+      () => ({
+        field: this.field,
+        maxValuesToDisplay: this.maxValuesToDisplay,
+      }),
+      new Schema({
+        field: new StringValue({required: true, emptyAllowed: false}),
+        maxValuesToDisplay: new NumberValue({min: 0, required: false}),
+      })
+    );
+  }
 
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
@@ -85,15 +114,16 @@ export class AtomicResultMultiValueText {
   }
 
   private get facetSelectedValues() {
-    return this.breadcrumbManager.state.facetBreadcrumbs
+    const values: string[] = [];
+    if (!this.breadcrumbManager) {
+      return values;
+    }
+    this.breadcrumbManager.state.facetBreadcrumbs
       .filter((facet) => facet.field === this.field)
-      .reduce(
-        (values, facet) => [
-          ...values,
-          ...facet.values.map(({value}) => value.value),
-        ],
-        [] as string[]
-      );
+      .forEach((facet) => {
+        values.push(...facet.values.map(({value}) => value.value));
+      });
+    return values;
   }
 
   private updateSortedValues() {
@@ -124,69 +154,73 @@ export class AtomicResultMultiValueText {
   private renderValue(value: string) {
     const label = getFieldValueCaption(this.field, value, this.bindings.i18n);
     const kebabValue = titleToKebab(value);
-    return (
-      <li key={value} part="result-multi-value-text-value">
-        <slot name={`result-multi-value-text-value-${kebabValue}`}>
-          {label}
-        </slot>
-      </li>
+    return keyed(
+      value,
+      html`
+        <li part="result-multi-value-text-value">
+          <slot name=${`result-multi-value-text-value-${kebabValue}`}>
+            ${label}
+          </slot>
+        </li>
+      `
     );
   }
 
-  private renderSeparator(beforeValue: string, afterValue: string) {
-    return (
+  private renderSeparator() {
+    return html`
       <li
         aria-hidden="true"
         part="result-multi-value-text-separator"
-        key={`${beforeValue}~${afterValue}`}
-        class="separator"
+               class="${String.raw`inline-block before:inline before:content-[',\00a0']`}"
       ></li>
-    );
+    `;
   }
 
   private renderMoreLabel(value: number) {
-    return (
-      <li key="more-field-values" part="result-multi-value-text-value-more">
-        {this.bindings.i18n.t('n-more', {value})}
+    return html`
+      <li  part="result-multi-value-text-value-more">
+        ${this.bindings.i18n.t('n-more', {value})}
       </li>
-    );
+    `;
   }
 
   private renderListItems(values: string[]) {
     const numberOfValuesToDisplay = this.getNumberOfValuesToDisplay(values);
 
-    const nodes: VNode[] = [];
+    const nodes = [];
     for (let i = 0; i < numberOfValuesToDisplay; i++) {
       if (i > 0) {
-        nodes.push(this.renderSeparator(values[i - 1], values[i]));
+        nodes.push(this.renderSeparator());
       }
       nodes.push(this.renderValue(values[i]));
     }
     if (this.getShouldDisplayLabel(values)) {
-      nodes.push(
-        this.renderSeparator(
-          values[numberOfValuesToDisplay - 1],
-          'more-field-values'
-        )
-      );
+      nodes.push(this.renderSeparator());
       nodes.push(this.renderMoreLabel(values.length - numberOfValuesToDisplay));
     }
     return nodes;
   }
 
-  public componentWillRender() {
+  willUpdate() {
     this.updateSortedValues();
   }
 
-  public render() {
-    if (this.sortedValues === null) {
-      this.host.remove();
-      return;
-    }
-    return (
-      <ul part="result-multi-value-text-list">
-        {...this.renderListItems(this.sortedValues)}
-      </ul>
-    );
+  @bindingGuard()
+  @errorGuard()
+  render() {
+    return html`${when(
+      this.sortedValues,
+      () => html`
+        <ul part="result-multi-value-text-list" class="m-0 flex list-none p-0">
+          ${this.renderListItems(this.sortedValues!)}
+        </ul>
+      `
+    )}`;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-result-multi-value-text': AtomicResultMultiValueText;
   }
 }
