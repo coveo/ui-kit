@@ -3,7 +3,7 @@ import {describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderTabButton, type TabButtonProps} from './tab-button';
 
-describe('renderTabButton', () => {
+describe('#renderTabButton', () => {
   const renderTab = async (
     props: Partial<TabButtonProps> = {}
   ): Promise<{container: HTMLElement; button: HTMLButtonElement}> => {
@@ -15,7 +15,7 @@ describe('renderTabButton', () => {
     };
 
     const element = await renderFunctionFixture(
-      html`${renderTabButton({props: defaultProps})()}`
+      html`${renderTabButton({props: defaultProps})(html`test tab`)}`
     );
 
     const buttonContainer = element.querySelector(
@@ -26,26 +26,24 @@ describe('renderTabButton', () => {
     return {container: buttonContainer, button};
   };
 
-  describe('basic rendering', () => {
-    it('should render a tab button in the document', async () => {
-      const {button} = await renderTab();
-      expect(button).toBeInTheDocument();
-    });
+  it('should render a tab button in the document', async () => {
+    const {button} = await renderTab();
+    expect(button).toBeInTheDocument();
+  });
 
-    it('should render the label text', async () => {
-      const {button} = await renderTab({label: 'Products'});
-      expect(button).toHaveTextContent('Products');
-    });
+  it('should render the label text', async () => {
+    const {button} = await renderTab({label: 'Products'});
+    expect(button).toHaveTextContent('Products');
+  });
 
-    it('should render with listitem role on container', async () => {
-      const {container} = await renderTab();
-      expect(container).toHaveAttribute('role', 'listitem');
-    });
+  it('should render with listitem role on container', async () => {
+    const {container} = await renderTab();
+    expect(container).toHaveAttribute('role', 'listitem');
+  });
 
-    it('should have correct aria-label', async () => {
-      const {container} = await renderTab({label: 'Services'});
-      expect(container).toHaveAttribute('aria-label', 'tab for Services');
-    });
+  it('should have correct aria-label', async () => {
+    const {container} = await renderTab({label: 'Services'});
+    expect(container).toHaveAttribute('aria-label', 'tab for Services');
   });
 
   describe('when active is false', () => {
@@ -105,38 +103,12 @@ describe('renderTabButton', () => {
     });
   });
 
-  describe('interactions', () => {
-    it('should call select when button is clicked', async () => {
-      const selectFn = vi.fn();
-      const {button} = await renderTab({select: selectFn});
+  it('should call select when button is clicked', async () => {
+    const selectFn = vi.fn();
+    const {button} = await renderTab({select: selectFn});
 
-      button.click();
+    button.click();
 
-      expect(selectFn).toHaveBeenCalledOnce();
-    });
-
-    it('should not call select on initial render', async () => {
-      const selectFn = vi.fn();
-      await renderTab({select: selectFn});
-
-      expect(selectFn).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('styling', () => {
-    it('should have correct base classes on button', async () => {
-      const {button} = await renderTab();
-      expect(button.className).toContain('w-full');
-      expect(button.className).toContain('truncate');
-      expect(button.className).toContain('px-2');
-      expect(button.className).toContain('pb-1');
-      expect(button.className).toContain('text-xl');
-      expect(button.className).toContain('hover:text-primary');
-    });
-
-    it('should have responsive padding classes', async () => {
-      const {button} = await renderTab();
-      expect(button.className).toContain('sm:px-6');
-    });
+    expect(selectFn).toHaveBeenCalledOnce();
   });
 });

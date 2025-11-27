@@ -26,23 +26,32 @@ export const renderTabButton: FunctionalComponentWithChildren<TabButtonProps> =
         Boolean(props.active),
     });
 
-    const buttonClasses = tw({
-      'w-full truncate px-2 pb-1 text-xl sm:px-6 hover:text-primary': true,
-      'text-neutral-dark': !props.active,
-    });
+    const buttonClassNames = [
+      'w-full',
+      'truncate',
+      'px-2',
+      'pb-1',
+      'text-xl',
+      'hover:text-primary',
+      !props.active && 'text-neutral-dark',
+    ]
+      .filter(Boolean)
+      .join(' ');
 
     return html`<div
       role="listitem"
       class=${multiClassMap(containerClasses)}
       aria-current=${props.active ? 'true' : 'false'}
-      aria-label=${'tab for ' + props.label}
+      aria-label=${`tab for ${props.label}`}
       part=${props.active ? 'button-container-active' : 'button-container'}
     >
       ${renderButton({
-        style: 'text-transparent',
-        class: multiClassMap(buttonClasses),
-        part: props.active ? 'tab-button-active' : 'tab-button',
-        onClick: props.select,
-      })(() => html`${props.label}`)}
+        props: {
+          style: 'text-transparent',
+          class: buttonClassNames,
+          part: props.active ? 'tab-button-active' : 'tab-button',
+          onClick: props.select,
+        },
+      })(html`${props.label}`)}
     </div>`;
   };
