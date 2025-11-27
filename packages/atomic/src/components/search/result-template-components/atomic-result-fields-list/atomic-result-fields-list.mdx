@@ -1,0 +1,77 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicResultFieldsListStories from './atomic-result-field-list.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicResultFieldsListStories} />
+
+<AtomicDocTemplate
+  stories={AtomicResultFieldsListStories}
+  githubPath="search/result-template-components/atomic-result-fields-list/atomic-result-fields-list.ts"
+  tagName="atomic-result-fields-list"
+  className="AtomicResultFieldsList"
+>
+
+The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
+
+This component is useful for displaying a list of result fields that adapts to the available space, automatically hiding overflow fields when necessary.
+
+### Basic Usage
+
+Use inside an `atomic-result-template` to display multiple fields with automatic overflow handling:
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-result-list>
+    <atomic-result-template>
+      <template>
+        <atomic-result-fields-list>
+          <atomic-field-condition class="field" if-defined="author">
+            <span class="field-label">Author:</span>
+            <atomic-result-text field="author"></atomic-result-text>
+          </atomic-field-condition>
+
+          <atomic-field-condition class="field" if-defined="source">
+            <span class="field-label">Source:</span>
+            <atomic-result-text field="source"></atomic-result-text>
+          </atomic-field-condition>
+
+          <span class="field">
+            <span class="field-label">Date:</span>
+            <atomic-result-date></atomic-result-date>
+          </span>
+        </atomic-result-fields-list>
+      </template>
+    </atomic-result-template>
+  </atomic-result-list>
+  ...
+</atomic-search-interface>
+```
+
+### Responsive Behavior
+
+The component automatically:
+- Displays all children when there's sufficient space
+- Hides the smallest children first when the container is too narrow
+- Adds visual dividers between fields
+- Hides dividers at the end of each row
+
+### Styling Children
+
+For proper display, children should have inline-flex display:
+
+```css
+.field {
+  display: inline-flex;
+  white-space: nowrap;
+  align-items: center;
+}
+
+.field-label {
+  font-weight: bold;
+  margin-right: 0.25rem;
+}
+```
+
+</AtomicDocTemplate>

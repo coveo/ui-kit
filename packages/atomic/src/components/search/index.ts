@@ -40,3 +40,4 @@ export {AtomicSegmentedFacetScrollable} from './atomic-segmented-facet-scrollabl
 export {AtomicSortDropdown} from './atomic-sort-dropdown/atomic-sort-dropdown.js';
 export {AtomicTab} from './atomic-tab/atomic-tab.js';
 export {AtomicText} from './atomic-text/atomic-text.js';
+export {AtomicResultFieldsList} from './result-template-components/atomic-result-fields-list/atomic-result-fields-list.js';
