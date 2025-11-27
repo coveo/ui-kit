@@ -18,7 +18,7 @@ import {
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
-import {html, LitElement, nothing} from 'lit';
+import {html, LitElement, nothing, render} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import Star from '@/images/star.svg';
@@ -349,7 +349,7 @@ export class AtomicRatingFacet
     this.bindings.store.registerFacet('numericFacets', {
       ...facetInfo,
       format: (value) => this.formatFacetValue(value),
-      content: (value) => this.ratingContent(value),
+      content: (value) => this.ratingContentAsElement(value),
     });
     initializePopover(this, {
       ...facetInfo,
@@ -420,6 +420,13 @@ export class AtomicRatingFacet
         icon: this.icon,
       },
     });
+  }
+
+  private ratingContentAsElement(facetValue: NumericFacetValue): HTMLElement {
+    const template = this.ratingContent(facetValue);
+    const container = document.createElement('div');
+    render(template, container);
+    return container.firstElementChild as HTMLElement;
   }
 
   private renderHeader() {
