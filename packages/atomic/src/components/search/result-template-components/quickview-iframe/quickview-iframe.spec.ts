@@ -3,7 +3,7 @@ import type {VNode} from '@stencil/core';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {fixtureWrapper} from '@/vitest-utils/testing-helpers/fixture-wrapper';
 import {renderStencilVNode} from '@/vitest-utils/testing-helpers/stencil-vnode-renderer';
-import {QuickviewIframe} from './stencil-quickview-iframe';
+import {QuickviewIframe} from './quickview-iframe';
 
 describe('QuickviewIframe (Stencil)', () => {
   let mockOnSetIframeRef: (ref: HTMLIFrameElement) => void;
