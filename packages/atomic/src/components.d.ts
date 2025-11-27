@@ -1723,11 +1723,6 @@ export namespace Components {
         "tabsIncluded": string[] | string;
     }
     /**
-     * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
-     */
-    interface AtomicSegmentedFacetScrollable {
-    }
-    /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
      * You can style the snippet by inserting a template element as follows:
      * ```html
@@ -2895,15 +2890,6 @@ declare global {
         new (): HTMLAtomicSegmentedFacetElement;
     };
     /**
-     * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
-     */
-    interface HTMLAtomicSegmentedFacetScrollableElement extends Components.AtomicSegmentedFacetScrollable, HTMLStencilElement {
-    }
-    var HTMLAtomicSegmentedFacetScrollableElement: {
-        prototype: HTMLAtomicSegmentedFacetScrollableElement;
-        new (): HTMLAtomicSegmentedFacetScrollableElement;
-    };
-    /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
      * You can style the snippet by inserting a template element as follows:
      * ```html
@@ -3227,7 +3213,6 @@ declare global {
         "atomic-result-timespan": HTMLAtomicResultTimespanElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
-        "atomic-segmented-facet-scrollable": HTMLAtomicSegmentedFacetScrollableElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
         "atomic-smart-snippet-collapse-wrapper": HTMLAtomicSmartSnippetCollapseWrapperElement;
@@ -4893,11 +4878,6 @@ declare namespace LocalJSX {
         "tabsIncluded"?: string[] | string;
     }
     /**
-     * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
-     */
-    interface AtomicSegmentedFacetScrollable {
-    }
-    /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
      * You can style the snippet by inserting a template element as follows:
      * ```html
@@ -5280,7 +5260,6 @@ declare namespace LocalJSX {
         "atomic-result-timespan": AtomicResultTimespan;
         "atomic-search-box": AtomicSearchBox;
         "atomic-segmented-facet": AtomicSegmentedFacet;
-        "atomic-segmented-facet-scrollable": AtomicSegmentedFacetScrollable;
         "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
         "atomic-smart-snippet-collapse-wrapper": AtomicSmartSnippetCollapseWrapper;
@@ -5572,10 +5551,6 @@ declare module "@stencil/core" {
              * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
              */
             "atomic-segmented-facet": LocalJSX.AtomicSegmentedFacet & JSXBase.HTMLAttributes<HTMLAtomicSegmentedFacetElement>;
-            /**
-             * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
-             */
-            "atomic-segmented-facet-scrollable": LocalJSX.AtomicSegmentedFacetScrollable & JSXBase.HTMLAttributes<HTMLAtomicSegmentedFacetScrollableElement>;
             /**
              * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
              * You can style the snippet by inserting a template element as follows:
