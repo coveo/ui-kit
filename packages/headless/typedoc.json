@@ -41,7 +41,7 @@
   "navigation": {
     "includeCategories": true,
     "includeGroups": true,
-    "includeFolders": false
+    "includeFolders": true
   },
   "readme": "source_docs/coveo-headless-home.md",
   "categorizeByGroup": true,
