@@ -24,7 +24,7 @@ const withNarrowContainer: Decorator = (story) => {
 
 const meta: Meta = {
   component: 'atomic-segmented-facet-scrollable',
-  title: 'Search/SegmentedFacetScrollable',
+  title: 'Search/Segmented Facet Scrollable',
   id: 'atomic-segmented-facet-scrollable',
   render: () => html`
     <atomic-segmented-facet-scrollable>
