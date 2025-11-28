@@ -3,6 +3,8 @@ import {
   buildNumericFacet,
   buildSearchStatus,
   buildTabManager,
+  type NumericFacetState,
+  type SearchStatusState,
 } from '@coveo/headless';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
@@ -65,8 +67,8 @@ describe('atomic-rating-facet', () => {
       tabsExcluded: string[];
       dependsOn: Record<string, string>;
     }>;
-    facetState?: Parameters<typeof buildFakeNumericFacet>[0]['state'];
-    searchStatusState?: Partial<Parameters<typeof buildFakeSearchStatus>[0]>;
+    facetState?: NumericFacetState;
+    searchStatusState?: SearchStatusState;
   } = {}) => {
     if (facetState) {
       vi.mocked(buildNumericFacet).mockReturnValue(

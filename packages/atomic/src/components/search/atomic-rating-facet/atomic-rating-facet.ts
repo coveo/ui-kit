@@ -18,10 +18,9 @@ import {
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
-import {html, LitElement, nothing, render} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
-import Star from '@/images/star.svg';
 import atomicRatingStyles from '@/src/components/common/atomic-rating/atomic-rating.tw.css';
 import {renderRating} from '@/src/components/common/atomic-rating/rating';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
@@ -42,9 +41,10 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
-import {ArrayProp, MapProp} from '@/src/utils/props-utils';
+import {mapProperty} from '@/src/utils/props-utils';
+import Star from '../../../images/star.svg';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
@@ -73,8 +73,9 @@ import {ArrayProp, MapProp} from '@/src/utils/props-utils';
  */
 @customElement('atomic-rating-facet')
 @bindings()
+@withTailwindStyles
 export class AtomicRatingFacet
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<Bindings>
 {
   static styles = [
@@ -136,7 +137,6 @@ export class AtomicRatingFacet
   /**
    * Included tabs.
    */
-  @ArrayProp()
   @property({
     reflect: true,
     useDefault: true,
@@ -148,7 +148,6 @@ export class AtomicRatingFacet
   /**
    * Excluded tabs.
    */
-  @ArrayProp()
   @property({
     reflect: true,
     useDefault: true,
@@ -275,7 +274,7 @@ export class AtomicRatingFacet
    * ></atomic-rating-facet>
    * ```
    */
-  @MapProp()
+  @mapProperty({attributePrefix: 'depends-on-'})
   @property({useDefault: true, type: Object})
   public dependsOn: Record<string, string> = {};
 
@@ -290,6 +289,9 @@ export class AtomicRatingFacet
 
   constructor() {
     super();
+    console.log('*********************');
+    console.log('.tw.css.ts');
+    console.log('*********************');
 
     new ValidatePropsController(
       this,
@@ -349,7 +351,8 @@ export class AtomicRatingFacet
     this.bindings.store.registerFacet('numericFacets', {
       ...facetInfo,
       format: (value) => this.formatFacetValue(value),
-      content: (value) => this.ratingContentAsElement(value),
+      // @ts-ignore TODO:
+      // content: (value) => this.ratingContent(value),
     });
     initializePopover(this, {
       ...facetInfo,
@@ -420,13 +423,6 @@ export class AtomicRatingFacet
         icon: this.icon,
       },
     });
-  }
-
-  private ratingContentAsElement(facetValue: NumericFacetValue): HTMLElement {
-    const template = this.ratingContent(facetValue);
-    const container = document.createElement('div');
-    render(template, container);
-    return container.firstElementChild as HTMLElement;
   }
 
   private renderHeader() {
@@ -510,20 +506,20 @@ export class AtomicRatingFacet
   @errorGuard()
   render() {
     if (this.searchStatusState.hasError || !this.facet.state.enabled) {
-      return nothing;
+      return html`${nothing}`;
     }
 
     if (!this.searchStatusState.firstSearchExecuted) {
-      return renderFacetPlaceholder({
+      return html`${renderFacetPlaceholder({
         props: {
           numberOfValues: this.numberOfIntervals,
           isCollapsed: this.isCollapsed,
         },
-      });
+      })}`;
     }
 
     if (!this.valuesToRender.length) {
-      return nothing;
+      return html`${nothing}`;
     }
 
     return renderFacetContainer()(html`

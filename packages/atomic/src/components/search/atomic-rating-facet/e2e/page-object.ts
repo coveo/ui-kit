@@ -1,7 +1,7 @@
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
-export class AtomicRatingFacetPageObject extends BasePageObject<'atomic-rating-facet'> {
+export class AtomicRatingFacetPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-rating-facet');
   }
