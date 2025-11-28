@@ -15,11 +15,11 @@ describe('#renderTabButton', () => {
     };
 
     const element = await renderFunctionFixture(
-      html`${renderTabButton({props: defaultProps})(html`test tab`)}`
+      html`${renderTabButton({props: defaultProps})}`
     );
 
     const buttonContainer = element.querySelector(
-      '[role="listitem"]'
+      '[role="tab"]'
     ) as HTMLElement;
     const button = element.querySelector('button') as HTMLButtonElement;
 
@@ -38,18 +38,13 @@ describe('#renderTabButton', () => {
 
   it('should render with listitem role on container', async () => {
     const {container} = await renderTab();
-    expect(container).toHaveAttribute('role', 'listitem');
-  });
-
-  it('should have correct aria-label', async () => {
-    const {container} = await renderTab({label: 'Services'});
-    expect(container).toHaveAttribute('aria-label', 'tab for Services');
+    expect(container).toHaveAttribute('role', 'tab');
   });
 
   describe('when active is false', () => {
-    it('should set aria-current to false', async () => {
+    it('should set aria-selected to false', async () => {
       const {container} = await renderTab({active: false});
-      expect(container).toHaveAttribute('aria-current', 'false');
+      expect(container).toHaveAttribute('aria-selected', 'false');
     });
 
     it('should have button-container part', async () => {
@@ -75,9 +70,9 @@ describe('#renderTabButton', () => {
   });
 
   describe('when active is true', () => {
-    it('should set aria-current to true', async () => {
+    it('should set aria-selected to true', async () => {
       const {container} = await renderTab({active: true});
-      expect(container).toHaveAttribute('aria-current', 'true');
+      expect(container).toHaveAttribute('aria-selected', 'true');
     });
 
     it('should have button-container-active part', async () => {
