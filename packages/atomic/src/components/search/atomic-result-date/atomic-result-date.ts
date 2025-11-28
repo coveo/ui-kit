@@ -87,11 +87,7 @@ export class AtomicResultDate
   @bindingGuard()
   @errorGuard()
   render() {
-    return html`${when(
-      this.result && this.field,
-      () => this.renderDate(),
-      () => nothing
-    )}`;
+    return html`${when(this.result && this.field, () => this.renderDate())}`;
   }
 
   private renderDate() {
@@ -122,6 +118,7 @@ export class AtomicResultDate
     }
 
     if (this.relativeTime) {
+      console.log('here');
       dayjs.updateLocale(this.bindings.interfaceElement.language, {
         calendar: {
           sameDay: this.bindings.i18n.t('calendar-same-day'),
