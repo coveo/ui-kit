@@ -67,3 +67,43 @@ export const Default: Story = {
     `,
   },
 };
+
+export const WithPopover: Story = {
+  name: 'With facets inside atomic-popover',
+  decorators: [
+    (story) => html`
+      <style>
+        atomic-facet-manager {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+        }
+      </style>
+      ${story()}
+    `,
+  ],
+  args: {
+    'default-slot': `
+      <atomic-popover>
+        <atomic-facet field="author" label="Authors"></atomic-facet>
+      </atomic-popover>
+      <atomic-popover>
+        <atomic-facet field="language" label="Language"></atomic-facet>
+      </atomic-popover>
+      <atomic-popover>
+        <atomic-facet
+          field="objecttype"
+          label="Type"
+          display-values-as="link"
+        ></atomic-facet>
+      </atomic-popover>
+      <atomic-popover>
+        <atomic-facet
+          field="year"
+          label="Year"
+          display-values-as="box"
+        ></atomic-facet>
+      </atomic-popover>
+    `,
+  },
+};
