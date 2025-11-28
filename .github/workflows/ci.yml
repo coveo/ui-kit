@@ -348,7 +348,6 @@ jobs:
           testsToRun: ${{ needs.prepare-playwright-atomic.outputs.testsToRun }}
   merge-atomic-playwright-reports:
     name: "Merge Playwright reports"
-    environment: PR Artifacts
     if: ${{ !cancelled() && !contains(needs.*.result, 'skipped') }}
     needs:
       - "playwright-atomic"
@@ -367,7 +366,25 @@ jobs:
           working-directory: packages/atomic
           artifact-pattern: atomic-blob-report-*
           upload-artifact-name: atomic-playwright-report
-
+  upload-pr-review-site:
+    name: "Upload PR review site"
+    environment: PR Artifacts
+    needs:
+      - "merge-atomic-playwright-reports"
+      - 'build'
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: atomic-playwright-report
+          path: packages/atomic/playwright-report
       - name: Generate a token
         if: ${{ always() && github.event_name == 'pull_request'}}
         id: generate-token
