@@ -18,7 +18,7 @@ import {
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
-import {html, LitElement, nothing} from 'lit';
+import {html, LitElement, nothing, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import atomicRatingStyles from '@/src/components/common/atomic-rating/atomic-rating.tw.css';
@@ -128,7 +128,7 @@ export class AtomicRatingFacet
    */
   @property({
     reflect: true,
-    useDefault: true,
+    useDefault: false,
     attribute: 'number-of-intervals',
     type: Number,
   })
@@ -162,11 +162,10 @@ export class AtomicRatingFacet
    */
   @property({
     reflect: true,
-    useDefault: true,
     attribute: 'max-value-in-index',
     type: Number,
   })
-  public maxValueInIndex = this.numberOfIntervals;
+  public maxValueInIndex!: number;
 
   /**
    * The minimum value of the field.
@@ -289,10 +288,6 @@ export class AtomicRatingFacet
 
   constructor() {
     super();
-    console.log('*********************');
-    console.log('.tw.css.ts');
-    console.log('*********************');
-
     new ValidatePropsController(
       this,
       () => ({
@@ -367,6 +362,15 @@ export class AtomicRatingFacet
       !this.facet.state.enabled ||
       !this.valuesToRender.length
     );
+  }
+
+  protected updated(changed: PropertyValues<this>) {
+    if (
+      (changed.has('numberOfIntervals') || changed.has('maxValueInIndex')) &&
+      this.maxValueInIndex === undefined
+    ) {
+      this.maxValueInIndex = this.numberOfIntervals;
+    }
   }
 
   private get scaleFactor() {

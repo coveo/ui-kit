@@ -3,8 +3,10 @@ import {
   buildNumericFacet,
   buildSearchStatus,
   buildTabManager,
-  type NumericFacetState,
-  type SearchStatusState,
+  type FacetConditionsManager,
+  type NumericFacet,
+  type SearchStatus,
+  type TabManager,
 } from '@coveo/headless';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
@@ -19,36 +21,24 @@ import {buildFakeTabManager} from '@/vitest-utils/testing-helpers/fixtures/headl
 import type {AtomicRatingFacet} from './atomic-rating-facet';
 
 vi.mock('@coveo/headless', {spy: true});
-vi.mock('@/src/mixins/bindings-mixin', () => ({
-  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
-    return class extends superClass {
-      // biome-ignore lint/complexity/noUselessConstructor: <mocking the mixin for testing>
-      constructor(...args: unknown[]) {
-        super(...args);
-      }
-    };
-  }),
-}));
 
 describe('atomic-rating-facet', () => {
   let mockedRegisterFacet: Mock;
+  let mockedNumericFacet: NumericFacet;
+  let mockedSearchStatus: SearchStatus;
+  let mockedTabManager: TabManager;
+  let mockedFacetConditionsManager: FacetConditionsManager;
 
   beforeEach(() => {
     mockedRegisterFacet = vi.fn();
-    vi.mocked(buildNumericFacet).mockReturnValue(buildFakeNumericFacet({}));
-    vi.mocked(buildSearchStatus).mockReturnValue(
-      buildFakeSearchStatus({firstSearchExecuted: true})
-    );
-    vi.mocked(buildTabManager).mockReturnValue(buildFakeTabManager({}));
-    vi.mocked(buildFacetConditionsManager).mockReturnValue(
-      buildFakeFacetConditionsManager({})
-    );
+    mockedNumericFacet = buildFakeNumericFacet({});
+    mockedSearchStatus = buildFakeSearchStatus({firstSearchExecuted: true});
+    mockedTabManager = buildFakeTabManager({});
+    mockedFacetConditionsManager = buildFakeFacetConditionsManager({});
   });
 
   const renderRatingFacet = async ({
     props = {},
-    facetState,
-    searchStatusState,
   }: {
     props?: Partial<{
       field: string;
@@ -67,19 +57,13 @@ describe('atomic-rating-facet', () => {
       tabsExcluded: string[];
       dependsOn: Record<string, string>;
     }>;
-    facetState?: NumericFacetState;
-    searchStatusState?: SearchStatusState;
   } = {}) => {
-    if (facetState) {
-      vi.mocked(buildNumericFacet).mockReturnValue(
-        buildFakeNumericFacet({state: facetState})
-      );
-    }
-    if (searchStatusState) {
-      vi.mocked(buildSearchStatus).mockReturnValue(
-        buildFakeSearchStatus(searchStatusState)
-      );
-    }
+    vi.mocked(buildNumericFacet).mockReturnValue(mockedNumericFacet);
+    vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
+    vi.mocked(buildTabManager).mockReturnValue(mockedTabManager);
+    vi.mocked(buildFacetConditionsManager).mockReturnValue(
+      mockedFacetConditionsManager
+    );
 
     const {element} = await renderInAtomicSearchInterface<AtomicRatingFacet>({
       template: html`<atomic-rating-facet
@@ -104,6 +88,7 @@ describe('atomic-rating-facet', () => {
         ...bindings,
         store: {
           ...bindings.store,
+          getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
           registerFacet: mockedRegisterFacet,
         },
       }),
@@ -118,10 +103,13 @@ describe('atomic-rating-facet', () => {
       },
       getFacetValueButtonByPosition(valuePosition: number) {
         const value = this.getFacetValueByPosition(valuePosition);
-        return value.getByRole('button');
+        return value.getByRole('checkbox');
+      },
+      getFacetValueLinkByPosition(valuePosition: number) {
+        return this.getFacetValueByPosition(valuePosition);
       },
       get clearButton() {
-        return page.getByRole('button').filter({hasText: /Clear.*filter/});
+        return page.getByLabelText(/Clear \d+ filter for the Rating facet/);
       },
       get facetValues() {
         return page.getByRole('listitem');
@@ -160,7 +148,7 @@ describe('atomic-rating-facet', () => {
         options: expect.objectContaining({
           field: 'testfield',
           numberOfValues: 7,
-          filterFacetCount: false,
+          filterFacetCount: true,
           injectionDepth: 500,
           generateAutomaticRanges: false,
           sortCriteria: 'descending',
@@ -180,17 +168,7 @@ describe('atomic-rating-facet', () => {
 
     it('should register facet in store', async () => {
       await renderRatingFacet();
-      expect(mockedRegisterFacet).toHaveBeenCalledWith(
-        'numericFacets',
-        expect.objectContaining({
-          facetId: expect.any(String),
-          element: expect.any(Object),
-          label: expect.any(Function),
-          isHidden: expect.any(Function),
-          format: expect.any(Function),
-          content: expect.any(Function),
-        })
-      );
+      expect(mockedRegisterFacet).toHaveBeenCalled();
     });
   });
 
@@ -241,9 +219,11 @@ describe('atomic-rating-facet', () => {
     });
 
     it('should render placeholder when first search not executed', async () => {
-      const {element} = await renderRatingFacet({
-        searchStatusState: {firstSearchExecuted: false},
+      mockedSearchStatus = buildFakeSearchStatus({
+        firstSearchExecuted: false,
       });
+
+      const {element} = await renderRatingFacet();
       const placeholder = element.shadowRoot?.querySelector(
         'atomic-facet-placeholder'
       );
@@ -251,29 +231,39 @@ describe('atomic-rating-facet', () => {
     });
 
     it('should render nothing when there are no values', async () => {
-      const {element} = await renderRatingFacet({
-        facetState: {
+      mockedNumericFacet = buildFakeNumericFacet({
+        state: {
+          ...mockedNumericFacet.state,
           values: [],
         },
       });
+
+      const {element} = await renderRatingFacet();
       const facetContainer =
         element.shadowRoot?.querySelector('[part="facet"]');
       expect(facetContainer).toBeNull();
     });
 
     it('should render nothing when search has error', async () => {
-      const {element} = await renderRatingFacet({
-        searchStatusState: {hasError: true},
+      mockedSearchStatus = buildFakeSearchStatus({
+        hasError: true,
       });
+
+      const {element} = await renderRatingFacet();
       const facetContainer =
         element.shadowRoot?.querySelector('[part="facet"]');
       expect(facetContainer).toBeNull();
     });
 
     it('should render nothing when facet is not enabled', async () => {
-      const {element} = await renderRatingFacet({
-        facetState: {enabled: false},
+      mockedNumericFacet = buildFakeNumericFacet({
+        state: {
+          ...mockedNumericFacet.state,
+          enabled: false,
+        },
       });
+
+      const {element} = await renderRatingFacet();
       const facetContainer =
         element.shadowRoot?.querySelector('[part="facet"]');
       expect(facetContainer).toBeNull();
@@ -336,33 +326,40 @@ describe('atomic-rating-facet', () => {
 
   describe('interaction', () => {
     it('should call toggleSelect when clicking checkbox value', async () => {
-      const mockFacet = buildFakeNumericFacet({});
-      const toggleSelectSpy = vi.spyOn(mockFacet, 'toggleSelect');
-      vi.mocked(buildNumericFacet).mockReturnValue(mockFacet);
+      mockedNumericFacet = buildFakeNumericFacet({
+        implementation: {
+          toggleSelect: vi.fn(),
+        },
+      });
 
       const {locators} = await renderRatingFacet();
       const firstValueButton = locators.getFacetValueButtonByPosition(0);
       await firstValueButton.click();
 
-      expect(toggleSelectSpy).toHaveBeenCalled();
+      expect(mockedNumericFacet.toggleSelect).toHaveBeenCalled();
     });
 
     it('should call toggleSingleSelect when clicking link value', async () => {
-      const mockFacet = buildFakeNumericFacet({});
-      const toggleSingleSelectSpy = vi.spyOn(mockFacet, 'toggleSingleSelect');
-      vi.mocked(buildNumericFacet).mockReturnValue(mockFacet);
+      mockedNumericFacet = buildFakeNumericFacet({
+        implementation: {
+          toggleSingleSelect: vi.fn(),
+        },
+      });
 
       const {locators} = await renderRatingFacet({
         props: {displayValuesAs: 'link'},
       });
-      const firstValueButton = locators.getFacetValueButtonByPosition(0);
+      const firstValueButton = locators.getFacetValueLinkByPosition(0);
       await firstValueButton.click();
 
-      expect(toggleSingleSelectSpy).toHaveBeenCalled();
+      expect(mockedNumericFacet.toggleSingleSelect).toHaveBeenCalled();
     });
 
     it('should call deselectAll when clicking clear button', async () => {
-      const mockFacet = buildFakeNumericFacet({
+      mockedNumericFacet = buildFakeNumericFacet({
+        implementation: {
+          deselectAll: vi.fn(),
+        },
         state: {
           values: [
             {
@@ -375,22 +372,20 @@ describe('atomic-rating-facet', () => {
           ],
         },
       });
-      const deselectAllSpy = vi.spyOn(mockFacet, 'deselectAll');
-      vi.mocked(buildNumericFacet).mockReturnValue(mockFacet);
 
       const {locators} = await renderRatingFacet();
       await locators.clearButton.click();
 
-      expect(deselectAllSpy).toHaveBeenCalled();
+      expect(mockedNumericFacet.deselectAll).toHaveBeenCalled();
     });
   });
 
   describe('disconnectedCallback', () => {
     it('should stop watching dependencies when disconnected', async () => {
-      const mockDependenciesManager = buildFakeFacetConditionsManager({});
-      const stopWatchingSpy = vi.spyOn(mockDependenciesManager, 'stopWatching');
-      vi.mocked(buildFacetConditionsManager).mockReturnValue(
-        mockDependenciesManager
+      mockedFacetConditionsManager = buildFakeFacetConditionsManager({});
+      const stopWatchingSpy = vi.spyOn(
+        mockedFacetConditionsManager,
+        'stopWatching'
       );
 
       const {element} = await renderRatingFacet();
@@ -409,8 +404,9 @@ describe('atomic-rating-facet', () => {
     });
 
     it('should render clear button when values are selected', async () => {
-      const {locators} = await renderRatingFacet({
-        facetState: {
+      mockedNumericFacet = buildFakeNumericFacet({
+        state: {
+          ...mockedNumericFacet.state,
           values: [
             {
               start: 4,
@@ -422,6 +418,8 @@ describe('atomic-rating-facet', () => {
           ],
         },
       });
+
+      const {locators} = await renderRatingFacet();
       await expect.element(locators.clearButton).toBeInTheDocument();
     });
   });

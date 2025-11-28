@@ -1,17 +1,45 @@
-import type {NumericFacet} from '@coveo/headless';
+import type {
+  NumericFacet,
+  NumericFacetState,
+  NumericFacetValue,
+} from '@coveo/headless';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
+
+const defaultValues: NumericFacetValue[] = [
+  {
+    start: 1,
+    end: 2,
+    endInclusive: false,
+    state: 'selected',
+    numberOfResults: 10,
+  },
+  {
+    start: 2,
+    end: 3,
+    endInclusive: false,
+    state: 'idle',
+    numberOfResults: 20,
+  },
+  {
+    start: 3,
+    end: 4,
+    endInclusive: false,
+    state: 'idle',
+    numberOfResults: 30,
+  },
+];
 
 const defaultState = {
   enabled: true,
   facetId: 'numericFacet',
   hasActiveValues: false,
-  values: [],
+  values: defaultValues,
   isLoading: false,
   sortCriterion: 'ascending',
 } satisfies NumericFacet['state'];
 
-export const defaultImplementation = {
+const defaultImplementation = {
   subscribe: genericSubscribe,
   deselectAll: vi.fn(),
   isSortedBy: vi.fn(),
@@ -29,11 +57,10 @@ export const buildFakeNumericFacet = ({
   state,
 }: Partial<{
   implementation?: Partial<NumericFacet>;
-  state?: Partial<NumericFacet['state']>;
-}> = {}): NumericFacet => {
-  const properState = state ? state : defaultState;
-  return {
+  state?: Partial<NumericFacetState>;
+}>): NumericFacet =>
+  ({
+    ...defaultImplementation,
     ...implementation,
-    state: properState,
-  } as NumericFacet;
-};
+    ...{state: {...defaultState, ...(state || {})}},
+  }) as NumericFacet;
