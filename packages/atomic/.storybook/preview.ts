@@ -169,8 +169,26 @@ export const parameters: Parameters = {
   },
 };
 
+// Track the previous MSW state to detect changes and trigger reloads
+let previousMswState: boolean | undefined;
+
 export const decorators = [
-  (Story) => {
+  (Story, context) => {
+    // Check if MSW global has changed and reload the page if so
+    // This ensures the new mocking state takes effect immediately
+    if (!isTestEnvironment && typeof window !== 'undefined') {
+      const currentMswState = context.globals?.msw;
+      if (
+        previousMswState !== undefined &&
+        previousMswState !== currentMswState
+      ) {
+        previousMswState = currentMswState;
+        window.location.reload();
+        return null;
+      }
+      previousMswState = currentMswState;
+    }
+
     const story = Story();
 
     if (story?._$litType$) {
@@ -208,7 +226,7 @@ function disableAnalytics(container, selectors) {
 export const globalTypes = {
   msw: {
     name: 'MSW Mocking',
-    description: 'Toggle MSW API mocking on/off',
+    description: 'Toggle MSW API mocking on/off (reloads story)',
     defaultValue: isMswEnabledByDefault,
     toolbar: {
       icon: 'lightning',
