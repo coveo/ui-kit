@@ -710,13 +710,181 @@ describe('atomic-color-facet', () => {
     }
   });
 
-  it('should set error when invalid sort criteria is provided', async () => {
-    const {element} = await setupElement({
-      // @ts-expect-error Testing invalid value
-      sortCriteria: 'invalidOption',
-    });
+  // These tests ensure ValidatePropsController is properly wired up for all validated props.
 
-    expect(element.error).toBeInstanceOf(Error);
-    expect(element.error.message).toContain('sortCriteria');
-  });
+  // TODO V4: KIT-5197 - Remove skip
+  it.skip.each<{
+    prop:
+      | 'field'
+      | 'numberOfValues'
+      | 'headingLevel'
+      | 'injectionDepth'
+      | 'sortCriteria'
+      | 'resultsMustMatch'
+      | 'displayValuesAs'
+      | 'allowedValues'
+      | 'customSort'
+      | 'tabsExcluded'
+      | 'tabsIncluded';
+    invalidValue: string | number | string[];
+  }>([
+    {
+      prop: 'field',
+      invalidValue: '',
+    },
+    {
+      prop: 'numberOfValues',
+      invalidValue: 0,
+    },
+    {
+      prop: 'headingLevel',
+      invalidValue: 7,
+    },
+    {
+      prop: 'injectionDepth',
+      invalidValue: -1,
+    },
+    {
+      prop: 'sortCriteria',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'resultsMustMatch',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'displayValuesAs',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'allowedValues',
+      invalidValue: new Array(26).fill('value'),
+    },
+    {
+      prop: 'customSort',
+      invalidValue: new Array(26).fill('value'),
+    },
+    {
+      prop: 'tabsExcluded',
+      invalidValue: [''],
+    },
+    {
+      prop: 'tabsIncluded',
+      invalidValue: [''],
+    },
+  ])(
+    'should set error when #$prop is invalid',
+    async ({prop, invalidValue}) => {
+      const {element} = await setupElement();
+
+      expect(element.error).toBeUndefined();
+
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
+
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+    }
+  );
+
+  // TODO V4: KIT-5197 - Remove this test
+  it.each<{
+    prop:
+      | 'field'
+      | 'numberOfValues'
+      | 'headingLevel'
+      | 'injectionDepth'
+      | 'sortCriteria'
+      | 'resultsMustMatch'
+      | 'displayValuesAs'
+      | 'allowedValues'
+      | 'customSort'
+      | 'tabsExcluded'
+      | 'tabsIncluded';
+    validValue: string | number | string[];
+    invalidValue: string | number | string[];
+  }>([
+    {
+      prop: 'field',
+      validValue: 'author',
+      invalidValue: '',
+    },
+    {
+      prop: 'numberOfValues',
+      validValue: 10,
+      invalidValue: 0,
+    },
+    {
+      prop: 'headingLevel',
+      validValue: 2,
+      invalidValue: 7,
+    },
+    {
+      prop: 'injectionDepth',
+      validValue: 1000,
+      invalidValue: -1,
+    },
+    {
+      prop: 'sortCriteria',
+      validValue: 'alphanumeric',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'resultsMustMatch',
+      validValue: 'atLeastOneValue',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'displayValuesAs',
+      validValue: 'checkbox',
+      invalidValue: 'invalid',
+    },
+    {
+      prop: 'allowedValues',
+      validValue: ['pdf', 'doc'],
+      invalidValue: new Array(26).fill('value'),
+    },
+    {
+      prop: 'customSort',
+      validValue: ['pdf', 'doc'],
+      invalidValue: new Array(26).fill('value'),
+    },
+    {
+      prop: 'tabsExcluded',
+      validValue: ['tab1', 'tab2'],
+      invalidValue: [''],
+    },
+    {
+      prop: 'tabsIncluded',
+      validValue: ['tab1', 'tab2'],
+      invalidValue: [''],
+    },
+  ])(
+    'should log validation warning when #$prop is updated to invalid value',
+    async ({prop, validValue, invalidValue}) => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+
+      const {element} = await setupElement({[prop]: validValue});
+
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
+
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'Prop validation failed for component atomic-color-facet'
+        ),
+        element
+      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(prop),
+        element
+      );
+
+      consoleWarnSpy.mockRestore();
+    }
+  );
 });

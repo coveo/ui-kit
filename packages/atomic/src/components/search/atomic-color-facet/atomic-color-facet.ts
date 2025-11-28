@@ -1,3 +1,4 @@
+import {ArrayValue, NumberValue, Schema, StringValue} from '@coveo/bueno';
 import {
   buildFacet,
   buildFacetConditionsManager,
@@ -40,6 +41,7 @@ import facetValueBoxStyles from '@/src/components/common/facets/facet-value-box/
 import {renderFacetValueLabelHighlight} from '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '@/src/components/common/facets/popover/popover-type';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {renderColorFacetCheckbox} from '@/src/components/search/facets/color-facet-checkbox/color-facet-checkbox';
 import {arrayConverter} from '@/src/converters/array-converter';
@@ -262,7 +264,7 @@ export class AtomicColorFacet
    * Minimum: `0`
    * Default: `1000`
    */
-  @property({type: Number, attribute: 'injection-depth'})
+  @property({type: Number, attribute: 'injection-depth', reflect: true})
   public injectionDepth = 1000;
 
   /**
@@ -346,6 +348,73 @@ export class AtomicColorFacet
   private facetConditionsManager?: FacetConditionsManager;
   private facetSearchAriaLive?: AriaLiveRegionController;
   private resultIndexToFocusOnShowMore = 0;
+
+  constructor() {
+    super();
+    new ValidatePropsController(
+      this,
+      () => ({
+        field: this.field,
+        numberOfValues: this.numberOfValues,
+        headingLevel: this.headingLevel,
+        injectionDepth: this.injectionDepth,
+        sortCriteria: this.sortCriteria,
+        resultsMustMatch: this.resultsMustMatch,
+        displayValuesAs: this.displayValuesAs,
+        allowedValues: Array.isArray(this.allowedValues)
+          ? this.allowedValues
+          : [],
+        customSort: Array.isArray(this.customSort) ? this.customSort : [],
+        tabsExcluded: this.tabsExcluded,
+        tabsIncluded: this.tabsIncluded,
+      }),
+      new Schema({
+        field: new StringValue({required: true, emptyAllowed: false}),
+        numberOfValues: new NumberValue({min: 1, required: false}),
+        headingLevel: new NumberValue({min: 0, max: 6, required: false}),
+        injectionDepth: new NumberValue({min: 0, required: false}),
+        sortCriteria: new StringValue({
+          constrainTo: [
+            'score',
+            'alphanumeric',
+            'alphanumericDescending',
+            'occurrences',
+            'alphanumericNatural',
+            'alphanumericNaturalDescending',
+            'automatic',
+          ],
+          required: false,
+        }),
+        resultsMustMatch: new StringValue({
+          constrainTo: ['atLeastOneValue', 'allValues'],
+          required: false,
+        }),
+        displayValuesAs: new StringValue({
+          constrainTo: ['checkbox', 'box'],
+          required: false,
+        }),
+        allowedValues: new ArrayValue({
+          each: new StringValue({emptyAllowed: false}),
+          max: 25,
+          required: false,
+        }),
+        customSort: new ArrayValue({
+          each: new StringValue({emptyAllowed: false}),
+          max: 25,
+          required: false,
+        }),
+        tabsExcluded: new ArrayValue({
+          each: new StringValue({emptyAllowed: false}),
+          required: false,
+        }),
+        tabsIncluded: new ArrayValue({
+          each: new StringValue({emptyAllowed: false}),
+          required: false,
+        }),
+      }),
+      false
+    );
+  }
 
   public initialize() {
     if (this.tabsIncluded.length > 0 && this.tabsExcluded.length > 0) {
