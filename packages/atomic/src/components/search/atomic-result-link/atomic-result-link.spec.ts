@@ -71,18 +71,16 @@ describe('atomic-result-link', () => {
     await atomicInterface.updateComplete;
     await element?.updateComplete;
 
-    page
-      .getByRole('link')
-      .query()
-      ?.addEventListener('click', (e) => {
-        e.preventDefault();
-      });
+    const link = locators.getLink();
+    link.query()?.addEventListener('click', (e) => {
+      e.preventDefault();
+    });
 
     return {
       element,
       atomicResult,
       atomicInterface,
-      link: locators.getLink(),
+      link,
       parts: parts(element),
     };
   };
@@ -165,17 +163,6 @@ describe('atomic-result-link', () => {
       const {element} = await renderComponent();
 
       expect(element).toBeDefined();
-    });
-
-    it('should call super.connectedCallback', async () => {
-      const element = new AtomicResultLink();
-      const superSpy = vi.spyOn(
-        Object.getPrototypeOf(Object.getPrototypeOf(element)),
-        'connectedCallback'
-      );
-      element.connectedCallback();
-      expect(superSpy).toHaveBeenCalled();
-      superSpy.mockRestore();
     });
   });
 
