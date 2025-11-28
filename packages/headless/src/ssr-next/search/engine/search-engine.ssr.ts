@@ -17,7 +17,7 @@ import type {
  * Initializes a Search engine definition in SSR with given controllers definitions and search engine config.
  *
  * @param options - The search engine definition
- * @returns Two utility functions to fetch the initial state of the engine in SSR and hydrate the state in CSR.
+ * @returns An object containing the search engine definition with utility functions to fetch the initial state of the engine in SSR and hydrate the state in CSR.
  *
  * @remarks
  * You can use the {@link InferStaticState} and {@link InferHydratedState} utility types with the returned engine definition
@@ -25,7 +25,7 @@ import type {
  *
  * @example
  * ```ts
- * const searchEngineDefinition = defineSearchEngine(config);
+ * const {searchEngineDefinition} = defineSearchEngine(config);
  *
  * const staticState = await searchEngineDefinition.fetchStaticState({
  *   navigatorContext: {/*...* /},
@@ -41,7 +41,12 @@ export function defineSearchEngine<
   TControllerDefinitions extends SearchControllerDefinitionsMap = {},
 >(
   options: SearchEngineDefinitionOptions<TControllerDefinitions>
-): SearchEngineDefinition<SSRSearchEngine, TControllerDefinitions> {
+): {
+  searchEngineDefinition: SearchEngineDefinition<
+    SSRSearchEngine,
+    TControllerDefinitions
+  >;
+} {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
   const tokenManager = createAccessTokenManager(
@@ -78,10 +83,17 @@ export function defineSearchEngine<
     definitionOptions
   );
 
-  return {
+  const searchEngineDefinition: SearchEngineDefinition<
+    SSRSearchEngine,
+    TControllerDefinitions
+  > = {
     fetchStaticState,
     hydrateStaticState,
     getAccessToken,
     setAccessToken,
+  };
+
+  return {
+    searchEngineDefinition,
   };
 }

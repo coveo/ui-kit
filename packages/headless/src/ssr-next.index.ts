@@ -31,12 +31,12 @@
  *     ControllerDefinitionsMap<SearchEngine, Controller>
  *   >;
  *
- * const engineDefinition = defineSearchEngine(config);
+ * const {searchEngineDefinition} = defineSearchEngine(config);
  *
- * export type SearchStaticState = InferStaticState<typeof engineDefinition>;
- * export type SearchHydratedState = InferHydratedState<typeof engineDefinition>;
+ * export type SearchStaticState = InferStaticState<typeof searchEngineDefinition>;
+ * export type SearchHydratedState = InferHydratedState<typeof searchEngineDefinition>;
  *
- * export const {fetchStaticState, hydrateStaticState} = engineDefinition;
+ * export const {fetchStaticState, hydrateStaticState} = searchEngineDefinition;
  *
  * await fetchStaticState({
  *   navigatorContextProvider: () => {/*...* /},
