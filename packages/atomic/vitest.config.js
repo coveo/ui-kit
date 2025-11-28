@@ -149,6 +149,16 @@ const atomicDefault = defineConfig({
             actionTimeout: 3000,
           },
         },
+        ...(process.env.CI
+          ? [
+              {
+                browser: 'webkit',
+                context: {
+                  actionTimeout: 3000,
+                },
+              },
+            ]
+          : []),
       ],
     },
   },

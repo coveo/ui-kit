@@ -215,7 +215,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   private isStandaloneSearchBox(
     searchBox: SearchBox | StandaloneSearchBox
   ): searchBox is StandaloneSearchBox {
-    return 'redirectTo' in searchBox;
+    return Object.hasOwn(searchBox, 'redirectTo');
   }
 
   public initialize() {
@@ -252,10 +252,14 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
         });
   }
 
+  private isStandaloneSearchboxState(state: SearchBoxState | StandaloneSearchBoxState): state is StandaloneSearchBoxState {
+    return Object.hasOwn(state, 'redirectTo')
+  }
+
   public componentWillUpdate() {
     if (
-      !('redirectTo' in this.searchBoxState) ||
-      !('afterRedirection' in this.searchBox)
+      !this.isStandaloneSearchboxState(this.searchBoxState) ||
+      !Object.hasOwn(this.searchBox, 'afterRedirection')
     ) {
       return;
     }
@@ -273,7 +277,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     const storage = new SafeStorage();
     storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
 
-    this.searchBox.afterRedirection();
+    (this.searchBox as StandaloneSearchBox).afterRedirection();
     const event = this.redirect.emit({redirectTo, value});
     if (!event.defaultPrevented) {
       window.location.href = redirectTo;

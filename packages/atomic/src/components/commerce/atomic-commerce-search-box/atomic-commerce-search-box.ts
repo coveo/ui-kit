@@ -229,8 +229,8 @@ export class AtomicCommerceSearchBox
       return;
     }
     if (
-      !('redirectTo' in this.searchBoxState) ||
-      !('afterRedirection' in this.searchBox)
+      !this.isStandaloneSearchboxState(this.searchBoxState) ||
+      !Object.hasOwn(this.searchBox, 'afterRedirection')
     ) {
       return;
     }
@@ -247,7 +247,7 @@ export class AtomicCommerceSearchBox
     const storage = new SafeStorage();
     storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
 
-    this.searchBox.afterRedirection();
+    (this.searchBox as StandaloneSearchBox).afterRedirection();
 
     const event = new CustomEvent<RedirectionPayload>('redirect');
     this.dispatchEvent(event);
@@ -306,7 +306,13 @@ export class AtomicCommerceSearchBox
   private isStandaloneSearchBox(
     searchBox: SearchBox | StandaloneSearchBox
   ): searchBox is StandaloneSearchBox {
-    return 'updateRedirectUrl' in searchBox;
+    return Object.hasOwn(searchBox, 'updateRedirectUrl');
+  }
+
+  private isStandaloneSearchboxState(
+    state: SearchBoxState | StandaloneSearchBoxState
+  ): state is StandaloneSearchBoxState {
+    return Object.hasOwn(state, 'redirectTo');
   }
 
   private updateBreakpoints = once(() => updateBreakpoints(this));
