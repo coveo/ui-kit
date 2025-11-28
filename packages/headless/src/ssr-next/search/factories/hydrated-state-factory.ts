@@ -32,7 +32,9 @@ export function hydratedStaticStateFactory<
       engine.dispatch(action);
     });
 
-    await engine.waitForSearchCompletedAction();
+    if (params.searchActions.length > 0) {
+      await engine.waitForSearchCompletedAction();
+    }
 
     return {engine, controllers};
   };
