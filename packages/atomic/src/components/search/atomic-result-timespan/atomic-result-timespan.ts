@@ -58,9 +58,30 @@ export class AtomicResultTimespan
 
     new ValidatePropsController(
       this,
-      () => ({field: this.field}),
+      () => ({field: this.field, unit: this.unit, format: this.format}),
       new Schema({
         field: new StringValue({required: true, emptyAllowed: false}),
+        unit: new StringValue({
+          constrainTo: [
+            'milliseconds',
+            'ms',
+            'seconds',
+            's',
+            'minutes',
+            'm',
+            'hours',
+            'h',
+            'days',
+            'd',
+            'weeks',
+            'w',
+            'months',
+            'M',
+            'years',
+            'y',
+          ],
+        }),
+        format: new StringValue({required: false, emptyAllowed: false}),
       })
     );
   }
@@ -70,7 +91,8 @@ export class AtomicResultTimespan
       this.error = new Error(`No value found for field ${this.field}`);
       return;
     }
-    if (Number.isNaN(this.value)) {
+    // biome-ignore lint/suspicious/noGlobalIsNan: isNan is needed here because switching to Number.isNaN would be a breaking change.
+    if (isNaN(this.value)) {
       this.error = new Error(
         `Value ${this.value} for field ${this.field} is not a number`
       );

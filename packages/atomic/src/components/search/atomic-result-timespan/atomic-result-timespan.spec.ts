@@ -80,6 +80,46 @@ describe('atomic-result-timespan', () => {
 
       expect(element.error).toBeInstanceOf(Error);
     });
+
+    it('should not set error when unit is a valid value', async () => {
+      const {element} = await renderResultTimespan({
+        props: {field: 'duration', unit: 'seconds'},
+      });
+
+      expect(element.error).toBeUndefined();
+    });
+
+    it('should set error when unit is an invalid value', async () => {
+      const {element} = await renderResultTimespan({
+        props: {field: 'duration', unit: 'invalid'},
+      });
+
+      expect(element.error).toBeInstanceOf(Error);
+    });
+
+    it('should not set error when format is a non-empty string', async () => {
+      const {element} = await renderResultTimespan({
+        props: {field: 'duration', format: 'HH:mm:ss'},
+      });
+
+      expect(element.error).toBeUndefined();
+    });
+
+    it('should set error when format is an empty string', async () => {
+      const {element} = await renderResultTimespan({
+        props: {field: 'duration', format: ''},
+      });
+
+      expect(element.error).toBeInstanceOf(Error);
+    });
+
+    it('should not set error when format is undefined', async () => {
+      const {element} = await renderResultTimespan({
+        props: {field: 'duration'},
+      });
+
+      expect(element.error).toBeUndefined();
+    });
   });
 
   describe('when initializing', () => {
@@ -158,6 +198,63 @@ describe('atomic-result-timespan', () => {
       });
 
       expect(element).toHaveTextContent('00:00:03');
+    });
+
+    it('should set error for zero duration', async () => {
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(0);
+
+      const {element} = await renderResultTimespan({
+        props: {field: 'duration', unit: 'ms'},
+      });
+
+      expect(element.error).toBeInstanceOf(Error);
+      expect(element.error.message).toBe('No value found for field duration');
+    });
+
+    it('should handle negative duration values', async () => {
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
+        -3600000
+      );
+
+      const {element} = await renderResultTimespan({
+        props: {field: 'duration', unit: 'ms'},
+      });
+
+      expect(element).toHaveTextContent('-1:00:00');
+    });
+
+    it('should handle very large duration values', async () => {
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
+        Number.MAX_SAFE_INTEGER
+      );
+
+      const {element} = await renderResultTimespan({
+        props: {field: 'duration', unit: 'ms'},
+      });
+
+      expect(element.error).toBeUndefined();
+    });
+
+    it('should handle very small duration values', async () => {
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(1);
+
+      const {element} = await renderResultTimespan({
+        props: {field: 'duration', unit: 'ms'},
+      });
+
+      expect(element).toHaveTextContent('00:00:00');
+    });
+
+    it('should handle decimal values', async () => {
+      vi.mocked(ResultTemplatesHelpers.getResultProperty).mockReturnValue(
+        1500.5
+      );
+
+      const {element} = await renderResultTimespan({
+        props: {field: 'duration', unit: 'ms'},
+      });
+
+      expect(element).toHaveTextContent('00:00:01');
     });
   });
 
