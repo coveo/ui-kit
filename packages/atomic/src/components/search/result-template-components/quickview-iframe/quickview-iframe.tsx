@@ -1,3 +1,4 @@
+import {eventPromise} from '@/src/utils/event-utils';
 import {SearchEngine} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
 
@@ -44,6 +45,29 @@ const warnAboutLimitedUsageQuickview = (logger?: SearchEngine['logger']) => {
   );
 };
 
+// We can't access iframe.contentDocument until the element is added to the parent doc
+//
+// There are only 2 safe ways to get a callback when the iframe is added:
+//   - Adding a MutationObserver on the parent document. Works, but very verbose, needs to be de-registered, and could interfere with other frameworks
+//   - Adding a load event listener on the iframe. This is technically after the iframe loads its src, but since src is about:blank, it boils down to what we want.
+const iframeConnectedEvent = async (
+  iframe: HTMLIFrameElement,
+  logger?: SearchEngine['logger']
+) => {
+  if (iframe.isConnected) {
+    // The iframe is already connected.
+    // There would likely be no load event to catch anyway.
+    return;
+  }
+
+  // There could be edge cases where the iframe never loads, so add a timeout to gracefully handle errors.
+  const timeoutMs = 1000;
+
+  await eventPromise(iframe, 'load', timeoutMs).catch(() => {
+    logger?.warn('Quickview timed out waiting for the iframe to load.');
+  });
+};
+
 /**
  * @deprecated should only be used for Stencil components.
  */
@@ -75,6 +99,8 @@ export const QuickviewIframe: FunctionalComponent<{
         if (!uniqueIdentifier || !content) {
           return;
         }
+
+        await iframeConnectedEvent(iframeRef, logger);
 
         const documentWriter = iframeRef.contentDocument;
         if (!documentWriter) {

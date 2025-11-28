@@ -17,6 +17,8 @@ export {AtomicResultBadge} from './atomic-result-badge/atomic-result-badge.js';
 export {AtomicResultChildrenTemplate} from './atomic-result-children-template/atomic-result-children-template.js';
 export {AtomicResultHtml} from './atomic-result-html/atomic-result-html.js';
 export {AtomicResultList} from './atomic-result-list/atomic-result-list.js';
+export {AtomicResultLocalizedText} from './atomic-result-localized-text/atomic-result-localized-text.js';
+export {AtomicResultMultiValueText} from './atomic-result-multi-value-text/atomic-result-multi-value-text.js';
 export {AtomicResultNumber} from './atomic-result-number/atomic-result-number.js';
 export {AtomicResultSectionActions} from './atomic-result-section-actions/atomic-result-section-actions.js';
 export {AtomicResultSectionBadges} from './atomic-result-section-badges/atomic-result-section-badges.js';
@@ -36,5 +38,6 @@ export {AtomicSearchBoxRecentQueries} from './atomic-search-box-recent-queries/a
 export {AtomicSearchInterface} from './atomic-search-interface/atomic-search-interface.js';
 export {AtomicSearchLayout} from './atomic-search-layout/atomic-search-layout.js';
 export {AtomicSegmentedFacetScrollable} from './atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.js';
+export {AtomicSortDropdown} from './atomic-sort-dropdown/atomic-sort-dropdown.js';
 export {AtomicTab} from './atomic-tab/atomic-tab.js';
 export {AtomicText} from './atomic-text/atomic-text.js';

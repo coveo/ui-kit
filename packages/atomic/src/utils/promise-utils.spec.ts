@@ -17,7 +17,7 @@ describe('promise-utils', () => {
 
       const result = promiseTimeout(fastPromise, 1000);
 
-      await expect(result).resolves.toBeUndefined();
+      await expect(result).resolves.toBe('success');
     });
 
     it('should resolve when non-promise value is provided', async () => {
@@ -25,7 +25,7 @@ describe('promise-utils', () => {
 
       const result = promiseTimeout(value, 1000);
 
-      await expect(result).resolves.toBeUndefined();
+      await expect(result).resolves.toBe('immediate value');
     });
 
     it('should reject with timeout error when promise takes too long', async () => {
@@ -47,7 +47,7 @@ describe('promise-utils', () => {
 
       const result = promiseTimeout(fastPromise, 1000);
 
-      await expect(result).resolves.toBeUndefined();
+      await expect(result).resolves.toBe('quick');
       expect(clearTimeoutSpy).toHaveBeenCalled();
     });
 
@@ -80,8 +80,8 @@ describe('promise-utils', () => {
       // Negative timeout should still create a timeout that fires immediately
       vi.advanceTimersByTime(0);
 
-      // Should either resolve immediately or timeout immediately
-      await expect(result).resolves.toBeUndefined();
+      // Promise microtask resolves before the timer fires
+      await expect(result).resolves.toBe('immediate');
     });
 
     it('should handle very large timeout values', async () => {
@@ -89,7 +89,7 @@ describe('promise-utils', () => {
 
       const result = promiseTimeout(promise, Number.MAX_SAFE_INTEGER);
 
-      await expect(result).resolves.toBeUndefined();
+      await expect(result).resolves.toBe('quick');
     });
 
     it('should handle multiple concurrent timeouts', async () => {
@@ -109,12 +109,12 @@ describe('promise-utils', () => {
 
       // Advance time to 500ms - promise1 should resolve
       vi.advanceTimersByTime(500);
-      await expect(result1).resolves.toBeUndefined();
+      await expect(result1).resolves.toBe('p1');
 
       // Advance time to 1000ms total - promise2 should timeout, promise3 should resolve
       vi.advanceTimersByTime(500);
       await expect(result2).rejects.toThrow('Promise timed out.');
-      await expect(result3).resolves.toBeUndefined();
+      await expect(result3).resolves.toBe('p3');
     });
 
     it('should handle promise that resolves exactly at timeout', async () => {
@@ -126,9 +126,8 @@ describe('promise-utils', () => {
 
       vi.advanceTimersByTime(1000);
 
-      // This is a race condition - could go either way depending on implementation
-      // But the function should handle it gracefully
-      await expect(result).resolves.toBeUndefined();
+      // The original promise resolves first because its timer was registered earlier
+      await expect(result).resolves.toBe('on time');
     });
 
     it('should work with async/await pattern', async () => {
@@ -141,7 +140,7 @@ describe('promise-utils', () => {
 
       vi.advanceTimersByTime(500);
 
-      await expect(result).resolves.toBeUndefined();
+      await expect(result).resolves.toBe('async result');
     });
 
     it('should handle promises that throw synchronously', async () => {
@@ -177,17 +176,17 @@ describe('promise-utils', () => {
       const nullPromise = Promise.resolve(null);
       const undefinedPromise = Promise.resolve(undefined);
 
-      await expect(
-        promiseTimeout(stringPromise, 1000)
-      ).resolves.toBeUndefined();
-      await expect(
-        promiseTimeout(numberPromise, 1000)
-      ).resolves.toBeUndefined();
-      await expect(
-        promiseTimeout(objectPromise, 1000)
-      ).resolves.toBeUndefined();
-      await expect(promiseTimeout(arrayPromise, 1000)).resolves.toBeUndefined();
-      await expect(promiseTimeout(nullPromise, 1000)).resolves.toBeUndefined();
+      await expect(promiseTimeout(stringPromise, 1000)).resolves.toBe(
+        'string value'
+      );
+      await expect(promiseTimeout(numberPromise, 1000)).resolves.toBe(42);
+      await expect(promiseTimeout(objectPromise, 1000)).resolves.toEqual({
+        key: 'value',
+      });
+      await expect(promiseTimeout(arrayPromise, 1000)).resolves.toEqual([
+        1, 2, 3,
+      ]);
+      await expect(promiseTimeout(nullPromise, 1000)).resolves.toBeNull();
       await expect(
         promiseTimeout(undefinedPromise, 1000)
       ).resolves.toBeUndefined();
