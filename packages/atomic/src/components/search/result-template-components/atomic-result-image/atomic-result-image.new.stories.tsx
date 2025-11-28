@@ -54,8 +54,15 @@ export const Default: Story = {
 export const withAnAltTextField: Story = {
   name: 'With an alt text field',
   args: {
-    field: 'invalid',
-    fallback: 'invalid',
+    field: 'randomimage',
     'image-alt-field': 'someAltField',
+  },
+};
+
+export const withFallbackImage: Story = {
+  name: 'With fallback image',
+  args: {
+    field: 'nonexistentfield',
+    fallback: 'https://picsum.photos/200/200',
   },
 };
