@@ -103,6 +103,7 @@ export function getFacetsInChildren(parent: HTMLElement): BaseFacetElement[] {
     if (isPseudoFacet(child)) {
       facets.push(child);
     } else if (isPopover(child)) {
+      // atomic-popover only allows a single child facet, so find() is sufficient
       const nestedFacet = Array.from(child.children).find(isPseudoFacet);
       if (nestedFacet) {
         facets.push(nestedFacet);
