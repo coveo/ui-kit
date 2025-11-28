@@ -12,6 +12,16 @@ import customElements from '../custom-elements.json';
 import {defineCustomElements} from '../dist/atomic/loader/index.js';
 
 /**
+ * Type guard to check if globalThis has the vitest browser property.
+ * This property is set by @vitest/browser when running tests.
+ */
+function hasVitestBrowser(
+  obj: typeof globalThis
+): obj is typeof globalThis & {__vitest_browser__: unknown} {
+  return Object.hasOwn(obj, '__vitest_browser__');
+}
+
+/**
  * Checks if the code is running in a test environment.
  * This is true for vitest story tests via @storybook/addon-vitest.
  */
@@ -24,7 +34,7 @@ function checkIsTestEnvironment(): boolean {
     }
   }
   // Check for vitest global (set by @vitest/browser)
-  if (typeof globalThis !== 'undefined' && '__vitest_browser__' in globalThis) {
+  if (typeof globalThis !== 'undefined' && hasVitestBrowser(globalThis)) {
     return true;
   }
   return false;
@@ -88,7 +98,7 @@ const conditionalMswLoader: typeof mswLoader = async (context) => {
     return mswLoader(context);
   }
 
-  // Check if MSW is enabled via the global toggle
+  // Determine if MSW is enabled: use the global toggle if set (including false), otherwise fall back to the default
   const isMswEnabled = context.globals?.msw ?? isMswEnabledByDefault;
 
   // If MSW is disabled, skip the loader
@@ -169,8 +179,9 @@ export const parameters: Parameters = {
   },
 };
 
-// Track the previous MSW state to detect changes and trigger reloads
-let previousMswState: boolean | undefined;
+// Track the previous MSW state to detect changes and trigger reloads.
+// Initialize to the default value to avoid unnecessary reloads on first render.
+let previousMswState: boolean | undefined = isMswEnabledByDefault;
 
 export const decorators = [
   (Story, context) => {
