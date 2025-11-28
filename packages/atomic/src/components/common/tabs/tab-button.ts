@@ -42,7 +42,7 @@ export const renderTabButton: FunctionalComponentWithChildren<TabButtonProps> =
     return html`<div
       role="tab"
       class=${multiClassMap(containerClasses)}
-      aria-current=${props.active ? 'true' : 'false'}
+      aria-selected=${props.active ? 'true' : 'false'}
       aria-label=${`tab for ${props.label}`}
       part=${props.active ? 'button-container-active' : 'button-container'}
     >
