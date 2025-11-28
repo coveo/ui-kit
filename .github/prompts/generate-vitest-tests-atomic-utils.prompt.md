@@ -160,7 +160,7 @@ describe('promise-utils', () => {
   describe('#promiseTimeout', () => {
     it('should resolve when promise completes before timeout', async () => {
       const result = promiseTimeout(Promise.resolve('success'), 1000);
-      await expect(result).resolves.toBeUndefined();
+      await expect(result).resolves.toBe('success');
     });
 
     it('should reject when promise exceeds timeout', async () => {
@@ -178,7 +178,7 @@ describe('promise-utils', () => {
       const p2 = new Promise((resolve) => setTimeout(() => resolve('slow'), 2000));
       const p2Timeout = promiseTimeout(p2, 1000);
 
-      await expect(p1).resolves.toBeUndefined();
+      await expect(p1).resolves.toBe('fast');
       
       vi.advanceTimersByTime(1000);
       await expect(p2Timeout).rejects.toThrow('Promise timed out.');

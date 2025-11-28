@@ -8,7 +8,8 @@ export function promiseTimeout<T>(
       reject(new Error('Promise timed out.'));
     }, ms);
   });
-  return Promise.race([prom, timeout]).then(() => {
+  return Promise.race([prom, timeout]).then((value) => {
     clearTimeout(id);
+    return value;
   }) as Promise<T>;
 }
