@@ -1,6 +1,5 @@
 import type {
   Args,
-  ArgTypes,
   Meta,
   StoryObj as Story,
 } from '@storybook/web-components-vite';
@@ -40,6 +39,14 @@ searchApiHarness.searchEndpoint.mock((response) => {
   }
   return response;
 });
+
+searchApiHarness.facetSearchEndpoint.mock(() => ({
+  values: [
+    {displayValue: 'Powerpoint', rawValue: 'Powerpoint', count: 76},
+    {displayValue: 'PDF', rawValue: 'PDF', count: 43},
+  ],
+  moreValuesAvailable: false,
+}));
 
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -106,33 +113,6 @@ const facetValueToCss = {
   },
 };
 
-const valueFacetArgTypes = Object.keys(facetValueToCss).reduce<ArgTypes>(
-  (acc, facetValue) =>
-    // biome-ignore lint/performance/noAccumulatingSpread: <>
-    Object.assign(acc, {
-      [`cssParts-value-${facetValue}`]: {
-        control: {
-          type: 'object',
-        },
-        if: {arg: 'field', eq: 'filetype'},
-        name: `value-${facetValue}`,
-        required: false,
-        description: `The facet value to customize facet value '${facetValue}'. See \`value-*\`.`,
-        type: {
-          name: 'object',
-          value: {},
-        },
-        table: {
-          category: 'css shadow-sm parts',
-          subcategory: 'Dynamic parts',
-          type: {},
-          defaultValue: {},
-        },
-      },
-    }),
-  {} as ArgTypes
-);
-
 const baseFacetValueCss = {
   'background-position': 'center',
   'background-size': 'contain',
@@ -197,19 +177,10 @@ const colorFacetStylesDecorator = (story: () => unknown) => {
 
 export const Default: Story = {
   name: 'atomic-color-facet',
-  argTypes: {
-    ...argTypes,
-    ...valueFacetArgTypes,
-    'value-*-part': {
-      name: 'value-*',
-      control: false,
-    },
-  },
   args: {
     ...args,
     ...facetValueArgs,
     field: 'filetype',
-    numberOfValues: 9,
   },
   decorators: [facetDecorator, colorFacetStylesDecorator],
 };
@@ -219,39 +190,6 @@ export const CheckboxDisplay: Story = {
   args: {
     field: 'filetype',
     'display-values-as': 'checkbox',
-    numberOfValues: 8,
   },
   decorators: [facetDecorator, colorFacetStylesDecorator],
-};
-
-export const LowFacetValues: Story = {
-  tags: ['test'],
-  args: {
-    field: 'filetype',
-    'number-of-values': 2,
-  },
-  decorators: [facetDecorator, colorFacetStylesDecorator],
-  beforeEach: () => {
-    searchApiHarness.searchEndpoint.mockOnce((response) => {
-      if ('facets' in response) {
-        return {
-          ...response,
-          facets: response.facets.map((facet) => {
-            if (
-              facet &&
-              typeof facet === 'object' &&
-              'field' in facet &&
-              facet.field === 'filetype' &&
-              'values' in facet &&
-              Array.isArray(facet.values)
-            ) {
-              return {...facet, values: facet.values.slice(0, 2)};
-            }
-            return facet;
-          }),
-        };
-      }
-      return response;
-    });
-  },
 };

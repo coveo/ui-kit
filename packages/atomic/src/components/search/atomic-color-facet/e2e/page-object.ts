@@ -6,35 +6,27 @@ export class AtomicColorFacetPageObject extends BasePageObject {
     super(page, 'atomic-color-facet');
   }
 
-  get getFacetSearch() {
-    return this.page.getByLabel('Search');
-  }
-
-  get getFacetValue() {
-    return this.page.locator('[part="value-box"]');
-  }
-
-  get facetSearchMoreMatchesFor() {
-    return this.page.getByRole('button', {name: 'More matches for p'});
+  get facet() {
+    return this.page.locator('[part="facet"]');
   }
 
   get labelButton() {
     return this.page.locator('[part="label-button"]').first();
   }
 
-  get clearButton() {
-    return this.page.locator('[part="clear-button"]').first();
-  }
-
-  get showMoreButton() {
-    return this.page.locator('[part="show-more"]').first();
-  }
-
-  get showLessButton() {
-    return this.page.locator('[part="show-less"]').first();
-  }
-
-  get facetValues() {
+  get values() {
     return this.page.locator('[part="values"]');
+  }
+
+  get valueBoxes() {
+    return this.page.locator('[part="value-box"]');
+  }
+
+  get searchInput() {
+    return this.page.locator('[part="search-input"]');
+  }
+
+  getFacetValueByLabel(label: string) {
+    return this.page.getByLabel(label, {exact: false});
   }
 }

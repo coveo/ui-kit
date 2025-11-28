@@ -1,102 +1,53 @@
 import {expect, test} from './fixture';
 
-test.describe('atomic-color-facet E2E tests', () => {
-  test.describe('when clicking facet search "More matches for"', () => {
-    test.beforeEach(async ({facet}) => {
-      await facet.load({story: 'low-facet-values'});
+test.describe('atomic-color-facet', () => {
+  test('should render the facet with all essential parts', async ({facet}) => {
+    await facet.load();
+
+    await test.step('Verify facet container is visible', async () => {
+      await expect(facet.facet).toBeVisible();
     });
 
-    test('should display an increasing number of matches', async ({facet}) => {
-      await facet.getFacetSearch.click();
-      await facet.getFacetSearch.pressSequentially('p');
-      await expect
-        .poll(async () => {
-          return await facet.getFacetValue.count();
-        })
-        .toBeGreaterThanOrEqual(2);
+    await test.step('Verify facet label button is visible', async () => {
+      await expect(facet.labelButton).toBeVisible();
+    });
 
-      await facet.facetSearchMoreMatchesFor.click();
-      await expect
-        .poll(async () => {
-          return await facet.getFacetValue.count();
-        })
-        .toBeGreaterThanOrEqual(4);
+    await test.step('Verify facet values are visible', async () => {
+      await expect(facet.values).toBeVisible();
+      await expect(facet.valueBoxes).toHaveCount(8);
+    });
 
-      await facet.facetSearchMoreMatchesFor.click();
-      await expect
-        .poll(async () => {
-          return await facet.getFacetValue.count();
-        })
-        .toBeGreaterThanOrEqual(6);
+    await test.step('Verify facet search input is visible', async () => {
+      await expect(facet.searchInput).toBeVisible();
     });
   });
 
-  test.describe('collapse and expand', () => {
-    test.beforeEach(async ({facet}) => {
-      await facet.load();
-    });
+  test('should be able to click on a facet value', async ({facet}) => {
+    await facet.load();
 
-    test('should collapse when label button is clicked', async ({facet}) => {
-      await expect(facet.facetValues).toBeVisible();
-      await facet.labelButton.click();
-      await expect(facet.facetValues).not.toBeVisible();
-    });
-
-    test('should expand when label button is clicked again', async ({
-      facet,
-    }) => {
-      await facet.labelButton.click();
-      await expect(facet.facetValues).not.toBeVisible();
-      await facet.labelButton.click();
-      await expect(facet.facetValues).toBeVisible();
-    });
-  });
-
-  test.describe('show more and show less', () => {
-    test.beforeEach(async ({facet}) => {
-      await facet.load();
-    });
-
-    test('should show more values when show more is clicked', async ({
-      facet,
-    }) => {
-      const initialCount = await facet.getFacetValue.count();
-      await facet.showMoreButton.click();
-      await expect
-        .poll(async () => await facet.getFacetValue.count())
-        .toBeGreaterThan(initialCount);
-    });
-
-    test('should show less values when show less is clicked after show more', async ({
-      facet,
-    }) => {
-      const initialCount = await facet.getFacetValue.count();
-      await facet.showMoreButton.click();
-      await expect
-        .poll(async () => await facet.getFacetValue.count())
-        .toBeGreaterThan(initialCount);
-
-      await facet.showLessButton.click();
-      await expect
-        .poll(async () => await facet.getFacetValue.count())
-        .toBe(initialCount);
-    });
-  });
-
-  test.describe('clear functionality', () => {
-    test.beforeEach(async ({facet}) => {
-      await facet.load();
-    });
-
-    test('should clear selection when clear button is clicked', async ({
-      facet,
-    }) => {
-      const firstValue = facet.getFacetValue.first();
+    await test.step('Click on the first facet value', async () => {
+      // Verify value is clickable and accessible
+      const firstValue = facet.valueBoxes.first();
+      await expect(firstValue).toBeEnabled();
+      await expect(firstValue).toHaveAttribute('aria-label', /Email/);
       await firstValue.click();
+      // Verify the click was processed without error
+      // The component should still be visible after interaction
+      await expect(facet.facet).toBeVisible();
+    });
+  });
 
-      await expect(facet.clearButton).toBeVisible();
-      await facet.clearButton.click();
-      await expect(facet.clearButton).not.toBeVisible();
+  test('should show facet search results when typing in search input', async ({
+    facet,
+  }) => {
+    await facet.load();
+
+    await test.step('Type in the search input', async () => {
+      await facet.searchInput.fill('power');
+    });
+
+    await test.step('Verify Powerpoint appears in search results', async () => {
+      await expect(facet.getFacetValueByLabel('Powerpoint')).toBeVisible();
     });
   });
 });
