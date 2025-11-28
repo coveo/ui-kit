@@ -3,6 +3,7 @@ import type {
   ChildProduct,
   Product,
 } from '../../../api/commerce/common/product.js';
+import type {Result} from '../../../api/commerce/common/result.js';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {configuration} from '../../../app/common-reducers.js';
 import {stateKey} from '../../../app/state-key.js';
@@ -16,8 +17,8 @@ import type {Parameters} from '../../../features/commerce/parameters/parameters-
 import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema.js';
 import {activeParametersSelector} from '../../../features/commerce/parameters/parameters-selectors.js';
 import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
+import type {FetchProductListingPayload} from '../../../features/commerce/product-listing/product-listing-actions.js';
 import {
-  type FetchProductListingPayload,
   fetchMoreProducts,
   fetchProductListing,
   promoteChildToParent,
@@ -98,6 +99,7 @@ export interface ProductListing
  */
 export interface ProductListingState {
   products: Product[];
+  results: Result[];
   error: CommerceAPIErrorStatusResponse | null;
   isLoading: boolean;
   responseId: string;
@@ -158,10 +160,11 @@ export function buildProductListing(
     ...subControllers,
 
     get state() {
-      const {products, error, isLoading, responseId} =
+      const {products, results, error, isLoading, responseId} =
         getState().productListing;
       return {
         products,
+        results,
         error,
         isLoading,
         responseId,
