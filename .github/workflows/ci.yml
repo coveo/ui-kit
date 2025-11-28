@@ -371,7 +371,7 @@ jobs:
     environment: PR Artifacts
     needs:
       - "merge-atomic-playwright-reports"
-      - 'build'
+      - "build"
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     steps:
