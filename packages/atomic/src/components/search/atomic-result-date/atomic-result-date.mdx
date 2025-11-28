@@ -1,0 +1,65 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicResultDateStories from './atomic-result-date.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicResultDateStories} />
+
+<AtomicDocTemplate
+  stories={AtomicResultDateStories}
+  githubPath="search/atomic-result-date/atomic-result-date.ts"
+  tagName="atomic-result-date"
+  className="AtomicResultDate"
+>
+
+The `atomic-result-date` component renders the value of a date result field.
+
+This component is used within `atomic-result-template` components inside the result list:
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-result-list>
+    <atomic-result-template>
+      <template>
+        <atomic-result-date field="date"></atomic-result-date>
+      </template>
+    </atomic-result-template>
+  </atomic-result-list>
+  ...
+</atomic-search-interface>
+```
+
+### Basic Usage
+
+To display a date field with the default format (`D/M/YYYY`):
+
+```html
+<atomic-result-date field="date"></atomic-result-date>
+```
+
+### With Custom Format
+
+You can specify a custom date format using [Day.js format tokens](https://day.js.org/docs/en/display/format):
+
+```html
+<atomic-result-date field="date" format="YYYY-MM-DD"></atomic-result-date>
+```
+
+### With Relative Time
+
+Enable relative time display to show dates like "Today", "Yesterday", or "Tomorrow":
+
+```html
+<atomic-result-date field="date" relative-time></atomic-result-date>
+```
+
+To customize the relative time strings, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
+
+### Supported Fields
+
+The component looks for fields in this order:
+1. First in the Result object properties
+2. Then in the `result.raw` object
+
+</AtomicDocTemplate>
