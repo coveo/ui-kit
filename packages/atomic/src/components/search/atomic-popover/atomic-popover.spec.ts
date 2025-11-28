@@ -242,6 +242,18 @@ describe('atomic-popover', () => {
       expect(button.getAttribute('aria-expanded')).toBe('false');
     });
 
+    it('should have correct aria-expanded attribute', async () => {
+      const element = await renderPopover();
+      const {button} = locators.parts(element);
+
+      expect(button.getAttribute('aria-expanded')).toBe('false');
+
+      await userEvent.click(button);
+      await element.updateComplete;
+
+      expect(button.getAttribute('aria-expanded')).toBe('true');
+    });
+
     describe('when search has error', () => {
       it('should render nothing', async () => {
         const element = await renderPopover({hasError: true});
