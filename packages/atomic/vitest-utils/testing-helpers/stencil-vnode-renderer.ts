@@ -13,7 +13,7 @@ import type {VNode} from '@stencil/core';
  * text nodes, elements, attributes, children, fragments, and ref callbacks.
  *
  * **Limitations:**
- * - Does not handle event listeners (use DOM APIs directly in tests)
+ * - Only handles basic event listeners attached via `on*` props
  * - Does not handle property vs attribute distinction (uses setAttribute)
  * - Does not handle slot projection or shadow DOM
  * - Does not handle all VNode edge cases that Stencil's internal renderer handles
@@ -34,9 +34,21 @@ import type {VNode} from '@stencil/core';
  * ```
  */
 export async function renderStencilVNode(
-  vnode: NonNullable<VNode>,
+  vnode: VNode | VNode[],
   container: HTMLElement
 ): Promise<void> {
+  if (!vnode) {
+    return;
+  }
+
+  // Handle arrays of children (common when components return fragments)
+  if (Array.isArray(vnode)) {
+    for (const child of vnode) {
+      await renderStencilVNode(child, container);
+    }
+    return;
+  }
+
   const doc = container.ownerDocument;
 
   // Handle text nodes
@@ -73,6 +85,19 @@ export async function renderStencilVNode(
         element.className = value as string;
       } else if (key === 'ref') {
         refCallback = value as (el: Element) => void | Promise<void>;
+      } else if (key === 'htmlFor') {
+        element.setAttribute('for', String(value));
+      } else if (
+        key.startsWith('on') &&
+        typeof value === 'function' &&
+        key.length > 2
+      ) {
+        const eventName = key.slice(2).toLowerCase();
+        element.addEventListener(eventName, value as EventListener);
+      } else if (typeof value === 'boolean') {
+        if (value) {
+          element.setAttribute(key, '');
+        }
       } else if (value !== undefined && value !== null) {
         element.setAttribute(key, String(value));
       }
