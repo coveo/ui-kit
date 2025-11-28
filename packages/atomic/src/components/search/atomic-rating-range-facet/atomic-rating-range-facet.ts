@@ -40,7 +40,7 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
-import Star from '../../../../images/star.svg';
+import Star from '../../../images/star.svg';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
