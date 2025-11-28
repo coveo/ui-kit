@@ -243,6 +243,58 @@ describe('QuickviewIframe (Stencil)', () => {
     });
   });
 
+  describe('when contentDocument is unavailable', () => {
+    it('should log a warning and set fallback src when provided', async () => {
+      const contentDocumentSpy = vi
+        .spyOn(HTMLIFrameElement.prototype, 'contentDocument', 'get')
+        .mockReturnValue(null as unknown as Document);
+
+      try {
+        const fallbackSrc = 'https://example.com/quickview';
+
+        const iframe = await renderComponent({
+          title: 'Test Title',
+          content: '<p>Content</p>',
+          onSetIframeRef: mockOnSetIframeRef,
+          uniqueIdentifier: 'test-id',
+          logger: mockLogger,
+          src: fallbackSrc,
+        });
+
+        expect(mockLogger.warn).toHaveBeenCalledTimes(1);
+        expect(mockLogger.warn).toHaveBeenCalledWith(
+          'Quickview initialized in restricted mode due to incompatible sandboxing environment. Keywords hit navigation will be disabled.'
+        );
+        expect(iframe.getAttribute('src')).toBe(fallbackSrc);
+        expect(mockOnSetIframeRef).not.toHaveBeenCalled();
+      } finally {
+        contentDocumentSpy.mockRestore();
+      }
+    });
+
+    it('should return early without logging when fallback src is not provided', async () => {
+      const contentDocumentSpy = vi
+        .spyOn(HTMLIFrameElement.prototype, 'contentDocument', 'get')
+        .mockReturnValue(null as unknown as Document);
+
+      try {
+        const iframe = await renderComponent({
+          title: 'Test Title',
+          content: '<p>Content</p>',
+          onSetIframeRef: mockOnSetIframeRef,
+          uniqueIdentifier: 'test-id',
+          logger: mockLogger,
+        });
+
+        expect(mockLogger.warn).not.toHaveBeenCalled();
+        expect(iframe.getAttribute('src')).toBe('about:blank');
+        expect(mockOnSetIframeRef).not.toHaveBeenCalled();
+      } finally {
+        contentDocumentSpy.mockRestore();
+      }
+    });
+  });
+
   describe('async behavior', () => {
     it('should call onSetIframeRef after content is written asynchronously', async () => {
       const callOrder: string[] = [];
