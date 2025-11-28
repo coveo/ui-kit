@@ -32,7 +32,6 @@
     "**/*.stories.ts",
     "**/*.spec.ts",
     "**/*.stories.js",
-    "**/e2e/**/*",
-    "**/stencil-*.tsx"
+    "**/e2e/**/*"
   ]
 }
