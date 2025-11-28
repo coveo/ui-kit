@@ -89,7 +89,7 @@ export const WithAlternativeContent: Story = {
       return html`
         <atomic-result-link>
           <div style="display: flex; align-items: center; gap: 8px;">
-            <img src="https://picsum.photos/150" alt="Thumbnail" style="width: 100px; height: 100px; object-fit: cover; border-radius: 4px;" />
+            <img src="https://picsum.photos/seed/atomic-result-link/100/100" alt="Thumbnail" style="width: 100px; height: 100px; object-fit: cover; border-radius: 4px;" />
           </div>
         </atomic-result-link>
       `;
