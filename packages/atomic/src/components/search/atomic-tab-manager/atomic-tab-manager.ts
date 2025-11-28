@@ -49,15 +49,30 @@ export class AtomicTabManager
 {
   static styles: CSSResultGroup = css`
     atomic-tab-bar::part(popover-button) {
-      @apply m-0 px-2 pb-1 text-left text-xl font-normal text-black sm:px-6;
+      margin: 0;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      padding-bottom: 0.25rem;
+      text-align: left;
+      font-size: 1.25rem;
+      line-height: 1.75rem;
+      font-weight: 400;
+      color: black;
+    }
+
+    @media (min-width: 640px) {
+      atomic-tab-bar::part(popover-button) {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
     }
 
     atomic-tab-bar::part(value-label) {
-      @apply font-normal;
+      font-weight: 400;
     }
 
     ::part(popover-tab) {
-      @apply font-normal;
+      font-weight: 400;
     }
   `;
 
@@ -143,11 +158,5 @@ export class AtomicTabManager
         </div>
       </atomic-tab-bar>
     `;
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'atomic-tab-manager': AtomicTabManager;
   }
 }
