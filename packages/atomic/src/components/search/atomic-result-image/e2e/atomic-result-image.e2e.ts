@@ -1,17 +1,12 @@
 /* eslint-disable @cspell/spellchecker */
 import {expect, test} from './fixture';
 
-test.describe('with an alt text field', async () => {
-  test.describe('when imageAltField is a valid string & the image is not found', () => {
-    test.beforeEach(async ({resultImage}) => {
-      await resultImage.load({
-        story: 'with-an-alt-text-field',
-      });
-      await resultImage.hydrated.waitFor();
-    });
+test.describe('atomic-result-image', () => {
+  test('should render default image', async ({resultImage}) => {
+    await resultImage.load();
+    await resultImage.hydrated.waitFor();
 
-    test('should use the alt text', async ({resultImage}) => {
-      expect(resultImage.hydrated.first().getByAltText('Some alt value'));
-    });
+    const img = resultImage.hydrated.locator('img');
+    await expect(img).toBeVisible();
   });
 });
