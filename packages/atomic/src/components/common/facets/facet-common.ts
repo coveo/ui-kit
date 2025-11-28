@@ -92,10 +92,23 @@ function isPseudoFacet(el: Element): el is BaseFacetElement {
   return 'facetId' in el;
 }
 
+function isPopover(el: Element): el is HTMLAtomicPopoverElement {
+  return el.tagName === 'ATOMIC-POPOVER';
+}
+
 export function getFacetsInChildren(parent: HTMLElement): BaseFacetElement[] {
-  const facets = Array.from(parent.children).filter((child) =>
-    isPseudoFacet(child)
-  ) as BaseFacetElement[];
+  const facets: BaseFacetElement[] = [];
+
+  Array.from(parent.children).forEach((child) => {
+    if (isPseudoFacet(child)) {
+      facets.push(child);
+    } else if (isPopover(child)) {
+      const nestedFacet = Array.from(child.children).find(isPseudoFacet);
+      if (nestedFacet) {
+        facets.push(nestedFacet);
+      }
+    }
+  });
 
   return facets;
 }
