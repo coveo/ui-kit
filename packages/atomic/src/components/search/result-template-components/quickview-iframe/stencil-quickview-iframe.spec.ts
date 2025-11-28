@@ -1,20 +1,34 @@
 import type {SearchEngine} from '@coveo/headless';
-import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {renderQuickviewIframe} from './quickview-iframe';
+import type {VNode} from '@stencil/core';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {renderStencilVNode} from '@/vitest-utils/testing-helpers/stencil-vnode-renderer';
+import {QuickviewIframe} from './stencil-quickview-iframe';
 
-describe('#renderQuickviewIframe', () => {
+describe('QuickviewIframe (Stencil)', () => {
   let mockOnSetIframeRef: (ref: HTMLIFrameElement) => void;
   let mockLogger: SearchEngine['logger'];
+  let container: HTMLElement;
 
   beforeEach(() => {
     mockOnSetIframeRef = vi.fn();
     mockLogger = {
       warn: vi.fn(),
     } as unknown as SearchEngine['logger'];
+    container = document.createElement('div');
+    document.body.appendChild(container);
   });
 
+  afterEach(() => {
+    container.remove();
+  });
+
+  /**
+   * Helper function to render the QuickviewIframe component.
+   * This calls the actual Stencil functional component and renders its output.
+   *
+   * For Lit migration: Replace this with a helper that uses renderFunctionFixture
+   * with the Lit component.
+   */
   const renderComponent = async (props: {
     title: string;
     content?: string;
@@ -24,14 +38,15 @@ describe('#renderQuickviewIframe', () => {
     src?: string;
     logger?: SearchEngine['logger'];
   }): Promise<HTMLIFrameElement> => {
-    const container = await renderFunctionFixture(
-      html`${renderQuickviewIframe({props})}`
-    );
+    // Call the actual Stencil functional component with required parameters
+    const vnode = QuickviewIframe(
+      props,
+      [], // children
+      // biome-ignore lint/suspicious/noExplicitAny: Lit's ifDefined directive returns 'typeof nothing' for undefined values, which is incompatible with sandbox attribute typing. 'any' is required here for type compatibility.
+      {} as any
+    ) as VNode;
 
-    // Twice because renderQuickviewIframe has 2 nested async updates
-    await new Promise((resolve) => setTimeout(resolve));
-    await new Promise((resolve) => setTimeout(resolve));
-
+    await renderStencilVNode(vnode, container);
     return container.firstElementChild as HTMLIFrameElement;
   };
 
