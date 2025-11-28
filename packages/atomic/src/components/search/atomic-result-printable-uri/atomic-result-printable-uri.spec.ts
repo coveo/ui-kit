@@ -1,9 +1,12 @@
-import {buildInteractiveResult, type InteractiveResult, type Result} from '@coveo/headless';
+import {
+  buildInteractiveResult,
+  type InteractiveResult,
+  type Result,
+} from '@coveo/headless';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {page} from 'vitest/browser';
 import {renderInAtomicResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-result-fixture';
 import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
@@ -67,10 +70,7 @@ describe('atomic-result-printable-uri', () => {
   });
 
   const renderComponent = async (
-    options: {
-      maxNumberOfParts?: number;
-      result?: Result;
-    } = {}
+    options: {maxNumberOfParts?: number; result?: Result} = {}
   ) => {
     const resultToUse = options.result ?? mockResult;
     const {element, atomicInterface} =
@@ -197,7 +197,9 @@ describe('atomic-result-printable-uri', () => {
         const ellipsisButton = locators.ellipsisButton();
         expect(ellipsisButton).toBeTruthy();
         expect(ellipsisButton?.textContent?.trim()).toBe('...');
-        expect(ellipsisButton?.getAttribute('aria-label')).toBe('Show hidden path');
+        expect(ellipsisButton?.getAttribute('aria-label')).toBe(
+          'Show hidden path'
+        );
       });
 
       it('should show only limited number of links with ellipsis', async () => {
@@ -234,14 +236,16 @@ describe('atomic-result-printable-uri', () => {
   describe('validation', () => {
     describe('when max-number-of-parts is less than 3', () => {
       it('should set error', async () => {
-        const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-        
+        const consoleWarnSpy = vi
+          .spyOn(console, 'warn')
+          .mockImplementation(() => {});
+
         const {element} = await renderComponent({
           maxNumberOfParts: 2,
         });
 
         expect(element?.error).toBeDefined();
-        
+
         consoleWarnSpy.mockRestore();
       });
     });

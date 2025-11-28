@@ -18,9 +18,9 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {parseXML} from '@/src/utils/utils';
-import Arrow from '../../../../images/arrow-right.svg';
+import Arrow from '../../../images/arrow-right.svg';
 import '../atomic-result-text/atomic-result-text';
-import '../../atomic-icon/atomic-icon';
+import '../../common/atomic-icon/atomic-icon';
 
 /**
  * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
