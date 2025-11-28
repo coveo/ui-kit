@@ -251,20 +251,18 @@ describe('#renderQuickviewIframe', () => {
   });
 
   describe('edge cases', () => {
-    it('should handle empty content string', async () => {
-      const iframe = await renderComponent({
+    it('should not call onSetIframeRef when content is falsy', async () => {
+      await renderComponent({
         title: 'Test Title',
         content: '',
         onSetIframeRef: mockOnSetIframeRef,
         uniqueIdentifier: 'test-id',
       });
 
-      const iframeDoc = iframe.contentDocument;
-      // Empty string is falsy, so onSetIframeRef should not be called
-      expect(iframeDoc?.body.innerHTML).not.toContain('CoveoDocIdentifier');
+      expect(mockOnSetIframeRef).not.toHaveBeenCalled();
     });
 
-    it('should handle empty uniqueIdentifier string', async () => {
+    it('should not call onSetIframeRef when uniqueIdentifier is falsy', async () => {
       await renderComponent({
         title: 'Test Title',
         content: '<p>Content</p>',
@@ -272,7 +270,6 @@ describe('#renderQuickviewIframe', () => {
         uniqueIdentifier: '',
       });
 
-      // Empty string is falsy, so onSetIframeRef should not be called
       expect(mockOnSetIframeRef).not.toHaveBeenCalled();
     });
 
