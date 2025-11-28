@@ -1,5 +1,5 @@
 # Development container for pnpm-based monorepo
-FROM node:jod-bookworm
+FROM node:krypton-bookworm@sha256:aa648b387728c25f81ff811799bbf8de39df66d7e2d9b3ab55cc6300cb9175d9
 
 # Install essential packages
 RUN apt-get update && apt-get install -y \
