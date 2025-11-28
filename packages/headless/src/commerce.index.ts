@@ -1,5 +1,6 @@
 /**
- * The Coveo Headless Commerce sub-package exposes exposes the engine, controllers, actions, and utility functions to build a commerce search experience.
+ * The Coveo Headless Commerce sub-package exposes the engine, controllers, actions, and utility functions to
+ * build a [commerce search experience](https://docs.coveo.com/en/o6r70022/).
  *
  * @example
  * ```typescript

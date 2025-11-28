@@ -1546,51 +1546,6 @@ export namespace Components {
         "hrefTemplate"?: string;
     }
     /**
-     * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
-     * Given this i18n configuration:
-     * ```
-     * searchInterface.i18n.addResourceBundle('en', 'translation', {
-     *    classic_book_advert: 'Classic book from {{name}}',
-     * });
-     * ```
-     * The component could be configured in such a way to replace `{{name}}` with the `author` field value from the result item:
-     * ```
-     * <atomic-result-localized-text locale-key="classic_book_advert" field-author="name"></atomic-result-localized-text>
-     * ```
-     * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
-     */
-    interface AtomicResultLocalizedText {
-        /**
-          * The field value to dynamically evaluate.
-         */
-        "field": Record<string, string>;
-        /**
-          * The numerical field value used to determine whether to use the singular or plural value of a translation.
-         */
-        "fieldCount"?: string;
-        /**
-          * The i18n translation key.
-         */
-        "localeKey": string;
-    }
-    /**
-     * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
-     */
-    interface AtomicResultMultiValueText {
-        /**
-          * The delimiter used to separate values when the field isn't indexed as a multi value field.
-         */
-        "delimiter": string | null;
-        /**
-          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
-         */
-        "maxValuesToDisplay": number;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
@@ -1842,11 +1797,6 @@ export namespace Components {
           * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
-    }
-    /**
-     * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
-     */
-    interface AtomicSortDropdown {
     }
     /**
      * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
@@ -2813,35 +2763,6 @@ declare global {
         new (): HTMLAtomicResultLinkElement;
     };
     /**
-     * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
-     * Given this i18n configuration:
-     * ```
-     * searchInterface.i18n.addResourceBundle('en', 'translation', {
-     *    classic_book_advert: 'Classic book from {{name}}',
-     * });
-     * ```
-     * The component could be configured in such a way to replace `{{name}}` with the `author` field value from the result item:
-     * ```
-     * <atomic-result-localized-text locale-key="classic_book_advert" field-author="name"></atomic-result-localized-text>
-     * ```
-     * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
-     */
-    interface HTMLAtomicResultLocalizedTextElement extends Components.AtomicResultLocalizedText, HTMLStencilElement {
-    }
-    var HTMLAtomicResultLocalizedTextElement: {
-        prototype: HTMLAtomicResultLocalizedTextElement;
-        new (): HTMLAtomicResultLocalizedTextElement;
-    };
-    /**
-     * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
-     */
-    interface HTMLAtomicResultMultiValueTextElement extends Components.AtomicResultMultiValueText, HTMLStencilElement {
-    }
-    var HTMLAtomicResultMultiValueTextElement: {
-        prototype: HTMLAtomicResultMultiValueTextElement;
-        new (): HTMLAtomicResultMultiValueTextElement;
-    };
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface HTMLAtomicResultPlaceholderElement extends Components.AtomicResultPlaceholder, HTMLStencilElement {
@@ -3045,15 +2966,6 @@ declare global {
         new (): HTMLAtomicSmartSnippetSuggestionsElement;
     };
     /**
-     * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
-     */
-    interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
-    }
-    var HTMLAtomicSortDropdownElement: {
-        prototype: HTMLAtomicSortDropdownElement;
-        new (): HTMLAtomicSortDropdownElement;
-    };
-    /**
      * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
      */
     interface HTMLAtomicSortExpressionElement extends Components.AtomicSortExpression, HTMLStencilElement {
@@ -3231,8 +3143,6 @@ declare global {
         "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
-        "atomic-result-localized-text": HTMLAtomicResultLocalizedTextElement;
-        "atomic-result-multi-value-text": HTMLAtomicResultMultiValueTextElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-rating": HTMLAtomicResultRatingElement;
@@ -3247,7 +3157,6 @@ declare global {
         "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
         "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
-        "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
@@ -4724,51 +4633,6 @@ declare namespace LocalJSX {
         "hrefTemplate"?: string;
     }
     /**
-     * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
-     * Given this i18n configuration:
-     * ```
-     * searchInterface.i18n.addResourceBundle('en', 'translation', {
-     *    classic_book_advert: 'Classic book from {{name}}',
-     * });
-     * ```
-     * The component could be configured in such a way to replace `{{name}}` with the `author` field value from the result item:
-     * ```
-     * <atomic-result-localized-text locale-key="classic_book_advert" field-author="name"></atomic-result-localized-text>
-     * ```
-     * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
-     */
-    interface AtomicResultLocalizedText {
-        /**
-          * The field value to dynamically evaluate.
-         */
-        "field"?: Record<string, string>;
-        /**
-          * The numerical field value used to determine whether to use the singular or plural value of a translation.
-         */
-        "fieldCount"?: string;
-        /**
-          * The i18n translation key.
-         */
-        "localeKey": string;
-    }
-    /**
-     * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
-     */
-    interface AtomicResultMultiValueText {
-        /**
-          * The delimiter used to separate values when the field isn't indexed as a multi value field.
-         */
-        "delimiter"?: string | null;
-        /**
-          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
-         */
-        "maxValuesToDisplay"?: number;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
@@ -5039,11 +4903,6 @@ declare namespace LocalJSX {
         "snippetStyle"?: string;
     }
     /**
-     * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
-     */
-    interface AtomicSortDropdown {
-    }
-    /**
      * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
      */
     interface AtomicSortExpression {
@@ -5296,8 +5155,6 @@ declare namespace LocalJSX {
         "atomic-result-icon": AtomicResultIcon;
         "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
-        "atomic-result-localized-text": AtomicResultLocalizedText;
-        "atomic-result-multi-value-text": AtomicResultMultiValueText;
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-rating": AtomicResultRating;
@@ -5312,7 +5169,6 @@ declare namespace LocalJSX {
         "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
         "atomic-smart-snippet-source": AtomicSmartSnippetSource;
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
-        "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
@@ -5554,25 +5410,6 @@ declare module "@stencil/core" {
              */
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             /**
-             * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
-             * Given this i18n configuration:
-             * ```
-             * searchInterface.i18n.addResourceBundle('en', 'translation', {
-             *    classic_book_advert: 'Classic book from {{name}}',
-             * });
-             * ```
-             * The component could be configured in such a way to replace `{{name}}` with the `author` field value from the result item:
-             * ```
-             * <atomic-result-localized-text locale-key="classic_book_advert" field-author="name"></atomic-result-localized-text>
-             * ```
-             * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
-             */
-            "atomic-result-localized-text": LocalJSX.AtomicResultLocalizedText & JSXBase.HTMLAttributes<HTMLAtomicResultLocalizedTextElement>;
-            /**
-             * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
-             */
-            "atomic-result-multi-value-text": LocalJSX.AtomicResultMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicResultMultiValueTextElement>;
-            /**
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
@@ -5641,10 +5478,6 @@ declare module "@stencil/core" {
              * ```
              */
             "atomic-smart-snippet-suggestions": LocalJSX.AtomicSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSuggestionsElement>;
-            /**
-             * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
-             */
-            "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             /**
              * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
              */
