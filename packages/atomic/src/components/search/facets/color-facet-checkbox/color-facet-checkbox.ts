@@ -36,7 +36,7 @@ export const renderColorFacetCheckbox: FunctionalComponentWithChildren<
             @click=${() => props.onClick()}
             @mousedown=${(e: MouseEvent) =>
               createRipple(e, {color: 'neutral', parent: labelRef})}
-            aria-checked=${props.isSelected.toString()}
+            aria-checked=${getAriaCheckedValue(props.isSelected)}
             class=${`value-checkbox ${props.isSelected ? 'ring-primary' : ''}`}
             aria-label=${ariaLabel}
           ></button>
@@ -59,3 +59,7 @@ export const renderColorFacetCheckbox: FunctionalComponentWithChildren<
       )}
     `;
   };
+
+const getAriaCheckedValue = (isSelected: boolean) => {
+  return isSelected ? 'true' : 'false';
+};
