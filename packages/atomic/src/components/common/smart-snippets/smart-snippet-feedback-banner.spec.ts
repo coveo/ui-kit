@@ -1,6 +1,5 @@
 import type {i18n} from 'i18next';
 import {html} from 'lit';
-import {fireEvent, within} from 'storybook/test';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
@@ -103,7 +102,7 @@ describe('#renderSmartSnippetFeedbackBanner', () => {
     const likeRadio = Array.from(radioButtons).find(
       (radio) => (radio as HTMLInputElement).value === i18n.t('yes')
     ) as HTMLInputElement;
-    await fireEvent.click(likeRadio);
+    likeRadio.click();
     expect(onLike).toHaveBeenCalled();
   });
 
@@ -114,7 +113,7 @@ describe('#renderSmartSnippetFeedbackBanner', () => {
     const dislikeRadio = Array.from(radioButtons).find(
       (radio) => (radio as HTMLInputElement).value === i18n.t('no')
     ) as HTMLInputElement;
-    await fireEvent.click(dislikeRadio);
+    dislikeRadio.click();
     expect(onDislike).toHaveBeenCalled();
   });
 
@@ -161,8 +160,9 @@ describe('#renderSmartSnippetFeedbackBanner', () => {
       disliked: true,
       feedbackSent: false,
     });
-    const explainWhyButton = within(container).queryByText(
-      i18n.t('smart-snippet-feedback-explain-why')
+    const explainWhyButton = Array.from(container.querySelectorAll('*')).find(
+      (el) =>
+        el.textContent?.trim() === i18n.t('smart-snippet-feedback-explain-why')
     );
     expect(explainWhyButton).toBeInTheDocument();
   });
@@ -173,8 +173,9 @@ describe('#renderSmartSnippetFeedbackBanner', () => {
       disliked: false,
       feedbackSent: false,
     });
-    const explainWhyButton = within(container).queryByText(
-      i18n.t('smart-snippet-feedback-explain-why')
+    const explainWhyButton = Array.from(container.querySelectorAll('*')).find(
+      (el) =>
+        el.textContent?.trim() === i18n.t('smart-snippet-feedback-explain-why')
     );
     expect(explainWhyButton).not.toBeInTheDocument();
   });
@@ -184,8 +185,9 @@ describe('#renderSmartSnippetFeedbackBanner', () => {
       disliked: true,
       feedbackSent: true,
     });
-    const explainWhyButton = within(container).queryByText(
-      i18n.t('smart-snippet-feedback-explain-why')
+    const explainWhyButton = Array.from(container.querySelectorAll('*')).find(
+      (el) =>
+        el.textContent?.trim() === i18n.t('smart-snippet-feedback-explain-why')
     );
     expect(explainWhyButton).not.toBeInTheDocument();
   });
@@ -197,10 +199,11 @@ describe('#renderSmartSnippetFeedbackBanner', () => {
       feedbackSent: false,
       onPressExplainWhy,
     });
-    const explainWhyButton = within(container).getByText(
-      i18n.t('smart-snippet-feedback-explain-why')
-    );
-    await fireEvent.click(explainWhyButton);
+    const explainWhyButton = Array.from(container.querySelectorAll('*')).find(
+      (el) =>
+        el.textContent?.trim() === i18n.t('smart-snippet-feedback-explain-why')
+    ) as HTMLElement;
+    explainWhyButton.click();
     expect(onPressExplainWhy).toHaveBeenCalled();
   });
 

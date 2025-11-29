@@ -1,16 +1,14 @@
-import {html, nothing, render, type TemplateResult} from 'lit';
+import {html, nothing, type TemplateResult} from 'lit';
 import {describe, expect, it} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {type ItemListProps, renderItemList} from './item-list';
 
 describe('renderItemList', () => {
-  const renderItemListWithChildren = (
+  const renderItemListWithChildren = async (
     props: Partial<ItemListProps> = {},
     children: TemplateResult | typeof nothing = nothing
   ) => {
-    const container = document.createElement('div');
-    document.body.appendChild(container);
-
-    render(
+    return renderFunctionFixture(
       renderItemList({
         props: {
           hasError: false,
@@ -20,11 +18,8 @@ describe('renderItemList', () => {
           templateHasError: false,
           ...props,
         },
-      })(children),
-      container
+      })(children)
     );
-
-    return container;
   };
 
   const testChild = html`<div class="child">Test Child</div>`;
@@ -42,14 +37,12 @@ describe('renderItemList', () => {
       description: '#firstRequestExecuted is false and #hasItems is false',
       props: {firstRequestExecuted: false, hasItems: false},
     },
-  ])('should render children when $description', ({props}) => {
-    const container = renderItemListWithChildren(props, testChild);
-    const child = container.querySelector('.child');
+  ])('should render children when $description', async ({props}) => {
+    const element = await renderItemListWithChildren(props, testChild);
+    const child = element.querySelector('.child');
 
     expect(child).toBeInTheDocument();
     expect(child?.textContent).toBe('Test Child');
-
-    container.remove();
   });
 
   it.each([
@@ -65,12 +58,10 @@ describe('renderItemList', () => {
       description: '#firstRequestExecuted is true and #hasItems is false',
       props: {firstRequestExecuted: true, hasItems: false},
     },
-  ])('should not render children when $description', ({props}) => {
-    const container = renderItemListWithChildren(props, testChild);
-    const child = container.querySelector('.child');
+  ])('should not render children when $description', async ({props}) => {
+    const element = await renderItemListWithChildren(props, testChild);
+    const child = element.querySelector('.child');
 
     expect(child).not.toBeInTheDocument();
-
-    container.remove();
   });
 });
