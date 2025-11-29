@@ -1,3 +1,6 @@
+---
+title: Introduction
+---
 # Headless React Utils for SSR (Open Beta)
 
 `@coveo/headless-react/ssr-commerce` is currently in Open Beta and provides React utilities for server-side rendering with Headless Commerce controllers.

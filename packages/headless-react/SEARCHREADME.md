@@ -1,3 +1,6 @@
+---
+title: Introduction
+---
 # Headless React Utils for SSR
 
 `@coveo/headless-react/ssr` provides React utilities for server-side rendering with headless controllers.
