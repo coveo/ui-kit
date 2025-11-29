@@ -20,8 +20,14 @@ import {
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
- * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
+ * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
+ *
+ * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
+ * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
+ * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
+ *
  * @slot default - Facet components are slotted within to leverage this functionality.
+ *
  */
 @Component({
   tag: 'atomic-facet-manager',

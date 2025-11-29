@@ -21,33 +21,57 @@ The `@coveo/atomic` package exposes the following entry points:
 
 Once you have cloned the repo, follow the instructions in the top-level [README.md](../../README.md) to install dependencies and link packages.
 
-To start the project in development mode, run:
+### Running package scripts
+While there are package specific scripts for this package, its best to rely on running command with `turbo` from the root of the monorepo.
 
-```bash
-pnpm run start
+For example, to run the package in the development you would run 
+
+```sh
+# ✅ Preferred method
+pnpm turbo run dev --filter=@coveo/atomic
 ```
+
+from the root of the monorepo, as opposed to 
+
+```sh
+# ❌ Deprecated method
+cd package/atomic
+pnpm run dev 
+```
+
+While running scripts from the package folder does work, using the `turbo` scripts is generally a smoother experience.
+
+All the subsequent examples assume you are operating from the monorepo root.
+
+
+### Available scripts
+
+
+Atomic uses Storybook for component development, documentation, and testing. To start Storybook in development mode:
+
+```sh
+pnpm turbo run dev --filter=@coveo/atomic
+```
+
+Storybook will be available at `http://localhost:4400`.
+
+> [!NOTE]
+> It is important you build `@coveo/atomic` at least once before running the Storybook server.
+> This ensures all components can be properly rendered by Storybook, otherwise you not see components rendered.
 
 To build the library for production, run:
 
-```bash
-pnpm run build
+```sh
+pnpm turbo run build --filter=@coveo/atomic
 ```
 
 To run the unit tests for the components, run:
 
-```bash
-pnpm test
+```sh
+pnpm turbo run test --filter=@coveo/atomic
 ```
 
-## Storybook
 
-Atomic uses Storybook for component development, documentation, and testing. To start Storybook in development mode:
-
-```bash
-pnpm run start
-```
-
-Storybook will be available at `http://localhost:4400`.
 
 ### Storybook MCP (Model Context Protocol)
 
@@ -64,19 +88,19 @@ Ref: https://docs.cypress.io/
 To open cypress, run:
 
 ```sh
-pnpm run e2e:watch
+pnpm turbo run e2e:watch --filter=@coveo/atomic
 ```
 
 To run all the test, run:
 
 ```sh
-pnpm run e2e
+pnpm turbo run e2e  --filter=@coveo/atomic
 ```
 
 To run all the test in Firefox:
 
 ```sh
-pnpm run e2e:firefox
+pnpm turbo run e2e:firefox --filter=@coveo/atomic
 ```
 
 ## Utilities
@@ -152,7 +176,7 @@ export class AtomicResultComponent {
 
 To generate a new component, use the following command:
 
-```bash
+```sh
 pnpm turbo generate-component --filter=@coveo/atomic -- --name=<component-name> --output=<path-to-output-directory>
 ```
 
@@ -160,7 +184,7 @@ The `output` argument is optional. If not provided, it will default to `src/comp
 
 For example, to generate a component named `atomic-ball`, run:
 
-```bash
+```sh
 pnpm turbo generate-component --filter=@coveo/atomic -- --name=ball
 ```
 
@@ -168,7 +192,7 @@ This will create the necessary component files under the default path `src/compo
 
 If you'd like to specify a different path, you can use the `--output` flag. For example, to generate the component under `src/components/search`, run:
 
-```bash
+```sh
 pnpm turbo generate-component --filter=@coveo/atomic -- --name=ball --output=src/components/search
 ```
 

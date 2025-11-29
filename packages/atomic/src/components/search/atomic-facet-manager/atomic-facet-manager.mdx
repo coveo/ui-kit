@@ -1,0 +1,35 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicFacetManagerStories from './atomic-facet-manager.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicFacetManagerStories} />
+
+<AtomicDocTemplate
+  stories={AtomicFacetManagerStories}
+  githubPath="search/atomic-facet-manager/atomic-facet-manager.ts"
+  tagName="atomic-facet-manager"
+  className="AtomicFacetManager"
+>
+Place facets inside the `atomic-facet-manager` component within the "facets" section of your layout:
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    <atomic-layout-section section="facets">
+      <atomic-facet-manager collapse-facets-after="4">
+        <atomic-facet field="author" label="Authors"></atomic-facet>
+        <atomic-facet field="source" label="Source"></atomic-facet>
+        <atomic-category-facet field="geographicalhierarchy" label="Geography"></atomic-category-facet>
+        <atomic-numeric-facet field="ytviewcount" label="Views"></atomic-numeric-facet>
+        <atomic-automatic-facet-generator desired-count="3"></atomic-automatic-facet-generator>
+      </atomic-facet-manager>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+## Dynamic Navigation Experience (DNE)
+The facet manager leverages Coveo's [Dynamic Navigation Experience](https://docs.coveo.com/en/3383) to automatically the order facets based on their relevance to the current search query.
+It also automatically selects facets to improve the user experience.
+</AtomicDocTemplate>
