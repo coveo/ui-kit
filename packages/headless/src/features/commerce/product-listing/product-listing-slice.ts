@@ -5,7 +5,13 @@ import type {
   ChildProduct,
   Product,
 } from '../../../api/commerce/common/product.js';
-import type {CommerceSuccessResponse} from '../../../api/commerce/common/response.js';
+import type {
+  BaseSpotlightContent,
+  Result,
+  SpotlightContent,
+} from '../../../api/commerce/common/result.js';
+import {ResultType} from '../../../api/commerce/common/result.js';
+import type {ListingCommerceSuccessResponse} from '../../../api/commerce/listing/response.js';
 import {setError} from '../../error/error-actions.js';
 import {setContext, setView} from '../context/context-actions.js';
 import {
@@ -32,7 +38,7 @@ export const productListingReducer = createReducer(
       })
       .addCase(fetchProductListing.fulfilled, (state, action) => {
         const paginationOffset = getPaginationOffset(action.payload);
-        handleFullfilled(state, action.payload.response);
+        handleFulfilled(state, action.payload.response);
         state.products = action.payload.response.products.map(
           (product, index) =>
             preprocessProduct(
@@ -41,13 +47,27 @@ export const productListingReducer = createReducer(
               action.payload.response.responseId
             )
         );
+        state.results = action.payload.response.results.map(
+          (result, index): Result =>
+            result.resultType === ResultType.SPOTLIGHT
+              ? preprocessSpotlightContent(
+                  result,
+                  paginationOffset + index + 1,
+                  action.payload.response.responseId
+                )
+              : preprocessProduct(
+                  result,
+                  paginationOffset + index + 1,
+                  action.payload.response.responseId
+                )
+        );
       })
       .addCase(fetchMoreProducts.fulfilled, (state, action) => {
         if (!action.payload) {
           return;
         }
         const paginationOffset = getPaginationOffset(action.payload);
-        handleFullfilled(state, action.payload.response);
+        handleFulfilled(state, action.payload.response);
         state.products = state.products.concat(
           action.payload.response.products.map((product, index) =>
             preprocessProduct(
@@ -55,6 +75,22 @@ export const productListingReducer = createReducer(
               paginationOffset + index + 1,
               action.payload?.response.responseId
             )
+          )
+        );
+        state.results = state.results.concat(
+          action.payload.response.results.map(
+            (result, index): Result =>
+              result.resultType === ResultType.SPOTLIGHT
+                ? preprocessSpotlightContent(
+                    result,
+                    paginationOffset + index + 1,
+                    action.payload?.response.responseId
+                  )
+                : preprocessProduct(
+                    result,
+                    paginationOffset + index + 1,
+                    action.payload?.response.responseId
+                  )
           )
         );
       })
@@ -65,10 +101,14 @@ export const productListingReducer = createReducer(
         handlePending(state, action.meta.requestId);
       })
       .addCase(promoteChildToParent, (state, action) => {
-        const {products} = state;
+        const productsOrResults =
+          state.results.length > 0 ? state.results : state.products;
         let childToPromote: ChildProduct | undefined;
-        const currentParentIndex = products.findIndex((product) => {
-          childToPromote = product.children.find(
+        const currentParentIndex = productsOrResults.findIndex((result) => {
+          if (result.resultType === ResultType.SPOTLIGHT) {
+            return false;
+          }
+          childToPromote = result.children.find(
             (child) => child.permanentid === action.payload.child.permanentid
           );
           return !!childToPromote;
@@ -78,19 +118,21 @@ export const productListingReducer = createReducer(
           return;
         }
 
-        const responseId = products[currentParentIndex].responseId;
-        const position = products[currentParentIndex].position;
-        const {children, totalNumberOfChildren} = products[currentParentIndex];
+        const currentParent = productsOrResults[currentParentIndex] as Product;
+        const responseId = currentParent.responseId;
+        const position = currentParent.position;
+        const {children, totalNumberOfChildren} = currentParent;
 
         const newParent: Product = {
           ...(childToPromote as ChildProduct),
+          resultType: ResultType.PRODUCT,
           children,
           totalNumberOfChildren,
           position,
           responseId,
         };
 
-        products.splice(currentParentIndex, 1, newParent);
+        productsOrResults.splice(currentParentIndex, 1, newParent);
       })
       .addCase(setView, () => getProductListingInitialState())
       .addCase(setContext, () => getProductListingInitialState())
@@ -108,9 +150,9 @@ function handleError(
   state.isLoading = false;
 }
 
-function handleFullfilled(
+function handleFulfilled(
   state: ProductListingState,
-  response: CommerceSuccessResponse
+  response: ListingCommerceSuccessResponse
 ) {
   state.error = null;
   state.facets = response.facets;
@@ -149,6 +191,18 @@ function preprocessProduct(
   return {
     ...product,
     children: [restOfProduct, ...children],
+    position,
+    responseId,
+  };
+}
+
+function preprocessSpotlightContent(
+  spotlight: BaseSpotlightContent,
+  position: number,
+  responseId?: string
+): SpotlightContent {
+  return {
+    ...spotlight,
     position,
     responseId,
   };

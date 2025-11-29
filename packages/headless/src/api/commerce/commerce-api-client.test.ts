@@ -9,6 +9,7 @@ import {
 } from './commerce-api-client.js';
 import type {FilterableCommerceAPIRequest} from './common/request.js';
 import type {CommerceResponse} from './common/response.js';
+import type {CommerceListingRequest} from './listing/request.js';
 import type {CommerceRecommendationsRequest} from './recommendations/recommendations-request.js';
 
 describe('commerce api client', () => {
@@ -81,7 +82,10 @@ describe('commerce api client', () => {
   };
 
   it('#getProductListing should call the platform endpoint with the correct arguments', async () => {
-    const request = await buildCommerceAPIRequest();
+    const request: CommerceListingRequest = {
+      ...(await buildCommerceAPIRequest()),
+      enableResults: false,
+    };
 
     mockPlatformCall({
       ok: true,
@@ -279,7 +283,10 @@ describe('commerce api client', () => {
   });
 
   it('should return error response on failure', async () => {
-    const request = await buildCommerceAPIRequest();
+    const request: CommerceListingRequest = {
+      ...(await buildCommerceAPIRequest()),
+      enableResults: false,
+    };
 
     const expectedError = {
       statusCode: 401,
@@ -300,7 +307,10 @@ describe('commerce api client', () => {
   });
 
   it('should return success response on success', async () => {
-    const request = await buildCommerceAPIRequest();
+    const request: CommerceListingRequest = {
+      ...(await buildCommerceAPIRequest()),
+      enableResults: false,
+    };
 
     const expectedBody: CommerceResponse = {
       products: [],

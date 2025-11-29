@@ -5,7 +5,7 @@ import {
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client.js';
 import type {ChildProduct} from '../../../api/commerce/common/product.js';
-import type {CommerceSuccessResponse} from '../../../api/commerce/common/response.js';
+import type {ListingCommerceSuccessResponse} from '../../../api/commerce/listing/response.js';
 import type {ProductListingSection} from '../../../state/state-sections.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
 import {
@@ -20,26 +20,37 @@ import {
 
 export interface QueryCommerceAPIThunkReturn {
   /** The successful response. */
-  response: CommerceSuccessResponse;
+  response: ListingCommerceSuccessResponse;
 }
 
 export type StateNeededByFetchProductListing =
   StateNeededForFilterableCommerceAPIRequest & ProductListingSection;
 
+export interface FetchProductListingPayload {
+  /**
+   * When set to true, fills the `results` field rather than the `products` field
+   * in the response. It may also include Spotlight Content in the results.
+   * @default false
+   */
+  enableResults?: boolean;
+}
+
 export const fetchProductListing = createAsyncThunk<
   QueryCommerceAPIThunkReturn,
-  void,
+  FetchProductListingPayload,
   AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
 >(
   'commerce/productListing/fetch',
   async (
-    _action,
+    payload,
     {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
   ) => {
     const state = getState();
-    const fetched = await apiClient.getProductListing(
-      buildFilterableCommerceAPIRequest(state, navigatorContext)
-    );
+    const request = buildFilterableCommerceAPIRequest(state, navigatorContext);
+    const fetched = await apiClient.getProductListing({
+      ...request,
+      enableResults: Boolean(payload?.enableResults),
+    });
 
     if (isErrorResponse(fetched)) {
       return rejectWithValue(fetched.error);
@@ -53,12 +64,12 @@ export const fetchProductListing = createAsyncThunk<
 
 export const fetchMoreProducts = createAsyncThunk<
   QueryCommerceAPIThunkReturn | null,
-  void,
+  FetchProductListingPayload,
   AsyncThunkCommerceOptions<StateNeededByFetchProductListing>
 >(
   'commerce/productListing/fetchMoreProducts',
   async (
-    _action,
+    payload,
     {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
   ) => {
     const state = getState();
@@ -72,6 +83,7 @@ export const fetchMoreProducts = createAsyncThunk<
 
     const fetched = await apiClient.getProductListing({
       ...buildFilterableCommerceAPIRequest(state, navigatorContext),
+      enableResults: Boolean(payload?.enableResults),
       page: nextPageToRequest,
     });
 
