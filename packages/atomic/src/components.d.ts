@@ -1588,23 +1588,6 @@ export namespace Components {
         "rows": number;
     }
     /**
-     * The `atomic-result-timespan` component renders a target result number field value as a duration.
-     */
-    interface AtomicResultTimespan {
-        /**
-          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * The format to apply to the result field value.  By default, the format is HH:mm:ss when the duration is under a day, and it is an approximation when longer (days, months or years).  The string displayed when there is an approximation can be modified with [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).  Available formats: https://day.js.org/docs/en/durations/format
-         */
-        "format"?: string;
-        /**
-          * The unit of measurement of the field value. Available units: https://day.js.org/docs/en/durations/creating
-         */
-        "unit": string;
-    }
-    /**
      * The `atomic-search-box` component creates a search box with built-in support for suggestions.
      */
     interface AtomicSearchBox {
@@ -2798,15 +2781,6 @@ declare global {
         prototype: HTMLAtomicResultTablePlaceholderElement;
         new (): HTMLAtomicResultTablePlaceholderElement;
     };
-    /**
-     * The `atomic-result-timespan` component renders a target result number field value as a duration.
-     */
-    interface HTMLAtomicResultTimespanElement extends Components.AtomicResultTimespan, HTMLStencilElement {
-    }
-    var HTMLAtomicResultTimespanElement: {
-        prototype: HTMLAtomicResultTimespanElement;
-        new (): HTMLAtomicResultTimespanElement;
-    };
     interface HTMLAtomicSearchBoxElementEventMap {
         "redirect": RedirectionPayload;
     }
@@ -3147,7 +3121,6 @@ declare global {
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-rating": HTMLAtomicResultRatingElement;
         "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
-        "atomic-result-timespan": HTMLAtomicResultTimespanElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
@@ -4675,23 +4648,6 @@ declare namespace LocalJSX {
         "rows": number;
     }
     /**
-     * The `atomic-result-timespan` component renders a target result number field value as a duration.
-     */
-    interface AtomicResultTimespan {
-        /**
-          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * The format to apply to the result field value.  By default, the format is HH:mm:ss when the duration is under a day, and it is an approximation when longer (days, months or years).  The string displayed when there is an approximation can be modified with [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).  Available formats: https://day.js.org/docs/en/durations/format
-         */
-        "format"?: string;
-        /**
-          * The unit of measurement of the field value. Available units: https://day.js.org/docs/en/durations/creating
-         */
-        "unit"?: string;
-    }
-    /**
      * The `atomic-search-box` component creates a search box with built-in support for suggestions.
      */
     interface AtomicSearchBox {
@@ -5159,7 +5115,6 @@ declare namespace LocalJSX {
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-rating": AtomicResultRating;
         "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
-        "atomic-result-timespan": AtomicResultTimespan;
         "atomic-search-box": AtomicSearchBox;
         "atomic-segmented-facet": AtomicSegmentedFacet;
         "atomic-smart-snippet": AtomicSmartSnippet;
@@ -5425,10 +5380,6 @@ declare module "@stencil/core" {
              * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
-            /**
-             * The `atomic-result-timespan` component renders a target result number field value as a duration.
-             */
-            "atomic-result-timespan": LocalJSX.AtomicResultTimespan & JSXBase.HTMLAttributes<HTMLAtomicResultTimespanElement>;
             /**
              * The `atomic-search-box` component creates a search box with built-in support for suggestions.
              */

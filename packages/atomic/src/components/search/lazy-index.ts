@@ -82,6 +82,8 @@ export default {
     await import('./atomic-result-template/atomic-result-template.js'),
   'atomic-result-text': async () =>
     await import('./atomic-result-text/atomic-result-text.js'),
+  'atomic-result-timespan': async () =>
+    await import('./atomic-result-timespan/atomic-result-timespan.js'),
   'atomic-results-per-page': async () =>
     await import('./atomic-results-per-page/atomic-results-per-page.js'),
   'atomic-search-box-instant-results': async () =>
