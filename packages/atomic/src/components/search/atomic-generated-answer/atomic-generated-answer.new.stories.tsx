@@ -90,3 +90,10 @@ export const DisableCitationAnchoring: Story = {
     'disable-citation-anchoring': true,
   },
 };
+
+export const WithoutAnswerConfigurationId: Story = {
+  name: 'Without answer configuration ID',
+  args: {
+    'answer-configuration-id': undefined,
+  },
+};
