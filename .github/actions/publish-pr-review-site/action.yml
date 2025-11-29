@@ -55,7 +55,9 @@ runs:
       if: ${{inputs.copy}}
       run: |
         cp -R packages/atomic/dist-storybook prs/${{github.event.pull_request.number}}
-        cp -R packages/atomic/playwright-report prs/${{github.event.pull_request.number}}
+        if [ -d "packages/atomic/playwright-report" ]; then
+          cp -R packages/atomic/playwright-report prs/${{github.event.pull_request.number}}
+        fi
       shell: bash
     - name: 'Commit/Push'
       run: |
