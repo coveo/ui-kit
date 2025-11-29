@@ -1,44 +1,50 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {
-  NumericFacet,
-  buildNumericFacet,
-  NumericFacetState,
-  NumericFacetOptions,
-  SearchStatus,
-  SearchStatusState,
-  buildSearchStatus,
-  NumericFacetValue,
-  NumericRangeRequest,
-  buildNumericRange,
   buildFacetConditionsManager,
-  FacetConditionsManager,
-  FacetValueRequest,
-  CategoryFacetValueRequest,
+  buildNumericFacet,
+  buildNumericRange,
+  buildSearchStatus,
   buildTabManager,
-  TabManager,
-  TabManagerState,
+  type CategoryFacetValueRequest,
+  type FacetConditionsManager,
+  type FacetValueRequest,
+  type NumericFacet,
+  type NumericFacetOptions,
+  type NumericFacetState,
+  type NumericFacetValue,
+  type NumericRangeRequest,
+  type SearchStatus,
+  type SearchStatusState,
+  type TabManager,
+  type TabManagerState,
 } from '@coveo/headless';
-import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
-import Star from '../../../../images/star.svg';
-import {
-  BindStateToController,
-  InitializableComponent,
-  InitializeBindings,
-} from '../../../../utils/initialization-utils';
-import {ArrayProp, MapProp} from '../../../../utils/props-utils';
-import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
-import {Rating} from '../../../common/atomic-rating/stencil-rating';
-import {parseDependsOn} from '../../../common/facets/depends-on';
-import {FacetInfo} from '../../../common/facets/facet-common-store';
-import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
-import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/stencil-facet-placeholder';
-import {FacetValueCheckbox} from '../../../common/facets/facet-value-checkbox/stencil-facet-value-checkbox';
-import {FacetValueLink} from '../../../common/facets/facet-value-link/stencil-facet-value-link';
-import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stencil-facet-values-group';
-import {initializePopover} from '../../../common/facets/popover/popover-type';
-import {Hidden} from '../../../common/stencil-hidden';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {html, LitElement, nothing, type PropertyValues} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
+import atomicRatingStyles from '@/src/components/common/atomic-rating/atomic-rating.tw.css';
+import {renderRating} from '@/src/components/common/atomic-rating/rating';
+import {parseDependsOn} from '@/src/components/common/facets/depends-on';
+import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.css';
+import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
+import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
+import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
+import {renderFacetPlaceholder} from '@/src/components/common/facets/facet-placeholder/facet-placeholder';
+import {renderFacetValueCheckbox} from '@/src/components/common/facets/facet-value-checkbox/facet-value-checkbox';
+import facetValueCheckboxStyles from '@/src/components/common/facets/facet-value-checkbox/facet-value-checkbox.tw.css';
+import {renderFacetValueLink} from '@/src/components/common/facets/facet-value-link/facet-value-link';
+import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-values-group/facet-values-group';
+import {initializePopover} from '@/src/components/common/facets/popover/popover-type';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
+import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
+import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {FocusTargetController} from '@/src/utils/accessibility-utils';
+import {mapProperty} from '@/src/utils/props-utils';
+import Star from '../../../images/star.svg';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
@@ -65,87 +71,125 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part value-link - The facet value when display is 'link'.
  * @part value-link-selected - The selected facet value when display is 'link'.
  */
-@Component({
-  tag: 'atomic-rating-facet',
-  styleUrl: 'atomic-rating-facet.pcss',
-  shadow: true,
-})
-export class AtomicRatingFacet implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
+@customElement('atomic-rating-facet')
+@bindings()
+@withTailwindStyles
+export class AtomicRatingFacet
+  extends LitElement
+  implements InitializableComponent<Bindings>
+{
+  static styles = [
+    facetCommonStyles,
+    facetValueCheckboxStyles,
+    atomicRatingStyles,
+  ];
+
+  @state() public bindings!: Bindings;
+  @state() public error!: Error;
+
   public facet!: NumericFacet;
   private dependenciesManager?: FacetConditionsManager;
   public searchStatus!: SearchStatus;
   public tabManager!: TabManager;
-  @Element() private host!: HTMLElement;
 
-  @BindStateToController('facet')
-  @State()
+  @bindStateToController('facet')
+  @state()
   public facetState!: NumericFacetState;
-  @BindStateToController('searchStatus')
-  @State()
+
+  @bindStateToController('searchStatus')
+  @state()
   public searchStatusState!: SearchStatusState;
-  @BindStateToController('tabManager')
-  @State()
+
+  @bindStateToController('tabManager')
+  @state()
   public tabManagerState!: TabManagerState;
-  @State() public error!: Error;
 
   /**
    * Specifies a unique identifier for the facet.
    */
-  @Prop({mutable: true, reflect: true}) public facetId?: string;
+  @property({reflect: true, attribute: 'facet-id', type: String})
+  public facetId?: string;
+
   /**
    * The non-localized label for the facet.
    * Used in the `atomic-breadbox` component through the bindings store.
    */
-  @Prop({reflect: true}) public label = 'no-label';
+  @property({reflect: true, useDefault: true, type: String})
+  public label = 'no-label';
+
   /**
    * The field whose values you want to display in the facet.
    */
-  @Prop({reflect: true}) public field!: string;
-  /**
-   * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.
-   *
-   * Set this property as a stringified JSON array, for example:
-   * ```html
-   *  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
-   * ```
-   * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
-   */
-  @ArrayProp()
-  @Prop({reflect: true, mutable: true})
-  public tabsIncluded: string[] | string = '[]';
+  @property({reflect: true, type: String})
+  public field!: string;
 
   /**
-   * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.
-   *
-   * Set this property as a stringified JSON array, for example:
-   * ```html
-   *  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet>
-   * ```
-   * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
+   * The number of intervals generated by the facet.
    */
-  @ArrayProp()
-  @Prop({reflect: true, mutable: true})
-  public tabsExcluded: string[] | string = '[]';
+  @property({
+    reflect: true,
+    useDefault: false,
+    attribute: 'number-of-intervals',
+    type: Number,
+  })
+  public numberOfIntervals = 5;
 
   /**
-   * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
+   * Included tabs.
    */
-  @Prop({reflect: true}) public numberOfIntervals = 5;
+  @property({
+    reflect: true,
+    useDefault: true,
+    attribute: 'tabs-included',
+    type: Array,
+  })
+  public tabsIncluded: string[] = [];
+
   /**
-   * The maximum value in the field's index and the number of rating icons to display in the facet. If not assigned a value, this property will default to the same value as `numberOfIntervals`.
+   * Excluded tabs.
    */
-  @Prop({reflect: true}) public maxValueInIndex = this.numberOfIntervals;
+  @property({
+    reflect: true,
+    useDefault: true,
+    attribute: 'tabs-excluded',
+    type: Array,
+  })
+  public tabsExcluded: string[] = [];
+
+  /**
+   * The maximum value of the field.
+   * If no value, this property will default to the same value as `numberOfIntervals`.
+   */
+  @property({
+    reflect: true,
+    attribute: 'max-value-in-index',
+    type: Number,
+  })
+  public maxValueInIndex!: number;
+
   /**
    * The minimum value of the field.
    */
-  @Prop({reflect: true}) public minValueInIndex = 1;
+  @property({
+    reflect: true,
+    useDefault: true,
+    attribute: 'min-value-in-index',
+    type: Number,
+  })
+  public minValueInIndex = 1;
+
   /**
    * Whether to display the facet values as checkboxes (multiple selection) or links (single selection).
    * Possible values are 'checkbox' and 'link'.
    */
-  @Prop({reflect: true}) public displayValuesAs: 'checkbox' | 'link' =
-    'checkbox';
+  @property({
+    reflect: true,
+    useDefault: true,
+    attribute: 'display-values-as',
+    type: String,
+  })
+  public displayValuesAs: 'checkbox' | 'link' = 'checkbox';
+
   /**
    * The SVG icon to use to display the rating.
    *
@@ -158,30 +202,57 @@ export class AtomicRatingFacet implements InitializableComponent {
    *
    * - `--atomic-rating-icon-active-color`
    * - `--atomic-rating-icon-inactive-color`
-
    */
-  @Prop({reflect: true}) public icon = Star;
+  @property({reflect: true, useDefault: true, type: String})
+  public icon = Star;
+
   /**
    * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
    */
-  @Prop({reflect: true, mutable: true}) public isCollapsed = false;
+  @property({
+    reflect: true,
+    useDefault: true,
+    attribute: 'is-collapsed',
+    type: Boolean,
+  })
+  public isCollapsed = false;
+
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
    */
-  @Prop({reflect: true}) public headingLevel = 0;
+  @property({
+    reflect: true,
+    useDefault: true,
+    attribute: 'heading-level',
+    type: Number,
+  })
+  public headingLevel = 0;
+
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    *
-   *
    * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
    */
-  @Prop({reflect: true}) public filterFacetCount = true;
+  @property({
+    reflect: true,
+    useDefault: true,
+    attribute: 'filter-facet-count',
+    type: Boolean,
+  })
+  public filterFacetCount = true;
+
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
    * Minimum: `0`
    */
-  @Prop({reflect: true}) public injectionDepth = 1000;
+  @property({
+    reflect: true,
+    useDefault: true,
+    attribute: 'injection-depth',
+    type: Number,
+  })
+  public injectionDepth = 1000;
 
   /**
    * The required facets and values for this facet to be displayed.
@@ -202,22 +273,30 @@ export class AtomicRatingFacet implements InitializableComponent {
    * ></atomic-rating-facet>
    * ```
    */
-  @MapProp() @Prop() public dependsOn: Record<string, string> = {};
+  @mapProperty({attributePrefix: 'depends-on-'})
+  @property({useDefault: true, type: Object})
+  public dependsOn: Record<string, string> = {};
 
   private headerFocus?: FocusTargetController;
 
   private get focusTarget(): FocusTargetController {
     if (!this.headerFocus) {
-      this.headerFocus = new FocusTargetController(this);
+      this.headerFocus = new FocusTargetController(this, this.bindings);
     }
     return this.headerFocus;
   }
-  private validateProps() {
-    new Schema({
-      displayValuesAs: new StringValue({constrainTo: ['checkbox', 'link']}),
-    }).validate({
-      displayValuesAs: this.displayValuesAs,
-    });
+
+  constructor() {
+    super();
+    new ValidatePropsController(
+      this,
+      () => ({
+        displayValuesAs: this.displayValuesAs,
+      }),
+      new Schema({
+        displayValuesAs: new StringValue({constrainTo: ['checkbox', 'link']}),
+      })
+    );
   }
 
   public initialize() {
@@ -229,11 +308,16 @@ export class AtomicRatingFacet implements InitializableComponent {
         'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behaviors.'
       );
     }
-    this.validateProps();
+
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.tabManager = buildTabManager(this.bindings.engine);
     this.initializeFacet();
     this.initializeDependenciesManager();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.dependenciesManager?.stopWatching();
   }
 
   private initializeFacet() {
@@ -256,33 +340,37 @@ export class AtomicRatingFacet implements InitializableComponent {
     const facetInfo: FacetInfo = {
       label: () => this.bindings.i18n.t(this.label),
       facetId: this.facetId!,
-      element: this.host,
+      element: this,
       isHidden: () => this.isHidden,
     };
     this.bindings.store.registerFacet('numericFacets', {
       ...facetInfo,
       format: (value) => this.formatFacetValue(value),
-      content: (value) => this.ratingContent(value),
+      // @ts-ignore TODO:
+      // content: (value) => this.ratingContent(value),
     });
-    initializePopover(this.host, {
+    initializePopover(this, {
       ...facetInfo,
       hasValues: () => !!this.valuesToRender.length,
       numberOfActiveValues: () => this.numberOfSelectedValues,
     });
   }
 
-  public disconnectedCallback() {
-    if (this.host.isConnected) {
-      return;
-    }
-    this.dependenciesManager?.stopWatching();
-  }
   private get isHidden() {
     return (
       this.searchStatusState.hasError ||
       !this.facet.state.enabled ||
       !this.valuesToRender.length
     );
+  }
+
+  protected updated(changed: PropertyValues<this>) {
+    if (
+      (changed.has('numberOfIntervals') || changed.has('maxValueInIndex')) &&
+      this.maxValueInIndex === undefined
+    ) {
+      this.maxValueInIndex = this.numberOfIntervals;
+    }
   }
 
   private get scaleFactor() {
@@ -331,75 +419,73 @@ export class AtomicRatingFacet implements InitializableComponent {
   }
 
   private ratingContent(facetValue: NumericFacetValue) {
-    return (
-      <Rating
-        i18n={this.bindings.i18n}
-        numberOfTotalIcons={this.maxValueInIndex}
-        numberOfActiveIcons={facetValue.start}
-        icon={this.icon}
-      ></Rating>
-    );
+    return renderRating({
+      props: {
+        i18n: this.bindings.i18n,
+        numberOfTotalIcons: this.maxValueInIndex,
+        numberOfActiveIcons: facetValue.start,
+        icon: this.icon,
+      },
+    });
   }
 
   private renderHeader() {
-    return (
-      <FacetHeader
-        i18n={this.bindings.i18n}
-        label={this.label}
-        onClearFilters={() => {
+    return renderFacetHeader({
+      props: {
+        i18n: this.bindings.i18n,
+        label: this.label,
+        onClearFilters: () => {
           this.focusTarget.focusAfterSearch();
           this.facet.deselectAll();
-        }}
-        numberOfActiveValues={this.numberOfSelectedValues}
-        isCollapsed={this.isCollapsed}
-        headingLevel={this.headingLevel}
-        onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
-        headerRef={(el) => this.focusTarget.setTarget(el)}
-      ></FacetHeader>
-    );
+        },
+        numberOfActiveValues: this.numberOfSelectedValues,
+        isCollapsed: this.isCollapsed,
+        headingLevel: this.headingLevel,
+        onToggleCollapse: () => {
+          this.isCollapsed = !this.isCollapsed;
+        },
+        headerRef: (el) => this.focusTarget.setTarget(el),
+      },
+    });
   }
 
   private renderValue(facetValue: NumericFacetValue, onClick: () => void) {
     const displayValue = this.formatFacetValue(facetValue);
     const isSelected = facetValue.state === 'selected';
     const shouldBeDimmed = this.facetState.hasActiveValues && !isSelected;
+
     switch (this.displayValuesAs) {
       case 'checkbox':
-        return (
-          <FacetValueCheckbox
-            displayValue={displayValue}
-            numberOfResults={facetValue.numberOfResults}
-            isSelected={isSelected}
-            i18n={this.bindings.i18n}
-            onClick={onClick}
-          >
-            {this.ratingContent(facetValue)}
-          </FacetValueCheckbox>
-        );
+        return renderFacetValueCheckbox({
+          props: {
+            displayValue,
+            numberOfResults: facetValue.numberOfResults,
+            isSelected,
+            i18n: this.bindings.i18n,
+            onClick,
+          },
+        })(this.ratingContent(facetValue));
       case 'link':
-        return (
-          <FacetValueLink
-            displayValue={displayValue}
-            numberOfResults={facetValue.numberOfResults}
-            isSelected={isSelected}
-            i18n={this.bindings.i18n}
-            onClick={onClick}
-            class={shouldBeDimmed ? 'opacity-80' : undefined}
-          >
-            {this.ratingContent(facetValue)}
-          </FacetValueLink>
-        );
+        return renderFacetValueLink({
+          props: {
+            displayValue,
+            numberOfResults: facetValue.numberOfResults,
+            isSelected,
+            i18n: this.bindings.i18n,
+            onClick,
+            class: shouldBeDimmed ? 'opacity-80' : undefined,
+          },
+        })(this.ratingContent(facetValue));
     }
   }
 
-  private renderValuesContainer(children: VNode[]) {
-    return (
-      <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
-        <ul class="mt-3" part="values">
-          {children}
-        </ul>
-      </FacetValuesGroup>
-    );
+  private renderValuesContainer(children: unknown) {
+    return renderFacetValuesGroup({
+      props: {
+        i18n: this.bindings.i18n,
+        label: this.label,
+      },
+    })(html`<ul class="mt-3" part="values">${children}</ul>`);
   }
 
   private renderValues() {
@@ -420,29 +506,29 @@ export class AtomicRatingFacet implements InitializableComponent {
     );
   }
 
-  public render() {
+  @bindingGuard()
+  @errorGuard()
+  render() {
     if (this.searchStatusState.hasError || !this.facet.state.enabled) {
-      return <Hidden></Hidden>;
+      return html`${nothing}`;
     }
 
     if (!this.searchStatusState.firstSearchExecuted) {
-      return (
-        <FacetPlaceholder
-          numberOfValues={this.numberOfIntervals}
-          isCollapsed={this.isCollapsed}
-        ></FacetPlaceholder>
-      );
+      return html`${renderFacetPlaceholder({
+        props: {
+          numberOfValues: this.numberOfIntervals,
+          isCollapsed: this.isCollapsed,
+        },
+      })}`;
     }
 
     if (!this.valuesToRender.length) {
-      return <Hidden></Hidden>;
+      return html`${nothing}`;
     }
 
-    return (
-      <FacetContainer>
-        {this.renderHeader()}
-        {!this.isCollapsed && this.renderValues()}
-      </FacetContainer>
-    );
+    return renderFacetContainer()(html`
+      ${this.renderHeader()}
+      ${when(!this.isCollapsed, () => this.renderValues())}
+    `);
   }
 }
