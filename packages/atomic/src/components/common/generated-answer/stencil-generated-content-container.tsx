@@ -1,6 +1,6 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {GeneratedMarkdownContent} from './generated-content/generated-markdown-content';
-import {GeneratedTextContent} from './generated-content/generated-text-content';
+import {GeneratedMarkdownContent} from './generated-content/stencil-generated-markdown-content';
+import {GeneratedTextContent} from './generated-content/stencil-generated-text-content';
 
 interface GeneratedContentContainerProps {
   answer?: string;
