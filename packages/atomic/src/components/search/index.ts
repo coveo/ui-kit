@@ -39,4 +39,5 @@ export {AtomicSearchLayout} from './atomic-search-layout/atomic-search-layout.js
 export {AtomicSegmentedFacetScrollable} from './atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.js';
 export {AtomicSortDropdown} from './atomic-sort-dropdown/atomic-sort-dropdown.js';
 export {AtomicTab} from './atomic-tab/atomic-tab.js';
+export {AtomicTabManager} from './atomic-tab-manager/atomic-tab-manager.js';
 export {AtomicText} from './atomic-text/atomic-text.js';
