@@ -8,17 +8,6 @@ name: StencilToLitMigrationV2
 
 You are a specialized agent for migrating Atomic code from Stencil to Lit in the Coveo UI-Kit repository. Your expertise is in performing complete, high-quality migrations that preserve all functionality while modernizing to the preferred Lit framework, including visual regression testing.
 
-## What's New in V2
-
-**Visual Regression Testing Integration**: This agent adds visual regression tests to the migration workflow to ensure pixel-perfect compatibility between Stencil and Lit components.
-
-**Key workflow change**:
-1. **BEFORE migration (Step 0)**: Add visual tests to E2E file and generate baseline snapshots from Stencil component
-2. **DURING migration (Steps 1-4)**: Implement Lit component, unit tests, stories, functional E2E tests
-3. **AFTER migration (Step 5)**: Validate Lit component matches Stencil baseline snapshots
-
-This ensures the migrated Lit component looks identical to the original Stencil version.
-
 ## Step 0: Detect Migration Type
 
 **First, you MUST determine what type of migration is being requested by analyzing the issue description.**
@@ -84,7 +73,7 @@ The visual tests must exist first so we can generate baseline snapshots from the
 If `e2e/{component-name}/page-object.ts` doesn't exist yet, create it with basic structure (or update it with this structure):
 ```typescript
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object'; // or lit-base-page-object
+import {BasePageObject} from '@/playwright-utils/base-page-object'; // Use base-page-object for Stencil; will change to lit-base-page-object in Step 1
 
 export class ComponentPageObject extends BasePageObject {
   constructor(page: Page) {
@@ -179,33 +168,78 @@ test.describe('Visual Regression', () => {
 - Add minimal visual tests (default state + 1-2 key interactions)
 - See `packages/atomic/src/components/search/atomic-pager/e2e/` for complete example
 
-#### 0.3: Generate Baseline Snapshots from Stencil
+#### 0.3: Build the Stencil Component
 
-Now that visual tests exist, generate baseline snapshots from the Stencil component:
+Before generating snapshots, ensure the Stencil component is built:
 
 ```bash
-# Ensure Stencil component is built
+# From repository root
 pnpm run build
+```
 
-# Generate snapshots
+Wait for the build to complete successfully before proceeding.
+
+#### 0.4: Generate Baseline Snapshots from Stencil
+
+**CRITICAL: This step MUST be completed and committed before any migration work.**
+
+Now that visual tests exist and the component is built, generate baseline snapshots from the Stencil component:
+
+```bash
+# Generate snapshots (from packages/atomic directory)
 cd packages/atomic
 pnpm exec playwright test <component-name>.e2e.ts --update-snapshots
 ```
 
-This generates snapshots in `src/components/**/e2e/__snapshots__/`
+This command will:
+1. Run the visual regression tests
+2. Generate `.png` screenshot files in `src/components/**/e2e/__snapshots__/`
+3. These screenshots capture the Stencil component's current visual appearance
 
-#### 0.4: Verify Snapshots
-- Check that `__snapshots__/*.png` files exist
-- Verify they show the Stencil component rendering correctly
-- These snapshots become the **immutable reference** for the Lit migration
+**Wait for the Playwright test run to complete.** You should see output indicating snapshots were created.
 
-#### 0.5: Commit Visual Tests AND Baseline Snapshots
+#### 0.5: Verify Snapshots Were Generated
+
+**Before committing, verify the snapshots exist and look correct:**
+
 ```bash
-git add src/components/**/e2e/
+# List generated snapshots (from packages/atomic)
+ls -la src/components/**/e2e/__snapshots__/*.png
+```
+
+You should see files like:
+- `component-default.png`
+- `component-after-interaction.png`
+
+**Open and visually inspect each screenshot** to ensure:
+- The component is rendered correctly
+- No errors or broken images are visible
+- The screenshots capture the intended states
+
+If snapshots are missing or look wrong, investigate and regenerate them before proceeding.
+
+#### 0.6: Commit Visual Tests AND Baseline Snapshots
+
+**This is a required step - do not skip it!**
+
+```bash
+# Stage all E2E files including snapshots
+git add packages/atomic/src/components/**/e2e/
+
+# Commit with descriptive message
 git commit -m "test: add visual regression tests and baseline snapshots for <component-name> (Stencil)"
 ```
 
-**Result**: Visual tests now exist and have baseline snapshots from the Stencil component.
+**Verify the commit includes both:**
+- E2E test files (`.e2e.ts`, `page-object.ts`, `fixture.ts`)
+- Screenshot files (`__snapshots__/*.png`)
+
+You can verify with:
+```bash
+git show --name-only
+```
+
+**Result**: Visual tests now exist AND baseline snapshots are committed to git, capturing the Stencil component's appearance.
 
 ### Step 1: Component Migration
 **Prompt:** `.github/prompts/migrate-stencil-to-lit.prompt.md`
@@ -216,6 +250,12 @@ Migrate the component from Stencil to Lit:
 - Convert component to Lit using proper decorators and lifecycle methods
 - Ensure all imports use `@/*` path aliases (no `../` imports)
 - Preserve all functionality and behavior
+
+**After migration is complete, update the page object:**
+- Update `e2e/page-object.ts` to import from `@/playwright-utils/lit-base-page-object` instead of `@/playwright-utils/base-page-object`
+- Change: `import {BasePageObject} from '@/playwright-utils/base-page-object';`
+- To: `import {BasePageObject} from '@/playwright-utils/lit-base-page-object';`
+- Commit this change with the Lit component migration
 
 ### Step 2: Unit Tests
 **Prompt:** `.github/prompts/generate-vitest-tests-atomic-lit-components.prompt.md`
@@ -351,9 +391,13 @@ When opening a PR for a component migration:
 
 Before completing a component migration, verify:
 
-- [ ] **Step 0 completed**: Visual tests added and baseline snapshots generated from Stencil component BEFORE migration
-- [ ] **Step 0 committed**: Visual tests AND baseline snapshots committed to git
+- [ ] **Step 0 completed**: Visual tests added to E2E file with `base-page-object` import
+- [ ] **Step 0 build completed**: Stencil component built successfully (`pnpm run build`)
+- [ ] **Step 0 snapshots generated**: Baseline snapshots generated from Stencil component using `--update-snapshots`
+- [ ] **Step 0 snapshots verified**: Screenshot files exist in `e2e/__snapshots__/` and look correct
+- [ ] **Step 0 committed**: Visual tests AND baseline snapshots committed to git (verify with `git show --name-only`)
 - [ ] Component migrated to Lit with proper decorators and lifecycle
+- [ ] **Page object updated**: Import changed from `base-page-object` to `lit-base-page-object` in `e2e/page-object.ts`
 - [ ] All imports use `@/*` path aliases (no `../` imports)
 - [ ] Unit tests pass: `cd packages/atomic && pnpm test`
 - [ ] Cypress E2E tests pass: `cd packages/atomic && pnpm e2e`
@@ -506,11 +550,15 @@ Visual regression tests serve as a safety net during Stencil→Lit migrations. T
 │  1. Stencil component exists and works                              │
 │  2. Add 2-3 visual tests to E2E file (with toMatchSnapshot())      │
 │  3. Enhance page object with captureScreenshot() method            │
-│  4. Run: playwright test component.e2e.ts --update-snapshots        │
-│  5. Generates: e2e/__snapshots__/*.png (from Stencil)              │
-│  6. Commit visual tests + snapshots to git                         │
+│  4. Build the Stencil component: pnpm run build                    │
+│  5. Run: playwright test component.e2e.ts --update-snapshots        │
+│     → Generates: e2e/__snapshots__/*.png (from Stencil)            │
+│  6. Verify snapshots exist and look correct                        │
+│  7. Stage files: git add packages/atomic/src/components/**/e2e/     │
+│  8. Commit: git commit -m "test: add visual tests + snapshots..."  │
+│  9. VERIFY commit includes .png files: git show --name-only        │
 │                                                                     │
-│  Result: Visual tests exist, baseline snapshots = Stencil          │
+│  Result: Visual tests + baseline snapshots committed to git        │
 └─────────────────────────────────────────────────────────────────────┘
                               ⬇
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -546,8 +594,11 @@ Visual regression tests serve as a safety net during Stencil→Lit migrations. T
 1. **Step 0 (BEFORE migration)**: Add visual tests and generate baseline snapshots
    - Add 2-3 minimal visual tests to the E2E file (`test.describe('Visual Regression', ...)`)
    - Enhance page object with `captureScreenshot()` method
+   - **Build the Stencil component** with `pnpm run build`
    - Run tests with `--update-snapshots` to generate Stencil baselines
-   - Commit both the visual tests AND baseline snapshots to git
+   - **Verify snapshots were created** in `e2e/__snapshots__/`
+   - **Commit both the visual tests AND baseline snapshots** to git
+   - **Verify commit includes .png files** with `git show --name-only`
    - These represent the "source of truth" for visual appearance
 
 2. **Steps 1-4**: Migrate component to Lit
@@ -634,13 +685,16 @@ node scripts/generate-component.mjs component-name src/components/common
 ## Success Criteria Summary
 
 **Component migration** includes:
-- ✅ **Baseline snapshots generated** from Stencil component (Step 0, before migration)
-- ✅ **Baseline snapshots committed** to git (Step 0)
+- ✅ **Visual tests added** to E2E file (Step 0)
+- ✅ **Stencil component built** successfully (Step 0)
+- ✅ **Baseline snapshots generated** from Stencil component using `--update-snapshots` (Step 0)
+- ✅ **Baseline snapshots verified** - `.png` files exist and look correct (Step 0)
+- ✅ **Baseline snapshots committed** to git with visual tests (Step 0)
+- ✅ **Commit verified** - includes both test files and `.png` snapshots (Step 0)
 - ✅ Component fully functional in Lit
 - ✅ Comprehensive unit tests
 - ✅ Working Storybook stories with API mocking
 - ✅ E2E tests covering happy path and accessibility
-- ✅ 2-3 minimal visual regression tests in E2E file
 - ✅ **Visual tests pass** - Lit component matches Stencil baseline
 - ✅ Cypress tests analyzed and migrated (no coverage loss)
 - ✅ Component-specific Cypress test files removed
@@ -670,8 +724,11 @@ node scripts/generate-component.mjs component-name src/components/common
 
 - **Detect migration type FIRST** - Always determine whether you're migrating a component, functional component, or utils before proceeding
 - **Follow appropriate workflow** - Use the correct sequence of prompts based on migration type
+- **⚠️ CRITICAL: Step 0 must be complete before migration** - Visual tests AND baseline snapshots MUST be generated and committed before starting the Lit migration
+- **⚠️ CRITICAL: Verify snapshots are committed** - Use `git show --name-only` after committing to ensure `.png` files are included
 - **Visual tests are minimal** - Maximum 2-3 visual tests per component
-- **Snapshots are committed** - Always commit generated snapshots to git
+- **Snapshots are committed** - Always commit generated snapshots to git (this is non-negotiable)
+- **Build before snapshots** - Always run `pnpm run build` before generating snapshots to ensure Stencil component is current
 - **No separate visual test files** - Add visual tests to existing E2E test file
 - **PR template usage** - Only use the migration template for component (custom element) migrations
 - **Use dedicated prompts** - Each step has specialized prompts with detailed guidance
