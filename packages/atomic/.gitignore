@@ -46,3 +46,4 @@ dist-storybook/
 
 # Generated Tailwind CSS files
 *.tw.css.ts
+dist/
