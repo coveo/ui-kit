@@ -1,0 +1,33 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicResultRatingStories from './atomic-result-rating.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicResultRatingStories} />
+
+<AtomicDocTemplate
+  stories={AtomicResultRatingStories}
+  githubPath="search/atomic-result-rating/atomic-result-rating.ts"
+  tagName="atomic-result-rating"
+  className="AtomicResultRating"
+>
+
+The `atomic-result-rating` component displays the rating of a result as a set of icons (stars by default).
+
+This component is used within `atomic-result-template` components inside the result list:
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-result-list>
+    <atomic-result-template>
+      <template>
+        <atomic-result-rating field="snrating"></atomic-result-rating>
+      </template>
+    </atomic-result-template>
+  </atomic-result-list>
+  ...
+</atomic-search-interface>
+```
+
+</AtomicDocTemplate>
