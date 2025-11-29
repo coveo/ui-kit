@@ -24,6 +24,8 @@ export default {
   'atomic-result': async () => await import('./atomic-result/atomic-result.js'),
   'atomic-result-badge': async () =>
     await import('./atomic-result-badge/atomic-result-badge.js'),
+  'atomic-result-children': async () =>
+    await import('./atomic-result-children/atomic-result-children.js'),
   'atomic-result-children-template': async () =>
     await import(
       './atomic-result-children-template/atomic-result-children-template.js'
