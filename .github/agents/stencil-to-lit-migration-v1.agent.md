@@ -244,6 +244,15 @@ When opening a PR for a functional component migration:
 
 Before completing a functional component migration, verify:
 
+**Test quality (consensus-based patterns):**
+- [ ] Icon properties tested using bracket notation (`iconElement?.['icon']`)
+- [ ] Only conditional CSS classes tested (static classes skipped)
+- [ ] Children content verified via text content (DOM checks optional)
+- [ ] `tw`/`multiClassMap` used only for conditional/dynamic classes
+- [ ] Interactive tests use Page API (`page.getByRole()`, not DOM API)
+- [ ] Edge cases focus on security and common scenarios (pragmatic scope)
+
+**Migration equivalence:**
 - [ ] Functional component migrated to Lit with correct types
 - [ ] All imports use `@/*` path aliases (no `../` imports)
 - [ ] Original Stencil file renamed with `stencil-` prefix

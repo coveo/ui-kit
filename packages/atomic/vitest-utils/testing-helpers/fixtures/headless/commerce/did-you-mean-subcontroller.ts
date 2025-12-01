@@ -2,7 +2,7 @@ import type {DidYouMean, DidYouMeanState} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 
-export const defaultState: DidYouMeanState = {
+export const defaultState = {
   hasQueryCorrection: false,
   originalQuery: '',
   wasCorrectedTo: '',
