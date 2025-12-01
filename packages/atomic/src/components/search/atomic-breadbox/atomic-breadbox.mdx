@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicBreadboxStories from './atomic-breadbox.new.stories';
-import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicBreadboxStories} />
 
@@ -10,23 +10,19 @@ import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/ato
   tagName="atomic-breadbox"
   className="AtomicBreadbox"
 >
-Include breadcrumbs in a search page when you want users to navigate the content using facets.
 
 This component is typically placed within the "status" section of the layout.
 
-```jsx
+```html
 <atomic-search-interface>
   ...
-  <atomic-search-layout>
-    ...
-    <atomic-layout-section section="main">
-      ...
-      <atomic-layout-section section="status">
-        <atomic-breadbox></atomic-breadbox>
-      </atomic-layout-section>
-      ...
+  <atomic-layout-section section="main">
+    <atomic-layout-section section="status">
+      
+      <atomic-breadbox></atomic-breadbox>
+      
     </atomic-layout-section>
-  </atomic-search-layout>
+  </atomic-layout-section>
 </atomic-search-interface>
 ```
 

@@ -1,5 +1,5 @@
 ---
-mode: 'agent'
+agent: 'agent'
 description: 'Generate comprehensive Vitest unit tests for utility functions in the Atomic package'
 ---
 
@@ -160,7 +160,7 @@ describe('promise-utils', () => {
   describe('#promiseTimeout', () => {
     it('should resolve when promise completes before timeout', async () => {
       const result = promiseTimeout(Promise.resolve('success'), 1000);
-      await expect(result).resolves.toBeUndefined();
+      await expect(result).resolves.toBe('success');
     });
 
     it('should reject when promise exceeds timeout', async () => {
@@ -178,7 +178,7 @@ describe('promise-utils', () => {
       const p2 = new Promise((resolve) => setTimeout(() => resolve('slow'), 2000));
       const p2Timeout = promiseTimeout(p2, 1000);
 
-      await expect(p1).resolves.toBeUndefined();
+      await expect(p1).resolves.toBe('fast');
       
       vi.advanceTimersByTime(1000);
       await expect(p2Timeout).rejects.toThrow('Promise timed out.');
@@ -447,26 +447,3 @@ npx vitest --config vitest.config.ts ./src/utils/your-utility.spec.ts
 - **Consider performance** - mock expensive operations to keep tests fast
 
 The goal is to create a comprehensive test suite that validates the utility functions work correctly across all scenarios while maintaining the high quality standards of the UI Kit project.
-
-## Post-Execution: Generate Summary
-
-After completing test generation, generate execution summary:
-
-**1. Create summary file:**
-- **Location:** `.github/prompts/.executions/generate-vitest-tests-atomic-utils-[YYYY-MM-DD-HHmmss].prompt-execution.md`
-- **Structure:** Follow `.github/prompts/.executions/TEMPLATE.prompt-execution.md`
-- **Purpose:** Structured feedback for prompt optimization
-
-**2. Include in summary:**
-- Which similar utility tests were used as reference (if any)
-- Issues with understanding utility function patterns or edge cases
-- Ambiguities in prompt instructions that required interpretation
-- Time-consuming operations (excessive file reads, searches)
-- Missing instructions or unclear testing requirements
-- Concrete suggestions for prompt improvements
-
-**3. Inform user** about summary location and next steps (switch to "Prompt Engineer" chatmode for optimization)
-
-**4. Mark complete** only after file created and user informed.
-
-````

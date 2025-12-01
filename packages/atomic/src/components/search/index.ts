@@ -1,5 +1,6 @@
 // Auto-generated file
 export {AtomicAutomaticFacet} from './atomic-automatic-facet/atomic-automatic-facet.js';
+export {AtomicBreadbox} from './atomic-breadbox/atomic-breadbox.js';
 export {AtomicExternal} from './atomic-external/atomic-external.js';
 export {AtomicFacet} from './atomic-facet/atomic-facet.js';
 export {AtomicFieldCondition} from './atomic-field-condition/atomic-field-condition.js';
@@ -16,6 +17,8 @@ export {AtomicResultBadge} from './atomic-result-badge/atomic-result-badge.js';
 export {AtomicResultChildrenTemplate} from './atomic-result-children-template/atomic-result-children-template.js';
 export {AtomicResultHtml} from './atomic-result-html/atomic-result-html.js';
 export {AtomicResultList} from './atomic-result-list/atomic-result-list.js';
+export {AtomicResultLocalizedText} from './atomic-result-localized-text/atomic-result-localized-text.js';
+export {AtomicResultMultiValueText} from './atomic-result-multi-value-text/atomic-result-multi-value-text.js';
 export {AtomicResultNumber} from './atomic-result-number/atomic-result-number.js';
 export {AtomicResultSectionActions} from './atomic-result-section-actions/atomic-result-section-actions.js';
 export {AtomicResultSectionBadges} from './atomic-result-section-badges/atomic-result-section-badges.js';
@@ -28,11 +31,14 @@ export {AtomicResultSectionTitleMetadata} from './atomic-result-section-title-me
 export {AtomicResultSectionVisual} from './atomic-result-section-visual/atomic-result-section-visual.js';
 export {AtomicResultTemplate} from './atomic-result-template/atomic-result-template.js';
 export {AtomicResultText} from './atomic-result-text/atomic-result-text.js';
+export {AtomicResultTimespan} from './atomic-result-timespan/atomic-result-timespan.js';
 export {AtomicResultsPerPage} from './atomic-results-per-page/atomic-results-per-page.js';
 export {AtomicSearchBoxInstantResults} from './atomic-search-box-instant-results/atomic-search-box-instant-results.js';
 export {AtomicSearchBoxQuerySuggestions} from './atomic-search-box-query-suggestions/atomic-search-box-query-suggestions.js';
 export {AtomicSearchBoxRecentQueries} from './atomic-search-box-recent-queries/atomic-search-box-recent-queries.js';
 export {AtomicSearchInterface} from './atomic-search-interface/atomic-search-interface.js';
 export {AtomicSearchLayout} from './atomic-search-layout/atomic-search-layout.js';
+export {AtomicSegmentedFacetScrollable} from './atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.js';
+export {AtomicSortDropdown} from './atomic-sort-dropdown/atomic-sort-dropdown.js';
 export {AtomicTab} from './atomic-tab/atomic-tab.js';
 export {AtomicText} from './atomic-text/atomic-text.js';
