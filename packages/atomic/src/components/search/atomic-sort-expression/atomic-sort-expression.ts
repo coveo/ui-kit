@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
@@ -85,11 +85,18 @@ export class AtomicSortExpression extends LightDomMixin(LitElement) {
       () => ({
         label: this.label,
         expression: this.expression,
+        tabsExcluded: this.tabsExcluded,
       }),
       new Schema({
         label: new StringValue({required: true, emptyAllowed: false}),
         expression: new StringValue({required: true, emptyAllowed: false}),
-      })
+        tabsExcluded: new ArrayValue({
+          each: new StringValue({}),
+          required: false,
+        }),
+      }),
+      // TODO V4: KIT-5197 - Remove false
+      false
     );
   }
 

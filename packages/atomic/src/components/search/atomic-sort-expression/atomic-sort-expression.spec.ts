@@ -216,4 +216,37 @@ describe('atomic-sort-expression', () => {
       expect(slotContent?.textContent).toBe('Slot Content');
     });
   });
+
+  // TODO V4: KIT-5197 - Remove skip
+  it.skip.each<{
+    prop: 'label' | 'expression' | 'tabsIncluded';
+    invalidValue: string | number | unknown[];
+  }>([
+    {
+      prop: 'label',
+      invalidValue: '',
+    },
+    {
+      prop: 'expression',
+      invalidValue: '',
+    },
+    {
+      prop: 'tabsIncluded',
+      invalidValue: ['invalid', 123, null],
+    },
+  ])(
+    'should set error when #$prop is invalid',
+    async ({prop, invalidValue}) => {
+      const {element} = await renderSortExpression();
+
+      expect(element.error).toBeUndefined();
+
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      (element as any)[prop] = invalidValue;
+      await element.updateComplete;
+
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+    }
+  );
 });
