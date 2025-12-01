@@ -1,11 +1,10 @@
 import type {SearchEngine} from '@coveo/headless';
-import type {VNode} from '@stencil/core';
+import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {fixtureWrapper} from '@/vitest-utils/testing-helpers/fixture-wrapper';
-import {renderStencilVNode} from '@/vitest-utils/testing-helpers/stencil-vnode-renderer';
-import {QuickviewIframe} from './quickview-iframe';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {renderQuickviewIframe} from './quickview-iframe';
 
-describe('QuickviewIframe (Stencil)', () => {
+describe('#renderQuickviewIframe', () => {
   let mockOnSetIframeRef: (ref: HTMLIFrameElement) => void;
   let mockLogger: SearchEngine['logger'];
 
@@ -16,13 +15,6 @@ describe('QuickviewIframe (Stencil)', () => {
     } as unknown as SearchEngine['logger'];
   });
 
-  /**
-   * Helper function to render the QuickviewIframe component.
-   * This calls the actual Stencil functional component and renders its output.
-   *
-   * For Lit migration: Replace this with a helper that uses renderFunctionFixture
-   * with the Lit component.
-   */
   const renderComponent = async (props: {
     title: string;
     content?: string;
@@ -32,18 +24,14 @@ describe('QuickviewIframe (Stencil)', () => {
     src?: string;
     logger?: SearchEngine['logger'];
   }): Promise<HTMLIFrameElement> => {
-    // Call the actual Stencil functional component with required parameters
-    const vnode = QuickviewIframe(
-      props,
-      [], // children
-      // biome-ignore lint/suspicious/noExplicitAny: Stencil FunctionalComponent requires utils parameter but it's not used
-      {} as any
-    ) as VNode;
+    const container = await renderFunctionFixture(
+      html`${renderQuickviewIframe({props})}`
+    );
 
-    const container = document.createElement('div');
-    fixtureWrapper(container);
+    // Twice because renderQuickviewIframe has 2 nested async updates
+    await new Promise((resolve) => setTimeout(resolve));
+    await new Promise((resolve) => setTimeout(resolve));
 
-    await renderStencilVNode(vnode, container);
     return container.firstElementChild as HTMLIFrameElement;
   };
 
@@ -240,6 +228,58 @@ describe('QuickviewIframe (Stencil)', () => {
     });
   });
 
+  describe('when contentDocument is unavailable', () => {
+    it('should log a warning and set fallback src when provided', async () => {
+      const contentDocumentSpy = vi
+        .spyOn(HTMLIFrameElement.prototype, 'contentDocument', 'get')
+        .mockReturnValue(null as unknown as Document);
+
+      try {
+        const fallbackSrc = 'https://example.com/quickview';
+
+        const iframe = await renderComponent({
+          title: 'Test Title',
+          content: '<p>Content</p>',
+          onSetIframeRef: mockOnSetIframeRef,
+          uniqueIdentifier: 'test-id',
+          logger: mockLogger,
+          src: fallbackSrc,
+        });
+
+        expect(mockLogger.warn).toHaveBeenCalledTimes(1);
+        expect(mockLogger.warn).toHaveBeenCalledWith(
+          'Quickview initialized in restricted mode due to incompatible sandboxing environment. Keywords hit navigation will be disabled.'
+        );
+        expect(iframe.getAttribute('src')).toBe(fallbackSrc);
+        expect(mockOnSetIframeRef).not.toHaveBeenCalled();
+      } finally {
+        contentDocumentSpy.mockRestore();
+      }
+    });
+
+    it('should return early without logging when fallback src is not provided', async () => {
+      const contentDocumentSpy = vi
+        .spyOn(HTMLIFrameElement.prototype, 'contentDocument', 'get')
+        .mockReturnValue(null as unknown as Document);
+
+      try {
+        const iframe = await renderComponent({
+          title: 'Test Title',
+          content: '<p>Content</p>',
+          onSetIframeRef: mockOnSetIframeRef,
+          uniqueIdentifier: 'test-id',
+          logger: mockLogger,
+        });
+
+        expect(mockLogger.warn).not.toHaveBeenCalled();
+        expect(iframe.getAttribute('src')).toBe('about:blank');
+        expect(mockOnSetIframeRef).not.toHaveBeenCalled();
+      } finally {
+        contentDocumentSpy.mockRestore();
+      }
+    });
+  });
+
   describe('async behavior', () => {
     it('should call onSetIframeRef after content is written asynchronously', async () => {
       const callOrder: string[] = [];
@@ -263,20 +303,18 @@ describe('QuickviewIframe (Stencil)', () => {
   });
 
   describe('edge cases', () => {
-    it('should handle empty content string', async () => {
-      const iframe = await renderComponent({
+    it('should not call onSetIframeRef when content is falsy', async () => {
+      await renderComponent({
         title: 'Test Title',
         content: '',
         onSetIframeRef: mockOnSetIframeRef,
         uniqueIdentifier: 'test-id',
       });
 
-      const iframeDoc = iframe.contentDocument;
-      // Empty string is falsy, so onSetIframeRef should not be called
-      expect(iframeDoc?.body.innerHTML).not.toContain('CoveoDocIdentifier');
+      expect(mockOnSetIframeRef).not.toHaveBeenCalled();
     });
 
-    it('should handle empty uniqueIdentifier string', async () => {
+    it('should not call onSetIframeRef when uniqueIdentifier is falsy', async () => {
       await renderComponent({
         title: 'Test Title',
         content: '<p>Content</p>',
@@ -284,7 +322,6 @@ describe('QuickviewIframe (Stencil)', () => {
         uniqueIdentifier: '',
       });
 
-      // Empty string is falsy, so onSetIframeRef should not be called
       expect(mockOnSetIframeRef).not.toHaveBeenCalled();
     });
 
