@@ -43,9 +43,7 @@ test.describe('atomic-color-facet', () => {
   test('should display selected value with visual indicator and clear button', async ({
     facet,
   }) => {
-    await facet.load({
-      storyId: 'search-facet-color-test-stories--with-selected-value',
-    });
+    await facet.load({story: 'with-selected-value'});
 
     await test.step('Verify selected value has selected styling', async () => {
       await expect(facet.selectedValueBoxes).toHaveCount(1);
@@ -63,9 +61,7 @@ test.describe('atomic-color-facet', () => {
   test('should render checkboxes when display-values-as is checkbox', async ({
     facet,
   }) => {
-    await facet.load({
-      storyId: 'atomic-color-facet--checkbox-display',
-    });
+    await facet.load({story: 'checkbox-display'});
 
     await test.step('Verify facet is loaded', async () => {
       await expect(facet.facet).toBeVisible();

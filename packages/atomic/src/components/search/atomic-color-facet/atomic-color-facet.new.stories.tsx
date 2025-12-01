@@ -8,41 +8,50 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 
 const searchApiHarness = new MockSearchApi();
 
-searchApiHarness.searchEndpoint.mock((response) => {
-  if ('facets' in response) {
-    return {
-      ...response,
-      facets: [
-        ...(response.facets || []),
-        {
-          facetId: 'filetype',
-          field: 'filetype',
-          moreValuesAvailable: true,
-          values: [
-            {value: 'Email', state: 'idle', numberOfResults: 87},
-            {value: 'HTML', state: 'idle', numberOfResults: 245},
-            {value: 'Message', state: 'idle', numberOfResults: 134},
-            {value: 'PDF', state: 'idle', numberOfResults: 43},
-            {value: 'Powerpoint', state: 'idle', numberOfResults: 76},
-            {value: 'Text', state: 'idle', numberOfResults: 54},
-            {value: 'Thread', state: 'idle', numberOfResults: 98},
-            {value: 'Video', state: 'idle', numberOfResults: 156},
-          ],
-          label: 'File Type',
-        },
-      ],
-    };
-  }
-  return response;
+const baseFacetValues = [
+  {value: 'Email', state: 'idle', numberOfResults: 87},
+  {value: 'HTML', state: 'idle', numberOfResults: 245},
+  {value: 'Message', state: 'idle', numberOfResults: 134},
+  {value: 'PDF', state: 'idle', numberOfResults: 43},
+  {value: 'Powerpoint', state: 'idle', numberOfResults: 76},
+  {value: 'Text', state: 'idle', numberOfResults: 54},
+  {value: 'Thread', state: 'idle', numberOfResults: 98},
+  {value: 'Video', state: 'idle', numberOfResults: 156},
+];
+
+const createFacetResponse = (
+  values: typeof baseFacetValues,
+  {moreValuesAvailable = true}: {moreValuesAvailable?: boolean} = {}
+) => ({
+  facetId: 'filetype',
+  field: 'filetype',
+  moreValuesAvailable,
+  values,
+  label: 'File Type',
 });
 
-searchApiHarness.facetSearchEndpoint.mock(() => ({
-  values: [
-    {displayValue: 'Powerpoint', rawValue: 'Powerpoint', count: 76},
-    {displayValue: 'PDF', rawValue: 'PDF', count: 43},
-  ],
-  moreValuesAvailable: false,
-}));
+const mockDefaultFacetResponse = () => {
+  searchApiHarness.searchEndpoint.mockOnce((response) => {
+    if ('facets' in response) {
+      return {
+        ...response,
+        facets: [
+          ...(response.facets || []),
+          createFacetResponse(baseFacetValues),
+        ],
+      };
+    }
+    return response;
+  });
+
+  searchApiHarness.facetSearchEndpoint.mockOnce(() => ({
+    values: [
+      {displayValue: 'Powerpoint', rawValue: 'Powerpoint', count: 76},
+      {displayValue: 'PDF', rawValue: 'PDF', count: 43},
+    ],
+    moreValuesAvailable: false,
+  }));
+};
 
 const {decorator, play} = wrapInSearchInterface();
 
@@ -68,6 +77,10 @@ const meta: Meta = {
     msw: {handlers: [...searchApiHarness.handlers]},
   },
   argTypes,
+  beforeEach: () => {
+    searchApiHarness.searchEndpoint.clear();
+    searchApiHarness.facetSearchEndpoint.clear();
+  },
   play,
 };
 
@@ -162,6 +175,9 @@ export const Default: Story = {
     label: 'File Type',
   },
   decorators: [facetDecorator, colorFacetStylesDecorator],
+  beforeEach: () => {
+    mockDefaultFacetResponse();
+  },
 };
 
 export const CheckboxDisplay: Story = {
@@ -172,4 +188,33 @@ export const CheckboxDisplay: Story = {
     'display-values-as': 'checkbox',
   },
   decorators: [facetDecorator, colorFacetStylesDecorator],
+  beforeEach: () => {
+    mockDefaultFacetResponse();
+  },
+};
+
+export const WithSelectedValue: Story = {
+  name: 'With Selected Value',
+  args: {
+    field: 'filetype',
+    label: 'File Type',
+  },
+  decorators: [facetDecorator, colorFacetStylesDecorator],
+  beforeEach: () => {
+    const selectedValues = baseFacetValues.map((v) =>
+      v.value === 'Email' ? {...v, state: 'selected'} : v
+    );
+    searchApiHarness.searchEndpoint.mockOnce((response) => {
+      if ('facets' in response) {
+        return {
+          ...response,
+          facets: [
+            ...(response.facets || []),
+            createFacetResponse(selectedValues),
+          ],
+        };
+      }
+      return response;
+    });
+  },
 };

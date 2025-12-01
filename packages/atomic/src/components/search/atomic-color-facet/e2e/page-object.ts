@@ -6,22 +6,6 @@ export class AtomicColorFacetPageObject extends BasePageObject {
     super(page, 'atomic-color-facet');
   }
 
-  async load({
-    args,
-    story = 'default',
-    storyId,
-  }: {
-    args?: Record<string, unknown>;
-    story?: string;
-    storyId?: string;
-  } = {}) {
-    if (storyId) {
-      await this.page.goto(`${this.urlRoot}?id=${storyId}`);
-      return;
-    }
-    return super.load({args, story});
-  }
-
   get facet() {
     return this.page.locator('[part="facet"]');
   }
