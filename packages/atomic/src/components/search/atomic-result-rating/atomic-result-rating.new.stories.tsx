@@ -5,6 +5,9 @@ import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
+const CircleIcon =
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/></svg>';
+
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-result-rating',
   {excludeCategories: ['methods']}
@@ -67,6 +70,6 @@ export const WithADifferentIcon: Story = {
   name: 'With a custom icon',
   args: {
     field: 'snrating',
-    icon: 'https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/circle.svg',
+    icon: CircleIcon,
   },
 };
