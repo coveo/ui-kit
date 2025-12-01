@@ -35,6 +35,15 @@ export class AtomicResultRating
 {
   static styles = ratingStyles;
 
+  private static readonly propsSchema = new Schema({
+    field: new StringValue({required: true, emptyAllowed: false}),
+    maxValueInIndex: new NumberValue({
+      default: 5,
+      min: 1,
+      required: false,
+    }),
+  });
+
   /**
    * The result field containing the rating value to display.
    */
@@ -77,14 +86,7 @@ export class AtomicResultRating
         field: this.field,
         maxValueInIndex: this.maxValueInIndex,
       }),
-      new Schema({
-        field: new StringValue({required: true, emptyAllowed: false}),
-        maxValueInIndex: new NumberValue({
-          default: 5,
-          min: 1,
-          required: false,
-        }),
-      })
+      AtomicResultRating.propsSchema
     );
   }
 

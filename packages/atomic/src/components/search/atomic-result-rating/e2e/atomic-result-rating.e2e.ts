@@ -10,7 +10,6 @@ test.describe('atomic-result-rating', () => {
     const ratingContainer = resultRating.ratingContainer;
     await expect(ratingContainer).toBeVisible();
 
-    // Check that the rating icons are rendered
     const icons = resultRating.ratingIcons;
     await expect(icons.first()).toBeVisible();
   });
