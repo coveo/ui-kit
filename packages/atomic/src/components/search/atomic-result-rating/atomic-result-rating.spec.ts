@@ -4,7 +4,7 @@ import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-result-fixture';
-import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/result';
+import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {AtomicResultRating} from './atomic-result-rating';
 import './atomic-result-rating';
