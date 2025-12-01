@@ -8,12 +8,21 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 
 const searchApiHarness = new MockSearchApi();
 
-searchApiHarness.searchEndpoint.mock((response) => ({
-  ...response,
-  results: response.results.slice(0, 1),
-  totalCount: 1,
-  totalCountFiltered: 1,
-}));
+searchApiHarness.searchEndpoint.mock((response) => {
+  if ('results' in response) {
+    return {
+      ...response,
+      // biome-ignore lint/suspicious/noExplicitAny: Mock response type needs flexibility
+      results: response.results.slice(0, 1).map((r: any) => ({
+        ...r,
+        printableUri: 'https://www.example.com/path/to/document.html',
+      })),
+      totalCount: 1,
+      totalCountFiltered: 1,
+    };
+  }
+  return response;
+});
 
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
   includeCodeRoot: false,
