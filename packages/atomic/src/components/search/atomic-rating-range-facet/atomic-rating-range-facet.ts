@@ -18,28 +18,32 @@ import {
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
-import {html, LitElement, nothing} from 'lit';
+import {html, LitElement, nothing, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import atomicRatingStyles from '@/src/components/common/atomic-rating/atomic-rating.tw.css';
 import {renderRating} from '@/src/components/common/atomic-rating/rating';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
+import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.css';
 import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
 import {renderFacetPlaceholder} from '@/src/components/common/facets/facet-placeholder/facet-placeholder';
+import facetValueCheckboxStyles from '@/src/components/common/facets/facet-value-checkbox/facet-value-checkbox.tw.css';
 import {renderFacetValueLink} from '@/src/components/common/facets/facet-value-link/facet-value-link';
 import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '@/src/components/common/facets/popover/popover-type';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
+import {arrayConverter} from '@/src/converters/array-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
+import {mapProperty} from '@/src/utils/props-utils';
 import Star from '../../../images/star.svg';
 
 /**
@@ -70,9 +74,14 @@ import Star from '../../../images/star.svg';
 @bindings()
 @withTailwindStyles
 export class AtomicRatingRangeFacet
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<Bindings>
 {
+  static styles = [
+    facetCommonStyles,
+    facetValueCheckboxStyles,
+    atomicRatingStyles,
+  ];
   @state() public bindings!: Bindings;
   @state() public error!: Error;
 
@@ -98,20 +107,20 @@ export class AtomicRatingRangeFacet
    * Specifies a unique identifier for the facet.
    */
   @property({reflect: true, attribute: 'facet-id', type: String})
-  facetId?: string;
+  public facetId?: string;
 
   /**
    * The non-localized label for the facet.
    * Used in the `atomic-breadbox` component through the bindings store.
    */
   @property({reflect: true, type: String})
-  label = 'no-label';
+  public label = 'no-label';
 
   /**
    * The field whose values you want to display in the facet.
    */
   @property({reflect: true, type: String})
-  field!: string;
+  public field!: string;
 
   /**
    * The tabs on which the facet will be displayed.
@@ -120,8 +129,13 @@ export class AtomicRatingRangeFacet
    *
    * If left empty, the facet will be displayed on any tab. Otherwise, the facet will only be displayed on the specified tabs.
    */
-  @property({reflect: true, attribute: 'tabs-included', type: Array})
-  tabsIncluded: string[] = [];
+  @property({
+    reflect: true,
+    attribute: 'tabs-included',
+    type: Array,
+    converter: arrayConverter,
+  })
+  public tabsIncluded: string[] = [];
 
   /**
    * The tabs on which the facet will NOT be displayed.
@@ -130,26 +144,31 @@ export class AtomicRatingRangeFacet
    *
    * If left empty, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
    */
-  @property({reflect: true, attribute: 'tabs-excluded', type: Array})
-  tabsExcluded: string[] = [];
+  @property({
+    reflect: true,
+    attribute: 'tabs-excluded',
+    type: Array,
+    converter: arrayConverter,
+  })
+  public tabsExcluded: string[] = [];
 
   /**
    * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
    */
   @property({reflect: true, attribute: 'number-of-intervals', type: Number})
-  numberOfIntervals = 5;
+  public numberOfIntervals = 5;
 
   /**
    * The maximum value in the field's index and the number of rating icons to display in the facet. This property will default to the same value as `numberOfIntervals`, if not assigned a value.
    */
   @property({reflect: true, attribute: 'max-value-in-index', type: Number})
-  maxValueInIndex = this.numberOfIntervals;
+  public maxValueInIndex!: number;
 
   /**
    * The minimum value of the field.
    */
   @property({reflect: true, attribute: 'min-value-in-index', type: Number})
-  minValueInIndex = 1;
+  public minValueInIndex = 1;
 
   /**
    * The SVG icon to use to display the rating.
@@ -165,19 +184,19 @@ export class AtomicRatingRangeFacet
    * - `--atomic-rating-icon-inactive-color`
    */
   @property({reflect: true, type: String})
-  icon = Star;
+  public icon = Star;
 
   /**
    * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
    */
   @property({reflect: true, attribute: 'is-collapsed', type: Boolean})
-  isCollapsed = false;
+  public isCollapsed = false;
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
    */
   @property({reflect: true, attribute: 'heading-level', type: Number})
-  headingLevel = 0;
+  public headingLevel = 0;
 
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
@@ -185,7 +204,7 @@ export class AtomicRatingRangeFacet
    * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
    */
   @property({reflect: true, attribute: 'filter-facet-count', type: Boolean})
-  filterFacetCount = true;
+  public filterFacetCount = true;
 
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
@@ -194,7 +213,7 @@ export class AtomicRatingRangeFacet
    * Default: `1000`
    */
   @property({reflect: true, attribute: 'injection-depth', type: Number})
-  injectionDepth = 1000;
+  public injectionDepth = 1000;
 
   /**
    * The required facets and values for this facet to be displayed.
@@ -215,8 +234,8 @@ export class AtomicRatingRangeFacet
    * ></atomic-rating-range-facet>
    * ```
    */
-  @property({type: Object})
-  dependsOn: Record<string, string> = {};
+  @mapProperty({attributePrefix: 'depends-on'})
+  public dependsOn!: Record<string, string>;
 
   constructor() {
     super();
@@ -257,6 +276,15 @@ export class AtomicRatingRangeFacet
   public disconnectedCallback() {
     super.disconnectedCallback();
     this.dependenciesManager?.stopWatching();
+  }
+
+  protected updated(changed: PropertyValues<this>) {
+    if (
+      (changed.has('numberOfIntervals') || changed.has('maxValueInIndex')) &&
+      this.maxValueInIndex === undefined
+    ) {
+      this.maxValueInIndex = this.numberOfIntervals;
+    }
   }
 
   private get focusTarget() {
@@ -466,5 +494,11 @@ export class AtomicRatingRangeFacet
           ${when(!this.isCollapsed, () => this.renderValues())}`);
       }
     )}`;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-rating-range-facet': AtomicRatingRangeFacet;
   }
 }

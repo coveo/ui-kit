@@ -1,43 +1,13 @@
 import type {Locator, Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
-export class RatingRangeFacetPageObject extends BasePageObject<'atomic-rating-range-facet'> {
+export class RatingRangeFacetPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-rating-range-facet');
   }
 
-  get facetLabel(): Locator {
-    return this.page.locator(
-      'atomic-rating-range-facet button[part="label-button"]'
-    );
-  }
-
-  get clearButton(): Locator {
-    return this.page.locator(
-      'atomic-rating-range-facet button[part="clear-button"]'
-    );
-  }
-
-  get values(): Locator {
-    return this.page.locator('atomic-rating-range-facet [part="values"]');
-  }
-
   valueLink(index: number): Locator {
-    return this.page
-      .locator(`atomic-rating-range-facet [part="value-link"]`)
-      .nth(index);
-  }
-
-  get selectedValues(): Locator {
-    return this.page.locator(
-      'atomic-rating-range-facet [part~="value-link-selected"]'
-    );
-  }
-
-  get ratingIcons(): Locator {
-    return this.page.locator(
-      'atomic-rating-range-facet [part="value-rating-icon"]'
-    );
+    return this.hydrated.locator(`[part="value-link"]`).nth(index);
   }
 
   /**
