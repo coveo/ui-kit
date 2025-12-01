@@ -105,20 +105,18 @@ describe('atomic-result-printable-uri', () => {
     expect(el).toBeInstanceOf(AtomicResultPrintableUri);
   });
 
-  describe('when there is no "parents" property in the result object', () => {
-    it('should render a link with atomic-result-text for printableUri', async () => {
-      const {element, locators} = await renderComponent();
+  it('should render a link with atomic-result-text for printableUri when there is no "parents" property in the result object', async () => {
+    const {element, locators} = await renderComponent();
 
-      const links = locators.links();
-      expect(links?.length).toBe(1);
+    const links = locators.links();
+    expect(links?.length).toBe(1);
 
-      const link = links?.[0];
-      expect(link?.getAttribute('href')).toBe('https://example.com/click');
+    const link = links?.[0];
+    expect(link?.getAttribute('href')).toBe('https://example.com/click');
 
-      const resultText = element?.querySelector('atomic-result-text');
-      expect(resultText).toBeTruthy();
-      expect(resultText?.getAttribute('field')).toBe('printableUri');
-    });
+    const resultText = element?.querySelector('atomic-result-text');
+    expect(resultText).toBeTruthy();
+    expect(resultText?.getAttribute('field')).toBe('printableUri');
   });
 
   describe('when there is a "parents" property in the result object', () => {
@@ -238,45 +236,37 @@ describe('atomic-result-printable-uri', () => {
     });
   });
 
-  describe('validation', () => {
-    describe('when max-number-of-parts is less than 3', () => {
-      it('should set error', async () => {
-        const consoleWarnSpy = vi
-          .spyOn(console, 'warn')
-          .mockImplementation(() => {});
+  it('should set error when max-number-of-parts is less than 3', async () => {
+    const consoleWarnSpy = vi
+      .spyOn(console, 'warn')
+      .mockImplementation(() => {});
 
-        const {element} = await renderComponent({
-          maxNumberOfParts: 2,
-        });
-
-        expect(element?.error).toBeDefined();
-
-        consoleWarnSpy.mockRestore();
-      });
+    const {element} = await renderComponent({
+      maxNumberOfParts: 2,
     });
+
+    expect(element?.error).toBeDefined();
+
+    consoleWarnSpy.mockRestore();
   });
 
-  describe('interactive result analytics', () => {
-    beforeEach(() => {
-      mockResult = buildFakeResult({
-        raw: {
-          urihash: 'hash',
-          parents: createParentsXml(2),
-        },
-      });
+  it('should call buildInteractiveResult with the engine and result', async () => {
+    const result = buildFakeResult({
+      raw: {
+        urihash: 'hash',
+        parents: createParentsXml(2),
+      },
     });
 
-    it('should call buildInteractiveResult with the engine and result', async () => {
-      await renderComponent({result: mockResult});
+    await renderComponent({result});
 
-      expect(buildInteractiveResult).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          options: expect.objectContaining({
-            result: mockResult,
-          }),
-        })
-      );
-    });
+    expect(buildInteractiveResult).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        options: expect.objectContaining({
+          result,
+        }),
+      })
+    );
   });
 });

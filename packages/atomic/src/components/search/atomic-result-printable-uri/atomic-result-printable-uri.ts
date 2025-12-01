@@ -160,11 +160,7 @@ export class AtomicResultPrintableUri
   @bindingGuard()
   @errorGuard()
   render() {
-    return html`${when(
-      this.result,
-      () => this.renderPrintableUri(),
-      () => nothing
-    )}`;
+    return html`${when(this.result, () => this.renderPrintableUri())}`;
   }
 
   private cleanupLinkCallbacks() {
