@@ -114,7 +114,7 @@ export class AtomicRatingFacet
    * The non-localized label for the facet.
    * Used in the `atomic-breadbox` component through the bindings store.
    */
-  @property({reflect: true, useDefault: true, type: String})
+  @property({reflect: true, type: String})
   public label = 'no-label';
 
   /**
@@ -128,7 +128,6 @@ export class AtomicRatingFacet
    */
   @property({
     reflect: true,
-    useDefault: false,
     attribute: 'number-of-intervals',
     type: Number,
   })
@@ -139,7 +138,6 @@ export class AtomicRatingFacet
    */
   @property({
     reflect: true,
-    useDefault: true,
     attribute: 'tabs-included',
     type: Array,
   })
@@ -150,7 +148,6 @@ export class AtomicRatingFacet
    */
   @property({
     reflect: true,
-    useDefault: true,
     attribute: 'tabs-excluded',
     type: Array,
   })
@@ -172,7 +169,6 @@ export class AtomicRatingFacet
    */
   @property({
     reflect: true,
-    useDefault: true,
     attribute: 'min-value-in-index',
     type: Number,
   })
@@ -184,7 +180,6 @@ export class AtomicRatingFacet
    */
   @property({
     reflect: true,
-    useDefault: true,
     attribute: 'display-values-as',
     type: String,
   })
@@ -203,7 +198,7 @@ export class AtomicRatingFacet
    * - `--atomic-rating-icon-active-color`
    * - `--atomic-rating-icon-inactive-color`
    */
-  @property({reflect: true, useDefault: true, type: String})
+  @property({reflect: true, type: String})
   public icon = Star;
 
   /**
@@ -211,7 +206,7 @@ export class AtomicRatingFacet
    */
   @property({
     reflect: true,
-    useDefault: true,
+
     attribute: 'is-collapsed',
     type: Boolean,
   })
@@ -222,7 +217,7 @@ export class AtomicRatingFacet
    */
   @property({
     reflect: true,
-    useDefault: true,
+
     attribute: 'heading-level',
     type: Number,
   })
@@ -235,7 +230,7 @@ export class AtomicRatingFacet
    */
   @property({
     reflect: true,
-    useDefault: true,
+
     attribute: 'filter-facet-count',
     type: Boolean,
   })
@@ -248,7 +243,7 @@ export class AtomicRatingFacet
    */
   @property({
     reflect: true,
-    useDefault: true,
+
     attribute: 'injection-depth',
     type: Number,
   })
@@ -274,7 +269,7 @@ export class AtomicRatingFacet
    * ```
    */
   @mapProperty({attributePrefix: 'depends-on-'})
-  @property({useDefault: true, type: Object})
+  @property({type: Object})
   public dependsOn: Record<string, string> = {};
 
   private headerFocus?: FocusTargetController;
