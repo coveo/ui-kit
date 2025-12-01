@@ -1492,23 +1492,6 @@ export namespace Components {
         "noResultText": string;
     }
     /**
-     * The `atomic-result-date` component renders the value of a date result field.
-     */
-    interface AtomicResultDate {
-        /**
-          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * Available formats: https://day.js.org/docs/en/display/format
-         */
-        "format": string;
-        /**
-          * Whether the date should display in the [relative time format](https://day.js.org/docs/en/plugin/calendar).  To modify the relative time string, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
-         */
-        "relativeTime"?: boolean;
-    }
-    /**
      * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
      */
     interface AtomicResultFieldsList {
@@ -1544,51 +1527,6 @@ export namespace Components {
           * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
          */
         "hrefTemplate"?: string;
-    }
-    /**
-     * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
-     * Given this i18n configuration:
-     * ```
-     * searchInterface.i18n.addResourceBundle('en', 'translation', {
-     *    classic_book_advert: 'Classic book from {{name}}',
-     * });
-     * ```
-     * The component could be configured in such a way to replace `{{name}}` with the `author` field value from the result item:
-     * ```
-     * <atomic-result-localized-text locale-key="classic_book_advert" field-author="name"></atomic-result-localized-text>
-     * ```
-     * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
-     */
-    interface AtomicResultLocalizedText {
-        /**
-          * The field value to dynamically evaluate.
-         */
-        "field": Record<string, string>;
-        /**
-          * The numerical field value used to determine whether to use the singular or plural value of a translation.
-         */
-        "fieldCount"?: string;
-        /**
-          * The i18n translation key.
-         */
-        "localeKey": string;
-    }
-    /**
-     * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
-     */
-    interface AtomicResultMultiValueText {
-        /**
-          * The delimiter used to separate values when the field isn't indexed as a multi value field.
-         */
-        "delimiter": string | null;
-        /**
-          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
-         */
-        "maxValuesToDisplay": number;
     }
     /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
@@ -1631,23 +1569,6 @@ export namespace Components {
         "density": ItemDisplayDensity;
         "imageSize": ItemDisplayImageSize;
         "rows": number;
-    }
-    /**
-     * The `atomic-result-timespan` component renders a target result number field value as a duration.
-     */
-    interface AtomicResultTimespan {
-        /**
-          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * The format to apply to the result field value.  By default, the format is HH:mm:ss when the duration is under a day, and it is an approximation when longer (days, months or years).  The string displayed when there is an approximation can be modified with [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).  Available formats: https://day.js.org/docs/en/durations/format
-         */
-        "format"?: string;
-        /**
-          * The unit of measurement of the field value. Available units: https://day.js.org/docs/en/durations/creating
-         */
-        "unit": string;
     }
     /**
      * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -1738,11 +1659,6 @@ export namespace Components {
           * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded": string[] | string;
-    }
-    /**
-     * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
-     */
-    interface AtomicSegmentedFacetScrollable {
     }
     /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
@@ -1847,32 +1763,6 @@ export namespace Components {
           * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
-    }
-    /**
-     * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
-     */
-    interface AtomicSortDropdown {
-    }
-    /**
-     * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
-     */
-    interface AtomicSortExpression {
-        /**
-          * One or more sort criteria that the end user can select or toggle between.  The available sort criteria are:  * `relevancy` * `date ascending`/`date descending` * `qre` * `<FIELD> ascending`/`<FIELD> descending`, where you replace `<FIELD>` with the name of a sortable field in your index (`criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (`criteria="size ascending, date ascending"`).  You can specify a list of comma-separated sort criteria which will be applied sequentially. For example, if there's a tie on the 1st criterion, the API uses the 2nd criterion to break the tie. However, this only works when combining: * a relevancy criterion followed by one or more field or date criteria. * a qre criterion followed by one or more field or date criteria. * two or more field criteria (`<FIELD>` descending, `<FIELD>` descending). * a single date criterion and one or more field criteria in any order (`<FIELD>` descending, date ascending).  Examples: * `relevancy`, `<FIELD> descending` * `qre`, `<FIELD> ascending` * `date descending`, `<FIELD> descending`, `<FIELD> ascending`
-         */
-        "expression": string;
-        /**
-          * The non-localized label to display for this expression.
-         */
-        "label": string;
-        /**
-          * The tabs on which the sort expression must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-sort-expression tabs-excluded='["tabIDA", "tabIDB"]'></atomic-sort-expression> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded": string[] | string;
-        /**
-          * The tabs on which the sort expression can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-sort-expression tabs-included='["tabIDA", "tabIDB"]'></atomic-sort-expression snippet> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression can only be displayed on the specified tabs.
-         */
-        "tabsIncluded": string[] | string;
     }
     /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
@@ -2772,15 +2662,6 @@ declare global {
         new (): HTMLAtomicResultChildrenElement;
     };
     /**
-     * The `atomic-result-date` component renders the value of a date result field.
-     */
-    interface HTMLAtomicResultDateElement extends Components.AtomicResultDate, HTMLStencilElement {
-    }
-    var HTMLAtomicResultDateElement: {
-        prototype: HTMLAtomicResultDateElement;
-        new (): HTMLAtomicResultDateElement;
-    };
-    /**
      * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
      */
     interface HTMLAtomicResultFieldsListElement extends Components.AtomicResultFieldsList, HTMLStencilElement {
@@ -2818,35 +2699,6 @@ declare global {
         new (): HTMLAtomicResultLinkElement;
     };
     /**
-     * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
-     * Given this i18n configuration:
-     * ```
-     * searchInterface.i18n.addResourceBundle('en', 'translation', {
-     *    classic_book_advert: 'Classic book from {{name}}',
-     * });
-     * ```
-     * The component could be configured in such a way to replace `{{name}}` with the `author` field value from the result item:
-     * ```
-     * <atomic-result-localized-text locale-key="classic_book_advert" field-author="name"></atomic-result-localized-text>
-     * ```
-     * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
-     */
-    interface HTMLAtomicResultLocalizedTextElement extends Components.AtomicResultLocalizedText, HTMLStencilElement {
-    }
-    var HTMLAtomicResultLocalizedTextElement: {
-        prototype: HTMLAtomicResultLocalizedTextElement;
-        new (): HTMLAtomicResultLocalizedTextElement;
-    };
-    /**
-     * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
-     */
-    interface HTMLAtomicResultMultiValueTextElement extends Components.AtomicResultMultiValueText, HTMLStencilElement {
-    }
-    var HTMLAtomicResultMultiValueTextElement: {
-        prototype: HTMLAtomicResultMultiValueTextElement;
-        new (): HTMLAtomicResultMultiValueTextElement;
-    };
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface HTMLAtomicResultPlaceholderElement extends Components.AtomicResultPlaceholder, HTMLStencilElement {
@@ -2882,15 +2734,6 @@ declare global {
         prototype: HTMLAtomicResultTablePlaceholderElement;
         new (): HTMLAtomicResultTablePlaceholderElement;
     };
-    /**
-     * The `atomic-result-timespan` component renders a target result number field value as a duration.
-     */
-    interface HTMLAtomicResultTimespanElement extends Components.AtomicResultTimespan, HTMLStencilElement {
-    }
-    var HTMLAtomicResultTimespanElement: {
-        prototype: HTMLAtomicResultTimespanElement;
-        new (): HTMLAtomicResultTimespanElement;
-    };
     interface HTMLAtomicSearchBoxElementEventMap {
         "redirect": RedirectionPayload;
     }
@@ -2919,15 +2762,6 @@ declare global {
     var HTMLAtomicSegmentedFacetElement: {
         prototype: HTMLAtomicSegmentedFacetElement;
         new (): HTMLAtomicSegmentedFacetElement;
-    };
-    /**
-     * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
-     */
-    interface HTMLAtomicSegmentedFacetScrollableElement extends Components.AtomicSegmentedFacetScrollable, HTMLStencilElement {
-    }
-    var HTMLAtomicSegmentedFacetScrollableElement: {
-        prototype: HTMLAtomicSegmentedFacetScrollableElement;
-        new (): HTMLAtomicSegmentedFacetScrollableElement;
     };
     /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
@@ -3057,24 +2891,6 @@ declare global {
     var HTMLAtomicSmartSnippetSuggestionsElement: {
         prototype: HTMLAtomicSmartSnippetSuggestionsElement;
         new (): HTMLAtomicSmartSnippetSuggestionsElement;
-    };
-    /**
-     * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
-     */
-    interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
-    }
-    var HTMLAtomicSortDropdownElement: {
-        prototype: HTMLAtomicSortDropdownElement;
-        new (): HTMLAtomicSortDropdownElement;
-    };
-    /**
-     * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
-     */
-    interface HTMLAtomicSortExpressionElement extends Components.AtomicSortExpression, HTMLStencilElement {
-    }
-    var HTMLAtomicSortExpressionElement: {
-        prototype: HTMLAtomicSortExpressionElement;
-        new (): HTMLAtomicSortExpressionElement;
     };
     interface HTMLAtomicStencilFacetDateInputElementEventMap {
         "atomic/dateInputApply": any;
@@ -3240,21 +3056,16 @@ declare global {
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-result-children": HTMLAtomicResultChildrenElement;
-        "atomic-result-date": HTMLAtomicResultDateElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
         "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
-        "atomic-result-localized-text": HTMLAtomicResultLocalizedTextElement;
-        "atomic-result-multi-value-text": HTMLAtomicResultMultiValueTextElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-rating": HTMLAtomicResultRatingElement;
         "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
-        "atomic-result-timespan": HTMLAtomicResultTimespanElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
-        "atomic-segmented-facet-scrollable": HTMLAtomicSegmentedFacetScrollableElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
         "atomic-smart-snippet-collapse-wrapper": HTMLAtomicSmartSnippetCollapseWrapperElement;
@@ -3262,8 +3073,6 @@ declare global {
         "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
         "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
-        "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
-        "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
         "atomic-tab-bar": HTMLAtomicTabBarElement;
@@ -4685,23 +4494,6 @@ declare namespace LocalJSX {
         "noResultText"?: string;
     }
     /**
-     * The `atomic-result-date` component renders the value of a date result field.
-     */
-    interface AtomicResultDate {
-        /**
-          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
-         */
-        "field"?: string;
-        /**
-          * Available formats: https://day.js.org/docs/en/display/format
-         */
-        "format"?: string;
-        /**
-          * Whether the date should display in the [relative time format](https://day.js.org/docs/en/plugin/calendar).  To modify the relative time string, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
-         */
-        "relativeTime"?: boolean;
-    }
-    /**
      * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
      */
     interface AtomicResultFieldsList {
@@ -4737,51 +4529,6 @@ declare namespace LocalJSX {
           * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
          */
         "hrefTemplate"?: string;
-    }
-    /**
-     * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
-     * Given this i18n configuration:
-     * ```
-     * searchInterface.i18n.addResourceBundle('en', 'translation', {
-     *    classic_book_advert: 'Classic book from {{name}}',
-     * });
-     * ```
-     * The component could be configured in such a way to replace `{{name}}` with the `author` field value from the result item:
-     * ```
-     * <atomic-result-localized-text locale-key="classic_book_advert" field-author="name"></atomic-result-localized-text>
-     * ```
-     * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
-     */
-    interface AtomicResultLocalizedText {
-        /**
-          * The field value to dynamically evaluate.
-         */
-        "field"?: Record<string, string>;
-        /**
-          * The numerical field value used to determine whether to use the singular or plural value of a translation.
-         */
-        "fieldCount"?: string;
-        /**
-          * The i18n translation key.
-         */
-        "localeKey": string;
-    }
-    /**
-     * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
-     */
-    interface AtomicResultMultiValueText {
-        /**
-          * The delimiter used to separate values when the field isn't indexed as a multi value field.
-         */
-        "delimiter"?: string | null;
-        /**
-          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
-         */
-        "maxValuesToDisplay"?: number;
     }
     /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
@@ -4824,23 +4571,6 @@ declare namespace LocalJSX {
         "density": ItemDisplayDensity;
         "imageSize": ItemDisplayImageSize;
         "rows": number;
-    }
-    /**
-     * The `atomic-result-timespan` component renders a target result number field value as a duration.
-     */
-    interface AtomicResultTimespan {
-        /**
-          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * The format to apply to the result field value.  By default, the format is HH:mm:ss when the duration is under a day, and it is an approximation when longer (days, months or years).  The string displayed when there is an approximation can be modified with [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).  Available formats: https://day.js.org/docs/en/durations/format
-         */
-        "format"?: string;
-        /**
-          * The unit of measurement of the field value. Available units: https://day.js.org/docs/en/durations/creating
-         */
-        "unit"?: string;
     }
     /**
      * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -4935,11 +4665,6 @@ declare namespace LocalJSX {
           * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
          */
         "tabsIncluded"?: string[] | string;
-    }
-    /**
-     * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
-     */
-    interface AtomicSegmentedFacetScrollable {
     }
     /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
@@ -5057,32 +4782,6 @@ declare namespace LocalJSX {
           * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
-    }
-    /**
-     * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
-     */
-    interface AtomicSortDropdown {
-    }
-    /**
-     * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
-     */
-    interface AtomicSortExpression {
-        /**
-          * One or more sort criteria that the end user can select or toggle between.  The available sort criteria are:  * `relevancy` * `date ascending`/`date descending` * `qre` * `<FIELD> ascending`/`<FIELD> descending`, where you replace `<FIELD>` with the name of a sortable field in your index (`criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (`criteria="size ascending, date ascending"`).  You can specify a list of comma-separated sort criteria which will be applied sequentially. For example, if there's a tie on the 1st criterion, the API uses the 2nd criterion to break the tie. However, this only works when combining: * a relevancy criterion followed by one or more field or date criteria. * a qre criterion followed by one or more field or date criteria. * two or more field criteria (`<FIELD>` descending, `<FIELD>` descending). * a single date criterion and one or more field criteria in any order (`<FIELD>` descending, date ascending).  Examples: * `relevancy`, `<FIELD> descending` * `qre`, `<FIELD> ascending` * `date descending`, `<FIELD> descending`, `<FIELD> ascending`
-         */
-        "expression": string;
-        /**
-          * The non-localized label to display for this expression.
-         */
-        "label": string;
-        /**
-          * The tabs on which the sort expression must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-sort-expression tabs-excluded='["tabIDA", "tabIDB"]'></atomic-sort-expression> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded"?: string[] | string;
-        /**
-          * The tabs on which the sort expression can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-sort-expression tabs-included='["tabIDA", "tabIDB"]'></atomic-sort-expression snippet> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression can only be displayed on the specified tabs.
-         */
-        "tabsIncluded"?: string[] | string;
     }
     /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
@@ -5311,21 +5010,16 @@ declare namespace LocalJSX {
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-result-children": AtomicResultChildren;
-        "atomic-result-date": AtomicResultDate;
         "atomic-result-fields-list": AtomicResultFieldsList;
         "atomic-result-icon": AtomicResultIcon;
         "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
-        "atomic-result-localized-text": AtomicResultLocalizedText;
-        "atomic-result-multi-value-text": AtomicResultMultiValueText;
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-rating": AtomicResultRating;
         "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
-        "atomic-result-timespan": AtomicResultTimespan;
         "atomic-search-box": AtomicSearchBox;
         "atomic-segmented-facet": AtomicSegmentedFacet;
-        "atomic-segmented-facet-scrollable": AtomicSegmentedFacetScrollable;
         "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
         "atomic-smart-snippet-collapse-wrapper": AtomicSmartSnippetCollapseWrapper;
@@ -5333,8 +5027,6 @@ declare namespace LocalJSX {
         "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
         "atomic-smart-snippet-source": AtomicSmartSnippetSource;
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
-        "atomic-sort-dropdown": AtomicSortDropdown;
-        "atomic-sort-expression": AtomicSortExpression;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
         "atomic-tab-bar": AtomicTabBar;
@@ -5554,10 +5246,6 @@ declare module "@stencil/core" {
              */
             "atomic-result-children": LocalJSX.AtomicResultChildren & JSXBase.HTMLAttributes<HTMLAtomicResultChildrenElement>;
             /**
-             * The `atomic-result-date` component renders the value of a date result field.
-             */
-            "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
-            /**
              * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
              */
             "atomic-result-fields-list": LocalJSX.AtomicResultFieldsList & JSXBase.HTMLAttributes<HTMLAtomicResultFieldsListElement>;
@@ -5575,25 +5263,6 @@ declare module "@stencil/core" {
              */
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             /**
-             * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
-             * Given this i18n configuration:
-             * ```
-             * searchInterface.i18n.addResourceBundle('en', 'translation', {
-             *    classic_book_advert: 'Classic book from {{name}}',
-             * });
-             * ```
-             * The component could be configured in such a way to replace `{{name}}` with the `author` field value from the result item:
-             * ```
-             * <atomic-result-localized-text locale-key="classic_book_advert" field-author="name"></atomic-result-localized-text>
-             * ```
-             * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
-             */
-            "atomic-result-localized-text": LocalJSX.AtomicResultLocalizedText & JSXBase.HTMLAttributes<HTMLAtomicResultLocalizedTextElement>;
-            /**
-             * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
-             */
-            "atomic-result-multi-value-text": LocalJSX.AtomicResultMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicResultMultiValueTextElement>;
-            /**
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
@@ -5610,10 +5279,6 @@ declare module "@stencil/core" {
              */
             "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
             /**
-             * The `atomic-result-timespan` component renders a target result number field value as a duration.
-             */
-            "atomic-result-timespan": LocalJSX.AtomicResultTimespan & JSXBase.HTMLAttributes<HTMLAtomicResultTimespanElement>;
-            /**
              * The `atomic-search-box` component creates a search box with built-in support for suggestions.
              */
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
@@ -5621,10 +5286,6 @@ declare module "@stencil/core" {
              * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
              */
             "atomic-segmented-facet": LocalJSX.AtomicSegmentedFacet & JSXBase.HTMLAttributes<HTMLAtomicSegmentedFacetElement>;
-            /**
-             * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
-             */
-            "atomic-segmented-facet-scrollable": LocalJSX.AtomicSegmentedFacetScrollable & JSXBase.HTMLAttributes<HTMLAtomicSegmentedFacetScrollableElement>;
             /**
              * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
              * You can style the snippet by inserting a template element as follows:
@@ -5666,14 +5327,6 @@ declare module "@stencil/core" {
              * ```
              */
             "atomic-smart-snippet-suggestions": LocalJSX.AtomicSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSuggestionsElement>;
-            /**
-             * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
-             */
-            "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
-            /**
-             * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
-             */
-            "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             /**
              * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
              * Internal component made to be integrated in a TimeframeFacet.

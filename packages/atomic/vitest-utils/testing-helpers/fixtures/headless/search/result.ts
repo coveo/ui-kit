@@ -36,5 +36,5 @@ export const buildFakeResult = (result?: DeepPartialResult): Result => {
       urihash: 'urihash',
       ...raw,
     },
-  };
+  } satisfies Result;
 };
