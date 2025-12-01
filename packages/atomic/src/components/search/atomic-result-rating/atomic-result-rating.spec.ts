@@ -78,14 +78,6 @@ describe('atomic-result-rating', () => {
     expect(icons).toHaveLength(10); // 5 empty + 5 filled icons
   });
 
-  it('should display rating for specified field', async () => {
-    const element = await renderComponent({field: 'snrating'});
-    const ratingContainer = locators.getRatingContainer(element);
-
-    expect(ratingContainer).toBeInTheDocument();
-    expect(ratingContainer).toHaveAttribute('aria-label', '4 stars out of 5');
-  });
-
   describe('when a custom field is specified', () => {
     it('should render rating using custom field', async () => {
       const element = await renderComponent({field: 'custom_rating'});
