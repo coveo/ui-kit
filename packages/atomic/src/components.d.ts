@@ -1492,23 +1492,6 @@ export namespace Components {
         "noResultText": string;
     }
     /**
-     * The `atomic-result-date` component renders the value of a date result field.
-     */
-    interface AtomicResultDate {
-        /**
-          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * Available formats: https://day.js.org/docs/en/display/format
-         */
-        "format": string;
-        /**
-          * Whether the date should display in the [relative time format](https://day.js.org/docs/en/plugin/calendar).  To modify the relative time string, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
-         */
-        "relativeTime"?: boolean;
-    }
-    /**
      * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
      */
     interface AtomicResultFieldsList {
@@ -2679,15 +2662,6 @@ declare global {
         new (): HTMLAtomicResultChildrenElement;
     };
     /**
-     * The `atomic-result-date` component renders the value of a date result field.
-     */
-    interface HTMLAtomicResultDateElement extends Components.AtomicResultDate, HTMLStencilElement {
-    }
-    var HTMLAtomicResultDateElement: {
-        prototype: HTMLAtomicResultDateElement;
-        new (): HTMLAtomicResultDateElement;
-    };
-    /**
      * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
      */
     interface HTMLAtomicResultFieldsListElement extends Components.AtomicResultFieldsList, HTMLStencilElement {
@@ -3082,7 +3056,6 @@ declare global {
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-result-children": HTMLAtomicResultChildrenElement;
-        "atomic-result-date": HTMLAtomicResultDateElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
         "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-image": HTMLAtomicResultImageElement;
@@ -4521,23 +4494,6 @@ declare namespace LocalJSX {
         "noResultText"?: string;
     }
     /**
-     * The `atomic-result-date` component renders the value of a date result field.
-     */
-    interface AtomicResultDate {
-        /**
-          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
-         */
-        "field"?: string;
-        /**
-          * Available formats: https://day.js.org/docs/en/display/format
-         */
-        "format"?: string;
-        /**
-          * Whether the date should display in the [relative time format](https://day.js.org/docs/en/plugin/calendar).  To modify the relative time string, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
-         */
-        "relativeTime"?: boolean;
-    }
-    /**
      * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
      */
     interface AtomicResultFieldsList {
@@ -5054,7 +5010,6 @@ declare namespace LocalJSX {
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-result-children": AtomicResultChildren;
-        "atomic-result-date": AtomicResultDate;
         "atomic-result-fields-list": AtomicResultFieldsList;
         "atomic-result-icon": AtomicResultIcon;
         "atomic-result-image": AtomicResultImage;
@@ -5290,10 +5245,6 @@ declare module "@stencil/core" {
              * only when children exist.
              */
             "atomic-result-children": LocalJSX.AtomicResultChildren & JSXBase.HTMLAttributes<HTMLAtomicResultChildrenElement>;
-            /**
-             * The `atomic-result-date` component renders the value of a date result field.
-             */
-            "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
             /**
              * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
              */

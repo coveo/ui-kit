@@ -28,6 +28,8 @@ export default {
     await import(
       './atomic-result-children-template/atomic-result-children-template.js'
     ),
+  'atomic-result-date': async () =>
+    await import('./atomic-result-date/atomic-result-date.js'),
   'atomic-result-html': async () =>
     await import('./atomic-result-html/atomic-result-html.js'),
   'atomic-result-list': async () =>
