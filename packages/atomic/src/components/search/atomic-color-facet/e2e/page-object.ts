@@ -6,6 +6,22 @@ export class AtomicColorFacetPageObject extends BasePageObject {
     super(page, 'atomic-color-facet');
   }
 
+  async load({
+    args,
+    story = 'default',
+    storyId,
+  }: {
+    args?: Record<string, unknown>;
+    story?: string;
+    storyId?: string;
+  } = {}) {
+    if (storyId) {
+      await this.page.goto(`${this.urlRoot}?id=${storyId}`);
+      return;
+    }
+    return super.load({args, story});
+  }
+
   get facet() {
     return this.page.locator('[part="facet"]');
   }
@@ -19,11 +35,27 @@ export class AtomicColorFacetPageObject extends BasePageObject {
   }
 
   get valueBoxes() {
-    return this.page.locator('[part="value-box"]');
+    return this.facet.locator('[part="value-box"]');
+  }
+
+  get valueCheckboxes() {
+    return this.facet.locator('[part~="value-checkbox"]');
   }
 
   get searchInput() {
-    return this.page.locator('[part="search-input"]');
+    return this.facet.locator('[part="search-input"]');
+  }
+
+  get clearButton() {
+    return this.facet.locator('[part="clear-button"]');
+  }
+
+  get selectedValueBoxes() {
+    return this.facet.locator('[part~="value-box-selected"]');
+  }
+
+  get facetSearchResults() {
+    return this.facet.locator('[part="search-results"]');
   }
 
   getFacetValueByLabel(label: string) {

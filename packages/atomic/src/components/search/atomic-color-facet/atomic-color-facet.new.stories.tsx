@@ -1,8 +1,4 @@
-import type {
-  Args,
-  Meta,
-  StoryObj as Story,
-} from '@storybook/web-components-vite';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
@@ -49,10 +45,14 @@ searchApiHarness.facetSearchEndpoint.mock(() => ({
 }));
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-color-facet',
-  {excludeCategories: ['methods']}
-);
+
+const {events, argTypes} = getStorybookHelpers('atomic-color-facet', {
+  excludeCategories: ['methods'],
+});
+
+const {template} = getStorybookHelpers('atomic-color-facet', {
+  excludeCategories: ['methods', 'cssParts'],
+});
 
 const meta: Meta = {
   component: 'atomic-color-facet',
@@ -68,17 +68,12 @@ const meta: Meta = {
     msw: {handlers: [...searchApiHarness.handlers]},
   },
   argTypes,
-
   play,
-  args: {
-    ...args,
-  },
 };
 
 export default meta;
 
 const facetValueToCss = {
-  // Matching dev/index.html color facet configuration
   Email: {
     'background-image': 'url("/assets/email.svg")',
     'background-color': 'rgb(149, 174, 197)',
@@ -119,19 +114,6 @@ const baseFacetValueCss = {
   'background-repeat': 'no-repeat',
 };
 
-const facetValueArgs = Object.entries(facetValueToCss).reduce<Args>(
-  (acc, [facetValue, css]) =>
-    // biome-ignore lint/performance/noAccumulatingSpread: <>
-    Object.assign(acc, {
-      [`value-${facetValue}-part`]: {
-        ...baseFacetValueCss,
-        ...css,
-      },
-    }),
-  {} as Args
-);
-
-// Decorator to apply CSS styles to facet value parts
 const colorFacetStylesDecorator = (story: () => unknown) => {
   const cssRules = Object.entries(facetValueToCss)
     .map(([facetValue, css]) => {
@@ -143,7 +125,6 @@ const colorFacetStylesDecorator = (story: () => unknown) => {
         .map(([prop, value]) => `${prop}: ${value};`)
         .join('\n');
 
-      // For box display mode
       const boxRule = `atomic-color-facet::part(value-${partValueSanitized}) {
           ${cssProperties}
         }`;
@@ -152,7 +133,6 @@ const colorFacetStylesDecorator = (story: () => unknown) => {
     })
     .join('\n');
 
-  // Add checkbox-specific styling to make them larger and visible with colors
   const checkboxSizing = `
         atomic-color-facet::part(value-checkbox) {
           width: 1.5rem;
@@ -178,9 +158,8 @@ const colorFacetStylesDecorator = (story: () => unknown) => {
 export const Default: Story = {
   name: 'atomic-color-facet',
   args: {
-    ...args,
-    ...facetValueArgs,
     field: 'filetype',
+    label: 'File Type',
   },
   decorators: [facetDecorator, colorFacetStylesDecorator],
 };
@@ -189,6 +168,7 @@ export const CheckboxDisplay: Story = {
   name: 'Checkbox Display Mode',
   args: {
     field: 'filetype',
+    label: 'File Type',
     'display-values-as': 'checkbox',
   },
   decorators: [facetDecorator, colorFacetStylesDecorator],
