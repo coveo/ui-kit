@@ -4,7 +4,7 @@ import {page} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {type CheckboxProps, renderCheckbox as checkbox} from './checkbox';
 
-describe('renderCheckbox', () => {
+describe('#renderCheckbox', () => {
   const locators = {
     get checkbox() {
       return page.getByRole('checkbox');

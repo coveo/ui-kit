@@ -1,6 +1,7 @@
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {page} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {
@@ -156,54 +157,50 @@ describe('#renderSmartSnippetFeedbackBanner', () => {
   });
 
   it('should show explain why button when disliked and feedback not sent', async () => {
-    const container = await renderFeedbackBanner({
+    await renderFeedbackBanner({
       disliked: true,
       feedbackSent: false,
     });
-    const explainWhyButton = Array.from(container.querySelectorAll('*')).find(
-      (el) =>
-        el.textContent?.trim() === i18n.t('smart-snippet-feedback-explain-why')
+    const explainWhyButton = page.getByText(
+      i18n.t('smart-snippet-feedback-explain-why')
     );
-    expect(explainWhyButton).toBeInTheDocument();
+    await expect.element(explainWhyButton).toBeInTheDocument();
   });
 
   it('should not show explain why button when liked', async () => {
-    const container = await renderFeedbackBanner({
+    await renderFeedbackBanner({
       liked: true,
       disliked: false,
       feedbackSent: false,
     });
-    const explainWhyButton = Array.from(container.querySelectorAll('*')).find(
-      (el) =>
-        el.textContent?.trim() === i18n.t('smart-snippet-feedback-explain-why')
+    const explainWhyButton = page.getByText(
+      i18n.t('smart-snippet-feedback-explain-why')
     );
-    expect(explainWhyButton).not.toBeInTheDocument();
+    await expect.element(explainWhyButton).not.toBeInTheDocument();
   });
 
   it('should not show explain why button when feedback sent', async () => {
-    const container = await renderFeedbackBanner({
+    await renderFeedbackBanner({
       disliked: true,
       feedbackSent: true,
     });
-    const explainWhyButton = Array.from(container.querySelectorAll('*')).find(
-      (el) =>
-        el.textContent?.trim() === i18n.t('smart-snippet-feedback-explain-why')
+    const explainWhyButton = page.getByText(
+      i18n.t('smart-snippet-feedback-explain-why')
     );
-    expect(explainWhyButton).not.toBeInTheDocument();
+    await expect.element(explainWhyButton).not.toBeInTheDocument();
   });
 
   it('should call onPressExplainWhy when explain why button is clicked', async () => {
     const onPressExplainWhy = vi.fn();
-    const container = await renderFeedbackBanner({
+    await renderFeedbackBanner({
       disliked: true,
       feedbackSent: false,
       onPressExplainWhy,
     });
-    const explainWhyButton = Array.from(container.querySelectorAll('*')).find(
-      (el) =>
-        el.textContent?.trim() === i18n.t('smart-snippet-feedback-explain-why')
-    ) as HTMLElement;
-    explainWhyButton.click();
+    const explainWhyButton = page.getByRole('button', {
+      name: i18n.t('smart-snippet-feedback-explain-why'),
+    });
+    await explainWhyButton.click();
     expect(onPressExplainWhy).toHaveBeenCalled();
   });
 

@@ -1,6 +1,5 @@
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
-import {page} from 'vitest/browser';
 import {createRipple} from '@/src/utils/ripple-utils';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {type RadioButtonProps, renderRadioButton} from './radio-button';
@@ -8,18 +7,6 @@ import {type RadioButtonProps, renderRadioButton} from './radio-button';
 vi.mock('@/src/utils/ripple-utils', {spy: true});
 
 describe('#renderRadioButton', () => {
-  const locators = {
-    get radio() {
-      return page.getByRole('radio');
-    },
-    getAllRadios() {
-      return page.getByRole('radio').all();
-    },
-    getRadioByLabel(label: string) {
-      return page.getByLabelText(label);
-    },
-  };
-
   const renderComponent = async (
     props: Partial<RadioButtonProps>
   ): Promise<HTMLElement> => {
@@ -74,44 +61,42 @@ describe('#renderRadioButton', () => {
       ${renderRadioButton({props: {...props, text: 'radio-4'}})}`
     );
 
-    const inputs = element.querySelectorAll('input[type="radio"]');
+    const inputs = element.querySelectorAll(
+      'input[type="radio"]'
+    ) as NodeListOf<HTMLInputElement>;
 
     inputs[0].focus();
+    expect(document.activeElement).toBe(inputs[0]);
+
     inputs[0].dispatchEvent(
       new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true})
     );
-
-    await expect
-      .element(locators.getRadioByLabel('radio-1'))
-      .toBeInTheDocument();
+    expect(document.activeElement).toBe(inputs[1]);
 
     inputs[1].dispatchEvent(
       new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true})
     );
-    await expect
-      .element(locators.getRadioByLabel('radio-2'))
-      .toBeInTheDocument();
+    expect(document.activeElement).toBe(inputs[2]);
 
     inputs[2].dispatchEvent(
       new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true})
     );
-    await expect
-      .element(locators.getRadioByLabel('radio-3'))
-      .toBeInTheDocument();
+    expect(document.activeElement).toBe(inputs[3]);
 
-    inputs[2].dispatchEvent(
-      new KeyboardEvent('keydown', {key: 'Tab', bubbles: true})
+    inputs[3].dispatchEvent(
+      new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true})
     );
-    await expect
-      .element(locators.getRadioByLabel('radio-4'))
-      .toBeInTheDocument();
+    expect(document.activeElement).toBe(inputs[0]);
 
-    inputs[2].dispatchEvent(
+    inputs[0].dispatchEvent(
+      new KeyboardEvent('keydown', {key: 'ArrowLeft', bubbles: true})
+    );
+    expect(document.activeElement).toBe(inputs[3]);
+
+    inputs[3].dispatchEvent(
       new KeyboardEvent('keydown', {key: 'Tab', shiftKey: true, bubbles: true})
     );
-    await expect
-      .element(locators.getRadioByLabel('radio-3'))
-      .toBeInTheDocument();
+    expect(document.activeElement).toBe(inputs[2]);
   });
 
   it('should create a ripple effect on mousedown', async () => {
@@ -169,9 +154,8 @@ describe('#renderRadioButton', () => {
       ariaCurrent: 'page',
     };
 
-    await renderComponent(props);
-    await expect
-      .element(page.getByRole('radio', {current: 'page'}))
-      .toBeInTheDocument();
+    const element = await renderComponent(props);
+    const input = element.querySelector('input[type="radio"]')!;
+    expect(input.getAttribute('aria-current')).toBe('page');
   });
 });
