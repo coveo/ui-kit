@@ -27,13 +27,13 @@ export class AtomicResultTimespan
   implements InitializableComponent<Bindings>
 {
   /**
-   * The target result field.
+   * The target result numeric field.
    * The component first looks for the field in the Result object, and then in the Result.raw object.
    * It is important to include the necessary field in the `atomic-search-interface` component.
    */
   @property({reflect: true}) public field!: string;
   /**
-   * The unit of measurement of the field value.
+   * The unit of measurement of the numeric field value.
    * Available units: https://day.js.org/docs/en/durations/creating
    */
   @property({reflect: true}) public unit = 'ms';
