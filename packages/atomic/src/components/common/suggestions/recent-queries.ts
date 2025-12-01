@@ -51,7 +51,7 @@ export const renderRecentQuery = ({
 
   const template = html`<div
     part="recent-query-content"
-    class="flex items-center text-left break-all"
+    class="pointer-events-none flex items-center text-left break-all"
   >
     <atomic-icon
       part="recent-query-icon"
@@ -93,7 +93,7 @@ export const renderRecentQuery = ({
 export const renderRecentQueryClear = ({i18n}: {i18n: i18n}): HTMLElement => {
   const template = html` <div
     part="recent-query-title-content"
-    class="flex w-full justify-between"
+    class="pointer-events-none flex w-full justify-between"
   >
     <span class="font-bold" part="recent-query-title">
       ${i18n.t('recent-searches')}

@@ -26,8 +26,8 @@ import {IconButton} from '../../../common/stencil-iconButton';
 import {LinkWithItemAnalytics} from '../../../common/item-link/stencil-item-link';
 import {Button} from '../../../common/stencil-button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {QuickviewSidebar} from '../atomic-quickview-sidebar/atomic-quickview-sidebar';
-import {QuickviewIframe} from '../quickview-iframe/quickview-iframe';
+import {QuickviewSidebar} from '../atomic-quickview-sidebar/stencil-atomic-quickview-sidebar';
+import {QuickviewIframe} from '../quickview-iframe/stencil-quickview-iframe';
 import {buildQuickviewPreviewBar} from '../quickview-preview-bar/quickview-preview-bar';
 import {
   getWordsHighlights,
@@ -46,7 +46,7 @@ export interface HighlightKeywords {
 }
 
 /**
- * The modal opened when clicking on a quickview button.
+ * The modal opened when clicking a quickview button.
  * Do not use this component directly; use `atomic-quickview` instead.
  *
  * @part backdrop - The transparent backdrop hiding the content behind the modal.

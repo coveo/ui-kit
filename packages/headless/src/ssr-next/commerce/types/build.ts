@@ -104,9 +104,87 @@ export interface ListingBuildConfig extends CommonBuildConfig {}
 export interface StandaloneBuildConfig extends CommonBuildConfig {}
 
 export interface CommonBuildConfig {
+  /**
+   * The `NavigatorContext` interface represents the context of the browser client.
+   * See {@link NavigatorContext}
+   */
   navigatorContext: NavigatorContext;
+
+  /**
+   * The initial context options passed to the engine when fetching the static state.
+   *
+   * This property is used to configure the commerce context (e.g., currency, language, country)
+   * when calling `fetchStaticState()`.
+   *
+   * @remarks
+   * To access the context after engine creation, use the context controller.
+   *
+   * @example
+   * ```typescript
+   * // Setting context during static state fetch
+   * const staticState = await engineDefinition.fetchStaticState({
+   *   context: { currency: 'USD', language: 'en', country: 'US' },
+   *   // ...other config
+   * });
+   *
+   * // Reading context from the static state
+   * const {context} = staticState.controllers;
+   * console.log(context.state.currency); // 'USD'
+   * ```
+   */
   context: ContextOptions;
+
+  /**
+   * The initial search parameters to apply when fetching the static state.
+   *
+   * This property allows you to set initial search parameters (filters, facets, query, etc.)
+   * that will be applied during the server-side search execution.
+   *
+   * @remarks
+   * To access search parameters after engine creation, use the parameter manager controller.
+   *
+   * @example
+   * ```typescript
+   * // Setting search parameters during static state fetch
+   * const staticState = await engineDefinition.fetchStaticState({
+   *   searchParams: {
+   *     q: 'shoes',
+   *   },
+   *   // ...other config
+   * });
+   *
+   * // Reading search parameters from the static state
+   * const {parameterManager} = staticState.controllers;
+   * console.log(parameterManager.state.parameters.q); // 'shoes'
+   * ```
+   */
   searchParams?: ParameterManagerState<Parameters>['parameters'];
+
+  /**
+   * The initial cart state to apply when fetching the static state.
+   *
+   * This property allows you to set an initial cart state that will be used during
+   * server-side rendering.
+   *
+   * @remarks
+   * To access cart state after engine creation, use the cart controller.
+   *
+   * @example
+   * ```typescript
+   * // Setting cart state during static state fetch
+   * const staticState = await engineDefinition.fetchStaticState({
+   *   cart: {
+   *     // This is a simplified example. The actual item structure may require additional properties.
+   *     items: [{ productId: 'abc123', quantity: 1 }]
+   *   },
+   *   // ...other config
+   * });
+   *
+   * // Reading cart state from the static state
+   * const {cart} = staticState.controllers;
+   * console.log(cart.state.items.length); // 1
+   * ```
+   */
   cart?: CartInitialState;
 }
 

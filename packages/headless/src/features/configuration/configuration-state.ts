@@ -12,7 +12,7 @@ export interface CoreConfigurationState<
   Analytics extends CoreAnalyticsState = CoreAnalyticsState,
 > {
   /**
-   * The access token to use to authenticate requests against the Coveo Cloud endpoints. Typically, this will be an API key or search token that grants the privileges to execute queries and push usage analytics data in the target Coveo Cloud organization.
+   * The access token to use to authenticate requests against the Coveo endpoints. Typically, this will be an API key or search token that grants the privileges to execute queries and push usage analytics data in the target Coveo organization.
    */
   accessToken: string;
 
@@ -24,14 +24,14 @@ export interface CoreConfigurationState<
   /**
    * The environment in which the Coveo cloud organization is hosted.
    *
-   * The `dev` and `stg` environments are only available internally for Coveo employees (e.g., Professional Services).
+   * The `dev` and `stg` environments are only available internally for Coveo employees (for example, Professional Services).
    *
    * Defaults to `prod`.
    */
   environment: PlatformEnvironment;
 
   /**
-   * The unique identifier of the target Coveo Cloud organization (e.g., `mycoveocloudorganizationg8tp8wu3`)
+   * The unique identifier of the target Coveo organization (for example, `mycoveocloudorganizationg8tp8wu3`)
    */
   organizationId: string;
 }
@@ -54,7 +54,7 @@ interface SearchState {
    *
    * By default, will append `/rest/search/v2` to the automatically resolved
    * platform [organization endpoint](https://docs.coveo.com/en/mcc80216)
-   * (i.e., `https;://<ORG_ID>.org<hipaa|dev|stg|>.coveo.com`)
+   * (that is, `https;://<ORG_ID>.org<hipaa|dev|stg|>.coveo.com`)
    *
    * If necessary, you can override this value by specifying a `proxyBaseUrl` in the `search` object of your engine
    * configuration, or when manually dispatching the `updateSearchConfiguration` action.
@@ -153,7 +153,7 @@ export interface CoreAnalyticsState {
    * By default, will append `/rest/organizations/${organizationId}/events/v1` (or `/rest/v15/analytics` if
    * `analyticsMode`is set to `legacy`) to the automatically resolved analytics
    * [organization endpoint](https://docs.coveo.com/en/mcc80216)
-   * (i.e., `https;://<ORG_ID>.analytics.org<hipaa|dev|stg|>.coveo.com`)
+   * (that is, `https;://<ORG_ID>.analytics.org<hipaa|dev|stg|>.coveo.com`)
    *
    * If necessary, you can override this value by specifying a `proxyBaseUrl` in the `analytics` object of your engine
    * configuration, or when manually dispatching the `updateAnalyticsConfiguration` action.

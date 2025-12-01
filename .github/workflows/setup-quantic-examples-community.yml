@@ -10,6 +10,9 @@ on:
       SFDX_AUTH_JWT_KEY:
         required: true
 
+permissions:
+  contents: read
+
 defaults:
   run:
     shell: bash

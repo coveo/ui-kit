@@ -3,6 +3,8 @@ import type {
   NumericFacetState,
   NumericFacetValue,
 } from '@coveo/headless/commerce';
+import {vi} from 'vitest';
+import {genericSubscribe} from '../common';
 
 const defaultValues: NumericFacetValue[] = [
   {
@@ -27,7 +29,7 @@ const defaultValues: NumericFacetValue[] = [
   },
 ];
 
-export const defaultState: NumericFacetState = {
+export const defaultState = {
   canShowLessValues: true,
   canShowMoreValues: true,
   facetId: 'some-facet-id',
@@ -38,14 +40,23 @@ export const defaultState: NumericFacetState = {
   field: 'field',
   type: 'numericalRange',
   hasActiveValues: false,
-};
+} satisfies NumericFacetState;
 
 export const defaultImplementation = {
-  subscribe: (subscribedFunction: () => void) => {
-    subscribedFunction();
-  },
+  subscribe: genericSubscribe,
   state: defaultState,
-};
+  deselectAll: vi.fn(),
+  showLessValues: vi.fn(),
+  showMoreValues: vi.fn(),
+  toggleSelect: vi.fn(),
+  toggleExclude: vi.fn(),
+  toggleSingleSelect: vi.fn(),
+  toggleSingleExclude: vi.fn(),
+  isValueSelected: vi.fn(),
+  isValueExcluded: vi.fn(),
+  setRanges: vi.fn(),
+  type: 'numericalRange' as const,
+} satisfies NumericFacet;
 
 export const buildFakeNumericFacet = ({
   implementation,
@@ -57,5 +68,5 @@ export const buildFakeNumericFacet = ({
   ({
     ...defaultImplementation,
     ...implementation,
-    ...(state && {state: {...defaultState, ...state}}),
+    ...{state: {...defaultState, ...(state || {})}},
   }) as NumericFacet;

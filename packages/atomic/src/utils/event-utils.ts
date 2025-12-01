@@ -1,3 +1,5 @@
+import {promiseTimeout} from './promise-utils';
+
 export function buildCustomEvent<T>(name: string, detail: T) {
   return new CustomEvent(name, {
     detail,
@@ -35,4 +37,22 @@ export function listenOnce(
       : listener.call(element, evt);
   };
   element.addEventListener(type, _listener, options);
+}
+
+export function eventPromise(
+  element: HTMLElement,
+  type: string,
+  timeoutMs: number = 0
+): Promise<Event> {
+  let promise = new Promise<Event>((resolve) => {
+    listenOnce(element, type, (e) => {
+      resolve(e);
+    });
+  });
+
+  if (timeoutMs > 0) {
+    promise = promiseTimeout(promise, timeoutMs);
+  }
+
+  return promise;
 }

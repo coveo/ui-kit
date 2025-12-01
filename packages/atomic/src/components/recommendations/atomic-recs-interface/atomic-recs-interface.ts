@@ -30,6 +30,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
+import {waitForAtomicChildrenToBeDefined} from '@/src/utils/custom-element-tags';
 import {markParentAsReady} from '@/src/utils/init-queue';
 import {getAnalyticsConfig} from './analytics-config';
 import {createRecsStore, type RecsStore} from './store';
@@ -209,7 +210,7 @@ export class AtomicRecsInterface
   }
   /**
    * Initializes the interface using the provided [headless recommendation engine](https://docs.coveo.com/en/headless/latest/reference/modules/Recommendation.html), as opposed to the `initialize` method which internally builds a recommendation engine instance.
-   * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
+   * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone, and logLevel.
    */
   public initializeWithRecommendationEngine(engine: RecommendationEngine) {
     if (this.pipeline && this.pipeline !== engine.state.pipeline) {
@@ -354,6 +355,7 @@ export class AtomicRecsInterface
     this.pipeline = this.engine!.state.pipeline;
     this.searchHub = this.engine!.state.searchHub;
     this.store.unsetLoadingFlag(FirstRecommendationExecutedFlag);
+    await waitForAtomicChildrenToBeDefined(this);
     await this.getUpdateComplete();
     this.initialized = true;
   }

@@ -40,6 +40,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
+import {waitForAtomicChildrenToBeDefined} from '@/src/utils/custom-element-tags';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
 import {
   SafeStorage,
@@ -241,7 +242,7 @@ export class AtomicSearchInterface
   /**
    * Whether the relevance inspector shortcut should be enabled for this interface.
    *
-   * The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double click.
+   * The relevance inspector can be opened by holding the Alt key (Option on Mac) while over the interface, and performing a double-click.
    *
    * The relevance inspector allows to troubleshoot and debug queries.
    * @deprecated - replaced by `disable-relevance-inspector` (this defaults to `true`, while the replacement defaults to `false`).
@@ -347,7 +348,7 @@ export class AtomicSearchInterface
 
   /**
    * Initializes the interface using the provided [headless search engine](https://docs.coveo.com/en/headless/latest/reference/modules/Search.html, as opposed to the `initialize` method which internally builds a search engine instance.
-   * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
+   * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone, and logLevel.
    */
   public initializeWithSearchEngine(engine: SearchEngine) {
     if (this.pipeline && this.pipeline !== engine.state.pipeline) {
@@ -602,6 +603,7 @@ export class AtomicSearchInterface
     this.pipeline = this.engine!.state.pipeline;
     this.searchHub = this.engine!.state.searchHub;
     this.initSearchStatus();
+    await waitForAtomicChildrenToBeDefined(this);
     await this.getUpdateComplete();
     this.initUrlManager();
     this.initialized = true;

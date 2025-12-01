@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicTextStories from './atomic-text.new.stories';
-import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicTextStories} />
 
@@ -31,7 +31,7 @@ This component is typically used within result templates or other parts of your 
 
 ### With Pluralization
 
-For text that needs to change based on count (e.g., "1 item" vs "5 items"), you can use the `count` attribute:
+For text that needs to change based on count (for example, "1 item" vs "5 items"), you can use the `count` attribute:
 
 ```html
 <atomic-text value="items-count" count="1"></atomic-text>

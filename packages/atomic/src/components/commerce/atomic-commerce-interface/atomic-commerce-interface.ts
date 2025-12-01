@@ -42,6 +42,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
+import {waitForAtomicChildrenToBeDefined} from '@/src/utils/custom-element-tags';
 import {type InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
 import {
   SafeStorage,
@@ -327,9 +328,9 @@ export class AtomicCommerceInterface
    * configuration in your Coveo organization, requests made through the
    * commerce engine will start failing.
    *
-   * @param language - (Optional) The IETF language code tag (e.g., `en`).
-   * @param country - (Optional) The ISO-3166-1 country tag (e.g., `US`).
-   * @param currency - (Optional) The ISO-4217 currency code (e.g., `USD`).
+   * @param language - (Optional) The IETF language code tag (for example, `en`).
+   * @param country - (Optional) The ISO-3166-1 country tag (for example, `US`).
+   * @param currency - (Optional) The ISO-4217 currency code (for example, `USD`).
    *
    * @example
    * ```typescript
@@ -506,6 +507,7 @@ export class AtomicCommerceInterface
     this.initRequestStatus();
     this.initSummary();
     this.initLanguage();
+    await waitForAtomicChildrenToBeDefined(this);
     await this.getUpdateComplete();
     this.initUrlManager();
     this.initialized = true;

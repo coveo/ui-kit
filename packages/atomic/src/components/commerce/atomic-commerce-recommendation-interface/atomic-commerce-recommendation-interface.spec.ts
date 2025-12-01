@@ -4,7 +4,14 @@ import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {within} from 'shadow-dom-testing-library';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {
+  beforeEach,
+  describe,
+  expect,
+  it,
+  type MockedFunction,
+  vi,
+} from 'vitest';
 import {
   AtomicCommerceRecommendationInterface,
   type CommerceBindings,
@@ -18,6 +25,7 @@ import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import './atomic-commerce-recommendation-interface';
+import type {ContextActionCreators} from '@coveo/headless/commerce';
 
 vi.mock('i18next', {spy: true});
 vi.mock('@coveo/headless/commerce', {spy: true});
@@ -419,8 +427,10 @@ describe('atomic-commerce-recommendation-interface', () => {
     describe('when the engine has been created and the context is defined', () => {
       let element: AtomicCommerceRecommendationInterface;
       let engine: ReturnType<typeof buildFakeCommerceEngine>;
-      let onLanguageChangeSpy: ReturnType<typeof vi.spyOn>;
-      let setContextMock: ReturnType<typeof vi.fn>;
+      let onLanguageChangeSpy: MockedFunction<
+        typeof InterfaceController.prototype.onLanguageChange
+      >;
+      let setContextMock: MockedFunction<ContextActionCreators['setContext']>;
 
       beforeEach(async () => {
         element = await setupElement();
@@ -436,6 +446,7 @@ describe('atomic-commerce-recommendation-interface', () => {
           InterfaceController.prototype,
           'onLanguageChange'
         );
+        onLanguageChangeSpy.mockClear();
       });
 
       it('should call InterfaceController.onLanguageChange when the language parameter is provided', async () => {
@@ -594,13 +605,15 @@ describe('atomic-commerce-recommendation-interface', () => {
       });
 
       it('should call InterfaceController.onLanguageChange with no argument', async () => {
-        const element = await setupElement({language: 'en'});
-        const engine = buildFakeCommerceEngine();
-        await element.initializeWithEngine(engine);
         const onLanguageChangeSpy = vi.spyOn(
           InterfaceController.prototype,
           'onLanguageChange'
         );
+        const element = await setupElement({language: 'en'});
+        const engine = buildFakeCommerceEngine();
+        await element.initializeWithEngine(engine);
+        await element.updateComplete;
+        onLanguageChangeSpy.mockClear();
 
         element.language = 'fr';
         await element.updateComplete;

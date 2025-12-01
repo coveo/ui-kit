@@ -98,7 +98,7 @@ export interface CategoryFilterSuggestions
    * updated query.
    *
    * For example, if this method is called with `jeans` as an argument, it will request values from the controller's
-   * field (e.g., `ec_category`) that would return results if selected when the search query is `jeans` (such as
+   * field (for example, `ec_category`) that would return results if selected when the search query is `jeans` (such as
    * `Clothing`, `Clothing;Pants`, and `Clothing;Shorts`).
    *
    * @param query - The search query to use as context to request the category filter suggestions. In a typical

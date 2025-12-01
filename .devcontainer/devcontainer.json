@@ -1,22 +1,55 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
-  "name": "Node.js & TypeScript",
-  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:2-22-bookworm",
+  "name": "UI Kit (pnpm)",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
 
-  // Features to add to the dev container. More info: https://containers.dev/features.
-  // "features": {},
+  // Features to add to the dev container
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
 
-  // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  // "forwardPorts": [],
+  // Mount volumes for pnpm store and turbo cache
+  "mounts": [
+    "source=ui-kit-pnpm-store,target=/pnpm/store,type=volume",
+    "source=ui-kit-turbo-cache,target=/home/node/.cache/turbo,type=volume"
+  ],
 
-  // Use 'updateContentCommand ' to run commands when the prebuild is created or updated https://docs.github.com/en/codespaces/prebuilding-your-codespaces/configuring-prebuilds#configuring-time-consuming-tasks-to-be-included-in-the-prebuild
-  "onCreateCommand": "CI=true bash -c 'corepack enable pnpm && pnpm install --frozen-lockfile && pnpm run build'"
+  // Lifecycle commands optimized for GitHub Codespaces
+  // updateContentCommand runs during prebuild (expensive operations cached)
+  "updateContentCommand": "pnpm install --frozen-lockfile && pnpm run build",
 
-  // Configure tool-specific properties.
-  // "customizations": {},
+  // postStartCommand runs every time the codespace starts
+  "postStartCommand": "echo '✓ Codespace ready!'",
 
-  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-  // "remoteUser": "root"
+  // Configure tool-specific properties
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "biomejs.biome",
+        "streetsidesoftware.code-spell-checker",
+        "github.copilot",
+        "github.copilot-chat",
+        "runem.lit-plugin",
+        "unifiedjs.vscode-mdx",
+        "ms-playwright.playwright",
+        "bradlc.vscode-tailwindcss",
+        "vitest.explorer"
+      ],
+      "settings": {
+        "editor.defaultFormatter": "biomejs.biome",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "quickfix.biome": "explicit",
+          "source.organizeImports.biome": "explicit"
+        },
+        "files.eol": "\n",
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+
+  "remoteUser": "node",
+  "containerUser": "node"
 }

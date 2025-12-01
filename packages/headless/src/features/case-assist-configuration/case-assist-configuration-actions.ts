@@ -16,7 +16,7 @@ interface SetCaseAssistConfigurationActionCreatorPayload {
    */
   locale?: string;
   /**
-   * The base URL to use to proxy Coveo case assist requests (e.g., `https://example.com/search`).
+   * The base URL to use to proxy Coveo case assist requests (for example, `https://example.com/search`).
    *
    * This is an advanced option that you only set if you proxy Coveo case assist through your own
    * server. In most cases, you should not set this option.
