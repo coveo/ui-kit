@@ -1,5 +1,5 @@
 ---
-mode: 'agent'
+agent: 'agent'
 description: 'Generate Vitest test suites for a Lit component in the Atomic package'
 ---
 
@@ -328,7 +328,3 @@ expect(element.error).toBe(...); // Element is null, can't access properties
 
 **Lifecycle:**
 - [ ] Event listener cleanup (if component adds listeners)
-
-## Post-Execution Summary
-
-Generate execution summary at `.github/prompts/.executions/generate-vitest-tests-[component]-[YYYY-MM-DD-HHmmss].prompt-execution.md` following `TEMPLATE.prompt-execution.md`. Include reference component used, issues encountered, ambiguities requiring interpretation, and concrete improvement suggestions. Inform user of summary location.
