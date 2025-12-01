@@ -18,12 +18,32 @@ import type {AtomicCategoryFacet} from './atomic-category-facet';
 import './atomic-category-facet';
 
 vi.mock('@coveo/headless', {spy: true});
+vi.mock('@/src/mixins/bindings-mixin', () => ({
+  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
+    return class extends superClass {
+      // biome-ignore lint/complexity/noUselessConstructor: <mocking the mixin for testing>
+      constructor(...args: unknown[]) {
+        super(...args);
+      }
+    };
+  }),
+}));
 
 describe('atomic-category-facet', () => {
   let mockedConsoleWarn: MockInstance;
+  let mockedRegisterFacet: MockInstance;
 
   beforeEach(() => {
     mockedConsoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    mockedRegisterFacet = vi.fn();
+    vi.mocked(buildCategoryFacet).mockReturnValue(buildFakeCategoryFacet({}));
+    vi.mocked(buildSearchStatus).mockReturnValue(
+      buildFakeSearchStatus({firstSearchExecuted: true})
+    );
+    vi.mocked(buildTabManager).mockReturnValue(buildFakeTabManager({}));
+    vi.mocked(buildFacetConditionsManager).mockReturnValue({
+      stopWatching: vi.fn(),
+    });
   });
 
   const renderCategoryFacet = async (
@@ -50,27 +70,28 @@ describe('atomic-category-facet', () => {
       tabManagerState?: Partial<TabManagerState>;
     }
   ) => {
-    vi.mocked(buildCategoryFacet).mockReturnValue(
-      buildFakeCategoryFacet({
-        state: options?.facetState,
-      })
-    );
-    vi.mocked(buildSearchStatus).mockReturnValue(
-      buildFakeSearchStatus({
-        firstSearchExecuted: true,
-        hasResults: true,
-        hasError: false,
-        ...options?.searchStatusState,
-      })
-    );
-    vi.mocked(buildTabManager).mockReturnValue(
-      buildFakeTabManager({
-        ...options?.tabManagerState,
-      })
-    );
-    vi.mocked(buildFacetConditionsManager).mockReturnValue({
-      stopWatching: vi.fn(),
-    });
+    if (options?.facetState) {
+      vi.mocked(buildCategoryFacet).mockReturnValue(
+        buildFakeCategoryFacet({
+          state: options.facetState,
+        })
+      );
+    }
+    if (options?.searchStatusState) {
+      vi.mocked(buildSearchStatus).mockReturnValue(
+        buildFakeSearchStatus({
+          firstSearchExecuted: true,
+          hasResults: true,
+          hasError: false,
+          ...options.searchStatusState,
+        })
+      );
+    }
+    if (options?.tabManagerState) {
+      vi.mocked(buildTabManager).mockReturnValue(
+        buildFakeTabManager(options.tabManagerState)
+      );
+    }
 
     const {element} = await renderInAtomicSearchInterface<AtomicCategoryFacet>({
       template: html`<atomic-category-facet
@@ -97,10 +118,14 @@ describe('atomic-category-facet', () => {
         )}
       ></atomic-category-facet>`,
       selector: 'atomic-category-facet',
-      bindings: (bindings) => {
-        bindings.store.getUniqueIDFromEngine = vi.fn().mockReturnValue('123');
-        return bindings;
-      },
+      bindings: (bindings) => ({
+        ...bindings,
+        store: {
+          ...bindings.store,
+          getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
+          registerFacet: mockedRegisterFacet,
+        },
+      }),
     });
 
     return {
