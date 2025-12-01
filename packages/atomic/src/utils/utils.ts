@@ -3,12 +3,13 @@ import DOMPurify from 'dompurify';
 /**
  * Returns a function that can be executed only once
  */
-export function once<T extends unknown[]>(fn: (...args: T) => unknown) {
-  let result: unknown;
+export function once<T extends unknown[], R>(fn: (...args: T) => R) {
+  let result: R;
   return function (this: unknown, ...args: T) {
     if (fn) {
       result = fn.apply(this, args);
-      fn = () => {};
+      // Use fn as the memoization flag, but also null out the reference to allow garbage collection
+      fn = null as unknown as (...args: T) => R;
     }
     return result;
   };
