@@ -43,14 +43,6 @@ const mockDefaultFacetResponse = () => {
     }
     return response;
   });
-
-  searchApiHarness.facetSearchEndpoint.mockOnce(() => ({
-    values: [
-      {displayValue: 'Powerpoint', rawValue: 'Powerpoint', count: 76},
-      {displayValue: 'PDF', rawValue: 'PDF', count: 43},
-    ],
-    moreValuesAvailable: false,
-  }));
 };
 
 const {decorator, play} = wrapInSearchInterface();
@@ -80,6 +72,13 @@ const meta: Meta = {
   beforeEach: () => {
     searchApiHarness.searchEndpoint.clear();
     searchApiHarness.facetSearchEndpoint.clear();
+    searchApiHarness.facetSearchEndpoint.mock(() => ({
+      values: [
+        {displayValue: 'Powerpoint', rawValue: 'Powerpoint', count: 76},
+        {displayValue: 'PDF', rawValue: 'PDF', count: 43},
+      ],
+      moreValuesAvailable: false,
+    }));
   },
   play,
 };
