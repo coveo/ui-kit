@@ -5,11 +5,11 @@ import DOMPurify from 'dompurify';
  */
 export function once<T extends unknown[], R>(fn: (...args: T) => R) {
   let result: R;
+  let callable: ((...args: T) => R) | null = fn;
   return function (this: unknown, ...args: T) {
-    if (fn) {
-      result = fn.apply(this, args);
-      // Use fn as the memoization flag, but also null out the reference to allow garbage collection
-      fn = null as unknown as (...args: T) => R;
+    if (callable) {
+      result = callable.apply(this, args);
+      callable = null; // Allow garbage collection
     }
     return result;
   };
