@@ -12,4 +12,8 @@ test.describe('atomic-result-timespan', () => {
     const text = await resultTimespan.hydrated.textContent();
     expect(text).toMatch(/^\d{2}:\d{2}:\d{2}$/);
   });
+
+  test('should match visual snapshot', async ({page}) => {
+    await expect(page).toHaveScreenshot();
+  });
 });
