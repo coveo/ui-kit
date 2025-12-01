@@ -23,6 +23,10 @@ export class AtomicRatingFacetPageObject extends BasePageObject {
     return this.page.locator('[part="value-link value-link-selected"]');
   }
 
+  get getSelectedFacetValueBox() {
+    return this.page.locator('[part="value-box value-checkbox-checked"]');
+  }
+
   get facetValues() {
     return this.page.getByRole('listitem');
   }
