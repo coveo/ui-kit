@@ -272,4 +272,40 @@ describe('atomic-result-image', () => {
 
     expect(image).toHaveAttribute('src', DEFAULT_IMAGE);
   });
+
+  it('should fall back correctly when field value is a number', async () => {
+    const resultWithNumberField = buildFakeResult({
+      title: 'Test Result',
+      raw: {
+        imageUrl: 12345 as unknown as string,
+        urihash: 'hash123',
+      },
+    });
+
+    const {image} = await renderResultImage({
+      field: 'imageUrl',
+      fallback: FALLBACK_IMAGE,
+      result: resultWithNumberField,
+    });
+
+    expect(image).toHaveAttribute('src', FALLBACK_IMAGE);
+  });
+
+  it('should fall back correctly when field value is an object', async () => {
+    const resultWithObjectField = buildFakeResult({
+      title: 'Test Result',
+      raw: {
+        imageUrl: {url: DEFAULT_IMAGE} as unknown as string,
+        urihash: 'hash123',
+      },
+    });
+
+    const {image} = await renderResultImage({
+      field: 'imageUrl',
+      fallback: FALLBACK_IMAGE,
+      result: resultWithObjectField,
+    });
+
+    expect(image).toHaveAttribute('src', FALLBACK_IMAGE);
+  });
 });

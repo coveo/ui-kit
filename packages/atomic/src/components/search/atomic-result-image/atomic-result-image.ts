@@ -2,6 +2,7 @@ import type {Result} from '@coveo/headless';
 import {ResultTemplatesHelpers} from '@coveo/headless';
 import {css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit-html/directives/when.js';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -75,7 +76,7 @@ export class AtomicResultImage
     }
   }
 
-  private get url() {
+  public get url() {
     const value = ResultTemplatesHelpers.getResultProperty(
       this.result,
       this.field
@@ -141,30 +142,28 @@ export class AtomicResultImage
     return url;
   }
 
-  @bindingGuard()
-  @errorGuard()
-  render() {
-    if (!this.result) {
-      return html`${nothing}`;
-    }
-
+  private renderImage() {
     let url = this.useFallback ? this.fallback : this.url;
 
     if (!this.useFallback) {
       url = this.validateUrl(url as string);
       if (!url) {
-        return html`${nothing}`;
+        return nothing;
       }
     }
-
-    return html`
-      <img
+    return html`      <img
         alt=${this.altText}
         src=${filterProtocol(url as string)}
         @error=${() => this.handleImageError()}
         loading="lazy"
       />
     `;
+  }
+
+  @bindingGuard()
+  @errorGuard()
+  render() {
+    return html`${when(this.result, () => this.renderImage())}`;
   }
 }
 
