@@ -152,6 +152,7 @@ test.describe('Visual Regression', () => {
     
     const screenshot = await component.captureScreenshot();
     expect(screenshot).toMatchSnapshot('component-default.png', {
+      // Setting maxDiffPixelRatio to 4% to avoid CI test failures due to minor rendering differences across environments
       maxDiffPixelRatio: 0.04,
     });
   });
@@ -166,6 +167,7 @@ test.describe('Visual Regression', () => {
     
     const screenshot = await component.captureScreenshot();
     expect(screenshot).toMatchSnapshot('component-after-interaction.png', {
+      // Setting maxDiffPixelRatio to 4% to avoid CI test failures due to minor rendering differences across environments
       maxDiffPixelRatio: 0.04,
     });
   });

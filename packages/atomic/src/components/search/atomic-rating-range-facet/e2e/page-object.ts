@@ -10,6 +10,14 @@ export class RatingRangeFacetPageObject extends BasePageObject {
     return this.hydrated.locator(`[part="value-link"]`).nth(index);
   }
 
+  selectedValueLinks(): Locator {
+    return this.hydrated.locator(`[part="value-link value-link-selected"]`);
+  }
+
+  clearButton(): Locator {
+    return this.hydrated.locator(`[part="clear-button"]`);
+  }
+
   /**
    * Wait for component to be stable before screenshot
    */

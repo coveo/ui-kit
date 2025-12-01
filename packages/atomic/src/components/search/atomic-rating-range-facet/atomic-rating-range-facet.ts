@@ -21,12 +21,15 @@ import {
 import {html, LitElement, nothing, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import atomicRatingStyles from '@/src/components/common/atomic-rating/atomic-rating.tw.css';
 import {renderRating} from '@/src/components/common/atomic-rating/rating';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
+import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.css';
 import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
 import {renderFacetPlaceholder} from '@/src/components/common/facets/facet-placeholder/facet-placeholder';
+import facetValueCheckboxStyles from '@/src/components/common/facets/facet-value-checkbox/facet-value-checkbox.tw.css';
 import {renderFacetValueLink} from '@/src/components/common/facets/facet-value-link/facet-value-link';
 import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '@/src/components/common/facets/popover/popover-type';
@@ -74,6 +77,11 @@ export class AtomicRatingRangeFacet
   extends LitElement
   implements InitializableComponent<Bindings>
 {
+  static styles = [
+    facetCommonStyles,
+    facetValueCheckboxStyles,
+    atomicRatingStyles,
+  ];
   @state() public bindings!: Bindings;
   @state() public error!: Error;
 
