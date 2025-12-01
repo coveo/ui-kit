@@ -21,7 +21,6 @@ test.describe('atomic-rating-range-facet', () => {
   }) => {
     await ratingRangeFacet.load({story: 'default'});
     await ratingRangeFacet.hydrated.waitFor();
-
     await ratingRangeFacet.valueLink(0).click();
 
     const screenshot = await ratingRangeFacet.captureScreenshot();
