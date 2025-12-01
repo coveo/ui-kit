@@ -21,7 +21,9 @@ import {
   AtomicResult as LitAtomicResult,
   AtomicResultBadge as LitAtomicResultBadge,
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
+  AtomicResultDate as LitAtomicResultDate,
   AtomicResultHtml as LitAtomicResultHtml,
+  AtomicResultImage as LitAtomicResultImage,
   AtomicResultList as LitAtomicResultList,
   AtomicResultLocalizedText as LitAtomicResultLocalizedText,
   AtomicResultMultiValueText as LitAtomicResultMultiValueText,
@@ -37,6 +39,7 @@ import {
   AtomicResultSectionVisual as LitAtomicResultSectionVisual,
   AtomicResultsPerPage as LitAtomicResultsPerPage,
   AtomicResultText as LitAtomicResultText,
+  AtomicResultTimespan as LitAtomicResultTimespan,
   AtomicSearchBoxInstantResults as LitAtomicSearchBoxInstantResults,
   AtomicSearchBoxQuerySuggestions as LitAtomicSearchBoxQuerySuggestions,
   AtomicSearchBoxRecentQueries as LitAtomicSearchBoxRecentQueries,
@@ -44,6 +47,7 @@ import {
   AtomicSearchLayout as LitAtomicSearchLayout,
   AtomicSegmentedFacetScrollable as LitAtomicSegmentedFacetScrollable,
   AtomicSortDropdown as LitAtomicSortDropdown,
+  AtomicSortExpression as LitAtomicSortExpression,
   AtomicTab as LitAtomicTab,
   AtomicTabManager as LitAtomicTabManager,
   AtomicText as LitAtomicText,
@@ -183,10 +187,22 @@ export const AtomicResultChildrenTemplate = createComponent({
   elementClass: LitAtomicResultChildrenTemplate,
 });
 
+export const AtomicResultDate = createComponent({
+  tagName: 'atomic-result-date',
+  react: React,
+  elementClass: LitAtomicResultDate,
+});
+
 export const AtomicResultHtml = createComponent({
   tagName: 'atomic-result-html',
   react: React,
   elementClass: LitAtomicResultHtml,
+});
+
+export const AtomicResultImage = createComponent({
+  tagName: 'atomic-result-image',
+  react: React,
+  elementClass: LitAtomicResultImage,
 });
 
 export const AtomicResultList = createComponent({
@@ -279,6 +295,12 @@ export const AtomicResultText = createComponent({
   elementClass: LitAtomicResultText,
 });
 
+export const AtomicResultTimespan = createComponent({
+  tagName: 'atomic-result-timespan',
+  react: React,
+  elementClass: LitAtomicResultTimespan,
+});
+
 export const AtomicSearchBoxInstantResults = createComponent({
   tagName: 'atomic-search-box-instant-results',
   react: React,
@@ -319,6 +341,12 @@ export const AtomicSortDropdown = createComponent({
   tagName: 'atomic-sort-dropdown',
   react: React,
   elementClass: LitAtomicSortDropdown,
+});
+
+export const AtomicSortExpression = createComponent({
+  tagName: 'atomic-sort-expression',
+  react: React,
+  elementClass: LitAtomicSortExpression,
 });
 
 export const AtomicTab = createComponent({
