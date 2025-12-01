@@ -1492,23 +1492,6 @@ export namespace Components {
         "noResultText": string;
     }
     /**
-     * The `atomic-result-date` component renders the value of a date result field.
-     */
-    interface AtomicResultDate {
-        /**
-          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * Available formats: https://day.js.org/docs/en/display/format
-         */
-        "format": string;
-        /**
-          * Whether the date should display in the [relative time format](https://day.js.org/docs/en/plugin/calendar).  To modify the relative time string, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
-         */
-        "relativeTime"?: boolean;
-    }
-    /**
      * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
      */
     interface AtomicResultFieldsList {
@@ -1518,23 +1501,6 @@ export namespace Components {
      * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
      */
     interface AtomicResultIcon {
-    }
-    /**
-     * The `atomic-result-image` component renders an image from a result field.
-     */
-    interface AtomicResultImage {
-        /**
-          * An optional fallback image URL that will be used in case the specified image field is not available or encounters an error.
-         */
-        "fallback"?: string;
-        /**
-          * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * The result field that contains the alt text for the image. This will look for the field in the Result object first, then in the Result.raw object  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image for {productName}".
-         */
-        "imageAltField"?: string;
     }
     /**
      * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
@@ -2679,15 +2645,6 @@ declare global {
         new (): HTMLAtomicResultChildrenElement;
     };
     /**
-     * The `atomic-result-date` component renders the value of a date result field.
-     */
-    interface HTMLAtomicResultDateElement extends Components.AtomicResultDate, HTMLStencilElement {
-    }
-    var HTMLAtomicResultDateElement: {
-        prototype: HTMLAtomicResultDateElement;
-        new (): HTMLAtomicResultDateElement;
-    };
-    /**
      * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
      */
     interface HTMLAtomicResultFieldsListElement extends Components.AtomicResultFieldsList, HTMLStencilElement {
@@ -2705,15 +2662,6 @@ declare global {
     var HTMLAtomicResultIconElement: {
         prototype: HTMLAtomicResultIconElement;
         new (): HTMLAtomicResultIconElement;
-    };
-    /**
-     * The `atomic-result-image` component renders an image from a result field.
-     */
-    interface HTMLAtomicResultImageElement extends Components.AtomicResultImage, HTMLStencilElement {
-    }
-    var HTMLAtomicResultImageElement: {
-        prototype: HTMLAtomicResultImageElement;
-        new (): HTMLAtomicResultImageElement;
     };
     /**
      * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
@@ -3082,10 +3030,8 @@ declare global {
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-result-children": HTMLAtomicResultChildrenElement;
-        "atomic-result-date": HTMLAtomicResultDateElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
         "atomic-result-icon": HTMLAtomicResultIconElement;
-        "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
@@ -4521,23 +4467,6 @@ declare namespace LocalJSX {
         "noResultText"?: string;
     }
     /**
-     * The `atomic-result-date` component renders the value of a date result field.
-     */
-    interface AtomicResultDate {
-        /**
-          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
-         */
-        "field"?: string;
-        /**
-          * Available formats: https://day.js.org/docs/en/display/format
-         */
-        "format"?: string;
-        /**
-          * Whether the date should display in the [relative time format](https://day.js.org/docs/en/plugin/calendar).  To modify the relative time string, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
-         */
-        "relativeTime"?: boolean;
-    }
-    /**
      * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
      */
     interface AtomicResultFieldsList {
@@ -4547,23 +4476,6 @@ declare namespace LocalJSX {
      * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
      */
     interface AtomicResultIcon {
-    }
-    /**
-     * The `atomic-result-image` component renders an image from a result field.
-     */
-    interface AtomicResultImage {
-        /**
-          * An optional fallback image URL that will be used in case the specified image field is not available or encounters an error.
-         */
-        "fallback"?: string;
-        /**
-          * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
-         */
-        "field": string;
-        /**
-          * The result field that contains the alt text for the image. This will look for the field in the Result object first, then in the Result.raw object  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image for {productName}".
-         */
-        "imageAltField"?: string;
     }
     /**
      * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
@@ -5054,10 +4966,8 @@ declare namespace LocalJSX {
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-result-children": AtomicResultChildren;
-        "atomic-result-date": AtomicResultDate;
         "atomic-result-fields-list": AtomicResultFieldsList;
         "atomic-result-icon": AtomicResultIcon;
-        "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
@@ -5291,10 +5201,6 @@ declare module "@stencil/core" {
              */
             "atomic-result-children": LocalJSX.AtomicResultChildren & JSXBase.HTMLAttributes<HTMLAtomicResultChildrenElement>;
             /**
-             * The `atomic-result-date` component renders the value of a date result field.
-             */
-            "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
-            /**
              * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
              */
             "atomic-result-fields-list": LocalJSX.AtomicResultFieldsList & JSXBase.HTMLAttributes<HTMLAtomicResultFieldsListElement>;
@@ -5303,10 +5209,6 @@ declare module "@stencil/core" {
              * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
              */
             "atomic-result-icon": LocalJSX.AtomicResultIcon & JSXBase.HTMLAttributes<HTMLAtomicResultIconElement>;
-            /**
-             * The `atomic-result-image` component renders an image from a result field.
-             */
-            "atomic-result-image": LocalJSX.AtomicResultImage & JSXBase.HTMLAttributes<HTMLAtomicResultImageElement>;
             /**
              * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
              */
