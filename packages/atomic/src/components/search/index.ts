@@ -17,6 +17,7 @@ export {AtomicResultBadge} from './atomic-result-badge/atomic-result-badge.js';
 export {AtomicResultChildrenTemplate} from './atomic-result-children-template/atomic-result-children-template.js';
 export {AtomicResultDate} from './atomic-result-date/atomic-result-date.js';
 export {AtomicResultHtml} from './atomic-result-html/atomic-result-html.js';
+export {AtomicResultImage} from './atomic-result-image/atomic-result-image.js';
 export {AtomicResultList} from './atomic-result-list/atomic-result-list.js';
 export {AtomicResultLocalizedText} from './atomic-result-localized-text/atomic-result-localized-text.js';
 export {AtomicResultMultiValueText} from './atomic-result-multi-value-text/atomic-result-multi-value-text.js';
