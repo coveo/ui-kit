@@ -49,13 +49,13 @@ export class AtomicResultDate
   @property({type: Boolean, reflect: true, attribute: 'relative-time'})
   public relativeTime = false;
 
-  @state() private result!: Result;
-
-  private resultController = createResultContextController(this);
-
   @state() public bindings!: Bindings;
 
   @state() public error!: Error;
+
+  @state() private result!: Result;
+
+  private resultController = createResultContextController(this);
 
   constructor() {
     super();
@@ -69,7 +69,8 @@ export class AtomicResultDate
       new Schema({
         field: new StringValue({required: true, emptyAllowed: false}),
         format: new StringValue({required: false, emptyAllowed: false}),
-      })
+      }),
+      false
     );
   }
 
@@ -118,7 +119,6 @@ export class AtomicResultDate
     }
 
     if (this.relativeTime) {
-      console.log('here');
       dayjs.updateLocale(this.bindings.interfaceElement.language, {
         calendar: {
           sameDay: this.bindings.i18n.t('calendar-same-day'),

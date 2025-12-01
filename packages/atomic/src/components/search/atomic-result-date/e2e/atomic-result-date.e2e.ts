@@ -1,11 +1,6 @@
 import {expect, test} from './fixture';
 
 test.describe('atomic-result-date', () => {
-  test.beforeEach(async ({resultDate}) => {
-    await resultDate.load();
-    await resultDate.hydrated.first().waitFor();
-  });
-
   test('should render the date field with default format', async ({
     resultDate,
   }) => {

@@ -111,26 +111,23 @@ describe('atomic-result-date', () => {
     });
   });
 
-  describe('when the field does not exist', () => {
-    it('should not render the component', async () => {
-      const element = await renderComponent({field: 'nonexistent_field'});
+  it('should not render the component when the field does not exist', async () => {
+    const element = await renderComponent({field: 'nonexistent_field'});
 
-      // Element is null because it's removed from DOM
-      expect(element).toBeNull();
-    });
+    // Element is null because it's removed from DOM
+    expect(element).toBeNull();
   });
 
-  describe('when the field value is not a valid date', () => {
-    it('should not render the component', async () => {
-      const element = await renderComponent({field: 'invalidDate'});
+  it('should not render the component when the field value is not a valid date', async () => {
+    const element = await renderComponent({field: 'invalidDate'});
 
-      // Element is null because it's removed from DOM after error
-      expect(element).toBeNull();
-    });
+    // Element is null because it's removed from DOM after error
+    expect(element).toBeNull();
   });
 
   describe('when #field is empty', () => {
-    it('should set error', async () => {
+    // TODO V4: KIT-5197 - Remove skip
+    it.skip('should set error', async () => {
       const element = await renderComponent({field: 'date'});
 
       expect(element.error).toBeUndefined();
@@ -141,21 +138,47 @@ describe('atomic-result-date', () => {
       expect(element.error).toBeDefined();
       expect(element.error.message).toMatch(/field/i);
     });
+
+    // TODO V4: KIT-5197 - Remove this test
+    it('should log validation warning', async () => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+
+      const element = await renderComponent({field: 'date'});
+
+      element.field = '';
+      await element.updateComplete;
+
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'Prop validation failed for component atomic-result-date'
+        ),
+        element
+      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('field'),
+        element
+      );
+
+      consoleWarnSpy.mockRestore();
+    });
   });
 
-  describe('when result is not available', () => {
-    it.each([
-      {result: null, description: '#result is null'},
-      {result: undefined, description: '#result is undefined'},
-    ])('should render error component when $description', async ({result}) => {
+  it.each([
+    {result: null, description: '#result is null'},
+    {result: undefined, description: '#result is undefined'},
+  ])(
+    'should render error component when result is not available and $description',
+    async ({result}) => {
       const element = await renderComponent({
         result: result as unknown as Result,
       });
 
       // Since there's no result context, the error component should be rendered
       expect(element).toBeDefined();
-    });
-  });
+    }
+  );
 
   describe('when #relativeTime is true', () => {
     it('should render relative time for yesterday date', async () => {
