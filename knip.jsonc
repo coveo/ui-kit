@@ -13,7 +13,7 @@
   "workspaces": {
     ".": {
       "entry": ["hooks/*.js", "scripts/**/*.{js,mjs}"],
-      "ignoreBinaries": ["ts-node", "dev"]
+      "ignoreBinaries": ["ts-node", "dev", "@playwright/mcp"]
     },
     "packages/headless": {
       "entry": ["src/*index.ts", "ponyfills/*.js"],
