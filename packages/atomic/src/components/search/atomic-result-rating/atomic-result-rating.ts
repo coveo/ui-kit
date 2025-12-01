@@ -33,17 +33,10 @@ export class AtomicResultRating
   extends LightDomMixin(InitializeBindingsMixin(LitElement))
   implements InitializableComponent<Bindings>
 {
-  @state() public bindings!: Bindings;
-  @state() public error!: Error;
-
-  private resultController = createResultContextController(this);
-
-  @state() private result!: Result;
-
   static styles = ratingStyles;
 
   /**
-   * The field whose values you want to display as a rating.
+   * The result field containing the rating value to display.
    */
   @property({reflect: true}) public field!: string;
 
@@ -68,7 +61,12 @@ export class AtomicResultRating
    */
   @property({reflect: true}) public icon = Star;
 
+  @state() public bindings!: Bindings;
+  @state() public error!: Error;
+  @state() private result!: Result;
   @state() private numberOfStars: number | null = null;
+
+  private resultController = createResultContextController(this);
 
   constructor() {
     super();
@@ -120,15 +118,6 @@ export class AtomicResultRating
   @bindingGuard()
   @errorGuard()
   render() {
-    if (!this.result && this.resultController.item) {
-      const item = this.resultController.item;
-      if ('result' in item) {
-        this.result = item.result;
-      } else {
-        this.result = item;
-      }
-    }
-
     this.updateNumberOfStars();
 
     return html`

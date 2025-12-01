@@ -11,8 +11,6 @@ export class ResultRatingPageObject extends BasePageObject {
   }
 
   get ratingIcons() {
-    return this.page.locator(
-      'atomic-result-rating [part="value-rating-icon"]'
-    );
+    return this.page.locator('atomic-result-rating [part="value-rating-icon"]');
   }
 }
