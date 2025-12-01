@@ -45,6 +45,7 @@ import {
   AtomicSearchLayout as LitAtomicSearchLayout,
   AtomicSegmentedFacetScrollable as LitAtomicSegmentedFacetScrollable,
   AtomicSortDropdown as LitAtomicSortDropdown,
+  AtomicSortExpression as LitAtomicSortExpression,
   AtomicTab as LitAtomicTab,
   AtomicText as LitAtomicText,
 } from '@coveo/atomic/components';
@@ -325,6 +326,12 @@ export const AtomicSortDropdown = createComponent({
   tagName: 'atomic-sort-dropdown',
   react: React,
   elementClass: LitAtomicSortDropdown,
+});
+
+export const AtomicSortExpression = createComponent({
+  tagName: 'atomic-sort-expression',
+  react: React,
+  elementClass: LitAtomicSortExpression,
 });
 
 export const AtomicTab = createComponent({
