@@ -4,18 +4,18 @@ import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import ratingStyles from '@/src/components/common/atomic-rating/atomic-rating.tw.css.js';
+import {renderRating} from '@/src/components/common/atomic-rating/rating.js';
 import {computeNumberOfStars} from '@/src/components/common/atomic-rating/rating-utils.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
+import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces.js';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller.js';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types.js';
+import Star from '@/src/images/star.svg';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {LightDomMixin} from '@/src/mixins/light-dom';
-import {renderRating} from '../../../common/atomic-rating/rating';
-import Star from '../../../images/star.svg';
-import type {Bindings} from '../../atomic-search-interface/interfaces';
 
 /**
  * The `atomic-result-rating` element renders a star rating.
@@ -92,7 +92,12 @@ export class AtomicResultRating
 
   public initialize() {
     if (!this.result && this.resultController.item) {
-      this.result = this.resultController.item;
+      const item = this.resultController.item;
+      if ('result' in item) {
+        this.result = item.result;
+      } else {
+        this.result = item;
+      }
     }
   }
 
@@ -116,7 +121,12 @@ export class AtomicResultRating
   @errorGuard()
   render() {
     if (!this.result && this.resultController.item) {
-      this.result = this.resultController.item;
+      const item = this.resultController.item;
+      if ('result' in item) {
+        this.result = item.result;
+      } else {
+        this.result = item;
+      }
     }
 
     this.updateNumberOfStars();
