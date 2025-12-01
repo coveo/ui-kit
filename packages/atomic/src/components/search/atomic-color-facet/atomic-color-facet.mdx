@@ -35,14 +35,14 @@ Place this component within the "facets" section of your search layout. For Dyna
 
 You can customize the colors for specific facet values using CSS shadow parts. The component provides dynamic parts for each facet value:
 
-- `default-color-value` - Default styling for all color boxes
-- `value-{value}` - Specific styling for a particular facet value
+- `value-{value}` - Specific styling for a particular facet value (case-sensitive, matching the raw facet value)
+- `default-color-value` - Default styling applied to all color boxes
 
 ### Example: Customizing File Type Colors
 
 ```html
 <style>
-  atomic-color-facet::part(value-pdf default-color-value) {
+  atomic-color-facet::part(value-pdf) {
     background-image: url('atomic/assets/pdf.svg');
     background-color: rgb(255, 0, 0);
     background-position: center;
@@ -50,7 +50,7 @@ You can customize the colors for specific facet values using CSS shadow parts. T
     background-repeat: no-repeat;
   }
   
-  atomic-color-facet::part(value-doc default-color-value) {
+  atomic-color-facet::part(value-doc) {
     background-image: url('atomic/assets/document.svg');
     background-color: rgb(146, 151, 196);
     background-position: center;
@@ -59,7 +59,7 @@ You can customize the colors for specific facet values using CSS shadow parts. T
   }
 </style>
 
-<atomic-color-facet field="filetype" label="File Types" display-values-as="box"></atomic-color-facet>
+<atomic-color-facet field="filetype" label="File Type"></atomic-color-facet>
 ```
 
 ## Customizing Layout
