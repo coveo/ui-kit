@@ -37,7 +37,7 @@ export class AtomicTabButton {
   render() {
     return (
       <Host
-        role="tab"
+        role="listitem"
         class={`${this.activeTabClass}`}
         aria-current={this.active ? 'true' : 'false'}
         aria-label={'tab for ' + this.label}
