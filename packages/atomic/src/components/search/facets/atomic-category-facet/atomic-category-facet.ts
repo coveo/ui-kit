@@ -709,6 +709,10 @@ export class AtomicCategoryFacet
   @bindingGuard()
   @errorGuard()
   render() {
+    if (!this.facetState || !this.searchStatusState) {
+      return html`${nothing}`;
+    }
+
     const {
       bindings: {i18n},
       label,
