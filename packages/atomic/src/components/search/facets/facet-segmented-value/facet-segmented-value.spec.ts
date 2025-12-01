@@ -6,7 +6,6 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderFacetSegmentedValue} from './facet-segmented-value';
 
 describe('renderFacetSegmentedValue', () => {
-  // createTestI18n provides stable English locale for predictable formatting
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
   const locators = {

@@ -17,13 +17,13 @@ export const renderFacetSegmentedValue: FunctionalComponent<
   const ariaLabel = props.i18n.t('facet-value', {
     value: props.displayValue,
     count: props.numberOfResults,
-    formattedCount: count,
+    formattedCount: compactCount,
   });
 
   return html`
     ${keyed(
       props.displayValue,
-      html`<li .key=${props.displayValue}>
+      html`<li>
         ${renderButton({
           props: {
             style: 'square-neutral',
