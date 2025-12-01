@@ -1,42 +1,31 @@
-import {html, render} from 'lit';
-import {fireEvent, within} from 'storybook/test';
-import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {html} from 'lit';
+import {describe, expect, it, vi} from 'vitest';
 import {createRipple} from '@/src/utils/ripple-utils';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {type RadioButtonProps, renderRadioButton} from './radio-button';
 
 vi.mock('@/src/utils/ripple-utils', {spy: true});
 
 describe('#renderRadioButton', () => {
-  let container: HTMLElement;
-
-  beforeEach(() => {
-    container = document.createElement('div');
-    document.body.appendChild(container);
-  });
-
-  afterEach(() => {
-    document.body.removeChild(container);
-  });
-
-  const renderComponent = (
+  const renderComponent = async (
     props: Partial<RadioButtonProps>
-  ): HTMLInputElement => {
-    render(
-      html`${renderRadioButton({props: {...props, groupName: 'test-group'}})}`,
-      container
+  ): Promise<HTMLElement> => {
+    return renderFunctionFixture(
+      html`${renderRadioButton({props: {...props, groupName: 'test-group'}})}`
     );
-
-    return within(container).getByRole('radio');
   };
 
-  it('should render a radio button with the correct attributes', () => {
+  it('should render a radio button with the correct attributes', async () => {
     const props = {
       text: 'Test Radio Button',
       checked: true,
       ariaLabel: 'Test Radio Button',
     };
 
-    const input = renderComponent(props);
+    const element = await renderComponent(props);
+    const input = element.querySelector(
+      'input[type="radio"]'
+    ) as HTMLInputElement;
 
     expect(input).toBeInTheDocument();
     expect(input.name).toBe('test-group');
@@ -52,47 +41,62 @@ describe('#renderRadioButton', () => {
       onChecked,
     };
 
-    const input = renderComponent(props);
-    await fireEvent.click(input);
+    const element = await renderComponent(props);
+    const input = element.querySelector('input[type="radio"]')!;
+    input.click();
 
-    await expect(onChecked).toHaveBeenCalled();
+    expect(onChecked).toHaveBeenCalled();
   });
 
   it('should handle keyboard navigation', async () => {
-    const {focus, keyDown} = fireEvent;
-    const getRadio = (index: number) =>
-      within(container).getByLabelText(`radio-${index}`);
     const props = {
       groupName: 'test-group',
       selectWhenFocused: false,
     };
 
-    render(
+    const element = await renderFunctionFixture(
       html`${renderRadioButton({props: {...props, text: 'radio-1'}})}
       ${renderRadioButton({props: {...props, text: 'radio-2'}})}
       ${renderRadioButton({props: {...props, text: 'radio-3'}})}
-      ${renderRadioButton({props: {...props, text: 'radio-4'}})}`,
-      container
+      ${renderRadioButton({props: {...props, text: 'radio-4'}})}`
     );
 
-    const inputs = within(container).getAllByRole('radio');
+    const inputs = element.querySelectorAll(
+      'input[type="radio"]'
+    ) as NodeListOf<HTMLInputElement>;
 
-    await focus(inputs[0]);
-    await keyDown(inputs[0], {key: 'ArrowRight'});
+    inputs[0].focus();
+    expect(document.activeElement).toBe(inputs[0]);
 
-    await expect(getRadio(1)).toBeInTheDocument();
+    inputs[0].dispatchEvent(
+      new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true})
+    );
+    expect(document.activeElement).toBe(inputs[1]);
 
-    keyDown(inputs[1], {key: 'ArrowRight'});
-    await expect(getRadio(2)).toBeInTheDocument();
+    inputs[1].dispatchEvent(
+      new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true})
+    );
+    expect(document.activeElement).toBe(inputs[2]);
 
-    keyDown(inputs[2], {key: 'ArrowRight'});
-    await expect(getRadio(3)).toBeInTheDocument();
+    inputs[2].dispatchEvent(
+      new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true})
+    );
+    expect(document.activeElement).toBe(inputs[3]);
 
-    keyDown(inputs[2], {key: 'Tab'});
-    await expect(getRadio(4)).toBeInTheDocument();
+    inputs[3].dispatchEvent(
+      new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true})
+    );
+    expect(document.activeElement).toBe(inputs[0]);
 
-    keyDown(inputs[2], {key: 'Tab', shiftKey: true});
-    await expect(getRadio(3)).toBeInTheDocument();
+    inputs[0].dispatchEvent(
+      new KeyboardEvent('keydown', {key: 'ArrowLeft', bubbles: true})
+    );
+    expect(document.activeElement).toBe(inputs[3]);
+
+    inputs[3].dispatchEvent(
+      new KeyboardEvent('keydown', {key: 'Tab', shiftKey: true, bubbles: true})
+    );
+    expect(document.activeElement).toBe(inputs[2]);
   });
 
   it('should create a ripple effect on mousedown', async () => {
@@ -101,10 +105,11 @@ describe('#renderRadioButton', () => {
       style: 'primary',
     };
 
-    const input = renderComponent(props);
-    await fireEvent.mouseDown(input);
+    const element = await renderComponent(props);
+    const input = element.querySelector('input[type="radio"]')!;
+    input.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
 
-    await expect(mockedRipple).toHaveBeenCalledWith(expect.anything(), {
+    expect(mockedRipple).toHaveBeenCalledWith(expect.anything(), {
       color: 'primary',
     });
   });
@@ -114,42 +119,43 @@ describe('#renderRadioButton', () => {
       class: 'test-class',
     };
 
-    const input = renderComponent(props);
+    const element = await renderComponent(props);
+    const input = element.querySelector('input[type="radio"]')!;
     expect(input).toBeInTheDocument();
     expect(input.classList.contains('test-class')).toBe(true);
     expect(input.classList.contains('btn-radio')).toBe(true);
     expect(input.classList.contains('selected')).toBe(false);
   });
 
-  it('should render a radio button with the correct part attribute', () => {
+  it('should render a radio button with the correct part attribute', async () => {
     const props = {
       part: 'test-part',
     };
 
-    const input = renderComponent(props);
+    const element = await renderComponent(props);
+    const input = element.querySelector('input[type="radio"]')!;
     expect(input.getAttribute('part')).toBe('test-part');
   });
 
-  it('should render a radio button with the correct ref', () => {
+  it('should render a radio button with the correct ref', async () => {
     const ref = vi.fn();
     const props = {
       groupName: 'test-group',
       ref,
     };
 
-    render(html`${renderRadioButton({props})}`, container);
+    await renderFunctionFixture(html`${renderRadioButton({props})}`);
 
     expect(ref).toHaveBeenCalled();
   });
 
-  it('should render a radio button with the correct aria-current attribute', () => {
+  it('should render a radio button with the correct aria-current attribute', async () => {
     const props: Partial<RadioButtonProps> = {
       ariaCurrent: 'page',
     };
 
-    renderComponent(props);
-    expect(
-      within(container).getByRole('radio', {current: 'page'})
-    ).toBeInTheDocument();
+    const element = await renderComponent(props);
+    const input = element.querySelector('input[type="radio"]')!;
+    expect(input.getAttribute('aria-current')).toBe('page');
   });
 });

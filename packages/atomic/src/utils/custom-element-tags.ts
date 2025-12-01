@@ -84,6 +84,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-result',
   'atomic-result-badge',
   'atomic-result-children-template',
+  'atomic-result-date',
   'atomic-result-html',
   'atomic-result-list',
   'atomic-result-localized-text',
@@ -100,6 +101,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-result-section-visual',
   'atomic-result-template',
   'atomic-result-text',
+  'atomic-result-timespan',
   'atomic-results-per-page',
   'atomic-search-box-instant-results',
   'atomic-search-box-query-suggestions',
@@ -108,6 +110,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-search-layout',
   'atomic-segmented-facet-scrollable',
   'atomic-sort-dropdown',
+  'atomic-sort-expression',
   'atomic-tab',
   'atomic-text',
 ]);
