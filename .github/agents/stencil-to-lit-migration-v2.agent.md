@@ -262,7 +262,7 @@ await component.nextButton.click();
 // Wait for visible state change that indicates interaction completed
 await expect(component.currentPage).toContainText('2');
 // OR wait for element to appear/disappear
-await expect(component.loadingSpinner).not.toBeVisible();
+await expect(component.statusMessage).toBeVisible();
 // OR wait for attribute change
 await expect(component.nextButton).toHaveAttribute('aria-disabled', 'false');
 ```
@@ -287,7 +287,7 @@ Now that visual tests exist, generate baseline snapshots from the **original Ste
 
 ```bash
 # Step 1: Ensure the Stencil component is built
-cd /home/runner/work/ui-kit/ui-kit
+# (Navigate to the repository root if not already there)
 pnpm run build
 
 # Step 2: Generate baseline snapshots
@@ -326,7 +326,7 @@ src/components/search/atomic-component-name/e2e/__snapshots__/
 cd packages/atomic
 pnpm exec playwright test atomic-component-name.e2e.ts --grep "Visual"
 ```
-All visual tests should PASS (comparing Stencil component against its own baseline).
+All visual tests should PASS (confirming successful baseline generation).
 
 **Step 3: Commit everything**
 ```bash
