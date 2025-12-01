@@ -18,16 +18,6 @@ import {mockConsole} from '@/vitest-utils/testing-helpers/testing-utils/mock-con
 import type {AtomicColorFacet} from './atomic-color-facet';
 
 vi.mock('@coveo/headless', {spy: true});
-vi.mock('@/src/mixins/bindings-mixin', () => ({
-  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
-    return class extends superClass {
-      // biome-ignore lint/complexity/noUselessConstructor: <mocking the mixin for testing>
-      constructor(...args: unknown[]) {
-        super(...args);
-      }
-    };
-  }),
-}));
 
 describe('atomic-color-facet', () => {
   let mockedRegisterFacet: Mock;

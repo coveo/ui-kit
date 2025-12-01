@@ -52,7 +52,6 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {
   AriaLiveRegionController,
   FocusTargetController,
@@ -101,7 +100,7 @@ import '@/src/components/common/atomic-facet-placeholder/atomic-facet-placeholde
 @bindings()
 @withTailwindStyles
 export class AtomicColorFacet
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<Bindings>
 {
   static styles = [
