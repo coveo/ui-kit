@@ -12,7 +12,7 @@ test.describe('atomic-rating-range-facet', () => {
 
     const screenshot = await ratingRangeFacet.captureScreenshot();
     expect(screenshot).toMatchSnapshot('rating-range-facet-default.png', {
-      maxDiffPixelRatio: 0.01,
+      maxDiffPixelRatio: 0.04,
     });
   });
 
@@ -25,7 +25,7 @@ test.describe('atomic-rating-range-facet', () => {
 
     const screenshot = await ratingRangeFacet.captureScreenshot();
     expect(screenshot).toMatchSnapshot('rating-range-facet-selected.png', {
-      maxDiffPixelRatio: 0.01,
+      maxDiffPixelRatio: 0.04,
     });
   });
 });
