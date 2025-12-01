@@ -7,6 +7,7 @@ import {
 } from '@coveo/headless';
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {renderTabButton} from '@/src/components/common/tabs/tab-button';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -134,26 +135,26 @@ export class AtomicTabManager
     return html`
       <atomic-tab-bar>
         <div
-          role="list"
+          role="tablist"
           aria-label="tab-area"
           part="tab-area"
           class="border-neutral mb-2 flex w-full flex-row border-b"
         >
           ${this.tabs.map((tab) => {
             const isActive = this.tabManagerState.activeTab === tab.name;
-            return html`
-              <atomic-tab-button
-                .active=${isActive}
-                .label=${this.bindings.i18n.t(tab.label, {
+            return renderTabButton({
+              props: {
+                active: isActive,
+                label: this.bindings.i18n.t(tab.label, {
                   defaultValue: tab.label,
-                })}
-                .select=${() => {
+                }),
+                select: () => {
                   if (!tab.tabController.state.isActive) {
                     tab.tabController.select();
                   }
-                }}
-              ></atomic-tab-button>
-            `;
+                },
+              },
+            });
           })}
         </div>
       </atomic-tab-bar>
