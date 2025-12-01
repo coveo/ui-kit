@@ -1,8 +1,10 @@
+import {Schema, StringValue} from '@coveo/bueno';
 import type {Result} from '@coveo/headless';
 import {ResultTemplatesHelpers} from '@coveo/headless';
 import {css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit-html/directives/when.js';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -64,6 +66,20 @@ export class AtomicResultImage
   @state() private useFallback = false;
 
   private resultController = createResultContextController(this);
+
+  constructor() {
+    super();
+
+    new ValidatePropsController(
+      this,
+      () => ({field: this.field}),
+      new Schema({
+        field: new StringValue({required: true, emptyAllowed: false}),
+      }),
+      // TODO V4: KIT-5197 - Remove false
+      false
+    );
+  }
 
   public initialize() {
     if (!this.result && this.resultController.item) {

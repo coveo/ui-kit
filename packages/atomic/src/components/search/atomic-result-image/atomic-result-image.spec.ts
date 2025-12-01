@@ -308,4 +308,55 @@ describe('atomic-result-image', () => {
 
     expect(image).toHaveAttribute('src', FALLBACK_IMAGE);
   });
+
+  describe('prop validation', () => {
+    it.each([
+      {
+        prop: 'field',
+        validValue: 'imageUrl',
+        invalidValue: '',
+      },
+    ])(
+      'should log validation warning when #$prop is updated to invalid value',
+      async ({prop, validValue, invalidValue}) => {
+        const consoleWarnSpy = vi
+          .spyOn(console, 'warn')
+          .mockImplementation(() => {});
+
+        const {element} = await renderResultImage({[prop]: validValue});
+
+        // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+        (element as any)[prop] = invalidValue;
+        await element?.updateComplete;
+
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          expect.stringContaining(
+            'Prop validation failed for component atomic-result-image'
+          ),
+          element
+        );
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          expect.stringContaining(prop),
+          element
+        );
+
+        consoleWarnSpy.mockRestore();
+      }
+    );
+
+    // TODO V4: KIT-5197 - Remove skip
+    it.skip.each([
+      {
+        prop: 'field',
+        invalidValue: '',
+      },
+    ])(
+      'should throw error when #$prop is set to invalid value',
+      async ({prop, invalidValue}) => {
+        await expect(() =>
+          renderResultImage({[prop]: invalidValue})
+        ).rejects.toThrow();
+      }
+    );
+  });
 });
