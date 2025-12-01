@@ -28,6 +28,7 @@ import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.cs
 import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
+import {renderFacetPlaceholder} from '@/src/components/common/facets/facet-placeholder/facet-placeholder';
 import facetValueCheckboxStyles from '@/src/components/common/facets/facet-value-checkbox/facet-value-checkbox.tw.css';
 import {renderFacetValueLink} from '@/src/components/common/facets/facet-value-link/facet-value-link';
 import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-values-group/facet-values-group';
@@ -44,7 +45,6 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {mapProperty} from '@/src/utils/props-utils';
 import Star from '../../../images/star.svg';
-import {renderFacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
