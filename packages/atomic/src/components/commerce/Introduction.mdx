@@ -1,0 +1,88 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Commerce/Introduction" />
+
+# Atomic Commerce Components
+
+This section showcases interactive documentation for the [Coveo Atomic for Commerce](https://docs.coveo.com/en/p8bd0068) web components.
+
+You can explore the individual components in the sidebar. 
+Each component includes:
+
+* Interactive examples with configurable properties
+* Code snippets showing implementation details
+* Documentation for available attributes and events
+
+You can also find example of full implementations:
+* [Product List Page](/story/product-listing-page--default)
+* [Recommendation Carousel](/story/recommendations--default)
+* [Search Page](/story/search-page--default)
+
+
+
+## Getting Started
+These guides provide examples of implementing the Coveo Atomic web components. 
+Each of the components must be placed correctly within the component hierarchy in order to function.
+The top level of the tree must match the interface being initialized by the Atomic engine.
+For example, a most Coveo Commerce pages must start have `atomic-commerce-interface` at the of the component hierarchy.
+
+
+### Initialization
+Here is an example of how to initialize an `atomic-commerce-interface` for a search page:
+```html
+<html>
+  <head>
+    <title>Example</title>
+        <script
+            type="module"
+            src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js" />
+        <link
+            rel="stylesheet"
+            href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"/>
+
+
+      <script type="module">
+        (async () => {
+          const {
+            buildCommerceEngine, 
+            getSampleCommerceEngineConfiguration
+          } = await import('http://static.cloud.coveo.com/headless/v3/commerce/headless.esm.js');
+
+          const siteRoot = 'https://www.example.com/';
+          const siteConfig = {
+            'Example': {href: 'index.html', label: 'Home', siteUrl: `${siteRoot}/search`},
+          };
+
+          const {context, ...restOfConfiguration} = getSampleCommerceEngineConfiguration();
+
+          const commerceEngine = buildCommerceEngine({
+            configuration: {
+              context: {
+                ...context,
+                view: {
+                  url: siteConfig[document.title]?.siteUrl || siteRoot
+                },
+              },
+              ...restOfConfiguration,
+            },
+          });
+
+          await customElements.whenDefined('atomic-commerce-interface');
+          const commerceInterface = document.querySelector('atomic-commerce-interface');
+          await commerceInterface.initializeWithEngine(commerceEngine);
+
+          commerceInterface.executeFirstRequest();
+        })();
+      </script>
+  </head>
+  <body>
+    <atomic-commerce-interface>
+      <!-- The rest of your component hierarchy -->
+    </atomic-commerce-interface>
+  </body>
+</html>
+```
+
+For a detailed breakdown of how to initialize a commerce engine, please refer to the Coveo Headless documentation for [`buildCommerceEngine`](https://docs.coveo.com/en/headless/latest/reference/functions/Commerce.buildCommerceEngine.html).
+
+
