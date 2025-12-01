@@ -26,6 +26,31 @@ export class AtomicResultTimespan
   extends LightDomMixin(InitializeBindingsMixin(LitElement))
   implements InitializableComponent<Bindings>
 {
+  private static readonly propsSchema = new Schema({
+    field: new StringValue({required: true, emptyAllowed: false}),
+    unit: new StringValue({
+      constrainTo: [
+        'milliseconds',
+        'ms',
+        'seconds',
+        's',
+        'minutes',
+        'm',
+        'hours',
+        'h',
+        'days',
+        'd',
+        'weeks',
+        'w',
+        'months',
+        'M',
+        'years',
+        'y',
+      ],
+    }),
+    format: new StringValue({required: false, emptyAllowed: false}),
+  });
+
   /**
    * The target result numeric field.
    * The component first looks for the field in the Result object, and then in the Result.raw object.
@@ -59,30 +84,7 @@ export class AtomicResultTimespan
     new ValidatePropsController(
       this,
       () => ({field: this.field, unit: this.unit, format: this.format}),
-      new Schema({
-        field: new StringValue({required: true, emptyAllowed: false}),
-        unit: new StringValue({
-          constrainTo: [
-            'milliseconds',
-            'ms',
-            'seconds',
-            's',
-            'minutes',
-            'm',
-            'hours',
-            'h',
-            'days',
-            'd',
-            'weeks',
-            'w',
-            'months',
-            'M',
-            'years',
-            'y',
-          ],
-        }),
-        format: new StringValue({required: false, emptyAllowed: false}),
-      })
+      AtomicResultTimespan.propsSchema
     );
   }
 
