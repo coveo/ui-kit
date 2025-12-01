@@ -1,5 +1,5 @@
 import type {SearchEngine} from '@coveo/headless';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {createSearchStore, type SearchStore} from './store';
 
 vi.mock('@coveo/headless', {spy: true});
@@ -81,9 +81,17 @@ describe('SearchStore', () => {
   });
 
   describe('#isMobile', () => {
-    it('should return true when viewport is below mobile breakpoint', () => {
-      const originalMatchMedia = window.matchMedia;
+    let originalMatchMedia: typeof window.matchMedia;
 
+    beforeEach(() => {
+      originalMatchMedia = window.matchMedia;
+    });
+
+    afterEach(() => {
+      window.matchMedia = originalMatchMedia;
+    });
+
+    it('should return true when viewport is below mobile breakpoint', () => {
       window.matchMedia = vi.fn().mockImplementation((query) => ({
         matches: false,
         media: query,
@@ -93,13 +101,9 @@ describe('SearchStore', () => {
       }));
 
       expect(store.isMobile()).toBe(true);
-
-      window.matchMedia = originalMatchMedia;
     });
 
     it('should return false when viewport is above mobile breakpoint', () => {
-      const originalMatchMedia = window.matchMedia;
-
       window.matchMedia = vi.fn().mockImplementation((query) => ({
         matches: true,
         media: query,
@@ -109,8 +113,6 @@ describe('SearchStore', () => {
       }));
 
       expect(store.isMobile()).toBe(false);
-
-      window.matchMedia = originalMatchMedia;
     });
   });
 
