@@ -13,9 +13,9 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types.js';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import Star from '@/src/images/star.svg';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
-import {LightDomMixin} from '@/src/mixins/light-dom';
 
 /**
  * The `atomic-result-rating` element renders a star rating.
@@ -29,8 +29,10 @@ import {LightDomMixin} from '@/src/mixins/light-dom';
  */
 @customElement('atomic-result-rating')
 @bindings()
+@withTailwindStyles
+// TODO V4: Consider switching to Light DOM if appropriate for result template components
 export class AtomicResultRating
-  extends LightDomMixin(InitializeBindingsMixin(LitElement))
+  extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
   static styles = ratingStyles;
@@ -86,7 +88,8 @@ export class AtomicResultRating
         field: this.field,
         maxValueInIndex: this.maxValueInIndex,
       }),
-      AtomicResultRating.propsSchema
+      AtomicResultRating.propsSchema,
+      false
     );
   }
 
