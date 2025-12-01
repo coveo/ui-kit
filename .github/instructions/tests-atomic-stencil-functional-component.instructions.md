@@ -63,7 +63,7 @@ describe('Component (Stencil)', () => {
         /* component-specific props */
       },
       [],
-      // biome-ignore lint/suspicious/noExplicitAny: Stencil FunctionalComponent utils parameter is unused in tests.
+      // biome-ignore lint/suspicious/noExplicitAny: Provide a context-specific justification for using 'any' here (e.g., type incompatibility or unused parameter).
       {} as any
     ) as VNode;
 
@@ -91,6 +91,9 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 describe('Component (Stencil)', () => {
   let i18n: i18n;
 
+  // Use `beforeAll` here because i18n setup is expensive and can be shared across tests.
+  // Prefer `beforeAll` for expensive, shared setup (e.g., i18n, global mocks).
+  // Use `beforeEach`/`afterEach` for per-test isolation (e.g., DOM containers, spies).
   beforeAll(async () => {
     i18n = await createTestI18n();
   });
