@@ -1,4 +1,4 @@
-import {page, userEvent} from '@vitest/browser/context';
+import {page, userEvent} from '@vitest/browser';
 import {html} from 'lit';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
 import type {FacetValuePropsBase} from '@/src/components/common/facets/facet-common';
