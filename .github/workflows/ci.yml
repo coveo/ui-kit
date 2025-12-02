@@ -717,6 +717,7 @@ jobs:
     needs:
       - "build"
       - "lint-check"
+      - "knip"
       - "unit-test"
       - "storybook-atomic"
       - "playwright-atomic"
@@ -758,6 +759,7 @@ jobs:
     needs:
       - "build"
       - "lint-check"
+      - "knip"
       - "unit-test"
       - "storybook-atomic"
       - "playwright-atomic"
