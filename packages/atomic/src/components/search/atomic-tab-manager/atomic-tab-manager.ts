@@ -132,3 +132,9 @@ export class AtomicTabManager
     `;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-tab-manager': AtomicTabManager;
+  }
+}

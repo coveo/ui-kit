@@ -15,9 +15,7 @@ export class TabManagerPageObject extends BasePageObject {
   }
 
   get activeTab() {
-    return this.page.locator(
-      'atomic-tab-manager [aria-selected="true"] button'
-    );
+    return this.page.locator('atomic-tab-manager [aria-current="true"]');
   }
 
   get excludedFacet() {
@@ -88,7 +86,7 @@ export class TabManagerPageObject extends BasePageObject {
   }
 
   tabButtons(value?: string) {
-    const baseLocator = this.page.locator('atomic-tab-manager [role="tab"]');
+    const baseLocator = this.page.getByLabel(/tab for .*/);
     return value ? baseLocator.filter({hasText: value}) : baseLocator;
   }
 
