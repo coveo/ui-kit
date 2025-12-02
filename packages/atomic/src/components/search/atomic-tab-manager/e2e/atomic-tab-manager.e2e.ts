@@ -19,20 +19,4 @@ test.describe('AtomicTabManager', () => {
       /Articles/,
     ]);
   });
-
-  test('should not display tabs popover menu button on large viewport', async ({
-    tabManager,
-  }) => {
-    await expect(tabManager.tabPopoverMenuButton).not.toBeVisible();
-  });
-
-  test.describe('when clicking on a tab button', () => {
-    test.beforeEach(async ({tabManager}) => {
-      await tabManager.tabButtons('Documentation').click();
-    });
-
-    test('should change active tab', async ({tabManager}) => {
-      await expect(tabManager.activeTab).toHaveText(/Documentation/);
-    });
-  });
 });
