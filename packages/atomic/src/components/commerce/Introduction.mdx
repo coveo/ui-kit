@@ -30,8 +30,9 @@ For example, most Coveo Commerce interfaces must start have `atomic-commerce-int
 Here is an example of initilizating a `atomic-commerce-interface`,
 This example `getSampleCommerceEngineConfiguration` from `@coveo/headless` as its initialization configuration.
 This will not work in a production environment.
+See [Initialize the Headless commerce engine](https://docs.coveo.com/en/o6r70022#initialize-the-headless-commerce-engine).
 
-For a detailed breakdown of how to configurea commerce engine, please refer to the Coveo Headless documentation for [`buildCommerceEngine`](https://docs.coveo.com/en/headless/latest/reference/functions/Commerce.buildCommerceEngine.html).
+For a detailed breakdown of how to configure a commerce engine, please refer to the Coveo Headless documentation for [`buildCommerceEngine`](https://docs.coveo.com/en/headless/latest/reference/functions/Commerce.buildCommerceEngine.html).
 ```html
 <html>
   <head>
@@ -159,4 +160,8 @@ export const commerceEngine = buildCommerceEngine({
 ```
 
 ## Advanced Examples
-The Atomic library also provides an in-depth example of a Commerce integration in the [GitHub repo](https://github.com/coveo/ui-kit/tree/main/packages/atomic/dev/examples/commerce-website), which you can clone and run locally.
+If you are looking to implement Coveo Atomic for Commerce in a framework, you can find reference code in our GitHub repo:
+* [Angular - Commerce Search](https://github.com/coveo/ui-kit/tree/main/samples/atomic/search-commerce-angular)
+* [React - Commerce Search](https://github.com/coveo/ui-kit/tree/main/samples/atomic/search-commerce-react)
+
+The Atomic library also provides more in-depth examples in the [GitHub repo](https://github.com/coveo/ui-kit/tree/main/packages/atomic/dev/examples/commerce-website) without using a framework which you can review.
