@@ -19,6 +19,19 @@ describe('atomic-result-icon', () => {
         template: html`<atomic-result-icon></atomic-result-icon>`,
         selector: 'atomic-result-icon',
         result: resultToUse,
+        bindings: (bindings) => {
+          bindings.engine.logger = {warn: vi.fn()} as never;
+          bindings.store = {
+            ...bindings.store,
+            onChange: vi.fn(),
+            state: {
+              ...bindings.store?.state,
+              loadingFlags: [],
+              iconAssetsPath: '',
+            },
+          };
+          return bindings;
+        },
       });
 
     await atomicInterface.updateComplete;

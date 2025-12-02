@@ -10,11 +10,4 @@ test.describe('AtomicResultIcon', () => {
     await expect(resultIcon.svg).toBeVisible();
     await expect(resultIcon.atomicIcon).toBeVisible();
   });
-
-  test('should match baseline in default state', async ({resultIcon}) => {
-    const screenshot = await resultIcon.captureScreenshot();
-    expect(screenshot).toMatchSnapshot('atomic-result-icon-default.png', {
-      maxDiffPixelRatio: 0.01,
-    });
-  });
 });

@@ -2,11 +2,13 @@ import type {Result} from '@coveo/headless';
 import {ResultTemplatesHelpers} from '@coveo/headless';
 import bgIcons from '@salesforce-ux/design-system/design-tokens/dist/bg-standard.common';
 import {css, html, LitElement, nothing} from 'lit';
-import {customElement} from 'lit/decorators.js';
+import {customElement, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import '@/src/components/common/atomic-icon/atomic-icon';
+import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {bindings} from '@/src/decorators/bindings';
+import type {InitializableComponent} from '@/src/decorators/types';
 import {snakeToCamel} from '@/src/utils/utils';
 import {fileTypeIcons} from './file-type-icons';
 import {objectTypeIcons} from './object-type-icons';
@@ -18,8 +20,11 @@ import {objectTypeIcons} from './object-type-icons';
  * @slot default - Fallback content to display when no matching icon is found.
  */
 @customElement('atomic-result-icon')
-@withTailwindStyles
-export class AtomicResultIcon extends LitElement {
+@bindings()
+export class AtomicResultIcon
+  extends LitElement
+  implements InitializableComponent<Bindings>
+{
   static styles = css`
     :host {
       display: inline-block;
@@ -35,9 +40,15 @@ export class AtomicResultIcon extends LitElement {
   public license =
     "Salesforce's specific icons originally from lightning design system (https://www.lightningdesignsystem.com/icons/). Icons licensed under Creative Commons Attribution-NoDerivatives 4.0 (https://github.com/salesforce-ux/design-system).";
 
-  public error: Error | null = null;
+  @state() public bindings!: Bindings;
+
+  @state() public error!: Error;
 
   private resultController = createResultContextController(this);
+
+  public initialize() {
+    // Bindings initialization handled by decorator
+  }
 
   private get result(): Result | null {
     const item = this.resultController.item;
