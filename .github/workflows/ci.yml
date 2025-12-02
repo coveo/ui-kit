@@ -432,12 +432,19 @@ jobs:
           name: visual-snapshots
           path: packages/atomic/src/**/e2e/__snapshots__/*.png
           retention-days: 30
-  commit-visual-snapshots:
-    name: "Commit Visual Snapshots"
+  should-commit-visual-snapshots:
+    name: "Confirm whether to commit visual snapshots"
+    environment: Visual Snapshots
     needs: update-visual-snapshots
     if: ${{ needs.update-visual-snapshots.outputs.has_changes == 'true' && github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
-    environment: Visual Snapshots
+    steps:
+      - run: exit 0
+  commit-visual-snapshots:
+    name: "Commit Visual Snapshots"
+    needs: should-commit-visual-snapshots
+    runs-on: ubuntu-latest
+    environment: PR Artifacts
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
