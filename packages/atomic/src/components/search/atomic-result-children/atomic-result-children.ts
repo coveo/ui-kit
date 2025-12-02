@@ -32,6 +32,8 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import {elementHasAncestorTag} from '@/src/utils/utils';
 import '@/src/components/search/atomic-result/atomic-result';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {errorGuard} from '@/src/decorators/error-guard';
 
 const childTemplateComponent = 'atomic-result-children-template';
 const componentTag = 'atomic-result-children';
@@ -54,14 +56,15 @@ export class AtomicResultChildren
   implements InitializableComponent<Bindings>
 {
   static styles = css`
-    .show-hide-button {
-      font-size: 0.875rem;
-      line-height: 1.25rem;
-    }
+@reference '../../../utils/tailwind-utilities/set-font-size.css';
 
-    .no-result-root {
-      color: var(--atomic-neutral-dark);
-    }
+.show-hide-button {
+  @apply set-font-size-sm;
+}
+
+.no-result-root {
+  @apply text-neutral-dark;
+}
   `;
 
   /**
@@ -202,22 +205,18 @@ export class AtomicResultChildren
   }
 
   willUpdate() {
-    // Subscribe to foldedResultList state updates
     if (this.foldedResultList && !this.foldedResultListUnsubscriber) {
       this.foldedResultListUnsubscriber = this.foldedResultList.subscribe(
         () => {
           this.foldedResultListState = this.foldedResultList!.state;
-          // Capture initial children on first render
           if (!this.initialChildren && this.collection) {
             this.initialChildren = this.collection.children;
           }
         }
       );
-      // Initialize state
       this.foldedResultListState = this.foldedResultList.state;
     }
 
-    // Capture initial children
     if (!this.initialChildren && this.collection) {
       this.initialChildren = this.collection.children;
     }
@@ -328,8 +327,10 @@ export class AtomicResultChildren
     return this.renderChildren(this.result.children);
   }
 
+  @errorGuard()
+  @bindingGuard()
   render() {
-    return when(
+    return html`${when(
       this.bindings && (this.displayConfig || this.inheritTemplates),
       () =>
         renderResultChildrenGuard({
@@ -341,7 +342,7 @@ export class AtomicResultChildren
         })(
           this.collection ? this.renderCollection() : this.renderFoldedResult()
         )
-    );
+    )}`;
   }
 }
 

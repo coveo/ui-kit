@@ -30,7 +30,6 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-result-children',
   render: () => html`
     <atomic-folded-result-list>
       <atomic-result-template>

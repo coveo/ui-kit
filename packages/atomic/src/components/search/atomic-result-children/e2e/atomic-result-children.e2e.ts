@@ -5,8 +5,8 @@ test.describe('atomic-result-children', () => {
     resultChildren,
   }) => {
     await resultChildren.load({story: 'default'});
-    await resultChildren.hydrated.waitFor();
+    await resultChildren.hydrated.first().waitFor();
 
-    await expect(resultChildren.hydrated).toBeVisible();
+    await expect(resultChildren.hydrated.first()).toBeVisible();
   });
 });
