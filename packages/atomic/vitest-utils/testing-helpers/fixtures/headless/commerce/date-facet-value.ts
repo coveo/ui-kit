@@ -1,6 +1,6 @@
 import type {DateFacetValue} from '@coveo/headless/commerce';
 
-const defaultDateFacetValue: DateFacetValue = {
+const defaultDateFacetValue = {
   start: 'past-1-month',
   end: 'now',
   endInclusive: true,
@@ -9,7 +9,7 @@ const defaultDateFacetValue: DateFacetValue = {
   state: 'idle',
   isAutoSelected: false,
   isSuggested: false,
-};
+} satisfies DateFacetValue;
 
 export const buildFakeCommerceDateFacetValue = (
   override: Partial<DateFacetValue> = {}

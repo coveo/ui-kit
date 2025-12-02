@@ -1,5 +1,5 @@
 ---
-mode: 'agent'
+agent: 'agent'
 description: 'Migrate an Atomic Stencil component to Lit with functional components/utils migration'
 ---
 
@@ -388,7 +388,9 @@ Focus on code/style/functional migration only. Do not: build, test, lint, modify
 
 ## Migration Checklist
 
-## Migration Checklist
+**Track your progress systematically through these steps - order is critical:**
+
+Work on ONE step at a time, marking each complete before proceeding to the next. This ensures nothing is missed in the complex migration workflow.
 
 **Follow this exact order:**
 
@@ -420,27 +422,3 @@ Focus on code/style/functional migration only. Do not: build, test, lint, modify
 - **Step order matters:** Always follow the numbered steps in sequence
 
 Ask me for the component name and directory if not provided, then proceed with the migration following these steps systematically.
-
-## Post-Execution: Generate Summary
-
-After completing migration, generate execution summary:
-
-**1. Create summary file:**
-- **Location:** `.github/prompts/.executions/migrate-stencil-to-lit-{component}-[YYYY-MM-DD-HHmmss].prompt-execution.md`
-- **Structure:** Follow `.github/prompts/.executions/TEMPLATE.prompt-execution.md`
-
-**2. Include in summary:**
-- Which similar migrated component was used as reference
-- Actual issues encountered (not expected behaviors like duplicate type declaration errors)
-- Ambiguities requiring interpretation or decisions made
-- Time-consuming operations
-- Missing or unclear instructions
-- Concrete improvement suggestions
-
-**3. Expected behaviors (not issues):**
-- TypeScript duplicate declaration errors for `HTMLElementTagNameMap` during migration
-- Compiler warnings resolved by using `type` imports
-
-**4. Inform user** about summary location
-
-**5. Mark complete** only after file created and user informed.

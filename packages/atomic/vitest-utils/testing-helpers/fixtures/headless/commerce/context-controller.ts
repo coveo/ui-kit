@@ -2,14 +2,14 @@ import type {Context, ContextState} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 import {genericSubscribe} from '../common';
 
-export const defaultState: ContextState = {
+export const defaultState = {
   language: 'en',
   country: 'US',
   currency: 'USD',
   view: {
     url: 'https://example.com',
   },
-};
+} satisfies ContextState;
 
 export const defaultImplementation = {
   subscribe: genericSubscribe,
@@ -19,7 +19,7 @@ export const defaultImplementation = {
   setCurrency: vi.fn(),
   setView: vi.fn(),
   setLocation: vi.fn(),
-};
+} satisfies Context;
 
 export const buildFakeContext = ({
   implementation,

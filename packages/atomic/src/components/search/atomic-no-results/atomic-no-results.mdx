@@ -1,0 +1,35 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicNoResultsStories from './atomic-no-results.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicNoResultsStories} />
+
+<AtomicDocTemplate
+  stories={AtomicNoResultsStories}
+  githubPath="search/atomic-no-results/atomic-no-results.ts"
+  tagName="atomic-no-results"
+  className="AtomicNoResults"
+>
+
+The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
+
+This component is typically placed within the results section of the search interface layout.
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+      <atomic-layout-section section="results">
+
+        <atomic-no-results></atomic-no-results>
+
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+</AtomicDocTemplate>
