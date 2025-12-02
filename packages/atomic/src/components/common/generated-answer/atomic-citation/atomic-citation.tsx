@@ -52,7 +52,7 @@ export class AtomicCitation {
   private hoverAnalyticsTimeout = 1000;
 
   private hoverTimeout?: ReturnType<typeof setTimeout>;
-  private hoverDebounceTimeoutMs = 200;
+  private hoverDebounceTimeoutMs = 100;
 
   @Watch('isOpen')
   sendHoverAnalytics() {
@@ -122,32 +122,32 @@ export class AtomicCitation {
     }
   }
 
-  private openPopover = () => {
+  private showPopover = () => {
+    clearTimeout(this.hoverTimeout);
     this.isOpen = true;
   };
 
-  private closePopover = () => {
+  private hidePopover = () => {
     clearTimeout(this.hoverTimeout);
     this.isOpen = false;
   };
 
-  private delayedPopoverOpen = () => {
+  private debouncePopoverHide = () => {
     clearTimeout(this.hoverTimeout);
-    this.hoverTimeout = setTimeout(
-      this.openPopover,
-      this.hoverDebounceTimeoutMs
-    );
+    this.hoverTimeout = setTimeout(this.hidePopover, this.hoverDebounceTimeoutMs);
   };
 
   private renderPopover() {
     return (
       <div
         part="citation-popover"
-        class={`border-neutral bg-background z-10 rounded-md border p-4 shadow ${
-          this.isOpen ? 'desktop-only:flex' : 'hidden'
-        } mobile-only:hidden flex-col gap-3`}
+        class={`border-neutral bg-background z-10 rounded-md border p-4 shadow desktop-only:flex mobile-only:hidden flex-col gap-3 ${
+          this.isOpen ? 'visible' : 'hidden'
+        }`}
         ref={(el) => (this.popupRef = el!)}
         role="dialog"
+        onMouseEnter={this.showPopover}
+        onMouseLeave={this.debouncePopoverHide}
       >
         <div class="text-neutral-dark truncate text-sm">
           {this.citation.uri}
@@ -183,10 +183,10 @@ export class AtomicCitation {
             this.interactiveCitation.cancelPendingSelect()
           }
           stopPropagation={this.stopPropagation}
-          onMouseLeave={this.closePopover}
-          onMouseOver={this.delayedPopoverOpen}
-          onFocus={this.openPopover}
-          onBlur={this.closePopover}
+          onMouseLeave={this.debouncePopoverHide}
+          onMouseOver={this.showPopover}
+          onFocus={this.showPopover}
+          onBlur={this.debouncePopoverHide}
         >
           <span class="citation-title mx-1 truncate">
             {this.citation.title}
