@@ -5,7 +5,7 @@ import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderFacetSegmentedValue} from './facet-segmented-value';
 
-describe('renderFacetSegmentedValue', () => {
+describe('#renderFacetSegmentedValue', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
   const locators = {
@@ -13,17 +13,21 @@ describe('renderFacetSegmentedValue', () => {
       return page.getByRole('listitem');
     },
     get button() {
-      return page.getByLabelText(
-        'Inclusion filter on Test Value; 988M results'
-      );
+      return page.getByRole('button');
     },
     get valueLabel() {
-      return page.getByText('Test Value');
+      return page.getByRole('button').locator('[part="value-label"]');
     },
     get valueCount() {
-      return page.getByText('(988M)');
+      return page.getByRole('button').locator('[part="value-count"]');
     },
   };
+
+  const parts = (element: HTMLElement) => ({
+    button: element.querySelector('[part*="value-box"]'),
+    label: element.querySelector('[part="value-label"]'),
+    count: element.querySelector('[part="value-count"]'),
+  });
 
   beforeAll(async () => {
     i18n = await createTestI18n();
@@ -37,9 +41,10 @@ describe('renderFacetSegmentedValue', () => {
       i18n,
       onClick: vi.fn(),
     };
-    return await renderFunctionFixture(
+    const element = await renderFunctionFixture(
       html`${renderFacetSegmentedValue({props: {...baseProps, ...props}})}`
     );
+    return {element, onClick: props.onClick || baseProps.onClick};
   };
 
   it('should render all elements', async () => {
@@ -65,21 +70,8 @@ describe('renderFacetSegmentedValue', () => {
   });
 
   it('should apply the correct part attributes', async () => {
-    await setupElement();
-    const element = await renderFunctionFixture(
-      html`${renderFacetSegmentedValue({
-        props: {
-          displayValue: 'Test',
-          numberOfResults: 100,
-          isSelected: false,
-          i18n,
-          onClick: vi.fn(),
-        },
-      })}`
-    );
-    const button = element.querySelector('[part*="value-box"]');
-    const label = element.querySelector('[part="value-label"]');
-    const count = element.querySelector('[part="value-count"]');
+    const {element} = await setupElement();
+    const {button, label, count} = parts(element);
     expect(button).toBeTruthy();
     expect(label).toBeTruthy();
     expect(count).toBeTruthy();
@@ -106,20 +98,9 @@ describe('renderFacetSegmentedValue', () => {
   });
 
   it('should include value-box-selected part when selected', async () => {
-    await setupElement({isSelected: true});
-    const element = await renderFunctionFixture(
-      html`${renderFacetSegmentedValue({
-        props: {
-          displayValue: 'Test',
-          numberOfResults: 100,
-          isSelected: true,
-          i18n,
-          onClick: vi.fn(),
-        },
-      })}`
-    );
-    const button = element.querySelector('[part*="value-box-selected"]');
-    expect(button).toBeTruthy();
+    const {element} = await setupElement({isSelected: true});
+    const button = parts(element).button;
+    expect(button?.getAttribute('part')).toContain('value-box-selected');
   });
 
   it('should apply selected styles when selected', async () => {
@@ -140,36 +121,14 @@ describe('renderFacetSegmentedValue', () => {
   });
 
   it('should apply text-primary class to label when selected', async () => {
-    await setupElement({isSelected: true});
-    const element = await renderFunctionFixture(
-      html`${renderFacetSegmentedValue({
-        props: {
-          displayValue: 'Test',
-          numberOfResults: 100,
-          isSelected: true,
-          i18n,
-          onClick: vi.fn(),
-        },
-      })}`
-    );
-    const label = element.querySelector('[part="value-label"]');
+    const {element} = await setupElement({isSelected: true});
+    const label = parts(element).label;
     expect(label?.classList.contains('text-primary')).toBe(true);
   });
 
   it('should apply hover styles to label when not selected', async () => {
-    await setupElement({isSelected: false});
-    const element = await renderFunctionFixture(
-      html`${renderFacetSegmentedValue({
-        props: {
-          displayValue: 'Test',
-          numberOfResults: 100,
-          isSelected: false,
-          i18n,
-          onClick: vi.fn(),
-        },
-      })}`
-    );
-    const label = element.querySelector('[part="value-label"]');
+    const {element} = await setupElement({isSelected: false});
+    const label = parts(element).label;
     expect(label?.classList.contains('group-hover:text-primary-light')).toBe(
       true
     );
