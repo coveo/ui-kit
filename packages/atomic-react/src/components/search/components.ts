@@ -24,6 +24,7 @@ import {
   AtomicResultDate as LitAtomicResultDate,
   AtomicResultHtml as LitAtomicResultHtml,
   AtomicResultImage as LitAtomicResultImage,
+  AtomicResultLink as LitAtomicResultLink,
   AtomicResultList as LitAtomicResultList,
   AtomicResultLocalizedText as LitAtomicResultLocalizedText,
   AtomicResultMultiValueText as LitAtomicResultMultiValueText,
@@ -202,6 +203,12 @@ export const AtomicResultImage = createComponent({
   tagName: 'atomic-result-image',
   react: React,
   elementClass: LitAtomicResultImage,
+});
+
+export const AtomicResultLink = createComponent({
+  tagName: 'atomic-result-link',
+  react: React,
+  elementClass: LitAtomicResultLink,
 });
 
 export const AtomicResultList = createComponent({

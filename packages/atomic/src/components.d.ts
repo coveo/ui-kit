@@ -1503,15 +1503,6 @@ export namespace Components {
     interface AtomicResultIcon {
     }
     /**
-     * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
-     */
-    interface AtomicResultLink {
-        /**
-          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
-         */
-        "hrefTemplate"?: string;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
@@ -2664,15 +2655,6 @@ declare global {
         new (): HTMLAtomicResultIconElement;
     };
     /**
-     * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
-     */
-    interface HTMLAtomicResultLinkElement extends Components.AtomicResultLink, HTMLStencilElement {
-    }
-    var HTMLAtomicResultLinkElement: {
-        prototype: HTMLAtomicResultLinkElement;
-        new (): HTMLAtomicResultLinkElement;
-    };
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface HTMLAtomicResultPlaceholderElement extends Components.AtomicResultPlaceholder, HTMLStencilElement {
@@ -3032,7 +3014,6 @@ declare global {
         "atomic-result-children": HTMLAtomicResultChildrenElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
         "atomic-result-icon": HTMLAtomicResultIconElement;
-        "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-rating": HTMLAtomicResultRatingElement;
@@ -4478,15 +4459,6 @@ declare namespace LocalJSX {
     interface AtomicResultIcon {
     }
     /**
-     * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
-     */
-    interface AtomicResultLink {
-        /**
-          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
-         */
-        "hrefTemplate"?: string;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
@@ -4968,7 +4940,6 @@ declare namespace LocalJSX {
         "atomic-result-children": AtomicResultChildren;
         "atomic-result-fields-list": AtomicResultFieldsList;
         "atomic-result-icon": AtomicResultIcon;
-        "atomic-result-link": AtomicResultLink;
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-rating": AtomicResultRating;
@@ -5209,10 +5180,6 @@ declare module "@stencil/core" {
              * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
              */
             "atomic-result-icon": LocalJSX.AtomicResultIcon & JSXBase.HTMLAttributes<HTMLAtomicResultIconElement>;
-            /**
-             * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
-             */
-            "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             /**
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
