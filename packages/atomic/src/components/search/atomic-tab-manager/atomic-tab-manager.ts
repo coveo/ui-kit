@@ -108,7 +108,7 @@ export class AtomicTabManager
     return html`
       <atomic-tab-bar>
         <div
-          role="tablist"
+          role="list"
           aria-label="tab-area"
           part="tab-area"
           class="border-neutral mb-2 flex w-full flex-row border-b"
