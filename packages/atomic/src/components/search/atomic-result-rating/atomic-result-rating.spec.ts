@@ -2,10 +2,12 @@ import type {Result} from '@coveo/headless';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
+import type {MockedObject} from 'vitest';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-result-fixture';
 import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
+import {mockConsole} from '@/vitest-utils/testing-helpers/testing-utils/mock-console';
 import {AtomicResultRating} from './atomic-result-rating';
 import './atomic-result-rating';
 
@@ -14,6 +16,7 @@ vi.mock('@coveo/headless', {spy: true});
 describe('atomic-result-rating', () => {
   let i18n: i18n;
   let mockResult: Result;
+  let mockedConsole: MockedObject<Console>;
 
   const locators = {
     getRatingContainer: (element: AtomicResultRating) =>
@@ -26,6 +29,7 @@ describe('atomic-result-rating', () => {
 
   beforeEach(async () => {
     console.error = vi.fn();
+    mockedConsole = mockConsole();
 
     i18n = await createTestI18n();
 
@@ -184,26 +188,19 @@ describe('atomic-result-rating', () => {
 
   // TODO V4: KIT-5197 - Remove this test (validation will set error in V4)
   it('should log validation warning when maxValueInIndex is updated to invalid value', async () => {
-    const consoleWarnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
-
     const element = await renderComponent({
       field: 'snrating',
       maxValueInIndex: 5,
     });
 
-    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-    (element as any).maxValueInIndex = 0;
+    element.maxValueInIndex = 0;
     await element.updateComplete;
 
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
+    expect(mockedConsole.warn).toHaveBeenCalledWith(
       expect.stringContaining(
         'Prop validation failed for component atomic-result-rating'
       ),
       element
     );
-
-    consoleWarnSpy.mockRestore();
   });
 });
