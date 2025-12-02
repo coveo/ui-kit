@@ -72,6 +72,9 @@ export const productListingReducer = createReducer(
           )
         );
       })
+      .addCase(fetchProductListing.pending, (state, action) => {
+        handlePending(state, action.meta.requestId);
+      })
       .addCase(fetchMoreProducts.pending, (state, action) => {
         handlePending(state, action.meta.requestId);
       })
