@@ -37,13 +37,10 @@ export class PopoverPageObject extends BasePageObject {
     return this.page.locator('atomic-popover [part="placeholder"]');
   }
 
-  /**
-   * Wait for component to be stable before screenshot
-   */
   async waitForVisualStability() {
     await this.hydrated.waitFor();
-    await this.page.waitForTimeout(500); // Wait for animations
-    await this.page.evaluate(() => document.fonts.ready); // Wait for fonts
+    await this.page.waitForTimeout(500);
+    await this.page.evaluate(() => document.fonts.ready);
     await this.page.waitForLoadState('networkidle');
   }
 
