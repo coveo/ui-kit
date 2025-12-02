@@ -14,11 +14,11 @@ test.describe('atomic-rating-facet', () => {
   test('should render links instead of checkboxes', async ({facet}) => {
     await facet.load({story: 'display-as-link'});
     await facet.hydrated.waitFor();
-    await facet.getSelectedFacetValueLink.first().click();
-    expect(await facet.getSelectedFacetValueLink).toHaveCount(1);
+    await facet.getFacetValueButtonByPosition(0).click();
+    await expect(facet.getSelectedFacetValueLink).toHaveCount(1);
 
     await facet.clearFilter.click();
-    expect(await facet.getSelectedFacetValueLink).toHaveCount(0);
+    await expect(facet.getSelectedFacetValueLink).toHaveCount(0);
   });
 
   test.describe.skip('Visual Regression', () => {

@@ -24,7 +24,7 @@ export class AtomicRatingFacetPageObject extends BasePageObject {
   }
 
   get getSelectedFacetValueBox() {
-    return this.page.locator('[part="value-box value-checkbox-checked"]');
+    return this.page.locator('[part="value-checkbox value-checkbox-checked"]');
   }
 
   get facetValues() {

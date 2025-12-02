@@ -270,8 +270,7 @@ export class AtomicRatingFacet
    * ```
    */
   @mapProperty({attributePrefix: 'depends-on'})
-  @property({type: Object})
-  public dependsOn: Record<string, string> = {};
+  public dependsOn!: Record<string, string>;
 
   private headerFocus?: FocusTargetController;
 
@@ -408,7 +407,7 @@ export class AtomicRatingFacet
         facetId: this.facetId!,
         conditions: parseDependsOn<
           FacetValueRequest | CategoryFacetValueRequest
-        >(this.dependsOn),
+        >(this.dependsOn || {}),
       }
     );
   }

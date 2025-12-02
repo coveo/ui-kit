@@ -22,12 +22,30 @@ const meta: Meta = {
       handles: events,
     },
   },
-  argTypes,
+  argTypes: {
+    ...argTypes,
+    'tabs-included': {
+      control: {type: 'object'},
+    },
+    'tabs-excluded': {
+      control: {type: 'object'},
+    },
+    'depends-on': {
+      control: {type: 'object'},
+    },
+    'allowed-values': {
+      control: {type: 'object'},
+    },
+  },
 
   play,
   args: {
     ...args,
     'number-of-values': 8,
+    'tabs-included': '[]',
+    'tabs-excluded': '[]',
+    'allowed-values': '[]',
+    'depends-on': '{}',
   },
 };
 
