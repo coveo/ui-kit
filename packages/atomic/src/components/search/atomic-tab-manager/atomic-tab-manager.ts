@@ -5,9 +5,8 @@ import {
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
-import {type CSSResultGroup, css, html, LitElement} from 'lit';
+import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {renderTabButton} from '@/src/components/common/tabs/tab-button';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -15,6 +14,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import styles from './atomic-tab-manager.tw.css';
 
 interface TabInfo {
   label: string;
@@ -48,34 +48,7 @@ export class AtomicTabManager
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  static styles: CSSResultGroup = css`
-    atomic-tab-bar::part(popover-button) {
-      margin: 0;
-      padding-left: 0.5rem;
-      padding-right: 0.5rem;
-      padding-bottom: 0.25rem;
-      text-align: left;
-      font-size: 1.25rem;
-      line-height: 1.75rem;
-      font-weight: 400;
-      color: black;
-    }
-
-    @media (min-width: 640px) {
-      atomic-tab-bar::part(popover-button) {
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-      }
-    }
-
-    atomic-tab-bar::part(value-label) {
-      font-weight: 400;
-    }
-
-    ::part(popover-tab) {
-      font-weight: 400;
-    }
-  `;
+  static styles: CSSResultGroup = styles;
 
   public bindings!: Bindings;
   public tabManager!: TabManager;
@@ -142,19 +115,17 @@ export class AtomicTabManager
         >
           ${this.tabs.map((tab) => {
             const isActive = this.tabManagerState.activeTab === tab.name;
-            return renderTabButton({
-              props: {
-                active: isActive,
-                label: this.bindings.i18n.t(tab.label, {
-                  defaultValue: tab.label,
-                }),
-                select: () => {
-                  if (!tab.tabController.state.isActive) {
-                    tab.tabController.select();
-                  }
-                },
-              },
-            });
+            return html`<atomic-tab-button
+              .label=${this.bindings.i18n.t(tab.label, {
+                defaultValue: tab.label,
+              })}
+              .active=${isActive}
+              .select=${() => {
+                if (!tab.tabController.state.isActive) {
+                  tab.tabController.select();
+                }
+              }}
+            ></atomic-tab-button>`;
           })}
         </div>
       </atomic-tab-bar>

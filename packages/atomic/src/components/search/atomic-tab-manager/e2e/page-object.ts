@@ -1,7 +1,7 @@
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
-export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
+export class TabManagerPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-tab-manager');
   }
@@ -15,7 +15,9 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
   }
 
   get activeTab() {
-    return this.page.locator('atomic-tab-manager [aria-current="true"]');
+    return this.page.locator(
+      'atomic-tab-manager [aria-selected="true"] button'
+    );
   }
 
   get excludedFacet() {
@@ -86,7 +88,7 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
   }
 
   tabButtons(value?: string) {
-    const baseLocator = this.page.getByLabel(/tab for .*/);
+    const baseLocator = this.page.locator('atomic-tab-manager [role="tab"]');
     return value ? baseLocator.filter({hasText: value}) : baseLocator;
   }
 
