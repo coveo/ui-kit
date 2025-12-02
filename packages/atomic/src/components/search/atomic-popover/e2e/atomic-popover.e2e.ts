@@ -7,21 +7,31 @@ test.describe('atomic-popover', () => {
   });
 
   test('should open and close popover with button', async ({popover}) => {
-    await expect(popover.facetContainer).not.toBeVisible();
+    await test.step('Verify initial closed state', async () => {
+      await expect(popover.facetContainer).not.toBeVisible();
+    });
 
-    await popover.popoverButton.click();
-    await expect(popover.facetContainer).toBeVisible();
-    await expect(popover.backdrop).toBeVisible();
+    await test.step('Open popover', async () => {
+      await popover.popoverButton.click();
+      await expect(popover.facetContainer).toBeVisible();
+      await expect(popover.backdrop).toBeVisible();
+    });
 
-    await popover.popoverButton.click();
-    await expect(popover.facetContainer).not.toBeVisible();
+    await test.step('Close popover', async () => {
+      await popover.popoverButton.click();
+      await expect(popover.facetContainer).not.toBeVisible();
+    });
   });
 
   test('should close popover with Escape key', async ({popover}) => {
-    await popover.popoverButton.click();
-    await expect(popover.facetContainer).toBeVisible();
+    await test.step('Open popover', async () => {
+      await popover.popoverButton.click();
+      await expect(popover.facetContainer).toBeVisible();
+    });
 
-    await popover.page.keyboard.press('Escape');
-    await expect(popover.facetContainer).not.toBeVisible();
+    await test.step('Close popover with Escape key', async () => {
+      await popover.page.keyboard.press('Escape');
+      await expect(popover.facetContainer).not.toBeVisible();
+    });
   });
 });
