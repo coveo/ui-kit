@@ -26,6 +26,7 @@ import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.cs
 import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
+import {renderFacetPlaceholder} from '@/src/components/common/facets/facet-placeholder/facet-placeholder';
 import facetSearchStyles from '@/src/components/common/facets/facet-search/facet-search.tw.css';
 import {announceFacetSearchResultsWithAriaLive} from '@/src/components/common/facets/facet-search/facet-search-aria-live';
 import {renderFacetSearchInput} from '@/src/components/common/facets/facet-search/facet-search-input';
@@ -58,7 +59,6 @@ import {
 } from '@/src/utils/accessibility-utils';
 import {getFieldCaptions, getFieldValueCaption} from '@/src/utils/field-utils';
 import {mapProperty} from '@/src/utils/props-utils';
-import '@/src/components/common/atomic-facet-placeholder/atomic-facet-placeholder';
 
 /**
  * The `atomic-color-facet` component displays facet values as color boxes or checkboxes with color indicators.
@@ -479,9 +479,10 @@ export class AtomicColorFacet
             ${this.renderBody()}
           `
           )
-        : html`<atomic-facet-placeholder
-          value-count="${this.numberOfValues}"
-        ></atomic-facet-placeholder>`
+        : renderFacetPlaceholder({
+            numberOfValues: this.numberOfValues,
+            isCollapsed: this.isCollapsed,
+          })
     )}`;
   }
 

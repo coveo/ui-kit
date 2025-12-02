@@ -108,9 +108,7 @@ describe('atomic-color-facet', () => {
       get componentError() {
         return page.getByText(/error/i);
       },
-      placeholder: element.shadowRoot?.querySelector(
-        'atomic-facet-placeholder'
-      ),
+      placeholder: element.shadowRoot?.querySelector('[part="placeholder"]'),
       facet: qs('facet'),
       labelButton: qs('label-button'),
       labelButtonIcon: qs('label-button-icon'),
