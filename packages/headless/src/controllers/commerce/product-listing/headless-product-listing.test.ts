@@ -42,18 +42,10 @@ describe('headless product-listing', () => {
     vi.clearAllMocks();
   });
 
-  it('uses sub-controllers with default enableResults=false', () => {
+  it('uses sub-controllers', () => {
     const buildProductListingSubControllers = vi.spyOn(
       SubControllers,
       'buildProductListingSubControllers'
-    );
-    const fetchProductListingMock = vi.spyOn(
-      ProductListingActions,
-      'fetchProductListing'
-    );
-    const fetchMoreProductsMock = vi.spyOn(
-      ProductListingActions,
-      'fetchMoreProducts'
     );
 
     buildProductListing(engine);
@@ -76,6 +68,23 @@ describe('headless product-listing', () => {
       totalEntriesSelector: totalEntriesPrincipalSelector,
       numberOfProductsSelector,
     });
+  });
+
+  it('creates closures for fetching products that capture default enableResults=false', () => {
+    const buildProductListingSubControllers = vi.spyOn(
+      SubControllers,
+      'buildProductListingSubControllers'
+    );
+    const fetchProductListingMock = vi.spyOn(
+      ProductListingActions,
+      'fetchProductListing'
+    );
+    const fetchMoreProductsMock = vi.spyOn(
+      ProductListingActions,
+      'fetchMoreProducts'
+    );
+
+    buildProductListing(engine);
 
     const callArgs = buildProductListingSubControllers.mock.calls[0][1];
     callArgs.fetchProductsActionCreator();
@@ -87,7 +96,7 @@ describe('headless product-listing', () => {
     expect(fetchMoreProductsMock).toHaveBeenCalledWith({enableResults: false});
   });
 
-  it('uses sub-controllers with enableResults=true when specified', () => {
+  it('creates closures for fetching products that capture enableResults=true', () => {
     const buildProductListingSubControllers = vi.spyOn(
       SubControllers,
       'buildProductListingSubControllers'
