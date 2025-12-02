@@ -5,13 +5,13 @@ import type {
   ChildProduct,
   Product,
 } from '../../../api/commerce/common/product.js';
-import type {
-  BaseResult,
-  BaseSpotlightContent,
-  Result,
-  SpotlightContent,
+import {
+  type BaseResult,
+  type BaseSpotlightContent,
+  type Result,
+  ResultType,
+  type SpotlightContent,
 } from '../../../api/commerce/common/result.js';
-import {ResultType} from '../../../api/commerce/common/result.js';
 import type {ListingCommerceSuccessResponse} from '../../../api/commerce/listing/response.js';
 import {setError} from '../../error/error-actions.js';
 import {setContext, setView} from '../context/context-actions.js';
@@ -89,11 +89,16 @@ export const productListingReducer = createReducer(
           return !!childToPromote;
         });
 
-        if (currentParentIndex === -1 || childToPromote === undefined) {
+        if (
+          currentParentIndex === -1 ||
+          childToPromote === undefined ||
+          productsOrResults[currentParentIndex].resultType ===
+            ResultType.SPOTLIGHT
+        ) {
           return;
         }
 
-        const currentParent = productsOrResults[currentParentIndex] as Product;
+        const currentParent = productsOrResults[currentParentIndex];
         const responseId = currentParent.responseId;
         const position = currentParent.position;
         const {children, totalNumberOfChildren} = currentParent;
