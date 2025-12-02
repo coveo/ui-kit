@@ -72,7 +72,6 @@ test.describe('atomic-generated-answer citation', () => {
           timeout: pollTimeoutMs,
         })
         .toMatch(/visible/);
-
       await expect(popover).toContainText(/https?:\/\//);
     });
 
@@ -81,7 +80,6 @@ test.describe('atomic-generated-answer citation', () => {
     }) => {
       const citation = generatedAnswer.citation.first();
       const popover = generatedAnswer.citationPopover.first();
-
       await expect(popover).toHaveClass(/hidden/);
 
       await citation.hover();
@@ -98,7 +96,6 @@ test.describe('atomic-generated-answer citation', () => {
       await popover.dispatchEvent('mouseenter');
 
       await generatedAnswer.page.waitForTimeout(hoverDebounceTimeoutMs + 100);
-
       await expect(popover).toHaveClass(/visible/);
     });
 
