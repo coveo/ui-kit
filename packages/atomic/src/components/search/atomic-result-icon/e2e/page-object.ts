@@ -27,7 +27,7 @@ export class ResultIconPageObject extends BasePageObject {
   async captureScreenshot(options?: {animations?: 'disabled' | 'allow'}) {
     await this.waitForVisualStability();
 
-    const element = await this.component.elementHandle();
+    const element = await this.hydrated.elementHandle();
     if (!element) {
       throw new Error('Component element not found');
     }
