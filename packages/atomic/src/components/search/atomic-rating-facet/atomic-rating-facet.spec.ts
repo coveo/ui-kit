@@ -173,19 +173,51 @@ describe('atomic-rating-facet', () => {
   });
 
   describe('props validation', () => {
-    it('should accept valid displayValuesAs prop', async () => {
-      const {element} = await renderRatingFacet({
-        props: {displayValuesAs: 'link'},
-      });
-      expect(element.error).toBeUndefined();
-    });
+    // TODO V4: KIT-5197 - Remove skip
+    it.skip.each<{
+      prop:
+        | 'displayValuesAs'
+        | 'numberOfIntervals'
+        | 'minValueInIndex'
+        | 'headingLevel'
+        | 'injectionDepth';
+      invalidValue: string | number;
+    }>([
+      {
+        prop: 'displayValuesAs',
+        invalidValue: 'invalid',
+      },
+      {
+        prop: 'numberOfIntervals',
+        invalidValue: 0,
+      },
+      {
+        prop: 'minValueInIndex',
+        invalidValue: -1,
+      },
+      {
+        prop: 'headingLevel',
+        invalidValue: 7,
+      },
+      {
+        prop: 'injectionDepth',
+        invalidValue: -1,
+      },
+    ])(
+      'should set error when #$prop is invalid',
+      async ({prop, invalidValue}) => {
+        const element = await renderRatingFacet().then(({element}) => element);
 
-    it('should handle invalid displayValuesAs prop', async () => {
-      const {element} = await renderRatingFacet({
-        props: {displayValuesAs: 'invalid' as 'checkbox'},
-      });
-      expect(element.error).toBeDefined();
-    });
+        expect(element.error).toBeUndefined();
+
+        // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+        (element as any)[prop] = invalidValue;
+        await element.updateComplete;
+
+        expect(element.error).toBeDefined();
+        expect(element.error.message).toMatch(new RegExp(prop, 'i'));
+      }
+    );
 
     it('should warn when both tabsIncluded and tabsExcluded are provided', async () => {
       const consoleWarnSpy = vi
@@ -203,6 +235,25 @@ describe('atomic-rating-facet', () => {
         expect.stringContaining('tabs-included')
       );
       consoleWarnSpy.mockRestore();
+    });
+
+    it('should handle maxValueInIndex defaulting to numberOfIntervals', async () => {
+      const {element} = await renderRatingFacet({
+        props: {numberOfIntervals: 7},
+      });
+
+      expect(element.maxValueInIndex).toBe(7);
+    });
+
+    it('should handle explicit maxValueInIndex value', async () => {
+      const {element} = await renderRatingFacet({
+        props: {
+          numberOfIntervals: 5,
+          maxValueInIndex: 10,
+        },
+      });
+
+      expect(element.maxValueInIndex).toBe(10);
     });
   });
 

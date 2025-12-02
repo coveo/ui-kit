@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {NumberValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {
   buildFacetConditionsManager,
   buildNumericFacet,
@@ -28,6 +28,7 @@ import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.cs
 import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
+import {renderFacetPlaceholder} from '@/src/components/common/facets/facet-placeholder/facet-placeholder';
 import {renderFacetValueCheckbox} from '@/src/components/common/facets/facet-value-checkbox/facet-value-checkbox';
 import facetValueCheckboxStyles from '@/src/components/common/facets/facet-value-checkbox/facet-value-checkbox.tw.css';
 import {renderFacetValueLink} from '@/src/components/common/facets/facet-value-link/facet-value-link';
@@ -35,6 +36,7 @@ import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-value
 import {initializePopover} from '@/src/components/common/facets/popover/popover-type';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
+import {arrayConverter} from '@/src/converters/array-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -44,7 +46,6 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {mapProperty} from '@/src/utils/props-utils';
 import Star from '../../../images/star.svg';
-import {renderFacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
@@ -140,6 +141,7 @@ export class AtomicRatingFacet
     reflect: true,
     attribute: 'tabs-included',
     type: Array,
+    converter: arrayConverter,
   })
   public tabsIncluded: string[] = [];
 
@@ -149,6 +151,7 @@ export class AtomicRatingFacet
   @property({
     reflect: true,
     attribute: 'tabs-excluded',
+    converter: arrayConverter,
     type: Array,
   })
   public tabsExcluded: string[] = [];
@@ -206,7 +209,6 @@ export class AtomicRatingFacet
    */
   @property({
     reflect: true,
-
     attribute: 'is-collapsed',
     type: Boolean,
   })
@@ -217,7 +219,6 @@ export class AtomicRatingFacet
    */
   @property({
     reflect: true,
-
     attribute: 'heading-level',
     type: Number,
   })
@@ -268,7 +269,7 @@ export class AtomicRatingFacet
    * ></atomic-rating-facet>
    * ```
    */
-  @mapProperty({attributePrefix: 'depends-on-'})
+  @mapProperty({attributePrefix: 'depends-on'})
   @property({type: Object})
   public dependsOn: Record<string, string> = {};
 
@@ -286,12 +287,35 @@ export class AtomicRatingFacet
     new ValidatePropsController(
       this,
       () => ({
+        field: this.field,
+        numberOfIntervals: this.numberOfIntervals,
+        maxValueInIndex: this.maxValueInIndex,
+        minValueInIndex: this.minValueInIndex,
         displayValuesAs: this.displayValuesAs,
+        injectionDepth: this.injectionDepth,
+        dependsOn: this.dependsOn,
+        headingLevel: this.headingLevel,
       }),
       new Schema({
+        field: new StringValue({required: true, emptyAllowed: false}),
+        numberOfIntervals: new NumberValue({min: 1}),
+        maxValueInIndex: new NumberValue({min: 0, required: false}),
+        minValueInIndex: new NumberValue({min: 0}),
         displayValuesAs: new StringValue({constrainTo: ['checkbox', 'link']}),
-      })
+        injectionDepth: new NumberValue({min: 0, required: false}),
+        dependsOn: new RecordValue({options: {required: false}}),
+        headingLevel: new NumberValue({min: 0, max: 6, required: false}),
+      }),
+      // TODO V4: KIT-5197 - Remove false
+      false
     );
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.maxValueInIndex === undefined) {
+      this.maxValueInIndex = this.numberOfIntervals;
+    }
   }
 
   public initialize() {
@@ -361,7 +385,7 @@ export class AtomicRatingFacet
 
   protected updated(changed: PropertyValues<this>) {
     if (
-      (changed.has('numberOfIntervals') || changed.has('maxValueInIndex')) &&
+      changed.has('numberOfIntervals') &&
       this.maxValueInIndex === undefined
     ) {
       this.maxValueInIndex = this.numberOfIntervals;
