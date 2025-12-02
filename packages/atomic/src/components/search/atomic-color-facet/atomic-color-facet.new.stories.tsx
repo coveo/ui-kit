@@ -168,7 +168,6 @@ const colorFacetStylesDecorator = (story: () => unknown) => {
 };
 
 export const Default: Story = {
-  name: 'atomic-color-facet',
   args: {
     field: 'filetype',
     label: 'File Type',
