@@ -204,7 +204,6 @@ describe('renderFacetSegmentedValue', () => {
   it('should use correct aria-label with localized count', async () => {
     await setupElement();
     const {button} = locators;
-    // The aria label should include the formatted count
     await expect
       .element(button)
       .toHaveAccessibleName('Inclusion filter on Test Value; 988M results');
