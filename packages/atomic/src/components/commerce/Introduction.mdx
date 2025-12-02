@@ -49,18 +49,25 @@ Here is an example of how to initialize an `atomic-commerce-interface` for a sea
           } = await import('http://static.cloud.coveo.com/headless/v3/commerce/headless.esm.js');
 
           const siteRoot = 'https://www.example.com/';
+          const fallbackResourceUrl = `${siteRoot}/search`;
           const siteConfig = {
-            'Example': {href: 'index.html', label: 'Home', siteUrl: `${siteRoot}/search`},
+            'Example': {href: 'index.html', label: 'Home', resourceUrl: `${siteRoot}/search`},
           };
 
           const {context, ...restOfConfiguration} = getSampleCommerceEngineConfiguration();
+
+          let viewUrl = siteConfig[document.title]?.resourceUrl;
+          if (!viewUrl) {
+            console.warn(`No resource URL found for page title "${document.title}". Falling back to default search URL.`);
+            viewUrl = fallbackResourceUrl;
+          }
 
           const commerceEngine = buildCommerceEngine({
             configuration: {
               context: {
                 ...context,
                 view: {
-                  url: siteConfig[document.title]?.siteUrl || siteRoot
+                  url: siteConfig[document.title]?.resourceUrl || fallbackResourceUrl
                 },
               },
               ...restOfConfiguration,
