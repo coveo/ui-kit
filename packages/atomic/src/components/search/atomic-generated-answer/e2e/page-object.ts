@@ -31,11 +31,6 @@ export class GeneratedAnswerPageObject extends BasePageObject<'atomic-generated-
     await this.citation.nth(index).hover();
   }
 
-  async isPopoverVisible(index: number = 0): Promise<boolean> {
-    const popover = this.citationPopover.nth(index);
-    return await popover.isVisible();
-  }
-
   async getCitationCount(): Promise<number> {
     return await this.citation.count();
   }

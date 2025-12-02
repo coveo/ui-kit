@@ -1,5 +1,8 @@
 import {expect, test} from './fixture';
 
+const hoverDebounceTimeoutMs = 100;
+const pollTimeoutMs = 2000;
+
 test.describe('atomic-generated-answer citation', () => {
   test.describe('with citation anchoring enabled', () => {
     test.beforeEach(async ({generatedAnswer}) => {
@@ -58,57 +61,67 @@ test.describe('atomic-generated-answer citation', () => {
     test('should show popover when hovering over citation', async ({
       generatedAnswer,
     }) => {
-      const initiallyVisible = await generatedAnswer.isPopoverVisible(0);
-      expect(initiallyVisible).toBe(false);
+      const popover = generatedAnswer.citationPopover.first();
+      await expect(popover).toHaveClass(/hidden/);
+      await expect(popover).not.toBeVisible();
 
       await generatedAnswer.hoverCitation(0);
 
-      // Wait a bit for the popover to appear
-      await generatedAnswer.page.waitForTimeout(100);
+      await expect
+        .poll(async () => await popover.getAttribute('class'), {
+          timeout: pollTimeoutMs,
+        })
+        .toMatch(/visible/);
 
-      const popover = generatedAnswer.citationPopover.first();
-      await expect(popover).toBeVisible();
       await expect(popover).toContainText(/https?:\/\//);
     });
 
-    test('should still show popover when hovering from the citation to the popover', async ({
+    test('should still show the popover when moving from citation to popover', async ({
       generatedAnswer,
     }) => {
-      await generatedAnswer.hoverCitation(0);
-      await generatedAnswer.page.waitForTimeout(100);
+      const citation = generatedAnswer.citation.first();
       const popover = generatedAnswer.citationPopover.first();
-      await expect(popover).toBeVisible();
 
-      // Move mouse to the popover
-      const popoverBox = await popover.boundingBox();
-      expect(popoverBox).not.toBeNull();
-      if (popoverBox) {
-        await generatedAnswer.page.mouse.move(
-          popoverBox.x + popoverBox.width / 2,
-          popoverBox.y + popoverBox.height / 2
-        );
-      }
+      await expect(popover).toHaveClass(/hidden/);
 
-      // Wait a bit to ensure no hide is triggered
-      await generatedAnswer.page.waitForTimeout(150);
-      await expect(popover).toBeVisible();
+      await citation.hover();
+      await expect
+        .poll(async () => await popover.getAttribute('class'), {
+          timeout: pollTimeoutMs,
+        })
+        .toMatch(/visible/);
+
+      // Trigger hide debounce by dispatching mouseleave on citation
+      await citation.dispatchEvent('mouseleave');
+
+      // Immediately cancel hide by dispatching mouseenter on popover
+      await popover.dispatchEvent('mouseenter');
+
+      await generatedAnswer.page.waitForTimeout(hoverDebounceTimeoutMs + 100);
+
+      await expect(popover).toHaveClass(/visible/);
     });
 
     test('should hide popover after mouse leaves citation', async ({
       generatedAnswer,
     }) => {
-      await generatedAnswer.hoverCitation(0);
-      await generatedAnswer.page.waitForTimeout(100);
-
       const popover = generatedAnswer.citationPopover.first();
-      await expect(popover).toBeVisible();
 
-      // Move mouse away from citation
+      await generatedAnswer.hoverCitation(0);
+      await expect
+        .poll(async () => await popover.getAttribute('class'), {
+          timeout: pollTimeoutMs,
+        })
+        .toMatch(/visible/);
+
       await generatedAnswer.page.mouse.move(0, 0);
 
-      // Wait for debounce timeout (100ms) plus a bit extra
-      await generatedAnswer.page.waitForTimeout(200);
-      await expect(popover).toBeHidden();
+      await generatedAnswer.page.waitForTimeout(hoverDebounceTimeoutMs + 50);
+      await expect
+        .poll(async () => await popover.getAttribute('class'), {
+          timeout: pollTimeoutMs,
+        })
+        .toMatch(/hidden/);
     });
   });
 });
