@@ -18,10 +18,8 @@ test.describe('atomic-rating-range-facet', () => {
     await expect(ratingRangeFacet.selectedValueLinks()).toHaveCount(0);
   });
 
-  // TODO: Issue #6691: Unskip visual tests after fixing CI snapshot issues
-  test.skip('should match baseline in default state', async ({
-    ratingRangeFacet,
-  }) => {
+  test('should match baseline in default state', async ({ratingRangeFacet}) => {
+    test.skip(process.env.CI !== 'true', 'Visual test only in CI');
     await ratingRangeFacet.load({story: 'default'});
     await ratingRangeFacet.hydrated.waitFor();
 
@@ -32,10 +30,11 @@ test.describe('atomic-rating-range-facet', () => {
     });
   });
 
-  // TODO: Issue #6691: Unskip visual tests after fixing CI snapshot issues
-  test.skip('should match baseline after selecting a value', async ({
+  test('should match baseline after selecting a value', async ({
     ratingRangeFacet,
   }) => {
+    test.skip(process.env.CI !== 'true', 'Visual test only in CI');
+
     await ratingRangeFacet.load({story: 'default'});
     await ratingRangeFacet.hydrated.waitFor();
     await ratingRangeFacet.valueLink(0).click();
