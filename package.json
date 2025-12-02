@@ -13,7 +13,7 @@
     "lint:check": "npx @biomejs/biome check --error-on-warnings . && turbo lint:check --filter=@coveo/quantic && cspell **/*.md --no-progress --show-suggestions --show-context",
     "lint:fix": "npx @biomejs/biome check --write --error-on-warnings . && turbo lint:fix --filter=@coveo/quantic && cspell **/*.md --no-progress --show-suggestions --show-context",
     "package-compatibility": "node ./scripts/ci/package-compatibility.mjs",
-    "pr:report": "echo 'TODO KIT-5109: pr:report must be reactivated after pnpm has been merged in main'",
+    "pr:report": "node ./scripts/reports/pr-report.mjs",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.mjs",
     "pre-commit": "lint-staged",
     "promote:npm:latest": "turbo promote:npm:latest",
