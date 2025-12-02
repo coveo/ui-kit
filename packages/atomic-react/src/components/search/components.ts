@@ -20,6 +20,7 @@ import {
   AtomicRecsInterface as LitAtomicRecsInterface,
   AtomicResult as LitAtomicResult,
   AtomicResultBadge as LitAtomicResultBadge,
+  AtomicResultChildren as LitAtomicResultChildren,
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
   AtomicResultDate as LitAtomicResultDate,
   AtomicResultHtml as LitAtomicResultHtml,
@@ -178,6 +179,12 @@ export const AtomicResultBadge = createComponent({
   tagName: 'atomic-result-badge',
   react: React,
   elementClass: LitAtomicResultBadge,
+});
+
+export const AtomicResultChildren = createComponent({
+  tagName: 'atomic-result-children',
+  react: React,
+  elementClass: LitAtomicResultChildren,
 });
 
 export const AtomicResultChildrenTemplate = createComponent({
