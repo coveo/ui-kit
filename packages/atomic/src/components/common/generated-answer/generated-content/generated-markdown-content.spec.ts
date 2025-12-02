@@ -1,28 +1,17 @@
 import DOMPurify from 'dompurify';
 import {html} from 'lit';
-import {afterEach, describe, expect, it, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {
   type GeneratedMarkdownContentProps,
   renderGeneratedMarkdownContent,
 } from './generated-markdown-content';
-import * as markdownUtils from './markdown-utils';
+import {transformMarkdownToHtml} from './markdown-utils';
 
-vi.mock('dompurify');
-
-vi.mock('./markdown-utils', async (importOriginal) => {
-  const actual = await importOriginal<typeof markdownUtils>();
-  return {
-    ...actual,
-    transformMarkdownToHtml: vi.fn(actual.transformMarkdownToHtml),
-  };
-});
+vi.mock('dompurify', {spy: true});
+vi.mock('./markdown-utils', {spy: true});
 
 describe('#renderGeneratedMarkdownContent', () => {
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-
   const locators = (element: Element) => ({
     get generatedText() {
       return element.querySelector('div[part="generated-text"]');
@@ -75,31 +64,32 @@ describe('#renderGeneratedMarkdownContent', () => {
   });
 
   it('should call transformMarkdownToHtml with the answer', async () => {
+    const mockedTransformMarkdownToHtml = vi.mocked(transformMarkdownToHtml);
     const answer = '**bold** markdown';
     await renderComponent({answer});
 
-    expect(markdownUtils.transformMarkdownToHtml).toHaveBeenCalledWith(answer);
+    expect(mockedTransformMarkdownToHtml).toHaveBeenCalledWith(answer);
   });
 
   it('should call transformMarkdownToHtml with empty string when answer is undefined', async () => {
+    const mockedTransformMarkdownToHtml = vi.mocked(transformMarkdownToHtml);
     await renderComponent({answer: undefined});
 
-    expect(markdownUtils.transformMarkdownToHtml).toHaveBeenCalledWith('');
+    expect(mockedTransformMarkdownToHtml).toHaveBeenCalledWith('');
   });
 
   it('should call DOMPurify.sanitize with the transformed HTML and with ADD_ATTR config to preserve part attributes', async () => {
+    const mockedTransformMarkdownToHtml = vi.mocked(transformMarkdownToHtml);
     const answer = '# Heading';
     const transformedHtml = '<h1 part="answer-heading-1">Heading</h1>';
     const sanitizedHtml = '<h1 part="answer-heading-1">Heading</h1>';
 
-    vi.mocked(markdownUtils.transformMarkdownToHtml).mockReturnValue(
-      transformedHtml
-    );
+    mockedTransformMarkdownToHtml.mockReturnValue(transformedHtml);
     vi.mocked(DOMPurify.sanitize).mockReturnValue(sanitizedHtml);
 
     await renderComponent({answer});
 
-    expect(markdownUtils.transformMarkdownToHtml).toHaveBeenCalledWith(answer);
+    expect(mockedTransformMarkdownToHtml).toHaveBeenCalledWith(answer);
     expect(DOMPurify.sanitize).toHaveBeenCalledWith(transformedHtml, {
       ADD_ATTR: ['part'],
     });
