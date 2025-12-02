@@ -89,16 +89,15 @@ export const productListingReducer = createReducer(
           return !!childToPromote;
         });
 
+        const currentParent = productsOrResults[currentParentIndex];
         if (
           currentParentIndex === -1 ||
           childToPromote === undefined ||
-          productsOrResults[currentParentIndex].resultType ===
-            ResultType.SPOTLIGHT
+          currentParent.resultType === ResultType.SPOTLIGHT
         ) {
           return;
         }
 
-        const currentParent = productsOrResults[currentParentIndex];
         const responseId = currentParent.responseId;
         const position = currentParent.position;
         const {children, totalNumberOfChildren} = currentParent;
