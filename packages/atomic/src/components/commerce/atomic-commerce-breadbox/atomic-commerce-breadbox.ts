@@ -17,7 +17,7 @@ import {
   type RegularFacetValue,
   type Search,
 } from '@coveo/headless/commerce';
-import {type CSSResultGroup, html, LitElement, nothing} from 'lit';
+import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import type {CommerceBindings} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
 import {renderBreadcrumbButton} from '@/src/components/common/breadbox/breadcrumb-button';
@@ -45,7 +45,6 @@ import {
 } from '@/src/utils/accessibility-utils';
 import {parseDate} from '@/src/utils/date-utils';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
-import styles from './atomic-commerce-breadbox.tw.css';
 
 type AnyFacetValue =
   | RegularFacetValue
@@ -76,7 +75,20 @@ export class AtomicCommerceBreadbox
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  static styles: CSSResultGroup = styles;
+  static styles: CSSResultGroup = [
+    css`
+      [part='breadcrumb-label'].excluded,
+      [part='breadcrumb-value'].excluded {
+        text-decoration: line-through;
+        @apply text-error;
+      }
+
+      /* Prepend non-breaking space to all breadcrumb values for consistent spacing */
+      [part='breadcrumb-value']::before {
+        content: '\00a0';
+      }
+    `,
+  ];
 
   private resizeObserver?: ResizeObserver;
   private lastRemovedBreadcrumbIndex = 0;

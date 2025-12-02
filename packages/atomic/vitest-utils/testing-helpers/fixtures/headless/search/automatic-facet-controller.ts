@@ -1,7 +1,8 @@
 import type {AutomaticFacet, AutomaticFacetState} from '@coveo/headless';
 import {vi} from 'vitest';
+import {genericSubscribe} from '../common';
 
-export const defaultState: AutomaticFacetState = {
+export const defaultState = {
   field: 'test_field',
   label: 'Test Field',
   values: [
@@ -16,18 +17,14 @@ export const defaultState: AutomaticFacetState = {
       state: 'idle',
     },
   ],
-};
+} satisfies AutomaticFacetState;
 
 export const defaultImplementation = {
-  subscribe: (subscribedFunction: () => void) => {
-    subscribedFunction();
-  },
+  subscribe: genericSubscribe,
   state: defaultState,
   toggleSelect: vi.fn(),
-  toggleSingleSelect: vi.fn(),
-  isValueSelected: vi.fn(),
   deselectAll: vi.fn(),
-};
+} satisfies AutomaticFacet;
 
 export const buildFakeAutomaticFacet = ({
   implementation,

@@ -30,8 +30,8 @@ if (configArg === undefined) {
 const tsConfigPath = configArg.split('=')[1];
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const transformers = [
-  svgTransformer,
   pathTransformer,
+  svgTransformer,
   versionTransformer,
   ...(isCDN ? [resourceUrlTransformer] : []),
 ];
