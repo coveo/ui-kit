@@ -44,5 +44,3 @@ dist-storybook/
 /dev/bueno/
 /dev/headless/
 
-# Generated Tailwind CSS files
-*.tw.css.ts

@@ -49,6 +49,7 @@ import {
   AtomicSortDropdown as LitAtomicSortDropdown,
   AtomicSortExpression as LitAtomicSortExpression,
   AtomicTab as LitAtomicTab,
+  AtomicTabManager as LitAtomicTabManager,
   AtomicText as LitAtomicText,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
@@ -352,6 +353,12 @@ export const AtomicTab = createComponent({
   tagName: 'atomic-tab',
   react: React,
   elementClass: LitAtomicTab,
+});
+
+export const AtomicTabManager = createComponent({
+  tagName: 'atomic-tab-manager',
+  react: React,
+  elementClass: LitAtomicTabManager,
 });
 
 export const AtomicText = createComponent({
