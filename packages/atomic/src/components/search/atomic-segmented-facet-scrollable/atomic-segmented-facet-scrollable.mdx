@@ -1,0 +1,44 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+import * as AtomicSegmentedFacetScrollableStories from './atomic-segmented-facet-scrollable.new.stories';
+import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicSegmentedFacetScrollableStories} />
+
+<AtomicDocTemplate
+  stories={AtomicSegmentedFacetScrollableStories}
+  githubPath="search/facets/atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.ts"
+  tagName="atomic-segmented-facet-scrollable"
+  className="AtomicSegmentedFacetScrollable"
+>
+
+The `atomic-segmented-facet-scrollable` component wraps around one or several `atomic-segmented-facet` components to provide horizontal scrolling capabilities.
+
+This component is useful when you have multiple segmented facets that need to be displayed horizontally but may not fit in the available space. The component automatically shows arrow buttons when the content overflows, allowing users to scroll through the facets.
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="horizontal-facets">
+      <atomic-segmented-facet-scrollable>
+        <atomic-segmented-facet
+          field="objecttype"
+          label="Object Type"
+        ></atomic-segmented-facet>
+        <atomic-segmented-facet
+          field="author"
+          label="Author"
+        ></atomic-segmented-facet>
+        <atomic-segmented-facet
+          field="language"
+          label="Language"
+        ></atomic-segmented-facet>
+      </atomic-segmented-facet-scrollable>
+    </atomic-layout-section>
+    ...
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+</AtomicDocTemplate>
