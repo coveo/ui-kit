@@ -47,6 +47,14 @@ describe('headless product-listing', () => {
       SubControllers,
       'buildProductListingSubControllers'
     );
+    const fetchProductListingMock = vi.spyOn(
+      ProductListingActions,
+      'fetchProductListing'
+    );
+    const fetchMoreProductsMock = vi.spyOn(
+      ProductListingActions,
+      'fetchMoreProducts'
+    );
 
     buildProductListing(engine);
 
@@ -68,6 +76,39 @@ describe('headless product-listing', () => {
       totalEntriesSelector: totalEntriesPrincipalSelector,
       numberOfProductsSelector,
     });
+
+    const callArgs = buildProductListingSubControllers.mock.calls[0][1];
+    callArgs.fetchProductsActionCreator();
+    expect(fetchProductListingMock).toHaveBeenCalledWith({
+      enableResults: false,
+    });
+
+    callArgs.fetchMoreProductsActionCreator();
+    expect(fetchMoreProductsMock).toHaveBeenCalledWith({enableResults: false});
+  });
+
+  it('uses sub-controllers with enableResults=true when specified', () => {
+    const buildProductListingSubControllers = vi.spyOn(
+      SubControllers,
+      'buildProductListingSubControllers'
+    );
+    const fetchProductListingMock = vi.spyOn(
+      ProductListingActions,
+      'fetchProductListing'
+    );
+    const fetchMoreProductsMock = vi.spyOn(
+      ProductListingActions,
+      'fetchMoreProducts'
+    );
+
+    buildProductListing(engine, {enableResults: true});
+
+    const callArgs = buildProductListingSubControllers.mock.calls[0][1];
+    callArgs.fetchProductsActionCreator();
+    expect(fetchProductListingMock).toHaveBeenCalledWith({enableResults: true});
+
+    callArgs.fetchMoreProductsActionCreator();
+    expect(fetchMoreProductsMock).toHaveBeenCalledWith({enableResults: true});
   });
 
   it('adds the correct reducers to engine', () => {
