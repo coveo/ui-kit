@@ -414,7 +414,6 @@ jobs:
       - name: Check for snapshot changes
         id: check-changes
         run: |
-          # Check if there are any modified or new snapshot files
           SNAPSHOT_CHANGES="$(git status --porcelain | grep -E 'e2e/__snapshots__/.*\.png$' || echo '')"
           if [[ -n "$SNAPSHOT_CHANGES" ]]; then
             echo "has_changes=true" >> $GITHUB_OUTPUT
