@@ -27,7 +27,8 @@
     "@coveo/headless": "workspace:*",
     "ng-packagr": "19.2.2",
     "typescript": "catalog:",
-    "tslib": "2.8.1"
+    "tslib": "2.8.1",
+    "vite": "^6.0.0"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"
