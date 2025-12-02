@@ -161,7 +161,11 @@ export class AtomicRatingRangeFacet
   /**
    * The maximum value in the field's index and the number of rating icons to display in the facet. This property will default to the same value as `numberOfIntervals`, if not assigned a value.
    */
-  @property({reflect: true, attribute: 'max-value-in-index', type: Number})
+  @property({
+    reflect: true,
+    attribute: 'max-value-in-index',
+    type: Number,
+  })
   public maxValueInIndex!: number;
 
   /**
@@ -253,12 +257,19 @@ export class AtomicRatingRangeFacet
       new Schema({
         field: new StringValue({required: true, emptyAllowed: false}),
         numberOfIntervals: new NumberValue({min: 1}),
-        maxValueInIndex: new NumberValue({min: 0}),
+        maxValueInIndex: new NumberValue({min: 0, required: false}),
         minValueInIndex: new NumberValue({min: 0}),
         injectionDepth: new NumberValue({min: 0}),
         dependsOn: new RecordValue({options: {required: false}}),
       })
     );
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.maxValueInIndex === undefined) {
+      this.maxValueInIndex = this.numberOfIntervals;
+    }
   }
 
   public initialize() {
@@ -280,7 +291,7 @@ export class AtomicRatingRangeFacet
 
   protected updated(changed: PropertyValues<this>) {
     if (
-      (changed.has('numberOfIntervals') || changed.has('maxValueInIndex')) &&
+      changed.has('numberOfIntervals') &&
       this.maxValueInIndex === undefined
     ) {
       this.maxValueInIndex = this.numberOfIntervals;
@@ -337,7 +348,9 @@ export class AtomicRatingRangeFacet
   }
 
   private get scaleFactor() {
-    return this.maxValueInIndex / this.numberOfIntervals;
+    return (
+      (this.maxValueInIndex ?? this.numberOfIntervals) / this.numberOfIntervals
+    );
   }
 
   private get numberOfSelectedValues() {
@@ -363,7 +376,9 @@ export class AtomicRatingRangeFacet
       currentValues.push(
         buildNumericRange({
           start: Math.round(i * this.scaleFactor * 100) / 100,
-          end: Math.round(this.maxValueInIndex * 100) / 100,
+          end:
+            Math.round((this.maxValueInIndex ?? this.numberOfIntervals) * 100) /
+            100,
           endInclusive: true,
         })
       );
@@ -372,14 +387,15 @@ export class AtomicRatingRangeFacet
   }
 
   private formatFacetValue(facetValue: NumericFacetValue) {
-    if (facetValue.start === this.maxValueInIndex) {
+    const maxValue = this.maxValueInIndex ?? this.numberOfIntervals;
+    if (facetValue.start === maxValue) {
       return this.bindings.i18n.t('stars-only', {
         count: facetValue.start,
       });
     }
     return this.bindings.i18n.t('stars-range', {
       value: facetValue.start,
-      count: this.maxValueInIndex,
+      count: maxValue,
     });
   }
 
@@ -388,7 +404,7 @@ export class AtomicRatingRangeFacet
       ${renderRating({
         props: {
           i18n: this.bindings.i18n,
-          numberOfTotalIcons: this.maxValueInIndex,
+          numberOfTotalIcons: this.maxValueInIndex ?? this.numberOfIntervals,
           numberOfActiveIcons: facetValue.start,
           icon: this.icon,
         },
@@ -425,7 +441,7 @@ export class AtomicRatingRangeFacet
       }"
     >
       ${when(
-        facetValue.start === this.maxValueInIndex,
+        facetValue.start === (this.maxValueInIndex ?? this.numberOfIntervals),
         () => html`<span>${this.bindings.i18n.t('only')}</span>`,
         () => html`${this.bindings.i18n.t('and-up')}`
       )}
