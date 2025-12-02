@@ -6,7 +6,6 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 
 const searchApiHarness = new MockSearchApi();
 
-// Add facet data to the base response
 searchApiHarness.searchEndpoint.mock((response) => ({
   ...response,
   facets: [
@@ -79,9 +78,6 @@ const meta: Meta = {
   },
   args,
   argTypes,
-  beforeEach: async () => {
-    searchApiHarness.searchEndpoint.clear();
-  },
   play,
 };
 

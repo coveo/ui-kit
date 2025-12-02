@@ -9,7 +9,7 @@ import {
   type Instance as PopperInstance,
   preventOverflow,
 } from '@popperjs/core';
-import {css, html, LitElement, type TemplateResult} from 'lit';
+import {html, LitElement, type TemplateResult} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {createRef, type Ref, ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
@@ -23,7 +23,9 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {multiClassMap, tw} from '@/src/directives/multi-class-map';
 import ArrowBottomIcon from '../../../images/arrow-bottom-rounded.svg';
+import facetCommonStyles from '../../common/facets/facet-common.tw.css';
 import '@/src/components/common/atomic-focus-trap/atomic-focus-trap';
 import '@/src/components/common/atomic-icon/atomic-icon';
 
@@ -46,19 +48,17 @@ export class AtomicPopover
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  static styles = css`
-    @reference '../../../utils/tailwind.global.tw.css';
-  `;
+  static styles = [facetCommonStyles];
+
+  private buttonRef: Ref<HTMLButtonElement> = createRef();
+  private popupRef: Ref<HTMLDivElement> = createRef();
+  private popperInstance?: PopperInstance;
 
   @state()
   bindings!: Bindings;
 
   @state()
   error!: Error;
-
-  private buttonRef: Ref<HTMLButtonElement> = createRef();
-  private popupRef: Ref<HTMLDivElement> = createRef();
-  private popperInstance?: PopperInstance;
 
   @bindStateToController('searchStatus')
   @state()
@@ -168,6 +168,34 @@ export class AtomicPopover
     );
     const ariaLabel = this.bindings.i18n.t('popover', {label});
 
+    const buttonClasses = tw({
+      'hover:border-primary-light focus-visible:border-primary-light group box-border flex h-full max-w-60 min-w-24 items-center rounded p-2.5 hover:border focus-visible:border overflow-hidden relative': true,
+      'border-primary ring-ring-primary text-primary z-9999 ring-3':
+        this.isOpen,
+    });
+
+    const labelClasses = tw({
+      'mr-1.5 truncate': true,
+      'group-hover:text-primary-light group-focus:text-primary': !this.isOpen,
+    });
+
+    const countClasses = tw({
+      'group-hover:text-primary-light group-focus:text-primary mr-1.5 truncate text-sm': true,
+      hidden: !hasActiveValues,
+      'text-primary': this.isOpen,
+      'text-neutral-dark': !this.isOpen,
+    });
+
+    const iconClasses = tw({
+      'group-hover:text-primary-light group-focus:text-primary ml-auto w-2': true,
+      'rotate-180': this.isOpen,
+    });
+
+    const buttonClassString = Object.entries(buttonClasses)
+      .filter(([, value]) => value)
+      .map(([key]) => key)
+      .join(' ');
+
     return renderButton({
       props: {
         ref: this.buttonRef,
@@ -177,29 +205,19 @@ export class AtomicPopover
         ariaExpanded: this.isOpen ? 'true' : 'false',
         ariaLabel,
         ariaControls: this.popoverId,
-        class: `hover:border-primary-light focus-visible:border-primary-light group box-border flex h-full max-w-60 min-w-24 items-center rounded p-2.5 hover:border focus-visible:border ${
-          this.isOpen
-            ? 'border-primary ring-ring-primary text-primary z-9999 ring-3'
-            : ''
-        }`,
+        class: buttonClassString,
       },
     })(html`
       <span
         title=${label}
         part="value-label"
-        class=${`mr-1.5 truncate ${
-          this.isOpen
-            ? ''
-            : 'group-hover:text-primary-light group-focus:text-primary'
-        }`}
+        class=${multiClassMap(labelClasses)}
       >
         ${label}
       </span>
       <span
         part="value-count"
-        class=${`group-hover:text-primary-light group-focus:text-primary mr-1.5 truncate text-sm ${
-          hasActiveValues ? '' : 'hidden'
-        } ${this.isOpen ? 'text-primary' : 'text-neutral-dark'}`}
+        class=${multiClassMap(countClasses)}
       >
         ${this.bindings.i18n.t('between-parentheses', {
           text: count,
@@ -207,9 +225,7 @@ export class AtomicPopover
       </span>
       <atomic-icon
         part="arrow-icon"
-        class=${`group-hover:text-primary-light group-focus:text-primary ml-auto w-2 ${
-          this.isOpen ? 'rotate-180' : ''
-        }`}
+        class=${multiClassMap(iconClasses)}
         .icon=${ArrowBottomIcon}
       ></atomic-icon>
     `);

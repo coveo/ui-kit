@@ -100,34 +100,53 @@ describe('atomic-popover', () => {
     return element;
   };
 
-  describe('#initialize', () => {
+  describe('when initializing', () => {
     it('should build search status controller', async () => {
       await renderPopover();
       expect(buildSearchStatus).toHaveBeenCalledWith(mockEngine);
     });
 
-    describe('when no child is provided', () => {
-      it('should set error', async () => {
-        const element = (
-          await renderInAtomicSearchInterface<AtomicPopover>({
-            template: html`<atomic-popover></atomic-popover>`,
-            selector: 'atomic-popover',
-            bindings: (bindings) => {
-              bindings.engine = mockEngine;
-              return bindings;
-            },
-          })
-        ).element;
+    it('should set error when no child is provided', async () => {
+      const element = (
+        await renderInAtomicSearchInterface<AtomicPopover>({
+          template: html`<atomic-popover></atomic-popover>`,
+          selector: 'atomic-popover',
+          bindings: (bindings) => {
+            bindings.engine = mockEngine;
+            return bindings;
+          },
+        })
+      ).element;
 
-        expect(element.error).toBeTruthy();
-        expect(element.error.message).toContain(
-          'One child is required inside a set of popover tags.'
-        );
-      });
+      expect(element.error).toBeTruthy();
+      expect(element.error.message).toContain(
+        'One child is required inside a set of popover tags.'
+      );
+    });
+
+    it('should set error when more than one child is provided', async () => {
+      const element = (
+        await renderInAtomicSearchInterface<AtomicPopover>({
+          template: html`<atomic-popover>
+              <div>Child 1</div>
+              <div>Child 2</div>
+            </atomic-popover>`,
+          selector: 'atomic-popover',
+          bindings: (bindings) => {
+            bindings.engine = mockEngine;
+            return bindings;
+          },
+        })
+      ).element;
+
+      expect(element.error).toBeTruthy();
+      expect(element.error.message).toContain(
+        'Cannot have more than one child inside a set of popover tags.'
+      );
     });
   });
 
-  describe('#connectedCallback', () => {
+  describe('when connected to DOM', () => {
     it('should add event listeners', async () => {
       const element = await renderPopover();
       const addEventListenerSpy = vi.spyOn(element, 'addEventListener');
@@ -146,7 +165,7 @@ describe('atomic-popover', () => {
     });
   });
 
-  describe('#disconnectedCallback', () => {
+  describe('when disconnected from DOM', () => {
     it('should remove event listeners', async () => {
       const element = await renderPopover();
       const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
@@ -164,7 +183,7 @@ describe('atomic-popover', () => {
     });
   });
 
-  describe('#render', () => {
+  describe('when rendering', () => {
     it('should render popover button with label', async () => {
       const element = await renderPopover();
       const {button, valueLabel} = locators.parts(element);
@@ -264,7 +283,7 @@ describe('atomic-popover', () => {
       });
     });
 
-    describe('when search has no results', () => {
+    describe('when first search has not executed', () => {
       it('should show placeholder', async () => {
         vi.mocked(buildSearchStatus).mockReturnValue(
           buildFakeSearchStatus({
@@ -283,7 +302,7 @@ describe('atomic-popover', () => {
     });
   });
 
-  describe('#updated', () => {
+  describe('when updated', () => {
     it('should not create Popper when refs are missing', async () => {
       const element = (
         await renderInAtomicSearchInterface<AtomicPopover>({
