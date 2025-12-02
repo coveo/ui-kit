@@ -68,7 +68,6 @@ test.describe('atomic-generated-answer citation', () => {
 
       const popover = generatedAnswer.citationPopover.first();
       await expect(popover).toBeVisible();
-
       await expect(popover).toContainText(/https?:\/\//);
     });
 
@@ -109,7 +108,6 @@ test.describe('atomic-generated-answer citation', () => {
 
       // Wait for debounce timeout (100ms) plus a bit extra
       await generatedAnswer.page.waitForTimeout(200);
-
       await expect(popover).toBeHidden();
     });
   });
