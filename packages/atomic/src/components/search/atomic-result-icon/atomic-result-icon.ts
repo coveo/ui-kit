@@ -6,6 +6,7 @@ import {customElement} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import '@/src/components/common/atomic-icon/atomic-icon';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {snakeToCamel} from '@/src/utils/utils';
 import {fileTypeIcons} from './file-type-icons';
 import {objectTypeIcons} from './object-type-icons';
@@ -14,9 +15,10 @@ import {objectTypeIcons} from './object-type-icons';
  * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
  * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
  *
- * @slot (default) - Fallback content to display when no matching icon is found.
+ * @slot default - Fallback content to display when no matching icon is found.
  */
 @customElement('atomic-result-icon')
+@withTailwindStyles
 export class AtomicResultIcon extends LitElement {
   static styles = css`
     :host {
