@@ -43,6 +43,7 @@ import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware.
 import {stateKey} from './state-key.js';
 import {type CoreExtraArguments, configureStore, type Store} from './store.js';
 import type {ThunkExtraArguments} from './thunk-extra-arguments.js';
+import { generateAnswerListener } from './generate-answer-listener.js';
 
 export type CoreState<
   Configuration extends CoreConfigurationState = CoreConfigurationState,
@@ -372,7 +373,9 @@ function createMiddleware<Reducers extends ReducersMapObject>(
     renewTokenMiddleware,
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
-  ].concat(answerApi.middleware, options.middlewares || []);
+  ]
+    .concat(answerApi.middleware, options.middlewares || [])
+    .concat(generateAnswerListener.middleware);
 }
 
 export const nextAnalyticsUsageWithServiceFeatureWarning =

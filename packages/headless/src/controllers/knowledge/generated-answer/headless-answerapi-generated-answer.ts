@@ -8,16 +8,16 @@ import {
   fetchAnswer,
   selectAnswer,
 } from '../../../api/knowledge/stream-answer-api.js';
-import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
+// import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../../app/engine.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {
   selectAnswerApiQueryParams,
-  selectAnswerTriggerParams,
+  // selectAnswerTriggerParams,
 } from '../../../features/generated-answer/answer-api-selectors.js';
 import {
-  generateAnswer,
+  // generateAnswer,
   resetAnswer,
   sendGeneratedAnswerFeedback,
   updateAnswerConfigurationId,
@@ -95,30 +95,30 @@ const parseEvaluationArguments = ({
   question: query,
 });
 
-const subscribeToSearchRequest = (
-  engine: SearchEngine<StreamAnswerAPIState>
-) => {
-  let lastRequestId = '';
+// const subscribeToSearchRequest = (
+//   engine: SearchEngine<StreamAnswerAPIState>
+// ) => {
+//   let lastRequestId = '';
 
-  const strictListener = () => {
-    const state = engine.state;
-    const triggerParams = selectAnswerTriggerParams(state);
+//   const strictListener = () => {
+//     const state = engine.state;
+//     const triggerParams = selectAnswerTriggerParams(state);
 
-    const currentRequestId = triggerParams.requestId;
-    const newSearchRequestDetected = currentRequestId !== lastRequestId;
+//     const currentRequestId = triggerParams.requestId;
+//     const newSearchRequestDetected = currentRequestId !== lastRequestId;
 
-    if (newSearchRequestDetected) {
-      lastRequestId = currentRequestId;
-      engine.dispatch(resetAnswer());
+//     if (newSearchRequestDetected) {
+//       lastRequestId = currentRequestId;
+//       engine.dispatch(resetAnswer());
 
-      if (triggerParams.q?.length > 0) {
-        engine.dispatch(generateAnswer());
-      }
-    }
-  };
+//       if (triggerParams.q?.length > 0) {
+//         engine.dispatch(generateAnswer());
+//       }
+//     }
+//   };
 
-  engine.subscribe(strictListener);
-};
+//   engine.subscribe(strictListener);
+// };
 
 /**
  *
@@ -150,7 +150,8 @@ export function buildAnswerApiGeneratedAnswer(
   const getState = () => engine.state;
   engine.dispatch(updateAnswerConfigurationId(props.answerConfigurationId!));
 
-  subscribeToSearchRequest(engine as SearchEngine<StreamAnswerAPIState>);
+  console.log('No Subscription to search requests for Answer API Generated Answer');
+  // subscribeToSearchRequest(engine as SearchEngine<StreamAnswerAPIState>);
 
   return {
     ...controller,
