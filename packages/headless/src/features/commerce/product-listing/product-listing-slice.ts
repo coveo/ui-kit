@@ -40,20 +40,15 @@ export const productListingReducer = createReducer(
       .addCase(fetchProductListing.fulfilled, (state, action) => {
         const paginationOffset = getPaginationOffset(action.payload);
         handleFulfilled(state, action.payload.response);
-        state.products = action.payload.response.products.map(
-          (product, index) =>
-            preprocessProduct(
-              product,
-              paginationOffset + index + 1,
-              action.payload.response.responseId
-            )
+        state.products = mapPreprocessedProducts(
+          action.payload.response.products,
+          paginationOffset,
+          action.payload.response.responseId
         );
-        state.results = action.payload.response.results.map((result, index) =>
-          preprocessResult(
-            result,
-            paginationOffset + index + 1,
-            action.payload.response.responseId
-          )
+        state.results = mapPreprocessedResults(
+          action.payload.response.results,
+          paginationOffset,
+          action.payload.response.responseId
         );
       })
       .addCase(fetchMoreProducts.fulfilled, (state, action) => {
@@ -63,21 +58,17 @@ export const productListingReducer = createReducer(
         const paginationOffset = getPaginationOffset(action.payload);
         handleFulfilled(state, action.payload.response);
         state.products = state.products.concat(
-          action.payload.response.products.map((product, index) =>
-            preprocessProduct(
-              product,
-              paginationOffset + index + 1,
-              action.payload?.response.responseId
-            )
+          mapPreprocessedProducts(
+            action.payload.response.products,
+            paginationOffset,
+            action.payload.response.responseId
           )
         );
         state.results = state.results.concat(
-          action.payload.response.results.map((result, index) =>
-            preprocessResult(
-              result,
-              paginationOffset + index + 1,
-              action.payload?.response.responseId
-            )
+          mapPreprocessedResults(
+            action.payload.response.results,
+            paginationOffset,
+            action.payload.response.responseId
           )
         );
       })
@@ -152,6 +143,26 @@ function handlePending(state: ProductListingState, requestId: string) {
 function getPaginationOffset(payload: QueryCommerceAPIThunkReturn): number {
   const pagination = payload.response.pagination;
   return pagination.page * pagination.perPage;
+}
+
+function mapPreprocessedProducts(
+  products: BaseProduct[],
+  paginationOffset: number,
+  responseId?: string
+): Product[] {
+  return products.map((product, index) =>
+    preprocessProduct(product, paginationOffset + index + 1, responseId)
+  );
+}
+
+function mapPreprocessedResults(
+  results: BaseResult[],
+  paginationOffset: number,
+  responseId?: string
+): Result[] {
+  return results.map((result, index) =>
+    preprocessResult(result, paginationOffset + index + 1, responseId)
+  );
 }
 
 function preprocessResult(
