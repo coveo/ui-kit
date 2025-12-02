@@ -95,6 +95,9 @@ import '@/src/components/common/atomic-facet-placeholder/atomic-facet-placeholde
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
  * @part show-more-less-icon - The icons of the show more & show less buttons.
+ *
+ * @cssprop --atomic-facet-color-boxes-per-row - The number of color boxes displayed per row when display is 'box'.
+ * @cssprop --atomic-facet-color-boxes-gap - The gap between color boxes when display is 'box'.
  */
 @customElement('atomic-color-facet')
 @bindings()
