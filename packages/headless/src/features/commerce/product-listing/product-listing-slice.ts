@@ -6,6 +6,7 @@ import type {
   Product,
 } from '../../../api/commerce/common/product.js';
 import type {
+  BaseResult,
   BaseSpotlightContent,
   Result,
   SpotlightContent,
@@ -47,19 +48,12 @@ export const productListingReducer = createReducer(
               action.payload.response.responseId
             )
         );
-        state.results = action.payload.response.results.map(
-          (result, index): Result =>
-            result.resultType === ResultType.SPOTLIGHT
-              ? preprocessSpotlightContent(
-                  result,
-                  paginationOffset + index + 1,
-                  action.payload.response.responseId
-                )
-              : preprocessProduct(
-                  result,
-                  paginationOffset + index + 1,
-                  action.payload.response.responseId
-                )
+        state.results = action.payload.response.results.map((result, index) =>
+          preprocessResult(
+            result,
+            paginationOffset + index + 1,
+            action.payload.response.responseId
+          )
         );
       })
       .addCase(fetchMoreProducts.fulfilled, (state, action) => {
@@ -78,24 +72,14 @@ export const productListingReducer = createReducer(
           )
         );
         state.results = state.results.concat(
-          action.payload.response.results.map(
-            (result, index): Result =>
-              result.resultType === ResultType.SPOTLIGHT
-                ? preprocessSpotlightContent(
-                    result,
-                    paginationOffset + index + 1,
-                    action.payload?.response.responseId
-                  )
-                : preprocessProduct(
-                    result,
-                    paginationOffset + index + 1,
-                    action.payload?.response.responseId
-                  )
+          action.payload.response.results.map((result, index) =>
+            preprocessResult(
+              result,
+              paginationOffset + index + 1,
+              action.payload?.response.responseId
+            )
           )
         );
-      })
-      .addCase(fetchProductListing.pending, (state, action) => {
-        handlePending(state, action.meta.requestId);
       })
       .addCase(fetchMoreProducts.pending, (state, action) => {
         handlePending(state, action.meta.requestId);
@@ -168,6 +152,17 @@ function handlePending(state: ProductListingState, requestId: string) {
 function getPaginationOffset(payload: QueryCommerceAPIThunkReturn): number {
   const pagination = payload.response.pagination;
   return pagination.page * pagination.perPage;
+}
+
+function preprocessResult(
+  result: BaseResult,
+  position: number,
+  responseId?: string
+): Result {
+  if (result.resultType === ResultType.SPOTLIGHT) {
+    return preprocessSpotlightContent(result, position, responseId);
+  }
+  return preprocessProduct(result, position, responseId);
 }
 
 function preprocessProduct(
