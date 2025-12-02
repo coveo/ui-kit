@@ -76,7 +76,7 @@ describe('atomic-rating-range-facet', () => {
           icon=${ifDefined(props.icon)}
           ?is-collapsed=${props.isCollapsed}
           heading-level=${ifDefined(props.headingLevel)}
-          ?filter-facet-count=${props.filterFacetCount}
+          filter-facet-count=${props.filterFacetCount}
           injection-depth=${ifDefined(props.injectionDepth)}
           .tabsIncluded=${props.tabsIncluded || []}
           .tabsExcluded=${props.tabsExcluded || []}
@@ -142,7 +142,7 @@ describe('atomic-rating-range-facet', () => {
         options: expect.objectContaining({
           field: 'testfield',
           numberOfValues: 7,
-          filterFacetCount: true,
+          filterFacetCount: false,
           injectionDepth: 500,
           generateAutomaticRanges: false,
           sortCriteria: 'descending',
@@ -353,17 +353,14 @@ describe('atomic-rating-range-facet', () => {
     });
   });
 
-  describe('disconnectedCallback', () => {
-    it('should stop watching dependencies when disconnected', async () => {
-      mockedFacetConditionsManager = buildFakeFacetConditionsManager({});
+  describe('when removed from the DOM (#disconnectedCallback)', () => {
+    it('should stop watching dependencies', async () => {
       const stopWatchingSpy = vi.spyOn(
         mockedFacetConditionsManager,
         'stopWatching'
       );
-
       const {element} = await renderRatingRangeFacet();
       element.disconnectedCallback();
-
       expect(stopWatchingSpy).toHaveBeenCalled();
     });
   });
@@ -481,20 +478,18 @@ describe('atomic-rating-range-facet', () => {
     });
   });
 
-  describe('dependencies', () => {
-    it('should build facet conditions manager when dependsOn is provided', async () => {
-      const {element} = await renderRatingRangeFacet({
-        props: {dependsOn: {parentFacet: 'value'}},
-      });
-
-      expect(buildFacetConditionsManager).toHaveBeenCalledWith(
-        element.bindings.engine,
-        expect.objectContaining({
-          facetId: expect.any(String),
-          conditions: expect.any(Object),
-        })
-      );
+  it('should build facet conditions manager when dependsOn is provided', async () => {
+    const {element} = await renderRatingRangeFacet({
+      props: {dependsOn: {parentFacet: 'value'}},
     });
+
+    expect(buildFacetConditionsManager).toHaveBeenCalledWith(
+      element.bindings.engine,
+      expect.objectContaining({
+        facetId: expect.any(String),
+        conditions: expect.any(Object),
+      })
+    );
   });
 
   describe('parts', () => {
@@ -528,14 +523,21 @@ describe('atomic-rating-range-facet', () => {
       });
 
       const {element} = await renderRatingRangeFacet();
+
+      // Test basic parts
+      const values = element.shadowRoot?.querySelector('[part="values"]');
+      expect(values).toBeDefined();
+
+      const valueLink = element.shadowRoot?.querySelector(
+        '[part="value-link"]'
+      );
+      expect(valueLink).toBeDefined();
+
       const selectedLink = element.shadowRoot?.querySelector(
         '[part="value-link-selected"]'
       );
       expect(selectedLink).toBeDefined();
-    });
 
-    it('should have value-rating-icon part', async () => {
-      const {element} = await renderRatingRangeFacet();
       const ratingIcon = element.shadowRoot?.querySelector(
         '[part~="value-rating-icon"]'
       );

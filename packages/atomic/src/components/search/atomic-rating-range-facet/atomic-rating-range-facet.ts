@@ -18,7 +18,7 @@ import {
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
-import {html, LitElement, nothing, type PropertyValues} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import atomicRatingStyles from '@/src/components/common/atomic-rating/atomic-rating.tw.css';
@@ -36,6 +36,7 @@ import {initializePopover} from '@/src/components/common/facets/popover/popover-
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {arrayConverter} from '@/src/converters/array-converter';
+import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -193,7 +194,12 @@ export class AtomicRatingRangeFacet
   /**
    * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
    */
-  @property({reflect: true, attribute: 'is-collapsed', type: Boolean})
+  @property({
+    reflect: true,
+    attribute: 'is-collapsed',
+    type: Boolean,
+    converter: booleanConverter,
+  })
   public isCollapsed = false;
 
   /**
@@ -207,8 +213,13 @@ export class AtomicRatingRangeFacet
    *
    * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
    */
-  @property({reflect: true, attribute: 'filter-facet-count', type: Boolean})
-  public filterFacetCount = true;
+  @property({
+    reflect: true,
+    attribute: 'filter-facet-count',
+    type: Boolean,
+    converter: booleanConverter,
+  })
+  public filterFacetCount!: boolean;
 
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
@@ -272,10 +283,14 @@ export class AtomicRatingRangeFacet
     }
   }
 
+  private get _filterFacetCount() {
+    return this.filterFacetCount ?? true;
+  }
+
   public initialize() {
     if (this.tabsIncluded.length > 0 && this.tabsExcluded.length > 0) {
       console.warn(
-        'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behaviors.'
+        'Values for both "tabs-included" and "tabs-excluded" have been provided. This could lead to unexpected behaviors.'
       );
     }
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -287,15 +302,6 @@ export class AtomicRatingRangeFacet
   public disconnectedCallback() {
     super.disconnectedCallback();
     this.dependenciesManager?.stopWatching();
-  }
-
-  protected updated(changed: PropertyValues<this>) {
-    if (
-      changed.has('numberOfIntervals') &&
-      this.maxValueInIndex === undefined
-    ) {
-      this.maxValueInIndex = this.numberOfIntervals;
-    }
   }
 
   private get focusTarget() {
@@ -321,7 +327,7 @@ export class AtomicRatingRangeFacet
       currentValues: this.generateCurrentValues(),
       sortCriteria: 'descending',
       generateAutomaticRanges: false,
-      filterFacetCount: this.filterFacetCount,
+      filterFacetCount: this._filterFacetCount,
       injectionDepth: this.injectionDepth,
       tabs: {
         included: [...this.tabsIncluded],
@@ -365,7 +371,7 @@ export class AtomicRatingRangeFacet
         facetId: this.facetId!,
         conditions: parseDependsOn<
           FacetValueRequest | CategoryFacetValueRequest
-        >(this.dependsOn),
+        >(this.dependsOn || {}),
       }
     );
   }

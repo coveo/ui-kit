@@ -6,16 +6,46 @@ export class RatingRangeFacetPageObject extends BasePageObject {
     super(page, 'atomic-rating-range-facet');
   }
 
-  valueLink(index: number): Locator {
-    return this.hydrated.locator(`[part="value-link"]`).nth(index);
+  get facet(): Locator {
+    return this.hydrated.locator(`[part="facet"]`);
   }
 
-  selectedValueLinks(): Locator {
+  get labelButton(): Locator {
+    return this.hydrated.locator(`[part="label-button"]`);
+  }
+
+  get clearButton(): Locator {
+    return this.hydrated.getByRole('button', {name: /clear.*filter/i});
+  }
+
+  get values(): Locator {
+    return this.hydrated.locator(`[part="values"]`);
+  }
+
+  get valueLinks(): Locator {
+    return this.hydrated.locator(`[part="value-link"]`);
+  }
+
+  get selectedValueLinks(): Locator {
     return this.hydrated.locator(`[part="value-link value-link-selected"]`);
   }
 
-  clearButton(): Locator {
-    return this.hydrated.locator(`[part="clear-button"]`);
+  get ratingIcons(): Locator {
+    return this.hydrated.locator(`[part~="value-rating-icon"]`);
+  }
+
+  get placeholder(): Locator {
+    return this.hydrated.locator(`[part="placeholder"]`);
+  }
+
+  valueLink(index: number): Locator {
+    return this.valueLinks.nth(index);
+  }
+
+  getRatingValueByStars(stars: number): Locator {
+    return this.hydrated.locator(
+      `[part="value-link"]:has([aria-label*="${stars} star"])`
+    );
   }
 
   /**
