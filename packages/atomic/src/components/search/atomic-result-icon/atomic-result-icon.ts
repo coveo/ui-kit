@@ -46,13 +46,13 @@ export class AtomicResultIcon
 
   private resultController = createResultContextController(this);
 
-  public initialize() {
-    // Bindings initialization handled by decorator
-  }
+  public initialize() {}
 
   private get result(): Result | null {
     const item = this.resultController.item;
-    if (!item) return null;
+    if (!item) {
+      return null;
+    }
     if ('result' in item) {
       return item.result as Result;
     }
@@ -73,10 +73,8 @@ export class AtomicResultIcon
 
     const fileType = fileTypeIcons[fileTypeValue?.toLowerCase()];
     const objectType = objectTypeIcons[objectTypeValue?.toLowerCase()];
-    if (!fileType && !objectType) {
-      return null;
-    }
-    return objectType || fileType;
+
+    return objectType ?? fileType ?? null;
   }
 
   private renderIcon() {
