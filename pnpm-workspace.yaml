@@ -31,6 +31,7 @@ packages:
 catalog:
   '@coveo/create-atomic-rollup-plugin': 1.2.1
   '@coveo/relay-event-types': 15.1.0
+  '@playwright/mcp': 0.0.48
   '@playwright/test': 1.56.1
   '@rollup/plugin-replace': 6.0.2
   '@rollup/plugin-url': 8.0.2
