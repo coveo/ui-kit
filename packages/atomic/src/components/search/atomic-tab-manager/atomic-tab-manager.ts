@@ -8,6 +8,7 @@ import {
 import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
+import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -64,7 +65,11 @@ export class AtomicTabManager
   /**
    * Whether to clear the filters when the active tab changes.
    */
-  @property({type: Boolean, attribute: 'clear-filters-on-tab-change'})
+  @property({
+    type: Boolean,
+    converter: booleanConverter,
+    attribute: 'clear-filters-on-tab-change',
+  })
   clearFiltersOnTabChange = false;
 
   public initialize() {

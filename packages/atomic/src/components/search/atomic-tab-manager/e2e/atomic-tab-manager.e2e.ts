@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-test.describe('AtomicTabManager', () => {
+test.describe('atomic-tab-manager', () => {
   test.beforeEach(async ({tabManager}) => {
     await tabManager.load();
     await tabManager.hydrated.waitFor();
