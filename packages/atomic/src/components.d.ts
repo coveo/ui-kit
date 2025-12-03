@@ -152,80 +152,6 @@ export namespace Components {
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
     }
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
-     * An `atomic-color-facet` displays a facet of the results for the current query as colors.
-     */
-    interface AtomicColorFacet {
-        /**
-          * Specifies an explicit list of `allowedValues` in the Search API request. This list is in the form of a JSON string.  If you specify a list of values for this option, the facet only uses these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message` or `Product`, the facet does not use them.  ```html <atomic-color-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-color-facet> ```  The maximum amount of allowed values is 25.  The default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
-         */
-        "allowedValues": string[] | string;
-        /**
-          * Identifies the facet values that must appear at the top, in this order. This parameter can be used in conjunction with the `sortCriteria` parameter.  Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.  Example:  The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.  If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.  ```html <atomic-color-facet field="objecttype" custom-sort='["Contact","Account","File"]' sort-criteria='occurrences'></atomic-color-facet> ``` The maximum amount of custom sort values is 25.  The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
-         */
-        "customSort": string[] | string;
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc   ... ></atomic-color-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc="doc"   ... ></atomic-color-facet> ```
-         */
-        "dependsOn": Record<string, string>;
-        /**
-          * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection). Possible values are 'checkbox', and 'box'.
-         */
-        "displayValuesAs": 'checkbox' | 'box';
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount": boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel": number;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth": number;
-        /**
-          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
-         */
-        "isCollapsed": boolean;
-        /**
-          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label": string;
-        /**
-          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
-         */
-        "numberOfValues": number;
-        /**
-          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
-         */
-        "resultsMustMatch": FacetResultsMustMatch;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
-         */
-        "sortCriteria": FacetSortCriterion;
-        /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded": string[] | string;
-        /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded": string[] | string;
-        /**
-          * Whether this facet should contain a search box.
-         */
-        "withSearch": boolean;
-    }
-    /**
      * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
      */
     interface AtomicDidYouMean {
@@ -1473,34 +1399,18 @@ export namespace Components {
         "collapseFacetsAfter": number;
     }
     /**
-     * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.
-     * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,
-     * only when children exist.
-     */
-    interface AtomicResultChildren {
-        /**
-          * The expected size of the image displayed in the children results.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
-         */
-        "inheritTemplates": boolean;
-        /**
-          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
-         */
-        "noResultText": string;
-    }
-    /**
      * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
      */
     interface AtomicResultFieldsList {
     }
     /**
-     * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
-     * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
+     * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
      */
-    interface AtomicResultIcon {
+    interface AtomicResultLink {
+        /**
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
+         */
+        "hrefTemplate"?: string;
     }
     /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
@@ -1785,17 +1695,6 @@ export namespace Components {
          */
         "select": () => void;
     }
-    /**
-     * The `atomic-tab-manager` component manages a collection of tabs,
-     * allowing users to switch between them. Each child `atomic-tab` represents an
-     * individual tab within the manager.
-     */
-    interface AtomicTabManager {
-        /**
-          * Whether to clear the filters when the active tab changes.
-         */
-        "clearFiltersOnTabChange"?: boolean;
-    }
     interface AtomicTabPopover {
         "closePopoverOnFocusOut": (event: FocusEvent) => Promise<void>;
         "setButtonVisibility": (isVisible: boolean) => Promise<void>;
@@ -1992,16 +1891,6 @@ declare global {
     var HTMLAtomicCitationElement: {
         prototype: HTMLAtomicCitationElement;
         new (): HTMLAtomicCitationElement;
-    };
-    /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
-     * An `atomic-color-facet` displays a facet of the results for the current query as colors.
-     */
-    interface HTMLAtomicColorFacetElement extends Components.AtomicColorFacet, HTMLStencilElement {
-    }
-    var HTMLAtomicColorFacetElement: {
-        prototype: HTMLAtomicColorFacetElement;
-        new (): HTMLAtomicColorFacetElement;
     };
     /**
      * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
@@ -2625,17 +2514,6 @@ declare global {
         new (): HTMLAtomicRefineToggleElement;
     };
     /**
-     * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.
-     * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,
-     * only when children exist.
-     */
-    interface HTMLAtomicResultChildrenElement extends Components.AtomicResultChildren, HTMLStencilElement {
-    }
-    var HTMLAtomicResultChildrenElement: {
-        prototype: HTMLAtomicResultChildrenElement;
-        new (): HTMLAtomicResultChildrenElement;
-    };
-    /**
      * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
      */
     interface HTMLAtomicResultFieldsListElement extends Components.AtomicResultFieldsList, HTMLStencilElement {
@@ -2645,14 +2523,13 @@ declare global {
         new (): HTMLAtomicResultFieldsListElement;
     };
     /**
-     * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
-     * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
+     * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
      */
-    interface HTMLAtomicResultIconElement extends Components.AtomicResultIcon, HTMLStencilElement {
+    interface HTMLAtomicResultLinkElement extends Components.AtomicResultLink, HTMLStencilElement {
     }
-    var HTMLAtomicResultIconElement: {
-        prototype: HTMLAtomicResultIconElement;
-        new (): HTMLAtomicResultIconElement;
+    var HTMLAtomicResultLinkElement: {
+        prototype: HTMLAtomicResultLinkElement;
+        new (): HTMLAtomicResultLinkElement;
     };
     /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
@@ -2893,17 +2770,6 @@ declare global {
         prototype: HTMLAtomicTabButtonElement;
         new (): HTMLAtomicTabButtonElement;
     };
-    /**
-     * The `atomic-tab-manager` component manages a collection of tabs,
-     * allowing users to switch between them. Each child `atomic-tab` represents an
-     * individual tab within the manager.
-     */
-    interface HTMLAtomicTabManagerElement extends Components.AtomicTabManager, HTMLStencilElement {
-    }
-    var HTMLAtomicTabManagerElement: {
-        prototype: HTMLAtomicTabManagerElement;
-        new (): HTMLAtomicTabManagerElement;
-    };
     interface HTMLAtomicTabPopoverElement extends Components.AtomicTabPopover, HTMLStencilElement {
     }
     var HTMLAtomicTabPopoverElement: {
@@ -2943,7 +2809,6 @@ declare global {
         "atomic-automatic-facet-generator": HTMLAtomicAutomaticFacetGeneratorElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-citation": HTMLAtomicCitationElement;
-        "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
@@ -3011,9 +2876,8 @@ declare global {
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
-        "atomic-result-children": HTMLAtomicResultChildrenElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
-        "atomic-result-icon": HTMLAtomicResultIconElement;
+        "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-rating": HTMLAtomicResultRatingElement;
@@ -3031,7 +2895,6 @@ declare global {
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
         "atomic-tab-bar": HTMLAtomicTabBarElement;
         "atomic-tab-button": HTMLAtomicTabButtonElement;
-        "atomic-tab-manager": HTMLAtomicTabManagerElement;
         "atomic-tab-popover": HTMLAtomicTabPopoverElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
@@ -3154,80 +3017,6 @@ declare namespace LocalJSX {
           * Callback function invoked when the user stops hovering over a citation. `citationHoverTimeMs` is the amount of time over which the citation has been hovered.
          */
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
-    }
-    /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
-     * An `atomic-color-facet` displays a facet of the results for the current query as colors.
-     */
-    interface AtomicColorFacet {
-        /**
-          * Specifies an explicit list of `allowedValues` in the Search API request. This list is in the form of a JSON string.  If you specify a list of values for this option, the facet only uses these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message` or `Product`, the facet does not use them.  ```html <atomic-color-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-color-facet> ```  The maximum amount of allowed values is 25.  The default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
-         */
-        "allowedValues"?: string[] | string;
-        /**
-          * Identifies the facet values that must appear at the top, in this order. This parameter can be used in conjunction with the `sortCriteria` parameter.  Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.  Example:  The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.  If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.  ```html <atomic-color-facet field="objecttype" custom-sort='["Contact","Account","File"]' sort-criteria='occurrences'></atomic-color-facet> ``` The maximum amount of custom sort values is 25.  The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
-         */
-        "customSort"?: string[] | string;
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc   ... ></atomic-color-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc="doc"   ... ></atomic-color-facet> ```
-         */
-        "dependsOn"?: Record<string, string>;
-        /**
-          * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection). Possible values are 'checkbox', and 'box'.
-         */
-        "displayValuesAs"?: 'checkbox' | 'box';
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount"?: boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel"?: number;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth"?: number;
-        /**
-          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
-         */
-        "isCollapsed"?: boolean;
-        /**
-          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
-         */
-        "numberOfValues"?: number;
-        /**
-          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
-         */
-        "resultsMustMatch"?: FacetResultsMustMatch;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
-         */
-        "sortCriteria"?: FacetSortCriterion;
-        /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded"?: string[] | string;
-        /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded"?: string[] | string;
-        /**
-          * Whether this facet should contain a search box.
-         */
-        "withSearch"?: boolean;
     }
     /**
      * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
@@ -4429,34 +4218,18 @@ declare namespace LocalJSX {
         "collapseFacetsAfter"?: number;
     }
     /**
-     * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.
-     * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,
-     * only when children exist.
-     */
-    interface AtomicResultChildren {
-        /**
-          * The expected size of the image displayed in the children results.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
-         */
-        "inheritTemplates"?: boolean;
-        /**
-          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
-         */
-        "noResultText"?: string;
-    }
-    /**
      * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
      */
     interface AtomicResultFieldsList {
     }
     /**
-     * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
-     * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
+     * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
      */
-    interface AtomicResultIcon {
+    interface AtomicResultLink {
+        /**
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
+         */
+        "hrefTemplate"?: string;
     }
     /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
@@ -4759,17 +4532,6 @@ declare namespace LocalJSX {
          */
         "select": () => void;
     }
-    /**
-     * The `atomic-tab-manager` component manages a collection of tabs,
-     * allowing users to switch between them. Each child `atomic-tab` represents an
-     * individual tab within the manager.
-     */
-    interface AtomicTabManager {
-        /**
-          * Whether to clear the filters when the active tab changes.
-         */
-        "clearFiltersOnTabChange"?: boolean;
-    }
     interface AtomicTabPopover {
     }
     /**
@@ -4869,7 +4631,6 @@ declare namespace LocalJSX {
         "atomic-automatic-facet-generator": AtomicAutomaticFacetGenerator;
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-citation": AtomicCitation;
-        "atomic-color-facet": AtomicColorFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-number-input": AtomicFacetNumberInput;
@@ -4937,9 +4698,8 @@ declare namespace LocalJSX {
         "atomic-recs-result-template": AtomicRecsResultTemplate;
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
-        "atomic-result-children": AtomicResultChildren;
         "atomic-result-fields-list": AtomicResultFieldsList;
-        "atomic-result-icon": AtomicResultIcon;
+        "atomic-result-link": AtomicResultLink;
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-rating": AtomicResultRating;
@@ -4957,7 +4717,6 @@ declare namespace LocalJSX {
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
         "atomic-tab-bar": AtomicTabBar;
         "atomic-tab-button": AtomicTabButton;
-        "atomic-tab-manager": AtomicTabManager;
         "atomic-tab-popover": AtomicTabPopover;
         "atomic-table-element": AtomicTableElement;
         "atomic-timeframe": AtomicTimeframe;
@@ -4986,11 +4745,6 @@ declare module "@stencil/core" {
              * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
              */
             "atomic-citation": LocalJSX.AtomicCitation & JSXBase.HTMLAttributes<HTMLAtomicCitationElement>;
-            /**
-             * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
-             * An `atomic-color-facet` displays a facet of the results for the current query as colors.
-             */
-            "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
             /**
              * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
              */
@@ -5166,20 +4920,13 @@ declare module "@stencil/core" {
              */
             "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
             /**
-             * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.
-             * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,
-             * only when children exist.
-             */
-            "atomic-result-children": LocalJSX.AtomicResultChildren & JSXBase.HTMLAttributes<HTMLAtomicResultChildrenElement>;
-            /**
              * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
              */
             "atomic-result-fields-list": LocalJSX.AtomicResultFieldsList & JSXBase.HTMLAttributes<HTMLAtomicResultFieldsListElement>;
             /**
-             * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
-             * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
+             * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
              */
-            "atomic-result-icon": LocalJSX.AtomicResultIcon & JSXBase.HTMLAttributes<HTMLAtomicResultIconElement>;
+            "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             /**
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
@@ -5259,12 +5006,6 @@ declare module "@stencil/core" {
             "atomic-suggestion-renderer": LocalJSX.AtomicSuggestionRenderer & JSXBase.HTMLAttributes<HTMLAtomicSuggestionRendererElement>;
             "atomic-tab-bar": LocalJSX.AtomicTabBar & JSXBase.HTMLAttributes<HTMLAtomicTabBarElement>;
             "atomic-tab-button": LocalJSX.AtomicTabButton & JSXBase.HTMLAttributes<HTMLAtomicTabButtonElement>;
-            /**
-             * The `atomic-tab-manager` component manages a collection of tabs,
-             * allowing users to switch between them. Each child `atomic-tab` represents an
-             * individual tab within the manager.
-             */
-            "atomic-tab-manager": LocalJSX.AtomicTabManager & JSXBase.HTMLAttributes<HTMLAtomicTabManagerElement>;
             "atomic-tab-popover": LocalJSX.AtomicTabPopover & JSXBase.HTMLAttributes<HTMLAtomicTabPopoverElement>;
             /**
              * The `atomic-table-element` element defines a table column in a result list.
