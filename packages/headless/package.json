@@ -68,7 +68,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.35.2",
+  "version": "3.35.4",
   "files": [
     "dist/"
   ],
