@@ -61,9 +61,3 @@ export class AtomicFormatUnit extends LitElement {
     return nothing;
   }
 }
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'atomic-format-unit': AtomicFormatUnit;
-  }
-}

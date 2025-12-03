@@ -1,8 +1,8 @@
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {
-  dispatchNumberFormatEvent,
   defaultCurrencyFormatter,
+  dispatchNumberFormatEvent,
   type NumberFormatter,
 } from '@/src/components/common/formats/format-common.js';
 import '@/src/components/common/atomic-component-error/atomic-component-error.js';
@@ -44,11 +44,5 @@ export class AtomicFormatCurrency extends LitElement {
       ></atomic-component-error>`;
     }
     return nothing;
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'atomic-format-currency': AtomicFormatCurrency;
   }
 }

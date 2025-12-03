@@ -84,9 +84,3 @@ export class AtomicFormatNumber extends LitElement {
     return nothing;
   }
 }
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'atomic-format-number': AtomicFormatNumber;
-  }
-}
