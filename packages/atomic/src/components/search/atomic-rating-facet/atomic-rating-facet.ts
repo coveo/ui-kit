@@ -79,6 +79,17 @@ export class AtomicRatingFacet
   extends LitElement
   implements InitializableComponent<Bindings>
 {
+  private static readonly propsSchema = new Schema({
+    field: new StringValue({required: true, emptyAllowed: false}),
+    numberOfIntervals: new NumberValue({min: 1}),
+    maxValueInIndex: new NumberValue({min: 0, required: false}),
+    minValueInIndex: new NumberValue({min: 0}),
+    displayValuesAs: new StringValue({constrainTo: ['checkbox', 'link']}),
+    injectionDepth: new NumberValue({min: 0, required: false}),
+    dependsOn: new RecordValue({options: {required: false}}),
+    headingLevel: new NumberValue({min: 0, max: 6, required: false}),
+  });
+
   static styles = [
     facetCommonStyles,
     facetValueCheckboxStyles,
@@ -295,16 +306,7 @@ export class AtomicRatingFacet
         dependsOn: this.dependsOn,
         headingLevel: this.headingLevel,
       }),
-      new Schema({
-        field: new StringValue({required: true, emptyAllowed: false}),
-        numberOfIntervals: new NumberValue({min: 1}),
-        maxValueInIndex: new NumberValue({min: 0, required: false}),
-        minValueInIndex: new NumberValue({min: 0}),
-        displayValuesAs: new StringValue({constrainTo: ['checkbox', 'link']}),
-        injectionDepth: new NumberValue({min: 0, required: false}),
-        dependsOn: new RecordValue({options: {required: false}}),
-        headingLevel: new NumberValue({min: 0, max: 6, required: false}),
-      }),
+      AtomicRatingFacet.propsSchema,
       // TODO V4: KIT-5197 - Remove false
       false
     );
@@ -364,8 +366,8 @@ export class AtomicRatingFacet
     this.bindings.store.registerFacet('numericFacets', {
       ...facetInfo,
       format: (value) => this.formatFacetValue(value),
-      // @ts-ignore TODO:
-      // content: (value) => this.ratingContent(value),
+      // @ts-ignore -- Because of Stencil VNode dependencies.
+      content: (value) => this.ratingContent(value),
     });
     initializePopover(this, {
       ...facetInfo,
