@@ -10,6 +10,7 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   githubPath="search/atomic-format-unit/atomic-format-unit.ts"
   tagName="atomic-format-unit"
   className="AtomicFormatUnit"
+  defaultStory="Facet"
 >
 
 The `atomic-format-unit` component is used for formatting numbers with units.
@@ -57,18 +58,5 @@ The `unit` property must be a [sanctioned unit identifier](https://tc39.es/propo
 - `"meter"`, `"kilometer"`, `"mile"`
 - `"liter"`, `"gallon"`
 - `"second"`, `"minute"`, `"hour"`, `"day"`
-
-### Examples
-
-```html
-<!-- File size in bytes -->
-<atomic-format-unit unit="byte" unit-display="short"></atomic-format-unit>
-
-<!-- Distance in kilometers with full name -->
-<atomic-format-unit unit="kilometer" unit-display="long"></atomic-format-unit>
-
-<!-- Duration in hours -->
-<atomic-format-unit unit="hour" unit-display="narrow"></atomic-format-unit>
-```
 
 </AtomicDocTemplate>

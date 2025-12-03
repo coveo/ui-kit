@@ -84,3 +84,9 @@ export class AtomicFormatNumber
     return html`${nothing}`;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-format-number': AtomicFormatNumber;
+  }
+}

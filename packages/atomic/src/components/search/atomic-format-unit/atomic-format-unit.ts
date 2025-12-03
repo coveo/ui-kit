@@ -61,3 +61,9 @@ export class AtomicFormatUnit
     return html`${nothing}`;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-format-unit': AtomicFormatUnit;
+  }
+}

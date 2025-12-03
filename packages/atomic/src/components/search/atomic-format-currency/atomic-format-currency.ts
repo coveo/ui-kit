@@ -46,3 +46,9 @@ export class AtomicFormatCurrency
     return html`${nothing}`;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-format-currency': AtomicFormatCurrency;
+  }
+}

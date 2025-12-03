@@ -94,8 +94,6 @@ export class AtomicResultNumber
     if (value === null) {
       return null;
     }
-    console.log('value', value);
-    console.log('result', this.result);
 
     const valueAsNumber = parseFloat(`${value}`);
     if (Number.isNaN(valueAsNumber)) {
