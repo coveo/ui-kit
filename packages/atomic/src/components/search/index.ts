@@ -21,6 +21,7 @@ export {AtomicResultDate} from './atomic-result-date/atomic-result-date.js';
 export {AtomicResultHtml} from './atomic-result-html/atomic-result-html.js';
 export {AtomicResultIcon} from './atomic-result-icon/atomic-result-icon.js';
 export {AtomicResultImage} from './atomic-result-image/atomic-result-image.js';
+export {AtomicResultLink} from './atomic-result-link/atomic-result-link.js';
 export {AtomicResultList} from './atomic-result-list/atomic-result-list.js';
 export {AtomicResultLocalizedText} from './atomic-result-localized-text/atomic-result-localized-text.js';
 export {AtomicResultMultiValueText} from './atomic-result-multi-value-text/atomic-result-multi-value-text.js';

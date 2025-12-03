@@ -42,6 +42,8 @@ export default {
     await import('./atomic-result-icon/atomic-result-icon.js'),
   'atomic-result-image': async () =>
     await import('./atomic-result-image/atomic-result-image.js'),
+  'atomic-result-link': async () =>
+    await import('./atomic-result-link/atomic-result-link.js'),
   'atomic-result-list': async () =>
     await import('./atomic-result-list/atomic-result-list.js'),
   'atomic-result-localized-text': async () =>
