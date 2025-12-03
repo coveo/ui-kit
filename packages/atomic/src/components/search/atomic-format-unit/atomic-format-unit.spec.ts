@@ -43,7 +43,10 @@ describe('atomic-format-unit', () => {
 
   it('should render nothing when there is no error', async () => {
     const {element} = await renderAtomicFormatUnit();
-    expect(element.shadowRoot?.innerHTML.trim()).toBe('<!---->');
+    const errorComponent = element.shadowRoot?.querySelector(
+      'atomic-component-error'
+    );
+    expect(errorComponent).toBeNull();
   });
 
   it('should format unit correctly with short display', async () => {

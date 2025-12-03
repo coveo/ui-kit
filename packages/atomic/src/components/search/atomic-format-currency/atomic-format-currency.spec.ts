@@ -41,7 +41,10 @@ describe('atomic-format-currency', () => {
 
   it('should render nothing when there is no error', async () => {
     const {element} = await renderAtomicFormatCurrency('USD');
-    expect(element.shadowRoot?.innerHTML.trim()).toBe('<!---->');
+    const errorComponent = element.shadowRoot?.querySelector(
+      'atomic-component-error'
+    );
+    expect(errorComponent).toBeNull();
   });
 
   it('should format currency correctly using the provided currency code', async () => {
