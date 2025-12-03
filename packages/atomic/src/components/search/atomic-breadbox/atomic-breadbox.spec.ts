@@ -717,4 +717,97 @@ describe('atomic-breadbox', () => {
       window.ResizeObserver = originalResizeObserver;
     });
   });
+
+  describe('rating facet breadcrumbs', () => {
+    it('should render rating facet breadcrumbs with content', async () => {
+      await renderBreadbox({
+        breadcrumbState: {
+          numericFacetBreadcrumbs: [
+            {
+              facetId: 'test-numeric-facet',
+              field: 'rating-field',
+              values: [
+                {
+                  value: {
+                    start: 4,
+                    end: 5,
+                    endInclusive: false,
+                    state: 'selected',
+                    numberOfResults: 10,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+        },
+      });
+
+      const breadcrumbButtons = page.getByRole('button', {
+        name: /Remove inclusion filter/,
+      });
+      await expect.element(breadcrumbButtons.first()).toBeVisible();
+    });
+
+    it('should render rating-range facet breadcrumbs with content', async () => {
+      await renderBreadbox({
+        breadcrumbState: {
+          numericFacetBreadcrumbs: [
+            {
+              facetId: 'test-numeric-facet',
+              field: 'rating-range-field',
+              values: [
+                {
+                  value: {
+                    start: 3,
+                    end: 5,
+                    endInclusive: true,
+                    state: 'selected',
+                    numberOfResults: 25,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+        },
+      });
+
+      const breadcrumbButtons = page.getByRole('button', {
+        name: /Remove inclusion filter/,
+      });
+      await expect.element(breadcrumbButtons.first()).toBeVisible();
+    });
+
+    it('should handle breadcrumb with custom content prop', async () => {
+      const {element} = await renderBreadbox({
+        breadcrumbState: {
+          numericFacetBreadcrumbs: [
+            {
+              facetId: 'test-numeric-facet',
+              field: 'test-numeric-field',
+              values: [
+                {
+                  value: {
+                    start: 4,
+                    end: 5,
+                    endInclusive: false,
+                    state: 'selected',
+                    numberOfResults: 5,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+        },
+      });
+
+      // Verify breadcrumb exists and is rendered
+      const breadcrumbValue = element.shadowRoot?.querySelector(
+        '[part="breadcrumb-value"]'
+      );
+      expect(breadcrumbValue).toBeInTheDocument();
+    });
+  });
 });
