@@ -18,7 +18,7 @@ import {
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
-import {html, LitElement, nothing, type PropertyValues} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import atomicRatingStyles from '@/src/components/common/atomic-rating/atomic-rating.tw.css';
@@ -382,17 +382,10 @@ export class AtomicRatingFacet
     );
   }
 
-  protected updated(changed: PropertyValues<this>) {
-    if (
-      changed.has('numberOfIntervals') &&
-      this.maxValueInIndex === undefined
-    ) {
-      this.maxValueInIndex = this.numberOfIntervals;
-    }
-  }
-
   private get scaleFactor() {
-    return this.maxValueInIndex / this.numberOfIntervals;
+    return (
+      (this.maxValueInIndex ?? this.numberOfIntervals) / this.numberOfIntervals
+    );
   }
 
   private get numberOfSelectedValues() {
@@ -427,12 +420,13 @@ export class AtomicRatingFacet
   }
 
   private formatFacetValue(facetValue: NumericFacetValue) {
-    if (facetValue.start === this.maxValueInIndex) {
+    const maxValue = this.maxValueInIndex ?? this.numberOfIntervals;
+    if (facetValue.start === maxValue) {
       return this.bindings.i18n.t('stars-only', {count: facetValue.start});
     }
     return this.bindings.i18n.t('stars', {
       count: facetValue.start,
-      max: this.maxValueInIndex,
+      max: maxValue,
     });
   }
 
@@ -440,7 +434,7 @@ export class AtomicRatingFacet
     return renderRating({
       props: {
         i18n: this.bindings.i18n,
-        numberOfTotalIcons: this.maxValueInIndex,
+        numberOfTotalIcons: this.maxValueInIndex ?? this.numberOfIntervals,
         numberOfActiveIcons: facetValue.start,
         icon: this.icon,
       },
