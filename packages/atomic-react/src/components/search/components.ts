@@ -23,6 +23,7 @@ import {
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
   AtomicResultDate as LitAtomicResultDate,
   AtomicResultHtml as LitAtomicResultHtml,
+  AtomicResultIcon as LitAtomicResultIcon,
   AtomicResultImage as LitAtomicResultImage,
   AtomicResultList as LitAtomicResultList,
   AtomicResultLocalizedText as LitAtomicResultLocalizedText,
@@ -197,6 +198,12 @@ export const AtomicResultHtml = createComponent({
   tagName: 'atomic-result-html',
   react: React,
   elementClass: LitAtomicResultHtml,
+});
+
+export const AtomicResultIcon = createComponent({
+  tagName: 'atomic-result-icon',
+  react: React,
+  elementClass: LitAtomicResultIcon,
 });
 
 export const AtomicResultImage = createComponent({

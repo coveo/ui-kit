@@ -1497,12 +1497,6 @@ export namespace Components {
     interface AtomicResultFieldsList {
     }
     /**
-     * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
-     * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
-     */
-    interface AtomicResultIcon {
-    }
-    /**
      * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
      */
     interface AtomicResultLink {
@@ -2643,16 +2637,6 @@ declare global {
         new (): HTMLAtomicResultFieldsListElement;
     };
     /**
-     * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
-     * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
-     */
-    interface HTMLAtomicResultIconElement extends Components.AtomicResultIcon, HTMLStencilElement {
-    }
-    var HTMLAtomicResultIconElement: {
-        prototype: HTMLAtomicResultIconElement;
-        new (): HTMLAtomicResultIconElement;
-    };
-    /**
      * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
      */
     interface HTMLAtomicResultLinkElement extends Components.AtomicResultLink, HTMLStencilElement {
@@ -3009,7 +2993,6 @@ declare global {
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-result-children": HTMLAtomicResultChildrenElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
-        "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
@@ -4449,12 +4432,6 @@ declare namespace LocalJSX {
     interface AtomicResultFieldsList {
     }
     /**
-     * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
-     * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
-     */
-    interface AtomicResultIcon {
-    }
-    /**
      * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
      */
     interface AtomicResultLink {
@@ -4933,7 +4910,6 @@ declare namespace LocalJSX {
         "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-result-children": AtomicResultChildren;
         "atomic-result-fields-list": AtomicResultFieldsList;
-        "atomic-result-icon": AtomicResultIcon;
         "atomic-result-link": AtomicResultLink;
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
@@ -5169,11 +5145,6 @@ declare module "@stencil/core" {
              * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
              */
             "atomic-result-fields-list": LocalJSX.AtomicResultFieldsList & JSXBase.HTMLAttributes<HTMLAtomicResultFieldsListElement>;
-            /**
-             * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
-             * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
-             */
-            "atomic-result-icon": LocalJSX.AtomicResultIcon & JSXBase.HTMLAttributes<HTMLAtomicResultIconElement>;
             /**
              * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
              */
