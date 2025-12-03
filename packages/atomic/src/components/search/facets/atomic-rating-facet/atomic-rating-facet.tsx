@@ -19,7 +19,6 @@ import {
   TabManagerState,
 } from '@coveo/headless';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
-import type {TemplateResult} from 'lit';
 import Star from '../../../../images/star.svg';
 import {
   BindStateToController,
@@ -28,7 +27,7 @@ import {
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
-import {renderRating} from '../../../common/atomic-rating/rating';
+import {Rating} from '../../../common/atomic-rating/stencil-rating';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
@@ -332,14 +331,14 @@ export class AtomicRatingFacet implements InitializableComponent {
   }
 
   private ratingContent(facetValue: NumericFacetValue) {
-    return renderRating({
-      props: {
-        i18n: this.bindings.i18n,
-        numberOfTotalIcons: this.maxValueInIndex,
-        numberOfActiveIcons: facetValue.start,
-        icon: this.icon,
-      },
-    }) as TemplateResult;
+    return (
+      <Rating
+        i18n={this.bindings.i18n}
+        numberOfTotalIcons={this.maxValueInIndex}
+        numberOfActiveIcons={facetValue.start}
+        icon={this.icon}
+      ></Rating>
+    );
   }
 
   private renderHeader() {
