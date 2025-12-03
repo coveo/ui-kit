@@ -21,6 +21,7 @@ export {AtomicResultList} from './atomic-result-list/atomic-result-list.js';
 export {AtomicResultLocalizedText} from './atomic-result-localized-text/atomic-result-localized-text.js';
 export {AtomicResultMultiValueText} from './atomic-result-multi-value-text/atomic-result-multi-value-text.js';
 export {AtomicResultNumber} from './atomic-result-number/atomic-result-number.js';
+export {AtomicResultRating} from './atomic-result-rating/atomic-result-rating.js';
 export {AtomicResultSectionActions} from './atomic-result-section-actions/atomic-result-section-actions.js';
 export {AtomicResultSectionBadges} from './atomic-result-section-badges/atomic-result-section-badges.js';
 export {AtomicResultSectionBottomMetadata} from './atomic-result-section-bottom-metadata/atomic-result-section-bottom-metadata.js';

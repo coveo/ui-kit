@@ -46,6 +46,8 @@ export default {
     ),
   'atomic-result-number': async () =>
     await import('./atomic-result-number/atomic-result-number.js'),
+  'atomic-result-rating': async () =>
+    await import('./atomic-result-rating/atomic-result-rating.js'),
   'atomic-result-section-actions': async () =>
     await import(
       './atomic-result-section-actions/atomic-result-section-actions.js'
