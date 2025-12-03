@@ -1,3 +1,9 @@
+## <small>3.33.5 (2025-12-03)</small>
+
+* fix(quantic): optimized the loading of the bueno script in quantic (#6630) ([e392c77](https://github.com/coveo/ui-kit/commits/e392c77)), closes [#6630](https://github.com/coveo/ui-kit/issues/6630)
+
+
+
 ## <small>3.33.4 (2025-11-12)</small>
 
 * docs: correct JSDoc grammar and terminology across packages (#6531) ([356975a](https://github.com/coveo/ui-kit/commits/356975a)), closes [#6531](https://github.com/coveo/ui-kit/issues/6531)
