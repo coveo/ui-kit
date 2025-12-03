@@ -78,3 +78,8 @@ minimumReleaseAgeExclude:
   - '@wc-toolkit/storybook-helpers'
   - '@storybook/*'
   - storybook
+  - '@angular-devkit/*'
+  - '@angular/*'
+  - ng-packagr
+  - '@react-router/*'
+  - react-router

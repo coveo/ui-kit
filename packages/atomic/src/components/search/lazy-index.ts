@@ -115,6 +115,8 @@ export default {
   'atomic-sort-expression': async () =>
     await import('./atomic-sort-expression/atomic-sort-expression.js'),
   'atomic-tab': async () => await import('./atomic-tab/atomic-tab.js'),
+  'atomic-tab-manager': async () =>
+    await import('./atomic-tab-manager/atomic-tab-manager.js'),
   'atomic-text': async () => await import('./atomic-text/atomic-text.js'),
 } as Record<string, () => Promise<unknown>>;
 
