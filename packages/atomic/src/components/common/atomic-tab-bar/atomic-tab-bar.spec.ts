@@ -4,7 +4,6 @@ import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {AtomicTabBar} from './atomic-tab-bar';
 import './atomic-tab-bar';
 
-// Mock tab element interface for testing
 interface MockTabElement {
   active: boolean;
   label: string;
@@ -24,7 +23,6 @@ describe('atomic-tab-bar', () => {
   };
 
   beforeEach(() => {
-    // Mock ResizeObserver as a constructor function
     mockResizeObserver = {
       observe: vi.fn(),
       unobserve: vi.fn(),
@@ -44,7 +42,6 @@ describe('atomic-tab-bar', () => {
     const div = document.createElement('div');
     div.setAttribute('data-tab', 'true');
 
-    // Set initial styles
     div.style.width = options.width ? `${options.width}px` : '100px';
     div.style.visibility = 'visible';
 
@@ -162,36 +159,32 @@ describe('atomic-tab-bar', () => {
     });
   });
 
-  describe('when tabs fit within container', () => {
-    it('should show all tabs', async () => {
-      const tabs = [
-        createMockTab({label: 'Tab 1', width: 80}),
-        createMockTab({label: 'Tab 2', width: 80}),
-      ];
+  it('should show all tabs when they fit within the container', async () => {
+    const tabs = [
+      createMockTab({label: 'Tab 1', width: 80}),
+      createMockTab({label: 'Tab 2', width: 80}),
+    ];
 
-      const {element} = await renderTabBar({
-        tabs,
-        containerWidth: 400,
-      });
-
-      const visibleTabs = Array.from(element.children).filter(
-        (tab) => (tab as HTMLElement).style.visibility !== 'hidden'
-      );
-
-      expect(visibleTabs.length).toBeGreaterThan(0);
-      expect(window.ResizeObserver).toHaveBeenCalled();
-      expect(mockResizeObserver.observe).toHaveBeenCalledWith(element);
+    const {element} = await renderTabBar({
+      tabs,
+      containerWidth: 400,
     });
+
+    const visibleTabs = Array.from(element.children).filter(
+      (tab) => (tab as HTMLElement).style.visibility !== 'hidden'
+    );
+
+    expect(visibleTabs.length).toBeGreaterThan(0);
+    expect(window.ResizeObserver).toHaveBeenCalled();
+    expect(mockResizeObserver.observe).toHaveBeenCalledWith(element);
   });
 
-  describe('when disconnecting', () => {
-    it('should disconnect ResizeObserver', async () => {
-      const {element} = await renderTabBar();
+  it('should disconnect ResizeObserver when disconnected', async () => {
+    const {element} = await renderTabBar();
 
-      element.remove();
+    element.remove();
 
-      expect(mockResizeObserver.disconnect).toHaveBeenCalled();
-    });
+    expect(mockResizeObserver.disconnect).toHaveBeenCalled();
   });
 
   describe('when handling atomic/tabRendered event', () => {
@@ -223,23 +216,6 @@ describe('atomic-tab-bar', () => {
         'atomic/tabRendered',
         expect.any(Function)
       );
-    });
-  });
-
-  describe('when managing tab styling', () => {
-    it('should render with tabs and manage their display', async () => {
-      const tabs = [
-        createMockTab({label: 'Tab 1', width: 100}),
-        createMockTab({label: 'Tab 2', width: 100}),
-      ];
-
-      const {element} = await renderTabBar({tabs, containerWidth: 500});
-
-      // Verify tabs are present in the component
-      expect(element.children.length).toBe(2);
-
-      // Verify the component rendered successfully
-      expect(element).toBeInTheDocument();
     });
   });
 });
