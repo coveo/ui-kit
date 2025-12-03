@@ -1794,11 +1794,6 @@ export namespace Components {
          */
         "select": () => void;
     }
-    interface AtomicTabPopover {
-        "closePopoverOnFocusOut": (event: FocusEvent) => Promise<void>;
-        "setButtonVisibility": (isVisible: boolean) => Promise<void>;
-        "toggle": () => Promise<void>;
-    }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
      */
@@ -2900,12 +2895,6 @@ declare global {
         prototype: HTMLAtomicTabButtonElement;
         new (): HTMLAtomicTabButtonElement;
     };
-    interface HTMLAtomicTabPopoverElement extends Components.AtomicTabPopover, HTMLStencilElement {
-    }
-    var HTMLAtomicTabPopoverElement: {
-        prototype: HTMLAtomicTabPopoverElement;
-        new (): HTMLAtomicTabPopoverElement;
-    };
     /**
      * The `atomic-table-element` element defines a table column in a result list.
      */
@@ -3028,7 +3017,6 @@ declare global {
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
         "atomic-tab-bar": HTMLAtomicTabBarElement;
         "atomic-tab-button": HTMLAtomicTabButtonElement;
-        "atomic-tab-popover": HTMLAtomicTabPopoverElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
@@ -4764,8 +4752,6 @@ declare namespace LocalJSX {
          */
         "select": () => void;
     }
-    interface AtomicTabPopover {
-    }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
      */
@@ -4952,7 +4938,6 @@ declare namespace LocalJSX {
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
         "atomic-tab-bar": AtomicTabBar;
         "atomic-tab-button": AtomicTabButton;
-        "atomic-tab-popover": AtomicTabPopover;
         "atomic-table-element": AtomicTableElement;
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
@@ -5257,7 +5242,6 @@ declare module "@stencil/core" {
             "atomic-suggestion-renderer": LocalJSX.AtomicSuggestionRenderer & JSXBase.HTMLAttributes<HTMLAtomicSuggestionRendererElement>;
             "atomic-tab-bar": LocalJSX.AtomicTabBar & JSXBase.HTMLAttributes<HTMLAtomicTabBarElement>;
             "atomic-tab-button": LocalJSX.AtomicTabButton & JSXBase.HTMLAttributes<HTMLAtomicTabButtonElement>;
-            "atomic-tab-popover": LocalJSX.AtomicTabPopover & JSXBase.HTMLAttributes<HTMLAtomicTabPopoverElement>;
             /**
              * The `atomic-table-element` element defines a table column in a result list.
              */
