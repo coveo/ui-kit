@@ -906,33 +906,39 @@ return await this.hydrated.screenshot({...}); // Use locator.screenshot()
 
 #### Issue 3: Wrong BasePageObject Import for Migration Stage
 
-The base class depends on whether the component is Stencil or Lit:
-
-**At Step 0 (Stencil component - before migration):**
+❌ **Error:** Using wrong base class for migration stage
 ```typescript
-// Correct for Stencil - uses hydrated class selector
-import {BasePageObject} from '@/playwright-utils/base-page-object';
-export class ComponentPageObject extends BasePageObject<'atomic-component-name'> { ... }
+// At Step 0 with Stencil component - WRONG
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object'; // Don't use lit version yet!
+
+// After Step 4 with Lit component - WRONG  
+import {BasePageObject} from '@/playwright-utils/base-page-object'; // Still using Stencil version
 ```
 
-**After Step 4 (Lit component - after migration):**
+✅ **Fix:** Use the correct base class for each stage
 ```typescript
+// At Step 0 (Stencil component - before migration)
+// Correct for Stencil - uses hydrated class selector
+import {BasePageObject} from '@/playwright-utils/base-page-object';
+export class ComponentNamePageObject extends BasePageObject<'atomic-component-name'> { ... }
+
+// After Step 4 (Lit component - after migration)
 // Correct for Lit - uses tag selector
 import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
-export class ComponentPageObject extends BasePageObject { ... }
+export class ComponentNamePageObject extends BasePageObject { ... }
 ```
 
 #### Issue 4: Generic Class Name in Fixture
 
 ❌ **Error:**
 ```typescript
-// Using generic name instead of specific class
-import {ComponentPageObject} from './page-object';
+// Using generic name instead of the actual exported class name
+import {ComponentNamePageObject} from './page-object';
 ```
 
 ✅ **Fix:**
 ```typescript
-// Use the actual exported class name
+// Use the actual exported class name matching your component
 import {RatingFacetPageObject} from './page-object';
 ```
 
