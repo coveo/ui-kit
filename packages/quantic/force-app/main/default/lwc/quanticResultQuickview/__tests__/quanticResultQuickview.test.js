@@ -44,6 +44,8 @@ const exampleResult = {
   },
   title: 'abc',
   uniqueId: '123',
+  parentResult: {},
+  childResults: [],
 };
 
 const functionMocks = {
@@ -149,8 +151,10 @@ describe('c-quantic-result-quick-view', () => {
     await quickViewButton.click();
     await flushPromises();
 
+    const {parentResult, childResults, ...expectedPayload } = exampleResult;
+
     expect(functionMocks.pushRecentResult).toHaveBeenCalledTimes(1);
-    expect(functionMocks.pushRecentResult).toHaveBeenCalledWith(exampleResult);
+    expect(functionMocks.pushRecentResult).toHaveBeenCalledWith(expectedPayload);
   });
 
   describe('when the result has no preview', () => {
