@@ -86,16 +86,14 @@ describe('atomic-result-children', () => {
     });
   });
 
-  describe('when template is missing', () => {
-    it('should set an error when no child template is provided', async () => {
-      const {element} = await renderResultChildren({includeTemplate: false});
+  it('should set an error when no child template is provided', async () => {
+    const {element} = await renderResultChildren({includeTemplate: false});
 
-      await element.updateComplete;
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toContain(
-        'requires at least one "atomic-result-children-template" component'
-      );
-    });
+    await element.updateComplete;
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toContain(
+      'requires at least one "atomic-result-children-template" component'
+    );
   });
 
   describe('#resolveChildTemplates event', () => {
@@ -129,7 +127,7 @@ describe('atomic-result-children', () => {
   });
 
   describe('when inheritTemplates is true', () => {
-    it('should not require child templates when inherit-templates is set', async () => {
+    it('should not require child templates', async () => {
       const {element} = await renderResultChildren({
         inheritTemplates: true,
         includeTemplate: false,
@@ -144,6 +142,120 @@ describe('atomic-result-children', () => {
           'requires at least one "atomic-result-children-template"'
         );
       }
+    });
+
+    it('should use template provider from parent context when inheritTemplates is true', async () => {
+      const {element} = await renderResultChildren({
+        inheritTemplates: true,
+        includeTemplate: false,
+      });
+
+      const detailFn = vi.fn();
+      const event = new CustomEvent('atomic/resolveChildTemplates', {
+        detail: detailFn,
+        bubbles: true,
+        cancelable: true,
+      });
+
+      element.dispatchEvent(event);
+      expect(detailFn).toHaveBeenCalled();
+      // When inheritTemplates is true and no local template, it should resolve from parent context
+      expect(event.defaultPrevented).toBe(true);
+    });
+  });
+
+  describe('when connected to the DOM', () => {
+    it('should dispatch atomic/resolveFoldedResultList event', async () => {
+      const {element} = await renderResultChildren();
+
+      const detailFn = vi.fn();
+      const event = new CustomEvent('atomic/resolveFoldedResultList', {
+        detail: detailFn,
+        bubbles: true,
+        cancelable: true,
+      });
+
+      element.dispatchEvent(event);
+      // The FoldedItemListContextController should handle this event
+      expect(event.defaultPrevented).toBe(true);
+    });
+
+    it('should dispatch atomic/resolveChildTemplates event', async () => {
+      const {element} = await renderResultChildren();
+
+      const detailFn = vi.fn();
+      const event = new CustomEvent('atomic/resolveChildTemplates', {
+        detail: detailFn,
+        bubbles: true,
+        cancelable: true,
+      });
+
+      element.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(true);
+      expect(detailFn).toHaveBeenCalled();
+    });
+
+    it('should dispatch atomic/resolveResultDisplayConfig event', async () => {
+      const {element} = await renderResultChildren();
+
+      const detailFn = vi.fn();
+      const event = new CustomEvent('atomic/resolveResultDisplayConfig', {
+        detail: detailFn,
+        bubbles: true,
+        cancelable: true,
+      });
+
+      element.dispatchEvent(event);
+      // The ItemDisplayConfigContextController should handle this event
+      expect(event.defaultPrevented).toBe(true);
+    });
+
+    it('should dispatch atomic/resolveResult event', async () => {
+      const {element} = await renderResultChildren();
+
+      const detailFn = vi.fn();
+      const event = new CustomEvent('atomic/resolveResult', {
+        detail: detailFn,
+        bubbles: true,
+        cancelable: true,
+      });
+
+      element.dispatchEvent(event);
+      // The ResultContextController should handle this event
+      expect(event.defaultPrevented).toBe(true);
+    });
+  });
+
+  describe('when removed from the DOM', () => {
+    it('should remove resolveChildTemplates listener', async () => {
+      const {element} = await renderResultChildren();
+
+      const detailFn = vi.fn();
+      const event = new CustomEvent('atomic/resolveChildTemplates', {
+        detail: detailFn,
+        bubbles: true,
+        cancelable: true,
+      });
+
+      // Should work before disconnecting
+      element.dispatchEvent(event);
+      expect(detailFn).toHaveBeenCalledTimes(1);
+
+      // Disconnect from DOM
+      element.disconnectedCallback();
+
+      // Create new event
+      const detailFn2 = vi.fn();
+      const event2 = new CustomEvent('atomic/resolveChildTemplates', {
+        detail: detailFn2,
+        bubbles: true,
+        cancelable: true,
+      });
+
+      // Should not handle event after disconnecting
+      element.dispatchEvent(event2);
+      expect(detailFn2).not.toHaveBeenCalled();
+      expect(event2.defaultPrevented).toBe(false);
     });
   });
 });

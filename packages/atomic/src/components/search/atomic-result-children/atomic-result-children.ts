@@ -254,7 +254,7 @@ export class AtomicResultChildren
 
     const key =
       child.result.uniqueId +
-      child.children.map((c) => c.result.uniqueId).join('');
+      child.children.map((c) => c.result.uniqueId).join(',');
 
     return html`<atomic-result
       .key=${key}
