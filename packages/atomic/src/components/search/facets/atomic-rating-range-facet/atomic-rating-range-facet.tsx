@@ -18,6 +18,7 @@ import {
   TabManagerState,
 } from '@coveo/headless';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
+import {html, type TemplateResult} from 'lit';
 import Star from '../../../../images/star.svg';
 import {
   BindStateToController,
@@ -26,7 +27,7 @@ import {
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
-import {Rating} from '../../../common/atomic-rating/stencil-rating';
+import {renderRating} from '../../../common/atomic-rating/rating';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
@@ -316,17 +317,17 @@ export class AtomicRatingRangeFacet implements InitializableComponent {
   }
 
   private ratingContent(facetValue: NumericFacetValue) {
-    return (
-      <div class="flex items-center">
-        <Rating
-          i18n={this.bindings.i18n}
-          numberOfTotalIcons={this.maxValueInIndex}
-          numberOfActiveIcons={facetValue.start}
-          icon={this.icon}
-        ></Rating>
-        {this.renderLabelText(facetValue)}
-      </div>
-    );
+    return html`<div class="flex items-center">
+      ${renderRating({
+        props: {
+          i18n: this.bindings.i18n,
+          numberOfTotalIcons: this.maxValueInIndex,
+          numberOfActiveIcons: facetValue.start,
+          icon: this.icon,
+        },
+      })}
+      ${this.renderLabelText(facetValue)}
+    </div>` as TemplateResult;
   }
 
   private renderHeader() {
@@ -348,20 +349,15 @@ export class AtomicRatingRangeFacet implements InitializableComponent {
   }
 
   private renderLabelText(facetValue: NumericFacetValue) {
-    return (
-      <span
-        part="value-label"
-        class={`group-focus:text-primary group-hover:text-primary ml-1 flex items-center truncate ${
-          facetValue.state === 'selected' ? 'font-bold' : ''
-        }`}
-      >
-        {facetValue.start === this.maxValueInIndex ? (
-          <span>{this.bindings.i18n.t('only')}</span>
-        ) : (
-          this.bindings.i18n.t('and-up')
-        )}
-      </span>
-    );
+    const labelClass = `group-focus:text-primary group-hover:text-primary ml-1 flex items-center truncate ${
+      facetValue.state === 'selected' ? 'font-bold' : ''
+    }`;
+
+    return html`<span part="value-label" class=${labelClass}>
+      ${facetValue.start === this.maxValueInIndex
+        ? html`<span>${this.bindings.i18n.t('only')}</span>`
+        : this.bindings.i18n.t('and-up')}
+    </span>`;
   }
 
   private renderValue(facetValue: NumericFacetValue, onClick: () => void) {
