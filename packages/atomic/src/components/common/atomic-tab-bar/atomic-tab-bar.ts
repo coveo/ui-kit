@@ -1,27 +1,36 @@
-import {h, Component, Element, Host, State, Listen} from '@stencil/core';
-import {Button} from '../stencil-button';
-import {TabCommonElement} from './tab-common';
+import {type CSSResultGroup, html, LitElement, type TemplateResult} from 'lit';
+import {customElement, state} from 'lit/decorators.js';
+import {renderButton} from '@/src/components/common/button';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import type {TabCommonElement} from '../tabs/tab-common';
+import styles from './atomic-tab-bar.tw.css';
+
+interface TabPopoverElement extends HTMLElement {
+  toggle: () => Promise<void>;
+  setButtonVisibility: (isVisible: boolean) => Promise<void>;
+}
 
 /**
+ * The `atomic-tab-bar` component is an internal component that manages tab overflow behavior.
+ * When tabs exceed the available container width, overflowing tabs are moved to a popover menu.
+ *
  * @internal
+ * @slot (default) - The tab elements to display.
  */
-@Component({
-  tag: 'atomic-tab-bar',
-  shadow: true,
-  styleUrl: 'tab-bar.pcss',
-})
-export class TabBar {
-  @Element() private host!: HTMLElement;
+@customElement('atomic-tab-bar')
+@withTailwindStyles
+export class AtomicTabBar extends LitElement {
+  static styles: CSSResultGroup = styles;
 
-  @State()
-  private popoverTabs: (typeof Button)[] = [];
+  @state()
+  private popoverTabs: TemplateResult[] = [];
 
   private resizeObserver: ResizeObserver | undefined;
 
   private get tabsFromSlot(): TabCommonElement[] {
     const isTab = (tagName: string) =>
       /atomic-.+-tab$/i.test(tagName) || /tab-button$/i.test(tagName);
-    return Array.from(this.host.querySelectorAll<TabCommonElement>('*')).filter(
+    return Array.from(this.querySelectorAll<TabCommonElement>('*')).filter(
       (element) => isTab(element.tagName)
     );
   }
@@ -40,9 +49,7 @@ export class TabBar {
   }
 
   private get containerWidth() {
-    return parseFloat(
-      window.getComputedStyle(this.host).getPropertyValue('width')
-    );
+    return parseFloat(window.getComputedStyle(this).getPropertyValue('width'));
   }
 
   private get isOverflow() {
@@ -50,7 +57,9 @@ export class TabBar {
   }
 
   private get tabPopover() {
-    return this.host.shadowRoot?.querySelector('atomic-tab-popover');
+    return this.shadowRoot?.querySelector<TabPopoverElement>(
+      'atomic-tab-popover'
+    );
   }
 
   private get popoverWidth() {
@@ -58,8 +67,7 @@ export class TabBar {
   }
 
   private get overflowingTabs() {
-    const containerRelativeRightPosition =
-      this.host.getBoundingClientRect().right;
+    const containerRelativeRightPosition = this.getBoundingClientRect().right;
     const selectedTabRelativeRightPosition =
       this.selectedTab?.getBoundingClientRect().right;
 
@@ -96,9 +104,53 @@ export class TabBar {
   private get lastDisplayedTabRightPosition() {
     return (
       this.lastDisplayedTab.getBoundingClientRect().right -
-      this.host.getBoundingClientRect().left
+      this.getBoundingClientRect().left
     );
   }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener(
+      'atomic/tabRendered',
+      this.handleTabRendered as EventListener
+    );
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.resizeObserver?.disconnect();
+    this.removeEventListener(
+      'atomic/tabRendered',
+      this.handleTabRendered as EventListener
+    );
+  }
+
+  firstUpdated() {
+    this.resizeObserver = new ResizeObserver(() => {
+      this.updateTabsDisplay();
+    });
+    this.resizeObserver.observe(this);
+  }
+
+  willUpdate() {
+    this.updateTabsDisplay();
+  }
+
+  render() {
+    return html`
+      <slot></slot>
+      <atomic-tab-popover
+        exportparts="popover-button, value-label, arrow-icon, backdrop overflow-tabs"
+      >
+        ${this.popoverTabs}
+      </atomic-tab-popover>
+    `;
+  }
+
+  private handleTabRendered = (event: CustomEvent) => {
+    event.stopPropagation();
+    this.updatePopoverTabs();
+  };
 
   private updatePopoverPosition() {
     this.tabPopover?.style.setProperty(
@@ -143,24 +195,27 @@ export class TabBar {
   };
 
   private updatePopoverTabs = () => {
-    this.popoverTabs = this.overflowingTabs.map((tab) => (
-      <li>
-        <Button
-          part="popover-tab"
-          style="text-transparent"
-          class="w-full truncate rounded px-4 py-2 text-left font-semibold"
-          ariaLabel={tab.label}
-          title={tab.label}
-          onClick={() => {
-            tab.select();
-            this.updatePopoverTabs();
-            this.tabPopover?.toggle();
-          }}
-        >
-          {tab.label}
-        </Button>
-      </li>
-    ));
+    this.popoverTabs = this.overflowingTabs.map(
+      (tab) => html`
+        <li>
+          ${renderButton({
+            props: {
+              part: 'popover-tab',
+              style: 'text-transparent',
+              class:
+                'w-full truncate rounded px-4 py-2 text-left font-semibold',
+              ariaLabel: tab.label,
+              title: tab.label,
+              onClick: () => {
+                tab.select();
+                this.updatePopoverTabs();
+                this.tabPopover?.toggle();
+              },
+            },
+          })(html`${tab.label}`)}
+        </li>
+      `
+    );
   };
 
   private setTabButtonMaxWidth = () => {
@@ -177,35 +232,10 @@ export class TabBar {
     this.updatePopoverTabs();
     this.tabPopover?.setButtonVisibility(!!this.overflowingTabs.length);
   };
+}
 
-  @Listen('atomic/tabRendered')
-  public resolveResult(event: CustomEvent<{}>) {
-    event.stopPropagation();
-    this.updatePopoverTabs();
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-tab-bar': AtomicTabBar;
   }
-  public componentWillUpdate() {
-    this.updateTabsDisplay();
-  }
-
-  public componentDidLoad() {
-    this.resizeObserver = new ResizeObserver(() => {
-      this.updateTabsDisplay();
-    });
-    this.resizeObserver.observe(this.host);
-  }
-
-  public disconnectedCallback() {
-    this.resizeObserver?.disconnect();
-  }
-
-  public render = () => {
-    return (
-      <Host class="overflow-x-clip overflow-y-visible">
-        <slot></slot>
-        <atomic-tab-popover exportparts="popover-button, value-label, arrow-icon, backdrop overflow-tabs">
-          {this.popoverTabs}
-        </atomic-tab-popover>
-      </Host>
-    );
-  };
 }
