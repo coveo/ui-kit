@@ -275,6 +275,7 @@ export class AtomicRatingRangeFacet
         dependsOn: this.dependsOn,
       }),
       AtomicRatingRangeFacet.propsSchema,
+      // TODO V4: KIT-5197 - Remove false
       false
     );
   }

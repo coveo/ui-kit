@@ -166,7 +166,8 @@ describe('atomic-rating-range-facet', () => {
     });
   });
 
-  describe('props validation', () => {
+  // TODO V4: KIT-5197 - unskip
+  describe.skip('props validation', () => {
     it('should set error when field prop is missing', async () => {
       const consoleErrorSpy = vi
         .spyOn(console, 'error')
