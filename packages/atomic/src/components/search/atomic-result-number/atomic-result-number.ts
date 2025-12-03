@@ -42,7 +42,6 @@ export class AtomicResultNumber
 
   constructor() {
     super();
-    console.log('constructor bindings', this.bindings);
 
     new ValidatePropsController(
       this,
