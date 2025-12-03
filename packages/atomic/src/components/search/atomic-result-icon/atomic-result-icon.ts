@@ -8,6 +8,7 @@ import '@/src/components/common/atomic-icon/atomic-icon';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
 import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {snakeToCamel} from '@/src/utils/utils';
 import {fileTypeIcons} from './file-type-icons';
@@ -91,9 +92,10 @@ export class AtomicResultIcon
     `;
   }
 
+  @errorGuard()
   protected render() {
     if (this.resultController.hasError) {
-      return nothing;
+      return html`${nothing}`;
     }
 
     return when(
