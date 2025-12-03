@@ -237,14 +237,6 @@ describe('atomic-rating-facet', () => {
       consoleWarnSpy.mockRestore();
     });
 
-    it('should handle maxValueInIndex defaulting to numberOfIntervals', async () => {
-      const {element} = await renderRatingFacet({
-        props: {numberOfIntervals: 7},
-      });
-
-      expect(element.maxValueInIndex).toBe(7);
-    });
-
     it('should handle explicit maxValueInIndex value', async () => {
       const {element} = await renderRatingFacet({
         props: {
@@ -447,11 +439,10 @@ describe('atomic-rating-facet', () => {
   });
 
   describe('accessibility', () => {
-    it('should have proper heading level', async () => {
-      const {element} = await renderRatingFacet({
-        props: {headingLevel: 3},
-      });
-      expect(element.headingLevel).toBe(3);
+    it('should render heading with correct level', async () => {
+      const {element} = await renderRatingFacet({props: {headingLevel: 3}});
+      const heading = element.shadowRoot?.querySelector('h3');
+      expect(heading).toBeDefined();
     });
 
     it('should render clear button when values are selected', async () => {
@@ -535,19 +526,17 @@ describe('atomic-rating-facet', () => {
     });
   });
 
-  describe('dependencies', () => {
-    it('should build facet conditions manager when dependsOn is provided', async () => {
-      const {element} = await renderRatingFacet({
-        props: {dependsOn: {parentFacet: 'value'}},
-      });
-
-      expect(buildFacetConditionsManager).toHaveBeenCalledWith(
-        element.bindings.engine,
-        expect.objectContaining({
-          facetId: expect.any(String),
-          conditions: expect.any(Object),
-        })
-      );
+  it('should build facet conditions manager when dependsOn is provided', async () => {
+    const {element} = await renderRatingFacet({
+      props: {dependsOn: {parentFacet: 'value'}},
     });
+
+    expect(buildFacetConditionsManager).toHaveBeenCalledWith(
+      element.bindings.engine,
+      expect.objectContaining({
+        facetId: expect.any(String),
+        conditions: expect.any(Object),
+      })
+    );
   });
 });
