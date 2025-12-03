@@ -173,7 +173,8 @@ export default class QuanticResultQuickview extends LightningElement {
       this.engine
     );
 
-    // Destructuring transforms the Proxy object created by Salesforce to a normal object so no unexpected behaviour will occur with the Headless library.
+    // Exclude parentResult and childResults to prevent Salesforce Proxy extensibility errors.
+    // These nested result objects remain proxied after spreading, causing 'isExtensible' trap violations when accessed by the Headless library.
     // @ts-ignore
     const {parentResult, childResults, ...result } = this.result;
     this.engine.dispatch(
