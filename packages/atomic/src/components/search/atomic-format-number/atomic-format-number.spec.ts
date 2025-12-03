@@ -12,8 +12,15 @@ describe('atomic-format-number', () => {
       maximumFractionDigits?: number;
       minimumSignificantDigits?: number;
       maximumSignificantDigits?: number;
-    } = {}
+    } = {},
+    preventEventDefault = true
   ) => {
+    const container = document.createElement('div');
+    if (preventEventDefault) {
+      container.addEventListener('atomic/numberFormat', (e) => {
+        e.preventDefault();
+      });
+    }
     const element = await fixture<AtomicFormatNumber>(
       html`<atomic-format-number
         .minimumIntegerDigits=${options.minimumIntegerDigits}
@@ -21,7 +28,8 @@ describe('atomic-format-number', () => {
         .maximumFractionDigits=${options.maximumFractionDigits}
         .minimumSignificantDigits=${options.minimumSignificantDigits}
         .maximumSignificantDigits=${options.maximumSignificantDigits}
-      ></atomic-format-number>`
+      ></atomic-format-number>`,
+      container
     );
     return {element};
   };
@@ -47,19 +55,24 @@ describe('atomic-format-number', () => {
   });
 
   it('should format number with minimum fraction digits', async () => {
-    const {element} = await renderAtomicFormatNumber({
-      minimumFractionDigits: 2,
-    });
-
     let capturedFormatter:
       | ((value: number, languages: string[]) => string)
       | undefined;
-    element.addEventListener('atomic/numberFormat', (e: Event) => {
+
+    const container = document.createElement('div');
+    container.addEventListener('atomic/numberFormat', (e) => {
+      e.preventDefault();
       capturedFormatter = (e as CustomEvent).detail;
     });
 
-    element.connectedCallback();
+    await fixture<AtomicFormatNumber>(
+      html`<atomic-format-number
+        .minimumFractionDigits=${2}
+      ></atomic-format-number>`,
+      container
+    );
 
+    expect(capturedFormatter).toBeDefined();
     if (capturedFormatter) {
       const result = capturedFormatter(100, ['en-US']);
       expect(result).toBe('100.00');
@@ -67,19 +80,24 @@ describe('atomic-format-number', () => {
   });
 
   it('should format number with maximum fraction digits', async () => {
-    const {element} = await renderAtomicFormatNumber({
-      maximumFractionDigits: 1,
-    });
-
     let capturedFormatter:
       | ((value: number, languages: string[]) => string)
       | undefined;
-    element.addEventListener('atomic/numberFormat', (e: Event) => {
+
+    const container = document.createElement('div');
+    container.addEventListener('atomic/numberFormat', (e) => {
+      e.preventDefault();
       capturedFormatter = (e as CustomEvent).detail;
     });
 
-    element.connectedCallback();
+    await fixture<AtomicFormatNumber>(
+      html`<atomic-format-number
+        .maximumFractionDigits=${1}
+      ></atomic-format-number>`,
+      container
+    );
 
+    expect(capturedFormatter).toBeDefined();
     if (capturedFormatter) {
       const result = capturedFormatter(100.999, ['en-US']);
       expect(result).toBe('101');
@@ -88,15 +106,7 @@ describe('atomic-format-number', () => {
 
   describe('when not a child of a compatible component', () => {
     it('should render atomic-component-error when dispatchEvent is not canceled', async () => {
-      const container = document.createElement('div');
-      container.addEventListener('atomic/numberFormat', (_e) => {
-        // Don't prevent default - simulating no compatible parent
-      });
-
-      const element = await fixture<AtomicFormatNumber>(
-        html`<atomic-format-number></atomic-format-number>`,
-        container
-      );
+      const {element} = await renderAtomicFormatNumber({}, false);
 
       await element.updateComplete;
       const errorComponent = element.shadowRoot?.querySelector(

@@ -7,10 +7,21 @@ import {AtomicFormatUnit} from './atomic-format-unit.js';
 describe('atomic-format-unit', () => {
   const renderAtomicFormatUnit = async (
     unit = 'byte',
-    unitDisplay: 'long' | 'short' | 'narrow' = 'short'
+    unitDisplay: 'long' | 'short' | 'narrow' = 'short',
+    preventEventDefault = true
   ) => {
+    const container = document.createElement('div');
+    if (preventEventDefault) {
+      container.addEventListener('atomic/numberFormat', (e) => {
+        e.preventDefault();
+      });
+    }
     const element = await fixture<AtomicFormatUnit>(
-      html`<atomic-format-unit unit="${unit}" unit-display="${unitDisplay}"></atomic-format-unit>`
+      html`<atomic-format-unit
+        unit="${unit}"
+        unit-display="${unitDisplay}"
+      ></atomic-format-unit>`,
+      container
     );
     return {element};
   };
@@ -36,17 +47,25 @@ describe('atomic-format-unit', () => {
   });
 
   it('should format unit correctly with short display', async () => {
-    const {element} = await renderAtomicFormatUnit('liter', 'short');
-
     let capturedFormatter:
       | ((value: number, languages: string[]) => string)
       | undefined;
-    element.addEventListener('atomic/numberFormat', (e: Event) => {
+
+    const container = document.createElement('div');
+    container.addEventListener('atomic/numberFormat', (e) => {
+      e.preventDefault();
       capturedFormatter = (e as CustomEvent).detail;
     });
 
-    element.connectedCallback();
+    await fixture<AtomicFormatUnit>(
+      html`<atomic-format-unit
+        unit="liter"
+        unit-display="short"
+      ></atomic-format-unit>`,
+      container
+    );
 
+    expect(capturedFormatter).toBeDefined();
     if (capturedFormatter) {
       const result = capturedFormatter(16, ['en-US']);
       expect(result).toContain('16');
@@ -55,17 +74,25 @@ describe('atomic-format-unit', () => {
   });
 
   it('should format unit correctly with long display', async () => {
-    const {element} = await renderAtomicFormatUnit('liter', 'long');
-
     let capturedFormatter:
       | ((value: number, languages: string[]) => string)
       | undefined;
-    element.addEventListener('atomic/numberFormat', (e: Event) => {
+
+    const container = document.createElement('div');
+    container.addEventListener('atomic/numberFormat', (e) => {
+      e.preventDefault();
       capturedFormatter = (e as CustomEvent).detail;
     });
 
-    element.connectedCallback();
+    await fixture<AtomicFormatUnit>(
+      html`<atomic-format-unit
+        unit="liter"
+        unit-display="long"
+      ></atomic-format-unit>`,
+      container
+    );
 
+    expect(capturedFormatter).toBeDefined();
     if (capturedFormatter) {
       const result = capturedFormatter(16, ['en-US']);
       expect(result).toContain('16');
@@ -75,15 +102,7 @@ describe('atomic-format-unit', () => {
 
   describe('when not a child of a compatible component', () => {
     it('should render atomic-component-error when dispatchEvent is not canceled', async () => {
-      const container = document.createElement('div');
-      container.addEventListener('atomic/numberFormat', (_e) => {
-        // Don't prevent default - simulating no compatible parent
-      });
-
-      const element = await fixture<AtomicFormatUnit>(
-        html`<atomic-format-unit unit="byte"></atomic-format-unit>`,
-        container
-      );
+      const {element} = await renderAtomicFormatUnit('byte', 'short', false);
 
       await element.updateComplete;
       const errorComponent = element.shadowRoot?.querySelector(

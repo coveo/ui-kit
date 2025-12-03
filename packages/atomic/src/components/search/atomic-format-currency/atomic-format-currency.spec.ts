@@ -5,9 +5,21 @@ import './atomic-format-currency.js';
 import {AtomicFormatCurrency} from './atomic-format-currency.js';
 
 describe('atomic-format-currency', () => {
-  const renderAtomicFormatCurrency = async (currency = 'USD') => {
+  const renderAtomicFormatCurrency = async (
+    currency = 'USD',
+    preventEventDefault = true
+  ) => {
+    const container = document.createElement('div');
+    if (preventEventDefault) {
+      container.addEventListener('atomic/numberFormat', (e) => {
+        e.preventDefault();
+      });
+    }
     const element = await fixture<AtomicFormatCurrency>(
-      html`<atomic-format-currency currency="${currency}"></atomic-format-currency>`
+      html`<atomic-format-currency
+        currency="${currency}"
+      ></atomic-format-currency>`,
+      container
     );
     return {element};
   };
@@ -33,17 +45,22 @@ describe('atomic-format-currency', () => {
   });
 
   it('should format currency correctly using the provided currency code', async () => {
-    const {element} = await renderAtomicFormatCurrency('EUR');
-
     let capturedFormatter:
       | ((value: number, languages: string[]) => string)
       | undefined;
-    element.addEventListener('atomic/numberFormat', (e: Event) => {
+
+    const container = document.createElement('div');
+    container.addEventListener('atomic/numberFormat', (e) => {
+      e.preventDefault();
       capturedFormatter = (e as CustomEvent).detail;
     });
 
-    element.connectedCallback();
+    await fixture<AtomicFormatCurrency>(
+      html`<atomic-format-currency currency="EUR"></atomic-format-currency>`,
+      container
+    );
 
+    expect(capturedFormatter).toBeDefined();
     if (capturedFormatter) {
       const result = capturedFormatter(100, ['en-US']);
       expect(result).toContain('100');
@@ -53,15 +70,7 @@ describe('atomic-format-currency', () => {
 
   describe('when not a child of a compatible component', () => {
     it('should render atomic-component-error when dispatchEvent is not canceled', async () => {
-      const container = document.createElement('div');
-      container.addEventListener('atomic/numberFormat', (_e) => {
-        // Don't prevent default - simulating no compatible parent
-      });
-
-      const element = await fixture<AtomicFormatCurrency>(
-        html`<atomic-format-currency currency="USD"></atomic-format-currency>`,
-        container
-      );
+      const {element} = await renderAtomicFormatCurrency('USD', false);
 
       await element.updateComplete;
       const errorComponent = element.shadowRoot?.querySelector(
