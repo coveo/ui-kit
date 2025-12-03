@@ -1775,17 +1775,6 @@ export namespace Components {
          */
         "select": () => void;
     }
-    /**
-     * The `atomic-tab-manager` component manages a collection of tabs,
-     * allowing users to switch between them. Each child `atomic-tab` represents an
-     * individual tab within the manager.
-     */
-    interface AtomicTabManager {
-        /**
-          * Whether to clear the filters when the active tab changes.
-         */
-        "clearFiltersOnTabChange"?: boolean;
-    }
     interface AtomicTabPopover {
         "closePopoverOnFocusOut": (event: FocusEvent) => Promise<void>;
         "setButtonVisibility": (isVisible: boolean) => Promise<void>;
@@ -2881,17 +2870,6 @@ declare global {
         prototype: HTMLAtomicTabButtonElement;
         new (): HTMLAtomicTabButtonElement;
     };
-    /**
-     * The `atomic-tab-manager` component manages a collection of tabs,
-     * allowing users to switch between them. Each child `atomic-tab` represents an
-     * individual tab within the manager.
-     */
-    interface HTMLAtomicTabManagerElement extends Components.AtomicTabManager, HTMLStencilElement {
-    }
-    var HTMLAtomicTabManagerElement: {
-        prototype: HTMLAtomicTabManagerElement;
-        new (): HTMLAtomicTabManagerElement;
-    };
     interface HTMLAtomicTabPopoverElement extends Components.AtomicTabPopover, HTMLStencilElement {
     }
     var HTMLAtomicTabPopoverElement: {
@@ -3019,7 +2997,6 @@ declare global {
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
         "atomic-tab-bar": HTMLAtomicTabBarElement;
         "atomic-tab-button": HTMLAtomicTabButtonElement;
-        "atomic-tab-manager": HTMLAtomicTabManagerElement;
         "atomic-tab-popover": HTMLAtomicTabPopoverElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
@@ -4737,17 +4714,6 @@ declare namespace LocalJSX {
          */
         "select": () => void;
     }
-    /**
-     * The `atomic-tab-manager` component manages a collection of tabs,
-     * allowing users to switch between them. Each child `atomic-tab` represents an
-     * individual tab within the manager.
-     */
-    interface AtomicTabManager {
-        /**
-          * Whether to clear the filters when the active tab changes.
-         */
-        "clearFiltersOnTabChange"?: boolean;
-    }
     interface AtomicTabPopover {
     }
     /**
@@ -4935,7 +4901,6 @@ declare namespace LocalJSX {
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
         "atomic-tab-bar": AtomicTabBar;
         "atomic-tab-button": AtomicTabButton;
-        "atomic-tab-manager": AtomicTabManager;
         "atomic-tab-popover": AtomicTabPopover;
         "atomic-table-element": AtomicTableElement;
         "atomic-timeframe": AtomicTimeframe;
@@ -5235,12 +5200,6 @@ declare module "@stencil/core" {
             "atomic-suggestion-renderer": LocalJSX.AtomicSuggestionRenderer & JSXBase.HTMLAttributes<HTMLAtomicSuggestionRendererElement>;
             "atomic-tab-bar": LocalJSX.AtomicTabBar & JSXBase.HTMLAttributes<HTMLAtomicTabBarElement>;
             "atomic-tab-button": LocalJSX.AtomicTabButton & JSXBase.HTMLAttributes<HTMLAtomicTabButtonElement>;
-            /**
-             * The `atomic-tab-manager` component manages a collection of tabs,
-             * allowing users to switch between them. Each child `atomic-tab` represents an
-             * individual tab within the manager.
-             */
-            "atomic-tab-manager": LocalJSX.AtomicTabManager & JSXBase.HTMLAttributes<HTMLAtomicTabManagerElement>;
             "atomic-tab-popover": LocalJSX.AtomicTabPopover & JSXBase.HTMLAttributes<HTMLAtomicTabPopoverElement>;
             /**
              * The `atomic-table-element` element defines a table column in a result list.
