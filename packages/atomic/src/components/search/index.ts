@@ -44,4 +44,5 @@ export {AtomicSegmentedFacetScrollable} from './atomic-segmented-facet-scrollabl
 export {AtomicSortDropdown} from './atomic-sort-dropdown/atomic-sort-dropdown.js';
 export {AtomicSortExpression} from './atomic-sort-expression/atomic-sort-expression.js';
 export {AtomicTab} from './atomic-tab/atomic-tab.js';
+export {AtomicTabManager} from './atomic-tab-manager/atomic-tab-manager.js';
 export {AtomicText} from './atomic-text/atomic-text.js';

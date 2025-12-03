@@ -1,7 +1,7 @@
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
-export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
+export class TabManagerPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-tab-manager');
   }
