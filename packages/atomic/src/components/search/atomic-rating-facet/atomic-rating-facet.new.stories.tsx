@@ -52,7 +52,6 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-rating-facet',
   args: {
     field: 'snrating',
   },
@@ -60,7 +59,7 @@ export const Default: Story = {
 };
 
 export const DisplayAsLink: Story = {
-  name: 'atomic-rating-facet',
+  name: 'With display as link',
   tags: ['test'],
   args: {
     'display-values-as': 'link',

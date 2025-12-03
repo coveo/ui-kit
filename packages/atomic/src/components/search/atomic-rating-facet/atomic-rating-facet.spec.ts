@@ -77,7 +77,7 @@ describe('atomic-rating-facet', () => {
         icon=${ifDefined(props.icon)}
         ?is-collapsed=${props.isCollapsed}
         heading-level=${ifDefined(props.headingLevel)}
-        ?filter-facet-count=${props.filterFacetCount}
+        filter-facet-count=${props.filterFacetCount}
         injection-depth=${ifDefined(props.injectionDepth)}
         .tabsIncluded=${props.tabsIncluded || []}
         .tabsExcluded=${props.tabsExcluded || []}
@@ -148,7 +148,7 @@ describe('atomic-rating-facet', () => {
         options: expect.objectContaining({
           field: 'testfield',
           numberOfValues: 7,
-          filterFacetCount: true,
+          filterFacetCount: false,
           injectionDepth: 500,
           generateAutomaticRanges: false,
           sortCriteria: 'descending',

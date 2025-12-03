@@ -37,6 +37,7 @@ import {initializePopover} from '@/src/components/common/facets/popover/popover-
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {arrayConverter} from '@/src/converters/array-converter';
+import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -222,6 +223,7 @@ export class AtomicRatingFacet
     reflect: true,
     attribute: 'is-collapsed',
     type: Boolean,
+    converter: booleanConverter,
   })
   public isCollapsed = false;
 
@@ -242,11 +244,11 @@ export class AtomicRatingFacet
    */
   @property({
     reflect: true,
-
     attribute: 'filter-facet-count',
     type: Boolean,
+    converter: booleanConverter,
   })
-  public filterFacetCount = true;
+  public filterFacetCount!: boolean;
 
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
@@ -255,7 +257,6 @@ export class AtomicRatingFacet
    */
   @property({
     reflect: true,
-
     attribute: 'injection-depth',
     type: Number,
   })
@@ -319,6 +320,10 @@ export class AtomicRatingFacet
     }
   }
 
+  private get _filterFacetCount() {
+    return this.filterFacetCount ?? true;
+  }
+
   public initialize() {
     if (
       [...this.tabsIncluded].length > 0 &&
@@ -348,7 +353,7 @@ export class AtomicRatingFacet
       currentValues: this.generateCurrentValues(),
       sortCriteria: 'descending',
       generateAutomaticRanges: false,
-      filterFacetCount: this.filterFacetCount,
+      filterFacetCount: this._filterFacetCount,
       injectionDepth: this.injectionDepth,
       tabs: {
         included: [...this.tabsIncluded],
@@ -499,7 +504,11 @@ export class AtomicRatingFacet
         i18n: this.bindings.i18n,
         label: this.label,
       },
-    })(html`<ul class="mt-3" part="values">${children}</ul>`);
+    })(
+      html`<ul class="mt-3" part="values">
+        ${children}
+      </ul>`
+    );
   }
 
   private renderValues() {
