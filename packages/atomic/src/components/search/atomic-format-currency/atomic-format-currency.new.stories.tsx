@@ -1,8 +1,10 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {wrapInResult} from '@/storybook-utils/search/result-wrapper';
+import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
+import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const {events, args, argTypes, template} = getStorybookHelpers(
@@ -10,24 +12,66 @@ const {events, args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
-const {decorator: resultDecorator, engineConfig} = wrapInResult({
-  preprocessRequest: (r) => {
-    const request = JSON.parse(r.body!.toString());
-    request.cq = '@sncost>0';
-    request.fieldsToInclude = ['sncost'];
-    request.numberOfResults = 1;
-    r.body = JSON.stringify(request);
-    return r;
-  },
-});
+const searchApiHarness = new MockSearchApi();
+
+searchApiHarness.searchEndpoint.mock((response) => ({
+  ...response,
+  // biome-ignore lint/suspicious/noExplicitAny: response type is a union that needs assertion
+  results: (response as any).results.slice(0, 1).map((result: any) => ({
+    ...result,
+    raw: {
+      ...result.raw,
+      sncost: 299.99,
+    },
+  })),
+  facets: [
+    {
+      facetId: 'sncost',
+      field: 'sncost',
+      indexScore: 0,
+      moreValuesAvailable: false,
+      values: [
+        {
+          start: 0,
+          end: 100,
+          endInclusive: false,
+          numberOfResults: 45,
+          state: 'idle',
+        },
+        {
+          start: 100,
+          end: 500,
+          endInclusive: false,
+          numberOfResults: 32,
+          state: 'idle',
+        },
+        {
+          start: 500,
+          end: 1000,
+          endInclusive: true,
+          numberOfResults: 18,
+          state: 'idle',
+        },
+      ],
+      domain: {
+        start: 0,
+        end: 1000,
+      },
+    },
+  ],
+  totalCount: 1,
+  totalCountFiltered: 1,
+}));
 
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
-  config: engineConfig,
+  includeCodeRoot: false,
 });
+const {decorator: resultListDecorator} = wrapInResultList('list', false);
+const {decorator: resultTemplateDecorator} = wrapInResultTemplate(false);
 
 const meta: Meta = {
   component: 'atomic-format-currency',
-  title: 'Search/Format/atomic-format-currency',
+  title: 'Search/Format Currency',
   id: 'atomic-format-currency',
 
   render: (args) => template(args),
@@ -36,6 +80,9 @@ const meta: Meta = {
     ...parameters,
     actions: {
       handles: events,
+    },
+    msw: {
+      handlers: [...searchApiHarness.handlers],
     },
   },
   args,
@@ -48,11 +95,11 @@ export default meta;
 
 export const Facet: Story = {
   name: 'Within Numeric Facet',
-  decorators: [
-    (story) => html`
-      <atomic-numeric-facet field="sncost"> ${story()} </atomic-numeric-facet>
-    `,
-  ],
+  render: (args) => html`
+    <atomic-numeric-facet field="sncost" label="Cost">
+      ${template(args)}
+    </atomic-numeric-facet>
+  `,
   args: {
     currency: 'USD',
   },
@@ -60,12 +107,12 @@ export const Facet: Story = {
 
 export const Result: Story = {
   name: 'Within Numeric Result',
-  decorators: [
-    (story) => html`
-      <atomic-result-number field="sncost"> ${story()} </atomic-result-number>
-    `,
-    resultDecorator,
-  ],
+  render: (args) => html`
+    <atomic-result-number field="sncost">
+      ${template(args)}
+    </atomic-result-number>
+  `,
+  decorators: [resultTemplateDecorator, resultListDecorator],
   args: {
     currency: 'USD',
   },

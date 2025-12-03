@@ -42,6 +42,7 @@ export class AtomicResultNumber
 
   constructor() {
     super();
+    console.log('constructor bindings', this.bindings);
 
     new ValidatePropsController(
       this,
@@ -93,6 +94,8 @@ export class AtomicResultNumber
     if (value === null) {
       return null;
     }
+    console.log('value', value);
+    console.log('result', this.result);
 
     const valueAsNumber = parseFloat(`${value}`);
     if (Number.isNaN(valueAsNumber)) {

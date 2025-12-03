@@ -5,13 +5,18 @@ import {
   type NumberFormatter,
 } from '@/src/components/common/formats/format-common.js';
 import '@/src/components/common/atomic-component-error/atomic-component-error.js';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {LitElementWithError} from '@/src/decorators/types.js';
 
 /**
  * The `atomic-format-unit` component is used for formatting numbers with units.
  * The numerical format of compatible parents will be set according to the properties of this component.
  */
 @customElement('atomic-format-unit')
-export class AtomicFormatUnit extends LitElement {
+export class AtomicFormatUnit
+  extends LitElement
+  implements LitElementWithError
+{
   /**
    * The unit to use in unit formatting.
    * Leverages the [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat) constructor.
@@ -29,7 +34,7 @@ export class AtomicFormatUnit extends LitElement {
   @property({reflect: true, attribute: 'unit-display'})
   unitDisplay?: 'long' | 'short' | 'narrow' = 'short';
 
-  @state() private error?: Error;
+  @state() public error!: Error;
 
   private format: NumberFormatter = (value, languages) => {
     return value.toLocaleString(languages, {
@@ -51,13 +56,8 @@ export class AtomicFormatUnit extends LitElement {
     }
   }
 
+  @errorGuard()
   render() {
-    if (this.error) {
-      return html`<atomic-component-error
-        .element=${this}
-        .error=${this.error}
-      ></atomic-component-error>`;
-    }
-    return nothing;
+    return html`${nothing}`;
   }
 }

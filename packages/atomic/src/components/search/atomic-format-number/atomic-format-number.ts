@@ -5,13 +5,18 @@ import {
   type NumberFormatter,
 } from '@/src/components/common/formats/format-common.js';
 import '@/src/components/common/atomic-component-error/atomic-component-error.js';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {LitElementWithError} from '@/src/decorators/types.js';
 
 /**
  * The `atomic-format-number` component is used for number formatting.
  * The numerical format of compatible parents will be set according to the properties of this component.
  */
 @customElement('atomic-format-number')
-export class AtomicFormatNumber extends LitElement {
+export class AtomicFormatNumber
+  extends LitElement
+  implements LitElementWithError
+{
   /**
    * The minimum number of integer digits to use.
    */
@@ -50,7 +55,7 @@ export class AtomicFormatNumber extends LitElement {
   })
   maximumSignificantDigits?: number;
 
-  @state() private error?: Error;
+  @state() public error!: Error;
 
   private format: NumberFormatter = (value, languages) => {
     return value.toLocaleString(languages, {
@@ -74,13 +79,8 @@ export class AtomicFormatNumber extends LitElement {
     }
   }
 
+  @errorGuard()
   render() {
-    if (this.error) {
-      return html`<atomic-component-error
-        .element=${this}
-        .error=${this.error}
-      ></atomic-component-error>`;
-    }
-    return nothing;
+    return html`${nothing}`;
   }
 }

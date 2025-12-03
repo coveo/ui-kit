@@ -6,6 +6,9 @@ import {
   AtomicExternal as LitAtomicExternal,
   AtomicFacet as LitAtomicFacet,
   AtomicFocusTrap as LitAtomicFocusTrap,
+  AtomicFormatCurrency as LitAtomicFormatCurrency,
+  AtomicFormatNumber as LitAtomicFormatNumber,
+  AtomicFormatUnit as LitAtomicFormatUnit,
   AtomicHtml as LitAtomicHtml,
   AtomicIcon as LitAtomicIcon,
   AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
@@ -94,6 +97,24 @@ export const AtomicFocusTrap = createComponent({
   tagName: 'atomic-focus-trap',
   react: React,
   elementClass: LitAtomicFocusTrap,
+});
+
+export const AtomicFormatCurrency = createComponent({
+  tagName: 'atomic-format-currency',
+  react: React,
+  elementClass: LitAtomicFormatCurrency,
+});
+
+export const AtomicFormatNumber = createComponent({
+  tagName: 'atomic-format-number',
+  react: React,
+  elementClass: LitAtomicFormatNumber,
+});
+
+export const AtomicFormatUnit = createComponent({
+  tagName: 'atomic-format-unit',
+  react: React,
+  elementClass: LitAtomicFormatUnit,
 });
 
 export const AtomicHtml = createComponent({
