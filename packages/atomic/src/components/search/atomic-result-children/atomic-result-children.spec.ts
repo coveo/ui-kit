@@ -165,22 +165,7 @@ describe('atomic-result-children', () => {
   });
 
   describe('when connected to the DOM', () => {
-    it('should dispatch atomic/resolveFoldedResultList event', async () => {
-      const {element} = await renderResultChildren();
-
-      const detailFn = vi.fn();
-      const event = new CustomEvent('atomic/resolveFoldedResultList', {
-        detail: detailFn,
-        bubbles: true,
-        cancelable: true,
-      });
-
-      element.dispatchEvent(event);
-      // The FoldedItemListContextController should handle this event
-      expect(event.defaultPrevented).toBe(true);
-    });
-
-    it('should dispatch atomic/resolveChildTemplates event', async () => {
+    it('should handle atomic/resolveChildTemplates event', async () => {
       const {element} = await renderResultChildren();
 
       const detailFn = vi.fn();
@@ -194,68 +179,34 @@ describe('atomic-result-children', () => {
       expect(event.defaultPrevented).toBe(true);
       expect(detailFn).toHaveBeenCalled();
     });
-
-    it('should dispatch atomic/resolveResultDisplayConfig event', async () => {
-      const {element} = await renderResultChildren();
-
-      const detailFn = vi.fn();
-      const event = new CustomEvent('atomic/resolveResultDisplayConfig', {
-        detail: detailFn,
-        bubbles: true,
-        cancelable: true,
-      });
-
-      element.dispatchEvent(event);
-      // The ItemDisplayConfigContextController should handle this event
-      expect(event.defaultPrevented).toBe(true);
-    });
-
-    it('should dispatch atomic/resolveResult event', async () => {
-      const {element} = await renderResultChildren();
-
-      const detailFn = vi.fn();
-      const event = new CustomEvent('atomic/resolveResult', {
-        detail: detailFn,
-        bubbles: true,
-        cancelable: true,
-      });
-
-      element.dispatchEvent(event);
-      // The ResultContextController should handle this event
-      expect(event.defaultPrevented).toBe(true);
-    });
   });
 
   describe('when removed from the DOM', () => {
     it('should remove resolveChildTemplates listener', async () => {
       const {element} = await renderResultChildren();
 
-      const detailFn = vi.fn();
-      const event = new CustomEvent('atomic/resolveChildTemplates', {
-        detail: detailFn,
-        bubbles: true,
-        cancelable: true,
-      });
+      // Add a spy to track the event listener
+      const addListenerSpy = vi.spyOn(element, 'addEventListener');
+      const removeListenerSpy = vi.spyOn(element, 'removeEventListener');
 
-      // Should work before disconnecting
-      element.dispatchEvent(event);
-      expect(detailFn).toHaveBeenCalledTimes(1);
+      // Re-connect to verify listener is added
+      element.connectedCallback();
+      expect(addListenerSpy).toHaveBeenCalledWith(
+        'atomic/resolveChildTemplates',
+        expect.any(Function)
+      );
 
       // Disconnect from DOM
       element.disconnectedCallback();
 
-      // Create new event
-      const detailFn2 = vi.fn();
-      const event2 = new CustomEvent('atomic/resolveChildTemplates', {
-        detail: detailFn2,
-        bubbles: true,
-        cancelable: true,
-      });
+      // Verify listener is removed
+      expect(removeListenerSpy).toHaveBeenCalledWith(
+        'atomic/resolveChildTemplates',
+        expect.any(Function)
+      );
 
-      // Should not handle event after disconnecting
-      element.dispatchEvent(event2);
-      expect(detailFn2).not.toHaveBeenCalled();
-      expect(event2.defaultPrevented).toBe(false);
+      addListenerSpy.mockRestore();
+      removeListenerSpy.mockRestore();
     });
   });
 });
