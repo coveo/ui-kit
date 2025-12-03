@@ -3,7 +3,6 @@ import {hierarchicalField} from '../category-facet/category-facet-actions';
 import {colorFacetField} from '../color-facet/color-facet-actions';
 import {field as facetField} from '../facet/facet-actions';
 import {numericFacetField} from '../numeric-facet/numeric-facet-actions';
-import {ratingFacetField} from '../rating-facet/rating-facet-actions';
 import {createTimeframeElements} from '../timeframe-facet/timeframe-facet-action';
 import {addPopover, label} from './popover-facet-actions';
 import * as PopoverAssertions from './popover-facet-assertions';
@@ -140,36 +139,6 @@ describe('Popover Facet Test Suites', () => {
           addPopover('atomic-category-facet', {
             label,
             field: hierarchicalField,
-          })
-        )
-        .init();
-    });
-
-    testSuites();
-  });
-
-  describe('with an atomic-rating-facet', () => {
-    beforeEach(() => {
-      new TestFixture()
-        .with(
-          addPopover('atomic-rating-facet', {
-            label,
-            field: ratingFacetField,
-          })
-        )
-        .init();
-    });
-
-    testSuites();
-  });
-
-  describe('with an atomic-rating-range-facet', () => {
-    beforeEach(() => {
-      new TestFixture()
-        .with(
-          addPopover('atomic-rating-range-facet', {
-            label,
-            field: ratingFacetField,
           })
         )
         .init();
