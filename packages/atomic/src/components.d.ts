@@ -1072,11 +1072,6 @@ export namespace Components {
         "withInput"?: NumberInputType;
     }
     /**
-     * The `atomic-popover` component displays any facet as a popover menu.
-     */
-    interface AtomicPopover {
-    }
-    /**
      * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
      * about a result.
      * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (for example, custom styles and embedded
@@ -2372,15 +2367,6 @@ declare global {
         new (): HTMLAtomicNumericFacetElement;
     };
     /**
-     * The `atomic-popover` component displays any facet as a popover menu.
-     */
-    interface HTMLAtomicPopoverElement extends Components.AtomicPopover, HTMLStencilElement {
-    }
-    var HTMLAtomicPopoverElement: {
-        prototype: HTMLAtomicPopoverElement;
-        new (): HTMLAtomicPopoverElement;
-    };
-    /**
      * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
      * about a result.
      * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (for example, custom styles and embedded
@@ -2839,7 +2825,6 @@ declare global {
         "atomic-ipx-tabs": HTMLAtomicIpxTabsElement;
         "atomic-notifications": HTMLAtomicNotificationsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
-        "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-quickview": HTMLAtomicQuickviewElement;
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
@@ -3880,11 +3865,6 @@ declare namespace LocalJSX {
         "withInput"?: NumberInputType;
     }
     /**
-     * The `atomic-popover` component displays any facet as a popover menu.
-     */
-    interface AtomicPopover {
-    }
-    /**
      * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
      * about a result.
      * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (for example, custom styles and embedded
@@ -4643,7 +4623,6 @@ declare namespace LocalJSX {
         "atomic-ipx-tabs": AtomicIpxTabs;
         "atomic-notifications": AtomicNotifications;
         "atomic-numeric-facet": AtomicNumericFacet;
-        "atomic-popover": AtomicPopover;
         "atomic-quickview": AtomicQuickview;
         "atomic-quickview-modal": AtomicQuickviewModal;
         "atomic-rating-facet": AtomicRatingFacet;
@@ -4816,10 +4795,6 @@ declare module "@stencil/core" {
              * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
              */
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
-            /**
-             * The `atomic-popover` component displays any facet as a popover menu.
-             */
-            "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
             /**
              * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
              * about a result.

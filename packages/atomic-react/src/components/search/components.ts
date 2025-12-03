@@ -16,6 +16,7 @@ import {
   AtomicNoResults as LitAtomicNoResults,
   AtomicNumericRange as LitAtomicNumericRange,
   AtomicPager as LitAtomicPager,
+  AtomicPopover as LitAtomicPopover,
   AtomicQueryError as LitAtomicQueryError,
   AtomicQuerySummary as LitAtomicQuerySummary,
   AtomicRecsInterface as LitAtomicRecsInterface,
@@ -159,6 +160,12 @@ export const AtomicPager = createComponent({
   tagName: 'atomic-pager',
   react: React,
   elementClass: LitAtomicPager,
+});
+
+export const AtomicPopover = createComponent({
+  tagName: 'atomic-popover',
+  react: React,
+  elementClass: LitAtomicPopover,
 });
 
 export const AtomicQueryError = createComponent({

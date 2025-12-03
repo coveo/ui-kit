@@ -17,6 +17,8 @@ export default {
   'atomic-no-results': async () =>
     await import('./atomic-no-results/atomic-no-results.js'),
   'atomic-pager': async () => await import('./atomic-pager/atomic-pager.js'),
+  'atomic-popover': async () =>
+    await import('./atomic-popover/atomic-popover.js'),
   'atomic-query-error': async () =>
     await import('./atomic-query-error/atomic-query-error.js'),
   'atomic-query-summary': async () =>
