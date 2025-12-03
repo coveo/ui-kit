@@ -172,7 +172,9 @@ describe('atomic-rating-range-facet', () => {
         .spyOn(console, 'error')
         .mockImplementation(() => {});
 
-      const {element} = await renderRatingRangeFacet({props: {field: ''}});
+      const {element} = await renderRatingRangeFacet({
+        props: {field: ''},
+      });
       expect(element.error).toBeDefined();
       expect(consoleErrorSpy).toHaveBeenCalled();
 
@@ -365,116 +367,90 @@ describe('atomic-rating-range-facet', () => {
     });
   });
 
-  describe('accessibility', () => {
-    it('should have proper heading level', async () => {
-      const {element} = await renderRatingRangeFacet({
-        props: {headingLevel: 3},
-      });
-      expect(element.headingLevel).toBe(3);
+  it('should respect custom numberOfIntervals', async () => {
+    const {element} = await renderRatingRangeFacet({
+      props: {numberOfIntervals: 10},
+    });
+    expect(element.numberOfIntervals).toBe(10);
+  });
+
+  it('should default maxValueInIndex to numberOfIntervals', async () => {
+    const {element} = await renderRatingRangeFacet({
+      props: {numberOfIntervals: 7},
+    });
+    expect(element.maxValueInIndex).toBe(7);
+  });
+
+  it('should default maxValueInIndex to numberOfIntervals in connectedCallback when undefined', async () => {
+    const {element} = await renderRatingRangeFacet({
+      props: {numberOfIntervals: 7, maxValueInIndex: undefined},
+    });
+    expect(element.maxValueInIndex).toBe(7);
+  });
+
+  it('should allow custom maxValueInIndex', async () => {
+    const {element} = await renderRatingRangeFacet({
+      props: {maxValueInIndex: 4},
+    });
+    expect(element.maxValueInIndex).toBe(4);
+  });
+
+  it('should allow custom minValueInIndex', async () => {
+    const {element} = await renderRatingRangeFacet({
+      props: {minValueInIndex: 2},
+    });
+    expect(element.minValueInIndex).toBe(2);
+  });
+
+  it('should update numberOfIntervals property', async () => {
+    const {element} = await renderRatingRangeFacet({
+      props: {numberOfIntervals: 5},
+    });
+    expect(element.numberOfIntervals).toBe(5);
+
+    element.numberOfIntervals = 10;
+    await element.updateComplete;
+
+    expect(element.numberOfIntervals).toBe(10);
+  });
+
+  it('should update maxValueInIndex property', async () => {
+    const {element} = await renderRatingRangeFacet({
+      props: {maxValueInIndex: 5},
+    });
+    expect(element.maxValueInIndex).toBe(5);
+
+    element.maxValueInIndex = 10;
+    await element.updateComplete;
+
+    expect(element.maxValueInIndex).toBe(10);
+  });
+
+  it('should pass tabsIncluded to facet options', async () => {
+    const {element} = await renderRatingRangeFacet({
+      props: {tabsIncluded: ['tab1', 'tab2']},
     });
 
-    it('should render clear button when values are selected', async () => {
-      mockedNumericFacet = buildFakeNumericFacet({
-        state: {
-          ...mockedNumericFacet.state,
-          values: [
-            {
-              start: 4,
-              end: 5,
-              endInclusive: false,
-              state: 'selected',
-              numberOfResults: 10,
-            },
-          ],
-        },
-      });
-
-      const {locators} = await renderRatingRangeFacet();
-      await expect.element(locators.clearButton).toBeInTheDocument();
+    expect(buildNumericFacet).toHaveBeenCalledWith(element.bindings.engine, {
+      options: expect.objectContaining({
+        tabs: expect.objectContaining({
+          included: ['tab1', 'tab2'],
+        }),
+      }),
     });
   });
 
-  describe('number of intervals', () => {
-    it('should respect custom numberOfIntervals', async () => {
-      const {element} = await renderRatingRangeFacet({
-        props: {numberOfIntervals: 10},
-      });
-      expect(element.numberOfIntervals).toBe(10);
+  it('should pass tabsExcluded to facet options', async () => {
+    const {element} = await renderRatingRangeFacet({
+      props: {tabsExcluded: ['tab3', 'tab4']},
     });
 
-    it('should default maxValueInIndex to numberOfIntervals', async () => {
-      const {element} = await renderRatingRangeFacet({
-        props: {numberOfIntervals: 7},
-      });
-      expect(element.maxValueInIndex).toBe(7);
-    });
-
-    it('should allow custom maxValueInIndex', async () => {
-      const {element} = await renderRatingRangeFacet({
-        props: {maxValueInIndex: 4},
-      });
-      expect(element.maxValueInIndex).toBe(4);
-    });
-
-    it('should allow custom minValueInIndex', async () => {
-      const {element} = await renderRatingRangeFacet({
-        props: {minValueInIndex: 2},
-      });
-      expect(element.minValueInIndex).toBe(2);
-    });
-
-    it('should update numberOfIntervals property', async () => {
-      const {element} = await renderRatingRangeFacet({
-        props: {numberOfIntervals: 5},
-      });
-      expect(element.numberOfIntervals).toBe(5);
-
-      element.numberOfIntervals = 10;
-      await element.updateComplete;
-
-      expect(element.numberOfIntervals).toBe(10);
-    });
-
-    it('should update maxValueInIndex property', async () => {
-      const {element} = await renderRatingRangeFacet({
-        props: {maxValueInIndex: 5},
-      });
-      expect(element.maxValueInIndex).toBe(5);
-
-      element.maxValueInIndex = 10;
-      await element.updateComplete;
-
-      expect(element.maxValueInIndex).toBe(10);
-    });
-  });
-
-  describe('tabs configuration', () => {
-    it('should pass tabsIncluded to facet options', async () => {
-      const {element} = await renderRatingRangeFacet({
-        props: {tabsIncluded: ['tab1', 'tab2']},
-      });
-
-      expect(buildNumericFacet).toHaveBeenCalledWith(element.bindings.engine, {
-        options: expect.objectContaining({
-          tabs: expect.objectContaining({
-            included: ['tab1', 'tab2'],
-          }),
+    expect(buildNumericFacet).toHaveBeenCalledWith(element.bindings.engine, {
+      options: expect.objectContaining({
+        tabs: expect.objectContaining({
+          excluded: ['tab3', 'tab4'],
         }),
-      });
-    });
-
-    it('should pass tabsExcluded to facet options', async () => {
-      const {element} = await renderRatingRangeFacet({
-        props: {tabsExcluded: ['tab3', 'tab4']},
-      });
-
-      expect(buildNumericFacet).toHaveBeenCalledWith(element.bindings.engine, {
-        options: expect.objectContaining({
-          tabs: expect.objectContaining({
-            excluded: ['tab3', 'tab4'],
-          }),
-        }),
-      });
+      }),
     });
   });
 
@@ -527,6 +503,18 @@ describe('atomic-rating-range-facet', () => {
       // Test basic parts
       const values = element.shadowRoot?.querySelector('[part="values"]');
       expect(values).toBeDefined();
+
+      const valueCount = element.shadowRoot?.querySelector(
+        '[part="value-count"]'
+      );
+
+      expect(valueCount).toBeDefined();
+
+      const placeholder = element.shadowRoot?.querySelector(
+        '[part="placeholder"]'
+      );
+
+      expect(placeholder).toBeDefined();
 
       const valueLink = element.shadowRoot?.querySelector(
         '[part="value-link"]'

@@ -274,7 +274,8 @@ export class AtomicRatingRangeFacet
         injectionDepth: this.injectionDepth,
         dependsOn: this.dependsOn,
       }),
-      AtomicRatingRangeFacet.propsSchema
+      AtomicRatingRangeFacet.propsSchema,
+      false
     );
   }
 
