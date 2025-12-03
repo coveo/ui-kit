@@ -1,3 +1,10 @@
+## <small>3.33.6 (2025-12-03)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([cfc527e](https://github.com/coveo/ui-kit/commits/cfc527e))
+* fix(quantic): optimized the loading of the bueno script in quantic (#6630) ([e392c77](https://github.com/coveo/ui-kit/commits/e392c77)), closes [#6630](https://github.com/coveo/ui-kit/issues/6630)
+
+
+
 ## <small>3.33.5 (2025-12-03)</small>
 
 * fix(quantic): optimized the loading of the bueno script in quantic (#6630) ([e392c77](https://github.com/coveo/ui-kit/commits/e392c77)), closes [#6630](https://github.com/coveo/ui-kit/issues/6630)
