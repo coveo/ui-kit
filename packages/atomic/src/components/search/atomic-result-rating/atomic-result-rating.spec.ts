@@ -105,16 +105,14 @@ describe('atomic-result-rating', () => {
     expect(ratingContainer).toHaveAttribute('aria-label', '0 stars out of 5');
   });
 
-  describe('when a custom maxValueInIndex is specified', () => {
-    it('should render correct number of icons', async () => {
-      const element = await renderComponent({
-        field: 'snrating',
-        maxValueInIndex: 10,
-      });
-      const icons = locators.getRatingIcons(element);
-
-      expect(icons).toHaveLength(20); // 10 empty + 10 filled icons
+  it('should render correct number of icons when a custom maxValueInIndex is specified', async () => {
+    const element = await renderComponent({
+      field: 'snrating',
+      maxValueInIndex: 10,
     });
+    const icons = locators.getRatingIcons(element);
+
+    expect(icons).toHaveLength(20); // 10 empty + 10 filled icons
   });
 
   it('should use custom icon when provided', async () => {
