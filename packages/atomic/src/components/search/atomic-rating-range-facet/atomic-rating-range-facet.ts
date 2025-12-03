@@ -78,6 +78,15 @@ export class AtomicRatingRangeFacet
   extends LitElement
   implements InitializableComponent<Bindings>
 {
+  private static readonly propsSchema = new Schema({
+    field: new StringValue({required: true, emptyAllowed: false}),
+    numberOfIntervals: new NumberValue({min: 1}),
+    maxValueInIndex: new NumberValue({min: 0, required: false}),
+    minValueInIndex: new NumberValue({min: 0}),
+    injectionDepth: new NumberValue({min: 0}),
+    dependsOn: new RecordValue({options: {required: false}}),
+  });
+
   static styles = [
     facetCommonStyles,
     facetValueCheckboxStyles,
@@ -265,14 +274,7 @@ export class AtomicRatingRangeFacet
         injectionDepth: this.injectionDepth,
         dependsOn: this.dependsOn,
       }),
-      new Schema({
-        field: new StringValue({required: true, emptyAllowed: false}),
-        numberOfIntervals: new NumberValue({min: 1}),
-        maxValueInIndex: new NumberValue({min: 0, required: false}),
-        minValueInIndex: new NumberValue({min: 0}),
-        injectionDepth: new NumberValue({min: 0}),
-        dependsOn: new RecordValue({options: {required: false}}),
-      })
+      AtomicRatingRangeFacet.propsSchema
     );
   }
 
@@ -345,6 +347,8 @@ export class AtomicRatingRangeFacet
     this.bindings.store.registerFacet('numericFacets', {
       ...facetInfo,
       format: (value) => this.formatFacetValue(value),
+      // @ts-ignore -- Because of Stencil VNode dependencies.
+      content: (value) => this.ratingContent(value),
     });
     initializePopover(this, {
       ...facetInfo,
