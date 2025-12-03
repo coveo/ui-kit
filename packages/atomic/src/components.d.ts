@@ -1430,23 +1430,6 @@ export namespace Components {
         "maxNumberOfParts": number;
     }
     /**
-     * The `atomic-result-rating` element renders a star rating.
-     */
-    interface AtomicResultRating {
-        /**
-          * The field whose values you want to display as a rating.
-         */
-        "field": string;
-        /**
-          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-icon-active-color` - `--atomic-rating-icon-inactive-color`
-         */
-        "icon": string;
-        /**
-          * The maximum value of the field. This value is also used as the number of icons to be displayed.
-         */
-        "maxValueInIndex": number;
-    }
-    /**
      * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultTablePlaceholder {
@@ -2550,15 +2533,6 @@ declare global {
         new (): HTMLAtomicResultPrintableUriElement;
     };
     /**
-     * The `atomic-result-rating` element renders a star rating.
-     */
-    interface HTMLAtomicResultRatingElement extends Components.AtomicResultRating, HTMLStencilElement {
-    }
-    var HTMLAtomicResultRatingElement: {
-        prototype: HTMLAtomicResultRatingElement;
-        new (): HTMLAtomicResultRatingElement;
-    };
-    /**
      * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface HTMLAtomicResultTablePlaceholderElement extends Components.AtomicResultTablePlaceholder, HTMLStencilElement {
@@ -2880,7 +2854,6 @@ declare global {
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
-        "atomic-result-rating": HTMLAtomicResultRatingElement;
         "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
@@ -4249,23 +4222,6 @@ declare namespace LocalJSX {
         "maxNumberOfParts"?: number;
     }
     /**
-     * The `atomic-result-rating` element renders a star rating.
-     */
-    interface AtomicResultRating {
-        /**
-          * The field whose values you want to display as a rating.
-         */
-        "field": string;
-        /**
-          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-icon-active-color` - `--atomic-rating-icon-inactive-color`
-         */
-        "icon"?: string;
-        /**
-          * The maximum value of the field. This value is also used as the number of icons to be displayed.
-         */
-        "maxValueInIndex"?: number;
-    }
-    /**
      * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultTablePlaceholder {
@@ -4702,7 +4658,6 @@ declare namespace LocalJSX {
         "atomic-result-link": AtomicResultLink;
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
-        "atomic-result-rating": AtomicResultRating;
         "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
         "atomic-search-box": AtomicSearchBox;
         "atomic-segmented-facet": AtomicSegmentedFacet;
@@ -4935,10 +4890,6 @@ declare module "@stencil/core" {
              * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
              */
             "atomic-result-printable-uri": LocalJSX.AtomicResultPrintableUri & JSXBase.HTMLAttributes<HTMLAtomicResultPrintableUriElement>;
-            /**
-             * The `atomic-result-rating` element renders a star rating.
-             */
-            "atomic-result-rating": LocalJSX.AtomicResultRating & JSXBase.HTMLAttributes<HTMLAtomicResultRatingElement>;
             /**
              * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */

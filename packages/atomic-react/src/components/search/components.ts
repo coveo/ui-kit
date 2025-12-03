@@ -31,6 +31,7 @@ import {
   AtomicResultLocalizedText as LitAtomicResultLocalizedText,
   AtomicResultMultiValueText as LitAtomicResultMultiValueText,
   AtomicResultNumber as LitAtomicResultNumber,
+  AtomicResultRating as LitAtomicResultRating,
   AtomicResultSectionActions as LitAtomicResultSectionActions,
   AtomicResultSectionBadges as LitAtomicResultSectionBadges,
   AtomicResultSectionBottomMetadata as LitAtomicResultSectionBottomMetadata,
@@ -248,6 +249,12 @@ export const AtomicResultNumber = createComponent({
   tagName: 'atomic-result-number',
   react: React,
   elementClass: LitAtomicResultNumber,
+});
+
+export const AtomicResultRating = createComponent({
+  tagName: 'atomic-result-rating',
+  react: React,
+  elementClass: LitAtomicResultRating,
 });
 
 export const AtomicResultSectionActions = createComponent({
