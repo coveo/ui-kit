@@ -14,6 +14,7 @@ export {AtomicQuerySummary} from './atomic-query-summary/atomic-query-summary.js
 export {AtomicRelevanceInspector} from './atomic-relevance-inspector/atomic-relevance-inspector.js';
 export {AtomicResult} from './atomic-result/atomic-result.js';
 export {AtomicResultBadge} from './atomic-result-badge/atomic-result-badge.js';
+export {AtomicResultChildren} from './atomic-result-children/atomic-result-children.js';
 export {AtomicResultChildrenTemplate} from './atomic-result-children-template/atomic-result-children-template.js';
 export {AtomicResultDate} from './atomic-result-date/atomic-result-date.js';
 export {AtomicResultHtml} from './atomic-result-html/atomic-result-html.js';
