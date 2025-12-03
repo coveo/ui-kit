@@ -420,9 +420,8 @@ describe('Generated Answer Test Suites', () => {
           it('should send analytics when the hover ends', () => {
             cy.clock();
             GeneratedAnswerSelectors.citation().trigger('mouseleave');
-            // Wait for debounce timeout to ensure popover closes and analytics fire
-            cy.tick(150).invoke('restore');
-
+            // Wait for debounce timeout (100ms) plus some buffer  
+            cy.tick(150);
             GeneratedAnswerAssertions.assertLogGeneratedAnswerSourceHover();
           });
         });
