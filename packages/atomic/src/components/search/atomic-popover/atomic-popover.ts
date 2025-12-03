@@ -1,8 +1,4 @@
-import type {
-  FacetState,
-  SearchStatus,
-  SearchStatusState,
-} from '@coveo/headless';
+import type {SearchStatus, SearchStatusState} from '@coveo/headless';
 import {buildSearchStatus} from '@coveo/headless';
 import {
   createPopperLite as createPopper,
@@ -64,9 +60,6 @@ export class AtomicPopover
   @state()
   public searchStatusState!: SearchStatusState;
   public searchStatus!: SearchStatus;
-
-  @state()
-  public facetState!: FacetState;
 
   @state() private isOpen = false;
   @state() private childFacet?: PopoverChildFacet;
