@@ -1,6 +1,7 @@
 // Auto-generated file
 export {AtomicAutomaticFacet} from './atomic-automatic-facet/atomic-automatic-facet.js';
 export {AtomicBreadbox} from './atomic-breadbox/atomic-breadbox.js';
+export {AtomicColorFacet} from './atomic-color-facet/atomic-color-facet.js';
 export {AtomicExternal} from './atomic-external/atomic-external.js';
 export {AtomicFacet} from './atomic-facet/atomic-facet.js';
 export {AtomicFieldCondition} from './atomic-field-condition/atomic-field-condition.js';
@@ -14,14 +15,17 @@ export {AtomicRatingRangeFacet} from './atomic-rating-range-facet/atomic-rating-
 export {AtomicRelevanceInspector} from './atomic-relevance-inspector/atomic-relevance-inspector.js';
 export {AtomicResult} from './atomic-result/atomic-result.js';
 export {AtomicResultBadge} from './atomic-result-badge/atomic-result-badge.js';
+export {AtomicResultChildren} from './atomic-result-children/atomic-result-children.js';
 export {AtomicResultChildrenTemplate} from './atomic-result-children-template/atomic-result-children-template.js';
 export {AtomicResultDate} from './atomic-result-date/atomic-result-date.js';
 export {AtomicResultHtml} from './atomic-result-html/atomic-result-html.js';
+export {AtomicResultIcon} from './atomic-result-icon/atomic-result-icon.js';
 export {AtomicResultImage} from './atomic-result-image/atomic-result-image.js';
 export {AtomicResultList} from './atomic-result-list/atomic-result-list.js';
 export {AtomicResultLocalizedText} from './atomic-result-localized-text/atomic-result-localized-text.js';
 export {AtomicResultMultiValueText} from './atomic-result-multi-value-text/atomic-result-multi-value-text.js';
 export {AtomicResultNumber} from './atomic-result-number/atomic-result-number.js';
+export {AtomicResultRating} from './atomic-result-rating/atomic-result-rating.js';
 export {AtomicResultSectionActions} from './atomic-result-section-actions/atomic-result-section-actions.js';
 export {AtomicResultSectionBadges} from './atomic-result-section-badges/atomic-result-section-badges.js';
 export {AtomicResultSectionBottomMetadata} from './atomic-result-section-bottom-metadata/atomic-result-section-bottom-metadata.js';
@@ -44,4 +48,5 @@ export {AtomicSegmentedFacetScrollable} from './atomic-segmented-facet-scrollabl
 export {AtomicSortDropdown} from './atomic-sort-dropdown/atomic-sort-dropdown.js';
 export {AtomicSortExpression} from './atomic-sort-expression/atomic-sort-expression.js';
 export {AtomicTab} from './atomic-tab/atomic-tab.js';
+export {AtomicTabManager} from './atomic-tab-manager/atomic-tab-manager.js';
 export {AtomicText} from './atomic-text/atomic-text.js';

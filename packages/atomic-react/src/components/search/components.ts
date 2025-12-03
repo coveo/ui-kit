@@ -2,6 +2,7 @@ import {
   AtomicAriaLive as LitAtomicAriaLive,
   AtomicAutomaticFacet as LitAtomicAutomaticFacet,
   AtomicBreadbox as LitAtomicBreadbox,
+  AtomicColorFacet as LitAtomicColorFacet,
   AtomicComponentError as LitAtomicComponentError,
   AtomicExternal as LitAtomicExternal,
   AtomicFacet as LitAtomicFacet,
@@ -21,14 +22,17 @@ import {
   AtomicRecsInterface as LitAtomicRecsInterface,
   AtomicResult as LitAtomicResult,
   AtomicResultBadge as LitAtomicResultBadge,
+  AtomicResultChildren as LitAtomicResultChildren,
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
   AtomicResultDate as LitAtomicResultDate,
   AtomicResultHtml as LitAtomicResultHtml,
+  AtomicResultIcon as LitAtomicResultIcon,
   AtomicResultImage as LitAtomicResultImage,
   AtomicResultList as LitAtomicResultList,
   AtomicResultLocalizedText as LitAtomicResultLocalizedText,
   AtomicResultMultiValueText as LitAtomicResultMultiValueText,
   AtomicResultNumber as LitAtomicResultNumber,
+  AtomicResultRating as LitAtomicResultRating,
   AtomicResultSectionActions as LitAtomicResultSectionActions,
   AtomicResultSectionBadges as LitAtomicResultSectionBadges,
   AtomicResultSectionBottomMetadata as LitAtomicResultSectionBottomMetadata,
@@ -50,6 +54,7 @@ import {
   AtomicSortDropdown as LitAtomicSortDropdown,
   AtomicSortExpression as LitAtomicSortExpression,
   AtomicTab as LitAtomicTab,
+  AtomicTabManager as LitAtomicTabManager,
   AtomicText as LitAtomicText,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
@@ -71,6 +76,12 @@ export const AtomicBreadbox = createComponent({
   tagName: 'atomic-breadbox',
   react: React,
   elementClass: LitAtomicBreadbox,
+});
+
+export const AtomicColorFacet = createComponent({
+  tagName: 'atomic-color-facet',
+  react: React,
+  elementClass: LitAtomicColorFacet,
 });
 
 export const AtomicComponentError = createComponent({
@@ -187,6 +198,12 @@ export const AtomicResultBadge = createComponent({
   elementClass: LitAtomicResultBadge,
 });
 
+export const AtomicResultChildren = createComponent({
+  tagName: 'atomic-result-children',
+  react: React,
+  elementClass: LitAtomicResultChildren,
+});
+
 export const AtomicResultChildrenTemplate = createComponent({
   tagName: 'atomic-result-children-template',
   react: React,
@@ -203,6 +220,12 @@ export const AtomicResultHtml = createComponent({
   tagName: 'atomic-result-html',
   react: React,
   elementClass: LitAtomicResultHtml,
+});
+
+export const AtomicResultIcon = createComponent({
+  tagName: 'atomic-result-icon',
+  react: React,
+  elementClass: LitAtomicResultIcon,
 });
 
 export const AtomicResultImage = createComponent({
@@ -233,6 +256,12 @@ export const AtomicResultNumber = createComponent({
   tagName: 'atomic-result-number',
   react: React,
   elementClass: LitAtomicResultNumber,
+});
+
+export const AtomicResultRating = createComponent({
+  tagName: 'atomic-result-rating',
+  react: React,
+  elementClass: LitAtomicResultRating,
 });
 
 export const AtomicResultSectionActions = createComponent({
@@ -359,6 +388,12 @@ export const AtomicTab = createComponent({
   tagName: 'atomic-tab',
   react: React,
   elementClass: LitAtomicTab,
+});
+
+export const AtomicTabManager = createComponent({
+  tagName: 'atomic-tab-manager',
+  react: React,
+  elementClass: LitAtomicTabManager,
 });
 
 export const AtomicText = createComponent({
