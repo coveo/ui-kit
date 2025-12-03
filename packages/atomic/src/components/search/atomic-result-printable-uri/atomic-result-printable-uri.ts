@@ -183,6 +183,7 @@ export class AtomicResultPrintableUri
       <li>
         <button
           aria-label=${this.bindings.i18n.t('collapsed-uri-parts')}
+          aria-expanded=${this.listExpanded}
           @click=${(e: Event) => {
             e.stopPropagation();
             this.listExpanded = true;

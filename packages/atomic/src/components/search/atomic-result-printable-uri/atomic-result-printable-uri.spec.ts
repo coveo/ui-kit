@@ -27,7 +27,7 @@ const buildFakeInteractiveResult = (
 const getNameForPart = (index: number) => `Parent ${index + 1}`;
 
 const getUriForPart = (index: number) =>
-  'https://fakewebsite.com/' +
+  'https://example.com/' +
   Array.from({length: index + 1}, (_, i) => `page${i + 1}`).join('/');
 
 const createParentsXml = (numberOfParents: number) => {
@@ -225,12 +225,7 @@ describe('atomic-result-printable-uri', () => {
         const ellipsisButton = locators.ellipsisButton();
         ellipsisButton?.click();
 
-        // Wait for update
-        await new Promise((resolve) => requestAnimationFrame(resolve));
-        await new Promise((resolve) => setTimeout(resolve, 100));
-
-        const links = locators.links();
-        expect(links?.length).toBe(6);
+        await expect.poll(() => locators.links()?.length).toBe(6);
         expect(locators.ellipsisButton()).toBeNull();
       });
     });

@@ -7,6 +7,6 @@ test.describe('atomic-result-printable-uri', () => {
   });
 
   test('should render printable URI component', async ({printableUri}) => {
-    await expect(printableUri.hydrated.first()).toBeAttached();
+    await expect(printableUri.hydrated.first()).toBeVisible();
   });
 });
