@@ -185,7 +185,7 @@ describe('atomic-commerce-query-error', () => {
     });
 
     it('should render the doc link with the correct text', async () => {
-      expect(locators.docLink).toHaveTextContent('Coveo Online Help');
+      expect(locators.docLink).toHaveTextContent('Coveo documentation');
     });
   });
 
