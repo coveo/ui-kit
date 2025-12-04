@@ -124,6 +124,7 @@ export class AtomicCategoryFacet
     facetCommonStyles,
     facetSearchStyles,
     css`
+      @reference '../../../utils/tailwind.global.tw.css';
       [part~='active-parent'] {
         @apply pl-9;
       }
