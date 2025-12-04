@@ -16,20 +16,25 @@ import {
   AtomicNoResults as LitAtomicNoResults,
   AtomicNumericRange as LitAtomicNumericRange,
   AtomicPager as LitAtomicPager,
+  AtomicPopover as LitAtomicPopover,
   AtomicQueryError as LitAtomicQueryError,
   AtomicQuerySummary as LitAtomicQuerySummary,
+  AtomicRatingRangeFacet as LitAtomicRatingRangeFacet,
   AtomicRecsInterface as LitAtomicRecsInterface,
   AtomicResult as LitAtomicResult,
   AtomicResultBadge as LitAtomicResultBadge,
+  AtomicResultChildren as LitAtomicResultChildren,
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
   AtomicResultDate as LitAtomicResultDate,
   AtomicResultHtml as LitAtomicResultHtml,
   AtomicResultIcon as LitAtomicResultIcon,
   AtomicResultImage as LitAtomicResultImage,
+  AtomicResultLink as LitAtomicResultLink,
   AtomicResultList as LitAtomicResultList,
   AtomicResultLocalizedText as LitAtomicResultLocalizedText,
   AtomicResultMultiValueText as LitAtomicResultMultiValueText,
   AtomicResultNumber as LitAtomicResultNumber,
+  AtomicResultRating as LitAtomicResultRating,
   AtomicResultSectionActions as LitAtomicResultSectionActions,
   AtomicResultSectionBadges as LitAtomicResultSectionBadges,
   AtomicResultSectionBottomMetadata as LitAtomicResultSectionBottomMetadata,
@@ -159,6 +164,12 @@ export const AtomicPager = createComponent({
   elementClass: LitAtomicPager,
 });
 
+export const AtomicPopover = createComponent({
+  tagName: 'atomic-popover',
+  react: React,
+  elementClass: LitAtomicPopover,
+});
+
 export const AtomicQueryError = createComponent({
   tagName: 'atomic-query-error',
   react: React,
@@ -169,6 +180,12 @@ export const AtomicQuerySummary = createComponent({
   tagName: 'atomic-query-summary',
   react: React,
   elementClass: LitAtomicQuerySummary,
+});
+
+export const AtomicRatingRangeFacet = createComponent({
+  tagName: 'atomic-rating-range-facet',
+  react: React,
+  elementClass: LitAtomicRatingRangeFacet,
 });
 
 export const AtomicRecsInterface = createComponent({
@@ -187,6 +204,12 @@ export const AtomicResultBadge = createComponent({
   tagName: 'atomic-result-badge',
   react: React,
   elementClass: LitAtomicResultBadge,
+});
+
+export const AtomicResultChildren = createComponent({
+  tagName: 'atomic-result-children',
+  react: React,
+  elementClass: LitAtomicResultChildren,
 });
 
 export const AtomicResultChildrenTemplate = createComponent({
@@ -219,6 +242,12 @@ export const AtomicResultImage = createComponent({
   elementClass: LitAtomicResultImage,
 });
 
+export const AtomicResultLink = createComponent({
+  tagName: 'atomic-result-link',
+  react: React,
+  elementClass: LitAtomicResultLink,
+});
+
 export const AtomicResultList = createComponent({
   tagName: 'atomic-result-list',
   react: React,
@@ -241,6 +270,12 @@ export const AtomicResultNumber = createComponent({
   tagName: 'atomic-result-number',
   react: React,
   elementClass: LitAtomicResultNumber,
+});
+
+export const AtomicResultRating = createComponent({
+  tagName: 'atomic-result-rating',
+  react: React,
+  elementClass: LitAtomicResultRating,
 });
 
 export const AtomicResultSectionActions = createComponent({
