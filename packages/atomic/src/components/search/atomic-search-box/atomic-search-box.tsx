@@ -36,9 +36,9 @@ import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {
   isFocusingOut,
   once,
-  randomID,
-  spreadProperties,
+  spreadProperties
 } from '../../../utils/utils';
+import {randomID} from '../../../utils/random-utils';
 import {RedirectionPayload} from '../../common/search-box/redirection-payload';
 import {SearchBoxWrapper} from '../../common/search-box/stencil-search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/stencil-search-text-area';

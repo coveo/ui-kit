@@ -4,7 +4,7 @@ import {styleMap} from 'lit/directives/style-map.js';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import type {FindAriaLiveEventArgs} from '../../../utils/accessibility-utils';
 import {buildDebouncedQueue} from '../../../utils/debounce-utils';
-import {randomID} from '../../../utils/utils';
+import {randomID} from '../../../utils/random-utils';
 
 type Regions = {[regionName: string]: {assertive: boolean; message: string}};
 

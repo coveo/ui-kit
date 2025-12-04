@@ -22,7 +22,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {randomID} from '../../../utils/utils';
+import {randomID} from '../../../utils/random-utils';
 import {
   PagerNextButton,
   PagerPageButton,
