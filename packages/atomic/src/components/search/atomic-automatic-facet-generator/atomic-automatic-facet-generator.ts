@@ -9,6 +9,7 @@ import {
 } from '@coveo/headless';
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {keyed} from 'lit/directives/keyed.js';
 import {renderFacetPlaceholder} from '@/src/components/common/facets/facet-placeholder/facet-placeholder';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
@@ -79,7 +80,8 @@ export class AtomicAutomaticFacetGenerator
       new Schema({
         desiredCount: new NumberValue({min: 1, max: 20, required: false}),
         numberOfValues: new NumberValue({min: 1, required: false}),
-      })
+      }),
+      false
     );
   }
 
@@ -142,15 +144,19 @@ export class AtomicAutomaticFacetGenerator
     }
 
     return html`${this.automaticFacetGeneratorState.automaticFacets.map(
-      (facet, index) => html`
-        <atomic-automatic-facet
-          .field=${facet.state.field}
-          .facetId=${facet.state.field}
-          .facet=${facet}
-          .searchStatus=${this.searchStatus}
-          ?is-collapsed=${this.shouldCollapseFacet(index)}
-        ></atomic-automatic-facet>
-      `
+      (facet, index) =>
+        keyed(
+          facet.state.field,
+          html`
+            <atomic-automatic-facet
+              .field=${facet.state.field}
+              .facetId=${facet.state.field}
+              .facet=${facet}
+              .searchStatus=${this.searchStatus}
+              ?isCollapsed=${this.shouldCollapseFacet(index)}
+            ></atomic-automatic-facet>
+          `
+        )
     )}`;
   }
 
