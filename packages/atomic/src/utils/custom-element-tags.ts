@@ -45,6 +45,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-facet-placeholder',
   'atomic-field-condition',
   'atomic-focus-trap',
+  'atomic-folded-result-list',
   'atomic-html',
   'atomic-icon',
   'atomic-insight-generate-answer-button',
