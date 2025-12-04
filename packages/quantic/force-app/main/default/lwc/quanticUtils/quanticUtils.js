@@ -412,6 +412,7 @@ export class DateUtils {
    * @returns {string}
    */
   static fromSearchApiDate(dateString) {
+    // @ts-ignore
     return dateString.replaceAll('/', '-').replaceAll('@', 'T');
   }
 
@@ -987,6 +988,7 @@ export function getElementPadding(element) {
 
 /**
  * Returns the absolute height of an element.
+ * Uses getBoundingClientRect() to ensure synchronous layout calculation.
  * @param {Element} element
  * @returns {number} The absolute height of the element including padding.
  */
@@ -994,15 +996,18 @@ export function getAbsoluteHeight(element) {
   if (!element) {
     return 0;
   }
+
+  // Using getBoundingClientRect ensures accurate height measurements across all browsers, especially Safari.
+  const elementBoundingRect = element.getBoundingClientRect();
   const paddings = getElementPadding(element);
   const padding = paddings.top + paddings.bottom;
 
-  // @ts-ignore
-  return Math.ceil(element.offsetHeight + padding);
+  return Math.ceil(elementBoundingRect.height + padding);
 }
 
 /**
  * Returns the absolute width of an element.
+ * Uses getBoundingClientRect() to ensure synchronous layout calculation.
  * @param {Element} element
  * @returns {number} The absolute width of the element including padding.
  */
@@ -1010,9 +1015,11 @@ export function getAbsoluteWidth(element) {
   if (!element) {
     return 0;
   }
+
+  // Using getBoundingClientRect ensures accurate width measurements across all browsers, especially Safari.
+  const elementBoundingRect = element.getBoundingClientRect();
   const paddings = getElementPadding(element);
   const padding = paddings.left + paddings.right;
 
-  // @ts-ignore
-  return Math.ceil(element.offsetWidth + padding);
+  return Math.ceil(elementBoundingRect.width + padding);
 }
