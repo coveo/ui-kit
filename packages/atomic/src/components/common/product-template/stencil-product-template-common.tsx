@@ -1,4 +1,5 @@
-import {aggregate, isElementNode, isVisualNode} from '@/src/utils/utils';
+import {aggregate} from '@/src/utils/utils';
+import {isElementNode, isVisualNode} from '@/src/utils/dom-utils';
 import {
   ProductTemplate,
   ProductTemplateCondition,

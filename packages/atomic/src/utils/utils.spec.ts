@@ -1,5 +1,5 @@
-import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {aggregate, isInDocument, once} from './utils';
+import {describe, expect, it, vi} from 'vitest';
+import {aggregate, once} from './utils';
 
 describe('utils', () => {
   describe('#once', () => {
@@ -71,42 +71,6 @@ describe('utils', () => {
         Dessert: [{name: 'Cookie', category: 'Dessert'}],
         Vegetable: [{name: 'Carrot', category: 'Vegetable'}],
       });
-    });
-  });
-
-  describe('#isInDocument', () => {
-    beforeEach(() => {
-      document.body.innerHTML = '';
-    });
-
-    it('should return true for an element attached to the main document', () => {
-      const el = document.createElement('div');
-      document.body.appendChild(el);
-      expect(isInDocument(el)).toBe(true);
-      document.body.removeChild(el);
-    });
-
-    it('should return true for the descendant of an element attached to the main document', () => {
-      const parent = document.createElement('div');
-      const child = document.createElement('span');
-      parent.appendChild(child);
-      document.body.appendChild(parent);
-      expect(isInDocument(child)).toBe(true);
-    });
-
-    it('should return true for an element inside a shadow DOM attached to the document', () => {
-      const host = document.createElement('div');
-      document.body.appendChild(host);
-      const shadow = host.attachShadow({mode: 'open'});
-      const shadowChild = document.createElement('span');
-      shadow.appendChild(shadowChild);
-      expect(isInDocument(shadowChild)).toBe(true);
-      document.body.removeChild(host);
-    });
-
-    it('should return false for an element not attached to the document', () => {
-      const el = document.createElement('div');
-      expect(isInDocument(el)).toBe(false);
     });
   });
 

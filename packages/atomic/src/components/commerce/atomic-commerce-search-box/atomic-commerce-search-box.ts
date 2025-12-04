@@ -29,8 +29,9 @@ import {
 } from '@/src/utils/local-storage-utils';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {getDefaultSlotContent} from '@/src/utils/slot-utils';
+import {isFocusingOut} from '../../../utils/dom-utils';
 import {randomID} from '../../../utils/random-utils';
-import {isFocusingOut, once, spreadProperties} from '../../../utils/utils';
+import {once, spreadProperties} from '../../../utils/utils';
 import type {RedirectionPayload} from '../../common/search-box/redirection-payload';
 import {renderSearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {renderSearchBoxTextArea} from '../../common/search-box/search-text-area';

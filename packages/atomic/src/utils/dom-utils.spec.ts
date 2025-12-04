@@ -1,5 +1,10 @@
 import {afterEach, beforeEach, describe, expect, it} from 'vitest';
-import {closest, parentNodeToString, rectEquals} from './dom-utils';
+import {
+  closest,
+  isInDocument,
+  parentNodeToString,
+  rectEquals,
+} from './dom-utils';
 
 describe('dom-utils', () => {
   let container: HTMLElement;
@@ -275,6 +280,36 @@ describe('dom-utils', () => {
       expect(closest(element, 'body')).toBe(document.body);
 
       document.body.removeChild(element);
+    });
+  });
+
+  describe('#isInDocument', () => {
+    it('should return true for element attached to the document tree', () => {
+      const el = document.createElement('div');
+      container.appendChild(el);
+      expect(isInDocument(el)).toBe(true);
+    });
+
+    it('should return true for descendants of attached nodes', () => {
+      const parent = document.createElement('div');
+      const child = document.createElement('span');
+      parent.appendChild(child);
+      container.appendChild(parent);
+      expect(isInDocument(child)).toBe(true);
+    });
+
+    it('should return true for elements inside an attached shadow DOM', () => {
+      const host = document.createElement('div');
+      container.appendChild(host);
+      const shadow = host.attachShadow({mode: 'open'});
+      const shadowChild = document.createElement('span');
+      shadow.appendChild(shadowChild);
+      expect(isInDocument(shadowChild)).toBe(true);
+    });
+
+    it('should return false for nodes not attached to the document', () => {
+      const el = document.createElement('div');
+      expect(isInDocument(el)).toBe(false);
     });
   });
 });

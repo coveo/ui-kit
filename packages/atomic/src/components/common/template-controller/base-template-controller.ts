@@ -2,7 +2,8 @@ import type {ReactiveController, ReactiveControllerHost} from 'lit';
 import {isResultSectionNode} from '@/src/components/common/layout/item-layout-sections';
 import type {ItemTarget} from '@/src/components/common/layout/item-layout-utils';
 import {tableElementTagName} from '@/src/components/common/table-element-utils';
-import {aggregate, isElementNode, isVisualNode} from '@/src/utils/utils';
+import {isElementNode, isVisualNode} from '@/src/utils/dom-utils';
+import {aggregate} from '@/src/utils/utils';
 
 export type TemplateContent = DocumentFragment;
 
