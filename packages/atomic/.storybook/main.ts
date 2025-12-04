@@ -27,13 +27,11 @@ const virtualOpenApiModules: PluginImpl = () => {
           'virtual:open-api-coveo',
           'https://platform.cloud.coveo.com/api-docs'
         );
-        console.log('load', id);
         if (virtualModules.has(id)) {
           return virtualModules.get(id);
         }
 
         try {
-          console.log(`Fetching OpenAPI spec from ${id}`);
           const response = await fetch(url);
           if (!response.ok) {
             throw new Error(`Failed to fetch ${url}: ${response.statusText}`);

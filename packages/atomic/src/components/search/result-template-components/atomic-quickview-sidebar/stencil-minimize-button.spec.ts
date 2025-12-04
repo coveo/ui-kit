@@ -71,8 +71,8 @@ describe('MinimizeButton (Stencil)', () => {
 
     await renderStencilVNode(vnode, container);
 
-    const wrapper = container.firstChild as HTMLElement;
-    const button = wrapper.firstChild as HTMLButtonElement;
+    const wrapper = container.firstElementChild as HTMLElement;
+    const button = wrapper.firstElementChild as HTMLButtonElement;
 
     return {button};
   };
