@@ -25,10 +25,21 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
 import '@/src/components/common/atomic-facet-placeholder/atomic-facet-placeholder';
+import {renderCategoryFacetAllCategoryButton} from '@/src/components/common/facets/category-facet/all-categories-button';
+import {renderCategoryFacetChildrenAsTreeContainer} from '@/src/components/common/facets/category-facet/children-as-tree-container';
+import {renderCategoryFacetParentAsTreeContainer} from '@/src/components/common/facets/category-facet/parent-as-tree-container';
+import {renderCategoryFacetParentButton} from '@/src/components/common/facets/category-facet/parent-button';
+import {renderCategoryFacetParentValueLink} from '@/src/components/common/facets/category-facet/parent-value-link';
+import {renderCategoryFacetSearchResultsContainer} from '@/src/components/common/facets/category-facet/search-results-container';
+import {renderCategoryFacetSearchValue} from '@/src/components/common/facets/category-facet/search-value';
+import {renderCategoryFacetTreeValueContainer} from '@/src/components/common/facets/category-facet/value-as-tree-container';
+import {renderCategoryFacetValueLink} from '@/src/components/common/facets/category-facet/value-link';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
+import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.css';
 import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
+import facetSearchStyles from '@/src/components/common/facets/facet-search/facet-search.tw.css';
 import {announceFacetSearchResultsWithAriaLive} from '@/src/components/common/facets/facet-search/facet-search-aria-live';
 import {renderFacetSearchInput} from '@/src/components/common/facets/facet-search/facet-search-input';
 import {renderFacetSearchMatches} from '@/src/components/common/facets/facet-search/facet-search-matches';
@@ -53,17 +64,6 @@ import {
   FocusTargetController,
 } from '@/src/utils/accessibility-utils';
 import {getFieldCaptions, getFieldValueCaption} from '@/src/utils/field-utils';
-import {renderCategoryFacetAllCategoryButton} from '../../../common/facets/category-facet/all-categories-button';
-import {renderCategoryFacetChildrenAsTreeContainer} from '../../../common/facets/category-facet/children-as-tree-container';
-import {renderCategoryFacetParentAsTreeContainer} from '../../../common/facets/category-facet/parent-as-tree-container';
-import {renderCategoryFacetParentButton} from '../../../common/facets/category-facet/parent-button';
-import {renderCategoryFacetParentValueLink} from '../../../common/facets/category-facet/parent-value-link';
-import {renderCategoryFacetSearchResultsContainer} from '../../../common/facets/category-facet/search-results-container';
-import {renderCategoryFacetSearchValue} from '../../../common/facets/category-facet/search-value';
-import {renderCategoryFacetTreeValueContainer} from '../../../common/facets/category-facet/value-as-tree-container';
-import {renderCategoryFacetValueLink} from '../../../common/facets/category-facet/value-link';
-import facetCommonStyles from '../../../common/facets/facet-common.tw.css';
-import facetSearchStyles from '../../../common/facets/facet-search/facet-search.tw.css';
 
 /**
  * The `atomic-category-facet` component displays a facet of values in a browsable, hierarchical fashion.
@@ -437,7 +437,7 @@ export class AtomicCategoryFacet
 
   private getDependsOnAttribute(): Record<string, string> {
     const dependsOn: Record<string, string> = {};
-    for (const attr of this.attributes) {
+    for (const attr of Array.from(this.attributes)) {
       if (attr.name.startsWith('depends-on-')) {
         const facetId = attr.name.replace('depends-on-', '');
         dependsOn[facetId] = attr.value;
