@@ -79,133 +79,277 @@ Execute these steps in order when migrating a **component** (custom element):
 
 The visual tests must exist first so we can generate baseline snapshots from the Stencil component.
 
-#### 0.1: Locate or Create E2E Test File
+#### 0.1: Create TypeScript-Safe Page Object
 
-If `e2e/{component-name}/page-object.ts` doesn't exist yet, create it with basic structure (or update it with this structure):
+**CRITICAL:** The page-object file must be fully type-safe to avoid TypeScript compilation errors.
+
+If `e2e/page-object.ts` doesn't exist yet, create it with this complete, type-safe structure.
+
+**IMPORTANT:** At Step 0, the component is still Stencil, so use `base-page-object` (which looks for the `hydrated` class). After migrating to Lit (Step 4), update the import to use `lit-base-page-object`.
+
 ```typescript
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object'; // or lit-base-page-object
+// Use base-page-object for Stencil components (Step 0)
+// After migration to Lit (Step 4), change to: '@/playwright-utils/lit-base-page-object'
+import {BasePageObject} from '@/playwright-utils/base-page-object';
 
-export class ComponentPageObject extends BasePageObject {
+/**
+ * Page object for atomic-component-name E2E tests
+ */
+export class ComponentNamePageObject extends BasePageObject<'atomic-component-name'> {
   constructor(page: Page) {
     super(page, 'atomic-component-name');
   }
 
   /**
-   * Wait for component to be stable before screenshot
+   * Wait for component to be stable before taking screenshots.
+   * Use this before visual regression assertions.
    */
-  async waitForVisualStability() {
+  async waitForVisualStability(): Promise<void> {
+    // Wait for component to be in the DOM and hydrated
     await this.hydrated.waitFor();
-    await this.page.waitForTimeout(500); // Wait for animations
-    await this.page.evaluate(() => document.fonts.ready); // Wait for fonts
-    await this.page.waitForLoadState('networkidle');
+    
+    // Wait for fonts to load to prevent text rendering differences
+    await this.page.evaluate(() => document.fonts.ready);
+    
+    // Only add page.waitForTimeout() if the component has animations/transitions
+    // that can't be detected otherwise. Most components don't need this.
+    // Example: await this.page.waitForTimeout(300); // For fade-in animation
   }
 
-
+  /**
+   * Capture a screenshot of the component for visual regression testing.
+   * Disables animations by default for consistent snapshots.
+   */
   async captureScreenshot(options?: {
     animations?: 'disabled' | 'allow';
-  }) {
+  }): Promise<Buffer> {
     await this.waitForVisualStability();
-
-    const element = await this.component.elementHandle();
-    if (!element) {
-      throw new Error('Component element not found');
-    }
-
-    return await element.screenshot({
+    
+    return await this.hydrated.screenshot({
       animations: options?.animations ?? 'disabled',
     });
   }
-}
 
+  // Component-specific locators with proper typing
+  // ALWAYS use role-based locators when possible for accessibility
+  // Examples:
+  
+  // For buttons:
+  // get nextButton() {
+  //   return this.page.getByRole('button', {name: 'Next'});
+  // }
+  
+  // For links:
+  // get facetValueLink() {
+  //   return this.page.getByRole('link', {name: /rating/i});
+  // }
+  
+  // For text content:
+  // get statusMessage() {
+  //   return this.page.getByRole('status');
+  // }
+  
+  // For lists:
+  // get facetValues() {
+  //   return this.page.getByRole('listitem');
+  // }
+}
 ```
 
-#### 0.2: Add Visual Tests Section
+**Key TypeScript requirements:**
+- ✅ Import `Page` type from `@playwright/test`
+- ✅ Use `@/playwright-utils/base-page-object` at Step 0 (Stencil), switch to `@/playwright-utils/lit-base-page-object` after Step 4 (Lit migration)
+- ✅ For Stencil: extend `BasePageObject<'atomic-component-name'>` with the tag name as type parameter
+- ✅ Add explicit return type annotations (`: Promise<void>`, `: Promise<Buffer>`)
+- ✅ Type all method parameters and options
+- ✅ Use `await` properly in async methods
+- ✅ Use `this.hydrated.screenshot()` not `this.page.screenshot()`
 
-Add visual tests at the end of the E2E file. First, ensure the proper fixture setup exists:
+**Validation:** After creating, compile to verify TypeScript correctness:
+```bash
+cd packages/atomic
+pnpm build:stencil-lit
+```
 
-**fixture.ts** (if not already present):
+
+
+#### 0.2: Create TypeScript-Safe Fixture
+
+Create or update `e2e/fixture.ts` with proper TypeScript typing:
+
 ```typescript
 import {test as base} from '@playwright/test';
-import {ComponentPageObject} from './page-object';
+import {ComponentNamePageObject} from './page-object';
 
 type MyFixtures = {
-  component: ComponentPageObject;
+  component: ComponentNamePageObject;
 };
 
 export const test = base.extend<MyFixtures>({
   component: async ({page}, use) => {
-    await use(new ComponentPageObject(page));
+    await use(new ComponentNamePageObject(page));
   },
 });
+
 export {expect} from '@playwright/test';
 ```
 
-**E2E test file** - add visual tests at the end:
+**Key TypeScript requirements:**
+- ✅ Import specific page object class (not generic `ComponentPageObject`)
+- ✅ Define `MyFixtures` type with correct page object type
+- ✅ Pass type parameter to `base.extend<MyFixtures>`
+- ✅ Re-export `expect` from `@playwright/test`
+
+#### 0.3: Add Visual Test Cases with Proper Synchronization
+
+Add visual tests at the end of the E2E file (e.g., `e2e/atomic-component-name.e2e.ts`):
+
 ```typescript
 import {expect, test} from './fixture'; // Import from local fixture, NOT @playwright/test
 
 test.describe('Visual Regression', () => {
   test('should match baseline in default state', async ({component}) => {
-    await component.load({story: 'default'});
-    await component.hydrated.waitFor();
-    
-    const screenshot = await component.captureScreenshot();
-    expect(screenshot).toMatchSnapshot('component-default.png', {
-      // Setting maxDiffPixelRatio to 4% to avoid CI test failures due to minor rendering differences across environments
-      maxDiffPixelRatio: 0.04,
+    await test.step('Load component', async () => {
+      await component.load({story: 'default'});
+      await component.hydrated.waitFor();
+    });
+
+    await test.step('Capture and compare screenshot', async () => {
+      const screenshot = await component.captureScreenshot();
+      expect(screenshot).toMatchSnapshot('component-default.png', {
+        // Setting maxDiffPixelRatio to 4% to avoid CI test failures due to minor rendering differences across environments
+        maxDiffPixelRatio: 0.04,
+      });
     });
   });
   
   test('should match baseline after primary interaction', async ({component}) => {
-    await component.load({story: 'default'});
-    await component.hydrated.waitFor();
-    
-    // Perform the key interaction (e.g., click next, expand, etc.)
-    await component.someButton.click();
-    await component.page.waitForTimeout(300);
-    
-    const screenshot = await component.captureScreenshot();
-    expect(screenshot).toMatchSnapshot('component-after-interaction.png', {
-      // Setting maxDiffPixelRatio to 4% to avoid CI test failures due to minor rendering differences across environments
-      maxDiffPixelRatio: 0.04,
+    await test.step('Load and interact with component', async () => {
+      await component.load({story: 'default'});
+      await component.hydrated.waitFor();
+      
+      // Perform the key interaction (e.g., click next, expand, etc.)
+      // Use role-based locators, NOT arbitrary selectors
+      await component.nextButton.click();
+      
+      // Wait for the interaction to complete using Playwright auto-waiting
+      // DO NOT use page.waitForTimeout() unless absolutely necessary
+      // Instead, wait for specific state changes:
+      await expect(component.currentPage).toContainText('2');
+    });
+
+    await test.step('Capture and compare screenshot', async () => {
+      const screenshot = await component.captureScreenshot();
+      expect(screenshot).toMatchSnapshot('component-after-interaction.png', {
+        // Setting maxDiffPixelRatio to 4% to avoid CI test failures due to minor rendering differences across environments
+        maxDiffPixelRatio: 0.01,
+      });
     });
   });
 });
 ```
 
-**Important notes:**
-- Import `test` and `expect` from `./fixture`, NOT from `@playwright/test`
-- The `{component}` parameter comes from the fixture setup
-- Replace `component` with your component's fixture name (e.g., `{pager}`, `{searchBox}`)
-- Add minimal visual tests (default state + 1-2 key interactions)
-- See `packages/atomic/src/components/search/atomic-pager/e2e/` for complete example
+**CRITICAL - Test Synchronization Best Practices:**
 
-#### 0.3: Generate Baseline Snapshots from Stencil
+❌ **BAD - Using arbitrary timeouts:**
+```typescript
+await component.nextButton.click();
+await component.page.waitForTimeout(300); // DON'T DO THIS
+```
 
-Now that visual tests exist, generate baseline snapshots from the Stencil component:
+✅ **GOOD - Using Playwright auto-waiting:**
+```typescript
+await component.nextButton.click();
+// Wait for visible state change that indicates interaction completed
+await expect(component.currentPage).toContainText('2');
+// OR wait for element to appear/disappear
+await expect(component.statusMessage).toBeVisible();
+// OR wait for attribute change
+await expect(component.nextButton).toHaveAttribute('aria-disabled', 'false');
+```
+
+**When timeouts ARE acceptable:**
+- Waiting for animations/transitions that don't have detectable state changes
+- Already handled in `waitForVisualStability()` method - don't add more
+
+**Key requirements:**
+- ✅ Import `test` and `expect` from `./fixture`, NOT `@playwright/test`
+- ✅ Use `test.step()` to organize test phases
+- ✅ Use role-based locators in page object (not CSS selectors)
+- ✅ Use `await expect()` assertions for synchronization (auto-retrying)
+- ✅ Avoid `page.waitForTimeout()` - use state-based waiting instead
+- ✅ Add 2-3 minimal visual tests (default + key interactions only)
+
+#### 0.4: Generate Baseline Snapshots from Stencil Component
+
+**This is the CRITICAL step** - you're creating the "source of truth" for visual appearance.
+
+Now that visual tests exist, generate baseline snapshots from the **original Stencil component**:
 
 ```bash
-# Ensure Stencil component is built
+# Step 1: Ensure the Stencil component is built
+# (Navigate to the repository root if not already there)
 pnpm run build
 
-# Generate snapshots
+# Step 2: Generate baseline snapshots
 cd packages/atomic
-pnpm exec playwright test <component-name>.e2e.ts --update-snapshots
+pnpm exec playwright test atomic-component-name.e2e.ts --grep "Visual" --update-snapshots
+
+# Step 3: Verify snapshots were created
+ls -la src/components/**/e2e/__snapshots__/
 ```
 
-This generates snapshots in `src/components/**/e2e/__snapshots__/`
+**What this does:**
+- Runs ONLY the visual regression tests (via `--grep "Visual"`)
+- Takes screenshots of the **Stencil component** rendering
+- Saves snapshots to `e2e/__snapshots__/*.png`
+- These snapshots become the baseline for validating the Lit migration
 
-#### 0.4: Verify Snapshots
+**Expected output:**
+```
+src/components/search/atomic-component-name/e2e/__snapshots__/
+  atomic-component-name.e2e.ts-snapshots/
+    component-default-chromium-linux.png
+    component-after-interaction-chromium-linux.png
+```
+
+
+#### 0.5: Verify and Commit Baseline Snapshots
+
+**Step 1: Verify snapshots**
 - Check that `__snapshots__/*.png` files exist
-- Verify they show the Stencil component rendering correctly
-- These snapshots become the **immutable reference** for the Lit migration
+- Open the PNG files and visually verify they show the Stencil component correctly
+- Ensure all visual test cases have corresponding snapshots
+- These snapshots are the **immutable reference** for validating the Lit migration
 
-#### 0.5: Commit Visual Tests AND Baseline Snapshots
+**Step 2: Run tests to verify baselines work**
+```bash
+cd packages/atomic
+pnpm exec playwright test atomic-component-name.e2e.ts --grep "Visual"
+```
+All visual tests should PASS (confirming successful baseline generation).
+
+**Step 3: Commit everything**
 ```bash
 git add src/components/**/e2e/
-git commit -m "test: add visual regression tests and baseline snapshots for <component-name> (Stencil)"
+git commit -m "test: add visual regression baseline for atomic-component-name (Stencil)
+
+- Add page object with TypeScript typing
+- Add visual regression tests
+- Generate baseline snapshots from Stencil component
+- Snapshots will be used to validate Lit migration"
 ```
+
+**What you've accomplished:**
+- ✅ Created TypeScript-safe page object with `captureScreenshot()` method
+- ✅ Created TypeScript-safe fixture
+- ✅ Added 2-3 visual regression tests with proper synchronization
+- ✅ Generated baseline snapshots from original Stencil component
+- ✅ Committed all files to git
+
+**Step 0 is now complete!** You can proceed with Steps 1-4 (migrate component, write tests, stories, functional E2E tests).
+
 
 **Result**: Visual tests now exist and have baseline snapshots from the Stencil component.
 
@@ -242,11 +386,61 @@ Create Storybook stories with MSW API mocking:
 **Prompt:** `.github/prompts/generate-playwright-e2e-tests-atomic.prompt.md`
 
 Enhance the existing E2E test file with **functional tests** (visual tests already exist from Step 0):
+- **Update page-object import**: Change from `base-page-object` to `lit-base-page-object` now that component is Lit
 - Enhance page object model in `e2e/page-object.ts` with additional locators
 - Enhance test fixtures in `e2e/fixture.ts` if needed
 - Add functional test cases to `e2e/{component-name}.e2e.ts`
 - Test happy path, user interactions, and accessibility
 - Follow `playwright-typescript.instructions.md` conventions
+
+**IMPORTANT - Update Page Object for Lit:**
+Since the component is now Lit (migrated in Step 1), update the page-object import:
+
+```typescript
+// Before (Stencil - uses hydrated class selector):
+import {BasePageObject} from '@/playwright-utils/base-page-object';
+export class ComponentPageObject extends BasePageObject<'atomic-component-name'> { ... }
+
+// After (Lit - uses tag selector):
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
+export class ComponentPageObject extends BasePageObject { ... }
+```
+
+**CRITICAL - Proper Test Synchronization:**
+
+When writing functional E2E tests, follow these synchronization patterns:
+
+❌ **BAD - Arbitrary timeouts:**
+```typescript
+test('should navigate to next page', async ({component}) => {
+  await component.nextButton.click();
+  await component.page.waitForTimeout(1000); // DON'T DO THIS
+  // Check results...
+});
+```
+
+✅ **GOOD - State-based waiting:**
+```typescript
+test('should navigate to next page', async ({component}) => {
+  await test.step('Navigate to next page', async () => {
+    await component.nextButton.click();
+    // Wait for observable state change
+    await expect(component.currentPageIndicator).toContainText('Page 2');
+  });
+
+  await test.step('Verify results updated', async () => {
+    // Playwright auto-waits for assertions
+    await expect(component.resultsList).toHaveCount(10);
+  });
+});
+```
+
+**Synchronization Best Practices:**
+1. Use `await expect()` assertions - they auto-retry for up to 5 seconds
+2. Wait for specific state changes (text changes, elements appearing/disappearing, attribute changes)
+3. Use `test.step()` to organize test phases
+4. Only use `waitForTimeout()` for animations that can't be detected otherwise (rare)
+5. Use role-based locators in page object for better accessibility and reliability
 
 **Note**: DO NOT add visual regression tests here - they were already added in Step 0.
 
@@ -668,6 +862,132 @@ node scripts/generate-component.mjs component-name src/components/common
 - ✅ All linting passing
 - ✅ Standard PR (not migration template)
 
+## TypeScript Validation & Common Pitfalls
+
+### Validation Checklist
+
+After creating or modifying page-object.ts and fixture.ts files, **ALWAYS** validate TypeScript compilation:
+
+```bash
+cd packages/atomic
+pnpm build:stencil-lit
+```
+
+If there are TypeScript errors, fix them before proceeding.
+
+### Common TypeScript Issues and Fixes
+
+#### Issue 1: Missing Return Type Annotations
+
+❌ **Error:**
+```typescript
+// Missing return type
+async waitForVisualStability() {
+  await this.hydrated.waitFor();
+}
+```
+
+✅ **Fix:**
+```typescript
+async waitForVisualStability(): Promise<void> {
+  await this.hydrated.waitFor();
+}
+```
+
+#### Issue 2: Incorrect Screenshot Method
+
+❌ **Error:**
+```typescript
+return await this.page.screenshot({...}); // Type mismatch
+```
+
+✅ **Fix:**
+```typescript
+return await this.hydrated.screenshot({...}); // Use locator.screenshot()
+```
+
+#### Issue 3: Wrong BasePageObject Import for Migration Stage
+
+❌ **Error:** Using wrong base class for migration stage
+```typescript
+// At Step 0 with Stencil component - WRONG
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object'; // Don't use lit version yet!
+
+// After Step 4 with Lit component - WRONG  
+import {BasePageObject} from '@/playwright-utils/base-page-object'; // Still using Stencil version
+```
+
+✅ **Fix:** Use the correct base class for each stage
+```typescript
+// At Step 0 (Stencil component - before migration)
+// Correct for Stencil - uses hydrated class selector
+import {BasePageObject} from '@/playwright-utils/base-page-object';
+export class ComponentNamePageObject extends BasePageObject<'atomic-component-name'> { ... }
+
+// After Step 4 (Lit component - after migration)
+// Correct for Lit - uses tag selector
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
+export class ComponentNamePageObject extends BasePageObject { ... }
+```
+
+#### Issue 4: Generic Class Name in Fixture
+
+❌ **Error:**
+```typescript
+// Using generic name instead of the actual exported class name
+import {ComponentNamePageObject} from './page-object';
+```
+
+✅ **Fix:**
+```typescript
+// Use the actual exported class name matching your component
+import {RatingFacetPageObject} from './page-object';
+```
+
+#### Issue 5: Missing Type Parameter in Fixture
+
+❌ **Error:**
+```typescript
+export const test = base.extend({  // Missing type parameter
+  component: async ({page}, use) => {
+    await use(new ComponentPageObject(page));
+  },
+});
+```
+
+✅ **Fix:**
+```typescript
+type MyFixtures = {
+  component: ComponentPageObject;
+};
+
+export const test = base.extend<MyFixtures>({
+  component: async ({page}, use) => {
+    await use(new ComponentPageObject(page));
+  },
+});
+```
+
+### Pre-Commit Validation
+
+Before committing Step 0 files, verify:
+
+```bash
+# 1. TypeScript compiles
+cd packages/atomic
+pnpm build:stencil-lit
+
+# 2. Visual tests run (should pass with snapshots)
+pnpm exec playwright test atomic-component-name.e2e.ts --grep "Visual"
+
+# 3. Check generated files
+ls -la src/components/**/e2e/page-object.ts
+ls -la src/components/**/e2e/fixture.ts
+ls -la src/components/**/e2e/__snapshots__/
+```
+
+All checks must pass before committing.
+
 ## Important Notes
 
 - **Detect migration type FIRST** - Always determine whether you're migrating a component, functional component, or utils before proceeding
@@ -679,5 +999,7 @@ node scripts/generate-component.mjs component-name src/components/common
 - **Use dedicated prompts** - Each step has specialized prompts with detailed guidance
 - **Reference similar code** - Always find and analyze equivalent code for patterns
 - **Preserve functionality** - The migrated code must behave identically to the Stencil version
-- **Single source of truth** - All conventions are in instruction files - refer to them for patterns
 - **No assumptions** - If dependencies block migration, stop and document rather than making assumptions
+- **TypeScript safety is critical** - All page-object and fixture files must compile without errors; validate with `pnpm build:stencil-lit`
+- **Test synchronization matters** - Avoid `waitForTimeout()`, use Playwright's auto-waiting with `await expect()` assertions
+- **Role-based locators preferred** - Use `getByRole()`, `getByLabel()`, `getByText()` for accessibility and reliability
