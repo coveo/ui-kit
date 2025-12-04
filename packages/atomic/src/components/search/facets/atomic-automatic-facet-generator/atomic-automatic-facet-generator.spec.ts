@@ -163,7 +163,8 @@ describe('atomic-automatic-facet-generator', () => {
       'atomic-automatic-facet'
     );
 
-    expect(automaticFacetElement?.getAttribute('field')).toBe(null); // property binding, not attribute
+    // The field is reflected as an attribute
+    expect(automaticFacetElement?.getAttribute('field')).toBe('category');
   });
 
   describe('#updateCollapseFacetsDependingOnFacetsVisibility', () => {
