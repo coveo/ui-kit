@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.77",
+  "version": "3.0.79",
   "scripts": {
     "postinstall": "husky install",
     "reset:install": "git checkout origin/main pnpm-lock.yaml && pnpm install",
@@ -44,6 +44,7 @@
     "husky": "9.1.7",
     "knip": "5.62.0",
     "lint-staged": "16.1.2",
+    "@playwright/mcp": "catalog:",
     "playwright": "catalog:",
     "publint": "0.3.12",
     "semver": "7.7.2",

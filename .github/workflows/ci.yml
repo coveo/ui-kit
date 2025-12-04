@@ -2,6 +2,10 @@ name: CI
 on:
   pull_request:
   merge_group:
+
+permissions:
+  contents: read
+
 env:
   CYPRESS_VERIFY_TIMEOUT: 60000
 jobs:
@@ -464,7 +468,8 @@ jobs:
       - uses: ./.github/actions/cypress-atomic-screenshots
   storybook-atomic:
     name: "Run Storybook tests"
-    needs: build
+    needs: affected
+    if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.56.1-noble
@@ -630,6 +635,9 @@ jobs:
     name: "Run Quantic E2E tests"
     needs: affected
     if: contains(needs.affected.outputs.projects, '@coveo/quantic') && !(github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'skip-quantic'))
+    permissions:
+      contents: read
+      pull-requests: write
     uses: ./.github/workflows/e2e-quantic.yml
     with:
       event_name: ${{ github.event_name }}
@@ -710,6 +718,7 @@ jobs:
     needs:
       - "build"
       - "lint-check"
+      - "knip"
       - "unit-test"
       - "storybook-atomic"
       - "playwright-atomic"
@@ -751,6 +760,7 @@ jobs:
     needs:
       - "build"
       - "lint-check"
+      - "knip"
       - "unit-test"
       - "storybook-atomic"
       - "playwright-atomic"

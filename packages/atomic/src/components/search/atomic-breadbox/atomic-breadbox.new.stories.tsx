@@ -1,7 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
-import {expect, userEvent, waitFor} from 'storybook/test';
+import {expect, waitFor} from 'storybook/test';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
@@ -70,36 +70,5 @@ export const Default: Story = {
         }
       );
     });
-    await step('Select a facet value', async () => {
-      const facet = canvas.getByShadowTitle('People');
-      await userEvent.click(facet);
-      await waitFor(
-        () =>
-          expect(
-            canvas.getByShadowTitle('Object type: People')
-          ).toBeInTheDocument(),
-        {timeout: 30e3}
-      );
-    });
   },
-};
-
-export const WithRatingFacet: Story = {
-  name: 'atomic-breadbox with rating facet',
-  decorators: [
-    (story) => html`
-      ${story()}
-      <div style="margin:20px 0">
-        Select a rating facet value to see the Breadbox component.
-      </div>
-      <div style="display: flex; justify-content: flex-start;">
-        <atomic-rating-facet
-          field="snrating"
-          label="Rating"
-          number-of-intervals="5"
-        >
-        </atomic-rating-facet>
-      </div>
-    `,
-  ],
 };
