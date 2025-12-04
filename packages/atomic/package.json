@@ -79,7 +79,9 @@
     "release:phase3": "pnpm --filter @coveo/ci npm-publish",
     "release:phase1": "pnpm --filter @coveo/ci bump",
     "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
-    "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
+    "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
+    "chromatic:build": "IS_CHROMATIC=true storybook build -o dist-chromatic --stats-json",
+    "chromatic": "chromatic -d=dist-chromatic --only-changed"
   },
   "dependencies": {
     "@coveo/bueno": "workspace:*",
