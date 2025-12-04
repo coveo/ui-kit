@@ -8,6 +8,7 @@ export function buildMockBaseSpotlightContent(
   config: Partial<BaseSpotlightContent> = {}
 ): BaseSpotlightContent {
   return {
+    id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
     clickUri: 'https://example.com/spotlight',
     desktopImage: 'https://example.com/desktop.jpg',
     mobileImage: 'https://example.com/mobile.jpg',
