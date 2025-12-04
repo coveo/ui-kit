@@ -1,25 +1,23 @@
-import {NumberValue, Schema} from '@coveo/bueno';
-import type {
-  CategoryFacet,
-  CategoryFacetOptions,
-  CategoryFacetSortCriterion,
-  CategoryFacetState,
-  CategoryFacetValue,
-  CategoryFacetValueRequest,
-  FacetConditionsManager,
-  FacetValueRequest,
-  SearchStatus,
-  SearchStatusState,
-  TabManager,
-  TabManagerState,
-} from '@coveo/headless';
+import {NumberValue, Schema, StringValue} from '@coveo/bueno';
 import {
   buildCategoryFacet,
   buildFacetConditionsManager,
   buildSearchStatus,
   buildTabManager,
+  type CategoryFacet,
+  type CategoryFacetOptions,
+  type CategoryFacetSortCriterion,
+  type CategoryFacetState,
+  type CategoryFacetValue,
+  type CategoryFacetValueRequest,
+  type FacetConditionsManager,
+  type FacetValueRequest,
+  type SearchStatus,
+  type SearchStatusState,
+  type TabManager,
+  type TabManagerState,
 } from '@coveo/headless';
-import type {CSSResultGroup, TemplateResult} from 'lit';
+import type {TemplateResult} from 'lit';
 import {css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
@@ -50,15 +48,16 @@ import {
 import {renderFacetShowMoreLess} from '@/src/components/common/facets/facet-show-more-less/facet-show-more-less';
 import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '@/src/components/common/facets/popover/popover-type';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {arrayConverter} from '@/src/converters/array-converter';
+import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {
   AriaLiveRegionController,
   FocusTargetController,
@@ -107,14 +106,24 @@ import {getFieldCaptions, getFieldValueCaption} from '@/src/utils/field-utils';
 @bindings()
 @withTailwindStyles
 export class AtomicCategoryFacet
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<Bindings>
 {
-  static styles: CSSResultGroup = [
+  private static readonly propsSchema = new Schema({
+    field: new StringValue({required: true, emptyAllowed: false}),
+    numberOfValues: new NumberValue({min: 1}),
+    sortCriteria: new StringValue({
+      constrainTo: ['alphanumeric', 'occurrences'],
+    }),
+    headingLevel: new NumberValue({min: 0, max: 6}),
+    injectionDepth: new NumberValue({min: 0}),
+    delimitingCharacter: new StringValue(),
+  });
+
+  static styles = [
     facetCommonStyles,
     facetSearchStyles,
     css`
-      @reference '../../../utils/tailwind.global.tw.css';
       [part~='active-parent'] {
         @apply pl-9;
       }
@@ -217,7 +226,11 @@ export class AtomicCategoryFacet
   /**
    * Whether this facet should contain a search box.
    */
-  @property({reflect: true, type: Boolean, attribute: 'with-search'})
+  @property({
+    reflect: true,
+    attribute: 'with-search',
+    converter: booleanConverter,
+  })
   public withSearch = false;
 
   /**
@@ -250,14 +263,24 @@ export class AtomicCategoryFacet
 
   /**
    * Whether to use basePath as a filter for the results.
+   *
+   * TODO: KIT-XXXX - Deprecate this property and replace with one that defaults to false.
    */
-  @property({reflect: true, type: Boolean, attribute: 'filter-by-base-path'})
+  @property({
+    reflect: true,
+    attribute: 'filter-by-base-path',
+    converter: booleanConverter,
+  })
   public filterByBasePath = true;
 
   /**
    * Specifies whether the facet is collapsed.
    */
-  @property({reflect: true, type: Boolean, attribute: 'is-collapsed'})
+  @property({
+    reflect: true,
+    attribute: 'is-collapsed',
+    converter: booleanConverter,
+  })
   public isCollapsed = false;
 
   /**
@@ -268,8 +291,14 @@ export class AtomicCategoryFacet
 
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+   *
+   * TODO: KIT-XXXX - Deprecate this property and replace with one that defaults to false.
    */
-  @property({reflect: true, type: Boolean, attribute: 'filter-facet-count'})
+  @property({
+    reflect: true,
+    attribute: 'filter-facet-count',
+    converter: booleanConverter,
+  })
   public filterFacetCount = true;
 
   /**
@@ -291,15 +320,19 @@ export class AtomicCategoryFacet
   constructor() {
     super();
 
-    new Schema({
-      numberOfValues: new NumberValue({min: 1}),
-      injectionDepth: new NumberValue({min: 0}),
-      headingLevel: new NumberValue({min: 0, max: 6}),
-    }).validate({
-      numberOfValues: this.numberOfValues,
-      injectionDepth: this.injectionDepth,
-      headingLevel: this.headingLevel,
-    });
+    new ValidatePropsController(
+      this,
+      () => ({
+        field: this.field,
+        numberOfValues: this.numberOfValues,
+        sortCriteria: this.sortCriteria,
+        headingLevel: this.headingLevel,
+        injectionDepth: this.injectionDepth,
+        delimitingCharacter: this.delimitingCharacter,
+      }),
+      AtomicCategoryFacet.propsSchema,
+      false
+    );
   }
 
   public initialize() {
