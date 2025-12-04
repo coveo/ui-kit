@@ -1,6 +1,6 @@
 import {isUndefined} from '@coveo/bueno';
 import type {InteractiveProduct, Product} from '@coveo/headless/commerce';
-import {html, LitElement} from 'lit';
+import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {createInteractiveProductContextController} from '@/src/components/commerce/product-template-component-utils/context/interactive-product-context-controller.js';
@@ -20,7 +20,6 @@ import {
   type LightDOMWithSlots,
   SlotsForNoShadowDOMMixin,
 } from '@/src/mixins/slots-for-no-shadow-dom-mixin';
-import styles from './atomic-product-link.tw.css';
 
 /**
  * The `atomic-product-link` component automatically transforms a product `ec_name` into a clickable link that points to the original item.
@@ -34,7 +33,14 @@ export class AtomicProductLink
   extends LightDomMixin(SlotsForNoShadowDOMMixin(LitElement))
   implements InitializableComponent<CommerceBindings>
 {
-  static styles = styles;
+  static styles: CSSResultGroup =
+    css`@reference '../../../utils/tailwind.global.tw.css';
+
+atomic-product-link {
+  a {
+    @apply link-style;
+  }
+}`;
 
   /**
    * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value
