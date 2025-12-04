@@ -9,7 +9,7 @@ import {
   getParent,
   isAncestorOf,
 } from '@/src/utils/dom-utils';
-import {defer} from '@/src/utils/utils';
+import {defer} from '@/src/utils/promise-utils';
 
 /**
  * The `atomic-focus-trap` component manages focus within a modal or dialog,

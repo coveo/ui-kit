@@ -19,13 +19,16 @@ import {
   AriaLiveRegionController,
   FocusTargetController,
 } from './accessibility-utils';
-import {defer} from './utils';
+import {defer} from './promise-utils';
 
-vi.mock('./utils', () => ({
-  defer: vi.fn(async () => {
-    return Promise.resolve();
-  }),
-}));
+vi.mock('./promise-utils', async () => {
+  const actual =
+    await vi.importActual<typeof import('./promise-utils')>('./promise-utils');
+  return {
+    ...actual,
+    defer: vi.fn(async () => Promise.resolve()),
+  };
+});
 
 @customElement('stub-aria-live')
 class StubAriaLive extends LitElement {

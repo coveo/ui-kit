@@ -12,7 +12,3 @@ export function once<T extends unknown[], R>(fn: (...args: T) => R) {
     return result;
   };
 }
-
-export async function defer() {
-  return new Promise<void>((resolve) => setTimeout(resolve, 10));
-}
