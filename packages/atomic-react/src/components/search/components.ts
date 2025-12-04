@@ -7,6 +7,7 @@ import {
   AtomicExternal as LitAtomicExternal,
   AtomicFacet as LitAtomicFacet,
   AtomicFocusTrap as LitAtomicFocusTrap,
+  AtomicGeneratedAnswer as LitAtomicGeneratedAnswer,
   AtomicHtml as LitAtomicHtml,
   AtomicIcon as LitAtomicIcon,
   AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
@@ -108,6 +109,12 @@ export const AtomicFocusTrap = createComponent({
   tagName: 'atomic-focus-trap',
   react: React,
   elementClass: LitAtomicFocusTrap,
+});
+
+export const AtomicGeneratedAnswer = createComponent({
+  tagName: 'atomic-generated-answer',
+  react: React,
+  elementClass: LitAtomicGeneratedAnswer,
 });
 
 export const AtomicHtml = createComponent({
