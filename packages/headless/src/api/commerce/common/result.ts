@@ -8,6 +8,10 @@ export enum ResultType {
 
 export interface BaseSpotlightContent {
   /**
+   * The unique identifier of the spotlight content.
+   */
+  id: string;
+  /**
    * The URI to navigate to when the spotlight content is clicked.
    */
   clickUri: string;
