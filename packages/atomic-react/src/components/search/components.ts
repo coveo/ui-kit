@@ -19,6 +19,7 @@ import {
   AtomicPopover as LitAtomicPopover,
   AtomicQueryError as LitAtomicQueryError,
   AtomicQuerySummary as LitAtomicQuerySummary,
+  AtomicRatingFacet as LitAtomicRatingFacet,
   AtomicRatingRangeFacet as LitAtomicRatingRangeFacet,
   AtomicRecsInterface as LitAtomicRecsInterface,
   AtomicResult as LitAtomicResult,
@@ -180,6 +181,12 @@ export const AtomicQuerySummary = createComponent({
   tagName: 'atomic-query-summary',
   react: React,
   elementClass: LitAtomicQuerySummary,
+});
+
+export const AtomicRatingFacet = createComponent({
+  tagName: 'atomic-rating-facet',
+  react: React,
+  elementClass: LitAtomicRatingFacet,
 });
 
 export const AtomicRatingRangeFacet = createComponent({
