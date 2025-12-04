@@ -1,8 +1,10 @@
 import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import {classMap} from 'lit/directives/class-map.js';
 import {renderButton} from '@/src/components/common/button';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {LitElementWithError} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {multiClassMap, tw} from '@/src/directives/multi-class-map';
 
 /**
  * The `atomic-tab-button` component renders a tab button for use in tab interfaces.
@@ -15,7 +17,8 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
  */
 @customElement('atomic-tab-button')
 @withTailwindStyles
-export class AtomicTabButton extends LitElement {
+export class AtomicTabButton extends LitElement implements LitElementWithError {
+  error!: Error;
   /**
    * The label to display on the tab button.
    */
@@ -31,8 +34,9 @@ export class AtomicTabButton extends LitElement {
    */
   @property({attribute: false}) select!: () => void;
 
+  @errorGuard()
   render() {
-    const containerClasses = {
+    const containerClasses = tw({
       relative: this.active,
       'after:block': this.active,
       'after:w-full': this.active,
@@ -41,7 +45,7 @@ export class AtomicTabButton extends LitElement {
       'after:-bottom-0.5': this.active,
       'after:bg-primary': this.active,
       'after:rounded': this.active,
-    };
+    });
 
     const buttonClasses = [
       'w-full',
@@ -59,9 +63,8 @@ export class AtomicTabButton extends LitElement {
     return html`
       <div
         role="listitem"
-        class=${classMap(containerClasses)}
+        class=${multiClassMap(containerClasses)}
         aria-current=${this.active ? 'true' : 'false'}
-        aria-label=${`tab for ${this.label}`}
         part=${this.active ? 'button-container-active' : 'button-container'}
       >
         ${renderButton({

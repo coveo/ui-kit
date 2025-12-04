@@ -108,11 +108,6 @@ describe('atomic-tab-button', () => {
     });
   });
 
-  it('should set aria-label with the label', async () => {
-    const {container} = await renderTabButton({label: 'My Tab'});
-    expect(container).toHaveAttribute('aria-label', 'tab for My Tab');
-  });
-
   it('should call select when button is clicked', async () => {
     const selectFn = vi.fn();
     const {button} = await renderTabButton({select: selectFn});
