@@ -5,6 +5,7 @@ export {AtomicColorFacet} from './atomic-color-facet/atomic-color-facet.js';
 export {AtomicExternal} from './atomic-external/atomic-external.js';
 export {AtomicFacet} from './atomic-facet/atomic-facet.js';
 export {AtomicFieldCondition} from './atomic-field-condition/atomic-field-condition.js';
+export {AtomicGeneratedAnswer} from './atomic-generated-answer/atomic-generated-answer.js';
 export {AtomicHtml} from './atomic-html/atomic-html.js';
 export {AtomicLoadMoreResults} from './atomic-load-more-results/atomic-load-more-results.js';
 export {AtomicNoResults} from './atomic-no-results/atomic-no-results.js';
