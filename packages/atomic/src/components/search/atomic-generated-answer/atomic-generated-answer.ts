@@ -14,6 +14,7 @@ import {
 } from '@coveo/headless';
 import {html, LitElement, nothing, type PropertyValueMap} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {keyed} from 'lit/directives/keyed.js';
 import {renderCopyButton} from '@/src/components/common/generated-answer/copy-button';
 import {renderFeedbackButton} from '@/src/components/common/generated-answer/feedback-button';
 import {renderGeneratedContentContainer} from '@/src/components/common/generated-answer/generated-content-container';
@@ -24,6 +25,8 @@ import {renderHeading} from '@/src/components/common/heading';
 import {renderSwitch} from '@/src/components/common/switch';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
+import {arrayConverter} from '@/src/converters/array-converter';
+import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -85,6 +88,14 @@ export class AtomicGeneratedAnswer
   extends LitElement
   implements InitializableComponent<Bindings>
 {
+  private static readonly propsSchema = new Schema({
+    maxCollapsedHeight: new NumberValue({
+      min: 9,
+      max: 32,
+      required: false,
+    }),
+  });
+
   private readonly DEFAULT_COLLAPSED_HEIGHT = 16;
   private readonly MAX_COLLAPSED_HEIGHT = 32;
   private readonly MIN_COLLAPSED_HEIGHT = 9;
@@ -99,13 +110,17 @@ export class AtomicGeneratedAnswer
   /**
    * Whether to render a toggle button that lets the user hide or show the answer.
    */
-  @property({type: Boolean, attribute: 'with-toggle'})
+  @property({
+    type: Boolean,
+    attribute: 'with-toggle',
+    converter: booleanConverter,
+  })
   withToggle = false;
 
   /**
    * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
    */
-  @property({type: Boolean})
+  @property({type: Boolean, converter: booleanConverter})
   collapsible = false;
 
   /**
@@ -129,7 +144,11 @@ export class AtomicGeneratedAnswer
   /**
    * Whether to disable citation anchoring.
    */
-  @property({type: Boolean, attribute: 'disable-citation-anchoring'})
+  @property({
+    type: Boolean,
+    attribute: 'disable-citation-anchoring',
+    converter: booleanConverter,
+  })
   disableCitationAnchoring = false;
 
   /**
@@ -141,7 +160,11 @@ export class AtomicGeneratedAnswer
    * ```
    * If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer can only be displayed on the specified tabs.
    */
-  @property({type: Array, attribute: 'tabs-included'})
+  @property({
+    type: Array,
+    attribute: 'tabs-included',
+    converter: arrayConverter,
+  })
   tabsIncluded: string[] = [];
 
   /**
@@ -153,7 +176,11 @@ export class AtomicGeneratedAnswer
    * ```
    * If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
    */
-  @property({type: Array, attribute: 'tabs-excluded'})
+  @property({
+    type: Array,
+    attribute: 'tabs-excluded',
+    converter: arrayConverter,
+  })
   tabsExcluded: string[] = [];
 
   @state()
@@ -193,13 +220,7 @@ export class AtomicGeneratedAnswer
     new ValidatePropsController(
       this,
       () => ({maxCollapsedHeight: this.maxCollapsedHeight}),
-      new Schema({
-        maxCollapsedHeight: new NumberValue({
-          min: this.MIN_COLLAPSED_HEIGHT,
-          max: this.MAX_COLLAPSED_HEIGHT,
-          required: false,
-        }),
-      })
+      AtomicGeneratedAnswer.propsSchema
     );
   }
 
@@ -598,23 +619,26 @@ export class AtomicGeneratedAnswer
             },
           }
         );
-        return html`
-          <li key=${citation.id} class="max-w-full">
-            <atomic-citation
-              .citation=${this.getCitation(citation)}
-              .index=${index}
-              .sendHoverEndEvent=${(citationHoverTimeMs: number) => {
-                this.generatedAnswer?.logCitationHover(
-                  citation.id,
-                  citationHoverTimeMs
-                );
-              }}
-              .interactiveCitation=${interactiveCitation}
-              .disableCitationAnchoring=${this.disableCitationAnchoring}
-              exportparts="citation,citation-popover"
-            ></atomic-citation>
-          </li>
-        `;
+        return keyed(
+          citation.id,
+          html`
+            <li class="max-w-full">
+              <atomic-citation
+                .citation=${this.getCitation(citation)}
+                .index=${index}
+                .sendHoverEndEvent=${(citationHoverTimeMs: number) => {
+                  this.generatedAnswer?.logCitationHover(
+                    citation.id,
+                    citationHoverTimeMs
+                  );
+                }}
+                .interactiveCitation=${interactiveCitation}
+                .disableCitationAnchoring=${this.disableCitationAnchoring}
+                exportparts="citation,citation-popover"
+              ></atomic-citation>
+            </li>
+          `
+        );
       }
     );
   }

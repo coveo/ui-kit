@@ -1,0 +1,143 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+import * as AtomicGeneratedAnswerStories from './atomic-generated-answer.new.stories';
+import {AtomicDocTemplate} from '../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicGeneratedAnswerStories} />
+
+<AtomicDocTemplate
+  stories={AtomicGeneratedAnswerStories}
+  githubPath="search/atomic-generated-answer/atomic-generated-answer.ts"
+  tagName="atomic-generated-answer"
+  className="AtomicGeneratedAnswer"
+>
+
+The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user. For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/).
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    <atomic-layout-section section="main">
+      
+      <atomic-generated-answer></atomic-generated-answer>
+      
+    </atomic-layout-section>
+    ...
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+## Key Features
+
+- **AI-Generated Answers**: Automatically generates answers to user queries using Coveo ML
+- **Source Citations**: Displays citations to the sources used to generate the answer
+- **Feedback Collection**: Built-in like/dislike buttons to collect user feedback
+- **Copy to Clipboard**: Users can easily copy the generated answer
+- **Collapsible Mode**: Allows long answers to be collapsed for better UI management
+- **Tab Integration**: Show/hide the component based on active tabs
+
+## Configuration
+
+### Basic Configuration
+
+```html
+<atomic-generated-answer></atomic-generated-answer>
+```
+
+### With Toggle Button
+
+Display a toggle button that lets users hide or show the answer:
+
+```html
+<atomic-generated-answer with-toggle></atomic-generated-answer>
+```
+
+### Collapsible Mode
+
+Allow the answer to be collapsed when it's taller than a specified height:
+
+```html
+<atomic-generated-answer
+  collapsible
+  max-collapsed-height="20">
+</atomic-generated-answer>
+```
+
+- **`collapsible`**: Enables collapsible mode
+- **`max-collapsed-height`**: Maximum height in rem units when collapsed (default: 16, range: 9-32)
+
+### Answer Configuration
+
+Specify a particular answer configuration to use:
+
+```html
+<atomic-generated-answer
+  answer-configuration-id="my-config-id">
+</atomic-generated-answer>
+```
+
+### Citation Configuration
+
+Include additional fields with citations and control citation anchoring:
+
+```html
+<atomic-generated-answer
+  fields-to-include-in-citations="author,date,category"
+  disable-citation-anchoring>
+</atomic-generated-answer>
+```
+
+### Tab-Based Display
+
+Control which tabs display the generated answer:
+
+```html
+<!-- Show only on specific tabs -->
+<atomic-generated-answer
+  tabs-included='["search", "knowledge"]'>
+</atomic-generated-answer>
+
+<!-- Hide on specific tabs -->
+<atomic-generated-answer
+  tabs-excluded='["images", "videos"]'>
+</atomic-generated-answer>
+```
+
+### Custom No-Answer Message
+
+Provide a custom message when no answer can be generated:
+
+```html
+<atomic-generated-answer>
+  <div slot="no-answer-message">
+    Sorry, we couldn't generate an answer for your query.
+    Please try rephrasing your question.
+  </div>
+</atomic-generated-answer>
+```
+
+## Accessibility
+
+The component is built with accessibility in mind:
+- ARIA live regions announce answer generation status
+- Keyboard-accessible feedback buttons and toggle
+- Proper focus management
+- Screen reader support for all interactive elements
+
+## Styling
+
+The component supports various CSS parts for customization:
+- `container` - Main container
+- `header-label` - Answer header
+- `toggle` - Visibility toggle switch
+- `feedback-button` - Like/dislike buttons
+- `copy-button` - Copy answer button
+- `generated-text` - Answer text content
+- `citations-label` - Citations section header
+- `citation` - Individual citation links
+- `citation-popover` - Citation preview popups
+
+Custom CSS properties:
+- `--atomic-crga-collapsed-height` - Height of collapsed answer container
+
+</AtomicDocTemplate>
