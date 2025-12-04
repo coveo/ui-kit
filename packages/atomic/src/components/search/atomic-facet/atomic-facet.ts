@@ -65,7 +65,7 @@ import {ValidatePropsController} from '../../common/validate-props-controller/va
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
- * An `atomic-facet` displays a facet of the results for the current query. Adding an optional search box to a facet can help find specific values inside larger sets.
+ * An `atomic-facet` displays a facet of the results for the current query.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
