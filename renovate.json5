@@ -143,6 +143,7 @@
   "vulnerabilityAlerts": {
     "enabled": false
   },
+  "postUpdateOptions": ["pnpmDedupe"],
   "ignoreDeps": [
     "@salesforce/sfdx-lwc-jest",
     "fix-esm-import-path",

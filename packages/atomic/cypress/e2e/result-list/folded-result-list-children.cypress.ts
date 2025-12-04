@@ -22,7 +22,6 @@ import {
   addFoldedResultList,
   buildTemplateWithoutSections,
   buildTemplateWithSections,
-  removeResultChildrenFromResponse,
 } from './result-list-actions';
 
 const setSourceAndSortCriteria = () => {
@@ -103,22 +102,6 @@ describe('Folded Result List Component - Children results', () => {
         'contain.text',
         ExpectedHierarchyWith10foldedResultsRequested.children[2].name
       );
-  });
-
-  it('should not show a "no results" label when no child results are found when no-result-text is empty', () => {
-    new TestFixture()
-      .with(setSourceAndSortCriteria)
-      .with(
-        addFoldedResultList(
-          buildTemplateWithoutSections(
-            buildResultTopChild(undefined, {'no-result-text': ''})
-          )
-        )
-      )
-      .with(removeResultChildrenFromResponse)
-      .init();
-
-    FoldedResultListSelectors.noResultsLabel().should('not.exist');
   });
 
   it('renders content before and after children only when there are children', () => {

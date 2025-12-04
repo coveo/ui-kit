@@ -1,0 +1,94 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicSortExpressionStories from './atomic-sort-expression.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicSortExpressionStories} />
+
+<AtomicDocTemplate
+  stories={AtomicSortExpressionStories}
+  githubPath="search/atomic-sort-expression/atomic-sort-expression.ts"
+  tagName="atomic-sort-expression"
+  className="AtomicSortExpression"
+>
+
+The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
+
+This component is not used standalone. It must be a child of `atomic-sort-dropdown`.
+
+See the [atomic-sort-dropdown documentation](?path=/docs/atomic-sort-dropdown--docs) for additional usage examples.
+
+```html
+<atomic-search-interface>
+  <!-- other components -->
+  
+  <atomic-sort-dropdown>
+    <atomic-sort-expression label="Relevance" expression="relevancy"></atomic-sort-expression>
+    <atomic-sort-expression label="Newest" expression="date descending"></atomic-sort-expression>
+    <atomic-sort-expression label="Oldest" expression="date ascending"></atomic-sort-expression>
+    <atomic-sort-expression label="Size" expression="size descending"></atomic-sort-expression>
+  </atomic-sort-dropdown>
+
+  <!-- other components -->
+</atomic-search-interface>
+```
+
+## Sort Criteria
+
+The available sort criteria are:
+
+- `relevancy` - Sort by relevance score
+- `date ascending` / `date descending` - Sort by date
+- `qre` - Sort using Query Ranking Expression
+- `<FIELD> ascending` / `<FIELD> descending` - Sort by a specific field (e.g., `size ascending`)
+
+### Complex Sort Expressions
+
+You can specify multiple sort criteria separated by commas. The API applies them sequentially:
+
+```html
+<atomic-sort-expression 
+  label="Size then Date" 
+  expression="size ascending, date descending">
+</atomic-sort-expression>
+```
+
+Valid combinations:
+- A relevancy criterion followed by field or date criteria
+- A qre criterion followed by field or date criteria  
+- Two or more field criteria
+- A date criterion and one or more field criteria
+
+## Tab Filtering
+
+### tabs-included
+
+Specify which tabs should display this sort expression:
+
+```html
+<atomic-sort-expression 
+  label="Relevance" 
+  expression="relevancy"
+  tabs-included='["all", "documents"]'>
+</atomic-sort-expression>
+```
+
+### tabs-excluded
+
+Specify which tabs should NOT display this sort expression:
+
+```html
+<atomic-sort-expression 
+  label="Date" 
+  expression="date descending"
+  tabs-excluded='["images"]'>
+</atomic-sort-expression>
+```
+
+> **Note:** Do not use both `tabs-included` and `tabs-excluded` on the same component, as this may lead to unexpected behavior.
+
+## Related Components
+
+- [atomic-sort-dropdown](?path=/docs/atomic-sort-dropdown--docs): Renders a dropdown that allows users to select sort criteria
+
+</AtomicDocTemplate>

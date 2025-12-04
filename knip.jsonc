@@ -13,7 +13,8 @@
   "workspaces": {
     ".": {
       "entry": ["hooks/*.js", "scripts/**/*.{js,mjs}"],
-      "ignoreBinaries": ["ts-node", "dev"]
+      "ignoreBinaries": ["ts-node", "dev"],
+      "ignoreDependencies": ["@playwright/mcp"]
     },
     "packages/headless": {
       "entry": ["src/*index.ts", "ponyfills/*.js"],
@@ -29,7 +30,11 @@
       "ignoreDependencies": ["local-web-server"]
     },
     "packages/atomic-angular": {
-      "ignoreDependencies": ["rxjs"]
+      "ignoreDependencies": [
+        "rxjs",
+        // Can be removed once we bump our package to use more recent Angular versions that support Vite 7+.
+        "vite"
+      ]
     },
     "packages/atomic-angular/projects/atomic-angular": {
       "entry": ["src/public-api.ts"],

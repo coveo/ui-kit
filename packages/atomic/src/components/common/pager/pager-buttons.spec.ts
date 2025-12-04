@@ -1,6 +1,7 @@
 import type {i18n as I18n} from 'i18next';
-import {html, render} from 'lit';
-import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest';
+import {html} from 'lit';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
@@ -11,295 +12,252 @@ import {
   renderPagerPreviousButton,
 } from './pager-buttons';
 
-describe('pagerButtons', () => {
-  let container: HTMLElement;
+describe('#pagerButtons', () => {
   let i18n: I18n;
 
-  describe('pagerPreviousButton', () => {
-    beforeEach(async () => {
-      i18n = await createTestI18n();
-      container = document.createElement('div');
-      document.body.appendChild(container);
+  beforeAll(async () => {
+    i18n = await createTestI18n();
+  });
 
-      render(
-        html`
-          ${renderPagerPreviousButton({
-            props: {
-              i18n,
-              icon: ArrowLeftIcon,
-            },
-          })}
-        `,
-        container
-      );
-    });
+  const renderPreviousButton = async () => {
+    const element = await renderFunctionFixture(
+      html`
+        ${renderPagerPreviousButton({
+          props: {
+            i18n,
+            icon: ArrowLeftIcon,
+          },
+        })}
+      `
+    );
+    return {
+      element,
+      button: element.querySelector('button'),
+      icon: element.querySelector('atomic-icon'),
+    };
+  };
 
-    afterEach(() => {
-      document.body.removeChild(container);
-    });
+  const renderNextButton = async () => {
+    const element = await renderFunctionFixture(
+      html`
+        ${renderPagerNextButton({
+          props: {
+            i18n,
+            icon: ArrowRightIcon,
+          },
+        })}
+      `
+    );
+    return {
+      element,
+      button: element.querySelector('button'),
+      icon: element.querySelector('atomic-icon'),
+    };
+  };
 
-    test('should render the button with the correct attributes', () => {
-      const button = container.querySelector('button');
+  const renderPageButton = async (
+    overrides: Partial<{
+      groupName: string;
+      page: number;
+      isSelected: boolean;
+      text: string;
+      onFocusCallback?: (
+        elements: HTMLInputElement[],
+        previousFocus: HTMLInputElement,
+        newFocus: HTMLInputElement
+      ) => Promise<void>;
+    }> = {}
+  ) => {
+    const props = {
+      groupName: 'pager',
+      page: 1,
+      isSelected: false,
+      text: '1',
+      ...overrides,
+    };
+    const element = await renderFunctionFixture(
+      html` ${renderPagerPageButton({props})} `
+    );
+    return {
+      element,
+      input: element.querySelector('input'),
+    };
+  };
+
+  const renderPageButtonsGroup = async (children: ReturnType<typeof html>) => {
+    const element = await renderFunctionFixture(
+      html` ${renderPageButtons({props: {i18n}})(children)} `
+    );
+    return {
+      element,
+      div: element.querySelector('div'),
+      inputs: element.querySelectorAll('input'),
+    };
+  };
+
+  const renderMultiplePageButtons = async (
+    onFocusCallback?: (
+      elements: HTMLInputElement[],
+      previousFocus: HTMLInputElement,
+      newFocus: HTMLInputElement
+    ) => Promise<void>
+  ) => {
+    const element = await renderFunctionFixture(
+      html`
+        ${renderPagerPageButton({
+          props: {
+            groupName: 'pager',
+            page: 1,
+            isSelected: false,
+            text: '1',
+            onFocusCallback,
+          },
+        })}${renderPagerPageButton({
+          props: {
+            groupName: 'pager',
+            page: 2,
+            isSelected: false,
+            text: '2',
+            onFocusCallback,
+          },
+        })}
+      `
+    );
+    return {
+      element,
+      inputs: Array.from(
+        element.querySelectorAll('[type="radio"]')
+      ) as HTMLInputElement[],
+    };
+  };
+
+  describe('#pagerPreviousButton', () => {
+    it('should render the button with the correct attributes', async () => {
+      const {button} = await renderPreviousButton();
+
       expect(button).toHaveAttribute('aria-label', 'Previous');
       expect(button).toHaveClass('btn-outline-primary');
       expect(button).toHaveAttribute('part', 'previous-button');
     });
 
-    test('should render the icon with the correct attributes', () => {
-      const icon = container.querySelector('atomic-icon');
+    it('should render the icon with the correct attributes', async () => {
+      const {icon} = await renderPreviousButton();
+
       expect(icon).toHaveAttribute('part', 'previous-button-icon');
     });
   });
 
-  describe('pagerNextButton', () => {
-    beforeEach(async () => {
-      i18n = await createTestI18n();
-      container = document.createElement('div');
-      document.body.appendChild(container);
-      render(
-        html`
-          ${renderPagerNextButton({
-            props: {
-              i18n,
-              icon: ArrowRightIcon,
-            },
-          })}
-        `,
-        container
-      );
-    });
+  describe('#pagerNextButton', () => {
+    it('should render the button with the correct attributes', async () => {
+      const {button} = await renderNextButton();
 
-    afterEach(() => {
-      document.body.removeChild(container);
-    });
-
-    test('should render the button with the correct attributes', () => {
-      const button = container.querySelector('button');
       expect(button).toHaveAttribute('aria-label', 'Next');
       expect(button).toHaveClass('btn-outline-primary');
       expect(button).toHaveAttribute('part', 'next-button');
     });
 
-    test('should render the icon with the correct attributes', () => {
-      const icon = container.querySelector('atomic-icon');
+    it('should render the icon with the correct attributes', async () => {
+      const {icon} = await renderNextButton();
+
       expect(icon).toHaveClass('w-5');
     });
   });
 
-  describe('pagerPageButton', () => {
-    beforeEach(async () => {
-      i18n = await createTestI18n();
-      container = document.createElement('div');
-      document.body.appendChild(container);
-    });
+  describe('#pagerPageButton', () => {
+    it('should render the button with the correct attributes', async () => {
+      const {input} = await renderPageButton();
 
-    afterEach(() => {
-      document.body.removeChild(container);
-    });
-
-    test('should render the button with the correct attributes', () => {
-      render(
-        html`
-          ${renderPagerPageButton({
-            props: {
-              groupName: 'pager',
-              page: 1,
-              isSelected: false,
-              text: '1',
-            },
-          })}
-        `,
-        container
-      );
-
-      const input = container.querySelector('input');
       expect(input).toHaveAttribute('aria-label', '1');
       expect(input).toHaveAttribute('type', 'radio');
       expect(input).toHaveAttribute('name', 'pager');
       expect(input).toHaveAttribute('value', '1');
     });
 
-    test('should render with the correct attributes when not selected', () => {
-      render(
-        html`
-          ${renderPagerPageButton({
-            props: {
-              groupName: 'pager',
-              page: 1,
-              isSelected: false,
-              text: '1',
-            },
-          })}
-        `,
-        container
-      );
+    it('should render with the correct attributes when not selected', async () => {
+      const {input} = await renderPageButton({isSelected: false});
 
-      const input = container.querySelector('input');
       expect(input).toHaveAttribute('aria-current', 'false');
       expect(input).toHaveAttribute('part', 'page-button');
     });
 
-    test('should render with the correct attributes when selected', () => {
-      render(
-        html`
-          ${renderPagerPageButton({
-            props: {
-              groupName: 'pager',
-              page: 1,
-              isSelected: true,
-              text: '1',
-            },
-          })}
-        `,
-        container
-      );
+    it('should render with the correct attributes when selected', async () => {
+      const {input} = await renderPageButton({isSelected: true});
 
-      const input = container.querySelector('input');
       expect(input).toHaveAttribute('aria-current', 'page');
       expect(input).toHaveAttribute('part', 'page-button active-page-button');
     });
   });
 
-  describe('pagerPageButtons', () => {
-    beforeEach(async () => {
-      i18n = await createTestI18n();
-      container = document.createElement('div');
-      document.body.appendChild(container);
-      render(
-        html`
-          ${renderPageButtons({
-            props: {
-              i18n,
-            },
-          })(html`
-            ${renderPagerPageButton({
-              props: {groupName: 'pager', page: 1, isSelected: true, text: '1'},
-            })}
-            ${renderPagerPageButton({
-              props: {
-                groupName: 'pager',
-                page: 2,
-                isSelected: false,
-                text: '2',
-              },
-            })}
-          `)}
-        `,
-        container
-      );
-    });
+  describe('#pagerPageButtons', () => {
+    it('should render the list of buttons with the correct attributes', async () => {
+      const {div} = await renderPageButtonsGroup(html`
+        ${renderPagerPageButton({
+          props: {groupName: 'pager', page: 1, isSelected: true, text: '1'},
+        })}
+        ${renderPagerPageButton({
+          props: {
+            groupName: 'pager',
+            page: 2,
+            isSelected: false,
+            text: '2',
+          },
+        })}
+      `);
 
-    afterEach(() => {
-      document.body.removeChild(container);
-    });
-
-    test('should render the list of buttons with the correct attributes', () => {
-      const div = container.querySelector('div');
       expect(div).toHaveAttribute('role', 'radiogroup');
       expect(div).toHaveAttribute('aria-label', 'Pagination');
       expect(div).toHaveAttribute('part', 'page-buttons');
     });
 
-    test('should render the list of children', () => {
-      const inputs = container.querySelectorAll('input');
+    it('should render the list of children', async () => {
+      const {inputs} = await renderPageButtonsGroup(html`
+        ${renderPagerPageButton({
+          props: {groupName: 'pager', page: 1, isSelected: true, text: '1'},
+        })}
+        ${renderPagerPageButton({
+          props: {
+            groupName: 'pager',
+            page: 2,
+            isSelected: false,
+            text: '2',
+          },
+        })}
+      `);
+
       expect(inputs).toHaveLength(2);
     });
   });
 
   describe('accessibility', () => {
-    beforeEach(async () => {
-      i18n = await createTestI18n();
-      container = document.createElement('div');
-      document.body.appendChild(container);
-    });
+    it('should render with aria-roledescription set to link', async () => {
+      const {input} = await renderPageButton();
 
-    test('should render with aria-roledescription set to link', () => {
-      render(
-        html`
-          ${renderPagerPageButton({
-            props: {
-              groupName: 'pager',
-              page: 1,
-              isSelected: false,
-              text: '1',
-            },
-          })}
-        `,
-        container
-      );
-
-      const input = container.querySelector('input');
       expect(input).toHaveAttribute('aria-roledescription', 'link');
     });
 
-    test('should change focus target when input is tab', async () => {
+    it('should change focus target when input is tab', async () => {
       const onFocusCallback = vi.fn().mockResolvedValue(undefined);
+      const {inputs} = await renderMultiplePageButtons(onFocusCallback);
 
-      render(
-        html`
-          ${renderPagerPageButton({
-            props: {
-              groupName: 'pager',
-              page: 1,
-              isSelected: false,
-              text: '1',
-              onFocusCallback,
-            },
-          })}${renderPagerPageButton({
-            props: {
-              groupName: 'pager',
-              page: 2,
-              isSelected: false,
-              text: '2',
-              onFocusCallback,
-            },
-          })}
-        `,
-        container
-      );
-
-      const elements = Array.from(container.querySelectorAll('[type="radio"]'));
-      elements[0].dispatchEvent(
+      inputs[0].dispatchEvent(
         new KeyboardEvent('keydown', {key: 'Tab', bubbles: true})
       );
 
       await vi.waitFor(() => {
         expect(onFocusCallback).toHaveBeenCalledTimes(1);
         expect(onFocusCallback).toHaveBeenCalledWith(
-          elements,
-          elements[0],
-          elements[1]
+          inputs,
+          inputs[0],
+          inputs[1]
         );
       });
     });
-    test('should change focus target when input is shift + tab', async () => {
+
+    it('should change focus target when input is shift + tab', async () => {
       const onFocusCallback = vi.fn().mockResolvedValue(undefined);
+      const {inputs} = await renderMultiplePageButtons(onFocusCallback);
 
-      render(
-        html`
-          ${renderPagerPageButton({
-            props: {
-              groupName: 'pager',
-              page: 1,
-              isSelected: false,
-              text: '1',
-              onFocusCallback,
-            },
-          })}${renderPagerPageButton({
-            props: {
-              groupName: 'pager',
-              page: 2,
-              isSelected: false,
-              text: '2',
-              onFocusCallback,
-            },
-          })}
-        `,
-        container
-      );
-
-      const elements = Array.from(container.querySelectorAll('[type="radio"]'));
-      elements[1].dispatchEvent(
+      inputs[1].dispatchEvent(
         new KeyboardEvent('keydown', {
           key: 'Tab',
           bubbles: true,
@@ -310,9 +268,9 @@ describe('pagerButtons', () => {
       await vi.waitFor(() => {
         expect(onFocusCallback).toHaveBeenCalledTimes(1);
         expect(onFocusCallback).toHaveBeenCalledWith(
-          elements,
-          elements[1],
-          elements[0]
+          inputs,
+          inputs[1],
+          inputs[0]
         );
       });
     });

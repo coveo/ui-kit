@@ -1,70 +1,71 @@
-import {html, nothing, render} from 'lit';
-import {fireEvent, within} from 'storybook/test';
-import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {html, nothing} from 'lit';
+import {describe, expect, it, vi} from 'vitest';
+import {page} from 'vitest/browser';
 import {createRipple} from '@/src/utils/ripple-utils';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {type ButtonProps, renderButton as button} from './button';
 
 vi.mock('@/src/utils/ripple-utils', {spy: true});
 
 describe('#renderButton', () => {
-  let container: HTMLElement;
+  const locators = {
+    get button() {
+      return page.getByRole('button');
+    },
+    get span() {
+      return page.getByRole('button').getByText(/./);
+    },
+  };
 
-  beforeEach(() => {
-    container = document.createElement('div');
-    document.body.appendChild(container);
-  });
-
-  afterEach(() => {
-    document.body.removeChild(container);
-  });
-
-  const renderButton = (props: Partial<ButtonProps>): HTMLButtonElement => {
-    render(
+  const renderButton = async (
+    props: Partial<ButtonProps>
+  ): Promise<HTMLElement> => {
+    return renderFunctionFixture(
       html`${button({
         props: {
           ...props,
           style: props.style ?? 'primary',
         },
-      })(nothing)}`,
-      container
+      })(nothing)}`
     );
-    return within(container).getByRole('button') as HTMLButtonElement;
   };
 
-  it('should render a button in the document', () => {
-    const props = {};
-    const button = renderButton(props);
-    expect(button).toBeInTheDocument();
+  it('should render a button in the document', async () => {
+    await renderButton({});
+    await expect.element(locators.button).toBeInTheDocument();
   });
 
-  it('should render a button with the correct style', () => {
+  it('should render a button with the correct style', async () => {
     const props: Partial<ButtonProps> = {
       style: 'outline-error',
     };
 
-    const button = renderButton(props);
+    await renderButton(props);
 
-    expect(button).toHaveClass('btn-outline-error');
+    await expect.element(locators.button).toHaveClass('btn-outline-error');
   });
 
-  it('should render a button with the correct text', () => {
+  it('should render a button with the correct text', async () => {
     const props = {
       text: 'Click me',
     };
 
-    const button = renderButton(props);
+    await renderButton(props);
 
-    expect(button.querySelector('span')?.textContent).toBe('Click me');
+    await expect
+      .element(locators.button.getByText('Click me'))
+      .toBeInTheDocument();
   });
 
-  it('should wrap the button text with a truncate class', () => {
+  it('should wrap the button text with a truncate class', async () => {
     const props = {
       text: 'Click me',
     };
 
-    const button = renderButton(props);
+    const element = await renderButton(props);
+    const span = element.querySelector('span');
 
-    expect(button.querySelector('span')).toHaveClass('truncate');
+    expect(span).toHaveClass('truncate');
   });
 
   it('should handle click event', async () => {
@@ -73,110 +74,120 @@ describe('#renderButton', () => {
       onClick: handleClick,
     };
 
-    const button = renderButton(props);
+    const element = await renderButton(props);
+    const buttonEl = element.querySelector('button')!;
 
-    await fireEvent.click(button);
+    buttonEl.click();
 
     expect(handleClick).toHaveBeenCalled();
   });
 
-  it('should apply disabled attribute', () => {
+  it('should apply disabled attribute', async () => {
     const props = {
       disabled: true,
     };
 
-    const button = renderButton(props);
+    await renderButton(props);
 
-    expect(button.hasAttribute('disabled')).toBe(true);
+    await expect.element(locators.button).toBeDisabled();
   });
 
-  it('should apply aria attributes', () => {
+  it('should apply aria attributes', async () => {
     const props: Partial<ButtonProps> = {
       ariaLabel: 'button',
       ariaPressed: 'true',
     };
 
-    const button = renderButton(props);
+    await renderButton(props);
 
-    expect(button.getAttribute('aria-label')).toBe('button');
-    expect(button.getAttribute('aria-pressed')).toBe('true');
+    await expect
+      .element(locators.button)
+      .toHaveAttribute('aria-label', 'button');
+    await expect
+      .element(locators.button)
+      .toHaveAttribute('aria-pressed', 'true');
   });
 
-  it('should apply custom class', () => {
+  it('should apply custom class', async () => {
     const props = {
       class: 'custom-class',
     };
 
-    const button = renderButton(props);
+    await renderButton(props);
 
-    expect(button).toHaveClass('custom-class');
-    expect(button).toHaveClass('btn-primary');
+    await expect.element(locators.button).toHaveClass('custom-class');
+    await expect.element(locators.button).toHaveClass('btn-primary');
   });
 
-  it('should apply part attribute', () => {
+  it('should apply part attribute', async () => {
     const props = {
       part: 'button-part',
     };
 
-    const button = renderButton(props);
+    await renderButton(props);
 
-    expect(button.getAttribute('part')).toBe('button-part');
+    await expect
+      .element(locators.button)
+      .toHaveAttribute('part', 'button-part');
   });
 
-  it('should apply title attribute', () => {
+  it('should apply title attribute', async () => {
     const props = {
       title: 'Button Title',
     };
 
-    const button = renderButton(props);
+    await renderButton(props);
 
-    expect(button.getAttribute('title')).toBe('Button Title');
+    await expect
+      .element(locators.button)
+      .toHaveAttribute('title', 'Button Title');
   });
 
-  it('should apply tabindex attribute', () => {
+  it('should apply tabindex attribute', async () => {
     const props = {
       tabIndex: 1,
     };
 
-    const button = renderButton(props);
+    await renderButton(props);
 
-    expect(button.getAttribute('tabindex')).toBe('1');
+    await expect.element(locators.button).toHaveAttribute('tabindex', '1');
   });
 
-  it('should apply role attribute', () => {
+  it('should apply role attribute', async () => {
     const props: Partial<ButtonProps> = {
       role: 'button',
     };
 
-    const button = renderButton(props);
+    await renderButton(props);
 
-    expect(button.getAttribute('role')).toBe('button');
+    await expect.element(locators.button).toHaveAttribute('role', 'button');
   });
 
   it('should call onMouseDown when the mousedown event is fired on the button', async () => {
     const props: Partial<ButtonProps> = {};
-    const button = renderButton(props);
-    await fireEvent.mouseDown(button);
+    await renderButton(props);
+    const buttonEl = locators.button.element();
+    buttonEl.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
     expect(createRipple).toHaveBeenCalled();
   });
 
-  it('should apply form attribute', () => {
+  it('should apply form attribute', async () => {
     const props = {
       form: 'form-id',
     };
 
-    const button = renderButton(props);
+    await renderButton(props);
 
-    expect(button.getAttribute('form')).toBe('form-id');
+    await expect.element(locators.button).toHaveAttribute('form', 'form-id');
   });
 
-  it('should apply type attribute', () => {
+  it('should apply type attribute', async () => {
     const props: Partial<ButtonProps> = {
       type: 'submit',
     };
 
-    const button = renderButton(props);
+    await renderButton(props);
 
-    expect(button.getAttribute('type')).toBe('submit');
+    await expect.element(locators.button).toHaveAttribute('type', 'submit');
   });
 });

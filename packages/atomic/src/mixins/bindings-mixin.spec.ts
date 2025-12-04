@@ -8,7 +8,6 @@ import {
   expect,
   it,
   type Mock,
-  test,
   vi,
 } from 'vitest';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
@@ -101,7 +100,7 @@ describe('InitializeBindingsMixin', () => {
     expect(element.initialize).toHaveBeenCalled();
   });
 
-  test('should handle fetchBindings rejection gracefully', async () => {
+  it('should handle fetchBindings rejection gracefully', async () => {
     // Mock fetchBindings to return a rejected promise
     mockedFetchBindings.mockRejectedValue(
       new Error('Failed to fetch bindings')

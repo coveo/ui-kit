@@ -1,0 +1,29 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicPopoverStories from './atomic-popover.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicPopoverStories} />
+
+<AtomicDocTemplate
+  stories={AtomicPopoverStories}
+  githubPath="search/atomic-popover/atomic-popover.ts"
+  tagName="atomic-popover"
+  className="AtomicPopover"
+>
+
+The `atomic-popover` component displays a facet as a compact popover menu. When a user clicks the popover button, a backdrop appears along with a popover containing a single facet.
+
+```html
+<atomic-search-interface>
+  <atomic-search-layout>
+    <atomic-layout-section section="facets">
+      <atomic-popover>
+        <atomic-facet field="objecttype" label="Type"></atomic-facet>
+      </atomic-popover>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+</AtomicDocTemplate>

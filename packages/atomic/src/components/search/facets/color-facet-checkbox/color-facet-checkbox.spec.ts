@@ -1,7 +1,6 @@
-import {page} from '@vitest/browser/context';
 import {html} from 'lit';
-import {fireEvent} from 'storybook/test';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {page} from 'vitest/browser';
 import type {FacetValuePropsBase} from '@/src/components/common/facets/facet-common';
 import {createRipple} from '@/src/utils/ripple-utils';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
@@ -102,7 +101,7 @@ describe('#renderColorFacetCheckbox', () => {
 
     const {checkbox} = await setupElement({onClick});
 
-    await fireEvent.click(checkbox.element());
+    (checkbox.element() as HTMLElement).click();
 
     expect(onClick).toHaveBeenCalled();
   });
@@ -112,7 +111,9 @@ describe('#renderColorFacetCheckbox', () => {
 
     const {checkbox} = await setupElement();
 
-    await fireEvent.mouseDown(checkbox.element());
+    checkbox
+      .element()
+      .dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
 
     expect(createRippleSpy).toHaveBeenCalled();
   });
@@ -122,7 +123,7 @@ describe('#renderColorFacetCheckbox', () => {
 
     const {label} = await setupElement();
 
-    await fireEvent.mouseDown(label.element());
+    label.element().dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
 
     expect(createRippleSpy).toHaveBeenCalled();
   });

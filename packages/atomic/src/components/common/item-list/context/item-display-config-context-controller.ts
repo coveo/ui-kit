@@ -33,10 +33,6 @@ export class ItemDisplayConfigContextController implements ReactiveController {
     this._resolveDisplayConfig();
   }
 
-  hostUpdated(): void {
-    this._resolveDisplayConfig();
-  }
-
   private _resolveDisplayConfig(): void {
     const event = buildCustomEvent(
       itemDisplayConfigContextEventName,

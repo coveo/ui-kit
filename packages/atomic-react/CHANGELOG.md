@@ -1,3 +1,40 @@
+## 3.6.0 (2025-12-03)
+
+* [Version Bump][skip ci]: ui-kit publish ([cfc527e](https://github.com/coveo/ui-kit/commits/cfc527e))
+* Migrate atomic-breadbox from Stencil to Lit (#6492) ([f219d75](https://github.com/coveo/ui-kit/commits/f219d75)), closes [#6492](https://github.com/coveo/ui-kit/issues/6492)
+* refactor: migrate atomic-no-results from Stencil to Lit (#6322) ([1ec8894](https://github.com/coveo/ui-kit/commits/1ec8894)), closes [#6322](https://github.com/coveo/ui-kit/issues/6322)
+* refactor(atomic): migrate atomic-result-date (#6670) ([3e90ee8](https://github.com/coveo/ui-kit/commits/3e90ee8)), closes [#6670](https://github.com/coveo/ui-kit/issues/6670)
+* refactor(atomic): Migrate atomic-result-image component to Lit (#6671) ([b853176](https://github.com/coveo/ui-kit/commits/b853176)), closes [#6671](https://github.com/coveo/ui-kit/issues/6671)
+* refactor(atomic): migrate atomic-result-localized-text to Lit (#6628) ([0580b82](https://github.com/coveo/ui-kit/commits/0580b82)), closes [#6628](https://github.com/coveo/ui-kit/issues/6628)
+* refactor(atomic): migrate atomic-result-multi-value-text to Lit (#6629) ([c5a0b96](https://github.com/coveo/ui-kit/commits/c5a0b96)), closes [#6629](https://github.com/coveo/ui-kit/issues/6629)
+* refactor(atomic): migrate atomic-result-timespan to Lit (#6649) ([dcfea43](https://github.com/coveo/ui-kit/commits/dcfea43)), closes [#6649](https://github.com/coveo/ui-kit/issues/6649)
+* refactor(atomic): migrate atomic-tab to Lit (#6603) ([291e15e](https://github.com/coveo/ui-kit/commits/291e15e)), closes [#6603](https://github.com/coveo/ui-kit/issues/6603)
+* refactor(atomic): migrate atomic-tab-manager (#6674) ([bc93cfe](https://github.com/coveo/ui-kit/commits/bc93cfe)), closes [#6674](https://github.com/coveo/ui-kit/issues/6674)
+* feat(atomic): migrate atomic-segmented-facet-scrollable to Lit (#6513) ([09ca553](https://github.com/coveo/ui-kit/commits/09ca553)), closes [#6513](https://github.com/coveo/ui-kit/issues/6513)
+* feat(atomic): migrate atomic-sort-dropdown to Lit (#6658) ([f9a0b1e](https://github.com/coveo/ui-kit/commits/f9a0b1e)), closes [#6658](https://github.com/coveo/ui-kit/issues/6658)
+* feat(atomic): migrate atomic-sort-expression from Stencil to Lit (#6653) ([871ded9](https://github.com/coveo/ui-kit/commits/871ded9)), closes [#6653](https://github.com/coveo/ui-kit/issues/6653)
+* chore(atomic): migrate atomic-automatic-facet to Lit (#6576) ([7918ede](https://github.com/coveo/ui-kit/commits/7918ede)), closes [#6576](https://github.com/coveo/ui-kit/issues/6576)
+
+
+
+## 3.5.0 (2025-12-03)
+
+* refactor: migrate atomic-no-results from Stencil to Lit (#6322) ([1ec8894](https://github.com/coveo/ui-kit/commits/1ec8894)), closes [#6322](https://github.com/coveo/ui-kit/issues/6322)
+* refactor(atomic): migrate atomic-result-date (#6670) ([3e90ee8](https://github.com/coveo/ui-kit/commits/3e90ee8)), closes [#6670](https://github.com/coveo/ui-kit/issues/6670)
+* refactor(atomic): Migrate atomic-result-image component to Lit (#6671) ([b853176](https://github.com/coveo/ui-kit/commits/b853176)), closes [#6671](https://github.com/coveo/ui-kit/issues/6671)
+* refactor(atomic): migrate atomic-result-localized-text to Lit (#6628) ([0580b82](https://github.com/coveo/ui-kit/commits/0580b82)), closes [#6628](https://github.com/coveo/ui-kit/issues/6628)
+* refactor(atomic): migrate atomic-result-multi-value-text to Lit (#6629) ([c5a0b96](https://github.com/coveo/ui-kit/commits/c5a0b96)), closes [#6629](https://github.com/coveo/ui-kit/issues/6629)
+* refactor(atomic): migrate atomic-result-timespan to Lit (#6649) ([dcfea43](https://github.com/coveo/ui-kit/commits/dcfea43)), closes [#6649](https://github.com/coveo/ui-kit/issues/6649)
+* refactor(atomic): migrate atomic-tab to Lit (#6603) ([291e15e](https://github.com/coveo/ui-kit/commits/291e15e)), closes [#6603](https://github.com/coveo/ui-kit/issues/6603)
+* refactor(atomic): migrate atomic-tab-manager (#6674) ([bc93cfe](https://github.com/coveo/ui-kit/commits/bc93cfe)), closes [#6674](https://github.com/coveo/ui-kit/issues/6674)
+* feat(atomic): migrate atomic-segmented-facet-scrollable to Lit (#6513) ([09ca553](https://github.com/coveo/ui-kit/commits/09ca553)), closes [#6513](https://github.com/coveo/ui-kit/issues/6513)
+* feat(atomic): migrate atomic-sort-dropdown to Lit (#6658) ([f9a0b1e](https://github.com/coveo/ui-kit/commits/f9a0b1e)), closes [#6658](https://github.com/coveo/ui-kit/issues/6658)
+* feat(atomic): migrate atomic-sort-expression from Stencil to Lit (#6653) ([871ded9](https://github.com/coveo/ui-kit/commits/871ded9)), closes [#6653](https://github.com/coveo/ui-kit/issues/6653)
+* Migrate atomic-breadbox from Stencil to Lit (#6492) ([f219d75](https://github.com/coveo/ui-kit/commits/f219d75)), closes [#6492](https://github.com/coveo/ui-kit/issues/6492)
+* chore(atomic): migrate atomic-automatic-facet to Lit (#6576) ([7918ede](https://github.com/coveo/ui-kit/commits/7918ede)), closes [#6576](https://github.com/coveo/ui-kit/issues/6576)
+
+
+
 ## <small>3.4.2 (2025-11-20)</small>
 
 * chore(atomic): migrate atomic-result-badge to Lit (#6552) ([0b1d2f9](https://github.com/coveo/ui-kit/commits/0b1d2f9)), closes [#6552](https://github.com/coveo/ui-kit/issues/6552)

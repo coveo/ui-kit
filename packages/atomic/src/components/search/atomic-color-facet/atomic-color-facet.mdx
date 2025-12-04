@@ -1,0 +1,78 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicColorFacetStories from './atomic-color-facet.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={ AtomicColorFacetStories } />
+
+<AtomicDocTemplate
+  stories={ AtomicColorFacetStories }
+  githubPath="search/atomic-color-facet/atomic-color-facet.ts"
+  tagName="atomic-color-facet"
+  className="AtomicColorFacet"
+>
+
+Use this component when facet values benefit from visual color representation—such as file types, status indicators, or product categories. Unlike standard facets that display only text labels, color facets provide immediate visual recognition through customizable color boxes or color-coded checkboxes.
+
+Place this component within the "facets" section of your search layout. For Dynamic Navigation Experience (DNE) support, nest it inside an `atomic-facet-manager` component (see [DNE documentation](https://docs.coveo.com/en/2918)).
+
+## Usage
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="facets">
+      ...
+        <atomic-color-facet field="filetype" label="File Type"></atomic-color-facet>
+
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+## Customizing Colors
+
+You can customize the colors for specific facet values using CSS shadow parts. The component provides dynamic parts for each facet value:
+
+- `value-{value}` - Specific styling for a particular facet value (case-sensitive, matching the raw facet value)
+- `default-color-value` - Default styling applied to all color boxes
+
+### Example: Customizing File Type Colors
+
+```html
+<style>
+  atomic-color-facet::part(value-pdf) {
+    background-image: url('atomic/assets/pdf.svg');
+    background-color: rgb(255, 0, 0);
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  
+  atomic-color-facet::part(value-doc) {
+    background-image: url('atomic/assets/document.svg');
+    background-color: rgb(146, 151, 196);
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+</style>
+
+<atomic-color-facet field="filetype" label="File Type"></atomic-color-facet>
+```
+
+## Customizing Layout
+
+You can customize the number of color boxes displayed per row using CSS custom properties:
+
+```html
+<style>
+  atomic-color-facet {
+    --atomic-facet-color-boxes-per-row: 4;
+    --atomic-facet-color-boxes-gap: 1rem;
+  }
+</style>
+```
+
+</AtomicDocTemplate>

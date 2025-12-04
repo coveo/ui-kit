@@ -1,9 +1,10 @@
-import {html, nothing, render, type TemplateResult} from 'lit';
+import {html, nothing, type TemplateResult} from 'lit';
 import {describe, expect, it} from 'vitest';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {renderTabWrapper} from './tab-wrapper';
 
 describe('renderTabWrapper', () => {
-  const renderTabWrapperWithChildren = (
+  const renderTabWrapperWithChildren = async (
     props: {
       tabsIncluded?: string | string[];
       tabsExcluded?: string | string[];
@@ -11,21 +12,15 @@ describe('renderTabWrapper', () => {
     },
     children: TemplateResult | typeof nothing = nothing
   ) => {
-    const container = document.createElement('div');
-    document.body.appendChild(container);
-
-    render(
+    return renderFunctionFixture(
       renderTabWrapper({
         props: {
           tabsIncluded: props.tabsIncluded ?? [],
           tabsExcluded: props.tabsExcluded ?? [],
           activeTab: props.activeTab,
         },
-      })(children),
-      container
+      })(children)
     );
-
-    return container;
   };
 
   const testChild = html`<div class="child">Test Child</div>`;
@@ -47,14 +42,12 @@ describe('renderTabWrapper', () => {
       description: 'activeTab is empty and tabsIncluded is specified',
       props: {tabsIncluded: ['products'], activeTab: ''},
     },
-  ])('should render children when $description', ({props}) => {
-    const container = renderTabWrapperWithChildren(props, testChild);
-    const child = container.querySelector('.child');
+  ])('should render children when $description', async ({props}) => {
+    const element = await renderTabWrapperWithChildren(props, testChild);
+    const child = element.querySelector('.child');
 
     expect(child).toBeInTheDocument();
     expect(child?.textContent).toBe('Test Child');
-
-    container.remove();
   });
 
   it.each([
@@ -74,12 +67,10 @@ describe('renderTabWrapper', () => {
         activeTab: 'products',
       },
     },
-  ])('should not render children when $description', ({props}) => {
-    const container = renderTabWrapperWithChildren(props, testChild);
-    const child = container.querySelector('.child');
+  ])('should not render children when $description', async ({props}) => {
+    const element = await renderTabWrapperWithChildren(props, testChild);
+    const child = element.querySelector('.child');
 
     expect(child).not.toBeInTheDocument();
-
-    container.remove();
   });
 });

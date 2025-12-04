@@ -26,12 +26,6 @@ export class ChildTemplatesContextController implements ReactiveController {
     this._resolveChildTemplatesContext();
   }
 
-  hostUpdated(): void {
-    if (!this._itemTemplateProvider) {
-      this._resolveChildTemplatesContext();
-    }
-  }
-
   private _resolveChildTemplatesContext(): void {
     const event = buildCustomEvent(
       childTemplatesContextEventName,

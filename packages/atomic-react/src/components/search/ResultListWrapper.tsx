@@ -8,8 +8,10 @@ import type {Result} from '@coveo/headless';
 import React, {type JSX, useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {renderToString} from 'react-dom/server';
-import {AtomicResultLink} from '../stencil-generated/search/index.js';
-import {AtomicResultList as LitAtomicResultList} from './components.js';
+import {
+  AtomicResultLink,
+  AtomicResultList as LitAtomicResultList,
+} from './components.js';
 
 interface Template {
   contentTemplate: JSX.Element;
