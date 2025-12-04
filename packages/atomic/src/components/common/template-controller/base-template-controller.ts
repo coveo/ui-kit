@@ -3,7 +3,7 @@ import {isResultSectionNode} from '@/src/components/common/layout/item-layout-se
 import type {ItemTarget} from '@/src/components/common/layout/item-layout-utils';
 import {tableElementTagName} from '@/src/components/common/table-element-utils';
 import {isElementNode, isVisualNode} from '@/src/utils/dom-utils';
-import {aggregate} from '@/src/utils/utils';
+import {aggregate} from '@/src/utils/object-utils';
 
 export type TemplateContent = DocumentFragment;
 

@@ -1,5 +1,5 @@
 import {describe, expect, it, vi} from 'vitest';
-import {aggregate, once} from './utils';
+import {once} from './utils';
 
 describe('utils', () => {
   describe('#once', () => {
@@ -49,28 +49,6 @@ describe('utils', () => {
       const result: number = fnOnce();
 
       expect(result).toBe(123);
-    });
-  });
-
-  describe('#aggregate', () => {
-    it('should aggregate based on string keys', () => {
-      const aggregatedValues = aggregate(
-        [
-          {name: 'Apple', category: 'Fruit'},
-          {name: 'Cookie', category: 'Dessert'},
-          {name: 'Watermelon', category: 'Fruit'},
-          {name: 'Carrot', category: 'Vegetable'},
-        ] as const,
-        (value) => value.category
-      );
-      expect(aggregatedValues).toEqual({
-        Fruit: [
-          {name: 'Apple', category: 'Fruit'},
-          {name: 'Watermelon', category: 'Fruit'},
-        ],
-        Dessert: [{name: 'Cookie', category: 'Dessert'}],
-        Vegetable: [{name: 'Carrot', category: 'Vegetable'}],
-      });
     });
   });
 
