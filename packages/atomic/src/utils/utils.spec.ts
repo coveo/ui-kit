@@ -1,12 +1,5 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {
-  aggregate,
-  camelToKebab,
-  isInDocument,
-  kebabToCamel,
-  once,
-  randomID,
-} from './utils';
+import {aggregate, isInDocument, once, randomID} from './utils';
 
 describe('utils', () => {
   describe('#once', () => {
@@ -56,34 +49,6 @@ describe('utils', () => {
       const result: number = fnOnce();
 
       expect(result).toBe(123);
-    });
-  });
-
-  describe('#camelToKebab', () => {
-    it('should work with a camel case value', () => {
-      expect(camelToKebab('thisIsATest')).toBe('this-is-a-test');
-    });
-
-    it('should work with a camel case value with numerical characters', () => {
-      expect(camelToKebab('coolName2')).toBe('cool-name2');
-    });
-
-    it('should work with an already kebab cased value', () => {
-      expect(camelToKebab('fields-to-include')).toBe('fields-to-include');
-    });
-  });
-
-  describe('#kebabToCamel', () => {
-    it('should work with a kebab case value', () => {
-      expect(kebabToCamel('this-is-a-test')).toBe('thisIsATest');
-    });
-
-    it('should work with a kebab case value with numerical characters', () => {
-      expect(kebabToCamel('cool-name2')).toBe('coolName2');
-    });
-
-    it('should work with an already camel cased value', () => {
-      expect(kebabToCamel('fieldsToInclude')).toBe('fieldsToInclude');
     });
   });
 
