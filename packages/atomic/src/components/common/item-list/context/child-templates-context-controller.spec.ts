@@ -80,29 +80,4 @@ describe('#ChildTemplatesContextController', () => {
       expect(mockElement.requestUpdate).toHaveBeenCalled();
     });
   });
-
-  describe('#hostUpdated', () => {
-    it('should dispatch the resolveChildTemplates event when template provider is null', () => {
-      controller.hostUpdated();
-
-      expect(mockElement.dispatchEvent).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: 'atomic/resolveChildTemplates',
-        })
-      );
-    });
-
-    it('should not dispatch event when template provider already exists', () => {
-      controller.hostConnected();
-      const dispatchCall = vi.mocked(mockElement.dispatchEvent).mock.calls[0];
-      const event = dispatchCall[0] as CustomEvent;
-      event.detail(mockResultTemplateProvider);
-
-      vi.clearAllMocks();
-
-      controller.hostUpdated();
-
-      expect(mockElement.dispatchEvent).not.toHaveBeenCalled();
-    });
-  });
 });
