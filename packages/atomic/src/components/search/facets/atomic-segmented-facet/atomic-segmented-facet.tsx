@@ -28,7 +28,7 @@ import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stencil-facet-values-group';
 import {Hidden} from '../../../common/stencil-hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';
+import {FacetSegmentedValue} from '../facet-segmented-value/stencil-facet-segmented-value';
 
 /**
  * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.

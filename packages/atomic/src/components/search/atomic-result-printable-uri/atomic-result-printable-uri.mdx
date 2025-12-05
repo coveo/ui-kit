@@ -1,0 +1,35 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicResultPrintableUriStories from './atomic-result-printable-uri.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={ AtomicResultPrintableUriStories } />
+
+<AtomicDocTemplate
+  stories={ AtomicResultPrintableUriStories }
+  githubPath="search/atomic-result-printable-uri/atomic-result-printable-uri.ts"
+  tagName="atomic-result-printable-uri"
+  className="AtomicResultPrintableUri"
+>
+
+Use this component within `atomic-result-template` to display the URI path to access a result. The component parses hierarchical URI structures and displays them as a breadcrumb-style navigation, with arrow separators between path segments.
+
+When the number of path segments exceeds the `max-number-of-parts` property value, an ellipsis button appears. Clicking this button expands the full path.
+
+You can customize link attributes using the `attributes` slot to add properties like `target="_blank"` or `download` to all links.
+
+```html
+<atomic-result-template>
+  <!-- Basic usage -->
+  <atomic-result-printable-uri></atomic-result-printable-uri>
+
+  <!-- Limit to 3 path segments before showing ellipsis -->
+  <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
+
+  <!-- Open links in new tab -->
+  <atomic-result-printable-uri>
+    <a slot="attributes" target="_blank"></a>
+  </atomic-result-printable-uri>
+</atomic-result-template>
+```
+
+</AtomicDocTemplate>
