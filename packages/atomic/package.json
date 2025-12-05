@@ -79,7 +79,9 @@
     "release:phase3": "pnpm --filter @coveo/ci npm-publish",
     "release:phase1": "pnpm --filter @coveo/ci bump",
     "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
-    "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
+    "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
+    "chromatic:build": "IS_CHROMATIC=true storybook build -o dist-chromatic --stats-json",
+    "chromatic": "chromatic -d=dist-chromatic --only-changed"
   },
   "dependencies": {
     "@coveo/bueno": "workspace:*",
@@ -128,6 +130,7 @@
     "@vitest/coverage-v8": "catalog:",
     "@wc-toolkit/storybook-helpers": "10.0.0",
     "axe-core": "4.10.3",
+    "chromatic": "13.3.4",
     "cypress": "catalog:",
     "cypress-axe": "1.6.0",
     "cypress-repeat": "catalog:",
