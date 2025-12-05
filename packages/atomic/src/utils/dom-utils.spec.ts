@@ -1,9 +1,22 @@
-import {afterEach, beforeEach, describe, expect, it} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   closest,
+  containsVisualElement,
+  elementHasAncestorTag,
+  getFocusedElement,
+  getParent,
+  isAncestorOf,
+  isElementNode,
+  isFocusingOut,
   isInDocument,
+  isTextNode,
+  isVisualNode,
   parentNodeToString,
+  parseHTML,
+  parseXML,
   rectEquals,
+  sanitizeStyle,
+  sortByDocumentPosition,
 } from './dom-utils';
 
 describe('dom-utils', () => {
@@ -310,6 +323,242 @@ describe('dom-utils', () => {
     it('should return false for nodes not attached to the document', () => {
       const el = document.createElement('div');
       expect(isInDocument(el)).toBe(false);
+    });
+  });
+
+  describe('#parseHTML', () => {
+    it('should parse HTML strings into a document', () => {
+      const doc = parseHTML('<div class="wrapper">Hello</div>');
+      expect(doc.body.innerHTML).toBe('<div class="wrapper">Hello</div>');
+    });
+  });
+
+  describe('#parseXML', () => {
+    it('should parse XML strings into a document', () => {
+      const doc = parseXML('<items><item id="1"/></items>');
+      expect(doc.querySelector('item')?.getAttribute('id')).toBe('1');
+    });
+  });
+
+  describe('#isElementNode', () => {
+    it('should detect element nodes', () => {
+      const element = document.createElement('div');
+      expect(isElementNode(element)).toBe(true);
+    });
+
+    it('should return false for non-element nodes', () => {
+      const textNode = document.createTextNode('value');
+      expect(isElementNode(textNode)).toBe(false);
+    });
+  });
+
+  describe('#isTextNode', () => {
+    it('should detect text nodes', () => {
+      const textNode = document.createTextNode('value');
+      expect(isTextNode(textNode)).toBe(true);
+    });
+
+    it('should return false for elements', () => {
+      const element = document.createElement('div');
+      expect(isTextNode(element)).toBe(false);
+    });
+  });
+
+  describe('#isVisualNode', () => {
+    it('should treat visible elements as visual nodes', () => {
+      const element = document.createElement('div');
+      expect(isVisualNode(element)).toBe(true);
+    });
+
+    it('should ignore style elements', () => {
+      const styleEl = document.createElement('style');
+      expect(isVisualNode(styleEl)).toBe(false);
+    });
+
+    it('should consider text nodes with content as visual', () => {
+      const text = document.createTextNode('content');
+      expect(isVisualNode(text)).toBe(true);
+    });
+
+    it('should ignore whitespace-only text nodes', () => {
+      const text = document.createTextNode('   ');
+      expect(isVisualNode(text)).toBe(false);
+    });
+  });
+
+  describe('#containsVisualElement', () => {
+    it('should detect visual descendants', () => {
+      const parent = document.createElement('div');
+      parent.appendChild(document.createElement('span'));
+      expect(containsVisualElement(parent)).toBe(true);
+    });
+
+    it('should ignore non-visual children', () => {
+      const parent = document.createElement('div');
+      parent.appendChild(document.createElement('style'));
+      const text = document.createTextNode('   ');
+      parent.appendChild(text);
+      expect(containsVisualElement(parent)).toBe(false);
+    });
+  });
+
+  describe('#elementHasAncestorTag', () => {
+    it('should find ancestors regardless of tag case', () => {
+      const ancestor = document.createElement('section');
+      const child = document.createElement('div');
+      ancestor.appendChild(child);
+      container.appendChild(ancestor);
+
+      expect(elementHasAncestorTag(child, 'SECTION')).toBe(true);
+      expect(elementHasAncestorTag(child, 'article')).toBe(false);
+    });
+  });
+
+  describe('#sanitizeStyle', () => {
+    it('should retain safe CSS declarations', () => {
+      const sanitized = sanitizeStyle('body { color: red; }');
+
+      expect(sanitized).toBe('body { color: red; }');
+    });
+
+    it('should drop unsafe markup from style content', () => {
+      const sanitized = sanitizeStyle(
+        'body { color: red; }<script>alert("x")</script>'
+      );
+
+      expect(sanitized).toBeUndefined();
+    });
+  });
+
+  describe('#getFocusedElement', () => {
+    it('should return the deepest focused element across shadow roots', () => {
+      const host = document.createElement('div');
+      host.tabIndex = -1;
+      const shadow = host.attachShadow({mode: 'open'});
+      const button = document.createElement('button');
+      shadow.appendChild(button);
+      container.appendChild(host);
+
+      const originalActiveElementDescriptor = Object.getOwnPropertyDescriptor(
+        Document.prototype,
+        'activeElement'
+      );
+
+      Object.defineProperty(Document.prototype, 'activeElement', {
+        configurable: true,
+        get: () => host,
+      });
+
+      Object.defineProperty(shadow, 'activeElement', {
+        configurable: true,
+        get: () => button,
+      });
+
+      expect(getFocusedElement()).toBe(button);
+
+      if (originalActiveElementDescriptor) {
+        Object.defineProperty(
+          Document.prototype,
+          'activeElement',
+          originalActiveElementDescriptor
+        );
+      } else {
+        delete (Document.prototype as unknown as Record<string, unknown>)
+          .activeElement;
+      }
+
+      Reflect.deleteProperty(
+        shadow as ShadowRoot & Record<string, unknown>,
+        'activeElement'
+      );
+    });
+  });
+
+  describe('#isFocusingOut', () => {
+    it('should return true when moving focus outside of the current target', () => {
+      const currentTarget = document.createElement('div');
+      const event = new FocusEvent('focusout');
+      Object.defineProperty(event, 'currentTarget', {value: currentTarget});
+      Object.defineProperty(event, 'relatedTarget', {value: null});
+      const hasFocusSpy = vi.spyOn(document, 'hasFocus').mockReturnValue(true);
+
+      expect(isFocusingOut(event)).toBe(true);
+
+      hasFocusSpy.mockRestore();
+    });
+
+    it('should return false when focus stays within the current target tree', () => {
+      const currentTarget = document.createElement('div');
+      const child = document.createElement('button');
+      currentTarget.appendChild(child);
+
+      const event = new FocusEvent('focusout');
+      Object.defineProperty(event, 'currentTarget', {value: currentTarget});
+      Object.defineProperty(event, 'relatedTarget', {value: child});
+      const hasFocusSpy = vi.spyOn(document, 'hasFocus').mockReturnValue(true);
+
+      expect(isFocusingOut(event)).toBe(false);
+
+      hasFocusSpy.mockRestore();
+    });
+  });
+
+  describe('#getParent', () => {
+    it('should return the parent element when available', () => {
+      const parent = document.createElement('div');
+      const child = document.createElement('span');
+      parent.appendChild(child);
+      expect(getParent(child)).toBe(parent);
+    });
+
+    it('should return the host when called on a shadow root', () => {
+      const host = document.createElement('div');
+      const shadow = host.attachShadow({mode: 'open'});
+      expect(getParent(shadow)).toBe(host);
+    });
+  });
+
+  describe('#isAncestorOf', () => {
+    it('should return true for standard ancestor relationships', () => {
+      const ancestor = document.createElement('div');
+      const child = document.createElement('span');
+      ancestor.appendChild(child);
+      expect(isAncestorOf(ancestor, child)).toBe(true);
+    });
+
+    it('should account for assigned slots', async () => {
+      const host = document.createElement('div');
+      const shadow = host.attachShadow({mode: 'open'});
+      const slot = document.createElement('slot');
+      slot.name = 'content';
+      shadow.appendChild(slot);
+
+      const slottedChild = document.createElement('span');
+      slottedChild.slot = 'content';
+      host.appendChild(slottedChild);
+
+      container.appendChild(host);
+      await Promise.resolve();
+
+      expect(isAncestorOf(slot, slottedChild)).toBe(true);
+    });
+
+    it('should return false when no ancestral relationship exists', () => {
+      const one = document.createElement('div');
+      const two = document.createElement('div');
+      expect(isAncestorOf(one, two)).toBe(false);
+    });
+  });
+
+  describe('#sortByDocumentPosition', () => {
+    it('should sort nodes based on their document order', () => {
+      const first = document.createElement('div');
+      const second = document.createElement('div');
+      container.appendChild(first);
+      container.appendChild(second);
+
+      const nodes = [second, first].sort(sortByDocumentPosition);
+      expect(nodes).toEqual([first, second]);
     });
   });
 });

@@ -19,6 +19,10 @@ describe('case-utils', () => {
     it('should leave existing kebab case values unchanged', () => {
       expect(camelToKebab('fields-to-include')).toBe('fields-to-include');
     });
+
+    it('should return an empty string when provided one', () => {
+      expect(camelToKebab('')).toBe('');
+    });
   });
 
   describe('#kebabToCamel', () => {
@@ -33,6 +37,14 @@ describe('case-utils', () => {
     it('should leave existing camel case values unchanged', () => {
       expect(kebabToCamel('fieldsToInclude')).toBe('fieldsToInclude');
     });
+
+    it('should keep numeric segments when converting', () => {
+      expect(kebabToCamel('value-2-test')).toBe('value2Test');
+    });
+
+    it('should return an empty string when provided one', () => {
+      expect(kebabToCamel('')).toBe('');
+    });
   });
 
   describe('#snakeToCamel', () => {
@@ -43,6 +55,14 @@ describe('case-utils', () => {
     it('should normalize uppercase characters before converting', () => {
       expect(snakeToCamel('COOL_NAME')).toBe('coolName');
     });
+
+    it('should preserve numeric characters between segments', () => {
+      expect(snakeToCamel('value_2_test')).toBe('value_2Test');
+    });
+
+    it('should return an empty string when provided one', () => {
+      expect(snakeToCamel('')).toBe('');
+    });
   });
 
   describe('#titleToKebab', () => {
@@ -52,6 +72,14 @@ describe('case-utils', () => {
 
     it('should collapse multiple spaces into single hyphens', () => {
       expect(titleToKebab('Value   Example')).toBe('value---example');
+    });
+
+    it('should treat tabs as word separators', () => {
+      expect(titleToKebab('Value\tExample')).toBe('value-example');
+    });
+
+    it('should return an empty string when provided one', () => {
+      expect(titleToKebab('')).toBe('');
     });
   });
 });
