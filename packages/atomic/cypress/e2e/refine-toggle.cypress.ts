@@ -8,10 +8,6 @@ import {field as facetField} from './facets/facet/facet-actions';
 import {facetComponent} from './facets/facet/facet-selectors';
 import {numericFacetField} from './facets/numeric-facet/numeric-facet-actions';
 import {numericFacetComponent} from './facets/numeric-facet/numeric-facet-selectors';
-import {ratingFacetField} from './facets/rating-facet/rating-facet-actions';
-import {ratingFacetComponent} from './facets/rating-facet/rating-facet-selectors';
-import {ratingRangeFacetField} from './facets/rating-range-facet/rating-range-facet-actions';
-import {ratingRangeFacetComponent} from './facets/rating-range-facet/rating-range-facet-selectors';
 import {timeframeFacetField} from './facets/timeframe-facet/timeframe-facet-action';
 import {timeframeFacetComponent} from './facets/timeframe-facet/timeframe-facet-selectors';
 import {
@@ -60,8 +56,6 @@ describe('Refine Toggle Test Suites', () => {
         facetField,
         numericFacetField,
         hierarchicalField,
-        ratingFacetField,
-        ratingRangeFacetField,
         colorFacetField,
         timeframeFacetField,
       ];
@@ -136,10 +130,8 @@ describe('Refine Toggle Test Suites', () => {
         facetComponent,
         numericFacetComponent,
         categoryFacetComponent,
-        ratingFacetComponent,
         colorFacetComponent,
         timeframeFacetComponent,
-        ratingRangeFacetComponent,
       ];
       RefineModalSelectors.facets()
         .children()

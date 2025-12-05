@@ -22,19 +22,36 @@ const meta: Meta = {
       handles: events,
     },
   },
-  argTypes,
+  argTypes: {
+    ...argTypes,
+    'tabs-included': {
+      control: {type: 'object'},
+    },
+    'tabs-excluded': {
+      control: {type: 'object'},
+    },
+    'depends-on': {
+      control: {type: 'object'},
+    },
+    'allowed-values': {
+      control: {type: 'object'},
+    },
+  },
 
   play,
   args: {
     ...args,
     'number-of-values': 8,
+    'tabs-included': '[]',
+    'tabs-excluded': '[]',
+    'allowed-values': '[]',
+    'depends-on': '{}',
   },
 };
 
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-rating-facet',
   args: {
     field: 'snrating',
   },
@@ -42,7 +59,7 @@ export const Default: Story = {
 };
 
 export const DisplayAsLink: Story = {
-  name: 'atomic-rating-facet',
+  name: 'With display as link',
   tags: ['test'],
   args: {
     'display-values-as': 'link',
