@@ -167,9 +167,6 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 22.16.5
-      chromatic:
-        specifier: 13.3.4
-        version: 13.3.4
       concurrently:
         specifier: 9.2.0
         version: 9.2.0
@@ -348,6 +345,9 @@ importers:
       axe-core:
         specifier: 4.10.3
         version: 4.10.3
+      chromatic:
+        specifier: 13.3.4
+        version: 13.3.4
       cypress:
         specifier: 'catalog:'
         version: 13.7.3
@@ -942,10 +942,10 @@ importers:
         version: 1.56.1
       '@salesforce/eslint-config-lwc':
         specifier: 3.7.2
-        version: 3.7.2(@lwc/eslint-plugin-lwc@2.2.0(@babel/eslint-parser@7.24.8(@babel/core@7.28.5)(eslint@8.57.1))(eslint@8.57.1))(@salesforce/eslint-plugin-lightning@1.0.1(eslint@8.57.1))(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.44.0(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1))(eslint-plugin-jest@29.2.1(eslint@8.57.1)(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)))(typescript@5.8.3))(eslint@8.57.1)
+        version: 3.7.2(@lwc/eslint-plugin-lwc@2.2.0(@babel/eslint-parser@7.24.8(@babel/core@7.28.5)(eslint@8.57.1))(eslint@8.57.1))(@salesforce/eslint-plugin-lightning@1.0.1(eslint@8.57.1))(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.44.0(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1))(eslint-plugin-jest@29.2.1(eslint@8.57.1)(jest@29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3)))(typescript@5.8.3))(eslint@8.57.1)
       '@salesforce/sfdx-lwc-jest':
         specifier: 5.1.0
-        version: 5.1.0(@types/node@22.16.5)(eslint@8.57.1)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3))(typescript@5.8.3)
+        version: 5.1.0(@types/node@24.10.1)(eslint@8.57.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3))(typescript@5.8.3)
       '@types/wait-on':
         specifier: 5.3.4
         version: 5.3.4
@@ -966,7 +966,7 @@ importers:
         version: 3.1.2
       jest:
         specifier: 'catalog:'
-        version: 29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3))
+        version: 29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3))
       jest-junit:
         specifier: 16.0.0
         version: 16.0.0
@@ -981,7 +981,7 @@ importers:
         version: 2.2.6(prettier@3.6.2)
       ts-node:
         specifier: 10.9.2
-        version: 10.9.2(@types/node@22.16.5)(typescript@5.8.3)
+        version: 10.9.2(@types/node@24.10.1)(typescript@5.8.3)
       wait-on:
         specifier: 8.0.4
         version: 8.0.4
@@ -16695,33 +16695,33 @@ snapshots:
       globals: 13.24.0
       minimatch: 9.0.5
 
-  '@lwc/jest-preset@16.0.0(@lwc/compiler@6.7.2)(@lwc/engine-dom@6.7.2)(@lwc/engine-server@6.7.2)(@lwc/synthetic-shadow@6.7.2)(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)))':
+  '@lwc/jest-preset@16.0.0(@lwc/compiler@6.7.2)(@lwc/engine-dom@6.7.2)(@lwc/engine-server@6.7.2)(@lwc/synthetic-shadow@6.7.2)(jest@29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3)))':
     dependencies:
       '@lwc/compiler': 6.7.2
       '@lwc/engine-dom': 6.7.2
       '@lwc/engine-server': 6.7.2
-      '@lwc/jest-resolver': 16.0.0(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)))
-      '@lwc/jest-serializer': 16.0.0(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)))
-      '@lwc/jest-transformer': 16.0.0(@lwc/compiler@6.7.2)(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)))
+      '@lwc/jest-resolver': 16.0.0(jest@29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3)))
+      '@lwc/jest-serializer': 16.0.0(jest@29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3)))
+      '@lwc/jest-transformer': 16.0.0(@lwc/compiler@6.7.2)(jest@29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3)))
       '@lwc/synthetic-shadow': 6.7.2
-      jest: 29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3))
+      jest: 29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3))
     transitivePeerDependencies:
       - supports-color
 
-  '@lwc/jest-resolver@16.0.0(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)))':
+  '@lwc/jest-resolver@16.0.0(jest@29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3)))':
     dependencies:
       '@lwc/jest-shared': 16.0.0
-      jest: 29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3))
+      jest: 29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3))
 
-  '@lwc/jest-serializer@16.0.0(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)))':
+  '@lwc/jest-serializer@16.0.0(jest@29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3)))':
     dependencies:
       '@lwc/jest-shared': 16.0.0
-      jest: 29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3))
+      jest: 29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3))
       pretty-format: 29.7.0
 
   '@lwc/jest-shared@16.0.0': {}
 
-  '@lwc/jest-transformer@16.0.0(@lwc/compiler@6.7.2)(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)))':
+  '@lwc/jest-transformer@16.0.0(@lwc/compiler@6.7.2)(jest@29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3)))':
     dependencies:
       '@babel/core': 7.28.5
       '@babel/plugin-proposal-dynamic-import': 7.18.6(@babel/core@7.28.5)
@@ -16732,7 +16732,7 @@ snapshots:
       '@lwc/compiler': 6.7.2
       '@lwc/jest-shared': 16.0.0
       babel-preset-jest: 29.6.3(@babel/core@7.28.5)
-      jest: 29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3))
+      jest: 29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3))
       magic-string: 0.30.21
       semver: 7.7.2
     transitivePeerDependencies:
@@ -17798,7 +17798,7 @@ snapshots:
     dependencies:
       postcss: 8.5.6
 
-  '@salesforce/eslint-config-lwc@3.7.2(@lwc/eslint-plugin-lwc@2.2.0(@babel/eslint-parser@7.24.8(@babel/core@7.28.5)(eslint@8.57.1))(eslint@8.57.1))(@salesforce/eslint-plugin-lightning@1.0.1(eslint@8.57.1))(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.44.0(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1))(eslint-plugin-jest@29.2.1(eslint@8.57.1)(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)))(typescript@5.8.3))(eslint@8.57.1)':
+  '@salesforce/eslint-config-lwc@3.7.2(@lwc/eslint-plugin-lwc@2.2.0(@babel/eslint-parser@7.24.8(@babel/core@7.28.5)(eslint@8.57.1))(eslint@8.57.1))(@salesforce/eslint-plugin-lightning@1.0.1(eslint@8.57.1))(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.44.0(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1))(eslint-plugin-jest@29.2.1(eslint@8.57.1)(jest@29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3)))(typescript@5.8.3))(eslint@8.57.1)':
     dependencies:
       '@babel/core': 7.24.9
       '@babel/eslint-parser': 7.24.8(@babel/core@7.24.9)(eslint@8.57.1)
@@ -17806,7 +17806,7 @@ snapshots:
       '@salesforce/eslint-plugin-lightning': 1.0.1(eslint@8.57.1)
       eslint: 8.57.1
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.44.0(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1)
-      eslint-plugin-jest: 29.2.1(eslint@8.57.1)(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)))(typescript@5.8.3)
+      eslint-plugin-jest: 29.2.1(eslint@8.57.1)(jest@29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3)))(typescript@5.8.3)
       eslint-restricted-globals: 0.2.0
       semver: 7.7.2
     transitivePeerDependencies:
@@ -17816,21 +17816,21 @@ snapshots:
     dependencies:
       eslint: 8.57.1
 
-  '@salesforce/sfdx-lwc-jest@5.1.0(@types/node@22.16.5)(eslint@8.57.1)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3))(typescript@5.8.3)':
+  '@salesforce/sfdx-lwc-jest@5.1.0(@types/node@24.10.1)(eslint@8.57.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3))(typescript@5.8.3)':
     dependencies:
       '@lwc/compiler': 6.7.2
       '@lwc/engine-dom': 6.7.2
       '@lwc/engine-server': 6.7.2
-      '@lwc/jest-preset': 16.0.0(@lwc/compiler@6.7.2)(@lwc/engine-dom@6.7.2)(@lwc/engine-server@6.7.2)(@lwc/synthetic-shadow@6.7.2)(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)))
-      '@lwc/jest-resolver': 16.0.0(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)))
-      '@lwc/jest-serializer': 16.0.0(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)))
-      '@lwc/jest-transformer': 16.0.0(@lwc/compiler@6.7.2)(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)))
+      '@lwc/jest-preset': 16.0.0(@lwc/compiler@6.7.2)(@lwc/engine-dom@6.7.2)(@lwc/engine-server@6.7.2)(@lwc/synthetic-shadow@6.7.2)(jest@29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3)))
+      '@lwc/jest-resolver': 16.0.0(jest@29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3)))
+      '@lwc/jest-serializer': 16.0.0(jest@29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3)))
+      '@lwc/jest-transformer': 16.0.0(@lwc/compiler@6.7.2)(jest@29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3)))
       '@lwc/module-resolver': 6.7.2
       '@lwc/synthetic-shadow': 6.7.2
       '@lwc/wire-service': 6.7.2
       '@salesforce/wire-service-jest-util': 4.1.4(@lwc/engine-dom@6.7.2)(eslint@8.57.1)(typescript@5.8.3)
       fast-glob: 3.3.3
-      jest: 29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3))
+      jest: 29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3))
       jest-environment-jsdom: 29.7.0(patch_hash=b419a992476c3323e67ee6c86f3f9ecf6f4f073127cb572aa9af3b9c6550751d)
       yargs: 17.7.2
     transitivePeerDependencies:
@@ -18875,11 +18875,11 @@ snapshots:
       - utf-8-validate
       - vite
 
-  '@vitest/browser-playwright@4.0.10(msw@2.11.4(@types/node@24.10.1)(typescript@5.8.3))(playwright@1.56.1)(vite@7.2.2(@types/node@24.10.1)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.94.2)(terser@5.44.1)(yaml@2.8.1))(vitest@4.0.10)':
+  '@vitest/browser-playwright@4.0.10(msw@2.11.4(@types/node@24.10.1)(typescript@5.8.3))(playwright@1.58.0-alpha-1763757971000)(vite@7.2.2(@types/node@24.10.1)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.94.2)(terser@5.44.1)(yaml@2.8.1))(vitest@4.0.10)':
     dependencies:
       '@vitest/browser': 4.0.10(msw@2.11.4(@types/node@24.10.1)(typescript@5.8.3))(vite@7.2.2(@types/node@24.10.1)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.94.2)(terser@5.44.1)(yaml@2.8.1))(vitest@4.0.10)
       '@vitest/mocker': 4.0.10(msw@2.11.4(@types/node@24.10.1)(typescript@5.8.3))(vite@7.2.2(@types/node@24.10.1)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.94.2)(terser@5.44.1)(yaml@2.8.1))
-      playwright: 1.56.1
+      playwright: 1.58.0-alpha-1763757971000
       tinyrainbow: 3.0.3
       vitest: 4.0.10(@types/node@24.10.1)(@vitest/browser-playwright@4.0.10)(jiti@2.6.1)(jsdom@20.0.3)(less@4.4.2)(lightningcss@1.30.1)(msw@2.11.4(@types/node@24.10.1)(typescript@5.8.3))(sass@1.94.2)(terser@5.44.1)(yaml@2.8.1)
     transitivePeerDependencies:
@@ -21394,12 +21394,12 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-jest@29.2.1(eslint@8.57.1)(jest@29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3)))(typescript@5.8.3):
+  eslint-plugin-jest@29.2.1(eslint@8.57.1)(jest@29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3)))(typescript@5.8.3):
     dependencies:
       '@typescript-eslint/utils': 8.48.0(eslint@8.57.1)(typescript@5.8.3)
       eslint: 8.57.1
     optionalDependencies:
-      jest: 29.7.0(@types/node@22.16.5)(ts-node@10.9.2(@types/node@22.16.5)(typescript@5.8.3))
+      jest: 29.7.0(@types/node@24.10.1)(ts-node@10.9.2(@types/node@24.10.1)(typescript@5.8.3))
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -27565,7 +27565,6 @@ snapshots:
       typescript: 5.8.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
-    optional: true
 
   ts-simple-type@2.0.0-next.0: {}
 
@@ -28112,7 +28111,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 24.10.1
-      '@vitest/browser-playwright': 4.0.10(msw@2.11.4(@types/node@24.10.1)(typescript@5.8.3))(playwright@1.56.1)(vite@7.2.2(@types/node@24.10.1)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.94.2)(terser@5.44.1)(yaml@2.8.1))(vitest@4.0.10)
+      '@vitest/browser-playwright': 4.0.10(msw@2.11.4(@types/node@24.10.1)(typescript@5.8.3))(playwright@1.58.0-alpha-1763757971000)(vite@7.2.2(@types/node@24.10.1)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.1)(sass@1.94.2)(terser@5.44.1)(yaml@2.8.1))(vitest@4.0.10)
       jsdom: 20.0.3
     transitivePeerDependencies:
       - jiti
