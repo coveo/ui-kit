@@ -30,7 +30,6 @@ const meta: Meta = {
     },
   },
   beforeEach: async () => {
-    mockCommerceApi.searchEndpoint.reset();
     mockCommerceApi.searchEndpoint.mock(
       () => richResponse as unknown as typeof baseResponse
     );
