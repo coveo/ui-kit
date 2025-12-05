@@ -2,6 +2,7 @@ import {
   AtomicAriaLive as LitAtomicAriaLive,
   AtomicAutomaticFacet as LitAtomicAutomaticFacet,
   AtomicBreadbox as LitAtomicBreadbox,
+  AtomicCategoryFacet as LitAtomicCategoryFacet,
   AtomicColorFacet as LitAtomicColorFacet,
   AtomicComponentError as LitAtomicComponentError,
   AtomicExternal as LitAtomicExternal,
@@ -82,6 +83,12 @@ export const AtomicBreadbox = createComponent({
   tagName: 'atomic-breadbox',
   react: React,
   elementClass: LitAtomicBreadbox,
+});
+
+export const AtomicCategoryFacet = createComponent({
+  tagName: 'atomic-category-facet',
+  react: React,
+  elementClass: LitAtomicCategoryFacet,
 });
 
 export const AtomicColorFacet = createComponent({

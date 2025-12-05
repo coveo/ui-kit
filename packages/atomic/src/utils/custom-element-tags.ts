@@ -10,6 +10,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-aria-live',
   'atomic-automatic-facet',
   'atomic-breadbox',
+  'atomic-category-facet',
   'atomic-color-facet',
   'atomic-commerce-breadbox',
   'atomic-commerce-category-facet',

@@ -4,6 +4,8 @@ export default {
     await import('./atomic-automatic-facet/atomic-automatic-facet.js'),
   'atomic-breadbox': async () =>
     await import('./atomic-breadbox/atomic-breadbox.js'),
+  'atomic-category-facet': async () =>
+    await import('./atomic-category-facet/atomic-category-facet.js'),
   'atomic-color-facet': async () =>
     await import('./atomic-color-facet/atomic-color-facet.js'),
   'atomic-external': async () =>
