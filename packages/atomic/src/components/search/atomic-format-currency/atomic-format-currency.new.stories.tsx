@@ -1,6 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import type {baseSearchResponse} from '@/storybook-utils/api/search/mock';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultList} from '@/storybook-utils/search/result-list-wrapper';
@@ -13,55 +14,6 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 
 const searchApiHarness = new MockSearchApi();
-
-searchApiHarness.searchEndpoint.mock((response) => ({
-  ...response,
-  // biome-ignore lint/suspicious/noExplicitAny: response type is a union that needs assertion
-  results: (response as any).results.slice(0, 1).map((result: any) => ({
-    ...result,
-    raw: {
-      ...result.raw,
-      sncost: 299.99,
-    },
-  })),
-  facets: [
-    {
-      facetId: 'sncost',
-      field: 'sncost',
-      indexScore: 0,
-      moreValuesAvailable: false,
-      values: [
-        {
-          start: 0,
-          end: 100,
-          endInclusive: false,
-          numberOfResults: 45,
-          state: 'idle',
-        },
-        {
-          start: 100,
-          end: 500,
-          endInclusive: false,
-          numberOfResults: 32,
-          state: 'idle',
-        },
-        {
-          start: 500,
-          end: 1000,
-          endInclusive: true,
-          numberOfResults: 18,
-          state: 'idle',
-        },
-      ],
-      domain: {
-        start: 0,
-        end: 1000,
-      },
-    },
-  ],
-  totalCount: 1,
-  totalCountFiltered: 1,
-}));
 
 const {decorator: searchInterfaceDecorator, play} = wrapInSearchInterface({
   includeCodeRoot: false,
@@ -103,6 +55,47 @@ export const Facet: Story = {
   args: {
     currency: 'USD',
   },
+  beforeEach: () => {
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
+      ...response,
+      results: (response as typeof baseSearchResponse).results.slice(0, 1),
+      facets: [
+        {
+          facetId: 'sncost',
+          field: 'sncost',
+          indexScore: 0,
+          moreValuesAvailable: false,
+          values: [
+            {
+              start: 0,
+              end: 100,
+              endInclusive: false,
+              numberOfResults: 45,
+              state: 'idle',
+            },
+            {
+              start: 100,
+              end: 500,
+              endInclusive: false,
+              numberOfResults: 32,
+              state: 'idle',
+            },
+            {
+              start: 500,
+              end: 1000,
+              endInclusive: true,
+              numberOfResults: 18,
+              state: 'idle',
+            },
+          ],
+          domain: {
+            start: 0,
+            end: 1000,
+          },
+        },
+      ],
+    }));
+  },
 };
 
 export const Result: Story = {
@@ -115,5 +108,20 @@ export const Result: Story = {
   decorators: [resultTemplateDecorator, resultListDecorator],
   args: {
     currency: 'USD',
+  },
+  beforeEach: () => {
+    searchApiHarness.searchEndpoint.mockOnce((response) => ({
+      ...response,
+      results: (response as typeof baseSearchResponse).results
+        .slice(0, 1)
+        // biome-ignore lint/suspicious/noExplicitAny: raw fields are dynamically added
+        .map((result: any) => ({
+          ...result,
+          raw: {
+            ...result.raw,
+            sncost: 299.99,
+          },
+        })),
+    }));
   },
 };

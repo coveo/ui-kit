@@ -107,6 +107,81 @@ describe('atomic-format-number', () => {
     }
   });
 
+  it('should format number with minimum integer digits', async () => {
+    let capturedFormatter:
+      | ((value: number, languages: string[]) => string)
+      | undefined;
+
+    const container = document.createElement('div');
+    container.addEventListener('atomic/numberFormat', (e) => {
+      e.preventDefault();
+      capturedFormatter = (e as CustomEvent).detail;
+    });
+
+    await fixture<AtomicFormatNumber>(
+      html`<atomic-format-number
+        .minimumIntegerDigits=${4}
+      ></atomic-format-number>`,
+      container
+    );
+
+    expect(capturedFormatter).toBeDefined();
+    if (capturedFormatter) {
+      const result = capturedFormatter(42, ['en-US']);
+      expect(result).toBe('0,042');
+    }
+  });
+
+  it('should format number with minimum significant digits', async () => {
+    let capturedFormatter:
+      | ((value: number, languages: string[]) => string)
+      | undefined;
+
+    const container = document.createElement('div');
+    container.addEventListener('atomic/numberFormat', (e) => {
+      e.preventDefault();
+      capturedFormatter = (e as CustomEvent).detail;
+    });
+
+    await fixture<AtomicFormatNumber>(
+      html`<atomic-format-number
+        .minimumSignificantDigits=${4}
+      ></atomic-format-number>`,
+      container
+    );
+
+    expect(capturedFormatter).toBeDefined();
+    if (capturedFormatter) {
+      const result = capturedFormatter(42, ['en-US']);
+      expect(result).toBe('42.00');
+    }
+  });
+
+  it('should format number with maximum significant digits', async () => {
+    let capturedFormatter:
+      | ((value: number, languages: string[]) => string)
+      | undefined;
+
+    const container = document.createElement('div');
+    container.addEventListener('atomic/numberFormat', (e) => {
+      e.preventDefault();
+      capturedFormatter = (e as CustomEvent).detail;
+    });
+
+    await fixture<AtomicFormatNumber>(
+      html`<atomic-format-number
+        .maximumSignificantDigits=${2}
+      ></atomic-format-number>`,
+      container
+    );
+
+    expect(capturedFormatter).toBeDefined();
+    if (capturedFormatter) {
+      const result = capturedFormatter(12345, ['en-US']);
+      expect(result).toBe('12,000');
+    }
+  });
+
   describe('when not a child of a compatible component', () => {
     it('should render atomic-component-error when dispatchEvent is not canceled', async () => {
       const {element} = await renderAtomicFormatNumber({}, false);
