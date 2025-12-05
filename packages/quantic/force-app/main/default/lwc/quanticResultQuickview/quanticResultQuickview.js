@@ -182,7 +182,7 @@ export default class QuanticResultQuickview extends LightningElement {
     // Exclude parentResult and childResults to prevent Salesforce Proxy extensibility errors.
     // These nested result objects remain proxied after spreading, causing 'isExtensible' trap violations when accessed by the Headless library.
     // eslint-disable-next-line no-unused-vars
-    const {parentResult, childResults, ...result } = this.result;
+    const {parentResult, childResults, ...result} = this.result;
     this.engine.dispatch(
       pushRecentResult({ ...result, raw: { ...result.raw } })
     );
