@@ -4,7 +4,7 @@ import {
   type InteractiveResult,
   type Result,
 } from '@coveo/headless';
-import {css, html, LitElement, nothing, type TemplateResult} from 'lit';
+import {html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {getAttributesFromLinkSlotContent} from '@/src/components/common/item-link/attributes-slot';
@@ -21,6 +21,7 @@ import {parseXML} from '@/src/utils/utils';
 import Arrow from '../../../images/arrow-right.svg';
 import '../atomic-result-text/atomic-result-text';
 import '../../common/atomic-icon/atomic-icon';
+import styles from './atomic-result-printable-uri.tw.css';
 
 /**
  * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
@@ -34,71 +35,7 @@ export class AtomicResultPrintableUri
   extends LightDomMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
-  static styles = css`
-    atomic-result-printable-uri {
-      max-width: 100%;
-      word-break: break-word;
-    }
-
-    atomic-result-printable-uri a,
-    atomic-result-printable-uri button {
-      color: var(--atomic-primary);
-    }
-
-    atomic-result-printable-uri a:hover,
-    atomic-result-printable-uri a:focus-visible,
-    atomic-result-printable-uri button:hover,
-    atomic-result-printable-uri button:focus-visible {
-      text-decoration: underline;
-      color: var(--atomic-primary);
-    }
-
-    atomic-result-printable-uri a:focus,
-    atomic-result-printable-uri button:focus {
-      outline: none;
-    }
-
-    atomic-result-printable-uri a:visited {
-      color: var(--atomic-visited);
-    }
-
-    atomic-result-printable-uri ul {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    atomic-result-printable-uri li {
-      display: inline-flex;
-      align-items: center;
-      max-width: 100%;
-      white-space: nowrap;
-    }
-
-    atomic-result-printable-uri li:last-child {
-      white-space: normal;
-    }
-
-    atomic-result-printable-uri li:last-child::after {
-      content: none;
-    }
-
-    atomic-result-printable-uri li a {
-      display: inline-block;
-      vertical-align: middle;
-      max-width: 100%;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-
-    atomic-result-printable-uri li .result-printable-uri-separator {
-      display: inline-block;
-      margin: 0 0.5rem;
-      vertical-align: middle;
-      width: 0.75rem;
-      height: 0.75rem;
-      color: var(--atomic-neutral-dark);
-    }
-  `;
+  static styles = styles;
 
   /**
    * The maximum number of Uri parts to display. This has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
