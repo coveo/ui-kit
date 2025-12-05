@@ -999,10 +999,7 @@ export function getAbsoluteHeight(element) {
 
   // Using getBoundingClientRect ensures accurate height measurements across all browsers, especially Safari.
   const elementBoundingRect = element.getBoundingClientRect();
-  const paddings = getElementPadding(element);
-  const padding = paddings.top + paddings.bottom;
-
-  return Math.ceil(elementBoundingRect.height + padding);
+  return Math.ceil(elementBoundingRect.height);
 }
 
 /**
@@ -1018,8 +1015,5 @@ export function getAbsoluteWidth(element) {
 
   // Using getBoundingClientRect ensures accurate width measurements across all browsers, especially Safari.
   const elementBoundingRect = element.getBoundingClientRect();
-  const paddings = getElementPadding(element);
-  const padding = paddings.left + paddings.right;
-
-  return Math.ceil(elementBoundingRect.width + padding);
+  return Math.ceil(elementBoundingRect.width);
 }
