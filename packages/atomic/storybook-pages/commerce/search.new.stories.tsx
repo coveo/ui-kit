@@ -2,6 +2,10 @@ import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock.js';
+import {
+  type baseResponse,
+  richResponse,
+} from '@/storybook-utils/api/commerce/search-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 
 const mockCommerceApi = new MockCommerceApi();
@@ -24,6 +28,12 @@ const meta: Meta = {
     msw: {
       handlers: [...mockCommerceApi.handlers],
     },
+  },
+  beforeEach: async () => {
+    mockCommerceApi.searchEndpoint.reset();
+    mockCommerceApi.searchEndpoint.mock(
+      () => richResponse as unknown as typeof baseResponse
+    );
   },
   render: () => html`
     <atomic-commerce-interface type="search" language-assets-path="./lang" icon-assets-path="./assets">
