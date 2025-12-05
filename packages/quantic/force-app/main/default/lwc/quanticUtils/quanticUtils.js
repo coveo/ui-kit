@@ -412,7 +412,6 @@ export class DateUtils {
    * @returns {string}
    */
   static fromSearchApiDate(dateString) {
-    // @ts-ignore
     return dateString.replaceAll('/', '-').replaceAll('@', 'T');
   }
 
