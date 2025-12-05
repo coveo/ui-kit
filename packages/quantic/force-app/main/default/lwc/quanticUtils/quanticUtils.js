@@ -987,6 +987,7 @@ export function getElementPadding(element) {
 
 /**
  * Returns the absolute height of an element.
+ * Uses getBoundingClientRect() to ensure synchronous layout calculation.
  * @param {Element} element
  * @returns {number} The absolute height of the element including padding.
  */
@@ -994,15 +995,15 @@ export function getAbsoluteHeight(element) {
   if (!element) {
     return 0;
   }
-  const paddings = getElementPadding(element);
-  const padding = paddings.top + paddings.bottom;
 
-  // @ts-ignore
-  return Math.ceil(element.offsetHeight + padding);
+  // Using getBoundingClientRect ensures accurate height measurements across all browsers, especially Safari.
+  const elementBoundingRect = element.getBoundingClientRect();
+  return Math.ceil(elementBoundingRect.height);
 }
 
 /**
  * Returns the absolute width of an element.
+ * Uses getBoundingClientRect() to ensure synchronous layout calculation.
  * @param {Element} element
  * @returns {number} The absolute width of the element including padding.
  */
@@ -1010,9 +1011,8 @@ export function getAbsoluteWidth(element) {
   if (!element) {
     return 0;
   }
-  const paddings = getElementPadding(element);
-  const padding = paddings.left + paddings.right;
 
-  // @ts-ignore
-  return Math.ceil(element.offsetWidth + padding);
+  // Using getBoundingClientRect ensures accurate width measurements across all browsers, especially Safari.
+  const elementBoundingRect = element.getBoundingClientRect();
+  return Math.ceil(elementBoundingRect.width);
 }
