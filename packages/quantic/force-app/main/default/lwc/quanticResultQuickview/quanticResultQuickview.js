@@ -18,7 +18,7 @@ import {LightningElement, api, track} from 'lwc';
 
 /**
  * @typedef {Object} ResultWithFolding
- * @extends Result
+ * @mixes Result
  * @property {Result} parentResult
  * @property {Result[]} childResults
  */
