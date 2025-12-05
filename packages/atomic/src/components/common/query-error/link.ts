@@ -32,7 +32,7 @@ export const renderQueryErrorLink: FunctionalComponent<QueryErrorLinkProps> = ({
         part="doc-link"
         class="btn-primary mt-10 inline-block p-3"
       >
-        ${props.i18n.t('coveo-online-help')}
+        ${props.i18n.t('coveo-documentation')}
       </a>`
     : nothing;
 };

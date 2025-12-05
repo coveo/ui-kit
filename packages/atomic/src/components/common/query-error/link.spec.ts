@@ -32,7 +32,7 @@ describe('#renderQueryErrorLink', () => {
     const {link} = await renderComponent('NoEndpointsException');
 
     expect(link).not.toBeNull();
-    expect(link).toHaveTextContent('Coveo Online Help');
+    expect(link).toHaveTextContent('Coveo documentation');
   });
 
   it('should render link with correct href when errorType is NoEndpointsException', async () => {

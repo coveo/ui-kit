@@ -31,7 +31,7 @@ export const QueryErrorLink: FunctionalComponent<QueryErrorLinkProps> = ({
 
   return link ? (
     <a href={link} part="doc-link" class="btn-primary mt-10 inline-block p-3">
-      {i18n.t('coveo-online-help')}
+      {i18n.t('coveo-documentation')}
     </a>
   ) : null;
 };
