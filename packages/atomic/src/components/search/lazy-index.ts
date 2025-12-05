@@ -58,6 +58,10 @@ export default {
     ),
   'atomic-result-number': async () =>
     await import('./atomic-result-number/atomic-result-number.js'),
+  'atomic-result-printable-uri': async () =>
+    await import(
+      './atomic-result-printable-uri/atomic-result-printable-uri.js'
+    ),
   'atomic-result-rating': async () =>
     await import('./atomic-result-rating/atomic-result-rating.js'),
   'atomic-result-section-actions': async () =>

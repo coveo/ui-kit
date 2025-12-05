@@ -1347,15 +1347,6 @@ export namespace Components {
         "imageSize": ItemDisplayImageSize;
     }
     /**
-     * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
-     */
-    interface AtomicResultPrintableUri {
-        /**
-          * The maximum number of Uri parts to display. This has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
-         */
-        "maxNumberOfParts": number;
-    }
-    /**
      * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultTablePlaceholder {
@@ -2424,15 +2415,6 @@ declare global {
         new (): HTMLAtomicResultPlaceholderElement;
     };
     /**
-     * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
-     */
-    interface HTMLAtomicResultPrintableUriElement extends Components.AtomicResultPrintableUri, HTMLStencilElement {
-    }
-    var HTMLAtomicResultPrintableUriElement: {
-        prototype: HTMLAtomicResultPrintableUriElement;
-        new (): HTMLAtomicResultPrintableUriElement;
-    };
-    /**
      * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface HTMLAtomicResultTablePlaceholderElement extends Components.AtomicResultTablePlaceholder, HTMLStencilElement {
@@ -2750,7 +2732,6 @@ declare global {
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
-        "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
@@ -4036,15 +4017,6 @@ declare namespace LocalJSX {
         "imageSize": ItemDisplayImageSize;
     }
     /**
-     * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
-     */
-    interface AtomicResultPrintableUri {
-        /**
-          * The maximum number of Uri parts to display. This has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
-         */
-        "maxNumberOfParts"?: number;
-    }
-    /**
      * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultTablePlaceholder {
@@ -4477,7 +4449,6 @@ declare namespace LocalJSX {
         "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-result-fields-list": AtomicResultFieldsList;
         "atomic-result-placeholder": AtomicResultPlaceholder;
-        "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
         "atomic-search-box": AtomicSearchBox;
         "atomic-segmented-facet": AtomicSegmentedFacet;
@@ -4695,10 +4666,6 @@ declare module "@stencil/core" {
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
-            /**
-             * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
-             */
-            "atomic-result-printable-uri": LocalJSX.AtomicResultPrintableUri & JSXBase.HTMLAttributes<HTMLAtomicResultPrintableUriElement>;
             /**
              * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
