@@ -338,8 +338,15 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        if: ${{ github.event_name == 'pull_request' }}
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }} # https://www.chromatic.com/docs/github-actions/#recommended-configuration-for-build-events
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        if: ${{ github.event_name != 'pull_request' }}
+        with:
+          fetch-depth: 0
+
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo chromatic --filter=@coveo/atomic
         id: chromatic-run
