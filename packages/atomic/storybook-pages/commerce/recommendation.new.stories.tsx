@@ -5,6 +5,10 @@ import {
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock.js';
+import {
+  type baseResponse,
+  richResponse,
+} from '@/storybook-utils/api/commerce/recommendation-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 
 const mockCommerceApi = new MockCommerceApi();
@@ -32,6 +36,12 @@ const meta: Meta = {
     msw: {
       handlers: [...mockCommerceApi.handlers],
     },
+  },
+  beforeEach: async () => {
+    mockCommerceApi.recommendationEndpoint.reset();
+    mockCommerceApi.recommendationEndpoint.mock(
+      () => richResponse as unknown as typeof baseResponse
+    );
   },
   render: () => html`
     <atomic-commerce-recommendation-interface>
