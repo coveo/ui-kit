@@ -16,8 +16,10 @@ import {
   AtomicNoResults as LitAtomicNoResults,
   AtomicNumericRange as LitAtomicNumericRange,
   AtomicPager as LitAtomicPager,
+  AtomicPopover as LitAtomicPopover,
   AtomicQueryError as LitAtomicQueryError,
   AtomicQuerySummary as LitAtomicQuerySummary,
+  AtomicRatingRangeFacet as LitAtomicRatingRangeFacet,
   AtomicRecsInterface as LitAtomicRecsInterface,
   AtomicResult as LitAtomicResult,
   AtomicResultBadge as LitAtomicResultBadge,
@@ -27,6 +29,7 @@ import {
   AtomicResultHtml as LitAtomicResultHtml,
   AtomicResultIcon as LitAtomicResultIcon,
   AtomicResultImage as LitAtomicResultImage,
+  AtomicResultLink as LitAtomicResultLink,
   AtomicResultList as LitAtomicResultList,
   AtomicResultLocalizedText as LitAtomicResultLocalizedText,
   AtomicResultMultiValueText as LitAtomicResultMultiValueText,
@@ -162,6 +165,12 @@ export const AtomicPager = createComponent({
   elementClass: LitAtomicPager,
 });
 
+export const AtomicPopover = createComponent({
+  tagName: 'atomic-popover',
+  react: React,
+  elementClass: LitAtomicPopover,
+});
+
 export const AtomicQueryError = createComponent({
   tagName: 'atomic-query-error',
   react: React,
@@ -172,6 +181,12 @@ export const AtomicQuerySummary = createComponent({
   tagName: 'atomic-query-summary',
   react: React,
   elementClass: LitAtomicQuerySummary,
+});
+
+export const AtomicRatingRangeFacet = createComponent({
+  tagName: 'atomic-rating-range-facet',
+  react: React,
+  elementClass: LitAtomicRatingRangeFacet,
 });
 
 export const AtomicRecsInterface = createComponent({
@@ -226,6 +241,12 @@ export const AtomicResultImage = createComponent({
   tagName: 'atomic-result-image',
   react: React,
   elementClass: LitAtomicResultImage,
+});
+
+export const AtomicResultLink = createComponent({
+  tagName: 'atomic-result-link',
+  react: React,
+  elementClass: LitAtomicResultLink,
 });
 
 export const AtomicResultList = createComponent({

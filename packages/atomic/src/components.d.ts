@@ -165,7 +165,10 @@ export namespace Components {
         "queryCorrectionMode": 'legacy' | 'next';
     }
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
+     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
+     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
+     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
+     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
      */
     interface AtomicFacetManager {
         /**
@@ -1072,11 +1075,6 @@ export namespace Components {
         "withInput"?: NumberInputType;
     }
     /**
-     * The `atomic-popover` component displays any facet as a popover menu.
-     */
-    interface AtomicPopover {
-    }
-    /**
      * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
      * about a result.
      * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (for example, custom styles and embedded
@@ -1149,69 +1147,6 @@ export namespace Components {
         "label": string;
         /**
           * The maximum value in the field's index and the number of rating icons to display in the facet. If not assigned a value, this property will default to the same value as `numberOfIntervals`.
-         */
-        "maxValueInIndex": number;
-        /**
-          * The minimum value of the field.
-         */
-        "minValueInIndex": number;
-        /**
-          * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
-         */
-        "numberOfIntervals": number;
-        /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded": string[] | string;
-        /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded": string[] | string;
-    }
-    /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
-     * An `atomic-rating-range-facet` displays a facet of the results for the current query as ratings.
-     * It only supports numeric fields.
-     */
-    interface AtomicRatingRangeFacet {
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc   ... ></atomic-rating-range-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc="doc"   ... ></atomic-rating-range-facet> ```
-         */
-        "dependsOn": Record<string, string>;
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount": boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel": number;
-        /**
-          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-icon-active-color` - `--atomic-rating-icon-inactive-color`
-         */
-        "icon": string;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth": number;
-        /**
-          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
-         */
-        "isCollapsed": boolean;
-        /**
-          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label": string;
-        /**
-          * The maximum value in the field's index and the number of rating icons to display in the facet. This property will default to the same value as `numberOfIntervals`, if not assigned a value.
          */
         "maxValueInIndex": number;
         /**
@@ -1402,15 +1337,6 @@ export namespace Components {
      * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
      */
     interface AtomicResultFieldsList {
-    }
-    /**
-     * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
-     */
-    interface AtomicResultLink {
-        /**
-          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
-         */
-        "hrefTemplate"?: string;
     }
     /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
@@ -1876,7 +1802,10 @@ declare global {
         new (): HTMLAtomicDidYouMeanElement;
     };
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
+     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
+     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
+     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
+     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
      */
     interface HTMLAtomicFacetManagerElement extends Components.AtomicFacetManager, HTMLStencilElement {
     }
@@ -2363,15 +2292,6 @@ declare global {
         new (): HTMLAtomicNumericFacetElement;
     };
     /**
-     * The `atomic-popover` component displays any facet as a popover menu.
-     */
-    interface HTMLAtomicPopoverElement extends Components.AtomicPopover, HTMLStencilElement {
-    }
-    var HTMLAtomicPopoverElement: {
-        prototype: HTMLAtomicPopoverElement;
-        new (): HTMLAtomicPopoverElement;
-    };
-    /**
      * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
      * about a result.
      * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (for example, custom styles and embedded
@@ -2415,17 +2335,6 @@ declare global {
     var HTMLAtomicRatingFacetElement: {
         prototype: HTMLAtomicRatingFacetElement;
         new (): HTMLAtomicRatingFacetElement;
-    };
-    /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
-     * An `atomic-rating-range-facet` displays a facet of the results for the current query as ratings.
-     * It only supports numeric fields.
-     */
-    interface HTMLAtomicRatingRangeFacetElement extends Components.AtomicRatingRangeFacet, HTMLStencilElement {
-    }
-    var HTMLAtomicRatingRangeFacetElement: {
-        prototype: HTMLAtomicRatingRangeFacetElement;
-        new (): HTMLAtomicRatingRangeFacetElement;
     };
     /**
      * The `atomic-recs-error` component handles fatal errors when performing a recommendations request on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -2495,15 +2404,6 @@ declare global {
     var HTMLAtomicResultFieldsListElement: {
         prototype: HTMLAtomicResultFieldsListElement;
         new (): HTMLAtomicResultFieldsListElement;
-    };
-    /**
-     * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
-     */
-    interface HTMLAtomicResultLinkElement extends Components.AtomicResultLink, HTMLStencilElement {
-    }
-    var HTMLAtomicResultLinkElement: {
-        prototype: HTMLAtomicResultLinkElement;
-        new (): HTMLAtomicResultLinkElement;
     };
     /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
@@ -2821,11 +2721,9 @@ declare global {
         "atomic-ipx-tabs": HTMLAtomicIpxTabsElement;
         "atomic-notifications": HTMLAtomicNotificationsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
-        "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-quickview": HTMLAtomicQuickviewElement;
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
-        "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
         "atomic-recs-error": HTMLAtomicRecsErrorElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-recs-result": HTMLAtomicRecsResultElement;
@@ -2833,7 +2731,6 @@ declare global {
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
-        "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
@@ -2986,7 +2883,10 @@ declare namespace LocalJSX {
         "queryCorrectionMode"?: 'legacy' | 'next';
     }
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
+     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
+     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
+     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
+     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
      */
     interface AtomicFacetManager {
         /**
@@ -3861,11 +3761,6 @@ declare namespace LocalJSX {
         "withInput"?: NumberInputType;
     }
     /**
-     * The `atomic-popover` component displays any facet as a popover menu.
-     */
-    interface AtomicPopover {
-    }
-    /**
      * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
      * about a result.
      * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (for example, custom styles and embedded
@@ -3939,69 +3834,6 @@ declare namespace LocalJSX {
         "label"?: string;
         /**
           * The maximum value in the field's index and the number of rating icons to display in the facet. If not assigned a value, this property will default to the same value as `numberOfIntervals`.
-         */
-        "maxValueInIndex"?: number;
-        /**
-          * The minimum value of the field.
-         */
-        "minValueInIndex"?: number;
-        /**
-          * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
-         */
-        "numberOfIntervals"?: number;
-        /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded"?: string[] | string;
-        /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded"?: string[] | string;
-    }
-    /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
-     * An `atomic-rating-range-facet` displays a facet of the results for the current query as ratings.
-     * It only supports numeric fields.
-     */
-    interface AtomicRatingRangeFacet {
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc   ... ></atomic-rating-range-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc="doc"   ... ></atomic-rating-range-facet> ```
-         */
-        "dependsOn"?: Record<string, string>;
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount"?: boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel"?: number;
-        /**
-          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-icon-active-color` - `--atomic-rating-icon-inactive-color`
-         */
-        "icon"?: string;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth"?: number;
-        /**
-          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
-         */
-        "isCollapsed"?: boolean;
-        /**
-          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The maximum value in the field's index and the number of rating icons to display in the facet. This property will default to the same value as `numberOfIntervals`, if not assigned a value.
          */
         "maxValueInIndex"?: number;
         /**
@@ -4175,15 +4007,6 @@ declare namespace LocalJSX {
      * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
      */
     interface AtomicResultFieldsList {
-    }
-    /**
-     * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
-     */
-    interface AtomicResultLink {
-        /**
-          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
-         */
-        "hrefTemplate"?: string;
     }
     /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
@@ -4615,11 +4438,9 @@ declare namespace LocalJSX {
         "atomic-ipx-tabs": AtomicIpxTabs;
         "atomic-notifications": AtomicNotifications;
         "atomic-numeric-facet": AtomicNumericFacet;
-        "atomic-popover": AtomicPopover;
         "atomic-quickview": AtomicQuickview;
         "atomic-quickview-modal": AtomicQuickviewModal;
         "atomic-rating-facet": AtomicRatingFacet;
-        "atomic-rating-range-facet": AtomicRatingRangeFacet;
         "atomic-recs-error": AtomicRecsError;
         "atomic-recs-list": AtomicRecsList;
         "atomic-recs-result": AtomicRecsResult;
@@ -4627,7 +4448,6 @@ declare namespace LocalJSX {
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-result-fields-list": AtomicResultFieldsList;
-        "atomic-result-link": AtomicResultLink;
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
         "atomic-search-box": AtomicSearchBox;
@@ -4676,7 +4496,10 @@ declare module "@stencil/core" {
              */
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             /**
-             * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
+             * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
+             * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
+             * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
+             * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
              */
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             /**
@@ -4788,10 +4611,6 @@ declare module "@stencil/core" {
              */
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             /**
-             * The `atomic-popover` component displays any facet as a popover menu.
-             */
-            "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
-            /**
              * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
              * about a result.
              * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (for example, custom styles and embedded
@@ -4809,12 +4628,6 @@ declare module "@stencil/core" {
              * It only supports numeric fields.
              */
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;
-            /**
-             * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
-             * An `atomic-rating-range-facet` displays a facet of the results for the current query as ratings.
-             * It only supports numeric fields.
-             */
-            "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
             /**
              * The `atomic-recs-error` component handles fatal errors when performing a recommendations request on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
              */
@@ -4849,10 +4662,6 @@ declare module "@stencil/core" {
              * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
              */
             "atomic-result-fields-list": LocalJSX.AtomicResultFieldsList & JSXBase.HTMLAttributes<HTMLAtomicResultFieldsListElement>;
-            /**
-             * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
-             */
-            "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             /**
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */

@@ -1,0 +1,29 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicResultLinkStories from './atomic-result-link.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicResultLinkStories} />
+
+<AtomicDocTemplate
+  stories={AtomicResultLinkStories}
+  githubPath="search/atomic-result-link/atomic-result-link.ts"
+  tagName="atomic-result-link"
+  className="AtomicResultLink"
+>
+
+The `atomic-result-link` component automatically transforms a search result **title** into a clickable link that points to the original item. This component is used within `atomic-result-template` components inside the result list:
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-result-list>
+    <atomic-result-template>
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+    </atomic-result-template>
+  </atomic-result-list>
+</atomic-search-interface>
+```
+
+</AtomicDocTemplate>
