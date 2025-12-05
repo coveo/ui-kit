@@ -1,6 +1,11 @@
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {
+  type baseResponse,
+  richResponse,
+} from '@/storybook-utils/api/search/search-response';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 
 async function initializeSearchInterface(canvasElement: HTMLElement) {
@@ -11,6 +16,8 @@ async function initializeSearchInterface(canvasElement: HTMLElement) {
   await searchInterface!.initialize(getSampleSearchEngineConfiguration());
 }
 
+const mockSearchApi = new MockSearchApi();
+
 const meta: Meta = {
   component: 'rich-search-page',
   title: 'Search/Example Pages',
@@ -18,6 +25,14 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     layout: 'fullscreen',
+    msw: {
+      handlers: [...mockSearchApi.handlers],
+    },
+  },
+  beforeEach: async () => {
+    mockSearchApi.searchEndpoint.mock(
+      () => richResponse as unknown as typeof baseResponse
+    );
   },
   render: () => html`
     <atomic-search-interface language-assets-path="./lang" icon-assets-path="./assets">
@@ -215,5 +230,5 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'Rich Search Page',
+  name: 'Search Page',
 };
