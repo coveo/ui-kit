@@ -1,10 +1,7 @@
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import {MockSearchApi} from '@/storybook-utils/api/search/mock.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
-
-const mockSearchApi = new MockSearchApi();
 
 async function initializeSearchInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-search-interface');
@@ -21,9 +18,6 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     layout: 'fullscreen',
-    msw: {
-      handlers: [...mockSearchApi.handlers],
-    },
   },
   render: () => html`
     <atomic-search-interface language-assets-path="./lang" icon-assets-path="./assets">
@@ -143,7 +137,7 @@ const meta: Meta = {
                     </atomic-field-condition>
                   </atomic-result-section-badges>
                   <atomic-result-section-visual>
-                    <atomic-result-icon></atomic-result-icon>
+                    <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/350"></atomic-result-image>
                   </atomic-result-section-visual>
                   <atomic-result-section-title>
                     <atomic-result-link></atomic-result-link>
@@ -176,6 +170,18 @@ const meta: Meta = {
                       <atomic-field-condition class="field" if-defined="filetype">
                         <span class="field-label"><atomic-text value="fileType"></atomic-text>:</span>
                         <atomic-result-text field="filetype"></atomic-result-text>
+                      </atomic-field-condition>
+                      <atomic-field-condition class="field" if-defined="ytviewcount">
+                        <span class="field-label">Views:</span>
+                        <atomic-result-number field="ytviewcount"></atomic-result-number>
+                      </atomic-field-condition>
+                      <atomic-field-condition class="field" if-defined="ytlikecount">
+                        <span class="field-label">Likes:</span>
+                        <atomic-result-number field="ytlikecount"></atomic-result-number>
+                      </atomic-field-condition>
+                      <atomic-field-condition class="field" if-defined="videoduration">
+                        <span class="field-label">Duration:</span>
+                        <atomic-result-timespan field="videoduration"></atomic-result-timespan>
                       </atomic-field-condition>
                       <span class="field">
                         <span class="field-label">Date:</span>
