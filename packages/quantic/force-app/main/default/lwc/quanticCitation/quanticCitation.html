@@ -1,6 +1,6 @@
 <template>
   <li
-    class="citation slds-m-right_xx-small slds-m-vertical_xx-small slds-is-relative"
+    class={citationClasses}
   >
     <a
       class="citation__link slds-badge slds-badge_lightest slds-align_absolute-center slds-text-link_reset slds-p-left_xx-small slds-p-right_x-small"
@@ -12,8 +12,19 @@
       onmouseleave={handleCitationMouseLeave}
       onclick={handleClick}
     >
+      <!-- Dynamic action indicators -->
+      <template for:each={actionIndicators} for:item="indicator">
+        <lightning-icon
+          key={indicator.key}
+          icon-name={indicator.iconName}
+          alternative-text={indicator.altText}
+          size="xx-small"
+          class={indicator.classes}
+        ></lightning-icon>
+      </template>
+
       <p
-        class="citation__title slds-m-left_x-small slds-truncate slds-has-flexi-truncate"
+        class={citationTitleClasses}
       >
         {citationTitle}
       </p>
@@ -26,9 +37,30 @@
       onmouseleave={handleTooltipMouseLeave}
     >
       <div class="citation__tooltip" slot="content">
-        <div data-testid="citation__tooltip-uri" class="slds-text-body_small slds-text-color_weak slds-truncate slds-var-p-vertical_xxx-small">{hrefValue}</div>
-        <div data-testid="citation__tooltip-title" class="slds-text-title_bold slds-var-p-vertical_xx-small">{citationTitle}</div>
-        <div data-testid="citation__tooltip-text" class="citation__tooltip-text slds-text-body_small slds-var-p-vertical_xxx-small">{text}</div>
+        <div
+          data-testid="citation__tooltip-uri"
+          class="slds-text-body_small slds-text-color_weak slds-truncate slds-var-p-vertical_xxx-small"
+        >
+          {hrefValue}
+        </div>
+        <div
+          data-testid="citation__tooltip-title"
+          class="slds-text-title_bold slds-var-p-vertical_xx-small"
+        >
+          {citationTitle}
+        </div>
+        <div
+          data-testid="citation__tooltip-text"
+          class="citation__tooltip-text slds-text-body_small slds-var-p-vertical_xxx-small"
+        >
+          {text}
+        </div>
+        <div class="citation__tooltip-actions">
+          <slot
+            name="citation-action"
+            onactionregister={handleCitationActionRegister}
+          ></slot>
+        </div>
       </div>
     </c-quantic-tooltip>
   </li>

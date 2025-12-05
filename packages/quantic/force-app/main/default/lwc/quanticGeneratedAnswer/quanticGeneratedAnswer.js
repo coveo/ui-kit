@@ -60,9 +60,11 @@ const DEFAULT_CITATION_FIELDS = ['sfid', 'sfkbid', 'sfkavid', 'filetype'];
  * This component includes a slot, "no-answer-message", which allows for rendering a custom message when no answer is generated.
  * @category Search
  * @slot no-answer-message - Slot that allows the rendering of a custom message when no answer is generated.
+ * @slot citation-action - Slot that allows the rendering of custom action content for each citation.
  * @example
  * <c-quantic-generated-answer engine-id={engineId} with-toggle collapsible>
  *  <div slot="no-answer-message">No answer was generated.</div>
+ *  <lightning-button slot="citation-action" label="View Document" onclick={handleViewDocument}></lightning-button>
  * </c-quantic-generated-answer>
  */
 export default class QuanticGeneratedAnswer extends LightningElement {
