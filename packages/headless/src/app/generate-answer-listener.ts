@@ -9,7 +9,7 @@ import type {StreamAnswerAPIState} from '../api/knowledge/stream-answer-api-stat
 import type {SearchThunkExtraArguments} from './search-thunk-extra-arguments.js';
 
 export const generateAnswerListener = createListenerMiddleware<
-  {generateAnswer:  any},
+  {generatedAnswer: any},
   ThunkDispatch<StreamAnswerAPIState, SearchThunkExtraArguments, UnknownAction>
 >();
 
@@ -17,9 +17,15 @@ generateAnswerListener.startListening({
   actionCreator: executeSearch.pending,
 
   effect: async (action, api) => {
+    // 1️⃣ Log when the listener is triggered
+    console.log(
+      'generateAnswerListener effect triggered by executeSearch.pending action.'
+    );
+
+
     const state = api.getState();
 
-    const searchArgs = action.payload;
+    console.log('action', action);
 
     const answerReducerPresent = 'generatedAnswer' in state;
 
@@ -32,8 +38,6 @@ generateAnswerListener.startListening({
       console.log('generatedAnswer reducer detected in state.');
     }
 
-    // 3️⃣ Dispatch the action
-    console.log('Dispatching generateAnswer action with args:', searchArgs);
     api.dispatch(generateAnswer());
   },
 });
