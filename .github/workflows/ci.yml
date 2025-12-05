@@ -323,8 +323,14 @@ jobs:
   chromatic:
     name: "Run Chromatic visual tests on Atomic"
     needs: affected
-    if: contains(needs.affected.outputs.projects, '@coveo/atomic') && github.event_name != 'merge_group' && contains(github.event.pull_request.labels.*.name, 'chromatic')
     runs-on: ubuntu-latest
+    env:
+      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+      # Should be fine without because of https://github.com/chromaui/chromatic-cli/blob/56920bf704895dcef6d1106df608d8e0d7886b58/action-src/main.ts#L24-L82
+      # # https://www.chromatic.com/docs/faq/environment-variables/#how-to-set-chromatic-environment-variables-in-popular-ci-providers
+      # CHROMATIC_SHA: ${{ github.event.pull_request.head.sha }}
+      # CHROMATIC_BRANCH: ${{ github.head_ref }}
+      # CHROMATIC_SLUG: ${{ github.repository }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -336,12 +342,11 @@ jobs:
           fetch-depth: 0
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo chromatic --filter=@coveo/atomic
-        env:
-          CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          # https://www.chromatic.com/docs/faq/environment-variables/#how-to-set-chromatic-environment-variables-in-popular-ci-providers
-          CHROMATIC_SHA: ${{ github.event.pull_request.head.sha }}
-          CHROMATIC_BRANCH: ${{ github.head_ref }}
-          CHROMATIC_SLUG: ${{ env.GITHUB_REPOSITORY }}
+        id: chromatic-run
+        if: contains(needs.affected.outputs.projects, '@coveo/atomic') && github.event_name != 'merge_group' && contains(github.event.pull_request.labels.*.name, 'chromatic')
+      - run: pnpm exec chromatic --skip
+        working-directory: packages/atomic
+        if: steps.chromatic-run.outcome == 'skipped'
   playwright-atomic:
     name: "Run Playwright tests for Atomic"
     needs: prepare-playwright-atomic
@@ -785,6 +790,7 @@ jobs:
       - "lint-check"
       - "knip"
       - "unit-test"
+      - "chromatic"
       - "storybook-atomic"
       - "playwright-atomic"
       - "playwright-atomic-theming"
