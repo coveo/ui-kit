@@ -129,7 +129,7 @@
     .result-root {
       &.with-sections {
         @apply atomic-template-system-base-sections;
-
+        background-color: pink;
         /* Desktop layouts */
         &.display-list {
           @media (width >= theme(--breakpoint-desktop)) {
