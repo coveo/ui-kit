@@ -21,14 +21,11 @@ describe('atomic-tab-button', () => {
       ></atomic-tab-button>`
     );
 
-    const getContainer = () =>
-      element.shadowRoot?.querySelector('[role="listitem"]') as HTMLElement;
     const getButton = () =>
       element.shadowRoot?.querySelector('button') as HTMLButtonElement;
 
     return {
       element,
-      container: getContainer(),
       button: getButton(),
       locators: {
         button: page.getByRole('button'),
@@ -46,20 +43,15 @@ describe('atomic-tab-button', () => {
     await expect.element(locators.button).toHaveTextContent('Products');
   });
 
-  it('should render with listitem role on container', async () => {
-    const {container} = await renderTabButton();
-    expect(container).toHaveAttribute('role', 'listitem');
+  it('should render with listitem role on host element', async () => {
+    const {element} = await renderTabButton();
+    expect(element).toHaveAttribute('role', 'listitem');
   });
 
   describe('when active is false', () => {
     it('should set aria-current to false', async () => {
-      const {container} = await renderTabButton({active: false});
-      expect(container).toHaveAttribute('aria-current', 'false');
-    });
-
-    it('should have button-container part', async () => {
-      const {container} = await renderTabButton({active: false});
-      expect(container).toHaveAttribute('part', 'button-container');
+      const {element} = await renderTabButton({active: false});
+      expect(element).toHaveAttribute('aria-current', 'false');
     });
 
     it('should have tab-button part on button', async () => {
@@ -67,10 +59,10 @@ describe('atomic-tab-button', () => {
       expect(button).toHaveAttribute('part', 'tab-button');
     });
 
-    it('should not have active indicator classes', async () => {
-      const {container} = await renderTabButton({active: false});
-      expect(container.className).not.toContain('after:block');
-      expect(container.className).not.toContain('after:bg-primary');
+    it('should not have active indicator classes on host', async () => {
+      const {element} = await renderTabButton({active: false});
+      expect(element.className).not.toContain('after:block');
+      expect(element.className).not.toContain('after:bg-primary');
     });
 
     it('should have text-neutral-dark class on button', async () => {
@@ -81,13 +73,8 @@ describe('atomic-tab-button', () => {
 
   describe('when active is true', () => {
     it('should set aria-current to true', async () => {
-      const {container} = await renderTabButton({active: true});
-      expect(container).toHaveAttribute('aria-current', 'true');
-    });
-
-    it('should have button-container-active part', async () => {
-      const {container} = await renderTabButton({active: true});
-      expect(container).toHaveAttribute('part', 'button-container-active');
+      const {element} = await renderTabButton({active: true});
+      expect(element).toHaveAttribute('aria-current', 'true');
     });
 
     it('should have tab-button-active part on button', async () => {
@@ -95,11 +82,11 @@ describe('atomic-tab-button', () => {
       expect(button).toHaveAttribute('part', 'tab-button-active');
     });
 
-    it('should have active indicator classes', async () => {
-      const {container} = await renderTabButton({active: true});
-      expect(container.className).toContain('after:block');
-      expect(container.className).toContain('after:bg-primary');
-      expect(container.className).toContain('relative');
+    it('should have active indicator classes on host', async () => {
+      const {element} = await renderTabButton({active: true});
+      expect(element.className).toContain('after:block');
+      expect(element.className).toContain('after:bg-primary');
+      expect(element.className).toContain('relative');
     });
 
     it('should not have text-neutral-dark class on button', async () => {

@@ -1,10 +1,9 @@
-import {html, LitElement} from 'lit';
+import {html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {renderButton} from '@/src/components/common/button';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {multiClassMap, tw} from '@/src/directives/multi-class-map';
 
 /**
  * The `atomic-tab-button` component renders a tab button for use in tab interfaces.
@@ -34,19 +33,32 @@ export class AtomicTabButton extends LitElement implements LitElementWithError {
    */
   @property({attribute: false}) select!: () => void;
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.setAttribute('role', 'listitem');
+    this.updateHostClasses();
+  }
+
+  updated(changedProperties: PropertyValues<this>) {
+    if (changedProperties.has('active')) {
+      this.setAttribute('aria-current', this.active ? 'true' : 'false');
+      this.updateHostClasses();
+    }
+  }
+
+  private updateHostClasses() {
+    this.classList.toggle('relative', this.active);
+    this.classList.toggle('after:block', this.active);
+    this.classList.toggle('after:w-full', this.active);
+    this.classList.toggle('after:h-1', this.active);
+    this.classList.toggle('after:absolute', this.active);
+    this.classList.toggle('after:-bottom-0.5', this.active);
+    this.classList.toggle('after:bg-primary', this.active);
+    this.classList.toggle('after:rounded', this.active);
+  }
+
   @errorGuard()
   render() {
-    const containerClasses = tw({
-      relative: this.active,
-      'after:block': this.active,
-      'after:w-full': this.active,
-      'after:h-1': this.active,
-      'after:absolute': this.active,
-      'after:-bottom-0.5': this.active,
-      'after:bg-primary': this.active,
-      'after:rounded': this.active,
-    });
-
     const buttonClasses = [
       'w-full',
       'truncate',
@@ -61,21 +73,14 @@ export class AtomicTabButton extends LitElement implements LitElementWithError {
       .join(' ');
 
     return html`
-      <div
-        role="listitem"
-        class=${multiClassMap(containerClasses)}
-        aria-current=${this.active ? 'true' : 'false'}
-        part=${this.active ? 'button-container-active' : 'button-container'}
-      >
-        ${renderButton({
-          props: {
-            style: 'text-transparent',
-            class: buttonClasses,
-            part: this.active ? 'tab-button-active' : 'tab-button',
-            onClick: this.select,
-          },
-        })(html`${this.label}`)}
-      </div>
+      ${renderButton({
+        props: {
+          style: 'text-transparent',
+          class: buttonClasses,
+          part: this.active ? 'tab-button-active' : 'tab-button',
+          onClick: this.select,
+        },
+      })(html`${this.label}`)}
     `;
   }
 }
