@@ -1,7 +1,10 @@
 import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import {parameters} from '../../storybook-utils/common/common-meta-parameters.js';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock.js';
+import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
+
+const mockCommerceApi = new MockCommerceApi();
 
 async function initializeCommerceInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-commerce-interface');
@@ -18,6 +21,9 @@ const meta: Meta = {
   parameters: {
     ...parameters,
     layout: 'fullscreen',
+    msw: {
+      handlers: [...mockCommerceApi.handlers],
+    },
   },
   render: () => html`
     <atomic-commerce-interface type="search" language-assets-path="./lang" icon-assets-path="./assets">
