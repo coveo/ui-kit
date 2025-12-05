@@ -17,6 +17,12 @@ import {LightningElement, api, track} from 'lwc';
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 
 /**
+ * @typedef {Object} ResultWithFolding
+ * @property {Result} parentResult
+ * @property {Result[]} childResults
+ */
+
+/**
  * The `QuanticResultQuickview` component renders a button which the end user can click to open a modal box containing certain information about a result.
  * @category Result Template
  * @fires CustomEvent#quantic__haspreview
@@ -33,7 +39,7 @@ export default class QuanticResultQuickview extends LightningElement {
   /**
    * The result to retrieve a quickview for.
    * @api
-   * @type {Result & {parentResult: Result, childResults: Result[]}}
+   * @type {ResultWithFolding}
    */
   @api result;
   /**
