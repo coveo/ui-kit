@@ -343,7 +343,7 @@ jobs:
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo chromatic --filter=@coveo/atomic
         id: chromatic-run
-        if: contains(needs.affected.outputs.projects, '@coveo/atomic') && github.event_name != 'merge_group' && contains(github.event.pull_request.labels.*.name, 'chromatic')
+        if: contains(needs.affected.outputs.projects, '@coveo/atomic') && github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'chromatic')
       - run: pnpm exec chromatic --skip
         working-directory: packages/atomic
         if: steps.chromatic-run.outcome == 'skipped'
