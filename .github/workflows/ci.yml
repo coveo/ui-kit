@@ -468,7 +468,8 @@ jobs:
       - uses: ./.github/actions/cypress-atomic-screenshots
   storybook-atomic:
     name: "Run Storybook tests"
-    needs: build
+    needs: affected
+    if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.56.1-noble

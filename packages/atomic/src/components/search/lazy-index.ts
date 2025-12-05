@@ -4,6 +4,8 @@ export default {
     await import('./atomic-automatic-facet/atomic-automatic-facet.js'),
   'atomic-breadbox': async () =>
     await import('./atomic-breadbox/atomic-breadbox.js'),
+  'atomic-color-facet': async () =>
+    await import('./atomic-color-facet/atomic-color-facet.js'),
   'atomic-external': async () =>
     await import('./atomic-external/atomic-external.js'),
   'atomic-facet': async () => await import('./atomic-facet/atomic-facet.js'),
@@ -15,15 +17,21 @@ export default {
   'atomic-no-results': async () =>
     await import('./atomic-no-results/atomic-no-results.js'),
   'atomic-pager': async () => await import('./atomic-pager/atomic-pager.js'),
+  'atomic-popover': async () =>
+    await import('./atomic-popover/atomic-popover.js'),
   'atomic-query-error': async () =>
     await import('./atomic-query-error/atomic-query-error.js'),
   'atomic-query-summary': async () =>
     await import('./atomic-query-summary/atomic-query-summary.js'),
+  'atomic-rating-range-facet': async () =>
+    await import('./atomic-rating-range-facet/atomic-rating-range-facet.js'),
   'atomic-relevance-inspector': async () =>
     await import('./atomic-relevance-inspector/atomic-relevance-inspector.js'),
   'atomic-result': async () => await import('./atomic-result/atomic-result.js'),
   'atomic-result-badge': async () =>
     await import('./atomic-result-badge/atomic-result-badge.js'),
+  'atomic-result-children': async () =>
+    await import('./atomic-result-children/atomic-result-children.js'),
   'atomic-result-children-template': async () =>
     await import(
       './atomic-result-children-template/atomic-result-children-template.js'
@@ -32,8 +40,12 @@ export default {
     await import('./atomic-result-date/atomic-result-date.js'),
   'atomic-result-html': async () =>
     await import('./atomic-result-html/atomic-result-html.js'),
+  'atomic-result-icon': async () =>
+    await import('./atomic-result-icon/atomic-result-icon.js'),
   'atomic-result-image': async () =>
     await import('./atomic-result-image/atomic-result-image.js'),
+  'atomic-result-link': async () =>
+    await import('./atomic-result-link/atomic-result-link.js'),
   'atomic-result-list': async () =>
     await import('./atomic-result-list/atomic-result-list.js'),
   'atomic-result-localized-text': async () =>
@@ -46,6 +58,8 @@ export default {
     ),
   'atomic-result-number': async () =>
     await import('./atomic-result-number/atomic-result-number.js'),
+  'atomic-result-rating': async () =>
+    await import('./atomic-result-rating/atomic-result-rating.js'),
   'atomic-result-section-actions': async () =>
     await import(
       './atomic-result-section-actions/atomic-result-section-actions.js'
@@ -115,6 +129,8 @@ export default {
   'atomic-sort-expression': async () =>
     await import('./atomic-sort-expression/atomic-sort-expression.js'),
   'atomic-tab': async () => await import('./atomic-tab/atomic-tab.js'),
+  'atomic-tab-manager': async () =>
+    await import('./atomic-tab-manager/atomic-tab-manager.js'),
   'atomic-text': async () => await import('./atomic-text/atomic-text.js'),
 } as Record<string, () => Promise<unknown>>;
 
