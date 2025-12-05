@@ -3,7 +3,6 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const searchApiHarness = new MockSearchApi();
@@ -54,11 +53,15 @@ export const Default: Story = {
     label: 'Object Type',
   },
   decorators: [
-    facetDecorator,
     (story) => html`
-      <div style="display: flex; justify-content: center;">
-        ${story()}
-      </div>
+      <style>
+        atomic-segmented-facet {
+          width: 800px;
+          margin: auto;
+          display: block;
+        }
+      </style>
+      ${story()}
     `,
   ],
 };
