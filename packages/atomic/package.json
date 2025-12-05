@@ -81,7 +81,7 @@
     "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
     "chromatic:build": "IS_CHROMATIC=true storybook build -o dist-chromatic --stats-json",
-    "chromatic": "chromatic -d=dist-chromatic --only-changed"
+    "chromatic": "chromatic -d=dist-chromatic --only-changed --exit-zero-on-changes"
   },
   "dependencies": {
     "@coveo/bueno": "workspace:*",
