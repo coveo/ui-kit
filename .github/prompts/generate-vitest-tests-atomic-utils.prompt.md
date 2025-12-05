@@ -75,7 +75,7 @@ import {
 } from 'vitest';
 
 // Preferred mocking style - use {spy: true} when possible
-vi.mock('@/src/utils/utils', {spy: true});
+vi.mock('@/src/utils/function-utils', {spy: true});
 vi.mock('@coveo/headless/commerce');
 
 // Mock external dependencies only when necessary

@@ -12,7 +12,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint-utils';
-import {once} from '../../../utils/utils';
+import {once} from '../../../utils/function-utils';
 import {randomID} from '../../../utils/random-utils';
 import {AnyBindings} from '../../common/interface/bindings';
 

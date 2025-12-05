@@ -1,7 +1,7 @@
 import {describe, expect, it, vi} from 'vitest';
-import {once} from './utils';
+import {once} from './function-utils';
 
-describe('utils', () => {
+describe('function-utils', () => {
   describe('#once', () => {
     it('should call the function only once', () => {
       const myFunction = vi.fn();
@@ -52,5 +52,5 @@ describe('utils', () => {
     });
   });
 
-  // TODO - KIT-4326:  add tests for all other functions exported from utils.ts.
+  // TODO - KIT-4326:  add tests for all other functions exported from function-utils.ts.
 });

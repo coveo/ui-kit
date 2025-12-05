@@ -11,9 +11,9 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map.js';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {listenOnce} from '@/src/utils/event-utils.js';
+import {once} from '@/src/utils/function-utils.js';
 import {randomID} from '@/src/utils/random-utils.js';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
-import {once} from '@/src/utils/utils.js';
 import type {AtomicFocusTrap} from '../atomic-focus-trap/atomic-focus-trap.js';
 import type {AnyBindings} from '../interface/bindings.js';
 

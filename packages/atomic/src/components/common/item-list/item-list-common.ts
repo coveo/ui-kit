@@ -6,8 +6,8 @@ import {
   type FocusTargetController,
   getFirstFocusableDescendant,
 } from '@/src/utils/accessibility-utils';
+import {once} from '@/src/utils/function-utils';
 import {defer} from '@/src/utils/promise-utils';
-import {once} from '@/src/utils/utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint-utils';
 import type {CommerceStore} from '../../commerce/atomic-commerce-interface/store';
 import type {CommerceRecommendationStore} from '../../commerce/atomic-commerce-recommendation-interface/store';
