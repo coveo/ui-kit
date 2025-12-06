@@ -25,7 +25,7 @@ import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {randomID} from '@/src/utils/utils.js';
+import {randomID} from '@/src/utils/random-utils.js';
 
 /**
  * The `atomic-commerce-products-per-page` component lets the end user select how many products to display per page.

@@ -33,12 +33,10 @@ import {
 } from '../../../utils/local-storage-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
-import {
-  isFocusingOut,
-  once,
-  randomID,
-  spreadProperties,
-} from '../../../utils/utils';
+import {isFocusingOut} from '../../../utils/dom-utils';
+import {spreadProperties} from '../../../utils/object-utils';
+import {once} from '../../../utils/function-utils';
+import {randomID} from '../../../utils/random-utils';
 import {RedirectionPayload} from '../../common/search-box/redirection-payload';
 import {SearchBoxWrapper} from '../../common/search-box/stencil-search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/stencil-search-text-area';

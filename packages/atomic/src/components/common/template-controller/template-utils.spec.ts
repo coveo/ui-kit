@@ -15,7 +15,7 @@ import {
 
 vi.mock('@/src/components/common/layout/sections', {spy: true});
 vi.mock('@/src/components/common/layout/item-layout-sections', {spy: true});
-vi.mock('@/src/utils/utils', {spy: true});
+vi.mock('@/src/utils/function-utils', {spy: true});
 
 describe('template-utils', () => {
   describe('makeMatchConditions', () => {

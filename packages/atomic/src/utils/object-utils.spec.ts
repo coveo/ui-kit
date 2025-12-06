@@ -1,5 +1,10 @@
 import {describe, expect, it} from 'vitest';
-import {readFromObject} from './object-utils';
+import {
+  aggregate,
+  isPropValuesEqual,
+  readFromObject,
+  spreadProperties,
+} from './object-utils';
 
 describe('object-utils', () => {
   describe('#readFromObject', () => {
@@ -217,6 +222,74 @@ describe('object-utils', () => {
       obj.key = 'value';
 
       expect(readFromObject(obj, 'key')).toBe('value');
+    });
+  });
+
+  describe('#aggregate', () => {
+    it('should aggregate based on string keys', () => {
+      const aggregatedValues = aggregate(
+        [
+          {name: 'Apple', category: 'Fruit'},
+          {name: 'Cookie', category: 'Dessert'},
+          {name: 'Watermelon', category: 'Fruit'},
+          {name: 'Carrot', category: 'Vegetable'},
+        ] as const,
+        (value) => value.category
+      );
+
+      expect(aggregatedValues).toEqual({
+        Fruit: [
+          {name: 'Apple', category: 'Fruit'},
+          {name: 'Watermelon', category: 'Fruit'},
+        ],
+        Dessert: [{name: 'Cookie', category: 'Dessert'}],
+        Vegetable: [{name: 'Carrot', category: 'Vegetable'}],
+      });
+    });
+  });
+
+  describe('#isPropValuesEqual', () => {
+    it('returns true when the requested properties match', () => {
+      const a = {foo: 1, bar: 2};
+      const b = {foo: 1, bar: 3};
+
+      expect(isPropValuesEqual(a, b, ['foo'])).toBe(true);
+      expect(isPropValuesEqual(a, b, ['foo', 'bar'])).toBe(false);
+    });
+
+    it('works with partial keys and different objects', () => {
+      const source = {nested: {value: 'x'}, flag: true};
+      const target = {nested: {value: 'x'}, flag: true};
+
+      expect(isPropValuesEqual(source, target, ['flag'])).toBe(true);
+      expect(isPropValuesEqual(source, target, ['nested'])).toBe(false);
+    });
+  });
+
+  describe('#spreadProperties', () => {
+    it('preserves getters when spreading', () => {
+      const source = {
+        internal: 5,
+        get doubled() {
+          return this.internal * 2;
+        },
+      };
+
+      const result = spreadProperties({}, source);
+      const descriptor = Object.getOwnPropertyDescriptor(result, 'doubled');
+
+      expect(descriptor?.get).toBeDefined();
+      expect(result).toHaveProperty('doubled');
+      expect(result.doubled).toBe(10);
+    });
+
+    it('merges multiple sources', () => {
+      const first = {a: 1};
+      const second = {b: 2};
+
+      const merged = spreadProperties({}, first, second);
+
+      expect(merged).toEqual({a: 1, b: 2});
     });
   });
 });

@@ -51,7 +51,7 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
-import {randomID} from '@/src/utils/utils';
+import {randomID} from '@/src/utils/random-utils';
 
 /**
  * The `atomic-commerce-product-list` component is responsible for displaying products.

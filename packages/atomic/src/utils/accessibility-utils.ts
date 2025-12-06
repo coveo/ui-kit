@@ -2,7 +2,7 @@ import type {ReactiveController, ReactiveControllerHost} from 'lit';
 import type {AnyBindings} from '../components';
 import type {AtomicAriaLive} from '../components/common/atomic-aria-live/atomic-aria-live';
 import {buildCustomEvent} from './event-utils';
-import {defer} from './utils';
+import {defer} from './promise-utils';
 
 export interface FindAriaLiveEventArgs {
   element?: AtomicAriaLive;

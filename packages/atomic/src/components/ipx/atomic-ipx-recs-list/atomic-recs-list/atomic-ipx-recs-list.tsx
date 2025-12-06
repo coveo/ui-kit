@@ -27,7 +27,7 @@ import {
   BindStateToController,
 } from '../../../../utils/initialization-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
-import {randomID} from '../../../../utils/utils';
+import {randomID} from '../../../../utils/random-utils';
 import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/stencil-placeholders';
 import {createAppLoadedListener} from '../../../common/interface/store';
 import {ItemDisplayGuard} from '../../../common/item-list/stencil-item-display-guard';

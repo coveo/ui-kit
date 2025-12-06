@@ -29,8 +29,8 @@ import {createResultContextController} from '@/src/components/search/result-temp
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {elementHasAncestorTag} from '@/src/utils/dom-utils';
 import {buildCustomEvent} from '@/src/utils/event-utils';
-import {elementHasAncestorTag} from '@/src/utils/utils';
 import '@/src/components/search/atomic-result/atomic-result';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';

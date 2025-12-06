@@ -1,9 +1,9 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {hideEmptySection} from './item-section-utils';
 
-vi.mock('./utils', {spy: true});
+vi.mock('./dom-utils', {spy: true});
 
-import {containsVisualElement} from './utils';
+import {containsVisualElement} from './dom-utils';
 
 describe('item-section-utils', () => {
   let element: HTMLElement;

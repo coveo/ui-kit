@@ -8,8 +8,8 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
+import {once} from '@/src/utils/function-utils';
 import {SafeStorage, StorageItems} from '@/src/utils/local-storage-utils';
-import {once} from '@/src/utils/utils';
 import Clock from '../../../images/clock.svg';
 import {
   getPartialRecentQueryClearElement,

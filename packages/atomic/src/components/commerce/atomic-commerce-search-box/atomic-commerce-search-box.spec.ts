@@ -14,7 +14,7 @@ import {html, type TemplateResult} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, expect, it, vi} from 'vitest';
 import {userEvent} from 'vitest/browser';
-import {randomID} from '@/src/utils/utils';
+import {randomID} from '@/src/utils/random-utils';
 import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
 import {buildFakeLoadQuerySetActions} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-set-actions';
 import {buildFakeLoadQuerySuggestActions} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-suggest-actions';
@@ -26,7 +26,7 @@ import './atomic-commerce-search-box';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 vi.mock('@/src/utils/device-utils', {spy: true});
-vi.mock(import('@/src/utils/utils'), async (importOriginal) => {
+vi.mock(import('@/src/utils/random-utils'), async (importOriginal) => {
   const mod = await importOriginal();
   return {
     ...mod,

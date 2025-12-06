@@ -3,7 +3,7 @@ import { AtomicAriaLive } from '../components/common/atomic-aria-live/atomic-ari
 import {AnyBindings} from '../components/common/interface/bindings';
 import {buildCustomEvent} from './event-utils';
 import {InitializableComponent} from './initialization-utils';
-import {defer} from './utils';
+import {defer} from './promise-utils';
 
 const findAriaLiveEventName = 'atomic/accessibility/findAriaLive';
 

@@ -5,7 +5,7 @@ import {
   SmartSnippetFooter,
   SmartSnippetQuestion,
 } from '@/src/components/common/smart-snippets/atomic-smart-snippet/stencil-smart-snippet-common';
-import {randomID} from '@/src/utils/utils';
+import {randomID} from '@/src/utils/random-utils';
 import {
   buildSmartSnippet,
   buildTabManager,

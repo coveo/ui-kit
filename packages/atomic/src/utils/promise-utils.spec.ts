@@ -1,5 +1,5 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {promiseTimeout} from './promise-utils';
+import {defer, promiseTimeout} from './promise-utils';
 
 describe('promise-utils', () => {
   beforeEach(() => {
@@ -190,6 +190,32 @@ describe('promise-utils', () => {
       await expect(
         promiseTimeout(undefinedPromise, 1000)
       ).resolves.toBeUndefined();
+    });
+  });
+
+  describe('#defer', () => {
+    it('should resolve after the default delay', async () => {
+      const deferred = defer();
+      const thenSpy = vi.fn();
+      deferred.then(thenSpy);
+
+      vi.advanceTimersByTime(9);
+      expect(thenSpy).not.toHaveBeenCalled();
+
+      vi.advanceTimersByTime(1);
+      await expect(deferred).resolves.toBeUndefined();
+    });
+
+    it('should respect a custom delay', async () => {
+      const deferred = defer(50);
+      const thenSpy = vi.fn();
+      deferred.then(thenSpy);
+
+      vi.advanceTimersByTime(25);
+      expect(thenSpy).not.toHaveBeenCalled();
+
+      vi.advanceTimersByTime(25);
+      await expect(deferred).resolves.toBeUndefined();
     });
   });
 });

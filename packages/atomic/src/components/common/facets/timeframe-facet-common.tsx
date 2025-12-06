@@ -15,7 +15,7 @@ import {
 import {h, VNode} from '@stencil/core';
 import {parseDate} from '../../../utils/date-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
-import {randomID} from '../../../utils/utils';
+import {randomID} from '../../../utils/random-utils';
 import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
 import {Bindings as SearchBindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {Hidden} from '../stencil-hidden';

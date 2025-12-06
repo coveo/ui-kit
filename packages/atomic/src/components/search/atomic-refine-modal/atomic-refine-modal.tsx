@@ -24,7 +24,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {shouldDisplayOnCurrentTab} from '../../../utils/tab-utils';
-import {sortByDocumentPosition} from '../../../utils/utils';
+import {sortByDocumentPosition} from '../../../utils/dom-utils';
 import {findSection} from '../../common/atomic-layout-section/atomic-layout-section-utils';
 import {popoverClass} from '../../common/facets/popover/popover-type';
 import {

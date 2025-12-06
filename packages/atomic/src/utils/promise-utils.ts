@@ -13,3 +13,7 @@ export function promiseTimeout<T>(
     return value;
   }) as Promise<T>;
 }
+
+export async function defer(delay = 10) {
+  return new Promise<void>((resolve) => setTimeout(resolve, delay));
+}

@@ -1,13 +1,13 @@
 import {LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {randomID} from '@/src/utils/utils';
+import {randomID} from '@/src/utils/random-utils';
 import {
   LayoutStylesController,
   type LayoutStylesHost,
 } from './layout-styles-controller';
 
-vi.mock('@/src/utils/utils', {spy: true});
+vi.mock('@/src/utils/random-utils', {spy: true});
 
 @customElement('test-layout-element')
 class TestLayoutElement extends LitElement implements LayoutStylesHost {

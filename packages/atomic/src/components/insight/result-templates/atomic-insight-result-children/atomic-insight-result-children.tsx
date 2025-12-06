@@ -10,7 +10,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {elementHasAncestorTag} from '../../../../utils/utils';
+import {elementHasAncestorTag} from '../../../../utils/dom-utils';
 import {extractUnfoldedItem} from '../../../common/item-list/unfolded-item';
 import {
   FoldedItemListContext,

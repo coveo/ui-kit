@@ -5,11 +5,11 @@ import {watch} from '@/src/decorators/watch';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {getFirstFocusableDescendant} from '@/src/utils/accessibility-utils';
 import {
-  defer,
   getFocusedElement,
   getParent,
   isAncestorOf,
-} from '@/src/utils/utils';
+} from '@/src/utils/dom-utils';
+import {defer} from '@/src/utils/promise-utils';
 
 /**
  * The `atomic-focus-trap` component manages focus within a modal or dialog,

@@ -18,7 +18,7 @@ import {bindStateToController} from '../../../decorators/bind-state';
 import {bindingGuard} from '../../../decorators/binding-guard';
 import {errorGuard} from '../../../decorators/error-guard';
 import type {InitializableComponent} from '../../../decorators/types';
-import {randomID} from '../../../utils/utils';
+import {randomID} from '../../../utils/random-utils';
 import {renderSortLabel} from '../../common/sort/label';
 import {renderSortSelect} from '../../common/sort/select';
 import {sortGuard} from '../../common/sort/sort-guard';

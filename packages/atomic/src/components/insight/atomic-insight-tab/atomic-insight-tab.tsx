@@ -10,7 +10,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {randomID} from '../../../utils/utils';
+import {randomID} from '../../../utils/random-utils';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {Button} from '../../common/stencil-button';
 import {dispatchTabLoaded, TabCommon} from '../../common/tabs/tab-common';

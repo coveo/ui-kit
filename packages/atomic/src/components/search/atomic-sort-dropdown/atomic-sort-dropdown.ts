@@ -26,8 +26,8 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {randomID} from '@/src/utils/random-utils';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
-import {randomID} from '@/src/utils/utils';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**

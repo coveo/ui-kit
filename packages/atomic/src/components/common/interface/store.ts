@@ -1,5 +1,5 @@
 import type {DateFacetValue, NumericFacetValue} from '@coveo/headless';
-import {isInDocument} from '../../../utils/utils';
+import {isInDocument} from '../../../utils/dom-utils';
 import type {
   FacetInfo,
   FacetStore,

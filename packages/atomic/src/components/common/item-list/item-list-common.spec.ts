@@ -4,14 +4,14 @@ import {
   type FocusTargetController,
   getFirstFocusableDescendant,
 } from '@/src/utils/accessibility-utils';
+import {defer} from '@/src/utils/promise-utils';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
-import {defer} from '@/src/utils/utils';
 import {ItemListCommon, type ItemListCommonProps} from './item-list-common';
 
 vi.mock('@/src/utils/accessibility-utils', {spy: true});
 vi.mock('@/src/utils/replace-breakpoint-utils', {spy: true});
-vi.mock('@/src/utils/utils', async () => {
-  const actual = await vi.importActual('@/src/utils/utils');
+vi.mock('@/src/utils/promise-utils', async () => {
+  const actual = await vi.importActual('@/src/utils/promise-utils');
   return {
     ...actual,
     defer: vi.fn(async () => {

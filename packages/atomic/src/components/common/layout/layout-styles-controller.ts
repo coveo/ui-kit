@@ -1,5 +1,5 @@
 import type {ReactiveController, ReactiveControllerHost} from 'lit';
-import {randomID} from '@/src/utils/utils';
+import {randomID} from '@/src/utils/random-utils';
 
 export interface LayoutStylesHost extends ReactiveControllerHost {
   mobileBreakpoint: string;
