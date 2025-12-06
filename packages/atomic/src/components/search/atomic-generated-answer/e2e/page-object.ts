@@ -19,8 +19,16 @@ export class GeneratedAnswerPageObject extends BasePageObject<'atomic-generated-
     return this.page.locator('atomic-citation [part="citation"]');
   }
 
+  get citationPopover() {
+    return this.page.locator('atomic-citation [part="citation-popover"]');
+  }
+
   async waitForCitations() {
     await this.citation.first().waitFor();
+  }
+
+  async hoverCitation(index: number = 0) {
+    await this.citation.nth(index).hover();
   }
 
   async getCitationCount(): Promise<number> {

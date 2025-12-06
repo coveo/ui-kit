@@ -419,7 +419,8 @@ describe('Generated Answer Test Suites', () => {
 
           it('should send analytics when the hover ends', () => {
             GeneratedAnswerSelectors.citation().trigger('mouseleave');
-
+            // Wait for the debounce timeout (100ms) to complete
+            cy.wait(150);
             GeneratedAnswerAssertions.assertLogGeneratedAnswerSourceHover();
           });
         });
