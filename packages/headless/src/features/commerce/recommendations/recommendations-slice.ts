@@ -5,6 +5,7 @@ import type {
   ChildProduct,
   Product,
 } from '../../../api/commerce/common/product.js';
+import {ResultType} from '../../../api/commerce/common/result.js';
 import type {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response.js';
 import {setError} from '../../error/error-actions.js';
 import {
@@ -125,6 +126,7 @@ export const recommendationsReducer = createReducer(
 
         const newParent: Product = {
           ...(childToPromote as ChildProduct),
+          resultType: ResultType.PRODUCT,
           children,
           totalNumberOfChildren,
           position,

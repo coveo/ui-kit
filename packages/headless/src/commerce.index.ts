@@ -239,6 +239,7 @@ export type {
 export {buildInstantProducts} from './controllers/commerce/instant-products/headless-instant-products.js';
 export type {
   ProductListing,
+  ProductListingOptions,
   ProductListingState,
 } from './controllers/commerce/product-listing/headless-product-listing.js';
 export {buildProductListing} from './controllers/commerce/product-listing/headless-product-listing.js';
