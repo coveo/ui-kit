@@ -41,6 +41,7 @@ describe('generateAnswerListener', () => {
                   answerConfigurationId: 'some-id',
                 }
               ) => state,
+              answer: () => ({}),
               query: (state = {q: ''}) => state,
             },
             middleware: (getDefaultMiddleware) =>
@@ -94,6 +95,7 @@ describe('generateAnswerListener', () => {
                   answerConfigurationId: 'some-id',
                 }
               ) => state,
+              answer: () => ({}),
               query: (state = {q: 'test'}) => state,
             },
             middleware: (getDefaultMiddleware) =>

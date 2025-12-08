@@ -8,6 +8,7 @@ import {
   generateAnswer,
   resetAnswer,
 } from '../features/generated-answer/generated-answer-actions.js';
+import {isGeneratedAnswerFeatureEnabledWithAnswerAPI} from '../features/generated-answer/generated-answer-selectors.js';
 import {selectQuery} from '../features/query/query-selectors.js';
 import {executeSearch} from '../features/search/search-actions.js';
 import type {SearchThunkExtraArguments} from './search-thunk-extra-arguments.js';
@@ -28,10 +29,10 @@ generateAnswerListener.startListening({
 
     const q = selectQuery(state)?.q;
     const queryIsEmpty = !q || q.trim() === '';
-    const answerReducerPresent = 'generatedAnswer' in state;
-    const isUsingAnswerApi = state.generatedAnswer.answerConfigurationId;
+    const isGeneratedAnswerFeatureEnabled =
+      isGeneratedAnswerFeatureEnabledWithAnswerAPI(state);
 
-    if (!answerReducerPresent || !isUsingAnswerApi || queryIsEmpty) {
+    if (!isGeneratedAnswerFeatureEnabled || queryIsEmpty) {
       return;
     }
 
