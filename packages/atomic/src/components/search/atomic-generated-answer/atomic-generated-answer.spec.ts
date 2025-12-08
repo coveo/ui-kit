@@ -69,10 +69,10 @@ describe('atomic-generated-answer', () => {
     const {element} =
       await renderInAtomicSearchInterface<AtomicGeneratedAnswer>({
         template: html`<atomic-generated-answer
-        .withToggle=${props.withToggle ?? false}
-        .collapsible=${props.collapsible ?? false}
-        .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
-      ></atomic-generated-answer>`,
+          .withToggle=${props.withToggle ?? false}
+          .collapsible=${props.collapsible ?? false}
+          .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
+        ></atomic-generated-answer>`,
         selector: 'atomic-generated-answer',
         bindings: (bindings) => {
           bindings.engine = mockedEngine;
@@ -82,27 +82,37 @@ describe('atomic-generated-answer', () => {
 
     return {
       element,
-      parts: (el: AtomicGeneratedAnswer) => ({
-        container: el.shadowRoot?.querySelector('[part="container"]'),
-        headerLabel: el.shadowRoot?.querySelector('[part="header-label"]'),
-        toggle: el.shadowRoot?.querySelector('[part="toggle"]'),
-        generatedContainer: el.shadowRoot?.querySelector(
+      get container() {
+        return element.shadowRoot?.querySelector('[part="container"]');
+      },
+      get headerLabel() {
+        return element.shadowRoot?.querySelector('[part="header-label"]');
+      },
+      get toggle() {
+        return element.shadowRoot?.querySelector('[part="toggle"]');
+      },
+      get generatedContainer() {
+        return element.shadowRoot?.querySelector(
           '[part="generated-container"]'
-        ),
-        generatedContent: el.shadowRoot?.querySelector(
-          '[part="generated-content"]'
-        ),
-        feedbackButtons: el.shadowRoot?.querySelectorAll(
-          '[part="feedback-button"]'
-        ),
-        copyButton: el.shadowRoot?.querySelector('[part="copy-button"]'),
-        citationsLabel: el.shadowRoot?.querySelector(
-          '[part="citations-label"]'
-        ),
-        generatedAnswerFooter: el.shadowRoot?.querySelector(
+        );
+      },
+      get generatedContent() {
+        return element.shadowRoot?.querySelector('[part="generated-content"]');
+      },
+      get feedbackButtons() {
+        return element.shadowRoot?.querySelectorAll('[part="feedback-button"]');
+      },
+      get copyButton() {
+        return element.shadowRoot?.querySelector('[part="copy-button"]');
+      },
+      get citationsLabel() {
+        return element.shadowRoot?.querySelector('[part="citations-label"]');
+      },
+      get generatedAnswerFooter() {
+        return element.shadowRoot?.querySelector(
           '[part="generated-answer-footer"]'
-        ),
-      }),
+        );
+      },
     };
   };
 
@@ -112,13 +122,13 @@ describe('atomic-generated-answer', () => {
 
   describe('when answer is available', () => {
     it('should render the container', async () => {
-      const {parts, element} = await renderGeneratedAnswer();
-      expect(parts(element).container).toBeTruthy();
+      const {container} = await renderGeneratedAnswer();
+      expect(container).toBeTruthy();
     });
 
     it('should render the header label', async () => {
-      const {parts, element} = await renderGeneratedAnswer();
-      expect(parts(element).headerLabel).toBeTruthy();
+      const {headerLabel} = await renderGeneratedAnswer();
+      expect(headerLabel).toBeTruthy();
     });
 
     it('should call buildGeneratedAnswer with the engine', async () => {
@@ -142,19 +152,18 @@ describe('atomic-generated-answer', () => {
 
   describe('when no answer is generated', () => {
     it('should not render the container when answer is undefined', async () => {
-      const {parts, element} = await renderGeneratedAnswer({
+      const {container} = await renderGeneratedAnswer({
         generatedAnswerState: {answer: undefined, citations: []},
       });
-      expect(parts(element).container).toBeFalsy();
+      expect(container).toBeFalsy();
     });
   });
 
   describe('when withToggle is true', () => {
     it('should render the toggle button', async () => {
-      const {parts, element} = await renderGeneratedAnswer({
+      const {toggle} = await renderGeneratedAnswer({
         props: {withToggle: true},
       });
-      const toggle = parts(element).toggle;
       expect(toggle).toBeTruthy();
       expect(toggle?.classList.contains('hidden')).toBe(false);
     });
@@ -162,40 +171,39 @@ describe('atomic-generated-answer', () => {
 
   describe('when withToggle is false', () => {
     it('should hide the toggle button', async () => {
-      const {parts, element} = await renderGeneratedAnswer({
+      const {toggle} = await renderGeneratedAnswer({
         props: {withToggle: false},
       });
-      const toggle = parts(element).toggle;
       expect(toggle?.classList.contains('hidden')).toBe(true);
     });
   });
 
   describe('when answer is visible', () => {
     it('should render the generated content', async () => {
-      const {parts, element} = await renderGeneratedAnswer({
+      const {generatedContainer} = await renderGeneratedAnswer({
         generatedAnswerState: {isVisible: true, answer: 'Test answer'},
       });
-      expect(parts(element).generatedContainer).toBeTruthy();
+      expect(generatedContainer).toBeTruthy();
     });
 
     it('should render the feedback buttons when not streaming', async () => {
-      const {parts, element} = await renderGeneratedAnswer({
+      const {feedbackButtons} = await renderGeneratedAnswer({
         generatedAnswerState: {
           isVisible: true,
           isStreaming: false,
           answer: 'Test',
         },
       });
-      expect(parts(element).feedbackButtons?.length).toBeGreaterThan(0);
+      expect(feedbackButtons?.length).toBeGreaterThan(0);
     });
   });
 
   describe('when answer is hidden', () => {
     it('should not render the generated container', async () => {
-      const {parts, element} = await renderGeneratedAnswer({
+      const {generatedContainer} = await renderGeneratedAnswer({
         generatedAnswerState: {isVisible: false, answer: 'Test answer'},
       });
-      expect(parts(element).generatedContainer).toBeFalsy();
+      expect(generatedContainer).toBeFalsy();
     });
   });
 
@@ -230,12 +238,13 @@ describe('atomic-generated-answer', () => {
 
   describe('when citations are available', () => {
     it('should render citations label', async () => {
-      const {parts, element} = await renderGeneratedAnswer({
+      const {citationsLabel} = await renderGeneratedAnswer({
         generatedAnswerState: {
           isVisible: true,
           answer: 'Test answer',
           citations: [
             {
+              source: 'Source 1',
               id: 'citation-1',
               title: 'Citation 1',
               uri: 'https://example.com',
@@ -246,7 +255,7 @@ describe('atomic-generated-answer', () => {
           ],
         },
       });
-      expect(parts(element).citationsLabel).toBeTruthy();
+      expect(citationsLabel).toBeTruthy();
     });
   });
 
@@ -280,7 +289,6 @@ describe('atomic-generated-answer', () => {
       element.maxCollapsedHeight = 50;
       await element.updateComplete;
 
-      // Trigger the validation by accessing the method that validates
       const container = element.shadowRoot?.querySelector(
         '[part="generated-container"]'
       );

@@ -222,7 +222,8 @@ export class AtomicGeneratedAnswer
     new ValidatePropsController(
       this,
       () => ({maxCollapsedHeight: this.maxCollapsedHeight}),
-      AtomicGeneratedAnswer.propsSchema
+      AtomicGeneratedAnswer.propsSchema,
+      false
     );
   }
 
