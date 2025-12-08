@@ -4,6 +4,7 @@ import type {
   ChildProduct,
   Product,
 } from '../../../api/commerce/common/product.js';
+import {ResultType} from '../../../api/commerce/common/result.js';
 import {
   clearExpiredItems,
   fetchItemsFulfilled,
@@ -91,6 +92,7 @@ export const instantProductsReducer = createReducer(
 
         const newParent: Product = {
           ...(childToPromote as ChildProduct),
+          resultType: ResultType.PRODUCT,
           children,
           totalNumberOfChildren,
           position,

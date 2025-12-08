@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.77",
+  "version": "3.0.79",
   "scripts": {
     "postinstall": "husky install",
     "reset:install": "git checkout origin/main pnpm-lock.yaml && pnpm install",
@@ -81,5 +81,5 @@
     "node": "^22.14.0",
     "pnpm": ">=10.0.0"
   },
-  "packageManager": "pnpm@10.18.1"
+  "packageManager": "pnpm@10.24.0"
 }
