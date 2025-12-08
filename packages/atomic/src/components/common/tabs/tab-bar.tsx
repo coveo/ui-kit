@@ -32,9 +32,13 @@ export class TabBar {
 
   private get slotContentWidth() {
     return this.tabsFromSlot.reduce(
-      (total, el) =>
-        total +
-        parseFloat(window.getComputedStyle(el).getPropertyValue('width')),
+      (total, el) => {
+        const width = parseFloat(
+          window.getComputedStyle(el).getPropertyValue('width')
+        );
+        // If width is 0 or NaN, element hasn't rendered yet - return a large number to prevent premature overflow
+        return total + (width || 9999);
+      },
       0
     );
   }
@@ -170,6 +174,19 @@ export class TabBar {
   };
 
   private updateTabsDisplay = () => {
+    const tabsInfo = this.tabsFromSlot.map((tab) => ({
+      label: tab.label,
+      width: parseFloat(window.getComputedStyle(tab).getPropertyValue('width')),
+      active: tab.active,
+    }));
+    console.log('[atomic-tab-bar] updateTabsDisplay', {
+      tabsInfo,
+      slotContentWidth: this.slotContentWidth,
+      containerWidth: this.containerWidth,
+      isOverflow: this.isOverflow,
+      overflowingCount: this.overflowingTabs.length,
+      displayedCount: this.displayedTabs.length,
+    });
     this.updateTabVisibility(this.overflowingTabs, false);
     this.updateTabVisibility(this.displayedTabs, true);
     this.setTabButtonMaxWidth();
