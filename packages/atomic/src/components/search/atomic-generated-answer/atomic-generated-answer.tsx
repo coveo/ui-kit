@@ -307,15 +307,16 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   }
 
   // TODO V4 (KIT-5306): Remove support for string value. 
-  private getCitationFieldsInputArray() {
-    if( Array.isArray(this.fieldsToIncludeInCitations)) {
+  private getCitationFieldsInputArray(): string[] {
+    if (Array.isArray(this.fieldsToIncludeInCitations)) {
       return this.fieldsToIncludeInCitations;
-    } else {
+    } else if (typeof this.fieldsToIncludeInCitations === 'string') {
       this.bindings.engine.logger.warn(
         `Starting from Atomic v4, the "fields-to-include-in-citations" property will only accept an array of strings. Using a string value is now deprecated. Please update the value to be an array of strings. For example: fields-to-include-in-citations='["fieldA","fieldB"]'`
       );
-      return (this.fieldsToIncludeInCitations ?? '')
-        .split(',')
+      return this.fieldsToIncludeInCitations.split(',');
+    } else {
+      return [];
     }
   }
 
