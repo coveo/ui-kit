@@ -36,9 +36,6 @@ export const generatedAnswerReducer = createReducer(
   getGeneratedAnswerInitialState(),
   (builder) =>
     builder
-      // .addCase(executeSearch.pending, (_state, action) => {
-      //   console.log('Generated Answer Reducer - executeSearch pending', action);
-      // })
       .addCase(setIsVisible, (state, {payload}) => {
         state.isVisible = payload;
       })

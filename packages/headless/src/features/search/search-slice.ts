@@ -68,11 +68,9 @@ function handlePendingSearch(
     }
   >
 ) {
-  console.log('Handling pending search action:');
   state.isLoading = true;
   state.searchAction = action.meta.arg.next;
   state.requestId = action.meta.requestId;
-  console.log('Finished handling pending search action:');
 }
 
 function handlePendingFetchMoreResults(

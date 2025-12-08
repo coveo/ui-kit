@@ -8,16 +8,11 @@ import {
   fetchAnswer,
   selectAnswer,
 } from '../../../api/knowledge/stream-answer-api.js';
-// import type {StreamAnswerAPIState} from '../../../api/knowledge/stream-answer-api-state.js';
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../../app/engine.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import {selectAnswerApiQueryParams} from '../../../features/generated-answer/answer-api-selectors.js';
 import {
-  selectAnswerApiQueryParams,
-  // selectAnswerTriggerParams,
-} from '../../../features/generated-answer/answer-api-selectors.js';
-import {
-  // generateAnswer,
   resetAnswer,
   sendGeneratedAnswerFeedback,
   updateAnswerConfigurationId,
@@ -95,31 +90,6 @@ const parseEvaluationArguments = ({
   question: query,
 });
 
-// const subscribeToSearchRequest = (
-//   engine: SearchEngine<StreamAnswerAPIState>
-// ) => {
-//   let lastRequestId = '';
-
-//   const strictListener = () => {
-//     const state = engine.state;
-//     const triggerParams = selectAnswerTriggerParams(state);
-
-//     const currentRequestId = triggerParams.requestId;
-//     const newSearchRequestDetected = currentRequestId !== lastRequestId;
-
-//     if (newSearchRequestDetected) {
-//       lastRequestId = currentRequestId;
-//       engine.dispatch(resetAnswer());
-
-//       if (triggerParams.q?.length > 0) {
-//         engine.dispatch(generateAnswer());
-//       }
-//     }
-//   };
-
-//   engine.subscribe(strictListener);
-// };
-
 /**
  *
  * @internal
@@ -149,9 +119,6 @@ export function buildAnswerApiGeneratedAnswer(
   );
   const getState = () => engine.state;
   engine.dispatch(updateAnswerConfigurationId(props.answerConfigurationId!));
-
-  console.log('No Subscription to search requests for Answer API Generated Answer');
-  // subscribeToSearchRequest(engine as SearchEngine<StreamAnswerAPIState>);
 
   return {
     ...controller,

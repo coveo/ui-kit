@@ -30,6 +30,7 @@ import {doNotTrack} from '../utils/utils.js';
 import {analyticsMiddleware} from './analytics-middleware.js';
 import {configuration} from './common-reducers.js';
 import type {EngineConfiguration} from './engine-configuration.js';
+import {generateAnswerListener} from './generate-answer-listener-middleware.js';
 import {instantlyCallableThunkActionMiddleware} from './instantly-callable-middleware.js';
 import type {LoggerOptions} from './logger.js';
 import {logActionErrorMiddleware} from './logger-middlewares.js';
@@ -43,7 +44,6 @@ import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware.
 import {stateKey} from './state-key.js';
 import {type CoreExtraArguments, configureStore, type Store} from './store.js';
 import type {ThunkExtraArguments} from './thunk-extra-arguments.js';
-import { generateAnswerListener } from './generate-answer-listener.js';
 
 export type CoreState<
   Configuration extends CoreConfigurationState = CoreConfigurationState,
