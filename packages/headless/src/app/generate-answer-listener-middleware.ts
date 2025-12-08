@@ -22,10 +22,10 @@ export const generateAnswerListener = createListenerMiddleware<
 generateAnswerListener.startListening({
   actionCreator: executeSearch.pending,
 
-  effect: async (_action, api) => {
-    api.dispatch(resetAnswer());
+  effect: async (_action, listenerApi) => {
+    listenerApi.dispatch(resetAnswer());
 
-    const state = api.getState();
+    const state = listenerApi.getState();
 
     const q = selectQuery(state)?.q;
     const queryIsEmpty = !q || q.trim() === '';
@@ -36,6 +36,6 @@ generateAnswerListener.startListening({
       return;
     }
 
-    api.dispatch(generateAnswer());
+    listenerApi.dispatch(generateAnswer());
   },
 });
