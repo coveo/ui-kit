@@ -1,20 +1,23 @@
-import {GeneratedAnswerCitation, InteractiveCitation} from '@coveo/headless';
+import { GeneratedAnswerCitation, InteractiveCitation } from "@coveo/headless";
 import {
   createPopper,
   preventOverflow,
   Instance as PopperInstance,
-} from '@popperjs/core';
-import {Component, h, State, Prop, Element, Watch} from '@stencil/core';
-import {LinkWithItemAnalytics} from '../../item-link/stencil-item-link';
-import {Heading} from '../../stencil-heading';
-import {generateTextFragmentUrl, generatePdfPageUrl} from './citation-anchoring-utils';
+} from "@popperjs/core";
+import { Component, h, State, Prop, Element, Watch } from "@stencil/core";
+import { LinkWithItemAnalytics } from "../../item-link/stencil-item-link";
+import { Heading } from "../../stencil-heading";
+import {
+  generateTextFragmentUrl,
+  generatePdfPageUrl,
+} from "./citation-anchoring-utils";
 
 /**
  * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
  */
 @Component({
-  tag: 'atomic-citation',
-  styleUrl: 'atomic-citation.pcss',
+  tag: "atomic-citation",
+  styleUrl: "atomic-citation.pcss",
 })
 export class AtomicCitation {
   @Element() public host!: HTMLElement;
@@ -52,9 +55,11 @@ export class AtomicCitation {
   private hoverAnalyticsTimeout = 1000;
 
   private hoverTimeout?: ReturnType<typeof setTimeout>;
-  private hoverDebounceTimeoutMs = 100;
+  private hoverDebounceTimeoutMs = 200;
+  private closePopoverTimeout?: ReturnType<typeof setTimeout>;
+  private closePopoverDebounceMs = 100;
 
-  @Watch('isOpen')
+  @Watch("isOpen")
   sendHoverAnalytics() {
     if (this.isOpen) {
       this.hoverStart = new Date().getTime();
@@ -76,10 +81,10 @@ export class AtomicCitation {
     }
 
     this.popperInstance = createPopper(this.citationRef, this.popupRef, {
-      placement: 'top-start',
+      placement: "top-start",
       modifiers: [
         {
-          name: 'offset',
+          name: "offset",
           options: {
             offset: [0, 6],
           },
@@ -97,7 +102,7 @@ export class AtomicCitation {
     return (
       this.citation.text &&
       `${this.citation.text?.trim().slice(0, 200)}${
-        this.citation.text.length > 200 ? '...' : ''
+        this.citation.text.length > 200 ? "..." : ""
       }`
     );
   }
@@ -105,7 +110,7 @@ export class AtomicCitation {
   private anchorUrl(
     uri: string,
     text?: string,
-    filetype?: string, 
+    filetype?: string,
     pageNumber?: number
   ) {
     if (this.disableCitationAnchoring) {
@@ -113,41 +118,51 @@ export class AtomicCitation {
     }
 
     switch (filetype) {
-      case 'html':
+      case "html":
         return generateTextFragmentUrl(uri, text, filetype);
-      case 'pdf':
+      case "pdf":
         return generatePdfPageUrl(uri, pageNumber);
       default:
         return uri;
     }
   }
 
-  private showPopover = () => {
-    clearTimeout(this.hoverTimeout);
+  private openPopover = () => {
     this.isOpen = true;
   };
 
-  private hidePopover = () => {
+  private closePopover = () => {
     clearTimeout(this.hoverTimeout);
-    this.isOpen = false;
+    clearTimeout(this.closePopoverTimeout);
+    this.closePopoverTimeout = setTimeout(() => {
+      this.isOpen = false;
+    }, this.closePopoverDebounceMs);
   };
 
-  private debouncePopoverHide = () => {
+  private cancelClosePopover = () => {
+    clearTimeout(this.closePopoverTimeout);
+  };
+
+  private delayedPopoverOpen = () => {
     clearTimeout(this.hoverTimeout);
-    this.hoverTimeout = setTimeout(this.hidePopover, this.hoverDebounceTimeoutMs);
+    clearTimeout(this.closePopoverTimeout);
+    this.hoverTimeout = setTimeout(
+      this.openPopover,
+      this.hoverDebounceTimeoutMs
+    );
   };
 
   private renderPopover() {
     return (
       <div
         part="citation-popover"
-        class={`border-neutral bg-background z-10 rounded-md border p-4 shadow desktop-only:flex mobile-only:hidden flex-col gap-3 ${
-          this.isOpen ? 'visible' : 'hidden'
-        }`}
+        class={`border-neutral bg-background z-10 rounded-md border p-4 shadow ${
+          this.isOpen ? "desktop-only:flex" : "hidden"
+        } mobile-only:hidden flex-col gap-3`}
         ref={(el) => (this.popupRef = el!)}
         role="dialog"
-        onMouseEnter={this.showPopover}
-        onMouseLeave={this.debouncePopoverHide}
+        onMouseEnter={this.cancelClosePopover}
+        onMouseLeave={this.closePopover}
       >
         <div class="text-neutral-dark truncate text-sm">
           {this.citation.uri}
@@ -167,7 +182,7 @@ export class AtomicCitation {
           href={this.anchorUrl(
             this.citation.clickUri ?? this.citation.uri,
             this.citation.text,
-            this.citation.fields?.filetype,
+            this.citation.fields?.filetype
           )}
           ref={(el) => (this.citationRef = el!)}
           part="citation"
@@ -183,10 +198,10 @@ export class AtomicCitation {
             this.interactiveCitation.cancelPendingSelect()
           }
           stopPropagation={this.stopPropagation}
-          onMouseLeave={this.debouncePopoverHide}
-          onMouseOver={this.showPopover}
-          onFocus={this.showPopover}
-          onBlur={this.debouncePopoverHide}
+          onMouseLeave={this.closePopover}
+          onMouseOver={this.delayedPopoverOpen}
+          onFocus={this.openPopover}
+          onBlur={this.closePopover}
         >
           <span class="citation-title mx-1 truncate">
             {this.citation.title}
