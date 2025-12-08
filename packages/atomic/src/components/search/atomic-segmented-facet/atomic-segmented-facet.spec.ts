@@ -102,7 +102,7 @@ describe('atomic-segmented-facet', () => {
           label=${ifDefined(props.label)}
           .tabsIncluded=${props.tabsIncluded ?? []}
           .tabsExcluded=${props.tabsExcluded ?? []}
-          filter-facet-count=${ifDefined(props.filterFacetCount)}
+          .filterFacetCount=${props.filterFacetCount ?? true}
           injection-depth=${ifDefined(props.injectionDepth)}
           number-of-values=${ifDefined(props.numberOfValues)}
           sort-criteria=${ifDefined(props.sortCriteria)}
@@ -364,31 +364,23 @@ describe('atomic-segmented-facet', () => {
     });
   });
 
-  describe('rendering', () => {
-    describe('when search has error', () => {
-      it('should render nothing', async () => {
-        const {locators} = await renderComponent({
-          searchStatusState: {hasError: true},
-        });
-
-        await expect
-          .element(locators.segmentedContainer)
-          .not.toBeInTheDocument();
-        await expect.element(locators.placeholder).not.toBeInTheDocument();
+  describe('when rendering', () => {
+    it('should render nothing when search has error', async () => {
+      const {locators} = await renderComponent({
+        searchStatusState: {hasError: true},
       });
+
+      await expect.element(locators.segmentedContainer).not.toBeInTheDocument();
+      await expect.element(locators.placeholder).not.toBeInTheDocument();
     });
 
-    describe('when facet is not enabled', () => {
-      it('should render nothing', async () => {
-        const {locators} = await renderComponent({
-          facetState: {enabled: false},
-        });
-
-        await expect
-          .element(locators.segmentedContainer)
-          .not.toBeInTheDocument();
-        await expect.element(locators.placeholder).not.toBeInTheDocument();
+    it('should render nothing when facet is not enabled', async () => {
+      const {locators} = await renderComponent({
+        facetState: {enabled: false},
       });
+
+      await expect.element(locators.segmentedContainer).not.toBeInTheDocument();
+      await expect.element(locators.placeholder).not.toBeInTheDocument();
     });
 
     describe('when first search not executed', () => {
@@ -419,17 +411,13 @@ describe('atomic-segmented-facet', () => {
       });
     });
 
-    describe('when no facet values', () => {
-      it('should render nothing', async () => {
-        const {locators} = await renderComponent({
-          facetState: {values: []},
-        });
-
-        await expect
-          .element(locators.segmentedContainer)
-          .not.toBeInTheDocument();
-        await expect.element(locators.placeholder).not.toBeInTheDocument();
+    it('should render nothing when no facet values', async () => {
+      const {locators} = await renderComponent({
+        facetState: {values: []},
       });
+
+      await expect.element(locators.segmentedContainer).not.toBeInTheDocument();
+      await expect.element(locators.placeholder).not.toBeInTheDocument();
     });
 
     describe('when facet has values', () => {
@@ -480,14 +468,12 @@ describe('atomic-segmented-facet', () => {
         });
       });
 
-      describe('when label is not provided', () => {
-        it('should not render label', async () => {
-          const {locators} = await renderComponent({
-            props: {label: undefined},
-          });
-
-          await expect.element(locators.labelPart).not.toBeInTheDocument();
+      it('should not render label when label is not provided', async () => {
+        const {locators} = await renderComponent({
+          props: {label: undefined},
         });
+
+        await expect.element(locators.labelPart).not.toBeInTheDocument();
       });
     });
   });
@@ -526,19 +512,17 @@ describe('atomic-segmented-facet', () => {
     });
   });
 
-  describe('#disconnectedCallback', () => {
-    it('should call stopWatching on dependencies manager', async () => {
-      const mockDependenciesManager = buildFakeFacetConditionsManager({});
-      vi.mocked(buildFacetConditionsManager).mockReturnValue(
-        mockDependenciesManager
-      );
+  it('should call stopWatching on dependencies manager when disconnected', async () => {
+    const mockDependenciesManager = buildFakeFacetConditionsManager({});
+    vi.mocked(buildFacetConditionsManager).mockReturnValue(
+      mockDependenciesManager
+    );
 
-      const {element} = await renderComponent();
+    const {element} = await renderComponent();
 
-      element.remove();
+    element.remove();
 
-      expect(mockDependenciesManager.stopWatching).toHaveBeenCalled();
-    });
+    expect(mockDependenciesManager.stopWatching).toHaveBeenCalled();
   });
 
   describe('shadow parts', () => {
