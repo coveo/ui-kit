@@ -42,6 +42,7 @@ import {
 } from '@/src/utils/local-storage-utils';
 import {getNamedSlotContent} from '@/src/utils/slot-utils';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
+import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
 
 /**
  * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
@@ -88,6 +89,7 @@ export class AtomicGeneratedAnswer
   extends LitElement
   implements InitializableComponent<Bindings>
 {
+  static styles = [atomicGeneratedAnswerStyles];
   private static readonly propsSchema = new Schema({
     maxCollapsedHeight: new NumberValue({
       min: 9,
@@ -742,7 +744,10 @@ export class AtomicGeneratedAnswer
       return nothing;
     }
     return html`
-      <div part="is-generating" class="text-primary hidden text-base font-light">
+      <div
+        part="is-generating"
+        class="text-primary hidden text-base font-light"
+      >
         ${i18n.t('generating-answer')}...
       </div>
     `;
@@ -816,8 +821,7 @@ export class AtomicGeneratedAnswer
           !this.hasRetryableError && this.isAnswerVisible
             ? html`
               <div part="generated-answer-footer" class="mt-6 flex justify-end">
-                ${this.renderGeneratingAnswerLabel()}
-                ${this.renderShowButton()}
+                ${this.renderGeneratingAnswerLabel()} ${this.renderShowButton()}
                 ${this.renderDisclaimer()}
               </div>
             `

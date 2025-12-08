@@ -17,17 +17,25 @@ export interface HeadingProps {
    * Additional parts to add to the heading.
    */
   part?: string;
+  /**
+   * The accessible label applied to the heading when provided.
+   */
+  ariaLabel?: string;
 }
 
 export const renderHeading: FunctionalComponentWithChildren<HeadingProps> =
   ({props}) =>
   (children) => {
-    const {level, class: classname, part} = props;
+    const {level, class: classname, part, ariaLabel} = props;
 
     const headingTag =
       level > 0 && level <= 6 ? unsafeStatic(`h${level}`) : literal`div`;
 
-    return html`<${headingTag} class="${ifDefined(classname)}" part="${ifDefined(part)}">
+    return html`<${headingTag}
+      class="${ifDefined(classname)}"
+      part="${ifDefined(part)}"
+      aria-label="${ifDefined(ariaLabel)}"
+    >
       ${children}
     </${headingTag}>`;
   };

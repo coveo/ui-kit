@@ -1,8 +1,12 @@
-@reference '../../../../utils/tailwind-utilities/set-font-size.css';
-[part='generated-text'] {
-  @apply set-font-size-lg;
+import {css} from 'lit';
 
-  &.cursor::after {
+const styles = css`
+  [part='generated-text'] {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+
+  [part='generated-text'].cursor::after {
     content: '';
     width: 8px;
     height: 1em;
@@ -12,4 +16,6 @@
     animation: cursor-blink 1.5s steps(2) infinite;
     vertical-align: text-bottom;
   }
-}
+`;
+
+export default styles;
