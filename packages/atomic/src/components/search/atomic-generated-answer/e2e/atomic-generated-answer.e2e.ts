@@ -65,7 +65,8 @@ test.describe('atomic-generated-answer citation', () => {
       await expect(popover).toHaveClass(/hidden/);
       await expect(popover).not.toBeVisible();
 
-      await generatedAnswer.hoverCitation(0);
+      const citation = generatedAnswer.citation.first();
+      await citation.hover();
 
       await expect
         .poll(async () => await popover.getAttribute('class'), {
@@ -105,9 +106,10 @@ test.describe('atomic-generated-answer citation', () => {
     test('should hide popover after mouse leaves citation', async ({
       generatedAnswer,
     }) => {
+      const citation = generatedAnswer.citation.first();
       const popover = generatedAnswer.citationPopover.first();
 
-      await generatedAnswer.hoverCitation(0);
+      await citation.hover();
       await expect
         .poll(async () => await popover.getAttribute('class'), {
           timeout: pollTimeoutMs,

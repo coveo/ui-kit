@@ -27,10 +27,6 @@ export class GeneratedAnswerPageObject extends BasePageObject<'atomic-generated-
     await this.citation.first().waitFor();
   }
 
-  async hoverCitation(index: number = 0) {
-    await this.citation.nth(index).hover();
-  }
-
   async getCitationCount(): Promise<number> {
     return await this.citation.count();
   }
