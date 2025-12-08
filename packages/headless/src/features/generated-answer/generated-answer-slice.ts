@@ -30,7 +30,6 @@ import {
 } from './generated-answer-actions.js';
 import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
 import {filterOutDuplicatedCitations} from './utils/generated-answer-citation-utils.js';
-// import { executeSearch } from '../search/search-actions.js';
 
 export const generatedAnswerReducer = createReducer(
   getGeneratedAnswerInitialState(),
