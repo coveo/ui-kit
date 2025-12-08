@@ -1,5 +1,5 @@
 ---
-mode: 'agent'
+agent: 'agent'
 description: 'Write MDX documentation for an Atomic component'
 ---
 
@@ -75,7 +75,7 @@ Every MDX file should follow this structure:
 ```mdx
 import { Meta } from '@storybook/addon-docs/blocks';
 import * as AtomicComponentNameStories from './atomic-component-name.new.stories';
-import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
 <Meta of={AtomicComponentNameStories} />
 
@@ -292,7 +292,7 @@ This component is typically placed within the "pagination" section of the layout
 
 ## Workflow
 
-**Before starting, create todo list with these steps** (use `manage_todo_list`):
+Follow these steps systematically:
 
 1. **Identify the component** to document (get file path from user)
 2. **Search for similar components** in other use cases with MDX files
@@ -301,25 +301,5 @@ This component is typically placed within the "pagination" section of the layout
 5. **Read similar component MDX** (if found) for pattern reference
 6. **Write documentation** following established patterns
 7. **Verify quality** using the checklist above
-8. **Generate execution summary** (mandatory final step)
 
-Track progress by marking items in-progress → completed. Complete all workflow steps including summary generation before marking final todo as done.
-
-## Post-Execution: Generate Summary
-
-After completing documentation, generate execution summary:
-
-**1. Create summary file:**
-- **Location:** `.github/prompts/.executions/write-atomic-component-mdx-documentation-[YYYY-MM-DD-HHmmss].prompt-execution.md`
-- **Structure:** Follow `.github/prompts/.executions/TEMPLATE.prompt-execution.md`
-- **Purpose:** Structured feedback for prompt optimization
-
-**2. Include in summary:**
-- Which similar component was used as reference (if any)
-- Issues with finding patterns or understanding conventions
-- Ambiguities in prompt instructions that required interpretation
-- Time-consuming operations (excessive file reads, searches)
-- Missing instructions or unclear requirements
-- Concrete suggestions for prompt improvements
-
-**3. Inform user** about summary location and next steps (switch to "Prompt Engineer" chatmode for optimization)
+Complete all workflow steps before finishing.

@@ -25,6 +25,10 @@ export interface ContextParam {
   context: ContextParams;
 }
 
+export interface EnableResultsParam {
+  enableResults: boolean;
+}
+
 type ProductParam = {
   productId: string;
 };
