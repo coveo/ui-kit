@@ -161,29 +161,29 @@ export class AtomicCitation {
   private renderPopover() {
     return (
       <div
-        part='citation-popover'
+        part="citation-popover"
         class={`border-neutral bg-background z-10 rounded-md border p-4 shadow ${
           this.isOpen ? 'desktop-only:flex' : 'hidden'
         } mobile-only:hidden flex-col gap-3`}
         ref={(el) => (this.popupRef = el!)}
-        role='dialog'
+        role="dialog"
         onMouseEnter={this.cancelClosePopover}
         onMouseLeave={this.delayedClosePopover}
       >
-        <div class='text-neutral-dark truncate text-sm'>
+        <div class="text-neutral-dark truncate text-sm">
           {this.citation.uri}
         </div>
-        <Heading level={0} class='text-md font-bold'>
+        <Heading level={0} class="text-md font-bold">
           {this.citation.title}
         </Heading>
-        <p class='text-on-background text-sm'>{this.getTruncatedText()}</p>
+        <p class="text-on-background text-sm">{this.getTruncatedText()}</p>
       </div>
     );
   }
 
   public render() {
     return (
-      <div class='relative'>
+      <div class="relative">
         <LinkWithItemAnalytics
           href={this.anchorUrl(
             this.citation.clickUri ?? this.citation.uri,
@@ -191,11 +191,11 @@ export class AtomicCitation {
             this.citation.fields?.filetype
           )}
           ref={(el) => (this.citationRef = el!)}
-          part='citation'
-          target='_blank'
-          rel='noopener'
-          aria-haspopup='dialog'
-          className='bg-background btn-outline-primary border-neutral text-on-background flex items-center rounded-full border p-1'
+          part="citation"
+          target="_blank"
+          rel="noopener"
+          aria-haspopup="dialog"
+          className="bg-background btn-outline-primary border-neutral text-on-background flex items-center rounded-full border p-1"
           onSelect={() => this.interactiveCitation.select()}
           onBeginDelayedSelect={() =>
             this.interactiveCitation.beginDelayedSelect()
@@ -209,7 +209,7 @@ export class AtomicCitation {
           onFocus={this.openPopover}
           onBlur={this.closePopover}
         >
-          <span class='citation-title mx-1 truncate'>
+          <span class="citation-title mx-1 truncate">
             {this.citation.title}
           </span>
         </LinkWithItemAnalytics>
