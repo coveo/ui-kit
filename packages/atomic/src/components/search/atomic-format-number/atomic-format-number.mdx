@@ -1,0 +1,55 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicFormatNumberStories from './atomic-format-number.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicFormatNumberStories} />
+
+<AtomicDocTemplate
+  stories={AtomicFormatNumberStories}
+  githubPath="search/atomic-format-number/atomic-format-number.ts"
+  tagName="atomic-format-number"
+  className="AtomicFormatNumber"
+  defaultStory="Facet"
+>
+
+The `atomic-format-number` component is used for number formatting.
+The numerical format of compatible parents will be set according to the properties of this component.
+
+This component is used within compatible parent components such as `atomic-result-number` or `atomic-numeric-facet`:
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-result-list>
+    <atomic-result-template>
+      <template>
+        <atomic-result-number field="size">
+          <atomic-format-number minimum-fraction-digits="2"></atomic-format-number>
+        </atomic-result-number>
+      </template>
+    </atomic-result-template>
+  </atomic-result-list>
+  ...
+</atomic-search-interface>
+```
+
+### Within a Numeric Facet
+
+```html
+<atomic-numeric-facet field="size">
+  <atomic-format-number maximum-fraction-digits="0"></atomic-format-number>
+</atomic-numeric-facet>
+```
+
+### Formatting Options
+
+The component supports several formatting options:
+
+- `minimum-integer-digits`: The minimum number of integer digits to use
+- `minimum-fraction-digits`: The minimum number of fraction digits to use
+- `maximum-fraction-digits`: The maximum number of fraction digits to use
+- `minimum-significant-digits`: The minimum number of significant digits to use
+- `maximum-significant-digits`: The maximum number of significant digits to use
+
+</AtomicDocTemplate>
