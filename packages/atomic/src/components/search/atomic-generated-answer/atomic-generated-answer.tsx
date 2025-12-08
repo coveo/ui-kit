@@ -310,7 +310,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   private getCitationFieldsInputArray(): string[] {
     if (Array.isArray(this.fieldsToIncludeInCitations)) {
       return this.fieldsToIncludeInCitations;
-    } else if (typeof this.fieldsToIncludeInCitations === 'string') {
+    } else if (this.fieldsToIncludeInCitations) {
       this.bindings.engine.logger.warn(
         `Starting from Atomic v4, the "fields-to-include-in-citations" property will only accept an array of strings. Using a string value is now deprecated. Please update the value to be an array of strings. For example: fields-to-include-in-citations='["fieldA","fieldB"]'`
       );
