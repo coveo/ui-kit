@@ -12,7 +12,10 @@ import type {
   SortParam,
   TrackingIdParam,
 } from '../commerce-api-params.js';
-import type {CommerceApiMethod} from '../commerce-metadata.js';
+import {
+  type CommerceApiMethod,
+  TRACKING_ID_IN_PATH_METHODS,
+} from '../commerce-metadata.js';
 
 export type BaseCommerceAPIRequest = BaseParam &
   TrackingIdParam &
@@ -68,7 +71,7 @@ const prepareRequestParams = (req: FilterableCommerceAPIRequest) => {
 };
 
 export const baseRequest = (
-  req: BaseParam,
+  req: BaseCommerceAPIRequest,
   path: CommerceApiMethod
 ): Pick<
   PlatformClientCallOptions,
@@ -79,8 +82,9 @@ export const baseRequest = (
   | 'origin'
   | 'requestMetadata'
 > => {
-  const {url, accessToken} = req;
-  const baseUrl = `${url}/${path}`;
+  const {url, trackingId, accessToken} = req;
+
+  const baseUrl = buildUrlWithTrackingIdInPath(url, trackingId, path);
 
   return {
     accessToken,
@@ -90,4 +94,19 @@ export const baseRequest = (
     origin: 'commerceApiFetch',
     requestMetadata: {method: path},
   };
+};
+
+/**
+ * Builds a URL to include the tracking ID in the path.
+ * Used by endpoints that require tracking ID in the URL path instead of request body.
+ **/
+export const buildUrlWithTrackingIdInPath = (
+  baseUrl: string,
+  trackingId: string,
+  path: CommerceApiMethod
+): string => {
+  if (trackingId && TRACKING_ID_IN_PATH_METHODS.includes(path)) {
+    return `${baseUrl}/tracking-ids/${trackingId}/${path}`;
+  }
+  return `${baseUrl}/${path}`;
 };

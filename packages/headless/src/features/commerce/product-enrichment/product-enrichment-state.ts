@@ -1,0 +1,24 @@
+import type {BadgesProduct} from '../../../api/commerce/product-enrichment/product-enrichment-response.js';
+
+export interface ProductEnrichmentState {
+  /**
+   * The array of products containing badge placements for each product.
+   */
+  badges: BadgesProduct[];
+  /**
+   * Whether a request to fetch badges is currently being executed.
+   */
+  isLoading: boolean;
+  /**
+   * The error message if the request failed.
+   */
+  error: string | null;
+}
+
+export function getProductEnrichmentInitialState(): ProductEnrichmentState {
+  return {
+    badges: [],
+    isLoading: false,
+    error: null,
+  };
+}

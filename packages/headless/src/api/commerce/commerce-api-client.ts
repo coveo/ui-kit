@@ -24,6 +24,11 @@ import type {
   FacetSearchType,
 } from './facet-search/facet-search-request.js';
 import {
+  buildProductEnrichmentBadgesRequest,
+  type ProductEnrichmentBadgesRequest,
+} from './product-enrichment/product-enrichment-request.js';
+import type {ProductEnrichmentSuccessBadgesResponse} from './product-enrichment/product-enrichment-response.js';
+import {
   buildRecommendationsRequest,
   type CommerceRecommendationsRequest,
 } from './recommendations/recommendations-request.js';
@@ -148,6 +153,15 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
         query: req?.query,
         numberOfValues: req?.numberOfValues,
       },
+      ...this.options,
+    });
+  }
+
+  async getBadges(
+    req: ProductEnrichmentBadgesRequest
+  ): Promise<CommerceAPIResponse<ProductEnrichmentSuccessBadgesResponse>> {
+    return this.query<ProductEnrichmentSuccessBadgesResponse>({
+      ...buildProductEnrichmentBadgesRequest(req),
       ...this.options,
     });
   }
