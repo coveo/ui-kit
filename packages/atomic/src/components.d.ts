@@ -165,7 +165,10 @@ export namespace Components {
         "queryCorrectionMode": 'legacy' | 'next';
     }
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
+     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
+     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
+     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
+     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
      */
     interface AtomicFacetManager {
         /**
@@ -230,54 +233,45 @@ export namespace Components {
         "tabsIncluded": string[] | string;
     }
     /**
-     * The `atomic-format-currency` component is used for formatting currencies.
-     * The numerical format of compatible parents will be set according to the currency property of this component.
+     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
      */
-    interface AtomicFormatCurrency {
+    interface AtomicGeneratedAnswer {
         /**
-          * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB. See the current [currency & funds code list](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency).
+          * The unique identifier of the answer configuration to use to generate the answer.
          */
-        "currency": string;
-    }
-    /**
-     * The `atomic-format-number` component is used for number formatting.
-     * The numerical format of compatible parents will be set according to the properties of this component.
-     */
-    interface AtomicFormatNumber {
+        "answerConfigurationId"?: string;
         /**
-          * The maximum number of fraction digits to use.
+          * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
+          * @default false
          */
-        "maximumFractionDigits"?: number;
+        "collapsible"?: boolean;
         /**
-          * The maximum number of significant digits to use.
+          * Option to disable citation anchoring.
+          * @default false
          */
-        "maximumSignificantDigits"?: number;
+        "disableCitationAnchoring"?: boolean;
         /**
-          * The minimum number of fraction digits to use.
+          * A list of fields to include with the citations used to generate the answer.
          */
-        "minimumFractionDigits"?: number;
+        "fieldsToIncludeInCitations"?: string;
         /**
-          * The minimum number of integer digits to use.
+          * The maximum height (in rem units) of the answer when collapsed.
          */
-        "minimumIntegerDigits"?: number;
+        "maxCollapsedHeight": number;
         /**
-          * The minimum number of significant digits to use.
+          * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
          */
-        "minimumSignificantDigits"?: number;
-    }
-    /**
-     * The `atomic-format-unit` component is used for formatting numbers with units.
-     * The numerical format of compatible parents will be set according to the properties of this component.
-     */
-    interface AtomicFormatUnit {
+        "tabsExcluded": string[] | string;
         /**
-          * The unit to use in unit formatting. Leverages the [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat) constructor. The unit must be [sanctioned unit identifier](https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-issanctionedsimpleunitidentifier)
+          * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-generated-answer tabs-included='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer can only be displayed on the specified tabs.
          */
-        "unit": string;
+        "tabsIncluded": string[] | string;
         /**
-          * The unit formatting style to use in unit formatting.  * "long" (for example, 16 litres) * "short" (for example, 16 l) * "narrow" (for example, 16l)
+          * Whether to render a toggle button that lets the user hide or show the answer.
+          * @default false
          */
-        "unitDisplay"?: 'long' | 'short' | 'narrow';
+        "withToggle"?: boolean;
     }
     /**
      * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
@@ -1303,15 +1297,6 @@ export namespace Components {
         "imageSize": ItemDisplayImageSize;
     }
     /**
-     * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
-     */
-    interface AtomicResultPrintableUri {
-        /**
-          * The maximum number of Uri parts to display. This has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
-         */
-        "maxNumberOfParts": number;
-    }
-    /**
      * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultTablePlaceholder {
@@ -1767,7 +1752,10 @@ declare global {
         new (): HTMLAtomicDidYouMeanElement;
     };
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
+     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
+     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
+     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
+     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
      */
     interface HTMLAtomicFacetManagerElement extends Components.AtomicFacetManager, HTMLStencilElement {
     }
@@ -1805,34 +1793,14 @@ declare global {
         new (): HTMLAtomicFoldedResultListElement;
     };
     /**
-     * The `atomic-format-currency` component is used for formatting currencies.
-     * The numerical format of compatible parents will be set according to the currency property of this component.
+     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
      */
-    interface HTMLAtomicFormatCurrencyElement extends Components.AtomicFormatCurrency, HTMLStencilElement {
+    interface HTMLAtomicGeneratedAnswerElement extends Components.AtomicGeneratedAnswer, HTMLStencilElement {
     }
-    var HTMLAtomicFormatCurrencyElement: {
-        prototype: HTMLAtomicFormatCurrencyElement;
-        new (): HTMLAtomicFormatCurrencyElement;
-    };
-    /**
-     * The `atomic-format-number` component is used for number formatting.
-     * The numerical format of compatible parents will be set according to the properties of this component.
-     */
-    interface HTMLAtomicFormatNumberElement extends Components.AtomicFormatNumber, HTMLStencilElement {
-    }
-    var HTMLAtomicFormatNumberElement: {
-        prototype: HTMLAtomicFormatNumberElement;
-        new (): HTMLAtomicFormatNumberElement;
-    };
-    /**
-     * The `atomic-format-unit` component is used for formatting numbers with units.
-     * The numerical format of compatible parents will be set according to the properties of this component.
-     */
-    interface HTMLAtomicFormatUnitElement extends Components.AtomicFormatUnit, HTMLStencilElement {
-    }
-    var HTMLAtomicFormatUnitElement: {
-        prototype: HTMLAtomicFormatUnitElement;
-        new (): HTMLAtomicFormatUnitElement;
+    var HTMLAtomicGeneratedAnswerElement: {
+        prototype: HTMLAtomicGeneratedAnswerElement;
+        new (): HTMLAtomicGeneratedAnswerElement;
     };
     interface HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap {
         "feedbackSent": any;
@@ -2367,15 +2335,6 @@ declare global {
         new (): HTMLAtomicResultPlaceholderElement;
     };
     /**
-     * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
-     */
-    interface HTMLAtomicResultPrintableUriElement extends Components.AtomicResultPrintableUri, HTMLStencilElement {
-    }
-    var HTMLAtomicResultPrintableUriElement: {
-        prototype: HTMLAtomicResultPrintableUriElement;
-        new (): HTMLAtomicResultPrintableUriElement;
-    };
-    /**
      * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface HTMLAtomicResultTablePlaceholderElement extends Components.AtomicResultTablePlaceholder, HTMLStencilElement {
@@ -2630,9 +2589,7 @@ declare global {
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
         "atomic-folded-result-list": HTMLAtomicFoldedResultListElement;
-        "atomic-format-currency": HTMLAtomicFormatCurrencyElement;
-        "atomic-format-number": HTMLAtomicFormatNumberElement;
-        "atomic-format-unit": HTMLAtomicFormatUnitElement;
+        "atomic-generated-answer": HTMLAtomicGeneratedAnswerElement;
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
@@ -2692,7 +2649,6 @@ declare global {
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
-        "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
@@ -2844,7 +2800,10 @@ declare namespace LocalJSX {
         "queryCorrectionMode"?: 'legacy' | 'next';
     }
     /**
-     * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
+     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
+     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
+     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
+     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
      */
     interface AtomicFacetManager {
         /**
@@ -2906,54 +2865,45 @@ declare namespace LocalJSX {
         "tabsIncluded"?: string[] | string;
     }
     /**
-     * The `atomic-format-currency` component is used for formatting currencies.
-     * The numerical format of compatible parents will be set according to the currency property of this component.
+     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
      */
-    interface AtomicFormatCurrency {
+    interface AtomicGeneratedAnswer {
         /**
-          * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB. See the current [currency & funds code list](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency).
+          * The unique identifier of the answer configuration to use to generate the answer.
          */
-        "currency": string;
-    }
-    /**
-     * The `atomic-format-number` component is used for number formatting.
-     * The numerical format of compatible parents will be set according to the properties of this component.
-     */
-    interface AtomicFormatNumber {
+        "answerConfigurationId"?: string;
         /**
-          * The maximum number of fraction digits to use.
+          * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
+          * @default false
          */
-        "maximumFractionDigits"?: number;
+        "collapsible"?: boolean;
         /**
-          * The maximum number of significant digits to use.
+          * Option to disable citation anchoring.
+          * @default false
          */
-        "maximumSignificantDigits"?: number;
+        "disableCitationAnchoring"?: boolean;
         /**
-          * The minimum number of fraction digits to use.
+          * A list of fields to include with the citations used to generate the answer.
          */
-        "minimumFractionDigits"?: number;
+        "fieldsToIncludeInCitations"?: string;
         /**
-          * The minimum number of integer digits to use.
+          * The maximum height (in rem units) of the answer when collapsed.
          */
-        "minimumIntegerDigits"?: number;
+        "maxCollapsedHeight"?: number;
         /**
-          * The minimum number of significant digits to use.
+          * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
          */
-        "minimumSignificantDigits"?: number;
-    }
-    /**
-     * The `atomic-format-unit` component is used for formatting numbers with units.
-     * The numerical format of compatible parents will be set according to the properties of this component.
-     */
-    interface AtomicFormatUnit {
+        "tabsExcluded"?: string[] | string;
         /**
-          * The unit to use in unit formatting. Leverages the [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat) constructor. The unit must be [sanctioned unit identifier](https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-issanctionedsimpleunitidentifier)
+          * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-generated-answer tabs-included='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer can only be displayed on the specified tabs.
          */
-        "unit": string;
+        "tabsIncluded"?: string[] | string;
         /**
-          * The unit formatting style to use in unit formatting.  * "long" (for example, 16 litres) * "short" (for example, 16 l) * "narrow" (for example, 16l)
+          * Whether to render a toggle button that lets the user hide or show the answer.
+          * @default false
          */
-        "unitDisplay"?: 'long' | 'short' | 'narrow';
+        "withToggle"?: boolean;
     }
     /**
      * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
@@ -3934,15 +3884,6 @@ declare namespace LocalJSX {
         "imageSize": ItemDisplayImageSize;
     }
     /**
-     * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
-     */
-    interface AtomicResultPrintableUri {
-        /**
-          * The maximum number of Uri parts to display. This has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
-         */
-        "maxNumberOfParts"?: number;
-    }
-    /**
      * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultTablePlaceholder {
@@ -4312,9 +4253,7 @@ declare namespace LocalJSX {
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-number-input": AtomicFacetNumberInput;
         "atomic-folded-result-list": AtomicFoldedResultList;
-        "atomic-format-currency": AtomicFormatCurrency;
-        "atomic-format-number": AtomicFormatNumber;
-        "atomic-format-unit": AtomicFormatUnit;
+        "atomic-generated-answer": AtomicGeneratedAnswer;
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
         "atomic-insight-facet": AtomicInsightFacet;
@@ -4374,7 +4313,6 @@ declare namespace LocalJSX {
         "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-result-fields-list": AtomicResultFieldsList;
         "atomic-result-placeholder": AtomicResultPlaceholder;
-        "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
         "atomic-search-box": AtomicSearchBox;
         "atomic-segmented-facet": AtomicSegmentedFacet;
@@ -4422,7 +4360,10 @@ declare module "@stencil/core" {
              */
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             /**
-             * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results.
+             * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
+             * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
+             * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
+             * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
              */
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             /**
@@ -4434,20 +4375,10 @@ declare module "@stencil/core" {
              */
             "atomic-folded-result-list": LocalJSX.AtomicFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicFoldedResultListElement>;
             /**
-             * The `atomic-format-currency` component is used for formatting currencies.
-             * The numerical format of compatible parents will be set according to the currency property of this component.
+             * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
+             * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
              */
-            "atomic-format-currency": LocalJSX.AtomicFormatCurrency & JSXBase.HTMLAttributes<HTMLAtomicFormatCurrencyElement>;
-            /**
-             * The `atomic-format-number` component is used for number formatting.
-             * The numerical format of compatible parents will be set according to the properties of this component.
-             */
-            "atomic-format-number": LocalJSX.AtomicFormatNumber & JSXBase.HTMLAttributes<HTMLAtomicFormatNumberElement>;
-            /**
-             * The `atomic-format-unit` component is used for formatting numbers with units.
-             * The numerical format of compatible parents will be set according to the properties of this component.
-             */
-            "atomic-format-unit": LocalJSX.AtomicFormatUnit & JSXBase.HTMLAttributes<HTMLAtomicFormatUnitElement>;
+            "atomic-generated-answer": LocalJSX.AtomicGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerElement>;
             /**
              * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
              */
@@ -4584,10 +4515,6 @@ declare module "@stencil/core" {
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
-            /**
-             * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
-             */
-            "atomic-result-printable-uri": LocalJSX.AtomicResultPrintableUri & JSXBase.HTMLAttributes<HTMLAtomicResultPrintableUriElement>;
             /**
              * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
