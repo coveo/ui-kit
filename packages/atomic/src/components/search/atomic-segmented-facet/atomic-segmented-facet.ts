@@ -26,7 +26,7 @@ import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.cs
 import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-values-group/facet-values-group';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {renderFacetSegmentedValue} from '@/src/components/search/facets/facet-segmented-value/facet-segmented-value';
-import facetSegmentedValueStyles from '@/src/components/search/facets/facet-segmented-value/facet-segmented-value.tw.css';
+import facetSegmentedValueStyles from '@/src/components/search/facets/facet-segmented-value/facet-segmented-value.tw.css.js';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -253,6 +253,37 @@ export class AtomicSegmentedFacet
     );
   }
 
+  @bindingGuard()
+  @errorGuard()
+  render() {
+    if (this.searchStatusState.hasError || !this.facetState.enabled) {
+      return html``;
+    }
+
+    if (!this.searchStatusState.firstSearchExecuted) {
+      return html`
+        <div
+          part="placeholder"
+          aria-hidden="true"
+          class="bg-neutral h-8 w-48 animate-pulse rounded"
+        ></div>
+      `;
+    }
+
+    if (!this.facetState.values.length) {
+      return html``;
+    }
+
+    return html`
+      <div
+        part="segmented-container"
+        class="mr-2 flex h-10 items-center whitespace-nowrap"
+      >
+        ${this.renderLabel()} ${this.renderValues()}
+      </div>
+    `;
+  }
+
   disconnectedCallback() {
     super.disconnectedCallback();
     this.dependenciesManager.stopWatching();
@@ -319,37 +350,6 @@ export class AtomicSegmentedFacet
         excluded: this.tabsExcluded,
       },
     };
-  }
-
-  @bindingGuard()
-  @errorGuard()
-  render() {
-    if (this.searchStatusState.hasError || !this.facetState.enabled) {
-      return html``;
-    }
-
-    if (!this.searchStatusState.firstSearchExecuted) {
-      return html`
-        <div
-          part="placeholder"
-          aria-hidden="true"
-          class="bg-neutral h-8 w-48 animate-pulse rounded"
-        ></div>
-      `;
-    }
-
-    if (!this.facetState.values.length) {
-      return html``;
-    }
-
-    return html`
-      <div
-        part="segmented-container"
-        class="mr-2 flex h-10 items-center whitespace-nowrap"
-      >
-        ${this.renderLabel()} ${this.renderValues()}
-      </div>
-    `;
   }
 }
 
