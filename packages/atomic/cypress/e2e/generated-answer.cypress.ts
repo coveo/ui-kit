@@ -419,6 +419,7 @@ describe('Generated Answer Test Suites', () => {
 
           it('should send analytics when the hover ends', () => {
             GeneratedAnswerSelectors.citation().trigger('mouseleave');
+
             GeneratedAnswerAssertions.assertLogGeneratedAnswerSourceHover();
           });
         });
