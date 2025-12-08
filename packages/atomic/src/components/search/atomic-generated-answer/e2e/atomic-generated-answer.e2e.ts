@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-const hoverDebounceTimeoutMs = 100;
+const closePopoverDebounceMs = 100;
 const pollTimeoutMs = 2000;
 
 test.describe('atomic-generated-answer citation', () => {
@@ -71,7 +71,8 @@ test.describe('atomic-generated-answer citation', () => {
         .poll(async () => await popover.getAttribute('class'), {
           timeout: pollTimeoutMs,
         })
-        .toMatch(/visible/);
+        .toMatch(/desktop-only:flex/);
+      await expect(popover).toBeVisible();
       await expect(popover).toContainText(/https?:\/\//);
     });
 
@@ -87,16 +88,18 @@ test.describe('atomic-generated-answer citation', () => {
         .poll(async () => await popover.getAttribute('class'), {
           timeout: pollTimeoutMs,
         })
-        .toMatch(/visible/);
+        .toMatch(/desktop-only:flex/);
 
-      // Trigger hide debounce by dispatching mouseleave on citation
+      // Trigger close debounce by leaving citation
       await citation.dispatchEvent('mouseleave');
 
-      // Immediately cancel hide by dispatching mouseenter on popover
+      // Immediately cancel close by entering popover
       await popover.dispatchEvent('mouseenter');
 
-      await generatedAnswer.page.waitForTimeout(hoverDebounceTimeoutMs + 100);
-      await expect(popover).toHaveClass(/visible/);
+      // Wait longer than close debounce (100ms) to ensure cancel worked
+      await generatedAnswer.page.waitForTimeout(closePopoverDebounceMs + 100);
+      await expect(popover).toHaveClass(/desktop-only:flex/);
+      await expect(popover).toBeVisible();
     });
 
     test('should hide popover after mouse leaves citation', async ({
@@ -109,11 +112,11 @@ test.describe('atomic-generated-answer citation', () => {
         .poll(async () => await popover.getAttribute('class'), {
           timeout: pollTimeoutMs,
         })
-        .toMatch(/visible/);
+        .toMatch(/desktop-only:flex/);
 
       await generatedAnswer.page.mouse.move(0, 0);
 
-      await generatedAnswer.page.waitForTimeout(hoverDebounceTimeoutMs + 50);
+      await generatedAnswer.page.waitForTimeout(closePopoverDebounceMs + 50);
       await expect
         .poll(async () => await popover.getAttribute('class'), {
           timeout: pollTimeoutMs,
