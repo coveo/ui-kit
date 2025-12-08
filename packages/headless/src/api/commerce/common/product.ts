@@ -1,4 +1,5 @@
 import type {HighlightKeyword} from '../../../utils/highlight.js';
+import type {ResultPosition, ResultType} from './result.js';
 
 export type ChildProduct = Omit<
   BaseProduct,
@@ -143,13 +144,10 @@ export interface BaseProduct {
    * The ID of the response that returned the product.
    */
   responseId?: string;
+  /**
+   * The result type of the product.
+   */
+  resultType: ResultType.PRODUCT | ResultType.CHILD_PRODUCT;
 }
 
-export interface Product extends BaseProduct {
-  /**
-   * The 1-based product's position across the non-paginated result set.
-   *
-   * For example, if the product is the third one on the second page, and there are 10 products per page, its position is 13 (not 3).
-   */
-  position: number;
-}
+export interface Product extends ResultPosition, BaseProduct {}
