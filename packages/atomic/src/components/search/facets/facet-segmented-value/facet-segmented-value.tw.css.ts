@@ -1,15 +1,22 @@
 import {css} from 'lit';
 
-export default css`
-  li:first-child .value-box {
-    @apply rounded-l;
-  }
+const styles = css`
+@reference '../../../../utils/tailwind.global.tw.css';
 
-  li:last-child .value-box {
-    @apply rounded-r;
-  }
+.value-box {
+  @apply relative;
+}
 
-  .value-label {
-    max-width: 15ch;
-  }
-`;
+li:first-child .value-box {
+  @apply rounded-l;
+}
+
+li:last-child .value-box {
+  @apply rounded-r;
+}
+
+.value-label {
+  max-width: 15ch;
+}`;
+
+export default styles;
