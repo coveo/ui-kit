@@ -11,8 +11,12 @@ export default {
   'atomic-facet': async () => await import('./atomic-facet/atomic-facet.js'),
   'atomic-field-condition': async () =>
     await import('./atomic-field-condition/atomic-field-condition.js'),
-  'atomic-folded-result-list': async () =>
-    await import('./atomic-folded-result-list/atomic-folded-result-list.js'),
+  'atomic-format-currency': async () =>
+    await import('./atomic-format-currency/atomic-format-currency.js'),
+  'atomic-format-number': async () =>
+    await import('./atomic-format-number/atomic-format-number.js'),
+  'atomic-format-unit': async () =>
+    await import('./atomic-format-unit/atomic-format-unit.js'),
   'atomic-html': async () => await import('./atomic-html/atomic-html.js'),
   'atomic-load-more-results': async () =>
     await import('./atomic-load-more-results/atomic-load-more-results.js'),
@@ -25,6 +29,8 @@ export default {
     await import('./atomic-query-error/atomic-query-error.js'),
   'atomic-query-summary': async () =>
     await import('./atomic-query-summary/atomic-query-summary.js'),
+  'atomic-rating-facet': async () =>
+    await import('./atomic-rating-facet/atomic-rating-facet.js'),
   'atomic-rating-range-facet': async () =>
     await import('./atomic-rating-range-facet/atomic-rating-range-facet.js'),
   'atomic-relevance-inspector': async () =>
@@ -60,6 +66,10 @@ export default {
     ),
   'atomic-result-number': async () =>
     await import('./atomic-result-number/atomic-result-number.js'),
+  'atomic-result-printable-uri': async () =>
+    await import(
+      './atomic-result-printable-uri/atomic-result-printable-uri.js'
+    ),
   'atomic-result-rating': async () =>
     await import('./atomic-result-rating/atomic-result-rating.js'),
   'atomic-result-section-actions': async () =>

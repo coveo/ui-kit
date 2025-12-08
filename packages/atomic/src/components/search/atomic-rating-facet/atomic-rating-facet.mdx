@@ -1,0 +1,104 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicRatingFacetStories from './atomic-rating-facet.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicRatingFacetStories} />
+
+<AtomicDocTemplate
+  stories={AtomicRatingFacetStories}
+  githubPath="search/facets/atomic-rating-facet/atomic-rating-facet.ts"
+  tagName="atomic-rating-facet"
+  className="AtomicRatingFacet"
+>
+
+The `atomic-rating-facet` component displays facet values as star ratings, making it ideal for rating fields in your search results. It supports numeric fields and displays values as configurable star ratings.
+
+This component is typically placed within the "facets" section of the search interface layout.
+
+You can also place rating facets inside an `atomic-facet-manager` component to ensure the effective functioning of DNE (Dynamic Navigation Experience). 
+More info here: [atomic-facet-manager](https://docs.coveo.com/en/2918).
+
+## Key Features
+
+- **Star Rating Display**: Visualizes numeric values as star ratings
+- **Flexible Display Modes**: Support for checkbox (multi-select) or link (single-select) modes
+- **Customizable Icons**: Use custom SVG icons for rating display
+- **Configurable Intervals**: Set the number of rating intervals and their range
+- **Tab Integration**: Support for included/excluded tabs
+- **Facet Dependencies**: Can depend on other facet selections
+
+## Basic Usage
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="facets">
+      ...
+        <atomic-rating-facet field="snrating" label="Rating"></atomic-rating-facet>
+
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+## Display Modes
+
+### Checkbox Mode (Default)
+Allows multiple rating selections:
+
+```html
+<atomic-rating-facet 
+  field="rating" 
+  label="Customer Rating"
+  display-values-as="checkbox">
+</atomic-rating-facet>
+```
+
+### Link Mode
+Allows single rating selection:
+
+```html
+<atomic-rating-facet 
+  field="rating" 
+  label="Customer Rating"
+  display-values-as="link">
+</atomic-rating-facet>
+```
+
+## Custom Rating Intervals
+
+Configure the number of stars and value ranges:
+
+```html
+<atomic-rating-facet 
+  field="rating" 
+  label="Rating"
+  number-of-intervals="10"
+  max-value-in-index="10"
+  min-value-in-index="1">
+</atomic-rating-facet>
+```
+
+## Custom Icon
+
+Use a custom SVG icon for the rating display:
+
+```html
+<atomic-rating-facet 
+  field="rating" 
+  label="Rating"
+  icon="<svg>...</svg>">
+</atomic-rating-facet>
+```
+
+The custom icon should include `fill="currentColor"` to properly support active/inactive color states.
+
+## Related Components
+
+- **[atomic-facet](/?path=/docs/search-facet--docs)** - Standard text facet
+- **[atomic-numeric-facet](/?path=/docs/search-numericfacet--docs)** - Numeric range facet
+- **[atomic-facet-manager](https://docs.coveo.com/en/2918)** - Dynamic facet management
+
+</AtomicDocTemplate>

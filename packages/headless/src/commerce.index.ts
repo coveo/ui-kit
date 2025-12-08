@@ -27,6 +27,12 @@ export type {
   ChildProduct,
   Product,
 } from './api/commerce/common/product.js';
+export type {
+  BaseResult,
+  Result,
+  SpotlightContent,
+} from './api/commerce/common/result.js';
+export {ResultType} from './api/commerce/common/result.js';
 export {
   getAnalyticsNextApiBaseUrl,
   getOrganizationEndpoint,
@@ -239,6 +245,7 @@ export type {
 export {buildInstantProducts} from './controllers/commerce/instant-products/headless-instant-products.js';
 export type {
   ProductListing,
+  ProductListingOptions,
   ProductListingState,
 } from './controllers/commerce/product-listing/headless-product-listing.js';
 export {buildProductListing} from './controllers/commerce/product-listing/headless-product-listing.js';
