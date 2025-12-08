@@ -16,6 +16,9 @@ on:
         default: false
         required: false
 
+permissions:
+  contents: read
+
 jobs:
   approve:
     if: ${{ github.event_name == 'workflow_dispatch' }}

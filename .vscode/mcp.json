@@ -8,6 +8,11 @@
       "type": "http",
       "url": "https://api.githubcopilot.com/mcp/"
     },
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["@playwright/mcp"]
+    },
     "storybook": {
       "type": "http",
       "url": "http://localhost:4400/mcp"
