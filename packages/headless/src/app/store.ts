@@ -57,4 +57,3 @@ export type Store = ReturnType<typeof configureStore>;
 export type RootState = ReturnType<
   ReturnType<typeof configureStore>['getState']
 >;
-export type AppDispatch = ReturnType<typeof configureStore>['dispatch'];
