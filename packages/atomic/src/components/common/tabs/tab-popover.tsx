@@ -183,14 +183,14 @@ export class TabPopover implements InitializableComponent {
           title={label}
           part="value-label"
           class={
-            'group-hover:text-primary-light group-focus:text-primary mr-1.5 truncate'
+            'group-hover:text-primary group-focus:text-primary mr-1.5 truncate'
           }
         >
           {label}
         </span>
         <atomic-icon
           part="arrow-icon"
-          class={`group-hover:text-primary-light group-focus:text-primary ml-auto w-2 ${
+          class={`group-hover:text-primary group-focus:text-primary ml-auto w-2 ${
             this.isOpen ? 'rotate-180' : ''
           }`}
           icon={ArrowBottomIcon}
