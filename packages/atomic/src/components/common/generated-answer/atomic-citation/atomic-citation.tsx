@@ -1,13 +1,16 @@
-import {GeneratedAnswerCitation, InteractiveCitation} from '@coveo/headless';
+import { GeneratedAnswerCitation, InteractiveCitation } from '@coveo/headless';
 import {
   createPopper,
   preventOverflow,
   Instance as PopperInstance,
 } from '@popperjs/core';
-import {Component, h, State, Prop, Element, Watch} from '@stencil/core';
-import {LinkWithItemAnalytics} from '../../item-link/stencil-item-link';
-import {Heading} from '../../stencil-heading';
-import {generateTextFragmentUrl, generatePdfPageUrl} from './citation-anchoring-utils';
+import { Component, h, State, Prop, Element, Watch } from '@stencil/core';
+import { LinkWithItemAnalytics } from '../../item-link/stencil-item-link';
+import { Heading } from '../../stencil-heading';
+import {
+  generateTextFragmentUrl,
+  generatePdfPageUrl,
+} from './citation-anchoring-utils';
 
 /**
  * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
@@ -53,6 +56,8 @@ export class AtomicCitation {
 
   private hoverTimeout?: ReturnType<typeof setTimeout>;
   private hoverDebounceTimeoutMs = 200;
+  private closePopoverTimeout?: ReturnType<typeof setTimeout>;
+  private closePopoverDebounceMs = 100;
 
   @Watch('isOpen')
   sendHoverAnalytics() {
@@ -105,7 +110,7 @@ export class AtomicCitation {
   private anchorUrl(
     uri: string,
     text?: string,
-    filetype?: string, 
+    filetype?: string,
     pageNumber?: number
   ) {
     if (this.disableCitationAnchoring) {
@@ -128,11 +133,25 @@ export class AtomicCitation {
 
   private closePopover = () => {
     clearTimeout(this.hoverTimeout);
+    clearTimeout(this.closePopoverTimeout);
     this.isOpen = false;
+  };
+
+  private delayedClosePopover = () => {
+    clearTimeout(this.hoverTimeout);
+    clearTimeout(this.closePopoverTimeout);
+    this.closePopoverTimeout = setTimeout(() => {
+      this.isOpen = false;
+    }, this.closePopoverDebounceMs);
+  };
+
+  private cancelClosePopover = () => {
+    clearTimeout(this.closePopoverTimeout);
   };
 
   private delayedPopoverOpen = () => {
     clearTimeout(this.hoverTimeout);
+    clearTimeout(this.closePopoverTimeout);
     this.hoverTimeout = setTimeout(
       this.openPopover,
       this.hoverDebounceTimeoutMs
@@ -148,6 +167,8 @@ export class AtomicCitation {
         } mobile-only:hidden flex-col gap-3`}
         ref={(el) => (this.popupRef = el!)}
         role="dialog"
+        onMouseEnter={this.cancelClosePopover}
+        onMouseLeave={this.delayedClosePopover}
       >
         <div class="text-neutral-dark truncate text-sm">
           {this.citation.uri}
@@ -167,7 +188,7 @@ export class AtomicCitation {
           href={this.anchorUrl(
             this.citation.clickUri ?? this.citation.uri,
             this.citation.text,
-            this.citation.fields?.filetype,
+            this.citation.fields?.filetype
           )}
           ref={(el) => (this.citationRef = el!)}
           part="citation"
@@ -183,7 +204,7 @@ export class AtomicCitation {
             this.interactiveCitation.cancelPendingSelect()
           }
           stopPropagation={this.stopPropagation}
-          onMouseLeave={this.closePopover}
+          onMouseLeave={this.delayedClosePopover}
           onMouseOver={this.delayedPopoverOpen}
           onFocus={this.openPopover}
           onBlur={this.closePopover}
