@@ -131,7 +131,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   /**
    * A list of fields to include with the citations used to generate the answer.
    */
-  @Prop() fieldsToIncludeInCitations?: string;
+  @Prop() fieldsToIncludeInCitations?: string | string[];
 
   /**
    * Option to disable citation anchoring.
@@ -306,9 +306,21 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     );
   }
 
+  // TODO V4 (KIT-5306): Remove support for string value. 
+  private getCitationFieldsInputArray() {
+    if( Array.isArray(this.fieldsToIncludeInCitations)) {
+      return this.fieldsToIncludeInCitations;
+    } else {
+      this.bindings.engine.logger.warn(
+        `Starting from Atomic v4, the "fields-to-include-in-citations" property will only accept an array of strings. Using a string value is now deprecated. Please update the value to be an array of strings. For example: fields-to-include-in-citations='["fieldA","fieldB"]'`
+      );
+      return (this.fieldsToIncludeInCitations ?? '')
+        .split(',')
+    }
+  }
+
   private getCitationFields() {
-    return (this.fieldsToIncludeInCitations ?? '')
-      .split(',')
+    return this.getCitationFieldsInputArray()
       .map((field) => field.trim())
       .filter((field) => field.length > 0)
       .concat(this.REQUIRED_FIELDS_TO_INCLUDE_IN_CITATIONS)
