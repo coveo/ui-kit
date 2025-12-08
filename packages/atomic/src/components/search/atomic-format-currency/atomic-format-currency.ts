@@ -1,51 +1,54 @@
-import {Component, Element, Prop, State, h} from '@stencil/core';
+import {html, LitElement, nothing} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
 import {
   defaultCurrencyFormatter,
   dispatchNumberFormatEvent,
-  NumberFormatter,
-} from '../../common/formats/format-common';
+  type NumberFormatter,
+} from '@/src/components/common/formats/format-common.js';
+import '@/src/components/common/atomic-component-error/atomic-component-error.js';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {LitElementWithError} from '@/src/decorators/types.js';
 
 /**
  * The `atomic-format-currency` component is used for formatting currencies.
  * The numerical format of compatible parents will be set according to the currency property of this component.
  */
-@Component({
-  tag: 'atomic-format-currency',
-  shadow: true,
-})
-export class AtomicFormatCurrency {
-  @Element() private host!: HTMLElement;
-
-  @State() public error!: Error;
-
+@customElement('atomic-format-currency')
+export class AtomicFormatCurrency
+  extends LitElement
+  implements LitElementWithError
+{
   /**
    * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB.
    * See the current [currency & funds code list](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency).
    */
-  @Prop({reflect: true}) public currency!: string;
+  @property({reflect: true}) currency!: string;
+
+  @state() public error!: Error;
 
   private format!: NumberFormatter;
 
-  componentWillLoad() {
+  connectedCallback() {
+    super.connectedCallback();
     this.format = defaultCurrencyFormatter(this.currency);
     try {
       dispatchNumberFormatEvent(
         (value, languages) => this.format(value, languages),
-        this.host
+        this
       );
     } catch (error) {
       this.error = error as Error;
     }
   }
 
-  public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error
-          element={this.host}
-          error={this.error}
-        ></atomic-component-error>
-      );
-    }
+  @errorGuard()
+  render() {
+    return html`${nothing}`;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-format-currency': AtomicFormatCurrency;
   }
 }
