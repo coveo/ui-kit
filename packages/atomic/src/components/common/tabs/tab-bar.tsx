@@ -63,14 +63,6 @@ export class TabBar {
     const selectedTabRelativeRightPosition =
       this.selectedTab?.getBoundingClientRect().right;
 
-    console.log('[atomic-tab-bar] overflowingTabs calculation', {
-      containerRelativeRightPosition,
-      selectedTabRelativeRightPosition,
-      popoverWidth: this.popoverWidth,
-      isOverflow: this.isOverflow,
-      selectedTabLabel: this.selectedTab?.label,
-    });
-
     return this.tabsFromSlot.filter((element) => {
       const isBeforeSelectedTab = selectedTabRelativeRightPosition
         ? selectedTabRelativeRightPosition >
@@ -85,21 +77,10 @@ export class TabBar {
         ? containerRelativeRightPosition
         : containerRelativeRightPosition - minimumWidthNeeded;
 
-      const elementRight = element.getBoundingClientRect().right;
-      const willOverflow =
-        elementRight > rightPositionLimit && !element.active;
-
-      console.log('[atomic-tab-bar] checking tab', {
-        label: element.label,
-        elementRight,
-        rightPositionLimit,
-        isBeforeSelectedTab,
-        minimumWidthNeeded,
-        isActive: element.active,
-        willOverflow,
-      });
-
-      return willOverflow;
+      return (
+        element.getBoundingClientRect().right > rightPositionLimit &&
+        !element.active
+      );
     });
   }
 
