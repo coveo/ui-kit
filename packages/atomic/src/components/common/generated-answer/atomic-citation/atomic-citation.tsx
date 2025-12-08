@@ -134,6 +134,12 @@ export class AtomicCitation {
   private closePopover = () => {
     clearTimeout(this.hoverTimeout);
     clearTimeout(this.closePopoverTimeout);
+    this.isOpen = false;
+  };
+
+  private delayedClosePopover = () => {
+    clearTimeout(this.hoverTimeout);
+    clearTimeout(this.closePopoverTimeout);
     this.closePopoverTimeout = setTimeout(() => {
       this.isOpen = false;
     }, this.closePopoverDebounceMs);
@@ -162,7 +168,7 @@ export class AtomicCitation {
         ref={(el) => (this.popupRef = el!)}
         role="dialog"
         onMouseEnter={this.cancelClosePopover}
-        onMouseLeave={this.closePopover}
+        onMouseLeave={this.delayedClosePopover}
       >
         <div class="text-neutral-dark truncate text-sm">
           {this.citation.uri}
@@ -198,7 +204,7 @@ export class AtomicCitation {
             this.interactiveCitation.cancelPendingSelect()
           }
           stopPropagation={this.stopPropagation}
-          onMouseLeave={this.closePopover}
+          onMouseLeave={this.delayedClosePopover}
           onMouseOver={this.delayedPopoverOpen}
           onFocus={this.openPopover}
           onBlur={this.closePopover}
