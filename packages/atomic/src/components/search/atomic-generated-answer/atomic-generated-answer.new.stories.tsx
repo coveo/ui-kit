@@ -5,6 +5,16 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
+import {
+  answerWithBulletPointsResponse,
+  answerWithCodeResponse,
+  answerWithTableResponse,
+  comprehensiveAnswerResponse,
+  errorResponse,
+  noCitationsResponse,
+  shortAnswerResponse,
+  slowDelayedBaseResponse,
+} from '@/storybook-utils/api/answer/generate-response';
 import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -88,5 +98,65 @@ export const DisableCitationAnchoring: Story = {
   name: 'Citation anchoring disabled',
   args: {
     'disable-citation-anchoring': true,
+  },
+};
+
+export const ShortAnswer: Story = {
+  name: 'With short answer',
+  beforeEach: async () => {
+    mockedAnswerApi.generateEndPoint.mockOnce(() => shortAnswerResponse);
+  },
+};
+
+export const NoCitations: Story = {
+  name: 'Without citations',
+  beforeEach: async () => {
+    mockedAnswerApi.generateEndPoint.mockOnce(() => noCitationsResponse);
+  },
+};
+
+export const ErrorResponse: Story = {
+  name: 'With error response',
+  beforeEach: async () => {
+    mockedAnswerApi.generateEndPoint.mockOnce(() => errorResponse);
+  },
+};
+
+export const SlowResponse: Story = {
+  name: 'With slow streaming',
+  beforeEach: async () => {
+    mockedAnswerApi.generateEndPoint.mockOnce(() => slowDelayedBaseResponse);
+  },
+};
+
+export const AnswerWithBulletPoints: Story = {
+  name: 'With bullet points',
+  beforeEach: async () => {
+    mockedAnswerApi.generateEndPoint.mockOnce(
+      () => answerWithBulletPointsResponse
+    );
+  },
+};
+
+export const AnswerWithCode: Story = {
+  name: 'With code blocks',
+  beforeEach: async () => {
+    mockedAnswerApi.generateEndPoint.mockOnce(() => answerWithCodeResponse);
+  },
+};
+
+export const AnswerWithTable: Story = {
+  name: 'With table',
+  beforeEach: async () => {
+    mockedAnswerApi.generateEndPoint.mockOnce(() => answerWithTableResponse);
+  },
+};
+
+export const ComprehensiveAnswer: Story = {
+  name: 'With bullets, code, and table',
+  beforeEach: async () => {
+    mockedAnswerApi.generateEndPoint.mockOnce(
+      () => comprehensiveAnswerResponse
+    );
   },
 };

@@ -19,8 +19,42 @@ export class GeneratedAnswerPageObject extends BasePageObject<'atomic-generated-
     return this.page.locator('atomic-citation [part="citation"]');
   }
 
+  get answerContent() {
+    return this.page.locator('atomic-generated-answer [part="answer-content"]');
+  }
+
+  get listItems() {
+    return this.page
+      .locator('atomic-generated-answer')
+      .locator('[part="answer-list-item"]');
+  }
+
+  get codeBlocks() {
+    return this.page
+      .locator('atomic-generated-answer')
+      .locator('[part="answer-code-block"]');
+  }
+
+  get tables() {
+    return this.page
+      .locator('atomic-generated-answer')
+      .locator('[part="answer-table"]');
+  }
+
   async waitForCitations() {
     await this.citation.first().waitFor();
+  }
+
+  async waitForListItems() {
+    await this.listItems.first().waitFor();
+  }
+
+  async waitForCodeBlocks() {
+    await this.codeBlocks.first().waitFor();
+  }
+
+  async waitForTables() {
+    await this.tables.first().waitFor();
   }
 
   async getCitationCount(): Promise<number> {
@@ -40,5 +74,29 @@ export class GeneratedAnswerPageObject extends BasePageObject<'atomic-generated-
         null
       );
     });
+  }
+
+  async getListItemTexts(): Promise<string[]> {
+    return await this.listItems.allTextContents();
+  }
+
+  async getListItemCount(): Promise<number> {
+    return await this.listItems.count();
+  }
+
+  async getCodeBlockCount(): Promise<number> {
+    return await this.codeBlocks.count();
+  }
+
+  async getCodeBlockTexts(): Promise<string[]> {
+    return await this.codeBlocks.allTextContents();
+  }
+
+  async getTableCount(): Promise<number> {
+    return await this.tables.count();
+  }
+
+  async getTableTexts(): Promise<string[]> {
+    return await this.tables.allTextContents();
   }
 }
