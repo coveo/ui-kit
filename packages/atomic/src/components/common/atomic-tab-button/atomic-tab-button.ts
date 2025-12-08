@@ -4,6 +4,7 @@ import {renderButton} from '@/src/components/common/button';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {LightDomMixin} from '@/src/mixins/light-dom';
 
 /**
  * The `atomic-tab-button` component renders a tab button for use in tab interfaces.
@@ -16,7 +17,10 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
  */
 @customElement('atomic-tab-button')
 @withTailwindStyles
-export class AtomicTabButton extends LitElement implements LitElementWithError {
+export class AtomicTabButton
+  extends LightDomMixin(LitElement)
+  implements LitElementWithError
+{
   error!: Error;
   /**
    * The label to display on the tab button.
