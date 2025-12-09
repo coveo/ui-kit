@@ -2,14 +2,10 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import type {AtomicSearchInterface} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
-import {
-  playExecuteFirstSearch,
-  wrapInSearchInterface,
-} from '@/storybook-utils/search/search-interface-wrapper';
+import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
 const searchApiHarness = new MockSearchApi();
 
@@ -279,7 +275,7 @@ const renderCategoryFacet = (args: Record<string, unknown>) => html`
 
 const meta: Meta = {
   component: 'atomic-category-facet',
-  title: 'Search/CategoryFacet',
+  title: 'Search/Facet (Category)',
   id: 'atomic-category-facet',
   render: renderCategoryFacet,
   decorators: [decorator],
@@ -360,88 +356,5 @@ export const WithSelectedChildValue: Story = {
   decorators: [facetDecorator],
   beforeEach: () => {
     mockSelectedChildValue();
-  },
-};
-
-export const WithCustomAllCategoriesLabelById: Story = {
-  tags: ['!dev'],
-  args: {
-    field: 'geographicalhierarchy',
-    label: 'Geographical Hierarchy',
-    'with-search': true,
-    'facet-id': 'my-awesome-facet',
-  },
-  decorators: [facetDecorator],
-  play: async (context) => {
-    await play(context);
-    const searchInterface =
-      context.canvasElement.querySelector<AtomicSearchInterface>(
-        'atomic-search-interface'
-      );
-    searchInterface?.i18n.addResourceBundle('en', 'translation', {
-      'all-categories-my-awesome-facet': 'My Awesome Facet',
-    });
-    await playExecuteFirstSearch(context);
-  },
-  beforeEach: () => {
-    // Mock twice: once for initial search, once for re-search after i18n update
-    mockSelectedRootValue('my-awesome-facet');
-    mockSelectedRootValue('my-awesome-facet');
-  },
-};
-
-export const WithCustomAllCategoriesLabelByField: Story = {
-  tags: ['!dev'],
-  args: {
-    field: 'geographicalhierarchy',
-    label: 'Geographical Hierarchy',
-    'with-search': true,
-  },
-  decorators: [facetDecorator],
-  play: async (context) => {
-    await play(context);
-    const searchInterface =
-      context.canvasElement.querySelector<AtomicSearchInterface>(
-        'atomic-search-interface'
-      );
-    searchInterface?.i18n.addResourceBundle('en', 'translation', {
-      'all-categories-geographicalhierarchy': 'My Awesome Facet',
-    });
-    await playExecuteFirstSearch(context);
-  },
-  beforeEach: () => {
-    // Mock twice: once for initial search, once for re-search after i18n update
-    mockSelectedRootValue();
-    mockSelectedRootValue();
-  },
-};
-
-export const WithCustomAllCategoriesLabelWithIdAndFieldCompeting: Story = {
-  tags: ['!dev'],
-  args: {
-    field: 'geographicalhierarchy',
-    label: 'Geographical Hierarchy',
-    'with-search': true,
-    'facet-id': 'my-awesome-facet',
-  },
-  decorators: [facetDecorator],
-  play: async (context) => {
-    await play(context);
-    const searchInterface =
-      context.canvasElement.querySelector<AtomicSearchInterface>(
-        'atomic-search-interface'
-      );
-    searchInterface?.i18n.addResourceBundle('en', 'translation', {
-      'all-categories-geographicalhierarchy': 'My Super Awesome Facet',
-    });
-    searchInterface?.i18n.addResourceBundle('en', 'translation', {
-      'all-categories-my-awesome-facet': 'My Awesome Facet',
-    });
-    await playExecuteFirstSearch(context);
-  },
-  beforeEach: () => {
-    // Mock twice: once for initial search, once for re-search after i18n update
-    mockSelectedRootValue('my-awesome-facet');
-    mockSelectedRootValue('my-awesome-facet');
   },
 };
