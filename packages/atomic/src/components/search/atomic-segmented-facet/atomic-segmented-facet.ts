@@ -27,6 +27,8 @@ import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-value
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {renderFacetSegmentedValue} from '@/src/components/search/facets/facet-segmented-value/facet-segmented-value';
 import facetSegmentedValueStyles from '@/src/components/search/facets/facet-segmented-value/facet-segmented-value.tw.css.js';
+import {arrayConverter} from '@/src/converters/array-converter';
+import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -110,7 +112,12 @@ export class AtomicSegmentedFacet
    * ```
    * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
    */
-  @property({reflect: true, type: Array, attribute: 'tabs-included'})
+  @property({
+    type: Array,
+    attribute: 'tabs-included',
+    converter: arrayConverter,
+    reflect: true,
+  })
   tabsIncluded: string[] = [];
 
   /**
@@ -122,7 +129,12 @@ export class AtomicSegmentedFacet
    * ```
    * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
    */
-  @property({reflect: true, type: Array, attribute: 'tabs-excluded'})
+  @property({
+    type: Array,
+    attribute: 'tabs-excluded',
+    converter: arrayConverter,
+    reflect: true,
+  })
   tabsExcluded: string[] = [];
 
   /**
@@ -131,7 +143,12 @@ export class AtomicSegmentedFacet
    *
    * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
    */
-  @property({reflect: true, type: Boolean, attribute: 'filter-facet-count'})
+  @property({
+    type: Boolean,
+    converter: booleanConverter,
+    attribute: 'filter-facet-count',
+    reflect: true,
+  })
   filterFacetCount = true;
 
   /**
@@ -199,7 +216,12 @@ export class AtomicSegmentedFacet
    *
    * The default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
    */
-  @property({type: Array, attribute: 'allowed-values'})
+  @property({
+    type: Array,
+    attribute: 'allowed-values',
+    converter: arrayConverter,
+    reflect: true,
+  })
   allowedValues: string[] = [];
 
   /**
@@ -221,7 +243,12 @@ export class AtomicSegmentedFacet
    *
    * The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
    */
-  @property({type: Array, attribute: 'custom-sort'})
+  @property({
+    type: Array,
+    attribute: 'custom-sort',
+    converter: arrayConverter,
+    reflect: true,
+  })
   customSort: string[] = [];
 
   private dependenciesManager!: FacetConditionsManager;
