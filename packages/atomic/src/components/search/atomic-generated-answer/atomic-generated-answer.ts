@@ -5,7 +5,6 @@ import {
   buildSearchStatus,
   buildTabManager,
   type GeneratedAnswer,
-  type GeneratedAnswerCitation,
   type GeneratedAnswerState,
   type SearchStatus,
   type SearchStatusState,
@@ -14,15 +13,11 @@ import {
 } from '@coveo/headless';
 import {html, LitElement, nothing, type PropertyValueMap} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {keyed} from 'lit/directives/keyed.js';
-import {renderCopyButton} from '@/src/components/common/generated-answer/copy-button';
-import {renderFeedbackButton} from '@/src/components/common/generated-answer/feedback-button';
-import {renderGeneratedContentContainer} from '@/src/components/common/generated-answer/generated-content-container';
-import {renderRetryPrompt} from '@/src/components/common/generated-answer/retry-prompt';
-import {renderShowButton} from '@/src/components/common/generated-answer/show-button';
-import {renderSourceCitations} from '@/src/components/common/generated-answer/source-citations';
-import {renderHeading} from '@/src/components/common/heading';
-import {renderSwitch} from '@/src/components/common/switch';
+import {GeneratedAnswerController} from '@/src/components/common/generated-answer/generated-answer-controller';
+import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
+import {renderCitations} from '@/src/components/common/generated-answer/render-citations';
+import {renderCustomNoAnswerMessage} from '@/src/components/common/generated-answer/render-custom-no-answer-message';
+import {renderFeedbackAndCopyButtons} from '@/src/components/common/generated-answer/render-feedback-and-copy-buttons';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {arrayConverter} from '@/src/converters/array-converter';
@@ -35,11 +30,6 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {debounce} from '@/src/utils/debounce-utils';
-import {
-  type GeneratedAnswerData,
-  SafeStorage,
-  StorageItems,
-} from '@/src/utils/local-storage-utils';
 import {getNamedSlotContent} from '@/src/utils/slot-utils';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
 import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
@@ -105,9 +95,7 @@ export class AtomicGeneratedAnswer
 
   private resizeObserver?: ResizeObserver;
   private fullAnswerHeight?: number;
-  private storage: SafeStorage = new SafeStorage();
-  private storedData!: GeneratedAnswerData;
-  private modalRef?: HTMLAtomicGeneratedAnswerFeedbackModalElement;
+  private controller!: GeneratedAnswerController;
 
   /**
    * Whether to render a toggle button that lets the user hide or show the answer.
@@ -235,11 +223,17 @@ export class AtomicGeneratedAnswer
       );
     }
 
-    this.storedData = this.readStoredData();
+    this.controller = new GeneratedAnswerController(this, {
+      withToggle: this.withToggle,
+      getGeneratedAnswer: () => this.generatedAnswer,
+      getGeneratedAnswerState: () => this.generatedAnswerState,
+      getSearchStatusState: () => this.searchStatusState,
+      getBindings: () => this.bindings,
+    });
 
     this.generatedAnswer = buildGeneratedAnswer(this.bindings.engine, {
       initialState: {
-        isVisible: this.storedData.isVisible,
+        isVisible: this.controller.data.isVisible,
         responseFormat: {
           contentFormat: ['text/markdown', 'text/plain'],
         },
@@ -252,7 +246,7 @@ export class AtomicGeneratedAnswer
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.tabManager = buildTabManager(this.bindings.engine);
 
-    this.insertFeedbackModal();
+    this.controller.insertFeedbackModal();
 
     if (window.ResizeObserver && this.collapsible) {
       const debouncedAdaptAnswerHeight = debounce(
@@ -337,7 +331,7 @@ export class AtomicGeneratedAnswer
               part="container"
               aria-label=${this.bindings.i18n.t('generated-answer-title')}
             >
-              <article>${this.renderCustomNoAnswerMessage()}</article>
+              <article>${this.renderCustomNoAnswerMessageWrapper()}</article>
             </aside>
           </div>
         `;
@@ -360,144 +354,66 @@ export class AtomicGeneratedAnswer
 
   // Used by bindStateToController decorator via onUpdateCallbackMethod option
   public onGeneratedAnswerStateUpdate = () => {
-    if (this.generatedAnswerState.isVisible !== this.storedData?.isVisible) {
-      this.storedData = {
-        ...this.storedData,
+    if (
+      this.generatedAnswerState.isVisible !== this.controller.data.isVisible
+    ) {
+      this.controller.data = {
+        ...this.controller.data,
         isVisible: this.generatedAnswerState.isVisible,
       };
-      this.writeStoredData(this.storedData);
+      this.controller.writeStoredData(this.controller.data);
     }
 
-    this.ariaMessage.message = this.getGeneratedAnswerStatus();
+    this.ariaMessage.message = this.controller.getGeneratedAnswerStatus();
   };
 
-  private getGeneratedAnswerStatus() {
-    const isHidden = !this.generatedAnswerState?.isVisible;
-    const isGenerating = !!this.generatedAnswerState?.isStreaming;
-    const hasAnswer = !!this.generatedAnswerState?.answer;
-    const hasError = !!this.generatedAnswerState?.error;
-
-    if (isHidden) {
-      return this.bindings.i18n.t('generated-answer-hidden');
-    }
-
-    if (isGenerating) {
-      return this.bindings.i18n.t('generating-answer');
-    }
-
-    if (hasError) {
-      return this.bindings.i18n.t('answer-could-not-be-generated');
-    }
-
-    if (hasAnswer) {
-      return this.bindings.i18n.t('answer-generated', {
-        answer: this.generatedAnswerState?.answer,
-      });
-    }
-
-    return '';
-  }
-
   private get hasRetryableError() {
-    return (
-      !this.searchStatusState?.hasError &&
-      this.generatedAnswerState?.error?.isRetryable
-    );
+    return this.controller.hasRetryableError;
   }
 
   private get hasNoAnswerGenerated() {
-    const {answer, citations} = this.generatedAnswerState ?? {};
-    return (
-      answer === undefined && !citations?.length && !this.hasRetryableError
-    );
+    return this.controller.hasNoAnswerGenerated;
   }
 
   private get isAnswerVisible() {
-    return this.generatedAnswerState?.isVisible;
+    return this.controller.isAnswerVisible;
   }
 
   private get toggleTooltip() {
-    const key = this.isAnswerVisible
-      ? 'generated-answer-toggle-on'
-      : 'generated-answer-toggle-off';
-    return this.bindings.i18n.t(key);
-  }
-
-  private get hasClipboard() {
-    return !!navigator?.clipboard?.writeText;
+    return this.controller.getToggleTooltip();
   }
 
   private get copyToClipboardTooltip() {
-    if (this.copyError) {
-      return this.bindings.i18n.t('failed-to-copy-generated-answer');
-    }
-
-    return !this.copied
-      ? this.bindings.i18n.t('copy-generated-answer')
-      : this.bindings.i18n.t('generated-answer-copied');
+    return this.controller.getCopyToClipboardTooltip(
+      this.copied,
+      this.copyError
+    );
   }
 
   private get hasCustomNoAnswerMessage() {
     return getNamedSlotContent(this, 'no-answer-message').length > 0;
   }
 
-  private insertFeedbackModal() {
-    this.modalRef = document.createElement(
-      'atomic-generated-answer-feedback-modal'
-    );
-    this.modalRef.generatedAnswer = this.generatedAnswer;
-    this.insertAdjacentElement('beforebegin', this.modalRef);
-  }
-
-  private readStoredData(): GeneratedAnswerData {
-    const storedData = this.storage.getParsedJSON<GeneratedAnswerData>(
-      StorageItems.GENERATED_ANSWER_DATA,
-      {isVisible: true}
-    );
-
-    // This check ensures that the answer is visible when the toggle is hidden and visible is set to false in the local storage.
-    return {
-      isVisible: (this.withToggle && storedData.isVisible) || !this.withToggle,
-    };
-  }
-
-  private writeStoredData(data: GeneratedAnswerData) {
-    this.storage.setJSON(StorageItems.GENERATED_ANSWER_DATA, data);
-  }
-
   private async copyToClipboard(answer: string) {
-    try {
-      await navigator.clipboard.writeText(answer);
-      this.copied = true;
-      this.generatedAnswer?.logCopyToClipboard();
-    } catch (error) {
-      this.copyError = true;
-      this.bindings.engine.logger.error(
-        `Failed to copy to clipboard: ${error}`
-      );
-    }
-
-    setTimeout(() => {
-      this.copied = false;
-      this.copyError = false;
-    }, 2000);
+    await this.controller.copyToClipboard(
+      answer,
+      () => {
+        this.copied = true;
+        setTimeout(() => {
+          this.copied = false;
+        }, 2000);
+      },
+      () => {
+        this.copyError = true;
+        setTimeout(() => {
+          this.copyError = false;
+        }, 2000);
+      }
+    );
   }
 
   private clickOnShowButton() {
-    if (this.generatedAnswerState?.expanded) {
-      this.generatedAnswer?.collapse();
-    } else {
-      this.generatedAnswer?.expand();
-    }
-  }
-
-  private getCitation(citation: GeneratedAnswerCitation) {
-    const {title} = citation;
-    const {i18n} = this.bindings;
-
-    return title.trim() !== ''
-      ? citation
-      : {...citation, title: i18n.t('no-title')};
+    this.controller.clickOnShowButton();
   }
 
   private getCitationFields() {
@@ -586,273 +502,80 @@ export class AtomicGeneratedAnswer
     }
   }
 
-  private setIsAnswerHelpful(isAnswerHelpful: boolean) {
-    if (this.modalRef) {
-      this.modalRef.helpful = isAnswerHelpful;
-    }
-  }
-
-  private openFeedbackModal() {
-    if (this.modalRef && !this.generatedAnswerState?.feedbackSubmitted) {
-      this.modalRef.isOpen = true;
-    }
-  }
-
   private clickDislike() {
-    this.setIsAnswerHelpful(false);
-    this.generatedAnswer?.dislike();
-    this.openFeedbackModal();
+    this.controller.clickDislike();
   }
 
   private clickLike() {
-    this.setIsAnswerHelpful(true);
-    this.generatedAnswer?.like();
-    this.openFeedbackModal();
+    this.controller.clickLike();
   }
 
-  private renderCitations() {
+  private renderCitationsList() {
     const {citations} = this.generatedAnswerState ?? {};
 
-    return citations?.map(
-      (citation: GeneratedAnswerCitation, index: number) => {
-        const interactiveCitation = buildInteractiveCitation(
-          this.bindings.engine,
-          {
-            options: {
-              citation,
-            },
-          }
-        );
-        return keyed(
-          citation.id,
-          html`
-            <li class="max-w-full">
-              <atomic-citation
-                .citation=${this.getCitation(citation)}
-                .index=${index}
-                .sendHoverEndEvent=${(citationHoverTimeMs: number) => {
-                  this.generatedAnswer?.logCitationHover(
-                    citation.id,
-                    citationHoverTimeMs
-                  );
-                }}
-                .interactiveCitation=${interactiveCitation}
-                .disableCitationAnchoring=${this.disableCitationAnchoring}
-                exportparts="citation,citation-popover"
-              ></atomic-citation>
-            </li>
-          `
-        );
-      }
-    );
-  }
-
-  private renderFeedbackAndCopyButtons() {
-    const {i18n} = this.bindings;
-    const {liked, disliked, answer, isStreaming} =
-      this.generatedAnswerState ?? {};
-
-    const containerClasses = [
-      'feedback-buttons',
-      'flex',
-      'h-9',
-      'absolute',
-      'top-6',
-      'shrink-0',
-      'gap-2',
-      this.withToggle ? 'right-20' : 'right-6',
-    ].join(' ');
-
-    if (isStreaming) {
-      return nothing;
-    }
-
-    return html`
-      <div class=${containerClasses}>
-        ${renderFeedbackButton({
-          props: {
-            title: i18n.t('this-answer-was-helpful'),
-            variant: 'like',
-            active: !!liked,
-            onClick: () => this.clickLike(),
-          },
-        })}
-        ${renderFeedbackButton({
-          props: {
-            title: i18n.t('this-answer-was-not-helpful'),
-            variant: 'dislike',
-            active: !!disliked,
-            onClick: () => this.clickDislike(),
-          },
-        })}
-        ${
-          this.hasClipboard
-            ? renderCopyButton({
-                props: {
-                  title: this.copyToClipboardTooltip,
-                  isCopied: this.copied,
-                  error: this.copyError,
-                  onClick: async () => {
-                    if (answer) {
-                      await this.copyToClipboard(answer);
-                    }
-                  },
-                },
-              })
-            : nothing
-        }
-      </div>
-    `;
-  }
-
-  private renderDisclaimer() {
-    const {i18n} = this.bindings;
-    const {isStreaming} = this.generatedAnswerState ?? {};
-
-    if (isStreaming) {
-      return nothing;
-    }
-    return html`
-      <div class="text-neutral-dark text-xs/[1rem]">
-        <slot name="disclaimer">${i18n.t('generated-answer-disclaimer')}</slot>
-      </div>
-    `;
-  }
-
-  private renderShowButton() {
-    const {i18n} = this.bindings;
-    const {expanded, isStreaming} = this.generatedAnswerState ?? {};
-    const canRender = this.collapsible && !isStreaming;
-
-    if (!canRender) {
-      return nothing;
-    }
-    return renderShowButton({
+    return renderCitations({
       props: {
-        i18n,
-        onClick: () => this.clickOnShowButton(),
-        isCollapsed: !expanded,
+        citations,
+        i18n: this.bindings.i18n,
+        buildInteractiveCitation: (citation) =>
+          buildInteractiveCitation(this.bindings.engine, {
+            options: {citation},
+          }),
+        logCitationHover: (citationId, citationHoverTimeMs) => {
+          this.generatedAnswer?.logCitationHover(
+            citationId,
+            citationHoverTimeMs
+          );
+        },
+        disableCitationAnchoring: this.disableCitationAnchoring,
       },
     });
   }
 
-  private renderGeneratingAnswerLabel() {
-    const {i18n} = this.bindings;
-    const {isStreaming} = this.generatedAnswerState ?? {};
-
-    const canRender = this.collapsible && isStreaming;
-
-    if (!canRender) {
-      return nothing;
-    }
-    return html`
-      <div
-        part="is-generating"
-        class="text-primary hidden text-base font-light"
-      >
-        ${i18n.t('generating-answer')}...
-      </div>
-    `;
+  private renderFeedbackAndCopyButtonsWrapper() {
+    return renderFeedbackAndCopyButtons({
+      props: {
+        i18n: this.bindings.i18n,
+        generatedAnswerState: this.generatedAnswerState,
+        withToggle: this.withToggle,
+        copied: this.copied,
+        copyError: this.copyError,
+        getCopyToClipboardTooltip: () => this.copyToClipboardTooltip,
+        onClickLike: () => this.clickLike(),
+        onClickDislike: () => this.clickDislike(),
+        onCopyToClipboard: (answer) => this.copyToClipboard(answer),
+      },
+    });
   }
 
   private renderContent() {
-    const {i18n} = this.bindings;
-    const {isStreaming, answer, citations, answerContentFormat} =
-      this.generatedAnswerState ?? {};
-
-    return html`
-      <div part="generated-content">
-        <div class="flex items-center">
-          ${renderHeading({
-            props: {
-              level: 0,
-              part: 'header-label',
-              class:
-                'text-primary bg-primary-background inline-block rounded-md px-2.5 py-2 font-medium',
-            },
-          })(html`${i18n.t('generated-answer-title')}`)}
-          <div class="ml-auto flex h-9 items-center">
-            ${renderSwitch({
-              props: {
-                part: 'toggle',
-                checked: !!this.isAnswerVisible,
-                onToggle: (checked: boolean) => {
-                  checked
-                    ? this.generatedAnswer?.show()
-                    : this.generatedAnswer?.hide();
-                },
-                ariaLabel: i18n.t('generated-answer-title'),
-                title: this.toggleTooltip,
-                withToggle: this.withToggle,
-                tabIndex: 0,
-              },
-            })}
-          </div>
-        </div>
-        ${
-          this.hasRetryableError && this.isAnswerVisible
-            ? renderRetryPrompt({
-                props: {
-                  onClick: () => this.generatedAnswer?.retry(),
-                  buttonLabel: i18n.t('retry'),
-                  message: i18n.t('retry-stream-message'),
-                },
-              })
-            : nothing
-        }
-        ${
-          !this.hasRetryableError && this.isAnswerVisible
-            ? renderGeneratedContentContainer({
-                props: {
-                  answer,
-                  answerContentFormat,
-                  isStreaming: !!isStreaming,
-                },
-              })(html`
-              ${this.renderFeedbackAndCopyButtons()}
-              ${renderSourceCitations({
-                props: {
-                  label: i18n.t('citations'),
-                  isVisible: !!citations?.length,
-                },
-              })(html`${this.renderCitations()}`)}
-            `)
-            : nothing
-        }
-        ${
-          !this.hasRetryableError && this.isAnswerVisible
-            ? html`
-              <div part="generated-answer-footer" class="mt-6 flex justify-end">
-                ${this.renderGeneratingAnswerLabel()} ${this.renderShowButton()}
-                ${this.renderDisclaimer()}
-              </div>
-            `
-            : nothing
-        }
-      </div>
-    `;
+    return renderAnswerContent({
+      props: {
+        i18n: this.bindings.i18n,
+        generatedAnswerState: this.generatedAnswerState,
+        isAnswerVisible: this.isAnswerVisible,
+        hasRetryableError: this.hasRetryableError,
+        toggleTooltip: this.toggleTooltip,
+        withToggle: this.withToggle,
+        collapsible: this.collapsible,
+        renderFeedbackAndCopyButtonsSlot: () =>
+          this.renderFeedbackAndCopyButtonsWrapper(),
+        renderCitationsSlot: () => html`${this.renderCitationsList()}`,
+        onToggle: (checked: boolean) => {
+          checked ? this.generatedAnswer?.show() : this.generatedAnswer?.hide();
+        },
+        onRetry: () => this.generatedAnswer?.retry(),
+        onClickShowButton: () => this.clickOnShowButton(),
+      },
+    });
   }
 
-  private renderCustomNoAnswerMessage() {
-    const {i18n} = this.bindings;
-
-    return html`
-      <div part="generated-content">
-        <div class="flex items-center">
-          ${renderHeading({
-            props: {
-              level: 0,
-              part: 'header-label',
-              class:
-                'text-primary bg-primary-background inline-block rounded-md px-2.5 py-2 font-medium',
-            },
-          })(html`${i18n.t('generated-answer-title')}`)}
-        </div>
-        <div part="generated-container" class="mt-6 break-words">
-          <slot name="no-answer-message"></slot>
-        </div>
-      </div>
-    `;
+  private renderCustomNoAnswerMessageWrapper() {
+    return renderCustomNoAnswerMessage({
+      props: {
+        i18n: this.bindings.i18n,
+      },
+    });
   }
 }
 
