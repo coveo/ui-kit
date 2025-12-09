@@ -27,13 +27,11 @@ const virtualOpenApiModules: PluginImpl = () => {
           'virtual:open-api-coveo',
           'https://platform.cloud.coveo.com/api-docs'
         );
-        console.log('load', id);
         if (virtualModules.has(id)) {
           return virtualModules.get(id);
         }
 
         try {
-          console.log(`Fetching OpenAPI spec from ${id}`);
           const response = await fetch(url);
           if (!response.ok) {
             throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
@@ -88,6 +86,7 @@ const externalizeDependencies: PluginImpl = () => {
   };
 };
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
+const isChromatic = process.env.IS_CHROMATIC === 'true';
 
 function getPackageVersion(): string {
   return JSON.parse(
@@ -96,13 +95,15 @@ function getPackageVersion(): string {
 }
 
 const config: StorybookConfig = {
-  stories: [
-    './Introduction.stories.tsx',
-    '../src/**/*.new.stories.tsx',
-    '../src/**/*.mdx',
-    '../storybook-pages/**/*.new.stories.tsx',
-    '../storybook-pages/**/*.mdx',
-  ],
+  stories: isChromatic
+    ? ['../storybook-pages/**/*.new.stories.tsx']
+    : [
+        './Introduction.stories.tsx',
+        '../src/**/*.new.stories.tsx',
+        '../src/**/*.mdx',
+        '../storybook-pages/**/*.new.stories.tsx',
+        '../storybook-pages/**/*.mdx',
+      ],
   staticDirs: [
     {from: '../dist/atomic/assets', to: '/assets'},
     {from: '../dist/atomic/lang', to: '/lang'},

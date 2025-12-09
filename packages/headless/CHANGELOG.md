@@ -1,3 +1,22 @@
+## <small>3.35.4 (2025-12-03)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([cfc527e](https://github.com/coveo/ui-kit/commits/cfc527e))
+* Add standalone engine definition to SSR-Next search (#6613) ([04a7205](https://github.com/coveo/ui-kit/commits/04a7205)), closes [#6613](https://github.com/coveo/ui-kit/issues/6613)
+* docs(headless): remove a broken handwritten link (#6659) ([d312e18](https://github.com/coveo/ui-kit/commits/d312e18)), closes [#6659](https://github.com/coveo/ui-kit/issues/6659)
+* fix(headless): ensure capture depends on `clientId` value (#6608) ([58d12a2](https://github.com/coveo/ui-kit/commits/58d12a2)), closes [#6608](https://github.com/coveo/ui-kit/issues/6608)
+* chore(headless-ssr): apply token fix to search (#6422) ([98f2577](https://github.com/coveo/ui-kit/commits/98f2577)), closes [#6422](https://github.com/coveo/ui-kit/issues/6422)
+
+
+
+## <small>3.35.3 (2025-12-03)</small>
+
+* Add standalone engine definition to SSR-Next search (#6613) ([04a7205](https://github.com/coveo/ui-kit/commits/04a7205)), closes [#6613](https://github.com/coveo/ui-kit/issues/6613)
+* docs(headless): remove a broken handwritten link (#6659) ([d312e18](https://github.com/coveo/ui-kit/commits/d312e18)), closes [#6659](https://github.com/coveo/ui-kit/issues/6659)
+* fix(headless): ensure capture depends on `clientId` value (#6608) ([58d12a2](https://github.com/coveo/ui-kit/commits/58d12a2)), closes [#6608](https://github.com/coveo/ui-kit/issues/6608)
+* chore(headless-ssr): apply token fix to search (#6422) ([98f2577](https://github.com/coveo/ui-kit/commits/98f2577)), closes [#6422](https://github.com/coveo/ui-kit/issues/6422)
+
+
+
 ## <small>3.35.2 (2025-11-20)</small>
 
 * chore(headless): fix pnpm `pnpm run dev` in Headless (#6335) ([a5e4e95](https://github.com/coveo/ui-kit/commits/a5e4e95)), closes [#6335](https://github.com/coveo/ui-kit/issues/6335)

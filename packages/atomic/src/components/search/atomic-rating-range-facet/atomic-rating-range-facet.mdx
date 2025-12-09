@@ -1,0 +1,148 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+import * as AtomicRatingRangeFacetStories from './atomic-rating-range-facet.new.stories';
+import {AtomicDocTemplate} from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicRatingRangeFacetStories} />
+
+<AtomicDocTemplate
+  stories={AtomicRatingRangeFacetStories}
+  githubPath="search/facets/atomic-rating-range-facet/atomic-rating-range-facet.ts"
+  tagName="atomic-rating-range-facet"
+  className="AtomicRatingRangeFacet"
+>
+
+The `atomic-rating-range-facet` component displays a facet of the results for the current query as star ratings. It allows users to filter results based on rating ranges (e.g., "4 and up", "3 and up").
+
+This component only supports numeric fields and is designed to work with rating data typically stored as numeric values (e.g., 1-5 stars).
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    <atomic-layout-section section="facets">
+      
+      <atomic-rating-range-facet
+        field="rating"
+        label="Customer Rating"
+        number-of-intervals="5">
+      </atomic-rating-range-facet>
+      
+    </atomic-layout-section>
+    ...
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+## Key Features
+
+- **Visual Rating Display**: Shows ratings as star icons for intuitive user understanding
+- **Range-Based Filtering**: Provides "and up" filtering (e.g., "4 stars and up")
+- **Customizable Intervals**: Configure the number of rating levels to display
+- **Custom Icons**: Use custom SVG icons instead of default stars
+- **Tab Integration**: Show/hide facet based on active tabs
+- **Conditional Display**: Show facet based on other facet selections using `depends-on`
+
+## Configuration
+
+### Basic Configuration
+
+The `field` attribute specifies which numeric field in your index contains the rating data:
+
+```html
+<atomic-rating-range-facet
+  field="snrating"
+  label="Star Rating">
+</atomic-rating-range-facet>
+```
+
+### Customizing Rating Levels
+
+Control the number of rating levels and the maximum/minimum values:
+
+```html
+<atomic-rating-range-facet
+  field="rating"
+  number-of-intervals="5"
+  max-value-in-index="5"
+  min-value-in-index="1">
+</atomic-rating-range-facet>
+```
+
+- **`number-of-intervals`**: Number of rating options to display (default: 5)
+- **`max-value-in-index`**: Maximum rating value in your data (default: same as `number-of-intervals`)
+- **`min-value-in-index`**: Minimum rating value in your data (default: 1)
+
+### Custom Icons
+
+Replace the default star icon with a custom SVG:
+
+```html
+<atomic-rating-range-facet
+  field="rating"
+  icon="assets://heart.svg">
+</atomic-rating-range-facet>
+```
+
+You can use:
+- URLs starting with `http://`, `https://`, `./`, or `../` to load external icons
+- `assets://` prefix to use icons from the Atomic package
+- Inline SVG strings
+
+Make sure your custom icon includes `fill="currentColor"` to allow color customization via CSS variables:
+- `--atomic-rating-icon-active-color`: Color for filled/active icons
+- `--atomic-rating-icon-inactive-color`: Color for unfilled/inactive icons
+
+### Tab-Based Display
+
+Control which tabs display the facet:
+
+```html
+<!-- Show only on specific tabs -->
+<atomic-rating-range-facet
+  field="rating"
+  tabs-included='["reviews", "products"]'>
+</atomic-rating-range-facet>
+
+<!-- Hide on specific tabs -->
+<atomic-rating-range-facet
+  field="rating"
+  tabs-excluded='["documentation"]'>
+</atomic-rating-range-facet>
+```
+
+### Conditional Facets (depends-on)
+
+Display the facet only when specific values are selected in other facets:
+
+```html
+<atomic-facet facet-id="producttype" field="producttype"></atomic-facet>
+
+<!-- Show rating facet only when "Electronics" is selected -->
+<atomic-rating-range-facet
+  field="rating"
+  depends-on-producttype="Electronics">
+</atomic-rating-range-facet>
+```
+
+## Accessibility
+
+The component is built with accessibility in mind:
+- Proper ARIA labels for screen readers
+- Keyboard navigation support
+- Focus management for improved usability
+- High-contrast mode support
+
+## Performance Considerations
+
+Use `injection-depth` to control how many results are scanned when generating facet values. Higher values provide more accurate facet counts but may impact performance:
+
+```html
+<atomic-rating-range-facet
+  field="rating"
+  injection-depth="2000">
+</atomic-rating-range-facet>
+```
+
+Default: 1000. Minimum: 0.
+
+</AtomicDocTemplate>

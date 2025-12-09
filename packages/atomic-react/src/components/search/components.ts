@@ -2,10 +2,14 @@ import {
   AtomicAriaLive as LitAtomicAriaLive,
   AtomicAutomaticFacet as LitAtomicAutomaticFacet,
   AtomicBreadbox as LitAtomicBreadbox,
+  AtomicColorFacet as LitAtomicColorFacet,
   AtomicComponentError as LitAtomicComponentError,
   AtomicExternal as LitAtomicExternal,
   AtomicFacet as LitAtomicFacet,
   AtomicFocusTrap as LitAtomicFocusTrap,
+  AtomicFormatCurrency as LitAtomicFormatCurrency,
+  AtomicFormatNumber as LitAtomicFormatNumber,
+  AtomicFormatUnit as LitAtomicFormatUnit,
   AtomicHtml as LitAtomicHtml,
   AtomicIcon as LitAtomicIcon,
   AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
@@ -15,18 +19,27 @@ import {
   AtomicNoResults as LitAtomicNoResults,
   AtomicNumericRange as LitAtomicNumericRange,
   AtomicPager as LitAtomicPager,
+  AtomicPopover as LitAtomicPopover,
   AtomicQueryError as LitAtomicQueryError,
   AtomicQuerySummary as LitAtomicQuerySummary,
+  AtomicRatingFacet as LitAtomicRatingFacet,
+  AtomicRatingRangeFacet as LitAtomicRatingRangeFacet,
   AtomicRecsInterface as LitAtomicRecsInterface,
   AtomicResult as LitAtomicResult,
   AtomicResultBadge as LitAtomicResultBadge,
+  AtomicResultChildren as LitAtomicResultChildren,
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
-  AtomicResultFieldsList as LitAtomicResultFieldsList,
+  AtomicResultDate as LitAtomicResultDate,
   AtomicResultHtml as LitAtomicResultHtml,
+  AtomicResultIcon as LitAtomicResultIcon,
+  AtomicResultImage as LitAtomicResultImage,
+  AtomicResultLink as LitAtomicResultLink,
   AtomicResultList as LitAtomicResultList,
   AtomicResultLocalizedText as LitAtomicResultLocalizedText,
   AtomicResultMultiValueText as LitAtomicResultMultiValueText,
   AtomicResultNumber as LitAtomicResultNumber,
+  AtomicResultPrintableUri as LitAtomicResultPrintableUri,
+  AtomicResultRating as LitAtomicResultRating,
   AtomicResultSectionActions as LitAtomicResultSectionActions,
   AtomicResultSectionBadges as LitAtomicResultSectionBadges,
   AtomicResultSectionBottomMetadata as LitAtomicResultSectionBottomMetadata,
@@ -38,6 +51,7 @@ import {
   AtomicResultSectionVisual as LitAtomicResultSectionVisual,
   AtomicResultsPerPage as LitAtomicResultsPerPage,
   AtomicResultText as LitAtomicResultText,
+  AtomicResultTimespan as LitAtomicResultTimespan,
   AtomicSearchBoxInstantResults as LitAtomicSearchBoxInstantResults,
   AtomicSearchBoxQuerySuggestions as LitAtomicSearchBoxQuerySuggestions,
   AtomicSearchBoxRecentQueries as LitAtomicSearchBoxRecentQueries,
@@ -45,7 +59,9 @@ import {
   AtomicSearchLayout as LitAtomicSearchLayout,
   AtomicSegmentedFacetScrollable as LitAtomicSegmentedFacetScrollable,
   AtomicSortDropdown as LitAtomicSortDropdown,
+  AtomicSortExpression as LitAtomicSortExpression,
   AtomicTab as LitAtomicTab,
+  AtomicTabManager as LitAtomicTabManager,
   AtomicText as LitAtomicText,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
@@ -67,6 +83,12 @@ export const AtomicBreadbox = createComponent({
   tagName: 'atomic-breadbox',
   react: React,
   elementClass: LitAtomicBreadbox,
+});
+
+export const AtomicColorFacet = createComponent({
+  tagName: 'atomic-color-facet',
+  react: React,
+  elementClass: LitAtomicColorFacet,
 });
 
 export const AtomicComponentError = createComponent({
@@ -91,6 +113,24 @@ export const AtomicFocusTrap = createComponent({
   tagName: 'atomic-focus-trap',
   react: React,
   elementClass: LitAtomicFocusTrap,
+});
+
+export const AtomicFormatCurrency = createComponent({
+  tagName: 'atomic-format-currency',
+  react: React,
+  elementClass: LitAtomicFormatCurrency,
+});
+
+export const AtomicFormatNumber = createComponent({
+  tagName: 'atomic-format-number',
+  react: React,
+  elementClass: LitAtomicFormatNumber,
+});
+
+export const AtomicFormatUnit = createComponent({
+  tagName: 'atomic-format-unit',
+  react: React,
+  elementClass: LitAtomicFormatUnit,
 });
 
 export const AtomicHtml = createComponent({
@@ -147,6 +187,12 @@ export const AtomicPager = createComponent({
   elementClass: LitAtomicPager,
 });
 
+export const AtomicPopover = createComponent({
+  tagName: 'atomic-popover',
+  react: React,
+  elementClass: LitAtomicPopover,
+});
+
 export const AtomicQueryError = createComponent({
   tagName: 'atomic-query-error',
   react: React,
@@ -157,6 +203,18 @@ export const AtomicQuerySummary = createComponent({
   tagName: 'atomic-query-summary',
   react: React,
   elementClass: LitAtomicQuerySummary,
+});
+
+export const AtomicRatingFacet = createComponent({
+  tagName: 'atomic-rating-facet',
+  react: React,
+  elementClass: LitAtomicRatingFacet,
+});
+
+export const AtomicRatingRangeFacet = createComponent({
+  tagName: 'atomic-rating-range-facet',
+  react: React,
+  elementClass: LitAtomicRatingRangeFacet,
 });
 
 export const AtomicRecsInterface = createComponent({
@@ -177,22 +235,46 @@ export const AtomicResultBadge = createComponent({
   elementClass: LitAtomicResultBadge,
 });
 
+export const AtomicResultChildren = createComponent({
+  tagName: 'atomic-result-children',
+  react: React,
+  elementClass: LitAtomicResultChildren,
+});
+
 export const AtomicResultChildrenTemplate = createComponent({
   tagName: 'atomic-result-children-template',
   react: React,
   elementClass: LitAtomicResultChildrenTemplate,
 });
 
-export const AtomicResultFieldsList = createComponent({
-  tagName: 'atomic-result-fields-list',
+export const AtomicResultDate = createComponent({
+  tagName: 'atomic-result-date',
   react: React,
-  elementClass: LitAtomicResultFieldsList,
+  elementClass: LitAtomicResultDate,
 });
 
 export const AtomicResultHtml = createComponent({
   tagName: 'atomic-result-html',
   react: React,
   elementClass: LitAtomicResultHtml,
+});
+
+export const AtomicResultIcon = createComponent({
+  tagName: 'atomic-result-icon',
+  react: React,
+  elementClass: LitAtomicResultIcon,
+});
+
+export const AtomicResultImage = createComponent({
+  tagName: 'atomic-result-image',
+  react: React,
+  elementClass: LitAtomicResultImage,
+});
+
+export const AtomicResultLink = createComponent({
+  tagName: 'atomic-result-link',
+  react: React,
+  elementClass: LitAtomicResultLink,
 });
 
 export const AtomicResultList = createComponent({
@@ -217,6 +299,18 @@ export const AtomicResultNumber = createComponent({
   tagName: 'atomic-result-number',
   react: React,
   elementClass: LitAtomicResultNumber,
+});
+
+export const AtomicResultPrintableUri = createComponent({
+  tagName: 'atomic-result-printable-uri',
+  react: React,
+  elementClass: LitAtomicResultPrintableUri,
+});
+
+export const AtomicResultRating = createComponent({
+  tagName: 'atomic-result-rating',
+  react: React,
+  elementClass: LitAtomicResultRating,
 });
 
 export const AtomicResultSectionActions = createComponent({
@@ -285,6 +379,12 @@ export const AtomicResultText = createComponent({
   elementClass: LitAtomicResultText,
 });
 
+export const AtomicResultTimespan = createComponent({
+  tagName: 'atomic-result-timespan',
+  react: React,
+  elementClass: LitAtomicResultTimespan,
+});
+
 export const AtomicSearchBoxInstantResults = createComponent({
   tagName: 'atomic-search-box-instant-results',
   react: React,
@@ -327,10 +427,22 @@ export const AtomicSortDropdown = createComponent({
   elementClass: LitAtomicSortDropdown,
 });
 
+export const AtomicSortExpression = createComponent({
+  tagName: 'atomic-sort-expression',
+  react: React,
+  elementClass: LitAtomicSortExpression,
+});
+
 export const AtomicTab = createComponent({
   tagName: 'atomic-tab',
   react: React,
   elementClass: LitAtomicTab,
+});
+
+export const AtomicTabManager = createComponent({
+  tagName: 'atomic-tab-manager',
+  react: React,
+  elementClass: LitAtomicTabManager,
 });
 
 export const AtomicText = createComponent({
