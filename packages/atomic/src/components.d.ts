@@ -152,19 +152,6 @@ export namespace Components {
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
     }
     /**
-     * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
-     */
-    interface AtomicDidYouMean {
-        /**
-          * Whether to automatically apply corrections for queries that would otherwise return no results. When `automaticallyCorrectQuery` is `true`, the component automatically triggers a new query using the suggested term. When `automaticallyCorrectQuery` is `false`, the component returns the suggested term without triggering a new query.  The default value is `true`.
-         */
-        "automaticallyCorrectQuery": boolean;
-        /**
-          * Define which query correction system to use  `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms. `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.  Default value is `next`.
-         */
-        "queryCorrectionMode": 'legacy' | 'next';
-    }
-    /**
      * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
      * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
      * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
@@ -1676,15 +1663,6 @@ declare global {
         new (): HTMLAtomicCitationElement;
     };
     /**
-     * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
-     */
-    interface HTMLAtomicDidYouMeanElement extends Components.AtomicDidYouMean, HTMLStencilElement {
-    }
-    var HTMLAtomicDidYouMeanElement: {
-        prototype: HTMLAtomicDidYouMeanElement;
-        new (): HTMLAtomicDidYouMeanElement;
-    };
-    /**
      * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
      * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
      * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
@@ -2507,7 +2485,6 @@ declare global {
         "atomic-automatic-facet-generator": HTMLAtomicAutomaticFacetGeneratorElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-citation": HTMLAtomicCitationElement;
-        "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
         "atomic-folded-result-list": HTMLAtomicFoldedResultListElement;
@@ -2706,19 +2683,6 @@ declare namespace LocalJSX {
           * Callback function invoked when the user stops hovering over a citation. `citationHoverTimeMs` is the amount of time over which the citation has been hovered.
          */
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
-    }
-    /**
-     * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
-     */
-    interface AtomicDidYouMean {
-        /**
-          * Whether to automatically apply corrections for queries that would otherwise return no results. When `automaticallyCorrectQuery` is `true`, the component automatically triggers a new query using the suggested term. When `automaticallyCorrectQuery` is `false`, the component returns the suggested term without triggering a new query.  The default value is `true`.
-         */
-        "automaticallyCorrectQuery"?: boolean;
-        /**
-          * Define which query correction system to use  `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms. `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.  Default value is `next`.
-         */
-        "queryCorrectionMode"?: 'legacy' | 'next';
     }
     /**
      * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
@@ -4103,7 +4067,6 @@ declare namespace LocalJSX {
         "atomic-automatic-facet-generator": AtomicAutomaticFacetGenerator;
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-citation": AtomicCitation;
-        "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-number-input": AtomicFacetNumberInput;
         "atomic-folded-result-list": AtomicFoldedResultList;
@@ -4208,10 +4171,6 @@ declare module "@stencil/core" {
              * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
              */
             "atomic-citation": LocalJSX.AtomicCitation & JSXBase.HTMLAttributes<HTMLAtomicCitationElement>;
-            /**
-             * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
-             */
-            "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             /**
              * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
              * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
