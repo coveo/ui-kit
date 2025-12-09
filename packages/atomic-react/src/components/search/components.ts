@@ -8,6 +8,9 @@ import {
   AtomicExternal as LitAtomicExternal,
   AtomicFacet as LitAtomicFacet,
   AtomicFocusTrap as LitAtomicFocusTrap,
+  AtomicFormatCurrency as LitAtomicFormatCurrency,
+  AtomicFormatNumber as LitAtomicFormatNumber,
+  AtomicFormatUnit as LitAtomicFormatUnit,
   AtomicHtml as LitAtomicHtml,
   AtomicIcon as LitAtomicIcon,
   AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
@@ -20,6 +23,7 @@ import {
   AtomicPopover as LitAtomicPopover,
   AtomicQueryError as LitAtomicQueryError,
   AtomicQuerySummary as LitAtomicQuerySummary,
+  AtomicRatingFacet as LitAtomicRatingFacet,
   AtomicRatingRangeFacet as LitAtomicRatingRangeFacet,
   AtomicRecsInterface as LitAtomicRecsInterface,
   AtomicResult as LitAtomicResult,
@@ -35,6 +39,7 @@ import {
   AtomicResultLocalizedText as LitAtomicResultLocalizedText,
   AtomicResultMultiValueText as LitAtomicResultMultiValueText,
   AtomicResultNumber as LitAtomicResultNumber,
+  AtomicResultPrintableUri as LitAtomicResultPrintableUri,
   AtomicResultRating as LitAtomicResultRating,
   AtomicResultSectionActions as LitAtomicResultSectionActions,
   AtomicResultSectionBadges as LitAtomicResultSectionBadges,
@@ -117,6 +122,24 @@ export const AtomicFocusTrap = createComponent({
   elementClass: LitAtomicFocusTrap,
 });
 
+export const AtomicFormatCurrency = createComponent({
+  tagName: 'atomic-format-currency',
+  react: React,
+  elementClass: LitAtomicFormatCurrency,
+});
+
+export const AtomicFormatNumber = createComponent({
+  tagName: 'atomic-format-number',
+  react: React,
+  elementClass: LitAtomicFormatNumber,
+});
+
+export const AtomicFormatUnit = createComponent({
+  tagName: 'atomic-format-unit',
+  react: React,
+  elementClass: LitAtomicFormatUnit,
+});
+
 export const AtomicHtml = createComponent({
   tagName: 'atomic-html',
   react: React,
@@ -187,6 +210,12 @@ export const AtomicQuerySummary = createComponent({
   tagName: 'atomic-query-summary',
   react: React,
   elementClass: LitAtomicQuerySummary,
+});
+
+export const AtomicRatingFacet = createComponent({
+  tagName: 'atomic-rating-facet',
+  react: React,
+  elementClass: LitAtomicRatingFacet,
 });
 
 export const AtomicRatingRangeFacet = createComponent({
@@ -277,6 +306,12 @@ export const AtomicResultNumber = createComponent({
   tagName: 'atomic-result-number',
   react: React,
   elementClass: LitAtomicResultNumber,
+});
+
+export const AtomicResultPrintableUri = createComponent({
+  tagName: 'atomic-result-printable-uri',
+  react: React,
+  elementClass: LitAtomicResultPrintableUri,
 });
 
 export const AtomicResultRating = createComponent({
