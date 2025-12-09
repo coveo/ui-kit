@@ -99,3 +99,37 @@ test.describe.fixme('with a query trigger', () => {
     await expect(searchBox.searchInput).toHaveValue(ORIGINAL_QUERY);
   });
 });
+
+test.describe('Visual Regression', () => {
+  test('should match baseline with automatic query correction', async ({
+    didYouMean,
+  }) => {
+    await test.step('Load component with automatic correction', async () => {
+      await didYouMean.load({story: 'with-automatic-query-correction'});
+      await didYouMean.hydrated.waitFor();
+    });
+
+    await test.step('Capture and compare screenshot', async () => {
+      const screenshot = await didYouMean.captureScreenshot();
+      expect(screenshot).toMatchSnapshot('did-you-mean-auto-correction.png', {
+        maxDiffPixelRatio: 0.04,
+      });
+    });
+  });
+
+  test('should match baseline with manual query correction', async ({
+    didYouMean,
+  }) => {
+    await test.step('Load component with manual correction', async () => {
+      await didYouMean.load({story: 'without-automatic-query-correction'});
+      await didYouMean.hydrated.waitFor();
+    });
+
+    await test.step('Capture and compare screenshot', async () => {
+      const screenshot = await didYouMean.captureScreenshot();
+      expect(screenshot).toMatchSnapshot('did-you-mean-manual-correction.png', {
+        maxDiffPixelRatio: 0.04,
+      });
+    });
+  });
+});
