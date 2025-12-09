@@ -1,10 +1,7 @@
-import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
-import type {
-  BadgePlacement,
-  BadgesProduct,
-} from '../../../api/commerce/product-enrichment/product-enrichment-response.js';
+import type {BadgesProduct} from '../../../api/commerce/product-enrichment/product-enrichment-response.js';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
+import {productEnrichmentOptionsSchema} from '../../../features/commerce/product-enrichment/product-enrichment.js';
 import {
   type FetchBadgesPayload,
   fetchBadges,
@@ -18,51 +15,31 @@ import {
   type Controller,
 } from '../../controller/headless-controller.js';
 
-/**
- * The initial state for the `ProductEnrichment` controller.
- *
- * @group Buildable controllers
- * @category ProductEnrichment
- */
-export interface ProductEnrichmentInitialState {
+export interface ProductEnrichmentOptions {
   /**
    * An array of placement IDs to fetch badges for.
    */
   placementIds?: string[];
+  /**
+   * The product ID to fetch badges for.
+   */
+  productId?: string;
 }
 
-/**
- * The configuration properties for the `ProductEnrichment` controller.
- *
- * @group Buildable controllers
- * @category ProductEnrichment
- */
 export interface ProductEnrichmentProps {
   /**
-   * The initial state.
+   * The options for the `ProductEnrichment` controller.
    */
-  initialState?: ProductEnrichmentInitialState;
+  options?: ProductEnrichmentOptions;
 }
 
 export type {FetchBadgesPayload};
 
-const defaultProductEnrichmentState: ProductEnrichmentInitialState = {
+const defaultProductEnrichmentOptions: ProductEnrichmentOptions = {
   placementIds: [],
+  productId: undefined,
 };
 
-const initialStateSchema = new Schema<ProductEnrichmentInitialState>({
-  placementIds: new ArrayValue({
-    required: false,
-    each: new StringValue({required: true, emptyAllowed: false}),
-  }),
-});
-
-/**
- * The `ProductEnrichment` controller manages product badges from the product enrichment API.
- *
- * @group Buildable controllers
- * @category ProductEnrichment
- */
 export interface ProductEnrichment extends Controller {
   /**
    * The state of the ProductEnrichment controller.
@@ -71,31 +48,15 @@ export interface ProductEnrichment extends Controller {
   /**
    * Fetches badges for the configured product and placement IDs.
    *
-   * @param placementIds - Optional array of placement IDs to fetch badges for. If not provided, uses the controller's configured placement IDs.
    */
-  getBadges(placementIds?: string[]): void;
-  /**
-   * Gets badge placements for a specific product ID.
-   *
-   * @param productId - The product ID to get badges for.
-   * @returns The badge placements for the product, or undefined if not found.
-   */
-  getBadgesPlacementsForProduct(
-    productId: string
-  ): BadgePlacement[] | undefined;
+  getBadges(): void;
 }
 
-/**
- * A scoped and simplified part of the headless state that is relevant to the `ProductEnrichment` controller.
- *
- * @group Buildable controllers
- * @category ProductEnrichment
- * */
 export interface ProductEnrichmentState {
   /**
    * An array of products with their badge placements.
    */
-  badges: BadgesProduct[];
+  products: BadgesProduct[];
   /**
    * Whether a request to fetch badges is currently being executed.
    */
@@ -112,8 +73,8 @@ function validateProductEnrichmentProps(
 ) {
   validateInitialState(
     engine,
-    initialStateSchema,
-    props?.initialState,
+    productEnrichmentOptionsSchema,
+    props?.options,
     'buildProductEnrichment'
   );
 }
@@ -141,13 +102,13 @@ export function buildProductEnrichment(
   const {dispatch} = engine;
   const getState = () => engine[stateKey];
 
-  const registrationState: ProductEnrichmentInitialState = {
-    ...defaultProductEnrichmentState,
-    ...props?.initialState,
+  const registrationOptions: ProductEnrichmentOptions = {
+    ...defaultProductEnrichmentOptions,
+    ...props?.options,
   };
 
   validateProductEnrichmentProps(engine, {
-    initialState: registrationState,
+    options: props?.options,
   });
 
   return {
@@ -158,32 +119,20 @@ export function buildProductEnrichment(
       return state.productEnrichment;
     },
 
-    getBadges(placementIds?: string[]) {
-      const idsToUse = placementIds ?? registrationState.placementIds ?? [];
-
-      const errorMessage = new ArrayValue({
-        required: true,
-        min: 1,
-        each: new StringValue({required: true, emptyAllowed: false}),
-      }).validate(idsToUse);
-
-      if (errorMessage) {
-        throw new Error(errorMessage);
+    getBadges() {
+      if (
+        !registrationOptions.placementIds ||
+        registrationOptions.placementIds.length === 0
+      ) {
+        return;
       }
 
       dispatch(
         fetchBadges({
-          placementIds: idsToUse,
+          placementIds: registrationOptions.placementIds,
+          productId: registrationOptions.productId,
         })
       );
-    },
-
-    getBadgesPlacementsForProduct(productId: string) {
-      const state = getState();
-      const product = state.productEnrichment.badges.find(
-        (p) => p.productId === productId
-      );
-      return product?.badgePlacements;
     },
   };
 }

@@ -244,6 +244,12 @@ export type {
 } from './controllers/commerce/instant-products/headless-instant-products.js';
 export {buildInstantProducts} from './controllers/commerce/instant-products/headless-instant-products.js';
 export type {
+  ProductEnrichment,
+  ProductEnrichmentOptions,
+  ProductEnrichmentState,
+} from './controllers/commerce/product-enrichment/headless-product-enrichment.js';
+export {buildProductEnrichment} from './controllers/commerce/product-enrichment/headless-product-enrichment.js';
+export type {
   ProductListing,
   ProductListingOptions,
   ProductListingState,

@@ -19,17 +19,26 @@ export interface FetchBadgesPayload {
    * An array of placement IDs to fetch badges for.
    */
   placementIds: string[];
+  /**
+   * The product ID to fetch badges for.
+   */
+  productId?: string;
 }
 
 const buildProductEnrichmentBadgesRequest = (
   payload: FetchBadgesPayload,
   state: StateNeededByFetchBadges,
-  navigatorContext: NavigatorContext
+  navigatorContext: NavigatorContext,
+  productId?: string
 ): ProductEnrichmentBadgesRequest => {
   const baseRequest = buildBaseCommerceAPIRequest(state, navigatorContext);
 
   return {
     ...baseRequest,
+    context: {
+      ...baseRequest.context,
+      ...(productId ? {product: {productId}} : {}),
+    },
     placementIds: payload.placementIds,
   };
 };
@@ -55,12 +64,14 @@ export const fetchBadges = createAsyncThunk<
         max: 5,
         each: new StringValue({required: true, emptyAllowed: false}),
       }),
+      productId: new StringValue({required: false, emptyAllowed: false}),
     });
 
     const request = buildProductEnrichmentBadgesRequest(
       payload,
       getState(),
-      navigatorContext
+      navigatorContext,
+      payload.productId
     );
 
     const fetched = await apiClient.getBadges(request);

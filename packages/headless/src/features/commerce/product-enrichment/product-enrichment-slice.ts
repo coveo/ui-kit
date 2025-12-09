@@ -13,12 +13,12 @@ export const productEnrichmentReducer = createReducer(
       .addCase(fetchBadges.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
-        state.badges = action.payload.response.products;
+        state.products = action.payload.response.products;
       })
       .addCase(fetchBadges.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload?.message || 'Failed to fetch badges';
-        state.badges = [];
+        state.products = [];
       });
   }
 );

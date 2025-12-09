@@ -4,7 +4,7 @@ export interface ProductEnrichmentState {
   /**
    * The array of products containing badge placements for each product.
    */
-  badges: BadgesProduct[];
+  products: BadgesProduct[];
   /**
    * Whether a request to fetch badges is currently being executed.
    */
@@ -17,7 +17,7 @@ export interface ProductEnrichmentState {
 
 export function getProductEnrichmentInitialState(): ProductEnrichmentState {
   return {
-    badges: [],
+    products: [],
     isLoading: false,
     error: null,
   };
