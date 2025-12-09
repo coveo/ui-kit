@@ -21,6 +21,88 @@ test.describe('Visual Regression', () => {
   });
 });
 
+test.describe('Number Input Functionality', () => {
+  test.beforeEach(async ({facet}) => {
+    await facet.load({story: 'with-input-integer'});
+    await facet.hydrated.waitFor();
+  });
+
+  test('should render number input form with min and max inputs', async ({
+    facet,
+  }) => {
+    await expect(facet.numberInput).toBeVisible();
+    await expect(facet.facetInputStart).toBeVisible();
+    await expect(facet.facetInputEnd).toBeVisible();
+  });
+
+  test('should render apply button', async ({facet}) => {
+    await expect(facet.facetApplyButton).toBeVisible();
+  });
+
+  test('should allow filling in start and end values', async ({facet}) => {
+    await test.step('Fill in values', async () => {
+      await facet.facetInputStart.fill('100');
+      await facet.facetInputEnd.fill('1000');
+    });
+
+    await test.step('Verify values are filled', async () => {
+      await expect(facet.facetInputStart).toHaveValue(100);
+      await expect(facet.facetInputEnd).toHaveValue(1000);
+    });
+  });
+
+  test('should apply custom range when apply button is clicked', async ({
+    facet,
+  }) => {
+    await test.step('Fill in and apply values', async () => {
+      await facet.facetInputStart.fill('100');
+      await facet.facetInputEnd.fill('1000');
+      await facet.facetApplyButton.click();
+    });
+
+    await test.step('Verify filter is applied', async () => {
+      // Clear button appears when a filter is applied
+      await expect(facet.facetClearFilterButton).toBeVisible();
+    });
+  });
+
+  test('should update breadcrumb when custom range is applied', async ({
+    facet,
+  }) => {
+    await test.step('Apply custom range', async () => {
+      await facet.facetInputStart.fill('100');
+      await facet.facetInputEnd.fill('1000');
+      await facet.facetApplyButton.click();
+    });
+
+    await test.step('Verify breadcrumb appears', async () => {
+      const breadbox = facet.page.getByTestId('breadbox');
+      await expect(breadbox).toBeVisible();
+    });
+  });
+
+  test('should clear custom range when clear button is clicked', async ({
+    facet,
+  }) => {
+    await test.step('Apply custom range', async () => {
+      await facet.facetInputStart.fill('100');
+      await facet.facetInputEnd.fill('1000');
+      await facet.facetApplyButton.click();
+      await expect(facet.facetClearFilterButton).toBeVisible();
+    });
+
+    await test.step('Clear the filter', async () => {
+      await facet.facetClearFilterButton.click();
+    });
+
+    await test.step('Verify filter is cleared', async () => {
+      await expect(facet.facetClearFilterButton).not.toBeVisible();
+      const breadbox = facet.page.getByTestId('breadbox');
+      await expect(breadbox).not.toBeVisible();
+    });
+  });
+});
+
 test.describe('when a "depends-on" prop is provided', () => {
   test.beforeEach(async ({facet}) => {
     await facet.load({story: 'with-depends-on'});

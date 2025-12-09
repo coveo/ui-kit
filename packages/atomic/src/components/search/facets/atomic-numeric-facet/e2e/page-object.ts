@@ -1,6 +1,11 @@
 import type {Page} from '@playwright/test';
 import {BasePageObject} from '../../../../../../playwright-utils/base-page-object';
 
+/**
+ * Page object for atomic-numeric-facet E2E tests.
+ * Note: atomic-numeric-facet is still Stencil, so we use base-page-object.
+ * The nested atomic-facet-number-input is Lit, but we test it through the parent.
+ */
 export class AtomicNumericFacetPageObject extends BasePageObject<'atomic-numeric-facet'> {
   constructor(page: Page) {
     super(page, 'atomic-numeric-facet');
