@@ -56,6 +56,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-load-more-results',
   'atomic-modal',
   'atomic-no-results',
+  'atomic-notifications',
   'atomic-numeric-range',
   'atomic-pager',
   'atomic-popover',
