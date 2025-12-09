@@ -25,4 +25,8 @@ export class ResultFieldsListPageObject extends BasePageObject {
   get childrenWithHiddenDividers() {
     return this.page.locator('atomic-result-fields-list > *.hide-divider');
   }
+
+  get atomicText() {
+    return this.page.locator('atomic-text');
+  }
 }

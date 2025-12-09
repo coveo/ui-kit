@@ -30,6 +30,7 @@ import {
   AtomicResultChildren as LitAtomicResultChildren,
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
   AtomicResultDate as LitAtomicResultDate,
+  AtomicResultFieldsList as LitAtomicResultFieldsList,
   AtomicResultHtml as LitAtomicResultHtml,
   AtomicResultIcon as LitAtomicResultIcon,
   AtomicResultImage as LitAtomicResultImage,
@@ -251,6 +252,12 @@ export const AtomicResultDate = createComponent({
   tagName: 'atomic-result-date',
   react: React,
   elementClass: LitAtomicResultDate,
+});
+
+export const AtomicResultFieldsList = createComponent({
+  tagName: 'atomic-result-fields-list',
+  react: React,
+  elementClass: LitAtomicResultFieldsList,
 });
 
 export const AtomicResultHtml = createComponent({

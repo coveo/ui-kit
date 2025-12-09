@@ -9,14 +9,9 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 const searchApiHarness = new MockSearchApi();
 
 searchApiHarness.searchEndpoint.mock((response) => {
-  if ('error' in response) {
-    return response;
-  }
-  const searchResponse =
-    response as typeof import('@/storybook-utils/api/search/search-response').baseResponse;
   return {
-    ...searchResponse,
-    results: searchResponse.results
+    ...response,
+    results: response.results
       .map((result) => ({
         ...result,
         raw: {
@@ -68,7 +63,7 @@ const meta: Meta = {
   args: {
     ...args,
     'default-slot': `
-      <style>
+          <style>
         .field {
           display: inline-flex;
           white-space: nowrap;
@@ -97,10 +92,6 @@ const meta: Meta = {
       <span class="field">
         <span class="field-label"><atomic-text value="fileType"></atomic-text>:</span>
         <atomic-result-text field="filetype"></atomic-result-text>
-      </span>
-
-      <span class="field">
-        <span class="field-label">Date:</span>
       </span>
     `,
   },

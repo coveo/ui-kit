@@ -1,13 +1,15 @@
 import type {FoldedResult, Result} from '@coveo/headless';
-import {css, LitElement} from 'lit';
+import {css, html, LitElement, type PropertyValues} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
-import {SlotsForNoShadowDOMMixin} from '@/src/mixins/slots-for-no-shadow-dom-mixin';
+import {SlotsForNoShadowDOMMixin} from '../../../mixins/slots-for-no-shadow-dom-mixin';
 import '../atomic-result-text/atomic-result-text';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {errorGuard} from '@/src/decorators/error-guard';
 
 /**
  * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
@@ -76,7 +78,8 @@ export class AtomicResultFieldsList
     }
   }
 
-  protected updated() {
+  protected updated(_changedProperties: PropertyValues): void {
+    super.updated(_changedProperties);
     this.updateLayout();
   }
 
@@ -124,7 +127,6 @@ export class AtomicResultFieldsList
   }
 
   private showChildren() {
-    console.log(this.hostChildren);
     this.hostChildren.forEach((child) => this.show(child));
   }
 
@@ -157,6 +159,12 @@ export class AtomicResultFieldsList
     if (previousChild) {
       this.setHideDivider(previousChild, true);
     }
+  }
+
+  @bindingGuard()
+  @errorGuard()
+  render() {
+    return html`${this.renderDefaultSlotContent()}`;
   }
 }
 

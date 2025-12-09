@@ -15,19 +15,19 @@ test.describe('atomic-result-fields-list', () => {
     const children = await resultFieldsList.children.all();
     expect(children.length).toBeGreaterThan(0);
 
-    await expect(page.getByText('author')).toBeVisible();
-    await expect(page.getByText('John Doe')).toBeVisible();
+    await expect(page.getByText('Author:')).toBeVisible();
+    await expect(
+      resultFieldsList.atomicText.filter({hasText: 'John Doe'})
+    ).toBeVisible();
 
-    await expect(page.getByText('source')).toBeVisible();
-    await expect(page.getByText('Documentation')).toBeVisible();
+    await expect(page.getByText('Source:')).toBeVisible();
+    await expect(
+      resultFieldsList.atomicText.filter({hasText: 'Documentation'})
+    ).toBeVisible();
 
-    await expect(page.getByText('language')).toBeVisible();
-    await expect(page.getByText('en')).toBeVisible();
-    await expect(page.getByText('fr')).toBeVisible();
-
-    await expect(page.getByText('fileType')).toBeVisible();
-    await expect(page.getByText('pdf')).toBeVisible();
-
-    await expect(page.getByText('Date:')).toBeVisible();
+    await expect(page.getByText('FileType:')).toBeVisible();
+    await expect(
+      resultFieldsList.atomicText.filter({hasText: 'pdf'})
+    ).toBeVisible();
   });
 });

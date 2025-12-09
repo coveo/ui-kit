@@ -23,6 +23,7 @@ export {AtomicResultBadge} from './atomic-result-badge/atomic-result-badge.js';
 export {AtomicResultChildren} from './atomic-result-children/atomic-result-children.js';
 export {AtomicResultChildrenTemplate} from './atomic-result-children-template/atomic-result-children-template.js';
 export {AtomicResultDate} from './atomic-result-date/atomic-result-date.js';
+export {AtomicResultFieldsList} from './atomic-result-fields-list/atomic-result-fields-list.js';
 export {AtomicResultHtml} from './atomic-result-html/atomic-result-html.js';
 export {AtomicResultIcon} from './atomic-result-icon/atomic-result-icon.js';
 export {AtomicResultImage} from './atomic-result-image/atomic-result-image.js';
