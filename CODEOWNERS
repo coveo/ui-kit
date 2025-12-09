@@ -7,8 +7,9 @@
 
 packages/**/*.mdx @coveo/dev-writers
 packages/**/*.md @coveo/dev-writers
+packages/**/typedoc.json @coveo/dev-writers
 packages/**/*.typedoc.json @coveo/dev-writers
-packages/**/*.docs.config.json @coveo/dev-writers
+packages/**/docs.config.json @coveo/dev-writers
 
 ## Doc package
 
