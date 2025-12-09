@@ -264,7 +264,7 @@ export class AtomicCategoryFacet
   /**
    * Whether to use basePath as a filter for the results.
    *
-   * TODO: KIT-XXXX - Deprecate this property and replace with one that defaults to false.
+   * TODO: KIT-4412 - Deprecate this property and replace with one that defaults to false.
    */
   @property({
     reflect: true,
@@ -292,7 +292,7 @@ export class AtomicCategoryFacet
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    *
-   * TODO: KIT-XXXX - Deprecate this property and replace with one that defaults to false.
+   * TODO: KIT-4412 - Deprecate this property and replace with one that defaults to false.
    */
   @property({
     reflect: true,

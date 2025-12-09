@@ -14,17 +14,18 @@ import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixt
 import {buildFakeCategoryFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/search/category-facet-controller';
 import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
 import {buildFakeTabManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/tab-manager-controller';
+import {mockConsole} from '@/vitest-utils/testing-helpers/testing-utils/mock-console';
 import type {AtomicCategoryFacet} from './atomic-category-facet';
 import './atomic-category-facet';
 
 vi.mock('@coveo/headless', {spy: true});
 
 describe('atomic-category-facet', () => {
-  let mockedConsoleWarn: MockInstance;
+  let mockedConsole: ReturnType<typeof mockConsole>;
   let mockedRegisterFacet: MockInstance;
 
   beforeEach(() => {
-    mockedConsoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    mockedConsole = mockConsole();
     mockedRegisterFacet = vi.fn();
     vi.mocked(buildCategoryFacet).mockReturnValue(buildFakeCategoryFacet({}));
     vi.mocked(buildSearchStatus).mockReturnValue(
@@ -306,39 +307,39 @@ describe('atomic-category-facet', () => {
   });
 
   describe('prop validation', () => {
-    // TODO V4: KIT-XXXX - Remove skip and enable validation errors
+    // TODO V4: KIT-5197 - Remove skip and enable validation errors
     it.skip('should set error when field is not provided', async () => {
       const {element} = await renderCategoryFacet({field: ''});
       expect(element.error).toBeDefined();
       expect(element.error.message).toMatch(/field/i);
     });
 
-    // TODO V4: KIT-XXXX - Remove this test
+    // TODO V4: KIT-5197 - Remove this test
     it('should log validation warning when field is empty', async () => {
       await renderCategoryFacet({field: ''});
-      expect(mockedConsoleWarn).toHaveBeenCalledWith(
+      expect(mockedConsole.warn).toHaveBeenCalledWith(
         expect.stringContaining('Prop validation failed'),
         expect.anything()
       );
     });
 
-    // TODO V4: KIT-XXXX - Remove skip and enable validation errors
+    // TODO V4: KIT-5197 - Remove skip and enable validation errors
     it.skip('should set error when numberOfValues is less than 1', async () => {
       const {element} = await renderCategoryFacet({numberOfValues: 0});
       expect(element.error).toBeDefined();
       expect(element.error.message).toMatch(/numberOfValues/i);
     });
 
-    // TODO V4: KIT-XXXX - Remove this test
+    // TODO V4: KIT-5197 - Remove this test
     it('should log validation warning when numberOfValues is less than 1', async () => {
       await renderCategoryFacet({numberOfValues: 0});
-      expect(mockedConsoleWarn).toHaveBeenCalledWith(
+      expect(mockedConsole.warn).toHaveBeenCalledWith(
         expect.stringContaining('Prop validation failed'),
         expect.anything()
       );
     });
 
-    // TODO V4: KIT-XXXX - Remove skip and enable validation errors
+    // TODO V4: KIT-5197 - Remove skip and enable validation errors
     it.skip('should set error when sortCriteria is invalid', async () => {
       const {element} = await renderCategoryFacet({
         sortCriteria: 'invalid' as 'alphanumeric',
@@ -347,10 +348,10 @@ describe('atomic-category-facet', () => {
       expect(element.error.message).toMatch(/sortCriteria/i);
     });
 
-    // TODO V4: KIT-XXXX - Remove this test
+    // TODO V4: KIT-5197 - Remove this test
     it('should log validation warning when sortCriteria is invalid', async () => {
       await renderCategoryFacet({sortCriteria: 'invalid' as 'alphanumeric'});
-      expect(mockedConsoleWarn).toHaveBeenCalledWith(
+      expect(mockedConsole.warn).toHaveBeenCalledWith(
         expect.stringContaining('Prop validation failed'),
         expect.anything()
       );
@@ -363,7 +364,7 @@ describe('atomic-category-facet', () => {
       tabsExcluded: ['tab2'],
     });
 
-    expect(mockedConsoleWarn).toHaveBeenCalledWith(
+    expect(mockedConsole.warn).toHaveBeenCalledWith(
       expect.stringContaining('tabs-included')
     );
   });
