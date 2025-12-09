@@ -326,6 +326,9 @@ jobs:
     name: "Run Chromatic visual tests on Atomic"
     needs: affected
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.event_name == 'pull_request' && concat('Chromatic \#', github.event.pull_request.number) || 'Chromatic Main' }}
+      url: ${{ github.event_name == 'pull_request' && concat('https://www.chromatic.com/builds?appId=5f7d4e1f4c8f3a0020f6e8b4&branch=', github.event.pull_request.head.ref) || 'https://www.chromatic.com/builds?appId=5f7d4e1f4c8f3a0020f6e8b4&branch=main' }}
     env:
       CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
       # Should be fine without because of https://github.com/chromaui/chromatic-cli/blob/56920bf704895dcef6d1106df608d8e0d7886b58/action-src/main.ts#L24-L82
