@@ -29,4 +29,28 @@ export class AtomicNumericFacetPageObject extends BasePageObject<'atomic-numeric
   get facetValues() {
     return this.facet.locator('[part="value-checkbox"]');
   }
+
+  get numberInput() {
+    return this.facet.locator('atomic-facet-number-input');
+  }
+
+  /**
+   * Wait for component to be stable before taking screenshots.
+   */
+  async waitForVisualStability(): Promise<void> {
+    await this.hydrated.waitFor();
+    await this.page.evaluate(() => document.fonts.ready);
+  }
+
+  /**
+   * Capture a screenshot of the component for visual regression testing.
+   */
+  async captureScreenshot(options?: {
+    animations?: 'disabled' | 'allow';
+  }): Promise<Buffer> {
+    await this.waitForVisualStability();
+    return await this.hydrated.screenshot({
+      animations: options?.animations ?? 'disabled',
+    });
+  }
 }

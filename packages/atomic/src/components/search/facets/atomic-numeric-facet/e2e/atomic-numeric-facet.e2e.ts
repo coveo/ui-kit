@@ -1,5 +1,26 @@
 import {expect, test} from './fixture';
 
+test.describe('Visual Regression', () => {
+  test('should match baseline with number input in default state', async ({
+    facet,
+  }) => {
+    await test.step('Load component', async () => {
+      await facet.load({story: 'with-input-integer'});
+      await facet.hydrated.waitFor();
+    });
+
+    await test.step('Capture and compare screenshot', async () => {
+      const screenshot = await facet.captureScreenshot();
+      expect(screenshot).toMatchSnapshot(
+        'numeric-facet-with-input-default.png',
+        {
+          maxDiffPixelRatio: 0.04,
+        }
+      );
+    });
+  });
+});
+
 test.describe('when a "depends-on" prop is provided', () => {
   test.beforeEach(async ({facet}) => {
     await facet.load({story: 'with-depends-on'});

@@ -46,6 +46,17 @@ export const Default: Story = {
   },
 };
 
+export const WithInputInteger: Story = {
+  name: 'atomic-numeric-facet-with-input-integer',
+  tags: ['test'],
+  decorators: [facetDecorator, withBreadboxDecorator('before')],
+  args: {
+    label: 'YouTube View Count',
+    field: 'ytviewcount',
+    'with-input': 'integer',
+  },
+};
+
 export const WithDependsOn: Story = {
   name: 'atomic-numeric-facet-with-depends-on',
   tags: ['test'],
