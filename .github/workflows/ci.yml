@@ -64,7 +64,7 @@ jobs:
   build-missing:
     name: "Build & commit missing generated files"
     permissions:
-      content: write
+      contents: write
     runs-on: ubuntu-latest
     environment: PR Artifacts
     steps:
