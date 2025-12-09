@@ -1,28 +1,63 @@
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
-export class AtomicCategoryFacetPageObject extends BasePageObject<'atomic-category-facet'> {
+export class AtomicCategoryFacetPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-category-facet');
   }
 
-  get getFacetSearch() {
-    return this.page.getByLabel('Search');
+  get facet() {
+    return this.page.locator('[part="facet"]');
   }
 
-  get getFacetValue() {
-    return this.page.locator('[part="search-result"]');
+  get labelButton() {
+    return this.page.locator('[part="label-button"]').first();
   }
 
-  get getAllCategoriesButton() {
-    return this.page.locator('[part="all-categories-button"]');
+  get values() {
+    return this.page.locator('[part="values"]');
   }
 
-  get facetSearchMoreMatchesFor() {
-    return this.page.getByRole('button', {name: 'More matches for p'});
+  get valueLinks() {
+    return this.facet.locator('[part~="value-link"]');
+  }
+
+  get searchInput() {
+    return this.facet.locator('[part="search-input"]');
+  }
+
+  get searchResults() {
+    return this.facet.locator('[part="search-results"]');
+  }
+
+  get searchResultValues() {
+    return this.facet.locator('[part="search-result"]');
+  }
+
+  get allCategoriesButton() {
+    return this.facet.locator('[part="all-categories-button"]');
+  }
+
+  get parentButton() {
+    return this.facet.locator('[part="parent-button"]');
+  }
+
+  get activeParent() {
+    return this.facet.locator('[part~="active-parent"]');
+  }
+
+  get moreMatchesButton() {
+    return this.page.getByRole('button', {name: /More matches for/});
   }
 
   getFacetValueByLabel(label: string) {
     return this.page.locator('[part="value-label"]', {hasText: label});
+  }
+
+  getSearchResultByLabel(label: string) {
+    // Match the search result button by its aria-label which starts with the value name
+    return this.searchResults.getByRole('button', {
+      name: new RegExp(`^Inclusion filter on ${label}`),
+    });
   }
 }

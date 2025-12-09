@@ -1,66 +1,114 @@
 import {expect, test} from './fixture';
 
-test.describe('when clicking facet search "More matches for"', () => {
-  test.beforeEach(async ({facet}) => {
-    await facet.load({story: 'low-facet-values'});
-  });
-  test('should display an increasing number of matches', async ({facet}) => {
-    await facet.getFacetSearch.click();
-    await facet.getFacetSearch.pressSequentially('p');
-    await expect
-      .poll(async () => {
-        return await facet.getFacetValue.count();
-      })
-      .toBeGreaterThanOrEqual(2);
+test.describe('atomic-category-facet', () => {
+  test('should render all essential parts', async ({facet}) => {
+    await facet.load();
 
-    await facet.facetSearchMoreMatchesFor.click();
-    await expect
-      .poll(async () => {
-        return await facet.getFacetValue.count();
-      })
-      .toBeGreaterThanOrEqual(4);
-
-    await facet.facetSearchMoreMatchesFor.click();
-    await expect
-      .poll(async () => {
-        return await facet.getFacetValue.count();
-      })
-      .toBeGreaterThanOrEqual(6);
-  });
-});
-
-//TODO KIT-4944: Replace by Unit tests
-[
-  {
-    name: 'With custom all categories label, using facetId',
-    story: 'with-custom-all-categories-label-by-id',
-  },
-  {
-    name: 'With custom all categories label, using field',
-    story: 'with-custom-all-categories-label-by-field',
-  },
-  {
-    name: 'With custom all categories label, using facetId and field competing',
-    story: 'with-custom-all-categories-label-with-id-and-field-competing',
-  },
-].forEach(({name, story}) => {
-  test.describe(name, () => {
-    test.beforeEach(async ({facet}) => {
-      await facet.load({story});
+    await test.step('Verify facet container is visible', async () => {
+      await expect(facet.facet).toBeVisible();
     });
 
-    test('should display the custom all categories label after selecting a facet value with children values', async ({
-      facet,
-    }) => {
-      await facet.getFacetValueByLabel('North America').click();
-      await expect(facet.getAllCategoriesButton).toHaveText('My Awesome Facet');
+    await test.step('Verify facet label button is visible', async () => {
+      await expect(facet.labelButton).toBeVisible();
     });
 
-    test('should display the custom all categories label for path when searching for root values', async ({
-      facet,
-    }) => {
-      await facet.getFacetSearch.fill('North America');
-      await expect(facet.getFacetValue).toHaveText(/My Awesome Facet/);
+    await test.step('Verify facet values are visible', async () => {
+      await expect(facet.values).toBeVisible();
+      await expect(facet.valueLinks).toHaveCount(8);
+    });
+
+    await test.step('Verify facet search input is visible', async () => {
+      await expect(facet.searchInput).toBeVisible();
+    });
+  });
+
+  test('should display child values when selecting a root value', async ({
+    facet,
+  }) => {
+    await facet.load({story: 'with-selected-root-value'});
+
+    await test.step('Verify "All Categories" button is visible', async () => {
+      await expect(facet.allCategoriesButton).toBeVisible();
+    });
+
+    await test.step('Verify active parent is visible', async () => {
+      await expect(facet.activeParent).toBeVisible();
+      await expect(facet.activeParent).toContainText('North America');
+    });
+
+    await test.step('Verify child values are displayed', async () => {
+      await expect(facet.getFacetValueByLabel('United States')).toBeVisible();
+      await expect(facet.getFacetValueByLabel('Canada')).toBeVisible();
+      await expect(facet.getFacetValueByLabel('Mexico')).toBeVisible();
+    });
+  });
+
+  test('should display grandchild values when selecting a child value', async ({
+    facet,
+  }) => {
+    await facet.load({story: 'with-selected-child-value'});
+
+    await test.step('Verify "All Categories" button is visible', async () => {
+      await expect(facet.allCategoriesButton).toBeVisible();
+    });
+
+    await test.step('Verify parent breadcrumb is visible', async () => {
+      await expect(facet.parentButton).toBeVisible();
+      await expect(facet.parentButton).toContainText('North America');
+    });
+
+    await test.step('Verify active parent shows current selection', async () => {
+      await expect(facet.activeParent).toBeVisible();
+      await expect(facet.activeParent).toContainText('United States');
+    });
+
+    await test.step('Verify grandchild values are displayed', async () => {
+      await expect(facet.getFacetValueByLabel('California')).toBeVisible();
+      await expect(facet.getFacetValueByLabel('New York')).toBeVisible();
+      await expect(facet.getFacetValueByLabel('Texas')).toBeVisible();
+    });
+  });
+
+  test('should filter values when typing in search input', async ({facet}) => {
+    await facet.load();
+
+    await test.step('Verify initial values are visible', async () => {
+      await expect(facet.valueLinks).toHaveCount(8);
+    });
+
+    await test.step('Type in the search input', async () => {
+      await facet.searchInput.fill('North');
+    });
+
+    await test.step('Verify search results appear', async () => {
+      await expect(facet.searchResults).toBeVisible();
+      await expect(facet.getSearchResultByLabel('North America')).toBeVisible();
+    });
+  });
+
+  test('should collapse and hide values when clicking the label button', async ({
+    facet,
+  }) => {
+    await facet.load();
+
+    await test.step('Verify values are initially visible', async () => {
+      await expect(facet.values).toBeVisible();
+    });
+
+    await test.step('Click label button to collapse', async () => {
+      await facet.labelButton.click();
+    });
+
+    await test.step('Verify values are hidden after collapse', async () => {
+      await expect(facet.values).not.toBeVisible();
+    });
+
+    await test.step('Click label button to expand', async () => {
+      await facet.labelButton.click();
+    });
+
+    await test.step('Verify values are visible again after expand', async () => {
+      await expect(facet.values).toBeVisible();
     });
   });
 });

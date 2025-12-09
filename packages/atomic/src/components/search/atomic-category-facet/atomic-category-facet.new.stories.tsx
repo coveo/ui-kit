@@ -1,7 +1,11 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
+import type {AtomicSearchInterface} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {
   playExecuteFirstSearch,
   wrapInSearchInterface,
@@ -56,6 +60,95 @@ const baseCategoryFacetValues = [
     isLeafValue: false,
     children: [],
   },
+  {
+    value: 'Oceania',
+    numberOfResults: 42,
+    path: ['Oceania'],
+    state: 'idle',
+    moreValuesAvailable: false,
+    isLeafValue: false,
+    children: [],
+  },
+  {
+    value: 'Antarctica',
+    numberOfResults: 12,
+    path: ['Antarctica'],
+    state: 'idle',
+    moreValuesAvailable: false,
+    isLeafValue: true,
+    children: [],
+  },
+  {
+    value: 'Central America',
+    numberOfResults: 34,
+    path: ['Central America'],
+    state: 'idle',
+    moreValuesAvailable: false,
+    isLeafValue: false,
+    children: [],
+  },
+];
+
+// Child values for North America
+const northAmericaChildValues = [
+  {
+    value: 'United States',
+    numberOfResults: 145,
+    path: ['North America', 'United States'],
+    state: 'idle',
+    moreValuesAvailable: true,
+    isLeafValue: false,
+    children: [],
+  },
+  {
+    value: 'Canada',
+    numberOfResults: 67,
+    path: ['North America', 'Canada'],
+    state: 'idle',
+    moreValuesAvailable: true,
+    isLeafValue: false,
+    children: [],
+  },
+  {
+    value: 'Mexico',
+    numberOfResults: 33,
+    path: ['North America', 'Mexico'],
+    state: 'idle',
+    moreValuesAvailable: false,
+    isLeafValue: false,
+    children: [],
+  },
+];
+
+// Child values for United States (third level)
+const unitedStatesChildValues = [
+  {
+    value: 'California',
+    numberOfResults: 45,
+    path: ['North America', 'United States', 'California'],
+    state: 'idle',
+    moreValuesAvailable: false,
+    isLeafValue: true,
+    children: [],
+  },
+  {
+    value: 'New York',
+    numberOfResults: 38,
+    path: ['North America', 'United States', 'New York'],
+    state: 'idle',
+    moreValuesAvailable: false,
+    isLeafValue: true,
+    children: [],
+  },
+  {
+    value: 'Texas',
+    numberOfResults: 32,
+    path: ['North America', 'United States', 'Texas'],
+    state: 'idle',
+    moreValuesAvailable: false,
+    isLeafValue: true,
+    children: [],
+  },
 ];
 
 const createCategoryFacetResponse = (
@@ -64,53 +157,131 @@ const createCategoryFacetResponse = (
 ) => ({
   facetId,
   field: 'geographicalhierarchy',
+  moreValuesAvailable: values.length >= 5,
   values,
   indexScore: 0,
 });
+
+type CategoryFacetValue = {
+  value: string;
+  numberOfResults: number;
+  path: string[];
+  state: string;
+  moreValuesAvailable: boolean;
+  isLeafValue: boolean;
+  children: CategoryFacetValue[];
+};
+
+const createSelectedCategoryFacetResponse = (
+  selectedPath: string[],
+  children: CategoryFacetValue[],
+  facetId = 'geographicalhierarchy'
+) => {
+  // Build the parent chain with selected state
+  const buildParentChain = (
+    path: string[],
+    depth = 0
+  ): CategoryFacetValue | null => {
+    if (depth >= path.length) {
+      return null;
+    }
+
+    const value = path[depth];
+    const isSelected = depth === path.length - 1;
+    const childValue = buildParentChain(path, depth + 1);
+
+    return {
+      value,
+      numberOfResults: 245 - depth * 50,
+      path: path.slice(0, depth + 1),
+      state: isSelected ? 'selected' : 'idle',
+      moreValuesAvailable: !isSelected,
+      isLeafValue: false,
+      children: isSelected ? children : childValue ? [childValue] : [],
+    };
+  };
+
+  const parentChain = buildParentChain(selectedPath);
+
+  return {
+    facetId,
+    field: 'geographicalhierarchy',
+    moreValuesAvailable: false,
+    values: parentChain ? [parentChain] : [],
+    indexScore: 0,
+  };
+};
 
 const mockDefaultCategoryFacetResponse = (
   facetId = 'geographicalhierarchy'
 ) => {
   searchApiHarness.searchEndpoint.mockOnce((response) => {
-    if ('categoryFacets' in response) {
-      return {
-        ...response,
-        categoryFacets: [
-          ...(response.categoryFacets || []),
-          createCategoryFacetResponse(baseCategoryFacetValues, facetId),
-        ],
-      };
-    }
-    return response;
+    return {
+      ...response,
+      facets: [
+        ...(response.facets || []),
+        createCategoryFacetResponse(baseCategoryFacetValues, facetId),
+      ],
+    };
   });
 };
 
-const mockLowFacetValuesResponse = () => {
+const mockSelectedRootValue = (facetId = 'geographicalhierarchy') => {
   searchApiHarness.searchEndpoint.mockOnce((response) => {
-    if ('categoryFacets' in response) {
-      return {
-        ...response,
-        categoryFacets: [
-          ...(response.categoryFacets || []),
-          createCategoryFacetResponse(baseCategoryFacetValues.slice(0, 2)),
-        ],
-      };
-    }
-    return response;
+    return {
+      ...response,
+      facets: [
+        ...(response.facets || []),
+        createSelectedCategoryFacetResponse(
+          ['North America'],
+          northAmericaChildValues,
+          facetId
+        ),
+      ],
+    };
+  });
+};
+
+const mockSelectedChildValue = (facetId = 'geographicalhierarchy') => {
+  searchApiHarness.searchEndpoint.mockOnce((response) => {
+    return {
+      ...response,
+      facets: [
+        ...(response.facets || []),
+        createSelectedCategoryFacetResponse(
+          ['North America', 'United States'],
+          unitedStatesChildValues,
+          facetId
+        ),
+      ],
+    };
   });
 };
 
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-category-facet',
-  {excludeCategories: ['methods']}
-);
+
+const {events, argTypes} = getStorybookHelpers('atomic-category-facet', {
+  excludeCategories: ['methods'],
+});
+
+// Custom render function to properly handle boolean attributes
+// The getStorybookHelpers template incorrectly renders is-collapsed="" which is truthy
+const renderCategoryFacet = (args: Record<string, unknown>) => html`
+  <atomic-category-facet
+    field=${ifDefined(args.field as string)}
+    label=${ifDefined(args.label as string)}
+    ?with-search=${args['with-search']}
+    ?is-collapsed=${args['is-collapsed']}
+    facet-id=${ifDefined(args['facet-id'] as string)}
+    number-of-values=${ifDefined(args['number-of-values'] as number)}
+  ></atomic-category-facet>
+`;
 
 const meta: Meta = {
   component: 'atomic-category-facet',
   title: 'Search/CategoryFacet',
   id: 'atomic-category-facet',
-  render: (args) => template(args),
+  render: renderCategoryFacet,
   decorators: [decorator],
   parameters: {
     ...parameters,
@@ -125,55 +296,86 @@ const meta: Meta = {
     searchApiHarness.facetSearchEndpoint.clear();
     searchApiHarness.facetSearchEndpoint.mock(() => ({
       values: [
-        {displayValue: 'North America', rawValue: 'North America', count: 245},
-        {displayValue: 'New York', rawValue: 'New York', count: 87},
-        {displayValue: 'California', rawValue: 'California', count: 65},
+        {
+          displayValue: 'North America',
+          rawValue: 'North America',
+          count: 245,
+          path: ['North America'],
+        },
+        {
+          displayValue: 'New York',
+          rawValue: 'New York',
+          count: 87,
+          path: ['North America', 'United States', 'New York'],
+        },
+        {
+          displayValue: 'California',
+          rawValue: 'California',
+          count: 65,
+          path: ['North America', 'United States', 'California'],
+        },
       ],
       moreValuesAvailable: true,
     }));
   },
   play,
-  args: {
-    ...args,
-    numberOfValues: 8,
-  },
 };
 
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-category-facet',
   args: {
     field: 'geographicalhierarchy',
     label: 'Geographical Hierarchy',
     'with-search': true,
-    'number-of-values': 5,
-    'sort-criteria': 'occurrences',
   },
+  decorators: [facetDecorator],
   beforeEach: () => {
     mockDefaultCategoryFacetResponse();
   },
 };
 
-export const LowFacetValues: Story = {
+export const WithSelectedRootValue: Story = {
+  name: 'With Selected Root Value',
   tags: ['test'],
   args: {
     field: 'geographicalhierarchy',
-    'number-of-values': 2,
+    label: 'Geographical Hierarchy',
     'with-search': true,
   },
+  decorators: [facetDecorator],
   beforeEach: () => {
-    mockLowFacetValuesResponse();
+    mockSelectedRootValue();
+  },
+};
+
+export const WithSelectedChildValue: Story = {
+  name: 'With Selected Child Value',
+  tags: ['test'],
+  args: {
+    field: 'geographicalhierarchy',
+    label: 'Geographical Hierarchy',
+    'with-search': true,
+  },
+  decorators: [facetDecorator],
+  beforeEach: () => {
+    mockSelectedChildValue();
   },
 };
 
 export const WithCustomAllCategoriesLabelById: Story = {
-  name: 'With custom all categories label, using facetId',
   tags: ['!dev'],
+  args: {
+    field: 'geographicalhierarchy',
+    label: 'Geographical Hierarchy',
+    'with-search': true,
+    'facet-id': 'my-awesome-facet',
+  },
+  decorators: [facetDecorator],
   play: async (context) => {
     await play(context);
     const searchInterface =
-      context.canvasElement.querySelector<HTMLAtomicSearchInterfaceElement>(
+      context.canvasElement.querySelector<AtomicSearchInterface>(
         'atomic-search-interface'
       );
     searchInterface?.i18n.addResourceBundle('en', 'translation', {
@@ -181,26 +383,25 @@ export const WithCustomAllCategoriesLabelById: Story = {
     });
     await playExecuteFirstSearch(context);
   },
-  args: {
-    field: 'geographicalhierarchy',
-    label: 'Geographical Hierarchy',
-    'facet-id': 'my-awesome-facet',
-    'with-search': true,
-    'number-of-values': 5,
-    'sort-criteria': 'occurrences',
-  },
   beforeEach: () => {
-    mockDefaultCategoryFacetResponse('my-awesome-facet');
+    // Mock twice: once for initial search, once for re-search after i18n update
+    mockSelectedRootValue('my-awesome-facet');
+    mockSelectedRootValue('my-awesome-facet');
   },
 };
 
 export const WithCustomAllCategoriesLabelByField: Story = {
   tags: ['!dev'],
-  name: 'With custom all categories label, using field',
+  args: {
+    field: 'geographicalhierarchy',
+    label: 'Geographical Hierarchy',
+    'with-search': true,
+  },
+  decorators: [facetDecorator],
   play: async (context) => {
     await play(context);
     const searchInterface =
-      context.canvasElement.querySelector<HTMLAtomicSearchInterfaceElement>(
+      context.canvasElement.querySelector<AtomicSearchInterface>(
         'atomic-search-interface'
       );
     searchInterface?.i18n.addResourceBundle('en', 'translation', {
@@ -208,25 +409,26 @@ export const WithCustomAllCategoriesLabelByField: Story = {
     });
     await playExecuteFirstSearch(context);
   },
-  args: {
-    field: 'geographicalhierarchy',
-    label: 'Geographical Hierarchy',
-    'with-search': true,
-    'number-of-values': 5,
-    'sort-criteria': 'occurrences',
-  },
   beforeEach: () => {
-    mockDefaultCategoryFacetResponse();
+    // Mock twice: once for initial search, once for re-search after i18n update
+    mockSelectedRootValue();
+    mockSelectedRootValue();
   },
 };
 
 export const WithCustomAllCategoriesLabelWithIdAndFieldCompeting: Story = {
   tags: ['!dev'],
-  name: 'With custom all categories label, using field',
+  args: {
+    field: 'geographicalhierarchy',
+    label: 'Geographical Hierarchy',
+    'with-search': true,
+    'facet-id': 'my-awesome-facet',
+  },
+  decorators: [facetDecorator],
   play: async (context) => {
     await play(context);
     const searchInterface =
-      context.canvasElement.querySelector<HTMLAtomicSearchInterfaceElement>(
+      context.canvasElement.querySelector<AtomicSearchInterface>(
         'atomic-search-interface'
       );
     searchInterface?.i18n.addResourceBundle('en', 'translation', {
@@ -237,15 +439,9 @@ export const WithCustomAllCategoriesLabelWithIdAndFieldCompeting: Story = {
     });
     await playExecuteFirstSearch(context);
   },
-  args: {
-    field: 'geographicalhierarchy',
-    label: 'Geographical Hierarchy',
-    'facet-id': 'my-awesome-facet',
-    'with-search': true,
-    'number-of-values': 5,
-    'sort-criteria': 'occurrences',
-  },
   beforeEach: () => {
-    mockDefaultCategoryFacetResponse('my-awesome-facet');
+    // Mock twice: once for initial search, once for re-search after i18n update
+    mockSelectedRootValue('my-awesome-facet');
+    mockSelectedRootValue('my-awesome-facet');
   },
 };
