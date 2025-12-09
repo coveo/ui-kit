@@ -328,7 +328,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: Chromatic
-      url: ${{ github.event_name == 'pull_request' && format('https://www.chromatic.com/builds?appId=6932045129665d06f74ceb8e&branch={0}', github.head_ref || 'https://www.chromatic.com/builds?appId=6932045129665d06f74ceb8e&branch=main' }}
+      url: ${{ github.event_name == 'pull_request' && format('https://www.chromatic.com/builds?appId=6932045129665d06f74ceb8e&branch={0}', github.head_ref) || 'https://www.chromatic.com/builds?appId=6932045129665d06f74ceb8e&branch=main' }}
     env:
       CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
       # Should be fine without because of https://github.com/chromaui/chromatic-cli/blob/56920bf704895dcef6d1106df608d8e0d7886b58/action-src/main.ts#L24-L82
