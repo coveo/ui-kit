@@ -1,0 +1,36 @@
+import {html, LitElement} from 'lit';
+import {customElement, state} from 'lit/decorators.js';
+import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
+import {bindings} from '@/src/decorators/bindings';
+import type {InitializableComponent} from '@/src/decorators/types';
+
+/**
+ * The `atomic-insight-tabs` component wraps a list of `atomic-insight-tab` elements and manages their layout.
+ * This is an internal component used within the Insight Panel interface.
+ *
+ * @internal
+ * @slot (default) - The slot for `atomic-insight-tab` elements.
+ */
+@customElement('atomic-insight-tabs')
+@bindings()
+export class AtomicInsightTabs
+  extends LitElement
+  implements InitializableComponent<InsightBindings>
+{
+  @state() public bindings!: InsightBindings;
+  @state() public error!: Error;
+
+  public initialize() {
+    // No initialization needed for this simple wrapper component
+  }
+
+  protected render() {
+    return html`<atomic-tab-bar><slot></slot></atomic-tab-bar>`;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-insight-tabs': AtomicInsightTabs;
+  }
+}

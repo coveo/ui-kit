@@ -6,6 +6,8 @@ export default {
     ),
   'atomic-insight-interface': async () =>
     await import('./atomic-insight-interface/atomic-insight-interface.js'),
+  'atomic-insight-tabs': async () =>
+    await import('./atomic-insight-tabs/atomic-insight-tabs.js'),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';
