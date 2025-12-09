@@ -230,7 +230,7 @@ export class AtomicFacet
   })
   public isCollapsed = false;
   /**
-   * The <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements" target="_blank">heading level</a> to use for the heading over the facet, from 1 to 6.
+   * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
    */
   @property({type: Number, attribute: 'heading-level'})
   public headingLevel = 0;
