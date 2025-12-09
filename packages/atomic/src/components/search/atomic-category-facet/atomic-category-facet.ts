@@ -62,6 +62,7 @@ import {
   FocusTargetController,
 } from '@/src/utils/accessibility-utils';
 import {getFieldCaptions, getFieldValueCaption} from '@/src/utils/field-utils';
+import {mapProperty} from '@/src/utils/props-utils';
 
 /**
  * The `atomic-category-facet` component displays a facet of values in a browsable, hierarchical fashion.
@@ -307,6 +308,28 @@ export class AtomicCategoryFacet
   @property({reflect: true, type: Number, attribute: 'injection-depth'})
   public injectionDepth = 1000;
 
+  /**
+   * The required facets and values for this facet to be displayed.
+   * Examples:
+   * ```html
+   * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
+   *
+   * <!-- To show the facet when any value is selected in the facet with id "abc": -->
+   * <atomic-category-facet
+   *   depends-on-abc
+   *   ...
+   * ></atomic-category-facet>
+   *
+   * <!-- To show the facet when value "doc" is selected in the facet with id "abc": -->
+   * <atomic-category-facet
+   *   depends-on-abc="doc"
+   *   ...
+   * ></atomic-category-facet>
+   * ```
+   */
+  @mapProperty({attributePrefix: 'depends-on'})
+  public dependsOn!: Record<string, string>;
+
   private showLessFocus?: FocusTargetController;
   private showMoreFocus?: FocusTargetController;
   private headerFocus?: FocusTargetController;
@@ -452,8 +475,7 @@ export class AtomicCategoryFacet
   }
 
   private initializeDependenciesManager() {
-    const dependsOn = this.getDependsOnAttribute();
-    if (Object.keys(dependsOn).length === 0) {
+    if (!this.dependsOn || Object.keys(this.dependsOn).length === 0) {
       return;
     }
 
@@ -463,20 +485,9 @@ export class AtomicCategoryFacet
         facetId: this.facetId!,
         conditions: parseDependsOn<
           FacetValueRequest | CategoryFacetValueRequest
-        >(dependsOn),
+        >(this.dependsOn),
       }
     );
-  }
-
-  private getDependsOnAttribute(): Record<string, string> {
-    const dependsOn: Record<string, string> = {};
-    for (const attr of Array.from(this.attributes)) {
-      if (attr.name.startsWith('depends-on-')) {
-        const facetId = attr.name.replace('depends-on-', '');
-        dependsOn[facetId] = attr.value;
-      }
-    }
-    return dependsOn;
   }
 
   private renderHeader() {

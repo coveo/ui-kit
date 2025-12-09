@@ -54,6 +54,7 @@ describe('atomic-category-facet', () => {
       injectionDepth: number;
       tabsIncluded: string[];
       tabsExcluded: string[];
+      dependsOn: Record<string, string>;
     }>,
     options?: {
       facetState?: Partial<CategoryFacetState>;
@@ -101,6 +102,7 @@ describe('atomic-category-facet', () => {
         injection-depth=${ifDefined(props?.injectionDepth)}
         .tabsIncluded=${props?.tabsIncluded || []}
         .tabsExcluded=${props?.tabsExcluded || []}
+        .dependsOn=${props?.dependsOn || {}}
       ></atomic-category-facet>`,
       selector: 'atomic-category-facet',
       bindings: (bindings) => ({
@@ -364,23 +366,10 @@ describe('atomic-category-facet', () => {
   });
 
   describe('dependsOn', () => {
-    it('should build facet conditions manager when depends-on attribute is provided', async () => {
-      const {element} =
-        await renderInAtomicSearchInterface<AtomicCategoryFacet>({
-          template: html`<atomic-category-facet
-          field="category"
-          depends-on-parentfacet="parentValue"
-        ></atomic-category-facet>`,
-          selector: 'atomic-category-facet',
-          bindings: (bindings) => ({
-            ...bindings,
-            store: {
-              ...bindings.store,
-              getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
-              registerFacet: mockedRegisterFacet,
-            },
-          }),
-        });
+    it('should build facet conditions manager when dependsOn is provided', async () => {
+      const {element} = await renderCategoryFacet({
+        dependsOn: {parentFacet: 'parentValue'},
+      });
 
       expect(buildFacetConditionsManager).toHaveBeenCalledWith(
         element.bindings.engine,
