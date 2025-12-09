@@ -2,6 +2,7 @@ import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
 import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 
 /**
@@ -20,10 +21,9 @@ export class AtomicInsightTabs
   @state() public bindings!: InsightBindings;
   @state() public error!: Error;
 
-  public initialize() {
-    // No initialization needed for this simple wrapper component
-  }
+  public initialize() {}
 
+  @errorGuard()
   protected render() {
     return html`<atomic-tab-bar><slot></slot></atomic-tab-bar>`;
   }
