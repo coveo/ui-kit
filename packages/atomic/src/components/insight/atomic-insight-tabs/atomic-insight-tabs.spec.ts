@@ -53,6 +53,7 @@ describe('atomic-insight-tabs', () => {
       const customTab = element.querySelector('.custom-tab');
       expect(customTab).toBeTruthy();
       expect(customTab?.textContent).toBe('Custom Tab');
+      expect(customTab?.classList.contains('custom-tab')).toBe(true);
     });
   });
 
