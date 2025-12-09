@@ -5,14 +5,14 @@
 # Doc owners
 ## Doc files
 
-packages/**/*.mdx @coveo/dev-writers-ui-kit
-packages/**/*.md @coveo/dev-writers-ui-kit
-packages/**/*.typedoc.json @coveo/dev-writers-ui-kit
-packages/**/*.docs.config.json @coveo/dev-writers-ui-kit
+packages/**/*.mdx @coveo/dev-writers
+packages/**/*.md @coveo/dev-writers
+packages/**/*.typedoc.json @coveo/dev-writers
+packages/**/*.docs.config.json @coveo/dev-writers
 
 ## Doc package
 
-packages/documentation/ @dev-writers-ui-kit
+packages/documentation/ @dev-writers
 
 # Knowledge Owners
 ## Quantic package
