@@ -223,6 +223,7 @@ export class AtomicGeneratedAnswer
       this,
       () => ({maxCollapsedHeight: this.maxCollapsedHeight}),
       AtomicGeneratedAnswer.propsSchema,
+      // TODO: V4: KIT-5197 - Remove skipValidation flag
       false
     );
   }
