@@ -1,7 +1,7 @@
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
-export class AtomicFoldedResultListPageObject extends BasePageObject<'atomic-folded-result-list'> {
+export class AtomicFoldedResultListPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-folded-result-list');
   }

@@ -58,25 +58,6 @@ You can [define custom templates](https://docs.coveo.com/en/atomic/latest/usage/
 </atomic-folded-result-list>
 ```
 
-## Configuring Folding
-
-The component uses three fields to configure how results are folded:
-
-- `collection-field`: The field that groups results into collections (default: `foldingcollection`)
-- `parent-field`: The field that identifies a parent result (default: `foldingparent`)  
-- `child-field`: The field that uniquely identifies a result within a collection (default: `foldingchild`)
-
-```html
-<atomic-folded-result-list
-  collection-field="email_thread_id"
-  parent-field="is_root_message"
-  child-field="message_id"
-  number-of-folded-results="3"
->
-  <!-- templates -->
-</atomic-folded-result-list>
-```
-
 For more information on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
 
 </AtomicDocTemplate>
