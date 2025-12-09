@@ -70,3 +70,11 @@
 
 /packages/shopify/ @coveo/shopify
 /packages/shopify/package.json @coveo/shopify @coveo/dxui
+
+# Doc owners
+
+packages/**/*.mdx @coveo/dev-writers-ui-kit
+packages/**/*.md @coveo/dev-writers-ui-kit
+packages/**/*.typedoc.json @coveo/dev-writers-ui-kit
+packages/**/*.docs.config.json @coveo/dev-writers-ui-kit
+packages/documentation/ @dev-writers-ui-kit
