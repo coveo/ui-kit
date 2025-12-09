@@ -2,15 +2,15 @@ import {css} from 'lit';
 
 const styles = css`
   [part='copy-button'] .icon-container atomic-icon:hover {
-    @apply text-primary;
+    color: var(--atomic-primary);
   }
 
   [part='copy-button'].copied .icon-container atomic-icon {
-    @apply text-success;
+    color: var(--atomic-success);
   }
 
   [part='copy-button'].error .icon-container atomic-icon {
-    @apply text-error;
+    color: var(--atomic-error);
   }
 `;
 

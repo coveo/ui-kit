@@ -11,7 +11,7 @@ const styles = css`
     width: 8px;
     height: 1em;
     margin-left: 0.1em;
-    @apply bg-neutral-dark;
+    background-color: var(--atomic-neutral-dark);
     display: inline-block;
     animation: cursor-blink 1.5s steps(2) infinite;
     vertical-align: text-bottom;
