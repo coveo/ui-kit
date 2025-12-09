@@ -125,6 +125,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-sort-expression',
   'atomic-tab',
   'atomic-tab-manager',
+  'atomic-table-element',
   'atomic-text',
 ]);
 
