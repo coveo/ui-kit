@@ -9,6 +9,7 @@ import {
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -61,7 +62,12 @@ export class AtomicDidYouMean
    *
    * The default value is `true`.
    */
-  @property({reflect: true, type: Boolean})
+  @property({
+    reflect: true,
+    type: Boolean,
+    converter: booleanConverter,
+    attribute: 'automatically-correct-query',
+  })
   public automaticallyCorrectQuery = true;
 
   /**
@@ -72,7 +78,7 @@ export class AtomicDidYouMean
    *
    * Default value is `next`.
    */
-  @property({reflect: true, type: String})
+  @property({reflect: true, type: String, attribute: 'query-correction-mode'})
   public queryCorrectionMode: 'legacy' | 'next' = 'next';
 
   public initialize() {

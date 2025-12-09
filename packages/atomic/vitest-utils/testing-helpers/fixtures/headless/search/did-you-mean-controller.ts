@@ -1,6 +1,6 @@
 import type {DidYouMean, DidYouMeanState} from '@coveo/headless';
 import {vi} from 'vitest';
-import {genericSubscribe} from './common';
+import {genericSubscribe} from '../common';
 
 export const defaultState = {
   hasQueryCorrection: false,

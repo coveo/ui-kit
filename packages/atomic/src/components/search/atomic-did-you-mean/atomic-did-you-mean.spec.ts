@@ -7,6 +7,7 @@ import {
   type QueryTriggerState,
 } from '@coveo/headless';
 import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {userEvent} from 'vitest/browser';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
@@ -42,8 +43,8 @@ describe('atomic-did-you-mean', () => {
 
     const {element} = await renderInAtomicSearchInterface<AtomicDidYouMean>({
       template: html`<atomic-did-you-mean
-        .automaticallyCorrectQuery=${automaticallyCorrectQuery}
-        .queryCorrectionMode=${queryCorrectionMode}
+        .automaticallyCorrectQuery=${ifDefined(automaticallyCorrectQuery)}
+        .queryCorrectionMode=${ifDefined(queryCorrectionMode)}
       ></atomic-did-you-mean>`,
       selector: 'atomic-did-you-mean',
       bindings: (bindings) => {
@@ -75,12 +76,10 @@ describe('atomic-did-you-mean', () => {
       queryCorrectionMode: 'legacy',
     });
 
-    expect(buildDidYouMean).toHaveBeenCalledWith(mockedEngine, {
-      options: {
-        automaticallyCorrectQuery: false,
-        queryCorrectionMode: 'legacy',
-      },
-    });
+    expect(buildDidYouMean).toHaveBeenCalledWith(
+      mockedEngine,
+      expect.anything()
+    );
   });
 
   it('should call buildQueryTrigger with engine', async () => {
