@@ -17,8 +17,7 @@ import {
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
-import type {TemplateResult} from 'lit';
-import {css, html, LitElement, nothing} from 'lit';
+import {css, html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
