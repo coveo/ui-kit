@@ -233,47 +233,6 @@ export namespace Components {
         "tabsIncluded": string[] | string;
     }
     /**
-     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
-     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
-     */
-    interface AtomicGeneratedAnswer {
-        /**
-          * The unique identifier of the answer configuration to use to generate the answer.
-         */
-        "answerConfigurationId"?: string;
-        /**
-          * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
-          * @default false
-         */
-        "collapsible"?: boolean;
-        /**
-          * Option to disable citation anchoring.
-          * @default false
-         */
-        "disableCitationAnchoring"?: boolean;
-        /**
-          * A list of fields to include with the citations used to generate the answer.
-         */
-        "fieldsToIncludeInCitations"?: string;
-        /**
-          * The maximum height (in rem units) of the answer when collapsed.
-         */
-        "maxCollapsedHeight": number;
-        /**
-          * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded": string[] | string;
-        /**
-          * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-generated-answer tabs-included='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer can only be displayed on the specified tabs.
-         */
-        "tabsIncluded": string[] | string;
-        /**
-          * Whether to render a toggle button that lets the user hide or show the answer.
-          * @default false
-         */
-        "withToggle"?: boolean;
-    }
-    /**
      * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
      */
     interface AtomicGeneratedAnswerFeedbackModal {
@@ -1792,16 +1751,6 @@ declare global {
         prototype: HTMLAtomicFoldedResultListElement;
         new (): HTMLAtomicFoldedResultListElement;
     };
-    /**
-     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
-     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
-     */
-    interface HTMLAtomicGeneratedAnswerElement extends Components.AtomicGeneratedAnswer, HTMLStencilElement {
-    }
-    var HTMLAtomicGeneratedAnswerElement: {
-        prototype: HTMLAtomicGeneratedAnswerElement;
-        new (): HTMLAtomicGeneratedAnswerElement;
-    };
     interface HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap {
         "feedbackSent": any;
     }
@@ -2589,7 +2538,6 @@ declare global {
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
         "atomic-folded-result-list": HTMLAtomicFoldedResultListElement;
-        "atomic-generated-answer": HTMLAtomicGeneratedAnswerElement;
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
@@ -2863,47 +2811,6 @@ declare namespace LocalJSX {
           * The tabs on which the folded result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-folded-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-folded-result-list snippet> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list can only be displayed on the specified tabs.
          */
         "tabsIncluded"?: string[] | string;
-    }
-    /**
-     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
-     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
-     */
-    interface AtomicGeneratedAnswer {
-        /**
-          * The unique identifier of the answer configuration to use to generate the answer.
-         */
-        "answerConfigurationId"?: string;
-        /**
-          * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
-          * @default false
-         */
-        "collapsible"?: boolean;
-        /**
-          * Option to disable citation anchoring.
-          * @default false
-         */
-        "disableCitationAnchoring"?: boolean;
-        /**
-          * A list of fields to include with the citations used to generate the answer.
-         */
-        "fieldsToIncludeInCitations"?: string;
-        /**
-          * The maximum height (in rem units) of the answer when collapsed.
-         */
-        "maxCollapsedHeight"?: number;
-        /**
-          * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded"?: string[] | string;
-        /**
-          * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-generated-answer tabs-included='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer can only be displayed on the specified tabs.
-         */
-        "tabsIncluded"?: string[] | string;
-        /**
-          * Whether to render a toggle button that lets the user hide or show the answer.
-          * @default false
-         */
-        "withToggle"?: boolean;
     }
     /**
      * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
@@ -4253,7 +4160,6 @@ declare namespace LocalJSX {
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-number-input": AtomicFacetNumberInput;
         "atomic-folded-result-list": AtomicFoldedResultList;
-        "atomic-generated-answer": AtomicGeneratedAnswer;
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
         "atomic-insight-facet": AtomicInsightFacet;
@@ -4374,11 +4280,6 @@ declare module "@stencil/core" {
              * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
              */
             "atomic-folded-result-list": LocalJSX.AtomicFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicFoldedResultListElement>;
-            /**
-             * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
-             * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
-             */
-            "atomic-generated-answer": LocalJSX.AtomicGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerElement>;
             /**
              * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
              */

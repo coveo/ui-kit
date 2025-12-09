@@ -1,0 +1,105 @@
+@import '../../../../global/global.pcss';
+@import './generated-text.pcss';
+@import '../generated-content/generated-markdown-content.pcss';
+@import './feedback-buttons.pcss';
+@import './copy-button.pcss';
+
+@utility mobile-footer-layout {
+  & {
+    @apply flex-col gap-4;
+  }
+
+  .source-citations {
+    @apply mr-0;
+  }
+}
+
+@utility mobile-footer-xs-layout {
+  & {
+    @apply mt-4;
+  }
+
+  .feedback-buttons {
+    @apply relative top-0 right-0;
+  }
+}
+
+@utility mobile-generated-answer-footer-layout {
+  & {
+    @apply flex-col gap-1;
+  }
+}
+
+@keyframes cursor-blink {
+  0% {
+    opacity: 0;
+  }
+}
+
+[part='container'] {
+  container-type: inline-size;
+  contain: layout;
+}
+
+.footer {
+  @apply flex;
+
+  .source-citations {
+    @apply mr-2;
+  }
+
+  @container (max-width: 37.5rem) {
+    @apply mobile-footer-layout;
+  }
+  @media not all and (width >= theme(--breakpoint-desktop)) {
+    @apply mobile-footer-layout;
+  }
+  @container (max-width: 25rem) {
+    @apply mobile-footer-xs-layout;
+  }
+}
+
+[part='generated-answer-footer'] {
+  @container (max-width: 37.5rem) {
+    @apply mobile-generated-answer-footer-layout;
+  }
+
+  @media not all and (width >= theme(--breakpoint-desktop)) {
+    @apply mobile-generated-answer-footer-layout;
+  }
+}
+
+/**
+ * @prop --atomic-crga-collapsed-height: The maximum height of the collapsed generated answer container.
+ */
+[part='generated-container'] {
+  &.answer-collapsed {
+    @apply relative overflow-hidden content-[''];
+    max-height: var(--atomic-crga-collapsed-height, 16rem);
+
+    .feedback-buttons {
+      @apply hidden;
+    }
+  }
+  &.answer-collapsed:before {
+    @apply absolute top-0 left-0 h-full w-full content-[''];
+    background: linear-gradient(
+      transparent calc(var(--atomic-crga-collapsed-height, 16rem) * 0.7),
+      var(--atomic-background)
+    );
+  }
+}
+
+.is-collapsible {
+  @apply justify-between;
+
+  [part='answer-show-button'] {
+    @apply flex;
+  }
+}
+
+.generating-label-visible {
+  [part='is-generating'] {
+    @apply flex;
+  }
+}
