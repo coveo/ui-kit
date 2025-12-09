@@ -3,7 +3,7 @@
     "experimentalDecorators": true,
     "baseUrl": ".",
     "checkJs": true,
-    "target": "es2016",
+    "target": "es2023",
     "module": "esnext",
     "paths": {
       "c/exampleSearch": ["exampleSearch/exampleSearch"],

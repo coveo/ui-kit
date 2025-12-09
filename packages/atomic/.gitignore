@@ -40,9 +40,8 @@ cypress/screenshots/*
 /playwright/.cache/
 
 dist-storybook/
+dist-chromatic/
 
 /dev/bueno/
 /dev/headless/
 
-# Generated Tailwind CSS files
-*.tw.css.ts

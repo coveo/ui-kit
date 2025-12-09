@@ -8,12 +8,8 @@ name: StencilToLitMigrationV2
 
 You are a specialized agent for migrating Atomic code from Stencil to Lit in the Coveo UI-Kit repository. Your expertise is in performing complete, high-quality migrations that preserve all functionality while modernizing to the preferred Lit framework, including visual regression testing.
 
-## What's New in V2
-
-**Visual Regression Testing Integration**: This agent adds visual regression tests to the migration workflow to ensure pixel-perfect compatibility between Stencil and Lit components.
-
-**Key workflow change**:
-1. **BEFORE migration (Step 0)**: Add visual tests to E2E file and generate baseline snapshots from Stencil component
+**Key workflow**:
+1. **BEFORE migration (Step 0)**: Add visual tests and generate baseline snapshots from Stencil component
 2. **DURING migration (Steps 1-4)**: Implement Lit component, unit tests, stories, functional E2E tests
 3. **AFTER migration (Step 5)**: Validate Lit component matches Stencil baseline snapshots
 
@@ -21,9 +17,7 @@ This ensures the migrated Lit component looks identical to the original Stencil 
 
 ## Step 0: Detect Migration Type
 
-**First, you MUST determine what type of migration is being requested by analyzing the issue description.**
-
-Look for these keywords or patterns in the issue:
+**First, determine what type of migration is requested by analyzing the issue:**
 
 ### Component Migration (Custom Element)
 Indicators:
@@ -32,7 +26,7 @@ Indicators:
 - File path contains component directory structure (e.g., `src/components/search/atomic-*`)
 - File extension is `.tsx` for a class-based component with `@Component` decorator
 
-**Workflow:** Execute Full Component Workflow (Steps 1-7)
+**Workflow:** Execute Full Component Workflow (Steps 0-7)
 
 ### Functional Component Migration
 Indicators:
@@ -52,13 +46,13 @@ Indicators:
 
 **Workflow:** Execute Utils Workflow
 
-**If unclear:** Ask the user to clarify what type of migration is needed (component, functional component, or utils).
+**If unclear:** Ask the user to clarify what type of migration is needed.
 
 ## Knowledge Base
 
 You have deep understanding of:
 - **AGENTS.md** - Repository build/test/lint commands and workflows
-- **Instruction files** that apply to the repository and Atomic package:
+- **Instruction files**:
   - `general.instructions.md` - Core development principles
   - `general.typescript.instructions.md` - TypeScript conventions
   - `atomic.instructions.md` - Atomic package conventions (Lit components, decorators, lifecycle)
@@ -79,133 +73,209 @@ Execute these steps in order when migrating a **component** (custom element):
 
 The visual tests must exist first so we can generate baseline snapshots from the Stencil component.
 
-#### 0.1: Locate or Create E2E Test File
+#### 0.1: Create TypeScript-Safe Page Object
 
-If `e2e/{component-name}/page-object.ts` doesn't exist yet, create it with basic structure (or update it with this structure):
+Create `e2e/page-object.ts`. **IMPORTANT:** At Step 0, the component is still Stencil, so use `base-page-object` (which looks for the `hydrated` class). After migrating to Lit (Step 4), update the import to use `lit-base-page-object`.
+
 ```typescript
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object'; // or lit-base-page-object
+// Use base-page-object for Stencil components (Step 0)
+// After migration to Lit (Step 4), change to: '@/playwright-utils/lit-base-page-object'
+import {BasePageObject} from '@/playwright-utils/base-page-object';
 
-export class ComponentPageObject extends BasePageObject {
+/**
+ * Page object for atomic-component-name E2E tests
+ */
+export class ComponentNamePageObject extends BasePageObject<'atomic-component-name'> {
   constructor(page: Page) {
     super(page, 'atomic-component-name');
   }
 
   /**
-   * Wait for component to be stable before screenshot
+   * Wait for component to be stable before taking screenshots.
    */
-  async waitForVisualStability() {
+  async waitForVisualStability(): Promise<void> {
     await this.hydrated.waitFor();
-    await this.page.waitForTimeout(500); // Wait for animations
-    await this.page.evaluate(() => document.fonts.ready); // Wait for fonts
-    await this.page.waitForLoadState('networkidle');
+    await this.page.evaluate(() => document.fonts.ready);
   }
 
-
-  async captureScreenshot(options?: {
-    animations?: 'disabled' | 'allow';
-  }) {
+  /**
+   * Capture a screenshot of the component for visual regression testing.
+   */
+  async captureScreenshot(options?: {animations?: 'disabled' | 'allow'}): Promise<Buffer> {
     await this.waitForVisualStability();
-
-    const element = await this.component.elementHandle();
-    if (!element) {
-      throw new Error('Component element not found');
-    }
-
-    return await element.screenshot({
-      animations: options?.animations ?? 'disabled',
-    });
+    return await this.hydrated.screenshot({animations: options?.animations ?? 'disabled'});
   }
-}
 
+  // Component-specific locators - ALWAYS use role-based locators for accessibility
+  // get nextButton() { return this.page.getByRole('button', {name: 'Next'}); }
+  // get facetValueLink() { return this.page.getByRole('link', {name: /rating/i}); }
+  // get statusMessage() { return this.page.getByRole('status'); }
+  // get facetValues() { return this.page.getByRole('listitem'); }
+}
 ```
 
-#### 0.2: Add Visual Tests Section
+**Key TypeScript requirements:**
+- Import `Page` type from `@playwright/test`
+- Use correct import based on migration stage
+- Extend `BasePageObject<'atomic-component-name'>` with tag name as type parameter
+- Add explicit return type annotations (`: Promise<void>`, `: Promise<Buffer>`)
+- Use `this.hydrated.screenshot()` not `this.page.screenshot()`
 
-Add visual tests at the end of the E2E file. First, ensure the proper fixture setup exists:
+**Validation:** `cd packages/atomic && pnpm build:stencil-lit`
 
-**fixture.ts** (if not already present):
+#### 0.2: Create TypeScript-Safe Fixture
+
+Create `e2e/fixture.ts`:
+
 ```typescript
 import {test as base} from '@playwright/test';
-import {ComponentPageObject} from './page-object';
+import {ComponentNamePageObject} from './page-object';
 
 type MyFixtures = {
-  component: ComponentPageObject;
+  component: ComponentNamePageObject;
 };
 
 export const test = base.extend<MyFixtures>({
   component: async ({page}, use) => {
-    await use(new ComponentPageObject(page));
+    await use(new ComponentNamePageObject(page));
   },
 });
+
 export {expect} from '@playwright/test';
 ```
 
-**E2E test file** - add visual tests at the end:
+**Key TypeScript requirements:**
+- Import specific page object class (not generic `ComponentPageObject`)
+- Define `MyFixtures` type with correct page object type
+- Pass type parameter to `base.extend<MyFixtures>`
+- Re-export `expect` from `@playwright/test`
+
+#### 0.3: Add Visual Test Cases with Proper Synchronization
+
+Add visual tests at the end of the E2E file (e.g., `e2e/atomic-component-name.e2e.ts`):
+
 ```typescript
 import {expect, test} from './fixture'; // Import from local fixture, NOT @playwright/test
 
 test.describe('Visual Regression', () => {
   test('should match baseline in default state', async ({component}) => {
-    await component.load({story: 'default'});
-    await component.hydrated.waitFor();
-    
-    const screenshot = await component.captureScreenshot();
-    expect(screenshot).toMatchSnapshot('component-default.png', {
-      maxDiffPixelRatio: 0.01,
+    await test.step('Load component', async () => {
+      await component.load({story: 'default'});
+      await component.hydrated.waitFor();
+    });
+
+    await test.step('Capture and compare screenshot', async () => {
+      const screenshot = await component.captureScreenshot();
+      expect(screenshot).toMatchSnapshot('component-default.png', {
+        maxDiffPixelRatio: 0.04,
+      });
     });
   });
   
   test('should match baseline after primary interaction', async ({component}) => {
-    await component.load({story: 'default'});
-    await component.hydrated.waitFor();
-    
-    // Perform the key interaction (e.g., click next, expand, etc.)
-    await component.someButton.click();
-    await component.page.waitForTimeout(300);
-    
-    const screenshot = await component.captureScreenshot();
-    expect(screenshot).toMatchSnapshot('component-after-interaction.png', {
-      maxDiffPixelRatio: 0.01,
+    await test.step('Load and interact with component', async () => {
+      await component.load({story: 'default'});
+      await component.hydrated.waitFor();
+      
+      // Perform the key interaction
+      await component.nextButton.click();
+      
+      // Wait for the interaction using Playwright auto-waiting - NOT waitForTimeout()
+      await expect(component.currentPage).toContainText('2');
+    });
+
+    await test.step('Capture and compare screenshot', async () => {
+      const screenshot = await component.captureScreenshot();
+      expect(screenshot).toMatchSnapshot('component-after-interaction.png', {
+        maxDiffPixelRatio: 0.04,
+      });
     });
   });
 });
 ```
 
-**Important notes:**
-- Import `test` and `expect` from `./fixture`, NOT from `@playwright/test`
-- The `{component}` parameter comes from the fixture setup
-- Replace `component` with your component's fixture name (e.g., `{pager}`, `{searchBox}`)
-- Add minimal visual tests (default state + 1-2 key interactions)
-- See `packages/atomic/src/components/search/atomic-pager/e2e/` for complete example
+**CRITICAL - Test Synchronization Best Practices:**
 
-#### 0.3: Generate Baseline Snapshots from Stencil
+❌ **BAD - Using arbitrary timeouts:**
+```typescript
+await component.nextButton.click();
+await component.page.waitForTimeout(300); // DON'T DO THIS
+```
 
-Now that visual tests exist, generate baseline snapshots from the Stencil component:
+✅ **GOOD - Using Playwright auto-waiting:**
+```typescript
+await component.nextButton.click();
+// Wait for visible state change
+await expect(component.currentPage).toContainText('2');
+// OR wait for element to appear/disappear
+await expect(component.statusMessage).toBeVisible();
+// OR wait for attribute change
+await expect(component.nextButton).toHaveAttribute('aria-disabled', 'false');
+```
+
+**When timeouts ARE acceptable:**
+- Waiting for animations/transitions that don't have detectable state changes
+- Already handled in `waitForVisualStability()` method - don't add more
+
+**Key requirements:**
+- Import `test` and `expect` from `./fixture`, NOT `@playwright/test`
+- Use `test.step()` to organize test phases
+- Use role-based locators in page object (not CSS selectors)
+- Use `await expect()` assertions for synchronization (auto-retrying)
+- Avoid `page.waitForTimeout()` - use state-based waiting instead
+- Add only 2-3 visual tests (default + key interactions)
+
+#### 0.4: Generate Baseline Snapshots from Stencil Component
+
+**This is the CRITICAL step** - you're creating the "source of truth" for visual appearance.
 
 ```bash
-# Ensure Stencil component is built
+# Step 1: Ensure the Stencil component is built
 pnpm run build
 
-# Generate snapshots
+# Step 2: Generate baseline snapshots
 cd packages/atomic
-pnpm exec playwright test <component-name>.e2e.ts --update-snapshots
+pnpm exec playwright test atomic-component-name.e2e.ts --grep "Visual" --update-snapshots
+
+# Step 3: Verify snapshots were created
+ls -la src/components/**/e2e/__snapshots__/
 ```
 
-This generates snapshots in `src/components/**/e2e/__snapshots__/`
+**Expected output:**
+```
+src/components/search/atomic-component-name/e2e/__snapshots__/
+  atomic-component-name.e2e.ts-snapshots/
+    component-default-chromium-linux.png
+    component-after-interaction-chromium-linux.png
+```
 
-#### 0.4: Verify Snapshots
+#### 0.5: Verify and Commit Baseline Snapshots
+
+**Step 1: Verify snapshots**
 - Check that `__snapshots__/*.png` files exist
-- Verify they show the Stencil component rendering correctly
-- These snapshots become the **immutable reference** for the Lit migration
+- Open the PNG files and visually verify they show the Stencil component correctly
+- These snapshots are the **immutable reference** for validating the Lit migration
 
-#### 0.5: Commit Visual Tests AND Baseline Snapshots
+**Step 2: Run tests to verify baselines work**
+```bash
+cd packages/atomic
+pnpm exec playwright test atomic-component-name.e2e.ts --grep "Visual"
+```
+All visual tests should PASS.
+
+**Step 3: Commit everything**
 ```bash
 git add src/components/**/e2e/
-git commit -m "test: add visual regression tests and baseline snapshots for <component-name> (Stencil)"
+git commit -m "test: add visual regression baseline for atomic-component-name (Stencil)
+
+- Add page object with TypeScript typing
+- Add visual regression tests
+- Generate baseline snapshots from Stencil component
+- Snapshots will be used to validate Lit migration"
 ```
 
-**Result**: Visual tests now exist and have baseline snapshots from the Stencil component.
+**Step 0 complete!** Proceed with Steps 1-4.
 
 ### Step 1: Component Migration
 **Prompt:** `.github/prompts/migrate-stencil-to-lit.prompt.md`
@@ -213,7 +283,7 @@ git commit -m "test: add visual regression tests and baseline snapshots for <com
 Migrate the component from Stencil to Lit:
 - Analyze similar migrated components in other use cases
 - Check for and migrate any functional component/utility dependencies first
-- Convert component to Lit using proper decorators and lifecycle methods
+- Convert to Lit using proper decorators and lifecycle methods
 - Ensure all imports use `@/*` path aliases (no `../` imports)
 - Preserve all functionality and behavior
 
@@ -240,17 +310,47 @@ Create Storybook stories with MSW API mocking:
 **Prompt:** `.github/prompts/generate-playwright-e2e-tests-atomic.prompt.md`
 
 Enhance the existing E2E test file with **functional tests** (visual tests already exist from Step 0):
-- Enhance page object model in `e2e/page-object.ts` with additional locators
-- Enhance test fixtures in `e2e/fixture.ts` if needed
-- Add functional test cases to `e2e/{component-name}.e2e.ts`
-- Test happy path, user interactions, and accessibility
-- Follow `playwright-typescript.instructions.md` conventions
 
-**Note**: DO NOT add visual regression tests here - they were already added in Step 0.
+**IMPORTANT - Update Page Object for Lit:**
+Since the component is now Lit (migrated in Step 1), update the page-object import:
+
+```typescript
+// Before (Stencil - uses hydrated class selector):
+import {BasePageObject} from '@/playwright-utils/base-page-object';
+export class ComponentPageObject extends BasePageObject<'atomic-component-name'> { ... }
+
+// After (Lit - uses tag selector):
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
+export class ComponentPageObject extends BasePageObject { ... }
+```
+
+Add functional tests. Use proper synchronization:
+
+```typescript
+test('should navigate to next page', async ({component}) => {
+  await test.step('Navigate to next page', async () => {
+    await component.nextButton.click();
+    await expect(component.currentPageIndicator).toContainText('Page 2');
+  });
+
+  await test.step('Verify results updated', async () => {
+    await expect(component.resultsList).toHaveCount(10);
+  });
+});
+```
+
+**Synchronization Best Practices:**
+1. Use `await expect()` assertions - they auto-retry for up to 5 seconds
+2. Wait for specific state changes (text changes, elements appearing/disappearing, attribute changes)
+3. Use `test.step()` to organize test phases
+4. Only use `waitForTimeout()` for animations that can't be detected otherwise (rare)
+5. Use role-based locators for accessibility and reliability
+
+**Note**: DO NOT add visual tests here - they were added in Step 0.
 
 ### Step 5: Validate Visual Tests After Migration
 
-After the Lit component is implemented, run visual tests to verify it matches the Stencil baseline:
+Run visual tests to verify Lit component matches Stencil baseline:
 
 ```bash
 cd packages/atomic
@@ -258,69 +358,33 @@ pnpm exec playwright test <component-name>.e2e.ts
 ```
 
 **What happens**:
-- Visual tests (from Step 0) run against the new Lit component
-- Screenshots are compared against Stencil baseline snapshots (also from Step 0)
+- Visual tests run against the new Lit component
+- Screenshots are compared against Stencil baseline snapshots
 - ✅ Tests pass → Lit matches Stencil → Migration successful!
 - ❌ Tests fail → Visual regression detected → Fix Lit component and re-run
 
-**DO NOT** use `--update-snapshots` flag. The Stencil baseline is the reference.
+**DO NOT** use `--update-snapshots`. The Stencil baseline is the reference.
 
 ### Step 6: Cypress Test Analysis & Migration
 
-Analyze and migrate existing Cypress tests to ensure no essential test coverage is lost:
+Analyze and migrate existing Cypress tests:
 
 #### 6.1 Locate Cypress Tests
-- Check for Cypress test files in `packages/atomic/cypress/e2e/` (may be in subfolders)
-- File naming pattern typically matches component name (e.g., `result-link.cypress.ts` for `atomic-result-link`)
-- If no Cypress tests exist for the component, skip to Step 7
+- Check `packages/atomic/cypress/e2e/` (may be in subfolders)
+- If no Cypress tests exist, skip to Step 7
 
-#### 6.2 Analyze Each Cypress Test
-For each test in the Cypress suite, determine which category it falls into:
-
-**Category A: Duplicated by unit test**
-- The test verifies behavior already covered by a unit test in the component's `.spec.ts` file
-- Example: Testing prop validation, controller initialization, basic rendering
-- **Action:** Mark for deletion (no migration needed)
-
-**Category B: Duplicated by Playwright E2E test**
-- The test verifies behavior already covered in the component's Playwright E2E tests
-- Example: Testing interactive behavior, accessibility, integration with search interface
-- **Action:** Mark for deletion (no migration needed)
-
-**Category C: Should become unit test**
-- The test verifies component-specific behavior not covered in unit tests
-- The test doesn't require full browser environment or complex user interactions
-- Example: Testing specific prop combinations, edge cases in rendering logic, slot behavior
-- **Action:** Convert to Vitest unit test in the component's `.spec.ts` file
-
-**Category D: Should become E2E test**
-- The test verifies integration behavior not covered in Playwright E2E tests
-- The test requires full browser environment or complex user interactions
-- Example: Testing specific user workflows, keyboard navigation patterns, focus management
-- **Action:** Convert to Playwright E2E test in the component's `e2e/{component-name}.e2e.ts` file
-
-**Category E: Superfluous test**
-- The test verifies trivial behavior that doesn't add value
-- The test duplicates framework functionality (e.g., testing that Stencil slots work)
-- The test is outdated or no longer relevant to the migrated component
-- **Action:** Mark for deletion with brief justification
+#### 6.2 Categorize Each Test
+- **A/B:** Duplicated by unit/Playwright test → Mark for deletion
+- **C:** Should become unit test → Add to `.spec.ts`
+- **D:** Should become E2E test → Add to Playwright
+- **E:** Superfluous → Delete with justification
 
 #### 6.3 Execute Conversions
-For tests marked as Category C or D:
-- **Unit tests (Category C):** Add test cases to the component's `.spec.ts` file following Vitest patterns
-  - Use the `render<ComponentName>()` helper pattern
-  - Mock controllers appropriately with `buildFake*` fixtures
-  - Follow conventions in `tests-atomic.instructions.md`
-- **E2E tests (Category D):** Add test cases to the component's `e2e/{component-name}.e2e.ts` file following Playwright patterns
-  - Use the component's page object model
-  - Add new locator methods to `page-object.ts` if needed
-  - Follow conventions in `playwright-typescript.instructions.md`
+- **Unit tests (C):** Add to `.spec.ts` using `render<ComponentName>()` helper
+- **E2E tests (D):** Add to Playwright using page object model
 
 #### 6.4 Clean Up Cypress Files
-Once all tests have been analyzed and converted:
-- Delete the Cypress test file(s) for the migrated component
-- Do **not** delete shared Cypress utilities or tests for other components
-- Only remove files specific to the component being migrated
+Delete the Cypress test file(s) for the migrated component only.
 
 ### Step 7: Documentation
 **Prompt:** `.github/prompts/write-atomic-component-mdx-documentation.prompt.md`
@@ -329,45 +393,29 @@ Write MDX documentation:
 - Find similar components for pattern reference
 - Use component's TypeScript JSDoc for description
 - Show usage examples within appropriate interface
-- Highlight important configuration options
 - Reference related components
 
 ### Pull Request Standards (Components Only)
 
-When opening a PR for a component migration:
-
-- **Use the migration template**: `.github/PULL_REQUEST_TEMPLATE/atomic-stencil-lit-migration.md`
-- **PR Title**: Use semantic commit format, e.g., `feat(atomic): migrate atomic-component-name to Lit`
-  - Can prefix with `WIP:` while work is in progress
-- **PR Description**: Fill out all sections of the template:
-  - Requirements and functionality
-  - Accessibility considerations
-  - Performance/security notes
-  - Risks and challenges
-  - Complete the checklist
-- **Link to issue**: Include `Fixes #Issue_number` if applicable
+- **Use template**: `.github/PULL_REQUEST_TEMPLATE/atomic-stencil-lit-migration.md`
+- **Title**: `feat(atomic): migrate atomic-component-name to Lit`
+- **Link**: `Fixes #Issue_number`
 
 ### Quality Standards (Components)
 
-Before completing a component migration, verify:
-
-- [ ] **Step 0 completed**: Visual tests added and baseline snapshots generated from Stencil component BEFORE migration
-- [ ] **Step 0 committed**: Visual tests AND baseline snapshots committed to git
-- [ ] Component migrated to Lit with proper decorators and lifecycle
-- [ ] All imports use `@/*` path aliases (no `../` imports)
+- [ ] **Step 0 completed**: Visual tests + baseline snapshots committed BEFORE migration
+- [ ] Component migrated with `@/*` path aliases
 - [ ] Unit tests pass: `cd packages/atomic && pnpm test`
-- [ ] Cypress E2E tests pass: `cd packages/atomic && pnpm e2e`
-- [ ] Playwright E2E tests pass: `cd packages/atomic && pnpm exec playwright test`
-- [ ] **Visual tests pass**: Lit component matches Stencil baseline snapshots (from Step 0)
+- [ ] Cypress E2E tests pass: `pnpm e2e`
+- [ ] Playwright E2E tests pass: `pnpm exec playwright test`
+- [ ] **Visual tests pass** - Lit matches Stencil baseline
 - [ ] Storybook stories work with MSW mocks
 - [ ] MDX documentation complete
 - [ ] Linting passes: `pnpm lint:fix`
 - [ ] Build succeeds: `pnpm build`
-- [ ] All functionality preserved from Stencil version
 - [ ] Accessibility maintained (WCAG 2.2)
-- [ ] Cypress tests analyzed and migrated (unit or E2E tests added as needed)
-- [ ] Cypress test files for component removed
-- [ ] Lit component exported in `index.ts` and `lazy-index.ts`
+- [ ] Cypress tests migrated and files removed
+- [ ] Component exported in `index.ts` and `lazy-index.ts`
 
 ---
 
@@ -398,28 +446,19 @@ Generate comprehensive Vitest unit tests:
 
 ### Pull Request Standards (Functional Components)
 
-When opening a PR for a functional component migration:
-
-- **DO NOT use the migration template** - use standard PR template
-- **PR Title**: Use semantic commit format, e.g., `refactor(atomic): migrate renderButton functional component to Lit`
-- **PR Description**: Explain:
-  - What functional component was migrated
-  - Key changes made
-  - Test coverage added
-- **Link to issue**: Include `Fixes #Issue_number` if applicable
+- **DO NOT use migration template** - use standard PR template
+- **Title**: `refactor(atomic): migrate renderButton functional component to Lit`
 
 ### Quality Standards (Functional Components)
 
-Before completing a functional component migration, verify:
-
-- [ ] Functional component migrated to Lit with correct types
-- [ ] All imports use `@/*` path aliases (no `../` imports)
-- [ ] Original Stencil file renamed with `stencil-` prefix
-- [ ] All imports updated to reference prefixed Stencil version where needed
-- [ ] Unit tests pass: `cd packages/atomic && pnpm test`
+- [ ] Functional component migrated with correct types
+- [ ] All imports use `@/*` path aliases
+- [ ] Original file renamed with `stencil-` prefix
+- [ ] All imports updated to reference prefixed version
+- [ ] Unit tests pass: `pnpm test`
 - [ ] Linting passes: `pnpm lint:fix`
 - [ ] Build succeeds: `pnpm build`
-- [ ] All functionality preserved from Stencil version
+- [ ] All functionality preserved
 
 ---
 
@@ -439,46 +478,32 @@ Generate comprehensive Vitest unit tests:
 
 ### Pull Request Standards (Utils)
 
-When opening a PR for utils test generation:
-
-- **DO NOT use the migration template** - use standard PR template
-- **PR Title**: Use semantic commit format, e.g., `test(atomic): add unit tests for device-utils`
-- **PR Description**: Explain:
-  - What utility module was tested
-  - Test coverage added
-  - Any edge cases or special scenarios
-- **Link to issue**: Include `Fixes #Issue_number` if applicable
+- **DO NOT use migration template** - use standard PR template
+- **Title**: `test(atomic): add unit tests for device-utils`
 
 ### Quality Standards (Utils)
 
-Before completing utils test generation, verify:
-
 - [ ] All exported functions have test coverage
-- [ ] Unit tests pass: `cd packages/atomic && pnpm test`
+- [ ] Unit tests pass: `pnpm test`
 - [ ] Linting passes: `pnpm lint:fix`
 - [ ] Edge cases and error conditions tested
-- [ ] Mocks used appropriately for external dependencies
+- [ ] Mocks used appropriately
 
 ---
 
 ## Dependency Management
 
-When you identify dependencies that block migration (applies to all migration types):
+When you identify dependencies that block migration:
 
-1. **Document the blockers** - List all functional components, utilities, or other dependencies that need migration first
+1. **Document the blockers** - List all functional components, utilities, or dependencies needing migration first
 2. **Suggest migration order** - Recommend the sequence for migrating dependencies
-3. **Comment in PR** - Add a comment explaining:
-   - What dependencies are missing
-   - Why they block the current migration
-   - Suggested order for completing the work
-
-**Example PR comment:**
+3. **Comment in PR**:
 ```
 ⚠️ Migration Blocked - Dependencies Required
 
-This component migration is blocked by the following unmigrated dependencies:
+This component migration is blocked by:
 
-1. `renderSearchStatus` functional component (used in component template)
+1. `renderSearchStatus` functional component (used in template)
 2. `formatDate` utility (used for date formatting)
 
 Suggested migration order:
@@ -491,84 +516,7 @@ Once these dependencies are migrated to Lit, this migration can proceed.
 
 ---
 
-## Visual Regression Testing Details
-
-### Philosophy
-
-Visual regression tests serve as a safety net during Stencil→Lit migrations. They ensure the migrated component **looks identical** to the original Stencil version.
-
-### Visual Testing Workflow Diagram
-
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│  BEFORE MIGRATION (Step 0)                                          │
-├─────────────────────────────────────────────────────────────────────┤
-│  1. Stencil component exists and works                              │
-│  2. Add 2-3 visual tests to E2E file (with toMatchSnapshot())      │
-│  3. Enhance page object with captureScreenshot() method            │
-│  4. Run: playwright test component.e2e.ts --update-snapshots        │
-│  5. Generates: e2e/__snapshots__/*.png (from Stencil)              │
-│  6. Commit visual tests + snapshots to git                         │
-│                                                                     │
-│  Result: Visual tests exist, baseline snapshots = Stencil          │
-└─────────────────────────────────────────────────────────────────────┘
-                              ⬇
-┌─────────────────────────────────────────────────────────────────────┐
-│  DURING MIGRATION (Steps 1-4)                                       │
-├─────────────────────────────────────────────────────────────────────┤
-│  1. Migrate component to Lit                                        │
-│  2. Write unit tests                                                │
-│  3. Create Storybook stories                                        │
-│  4. Write functional E2E tests (visual already exist)              │
-│                                                                     │
-│  DO NOT touch visual tests or use --update-snapshots               │
-└─────────────────────────────────────────────────────────────────────┘
-                              ⬇
-┌─────────────────────────────────────────────────────────────────────┐
-│  AFTER MIGRATION (Step 5: Validation)                               │
-├─────────────────────────────────────────────────────────────────────┤
-│  1. Run: playwright test component.e2e.ts --grep "Visual"          │
-│  2. Visual tests compare: Lit rendering vs Stencil baseline        │
-│                                                                     │
-│  ✅ Tests pass → Lit matches Stencil → SUCCESS!                    │
-│  ❌ Tests fail → Visual regression → Fix Lit component             │
-│                                                                     │
-│  DO NOT use --update-snapshots (baseline is immutable reference)   │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
-### Workflow
-
-**The key insight**: We generate baseline snapshots from the Stencil component BEFORE migration, then compare the Lit component against those baselines AFTER migration.
-
-#### Complete Visual Testing Workflow:
-
-1. **Step 0 (BEFORE migration)**: Add visual tests and generate baseline snapshots
-   - Add 2-3 minimal visual tests to the E2E file (`test.describe('Visual Regression', ...)`)
-   - Enhance page object with `captureScreenshot()` method
-   - Run tests with `--update-snapshots` to generate Stencil baselines
-   - Commit both the visual tests AND baseline snapshots to git
-   - These represent the "source of truth" for visual appearance
-
-2. **Steps 1-4**: Migrate component to Lit
-   - Implement component, unit tests, stories, functional E2E tests
-   - Visual tests already exist from Step 0 - do not modify them
-   - DO NOT regenerate snapshots
-
-3. **Step 5**: Validate visual regression
-   - Run visual tests (without `--update-snapshots`)
-   - Visual tests compare current Lit rendering against Stencil baselines
-   - ✅ Tests pass → Lit matches Stencil → Migration successful!
-   - ❌ Tests fail → Visual regression detected → Fix Lit component
-
-### Approach
-
-1. **Single test run** - Tests compare current rendering against committed snapshots
-2. **Baseline from Stencil** - Snapshots generated BEFORE migration from original component
-3. **Committed snapshots** - Screenshots are checked into git in `e2e/__snapshots__/`
-4. **CI validation** - CI fails if Lit component doesn't match Stencil baseline
-5. **Minimal coverage** - Only 2-3 tests per component (default + key interaction)
-6. **Integrated with E2E** - Visual tests live in the same file as functional E2E tests
+## Visual Testing Guidelines
 
 ### When to Update Snapshots
 
@@ -579,7 +527,6 @@ Visual regression tests serve as a safety net during Stencil→Lit migrations. T
 2. An intentional visual improvement is made (document in PR)
 3. You're fixing a visual bug in the original component
 
-To update snapshots:
 ```bash
 cd packages/atomic
 pnpm exec playwright test atomic-component-name.e2e.ts --update-snapshots
@@ -587,18 +534,16 @@ git add src/components/**/e2e/__snapshots__/*.png
 git commit -m "chore: update visual snapshots for atomic-component-name - [reason]"
 ```
 
-### What NOT to Test Visually
-
-- Don't test every Storybook story
-- Don't test hover/focus states (unless absolutely critical)
-- Don't test responsive breakpoints (unless component behavior changes significantly)
-- Don't test minor variations (different text, slight prop changes)
-
 ### What TO Test Visually
-
 - Default/initial component state
-- One key interaction that changes component appearance (e.g., page change, expand/collapse, selection)
+- One key interaction that changes component appearance (page change, expand/collapse, selection)
 - Error states (if they have distinct visual treatment)
+
+### What NOT to Test Visually
+- Every Storybook story
+- Hover/focus states (unless absolutely critical)
+- Responsive breakpoints (unless component behavior changes significantly)
+- Minor variations (different text, slight prop changes)
 
 ---
 
@@ -618,64 +563,120 @@ pnpm e2e
 
 # From packages/atomic
 cd packages/atomic
-pnpm test              # Run unit tests
-pnpm test:watch        # Watch mode for tests
-pnpm exec playwright test               # Run all Playwright E2E tests (includes visual regression)
-pnpm exec playwright test component-name.e2e.ts  # Run E2E tests for a specific component (includes visual regression)
-pnpm build:stencil-lit # Build atomic package
+pnpm test                    # Run unit tests
+pnpm test:watch              # Watch mode for tests
+pnpm exec playwright test    # Run all E2E tests (includes visual regression)
+pnpm exec playwright test component.e2e.ts  # Run specific component tests
+pnpm build:stencil-lit       # Build atomic package / TypeScript validation
 
 # Update visual snapshots after intentional changes
-pnpm exec playwright test component-name.e2e.ts --update-snapshots
+pnpm exec playwright test component.e2e.ts --update-snapshots
 
-# Generate component structure (components only)
+# Generate component structure
 node scripts/generate-component.mjs component-name src/components/common
 ```
 
+---
+
+## TypeScript Validation & Common Pitfalls
+
+### Validation Checklist
+
+After creating or modifying page-object.ts and fixture.ts files, **ALWAYS** validate:
+
+```bash
+cd packages/atomic
+pnpm build:stencil-lit
+```
+
+### Common TypeScript Issues and Fixes
+
+**1. Missing Return Type Annotations:**
+```typescript
+// ❌ async waitForVisualStability() { await this.hydrated.waitFor(); }
+// ✅ async waitForVisualStability(): Promise<void> { await this.hydrated.waitFor(); }
+```
+
+**2. Incorrect Screenshot Method:**
+```typescript
+// ❌ return await this.page.screenshot({...}); // Type mismatch
+// ✅ return await this.hydrated.screenshot({...}); // Use locator.screenshot()
+```
+
+**3. Wrong BasePageObject Import for Migration Stage:**
+```typescript
+// Step 0 (Stencil): import {BasePageObject} from '@/playwright-utils/base-page-object';
+//                   export class X extends BasePageObject<'atomic-component-name'> { ... }
+// Step 4+ (Lit):    import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
+//                   export class X extends BasePageObject { ... }
+```
+
+**4. Missing Type Parameter in Fixture:**
+```typescript
+// ❌ export const test = base.extend({...});
+// ✅ type MyFixtures = {component: ComponentPageObject};
+//    export const test = base.extend<MyFixtures>({...});
+```
+
+### Pre-Commit Validation
+
+Before committing Step 0 files, verify:
+
+```bash
+cd packages/atomic
+pnpm build:stencil-lit
+pnpm exec playwright test atomic-component-name.e2e.ts --grep "Visual"
+```
+
+All checks must pass before committing.
+
+---
+
 ## Success Criteria Summary
 
-**Component migration** includes:
-- ✅ **Baseline snapshots generated** from Stencil component (Step 0, before migration)
-- ✅ **Baseline snapshots committed** to git (Step 0)
+**Component migration:**
+- ✅ Baseline snapshots generated from Stencil (Step 0)
+- ✅ Baseline snapshots committed to git
 - ✅ Component fully functional in Lit
 - ✅ Comprehensive unit tests
 - ✅ Working Storybook stories with API mocking
 - ✅ E2E tests covering happy path and accessibility
-- ✅ 2-3 minimal visual regression tests in E2E file
-- ✅ **Visual tests pass** - Lit component matches Stencil baseline
-- ✅ Cypress tests analyzed and migrated (no coverage loss)
-- ✅ Component-specific Cypress test files removed
+- ✅ 2-3 minimal visual regression tests
+- ✅ Visual tests pass - Lit matches Stencil baseline
+- ✅ Cypress tests analyzed and migrated
+- ✅ Cypress test files removed
 - ✅ Complete MDX documentation
 - ✅ All tests passing
 - ✅ All linting passing
 - ✅ PR using migration template
-- ✅ No blocking dependencies (or documented with migration plan)
 
-**Functional component migration** includes:
+**Functional component migration:**
 - ✅ Functional component fully functional in Lit
 - ✅ Comprehensive unit tests
-- ✅ Original Stencil file renamed with `stencil-` prefix
-- ✅ All imports updated to use prefixed version
+- ✅ Original file renamed with `stencil-` prefix
+- ✅ All imports updated
 - ✅ All tests passing
-- ✅ All linting passing
-- ✅ Standard PR (not migration template)
+- ✅ Standard PR
 
-**Utils test generation** includes:
+**Utils test generation:**
 - ✅ Comprehensive unit tests for all exported functions
-- ✅ Edge cases and error conditions covered
+- ✅ Edge cases covered
 - ✅ All tests passing
-- ✅ All linting passing
-- ✅ Standard PR (not migration template)
+- ✅ Standard PR
+
+---
 
 ## Important Notes
 
 - **Detect migration type FIRST** - Always determine whether you're migrating a component, functional component, or utils before proceeding
-- **Follow appropriate workflow** - Use the correct sequence of prompts based on migration type
 - **Visual tests are minimal** - Maximum 2-3 visual tests per component
-- **Snapshots are committed** - Always commit generated snapshots to git
+- **Snapshots are committed** - Always commit generated snapshots to git before migration
 - **No separate visual test files** - Add visual tests to existing E2E test file
 - **PR template usage** - Only use the migration template for component (custom element) migrations
 - **Use dedicated prompts** - Each step has specialized prompts with detailed guidance
 - **Reference similar code** - Always find and analyze equivalent code for patterns
 - **Preserve functionality** - The migrated code must behave identically to the Stencil version
-- **Single source of truth** - All conventions are in instruction files - refer to them for patterns
 - **No assumptions** - If dependencies block migration, stop and document rather than making assumptions
+- **TypeScript safety is critical** - All page-object and fixture files must compile without errors; validate with `pnpm build:stencil-lit`
+- **Test synchronization matters** - Avoid `waitForTimeout()`, use Playwright's auto-waiting with `await expect()` assertions
+- **Role-based locators preferred** - Use `getByRole()`, `getByLabel()`, `getByText()` for accessibility and reliability

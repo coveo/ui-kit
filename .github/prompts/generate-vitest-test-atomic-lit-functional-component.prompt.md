@@ -1,5 +1,5 @@
 ---
-mode: 'agent'
+agent: 'agent'
 description: 'Generate comprehensive Vitest unit tests for an Atomic Lit functional component following established patterns'
 ---
 
@@ -12,7 +12,7 @@ Generate comprehensive Vitest unit tests for functional components (functions re
 
 ## Required Steps
 
-**Use `manage_todo_list` tool:** Track progress through steps below. Mark ONE in-progress before working, mark completed immediately after finishing each step. Final todo must be execution summary generation.
+**Track your progress systematically:** Break down test generation into these sequential tasks, work on ONE at a time, and mark each complete before proceeding.
 
 **Checklist:**
 - [ ] Analyze component (signature, props, children, events, dependencies)
@@ -21,7 +21,6 @@ Generate comprehensive Vitest unit tests for functional components (functions re
 - [ ] Implement test patterns (basic rendering, props, events, children)
 - [ ] Ensure essential coverage (rendering, props, interactions, attributes, children, errors)
 - [ ] Run tests with Vitest
-- [ ] Generate execution summary (mandatory final todo)
 
 ### 1. Analyze the Component
 
@@ -222,11 +221,3 @@ const element = await renderComponent({class: 'test-class'});
 const classNames = tw({'test-class': true});
 const element = await renderComponent({class: multiClassMap(classNames)});
 ```
-
-## Post-Execution Summary
-
-**Mandatory final todo:** Generate `.github/prompts/.executions/generate-vitest-test-atomic-lit-functional-component-[YYYY-MM-DD-HHmmss].prompt-execution.md` following `TEMPLATE.prompt-execution.md`.
-
-**Include:** Reference components used, type selection issues, ambiguous instructions, time-consuming operations, missing guidance, concrete improvement suggestions.
-
-**Inform user** of summary location and suggest "Prompt Engineer" chatmode for optimization. Mark complete only after file created and user informed.

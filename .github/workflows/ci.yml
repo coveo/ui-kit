@@ -320,6 +320,40 @@ jobs:
           echo "Shard Index: ${{ steps.determine-tests.outputs.shardIndex }}"
           echo "Shard Total: ${{ steps.determine-tests.outputs.shardTotal }}"
         shell: bash
+  chromatic:
+    name: "Run Chromatic visual tests on Atomic"
+    needs: affected
+    runs-on: ubuntu-latest
+    env:
+      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+      # Should be fine without because of https://github.com/chromaui/chromatic-cli/blob/56920bf704895dcef6d1106df608d8e0d7886b58/action-src/main.ts#L24-L82
+      # # https://www.chromatic.com/docs/faq/environment-variables/#how-to-set-chromatic-environment-variables-in-popular-ci-providers
+      # CHROMATIC_SHA: ${{ github.event.pull_request.head.sha }}
+      # CHROMATIC_BRANCH: ${{ github.head_ref }}
+      # CHROMATIC_SLUG: ${{ github.repository }}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        if: ${{ github.event_name == 'pull_request' }}
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }} # https://www.chromatic.com/docs/github-actions/#recommended-configuration-for-build-events
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        if: ${{ github.event_name != 'pull_request' }}
+        with:
+          fetch-depth: 0
+
+      - uses: ./.github/actions/setup
+      - run: pnpm exec turbo chromatic --filter=@coveo/atomic
+        id: chromatic-run
+        if: contains(needs.affected.outputs.projects, '@coveo/atomic') && github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'chromatic')
+      - run: pnpm exec turbo chromatic --filter=@coveo/atomic -- --skip
+        working-directory: packages/atomic
+        if: steps.chromatic-run.outcome == 'skipped'
   playwright-atomic:
     name: "Run Playwright tests for Atomic"
     needs: prepare-playwright-atomic
@@ -468,7 +502,8 @@ jobs:
       - uses: ./.github/actions/cypress-atomic-screenshots
   storybook-atomic:
     name: "Run Storybook tests"
-    needs: build
+    needs: affected
+    if: contains(needs.affected.outputs.projects, '@coveo/atomic')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.56.1-noble
@@ -717,7 +752,9 @@ jobs:
     needs:
       - "build"
       - "lint-check"
+      - "knip"
       - "unit-test"
+      - "chromatic"
       - "storybook-atomic"
       - "playwright-atomic"
       - "playwright-atomic-theming"
@@ -758,7 +795,9 @@ jobs:
     needs:
       - "build"
       - "lint-check"
+      - "knip"
       - "unit-test"
+      - "chromatic"
       - "storybook-atomic"
       - "playwright-atomic"
       - "playwright-atomic-theming"
@@ -880,3 +919,23 @@ jobs:
         run: node ./scripts/deploy/trigger-ui-kit-cd-dev.mjs
         env:
           GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
+  chromatic-update-main:
+    name: "Update Chromatic baseline on main"
+    if: ${{ !cancelled() && needs.is-valid.result == 'success' && github.event_name == 'merge_group' }}
+    needs:
+      - is-valid
+    runs-on: ubuntu-latest
+    env:
+      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+
+      - uses: ./.github/actions/setup
+      - run: pnpm exec turbo chromatic --filter=@coveo/atomic -- --exit-zero-on-changes --auto-accept-changes --branchName=main

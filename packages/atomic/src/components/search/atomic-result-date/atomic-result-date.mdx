@@ -1,0 +1,33 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicResultDateStories from './atomic-result-date.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicResultDateStories} />
+
+<AtomicDocTemplate
+  stories={AtomicResultDateStories}
+  githubPath="search/atomic-result-date/atomic-result-date.ts"
+  tagName="atomic-result-date"
+  className="AtomicResultDate"
+>
+
+The `atomic-result-date` component renders the value of a date result field.
+
+This component is used within `atomic-result-template` components inside the result list:
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-result-list>
+    <atomic-result-template>
+      <template>
+        <atomic-result-date field="date"></atomic-result-date>
+      </template>
+    </atomic-result-template>
+  </atomic-result-list>
+  ...
+</atomic-search-interface>
+```
+
+</AtomicDocTemplate>
