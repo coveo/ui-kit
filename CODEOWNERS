@@ -12,7 +12,7 @@ packages/**/*.docs.config.json @coveo/dev-writers
 
 ## Doc package
 
-packages/documentation/ @dev-writers
+packages/documentation/ @coveo/dev-writers
 
 # Knowledge Owners
 ## Quantic package
