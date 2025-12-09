@@ -4,18 +4,20 @@ import type {InsightBindings} from '@/src/components/insight/atomic-insight-inte
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
+import {LightDomMixin} from '@/src/mixins/light-dom';
+import {SlotsForNoShadowDOMMixin} from '@/src/mixins/slots-for-no-shadow-dom-mixin';
 
 /**
  * The `atomic-insight-tabs` component wraps a list of `atomic-insight-tab` elements and manages their layout.
  * This is an internal component used within the Insight Panel interface.
  *
  * @internal
- * @slot (default) - The slot for `atomic-insight-tab` elements.
+ * @slot default - The slot for `atomic-insight-tab` elements.
  */
 @customElement('atomic-insight-tabs')
 @bindings()
 export class AtomicInsightTabs
-  extends LitElement
+  extends LightDomMixin(SlotsForNoShadowDOMMixin(LitElement))
   implements InitializableComponent<InsightBindings>
 {
   @state() public bindings!: InsightBindings;
@@ -25,7 +27,7 @@ export class AtomicInsightTabs
 
   @errorGuard()
   protected render() {
-    return html`<atomic-tab-bar><slot></slot></atomic-tab-bar>`;
+    return html`<atomic-tab-bar>${this.renderDefaultSlotContent()}</atomic-tab-bar>`;
   }
 }
 
