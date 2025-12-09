@@ -103,6 +103,67 @@ test.describe('Number Input Functionality', () => {
   });
 });
 
+test.describe('Number Input Validation', () => {
+  test.beforeEach(async ({facet}) => {
+    await facet.load({story: 'with-input-integer'});
+    await facet.hydrated.waitFor();
+  });
+
+  test('should show validation error when both inputs are empty', async ({
+    facet,
+  }) => {
+    await test.step('Try to apply with empty inputs', async () => {
+      await facet.facetApplyButton.click();
+    });
+
+    await test.step('Verify inputs are invalid', async () => {
+      await expect(facet.facetInputStart).not.toBeValid();
+      await expect(facet.facetInputEnd).not.toBeValid();
+    });
+  });
+
+  test('should show validation error when start input is empty', async ({
+    facet,
+  }) => {
+    await test.step('Fill only end input', async () => {
+      await facet.facetInputEnd.fill('1000');
+      await facet.facetApplyButton.click();
+    });
+
+    await test.step('Verify start input is invalid', async () => {
+      await expect(facet.facetInputStart).not.toBeValid();
+    });
+  });
+
+  test('should show validation error when end input is empty', async ({
+    facet,
+  }) => {
+    await test.step('Fill only start input', async () => {
+      await facet.facetInputStart.fill('100');
+      await facet.facetApplyButton.click();
+    });
+
+    await test.step('Verify end input is invalid', async () => {
+      await expect(facet.facetInputEnd).not.toBeValid();
+    });
+  });
+
+  test('should show validation error when min is greater than max', async ({
+    facet,
+  }) => {
+    await test.step('Enter invalid range', async () => {
+      await facet.facetInputStart.fill('1000');
+      await facet.facetInputEnd.fill('100');
+      await facet.facetApplyButton.click();
+    });
+
+    await test.step('Verify validation error', async () => {
+      // When min > max, the end input should be invalid
+      await expect(facet.facetInputEnd).not.toBeValid();
+    });
+  });
+});
+
 test.describe('when a "depends-on" prop is provided', () => {
   test.beforeEach(async ({facet}) => {
     await facet.load({story: 'with-depends-on'});
