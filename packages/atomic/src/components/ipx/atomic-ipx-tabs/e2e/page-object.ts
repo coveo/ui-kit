@@ -1,10 +1,10 @@
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
 /**
  * Page object for atomic-ipx-tabs E2E tests
  */
-export class IpxTabsPageObject extends BasePageObject<'atomic-ipx-tabs'> {
+export class IpxTabsPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-ipx-tabs');
   }

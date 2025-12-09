@@ -1,0 +1,44 @@
+import {Canvas, Meta} from '@storybook/blocks';
+import * as IPXTabsStories from './atomic-ipx-tabs.new.stories';
+
+<Meta of={IPXTabsStories} />
+
+# Atomic IPX Tabs
+
+The `atomic-ipx-tabs` component is a wrapper around `atomic-tab-bar` for In-Product Experience (IPX) interfaces. It provides a simple container for organizing `atomic-ipx-tab` elements.
+
+## Internal Component
+
+This component is marked as `@internal` and is primarily used within Coveo's In-Product Experience implementations.
+
+## Usage
+
+Place `atomic-ipx-tab` elements inside the `atomic-ipx-tabs` component to create a tabbed interface:
+
+```html
+<atomic-search-interface>
+  <atomic-ipx-tabs>
+    <atomic-ipx-tab label="All" name="all" expression=""></atomic-ipx-tab>
+    <atomic-ipx-tab
+      label="Documentation"
+      name="documentation"
+      expression="@source=documentation"
+    ></atomic-ipx-tab>
+    <atomic-ipx-tab
+      label="Articles"
+      name="articles"
+      expression="@source=articles"
+    ></atomic-ipx-tab>
+  </atomic-ipx-tabs>
+</atomic-search-interface>
+```
+
+## Stories
+
+<Canvas of={IPXTabsStories.Default} />
+
+## Related Components
+
+- [`atomic-ipx-tab`](../atomic-ipx-tab/atomic-ipx-tab.mdx) - Individual tab component to be used within `atomic-ipx-tabs`
+- [`atomic-tab-manager`](../../search/atomic-tab-manager/atomic-tab-manager.mdx) - Alternative tab management component for search interfaces
+- [`atomic-tab`](../../search/atomic-tab/atomic-tab.mdx) - Standard tab component for search interfaces
