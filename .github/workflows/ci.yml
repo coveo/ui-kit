@@ -327,6 +327,7 @@ jobs:
     needs: affected
     runs-on: ubuntu-latest
     environment:
+      name: Chromatic
       url: ${{ github.event_name == 'pull_request' && 'https://www.chromatic.com/builds?appId=5f7d4e1f4c8f3a0020f6e8b4&branch=chore/cute-environment' || 'https://www.chromatic.com/builds?appId=5f7d4e1f4c8f3a0020f6e8b4&branch=main' }}
     env:
       CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
