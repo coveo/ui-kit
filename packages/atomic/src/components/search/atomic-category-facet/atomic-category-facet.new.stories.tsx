@@ -3,6 +3,7 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import './atomic-category-facet';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -212,45 +213,54 @@ const mockDefaultCategoryFacetResponse = (
   facetId = 'geographicalhierarchy'
 ) => {
   searchApiHarness.searchEndpoint.mockOnce((response) => {
-    return {
-      ...response,
-      facets: [
-        ...(response.facets || []),
-        createCategoryFacetResponse(baseCategoryFacetValues, facetId),
-      ],
-    };
+    if ('facets' in response) {
+      return {
+        ...response,
+        facets: [
+          ...(response.facets || []),
+          createCategoryFacetResponse(baseCategoryFacetValues, facetId),
+        ],
+      };
+    }
+    return response;
   });
 };
 
 const mockSelectedRootValue = (facetId = 'geographicalhierarchy') => {
   searchApiHarness.searchEndpoint.mockOnce((response) => {
-    return {
-      ...response,
-      facets: [
-        ...(response.facets || []),
-        createSelectedCategoryFacetResponse(
-          ['North America'],
-          northAmericaChildValues,
-          facetId
-        ),
-      ],
-    };
+    if ('facets' in response) {
+      return {
+        ...response,
+        facets: [
+          ...(response.facets || []),
+          createSelectedCategoryFacetResponse(
+            ['North America'],
+            northAmericaChildValues,
+            facetId
+          ),
+        ],
+      };
+    }
+    return response;
   });
 };
 
 const mockSelectedChildValue = (facetId = 'geographicalhierarchy') => {
   searchApiHarness.searchEndpoint.mockOnce((response) => {
-    return {
-      ...response,
-      facets: [
-        ...(response.facets || []),
-        createSelectedCategoryFacetResponse(
-          ['North America', 'United States'],
-          unitedStatesChildValues,
-          facetId
-        ),
-      ],
-    };
+    if ('facets' in response) {
+      return {
+        ...response,
+        facets: [
+          ...(response.facets || []),
+          createSelectedCategoryFacetResponse(
+            ['North America', 'United States'],
+            unitedStatesChildValues,
+            facetId
+          ),
+        ],
+      };
+    }
+    return response;
   });
 };
 
@@ -266,8 +276,8 @@ const renderCategoryFacet = (args: Record<string, unknown>) => html`
   <atomic-category-facet
     field=${ifDefined(args.field as string)}
     label=${ifDefined(args.label as string)}
-    ?with-search=${args['with-search']}
-    ?is-collapsed=${args['is-collapsed']}
+    ?with-search=${args['with-search'] as boolean}
+    ?is-collapsed=${args['is-collapsed'] as boolean}
     facet-id=${ifDefined(args['facet-id'] as string)}
     number-of-values=${ifDefined(args['number-of-values'] as number)}
   ></atomic-category-facet>
