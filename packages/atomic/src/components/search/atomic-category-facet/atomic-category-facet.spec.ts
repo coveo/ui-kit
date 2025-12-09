@@ -9,7 +9,7 @@ import {
 } from '@coveo/headless';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeCategoryFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/search/category-facet-controller';
 import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
@@ -22,7 +22,7 @@ vi.mock('@coveo/headless', {spy: true});
 
 describe('atomic-category-facet', () => {
   let mockedConsole: ReturnType<typeof mockConsole>;
-  let mockedRegisterFacet: MockInstance;
+  let mockedRegisterFacet: Mock;
 
   beforeEach(() => {
     mockedConsole = mockConsole();
@@ -44,7 +44,7 @@ describe('atomic-category-facet', () => {
       field: string;
       numberOfValues: number;
       withSearch: boolean;
-      sortCriteria: string;
+      sortCriteria: 'alphanumeric' | 'occurrences';
       delimitingCharacter: string;
       basePath: string[];
       filterByBasePath: boolean;
@@ -93,20 +93,14 @@ describe('atomic-category-facet', () => {
         ?with-search=${props?.withSearch}
         sort-criteria=${ifDefined(props?.sortCriteria)}
         delimiting-character=${ifDefined(props?.delimitingCharacter)}
-        base-path=${ifDefined(
-          props?.basePath ? JSON.stringify(props?.basePath) : undefined
-        )}
+        .basePath=${props?.basePath || []}
         ?filter-by-base-path=${props?.filterByBasePath}
         ?is-collapsed=${props?.isCollapsed}
         heading-level=${ifDefined(props?.headingLevel)}
         ?filter-facet-count=${props?.filterFacetCount}
         injection-depth=${ifDefined(props?.injectionDepth)}
-        tabs-included=${ifDefined(
-          props?.tabsIncluded ? JSON.stringify(props?.tabsIncluded) : undefined
-        )}
-        tabs-excluded=${ifDefined(
-          props?.tabsExcluded ? JSON.stringify(props?.tabsExcluded) : undefined
-        )}
+        .tabsIncluded=${props?.tabsIncluded || []}
+        .tabsExcluded=${props?.tabsExcluded || []}
       ></atomic-category-facet>`,
       selector: 'atomic-category-facet',
       bindings: (bindings) => ({
@@ -231,7 +225,7 @@ describe('atomic-category-facet', () => {
 
   it('should not render facet when there are no values', async () => {
     const {facet} = await renderCategoryFacet(undefined, {
-      facetState: {valuesAsTrees: [], values: []},
+      facetState: {valuesAsTrees: []},
     });
     expect(facet).not.toBeInTheDocument();
   });
@@ -367,5 +361,42 @@ describe('atomic-category-facet', () => {
     expect(mockedConsole.warn).toHaveBeenCalledWith(
       expect.stringContaining('tabs-included')
     );
+  });
+
+  describe('dependsOn', () => {
+    it('should build facet conditions manager when depends-on attribute is provided', async () => {
+      const {element} =
+        await renderInAtomicSearchInterface<AtomicCategoryFacet>({
+          template: html`<atomic-category-facet
+          field="category"
+          depends-on-parentfacet="parentValue"
+        ></atomic-category-facet>`,
+          selector: 'atomic-category-facet',
+          bindings: (bindings) => ({
+            ...bindings,
+            store: {
+              ...bindings.store,
+              getUniqueIDFromEngine: vi.fn().mockReturnValue('123'),
+              registerFacet: mockedRegisterFacet,
+            },
+          }),
+        });
+
+      expect(buildFacetConditionsManager).toHaveBeenCalledWith(
+        element.bindings.engine,
+        expect.objectContaining({
+          facetId: expect.any(String),
+          conditions: expect.any(Array),
+        })
+      );
+    });
+
+    it('should not build facet conditions manager when no depends-on attribute is provided', async () => {
+      vi.mocked(buildFacetConditionsManager).mockClear();
+
+      await renderCategoryFacet();
+
+      expect(buildFacetConditionsManager).not.toHaveBeenCalled();
+    });
   });
 });
