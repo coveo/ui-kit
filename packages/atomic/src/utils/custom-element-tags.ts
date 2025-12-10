@@ -93,6 +93,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-result-children',
   'atomic-result-children-template',
   'atomic-result-date',
+  'atomic-result-fields-list',
   'atomic-result-html',
   'atomic-result-icon',
   'atomic-result-image',
