@@ -1,10 +1,10 @@
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
 /**
  * Page object for atomic-facet-manager E2E tests
  */
-export class FacetManagerPageObject extends BasePageObject<'atomic-facet-manager'> {
+export class FacetManagerPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-facet-manager');
   }
@@ -13,7 +13,7 @@ export class FacetManagerPageObject extends BasePageObject<'atomic-facet-manager
    * Wait for component to be stable before taking screenshots.
    */
   async waitForVisualStability(): Promise<void> {
-    await this.hydrated.waitFor();
+    await this.page.waitForSelector('atomic-facet-manager');
     await this.page.evaluate(() => document.fonts.ready);
   }
 
@@ -24,7 +24,8 @@ export class FacetManagerPageObject extends BasePageObject<'atomic-facet-manager
     animations?: 'disabled' | 'allow';
   }): Promise<Buffer> {
     await this.waitForVisualStability();
-    return await this.hydrated.screenshot({
+    const element = this.page.locator('atomic-facet-manager');
+    return await element.screenshot({
       animations: options?.animations ?? 'disabled',
     });
   }
