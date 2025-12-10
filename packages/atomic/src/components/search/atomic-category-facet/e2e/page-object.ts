@@ -50,6 +50,14 @@ export class AtomicCategoryFacetPageObject extends BasePageObject {
     return this.page.getByRole('button', {name: /More matches for/});
   }
 
+  get showMoreButton() {
+    return this.facet.locator('[part="show-more"]');
+  }
+
+  get showLessButton() {
+    return this.facet.locator('[part="show-less"]');
+  }
+
   getFacetValueByLabel(label: string) {
     return this.page.locator('[part="value-label"]', {hasText: label});
   }

@@ -3,7 +3,6 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
-import './atomic-category-facet';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -264,6 +263,49 @@ const mockSelectedChildValue = (facetId = 'geographicalhierarchy') => {
   });
 };
 
+const mockSelectedChildValueWithMoreAvailable = (
+  facetId = 'geographicalhierarchy'
+) => {
+  searchApiHarness.searchEndpoint.mockOnce((response) => {
+    if ('facets' in response) {
+      return {
+        ...response,
+        facets: [
+          ...(response.facets || []),
+          {
+            facetId,
+            field: 'geographicalhierarchy',
+            moreValuesAvailable: false,
+            indexScore: 0,
+            values: [
+              {
+                value: 'North America',
+                numberOfResults: 245,
+                path: ['North America'],
+                state: 'idle',
+                moreValuesAvailable: false,
+                isLeafValue: false,
+                children: [
+                  {
+                    value: 'United States',
+                    numberOfResults: 145,
+                    path: ['North America', 'United States'],
+                    state: 'selected',
+                    moreValuesAvailable: true,
+                    isLeafValue: false,
+                    children: unitedStatesChildValues,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      };
+    }
+    return response;
+  });
+};
+
 const {decorator, play} = wrapInSearchInterface();
 
 const {events, argTypes} = getStorybookHelpers('atomic-category-facet', {
@@ -366,5 +408,19 @@ export const WithSelectedChildValue: Story = {
   decorators: [facetDecorator],
   beforeEach: () => {
     mockSelectedChildValue();
+  },
+};
+
+export const WithSelectedChildValueAndMoreAvailable: Story = {
+  name: 'With Selected Child Value And More Available',
+  tags: ['test'],
+  args: {
+    field: 'geographicalhierarchy',
+    label: 'Geographical Hierarchy',
+    'with-search': true,
+  },
+  decorators: [facetDecorator],
+  beforeEach: () => {
+    mockSelectedChildValueWithMoreAvailable();
   },
 };

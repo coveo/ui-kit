@@ -111,4 +111,30 @@ test.describe('atomic-category-facet', () => {
       await expect(facet.values).toBeVisible();
     });
   });
+
+  test('should show more values in deep hierarchy and focus first new value', async ({
+    facet,
+  }) => {
+    await facet.load({story: 'with-selected-child-value-and-more-available'});
+
+    await test.step('Verify deep hierarchy is displayed (2 levels deep)', async () => {
+      await expect(facet.allCategoriesButton).toBeVisible();
+      await expect(facet.parentButton).toContainText('North America');
+      await expect(facet.activeParent).toContainText('United States');
+    });
+
+    await test.step('Verify initial child values are visible', async () => {
+      await expect(facet.getFacetValueByLabel('California')).toBeVisible();
+      await expect(facet.getFacetValueByLabel('New York')).toBeVisible();
+      await expect(facet.getFacetValueByLabel('Texas')).toBeVisible();
+    });
+
+    await test.step('Verify show more button is visible', async () => {
+      await expect(facet.showMoreButton).toBeVisible();
+    });
+
+    await test.step('Click show more button', async () => {
+      await facet.showMoreButton.click();
+    });
+  });
 });

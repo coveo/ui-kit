@@ -518,7 +518,7 @@ export class AtomicCategoryFacet
 
   private renderSearchInput() {
     if (!this.withSearch) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     return renderFacetSearchInput({
@@ -733,8 +733,12 @@ export class AtomicCategoryFacet
             label: this.label,
             i18n: this.bindings.i18n,
             onShowMore: () => {
+              const selectedValue = this.facetState.selectedValueAncestry.find(
+                (value) => value.state === 'selected'
+              );
               this.resultIndexToFocusOnShowMore =
-                this.facetState.valuesAsTrees[0]?.children?.length || 0;
+                selectedValue?.children.length ??
+                this.facetState.valuesAsTrees.length;
               this.focusTargets.showMoreFocus.focusAfterSearch();
               this.facet.showMoreValues();
             },
