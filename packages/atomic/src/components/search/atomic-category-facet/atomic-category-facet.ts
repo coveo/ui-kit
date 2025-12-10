@@ -21,7 +21,6 @@ import {css, html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
-import '@/src/components/common/atomic-facet-placeholder/atomic-facet-placeholder';
 import {renderCategoryFacetAllCategoryButton} from '@/src/components/common/facets/category-facet/all-categories-button';
 import {renderCategoryFacetChildrenAsTreeContainer} from '@/src/components/common/facets/category-facet/children-as-tree-container';
 import {renderCategoryFacetParentAsTreeContainer} from '@/src/components/common/facets/category-facet/parent-as-tree-container';
@@ -36,6 +35,7 @@ import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.cs
 import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
+import {renderFacetPlaceholder} from '@/src/components/common/facets/facet-placeholder/facet-placeholder';
 import facetSearchStyles from '@/src/components/common/facets/facet-search/facet-search.tw.css';
 import {announceFacetSearchResultsWithAriaLive} from '@/src/components/common/facets/facet-search/facet-search-aria-live';
 import {renderFacetSearchInput} from '@/src/components/common/facets/facet-search/facet-search-input';
@@ -169,20 +169,20 @@ export class AtomicCategoryFacet
   /**
    * Specifies a unique identifier for the facet.
    */
-  @property({reflect: true, attribute: 'facet-id'})
+  @property({type: String, reflect: true, attribute: 'facet-id'})
   public facetId?: string;
 
   /**
    * The non-localized label for the facet.
    * Used in the `atomic-breadbox` component through the bindings store.
    */
-  @property({reflect: true})
+  @property({type: String, reflect: true})
   public label = 'no-label';
 
   /**
    * The field whose values you want to display in the facet.
    */
-  @property({reflect: true})
+  @property({type: String, reflect: true})
   public field!: string;
 
   /**
@@ -195,6 +195,7 @@ export class AtomicCategoryFacet
    * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
    */
   @property({
+    type: Array,
     reflect: true,
     attribute: 'tabs-included',
     converter: arrayConverter,
@@ -211,6 +212,7 @@ export class AtomicCategoryFacet
    * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
    */
   @property({
+    type: Array,
     reflect: true,
     attribute: 'tabs-excluded',
     converter: arrayConverter,
@@ -228,6 +230,7 @@ export class AtomicCategoryFacet
    * Whether this facet should contain a search box.
    */
   @property({
+    type: Boolean,
     reflect: true,
     attribute: 'with-search',
     converter: booleanConverter,
@@ -238,13 +241,13 @@ export class AtomicCategoryFacet
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'alphanumeric' and 'occurrences'.
    */
-  @property({reflect: true, attribute: 'sort-criteria'})
+  @property({type: String, reflect: true, attribute: 'sort-criteria'})
   public sortCriteria: CategoryFacetSortCriterion = 'occurrences';
 
   /**
    * The character that separates values of a multi-value field.
    */
-  @property({reflect: true, attribute: 'delimiting-character'})
+  @property({type: String, reflect: true, attribute: 'delimiting-character'})
   public delimitingCharacter = ';';
 
   /**
@@ -256,6 +259,7 @@ export class AtomicCategoryFacet
    * ```
    */
   @property({
+    type: Array,
     reflect: true,
     attribute: 'base-path',
     converter: arrayConverter,
@@ -268,6 +272,7 @@ export class AtomicCategoryFacet
    * TODO: KIT-4412 - Deprecate this property and replace with one that defaults to false.
    */
   @property({
+    type: Boolean,
     reflect: true,
     attribute: 'filter-by-base-path',
     converter: booleanConverter,
@@ -278,6 +283,7 @@ export class AtomicCategoryFacet
    * Specifies whether the facet is collapsed.
    */
   @property({
+    type: Boolean,
     reflect: true,
     attribute: 'is-collapsed',
     converter: booleanConverter,
@@ -296,6 +302,7 @@ export class AtomicCategoryFacet
    * TODO: KIT-4412 - Deprecate this property and replace with one that defaults to false.
    */
   @property({
+    type: Boolean,
     reflect: true,
     attribute: 'filter-facet-count',
     converter: booleanConverter,
@@ -777,10 +784,12 @@ export class AtomicCategoryFacet
     }
 
     if (!firstSearchExecuted) {
-      return html`<atomic-facet-placeholder
-        ?is-collapsed=${this.isCollapsed}
-        value-count=${this.numberOfValues}
-      ></atomic-facet-placeholder>`;
+      return html`${renderFacetPlaceholder({
+        props: {
+          numberOfValues: this.numberOfValues,
+          isCollapsed: this.isCollapsed,
+        },
+      })}`;
     }
 
     return renderFacetContainer()(html`
