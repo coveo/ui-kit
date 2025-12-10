@@ -1,7 +1,5 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {html} from 'lit';
-import {ifDefined} from 'lit/directives/if-defined.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
@@ -308,28 +306,18 @@ const mockSelectedChildValueWithMoreAvailable = (
 
 const {decorator, play} = wrapInSearchInterface();
 
-const {events, argTypes} = getStorybookHelpers('atomic-category-facet', {
-  excludeCategories: ['methods'],
-});
-
-// Custom render function to properly handle boolean attributes
-// The getStorybookHelpers template incorrectly renders is-collapsed="" which is truthy
-const renderCategoryFacet = (args: Record<string, unknown>) => html`
-  <atomic-category-facet
-    field=${ifDefined(args.field as string)}
-    label=${ifDefined(args.label as string)}
-    ?with-search=${args['with-search'] as boolean}
-    ?is-collapsed=${args['is-collapsed'] as boolean}
-    facet-id=${ifDefined(args['facet-id'] as string)}
-    number-of-values=${ifDefined(args['number-of-values'] as number)}
-  ></atomic-category-facet>
-`;
+const {events, argTypes, template} = getStorybookHelpers(
+  'atomic-category-facet',
+  {
+    excludeCategories: ['methods'],
+  }
+);
 
 const meta: Meta = {
   component: 'atomic-category-facet',
   title: 'Search/Facet (Category)',
   id: 'atomic-category-facet',
-  render: renderCategoryFacet,
+  render: (args) => template(args),
   decorators: [decorator],
   parameters: {
     ...parameters,
