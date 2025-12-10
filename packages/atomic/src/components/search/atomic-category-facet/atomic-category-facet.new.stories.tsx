@@ -306,12 +306,13 @@ const mockSelectedChildValueWithMoreAvailable = (
 
 const {decorator, play} = wrapInSearchInterface();
 
-const {events, argTypes, template} = getStorybookHelpers(
-  'atomic-category-facet',
-  {
-    excludeCategories: ['methods'],
-  }
-);
+const {events, argTypes} = getStorybookHelpers('atomic-category-facet', {
+  excludeCategories: ['methods'],
+});
+
+const {template} = getStorybookHelpers('atomic-category-facet', {
+  excludeCategories: ['methods', 'cssParts'],
+});
 
 const meta: Meta = {
   component: 'atomic-category-facet',
