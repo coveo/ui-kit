@@ -192,9 +192,7 @@ const svgTransform: PluginImpl = () => {
             const svgContent = readFileSync(
               resolve(dirname(id), importPath),
               'utf8'
-            )
-              .replace(/\r?\n\s*/g, ' ')
-              .replace(/'/g, "\\'");
+            ).replace(/'/g, "\\'");
             return `const ${importName} = '${svgContent}';`;
           }
         );
