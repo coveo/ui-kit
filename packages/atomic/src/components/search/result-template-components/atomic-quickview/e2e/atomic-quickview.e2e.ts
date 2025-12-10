@@ -174,4 +174,43 @@ test.describe('Quickview', () => {
       );
     });
   });
+
+  test.describe('Visual Regression', () => {
+    test('should match baseline in default state', async ({quickview}) => {
+      await test.step('Load component', async () => {
+        await quickview.load({story: 'default'});
+        await quickview.hydrated.waitFor();
+      });
+
+      await test.step('Capture and compare screenshot', async () => {
+        const screenshot = await quickview.captureScreenshot();
+        expect(screenshot).toMatchSnapshot('quickview-default.png', {
+          maxDiffPixelRatio: 0.04,
+        });
+      });
+    });
+
+    test('should match baseline with modal opened', async ({quickview}) => {
+      await test.step('Load and open modal', async () => {
+        await quickview.load({
+          args: {
+            sandbox:
+              'allow-scripts allow-popups allow-top-navigation allow-same-origin',
+          },
+        });
+        await quickview.hydrated.waitFor();
+        await quickview.resultButton.click();
+        await expect(quickview.modal).toBeVisible();
+      });
+
+      await test.step('Capture and compare modal screenshot', async () => {
+        const screenshot = await quickview.modal.screenshot({
+          animations: 'disabled',
+        });
+        expect(screenshot).toMatchSnapshot('quickview-modal-opened.png', {
+          maxDiffPixelRatio: 0.04,
+        });
+      });
+    });
+  });
 });
