@@ -1,21 +1,23 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import type {Quickview, QuickviewState, Result} from '@coveo/headless';
 import {buildQuickview} from '@coveo/headless';
-import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {createRef, type Ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
-import QuickviewIcon from '@/images/quickview.svg';
 import {renderButton} from '@/src/components/common/button';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {
   AriaLiveRegionController,
   FocusTargetController,
 } from '@/src/utils/accessibility-utils';
+import QuickviewIcon from '../../../images/quickview.svg';
+import '@/src/components/common/atomic-icon/atomic-icon';
 
 /**
  * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
@@ -29,14 +31,11 @@ import {
  */
 @customElement('atomic-quickview')
 @bindings()
+@withTailwindStyles
 export class AtomicQuickview
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  static styles: CSSResultGroup = css`
-    @reference '../../../../utils/tailwind.global.tw.css';
-  `;
-
   @property({type: String})
   public sandbox = 'allow-popups allow-top-navigation allow-same-origin';
 
@@ -50,7 +49,7 @@ export class AtomicQuickview
   public quickview!: Quickview;
 
   private resultContext = createResultContextController(this);
-  private buttonFocusTarget = new FocusTargetController(this);
+  private buttonFocusTarget!: FocusTargetController;
   private ariaLiveRegion = new AriaLiveRegionController(this, 'quickview');
   private quickviewModalRef?: HTMLAtomicQuickviewModalElement;
   private buttonRef: Ref<HTMLButtonElement> = createRef();
@@ -74,7 +73,7 @@ export class AtomicQuickview
         this.result = item;
       }
     }
-
+    this.buttonFocusTarget = new FocusTargetController(this, this.bindings);
     this.quickview = buildQuickview(this.bindings.engine, {
       options: {result: this.result},
     });
@@ -97,8 +96,6 @@ export class AtomicQuickview
       'atomic/quickview/previous',
       this.previousQuickviewHandler
     );
-
-    this.buttonFocusTarget.setTarget(this.buttonRef.value);
   }
 
   disconnectedCallback() {
@@ -114,7 +111,7 @@ export class AtomicQuickview
   }
 
   private addQuickviewModalIfNeeded() {
-    if (this.quickviewModalRef) {
+    if (this.quickviewModalRef || !this.bindings?.interfaceElement) {
       return;
     }
 
@@ -156,8 +153,10 @@ export class AtomicQuickview
 
   updated() {
     this.addQuickviewModalIfNeeded();
-    this.updateModalContent();
-    if (this.buttonRef.value) {
+    if (this.quickviewState) {
+      this.updateModalContent();
+    }
+    if (this.buttonRef.value && this.buttonFocusTarget) {
       this.buttonFocusTarget.setTarget(this.buttonRef.value);
     }
   }
@@ -184,5 +183,11 @@ export class AtomicQuickview
         ),
       () => nothing
     );
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-quickview': AtomicQuickview;
   }
 }

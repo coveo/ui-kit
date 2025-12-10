@@ -12,6 +12,7 @@ export function buildFakeQuickview(config: Partial<Quickview> = {}): Quickview {
       currentResult: 1,
       totalResults: 1,
       resultHasPreview: false,
+      currentResultUniqueId: 'fake-unique-id',
       ...config.state,
     },
     subscribe: vi.fn(() => vi.fn()),

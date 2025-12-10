@@ -15,6 +15,7 @@ export {AtomicPager} from './atomic-pager/atomic-pager.js';
 export {AtomicPopover} from './atomic-popover/atomic-popover.js';
 export {AtomicQueryError} from './atomic-query-error/atomic-query-error.js';
 export {AtomicQuerySummary} from './atomic-query-summary/atomic-query-summary.js';
+export {AtomicQuickview} from './atomic-quickview/atomic-quickview.js';
 export {AtomicRatingFacet} from './atomic-rating-facet/atomic-rating-facet.js';
 export {AtomicRatingRangeFacet} from './atomic-rating-range-facet/atomic-rating-range-facet.js';
 export {AtomicRelevanceInspector} from './atomic-relevance-inspector/atomic-relevance-inspector.js';
