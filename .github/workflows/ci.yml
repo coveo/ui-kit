@@ -63,6 +63,8 @@ jobs:
           load-cache: "false"
   build-missing:
     name: "Build & commit missing generated files"
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     environment: PR Artifacts
     steps:
