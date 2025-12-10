@@ -38,6 +38,23 @@ test.describe('atomic-facet-manager', () => {
       await expect(component.collapsedFacets).toHaveCount(2);
     });
   });
+
+  test('should not collapse facets when collapseFacetsAfter is -1', async ({
+    component,
+  }) => {
+    await test.step('Load component with collapse disabled', async () => {
+      await component.load({
+        story: 'default',
+        args: {'collapse-facets-after': -1},
+      });
+      await component.page.waitForSelector('atomic-facet-manager');
+    });
+
+    await test.step('Verify all facets are expanded', async () => {
+      await expect(component.collapsedFacets).toHaveCount(0);
+      await expect(component.facets).toHaveCount(4);
+    });
+  });
 });
 
 test.describe('Visual Regression', () => {
