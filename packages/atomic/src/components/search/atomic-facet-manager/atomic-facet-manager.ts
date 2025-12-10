@@ -16,7 +16,9 @@ import {
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 
@@ -24,8 +26,8 @@ import {LightDomMixin} from '@/src/mixins/light-dom';
  * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
  *
  * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
- * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
- * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
+ * 2. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
+ * 3. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
  *
  * @slot default - Facet components are slotted within to leverage this functionality.
  */
@@ -39,7 +41,7 @@ export class AtomicFacetManager
 
   public facetManager!: FacetManager;
 
-  @bindStateToController('facetManager')
+  @bindStateToController('facetManager', {onUpdateCallbackMethod: 'sortFacets'})
   @state()
   public facetManagerState!: FacetManagerState;
 
@@ -118,11 +120,9 @@ export class AtomicFacetManager
     this.bindings?.i18n.off('languageChanged', this.sortFacets);
   }
 
+  @bindingGuard()
+  @errorGuard()
   protected render() {
     return html`<slot></slot>`;
-  }
-
-  protected updated(): void {
-    this.sortFacets();
   }
 }

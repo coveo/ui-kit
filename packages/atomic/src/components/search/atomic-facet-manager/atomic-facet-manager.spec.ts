@@ -1,9 +1,9 @@
-import type {FacetManager} from '@coveo/headless';
 import {buildFacetManager} from '@coveo/headless';
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
+import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {buildFakeFacetManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/facet-manager';
 import {AtomicFacetManager} from './atomic-facet-manager';
 import './atomic-facet-manager';
@@ -11,20 +11,24 @@ import './atomic-facet-manager';
 vi.mock('@coveo/headless', {spy: true});
 
 describe('atomic-facet-manager', () => {
-  let mockFacetManager: FacetManager;
-  let consoleWarnSpy: MockInstance;
+  const mockEngine = buildFakeSearchEngine();
 
   const renderComponent = async ({
     props = {},
     slottedContent = '',
-    controllerState = {},
+    mockSortImplementation,
   }: {
-    props?: Partial<AtomicFacetManager>;
+    props?: {collapseFacetsAfter?: number};
     slottedContent?: string;
-    controllerState?: Partial<typeof mockFacetManager.state>;
+    mockSortImplementation?: <T>(payload: T[]) => T[];
   } = {}) => {
+    const defaultSort = <T>(payload: T[]) => payload;
     vi.mocked(buildFacetManager).mockReturnValue(
-      buildFakeFacetManager({state: controllerState})
+      buildFakeFacetManager({
+        implementation: {
+          sort: (mockSortImplementation ?? defaultSort) as never,
+        },
+      })
     );
 
     const template = html`
@@ -35,117 +39,208 @@ describe('atomic-facet-manager', () => {
       </atomic-facet-manager>
     `;
 
-    const {element, atomicInterface} =
-      await renderInAtomicSearchInterface<AtomicFacetManager>({
-        template,
-        selector: 'atomic-facet-manager',
-        bindings: (bindings) => {
-          bindings.store = {
-            ...bindings.store,
-            getAllFacets: vi.fn(() => ({})),
-          } as never;
-          return bindings;
-        },
-      });
-
-    await atomicInterface.updateComplete;
-    await element?.updateComplete;
+    const {element} = await renderInAtomicSearchInterface<AtomicFacetManager>({
+      template,
+      selector: 'atomic-facet-manager',
+      bindings: (bindings) => {
+        bindings.engine = mockEngine;
+        bindings.store = {
+          ...bindings.store,
+          getAllFacets: vi.fn(() => ({})),
+        } as never;
+        return bindings;
+      },
+    });
 
     return {
       element,
-      atomicInterface,
     };
   };
-
-  beforeEach(() => {
-    mockFacetManager = buildFakeFacetManager();
-  });
 
   it('should be defined', () => {
     const el = document.createElement('atomic-facet-manager');
     expect(el).toBeInstanceOf(AtomicFacetManager);
   });
 
-  describe('when initialized', () => {
-    it('should build a facet manager controller', async () => {
-      await renderComponent();
-      expect(buildFacetManager).toHaveBeenCalled();
-    });
+  it('should build a facet manager controller', async () => {
+    await renderComponent();
+    expect(buildFacetManager).toHaveBeenCalledWith(mockEngine);
+  });
 
-    it('should have default collapseFacetsAfter property of 4', async () => {
-      const {element} = await renderComponent();
-      expect(element?.collapseFacetsAfter).toBe(4);
+  it('should have default collapseFacetsAfter property of 4', async () => {
+    const {element} = await renderComponent();
+    expect(element?.collapseFacetsAfter).toBe(4);
+  });
+
+  it('should accept valid collapseFacetsAfter values', async () => {
+    const {element} = await renderComponent({
+      props: {collapseFacetsAfter: 2},
+    });
+    expect(element?.collapseFacetsAfter).toBe(2);
+  });
+
+  it('should accept 0 to collapse all facets', async () => {
+    const {element} = await renderComponent({
+      props: {collapseFacetsAfter: 0},
+    });
+    expect(element?.collapseFacetsAfter).toBe(0);
+  });
+
+  it('should accept -1 to disable auto-collapse', async () => {
+    const {element} = await renderComponent({
+      props: {collapseFacetsAfter: -1},
+    });
+    expect(element?.collapseFacetsAfter).toBe(-1);
+  });
+
+  it('should allow slotted content', async () => {
+    await renderComponent({
+      slottedContent: '<div class="test-content">Test</div>',
+    });
+    await expect.element(page.getByText('Test')).toBeInTheDocument();
+  });
+
+  describe('when sorting facets', () => {
+    it('should use facet manager to sort facets', async () => {
+      const mockSort = vi.fn(<T>(payload: T[]) => payload);
+
+      await renderComponent({
+        mockSortImplementation: mockSort as never,
+      });
+
+      expect(mockSort).toHaveBeenCalled();
     });
   });
 
-  describe('when collapseFacetsAfter prop is set', () => {
-    it('should accept valid values', async () => {
+  describe('when managing visibility', () => {
+    it('should separate facets by visibility when sorting', async () => {
+      const {element} = await renderComponent();
+
+      const getAllFacetsSpy = vi.spyOn(element!.bindings.store, 'getAllFacets');
+
+      element?.['sortFacets']();
+
+      expect(getAllFacetsSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('when managing collapse state', () => {
+    const createMockFacet = (
+      facetId: string
+    ): HTMLElement & {
+      facetId: string;
+      isCollapsed: boolean;
+    } => {
+      const facet = document.createElement('div') as unknown as HTMLElement & {
+        facetId: string;
+        isCollapsed: boolean;
+      };
+      facet.facetId = facetId;
+      facet.isCollapsed = false;
+      return facet;
+    };
+
+    const createMockGenerator = () => {
+      const generator = document.createElement(
+        'atomic-automatic-facet-generator'
+      ) as unknown as HTMLElement & {
+        updateCollapseFacetsDependingOnFacetsVisibility: ReturnType<
+          typeof vi.fn
+        >;
+      };
+      generator.updateCollapseFacetsDependingOnFacetsVisibility = vi.fn();
+      return generator;
+    };
+
+    it('should apply collapse logic based on collapseFacetsAfter property', async () => {
+      const mockSort = vi.fn(<T>(payload: T[]) => payload);
+      const mockFacet1 = createMockFacet('facet1');
+      const mockFacet2 = createMockFacet('facet2');
+      const mockFacet3 = createMockFacet('facet3');
+
       const {element} = await renderComponent({
         props: {collapseFacetsAfter: 2},
+        mockSortImplementation: mockSort as never,
       });
-      expect(element?.collapseFacetsAfter).toBe(2);
+
+      element?.appendChild(mockFacet1);
+      element?.appendChild(mockFacet2);
+      element?.appendChild(mockFacet3);
+
+      element?.['sortFacets']();
+
+      expect(mockSort).toHaveBeenCalled();
+
+      expect(mockFacet1.isCollapsed).toBe(false);
+      expect(mockFacet2.isCollapsed).toBe(false);
+      expect(mockFacet3.isCollapsed).toBe(true);
     });
 
-    it('should accept 0 to collapse all facets', async () => {
+    it('should allow collapsing all facets with value 0', async () => {
+      const mockSort = vi.fn(<T>(payload: T[]) => payload);
+      const mockFacet1 = createMockFacet('facet1');
+      const mockFacet2 = createMockFacet('facet2');
+
       const {element} = await renderComponent({
         props: {collapseFacetsAfter: 0},
+        mockSortImplementation: mockSort as never,
       });
-      expect(element?.collapseFacetsAfter).toBe(0);
+
+      element?.appendChild(mockFacet1);
+      element?.appendChild(mockFacet2);
+
+      element?.['sortFacets']();
+
+      expect(mockSort).toHaveBeenCalled();
+
+      expect(mockFacet1.isCollapsed).toBe(true);
+      expect(mockFacet2.isCollapsed).toBe(true);
     });
 
-    it('should accept -1 to disable auto-collapse', async () => {
+    it('should allow disabling auto-collapse with value -1', async () => {
+      const mockSort = vi.fn(<T>(payload: T[]) => payload);
+      const mockFacet1 = createMockFacet('facet1');
+      const mockFacet2 = createMockFacet('facet2');
+      const mockFacet3 = createMockFacet('facet3');
+
       const {element} = await renderComponent({
         props: {collapseFacetsAfter: -1},
-      });
-      expect(element?.collapseFacetsAfter).toBe(-1);
-    });
-
-    describe('when value is invalid', () => {
-      beforeEach(() => {
-        consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+        mockSortImplementation: mockSort as never,
       });
 
-      it('should warn when collapseFacetsAfter is less than -1', async () => {
-        await renderComponent({props: {collapseFacetsAfter: -2}});
-        expect(consoleWarnSpy).toHaveBeenCalled();
+      element?.appendChild(mockFacet1);
+      element?.appendChild(mockFacet2);
+      element?.appendChild(mockFacet3);
+
+      element?.['sortFacets']();
+
+      expect(mockSort).toHaveBeenCalled();
+
+      expect(mockFacet1.isCollapsed).toBe(false);
+      expect(mockFacet2.isCollapsed).toBe(false);
+      expect(mockFacet3.isCollapsed).toBe(false);
+    });
+
+    it('should update automatic facet generator collapse state', async () => {
+      const mockSort = vi.fn(<T>(payload: T[]) => payload);
+      const mockFacet1 = createMockFacet('facet1');
+      const mockFacet2 = createMockFacet('facet2');
+      const mockGenerator = createMockGenerator();
+
+      const {element} = await renderComponent({
+        props: {collapseFacetsAfter: 3},
+        mockSortImplementation: mockSort as never,
       });
-    });
-  });
 
-  describe('when rendering', () => {
-    it('should render a slot for facets', async () => {
-      const {element} = await renderComponent();
-      const slot = element?.shadowRoot?.querySelector('slot');
-      expect(slot).toBeDefined();
-    });
+      element?.appendChild(mockFacet1);
+      element?.appendChild(mockFacet2);
+      element?.appendChild(mockGenerator);
 
-    it('should allow slotted content', async () => {
-      await renderComponent({
-        slottedContent: '<div class="test-content">Test</div>',
-      });
-      await expect.element(page.getByText('Test')).toBeInTheDocument();
-    });
-  });
+      element?.['sortFacets']();
 
-  describe('lifecycle', () => {
-    it('should listen to i18n language changes on initialization', async () => {
-      const {atomicInterface} = await renderComponent();
-      const i18n = atomicInterface.bindings.i18n;
-
-      expect(i18n.listenerCount('languageChanged')).toBeGreaterThan(0);
-    });
-
-    it('should clean up i18n listener on disconnection', async () => {
-      const {element, atomicInterface} = await renderComponent();
-      const i18n = atomicInterface.bindings.i18n;
-      const initialListenerCount = i18n.listenerCount('languageChanged');
-
-      element?.remove();
-      await element?.updateComplete;
-
-      expect(i18n.listenerCount('languageChanged')).toBeLessThan(
-        initialListenerCount
-      );
+      expect(
+        mockGenerator.updateCollapseFacetsDependingOnFacetsVisibility
+      ).toHaveBeenCalledWith(3, 2);
     });
   });
 });

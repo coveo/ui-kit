@@ -165,18 +165,6 @@ export namespace Components {
         "queryCorrectionMode": 'legacy' | 'next';
     }
     /**
-     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
-     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
-     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
-     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
-     */
-    interface AtomicFacetManager {
-        /**
-          * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
-         */
-        "collapseFacetsAfter": number;
-    }
-    /**
      * Internal component made to be integrated in a NumericFacet.
      */
     interface AtomicFacetNumberInput {
@@ -1668,18 +1656,6 @@ declare global {
         prototype: HTMLAtomicDidYouMeanElement;
         new (): HTMLAtomicDidYouMeanElement;
     };
-    /**
-     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
-     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
-     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
-     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
-     */
-    interface HTMLAtomicFacetManagerElement extends Components.AtomicFacetManager, HTMLStencilElement {
-    }
-    var HTMLAtomicFacetManagerElement: {
-        prototype: HTMLAtomicFacetManagerElement;
-        new (): HTMLAtomicFacetManagerElement;
-    };
     interface HTMLAtomicFacetNumberInputElementEventMap {
         "atomic/numberInputApply": any;
     }
@@ -2468,7 +2444,6 @@ declare global {
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
-        "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
         "atomic-folded-result-list": HTMLAtomicFoldedResultListElement;
         "atomic-generated-answer": HTMLAtomicGeneratedAnswerElement;
@@ -2676,18 +2651,6 @@ declare namespace LocalJSX {
           * Define which query correction system to use  `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms. `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.  Default value is `next`.
          */
         "queryCorrectionMode"?: 'legacy' | 'next';
-    }
-    /**
-     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
-     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
-     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
-     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
-     */
-    interface AtomicFacetManager {
-        /**
-          * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
-         */
-        "collapseFacetsAfter"?: number;
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
@@ -4045,7 +4008,6 @@ declare namespace LocalJSX {
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-citation": AtomicCitation;
         "atomic-did-you-mean": AtomicDidYouMean;
-        "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-number-input": AtomicFacetNumberInput;
         "atomic-folded-result-list": AtomicFoldedResultList;
         "atomic-generated-answer": AtomicGeneratedAnswer;
@@ -4150,13 +4112,6 @@ declare module "@stencil/core" {
              * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
              */
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
-            /**
-             * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
-             * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
-             * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
-             * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
-             */
-            "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             /**
              * Internal component made to be integrated in a NumericFacet.
              */
