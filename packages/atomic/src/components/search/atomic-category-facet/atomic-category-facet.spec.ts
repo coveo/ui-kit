@@ -121,7 +121,7 @@ describe('atomic-category-facet', () => {
         return element.shadowRoot?.querySelector('[part=facet]');
       },
       get placeholder() {
-        return element.shadowRoot?.querySelector('atomic-facet-placeholder');
+        return element.shadowRoot?.querySelector('[part="placeholder"]');
       },
       get labelButton() {
         return element.shadowRoot?.querySelector('[part=label-button]');
