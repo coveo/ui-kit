@@ -1,6 +1,10 @@
 import {createReducer} from '@reduxjs/toolkit';
+import type {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
 import {fetchBadges} from './product-enrichment-actions.js';
-import {getProductEnrichmentInitialState} from './product-enrichment-state.js';
+import {
+  getProductEnrichmentInitialState,
+  type ProductEnrichmentState,
+} from './product-enrichment-state.js';
 
 export const productEnrichmentReducer = createReducer(
   getProductEnrichmentInitialState(),
@@ -11,14 +15,25 @@ export const productEnrichmentReducer = createReducer(
         state.error = null;
       })
       .addCase(fetchBadges.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.error = null;
+        handleFulfilled(state);
         state.products = action.payload.response.products;
       })
       .addCase(fetchBadges.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload?.message || 'Failed to fetch badges';
-        state.products = [];
+        handleError(state, action.payload);
       });
   }
 );
+
+function handleError(
+  state: ProductEnrichmentState,
+  error?: CommerceAPIErrorStatusResponse
+) {
+  state.error = error || null;
+  state.isLoading = false;
+  state.products = [];
+}
+
+function handleFulfilled(state: ProductEnrichmentState) {
+  state.error = null;
+  state.isLoading = false;
+}

@@ -100,7 +100,7 @@ export const baseRequest = (
  * Builds a URL to include the tracking ID in the path.
  * Used by endpoints that require tracking ID in the URL path instead of request body.
  **/
-export const buildUrlWithTrackingIdInPath = (
+const buildUrlWithTrackingIdInPath = (
   baseUrl: string,
   trackingId: string,
   path: CommerceApiMethod

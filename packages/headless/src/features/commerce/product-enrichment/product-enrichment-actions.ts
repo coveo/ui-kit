@@ -1,4 +1,3 @@
-import {ArrayValue, StringValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import type {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client.js';
 import type {ProductEnrichmentBadgesRequest} from '../../../api/commerce/product-enrichment/product-enrichment-request.js';
@@ -10,6 +9,7 @@ import {
   buildBaseCommerceAPIRequest,
   type StateNeededForBaseCommerceAPIRequest,
 } from '../common/base-commerce-api-request-builder.js';
+import {productEnrichmentDefinition} from './product-enrichment.js';
 
 export type StateNeededByFetchBadges = StateNeededForBaseCommerceAPIRequest &
   ProductEnrichmentSection;
@@ -18,7 +18,7 @@ export interface FetchBadgesPayload {
   /**
    * An array of placement IDs to fetch badges for.
    */
-  placementIds: string[];
+  placementIds?: string[];
   /**
    * The product ID to fetch badges for.
    */
@@ -28,8 +28,7 @@ export interface FetchBadgesPayload {
 const buildProductEnrichmentBadgesRequest = (
   payload: FetchBadgesPayload,
   state: StateNeededByFetchBadges,
-  navigatorContext: NavigatorContext,
-  productId?: string
+  navigatorContext: NavigatorContext
 ): ProductEnrichmentBadgesRequest => {
   const baseRequest = buildBaseCommerceAPIRequest(state, navigatorContext);
 
@@ -37,7 +36,7 @@ const buildProductEnrichmentBadgesRequest = (
     ...baseRequest,
     context: {
       ...baseRequest.context,
-      ...(productId ? {product: {productId}} : {}),
+      ...(payload.productId ? {product: {productId: payload.productId}} : {}),
     },
     placementIds: payload.placementIds,
   };
@@ -57,21 +56,12 @@ export const fetchBadges = createAsyncThunk<
     payload,
     {getState, rejectWithValue, extra: {apiClient, navigatorContext}}
   ) => {
-    validatePayload(payload, {
-      placementIds: new ArrayValue({
-        required: true,
-        min: 1,
-        max: 5,
-        each: new StringValue({required: true, emptyAllowed: false}),
-      }),
-      productId: new StringValue({required: false, emptyAllowed: false}),
-    });
+    validatePayload(payload, productEnrichmentDefinition);
 
     const request = buildProductEnrichmentBadgesRequest(
       payload,
       getState(),
-      navigatorContext,
-      payload.productId
+      navigatorContext
     );
 
     const fetched = await apiClient.getBadges(request);

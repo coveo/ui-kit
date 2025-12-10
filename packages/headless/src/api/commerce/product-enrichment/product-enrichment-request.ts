@@ -1,8 +1,5 @@
+import type {PlacementIdsParam} from '../commerce-api-params.js';
 import {type BaseCommerceAPIRequest, baseRequest} from '../common/request.js';
-
-export interface PlacementIdsParam {
-  placementIds: string[];
-}
 
 export type ProductEnrichmentBadgesRequest = BaseCommerceAPIRequest &
   PlacementIdsParam;

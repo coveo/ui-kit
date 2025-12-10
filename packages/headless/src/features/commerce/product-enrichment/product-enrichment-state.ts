@@ -1,3 +1,4 @@
+import type {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
 import type {BadgesProduct} from '../../../api/commerce/product-enrichment/product-enrichment-response.js';
 
 export interface ProductEnrichmentState {
@@ -12,7 +13,7 @@ export interface ProductEnrichmentState {
   /**
    * The error message if the request failed.
    */
-  error: string | null;
+  error: CommerceAPIErrorStatusResponse | null;
 }
 
 export function getProductEnrichmentInitialState(): ProductEnrichmentState {

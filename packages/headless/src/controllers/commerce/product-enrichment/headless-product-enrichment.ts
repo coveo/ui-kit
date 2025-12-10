@@ -1,3 +1,5 @@
+import type {SerializedError} from '@reduxjs/toolkit';
+import type {CommerceAPIErrorResponse} from '../../../api/commerce/commerce-api-error-response.js';
 import type {BadgesProduct} from '../../../api/commerce/product-enrichment/product-enrichment-response.js';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
@@ -15,16 +17,7 @@ import {
   type Controller,
 } from '../../controller/headless-controller.js';
 
-export interface ProductEnrichmentOptions {
-  /**
-   * An array of placement IDs to fetch badges for.
-   */
-  placementIds?: string[];
-  /**
-   * The product ID to fetch badges for.
-   */
-  productId?: string;
-}
+export interface ProductEnrichmentOptions extends FetchBadgesPayload {}
 
 export interface ProductEnrichmentProps {
   /**
@@ -32,8 +25,6 @@ export interface ProductEnrichmentProps {
    */
   options?: ProductEnrichmentOptions;
 }
-
-export type {FetchBadgesPayload};
 
 const defaultProductEnrichmentOptions: ProductEnrichmentOptions = {
   placementIds: [],
@@ -48,7 +39,12 @@ export interface ProductEnrichment extends Controller {
   /**
    * Fetches badges for the configured product and placement IDs.
    *
-   */
+   * The results are accessible through the controller's `state.products` property.
+   *
+   * @remarks
+   * This method will not execute if no placement IDs were provided during controller initialization.
+   * The request will include the configured `productId` in the context if provided.
+   * */
   getBadges(): void;
 }
 
@@ -62,9 +58,9 @@ export interface ProductEnrichmentState {
    */
   isLoading: boolean;
   /**
-   * The error message if the request failed.
+   * The error returned when executing a badge fetch request, if any. This is `null` otherwise.
    */
-  error: string | null;
+  error: CommerceAPIErrorResponse | SerializedError | null;
 }
 
 function validateProductEnrichmentProps(
@@ -124,7 +120,9 @@ export function buildProductEnrichment(
         !registrationOptions.placementIds ||
         registrationOptions.placementIds.length === 0
       ) {
-        return;
+        throw new Error(
+          'placementIds must be provided and non-empty to fetch badges'
+        );
       }
 
       dispatch(

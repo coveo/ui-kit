@@ -4,12 +4,16 @@ import {
   nonEmptyString,
   requiredNonEmptyString,
 } from '../../../utils/validate-payload.js';
+import {
+  MAXIMUM_PLACEMENT_IDS,
+  MINIMUM_PLACEMENT_IDS,
+} from './product-enrichment-constants.js';
 
 export const productEnrichmentDefinition = {
   placementIds: new ArrayValue({
     required: false,
-    min: 1,
-    max: 5,
+    min: MINIMUM_PLACEMENT_IDS,
+    max: MAXIMUM_PLACEMENT_IDS,
     each: requiredNonEmptyString,
   }),
   productId: nonEmptyString,
