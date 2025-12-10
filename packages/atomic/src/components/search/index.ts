@@ -4,6 +4,7 @@ export {AtomicBreadbox} from './atomic-breadbox/atomic-breadbox.js';
 export {AtomicColorFacet} from './atomic-color-facet/atomic-color-facet.js';
 export {AtomicExternal} from './atomic-external/atomic-external.js';
 export {AtomicFacet} from './atomic-facet/atomic-facet.js';
+export {AtomicFacetManager} from './atomic-facet-manager/atomic-facet-manager.js';
 export {AtomicFieldCondition} from './atomic-field-condition/atomic-field-condition.js';
 export {AtomicFormatCurrency} from './atomic-format-currency/atomic-format-currency.js';
 export {AtomicFormatNumber} from './atomic-format-number/atomic-format-number.js';
