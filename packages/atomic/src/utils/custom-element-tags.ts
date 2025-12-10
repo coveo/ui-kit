@@ -52,6 +52,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-icon',
   'atomic-insight-generate-answer-button',
   'atomic-insight-interface',
+  'atomic-ipx-tabs',
   'atomic-layout-section',
   'atomic-load-more-results',
   'atomic-modal',
@@ -92,6 +93,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-result-children',
   'atomic-result-children-template',
   'atomic-result-date',
+  'atomic-result-fields-list',
   'atomic-result-html',
   'atomic-result-icon',
   'atomic-result-image',
@@ -125,6 +127,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-sort-expression',
   'atomic-tab',
   'atomic-tab-manager',
+  'atomic-table-element',
   'atomic-text',
 ]);
 
