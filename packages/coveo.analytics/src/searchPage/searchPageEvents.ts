@@ -354,6 +354,10 @@ export enum SearchPageEvents {
      * Identifies the click event that gets logged when the user clicks on a generated answer citation.
      */
     generatedAnswerCitationClick = 'generatedAnswerCitationClick',
+    /**
+     * Identifies the click event that gets logged when a user clicks the Attach Citation action.
+     */
+    generatedAnswerCitationDocumentAttach = 'generatedAnswerCitationDocumentAttach',
 }
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents, string>> = {

@@ -668,6 +668,19 @@ export class CoveoInsightClient {
         );
     }
 
+    public logGeneratedAnswerCitationDocumentAttach(
+        info: PartialDocumentInformation,
+        citation: GeneratedAnswerCitationClickMeta,
+        metadata?: CaseMetadata,
+    ) {
+        return this.logClickEvent(
+            SearchPageEvents.generatedAnswerCitationDocumentAttach,
+            {...info, documentPosition: 1},
+            {contentIDKey: citation.documentId.contentIdKey, contentIDValue: citation.documentId.contentIdValue},
+            metadata ? {...generateMetadataToSend(metadata, false), ...citation} : citation,
+        );
+    }
+
     public async logCustomEvent(event: SearchPageEvents | InsightEvents, metadata?: Record<string, any>) {
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
 
