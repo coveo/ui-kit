@@ -11,6 +11,7 @@ export {AtomicFormatUnit} from './atomic-format-unit/atomic-format-unit.js';
 export {AtomicHtml} from './atomic-html/atomic-html.js';
 export {AtomicLoadMoreResults} from './atomic-load-more-results/atomic-load-more-results.js';
 export {AtomicNoResults} from './atomic-no-results/atomic-no-results.js';
+export {AtomicNotifications} from './atomic-notifications/atomic-notifications.js';
 export {AtomicPager} from './atomic-pager/atomic-pager.js';
 export {AtomicPopover} from './atomic-popover/atomic-popover.js';
 export {AtomicQueryError} from './atomic-query-error/atomic-query-error.js';

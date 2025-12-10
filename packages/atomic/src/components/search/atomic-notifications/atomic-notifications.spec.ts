@@ -8,16 +8,6 @@ import type {AtomicNotifications} from './atomic-notifications';
 import './atomic-notifications';
 
 vi.mock('@coveo/headless', {spy: true});
-vi.mock('@/src/mixins/bindings-mixin', () => ({
-  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
-    return class extends superClass {
-      // biome-ignore lint/complexity/noUselessConstructor: <mocking the mixin for testing>
-      constructor(...args: unknown[]) {
-        super(...args);
-      }
-    };
-  }),
-}));
 
 describe('atomic-notifications', () => {
   const mockedEngine = buildFakeSearchEngine();
@@ -177,25 +167,23 @@ describe('atomic-notifications', () => {
     });
   });
 
-  describe('props', () => {
-    it('should have default headingLevel of 0', async () => {
-      const {element} = await renderNotifications();
-      expect(element.headingLevel).toBe(0);
-    });
+  it('should have default headingLevel of 0', async () => {
+    const {element} = await renderNotifications();
+    expect(element.headingLevel).toBe(0);
+  });
 
-    it('should allow setting headingLevel', async () => {
-      const {element} = await renderNotifications({
-        props: {headingLevel: 3},
-      });
-      expect(element.headingLevel).toBe(3);
+  it('should allow setting headingLevel', async () => {
+    const {element} = await renderNotifications({
+      props: {headingLevel: 3},
     });
+    expect(element.headingLevel).toBe(3);
+  });
 
-    it('should allow setting icon', async () => {
-      const icon = 'test-icon.svg';
-      const {element} = await renderNotifications({
-        props: {icon},
-      });
-      expect(element.icon).toBe(icon);
+  it('should allow setting icon', async () => {
+    const icon = 'test-icon.svg';
+    const {element} = await renderNotifications({
+      props: {icon},
     });
+    expect(element.icon).toBe(icon);
   });
 });
