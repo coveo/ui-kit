@@ -173,23 +173,45 @@ describe('atomic-tab-manager', () => {
     });
   });
 
-  describe('when tab expression property is undefined (race condition)', () => {
-    it('should use empty string as fallback for undefined expression', async () => {
-      await renderTabManager({
-        slottedContent: html`
-          <atomic-tab label="Test" name="test"></atomic-tab>
-        `,
-      });
-
-      // Verify buildTab was called with empty string for expression
-      const buildTabCalls = vi.mocked(buildTab).mock.calls;
-      expect(buildTabCalls.length).toBeGreaterThan(0);
-      buildTabCalls.forEach((call) => {
-        // The expression should be a string (either empty or defined)
-        expect(typeof call[1]?.options?.expression).toBe('string');
-        // Should not be undefined
-        expect(call[1]?.options?.expression).not.toBeUndefined();
-      });
+  it('should use empty string as fallback for undefined expression when tab expression property is undefined (race condition)', async () => {
+    const fakeTabManager = buildFakeTabManager({
+      activeTab: 'all',
     });
+
+    mockConsole();
+
+    vi.mocked(buildTabManager).mockReturnValue(fakeTabManager);
+
+    vi.mocked(buildTab).mockImplementation((_engine, options) => {
+      return {
+        state: {
+          isActive: options?.options?.id === fakeTabManager.state.activeTab,
+        },
+        select: vi.fn(),
+        subscribe: vi.fn(),
+      } as never;
+    });
+
+    const {element} = await renderInAtomicSearchInterface<AtomicTabManager>({
+      template: html`
+        <atomic-tab-manager>
+          <atomic-tab label="Test" name="test"></atomic-tab>
+        </atomic-tab-manager>
+      `,
+      selector: 'atomic-tab-manager',
+    });
+
+    const tabElement = element.querySelector('atomic-tab')!;
+    Object.defineProperty(tabElement, 'expression', {
+      get: () => undefined,
+      configurable: true,
+    });
+
+    element.initialize();
+
+    const buildTabCalls = vi.mocked(buildTab).mock.calls;
+    const lastCall = buildTabCalls[buildTabCalls.length - 1];
+    expect(lastCall[1]?.options?.expression).toBe('');
+    expect(lastCall[1]?.options?.expression).not.toBeUndefined();
   });
 });
