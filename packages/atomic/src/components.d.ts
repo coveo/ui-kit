@@ -1215,11 +1215,6 @@ export namespace Components {
         "collapseFacetsAfter": number;
     }
     /**
-     * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
-     */
-    interface AtomicResultFieldsList {
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
@@ -1480,15 +1475,6 @@ export namespace Components {
         "closePopoverOnFocusOut": (event: FocusEvent) => Promise<void>;
         "setButtonVisibility": (isVisible: boolean) => Promise<void>;
         "toggle": () => Promise<void>;
-    }
-    /**
-     * The `atomic-table-element` element defines a table column in a result list.
-     */
-    interface AtomicTableElement {
-        /**
-          * The label to display in the header of this column.
-         */
-        "label": string;
     }
     /**
      * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
@@ -2231,15 +2217,6 @@ declare global {
         new (): HTMLAtomicRefineToggleElement;
     };
     /**
-     * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
-     */
-    interface HTMLAtomicResultFieldsListElement extends Components.AtomicResultFieldsList, HTMLStencilElement {
-    }
-    var HTMLAtomicResultFieldsListElement: {
-        prototype: HTMLAtomicResultFieldsListElement;
-        new (): HTMLAtomicResultFieldsListElement;
-    };
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface HTMLAtomicResultPlaceholderElement extends Components.AtomicResultPlaceholder, HTMLStencilElement {
@@ -2467,15 +2444,6 @@ declare global {
         new (): HTMLAtomicTabPopoverElement;
     };
     /**
-     * The `atomic-table-element` element defines a table column in a result list.
-     */
-    interface HTMLAtomicTableElementElement extends Components.AtomicTableElement, HTMLStencilElement {
-    }
-    var HTMLAtomicTableElementElement: {
-        prototype: HTMLAtomicTableElementElement;
-        new (): HTMLAtomicTableElementElement;
-    };
-    /**
      * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
      * A timeframe is a span of time from now to a specific time in the past.
      */
@@ -2559,7 +2527,6 @@ declare global {
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
-        "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
@@ -2576,7 +2543,6 @@ declare global {
         "atomic-tab-bar": HTMLAtomicTabBarElement;
         "atomic-tab-button": HTMLAtomicTabButtonElement;
         "atomic-tab-popover": HTMLAtomicTabPopoverElement;
-        "atomic-table-element": HTMLAtomicTableElementElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
     }
@@ -3714,11 +3680,6 @@ declare namespace LocalJSX {
         "collapseFacetsAfter"?: number;
     }
     /**
-     * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
-     */
-    interface AtomicResultFieldsList {
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
@@ -3996,15 +3957,6 @@ declare namespace LocalJSX {
     interface AtomicTabPopover {
     }
     /**
-     * The `atomic-table-element` element defines a table column in a result list.
-     */
-    interface AtomicTableElement {
-        /**
-          * The label to display in the header of this column.
-         */
-        "label": string;
-    }
-    /**
      * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
      * A timeframe is a span of time from now to a specific time in the past.
      */
@@ -4152,7 +4104,6 @@ declare namespace LocalJSX {
         "atomic-recs-result-template": AtomicRecsResultTemplate;
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
-        "atomic-result-fields-list": AtomicResultFieldsList;
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
         "atomic-search-box": AtomicSearchBox;
@@ -4169,7 +4120,6 @@ declare namespace LocalJSX {
         "atomic-tab-bar": AtomicTabBar;
         "atomic-tab-button": AtomicTabButton;
         "atomic-tab-popover": AtomicTabPopover;
-        "atomic-table-element": AtomicTableElement;
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
     }
@@ -4342,10 +4292,6 @@ declare module "@stencil/core" {
              */
             "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
             /**
-             * The `atomic-result-fields-list` component selectively renders its children to ensure they fit the parent element and adds dividers between them.
-             */
-            "atomic-result-fields-list": LocalJSX.AtomicResultFieldsList & JSXBase.HTMLAttributes<HTMLAtomicResultFieldsListElement>;
-            /**
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
@@ -4417,10 +4363,6 @@ declare module "@stencil/core" {
             "atomic-tab-bar": LocalJSX.AtomicTabBar & JSXBase.HTMLAttributes<HTMLAtomicTabBarElement>;
             "atomic-tab-button": LocalJSX.AtomicTabButton & JSXBase.HTMLAttributes<HTMLAtomicTabButtonElement>;
             "atomic-tab-popover": LocalJSX.AtomicTabPopover & JSXBase.HTMLAttributes<HTMLAtomicTabPopoverElement>;
-            /**
-             * The `atomic-table-element` element defines a table column in a result list.
-             */
-            "atomic-table-element": LocalJSX.AtomicTableElement & JSXBase.HTMLAttributes<HTMLAtomicTableElementElement>;
             /**
              * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
              * A timeframe is a span of time from now to a specific time in the past.
