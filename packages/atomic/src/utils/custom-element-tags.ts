@@ -52,7 +52,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-icon',
   'atomic-insight-generate-answer-button',
   'atomic-insight-interface',
-  'atomic-insight-tabs',
+  'atomic-ipx-tabs',
   'atomic-layout-section',
   'atomic-load-more-results',
   'atomic-modal',
