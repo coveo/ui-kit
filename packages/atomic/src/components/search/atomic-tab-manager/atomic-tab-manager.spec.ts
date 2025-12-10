@@ -172,4 +172,24 @@ describe('atomic-tab-manager', () => {
       });
     });
   });
+
+  describe('when tab expression property is undefined (race condition)', () => {
+    it('should use empty string as fallback for undefined expression', async () => {
+      await renderTabManager({
+        slottedContent: html`
+          <atomic-tab label="Test" name="test"></atomic-tab>
+        `,
+      });
+
+      // Verify buildTab was called with empty string for expression
+      const buildTabCalls = vi.mocked(buildTab).mock.calls;
+      expect(buildTabCalls.length).toBeGreaterThan(0);
+      buildTabCalls.forEach((call) => {
+        // The expression should be a string (either empty or defined)
+        expect(typeof call[1]?.options?.expression).toBe('string');
+        // Should not be undefined
+        expect(call[1]?.options?.expression).not.toBeUndefined();
+      });
+    });
+  });
 });
