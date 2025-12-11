@@ -65,7 +65,7 @@ export function buildCoreInteractiveSpotlightContent(
   const getWarningMessage = () => {
     const {id, desktopImage} = props.options.spotlightContent;
 
-    const warnings = [];
+    const warnings: string[] = [];
 
     if (!id) {
       warnings.push(
