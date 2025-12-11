@@ -22,7 +22,7 @@ import {
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
-import {type CSSResultGroup, html, LitElement, nothing} from 'lit';
+import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
@@ -203,7 +203,8 @@ export class AtomicTimeframeFacet
    * ></atomic-timeframe-facet>
    * ```
    */
-  @property() dependsOn: Record<string, string> = {};
+  @mapProperty({attributePrefix: 'depends-on'})
+  public dependsOn!: Record<string, string>;
   /**
    * The earliest date to accept from user input when the `withDatepicker` option is enabled.
    *
@@ -292,7 +293,7 @@ export class AtomicTimeframeFacet
         headingLevel: this.headingLevel,
         min: this.min,
         max: this.max,
-        sortCriteria: this.sortCriteria,
+        sortCriteria: this.sortCriteria as string,
       }),
       AtomicTimeframeFacet.propsSchema
     );
@@ -338,7 +339,11 @@ export class AtomicTimeframeFacet
   }
 
   private get shouldRenderFacet() {
-    return this.shouldRenderInput || this.shouldRenderValues;
+    return (
+      this.enabled &&
+      !this.searchStatusState.hasError &&
+      (this.shouldRenderInput || this.shouldRenderValues)
+    );
   }
 
   private get shouldRenderInput() {
@@ -653,11 +658,10 @@ export class AtomicTimeframeFacet
         @atomic-date-input-apply=${(
           event: CustomEvent<FacetDateInputEventDetails>
         ) => {
-          const {start, end, endInclusive} = event.detail;
+          const {start, end} = event.detail;
           this.filter!.setRange({
             start,
             end,
-            endInclusive,
           });
           if (this.facetId) {
             this.bindings.engine.dispatch(
@@ -673,40 +677,28 @@ export class AtomicTimeframeFacet
 
   @bindingGuard()
   @errorGuard()
-  protected render() {
-    const {hasError, firstSearchExecuted} = this.searchStatusState;
-
-    if (hasError || !this.enabled) {
-      return nothing;
-    }
-
-    if (!firstSearchExecuted) {
-      return renderFacetPlaceholder({
-        props: {
-          numberOfValues: this.currentValues.length || 5,
-          isCollapsed: this.isCollapsed,
-        },
-      });
-    }
-
-    if (!this.shouldRenderFacet) {
-      return nothing;
-    }
-
-    return html`${renderFacetContainer()(
-      html`${this.renderHeader()}
-        ${when(
-          !this.isCollapsed,
-          () => html`
-            ${when(this.shouldRenderValues, () => this.renderValues())}
-            ${when(this.shouldRenderInput, () => this.renderDateInput())}
-          `
-        )}`
+  render() {
+    return html`${when(this.shouldRenderFacet, () =>
+      this.searchStatusState.firstSearchExecuted
+        ? renderFacetContainer()(
+            html`${this.renderHeader()}
+                ${when(
+                  !this.isCollapsed,
+                  () => html`
+                    ${when(this.shouldRenderValues, () => this.renderValues())}
+                    ${when(this.shouldRenderInput, () => this.renderDateInput())}
+                  `
+                )}`
+          )
+        : renderFacetPlaceholder({
+            props: {
+              numberOfValues: this.currentValues.length || 5,
+              isCollapsed: this.isCollapsed,
+            },
+          })
     )}`;
   }
 }
-
-mapProperty(AtomicTimeframeFacet, 'dependsOn');
 
 declare global {
   interface HTMLElementTagNameMap {
