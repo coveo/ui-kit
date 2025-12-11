@@ -47,29 +47,18 @@ describe('atomic-notifications', () => {
     };
   };
 
-  describe('when there are no notifications', () => {
-    it('should render nothing', async () => {
-      const {element} = await renderNotifications({
-        notifyTriggerState: {
-          notifications: [],
-        },
-      });
-
-      expect(element).toBeEmptyDOMElement();
+  it('should render nothing when there are no notifications', async () => {
+    const {element} = await renderNotifications({
+      notifyTriggerState: {
+        notifications: [],
+      },
     });
+
+    expect(element).toBeEmptyDOMElement();
   });
 
   describe('when there are notifications', () => {
     const notifications = ['First notification', 'Second notification'];
-
-    it('should render correctly', async () => {
-      const {element} = await renderNotifications({
-        notifyTriggerState: {notifications},
-      });
-
-      expect(element).toBeDefined();
-    });
-
     it('should call buildNotifyTrigger with the engine', async () => {
       await renderNotifications({
         notifyTriggerState: {notifications},
@@ -185,5 +174,99 @@ describe('atomic-notifications', () => {
       props: {icon},
     });
     expect(element.icon).toBe(icon);
+  });
+
+  // TODO V4: KIT-5197 - Remove skip
+  it.skip('should set error when headingLevel is invalid (negative)', async () => {
+    const {element} = await renderNotifications();
+
+    expect(element.error).toBeUndefined();
+
+    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+    (element as any).headingLevel = -1;
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/headingLevel/i);
+  });
+
+  // TODO V4: KIT-5197 - Remove skip
+  it.skip('should set error when headingLevel is invalid (greater than 6)', async () => {
+    const {element} = await renderNotifications();
+
+    expect(element.error).toBeUndefined();
+
+    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+    (element as any).headingLevel = 7;
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/headingLevel/i);
+  });
+
+  // TODO V4: KIT-5197 - Remove this test
+  it('should log validation warning when headingLevel is invalid (negative)', async () => {
+    const consoleWarnSpy = vi
+      .spyOn(console, 'warn')
+      .mockImplementation(() => {});
+
+    const {element} = await renderNotifications({props: {headingLevel: 2}});
+
+    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+    (element as any).headingLevel = -1;
+    await element.updateComplete;
+
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'Prop validation failed for component atomic-notifications'
+      ),
+      element
+    );
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('headingLevel'),
+      element
+    );
+
+    consoleWarnSpy.mockRestore();
+  });
+
+  // TODO V4: KIT-5197 - Remove this test
+  it('should log validation warning when headingLevel is invalid (greater than 6)', async () => {
+    const consoleWarnSpy = vi
+      .spyOn(console, 'warn')
+      .mockImplementation(() => {});
+
+    const {element} = await renderNotifications({props: {headingLevel: 2}});
+
+    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+    (element as any).headingLevel = 7;
+    await element.updateComplete;
+
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'Prop validation failed for component atomic-notifications'
+      ),
+      element
+    );
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('headingLevel'),
+      element
+    );
+
+    consoleWarnSpy.mockRestore();
+  });
+
+  // TODO V4: KIT-5197 - Remove skip
+  it.skip('should set error when valid headingLevel is updated to an invalid value', async () => {
+    const {element} = await renderNotifications({props: {headingLevel: 3}});
+
+    expect(element.error).toBeUndefined();
+
+    // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+    (element as any).headingLevel = 10;
+    await element.updateComplete;
+
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/headingLevel/i);
   });
 });

@@ -1,3 +1,4 @@
+import {NumberValue, Schema} from '@coveo/bueno';
 import {
   buildNotifyTrigger,
   type NotifyTrigger,
@@ -7,6 +8,7 @@ import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
 import {renderHeading} from '@/src/components/common/heading';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -33,6 +35,10 @@ export class AtomicNotifications
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
+  private static readonly schema = new Schema({
+    headingLevel: new NumberValue({min: 0, max: 6, required: false}),
+  });
+
   @state() public bindings!: Bindings;
   @state() public error!: Error;
 
@@ -57,6 +63,20 @@ export class AtomicNotifications
   public notifyTrigger!: NotifyTrigger;
 
   protected ariaMessage = new AriaLiveRegionController(this, 'notifications');
+
+  constructor() {
+    super();
+
+    new ValidatePropsController(
+      this,
+      () => ({
+        headingLevel: this.headingLevel,
+      }),
+      AtomicNotifications.schema,
+      // TODO V4: KIT-5197 - Remove false
+      false
+    );
+  }
 
   public initialize() {
     this.notifyTrigger = buildNotifyTrigger(this.bindings.engine);
@@ -114,7 +134,7 @@ export class AtomicNotifications
 
     return html`
       ${renderHeading({
-        props: {level: this.headingLevel ?? 0, class: 'sr-only'},
+        props: {level: this.headingLevel, class: 'sr-only'},
       })(html`${this.bindings.i18n.t('notifications')}`)}
       ${this.renderNotifications()}
     `;

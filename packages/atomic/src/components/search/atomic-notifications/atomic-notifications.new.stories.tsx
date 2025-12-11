@@ -42,7 +42,7 @@ const meta: Meta = {
         {
           type: 'notify',
           content:
-            'This is a different notification. Any amount of notifications can be returned by the Coveo Search API.',
+            'This is a different notification. Any number of notifications can be returned by the Coveo Search API.',
         },
       ],
     }));
