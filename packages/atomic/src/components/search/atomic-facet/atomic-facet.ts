@@ -191,6 +191,7 @@ export class AtomicFacet
   /**
    * Whether this facet should contain a search box.
    *
+   * @deprecated Use the `no-facet-search` attribute to disable the facet search feature.
    */
   @property({
     type: Boolean,
@@ -199,6 +200,19 @@ export class AtomicFacet
     reflect: true,
   })
   public withSearch = true;
+
+  /**
+   * Whether to disable the facet search feature.
+   * By default, facet search is enabled.
+   * Setting this attribute disables the facet search feature.
+   * Replaces the `with-search` attribute.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'no-facet-search',
+  })
+  public noFacetSearch = false;
+
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
@@ -513,7 +527,7 @@ export class AtomicFacet
         {
           canShowMoreValues: this.facetState.canShowMoreValues,
           numberOfDisplayedValues: this.facetState.values.length,
-          withSearch: this.withSearch,
+          withSearch: !this.noFacetSearch && this.withSearch,
         },
         () =>
           renderFacetSearchInput({
