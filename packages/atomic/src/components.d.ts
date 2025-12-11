@@ -614,26 +614,6 @@ export namespace Components {
          */
         "snippetStyle"?: string;
     }
-    interface AtomicInsightTab {
-        /**
-          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
-         */
-        "active": boolean;
-        /**
-          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
-         */
-        "expression": string;
-        /**
-          * The label that will be shown to the user.
-         */
-        "label": string;
-        /**
-          * Activates the tab.
-         */
-        "select": () => Promise<void>;
-    }
-    interface AtomicInsightTabs {
-    }
     interface AtomicInsightTimeframeFacet {
         /**
           * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc   ... ></atomic-insight-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc="doc"   ... ></atomic-insight-timeframe-facet> ```
@@ -854,24 +834,6 @@ export namespace Components {
           * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-ipx-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-ipx-result-link> ```
          */
         "hrefTemplate"?: string;
-    }
-    interface AtomicIpxTab {
-        /**
-          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
-         */
-        "active": boolean;
-        /**
-          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
-         */
-        "expression": string;
-        /**
-          * The label that will be shown to the user.
-         */
-        "label": string;
-        /**
-          * Activates the tab.
-         */
-        "select": () => Promise<void>;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
@@ -1859,18 +1821,6 @@ declare global {
         prototype: HTMLAtomicInsightSmartSnippetSuggestionsElement;
         new (): HTMLAtomicInsightSmartSnippetSuggestionsElement;
     };
-    interface HTMLAtomicInsightTabElement extends Components.AtomicInsightTab, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightTabElement: {
-        prototype: HTMLAtomicInsightTabElement;
-        new (): HTMLAtomicInsightTabElement;
-    };
-    interface HTMLAtomicInsightTabsElement extends Components.AtomicInsightTabs, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightTabsElement: {
-        prototype: HTMLAtomicInsightTabsElement;
-        new (): HTMLAtomicInsightTabsElement;
-    };
     interface HTMLAtomicInsightTimeframeFacetElement extends Components.AtomicInsightTimeframeFacet, HTMLStencilElement {
     }
     var HTMLAtomicInsightTimeframeFacetElement: {
@@ -2003,12 +1953,6 @@ declare global {
     var HTMLAtomicIpxResultLinkElement: {
         prototype: HTMLAtomicIpxResultLinkElement;
         new (): HTMLAtomicIpxResultLinkElement;
-    };
-    interface HTMLAtomicIpxTabElement extends Components.AtomicIpxTab, HTMLStencilElement {
-    }
-    var HTMLAtomicIpxTabElement: {
-        prototype: HTMLAtomicIpxTabElement;
-        new (): HTMLAtomicIpxTabElement;
     };
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
@@ -2398,8 +2342,6 @@ declare global {
         "atomic-insight-smart-snippet": HTMLAtomicInsightSmartSnippetElement;
         "atomic-insight-smart-snippet-feedback-modal": HTMLAtomicInsightSmartSnippetFeedbackModalElement;
         "atomic-insight-smart-snippet-suggestions": HTMLAtomicInsightSmartSnippetSuggestionsElement;
-        "atomic-insight-tab": HTMLAtomicInsightTabElement;
-        "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
         "atomic-insight-user-actions-modal": HTMLAtomicInsightUserActionsModalElement;
         "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
@@ -2413,7 +2355,6 @@ declare global {
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
         "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
-        "atomic-ipx-tab": HTMLAtomicIpxTabElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-quickview": HTMLAtomicQuickviewElement;
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
@@ -3009,22 +2950,6 @@ declare namespace LocalJSX {
          */
         "snippetStyle"?: string;
     }
-    interface AtomicInsightTab {
-        /**
-          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
-         */
-        "active"?: boolean;
-        /**
-          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
-         */
-        "expression": string;
-        /**
-          * The label that will be shown to the user.
-         */
-        "label"?: string;
-    }
-    interface AtomicInsightTabs {
-    }
     interface AtomicInsightTimeframeFacet {
         /**
           * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc   ... ></atomic-insight-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc="doc"   ... ></atomic-insight-timeframe-facet> ```
@@ -3235,20 +3160,6 @@ declare namespace LocalJSX {
           * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-ipx-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-ipx-result-link> ```
          */
         "hrefTemplate"?: string;
-    }
-    interface AtomicIpxTab {
-        /**
-          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
-         */
-        "active"?: boolean;
-        /**
-          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
-         */
-        "expression": string;
-        /**
-          * The label that will be shown to the user.
-         */
-        "label"?: string;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
@@ -3890,8 +3801,6 @@ declare namespace LocalJSX {
         "atomic-insight-smart-snippet": AtomicInsightSmartSnippet;
         "atomic-insight-smart-snippet-feedback-modal": AtomicInsightSmartSnippetFeedbackModal;
         "atomic-insight-smart-snippet-suggestions": AtomicInsightSmartSnippetSuggestions;
-        "atomic-insight-tab": AtomicInsightTab;
-        "atomic-insight-tabs": AtomicInsightTabs;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
         "atomic-insight-user-actions-modal": AtomicInsightUserActionsModal;
         "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
@@ -3905,7 +3814,6 @@ declare namespace LocalJSX {
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
         "atomic-ipx-result-link": AtomicIpxResultLink;
-        "atomic-ipx-tab": AtomicIpxTab;
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-quickview": AtomicQuickview;
         "atomic-quickview-modal": AtomicQuickviewModal;
@@ -4008,8 +3916,6 @@ declare module "@stencil/core" {
             "atomic-insight-smart-snippet": LocalJSX.AtomicInsightSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetElement>;
             "atomic-insight-smart-snippet-feedback-modal": LocalJSX.AtomicInsightSmartSnippetFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetFeedbackModalElement>;
             "atomic-insight-smart-snippet-suggestions": LocalJSX.AtomicInsightSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetSuggestionsElement>;
-            "atomic-insight-tab": LocalJSX.AtomicInsightTab & JSXBase.HTMLAttributes<HTMLAtomicInsightTabElement>;
-            "atomic-insight-tabs": LocalJSX.AtomicInsightTabs & JSXBase.HTMLAttributes<HTMLAtomicInsightTabsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
             "atomic-insight-user-actions-modal": LocalJSX.AtomicInsightUserActionsModal & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsModalElement>;
             /**
@@ -4045,7 +3951,6 @@ declare module "@stencil/core" {
              * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
              */
             "atomic-ipx-result-link": LocalJSX.AtomicIpxResultLink & JSXBase.HTMLAttributes<HTMLAtomicIpxResultLinkElement>;
-            "atomic-ipx-tab": LocalJSX.AtomicIpxTab & JSXBase.HTMLAttributes<HTMLAtomicIpxTabElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
              * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
