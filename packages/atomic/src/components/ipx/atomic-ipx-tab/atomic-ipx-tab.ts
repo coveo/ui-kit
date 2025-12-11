@@ -86,7 +86,9 @@ export class AtomicIpxTab
   }
 
   protected updated() {
-    this.active = this.tabState.isActive;
+    if (this.tabState) {
+      this.active = this.tabState.isActive;
+    }
     dispatchTabLoaded(this);
   }
 
