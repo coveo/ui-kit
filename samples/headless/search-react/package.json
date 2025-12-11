@@ -8,7 +8,7 @@
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
   },
   "dependencies": {
-    "@coveo/auth": "2.1.1",
+    "@coveo/auth": "workspace:*",
     "@coveo/headless": "workspace:*",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "catalog:",
