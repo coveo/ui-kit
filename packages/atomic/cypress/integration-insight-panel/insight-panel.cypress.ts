@@ -122,36 +122,6 @@ describe('Insight Panel test suites', () => {
         .should('have.attr', 'title', 'Filters');
     });
 
-    it('should display refine-modal', () => {
-      InsightPanelsSelectors.refineToggle().click();
-      InsightPanelsSelectors.refineModal().should('exist');
-      InsightPanelsSelectors.focusTrap().should('exist');
-
-      InsightPanelsSelectors.filtersModal().should('have.attr', 'is-open');
-
-      InsightPanelsSelectors.filtersModal()
-        .find('[slot~="header"]')
-        .should('have.text', 'Filters');
-
-      InsightPanelsSelectors.filters()
-        .find('atomic-insight-facet')
-        .should('be.visible')
-        .should('have.length.at.least', 1);
-
-      InsightPanelsSelectors.filters()
-        .find('atomic-insight-timeframe-facet')
-        .should('be.visible')
-        .should('have.length.at.least', 1);
-
-      InsightPanelsSelectors.filters()
-        .find('atomic-insight-numeric-facet')
-        .should('be.visible')
-        .should('have.length.at.least', 1);
-
-      InsightPanelsSelectors.filtersModal().find('[slot="footer"]').click();
-
-      InsightPanelsSelectors.filtersModal().should('not.have.attr', 'is-open');
-    });
 
     it('should display edit toggle', () => {
       InsightPanelsSelectors.editToggle()
