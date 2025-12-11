@@ -11,8 +11,8 @@ const SLOTS_DEFAULT = `
 <atomic-result-template>
   <template>
     <atomic-result-section-visual>
-      <atomic-result-image class="icon" fallback="https://picsum.photos/350"></atomic-result-image>
-      <img src="https://picsum.photos/350" alt="Thumbnail" class="thumbnail" />
+      <atomic-result-image class="icon" fallback="https://picsum.photos/seed/picsum/350"></atomic-result-image>
+      <img src="https://picsum.photos/seed/picsum/350" alt="Thumbnail" class="thumbnail" />
     </atomic-result-section-visual>
     <atomic-result-section-badges>
       <atomic-field-condition must-match-sourcetype="Salesforce">
@@ -56,8 +56,8 @@ const SLOTS_DEFAULT = `
         <atomic-result-children-template>
           <template>
             <atomic-result-section-visual>
-              <atomic-result-image class="icon" fallback="https://picsum.photos/350"></atomic-result-image>
-              <img src="https://picsum.photos/350" alt="Thumbnail" class="thumbnail" />
+              <atomic-result-image class="icon" fallback="https://picsum.photos/seed/picsum/350"></atomic-result-image>
+              <img src="https://picsum.photos/seed/picsum/350" alt="Thumbnail" class="thumbnail" />
             </atomic-result-section-visual>
             <atomic-result-section-title
               ><atomic-result-link></atomic-result-link

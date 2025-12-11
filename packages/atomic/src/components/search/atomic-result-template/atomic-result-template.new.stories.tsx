@@ -9,7 +9,7 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 
 const TEMPLATE_EXAMPLE = `<template>
   <atomic-result-section-visual>
-    <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/350"></atomic-result-image>
+    <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/seed/picsum/350"></atomic-result-image>
   </atomic-result-section-visual>
   <atomic-result-section-badges>
     <atomic-field-condition must-match-sourcetype="YouTube">

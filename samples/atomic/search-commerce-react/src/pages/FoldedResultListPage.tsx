@@ -61,7 +61,7 @@ function MyTemplate(result: FoldedResult) {
       <AtomicResultSectionVisual>
         <AtomicResultImage
           field="ec_images"
-          fallback="https://picsum.photos/350"
+          fallback="https://picsum.photos/seed/picsum/350"
         />
       </AtomicResultSectionVisual>
       <AtomicResultSectionTitle>

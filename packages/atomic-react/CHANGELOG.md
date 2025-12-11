@@ -1,3 +1,18 @@
+## 3.7.0 (2025-12-10)
+
+* feat(atomic): migrate atomic-popover from Stencil to Lit (#6638) ([1b1186d](https://github.com/coveo/ui-kit/commits/1b1186d)), closes [#6638](https://github.com/coveo/ui-kit/issues/6638)
+* feat(atomic): migrate atomic-rating-facet from Stencil to Lit (#6640) ([5b23931](https://github.com/coveo/ui-kit/commits/5b23931)), closes [#6640](https://github.com/coveo/ui-kit/issues/6640)
+* refactor(atomic): migrate atomic-color-facet to Lit (#6498) ([5f64b78](https://github.com/coveo/ui-kit/commits/5f64b78)), closes [#6498](https://github.com/coveo/ui-kit/issues/6498)
+* refactor(atomic): migrate atomic-format-* components (#6705) ([7a95a98](https://github.com/coveo/ui-kit/commits/7a95a98)), closes [#6705](https://github.com/coveo/ui-kit/issues/6705)
+* refactor(atomic): migrate atomic-rating-range-facet from Stencil to Lit (#6641) ([9b34a63](https://github.com/coveo/ui-kit/commits/9b34a63)), closes [#6641](https://github.com/coveo/ui-kit/issues/6641)
+* refactor(atomic): migrate atomic-result-children to Lit (#6700) ([2e78a7b](https://github.com/coveo/ui-kit/commits/2e78a7b)), closes [#6700](https://github.com/coveo/ui-kit/issues/6700)
+* refactor(atomic): migrate atomic-result-icon to Lit (#6672) ([190ed0b](https://github.com/coveo/ui-kit/commits/190ed0b)), closes [#6672](https://github.com/coveo/ui-kit/issues/6672)
+* refactor(atomic): migrate atomic-result-printable-uri (#6673) ([b0f394d](https://github.com/coveo/ui-kit/commits/b0f394d)), closes [#6673](https://github.com/coveo/ui-kit/issues/6673)
+* refactor(atomic): migrate atomic-result-rating to Lit (#6455) ([7c62356](https://github.com/coveo/ui-kit/commits/7c62356)), closes [#6455](https://github.com/coveo/ui-kit/issues/6455)
+* chore(atomic): Migrate atomic-result-link from Stencil to Lit (#6456) ([3768a66](https://github.com/coveo/ui-kit/commits/3768a66)), closes [#6456](https://github.com/coveo/ui-kit/issues/6456)
+
+
+
 ## 3.6.0 (2025-12-03)
 
 * [Version Bump][skip ci]: ui-kit publish ([cfc527e](https://github.com/coveo/ui-kit/commits/cfc527e))

@@ -1,3 +1,11 @@
+## 3.34.0 (2025-12-10)
+
+* fix(quantic): better handle pushing recent results to avoid salesforce proxy extensibility errors (# ([c0b0b71](https://github.com/coveo/ui-kit/commits/c0b0b71)), closes [#6706](https://github.com/coveo/ui-kit/issues/6706)
+* fix(quantic): fixed issue with generated answer not collapsing in safari for markdown content (#6724 ([ad8307e](https://github.com/coveo/ui-kit/commits/ad8307e)), closes [#6724](https://github.com/coveo/ui-kit/issues/6724)
+* feat(atomic): migrate atomic-rating-facet from Stencil to Lit (#6640) ([5b23931](https://github.com/coveo/ui-kit/commits/5b23931)), closes [#6640](https://github.com/coveo/ui-kit/issues/6640)
+
+
+
 ## <small>3.33.6 (2025-12-03)</small>
 
 * [Version Bump][skip ci]: ui-kit publish ([cfc527e](https://github.com/coveo/ui-kit/commits/cfc527e))

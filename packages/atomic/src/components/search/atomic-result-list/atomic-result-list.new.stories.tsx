@@ -11,7 +11,7 @@ const defaultTemplateContent = `<atomic-result-template>
       <atomic-result-section-actions><atomic-quickview></atomic-quickview></atomic-result-section-actions>
       <atomic-result-section-visual>
         <atomic-result-icon class="icon"></atomic-result-icon>
-        <img loading="lazy" src="https://picsum.photos/350" class="thumbnail" />
+        <img loading="lazy" src="https://picsum.photos/seed/picsum/350" class="thumbnail" />
       </atomic-result-section-visual>
       <atomic-result-section-badges>
         <atomic-field-condition must-match-sourcetype="Salesforce">
