@@ -185,7 +185,7 @@ describe('atomic-timeframe-facet', () => {
     };
   };
 
-  describe('#render', () => {
+  describe('when rendering (#render)', () => {
     it('should render the title', async () => {
       const {title} = await setupElement();
       await expect.element(title).toBeVisible();
@@ -338,7 +338,7 @@ describe('atomic-timeframe-facet', () => {
     });
   });
 
-  describe('#props', () => {
+  describe('props', () => {
     describe('field', () => {
       it('should pass field to buildDateFacet', async () => {
         await setupElement({field: 'customfield'});
@@ -420,19 +420,13 @@ describe('atomic-timeframe-facet', () => {
         );
       });
 
-      describe('when invalid', () => {
-        let consoleWarnSpy: MockInstance;
+      it('should warn when injectionDepth is negative', async () => {
+        const consoleWarnSpy = vi
+          .spyOn(console, 'warn')
+          .mockImplementation(() => {});
 
-        beforeEach(() => {
-          consoleWarnSpy = vi
-            .spyOn(console, 'warn')
-            .mockImplementation(() => {});
-        });
-
-        it('should warn when injectionDepth is negative', async () => {
-          await setupElement({injectionDepth: -1});
-          expect(consoleWarnSpy).toHaveBeenCalled();
-        });
+        await setupElement({injectionDepth: -1});
+        expect(consoleWarnSpy).toHaveBeenCalled();
       });
     });
 
@@ -468,22 +462,18 @@ describe('atomic-timeframe-facet', () => {
       });
     });
 
-    describe('when both tabsIncluded and tabsExcluded are provided', () => {
-      let consoleWarnSpy: MockInstance;
+    it('should warn when both tabsIncluded and tabsExcluded are provided', async () => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
 
-      beforeEach(() => {
-        consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await setupElement({
+        tabsIncluded: ['tab1'],
+        tabsExcluded: ['tab2'],
       });
-
-      it('should warn when both are provided', async () => {
-        await setupElement({
-          tabsIncluded: ['tab1'],
-          tabsExcluded: ['tab2'],
-        });
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          expect.stringContaining('tabs-included')
-        );
-      });
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('tabs-included')
+      );
     });
   });
 
@@ -503,43 +493,37 @@ describe('atomic-timeframe-facet', () => {
       expect(buildTabManager).toHaveBeenCalled();
     });
 
-    describe('when withDatePicker is true', () => {
-      it('should build date filter controller', async () => {
-        await setupElement({withDatePicker: true});
-        expect(buildDateFilter).toHaveBeenCalled();
-      });
-
-      it('should build two date facet controllers', async () => {
-        await setupElement({withDatePicker: true});
-        expect(buildDateFacet).toHaveBeenCalledTimes(2);
-      });
+    it('should build date filter controller when withDatePicker is true', async () => {
+      await setupElement({withDatePicker: true});
+      expect(buildDateFilter).toHaveBeenCalled();
     });
 
-    describe('when dependsOn is provided', () => {
-      it('should build facet conditions manager', async () => {
-        await setupElement({dependsOn: {abc: 'value'}});
-        expect(buildFacetConditionsManager).toHaveBeenCalled();
-      });
+    it('should build two date facet controllers when withDatePicker is true', async () => {
+      await setupElement({withDatePicker: true});
+      expect(buildDateFacet).toHaveBeenCalledTimes(2);
+    });
+
+    it('should build facet conditions manager when dependsOn is provided', async () => {
+      await setupElement({dependsOn: {abc: 'value'}});
+      expect(buildFacetConditionsManager).toHaveBeenCalled();
     });
   });
 
-  describe('#lifecycle', () => {
-    describe('disconnectedCallback', () => {
-      it('should stop watching dependencies when component is removed', async () => {
-        const stopWatching = vi.fn();
-        vi.mocked(buildFacetConditionsManager).mockReturnValue(
-          buildFakeFacetConditionsManager({
-            implementation: {
-              stopWatching,
-            },
-          })
-        );
+  describe('when removed from the DOM (#disconnectedCallback)', () => {
+    it('should stop watching dependencies when component is removed', async () => {
+      const stopWatching = vi.fn();
+      vi.mocked(buildFacetConditionsManager).mockReturnValue(
+        buildFakeFacetConditionsManager({
+          implementation: {
+            stopWatching,
+          },
+        })
+      );
 
-        const {element} = await setupElement({dependsOn: {abc: 'value'}});
-        element.remove();
+      const {element} = await setupElement({dependsOn: {abc: 'value'}});
+      element.remove();
 
-        expect(stopWatching).toHaveBeenCalled();
-      });
+      expect(stopWatching).toHaveBeenCalled();
     });
   });
 
@@ -586,43 +570,41 @@ describe('atomic-timeframe-facet', () => {
       expect(deselectAll).toHaveBeenCalled();
     });
 
-    describe('when withDatePicker is true', () => {
-      it('should call filter.setRange when apply button is clicked', async () => {
-        const setRange = vi.fn();
-        vi.mocked(buildDateFilter).mockReturnValue(
-          buildFakeDateFilter({
-            implementation: {
-              setRange,
-            },
-          })
-        );
-        vi.mocked(shouldDisplayInputForFacetRange).mockReturnValue(true);
-
-        const {element} = await setupElement({
-          withDatePicker: true,
-        });
-
-        const dateInput = element.shadowRoot!.querySelector(
-          'atomic-facet-date-input'
-        )!;
-
-        const customEvent = new CustomEvent('atomic-date-input-apply', {
-          detail: {
-            start: '2023-01-01',
-            end: '2023-12-31',
-            endInclusive: true,
+    it('should call filter.setRange when apply button is clicked with date picker enabled', async () => {
+      const setRange = vi.fn();
+      vi.mocked(buildDateFilter).mockReturnValue(
+        buildFakeDateFilter({
+          implementation: {
+            setRange,
           },
-          bubbles: true,
-          composed: true,
-        });
+        })
+      );
+      vi.mocked(shouldDisplayInputForFacetRange).mockReturnValue(true);
 
-        dateInput.dispatchEvent(customEvent);
+      const {element} = await setupElement({
+        withDatePicker: true,
+      });
 
-        expect(setRange).toHaveBeenCalledWith({
+      const dateInput = element.shadowRoot!.querySelector(
+        'atomic-facet-date-input'
+      )!;
+
+      const customEvent = new CustomEvent('atomic-date-input-apply', {
+        detail: {
           start: '2023-01-01',
           end: '2023-12-31',
           endInclusive: true,
-        });
+        },
+        bubbles: true,
+        composed: true,
+      });
+
+      dateInput.dispatchEvent(customEvent);
+
+      expect(setRange).toHaveBeenCalledWith({
+        start: '2023-01-01',
+        end: '2023-12-31',
+        endInclusive: true,
       });
     });
   });

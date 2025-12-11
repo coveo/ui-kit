@@ -1,4 +1,4 @@
-import {ArrayValue, MapValue, NumberValue, Schema} from '@coveo/bueno';
+import {NumberValue, Schema, StringValue} from '@coveo/bueno';
 import {
   buildDateFacet,
   buildDateFilter,
@@ -87,6 +87,17 @@ export class AtomicTimeframeFacet
   extends LitElement
   implements InitializableComponent<Bindings>
 {
+  private static readonly propsSchema = new Schema({
+    injectionDepth: new NumberValue({min: 0, required: false}),
+    headingLevel: new NumberValue({min: 0, max: 6, required: false}),
+    min: new StringValue({required: false}),
+    max: new StringValue({required: false}),
+    sortCriteria: new StringValue({
+      constrainTo: ['ascending', 'descending'],
+      required: false,
+    }),
+  });
+
   static styles: CSSResultGroup = facetCommonStyles;
 
   /**
@@ -230,15 +241,18 @@ export class AtomicTimeframeFacet
   @state() bindings!: Bindings;
   @state() error!: Error;
 
-  @bindStateToController('facetForDateRange')
+  // biome-ignore lint/suspicious/noExplicitAny: bindStateToController requires non-optional Controller type, but these controllers are conditionally created based on component configuration
+  @bindStateToController('facetForDateRange' as any)
   @state()
   facetState?: DateFacetState;
 
-  @bindStateToController('facetForDatePicker')
+  // biome-ignore lint/suspicious/noExplicitAny: bindStateToController requires non-optional Controller type, but these controllers are conditionally created based on component configuration
+  @bindStateToController('facetForDatePicker' as any)
   @state()
   facetForDatePickerState?: DateFacetState;
 
-  @bindStateToController('filter')
+  // biome-ignore lint/suspicious/noExplicitAny: bindStateToController requires non-optional Controller type, but these controllers are conditionally created based on component configuration
+  @bindStateToController('filter' as any)
   @state()
   filterState?: DateFilterState;
 
@@ -275,16 +289,12 @@ export class AtomicTimeframeFacet
       this,
       () => ({
         injectionDepth: this.injectionDepth,
-        tabsIncluded: this.tabsIncluded,
-        tabsExcluded: this.tabsExcluded,
-        dependsOn: this.dependsOn,
+        headingLevel: this.headingLevel,
+        min: this.min,
+        max: this.max,
+        sortCriteria: this.sortCriteria,
       }),
-      new Schema({
-        injectionDepth: new NumberValue({min: 0, required: false}),
-        tabsIncluded: new ArrayValue({required: false}),
-        tabsExcluded: new ArrayValue({required: false}),
-        dependsOn: new MapValue({required: false}),
-      })
+      AtomicTimeframeFacet.propsSchema
     );
   }
 
