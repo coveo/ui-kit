@@ -52,6 +52,6 @@ export const Default: Story = {
   decorators: getResultSectionDecorators(),
   play,
   args: {
-    'default-slot': `<img src="https://picsum.photos/200" alt="Result Image" class="w-full h-auto rounded-lg">`,
+    'default-slot': `<img src="https://picsum.photos/seed/picsum/200" alt="Result Image" class="w-full h-auto rounded-lg">`,
   },
 };
