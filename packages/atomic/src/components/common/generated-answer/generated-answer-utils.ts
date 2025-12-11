@@ -1,5 +1,5 @@
 import type {GeneratedAnswerCitation} from '@coveo/headless';
-import type {I18n} from '@/src/components/common/interface/i18n';
+import type {i18n} from 'i18next';
 
 /**
  * Normalizes a citation by ensuring it has a title.
@@ -7,7 +7,7 @@ import type {I18n} from '@/src/components/common/interface/i18n';
  */
 export function getCitationWithTitle(
   citation: GeneratedAnswerCitation,
-  i18n: I18n
+  i18n: i18n
 ): GeneratedAnswerCitation {
   const {title} = citation;
   return title.trim() !== ''
