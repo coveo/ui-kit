@@ -177,10 +177,7 @@ describe('sub-controllers', () => {
       );
       expect(buildCoreInteractiveSpotlightContentMock).toHaveBeenCalledWith(
         engine,
-        {
-          ...props,
-          responseIdSelector: mockResponseIdSelector,
-        }
+        {...props, responseIdSelector: mockResponseIdSelector}
       );
     });
   });
