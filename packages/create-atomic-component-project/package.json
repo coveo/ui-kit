@@ -35,5 +35,8 @@
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/create-atomic-component-project"
+  },
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
   }
 }
