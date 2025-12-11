@@ -1,6 +1,5 @@
 import {css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {createRef, type Ref, ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
 import ArrowDown from '@/images/arrow-down.svg';
 import type {AnyBindings} from '@/src/components/interface/bindings';
@@ -84,7 +83,6 @@ export class AtomicSmartSnippetCollapseWrapper
   @state()
   private fullHeight?: number;
 
-  private hostRef: Ref<HTMLElement> = createRef();
   private shouldRenderButton = false;
 
   // Lifecycle methods
@@ -114,17 +112,10 @@ export class AtomicSmartSnippetCollapseWrapper
   }
 
   private initializeFullHeight() {
-    if (!this.hostRef.value) {
-      return;
-    }
-
-    this.fullHeight = this.hostRef.value.getBoundingClientRect().height;
+    this.fullHeight = this.getBoundingClientRect().height;
     this.showButton = this.fullHeight! > this.maximumHeight!;
     this.isExpanded = !this.showButton;
-    this.hostRef.value.style.setProperty(
-      '--collapsed-size',
-      `${this.collapsedHeight}px`
-    );
+    this.style.setProperty('--collapsed-size', `${this.collapsedHeight}px`);
   }
 
   private toggleExpanded() {
@@ -178,19 +169,17 @@ export class AtomicSmartSnippetCollapseWrapper
     this.className = multiClassMap(hostClass);
 
     return html`
-      <div ${ref(this.hostRef)}>
-        <div
-          part="smart-snippet-collapse-wrapper"
-          class=${multiClassMap(
-            tw({
-              'block overflow-hidden text-lg text-on-background smart-snippet-content': true,
-            })
-          )}
-        >
-          <slot></slot>
-        </div>
-        ${when(this.shouldRenderButton, () => this.renderButton())}
+      <div
+        part="smart-snippet-collapse-wrapper"
+        class=${multiClassMap(
+          tw({
+            'block overflow-hidden text-lg text-on-background smart-snippet-content': true,
+          })
+        )}
+      >
+        <slot></slot>
       </div>
+      ${when(this.shouldRenderButton, () => this.renderButton())}
     `;
   }
 }
