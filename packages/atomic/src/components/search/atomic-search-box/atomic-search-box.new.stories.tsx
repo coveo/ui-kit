@@ -204,7 +204,7 @@ export const InPage: Story = {
                   <atomic-result-section-visual image-size="small">
                     <img
                       loading="lazy"
-                      src="https://picsum.photos/350"
+                      src="https://picsum.photos/seed/picsum/350"
                       class="thumbnail"
                     />
                   </atomic-result-section-visual>
@@ -266,7 +266,7 @@ export const InPage: Story = {
                     <atomic-result-icon class="icon"></atomic-result-icon>
                     <img
                       loading="lazy"
-                      src="https://picsum.photos/350"
+                      src="https://picsum.photos/seed/picsum/350"
                       class="thumbnail"
                     />
                   </atomic-result-section-visual>
