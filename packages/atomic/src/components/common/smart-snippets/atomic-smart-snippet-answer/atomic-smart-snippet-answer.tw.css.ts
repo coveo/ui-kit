@@ -1,0 +1,30 @@
+import {css} from 'lit';
+
+export default css`
+  @layer components {
+    :host {
+      @apply text-on-background text-lg;
+      line-height: calc(var(--text-lg) * var(--atomic-line-height-ratio));
+
+      .wrapper {
+        display: flow-root;
+        .margin {
+          margin: 1rem 0;
+        }
+      }
+    }
+
+    p {
+      @apply mt-4 mb-4;
+    }
+
+    ul,
+    ol {
+      @apply mb-4 list-outside list-decimal pl-10;
+    }
+
+    a {
+      @apply text-primary underline;
+    }
+  }
+`;
