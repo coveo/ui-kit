@@ -207,11 +207,13 @@ describe('atomic-tab-manager', () => {
       configurable: true,
     });
 
+    vi.mocked(buildTab).mockClear();
+
     element.initialize();
 
     const buildTabCalls = vi.mocked(buildTab).mock.calls;
-    const lastCall = buildTabCalls[buildTabCalls.length - 1];
-    expect(lastCall[1]?.options?.expression).toBe('');
-    expect(lastCall[1]?.options?.expression).not.toBeUndefined();
+    expect(buildTabCalls).toHaveLength(1);
+    expect(buildTabCalls[0][1]?.options?.expression).toBe('');
+    expect(buildTabCalls[0][1]?.options?.expression).not.toBeUndefined();
   });
 });
