@@ -1,5 +1,6 @@
 import {css} from 'lit';
 
+// TODO: reference tailind globals!!!
 export default css`
   @layer components {
     :host {

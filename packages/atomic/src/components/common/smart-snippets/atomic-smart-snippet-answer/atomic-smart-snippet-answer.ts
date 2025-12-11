@@ -1,6 +1,6 @@
 import type {InlineLink} from '@coveo/headless';
 import DOMPurify from 'dompurify';
-import {html, LitElement} from 'lit';
+import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {createRef, type Ref, ref} from 'lit/directives/ref.js';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
@@ -8,7 +8,7 @@ import {when} from 'lit/directives/when.js';
 import {bindAnalyticsToLink} from '@/src/components/common/item-link/bind-analytics-to-link';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {sanitizeStyle} from '@/src/utils/utils';
-import styles from './atomic-smart-snippet-answer.tw.css?inline';
+import styles from './atomic-smart-snippet-answer.tw.css';
 
 /**
  * The `atomic-smart-snippet-answer` component displays the full document excerpt from a smart snippet.
@@ -25,22 +25,34 @@ import styles from './atomic-smart-snippet-answer.tw.css?inline';
 @customElement('atomic-smart-snippet-answer')
 @withTailwindStyles
 export class AtomicSmartSnippetAnswer extends LitElement {
-  static styles = styles;
+  static styles: CSSResultGroup = styles;
+
   /**
    * The HTML content to display in the answer.
    */
-  @property({type: String}) htmlContent!: string;
+  @property({type: String, attribute: 'html-content'}) htmlContent!: string;
 
   /**
    * The inline style to apply to the content (sanitized before use).
    */
-  @property({type: String}) innerStyle?: string;
+  @property({type: String, attribute: 'inner-style'}) innerStyle?: string;
 
   private wrapperRef: Ref<HTMLDivElement> = createRef();
   private contentRef: Ref<HTMLDivElement> = createRef();
   private isRendering = true;
   private resizeObserver: ResizeObserver | undefined;
   private cleanupAnalyticsFunctions: (() => void)[] = [];
+
+  connectedCallback() {
+    super.connectedCallback();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.resizeObserver?.disconnect();
+    this.cleanupAnalyticsFunctions.forEach((cleanup) => cleanup());
+    this.cleanupAnalyticsFunctions = [];
+  }
 
   willUpdate() {
     this.isRendering = true;
@@ -54,25 +66,15 @@ export class AtomicSmartSnippetAnswer extends LitElement {
 
   firstUpdated() {
     // Prevents initial transition
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       this.classList.add('loaded');
-    }, 0);
+    });
 
     this.setupResizeObserver();
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    if (this.wrapperRef.value && this.resizeObserver) {
-      this.resizeObserver.observe(this.wrapperRef.value);
-    }
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.resizeObserver?.disconnect();
-    this.cleanupAnalyticsFunctions.forEach((cleanup) => cleanup());
-    this.cleanupAnalyticsFunctions = [];
+  render() {
+    return html`${this.renderStyle()} ${this.renderContent()}`;
   }
 
   private setupResizeObserver() {
@@ -155,20 +157,17 @@ export class AtomicSmartSnippetAnswer extends LitElement {
     const style = this.sanitizedStyle;
     return when(
       style,
-      () => html`<style>
-        ${unsafeHTML(style)}
-      </style>`
+      () =>
+        html`<style>
+          ${unsafeHTML(style)}
+        </style>`
     );
   }
 
   private renderContent() {
     return html`
       <div class="wrapper" ${ref(this.wrapperRef)}>
-        <div
-          part="answer"
-          class="margin"
-          ${ref(this.contentRef)}
-        >
+        <div part="answer" class="margin" ${ref(this.contentRef)}>
           ${unsafeHTML(
             DOMPurify.sanitize(this.htmlContent, {
               USE_PROFILES: {html: true},
@@ -177,10 +176,6 @@ export class AtomicSmartSnippetAnswer extends LitElement {
         </div>
       </div>
     `;
-  }
-
-  render() {
-    return html`${this.renderStyle()} ${this.renderContent()}`;
   }
 }
 
