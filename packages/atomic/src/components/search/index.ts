@@ -17,6 +17,7 @@ export {AtomicQueryError} from './atomic-query-error/atomic-query-error.js';
 export {AtomicQuerySummary} from './atomic-query-summary/atomic-query-summary.js';
 export {AtomicRatingFacet} from './atomic-rating-facet/atomic-rating-facet.js';
 export {AtomicRatingRangeFacet} from './atomic-rating-range-facet/atomic-rating-range-facet.js';
+export {AtomicRefineToggle} from './atomic-refine-toggle/atomic-refine-toggle.js';
 export {AtomicRelevanceInspector} from './atomic-relevance-inspector/atomic-relevance-inspector.js';
 export {AtomicResult} from './atomic-result/atomic-result.js';
 export {AtomicResultBadge} from './atomic-result-badge/atomic-result-badge.js';
