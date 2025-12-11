@@ -113,6 +113,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-result-section-title',
   'atomic-result-section-title-metadata',
   'atomic-result-section-visual',
+  'atomic-result-table-placeholder',
   'atomic-result-template',
   'atomic-result-text',
   'atomic-result-timespan',

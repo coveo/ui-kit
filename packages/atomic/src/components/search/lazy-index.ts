@@ -110,6 +110,10 @@ export default {
     await import(
       './atomic-result-section-visual/atomic-result-section-visual.js'
     ),
+  'atomic-result-table-placeholder': async () =>
+    await import(
+      './atomic-result-table-placeholder/atomic-result-table-placeholder.js'
+    ),
   'atomic-result-template': async () =>
     await import('./atomic-result-template/atomic-result-template.js'),
   'atomic-result-text': async () =>

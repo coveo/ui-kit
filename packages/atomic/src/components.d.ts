@@ -5,30 +5,24 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
-import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-import { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
-export { CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
-export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-export { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 export { i18n } from "i18next";
@@ -1223,14 +1217,6 @@ export namespace Components {
         "imageSize": ItemDisplayImageSize;
     }
     /**
-     * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface AtomicResultTablePlaceholder {
-        "density": ItemDisplayDensity;
-        "imageSize": ItemDisplayImageSize;
-        "rows": number;
-    }
-    /**
      * The `atomic-search-box` component creates a search box with built-in support for suggestions.
      */
     interface AtomicSearchBox {
@@ -2225,15 +2211,6 @@ declare global {
         prototype: HTMLAtomicResultPlaceholderElement;
         new (): HTMLAtomicResultPlaceholderElement;
     };
-    /**
-     * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface HTMLAtomicResultTablePlaceholderElement extends Components.AtomicResultTablePlaceholder, HTMLStencilElement {
-    }
-    var HTMLAtomicResultTablePlaceholderElement: {
-        prototype: HTMLAtomicResultTablePlaceholderElement;
-        new (): HTMLAtomicResultTablePlaceholderElement;
-    };
     interface HTMLAtomicSearchBoxElementEventMap {
         "redirect": RedirectionPayload;
     }
@@ -2528,7 +2505,6 @@ declare global {
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
-        "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
@@ -3688,14 +3664,6 @@ declare namespace LocalJSX {
         "imageSize": ItemDisplayImageSize;
     }
     /**
-     * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface AtomicResultTablePlaceholder {
-        "density": ItemDisplayDensity;
-        "imageSize": ItemDisplayImageSize;
-        "rows": number;
-    }
-    /**
      * The `atomic-search-box` component creates a search box with built-in support for suggestions.
      */
     interface AtomicSearchBox {
@@ -4105,7 +4073,6 @@ declare namespace LocalJSX {
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-result-placeholder": AtomicResultPlaceholder;
-        "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
         "atomic-search-box": AtomicSearchBox;
         "atomic-segmented-facet": AtomicSegmentedFacet;
         "atomic-smart-snippet": AtomicSmartSnippet;
@@ -4295,10 +4262,6 @@ declare module "@stencil/core" {
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
-            /**
-             * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-             */
-            "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
             /**
              * The `atomic-search-box` component creates a search box with built-in support for suggestions.
              */

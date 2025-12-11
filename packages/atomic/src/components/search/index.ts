@@ -43,6 +43,7 @@ export {AtomicResultSectionExcerpt} from './atomic-result-section-excerpt/atomic
 export {AtomicResultSectionTitle} from './atomic-result-section-title/atomic-result-section-title.js';
 export {AtomicResultSectionTitleMetadata} from './atomic-result-section-title-metadata/atomic-result-section-title-metadata.js';
 export {AtomicResultSectionVisual} from './atomic-result-section-visual/atomic-result-section-visual.js';
+export {AtomicResultTablePlaceholder} from './atomic-result-table-placeholder/atomic-result-table-placeholder.js';
 export {AtomicResultTemplate} from './atomic-result-template/atomic-result-template.js';
 export {AtomicResultText} from './atomic-result-text/atomic-result-text.js';
 export {AtomicResultTimespan} from './atomic-result-timespan/atomic-result-timespan.js';
