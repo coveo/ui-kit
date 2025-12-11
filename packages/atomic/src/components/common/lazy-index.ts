@@ -6,6 +6,8 @@ export default {
     await import('./atomic-component-error/atomic-component-error.js'),
   'atomic-facet-date-input': async () =>
     await import('./atomic-facet-date-input/atomic-facet-date-input.js'),
+  'atomic-facet-number-input': async () =>
+    await import('./atomic-facet-number-input/atomic-facet-number-input.js'),
   'atomic-facet-placeholder': async () =>
     await import('./atomic-facet-placeholder/atomic-facet-placeholder.js'),
   'atomic-focus-trap': async () =>

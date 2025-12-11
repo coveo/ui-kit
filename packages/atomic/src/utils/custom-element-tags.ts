@@ -42,6 +42,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-external',
   'atomic-facet',
   'atomic-facet-date-input',
+  'atomic-facet-number-input',
   'atomic-facet-placeholder',
   'atomic-field-condition',
   'atomic-focus-trap',
