@@ -6,9 +6,9 @@ import {createRef, type Ref, ref} from 'lit/directives/ref.js';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {when} from 'lit/directives/when.js';
 import {bindAnalyticsToLink} from '@/src/components/common/item-link/bind-analytics-to-link';
-import {withTailwindStyles} from '@/src/decorators/tailwind-decorator';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {sanitizeStyle} from '@/src/utils/utils';
-import styles from './atomic-smart-snippet-answer.tw.css';
+import styles from './atomic-smart-snippet-answer.tw.css?inline';
 
 /**
  * The `atomic-smart-snippet-answer` component displays the full document excerpt from a smart snippet.
@@ -23,8 +23,9 @@ import styles from './atomic-smart-snippet-answer.tw.css';
  * @internal
  */
 @customElement('atomic-smart-snippet-answer')
-@withTailwindStyles(styles)
+@withTailwindStyles
 export class AtomicSmartSnippetAnswer extends LitElement {
+  static styles = styles;
   /**
    * The HTML content to display in the answer.
    */
