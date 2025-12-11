@@ -1,4 +1,4 @@
-import type {Tab, TabState, Unsubscribe} from '@coveo/headless';
+import type {Tab, TabState} from '@coveo/headless';
 import {buildTab} from '@coveo/headless';
 import {css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -68,15 +68,10 @@ export class AtomicIpxTab
 
   @state() private isAppLoaded = false;
 
-  private unsubscribe: Unsubscribe = () => {};
-
   public initialize() {
     this.tab = buildTab(this.bindings.engine, {
       options: {expression: this.expression, id: this.label},
       initialState: {isActive: this.active},
-    });
-    this.unsubscribe = this.tab.subscribe(() => {
-      this.active = this.tab.state.isActive;
     });
     createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
       this.isAppLoaded = isAppLoaded;
@@ -91,12 +86,8 @@ export class AtomicIpxTab
   }
 
   protected updated() {
+    this.active = this.tabState.isActive;
     dispatchTabLoaded(this);
-  }
-
-  public disconnectedCallback() {
-    super.disconnectedCallback();
-    this.unsubscribe();
   }
 
   render() {
