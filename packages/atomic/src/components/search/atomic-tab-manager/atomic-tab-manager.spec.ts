@@ -175,14 +175,17 @@ describe('atomic-tab-manager', () => {
 
   it('should use empty string as fallback for undefined expression when tab expression property is undefined (race condition)', async () => {
     const fakeTabManager = buildFakeTabManager({
-      activeTab: 'all',
+      activeTab: 'test',
     });
 
     mockConsole();
 
     vi.mocked(buildTabManager).mockReturnValue(fakeTabManager);
 
+    let expressionValue: string | undefined;
+
     vi.mocked(buildTab).mockImplementation((_engine, options) => {
+      expressionValue = options?.options?.expression;
       return {
         state: {
           isActive: options?.options?.id === fakeTabManager.state.activeTab,
@@ -192,28 +195,27 @@ describe('atomic-tab-manager', () => {
       } as never;
     });
 
-    const {element} = await renderInAtomicSearchInterface<AtomicTabManager>({
+    await renderInAtomicSearchInterface<AtomicTabManager>({
       template: html`
         <atomic-tab-manager>
           <atomic-tab label="Test" name="test"></atomic-tab>
         </atomic-tab-manager>
       `,
       selector: 'atomic-tab-manager',
+      bindings: (bindings) => {
+        const manager = document.querySelector('atomic-tab-manager');
+        const tabElement = manager?.querySelector('atomic-tab');
+        if (tabElement) {
+          Object.defineProperty(tabElement, 'expression', {
+            get: () => undefined,
+            configurable: true,
+          });
+        }
+        return bindings;
+      },
     });
 
-    const tabElement = element.querySelector('atomic-tab')!;
-    Object.defineProperty(tabElement, 'expression', {
-      get: () => undefined,
-      configurable: true,
-    });
-
-    vi.mocked(buildTab).mockClear();
-
-    element.initialize();
-
-    const buildTabCalls = vi.mocked(buildTab).mock.calls;
-    expect(buildTabCalls).toHaveLength(1);
-    expect(buildTabCalls[0][1]?.options?.expression).toBe('');
-    expect(buildTabCalls[0][1]?.options?.expression).not.toBeUndefined();
+    expect(expressionValue).toBe('');
+    expect(expressionValue).not.toBeUndefined();
   });
 });
