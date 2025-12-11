@@ -95,10 +95,10 @@ describe('atomic-category-facet', () => {
         sort-criteria=${ifDefined(props?.sortCriteria)}
         delimiting-character=${ifDefined(props?.delimitingCharacter)}
         .basePath=${props?.basePath || []}
-        ?filter-by-base-path=${props?.filterByBasePath}
+        .filterByBasePath=${props?.filterByBasePath ?? true}
         ?is-collapsed=${props?.isCollapsed}
         heading-level=${ifDefined(props?.headingLevel)}
-        ?filter-facet-count=${props?.filterFacetCount}
+        .filterFacetCount=${props?.filterFacetCount ?? true}
         injection-depth=${ifDefined(props?.injectionDepth)}
         .tabsIncluded=${props?.tabsIncluded || []}
         .tabsExcluded=${props?.tabsExcluded || []}
@@ -158,21 +158,37 @@ describe('atomic-category-facet', () => {
     };
   };
 
-  it('should render placeholder when first search has not been executed', async () => {
-    const {placeholder} = await renderCategoryFacet(undefined, {
-      searchStatusState: {firstSearchExecuted: false},
+  describe('when first search has not been executed', () => {
+    it('should render placeholder', async () => {
+      const {placeholder} = await renderCategoryFacet(undefined, {
+        searchStatusState: {firstSearchExecuted: false},
+      });
+      expect(placeholder).toBeInTheDocument();
     });
-    expect(placeholder).toBeInTheDocument();
+
+    it('should not render facet container', async () => {
+      const {facet} = await renderCategoryFacet(undefined, {
+        searchStatusState: {firstSearchExecuted: false},
+      });
+      expect(facet).not.toBeInTheDocument();
+    });
   });
 
-  it('should render the facet container when first search is executed', async () => {
-    const {facet} = await renderCategoryFacet();
-    expect(facet).toBeInTheDocument();
-  });
+  describe('when first search has been executed', () => {
+    it('should render facet container', async () => {
+      const {facet} = await renderCategoryFacet();
+      expect(facet).toBeInTheDocument();
+    });
 
-  it('should render facet values when first search is executed', async () => {
-    const {valueLinks} = await renderCategoryFacet();
-    expect(valueLinks?.length).toBeGreaterThan(0);
+    it('should not render placeholder', async () => {
+      const {placeholder} = await renderCategoryFacet();
+      expect(placeholder).not.toBeInTheDocument();
+    });
+
+    it('should render facet values', async () => {
+      const {valueLinks} = await renderCategoryFacet();
+      expect(valueLinks?.length).toBeGreaterThan(0);
+    });
   });
 
   it('should render show more button when canShowMoreValues is true', async () => {
@@ -194,6 +210,13 @@ describe('atomic-category-facet', () => {
       facetState: {canShowMoreValues: false},
     });
     expect(showMore).not.toBeInTheDocument();
+  });
+
+  it('should not render show less button when canShowLessValues is false', async () => {
+    const {showLess} = await renderCategoryFacet(undefined, {
+      facetState: {canShowLessValues: false},
+    });
+    expect(showLess).not.toBeInTheDocument();
   });
 
   it('should render search wrapper when search is enabled', async () => {
@@ -232,7 +255,7 @@ describe('atomic-category-facet', () => {
     expect(facet).not.toBeInTheDocument();
   });
 
-  describe('when has selected value ancestry', () => {
+  describe('when facet has selected value ancestry', () => {
     const selectedAncestry = [
       {
         value: 'Electronics',
@@ -276,19 +299,37 @@ describe('atomic-category-facet', () => {
     });
   });
 
-  describe('controller initialization', () => {
+  describe('#initialize', () => {
     it('should call buildCategoryFacet with correct options', async () => {
+      const customId = 'my-custom-facet-id';
+      const basePath = ['Electronics', 'Computers'];
+      const delimitingCharacter = '|';
+      const injectionDepth = 5000;
+
+      vi.mocked(buildCategoryFacet).mockClear();
       await renderCategoryFacet({
+        facetId: customId,
         field: 'test-field',
         numberOfValues: 10,
         sortCriteria: 'alphanumeric',
+        basePath,
+        delimitingCharacter,
+        filterByBasePath: false,
+        filterFacetCount: false,
+        injectionDepth,
       });
 
       expect(buildCategoryFacet).toHaveBeenCalled();
       const callArgs = vi.mocked(buildCategoryFacet).mock.calls[0][1];
+      expect(callArgs?.options?.facetId).toBe(customId);
       expect(callArgs?.options?.field).toBe('test-field');
       expect(callArgs?.options?.numberOfValues).toBe(10);
       expect(callArgs?.options?.sortCriteria).toBe('alphanumeric');
+      expect(callArgs?.options?.basePath).toEqual(basePath);
+      expect(callArgs?.options?.delimitingCharacter).toBe(delimitingCharacter);
+      expect(callArgs?.options?.filterByBasePath).toBe(false);
+      expect(callArgs?.options?.filterFacetCount).toBe(false);
+      expect(callArgs?.options?.injectionDepth).toBe(injectionDepth);
     });
 
     it('should call buildSearchStatus', async () => {
@@ -302,56 +343,54 @@ describe('atomic-category-facet', () => {
     });
   });
 
-  describe('prop validation', () => {
-    // TODO V4: KIT-5197 - Remove skip and enable validation errors
-    it.skip('should set error when field is not provided', async () => {
-      const {element} = await renderCategoryFacet({field: ''});
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(/field/i);
-    });
+  // TODO V4: KIT-5197 - Remove skip and enable validation errors
+  it.skip('should set error when field is not provided', async () => {
+    const {element} = await renderCategoryFacet({field: ''});
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/field/i);
+  });
 
-    // TODO V4: KIT-5197 - Remove this test
-    it('should log validation warning when field is empty', async () => {
-      await renderCategoryFacet({field: ''});
-      expect(mockedConsole.warn).toHaveBeenCalledWith(
-        expect.stringContaining('Prop validation failed'),
-        expect.anything()
-      );
-    });
+  // TODO V4: KIT-5197 - Remove this test
+  it('should log validation warning when field is empty', async () => {
+    await renderCategoryFacet({field: ''});
+    expect(mockedConsole.warn).toHaveBeenCalledWith(
+      expect.stringContaining('Prop validation failed'),
+      expect.anything()
+    );
+  });
 
-    // TODO V4: KIT-5197 - Remove skip and enable validation errors
-    it.skip('should set error when numberOfValues is less than 1', async () => {
-      const {element} = await renderCategoryFacet({numberOfValues: 0});
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(/numberOfValues/i);
-    });
+  // TODO V4: KIT-5197 - Remove skip and enable validation errors
+  it.skip('should set error when numberOfValues is less than 1', async () => {
+    const {element} = await renderCategoryFacet({numberOfValues: 0});
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/numberOfValues/i);
+  });
 
-    // TODO V4: KIT-5197 - Remove this test
-    it('should log validation warning when numberOfValues is less than 1', async () => {
-      await renderCategoryFacet({numberOfValues: 0});
-      expect(mockedConsole.warn).toHaveBeenCalledWith(
-        expect.stringContaining('Prop validation failed'),
-        expect.anything()
-      );
-    });
+  // TODO V4: KIT-5197 - Remove this test
+  it('should log validation warning when numberOfValues is less than 1', async () => {
+    await renderCategoryFacet({numberOfValues: 0});
+    expect(mockedConsole.warn).toHaveBeenCalledWith(
+      expect.stringContaining('Prop validation failed'),
+      expect.anything()
+    );
+  });
 
-    // TODO V4: KIT-5197 - Remove skip and enable validation errors
-    it.skip('should set error when sortCriteria is invalid', async () => {
-      const {element} = await renderCategoryFacet({
-        sortCriteria: 'invalid' as 'alphanumeric',
-      });
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(/sortCriteria/i);
+  // TODO V4: KIT-5197 - Remove skip and enable validation errors
+  it.skip('should set error when sortCriteria is invalid', async () => {
+    const {element} = await renderCategoryFacet({
+      sortCriteria: 'invalid' as 'alphanumeric',
     });
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toMatch(/sortCriteria/i);
+  });
 
-    // TODO V4: KIT-5197 - Remove this test
-    it('should log validation warning when sortCriteria is invalid', async () => {
-      await renderCategoryFacet({sortCriteria: 'invalid' as 'alphanumeric'});
-      expect(mockedConsole.warn).toHaveBeenCalledWith(
-        expect.stringContaining('Prop validation failed'),
-        expect.anything()
-      );
-    });
+  // TODO V4: KIT-5197 - Remove this test
+  it('should log validation warning when sortCriteria is invalid', async () => {
+    await renderCategoryFacet({sortCriteria: 'invalid' as 'alphanumeric'});
+    expect(mockedConsole.warn).toHaveBeenCalledWith(
+      expect.stringContaining('Prop validation failed'),
+      expect.anything()
+    );
   });
 
   it('should log warning when both tabsIncluded and tabsExcluded are provided', async () => {
@@ -365,27 +404,63 @@ describe('atomic-category-facet', () => {
     );
   });
 
-  describe('dependsOn', () => {
-    it('should build facet conditions manager when dependsOn is provided', async () => {
-      const {element} = await renderCategoryFacet({
-        dependsOn: {parentFacet: 'parentValue'},
-      });
-
-      expect(buildFacetConditionsManager).toHaveBeenCalledWith(
-        element.bindings.engine,
-        expect.objectContaining({
-          facetId: expect.any(String),
-          conditions: expect.any(Array),
-        })
-      );
+  it('should build facet conditions manager when dependsOn is provided', async () => {
+    const {element} = await renderCategoryFacet({
+      dependsOn: {parentFacet: 'parentValue'},
     });
 
-    it('should not build facet conditions manager when no depends-on attribute is provided', async () => {
-      vi.mocked(buildFacetConditionsManager).mockClear();
+    expect(buildFacetConditionsManager).toHaveBeenCalledWith(
+      element.bindings.engine,
+      expect.objectContaining({
+        facetId: expect.any(String),
+        conditions: expect.any(Array),
+      })
+    );
+  });
 
-      await renderCategoryFacet();
+  it('should not build facet conditions manager when no depends-on attribute is provided', async () => {
+    vi.mocked(buildFacetConditionsManager).mockClear();
 
-      expect(buildFacetConditionsManager).not.toHaveBeenCalled();
-    });
+    await renderCategoryFacet();
+
+    expect(buildFacetConditionsManager).not.toHaveBeenCalled();
+  });
+
+  it('should use default label when not provided', async () => {
+    const {element} = await renderCategoryFacet();
+    expect(element.label).toBe('no-label');
+  });
+
+  it('should use custom label when provided', async () => {
+    const {element} = await renderCategoryFacet({label: 'Custom Label'});
+    expect(element.label).toBe('Custom Label');
+  });
+
+  it('should render label in facet header', async () => {
+    const customLabel = 'Product Categories';
+    const {labelButton} = await renderCategoryFacet({label: customLabel});
+    await expect
+      .element(labelButton as HTMLElement)
+      .toHaveTextContent(customLabel);
+  });
+
+  it('should register facet with label in store', async () => {
+    const customLabel = 'Custom Facet Label';
+    await renderCategoryFacet({label: customLabel});
+
+    expect(mockedRegisterFacet).toHaveBeenCalledWith(
+      'categoryFacets',
+      expect.objectContaining({
+        label: expect.any(Function),
+      })
+    );
+
+    const facetInfo = mockedRegisterFacet.mock.calls[0][1];
+    expect(facetInfo.label()).toBe(customLabel);
+  });
+
+  it('should pass headingLevel to facet header', async () => {
+    const {element} = await renderCategoryFacet({headingLevel: 3});
+    expect(element.headingLevel).toBe(3);
   });
 });
