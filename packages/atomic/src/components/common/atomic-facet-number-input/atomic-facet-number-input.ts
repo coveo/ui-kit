@@ -7,8 +7,8 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
-import type {AnyBindings} from '../../interface/bindings';
-import type {NumberInputType} from './number-input-type';
+import type {NumberInputType} from '../facets/facet-number-input/number-input-type';
+import type {AnyBindings} from '../interface/bindings';
 
 /**
  * Internal component made to be integrated in a NumericFacet.
@@ -20,15 +20,6 @@ export class AtomicFacetNumberInput
   extends LightDomMixin(LitElement)
   implements InitializableComponent<AnyBindings>
 {
-  /**
-   * The bindings object containing i18n and engine context for the component.
-   */
-  @state()
-  bindings!: AnyBindings;
-
-  @state()
-  error!: Error;
-
   /**
    * The type of number input (integer or decimal).
    */
@@ -47,6 +38,10 @@ export class AtomicFacetNumberInput
   @property({type: Object, attribute: 'filter-state'})
   public filterState!: NumericFilterState;
 
+  @state()
+  bindings!: AnyBindings;
+  @state()
+  error!: Error;
   @state() private start?: number;
   @state() private end?: number;
 
@@ -80,59 +75,12 @@ export class AtomicFacetNumberInput
     }
   `;
 
-  initialize() {
+  public initialize() {}
+
+  public connectedCallback() {
+    super.connectedCallback();
     this.start = this.filterState.range?.start;
     this.end = this.filterState.range?.end;
-    this.addEventListener(
-      'atomic/numberInputApply',
-      this.handleApply as EventListener
-    );
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.removeEventListener(
-      'atomic/numberInputApply',
-      this.handleApply as EventListener
-    );
-  }
-
-  private handleApply() {
-    if (!this.startRef?.validity.valid || !this.endRef?.validity.valid) {
-      return;
-    }
-    this.filter.setRange({
-      start: this.start!,
-      end: this.end!,
-    });
-  }
-
-  private apply() {
-    if (!this.startRef?.validity.valid || !this.endRef?.validity.valid) {
-      return;
-    }
-    this.dispatchEvent(
-      new CustomEvent('atomic/numberInputApply', {
-        bubbles: true,
-        composed: true,
-      })
-    );
-    this.filter.setRange({
-      start: this.start!,
-      end: this.end!,
-    });
-  }
-
-  private get startValue() {
-    return this.filterState.range?.start !== undefined
-      ? String(this.filterState.range.start)
-      : '';
-  }
-
-  private get endValue() {
-    return this.filterState.range?.end !== undefined
-      ? String(this.filterState.range.end)
-      : '';
   }
 
   @bindingGuard()
@@ -223,6 +171,34 @@ export class AtomicFacetNumberInput
         </button>
       </form>
     `;
+  }
+
+  private apply() {
+    if (!this.startRef?.validity.valid || !this.endRef?.validity.valid) {
+      return;
+    }
+    this.dispatchEvent(
+      new CustomEvent('atomic/numberInputApply', {
+        bubbles: true,
+        composed: true,
+      })
+    );
+    this.filter.setRange({
+      start: this.start!,
+      end: this.end!,
+    });
+  }
+
+  private get startValue() {
+    return this.filterState.range?.start !== undefined
+      ? String(this.filterState.range.start)
+      : '';
+  }
+
+  private get endValue() {
+    return this.filterState.range?.end !== undefined
+      ? String(this.filterState.range.end)
+      : '';
   }
 }
 
