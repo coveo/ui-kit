@@ -10,6 +10,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-aria-live',
   'atomic-automatic-facet',
   'atomic-breadbox',
+  'atomic-category-facet',
   'atomic-color-facet',
   'atomic-commerce-breadbox',
   'atomic-commerce-category-facet',
@@ -96,6 +97,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-result-children',
   'atomic-result-children-template',
   'atomic-result-date',
+  'atomic-result-fields-list',
   'atomic-result-html',
   'atomic-result-icon',
   'atomic-result-image',
@@ -129,6 +131,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-sort-expression',
   'atomic-tab',
   'atomic-tab-manager',
+  'atomic-table-element',
   'atomic-text',
 ]);
 
