@@ -2,6 +2,7 @@ import {
   AtomicAriaLive as LitAtomicAriaLive,
   AtomicAutomaticFacet as LitAtomicAutomaticFacet,
   AtomicBreadbox as LitAtomicBreadbox,
+  AtomicCategoryFacet as LitAtomicCategoryFacet,
   AtomicColorFacet as LitAtomicColorFacet,
   AtomicComponentError as LitAtomicComponentError,
   AtomicExternal as LitAtomicExternal,
@@ -18,6 +19,7 @@ import {
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
   AtomicNoResults as LitAtomicNoResults,
+  AtomicNotifications as LitAtomicNotifications,
   AtomicNumericRange as LitAtomicNumericRange,
   AtomicPager as LitAtomicPager,
   AtomicPopover as LitAtomicPopover,
@@ -31,6 +33,7 @@ import {
   AtomicResultChildren as LitAtomicResultChildren,
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
   AtomicResultDate as LitAtomicResultDate,
+  AtomicResultFieldsList as LitAtomicResultFieldsList,
   AtomicResultHtml as LitAtomicResultHtml,
   AtomicResultIcon as LitAtomicResultIcon,
   AtomicResultImage as LitAtomicResultImage,
@@ -62,6 +65,7 @@ import {
   AtomicSortDropdown as LitAtomicSortDropdown,
   AtomicSortExpression as LitAtomicSortExpression,
   AtomicTab as LitAtomicTab,
+  AtomicTableElement as LitAtomicTableElement,
   AtomicTabManager as LitAtomicTabManager,
   AtomicText as LitAtomicText,
 } from '@coveo/atomic/components';
@@ -84,6 +88,12 @@ export const AtomicBreadbox = createComponent({
   tagName: 'atomic-breadbox',
   react: React,
   elementClass: LitAtomicBreadbox,
+});
+
+export const AtomicCategoryFacet = createComponent({
+  tagName: 'atomic-category-facet',
+  react: React,
+  elementClass: LitAtomicCategoryFacet,
 });
 
 export const AtomicColorFacet = createComponent({
@@ -182,6 +192,12 @@ export const AtomicNoResults = createComponent({
   elementClass: LitAtomicNoResults,
 });
 
+export const AtomicNotifications = createComponent({
+  tagName: 'atomic-notifications',
+  react: React,
+  elementClass: LitAtomicNotifications,
+});
+
 export const AtomicNumericRange = createComponent({
   tagName: 'atomic-numeric-range',
   react: React,
@@ -258,6 +274,12 @@ export const AtomicResultDate = createComponent({
   tagName: 'atomic-result-date',
   react: React,
   elementClass: LitAtomicResultDate,
+});
+
+export const AtomicResultFieldsList = createComponent({
+  tagName: 'atomic-result-fields-list',
+  react: React,
+  elementClass: LitAtomicResultFieldsList,
 });
 
 export const AtomicResultHtml = createComponent({
@@ -444,6 +466,12 @@ export const AtomicTab = createComponent({
   tagName: 'atomic-tab',
   react: React,
   elementClass: LitAtomicTab,
+});
+
+export const AtomicTableElement = createComponent({
+  tagName: 'atomic-table-element',
+  react: React,
+  elementClass: LitAtomicTableElement,
 });
 
 export const AtomicTabManager = createComponent({

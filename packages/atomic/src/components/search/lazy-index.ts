@@ -4,6 +4,8 @@ export default {
     await import('./atomic-automatic-facet/atomic-automatic-facet.js'),
   'atomic-breadbox': async () =>
     await import('./atomic-breadbox/atomic-breadbox.js'),
+  'atomic-category-facet': async () =>
+    await import('./atomic-category-facet/atomic-category-facet.js'),
   'atomic-color-facet': async () =>
     await import('./atomic-color-facet/atomic-color-facet.js'),
   'atomic-external': async () =>
@@ -24,6 +26,8 @@ export default {
     await import('./atomic-load-more-results/atomic-load-more-results.js'),
   'atomic-no-results': async () =>
     await import('./atomic-no-results/atomic-no-results.js'),
+  'atomic-notifications': async () =>
+    await import('./atomic-notifications/atomic-notifications.js'),
   'atomic-pager': async () => await import('./atomic-pager/atomic-pager.js'),
   'atomic-popover': async () =>
     await import('./atomic-popover/atomic-popover.js'),
@@ -48,6 +52,8 @@ export default {
     ),
   'atomic-result-date': async () =>
     await import('./atomic-result-date/atomic-result-date.js'),
+  'atomic-result-fields-list': async () =>
+    await import('./atomic-result-fields-list/atomic-result-fields-list.js'),
   'atomic-result-html': async () =>
     await import('./atomic-result-html/atomic-result-html.js'),
   'atomic-result-icon': async () =>
@@ -145,6 +151,8 @@ export default {
   'atomic-tab': async () => await import('./atomic-tab/atomic-tab.js'),
   'atomic-tab-manager': async () =>
     await import('./atomic-tab-manager/atomic-tab-manager.js'),
+  'atomic-table-element': async () =>
+    await import('./atomic-table-element/atomic-table-element.js'),
   'atomic-text': async () => await import('./atomic-text/atomic-text.js'),
 } as Record<string, () => Promise<unknown>>;
 
