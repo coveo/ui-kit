@@ -10,7 +10,7 @@ import {createResultContextController} from '@/src/components/search/result-temp
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {snakeToCamel} from '@/src/utils/utils';
+import {snakeToCamel} from '@/src/utils/case-utils';
 import {fileTypeIcons} from './file-type-icons';
 import {objectTypeIcons} from './object-type-icons';
 

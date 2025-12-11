@@ -17,8 +17,8 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {titleToKebab} from '@/src/utils/case-utils';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
-import {titleToKebab} from '@/src/utils/utils';
 
 /**
  * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.

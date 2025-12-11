@@ -8,7 +8,7 @@ import {
   SmartSnippetSuggestionsWrapper,
 } from '@/src/components/common/smart-snippets/atomic-smart-snippet-suggestions/stencil-smart-snippet-suggestions-common';
 import {Hidden} from '@/src/components/common/stencil-hidden';
-import {randomID} from '@/src/utils/utils';
+import {randomID} from '@/src/utils/random-utils';
 import {
   buildSmartSnippetQuestionsList,
   Result,

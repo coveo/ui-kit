@@ -17,7 +17,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
-import {parseXML} from '@/src/utils/utils';
+import {parseXML} from '@/src/utils/dom-utils';
 import Arrow from '../../../images/arrow-right.svg';
 import '../atomic-result-text/atomic-result-text';
 import '../../common/atomic-icon/atomic-icon';

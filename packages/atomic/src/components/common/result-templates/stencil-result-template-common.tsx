@@ -4,7 +4,8 @@ import {
   ResultTemplatesHelpers,
 } from '@coveo/headless';
 import {h} from '@stencil/core';
-import {aggregate, isElementNode, isVisualNode} from '@/src/utils/utils';
+import {isElementNode, isVisualNode} from '@/src/utils/dom-utils';
+import {aggregate} from '@/src/utils/object-utils';
 import {tableElementTagName} from '../table-element-utils';
 import {ItemTarget} from '../layout/display-options';
 import {isResultSectionNode} from '../layout/item-layout-sections';

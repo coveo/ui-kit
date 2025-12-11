@@ -31,7 +31,7 @@ import {
   AriaLiveRegionController,
   FocusTargetController,
 } from '@/src/utils/accessibility-utils';
-import {randomID} from '@/src/utils/utils';
+import {randomID} from '@/src/utils/random-utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';

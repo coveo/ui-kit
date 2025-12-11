@@ -1,7 +1,7 @@
 import {isArray} from '@coveo/bueno';
 import {type ComponentInterface, getElement} from '@stencil/core';
 import type {ReactiveElement} from 'lit';
-import {camelToKebab, kebabToCamel} from './utils';
+import {camelToKebab, kebabToCamel} from './case-utils';
 
 interface MapPropOptions {
   attributePrefix?: string;

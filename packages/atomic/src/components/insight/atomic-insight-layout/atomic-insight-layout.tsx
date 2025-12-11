@@ -3,7 +3,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {randomID} from '../../../utils/utils';
+import {randomID} from '../../../utils/random-utils';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 import {buildInsightLayout} from './insight-layout';
 

@@ -29,12 +29,10 @@ import {
 } from '@/src/utils/local-storage-utils';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {getDefaultSlotContent} from '@/src/utils/slot-utils';
-import {
-  isFocusingOut,
-  once,
-  randomID,
-  spreadProperties,
-} from '../../../utils/utils';
+import {isFocusingOut} from '../../../utils/dom-utils';
+import {once} from '../../../utils/function-utils';
+import {spreadProperties} from '../../../utils/object-utils';
+import {randomID} from '../../../utils/random-utils';
 import type {RedirectionPayload} from '../../common/search-box/redirection-payload';
 import {renderSearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {renderSearchBoxTextArea} from '../../common/search-box/search-text-area';
