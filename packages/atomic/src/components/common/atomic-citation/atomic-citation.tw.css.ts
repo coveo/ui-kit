@@ -1,6 +1,9 @@
 import {css} from 'lit';
 
 const styles = css`
+  @reference '../../../utils/tailwind.global.tw.css';
+  @reference '../../../utils/tailwind-utilities/set-font-size.css';
+
   :host {
     position: relative;
     display: contents;
@@ -19,7 +22,11 @@ const styles = css`
     --popover-width: 350px;
 
     width: var(--popover-width);
+
+    p {
+      @apply set-font-size-sm;
+    }
   }
-}`;
+`;
 
 export default styles;

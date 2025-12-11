@@ -7,15 +7,13 @@ import {
   type Instance as PopperInstance,
   preventOverflow,
 } from '@popperjs/core';
-import {type CSSResultGroup, html, LitElement} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {createRef, type Ref, ref} from 'lit/directives/ref.js';
 import {watch} from '@/src/decorators/watch';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {renderHeading} from '../../heading';
-import {renderLinkWithItemAnalytics} from '../../item-link/item-link';
-import styles from './atomic-citation.tw.css';
+import {renderHeading} from '../heading';
+import {renderLinkWithItemAnalytics} from '../item-link/item-link';
 import {
   generatePdfPageUrl,
   generateTextFragmentUrl,
@@ -31,10 +29,7 @@ import {
  * @part citation-popover - The popover container that appears on hover.
  */
 @customElement('atomic-citation')
-@withTailwindStyles
 export class AtomicCitation extends LitElement {
-  static styles: CSSResultGroup = styles;
-
   /**
    * The citation item information.
    */
@@ -70,14 +65,17 @@ export class AtomicCitation extends LitElement {
   private popupRef: Ref<HTMLDivElement> = createRef();
   private popperInstance?: PopperInstance;
   private stopPropagation?: boolean;
-
   private hoverStart?: number;
   private hoverAnalyticsTimeout = 1000;
-
   private hoverTimeout?: ReturnType<typeof setTimeout>;
   private hoverDebounceTimeoutMs = 200;
   private closePopoverTimeout?: ReturnType<typeof setTimeout>;
   private closePopoverDebounceMs = 100;
+  private readonly ariaHaspopupAttr = (() => {
+    const attr = document.createAttribute('aria-haspopup');
+    attr.value = 'dialog';
+    return attr;
+  })();
 
   disconnectedCallback() {
     super.disconnectedCallback();
@@ -86,7 +84,7 @@ export class AtomicCitation extends LitElement {
   }
 
   @watch('isOpen')
-  sendHoverAnalytics() {
+  public sendHoverAnalytics() {
     if (this.isOpen) {
       this.hoverStart = Date.now();
       return;
@@ -103,6 +101,44 @@ export class AtomicCitation extends LitElement {
 
   updated() {
     this.updatePopper();
+  }
+
+  render() {
+    return html`
+      <div class="relative">
+        ${renderLinkWithItemAnalytics({
+          props: {
+            href: this.anchorUrl(
+              this.citation.clickUri ?? this.citation.uri,
+              this.citation.text,
+              this.citation.fields?.filetype
+            ),
+            ref: this.citationRef,
+            part: 'citation',
+            target: '_blank',
+            rel: 'noopener',
+            attributes: [this.ariaHaspopupAttr],
+            className:
+              'bg-background btn-outline-primary border-neutral text-on-background flex items-center rounded-full border p-1',
+            onSelect: () => this.interactiveCitation.select(),
+            onBeginDelayedSelect: () =>
+              this.interactiveCitation.beginDelayedSelect(),
+            onCancelPendingSelect: () =>
+              this.interactiveCitation.cancelPendingSelect(),
+            stopPropagation: this.stopPropagation,
+            onMouseLeave: this.delayedClosePopover,
+            onMouseOver: this.delayedPopoverOpen,
+            onFocus: this.openPopover,
+            onBlur: this.closePopover,
+          },
+        })(html`
+          <span class="citation-title mx-1 truncate">
+            ${this.citation.title}
+          </span>
+        `)}
+        ${this.renderPopover()}
+      </div>
+    `;
   }
 
   private updatePopper() {
@@ -206,11 +242,12 @@ export class AtomicCitation extends LitElement {
       <div
         ${ref(this.popupRef)}
         part="citation-popover"
-        class="${classMap({
-          'border-neutral bg-background mobile-only:hidden z-10 rounded-md border p-4 shadow flex-col gap-3': true,
-          'desktop-only:flex': this.isOpen,
-          hidden: !this.isOpen,
-        })}"
+        class="border-neutral bg-background mobile-only:hidden z-10 rounded-md border p-4 shadow flex-col gap-3 ${classMap(
+          {
+            'desktop-only:flex': this.isOpen,
+            hidden: !this.isOpen,
+          }
+        )}"
         role="dialog"
         @mouseenter=${this.cancelClosePopover}
         @mouseleave=${this.delayedClosePopover}
@@ -225,51 +262,6 @@ export class AtomicCitation extends LitElement {
           },
         })(html`${this.citation.title}`)}
         <p class="text-on-background text-sm">${this.getTruncatedText()}</p>
-      </div>
-    `;
-  }
-
-  render() {
-    const ariaHaspopupAttr = document.createAttribute('aria-haspopup');
-    ariaHaspopupAttr.value = 'dialog';
-
-    return html`
-      <div class="relative">
-        ${renderLinkWithItemAnalytics({
-          props: {
-            href: this.anchorUrl(
-              this.citation.clickUri ?? this.citation.uri,
-              this.citation.text,
-              this.citation.fields?.filetype
-            ),
-            ref: (el) => {
-              if (el) {
-                this.citationRef.value = el;
-              }
-            },
-            part: 'citation',
-            target: '_blank',
-            rel: 'noopener',
-            attributes: [ariaHaspopupAttr],
-            className:
-              'bg-background btn-outline-primary border-neutral text-on-background flex items-center rounded-full border p-1',
-            onSelect: () => this.interactiveCitation.select(),
-            onBeginDelayedSelect: () =>
-              this.interactiveCitation.beginDelayedSelect(),
-            onCancelPendingSelect: () =>
-              this.interactiveCitation.cancelPendingSelect(),
-            stopPropagation: this.stopPropagation,
-            onMouseLeave: this.delayedClosePopover,
-            onMouseOver: this.delayedPopoverOpen,
-            onFocus: this.openPopover,
-            onBlur: this.closePopover,
-          },
-        })(html`
-          <span class="citation-title mx-1 truncate">
-            ${this.citation.title}
-          </span>
-        `)}
-        ${this.renderPopover()}
       </div>
     `;
   }
