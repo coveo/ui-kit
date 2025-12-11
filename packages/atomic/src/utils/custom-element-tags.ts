@@ -129,6 +129,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-tab-manager',
   'atomic-table-element',
   'atomic-text',
+  'atomic-timeframe-facet',
 ]);
 
 /**
