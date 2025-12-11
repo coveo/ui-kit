@@ -1,18 +1,24 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
+const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-segmented-facet',
-  {excludeCategories: ['methods']}
+  {
+    excludeCategories: ['methods'],
+  }
 );
 
 const meta: Meta = {
   component: 'atomic-segmented-facet',
   title: 'Search/SegmentedFacet',
   id: 'atomic-segmented-facet',
+
   render: (args) => template(args),
   decorators: [decorator],
   parameters: {
@@ -20,13 +26,21 @@ const meta: Meta = {
     actions: {
       handles: events,
     },
+    msw: {
+      handlers: [...searchApiHarness.handlers],
+    },
   },
-  argTypes,
-
+  argTypes: {
+    ...argTypes,
+  },
   play,
   args: {
     ...args,
-    'number-of-values': 8,
+    'tabs-included': '[]',
+    'tabs-excluded': '[]',
+    'allowed-values': '[]',
+    'custom-sort': '[]',
+    'depends-on': '{}',
   },
 };
 
@@ -38,4 +52,16 @@ export const Default: Story = {
     field: 'objecttype',
     label: 'Object Type',
   },
+  decorators: [
+    (story) => html`
+      <style>
+        atomic-segmented-facet {
+          width: 800px;
+          margin: auto;
+          display: block;
+        }
+      </style>
+      ${story()}
+    `,
+  ],
 };

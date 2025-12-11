@@ -1,7 +1,4 @@
-import {
-  buildFacet,
-  buildFacetConditionsManager,
-  buildSearchStatus,
+import type {
   CategoryFacetValueRequest,
   Facet,
   FacetConditionsManager,
@@ -12,23 +9,33 @@ import {
   FacetValueRequest,
   SearchStatus,
   SearchStatusState,
-  buildTabManager,
   TabManager,
   TabManagerState,
 } from '@coveo/headless';
-import {Component, h, Prop, State, VNode} from '@stencil/core';
-import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {
-  BindStateToController,
-  InitializableComponent,
-  InitializeBindings,
-} from '../../../../utils/initialization-utils';
-import {ArrayProp, MapProp} from '../../../../utils/props-utils';
-import {parseDependsOn} from '../../../common/facets/depends-on';
-import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stencil-facet-values-group';
-import {Hidden} from '../../../common/stencil-hidden';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {FacetSegmentedValue} from '../facet-segmented-value/stencil-facet-segmented-value';
+  buildFacet,
+  buildFacetConditionsManager,
+  buildSearchStatus,
+  buildTabManager,
+} from '@coveo/headless';
+import {type CSSResultGroup, html, LitElement} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
+import {parseDependsOn} from '@/src/components/common/facets/depends-on';
+import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.css';
+import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-values-group/facet-values-group';
+import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
+import {renderFacetSegmentedValue} from '@/src/components/search/facets/facet-segmented-value/facet-segmented-value';
+import facetSegmentedValueStyles from '@/src/components/search/facets/facet-segmented-value/facet-segmented-value.tw.css.js';
+import {arrayConverter} from '@/src/converters/array-converter';
+import {booleanConverter} from '@/src/converters/boolean-converter';
+import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {getFieldValueCaption} from '@/src/utils/field-utils';
 
 /**
  * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
@@ -39,39 +46,63 @@ import {FacetSegmentedValue} from '../facet-segmented-value/stencil-facet-segmen
  * @part value-box-selected - The selected facet value.
  * @part placeholder - The placeholder displayed when the facet is loading.
  */
-@Component({
-  tag: 'atomic-segmented-facet',
-  styleUrl: 'atomic-segmented-facet.pcss',
-  shadow: true,
-})
-export class AtomicSegmentedFacet implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
-  public searchStatus!: SearchStatus;
-  public tabManager!: TabManager;
-  @State()
-  public searchStatusState!: SearchStatusState;
-  @BindStateToController('tabManager')
-  @State()
-  public tabManagerState!: TabManagerState;
-  @BindStateToController('facet')
-  @State()
-  public facetState!: FacetState;
-  public facet!: Facet;
-  @State() public error!: Error;
+@customElement('atomic-segmented-facet')
+@bindings()
+@withTailwindStyles
+export class AtomicSegmentedFacet
+  extends LitElement
+  implements InitializableComponent<Bindings>
+{
+  @state() bindings!: Bindings;
+
+  /**
+   * The SearchStatus controller instance.
+   */
+  @property({type: Object}) searchStatus!: SearchStatus;
+
+  /**
+   * The TabManager controller instance.
+   */
+  @property({type: Object}) tabManager!: TabManager;
+
+  /**
+   * The Facet controller instance.
+   */
+  @property({type: Object}) facet!: Facet;
+
+  @bindStateToController('searchStatus')
+  @state()
+  searchStatusState!: SearchStatusState;
+
+  @bindStateToController('tabManager')
+  @state()
+  tabManagerState!: TabManagerState;
+
+  @bindStateToController('facet')
+  @state()
+  facetState!: FacetState;
+
+  @state() error!: Error;
 
   /**
    * Specifies a unique identifier for the facet.
    */
-  @Prop({mutable: true, reflect: true}) public facetId?: string;
+  @property({reflect: true, attribute: 'facet-id'})
+  facetId?: string;
+
   /**
    * The field whose values you want to display in the facet.
    */
-  @Prop({reflect: true}) public field!: string;
+  @property({reflect: true})
+  field!: string;
+
   /**
    * The non-localized label for the facet.
    * Used in the `atomic-breadbox` component through the bindings store.
    */
-  @Prop({reflect: true}) public label?: string;
+  @property({reflect: true})
+  label?: string;
+
   /**
    * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.
    *
@@ -81,9 +112,13 @@ export class AtomicSegmentedFacet implements InitializableComponent {
    * ```
    * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
    */
-  @ArrayProp()
-  @Prop({reflect: true, mutable: true})
-  public tabsIncluded: string[] | string = '[]';
+  @property({
+    type: Array,
+    attribute: 'tabs-included',
+    converter: arrayConverter,
+    reflect: true,
+  })
+  tabsIncluded: string[] = [];
 
   /**
    * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.
@@ -94,9 +129,13 @@ export class AtomicSegmentedFacet implements InitializableComponent {
    * ```
    * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
    */
-  @ArrayProp()
-  @Prop({reflect: true, mutable: true})
-  public tabsExcluded: string[] | string = '[]';
+  @property({
+    type: Array,
+    attribute: 'tabs-excluded',
+    converter: arrayConverter,
+    reflect: true,
+  })
+  tabsExcluded: string[] = [];
 
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
@@ -104,24 +143,36 @@ export class AtomicSegmentedFacet implements InitializableComponent {
    *
    * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
    */
-  @Prop({reflect: true}) public filterFacetCount = true;
+  @property({
+    type: Boolean,
+    converter: booleanConverter,
+    attribute: 'filter-facet-count',
+    reflect: true,
+  })
+  filterFacetCount = true;
+
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
    * Minimum: `0`
    * Default: `1000`
    */
-  @Prop() public injectionDepth = 1000;
+  @property({type: Number, attribute: 'injection-depth'})
+  injectionDepth = 1000;
+
   /**
    * The number of values to request for this facet.
    * Also determines the number of additional values to request each time more values are shown.
    */
-  @Prop({reflect: true}) public numberOfValues = 6;
+  @property({reflect: true, type: Number, attribute: 'number-of-values'})
+  numberOfValues = 6;
+
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
    */
-  @Prop({reflect: true}) public sortCriteria: FacetSortCriterion = 'automatic';
+  @property({reflect: true, attribute: 'sort-criteria'})
+  sortCriteria: FacetSortCriterion = 'automatic';
 
   /**
    * The required facets and values for this facet to be displayed.
@@ -142,7 +193,9 @@ export class AtomicSegmentedFacet implements InitializableComponent {
    * ></atomic-segmented-facet>
    * ```
    */
-  @MapProp() @Prop() public dependsOn: Record<string, string> = {};
+  @property({type: Object, attribute: 'depends-on'})
+  dependsOn: Record<string, string> = {};
+
   /**
    * Specifies an explicit list of `allowedValues` in the Search API request. This list is in the form of a JSON string.
    *
@@ -163,9 +216,13 @@ export class AtomicSegmentedFacet implements InitializableComponent {
    *
    * The default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
    */
-  @ArrayProp()
-  @Prop({mutable: true})
-  public allowedValues: string[] | string = '[]';
+  @property({
+    type: Array,
+    attribute: 'allowed-values',
+    converter: arrayConverter,
+    reflect: true,
+  })
+  allowedValues: string[] = [];
 
   /**
    * Identifies the facet values that must appear at the top, in this order.
@@ -186,17 +243,23 @@ export class AtomicSegmentedFacet implements InitializableComponent {
    *
    * The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
    */
-  @ArrayProp()
-  @Prop({mutable: true})
-  public customSort: string[] | string = '[]';
+  @property({
+    type: Array,
+    attribute: 'custom-sort',
+    converter: arrayConverter,
+    reflect: true,
+  })
+  customSort: string[] = [];
 
   private dependenciesManager!: FacetConditionsManager;
 
-  public initialize() {
-    if (
-      [...this.tabsIncluded].length > 0 &&
-      [...this.tabsExcluded].length > 0
-    ) {
+  static styles: CSSResultGroup = [
+    facetCommonStyles,
+    facetSegmentedValueStyles,
+  ];
+
+  initialize() {
+    if (this.tabsIncluded.length > 0 && this.tabsExcluded.length > 0) {
       console.warn(
         'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behaviors.'
       );
@@ -217,19 +280,47 @@ export class AtomicSegmentedFacet implements InitializableComponent {
     );
   }
 
+  @bindingGuard()
+  @errorGuard()
+  render() {
+    if (this.searchStatusState.hasError || !this.facetState.enabled) {
+      return html``;
+    }
+
+    if (!this.searchStatusState.firstSearchExecuted) {
+      return html`
+        <div
+          part="placeholder"
+          aria-hidden="true"
+          class="bg-neutral h-8 w-48 animate-pulse rounded"
+        ></div>
+      `;
+    }
+
+    if (!this.facetState.values.length) {
+      return html``;
+    }
+
+    return html`
+      <div
+        part="segmented-container"
+        class="mr-2 flex h-10 items-center whitespace-nowrap"
+      >
+        ${this.renderLabel()} ${this.renderValues()}
+      </div>
+    `;
+  }
+
   disconnectedCallback() {
+    super.disconnectedCallback();
     this.dependenciesManager.stopWatching();
   }
 
-  private renderValuesContainer(children: VNode[]) {
+  private renderValuesContainer(children: unknown) {
     const classes = 'box-container flex h-10';
-    return (
-      <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
-        <ul class={classes} part="values">
-          {children}
-        </ul>
-      </FacetValuesGroup>
-    );
+    return renderFacetValuesGroup({
+      props: {i18n: this.bindings.i18n, label: this.label},
+    })(html` <ul class=${classes} part="values">${children}</ul> `);
   }
 
   private renderValue(facetValue: FacetValue, onClick: () => void) {
@@ -240,16 +331,16 @@ export class AtomicSegmentedFacet implements InitializableComponent {
     );
     const isSelected = facetValue.state !== 'idle';
 
-    return (
-      <FacetSegmentedValue
-        displayValue={displayValue}
-        numberOfResults={facetValue.numberOfResults}
-        isSelected={isSelected}
-        i18n={this.bindings.i18n}
-        onClick={onClick}
-        searchQuery={this.facetState.facetSearch.query}
-      ></FacetSegmentedValue>
-    );
+    return renderFacetSegmentedValue({
+      props: {
+        displayValue,
+        numberOfResults: facetValue.numberOfResults,
+        isSelected,
+        i18n: this.bindings.i18n,
+        onClick,
+        searchQuery: this.facetState.facetSearch.query,
+      },
+    });
   }
 
   private renderValues() {
@@ -261,13 +352,11 @@ export class AtomicSegmentedFacet implements InitializableComponent {
   }
 
   private renderLabel() {
-    if (!this.label) {
-      return;
-    }
-    return (
-      <b class="mr-2" part="label">
-        {this.label}:
-      </b>
+    return when(
+      this.label,
+      () => html`
+        <b class="mr-2" part="label"> ${this.label}: </b>
+      `
     );
   }
 
@@ -281,44 +370,18 @@ export class AtomicSegmentedFacet implements InitializableComponent {
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
       hasBreadcrumbs: false,
-      allowedValues: this.allowedValues.length
-        ? [...this.allowedValues]
-        : undefined,
-      customSort: this.customSort.length ? [...this.customSort] : undefined,
+      allowedValues: this.allowedValues.length ? this.allowedValues : undefined,
+      customSort: this.customSort.length ? this.customSort : undefined,
       tabs: {
-        included: [...this.tabsIncluded],
-        excluded: [...this.tabsExcluded],
+        included: this.tabsIncluded,
+        excluded: this.tabsExcluded,
       },
     };
   }
+}
 
-  public render() {
-    if (this.searchStatus.state.hasError || !this.facet.state.enabled) {
-      return <Hidden></Hidden>;
-    }
-
-    if (!this.searchStatus.state.firstSearchExecuted) {
-      return (
-        <div
-          part="placeholder"
-          aria-hidden
-          class="bg-neutral h-8 w-48 animate-pulse rounded"
-        ></div>
-      );
-    }
-
-    if (!this.facetState.values.length) {
-      return <Hidden></Hidden>;
-    }
-
-    return (
-      <div
-        part="segmented-container"
-        class="mr-2 flex h-10 items-center whitespace-nowrap"
-      >
-        {this.renderLabel()}
-        {this.renderValues()}
-      </div>
-    );
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-segmented-facet': AtomicSegmentedFacet;
   }
 }

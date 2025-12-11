@@ -58,6 +58,7 @@ import {
   AtomicSearchBoxRecentQueries as LitAtomicSearchBoxRecentQueries,
   AtomicSearchInterface as LitAtomicSearchInterface,
   AtomicSearchLayout as LitAtomicSearchLayout,
+  AtomicSegmentedFacet as LitAtomicSegmentedFacet,
   AtomicSegmentedFacetScrollable as LitAtomicSegmentedFacetScrollable,
   AtomicSortDropdown as LitAtomicSortDropdown,
   AtomicSortExpression as LitAtomicSortExpression,
@@ -421,6 +422,12 @@ export const AtomicSearchLayout = createComponent({
   tagName: 'atomic-search-layout',
   react: React,
   elementClass: LitAtomicSearchLayout,
+});
+
+export const AtomicSegmentedFacet = createComponent({
+  tagName: 'atomic-segmented-facet',
+  react: React,
+  elementClass: LitAtomicSegmentedFacet,
 });
 
 export const AtomicSegmentedFacetScrollable = createComponent({
