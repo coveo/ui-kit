@@ -75,12 +75,9 @@ export class AtomicFacetNumberInput
     }
   `;
 
-  public initialize() {}
-
-  public connectedCallback() {
-    super.connectedCallback();
-    this.start = this.filterState.range?.start;
-    this.end = this.filterState.range?.end;
+  public initialize() {
+    this.start = this.filterState?.range?.start;
+    this.end = this.filterState?.range?.end;
   }
 
   @bindingGuard()
