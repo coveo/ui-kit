@@ -7,13 +7,15 @@ import {
   type Instance as PopperInstance,
   preventOverflow,
 } from '@popperjs/core';
-import {type CSSResultGroup, css, html, LitElement} from 'lit';
+import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {classMap} from 'lit/directives/class-map.js';
 import {createRef, type Ref, ref} from 'lit/directives/ref.js';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {renderHeading} from '../../heading';
 import {renderLinkWithItemAnalytics} from '../../item-link/item-link';
+import styles from './atomic-citation.tw.css';
 import {
   generatePdfPageUrl,
   generateTextFragmentUrl,
@@ -23,35 +25,15 @@ import {
  * The `atomic-citation` component displays a citation with hover popover functionality.
  * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`.
  *
+ * @internal
+ *
  * @part citation - The citation link element.
  * @part citation-popover - The popover container that appears on hover.
  */
 @customElement('atomic-citation')
 @withTailwindStyles
 export class AtomicCitation extends LitElement {
-  static styles: CSSResultGroup = [
-    css`
-      :host {
-        position: relative;
-        display: contents;
-      }
-
-      [part='citation'] {
-        --height: 2.2em;
-        --index-height: 1.1em;
-        --max-citation-width: 400px;
-
-        max-width: var(--max-citation-width);
-        height: var(--height);
-      }
-
-      [part='citation-popover'] {
-        --popover-width: 350px;
-
-        width: var(--popover-width);
-      }
-    `,
-  ];
+  static styles: CSSResultGroup = styles;
 
   /**
    * The citation item information.
@@ -82,7 +64,7 @@ export class AtomicCitation extends LitElement {
   @property({type: Boolean, attribute: 'disable-citation-anchoring'})
   disableCitationAnchoring = false;
 
-  @state() private isOpen = false;
+  @state() public isOpen = false;
 
   private citationRef: Ref<HTMLAnchorElement> = createRef();
   private popupRef: Ref<HTMLDivElement> = createRef();
@@ -224,9 +206,11 @@ export class AtomicCitation extends LitElement {
       <div
         ${ref(this.popupRef)}
         part="citation-popover"
-        class="border-neutral bg-background z-10 rounded-md border p-4 shadow ${
-          this.isOpen ? 'desktop-only:flex' : 'hidden'
-        } mobile-only:hidden flex-col gap-3"
+        class="${classMap({
+          'border-neutral bg-background mobile-only:hidden z-10 rounded-md border p-4 shadow flex-col gap-3': true,
+          'desktop-only:flex': this.isOpen,
+          hidden: !this.isOpen,
+        })}"
         role="dialog"
         @mouseenter=${this.cancelClosePopover}
         @mouseleave=${this.delayedClosePopover}
