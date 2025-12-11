@@ -13,6 +13,8 @@ export default {
   'atomic-facet': async () => await import('./atomic-facet/atomic-facet.js'),
   'atomic-field-condition': async () =>
     await import('./atomic-field-condition/atomic-field-condition.js'),
+  'atomic-folded-result-list': async () =>
+    await import('./atomic-folded-result-list/atomic-folded-result-list.js'),
   'atomic-format-currency': async () =>
     await import('./atomic-format-currency/atomic-format-currency.js'),
   'atomic-format-number': async () =>

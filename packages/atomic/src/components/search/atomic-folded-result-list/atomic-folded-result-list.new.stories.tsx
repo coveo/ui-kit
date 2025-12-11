@@ -128,7 +128,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-folded-result-list',
-  title: 'Search/FoldedResultList',
+  title: 'Search/Folded Result List',
   id: 'atomic-folded-result-list',
   render: (args) => template(args),
   decorators: [decorator],
@@ -150,7 +150,6 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-folded-result-list',
   args: {
     'default-slot': SLOTS_DEFAULT,
   },
