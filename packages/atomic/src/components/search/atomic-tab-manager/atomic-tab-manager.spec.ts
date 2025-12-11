@@ -1,8 +1,13 @@
 import {buildTab, buildTabManager, type TabManagerState} from '@coveo/headless';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
-import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
+import {
+  defaultBindings,
+  type FixtureAtomicSearchInterface,
+  renderInAtomicSearchInterface,
+} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeTabManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/tab-manager-controller';
+import {fixture} from '@/vitest-utils/testing-helpers/testing-utils/fixture';
 import type {AtomicTabManager} from './atomic-tab-manager';
 import './atomic-tab-manager';
 import {mockConsole} from '@/vitest-utils/testing-helpers/testing-utils/mock-console';
@@ -195,25 +200,25 @@ describe('atomic-tab-manager', () => {
       } as never;
     });
 
-    await renderInAtomicSearchInterface<AtomicTabManager>({
-      template: html`
+    const atomicInterface = await fixture<FixtureAtomicSearchInterface>(
+      html`<atomic-search-interface>
         <atomic-tab-manager>
           <atomic-tab label="Test" name="test"></atomic-tab>
         </atomic-tab-manager>
-      `,
-      selector: 'atomic-tab-manager',
-      bindings: (bindings) => {
-        const manager = document.querySelector('atomic-tab-manager');
-        const tabElement = manager?.querySelector('atomic-tab');
-        if (tabElement) {
-          Object.defineProperty(tabElement, 'expression', {
-            get: () => undefined,
-            configurable: true,
-          });
-        }
-        return bindings;
-      },
+      </atomic-search-interface>`
+    );
+
+    const manager = atomicInterface.querySelector('atomic-tab-manager')!;
+    const tabElement = manager.querySelector('atomic-tab')!;
+
+    Object.defineProperty(tabElement, 'expression', {
+      get: () => undefined,
+      configurable: true,
     });
+
+    atomicInterface.setBindings(defaultBindings);
+    await atomicInterface.updateComplete;
+    await manager.updateComplete;
 
     expect(expressionValue).toBe('');
     expect(expressionValue).not.toBeUndefined();
