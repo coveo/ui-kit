@@ -30,6 +30,7 @@ import {
   AtomicResultChildren as LitAtomicResultChildren,
   AtomicResultChildrenTemplate as LitAtomicResultChildrenTemplate,
   AtomicResultDate as LitAtomicResultDate,
+  AtomicResultFieldsList as LitAtomicResultFieldsList,
   AtomicResultHtml as LitAtomicResultHtml,
   AtomicResultIcon as LitAtomicResultIcon,
   AtomicResultImage as LitAtomicResultImage,
@@ -61,6 +62,7 @@ import {
   AtomicSortDropdown as LitAtomicSortDropdown,
   AtomicSortExpression as LitAtomicSortExpression,
   AtomicTab as LitAtomicTab,
+  AtomicTableElement as LitAtomicTableElement,
   AtomicTabManager as LitAtomicTabManager,
   AtomicText as LitAtomicText,
 } from '@coveo/atomic/components';
@@ -253,6 +255,12 @@ export const AtomicResultDate = createComponent({
   elementClass: LitAtomicResultDate,
 });
 
+export const AtomicResultFieldsList = createComponent({
+  tagName: 'atomic-result-fields-list',
+  react: React,
+  elementClass: LitAtomicResultFieldsList,
+});
+
 export const AtomicResultHtml = createComponent({
   tagName: 'atomic-result-html',
   react: React,
@@ -437,6 +445,12 @@ export const AtomicTab = createComponent({
   tagName: 'atomic-tab',
   react: React,
   elementClass: LitAtomicTab,
+});
+
+export const AtomicTableElement = createComponent({
+  tagName: 'atomic-table-element',
+  react: React,
+  elementClass: LitAtomicTableElement,
 });
 
 export const AtomicTabManager = createComponent({

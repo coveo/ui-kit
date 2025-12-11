@@ -1,3 +1,9 @@
+## 2.7.0 (2025-12-10)
+
+* feat(headless): support spotlight content for commerce COMHUB2-1228 (#6646) ([ba8c990](https://github.com/coveo/ui-kit/commits/ba8c990)), closes [#6646](https://github.com/coveo/ui-kit/issues/6646)
+
+
+
 ## <small>2.6.10 (2025-10-30)</small>
 
 * [Version Bump][skip ci]: ui-kit publish ([b33d02f](https://github.com/coveo/ui-kit/commits/b33d02f))
