@@ -18,6 +18,7 @@ import {
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
   AtomicNoResults as LitAtomicNoResults,
+  AtomicNotifications as LitAtomicNotifications,
   AtomicNumericRange as LitAtomicNumericRange,
   AtomicPager as LitAtomicPager,
   AtomicPopover as LitAtomicPopover,
@@ -182,6 +183,12 @@ export const AtomicNoResults = createComponent({
   tagName: 'atomic-no-results',
   react: React,
   elementClass: LitAtomicNoResults,
+});
+
+export const AtomicNotifications = createComponent({
+  tagName: 'atomic-notifications',
+  react: React,
+  elementClass: LitAtomicNotifications,
 });
 
 export const AtomicNumericRange = createComponent({
