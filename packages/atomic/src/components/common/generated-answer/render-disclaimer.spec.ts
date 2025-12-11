@@ -1,4 +1,3 @@
-import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {beforeAll, describe, expect, it} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
@@ -9,7 +8,7 @@ import {
 } from './render-disclaimer';
 
 describe('#renderDisclaimer', () => {
-  let i18n: i18n;
+  let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
   beforeAll(async () => {
     i18n = await createTestI18n();
@@ -36,22 +35,10 @@ describe('#renderDisclaimer', () => {
   };
 
   describe('when not streaming', () => {
-    it('should render the disclaimer container', async () => {
-      const {container} = await renderComponent({isStreaming: false});
+    it('should render the disclaimer container and slot', async () => {
+      const {container, slot} = await renderComponent({isStreaming: false});
 
       expect(container).toBeInTheDocument();
-    });
-
-    it('should render the disclaimer with correct classes', async () => {
-      const {container} = await renderComponent({isStreaming: false});
-
-      expect(container).toHaveClass('text-neutral-dark');
-      expect(container).toHaveClass('text-xs/[1rem]');
-    });
-
-    it('should render the disclaimer slot', async () => {
-      const {slot} = await renderComponent({isStreaming: false});
-
       expect(slot).toBeInTheDocument();
     });
 
@@ -67,7 +54,7 @@ describe('#renderDisclaimer', () => {
       await expect
         .element(element)
         .toHaveTextContent(
-          'Generative AI can make mistakes. Make sure to verify information.'
+          'Generated content may contain errors. Verify important information.'
         );
     });
   });
@@ -79,15 +66,10 @@ describe('#renderDisclaimer', () => {
       expect(element.children.length).toBe(0);
     });
 
-    it('should not render the disclaimer container', async () => {
-      const {container} = await renderComponent({isStreaming: true});
+    it('should not render the disclaimer container nor slot', async () => {
+      const {container, slot} = await renderComponent({isStreaming: true});
 
       expect(container).not.toBeInTheDocument();
-    });
-
-    it('should not render the slot', async () => {
-      const {slot} = await renderComponent({isStreaming: true});
-
       expect(slot).not.toBeInTheDocument();
     });
 

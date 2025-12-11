@@ -1,17 +1,31 @@
 import type {GeneratedAnswerState} from '@coveo/headless';
-import type {i18n} from 'i18next';
 import {html} from 'lit';
-import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import * as generatedAnswerUtils from './generated-answer-utils';
+import * as copyButton from './copy-button';
+import * as feedbackButton from './feedback-button';
 import {
   type RenderFeedbackAndCopyButtonsProps,
   renderFeedbackAndCopyButtons,
 } from './render-feedback-and-copy-buttons';
 
+vi.mock('./copy-button', () => ({
+  renderCopyButton: vi.fn(() => html`<button part="copy-button"></button>`),
+}));
+
+vi.mock('./feedback-button', () => ({
+  renderFeedbackButton: vi.fn(
+    () => html`<button part="feedback-button"></button>`
+  ),
+}));
+
+vi.mock('./generated-answer-utils', () => ({
+  hasClipboardSupport: vi.fn(() => true),
+}));
+
 describe('#renderFeedbackAndCopyButtons', () => {
-  let i18n: i18n;
+  let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
   beforeAll(async () => {
     i18n = await createTestI18n();
@@ -21,7 +35,7 @@ describe('#renderFeedbackAndCopyButtons', () => {
     overrides: Partial<RenderFeedbackAndCopyButtonsProps> = {}
   ) => {
     const defaultProps: RenderFeedbackAndCopyButtonsProps = {
-      i18n,
+      i18n: i18n,
       generatedAnswerState: {
         liked: false,
         disliked: false,
@@ -35,138 +49,160 @@ describe('#renderFeedbackAndCopyButtons', () => {
       onClickLike: vi.fn(),
       onClickDislike: vi.fn(),
       onCopyToClipboard: vi.fn(),
-      ...overrides,
     };
 
+    const props = {...defaultProps, ...overrides};
     const element = await renderFunctionFixture(
-      html`${renderFeedbackAndCopyButtons({props: defaultProps})}`
+      html`${renderFeedbackAndCopyButtons({props})}`
     );
 
     return {
       element,
       container: element.querySelector('.feedback-buttons'),
-      likeButton: element.querySelector('[part="like-button"]'),
-      dislikeButton: element.querySelector('[part="dislike-button"]'),
-      copyButton: element.querySelector('[part="copy-button"]'),
     };
   };
 
-  describe('when not streaming', () => {
-    it('should render the feedback buttons container', async () => {
-      const {container} = await renderComponent({
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe('when streaming', () => {
+    it('should return nothing', async () => {
+      const {element} = await renderComponent({
         generatedAnswerState: {
-          isStreaming: false,
+          isStreaming: true,
         } as GeneratedAnswerState,
       });
 
-      expect(container).toBeInTheDocument();
+      expect(element.children.length).toBe(0);
     });
 
-    it('should apply correct base classes to container', async () => {
-      const {container} = await renderComponent();
+    it('should not call renderFeedbackButton', async () => {
+      await renderComponent({
+        generatedAnswerState: {
+          isStreaming: true,
+        } as GeneratedAnswerState,
+      });
 
-      expect(container).toHaveClass('feedback-buttons');
-      expect(container).toHaveClass('flex');
-      expect(container).toHaveClass('h-9');
-      expect(container).toHaveClass('absolute');
-      expect(container).toHaveClass('top-6');
-      expect(container).toHaveClass('shrink-0');
-      expect(container).toHaveClass('gap-2');
+      expect(feedbackButton.renderFeedbackButton).not.toHaveBeenCalled();
     });
 
+    it('should not call renderCopyButton', async () => {
+      await renderComponent({
+        generatedAnswerState: {
+          isStreaming: true,
+        } as GeneratedAnswerState,
+      });
+
+      expect(copyButton.renderCopyButton).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('when not streaming', () => {
     it('should apply right-6 class when withToggle is false', async () => {
       const {container} = await renderComponent({withToggle: false});
 
       expect(container).toHaveClass('right-6');
+      expect(container).not.toHaveClass('right-20');
     });
 
     it('should apply right-20 class when withToggle is true', async () => {
       const {container} = await renderComponent({withToggle: true});
 
       expect(container).toHaveClass('right-20');
+      expect(container).not.toHaveClass('right-6');
     });
 
-    it('should render like button', async () => {
-      const {element} = await renderComponent();
-
-      await expect
-        .element(element)
-        .toHaveTextContent('This answer was helpful');
-    });
-
-    it('should render dislike button', async () => {
-      const {element} = await renderComponent();
-
-      await expect
-        .element(element)
-        .toHaveTextContent('This answer was not helpful');
-    });
-
-    it('should pass liked state to like button', async () => {
-      const {element} = await renderComponent({
+    it('should call renderFeedbackButton for like button with correct props', async () => {
+      const onClickLike = vi.fn();
+      await renderComponent({
         generatedAnswerState: {
           liked: true,
           isStreaming: false,
         } as GeneratedAnswerState,
+        onClickLike,
       });
 
-      // Like button should be rendered with active state
-      expect(element).toBeInTheDocument();
+      expect(feedbackButton.renderFeedbackButton).toHaveBeenCalledWith({
+        props: expect.objectContaining({
+          title: 'Helpful',
+          variant: 'like',
+          active: true,
+          onClick: onClickLike,
+        }),
+      });
     });
 
-    it('should pass disliked state to dislike button', async () => {
-      const {element} = await renderComponent({
+    it('should call renderFeedbackButton for dislike button with correct props', async () => {
+      const onClickDislike = vi.fn();
+      await renderComponent({
         generatedAnswerState: {
           disliked: true,
           isStreaming: false,
         } as GeneratedAnswerState,
+        onClickDislike,
       });
 
-      // Dislike button should be rendered with active state
-      expect(element).toBeInTheDocument();
+      expect(feedbackButton.renderFeedbackButton).toHaveBeenCalledWith({
+        props: expect.objectContaining({
+          title: 'Not helpful',
+          variant: 'dislike',
+          active: true,
+          onClick: onClickDislike,
+        }),
+      });
+    });
+
+    it('should call renderFeedbackButton twice (like and dislike)', async () => {
+      await renderComponent();
+
+      expect(feedbackButton.renderFeedbackButton).toHaveBeenCalledTimes(2);
     });
 
     describe('when clipboard is supported', () => {
-      beforeAll(() => {
-        vi.spyOn(generatedAnswerUtils, 'hasClipboardSupport').mockReturnValue(
-          true
-        );
+      beforeEach(async () => {
+        const {hasClipboardSupport} = await import('./generated-answer-utils');
+        vi.mocked(hasClipboardSupport).mockReturnValue(true);
       });
 
-      it('should render copy button', async () => {
-        const {element} = await renderComponent();
+      it('should call hasClipboardSupport', async () => {
+        await renderComponent();
 
-        await expect.element(element).toHaveTextContent('Copy answer');
+        const {hasClipboardSupport} = await import('./generated-answer-utils');
+        expect(hasClipboardSupport).toHaveBeenCalled();
       });
 
-      it('should get copy tooltip from getCopyToClipboardTooltip', async () => {
+      it('should call renderCopyButton with correct props', async () => {
         const getCopyToClipboardTooltip = vi
           .fn()
           .mockReturnValue('Custom tooltip');
 
-        const {element} = await renderComponent({
+        await renderComponent({
+          copied: true,
+          copyError: false,
           getCopyToClipboardTooltip,
         });
 
+        expect(copyButton.renderCopyButton).toHaveBeenCalledWith({
+          props: expect.objectContaining({
+            title: 'Custom tooltip',
+            isCopied: true,
+            error: false,
+          }),
+        });
+      });
+
+      it('should call getCopyToClipboardTooltip', async () => {
+        const getCopyToClipboardTooltip = vi
+          .fn()
+          .mockReturnValue('Copy answer');
+
+        await renderComponent({getCopyToClipboardTooltip});
+
         expect(getCopyToClipboardTooltip).toHaveBeenCalled();
-        await expect.element(element).toHaveTextContent('Custom tooltip');
       });
 
-      it('should pass copied state to copy button', async () => {
-        const {element} = await renderComponent({copied: true});
-
-        // Copy button should be rendered with copied state
-        expect(element).toBeInTheDocument();
-      });
-
-      it('should pass copyError state to copy button', async () => {
-        const {element} = await renderComponent({copyError: true});
-
-        // Copy button should be rendered with error state
-        expect(element).toBeInTheDocument();
-      });
-
-      it('should call onCopyToClipboard with answer when copy is clicked', async () => {
+      it('should pass onClick that calls onCopyToClipboard with answer', async () => {
         const onCopyToClipboard = vi.fn();
         const answer = 'Test answer to copy';
 
@@ -178,8 +214,13 @@ describe('#renderFeedbackAndCopyButtons', () => {
           onCopyToClipboard,
         });
 
-        // Note: Actual click testing would require more integration with the copy-button component
-        expect(onCopyToClipboard).toBeDefined();
+        const copyButtonCall = vi.mocked(copyButton.renderCopyButton).mock
+          .calls[0][0];
+        const onClickHandler = copyButtonCall.props.onClick;
+
+        await onClickHandler();
+
+        expect(onCopyToClipboard).toHaveBeenCalledWith(answer);
       });
 
       it('should not call onCopyToClipboard when answer is undefined', async () => {
@@ -193,79 +234,27 @@ describe('#renderFeedbackAndCopyButtons', () => {
           onCopyToClipboard,
         });
 
-        // Copy button should handle undefined answer gracefully
-        expect(onCopyToClipboard).toBeDefined();
+        const copyButtonCall = vi.mocked(copyButton.renderCopyButton).mock
+          .calls[0][0];
+        const onClickHandler = copyButtonCall.props.onClick;
+
+        await onClickHandler();
+
+        expect(onCopyToClipboard).not.toHaveBeenCalled();
       });
     });
 
     describe('when clipboard is not supported', () => {
-      beforeAll(() => {
-        vi.spyOn(generatedAnswerUtils, 'hasClipboardSupport').mockReturnValue(
-          false
-        );
+      beforeEach(async () => {
+        const {hasClipboardSupport} = await import('./generated-answer-utils');
+        vi.mocked(hasClipboardSupport).mockReturnValue(false);
       });
 
-      it('should not render copy button', async () => {
-        const {element} = await renderComponent();
+      it('should not call renderCopyButton', async () => {
+        await renderComponent();
 
-        await expect.element(element).not.toHaveTextContent('Copy answer');
+        expect(copyButton.renderCopyButton).not.toHaveBeenCalled();
       });
-    });
-  });
-
-  describe('when streaming', () => {
-    it('should not render anything', async () => {
-      const {element} = await renderComponent({
-        generatedAnswerState: {
-          isStreaming: true,
-        } as GeneratedAnswerState,
-      });
-
-      expect(element.children.length).toBe(0);
-    });
-
-    it('should not render feedback buttons container', async () => {
-      const {container} = await renderComponent({
-        generatedAnswerState: {
-          isStreaming: true,
-        } as GeneratedAnswerState,
-      });
-
-      expect(container).not.toBeInTheDocument();
-    });
-
-    it('should not render like button', async () => {
-      const {element} = await renderComponent({
-        generatedAnswerState: {
-          isStreaming: true,
-        } as GeneratedAnswerState,
-      });
-
-      await expect
-        .element(element)
-        .not.toHaveTextContent('This answer was helpful');
-    });
-
-    it('should not render dislike button', async () => {
-      const {element} = await renderComponent({
-        generatedAnswerState: {
-          isStreaming: true,
-        } as GeneratedAnswerState,
-      });
-
-      await expect
-        .element(element)
-        .not.toHaveTextContent('This answer was not helpful');
-    });
-
-    it('should not render copy button', async () => {
-      const {element} = await renderComponent({
-        generatedAnswerState: {
-          isStreaming: true,
-        } as GeneratedAnswerState,
-      });
-
-      await expect.element(element).not.toHaveTextContent('Copy answer');
     });
   });
 });

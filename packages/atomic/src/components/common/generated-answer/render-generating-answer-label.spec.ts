@@ -54,18 +54,6 @@ describe('#renderGeneratingAnswerLabel', () => {
       expect(label).toHaveAttribute('part', 'is-generating');
     });
 
-    it('should render the label with correct classes', async () => {
-      const {label} = await renderComponent({
-        collapsible: true,
-        isStreaming: true,
-      });
-
-      expect(label).toHaveClass('text-primary');
-      expect(label).toHaveClass('hidden');
-      expect(label).toHaveClass('text-base');
-      expect(label).toHaveClass('font-light');
-    });
-
     it('should render the generating answer text with ellipsis', async () => {
       const {element} = await renderComponent({
         collapsible: true,

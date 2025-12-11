@@ -1,6 +1,7 @@
 import type {GeneratedAnswerState} from '@coveo/headless';
 import type {i18n} from 'i18next';
 import {html, nothing} from 'lit';
+import {classMap} from 'lit/directives/class-map.js';
 import {renderCopyButton} from '@/src/components/common/generated-answer/copy-button';
 import {renderFeedbackButton} from '@/src/components/common/generated-answer/feedback-button';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
@@ -38,23 +39,18 @@ export const renderFeedbackAndCopyButtons: FunctionalComponent<
 
   const {liked, disliked, answer, isStreaming} = generatedAnswerState ?? {};
 
-  const containerClasses = [
-    'feedback-buttons',
-    'flex',
-    'h-9',
-    'absolute',
-    'top-6',
-    'shrink-0',
-    'gap-2',
-    withToggle ? 'right-20' : 'right-6',
-  ].join(' ');
-
   if (isStreaming) {
     return nothing;
   }
 
   return html`
-    <div class=${containerClasses}>
+    <div
+      class="${classMap({
+        'feedback-buttons flex h-9 absolute top-6 shrink-0 gap-2': true,
+        'right-20': !!withToggle,
+        'right-6': !withToggle,
+      })}"
+    >
       ${renderFeedbackButton({
         props: {
           title: i18n.t('this-answer-was-helpful'),
