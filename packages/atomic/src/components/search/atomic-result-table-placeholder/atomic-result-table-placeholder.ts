@@ -1,5 +1,5 @@
 import type {TemplateResult} from 'lit';
-import {html, LitElement} from 'lit';
+import {css, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {map} from 'lit/directives/map.js';
 import {
@@ -8,7 +8,6 @@ import {
   type ItemDisplayImageSize,
 } from '@/src/components/common/layout/item-layout-utils';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import styles from './atomic-result-table-placeholder.tw.css';
 
 /**
  * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
@@ -17,7 +16,42 @@ import styles from './atomic-result-table-placeholder.tw.css';
 @customElement('atomic-result-table-placeholder')
 @withTailwindStyles
 export class AtomicResultTablePlaceholder extends LitElement {
-  static styles = styles;
+  static styles = css`
+  @reference '../../common/item-list/styles/mixins.pcss';
+    :host {
+    display: grid;
+  }
+
+  .list-root.display-table {
+    @apply atomic-result-table border-neutral rounded-xl border;
+
+    thead tr,
+    tbody tr:not(:last-child) {
+      position: relative;
+
+      &::after {
+        content: ' ';
+        display: block;
+        position: absolute;
+        height: 1px;
+        bottom: 0;
+        left: var(--padding);
+        right: var(--padding);
+        @apply bg-neutral;
+      }
+    }
+
+    th,
+    td {
+      border-color: transparent;
+      border-radius: initial;
+    }
+
+    th {
+      background-color: transparent;
+    }
+  }
+  `;
   /**
    * The display density for the table.
    */
@@ -39,8 +73,6 @@ export class AtomicResultTablePlaceholder extends LitElement {
   }
 
   render(): TemplateResult {
-    const placeholderClasses = 'block bg-neutral rounded';
-
     return html`
       <table
         class="list-root animate-pulse ${this.getClasses().join(' ')}"
@@ -50,19 +82,19 @@ export class AtomicResultTablePlaceholder extends LitElement {
           <tr>
             <th>
               <div
-                class="mt-2 h-8 ${placeholderClasses}"
+                class="mt-2 h-8 block bg-neutral rounded"
                 style="width: 14.5rem;"
               ></div>
             </th>
             <th>
               <div
-                class="mt-2 h-8 ${placeholderClasses}"
+                class="mt-2 h-8 block bg-neutral rounded"
                 style="width: 9.75rem;"
               ></div>
             </th>
             <th>
               <div
-                class="mt-2 h-8 ${placeholderClasses}"
+                class="mt-2 h-8 block bg-neutral rounded"
                 style="width: 6.5rem;"
               ></div>
             </th>
@@ -75,27 +107,27 @@ export class AtomicResultTablePlaceholder extends LitElement {
               <tr>
                 <td>
                   <div
-                    class="mb-6 h-8 ${placeholderClasses}"
+                    class="mb-6 h-8 block bg-neutral rounded"
                     style="width: 22.875rem;"
                   ></div>
                   <div
-                    class="mb-2 h-5 ${placeholderClasses}"
+                    class="mb-2 h-5 block bg-neutral rounded"
                     style="width: 23.75rem;"
                   ></div>
                   <div
-                    class="h-5 ${placeholderClasses}"
+                    class="h-5 block bg-neutral rounded"
                     style="width: 11.5rem;"
                   ></div>
                 </td>
                 <td>
                   <div
-                    class="mt-1.5 h-5 ${placeholderClasses}"
+                    class="mt-1.5 h-5 block bg-neutral rounded"
                     style="width: 11rem;"
                   ></div>
                 </td>
                 <td>
                   <div
-                    class="mt-1.5 h-5 ${placeholderClasses}"
+                    class="mt-1.5 h-5 block bg-neutral rounded"
                     style="width: 4.875rem;"
                   ></div>
                 </td>
