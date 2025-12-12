@@ -3,7 +3,6 @@ import type {
   ChildProduct,
   InteractiveProduct as HeadlessInteractiveProduct,
   InteractiveSpotlightContent as HeadlessInteractiveSpotlightContent,
-  Product as HeadlessProduct,
   Result as HeadlessResult,
   InteractiveProductProps,
   InteractiveSpotlightContentProps,
@@ -56,9 +55,9 @@ export default function ResultList(props: IResultListProps) {
         ) : (
           <li className="Result" key={result.permanentid}>
             <InteractiveProduct
-              product={result as HeadlessProduct}
+              product={result}
               controller={productControllerBuilder({
-                options: {product: result as HeadlessProduct},
+                options: {product: result},
               })}
               cartController={cartController}
               navigate={navigate}
