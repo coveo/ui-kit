@@ -25,18 +25,20 @@ export default function InteractiveSpotlightContent(
         className="SpotlightContentLink"
         onClick={clickSpotlightContent}
       >
-        {spotlightContent.name}
+        {spotlightContent.name ?? 'Spotlight Content name not available'}
       </button>
       <div className="SpotlightContentImageWrapper">
         <img
           src={spotlightContent.desktopImage}
-          alt={spotlightContent.name}
+          alt={spotlightContent.name ?? 'Spotlight Content image'}
           height={100}
         />
       </div>
-      <div className="SpotlightContentDescription">
-        <p>{spotlightContent.description}</p>
-      </div>
+      {spotlightContent.description ? (
+        <div className="SpotlightContentDescription">
+          <p>{spotlightContent.description}</p>
+        </div>
+      ) : null}
       <hr />
     </div>
   );

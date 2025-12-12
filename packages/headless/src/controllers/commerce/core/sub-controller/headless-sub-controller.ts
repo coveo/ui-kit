@@ -39,6 +39,7 @@ import {
 } from '../interactive-product/headless-core-interactive-product.js';
 import {
   buildCoreInteractiveSpotlightContent,
+  type InteractiveSpotlightContent,
   type InteractiveSpotlightContentProps,
 } from '../interactive-spotlight-content/headless-core-interactive-spotlight-content.js';
 import {
@@ -151,7 +152,7 @@ export interface ProductListingSubControllers
    */
   interactiveSpotlightContent(
     props: InteractiveSpotlightContentProps
-  ): InteractiveProduct;
+  ): InteractiveSpotlightContent;
 }
 
 interface BaseSubControllerProps<S extends SummaryState> {
