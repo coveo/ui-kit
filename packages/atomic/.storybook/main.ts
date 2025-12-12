@@ -98,7 +98,7 @@ const config: StorybookConfig = {
   stories: isChromatic
     ? ['../storybook-pages/**/*.new.stories.tsx']
     : [
-        './Introduction.stories.tsx',
+        './Introduction.mdx',
         '../src/**/*.new.stories.tsx',
         '../src/**/*.mdx',
         '../storybook-pages/**/*.new.stories.tsx',
