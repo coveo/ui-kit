@@ -22,7 +22,7 @@ interface TabPopoverElement extends HTMLElement {
  * When tabs exceed the available container width, overflowing tabs are moved to a popover menu.
  *
  * @internal
- * @slot (default) - The tab elements to display.
+ * @slot default - The tab elements to display.
  */
 @customElement('atomic-tab-bar')
 @withTailwindStyles

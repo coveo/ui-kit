@@ -1,8 +1,10 @@
 import {html} from 'lit';
-import {describe, expect, it} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import type {AtomicIpxTabs} from './atomic-ipx-tabs';
 import './atomic-ipx-tabs';
+
+vi.mock('@/src/components/common/atomic-tab-bar/atomic-tab-bar');
 
 describe('atomic-ipx-tabs', () => {
   const renderComponent = async ({
