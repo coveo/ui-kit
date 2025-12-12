@@ -18,7 +18,7 @@ afterEach(() => {
 });
 
 beforeEach(async () => {
-  // vi.spyOn(console, 'error').mockImplementation(() => {});
+  vi.spyOn(console, 'error').mockImplementation(() => {});
   document.adoptedStyleSheets = [];
   fixtureCleanup();
 });
