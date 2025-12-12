@@ -43,7 +43,7 @@ export default function ResultList(props: IResultListProps) {
     <ul className="ResultList">
       {results.map((result) =>
         result.resultType === ResultType.SPOTLIGHT ? (
-          <li className="Result" key={result.id}>
+          <li className="Result" key={result.id + result.position}>
             <InteractiveSpotlightContent
               spotlightContent={result}
               controller={spotlightContentControllerBuilder({
