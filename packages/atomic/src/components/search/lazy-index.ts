@@ -4,6 +4,8 @@ export default {
     await import('./atomic-automatic-facet/atomic-automatic-facet.js'),
   'atomic-breadbox': async () =>
     await import('./atomic-breadbox/atomic-breadbox.js'),
+  'atomic-category-facet': async () =>
+    await import('./atomic-category-facet/atomic-category-facet.js'),
   'atomic-color-facet': async () =>
     await import('./atomic-color-facet/atomic-color-facet.js'),
   'atomic-external': async () =>
@@ -11,6 +13,8 @@ export default {
   'atomic-facet': async () => await import('./atomic-facet/atomic-facet.js'),
   'atomic-field-condition': async () =>
     await import('./atomic-field-condition/atomic-field-condition.js'),
+  'atomic-folded-result-list': async () =>
+    await import('./atomic-folded-result-list/atomic-folded-result-list.js'),
   'atomic-format-currency': async () =>
     await import('./atomic-format-currency/atomic-format-currency.js'),
   'atomic-format-number': async () =>
@@ -22,6 +26,8 @@ export default {
     await import('./atomic-load-more-results/atomic-load-more-results.js'),
   'atomic-no-results': async () =>
     await import('./atomic-no-results/atomic-no-results.js'),
+  'atomic-notifications': async () =>
+    await import('./atomic-notifications/atomic-notifications.js'),
   'atomic-pager': async () => await import('./atomic-pager/atomic-pager.js'),
   'atomic-popover': async () =>
     await import('./atomic-popover/atomic-popover.js'),

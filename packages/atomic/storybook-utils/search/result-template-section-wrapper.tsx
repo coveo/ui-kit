@@ -44,7 +44,7 @@ export const wrapInResultTemplateForSections = (): {
           <div class="text-sm text-gray-600">• Running 101</div>
         </div>
       </div>`},
-      {tag: 'atomic-result-section-visual', content: `<img src="https://picsum.photos/200" alt="Result Image" class="w-full h-auto rounded-lg">`},
+      {tag: 'atomic-result-section-visual', content: `<img src="https://picsum.photos/seed/picsum/200" alt="Result Image" class="w-full h-auto rounded-lg">`},
       {tag: 'atomic-result-section-title-metadata', content: `<span class="text-sm text-gray-500">fileType:
 txt</span>`},
       {tag: 'atomic-result-section-emphasized', content: `<span class="text-2xl font-bold">Breaking News!</span>`},

@@ -3,8 +3,9 @@ import {
   TagProps,
   TestFixture,
 } from '../../../fixtures/test-fixture';
-import {hierarchicalField} from '../category-facet/category-facet-actions';
-import {categoryFacetComponent} from '../category-facet/category-facet-selectors';
+
+const hierarchicalField = 'geographicalhierarchy';
+const categoryFacetComponent = 'atomic-category-facet';
 import {colorFacetField} from '../color-facet/color-facet-actions';
 import {colorFacetComponent} from '../color-facet/color-facet-selectors';
 import {field as facetField} from '../facet/facet-actions';

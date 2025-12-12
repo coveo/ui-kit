@@ -1,0 +1,77 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicCategoryFacetStories from './atomic-category-facet.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={ AtomicCategoryFacetStories } />
+
+<AtomicDocTemplate
+  stories={ AtomicCategoryFacetStories }
+  githubPath="search/atomic-category-facet/atomic-category-facet.ts"
+  tagName="atomic-category-facet"
+  className="AtomicCategoryFacet"
+>
+
+Use this component to display hierarchical facet values in a navigable tree structure. Category facets are ideal for taxonomies like product categories, geographical locations, or organizational hierarchies where values have parent-child relationships.
+
+Place this component within the "facets" section of your search layout. For Dynamic Navigation Experience (DNE) support, nest it inside an `atomic-facet-manager` component (see [DNE documentation](https://docs.coveo.com/en/2918)).
+
+## Usage
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="facets">
+      ...
+        <atomic-category-facet field="geographicalhierarchy" label="Location"></atomic-category-facet>
+
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+## Hierarchical Navigation
+
+The category facet allows users to drill down through levels of a hierarchy:
+
+1. Initially, only root-level values are displayed
+2. Selecting a value shows its child values
+3. Breadcrumb navigation allows users to navigate back up the hierarchy
+4. An "All Categories" button resets to the root level
+
+## Facet Search
+
+Enable facet search to allow users to find values across all levels of the hierarchy:
+
+```html
+<atomic-category-facet 
+  field="geographicalhierarchy" 
+  label="Location"
+  with-search
+></atomic-category-facet>
+```
+
+Search results display the full path to each matching value, helping users understand where values exist in the hierarchy.
+
+## Customizing the "All Categories" Label
+
+You can customize the "All Categories" button label using i18n. The component looks for translation keys in this order:
+
+1. `all-categories-{facet-id}` - Custom label for a specific facet by ID
+2. `all-categories-{field}` - Custom label for facets using a specific field
+3. `all-categories` - Default fallback
+
+```javascript
+// Customize by facet ID
+searchInterface.i18n.addResourceBundle('en', 'translation', {
+  'all-categories-my-location-facet': 'All Locations'
+});
+
+// Or customize by field
+searchInterface.i18n.addResourceBundle('en', 'translation', {
+  'all-categories-geographicalhierarchy': 'All Regions'
+});
+```
+
+</AtomicDocTemplate>

@@ -14,7 +14,7 @@ searchApiHarness.searchEndpoint.mock((response) => ({
     ...result,
     raw: {
       ...result.raw,
-      thumbnail: 'https://picsum.photos/200',
+      thumbnail: 'https://picsum.photos/seed/picsum/200',
       alt_description: 'A beautiful placeholder image',
     },
   })),
@@ -75,6 +75,6 @@ export const WithAltTextField: Story = {
 export const WithFallback: Story = {
   args: {
     field: 'nonexistent_field',
-    fallback: 'https://picsum.photos/200/200',
+    fallback: 'https://picsum.photos/seed/picsum/200/200',
   },
 };
