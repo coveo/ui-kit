@@ -32,7 +32,7 @@ export default function InteractiveSpotlightContent(
           src={spotlightContent.desktopImage}
           alt={spotlightContent.name}
           height={100}
-        ></img>
+        />
       </div>
       <div className="SpotlightContentDescription">
         <p>{spotlightContent.description}</p>
