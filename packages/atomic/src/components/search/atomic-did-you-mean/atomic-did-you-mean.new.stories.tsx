@@ -16,12 +16,11 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 );
 
 const meta: Meta = {
-  title: 'Search/DidYouMean',
+  title: 'Search/Did You Mean',
   id: 'atomic-did-you-mean',
   component: 'atomic-did-you-mean',
   render: (args) => html`
   <div style="display: flex; justify-content: flex-start;">
-    <atomic-search-box style="flex-grow:1"></atomic-search-box>
     ${template(args)}
   </div>`,
   decorators: [decorator],
@@ -41,12 +40,6 @@ const meta: Meta = {
 };
 
 export default meta;
-
-export const Default: Story = {
-  name: 'atomic-did-you-mean',
-};
-
-export const QueryTrigger: Story = {};
 
 export const WithAutomaticQueryCorrection: Story = {
   name: 'With automatic query correction',

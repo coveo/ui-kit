@@ -1,4 +1,4 @@
-export function insertMetaTags() {
+export const insertMetaTags = () => {
   const head = document.getElementsByTagName('head')[0];
   if (head) {
     head.innerHTML += `
@@ -8,4 +8,4 @@ export function insertMetaTags() {
       <meta name="docsSiteBaseUrl" content="/en">
       `;
   }
-}
+};
