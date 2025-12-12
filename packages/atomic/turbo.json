@@ -13,6 +13,21 @@
       "dependsOn": ["build:cem", "build:list-assets", "build:copy-assets"],
       "outputs": ["./dist-storybook/**"]
     },
+    "chromatic:build": {
+      "dependsOn": ["build:cem", "build:list-assets", "build:copy-assets"],
+      "outputs": ["./dist-chromatic/**"],
+      "env": ["IS_CHROMATIC"]
+    },
+    "chromatic": {
+      "dependsOn": ["chromatic:build"],
+      "outputs": [],
+      "env": [
+        "CHROMATIC_PROJECT_TOKEN",
+        "CHROMATIC_SHA",
+        "CHROMATIC_BRANCH",
+        "CHROMATIC_SLUG"
+      ]
+    },
     "build:cem": {
       "dependsOn": ["build:stencil-lit"],
       "outputs": ["./custom-elements.json"]

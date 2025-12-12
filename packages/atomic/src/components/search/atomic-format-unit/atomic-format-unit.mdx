@@ -1,0 +1,62 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicFormatUnitStories from './atomic-format-unit.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicFormatUnitStories} />
+
+<AtomicDocTemplate
+  stories={AtomicFormatUnitStories}
+  githubPath="search/atomic-format-unit/atomic-format-unit.ts"
+  tagName="atomic-format-unit"
+  className="AtomicFormatUnit"
+  defaultStory="Facet"
+>
+
+The `atomic-format-unit` component is used for formatting numbers with units.
+The numerical format of compatible parents will be set according to the properties of this component.
+
+This component is used within compatible parent components such as `atomic-result-number` or `atomic-numeric-facet`:
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-result-list>
+    <atomic-result-template>
+      <template>
+        <atomic-result-number field="size">
+          <atomic-format-unit unit="byte"></atomic-format-unit>
+        </atomic-result-number>
+      </template>
+    </atomic-result-template>
+  </atomic-result-list>
+  ...
+</atomic-search-interface>
+```
+
+### Within a Numeric Facet
+
+```html
+<atomic-numeric-facet field="size">
+  <atomic-format-unit unit="byte" unit-display="long"></atomic-format-unit>
+</atomic-numeric-facet>
+```
+
+### Unit Display Styles
+
+The `unit-display` property controls how the unit is displayed:
+
+- `"long"`: Full unit name (e.g., "16 liters")
+- `"short"`: Abbreviated unit (e.g., "16 L") - **default**
+- `"narrow"`: Compact format (e.g., "16L")
+
+### Sanctioned Units
+
+The `unit` property must be a [sanctioned unit identifier](https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-issanctionedsimpleunitidentifier) as defined by the Intl.NumberFormat specification. Common examples include:
+
+- `"byte"`, `"kilobyte"`, `"megabyte"`, `"gigabyte"`
+- `"meter"`, `"kilometer"`, `"mile"`
+- `"liter"`, `"gallon"`
+- `"second"`, `"minute"`, `"hour"`, `"day"`
+
+</AtomicDocTemplate>
