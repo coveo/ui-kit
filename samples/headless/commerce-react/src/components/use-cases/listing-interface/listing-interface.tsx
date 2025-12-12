@@ -7,8 +7,8 @@ import {useEffect, useState} from 'react';
 import BreadcrumbManager from '../../breadcrumb-manager/breadcrumb-manager.js';
 import FacetGenerator from '../../facets/facet-generator/facet-generator.js';
 import Pagination from '../../pagination/pagination.js';
-import ProductList from '../../product-list/product-list.js';
 import ProductsPerPage from '../../products-per-page/products-per-page.js';
+import ResultList from '../../result-list/result-list.js';
 import Sort from '../../sort/sort.js';
 import Summary from '../../summary/summary.js';
 import './listing-interface.css';
@@ -43,16 +43,18 @@ export default function ListingInterface(props: IListingInterface) {
       </div>
       <div className="column medium">
         <BreadcrumbManager controller={listingController.breadcrumbManager()} />
-
-        <ProductList
-          products={listingState.products}
-          controllerBuilder={listingController.interactiveProduct}
+        <ResultList
+          results={listingState.results}
+          productControllerBuilder={listingController.interactiveProduct}
+          spotlightContentControllerBuilder={
+            listingController.interactiveSpotlightContent
+          }
           cartController={cartController}
           promoteChildToParent={(child: ChildProduct) =>
             listingController.promoteChildToParent(child)
           }
           navigate={navigate}
-        ></ProductList>
+        />
         <ProductsPerPage controller={paginationController} />
         <ShowMore
           controller={paginationController}

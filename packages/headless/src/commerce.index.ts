@@ -178,6 +178,11 @@ export type {
   InteractiveProductProps,
 } from './controllers/commerce/core/interactive-product/headless-core-interactive-product.js';
 export type {
+  InteractiveSpotlightContent,
+  InteractiveSpotlightContentOptions,
+  InteractiveSpotlightContentProps,
+} from './controllers/commerce/core/interactive-spotlight-content/headless-core-interactive-spotlight-content.js';
+export type {
   Pagination,
   PaginationOptions,
   PaginationProps,
