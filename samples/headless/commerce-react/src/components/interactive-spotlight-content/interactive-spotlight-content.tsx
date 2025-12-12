@@ -34,7 +34,7 @@ export default function InteractiveSpotlightContent(
           height={100}
         ></img>
       </div>
-      <div className="ProductDescription">
+      <div className="SpotlightContentDescription">
         <p>{spotlightContent.description}</p>
       </div>
       <hr />
