@@ -13,7 +13,7 @@ export default function InteractiveSpotlightContent(
 ) {
   const {spotlightContent, controller} = props;
 
-  const handleClick = () => {
+  const clickSpotlightContent = () => {
     controller.select();
     window.open(spotlightContent.clickUri, '_blank', 'noopener,noreferrer');
   };
@@ -23,7 +23,7 @@ export default function InteractiveSpotlightContent(
       <button
         type="button"
         className="SpotlightContentLink"
-        onClick={handleClick}
+        onClick={clickSpotlightContent}
       >
         {spotlightContent.name}
       </button>
