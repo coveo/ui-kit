@@ -1,5 +1,6 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html, unsafeStatic} from 'lit/static-html.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {
@@ -83,29 +84,34 @@ const mockDefaultDateFacetResponse = () => {
   });
 };
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-timeframe-facet',
-  {excludeCategories: ['methods']}
-);
-
 const {decorator, play} = wrapInSearchInterface();
+
+const {events, args, argTypes} = getStorybookHelpers('atomic-timeframe-facet', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-timeframe-facet',
   title: 'Search/TimeframeFacet',
   id: 'atomic-timeframe-facet',
-  args: {
-    ...args,
-    'default-slot': `
-    <atomic-timeframe unit="hour"></atomic-timeframe>
-    <atomic-timeframe unit="day"></atomic-timeframe>
-    <atomic-timeframe unit="week"></atomic-timeframe>
-    <atomic-timeframe unit="month"></atomic-timeframe>
-    <atomic-timeframe unit="quarter"></atomic-timeframe>
-    <atomic-timeframe unit="year"></atomic-timeframe>
-  `,
+  render: (args) => {
+    const {'default-slot': slot, ...props} = args;
+
+    // Build attribute string from props
+    const attributes = Object.entries(props)
+      .filter(([_, value]) => value !== undefined && value !== null)
+      .map(([key, value]) => {
+        if (typeof value === 'boolean') {
+          return value ? key : '';
+        }
+        return `${key}="${value}"`;
+      })
+      .filter(Boolean)
+      .join(' ');
+
+    const tag = unsafeStatic(`atomic-timeframe-facet ${attributes}`);
+    return html`<${tag}>${slot}</${unsafeStatic('atomic-timeframe-facet')}>`;
   },
-  render: (args) => template(args),
   decorators: [facetDecorator, withFacetContainer, decorator],
   parameters: {
     ...parameters,
@@ -114,6 +120,7 @@ const meta: Meta = {
     },
     msw: {handlers: [...searchApiHarness.handlers]},
   },
+  args,
   argTypes,
   beforeEach: () => {
     searchApiHarness.searchEndpoint.clear();
@@ -125,6 +132,16 @@ export default meta;
 
 export const Default: Story = {
   name: 'atomic-timeframe-facet',
+  args: {
+    'default-slot': html`
+      <atomic-timeframe unit="hour"></atomic-timeframe>
+      <atomic-timeframe unit="day"></atomic-timeframe>
+      <atomic-timeframe unit="week"></atomic-timeframe>
+      <atomic-timeframe unit="month"></atomic-timeframe>
+      <atomic-timeframe unit="quarter"></atomic-timeframe>
+      <atomic-timeframe unit="year"></atomic-timeframe>
+    `,
+  },
   beforeEach: () => {
     mockDefaultDateFacetResponse();
   },
