@@ -7,6 +7,7 @@ import {getManualNumericFacetInitialState} from '../features/commerce/facets/num
 import {getInstantProductsInitialState} from '../features/commerce/instant-products/instant-products-state.js';
 import {getCommercePaginationInitialState} from '../features/commerce/pagination/pagination-state.js';
 import {getCommerceParametersInitialState} from '../features/commerce/parameters/parameters-state.js';
+import {getProductEnrichmentInitialState} from '../features/commerce/product-enrichment/product-enrichment-state.js';
 import {getProductListingInitialState} from '../features/commerce/product-listing/product-listing-state.js';
 import {getCommerceQueryInitialState} from '../features/commerce/query/query-state.js';
 import {getRecommendationsInitialState} from '../features/commerce/recommendations/recommendations-state.js';
@@ -51,6 +52,7 @@ export function buildMockCommerceState(
     triggers: getTriggerInitialState(),
     fieldSuggestionsOrder: getFieldSuggestionsOrderInitialState(),
     manualNumericFacetSet: getManualNumericFacetInitialState(),
+    productEnrichment: getProductEnrichmentInitialState(),
     version: 'unit-testing-version',
     ...config,
   };

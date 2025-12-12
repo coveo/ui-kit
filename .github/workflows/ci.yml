@@ -63,6 +63,8 @@ jobs:
           load-cache: "false"
   build-missing:
     name: "Build & commit missing generated files"
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     environment: PR Artifacts
     steps:
@@ -308,8 +310,7 @@ jobs:
       - name: Identify E2E Test Files to run
         id: determine-tests
         run: |
-          runAllTests=$([ "${{ github.event_name }}" == "merge_group" ] && echo true || echo false)
-          node ./scripts/ci/determine-tests.mjs testsToRun shardIndex shardTotal $runAllTests
+          node ./scripts/ci/determine-tests.mjs testsToRun shardIndex shardTotal true
 
         env:
           projectRoot: ${{ github.workspace }}

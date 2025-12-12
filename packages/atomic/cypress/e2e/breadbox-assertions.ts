@@ -1,7 +1,8 @@
 import {deselectBreadcrumbAtIndex} from './breadbox-actions';
 import {BreadboxSelectors} from './breadbox-selectors';
 import {should} from './common-assertions';
-import {categoryFacetLabel} from './facets/category-facet/category-facet-actions';
+
+const categoryFacetLabel = 'Atlas';
 import {colorFacetLabel} from './facets/color-facet/color-facet-actions';
 import {ColorFacetSelectors} from './facets/color-facet/color-facet-selectors';
 import {
