@@ -21,10 +21,6 @@ describe('TimeframeFacetCommon', () => {
         // TODO: Fill in Step 1
       });
     });
-
-    it('should call props.setFacetId with determined facetId', () => {
-      // TODO: Fill in Step 1
-    });
   });
 
   describe('conditional controller creation', () => {
@@ -62,7 +58,15 @@ describe('TimeframeFacetCommon', () => {
       // TODO: Fill in Step 1
     });
 
-    it('should NOT create dependency managers for undefined controllers', () => {
+    it('should NOT create facetForDateRangeDependenciesManager when facetForDateRange does not exist', () => {
+      // TODO: Fill in Step 1
+    });
+
+    it('should NOT create facetForDatePickerDependenciesManager when facetForDatePicker does not exist', () => {
+      // TODO: Fill in Step 1
+    });
+
+    it('should NOT create filterDependenciesManager when filter does not exist', () => {
       // TODO: Fill in Step 1
     });
   });
@@ -123,25 +127,25 @@ describe('TimeframeFacetCommon', () => {
 
   describe('#render method (public API)', () => {
     describe('early returns', () => {
-      it('should render Hidden when hasError is true', () => {
+      it('should render nothing when hasError is true', () => {
         // TODO: Fill in Step 1
       });
 
-      it('should render Hidden when enabled is false', () => {
+      it('should render nothing when enabled is false', () => {
         // TODO: Fill in Step 1
       });
 
-      it('should render FacetPlaceholder when firstSearchExecuted is false', () => {
+      it('should render a facet placeholder when firstSearchExecuted is false', () => {
         // TODO: Fill in Step 1
       });
 
-      it('should render Hidden when shouldRenderFacet is false', () => {
+      it('should render nothing when shouldRenderFacet is false', () => {
         // TODO: Fill in Step 1
       });
     });
 
     describe('successful render', () => {
-      it('should render FacetContainer with header when conditions met', () => {
+      it('should render a facet container with header when conditions met', () => {
         // TODO: Fill in Step 1
       });
 
@@ -160,11 +164,11 @@ describe('TimeframeFacetCommon', () => {
         // TODO: Fill in Step 1
       });
 
-      it('should render individual value with FacetValueLink', () => {
+      it('should render individual value with a facet value link', () => {
         // TODO: Fill in Step 1
       });
 
-      it('should render individual value with FacetValueLabelHighlight', () => {
+      it('should render individual value with a facet value label highlight', () => {
         // TODO: Fill in Step 1
       });
 
