@@ -24,6 +24,7 @@ import type {ManualNumericFacetSetState} from '../features/commerce/facets/numer
 import type {InstantProductsState} from '../features/commerce/instant-products/instant-products-state.js';
 import type {CommercePaginationState} from '../features/commerce/pagination/pagination-state.js';
 import type {CommerceParametersState} from '../features/commerce/parameters/parameters-state.js';
+import type {ProductEnrichmentState} from '../features/commerce/product-enrichment/product-enrichment-state.js';
 import type {ProductListingState} from '../features/commerce/product-listing/product-listing-state.js';
 import type {CommerceQueryState} from '../features/commerce/query/query-state.js';
 import type {RecommendationsState as CommerceRecommendationsState} from '../features/commerce/recommendations/recommendations-state.js';
@@ -421,6 +422,13 @@ export interface RecentQueriesSection {
    * The recent queries executed by the current user.
    */
   recentQueries: RecentQueriesState;
+}
+
+export interface ProductEnrichmentSection {
+  /**
+   * The product enrichment state containing badge placements.
+   */
+  productEnrichment: ProductEnrichmentState;
 }
 
 export interface CaseAssistConfigurationSection {
