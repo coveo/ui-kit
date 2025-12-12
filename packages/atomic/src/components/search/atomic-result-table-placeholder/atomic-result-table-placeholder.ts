@@ -76,7 +76,6 @@ export class AtomicResultTablePlaceholder extends LitElement {
     return html`
       <table
         class="list-root animate-pulse ${this.getClasses().join(' ')}"
-        part="table"
       >
         <thead aria-hidden="true">
           <tr>
