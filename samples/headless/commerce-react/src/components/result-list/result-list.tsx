@@ -43,7 +43,9 @@ export default function ResultList(props: IResultListProps) {
     <ul className="ResultList">
       {results.map((result) =>
         result.resultType === ResultType.SPOTLIGHT ? (
-          <li className="Result" key={result.id + result.position}>
+          // keying on result.id should be fine so long as you do not have
+          // the same spotlight content appearing twice in one page.
+          <li className="Result" key={result.id}>
             <InteractiveSpotlightContent
               spotlightContent={result}
               controller={spotlightContentControllerBuilder({
