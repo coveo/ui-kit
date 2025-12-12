@@ -75,7 +75,7 @@ describe('atomic-generated-answer', () => {
           .collapsible=${props.collapsible ?? false}
           .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
           .answerConfigurationId=${props.answerConfigurationId}
-          .fieldsToIncludeInCitations=${props.fieldsToIncludeInCitations}
+          fields-to-include-in-citations=${props.fieldsToIncludeInCitations}
           .maxCollapsedHeight=${props.maxCollapsedHeight}
         ></atomic-generated-answer>`,
         selector: 'atomic-generated-answer',
@@ -595,6 +595,7 @@ describe('atomic-generated-answer', () => {
   });
 
   describe('fieldsToIncludeInCitations property', () => {
+    // TODO V4 (KIT-5306): Remove legacy comma-separated string support and update tests
     it('should parse comma-separated fields and pass to buildGeneratedAnswer', async () => {
       await renderGeneratedAnswer({
         props: {fieldsToIncludeInCitations: 'author,date,custom_field'},
