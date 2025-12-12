@@ -107,34 +107,30 @@ describe('atomic-did-you-mean', () => {
     expect(element).toHaveTextContent('');
   });
 
-  describe('when automaticallyCorrectQuery prop is true by default', () => {
-    it('should call buildDidYouMean with automaticallyCorrectQuery: true', async () => {
-      await renderDidYouMean();
+  it('should call buildDidYouMean with automaticallyCorrectQuery: true when automaticallyCorrectQuery is true', async () => {
+    await renderDidYouMean();
 
-      expect(buildDidYouMean).toHaveBeenCalledWith(
-        mockedEngine,
-        expect.objectContaining({
-          options: expect.objectContaining({
-            automaticallyCorrectQuery: true,
-          }),
-        })
-      );
-    });
+    expect(buildDidYouMean).toHaveBeenCalledWith(
+      mockedEngine,
+      expect.objectContaining({
+        options: expect.objectContaining({
+          automaticallyCorrectQuery: true,
+        }),
+      })
+    );
   });
 
-  describe('when queryCorrectionMode prop changes', () => {
-    it('should call updateQueryCorrectionMode on the controller', async () => {
-      const {element} = await renderDidYouMean({
-        queryCorrectionMode: 'legacy',
-      });
-
-      const spy = vi.spyOn(element.didYouMean, 'updateQueryCorrectionMode');
-
-      element.queryCorrectionMode = 'next';
-      await element.updateComplete;
-
-      expect(spy).toHaveBeenCalledWith('next');
+  it('should call updateQueryCorrectionMode on the controller when queryCorrectionMode changes', async () => {
+    const {element} = await renderDidYouMean({
+      queryCorrectionMode: 'legacy',
     });
+
+    const spy = vi.spyOn(element.didYouMean, 'updateQueryCorrectionMode');
+
+    element.queryCorrectionMode = 'next';
+    await element.updateComplete;
+
+    expect(spy).toHaveBeenCalledWith('next');
   });
 
   describe('when query was automatically corrected', () => {

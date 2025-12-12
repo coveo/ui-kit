@@ -1,3 +1,4 @@
+import {Schema, StringValue} from '@coveo/bueno';
 import {
   buildDidYouMean,
   buildQueryTrigger,
@@ -9,6 +10,7 @@ import {
 import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -80,6 +82,23 @@ export class AtomicDidYouMean
    */
   @property({reflect: true, type: String, attribute: 'query-correction-mode'})
   public queryCorrectionMode: 'legacy' | 'next' = 'next';
+
+  constructor() {
+    super();
+
+    new ValidatePropsController(
+      this,
+      () => ({
+        queryCorrectionMode: this.queryCorrectionMode,
+      }),
+      new Schema({
+        queryCorrectionMode: new StringValue({
+          constrainTo: ['legacy', 'next'],
+        }),
+      }),
+      false
+    );
+  }
 
   public initialize() {
     this.didYouMean = buildDidYouMean(this.bindings.engine, {
