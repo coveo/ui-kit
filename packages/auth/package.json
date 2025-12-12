@@ -42,7 +42,7 @@
   "homepage": "https://github.com/coveo/ui-kit/packages/auth#readme",
   "devDependencies": {
     "jest": "catalog:",
-    "ts-jest": "29.4.0",
+    "ts-jest": "29.4.6",
     "vite": "catalog:"
   },
   "engines": {
