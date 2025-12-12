@@ -40,6 +40,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-commerce-text',
   'atomic-commerce-timeframe-facet',
   'atomic-component-error',
+  'atomic-did-you-mean',
   'atomic-external',
   'atomic-facet',
   'atomic-facet-date-input',

@@ -8,6 +8,8 @@ export default {
     await import('./atomic-category-facet/atomic-category-facet.js'),
   'atomic-color-facet': async () =>
     await import('./atomic-color-facet/atomic-color-facet.js'),
+  'atomic-did-you-mean': async () =>
+    await import('./atomic-did-you-mean/atomic-did-you-mean.js'),
   'atomic-external': async () =>
     await import('./atomic-external/atomic-external.js'),
   'atomic-facet': async () => await import('./atomic-facet/atomic-facet.js'),

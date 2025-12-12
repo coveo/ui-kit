@@ -3,6 +3,7 @@ export {AtomicAutomaticFacet} from './atomic-automatic-facet/atomic-automatic-fa
 export {AtomicBreadbox} from './atomic-breadbox/atomic-breadbox.js';
 export {AtomicCategoryFacet} from './atomic-category-facet/atomic-category-facet.js';
 export {AtomicColorFacet} from './atomic-color-facet/atomic-color-facet.js';
+export {AtomicDidYouMean} from './atomic-did-you-mean/atomic-did-you-mean.js';
 export {AtomicExternal} from './atomic-external/atomic-external.js';
 export {AtomicFacet} from './atomic-facet/atomic-facet.js';
 export {AtomicFieldCondition} from './atomic-field-condition/atomic-field-condition.js';
