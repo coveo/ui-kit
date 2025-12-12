@@ -30,7 +30,6 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-refine-toggle',
   decorators: [
     (story) => html`
       ${story()}
