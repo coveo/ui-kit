@@ -54,6 +54,12 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
    * @default false
    */
   @api disableCitationAnchoring = false;
+  /**
+   * The variant of the citation.
+   * @api
+   * @type {string} "default" || "active"
+   */
+  @api variant = 'default';
 
   /** @type {Object} */
   timeout;
@@ -246,5 +252,11 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
     return this.isSalesforceLink
       ? this.salesforceRecordUrl
       : (this.clickUri ?? this.citation?.uri);
+  }
+
+  get citationTitleClasses() {
+    return this.variant === 'active'
+      ? 'citation__title citation__title--active slds-m-left_x-small slds-truncate slds-has-flexi-truncate'
+      : 'citation__title slds-m-left_x-small slds-truncate slds-has-flexi-truncate';
   }
 }

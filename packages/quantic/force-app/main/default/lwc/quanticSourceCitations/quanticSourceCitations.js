@@ -56,6 +56,11 @@ export default class QuanticSourceCitations extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
+
+    // Push citation data to slotted custom components
+    if (this.isInitialized) {
+      this._pushDataToCustomSlots();
+    }
   }
 
   initialize = (engine) => {
@@ -63,6 +68,43 @@ export default class QuanticSourceCitations extends LightningElement {
     this.engine = engine;
     this.isInitialized = true;
   };
+
+  /**
+   * Pushes citation data to custom slotted components
+   * @private
+   */
+  _pushDataToCustomSlots() {
+    const slots = this.template.querySelectorAll('slot[name="citation-component"]');
+    if (!slots || slots.length === 0) return;
+
+    slots.forEach((slotEl, index) => {
+      // @ts-ignore
+      const assigned = slotEl.assignedElements({flatten: true});
+      
+      // If nothing assigned, fallback is showing - don't push to it
+      if (assigned.length === 0) {
+        return; // Using fallback content
+      }
+
+      // Get the corresponding citation for this slot
+      const citationData = this.indexedCitations[index];
+      if (!citationData) return;
+
+      // Push data to each assigned element
+      assigned.forEach((el) => {
+        // Set the public API properties directly
+        if ('citation' in el) {
+          el.citation = citationData.data;
+        }
+        if ('interactiveCitation' in el) {
+          el.interactiveCitation = citationData.interactiveCitation;
+        }
+        if ('engineId' in el) {
+          el.engineId = this.engineId;
+        }
+      });
+    });
+  }
 
   /**
    * Returns the indexed citations.
