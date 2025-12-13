@@ -21,6 +21,7 @@ import {ArrayProp} from '../../../utils/props-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {shouldDisplayOnCurrentTab} from '../../../utils/tab-utils';
 import {GeneratedAnswerCommon} from '../../common/generated-answer/generated-answer-common';
+import '../../common/generated-answer/atomic-citation/atomic-citation';
 import {Hidden} from '../../common/stencil-hidden';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
