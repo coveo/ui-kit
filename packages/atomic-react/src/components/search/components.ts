@@ -13,6 +13,7 @@ import {
   AtomicFormatCurrency as LitAtomicFormatCurrency,
   AtomicFormatNumber as LitAtomicFormatNumber,
   AtomicFormatUnit as LitAtomicFormatUnit,
+  AtomicGeneratedAnswer as LitAtomicGeneratedAnswer,
   AtomicHtml as LitAtomicHtml,
   AtomicIcon as LitAtomicIcon,
   AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
@@ -155,6 +156,12 @@ export const AtomicFormatUnit = createComponent({
   tagName: 'atomic-format-unit',
   react: React,
   elementClass: LitAtomicFormatUnit,
+});
+
+export const AtomicGeneratedAnswer = createComponent({
+  tagName: 'atomic-generated-answer',
+  react: React,
+  elementClass: LitAtomicGeneratedAnswer,
 });
 
 export const AtomicHtml = createComponent({
