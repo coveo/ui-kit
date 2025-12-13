@@ -125,7 +125,7 @@ export namespace Components {
         /**
           * A list of fields to include with the citations used to generate the answer.
          */
-        "fieldsToIncludeInCitations"?: string;
+        "fieldsToIncludeInCitations"?: string | string[];
         /**
           * The maximum height (in rem units) of the answer when collapsed.
          */
@@ -2397,7 +2397,7 @@ declare namespace LocalJSX {
         /**
           * A list of fields to include with the citations used to generate the answer.
          */
-        "fieldsToIncludeInCitations"?: string;
+        "fieldsToIncludeInCitations"?: string | string[];
         /**
           * The maximum height (in rem units) of the answer when collapsed.
          */
