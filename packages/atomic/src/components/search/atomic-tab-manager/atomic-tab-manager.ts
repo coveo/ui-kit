@@ -7,6 +7,7 @@ import {
 } from '@coveo/headless';
 import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import '@/src/components/common/atomic-tab-button/atomic-tab-button';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';

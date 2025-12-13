@@ -1277,20 +1277,6 @@ export namespace Components {
     }
     interface AtomicTabBar {
     }
-    interface AtomicTabButton {
-        /**
-          * Whether the tab button is active.
-         */
-        "active": boolean;
-        /**
-          * The label to display on the tab button.
-         */
-        "label": string;
-        /**
-          * Click handler for the tab button.
-         */
-        "select": () => void;
-    }
     interface AtomicTabPopover {
         "closePopoverOnFocusOut": (event: FocusEvent) => Promise<void>;
         "setButtonVisibility": (isVisible: boolean) => Promise<void>;
@@ -2196,12 +2182,6 @@ declare global {
         prototype: HTMLAtomicTabBarElement;
         new (): HTMLAtomicTabBarElement;
     };
-    interface HTMLAtomicTabButtonElement extends Components.AtomicTabButton, HTMLStencilElement {
-    }
-    var HTMLAtomicTabButtonElement: {
-        prototype: HTMLAtomicTabButtonElement;
-        new (): HTMLAtomicTabButtonElement;
-    };
     interface HTMLAtomicTabPopoverElement extends Components.AtomicTabPopover, HTMLStencilElement {
     }
     var HTMLAtomicTabPopoverElement: {
@@ -2299,7 +2279,6 @@ declare global {
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
         "atomic-tab-bar": HTMLAtomicTabBarElement;
-        "atomic-tab-button": HTMLAtomicTabButtonElement;
         "atomic-tab-popover": HTMLAtomicTabPopoverElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
@@ -3530,20 +3509,6 @@ declare namespace LocalJSX {
     }
     interface AtomicTabBar {
     }
-    interface AtomicTabButton {
-        /**
-          * Whether the tab button is active.
-         */
-        "active"?: boolean;
-        /**
-          * The label to display on the tab button.
-         */
-        "label": string;
-        /**
-          * Click handler for the tab button.
-         */
-        "select": () => void;
-    }
     interface AtomicTabPopover {
     }
     /**
@@ -3701,7 +3666,6 @@ declare namespace LocalJSX {
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
         "atomic-tab-bar": AtomicTabBar;
-        "atomic-tab-button": AtomicTabButton;
         "atomic-tab-popover": AtomicTabPopover;
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
@@ -3924,7 +3888,6 @@ declare module "@stencil/core" {
              */
             "atomic-suggestion-renderer": LocalJSX.AtomicSuggestionRenderer & JSXBase.HTMLAttributes<HTMLAtomicSuggestionRendererElement>;
             "atomic-tab-bar": LocalJSX.AtomicTabBar & JSXBase.HTMLAttributes<HTMLAtomicTabBarElement>;
-            "atomic-tab-button": LocalJSX.AtomicTabButton & JSXBase.HTMLAttributes<HTMLAtomicTabButtonElement>;
             "atomic-tab-popover": LocalJSX.AtomicTabPopover & JSXBase.HTMLAttributes<HTMLAtomicTabPopoverElement>;
             /**
              * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.

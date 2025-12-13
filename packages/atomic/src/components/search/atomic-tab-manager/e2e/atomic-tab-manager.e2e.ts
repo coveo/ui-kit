@@ -12,7 +12,9 @@ test.describe('atomic-tab-manager', () => {
 
   test('should display tab buttons for each atomic-tab element', async ({
     tabManager,
+    page,
   }) => {
+    await page.setViewportSize({width: 1920, height: 1080});
     await expect(tabManager.tabButtons()).toHaveText([
       /All/,
       /Documentation/,
