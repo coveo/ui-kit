@@ -4,6 +4,8 @@ import {renderInAtomicInsightInterface} from '@/vitest-utils/testing-helpers/fix
 import type {AtomicInsightTabs} from './atomic-insight-tabs';
 import './atomic-insight-tabs';
 
+vi.mock('@/src/components/common/atomic-tab-bar/atomic-tab-bar');
+
 describe('atomic-insight-tabs', () => {
   const renderInsightTabs = async ({
     slottedContent,

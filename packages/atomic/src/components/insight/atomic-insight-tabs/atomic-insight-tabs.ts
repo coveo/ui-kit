@@ -6,6 +6,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {SlotsForNoShadowDOMMixin} from '../../../mixins/slots-for-no-shadow-dom-mixin';
+import '@/src/components/common/atomic-tab-bar/atomic-tab-bar';
 
 /**
  * The `atomic-insight-tabs` component wraps a list of `atomic-insight-tab` elements and manages their layout.
