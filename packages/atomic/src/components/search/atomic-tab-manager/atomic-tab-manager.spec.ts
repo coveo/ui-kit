@@ -1,8 +1,13 @@
 import {buildTab, buildTabManager, type TabManagerState} from '@coveo/headless';
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
-import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
+import {
+  defaultBindings,
+  type FixtureAtomicSearchInterface,
+  renderInAtomicSearchInterface,
+} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeTabManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/tab-manager-controller';
+import {fixture} from '@/vitest-utils/testing-helpers/testing-utils/fixture';
 import type {AtomicTabManager} from './atomic-tab-manager';
 import './atomic-tab-manager';
 import {mockConsole} from '@/vitest-utils/testing-helpers/testing-utils/mock-console';
@@ -171,5 +176,51 @@ describe('atomic-tab-manager', () => {
         expect(call[1]?.options?.clearFiltersOnTabChange).toBe(true);
       });
     });
+  });
+
+  it('should use empty string as fallback for undefined expression when tab expression property is undefined (race condition)', async () => {
+    const fakeTabManager = buildFakeTabManager({
+      activeTab: 'test',
+    });
+
+    mockConsole();
+
+    vi.mocked(buildTabManager).mockReturnValue(fakeTabManager);
+
+    let expressionValue: string | undefined;
+
+    vi.mocked(buildTab).mockImplementation((_engine, options) => {
+      expressionValue = options?.options?.expression;
+      return {
+        state: {
+          isActive: options?.options?.id === fakeTabManager.state.activeTab,
+        },
+        select: vi.fn(),
+        subscribe: vi.fn(),
+      } as never;
+    });
+
+    const atomicInterface = await fixture<FixtureAtomicSearchInterface>(
+      html`<atomic-search-interface>
+        <atomic-tab-manager>
+          <atomic-tab label="Test" name="test"></atomic-tab>
+        </atomic-tab-manager>
+      </atomic-search-interface>`
+    );
+
+    const manager = atomicInterface.querySelector('atomic-tab-manager')!;
+    const tabElement = manager.querySelector('atomic-tab')!;
+
+    Object.defineProperty(tabElement, 'expression', {
+      get: () => undefined,
+      configurable: true,
+    });
+
+    atomicInterface.setBindings(defaultBindings);
+    await atomicInterface.updateComplete;
+    await manager.updateComplete;
+
+    expect(expressionValue).toBe('');
+    expect(expressionValue).not.toBeUndefined();
   });
 });

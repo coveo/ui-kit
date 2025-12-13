@@ -93,7 +93,7 @@ export class AtomicTabManager
       }
       const tabController = buildTab(this.bindings.engine, {
         options: {
-          expression: tabElement.expression,
+          expression: tabElement.expression ?? '',
           id: tabElement.name,
           clearFiltersOnTabChange: this.clearFiltersOnTabChange,
         },
