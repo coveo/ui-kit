@@ -222,7 +222,7 @@ describe('c-quantic-citation', () => {
       jest.useRealTimers();
     });
 
-    it('should display the citation tooltip', async () => {
+    it('should display the citation tooltip after 200ms delay', async () => {
       const element = createTestComponent();
       await flushPromises();
 
@@ -242,8 +242,10 @@ describe('c-quantic-citation', () => {
       await citationLink.dispatchEvent(
         new CustomEvent('mouseenter', {bubbles: true})
       );
+      // The tooltip should not be shown immediately
+      expect(showTooltipSpy).toHaveBeenCalledTimes(0);
+      // Wait 200ms debounce duration and verify tooltip is shown
       jest.advanceTimersByTime(200);
-
       expect(showTooltipSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -260,6 +262,9 @@ describe('c-quantic-citation', () => {
       await citationLink.dispatchEvent(
         new CustomEvent('mouseenter', {bubbles: true})
       );
+      // Wait for show delay - this triggers the tooltip to show and sets hoverStartTimestamp
+      jest.advanceTimersByTime(200);
+      // Now wait for minimum hover time
       jest.advanceTimersByTime(1000);
       await citationLink.dispatchEvent(
         new CustomEvent('mouseleave', {bubbles: true})
