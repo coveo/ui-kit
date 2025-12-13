@@ -5,30 +5,24 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-import { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
-export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-export { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 export { i18n } from "i18next";
@@ -1297,28 +1291,6 @@ export namespace Components {
         "toggle": () => Promise<void>;
     }
     /**
-     * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
-     * A timeframe is a span of time from now to a specific time in the past.
-     */
-    interface AtomicTimeframe {
-        /**
-          * The amount of units from which to count.  For example, 10 days, 1 year, etc.
-         */
-        "amount": number;
-        /**
-          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The relative period of time to now.
-         */
-        "period": 'past' | 'next';
-        /**
-          * The unit used to define: - the start date of the timeframe, if the period is `past` - the end date of the timeframe, if the period is `future`
-         */
-        "unit": RelativeDateUnit;
-    }
-    /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
      */
@@ -2209,16 +2181,6 @@ declare global {
         new (): HTMLAtomicTabPopoverElement;
     };
     /**
-     * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
-     * A timeframe is a span of time from now to a specific time in the past.
-     */
-    interface HTMLAtomicTimeframeElement extends Components.AtomicTimeframe, HTMLStencilElement {
-    }
-    var HTMLAtomicTimeframeElement: {
-        prototype: HTMLAtomicTimeframeElement;
-        new (): HTMLAtomicTimeframeElement;
-    };
-    /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
      */
@@ -2301,7 +2263,6 @@ declare global {
         "atomic-tab-bar": HTMLAtomicTabBarElement;
         "atomic-tab-button": HTMLAtomicTabButtonElement;
         "atomic-tab-popover": HTMLAtomicTabPopoverElement;
-        "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
     }
 }
@@ -3547,28 +3508,6 @@ declare namespace LocalJSX {
     interface AtomicTabPopover {
     }
     /**
-     * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
-     * A timeframe is a span of time from now to a specific time in the past.
-     */
-    interface AtomicTimeframe {
-        /**
-          * The amount of units from which to count.  For example, 10 days, 1 year, etc.
-         */
-        "amount"?: number;
-        /**
-          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The relative period of time to now.
-         */
-        "period"?: 'past' | 'next';
-        /**
-          * The unit used to define: - the start date of the timeframe, if the period is `past` - the end date of the timeframe, if the period is `future`
-         */
-        "unit": RelativeDateUnit;
-    }
-    /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
      */
@@ -3703,7 +3642,6 @@ declare namespace LocalJSX {
         "atomic-tab-bar": AtomicTabBar;
         "atomic-tab-button": AtomicTabButton;
         "atomic-tab-popover": AtomicTabPopover;
-        "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
     }
 }
@@ -3926,11 +3864,6 @@ declare module "@stencil/core" {
             "atomic-tab-bar": LocalJSX.AtomicTabBar & JSXBase.HTMLAttributes<HTMLAtomicTabBarElement>;
             "atomic-tab-button": LocalJSX.AtomicTabButton & JSXBase.HTMLAttributes<HTMLAtomicTabButtonElement>;
             "atomic-tab-popover": LocalJSX.AtomicTabPopover & JSXBase.HTMLAttributes<HTMLAtomicTabPopoverElement>;
-            /**
-             * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
-             * A timeframe is a span of time from now to a specific time in the past.
-             */
-            "atomic-timeframe": LocalJSX.AtomicTimeframe & JSXBase.HTMLAttributes<HTMLAtomicTimeframeElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results.
              * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
