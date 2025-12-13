@@ -11,11 +11,63 @@ import {within} from 'shadow-dom-testing-library';
 import customElements from '../custom-elements.json';
 import {defineCustomElements} from '../dist/atomic/loader/index.js';
 
-initialize(
-  import.meta.env.DEV || import.meta.env.VITE_IS_CDN === 'true'
-    ? {serviceWorker: {url: './mockServiceWorker.js'}}
-    : {}
-);
+/**
+ * Type guard to check if globalThis has the vitest browser property.
+ * This property is set by @vitest/browser when running tests.
+ */
+function hasVitestBrowser(
+  obj: typeof globalThis
+): obj is typeof globalThis & {__vitest_browser__: unknown} {
+  return Object.hasOwn(obj, '__vitest_browser__');
+}
+
+/**
+ * Checks if the code is running in a test environment.
+ * This is true for vitest story tests via @storybook/addon-vitest.
+ */
+function checkIsTestEnvironment(): boolean {
+  // Check for vitest/storybook test environment variables
+  if (typeof process !== 'undefined') {
+    const env = process.env || {};
+    if (env.VITEST || env.STORYBOOK_TEST || env.TEST) {
+      return true;
+    }
+  }
+  // Check for vitest global (set by @vitest/browser)
+  if (typeof globalThis !== 'undefined' && hasVitestBrowser(globalThis)) {
+    return true;
+  }
+  return false;
+}
+
+const isTestEnvironment = checkIsTestEnvironment();
+
+// MSW is enabled by default in dev mode, or when running tests,
+// but disabled in production builds unless explicitly enabled
+const isMswEnabledByDefault =
+  isTestEnvironment ||
+  import.meta.env.DEV ||
+  import.meta.env.VITE_IS_CDN === 'true';
+
+// Track whether MSW has been initialized
+let mswInitialized = false;
+
+/**
+ * Initialize MSW service worker.
+ * This is called lazily when MSW is first enabled to support the toggle functionality.
+ */
+function initializeMsw() {
+  if (mswInitialized) {
+    return;
+  }
+  initialize({serviceWorker: {url: './mockServiceWorker.js'}});
+  mswInitialized = true;
+}
+
+// Initialize MSW immediately in test environments or dev mode
+if (isMswEnabledByDefault) {
+  initializeMsw();
+}
 
 setCustomElementsManifest(customElements);
 
@@ -33,7 +85,35 @@ setStorybookHelpersConfig({
   hideArgRef: true,
 });
 
-export const loaders = [mswLoader];
+/**
+ * Custom MSW loader that respects the msw global toggle.
+ * - In test environments (vitest), MSW is always enabled
+ * - In production builds, MSW is disabled by default
+ * - In dev mode, MSW is enabled by default but can be toggled via toolbar
+ */
+const conditionalMswLoader: typeof mswLoader = async (context) => {
+  // Always use MSW in test environments
+  if (isTestEnvironment) {
+    initializeMsw();
+    return mswLoader(context);
+  }
+
+  // Determine if MSW is enabled: use the global toggle if set (including false), otherwise fall back to the default
+  const isMswEnabled = context.globals?.msw ?? isMswEnabledByDefault;
+
+  // If MSW is disabled, skip the loader
+  if (!isMswEnabled) {
+    return {};
+  }
+
+  // Initialize MSW if not already done (for dynamic enabling)
+  initializeMsw();
+
+  // Otherwise, use the standard MSW loader
+  return mswLoader(context);
+};
+
+export const loaders = [conditionalMswLoader];
 
 export const parameters: Parameters = {
   options: {
@@ -100,8 +180,27 @@ export const parameters: Parameters = {
   chromatic: {disableSnapshot: true},
 };
 
+// Track the previous MSW state to detect changes and trigger reloads.
+// Initialize to the default value to avoid unnecessary reloads on first render.
+let previousMswState: boolean | undefined = isMswEnabledByDefault;
+
 export const decorators = [
-  (Story) => {
+  (Story, context) => {
+    // Check if MSW global has changed and reload the page if so
+    // This ensures the new mocking state takes effect immediately
+    if (!isTestEnvironment && typeof window !== 'undefined') {
+      const currentMswState = context.globals?.msw;
+      if (
+        previousMswState !== undefined &&
+        previousMswState !== currentMswState
+      ) {
+        previousMswState = currentMswState;
+        window.location.reload();
+        return null;
+      }
+      previousMswState = currentMswState;
+    }
+
     const story = Story();
 
     if (story?._$litType$) {
@@ -136,12 +235,30 @@ function disableAnalytics(container, selectors) {
   });
 }
 
+export const globalTypes = {
+  msw: {
+    name: 'MSW Mocking',
+    description: 'Toggle MSW API mocking on/off (reloads story)',
+    defaultValue: isMswEnabledByDefault,
+    toolbar: {
+      icon: 'lightning',
+      title: 'MSW Mocking',
+      items: [
+        {value: true, title: 'MSW Enabled', icon: 'lightning'},
+        {value: false, title: 'MSW Disabled', icon: 'lightningoff'},
+      ],
+      dynamicTitle: true,
+    },
+  },
+};
+
 const preview: Preview = {
   beforeEach({canvasElement, canvas}) {
     Object.assign(canvas, {...within(canvasElement)});
   },
   globals: {
     a11y: {manual: true},
+    msw: isMswEnabledByDefault,
   },
 };
 
