@@ -12,7 +12,7 @@ export const generativeQuestionAnsweringIdSelector = (
   state: Partial<SearchAppState>
 ): string | undefined => {
   // If using the AnswerApi, we return the answerId first.
-  if (isGeneratedAnswerSection(state)) {
+  if (isGeneratedAnswerFeatureEnabledWithAnswerAPI(state)) {
     return state.generatedAnswer?.answerId;
   }
 
@@ -25,7 +25,7 @@ export const generativeQuestionAnsweringIdSelector = (
   return undefined;
 };
 
-const isGeneratedAnswerSection = (
+export const isGeneratedAnswerFeatureEnabledWithAnswerAPI = (
   state: Partial<SearchAppState>
 ): state is StreamAnswerAPIState =>
   'answer' in state &&
