@@ -1,3 +1,9 @@
+## 2.8.0 (2025-12-12)
+
+* feat: migrating content from docs.coveo.com to typedoc (#6624) ([8a85527](https://github.com/coveo/ui-kit/commits/8a85527)), closes [#6624](https://github.com/coveo/ui-kit/issues/6624)
+
+
+
 ## 2.7.0 (2025-12-10)
 
 * feat(headless): support spotlight content for commerce COMHUB2-1228 (#6646) ([ba8c990](https://github.com/coveo/ui-kit/commits/ba8c990)), closes [#6646](https://github.com/coveo/ui-kit/issues/6646)
