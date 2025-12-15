@@ -12,12 +12,13 @@ import type {
   SearchStatusState,
 } from '@coveo/headless';
 import {html, nothing, type TemplateResult} from 'lit';
-import type {FocusTargetController} from '@/src/utils/stencil-accessibility-utils';
-import {parseDate} from '../../../utils/date-utils';
-import {getFieldValueCaption} from '../../../utils/field-utils';
-import {randomID} from '../../../utils/utils';
-import type {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
-import type {Bindings as SearchBindings} from '../../search/atomic-search-interface/atomic-search-interface';
+import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
+import type {Bindings as SearchBindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
+import type {FocusTargetController} from '@/src/utils/accessibility-utils';
+import {parseDate} from '@/src/utils/date-utils';
+import {getFieldValueCaption} from '@/src/utils/field-utils';
+import {randomID} from '@/src/utils/utils';
+import {shouldDisplayInputForFacetRange} from './facet-common';
 import type {FacetInfo} from './facet-common-store';
 import {renderFacetContainer} from './facet-container/facet-container';
 import {renderFacetHeader} from './facet-header/facet-header';
@@ -26,7 +27,6 @@ import {renderFacetValueLabelHighlight} from './facet-value-label-highlight/face
 import {renderFacetValueLink} from './facet-value-link/facet-value-link';
 import {renderFacetValuesGroup} from './facet-values-group/facet-values-group';
 import {initializePopover} from './popover/popover-type';
-import {shouldDisplayInputForFacetRange} from './stencil-facet-common';
 
 export interface Timeframe {
   period: RelativeDatePeriod;
@@ -284,13 +284,15 @@ export class TimeframeFacetCommon {
     }
   }
 
-  private renderValues(): TemplateResult {
+  private renderValues(): TemplateResult | typeof nothing {
     return this.renderValuesContainer(
       this.valuesToRender.map((value) => this.renderValue(value))
     );
   }
 
-  private renderValue(facetValue: DateFacetValue): TemplateResult {
+  private renderValue(
+    facetValue: DateFacetValue
+  ): TemplateResult | typeof nothing {
     const displayValue = this.formatFacetValue(facetValue);
     const isSelected = facetValue.state === 'selected';
     const isExcluded = facetValue.state === 'excluded';
@@ -313,7 +315,9 @@ export class TimeframeFacetCommon {
     );
   }
 
-  private renderValuesContainer(children: TemplateResult[]): TemplateResult {
+  private renderValuesContainer(
+    children: (TemplateResult | typeof nothing)[]
+  ): TemplateResult | typeof nothing {
     return renderFacetValuesGroup({
       props: {
         i18n: this.props.bindings.i18n,
@@ -328,7 +332,7 @@ export class TimeframeFacetCommon {
     isCollapsed: boolean,
     headerFocus: FocusTargetController,
     onToggleCollapse: () => void
-  ): TemplateResult {
+  ): TemplateResult | typeof nothing {
     return renderFacetHeader({
       props: {
         i18n: this.props.bindings.i18n,
@@ -351,17 +355,21 @@ export class TimeframeFacetCommon {
   }
 
   private renderDateInput(): TemplateResult {
-    return html`<atomic-stencil-facet-date-input
+    return html`<atomic-facet-date-input
       .min=${this.props.min}
       .max=${this.props.max}
-      .bindings=${this.props.bindings}
       .label=${this.props.label}
       .facetId=${this.filter!.state!.facetId}
-      .rangeGetter=${() => this.filter!.state.range}
-      .rangeSetter=${(request: DateRangeRequest) => {
-        this.filter!.setRange(request);
+      .inputRange=${this.filter!.state.range}
+      @atomic-date-input-apply=${(
+        event: CustomEvent<{start: string; end: string; endInclusive: boolean}>
+      ) => {
+        this.filter!.setRange({
+          start: event.detail.start,
+          end: event.detail.end,
+        });
       }}
-    ></atomic-stencil-facet-date-input>`;
+    ></atomic-facet-date-input>`;
   }
 
   public render({
@@ -370,7 +378,7 @@ export class TimeframeFacetCommon {
     isCollapsed,
     headerFocus,
     onToggleCollapse,
-  }: TimeframeFacetCommonRenderProps): TemplateResult {
+  }: TimeframeFacetCommonRenderProps): TemplateResult | typeof nothing {
     if (hasError || !this.enabled) {
       return nothing;
     }
