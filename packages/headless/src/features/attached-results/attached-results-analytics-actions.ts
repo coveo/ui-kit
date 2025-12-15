@@ -55,3 +55,24 @@ export const logCaseDetach = (result: Result) =>
       };
     },
   });
+
+export const logCitationDocumentAttach = (result: Result) =>
+  makeInsightAnalyticsActionFactory(
+    SearchPageEvents.generatedAnswerCitationDocumentAttach
+  )({
+    prefix: 'insight/generatedAnswerCitationDocumentAttach',
+    __legacy__getBuilder: (client, state) => {
+      validateResultPayload(result);
+      const metadata = getCaseContextAnalyticsMetadata(
+        state.insightCaseContext
+      );
+      const citation = {
+        documentId: documentIdentifier(result),
+      };
+      return client.logGeneratedAnswerCitationDocumentAttach(
+        partialDocumentInformation(result, state),
+        citation,
+        metadata
+      );
+    },
+  });

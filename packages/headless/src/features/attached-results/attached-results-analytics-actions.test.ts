@@ -13,10 +13,12 @@ import {getConfigurationInitialState} from '../configuration/configuration-state
 import {
   logCaseAttach,
   logCaseDetach,
+  logCitationDocumentAttach,
 } from './attached-results-analytics-actions.js';
 
 const mockLogCaseAttach = vi.fn();
 const mockLogCaseDetach = vi.fn();
+const mockLogGeneratedAnswerCitationDocumentAttach = vi.fn();
 const emit = vi.fn();
 
 vi.mock('@coveo/relay');
@@ -26,6 +28,8 @@ vi.mocked(CoveoInsightClient).mockImplementation(function () {
   this.disable = () => {};
   this.logCaseAttach = mockLogCaseAttach;
   this.logCaseDetach = mockLogCaseDetach;
+  this.logGeneratedAnswerCitationDocumentAttach =
+    mockLogGeneratedAnswerCitationDocumentAttach;
 });
 
 vi.mocked(createRelay).mockReturnValue({
@@ -164,6 +168,29 @@ describe('attached results analytics actions', () => {
         expect(mockLogCaseDetach.mock.calls[0][1]).toStrictEqual(
           expectedMetadata
         );
+      });
+    });
+
+    describe('logCitationDocumentAttach', () => {
+      it('should call coveo.analytics.logGeneratedAnswerCitationDocumentAttach properly', async () => {
+        await logCitationDocumentAttach(testResult)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
+
+        expect(
+          mockLogGeneratedAnswerCitationDocumentAttach
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          mockLogGeneratedAnswerCitationDocumentAttach.mock.calls[0][0]
+        ).toStrictEqual(expectedDocumentInfo);
+        expect(
+          mockLogGeneratedAnswerCitationDocumentAttach.mock.calls[0][1]
+        ).toStrictEqual({documentId: expectedDocumentIdentifier});
+        expect(
+          mockLogGeneratedAnswerCitationDocumentAttach.mock.calls[0][2]
+        ).toStrictEqual(expectedMetadata);
       });
     });
   });
