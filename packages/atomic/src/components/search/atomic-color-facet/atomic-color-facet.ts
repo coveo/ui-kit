@@ -289,7 +289,9 @@ export class AtomicColorFacet
   })
   public isCollapsed = false;
   /**
-   * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+   * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet.
+   * Valid values are 1 to 6, where each number corresponds to a heading element (h1, h2, etc.).
+   * A value of 0 (default) will render a div instead of a heading element.
    */
   @property({type: Number, attribute: 'heading-level', reflect: true})
   public headingLevel = 0;
