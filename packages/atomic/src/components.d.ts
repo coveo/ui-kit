@@ -1043,14 +1043,6 @@ export namespace Components {
         "imageSize": ItemDisplayImageSize;
     }
     /**
-     * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface AtomicResultTablePlaceholder {
-        "density": ItemDisplayDensity;
-        "imageSize": ItemDisplayImageSize;
-        "rows": number;
-    }
-    /**
      * The `atomic-search-box` component creates a search box with built-in support for suggestions.
      */
     interface AtomicSearchBox {
@@ -1982,15 +1974,6 @@ declare global {
         prototype: HTMLAtomicResultPlaceholderElement;
         new (): HTMLAtomicResultPlaceholderElement;
     };
-    /**
-     * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface HTMLAtomicResultTablePlaceholderElement extends Components.AtomicResultTablePlaceholder, HTMLStencilElement {
-    }
-    var HTMLAtomicResultTablePlaceholderElement: {
-        prototype: HTMLAtomicResultTablePlaceholderElement;
-        new (): HTMLAtomicResultTablePlaceholderElement;
-    };
     interface HTMLAtomicSearchBoxElementEventMap {
         "redirect": RedirectionPayload;
     }
@@ -2258,7 +2241,6 @@ declare global {
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
-        "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
@@ -3249,14 +3231,6 @@ declare namespace LocalJSX {
         "imageSize": ItemDisplayImageSize;
     }
     /**
-     * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface AtomicResultTablePlaceholder {
-        "density": ItemDisplayDensity;
-        "imageSize": ItemDisplayImageSize;
-        "rows": number;
-    }
-    /**
      * The `atomic-search-box` component creates a search box with built-in support for suggestions.
      */
     interface AtomicSearchBox {
@@ -3651,7 +3625,6 @@ declare namespace LocalJSX {
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-result-placeholder": AtomicResultPlaceholder;
-        "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
         "atomic-search-box": AtomicSearchBox;
         "atomic-segmented-facet": AtomicSegmentedFacet;
         "atomic-smart-snippet": AtomicSmartSnippet;
@@ -3820,10 +3793,6 @@ declare module "@stencil/core" {
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
-            /**
-             * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-             */
-            "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
             /**
              * The `atomic-search-box` component creates a search box with built-in support for suggestions.
              */
