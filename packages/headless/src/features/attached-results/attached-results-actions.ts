@@ -38,6 +38,7 @@ const attachedResultPayloadDefinition = {
   source: nonEmptyString,
   title: requiredNonEmptyString,
   uriHash: nonEmptyString,
+  isCitation: new BooleanValue({required: false}),
 };
 
 const RequiredAttachedResultRecord = new RecordValue({

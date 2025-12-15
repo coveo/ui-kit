@@ -1,6 +1,10 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
 import {
+  attachCitation,
+  detachCitation,
+} from './attached-citations/attached-citations-actions.js';
+import {
   attachResult,
   detachResult,
   setAttachedResults,
@@ -35,6 +39,19 @@ export const attachedResultsReducer = createReducer(
         }
       })
       .addCase(detachResult, (state, action) => {
+        state.results = state.results.filter((result) =>
+          attachedResultsMatchIds(result, action.payload)
+        );
+      })
+      .addCase(attachCitation, (state, action) => {
+        if (
+          !isNullOrUndefined(action.payload.permanentId) ||
+          !isNullOrUndefined(action.payload.uriHash)
+        ) {
+          state.results = [...state.results, action.payload];
+        }
+      })
+      .addCase(detachCitation, (state, action) => {
         state.results = state.results.filter((result) =>
           attachedResultsMatchIds(result, action.payload)
         );

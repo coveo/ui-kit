@@ -10,6 +10,7 @@ import {
 import {analyticsEventCaseContext} from '../analytics/insight-analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
+import {generativeQuestionAnsweringIdSelector} from '../generated-answer/generated-answer-selectors.js';
 
 export const logCaseAttach = (result: Result) =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.caseAttach)({
@@ -67,7 +68,13 @@ export const logCitationDocumentAttach = (result: Result) =>
         state.insightCaseContext
       );
       const citation = {
-        documentId: documentIdentifier(result),
+        generativeQuestionAnsweringId:
+          generativeQuestionAnsweringIdSelector(state) || 'unknown',
+        citationId: result.raw.urihash || result.raw.permanentid || 'unknown',
+        documentId: {
+          contentIdKey: 'permanentid',
+          contentIdValue: result.raw.permanentid || result.uniqueId,
+        },
       };
       return client.logGeneratedAnswerCitationDocumentAttach(
         partialDocumentInformation(result, state),

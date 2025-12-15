@@ -39,6 +39,10 @@ export interface AttachedResult {
    * The uriHash of the attached result.
    */
   uriHash?: string;
+  /**
+   * Whether the attached result is a citation.
+   */
+  isCitation?: boolean;
 }
 
 export interface AttachedResultsState {

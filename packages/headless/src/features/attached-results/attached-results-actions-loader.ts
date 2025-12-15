@@ -1,6 +1,11 @@
 import type {PayloadAction} from '@reduxjs/toolkit';
 import type {InsightEngine} from '../../app/insight-engine/insight-engine.js';
 import {
+  type AttachCitationActionCreatorPayload,
+  attachCitation,
+  detachCitation,
+} from './attached-citations/attached-citations-actions.js';
+import {
   attachResult,
   detachResult,
   type SetAttachedResultsActionCreatorPayload,
@@ -51,6 +56,24 @@ export interface AttachedResultsActionCreators {
    * @returns A dispatchable action.
    */
   detachResult(payload: AttachedResult): PayloadAction<AttachedResult>;
+
+  /**
+   * Creates an action that attaches a citation as a result to a case.
+   *
+   * @param payload - The action creator payload containing the citation to attach.
+   * @returns A dispatchable action.
+   */
+  attachCitation(
+    payload: AttachCitationActionCreatorPayload
+  ): PayloadAction<AttachedResult>;
+
+  /**
+   * Creates an action that detaches a citation result from a case.
+   *
+   * @param payload - The action creator payload containing the citation to detach.
+   * @returns A dispatchable action.
+   */
+  detachCitation(payload: AttachedResult): PayloadAction<AttachedResult>;
 }
 
 /**
@@ -71,5 +94,7 @@ export function loadAttachedResultsActions(
     setAttachedResults,
     detachResult,
     attachResult,
+    attachCitation,
+    detachCitation,
   };
 }

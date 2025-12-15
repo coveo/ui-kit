@@ -24,7 +24,9 @@ const emit = vi.fn();
 vi.mock('@coveo/relay');
 
 vi.mock('coveo.analytics');
-vi.mocked(CoveoInsightClient).mockImplementation(function () {
+vi.mocked(CoveoInsightClient).mockImplementation(function (
+  this: CoveoInsightClient
+) {
   this.disable = () => {};
   this.logCaseAttach = mockLogCaseAttach;
   this.logCaseDetach = mockLogCaseDetach;
@@ -187,7 +189,14 @@ describe('attached results analytics actions', () => {
         ).toStrictEqual(expectedDocumentInfo);
         expect(
           mockLogGeneratedAnswerCitationDocumentAttach.mock.calls[0][1]
-        ).toStrictEqual({documentId: expectedDocumentIdentifier});
+        ).toStrictEqual({
+          generativeQuestionAnsweringId: 'unknown',
+          citationId: 'example documentUriHash',
+          documentId: {
+            contentIdKey: 'permanentid',
+            contentIdValue: 'example contentIDValue',
+          },
+        });
         expect(
           mockLogGeneratedAnswerCitationDocumentAttach.mock.calls[0][2]
         ).toStrictEqual(expectedMetadata);
