@@ -16,6 +16,10 @@ export default {
   'atomic-modal': async () => await import('./atomic-modal/atomic-modal.js'),
   'atomic-numeric-range': async () =>
     await import('./atomic-numeric-range/atomic-numeric-range.js'),
+  'atomic-smart-snippet-expandable-answer': async () =>
+    await import(
+      './atomic-smart-snippet-expandable-answer/atomic-smart-snippet-expandable-answer.js'
+    ),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';
