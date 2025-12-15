@@ -7,9 +7,9 @@ import {
   renderInAtomicSearchInterface,
 } from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeTabManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/tab-manager-controller';
-import {fixture} from '@/vitest-utils/testing-helpers/testing-utils/fixture';
 import type {AtomicTabManager} from './atomic-tab-manager';
 import './atomic-tab-manager';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {mockConsole} from '@/vitest-utils/testing-helpers/testing-utils/mock-console';
 
 vi.mock('@coveo/headless', {spy: true});
@@ -183,8 +183,6 @@ describe('atomic-tab-manager', () => {
       activeTab: 'test',
     });
 
-    mockConsole();
-
     vi.mocked(buildTabManager).mockReturnValue(fakeTabManager);
 
     let expressionValue: string | undefined;
@@ -210,6 +208,11 @@ describe('atomic-tab-manager', () => {
 
     const manager = atomicInterface.querySelector('atomic-tab-manager')!;
     const tabElement = manager.querySelector('atomic-tab')!;
+
+    await tabElement.updateComplete;
+
+    tabElement.name = tabElement.getAttribute('name')!;
+    tabElement.label = tabElement.getAttribute('label')!;
 
     Object.defineProperty(tabElement, 'expression', {
       get: () => undefined,
