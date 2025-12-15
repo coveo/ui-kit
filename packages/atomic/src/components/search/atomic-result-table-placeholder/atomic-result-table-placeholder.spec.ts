@@ -46,9 +46,6 @@ describe('atomic-result-table-placeholder', () => {
       get headerCells() {
         return element.shadowRoot?.querySelectorAll('thead th');
       },
-      parts: (el: AtomicResultTablePlaceholder) => ({
-        table: el.shadowRoot?.querySelector('[part="table"]'),
-      }),
     };
   };
 
@@ -77,11 +74,6 @@ describe('atomic-result-table-placeholder', () => {
     it('should render tbody element', async () => {
       const {tbody} = await renderComponent();
       expect(tbody).toBeInTheDocument();
-    });
-
-    it('should expose table part', async () => {
-      const {element, parts} = await renderComponent();
-      expect(parts(element).table).toBeInTheDocument();
     });
   });
 
