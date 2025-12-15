@@ -32,113 +32,123 @@ describe('atomic-timeframe', () => {
     return {element, timeframe};
   };
 
-  describe('default properties', () => {
-    it('should have default period of "past"', async () => {
-      const {timeframe} = await renderTimeframe();
-      expect(timeframe.period).toBe('past');
-    });
-
-    it('should have default amount of 1', async () => {
-      const {timeframe} = await renderTimeframe();
-      expect(timeframe.amount).toBe(1);
-    });
+  it('should have default period of "past"', async () => {
+    const {timeframe} = await renderTimeframe();
+    expect(timeframe.period).toBe('past');
   });
 
-  describe('when setting period', () => {
-    it('should set period to "past"', async () => {
-      const {timeframe} = await renderTimeframe({period: 'past'});
-      expect(timeframe.period).toBe('past');
-    });
-
-    it('should set period to "next"', async () => {
-      const {timeframe} = await renderTimeframe({period: 'next'});
-      expect(timeframe.period).toBe('next');
-    });
+  it('should have default amount of 1', async () => {
+    const {timeframe} = await renderTimeframe();
+    expect(timeframe.amount).toBe(1);
   });
 
-  describe('when setting unit', () => {
-    it('should set unit to "day"', async () => {
-      const {timeframe} = await renderTimeframe({unit: 'day'});
-      expect(timeframe.unit).toBe('day');
-    });
-
-    it('should set unit to "month"', async () => {
-      const {timeframe} = await renderTimeframe({unit: 'month'});
-      expect(timeframe.unit).toBe('month');
-    });
-
-    it('should set unit to "year"', async () => {
-      const {timeframe} = await renderTimeframe({unit: 'year'});
-      expect(timeframe.unit).toBe('year');
-    });
+  it('should set period to "past"', async () => {
+    const {timeframe} = await renderTimeframe({period: 'past'});
+    expect(timeframe.period).toBe('past');
   });
 
-  describe('when setting amount', () => {
-    it('should set amount to 1', async () => {
-      const {timeframe} = await renderTimeframe({amount: 1});
-      expect(timeframe.amount).toBe(1);
-    });
-
-    it('should set amount to 10', async () => {
-      const {timeframe} = await renderTimeframe({amount: 10});
-      expect(timeframe.amount).toBe(10);
-    });
-
-    it('should set amount to 365', async () => {
-      const {timeframe} = await renderTimeframe({amount: 365});
-      expect(timeframe.amount).toBe(365);
-    });
+  it('should set period to "next"', async () => {
+    const {timeframe} = await renderTimeframe({period: 'next'});
+    expect(timeframe.period).toBe('next');
   });
 
-  describe('when setting label', () => {
-    it('should set custom label', async () => {
-      const label = 'Last month';
-      const {timeframe} = await renderTimeframe({label});
-      expect(timeframe.label).toBe(label);
-    });
-
-    it('should set label to "Past year"', async () => {
-      const label = 'Past year';
-      const {timeframe} = await renderTimeframe({label});
-      expect(timeframe.label).toBe(label);
-    });
+  it('should set unit to "day"', async () => {
+    const {timeframe} = await renderTimeframe({unit: 'day'});
+    expect(timeframe.unit).toBe('day');
   });
 
-  describe('Timeframe interface implementation', () => {
-    it('should implement all Timeframe interface properties', async () => {
-      const {timeframe} = await renderTimeframe({
-        period: 'past',
-        unit: 'month',
-        amount: 3,
-        label: 'Last quarter',
-      });
-
-      expect(timeframe).toHaveProperty('period');
-      expect(timeframe).toHaveProperty('unit');
-      expect(timeframe).toHaveProperty('amount');
-      expect(timeframe).toHaveProperty('label');
-    });
+  it('should set unit to "month"', async () => {
+    const {timeframe} = await renderTimeframe({unit: 'month'});
+    expect(timeframe.unit).toBe('month');
   });
 
-  describe('property reflection', () => {
-    it('should reflect period attribute', async () => {
-      const {timeframe} = await renderTimeframe({period: 'next'});
-      expect(timeframe.getAttribute('period')).toBe('next');
+  it('should set unit to "year"', async () => {
+    const {timeframe} = await renderTimeframe({unit: 'year'});
+    expect(timeframe.unit).toBe('year');
+  });
+
+  it('should set amount to 1', async () => {
+    const {timeframe} = await renderTimeframe({amount: 1});
+    expect(timeframe.amount).toBe(1);
+  });
+
+  it('should set amount to 10', async () => {
+    const {timeframe} = await renderTimeframe({amount: 10});
+    expect(timeframe.amount).toBe(10);
+  });
+
+  it('should set amount to 365', async () => {
+    const {timeframe} = await renderTimeframe({amount: 365});
+    expect(timeframe.amount).toBe(365);
+  });
+
+  it('should set custom label', async () => {
+    const label = 'Last month';
+    const {timeframe} = await renderTimeframe({label});
+    expect(timeframe.label).toBe(label);
+  });
+
+  it('should set label to "Past year"', async () => {
+    const label = 'Past year';
+    const {timeframe} = await renderTimeframe({label});
+    expect(timeframe.label).toBe(label);
+  });
+
+  it('should implement all Timeframe interface properties', async () => {
+    const {timeframe} = await renderTimeframe({
+      period: 'past',
+      unit: 'month',
+      amount: 3,
+      label: 'Last quarter',
     });
 
-    it('should reflect unit attribute', async () => {
-      const {timeframe} = await renderTimeframe({unit: 'week'});
-      expect(timeframe.getAttribute('unit')).toBe('week');
-    });
+    expect(timeframe).toHaveProperty('period');
+    expect(timeframe).toHaveProperty('unit');
+    expect(timeframe).toHaveProperty('amount');
+    expect(timeframe).toHaveProperty('label');
+  });
 
-    it('should reflect amount attribute', async () => {
-      const {timeframe} = await renderTimeframe({amount: 7});
-      expect(timeframe.getAttribute('amount')).toBe('7');
-    });
+  it('should reflect period attribute', async () => {
+    const {timeframe} = await renderTimeframe({period: 'next'});
+    expect(timeframe.getAttribute('period')).toBe('next');
+  });
 
-    it('should reflect label attribute when set', async () => {
-      const {timeframe} = await renderTimeframe({label: 'Custom Label'});
-      expect(timeframe.getAttribute('label')).toBe('Custom Label');
-    });
+  it('should reflect unit attribute', async () => {
+    const {timeframe} = await renderTimeframe({unit: 'week'});
+    expect(timeframe.getAttribute('unit')).toBe('week');
+  });
+
+  it('should reflect amount attribute', async () => {
+    const {timeframe} = await renderTimeframe({amount: 7});
+    expect(timeframe.getAttribute('amount')).toBe('7');
+  });
+
+  it('should reflect label attribute when set', async () => {
+    const {timeframe} = await renderTimeframe({label: 'Custom Label'});
+    expect(timeframe.getAttribute('label')).toBe('Custom Label');
+  });
+
+  // TODO V4: KIT-5197 - Remove skip
+  it.skip('should set error when period is invalid', async () => {
+    const {timeframe} = await renderTimeframe({period: 'invalid' as 'past'});
+    expect(timeframe.error).toBeInstanceOf(Error);
+  });
+
+  // TODO V4: KIT-5197 - Remove skip
+  it.skip('should set error when unit is invalid', async () => {
+    const {timeframe} = await renderTimeframe({unit: 'invalid'});
+    expect(timeframe.error).toBeInstanceOf(Error);
+  });
+
+  // TODO V4: KIT-5197 - Remove skip
+  it.skip('should set error when amount is less than 1', async () => {
+    const {timeframe} = await renderTimeframe({amount: 0});
+    expect(timeframe.error).toBeInstanceOf(Error);
+  });
+
+  // TODO V4: KIT-5197 - Remove skip
+  it.skip('should set error when amount is negative', async () => {
+    const {timeframe} = await renderTimeframe({amount: -1});
+    expect(timeframe.error).toBeInstanceOf(Error);
   });
 });
