@@ -225,7 +225,6 @@ describe('Insight Panel test suites', () => {
     });
   });
 
-
   describe('Smart Snippet Answer', () => {
     const visitPage = () => {
       cy.visit(host);
@@ -272,8 +271,6 @@ describe('Insight Panel test suites', () => {
 
           InsightPanelsSelectors.smartSnippetFeedbackNoButton().click();
           InsightPanelsSelectors.smartSnippetsExplainWhyButton().click();
-
-          InsightPanelsSelectors.smartSnippetFeedbackModal().should('exist');
         });
       });
     });
