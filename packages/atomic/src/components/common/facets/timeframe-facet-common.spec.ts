@@ -5,11 +5,14 @@ import type {
   DateRangeRequest,
   SearchStatusState,
 } from '@coveo/headless';
-import {nothing} from 'lit';
-import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {html, nothing} from 'lit';
+import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
+import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
+import type {FocusTargetController} from '@/src/utils/accessibility-utils';
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common';
 import {buildFakeFacetConditionsManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/facet-conditions-manager';
-import type {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {TimeframeFacetCommon} from './timeframe-facet-common';
 
 const buildFakeDateFacet = (overrides?: Partial<DateFacet>): DateFacet => {
@@ -32,9 +35,11 @@ const buildFakeDateFilter = (overrides?: Partial<DateFilter>): DateFilter => {
     state: {
       facetId: 'test-filter-id',
       enabled: true,
+      isLoading: false,
       range: undefined,
       ...(overrides?.state || {}),
-    },
+      // biome-ignore lint/suspicious/noExplicitAny: Test fixture builder requires flexible state override
+    } as any,
     subscribe: genericSubscribe,
     setRange: vi.fn(),
     clear: vi.fn(),
@@ -45,22 +50,26 @@ const buildFakeDateFilter = (overrides?: Partial<DateFilter>): DateFilter => {
 describe('TimeframeFacetCommon', () => {
   let mockHost: HTMLElement;
   let mockBindings: Partial<Bindings>;
-  let setFacetIdSpy: MockInstance;
-  let getSearchStatusStateSpy: MockInstance;
-  let buildDependenciesManagerSpy: MockInstance;
-  let buildDateRangeSpy: MockInstance;
-  let initializeFacetForDatePickerSpy: MockInstance;
-  let initializeFacetForDateRangeSpy: MockInstance;
-  let initializeFilterSpy: MockInstance;
+  let setFacetIdSpy: Mock<(id: string) => string>;
+  let getSearchStatusStateSpy: Mock<() => SearchStatusState>;
+  let buildDependenciesManagerSpy: Mock<
+    (facetId: string) => ReturnType<typeof buildFakeFacetConditionsManager>
+  >;
+  let buildDateRangeSpy: Mock<
+    (config: {start: unknown; end: unknown}) => DateRangeRequest
+  >;
+  let initializeFacetForDatePickerSpy: Mock<() => DateFacet>;
+  let initializeFacetForDateRangeSpy: Mock<
+    (values: DateRangeRequest[]) => DateFacet
+  >;
+  let initializeFilterSpy: Mock<() => DateFilter>;
 
-  beforeEach(() => {
-    // Mock host element with querySelectorAll for atomic-timeframe elements
+  beforeEach(async () => {
     mockHost = document.createElement('div');
     mockHost.querySelectorAll = vi.fn(
       () => []
     ) as unknown as typeof mockHost.querySelectorAll;
 
-    // Mock bindings
     mockBindings = {
       store: {
         state: {
@@ -68,13 +77,9 @@ describe('TimeframeFacetCommon', () => {
         },
         registerFacet: vi.fn(),
       },
-      i18n: {
-        t: vi.fn((key: string) => key),
-        language: 'en',
-      },
+      i18n: await createTestI18n(),
     } as unknown as Partial<Bindings>;
 
-    // Setup spies
     setFacetIdSpy = vi.fn((id: string) => id);
     getSearchStatusStateSpy = vi.fn(
       () =>
@@ -95,124 +100,215 @@ describe('TimeframeFacetCommon', () => {
     initializeFilterSpy = vi.fn(() => buildFakeDateFilter());
   });
 
-  describe('initialization', () => {
-    describe('facetId determination', () => {
-      it('should use props.facetId when provided', () => {
-        const common = new TimeframeFacetCommon({
-          facetId: 'custom-facet-id',
-          host: mockHost,
-          bindings: mockBindings as Bindings,
-          label: 'test-label',
-          field: 'date',
-          headingLevel: 2,
-          dependsOn: {},
-          withDatePicker: false,
-          setFacetId: setFacetIdSpy,
-          getSearchStatusState: getSearchStatusStateSpy,
-          buildDependenciesManager: buildDependenciesManagerSpy,
-          deserializeRelativeDate: vi.fn(),
-          buildDateRange: buildDateRangeSpy,
-          initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-          initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-          initializeFilter: initializeFilterSpy,
-          sortCriteria: 'descending',
-        });
-
-        expect(setFacetIdSpy).toHaveBeenCalledWith('custom-facet-id');
-        expect(common).toBeDefined();
-      });
-
-      it('should generate random facetId if field already exists in store', () => {
-        // biome-ignore lint/suspicious/noExplicitAny: Test fixture requires any type
-        mockBindings.store!.state.dateFacets.date = {} as any;
-
-        new TimeframeFacetCommon({
-          host: mockHost,
-          bindings: mockBindings as Bindings,
-          label: 'test-label',
-          field: 'date',
-          headingLevel: 2,
-          dependsOn: {},
-          withDatePicker: false,
-          setFacetId: setFacetIdSpy,
-          getSearchStatusState: getSearchStatusStateSpy,
-          buildDependenciesManager: buildDependenciesManagerSpy,
-          deserializeRelativeDate: vi.fn(),
-          buildDateRange: buildDateRangeSpy,
-          initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-          initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-          initializeFilter: initializeFilterSpy,
-          sortCriteria: 'descending',
-        });
-
-        const capturedFacetId = setFacetIdSpy.mock.calls[0][0];
-        expect(capturedFacetId).toContain('date_');
-        expect(capturedFacetId).not.toBe('date');
-      });
-
-      it('should use field as facetId if no conflicts', () => {
-        new TimeframeFacetCommon({
-          host: mockHost,
-          bindings: mockBindings as Bindings,
-          label: 'test-label',
-          field: 'date',
-          headingLevel: 2,
-          dependsOn: {},
-          withDatePicker: false,
-          setFacetId: setFacetIdSpy,
-          getSearchStatusState: getSearchStatusStateSpy,
-          buildDependenciesManager: buildDependenciesManagerSpy,
-          deserializeRelativeDate: vi.fn(),
-          buildDateRange: buildDateRangeSpy,
-          initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-          initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-          initializeFilter: initializeFilterSpy,
-          sortCriteria: 'descending',
-        });
-
-        expect(setFacetIdSpy).toHaveBeenCalledWith('date');
-      });
+  const createInstance = (
+    overrides: {
+      facetId?: string;
+      withDatePicker?: boolean;
+      deserializeRelativeDate?: Mock<
+        (date: string) => {period: string; unit?: string; amount?: number}
+      >;
+    } = {}
+  ) => {
+    return new TimeframeFacetCommon({
+      facetId: overrides.facetId,
+      host: mockHost,
+      bindings: mockBindings as Bindings,
+      label: 'test-label',
+      field: 'date',
+      headingLevel: 2,
+      dependsOn: {},
+      withDatePicker: overrides.withDatePicker ?? false,
+      setFacetId: setFacetIdSpy,
+      getSearchStatusState: getSearchStatusStateSpy,
+      buildDependenciesManager: buildDependenciesManagerSpy,
+      deserializeRelativeDate: overrides.deserializeRelativeDate ?? vi.fn(),
+      buildDateRange: buildDateRangeSpy,
+      initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
+      initializeFacetForDateRange: initializeFacetForDateRangeSpy,
+      initializeFilter: initializeFilterSpy,
+      sortCriteria: 'descending',
     });
+  };
 
-    describe('manual timeframe parsing', () => {
-      it('should parse manual timeframes from DOM (querySelectorAll "atomic-timeframe")', () => {
-        const mockTimeframeElements = [
-          {label: 'Last 24 hours', amount: 24, unit: 'hour', period: 'past'},
-          {label: 'Last 7 days', amount: 7, unit: 'day', period: 'past'},
-        ];
+  it('should use props.facetId when provided', () => {
+    const common = createInstance({facetId: 'custom-facet-id'});
 
-        mockHost.querySelectorAll = vi.fn(
-          () => mockTimeframeElements
-        ) as unknown as typeof mockHost.querySelectorAll;
-
-        new TimeframeFacetCommon({
-          host: mockHost,
-          bindings: mockBindings as Bindings,
-          label: 'test-label',
-          field: 'date',
-          headingLevel: 2,
-          dependsOn: {},
-          withDatePicker: false,
-          setFacetId: setFacetIdSpy,
-          getSearchStatusState: getSearchStatusStateSpy,
-          buildDependenciesManager: buildDependenciesManagerSpy,
-          deserializeRelativeDate: vi.fn(),
-          buildDateRange: buildDateRangeSpy,
-          initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-          initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-          initializeFilter: initializeFilterSpy,
-          sortCriteria: 'descending',
-        });
-
-        expect(mockHost.querySelectorAll).toHaveBeenCalledWith(
-          'atomic-timeframe'
-        );
-      });
-    });
+    expect(setFacetIdSpy).toHaveBeenCalledWith('custom-facet-id');
+    expect(common).toBeDefined();
   });
 
-  describe('conditional controller creation', () => {
-    it('should create facetForDateRange only when manualTimeframes.length > 0', () => {
+  it('should generate random facetId if field already exists in store', () => {
+    // biome-ignore lint/suspicious/noExplicitAny: Test fixture requires any type
+    mockBindings.store!.state.dateFacets.date = {} as any;
+
+    createInstance();
+
+    const capturedFacetId = setFacetIdSpy.mock.calls[0][0];
+    expect(capturedFacetId).toContain('date_');
+    expect(capturedFacetId).not.toBe('date');
+  });
+
+  it('should use field as facetId if no conflicts', () => {
+    createInstance();
+
+    expect(setFacetIdSpy).toHaveBeenCalledWith('date');
+  });
+
+  it('should parse manual timeframes from DOM', () => {
+    const mockTimeframeElements = [
+      {label: 'Last 24 hours', amount: 24, unit: 'hour', period: 'past'},
+      {label: 'Last 7 days', amount: 7, unit: 'day', period: 'past'},
+    ];
+
+    mockHost.querySelectorAll = vi.fn(
+      () => mockTimeframeElements
+    ) as unknown as typeof mockHost.querySelectorAll;
+
+    createInstance();
+
+    expect(mockHost.querySelectorAll).toHaveBeenCalledWith('atomic-timeframe');
+  });
+
+  it('should create facetForDateRange when manualTimeframes.length > 0', () => {
+    const mockTimeframeElements = [
+      {label: 'Last 24 hours', amount: 24, unit: 'hour', period: 'past'},
+    ];
+    mockHost.querySelectorAll = vi.fn(
+      () => mockTimeframeElements
+    ) as unknown as typeof mockHost.querySelectorAll;
+
+    createInstance();
+
+    expect(initializeFacetForDateRangeSpy).toHaveBeenCalled();
+  });
+
+  it('should create facetForDatePicker when props.withDatePicker is true', () => {
+    createInstance({withDatePicker: true});
+
+    expect(initializeFacetForDatePickerSpy).toHaveBeenCalled();
+  });
+
+  it('should create filter when props.withDatePicker is true', () => {
+    createInstance({withDatePicker: true});
+
+    expect(initializeFilterSpy).toHaveBeenCalled();
+  });
+
+  it('should NOT create facetForDateRange when manualTimeframes is empty', () => {
+    mockHost.querySelectorAll = vi.fn(
+      () => []
+    ) as unknown as typeof mockHost.querySelectorAll;
+
+    createInstance();
+
+    expect(initializeFacetForDateRangeSpy).not.toHaveBeenCalled();
+  });
+
+  it('should NOT create facetForDatePicker when props.withDatePicker is false', () => {
+    createInstance();
+
+    expect(initializeFacetForDatePickerSpy).not.toHaveBeenCalled();
+  });
+
+  it('should create facetForDateRangeDependenciesManager when facetForDateRange exists', () => {
+    const mockTimeframeElements = [
+      {label: 'Last 24 hours', amount: 24, unit: 'hour', period: 'past'},
+    ];
+    mockHost.querySelectorAll = vi.fn(
+      () => mockTimeframeElements
+    ) as unknown as typeof mockHost.querySelectorAll;
+
+    createInstance();
+
+    expect(buildDependenciesManagerSpy).toHaveBeenCalledWith('test-facet-id');
+  });
+
+  it('should create facetForDatePickerDependenciesManager when facetForDatePicker exists', () => {
+    createInstance({withDatePicker: true});
+
+    expect(buildDependenciesManagerSpy).toHaveBeenCalledWith('test-facet-id');
+  });
+
+  it('should create filterDependenciesManager when filter exists', () => {
+    createInstance({withDatePicker: true});
+
+    expect(buildDependenciesManagerSpy).toHaveBeenCalledWith('test-filter-id');
+  });
+
+  it('should NOT create facetForDateRangeDependenciesManager when facetForDateRange does not exist', () => {
+    mockHost.querySelectorAll = vi.fn(
+      () => []
+    ) as unknown as typeof mockHost.querySelectorAll;
+
+    createInstance();
+
+    expect(buildDependenciesManagerSpy).not.toHaveBeenCalled();
+  });
+
+  it('should NOT create facetForDatePickerDependenciesManager when facetForDatePicker does not exist', () => {
+    mockHost.querySelectorAll = vi.fn(
+      () => []
+    ) as unknown as typeof mockHost.querySelectorAll;
+
+    createInstance();
+
+    expect(buildDependenciesManagerSpy).not.toHaveBeenCalled();
+  });
+
+  it('should NOT create filterDependenciesManager when filter does not exist', () => {
+    mockHost.querySelectorAll = vi.fn(
+      () => []
+    ) as unknown as typeof mockHost.querySelectorAll;
+
+    createInstance();
+
+    expect(buildDependenciesManagerSpy).not.toHaveBeenCalled();
+  });
+
+  it('should register facet to bindings.store.dateFacets with correct facetInfo', () => {
+    createInstance();
+
+    expect(mockBindings.store!.registerFacet).toHaveBeenCalledWith(
+      'dateFacets',
+      expect.objectContaining({
+        facetId: 'date',
+        element: mockHost,
+      })
+    );
+  });
+
+  it('should initialize popover with facet metadata', () => {
+    // Test passes if registration completes without error
+    // Popover initialization is tested indirectly via constructor
+    createInstance();
+
+    expect(mockBindings.store!.registerFacet).toHaveBeenCalled();
+  });
+
+  it('should alias filter.state.facetId in dateFacets when filter exists', () => {
+    mockBindings.store!.state.dateFacets = {};
+
+    createInstance({withDatePicker: true});
+
+    const filterFacetId = 'test-filter-id';
+    const mainFacetId = 'date';
+    expect(mockBindings.store!.state.dateFacets[filterFacetId]).toBe(
+      mockBindings.store!.state.dateFacets[mainFacetId]
+    );
+  });
+
+  it('should provide format function that uses formatFacetValue', () => {
+    createInstance();
+
+    // biome-ignore lint/suspicious/noExplicitAny: Test spy access
+    const registerCall = (mockBindings.store!.registerFacet as any).mock
+      .calls[0];
+    expect(registerCall[1]).toHaveProperty('format');
+    expect(typeof registerCall[1].format).toBe('function');
+  });
+
+  describe('when formatting facet values through store callback', () => {
+    it('should return custom label when matching timeframe exists', () => {
       const mockTimeframeElements = [
         {label: 'Last 24 hours', amount: 24, unit: 'hour', period: 'past'},
       ];
@@ -220,401 +316,157 @@ describe('TimeframeFacetCommon', () => {
         () => mockTimeframeElements
       ) as unknown as typeof mockHost.querySelectorAll;
 
-      new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: false,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
+      const deserializeRelativeDateSpy = vi.fn((date: string) => {
+        if (date === '2023-01-01') {
+          return {period: 'past' as const, unit: 'hour' as const, amount: 24};
+        }
+        return {period: 'now' as const};
       });
 
-      expect(initializeFacetForDateRangeSpy).toHaveBeenCalled();
+      createInstance({deserializeRelativeDate: deserializeRelativeDateSpy});
+
+      // biome-ignore lint/suspicious/noExplicitAny: Test spy access
+      const formatFn = (mockBindings.store!.registerFacet as any).mock
+        .calls[0][1].format;
+
+      const facetValue: DateFacetValue = {
+        start: '2023-01-01',
+        end: '2023-01-02',
+        endInclusive: false,
+        state: 'idle',
+        numberOfResults: 10,
+      };
+
+      const result = formatFn(facetValue);
+      expect(result).toBe('Last 24 hours');
     });
 
-    it('should create facetForDatePicker only when props.withDatePicker is true', () => {
-      new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: true,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
-      });
-
-      expect(initializeFacetForDatePickerSpy).toHaveBeenCalled();
-    });
-
-    it('should create filter only when props.withDatePicker is true', () => {
-      new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: true,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
-      });
-
-      expect(initializeFilterSpy).toHaveBeenCalled();
-    });
-
-    it('should NOT create facetForDateRange when manualTimeframes is empty', () => {
+    it('should return i18n key when no custom label exists', () => {
+      const mockTimeframeElements = [{amount: 7, unit: 'day', period: 'past'}];
       mockHost.querySelectorAll = vi.fn(
-        () => []
+        () => mockTimeframeElements
       ) as unknown as typeof mockHost.querySelectorAll;
 
-      new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: false,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
+      const deserializeRelativeDateSpy = vi.fn((date: string) => {
+        if (date === '2023-01-01') {
+          return {period: 'past' as const, unit: 'day' as const, amount: 7};
+        }
+        return {period: 'now' as const};
       });
 
-      expect(initializeFacetForDateRangeSpy).not.toHaveBeenCalled();
+      createInstance({deserializeRelativeDate: deserializeRelativeDateSpy});
+
+      // biome-ignore lint/suspicious/noExplicitAny: Test spy access
+      const formatFn = (mockBindings.store!.registerFacet as any).mock
+        .calls[0][1].format;
+
+      const facetValue: DateFacetValue = {
+        start: '2023-01-01',
+        end: '2023-01-02',
+        endInclusive: false,
+        state: 'idle',
+        numberOfResults: 10,
+      };
+
+      const result = formatFn(facetValue);
+      expect(result).toBeTruthy();
+      expect(typeof result).toBe('string');
     });
 
-    it('should NOT create facetForDatePicker when props.withDatePicker is false', () => {
-      new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: false,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
-      });
-
-      expect(initializeFacetForDatePickerSpy).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('dependencies manager creation', () => {
-    it('should create facetForDateRangeDependenciesManager when facetForDateRange exists', () => {
+    it('should use start date period for past ranges', () => {
       const mockTimeframeElements = [
-        {label: 'Last 24 hours', amount: 24, unit: 'hour', period: 'past'},
+        {amount: 24, unit: 'hour', period: 'past'},
       ];
       mockHost.querySelectorAll = vi.fn(
         () => mockTimeframeElements
       ) as unknown as typeof mockHost.querySelectorAll;
 
-      new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: false,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
+      const deserializeRelativeDateSpy = vi.fn((date: string) => {
+        if (date === '2023-01-01') {
+          return {period: 'past' as const, unit: 'hour' as const, amount: 24};
+        }
+        return {period: 'now' as const};
       });
 
-      expect(buildDependenciesManagerSpy).toHaveBeenCalledWith('test-facet-id');
+      createInstance({deserializeRelativeDate: deserializeRelativeDateSpy});
+
+      // biome-ignore lint/suspicious/noExplicitAny: Test spy access
+      const formatFn = (mockBindings.store!.registerFacet as any).mock
+        .calls[0][1].format;
+
+      const facetValue: DateFacetValue = {
+        start: '2023-01-01',
+        end: '2023-01-02',
+        endInclusive: false,
+        state: 'idle',
+        numberOfResults: 10,
+      };
+
+      formatFn(facetValue);
+      expect(deserializeRelativeDateSpy).toHaveBeenCalledWith('2023-01-01');
     });
 
-    it('should create facetForDatePickerDependenciesManager when facetForDatePicker exists', () => {
-      new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: true,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
-      });
-
-      expect(buildDependenciesManagerSpy).toHaveBeenCalledWith('test-facet-id');
-    });
-
-    it('should create filterDependenciesManager when filter exists', () => {
-      new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: true,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
-      });
-
-      expect(buildDependenciesManagerSpy).toHaveBeenCalledWith(
-        'test-filter-id'
-      );
-    });
-
-    it('should NOT create facetForDateRangeDependenciesManager when facetForDateRange does not exist', () => {
+    it('should use end date period for future ranges', () => {
+      const mockTimeframeElements = [{amount: 7, unit: 'day', period: 'next'}];
       mockHost.querySelectorAll = vi.fn(
-        () => []
+        () => mockTimeframeElements
       ) as unknown as typeof mockHost.querySelectorAll;
 
-      new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: false,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
+      const deserializeRelativeDateSpy = vi.fn((date: string) => {
+        if (date === '2023-01-01') {
+          return {period: 'now' as const};
+        }
+        if (date === '2023-01-08') {
+          return {period: 'next' as const, unit: 'day' as const, amount: 7};
+        }
+        return {period: 'now' as const};
       });
 
-      expect(buildDependenciesManagerSpy).not.toHaveBeenCalled();
+      createInstance({deserializeRelativeDate: deserializeRelativeDateSpy});
+
+      // biome-ignore lint/suspicious/noExplicitAny: Test spy access
+      const formatFn = (mockBindings.store!.registerFacet as any).mock
+        .calls[0][1].format;
+
+      const facetValue: DateFacetValue = {
+        start: '2023-01-01',
+        end: '2023-01-08',
+        endInclusive: false,
+        state: 'idle',
+        numberOfResults: 10,
+      };
+
+      formatFn(facetValue);
+      expect(deserializeRelativeDateSpy).toHaveBeenCalledWith('2023-01-08');
     });
 
-    it('should NOT create facetForDatePickerDependenciesManager when facetForDatePicker does not exist', () => {
-      mockHost.querySelectorAll = vi.fn(
-        () => []
-      ) as unknown as typeof mockHost.querySelectorAll;
-
-      new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: false,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
+    it('should fallback to date range format when deserialization fails', () => {
+      const deserializeRelativeDateSpy = vi.fn(() => {
+        throw new Error('Invalid date format');
       });
 
-      expect(buildDependenciesManagerSpy).not.toHaveBeenCalled();
-    });
+      createInstance({deserializeRelativeDate: deserializeRelativeDateSpy});
 
-    it('should NOT create filterDependenciesManager when filter does not exist', () => {
-      mockHost.querySelectorAll = vi.fn(
-        () => []
-      ) as unknown as typeof mockHost.querySelectorAll;
+      // biome-ignore lint/suspicious/noExplicitAny: Test spy access
+      const formatFn = (mockBindings.store!.registerFacet as any).mock
+        .calls[0][1].format;
 
-      new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: false,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
-      });
+      const facetValue: DateFacetValue = {
+        start: '2023-01-01T00:00:00.000Z',
+        end: '2023-01-08T00:00:00.000Z',
+        endInclusive: false,
+        state: 'idle',
+        numberOfResults: 10,
+      };
 
-      expect(buildDependenciesManagerSpy).not.toHaveBeenCalled();
+      const result = formatFn(facetValue);
+      expect(result).toContain('to');
+      expect(typeof result).toBe('string');
+      expect(result.length).toBeGreaterThan(0);
     });
   });
 
-  describe('store registration', () => {
-    it('should register facet to bindings.store.dateFacets with correct facetInfo', () => {
-      new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: false,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
-      });
-
-      expect(mockBindings.store!.registerFacet).toHaveBeenCalledWith(
-        'dateFacets',
-        expect.objectContaining({
-          facetId: 'date',
-          element: mockHost,
-        })
-      );
-    });
-
-    it('should initialize popover with facet metadata', () => {
-      // Test passes if registration completes without error
-      // Popover initialization is tested indirectly via constructor
-      new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: false,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
-      });
-
-      expect(mockBindings.store!.registerFacet).toHaveBeenCalled();
-    });
-
-    it('should alias filter.state.facetId in dateFacets when filter exists', () => {
-      // Setup: ensure dateFacets can be modified
-      mockBindings.store!.state.dateFacets = {};
-
-      new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: true,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
-      });
-
-      // The filter facet ID should be aliased in dateFacets
-      const filterFacetId = 'test-filter-id';
-      const mainFacetId = 'date';
-      // Both should reference the same object
-      expect(mockBindings.store!.state.dateFacets[filterFacetId]).toBe(
-        mockBindings.store!.state.dateFacets[mainFacetId]
-      );
-    });
-
-    it('should provide format function that uses formatFacetValue', () => {
-      new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: false,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
-      });
-
-      const registerCall = (mockBindings.store!.registerFacet as MockInstance)
-        .mock.calls[0];
-      expect(registerCall[1]).toHaveProperty('format');
-      expect(typeof registerCall[1].format).toBe('function');
-    });
-  });
-
-  describe('#currentValues getter (public API)', () => {
+  describe('#currentValues', () => {
     it('should map manualTimeframes to DateRangeRequest array', () => {
       const mockTimeframeElements = [
         {label: 'Last 24 hours', amount: 24, unit: 'hour', period: 'past'},
@@ -624,31 +476,10 @@ describe('TimeframeFacetCommon', () => {
         () => mockTimeframeElements
       ) as unknown as typeof mockHost.querySelectorAll;
 
-      // Reset the spy to count only our calls
-      buildDateRangeSpy.mockClear();
-
-      const common = new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: false,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
-      });
+      const common = createInstance();
 
       const currentValues = common.currentValues;
       expect(currentValues).toHaveLength(2);
-      // buildDateRange is called during initialization AND when accessing currentValues
       expect(buildDateRangeSpy.mock.calls.length).toBeGreaterThanOrEqual(2);
     });
 
@@ -660,24 +491,7 @@ describe('TimeframeFacetCommon', () => {
         () => mockTimeframeElements
       ) as unknown as typeof mockHost.querySelectorAll;
 
-      const common = new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: false,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
-      });
+      const common = createInstance();
 
       common.currentValues;
       expect(buildDateRangeSpy).toHaveBeenCalledWith({
@@ -694,24 +508,7 @@ describe('TimeframeFacetCommon', () => {
         () => mockTimeframeElements
       ) as unknown as typeof mockHost.querySelectorAll;
 
-      const common = new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: false,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
-      });
+      const common = createInstance();
 
       common.currentValues;
       expect(buildDateRangeSpy).toHaveBeenCalledWith({
@@ -721,7 +518,7 @@ describe('TimeframeFacetCommon', () => {
     });
   });
 
-  describe('#disconnectedCallback (public API)', () => {
+  describe('#disconnectedCallback', () => {
     it('should return early if host.isConnected is true', () => {
       const mockTimeframeElements = [
         {label: 'Last 24 hours', amount: 24, unit: 'hour', period: 'past'},
@@ -737,24 +534,7 @@ describe('TimeframeFacetCommon', () => {
       const mockDepsManager = buildFakeFacetConditionsManager();
       buildDependenciesManagerSpy = vi.fn(() => mockDepsManager);
 
-      const common = new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: false,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
-      });
+      const common = createInstance();
 
       common.disconnectedCallback();
       expect(mockDepsManager.stopWatching).not.toHaveBeenCalled();
@@ -775,24 +555,7 @@ describe('TimeframeFacetCommon', () => {
       const mockDepsManager = buildFakeFacetConditionsManager();
       buildDependenciesManagerSpy = vi.fn(() => mockDepsManager);
 
-      const common = new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: false,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
-      });
+      const common = createInstance();
 
       common.disconnectedCallback();
       expect(mockDepsManager.stopWatching).toHaveBeenCalled();
@@ -807,24 +570,7 @@ describe('TimeframeFacetCommon', () => {
       const mockDepsManager = buildFakeFacetConditionsManager();
       buildDependenciesManagerSpy = vi.fn(() => mockDepsManager);
 
-      const common = new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: true,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
-      });
+      const common = createInstance({withDatePicker: true});
 
       common.disconnectedCallback();
       // Called twice: once for facetForDatePicker, once for filter
@@ -840,24 +586,7 @@ describe('TimeframeFacetCommon', () => {
       const mockDepsManager = buildFakeFacetConditionsManager();
       buildDependenciesManagerSpy = vi.fn(() => mockDepsManager);
 
-      const common = new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: true,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
-      });
+      const common = createInstance({withDatePicker: true});
 
       common.disconnectedCallback();
       expect(mockDepsManager.stopWatching).toHaveBeenCalled();
@@ -869,30 +598,13 @@ describe('TimeframeFacetCommon', () => {
         writable: true,
       });
 
-      const common = new TimeframeFacetCommon({
-        host: mockHost,
-        bindings: mockBindings as Bindings,
-        label: 'test-label',
-        field: 'date',
-        headingLevel: 2,
-        dependsOn: {},
-        withDatePicker: false,
-        setFacetId: setFacetIdSpy,
-        getSearchStatusState: getSearchStatusStateSpy,
-        buildDependenciesManager: buildDependenciesManagerSpy,
-        deserializeRelativeDate: vi.fn(),
-        buildDateRange: buildDateRangeSpy,
-        initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-        initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-        initializeFilter: initializeFilterSpy,
-        sortCriteria: 'descending',
-      });
+      const common = createInstance();
 
       expect(() => common.disconnectedCallback()).not.toThrow();
     });
   });
 
-  describe('#render method (public API)', () => {
+  describe('#render', () => {
     let mockHeaderFocus: FocusTargetController;
 
     beforeEach(() => {
@@ -902,406 +614,262 @@ describe('TimeframeFacetCommon', () => {
       } as unknown as FocusTargetController;
     });
 
-    describe('early returns', () => {
-      it('should render nothing when hasError is true', () => {
-        const common = new TimeframeFacetCommon({
-          host: mockHost,
-          bindings: mockBindings as Bindings,
-          label: 'test-label',
-          field: 'date',
-          headingLevel: 2,
-          dependsOn: {},
-          withDatePicker: false,
-          setFacetId: setFacetIdSpy,
-          getSearchStatusState: getSearchStatusStateSpy,
-          buildDependenciesManager: buildDependenciesManagerSpy,
-          deserializeRelativeDate: vi.fn(),
-          buildDateRange: buildDateRangeSpy,
-          initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-          initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-          initializeFilter: initializeFilterSpy,
-          sortCriteria: 'descending',
-        });
+    it('should render nothing when hasError is true', () => {
+      const common = createInstance();
 
-        const result = common.render({
-          hasError: true,
-          firstSearchExecuted: true,
-          isCollapsed: false,
-          headerFocus: mockHeaderFocus,
-          onToggleCollapse: vi.fn(),
-        });
-
-        expect(result).toBe(nothing);
+      const result = common.render({
+        hasError: true,
+        firstSearchExecuted: true,
+        isCollapsed: false,
+        headerFocus: mockHeaderFocus,
+        onToggleCollapse: vi.fn(),
       });
 
-      it('should render nothing when enabled is false', () => {
-        // Initialize with date picker that will be disabled
-        initializeFacetForDatePickerSpy = vi.fn(() =>
-          buildFakeDateFacet({
-            state: {facetId: 'test', enabled: false, values: []},
-          })
-        );
-
-        const common = new TimeframeFacetCommon({
-          host: mockHost,
-          bindings: mockBindings as Bindings,
-          label: 'test-label',
-          field: 'date',
-          headingLevel: 2,
-          dependsOn: {},
-          withDatePicker: true,
-          setFacetId: setFacetIdSpy,
-          getSearchStatusState: getSearchStatusStateSpy,
-          buildDependenciesManager: buildDependenciesManagerSpy,
-          deserializeRelativeDate: vi.fn(),
-          buildDateRange: buildDateRangeSpy,
-          initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-          initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-          initializeFilter: initializeFilterSpy,
-          sortCriteria: 'descending',
-        });
-
-        const result = common.render({
-          hasError: false,
-          firstSearchExecuted: true,
-          isCollapsed: false,
-          headerFocus: mockHeaderFocus,
-          onToggleCollapse: vi.fn(),
-        });
-
-        expect(result).toBe(nothing);
-      });
-
-      it('should render a facet placeholder when firstSearchExecuted is false', () => {
-        const mockTimeframeElements = [
-          {label: 'Last 24 hours', amount: 24, unit: 'hour', period: 'past'},
-        ];
-        mockHost.querySelectorAll = vi.fn(
-          () => mockTimeframeElements
-        ) as unknown as typeof mockHost.querySelectorAll;
-
-        const common = new TimeframeFacetCommon({
-          host: mockHost,
-          bindings: mockBindings as Bindings,
-          label: 'test-label',
-          field: 'date',
-          headingLevel: 2,
-          dependsOn: {},
-          withDatePicker: false,
-          setFacetId: setFacetIdSpy,
-          getSearchStatusState: getSearchStatusStateSpy,
-          buildDependenciesManager: buildDependenciesManagerSpy,
-          deserializeRelativeDate: vi.fn(),
-          buildDateRange: buildDateRangeSpy,
-          initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-          initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-          initializeFilter: initializeFilterSpy,
-          sortCriteria: 'descending',
-        });
-
-        const result = common.render({
-          hasError: false,
-          firstSearchExecuted: false,
-          isCollapsed: false,
-          headerFocus: mockHeaderFocus,
-          onToggleCollapse: vi.fn(),
-        });
-
-        expect(result).toBeDefined();
-        // Placeholder is rendered via renderFacetPlaceholder
-      });
-
-      it('should render nothing when shouldRenderFacet is false', () => {
-        // No timeframes and no date picker means nothing to render
-        mockHost.querySelectorAll = vi.fn(
-          () => []
-        ) as unknown as typeof mockHost.querySelectorAll;
-
-        const common = new TimeframeFacetCommon({
-          host: mockHost,
-          bindings: mockBindings as Bindings,
-          label: 'test-label',
-          field: 'date',
-          headingLevel: 2,
-          dependsOn: {},
-          withDatePicker: false,
-          setFacetId: setFacetIdSpy,
-          getSearchStatusState: getSearchStatusStateSpy,
-          buildDependenciesManager: buildDependenciesManagerSpy,
-          deserializeRelativeDate: vi.fn(),
-          buildDateRange: buildDateRangeSpy,
-          initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-          initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-          initializeFilter: initializeFilterSpy,
-          sortCriteria: 'descending',
-        });
-
-        const result = common.render({
-          hasError: false,
-          firstSearchExecuted: true,
-          isCollapsed: false,
-          headerFocus: mockHeaderFocus,
-          onToggleCollapse: vi.fn(),
-        });
-
-        expect(result).toBe(nothing);
-      });
+      expect(result).toBe(nothing);
     });
 
-    describe('successful render', () => {
-      it('should render a facet container with header when conditions met', () => {
-        const mockTimeframeElements = [
-          {label: 'Last 24 hours', amount: 24, unit: 'hour', period: 'past'},
-        ];
-        mockHost.querySelectorAll = vi.fn(
-          () => mockTimeframeElements
-        ) as unknown as typeof mockHost.querySelectorAll;
+    it('should render nothing when enabled is false', () => {
+      initializeFacetForDatePickerSpy = vi.fn(() =>
+        buildFakeDateFacet({
+          state: {
+            facetId: 'test',
+            enabled: false,
+            values: [],
+            sortCriterion: 'descending',
+            isLoading: false,
+            hasActiveValues: false,
+          },
+        })
+      );
 
-        const mockFacetValue: DateFacetValue = {
-          start: '2023-01-01',
-          end: '2023-01-02',
-          endInclusive: false,
-          state: 'idle',
-          numberOfResults: 10,
-        };
+      const common = createInstance({withDatePicker: true});
 
-        initializeFacetForDateRangeSpy = vi.fn(() =>
-          buildFakeDateFacet({
-            state: {
-              facetId: 'test',
-              enabled: true,
-              values: [mockFacetValue],
+      const result = common.render({
+        hasError: false,
+        firstSearchExecuted: true,
+        isCollapsed: false,
+        headerFocus: mockHeaderFocus,
+        onToggleCollapse: vi.fn(),
+      });
+
+      expect(result).toBe(nothing);
+    });
+
+    it('should render nothing when shouldRenderFacet is false', () => {
+      mockHost.querySelectorAll = vi.fn(
+        () => []
+      ) as unknown as typeof mockHost.querySelectorAll;
+
+      const common = createInstance();
+
+      const result = common.render({
+        hasError: false,
+        firstSearchExecuted: true,
+        isCollapsed: false,
+        headerFocus: mockHeaderFocus,
+        onToggleCollapse: vi.fn(),
+      });
+
+      expect(result).toBe(nothing);
+    });
+
+    it('should render a facet placeholder when firstSearchExecuted is false', async () => {
+      const mockTimeframeElements = [
+        {label: 'Last 24 hours', amount: 24, unit: 'hour', period: 'past'},
+      ];
+      mockHost.querySelectorAll = vi.fn(
+        () => mockTimeframeElements
+      ) as unknown as typeof mockHost.querySelectorAll;
+
+      const common = createInstance();
+
+      const result = common.render({
+        hasError: false,
+        firstSearchExecuted: false,
+        isCollapsed: false,
+        headerFocus: mockHeaderFocus,
+        onToggleCollapse: vi.fn(),
+      });
+
+      const element = await renderFunctionFixture(html`${result}`);
+      const placeholder = element.querySelector('[part="placeholder"]');
+
+      expect(placeholder).not.toBeNull();
+      expect(placeholder).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    it('should render a facet container with header when conditions met', async () => {
+      const mockTimeframeElements = [
+        {label: 'Last 24 hours', amount: 24, unit: 'hour', period: 'past'},
+      ];
+      mockHost.querySelectorAll = vi.fn(
+        () => mockTimeframeElements
+      ) as unknown as typeof mockHost.querySelectorAll;
+
+      const mockFacetValue: DateFacetValue = {
+        start: '2023-01-01',
+        end: '2023-01-02',
+        endInclusive: false,
+        state: 'idle',
+        numberOfResults: 10,
+      };
+
+      initializeFacetForDateRangeSpy = vi.fn(() =>
+        buildFakeDateFacet({
+          state: {
+            facetId: 'test',
+            enabled: true,
+            values: [mockFacetValue],
+            sortCriterion: 'descending',
+            isLoading: false,
+            hasActiveValues: false,
+          },
+        })
+      );
+
+      const common = createInstance();
+
+      const result = common.render({
+        hasError: false,
+        firstSearchExecuted: true,
+        isCollapsed: false,
+        headerFocus: mockHeaderFocus,
+        onToggleCollapse: vi.fn(),
+      });
+
+      const element = await renderFunctionFixture(html`${result}`);
+      const facetContainer = element.querySelector('[part="facet"]');
+
+      expect(facetContainer).not.toBeNull();
+      expect(result).not.toBe(nothing);
+    });
+
+    it('should NOT render values/input when isCollapsed is true', async () => {
+      const mockTimeframeElements = [
+        {label: 'Last 24 hours', amount: 24, unit: 'hour', period: 'past'},
+      ];
+      mockHost.querySelectorAll = vi.fn(
+        () => mockTimeframeElements
+      ) as unknown as typeof mockHost.querySelectorAll;
+
+      const mockFacetValue: DateFacetValue = {
+        start: '2023-01-01',
+        end: '2023-01-02',
+        endInclusive: false,
+        state: 'idle',
+        numberOfResults: 10,
+      };
+
+      initializeFacetForDateRangeSpy = vi.fn(() =>
+        buildFakeDateFacet({
+          state: {
+            facetId: 'test',
+            enabled: true,
+            values: [mockFacetValue],
+            sortCriterion: 'descending',
+            isLoading: false,
+            hasActiveValues: false,
+          },
+        })
+      );
+
+      const common = createInstance();
+
+      const result = common.render({
+        hasError: false,
+        firstSearchExecuted: true,
+        isCollapsed: true,
+        headerFocus: mockHeaderFocus,
+        onToggleCollapse: vi.fn(),
+      });
+
+      const element = await renderFunctionFixture(html`${result}`);
+      const facetContainer = element.querySelector('[part="facet"]');
+      const values = element.querySelector('[part="values"]');
+      const dateInput = element.querySelector('atomic-facet-date-input');
+
+      expect(facetContainer).not.toBeNull();
+      expect(values).toBeNull();
+      expect(dateInput).toBeNull();
+    });
+
+    it('should render values when not collapsed and shouldRenderValues is true', async () => {
+      const mockTimeframeElements = [
+        {label: 'Last 24 hours', amount: 24, unit: 'hour', period: 'past'},
+      ];
+      mockHost.querySelectorAll = vi.fn(
+        () => mockTimeframeElements
+      ) as unknown as typeof mockHost.querySelectorAll;
+
+      const mockFacetValue: DateFacetValue = {
+        start: '2023-01-01',
+        end: '2023-01-02',
+        endInclusive: false,
+        state: 'idle',
+        numberOfResults: 10,
+      };
+
+      initializeFacetForDateRangeSpy = vi.fn(() =>
+        buildFakeDateFacet({
+          state: {
+            facetId: 'test',
+            enabled: true,
+            values: [mockFacetValue],
+            sortCriterion: 'descending',
+            isLoading: false,
+            hasActiveValues: false,
+          },
+        })
+      );
+
+      const common = createInstance();
+
+      const result = common.render({
+        hasError: false,
+        firstSearchExecuted: true,
+        isCollapsed: false,
+        headerFocus: mockHeaderFocus,
+        onToggleCollapse: vi.fn(),
+      });
+
+      const element = await renderFunctionFixture(html`${result}`);
+      const values = element.querySelector('[part="values"]');
+
+      expect(values).not.toBeNull();
+    });
+
+    it('should render date input when not collapsed and withDatePicker is true', async () => {
+      initializeFilterSpy = vi.fn(() =>
+        buildFakeDateFilter({
+          state: {
+            facetId: 'test-filter-id',
+            enabled: true,
+            isLoading: false,
+            range: {
+              start: '2023-01-01',
+              end: '2023-01-31',
+              numberOfResults: 10,
+              endInclusive: true,
+              state: 'selected',
             },
-          })
-        );
+          },
+        })
+      );
 
-        const common = new TimeframeFacetCommon({
-          host: mockHost,
-          bindings: mockBindings as Bindings,
-          label: 'test-label',
-          field: 'date',
-          headingLevel: 2,
-          dependsOn: {},
-          withDatePicker: false,
-          setFacetId: setFacetIdSpy,
-          getSearchStatusState: getSearchStatusStateSpy,
-          buildDependenciesManager: buildDependenciesManagerSpy,
-          deserializeRelativeDate: vi.fn(),
-          buildDateRange: buildDateRangeSpy,
-          initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-          initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-          initializeFilter: initializeFilterSpy,
-          sortCriteria: 'descending',
-        });
+      const common = createInstance({withDatePicker: true});
 
-        const result = common.render({
-          hasError: false,
-          firstSearchExecuted: true,
-          isCollapsed: false,
-          headerFocus: mockHeaderFocus,
-          onToggleCollapse: vi.fn(),
-        });
-
-        expect(result).toBeDefined();
-        expect(result).not.toBe(undefined);
+      const result = common.render({
+        hasError: false,
+        firstSearchExecuted: true,
+        isCollapsed: false,
+        headerFocus: mockHeaderFocus,
+        onToggleCollapse: vi.fn(),
       });
 
-      it('should NOT render values/input when isCollapsed is true', () => {
-        const mockTimeframeElements = [
-          {label: 'Last 24 hours', amount: 24, unit: 'hour', period: 'past'},
-        ];
-        mockHost.querySelectorAll = vi.fn(
-          () => mockTimeframeElements
-        ) as unknown as typeof mockHost.querySelectorAll;
+      const element = await renderFunctionFixture(html`${result}`);
+      const dateInput = element.querySelector('atomic-facet-date-input');
 
-        const mockFacetValue: DateFacetValue = {
-          start: '2023-01-01',
-          end: '2023-01-02',
-          endInclusive: false,
-          state: 'idle',
-          numberOfResults: 10,
-        };
-
-        initializeFacetForDateRangeSpy = vi.fn(() =>
-          buildFakeDateFacet({
-            state: {
-              facetId: 'test',
-              enabled: true,
-              values: [mockFacetValue],
-            },
-          })
-        );
-
-        const common = new TimeframeFacetCommon({
-          host: mockHost,
-          bindings: mockBindings as Bindings,
-          label: 'test-label',
-          field: 'date',
-          headingLevel: 2,
-          dependsOn: {},
-          withDatePicker: false,
-          setFacetId: setFacetIdSpy,
-          getSearchStatusState: getSearchStatusStateSpy,
-          buildDependenciesManager: buildDependenciesManagerSpy,
-          deserializeRelativeDate: vi.fn(),
-          buildDateRange: buildDateRangeSpy,
-          initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-          initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-          initializeFilter: initializeFilterSpy,
-          sortCriteria: 'descending',
-        });
-
-        const result = common.render({
-          hasError: false,
-          firstSearchExecuted: true,
-          isCollapsed: true,
-          headerFocus: mockHeaderFocus,
-          onToggleCollapse: vi.fn(),
-        });
-
-        // Should render container and header but not values
-        expect(result).toBeDefined();
-      });
-    });
-
-    // EXTRACT: renderValues/renderValue/renderValuesContainer tests → facet-values/timeframe-facet-values.spec.ts
-    describe('render - values rendering (to be extracted)', () => {
-      it('should render values when shouldRenderValues is true and not collapsed', () => {
-        const mockTimeframeElements = [
-          {label: 'Last 24 hours', amount: 24, unit: 'hour', period: 'past'},
-        ];
-        mockHost.querySelectorAll = vi.fn(
-          () => mockTimeframeElements
-        ) as unknown as typeof mockHost.querySelectorAll;
-
-        const mockFacetValue: DateFacetValue = {
-          start: '2023-01-01',
-          end: '2023-01-02',
-          endInclusive: false,
-          state: 'idle',
-          numberOfResults: 10,
-        };
-
-        initializeFacetForDateRangeSpy = vi.fn(() =>
-          buildFakeDateFacet({
-            state: {
-              facetId: 'test',
-              enabled: true,
-              values: [mockFacetValue],
-            },
-          })
-        );
-
-        const common = new TimeframeFacetCommon({
-          host: mockHost,
-          bindings: mockBindings as Bindings,
-          label: 'test-label',
-          field: 'date',
-          headingLevel: 2,
-          dependsOn: {},
-          withDatePicker: false,
-          setFacetId: setFacetIdSpy,
-          getSearchStatusState: getSearchStatusStateSpy,
-          buildDependenciesManager: buildDependenciesManagerSpy,
-          deserializeRelativeDate: vi.fn(),
-          buildDateRange: buildDateRangeSpy,
-          initializeFacetForDatePicker: initializeFacetForDatePickerSpy,
-          initializeFacetForDateRange: initializeFacetForDateRangeSpy,
-          initializeFilter: initializeFilterSpy,
-          sortCriteria: 'descending',
-        });
-
-        const result = common.render({
-          hasError: false,
-          firstSearchExecuted: true,
-          isCollapsed: false,
-          headerFocus: mockHeaderFocus,
-          onToggleCollapse: vi.fn(),
-        });
-
-        expect(result).toBeDefined();
-      });
-
-      it('should render values container with correct structure', () => {
-        // Test is implicit in the successful render test above
-        expect(true).toBe(true);
-      });
-
-      it('should render individual value with a facet value link', () => {
-        // Test is implicit - values are rendered via renderFacetValueLink
-        expect(true).toBe(true);
-      });
-
-      it('should render individual value with a facet value label highlight', () => {
-        // Test is implicit - values are rendered via renderFacetValueLabelHighlight
-        expect(true).toBe(true);
-      });
-
-      it('should format facet value using formatFacetValue', () => {
-        // formatFacetValue is called internally when rendering values
-        expect(true).toBe(true);
-      });
-
-      it('should handle value selection state correctly', () => {
-        // Selection state is passed to renderFacetValueLink and renderFacetValueLabelHighlight
-        expect(true).toBe(true);
-      });
-
-      it('should handle value exclusion state correctly', () => {
-        // Exclusion state is passed to renderFacetValueLabelHighlight
-        expect(true).toBe(true);
-      });
-
-      it('should call toggleSingleSelect on facetForDateRange when value clicked', () => {
-        // onClick handler calls toggleSingleSelect - tested implicitly
-        expect(true).toBe(true);
-      });
-    });
-
-    // EXTRACT: renderHeader tests → (if timeframe-specific behavior)
-    describe('render - header rendering (to be extracted if needed)', () => {
-      it('should render header with correct label and props', () => {
-        // Header is rendered via renderFacetHeader with correct props
-        expect(true).toBe(true);
-      });
-
-      it('should call filter.clear on clear when filter has range', () => {
-        // Tested implicitly via onClearFilters callback
-        expect(true).toBe(true);
-      });
-
-      it('should call facetForDateRange.deselectAll on clear when no filter range', () => {
-        // Tested implicitly via onClearFilters callback
-        expect(true).toBe(true);
-      });
-    });
-
-    // EXTRACT: renderDateInput tests → (if needed)
-    describe('render - date input rendering (to be extracted if needed)', () => {
-      it('should render date input when shouldRenderInput is true and not collapsed', () => {
-        // Date input is rendered when withDatePicker is true and conditions are met
-        expect(true).toBe(true);
-      });
-
-      it('should render atomic-stencil-facet-date-input with correct props', () => {
-        // Props are passed correctly in renderDateInput
-        expect(true).toBe(true);
-      });
-
-      it('should provide correct min/max props to date input', () => {
-        // min/max props are passed from props to date input
-        expect(true).toBe(true);
-      });
-
-      it('should provide correct rangeGetter to date input', () => {
-        // rangeGetter returns filter.state.range
-        expect(true).toBe(true);
-      });
-
-      it('should provide correct rangeSetter to date input', () => {
-        // rangeSetter calls filter.setRange
-        expect(true).toBe(true);
-      });
+      expect(dateInput).not.toBeNull();
     });
   });
 });
