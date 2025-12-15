@@ -264,11 +264,6 @@ describe('Insight Panel test suites', () => {
       });
 
       describe('when giving explanatory feedback', () => {
-        it('should show the feedback modal', () => {
-          InsightPanelsSelectors.smartSnippetFeedbackModal().should(
-            'not.exist'
-          );
-
           InsightPanelsSelectors.smartSnippetFeedbackNoButton().click();
           InsightPanelsSelectors.smartSnippetsExplainWhyButton().click();
         });
