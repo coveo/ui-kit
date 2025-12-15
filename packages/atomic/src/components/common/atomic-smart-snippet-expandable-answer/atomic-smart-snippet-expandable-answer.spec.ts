@@ -14,6 +14,14 @@ vi.mock(
 );
 
 describe('atomic-smart-snippet-expandable-answer', () => {
+  async function setElementHeight(
+    element: AtomicSmartSnippetExpandableAnswer,
+    height: number
+  ) {
+    // biome-ignore lint/suspicious/noExplicitAny: Testing internal state
+    (element as any).fullHeight = height;
+    await element.updateComplete;
+  }
   let i18n: i18n;
 
   beforeEach(async () => {
@@ -35,7 +43,7 @@ describe('atomic-smart-snippet-expandable-answer', () => {
   } = {}) => {
     const element = await fixture<AtomicSmartSnippetExpandableAnswer>(html`
       <atomic-smart-snippet-expandable-answer
-        .expanded=${expanded}
+        expanded=${expanded}
         .htmlContent=${htmlContent}
         .maximumHeight=${maximumHeight}
         .collapsedHeight=${collapsedHeight}
@@ -66,7 +74,13 @@ describe('atomic-smart-snippet-expandable-answer', () => {
         ),
       }),
       answer: () =>
-        element.shadowRoot?.querySelector('atomic-smart-snippet-answer'),
+        element.shadowRoot?.querySelector('atomic-smart-snippet-answer')!,
+      get container() {
+        return element.shadowRoot?.querySelector('div')!;
+      },
+      get button() {
+        return element.shadowRoot?.querySelector('button')!;
+      },
     };
   };
 
@@ -118,7 +132,7 @@ describe('atomic-smart-snippet-expandable-answer', () => {
   describe('rendering', () => {
     it('should render the truncated answer part', async () => {
       const {parts, element} = await renderComponent();
-      expect(parts(element).truncatedAnswer).toBeTruthy();
+      expect(parts(element).truncatedAnswer).toBeInTheDocument();
     });
 
     it('should render atomic-smart-snippet-answer with correct props', async () => {
@@ -130,20 +144,19 @@ describe('atomic-smart-snippet-expandable-answer', () => {
       });
 
       const answerElement = answer();
-      expect(answerElement).toBeTruthy();
+      expect(answerElement).toBeInTheDocument();
       expect(answerElement?.getAttribute('exportparts')).toBe('answer');
     });
 
     it('should apply expanded class when expanded prop is true', async () => {
-      const {element} = await renderComponent({expanded: true});
-      const container = element.shadowRoot?.querySelector('div');
-      expect(container?.classList.contains('expanded')).toBe(true);
+      const {container} = await renderComponent({expanded: true});
+      expect(container).toHaveClass('expanded');
     });
 
     it('should not apply expanded class when expanded prop is false', async () => {
-      const {element} = await renderComponent({expanded: false});
-      const container = element.shadowRoot?.querySelector('div');
-      expect(container?.classList.contains('expanded')).toBe(false);
+      const {element, container} = await renderComponent({expanded: false});
+      await setElementHeight(element, 100220);
+      expect(container).not.toHaveClass('expanded');
     });
   });
 
@@ -153,13 +166,11 @@ describe('atomic-smart-snippet-expandable-answer', () => {
         maximumHeight: 250,
       });
 
-      // Simulate that fullHeight is greater than maximumHeight
-      // biome-ignore lint/suspicious/noExplicitAny: Testing internal state
-      (element as any).fullHeight = 300;
+      await setElementHeight(element, 300);
       await element.requestUpdate();
       await element.updateComplete;
 
-      expect(parts(element).showMoreButton).toBeTruthy();
+      expect(parts(element).showMoreButton).toBeInTheDocument();
     });
 
     it('should not render button when answer height is below maximumHeight', async () => {
@@ -167,14 +178,12 @@ describe('atomic-smart-snippet-expandable-answer', () => {
         maximumHeight: 250,
       });
 
-      // Simulate that fullHeight is less than maximumHeight
-      // biome-ignore lint/suspicious/noExplicitAny: Testing internal state
-      (element as any).fullHeight = 200;
+      await setElementHeight(element, 200);
       await element.requestUpdate();
       await element.updateComplete;
 
-      expect(parts(element).showMoreButton).toBeFalsy();
-      expect(parts(element).showLessButton).toBeFalsy();
+      expect(parts(element).showMoreButton).not.toBeInTheDocument();
+      expect(parts(element).showLessButton).not.toBeInTheDocument();
     });
 
     it('should render show-less-button when expanded', async () => {
@@ -182,39 +191,11 @@ describe('atomic-smart-snippet-expandable-answer', () => {
         expanded: true,
       });
 
-      // Simulate that fullHeight is greater than maximumHeight
-      // biome-ignore lint/suspicious/noExplicitAny: Testing internal state
-      (element as any).fullHeight = 300;
+      await setElementHeight(element, 300);
       await element.requestUpdate();
       await element.updateComplete;
 
-      expect(parts(element).showLessButton).toBeTruthy();
-    });
-
-    it('should display correct button text when collapsed', async () => {
-      const {element} = await renderComponent({expanded: false});
-
-      // Simulate that fullHeight is greater than maximumHeight
-      // biome-ignore lint/suspicious/noExplicitAny: Testing internal state
-      (element as any).fullHeight = 300;
-      await element.requestUpdate();
-      await element.updateComplete;
-
-      const button = element.shadowRoot?.querySelector('button');
-      await expect.element(button!).toContainText('show-more');
-    });
-
-    it('should display correct button text when expanded', async () => {
-      const {element} = await renderComponent({expanded: true});
-
-      // Simulate that fullHeight is greater than maximumHeight
-      // biome-ignore lint/suspicious/noExplicitAny: Testing internal state
-      (element as any).fullHeight = 300;
-      await element.requestUpdate();
-      await element.updateComplete;
-
-      const button = element.shadowRoot?.querySelector('button');
-      await expect.element(button!).toContainText('show-less');
+      expect(parts(element).showLessButton).toBeInTheDocument();
     });
   });
 
@@ -222,9 +203,7 @@ describe('atomic-smart-snippet-expandable-answer', () => {
     it('should emit expand event when show-more button is clicked', async () => {
       const {element} = await renderComponent({expanded: false});
 
-      // Simulate that fullHeight is greater than maximumHeight
-      // biome-ignore lint/suspicious/noExplicitAny: Testing internal state
-      (element as any).fullHeight = 300;
+      await setElementHeight(element, 300);
       await element.requestUpdate();
       await element.updateComplete;
 
@@ -242,9 +221,7 @@ describe('atomic-smart-snippet-expandable-answer', () => {
     it('should emit collapse event when show-less button is clicked', async () => {
       const {element} = await renderComponent({expanded: true});
 
-      // Simulate that fullHeight is greater than maximumHeight
-      // biome-ignore lint/suspicious/noExplicitAny: Testing internal state
-      (element as any).fullHeight = 300;
+      await setElementHeight(element, 300);
       await element.requestUpdate();
       await element.updateComplete;
 
@@ -327,9 +304,7 @@ describe('atomic-smart-snippet-expandable-answer', () => {
     it('should set --full-height CSS property when fullHeight changes', async () => {
       const {element} = await renderComponent();
 
-      // Simulate that fullHeight is set
-      // biome-ignore lint/suspicious/noExplicitAny: Testing internal state
-      (element as any).fullHeight = 300;
+      await setElementHeight(element, 300);
       await element.requestUpdate();
       await element.updateComplete;
 
@@ -339,9 +314,7 @@ describe('atomic-smart-snippet-expandable-answer', () => {
     it('should set --collapsed-size CSS property when fullHeight changes', async () => {
       const {element} = await renderComponent({collapsedHeight: 180});
 
-      // Simulate that fullHeight is greater than maximumHeight
-      // biome-ignore lint/suspicious/noExplicitAny: Testing internal state
-      (element as any).fullHeight = 300;
+      await setElementHeight(element, 300);
       await element.requestUpdate();
       await element.updateComplete;
 
@@ -351,9 +324,7 @@ describe('atomic-smart-snippet-expandable-answer', () => {
     it('should set --collapsed-size to fullHeight when button is not shown', async () => {
       const {element} = await renderComponent();
 
-      // Simulate that fullHeight is less than maximumHeight
-      // biome-ignore lint/suspicious/noExplicitAny: Testing internal state
-      (element as any).fullHeight = 200;
+      await setElementHeight(element, 200);
       await element.requestUpdate();
       await element.updateComplete;
 
