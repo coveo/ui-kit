@@ -80,6 +80,7 @@
     "release:phase1": "pnpm --filter @coveo/ci bump",
     "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
+    "validate:light-dom-styles": "node ./scripts/check-light-dom-host-selectors.mjs",
     "chromatic:build": "IS_CHROMATIC=true storybook build -o dist-chromatic --stats-json",
     "chromatic": "chromatic -d=dist-chromatic"
   },
