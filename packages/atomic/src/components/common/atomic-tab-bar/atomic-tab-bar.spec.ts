@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {AtomicTabBar} from './atomic-tab-bar';
 import './atomic-tab-bar';
@@ -14,6 +14,19 @@ interface MockTabElement {
   getBoundingClientRect: () => DOMRect;
   setAttribute: (name: string, value: string) => void;
 }
+
+// Mock atomic-tab-popover to prevent errors
+class MockTabPopover extends HTMLElement {
+  async toggle() {}
+  async setButtonVisibility(_isVisible: boolean) {}
+  async closePopoverOnFocusOut(_event: FocusEvent) {}
+}
+
+beforeAll(() => {
+  if (!customElements.get('atomic-tab-popover')) {
+    customElements.define('atomic-tab-popover', MockTabPopover);
+  }
+});
 
 describe('atomic-tab-bar', () => {
   let mockResizeObserver: {
