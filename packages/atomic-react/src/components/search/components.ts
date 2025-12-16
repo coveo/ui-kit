@@ -8,11 +8,13 @@ import {
   AtomicDidYouMean as LitAtomicDidYouMean,
   AtomicExternal as LitAtomicExternal,
   AtomicFacet as LitAtomicFacet,
+  AtomicFacetManager as LitAtomicFacetManager,
   AtomicFocusTrap as LitAtomicFocusTrap,
   AtomicFoldedResultList as LitAtomicFoldedResultList,
   AtomicFormatCurrency as LitAtomicFormatCurrency,
   AtomicFormatNumber as LitAtomicFormatNumber,
   AtomicFormatUnit as LitAtomicFormatUnit,
+  AtomicGeneratedAnswer as LitAtomicGeneratedAnswer,
   AtomicHtml as LitAtomicHtml,
   AtomicIcon as LitAtomicIcon,
   AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
@@ -26,9 +28,11 @@ import {
   AtomicPopover as LitAtomicPopover,
   AtomicQueryError as LitAtomicQueryError,
   AtomicQuerySummary as LitAtomicQuerySummary,
+  AtomicQuickview as LitAtomicQuickview,
   AtomicRatingFacet as LitAtomicRatingFacet,
   AtomicRatingRangeFacet as LitAtomicRatingRangeFacet,
   AtomicRecsInterface as LitAtomicRecsInterface,
+  AtomicRefineToggle as LitAtomicRefineToggle,
   AtomicResult as LitAtomicResult,
   AtomicResultBadge as LitAtomicResultBadge,
   AtomicResultChildren as LitAtomicResultChildren,
@@ -128,6 +132,12 @@ export const AtomicFacet = createComponent({
   elementClass: LitAtomicFacet,
 });
 
+export const AtomicFacetManager = createComponent({
+  tagName: 'atomic-facet-manager',
+  react: React,
+  elementClass: LitAtomicFacetManager,
+});
+
 export const AtomicFocusTrap = createComponent({
   tagName: 'atomic-focus-trap',
   react: React,
@@ -156,6 +166,12 @@ export const AtomicFormatUnit = createComponent({
   tagName: 'atomic-format-unit',
   react: React,
   elementClass: LitAtomicFormatUnit,
+});
+
+export const AtomicGeneratedAnswer = createComponent({
+  tagName: 'atomic-generated-answer',
+  react: React,
+  elementClass: LitAtomicGeneratedAnswer,
 });
 
 export const AtomicHtml = createComponent({
@@ -236,6 +252,12 @@ export const AtomicQuerySummary = createComponent({
   elementClass: LitAtomicQuerySummary,
 });
 
+export const AtomicQuickview = createComponent({
+  tagName: 'atomic-quickview',
+  react: React,
+  elementClass: LitAtomicQuickview,
+});
+
 export const AtomicRatingFacet = createComponent({
   tagName: 'atomic-rating-facet',
   react: React,
@@ -252,6 +274,12 @@ export const AtomicRecsInterface = createComponent({
   tagName: 'atomic-recs-interface',
   react: React,
   elementClass: LitAtomicRecsInterface,
+});
+
+export const AtomicRefineToggle = createComponent({
+  tagName: 'atomic-refine-toggle',
+  react: React,
+  elementClass: LitAtomicRefineToggle,
 });
 
 export const AtomicResult = createComponent({

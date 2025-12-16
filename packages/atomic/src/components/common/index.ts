@@ -8,4 +8,5 @@ export {AtomicIcon} from './atomic-icon/atomic-icon.js';
 export {AtomicLayoutSection} from './atomic-layout-section/atomic-layout-section.js';
 export {AtomicModal} from './atomic-modal/atomic-modal.js';
 export {AtomicNumericRange} from './atomic-numeric-range/atomic-numeric-range.js';
+export {AtomicTabBar} from './atomic-tab-bar/atomic-tab-bar.js';
 export {AtomicTimeframe} from './atomic-timeframe/atomic-timeframe.js';
