@@ -86,7 +86,7 @@ describe('atomic-smart-snippet-source', () => {
 
     it('should initialize without error', async () => {
       const {element} = await renderComponent();
-      expect(element.error).toBeNull();
+      expect(element.error).toBeUndefined();
     });
 
     it('should add event listener for atomic/resolveResult', async () => {

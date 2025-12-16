@@ -39,7 +39,7 @@ export class AtomicSmartSnippetSource
   public anchorAttributes?: Attr[];
 
   @state() public bindings!: AnyBindings;
-  @state() public error: Error | null = null;
+  @state() public error!: Error;
 
   public initialize() {
     // Dispatch custom event to provide result context
@@ -70,12 +70,7 @@ export class AtomicSmartSnippetSource
   };
 
   private dispatchSelectEvent(eventName: string) {
-    this.dispatchEvent(
-      buildCustomEvent(eventName, undefined, {
-        bubbles: true,
-        composed: true,
-      })
-    );
+    this.dispatchEvent(buildCustomEvent(eventName, undefined));
   }
 
   @errorGuard()
@@ -119,11 +114,5 @@ export class AtomicSmartSnippetSource
         )}
       `
     )}`;
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'atomic-smart-snippet-source': AtomicSmartSnippetSource;
   }
 }
