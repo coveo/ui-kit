@@ -227,4 +227,79 @@ describe('atomic-facet-number-input', () => {
       });
     });
   });
+
+  describe('when invalid input is entered', () => {
+    it('should not call filter.setRange when start input is empty', async () => {
+      const {element} = await setupElement({
+        filterState: {
+          facetId: 'test-facet',
+          range: undefined,
+        } as NumericFilterState,
+      });
+      const parts = locators.parts(element);
+
+      parts.endInput.value = '100';
+      parts.endInput.dispatchEvent(new Event('input', {bubbles: true}));
+      await locators.applyButton.click();
+
+      expect(parts.startInput.validity.valid).toBe(false);
+      expect(parts.startInput.validity.valueMissing).toBe(true);
+      expect(filter.setRange).not.toHaveBeenCalled();
+    });
+
+    it('should not call filter.setRange when end input is empty', async () => {
+      const {element} = await setupElement({
+        filterState: {
+          facetId: 'test-facet',
+          range: undefined,
+        } as NumericFilterState,
+      });
+      const parts = locators.parts(element);
+
+      parts.startInput.value = '10';
+      parts.startInput.dispatchEvent(new Event('input', {bubbles: true}));
+      await locators.applyButton.click();
+
+      expect(parts.endInput.validity.valid).toBe(false);
+      expect(parts.endInput.validity.valueMissing).toBe(true);
+      expect(filter.setRange).not.toHaveBeenCalled();
+    });
+
+    it('should not call filter.setRange when start value is greater than end value', async () => {
+      const {element} = await setupElement({
+        filterState: {
+          facetId: 'test-facet',
+          range: {start: 10, end: 100},
+        } as NumericFilterState,
+      });
+      const parts = locators.parts(element);
+
+      parts.startInput.value = '200';
+      parts.endInput.value = '100';
+      parts.startInput.dispatchEvent(new Event('input', {bubbles: true}));
+      parts.endInput.dispatchEvent(new Event('input', {bubbles: true}));
+      await locators.applyButton.click();
+
+      expect(parts.startInput.validity.valid).toBe(false);
+      expect(parts.startInput.validity.rangeOverflow).toBe(true);
+      expect(filter.setRange).not.toHaveBeenCalled();
+    });
+
+    it('should not emit atomic/numberInputApply event when inputs are invalid', async () => {
+      const {element} = await setupElement({
+        filterState: {
+          facetId: 'test-facet',
+          range: undefined,
+        } as NumericFilterState,
+      });
+      const parts = locators.parts(element);
+      const spy = vi.fn();
+      element.addEventListener('atomic/numberInputApply', spy);
+      await locators.applyButton.click();
+
+      expect(parts.startInput.validity.valid).toBe(false);
+      expect(parts.endInput.validity.valid).toBe(false);
+      expect(spy).not.toHaveBeenCalled();
+    });
+  });
 });
