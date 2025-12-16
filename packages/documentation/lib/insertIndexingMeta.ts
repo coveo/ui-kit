@@ -1,6 +1,11 @@
-import type {PageEvent} from 'typedoc';
+import {DocumentReflection, type PageEvent} from 'typedoc';
 
 export const insertIndexingMeta = (page: PageEvent) => {
+  const isHandwrittenDoc = page.model instanceof DocumentReflection;
+  if (isHandwrittenDoc) {
+    return;
+  }
+
   if (!page.contents) return;
 
   const titleMatch = page.contents.match(/<title>(.*?)<\/title>/);
@@ -14,6 +19,6 @@ export const insertIndexingMeta = (page: PageEvent) => {
 
   page.contents = page.contents.replace(
     /<\/head>/,
-    `<meta name="coveo-headless-indexing-meta" content="${lowerCaseName}" />\n</head>`
+    `<meta name="coveo-headless-indexing-meta" content="${lowerCaseName} reference" />\n</head>`
   );
 };
