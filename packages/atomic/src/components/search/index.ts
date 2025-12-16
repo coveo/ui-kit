@@ -12,6 +12,7 @@ export {AtomicFoldedResultList} from './atomic-folded-result-list/atomic-folded-
 export {AtomicFormatCurrency} from './atomic-format-currency/atomic-format-currency.js';
 export {AtomicFormatNumber} from './atomic-format-number/atomic-format-number.js';
 export {AtomicFormatUnit} from './atomic-format-unit/atomic-format-unit.js';
+export {AtomicGeneratedAnswer} from './atomic-generated-answer/atomic-generated-answer.js';
 export {AtomicHtml} from './atomic-html/atomic-html.js';
 export {AtomicLoadMoreResults} from './atomic-load-more-results/atomic-load-more-results.js';
 export {AtomicNoResults} from './atomic-no-results/atomic-no-results.js';

@@ -25,6 +25,8 @@ export default {
     await import('./atomic-format-number/atomic-format-number.js'),
   'atomic-format-unit': async () =>
     await import('./atomic-format-unit/atomic-format-unit.js'),
+  'atomic-generated-answer': async () =>
+    await import('./atomic-generated-answer/atomic-generated-answer.js'),
   'atomic-html': async () => await import('./atomic-html/atomic-html.js'),
   'atomic-load-more-results': async () =>
     await import('./atomic-load-more-results/atomic-load-more-results.js'),
