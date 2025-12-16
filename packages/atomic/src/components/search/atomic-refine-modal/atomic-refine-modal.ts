@@ -21,12 +21,7 @@ import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {findSection} from '@/src/components/common/atomic-layout-section/atomic-layout-section-utils';
 import {popoverClass} from '@/src/components/common/facets/popover/popover-type';
-import {
-  type BaseFacetElement,
-  collapseFacetsAfter,
-  sortFacetVisibility,
-  triageFacetsByParents,
-} from '@/src/components/common/facets/stencil-facet-common';
+
 import {isRefineModalFacet} from '@/src/components/common/interface/store';
 import {renderRefineModalBody} from '@/src/components/common/refine-modal/body';
 import {
@@ -46,6 +41,12 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import type {AtomicInterface} from '@/src/utils/initialization-lit-stencil-common-utils';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
 import {sortByDocumentPosition} from '@/src/utils/utils';
+import {
+  type BaseFacetElement,
+  collapseFacetsAfter,
+  sortFacetVisibility,
+  triageFacetsByParents,
+} from '../../common/facets/facet-common';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import type {SortDropdownOption} from '../atomic-search-interface/store';
 
