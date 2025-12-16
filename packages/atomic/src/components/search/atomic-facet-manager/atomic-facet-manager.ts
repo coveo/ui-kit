@@ -20,6 +20,7 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 
 /**
@@ -34,7 +35,7 @@ import {LightDomMixin} from '@/src/mixins/light-dom';
 @customElement('atomic-facet-manager')
 @bindings()
 export class AtomicFacetManager
-  extends LightDomMixin(LitElement)
+  extends ChildrenUpdateCompleteMixin(LightDomMixin(LitElement))
   implements InitializableComponent<Bindings>
 {
   @state() public bindings!: Bindings;
@@ -76,7 +77,9 @@ export class AtomicFacetManager
     this.bindings.i18n.on('languageChanged', this.sortFacets);
   }
 
-  private sortFacets = () => {
+  private sortFacets = async () => {
+    await this.getUpdateComplete();
+
     const facets = getFacetsInChildren(this);
 
     const sortedFacets = this.sortFacetsUsingManager(facets, this.facetManager);
