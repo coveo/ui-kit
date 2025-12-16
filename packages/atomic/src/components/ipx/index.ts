@@ -1,2 +1,3 @@
 // Auto-generated file
-export {};
+export {AtomicIpxTab} from './atomic-ipx-tab/atomic-ipx-tab.js';
+export {AtomicIpxTabs} from './atomic-ipx-tabs/atomic-ipx-tabs.js';
