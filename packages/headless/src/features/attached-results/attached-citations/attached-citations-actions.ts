@@ -66,12 +66,12 @@ const attachedCitationPayloadDefinition = {
   permanentId: nonEmptyString,
   resultUrl: nonEmptyString,
   title: requiredNonEmptyString,
-  uriHash: nonEmptyString || undefined,
+  uriHash: nonEmptyString,
   source: nonEmptyString,
-  knowledgeArticleId: nonEmptyString || undefined,
-  articleLanguage: nonEmptyString || undefined,
-  articleVersionNumber: nonEmptyString || undefined,
-  articlePublishStatus: nonEmptyString || undefined,
+  knowledgeArticleId: nonEmptyString,
+  articleLanguage: nonEmptyString,
+  articleVersionNumber: nonEmptyString,
+  articlePublishStatus: nonEmptyString,
   isCitation: new BooleanValue({required: true}),
 };
 
