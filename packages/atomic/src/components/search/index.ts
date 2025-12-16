@@ -21,6 +21,7 @@ export {AtomicQueryError} from './atomic-query-error/atomic-query-error.js';
 export {AtomicQuerySummary} from './atomic-query-summary/atomic-query-summary.js';
 export {AtomicRatingFacet} from './atomic-rating-facet/atomic-rating-facet.js';
 export {AtomicRatingRangeFacet} from './atomic-rating-range-facet/atomic-rating-range-facet.js';
+export {AtomicRefineToggle} from './atomic-refine-toggle/atomic-refine-toggle.js';
 export {AtomicRelevanceInspector} from './atomic-relevance-inspector/atomic-relevance-inspector.js';
 export {AtomicResult} from './atomic-result/atomic-result.js';
 export {AtomicResultBadge} from './atomic-result-badge/atomic-result-badge.js';
@@ -47,6 +48,7 @@ export {AtomicResultSectionExcerpt} from './atomic-result-section-excerpt/atomic
 export {AtomicResultSectionTitle} from './atomic-result-section-title/atomic-result-section-title.js';
 export {AtomicResultSectionTitleMetadata} from './atomic-result-section-title-metadata/atomic-result-section-title-metadata.js';
 export {AtomicResultSectionVisual} from './atomic-result-section-visual/atomic-result-section-visual.js';
+export {AtomicResultTablePlaceholder} from './atomic-result-table-placeholder/atomic-result-table-placeholder.js';
 export {AtomicResultTemplate} from './atomic-result-template/atomic-result-template.js';
 export {AtomicResultText} from './atomic-result-text/atomic-result-text.js';
 export {AtomicResultTimespan} from './atomic-result-timespan/atomic-result-timespan.js';
