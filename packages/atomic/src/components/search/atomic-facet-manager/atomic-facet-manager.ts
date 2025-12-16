@@ -76,11 +76,6 @@ export class AtomicFacetManager
     // An update has to be forced for the facets to be visually updated, without being interacted with.
     this.bindings.i18n.on('languageChanged', this.sortFacets);
   }
-  public async connectedCallback() {
-    super.connectedCallback();
-    console.log('connectedCallback called in atomic-facet-manager');
-    await this.getUpdateComplete();
-  }
 
   private sortFacets = async () => {
     await this.getUpdateComplete();

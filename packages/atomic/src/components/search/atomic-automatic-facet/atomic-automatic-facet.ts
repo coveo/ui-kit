@@ -183,7 +183,6 @@ export class AtomicAutomaticFacet
   @bindingGuard()
   @errorGuard()
   render() {
-    console.log(this.isCollapsed);
     if (this.searchStatus.state.hasError) {
       return html`${nothing}`;
     }
