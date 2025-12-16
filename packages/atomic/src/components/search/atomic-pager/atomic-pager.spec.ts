@@ -151,6 +151,26 @@ describe('atomic-pager', () => {
     await expect.element(locators.page6).not.toBeInTheDocument();
   });
 
+  it('should show correct page range on last page without overbound', async () => {
+    await renderPager({
+      pagerState: {
+        currentPage: 10,
+        maxPage: 10,
+        currentPages: [6, 7, 8, 9, 10],
+      },
+    });
+
+    await expect.element(locators.page6).toBeInTheDocument();
+    await expect.element(page.getByLabelText('Page 7')).toBeInTheDocument();
+    await expect.element(page.getByLabelText('Page 8')).toBeInTheDocument();
+    await expect.element(page.getByLabelText('Page 9')).toBeInTheDocument();
+    await expect.element(page.getByLabelText('Page 10')).toBeInTheDocument();
+    // Page 11 should not exist (this was the bug)
+    await expect
+      .element(page.getByLabelText('Page 11'))
+      .not.toBeInTheDocument();
+  });
+
   it('should update numberOfPages property', async () => {
     const element = await renderPager({
       props: {numberOfPages: 3},
