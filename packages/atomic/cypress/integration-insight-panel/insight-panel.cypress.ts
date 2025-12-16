@@ -264,6 +264,7 @@ describe('Insight Panel test suites', () => {
       });
 
       describe('when giving explanatory feedback', () => {
+        it('should allow user to provide feedback', () => {
           InsightPanelsSelectors.smartSnippetFeedbackNoButton().click();
           InsightPanelsSelectors.smartSnippetsExplainWhyButton().click();
         });
