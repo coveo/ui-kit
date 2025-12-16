@@ -8,6 +8,7 @@ import {
   AtomicDidYouMean as LitAtomicDidYouMean,
   AtomicExternal as LitAtomicExternal,
   AtomicFacet as LitAtomicFacet,
+  AtomicFacetManager as LitAtomicFacetManager,
   AtomicFocusTrap as LitAtomicFocusTrap,
   AtomicFoldedResultList as LitAtomicFoldedResultList,
   AtomicFormatCurrency as LitAtomicFormatCurrency,
@@ -126,6 +127,12 @@ export const AtomicFacet = createComponent({
   tagName: 'atomic-facet',
   react: React,
   elementClass: LitAtomicFacet,
+});
+
+export const AtomicFacetManager = createComponent({
+  tagName: 'atomic-facet-manager',
+  react: React,
+  elementClass: LitAtomicFacetManager,
 });
 
 export const AtomicFocusTrap = createComponent({
