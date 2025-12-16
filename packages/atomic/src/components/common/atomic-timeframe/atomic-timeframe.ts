@@ -11,7 +11,7 @@ import {LightDomMixin} from '@/src/mixins/light-dom';
  * The `atomic-timeframe` component defines a timeframe for an `atomic-timeframe-facet`.
  * This component must be a child of an `atomic-timeframe-facet` component.
  *
- * A timeframe represents a span of time relative to the current moment.
+ * A timeframe represents a span of time relative to the current moment, either in the past or future.
  */
 @customElement('atomic-timeframe')
 export class AtomicTimeframe
@@ -39,7 +39,7 @@ export class AtomicTimeframe
     amount: new NumberValue({min: 1, required: false}),
   });
   /**
-   * Specifies the direction of time relative to the current moment.
+   * The direction of time relative to the current moment.
    */
   @property({type: String, reflect: true}) public period: 'past' | 'next' =
     'past';
