@@ -119,7 +119,7 @@ const {decorator, play} = wrapInSearchInterface();
 
 const meta: Meta = {
   component: 'atomic-numeric-facet',
-  title: 'Search/NumericFacet',
+  title: 'Search/Facet (Numeric)',
   id: 'atomic-numeric-facet',
   render: (args) => template(args),
   decorators: [decorator],
@@ -158,7 +158,7 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-numeric-facet',
+  name: 'Default',
   decorators: [facetDecorator],
   args: {
     field: 'ytviewcount',
