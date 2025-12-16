@@ -6,6 +6,7 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {createRef, type Ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
 import {renderButton} from '@/src/components/common/button';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
 import {bindStateToController} from '@/src/decorators/bind-state';
@@ -71,6 +72,21 @@ export class AtomicQuickview
     this.quickview.previous();
   };
 
+  constructor() {
+    super();
+
+    new ValidatePropsController(
+      this,
+      () => ({sandbox: this.sandbox}),
+      new Schema({
+        sandbox: new StringValue({
+          required: true,
+          regex: /allow-same-origin/,
+        }),
+      })
+    );
+  }
+
   public initialize() {
     if (this.resultContext.item) {
       const item = this.resultContext.item;
@@ -84,13 +100,6 @@ export class AtomicQuickview
     this.quickview = buildQuickview(this.bindings.engine, {
       options: {result: this.result},
     });
-
-    new Schema({
-      sandbox: new StringValue({
-        required: true,
-        regex: /allow-same-origin/,
-      }),
-    }).validate({sandbox: this.sandbox});
   }
 
   connectedCallback() {
