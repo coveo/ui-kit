@@ -20,8 +20,8 @@ import {hoistOtherCategoryInArray, hoistOtherCategoryInNav} from './hoist.js';
 import {insertAtomicSearchBox} from './insertAtomicSearchBox.js';
 import {insertBetaNote} from './insertBetaNote.js';
 import {insertCustomComments} from './insertCustomComments.js';
-import {insertIndexingTitle} from './insertIndexingTitle.js';
 import {insertMetaTags} from './insertMetaTags.js';
+import {insertSentenceCaseMeta} from './insertSentenceCaseMeta.js';
 import {insertSiteHeaderBar} from './insertSiteHeaderBar.js';
 import {applyTopLevelRenameArray} from './renaming.js';
 import {
@@ -307,7 +307,7 @@ export const load = (app: Application) => {
     cpSync(darkModeJs.from, darkModeJs.to);
   });
 
-  app.renderer.on(PageEvent.END, insertIndexingTitle);
+  app.renderer.on(PageEvent.END, insertSentenceCaseMeta);
 
   app.renderer.defineRouter('kebab', KebabRouter);
 
