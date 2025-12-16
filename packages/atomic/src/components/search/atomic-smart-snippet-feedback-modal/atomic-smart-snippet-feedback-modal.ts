@@ -3,7 +3,7 @@ import {
   type SmartSnippet,
   type SmartSnippetFeedback,
 } from '@coveo/headless';
-import {css, html, LitElement} from 'lit';
+import {css, html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {createRef, type Ref} from 'lit/directives/ref.js';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '@/src/components/common/atomic-modal/export-parts';
@@ -14,15 +14,15 @@ import {renderModalFooter} from '@/src/components/common/smart-snippets/atomic-s
 import {renderModalHeader} from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-header';
 import {renderModalOption} from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-option';
 import {renderModalOptions} from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-options';
+import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {randomID} from '@/src/utils/utils';
-import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import type {Bindings} from '../atomic-search-interface/interfaces';
 
 /**
  * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
@@ -75,8 +75,13 @@ export class AtomicSmartSnippetFeedbackModal
   /**
    * Whether the modal is open.
    */
-  @property({type: Boolean, reflect: true, attribute: 'is-open'})
-  isOpen = false;
+  @property({
+    type: Boolean,
+    reflect: true,
+    attribute: 'is-open',
+    converter: booleanConverter,
+  })
+  public isOpen = false;
 
   @state()
   private currentAnswer?: SmartSnippetFeedback | 'other';
@@ -91,9 +96,8 @@ export class AtomicSmartSnippetFeedbackModal
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
   }
 
-  @watch('isOpen')
-  watchToggleOpen(newValue: boolean) {
-    if (newValue) {
+  updated(changedProperties: PropertyValues) {
+    if (changedProperties.has('isOpen') && this.isOpen) {
       this.smartSnippet.openFeedbackModal();
       this.currentAnswer = undefined;
     }
