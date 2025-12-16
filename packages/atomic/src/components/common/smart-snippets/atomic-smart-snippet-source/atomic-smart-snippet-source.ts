@@ -39,7 +39,7 @@ export class AtomicSmartSnippetSource
   public anchorAttributes?: Attr[];
 
   @state() public bindings!: AnyBindings;
-  @state() public error!: Error;
+  @state() public error: Error | null = null;
 
   public initialize() {
     // Dispatch custom event to provide result context
