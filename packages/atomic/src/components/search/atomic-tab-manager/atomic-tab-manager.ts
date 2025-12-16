@@ -17,6 +17,7 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import styles from './atomic-tab-manager.tw.css';
 import '@/src/components/common/atomic-tab-bar/atomic-tab-bar';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 
 interface TabInfo {
   label: string;
@@ -47,7 +48,7 @@ interface TabInfo {
 @bindings()
 @withTailwindStyles
 export class AtomicTabManager
-  extends LitElement
+  extends ChildrenUpdateCompleteMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
   static styles: CSSResultGroup = styles;
@@ -94,7 +95,7 @@ export class AtomicTabManager
       }
       const tabController = buildTab(this.bindings.engine, {
         options: {
-          expression: tabElement.expression ?? '',
+          expression: tabElement.expression,
           id: tabElement.name,
           clearFiltersOnTabChange: this.clearFiltersOnTabChange,
         },
