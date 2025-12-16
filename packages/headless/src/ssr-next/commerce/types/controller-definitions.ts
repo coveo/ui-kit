@@ -19,6 +19,7 @@ import type {
   RecommendationOnlyController,
   SearchAndListingController,
   SearchOnlyController,
+  StandaloneController,
   UniversalController,
 } from './controller-scopes.js';
 import type {HydratedState} from './hydrate-static-state.js';
@@ -204,3 +205,6 @@ export type SearchAndListingControllerDefinitionWithProps<
   TProps,
 > = ControllerDefinitionWithProps<TController, TProps> &
   SearchAndListingController;
+
+export type StandaloneControllerWithoutProps<TController extends Controller> =
+  ControllerDefinitionWithoutProps<TController> & StandaloneController;
