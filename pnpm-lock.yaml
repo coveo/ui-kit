@@ -6,9 +6,6 @@ settings:
 
 catalogs:
   default:
-    '@coveo/create-atomic-rollup-plugin':
-      specifier: 1.2.1
-      version: 1.2.1
     '@coveo/relay-event-types':
       specifier: 15.1.0
       version: 15.1.0
@@ -638,8 +635,8 @@ importers:
         version: link:../../headless
     devDependencies:
       '@coveo/create-atomic-rollup-plugin':
-        specifier: 'catalog:'
-        version: 1.2.1
+        specifier: workspace:*
+        version: link:../../create-atomic-rollup-plugin
       '@rollup/plugin-url':
         specifier: 'catalog:'
         version: 8.0.2(rollup@4.46.2)
@@ -675,8 +672,8 @@ importers:
         specifier: 2.2.19
         version: 2.2.19
       '@coveo/create-atomic-rollup-plugin':
-        specifier: 'catalog:'
-        version: 1.2.1
+        specifier: workspace:*
+        version: link:../../../../../create-atomic-rollup-plugin
       '@rollup/plugin-url':
         specifier: 'catalog:'
         version: 8.0.2(rollup@4.46.2)
@@ -718,8 +715,8 @@ importers:
         specifier: 2.2.19
         version: 2.2.19
       '@coveo/create-atomic-rollup-plugin':
-        specifier: 'catalog:'
-        version: 1.2.1
+        specifier: workspace:*
+        version: link:../../../../../create-atomic-rollup-plugin
       '@rollup/plugin-url':
         specifier: 'catalog:'
         version: 8.0.2(rollup@4.46.2)
@@ -758,8 +755,8 @@ importers:
         version: 4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9)
     devDependencies:
       '@coveo/create-atomic-rollup-plugin':
-        specifier: 'catalog:'
-        version: 1.2.1
+        specifier: workspace:*
+        version: link:../create-atomic-rollup-plugin
       '@rollup/plugin-replace':
         specifier: 'catalog:'
         version: 6.0.2(rollup@4.46.2)
@@ -2601,9 +2598,6 @@ packages:
   '@coveo/create-atomic-component-project@1.5.8':
     resolution: {integrity: sha512-sX/vjP/7jtXF8XF8jrWUDoe8TiObA5fq/5ZGCWTKpgk/AHeTv3KkfGvd8yliCMALr6EMPKLzRqRER0tkrQRZVw==}
     hasBin: true
-
-  '@coveo/create-atomic-rollup-plugin@1.2.1':
-    resolution: {integrity: sha512-dYokNIv1ImmGMbvbBs9LwXfKG/onolYUYMoOCUEXURmb3m3/JaRA9KmVvNpP42M4sSMKkrXf2SdfX8bitXrQIg==}
 
   '@coveo/explorer-messenger@0.4.1':
     resolution: {integrity: sha512-MX+alPTsRQLAC99b7cUwMGtaGcDw44ftEJOFwoS8alTgFlY7oaUP4jyZSJ/BCOMXlYpkhU2VYDERr/HD5P1Dtw==}
@@ -15422,8 +15416,6 @@ snapshots:
   '@coveo/create-atomic-component-project@1.4.2': {}
 
   '@coveo/create-atomic-component-project@1.5.8': {}
-
-  '@coveo/create-atomic-rollup-plugin@1.2.1': {}
 
   '@coveo/explorer-messenger@0.4.1': {}
 
