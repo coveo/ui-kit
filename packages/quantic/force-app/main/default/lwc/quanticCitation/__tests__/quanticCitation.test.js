@@ -274,7 +274,7 @@ describe('c-quantic-citation', () => {
 
       expect(functionsMocks.eventHandler).toHaveBeenCalledTimes(1);
       expect(functionsMocks.eventHandler).toHaveBeenCalledWith({
-        citationHoverTimeMs: 1200,
+        citationHoverTimeMs: 1100,
       });
     });
 
@@ -318,32 +318,32 @@ describe('c-quantic-citation', () => {
 
         const hideTooltipSpy = jest.spyOn(citationTooltip, 'hideTooltip');
 
-        // Hover over the citation
+        // Hover over the citation - tooltip shows after 200ms delay
         await citationLink.dispatchEvent(
           new CustomEvent('mouseenter', {bubbles: true})
         );
         jest.advanceTimersByTime(200);
 
-        // Move cursor to tooltip in less than 200ms
+        // Move cursor to tooltip quickly (before hide delay expires)
         await citationLink.dispatchEvent(
           new CustomEvent('mouseleave', {bubbles: true})
         );
-        jest.advanceTimersByTime(100);
+
         await citationTooltip.dispatchEvent(
           new CustomEvent('mouseenter', {bubbles: true})
         );
 
-        // Move cursor back to citation in less than 200ms
+        // Move cursor back to citation quickly (before hide delay expires)
         await citationTooltip.dispatchEvent(
           new CustomEvent('mouseleave', {bubbles: true})
         );
-        jest.advanceTimersByTime(100);
+
         await citationLink.dispatchEvent(
           new CustomEvent('mouseenter', {bubbles: true})
         );
 
-        // Advance time beyond 200ms to see if tooltip is hidden
-        jest.advanceTimersByTime(300);
+        // Advance time beyond 100ms to see if tooltip is hidden
+        jest.advanceTimersByTime(200);
 
         expect(hideTooltipSpy).toHaveBeenCalledTimes(0);
       });

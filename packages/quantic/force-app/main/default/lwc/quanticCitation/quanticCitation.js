@@ -5,7 +5,8 @@ import {LightningElement, api} from 'lwc';
 /** @typedef {import("coveo").InteractiveCitation} InteractiveCitation */
 
 const minimumTooltipDisplayDurationMs = 1000;
-const tooltipDebounceDelayMs = 200;
+const hoverTooltipDelayMs = 200;
+const closeTooltipDelayMs = 100;
 const supportedFileTypesForTextFragment = ['html', 'SalesforceItem'];
 
 /**
@@ -82,20 +83,12 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       !!this.text;
 
     this.hideTooltipDebounced = debounce(() => {
-      if (this.tooltipIsDisplayed) {
-        this.dispatchCitationHoverEvent();
-        this.tooltipIsDisplayed = false;
-        this.tooltipComponent?.hideTooltip();
-      }
-    }, tooltipDebounceDelayMs);
+      this.hideTooltip();
+    }, closeTooltipDelayMs);
 
     this.showTooltipDebounced = debounce(() => {
-      if (!this.tooltipIsDisplayed) {
-        this.hoverStartTimestamp = Date.now();
-        this.tooltipIsDisplayed = true;
-        this.tooltipComponent?.showTooltip();
-      }
-    }, tooltipDebounceDelayMs);
+      this.showTooltip();
+    }, hoverTooltipDelayMs);
   }
 
   renderedCallback() {
@@ -120,25 +113,20 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   disconnectedCallback() {
     this.removeBindings?.();
     clearTimeout(this.timeout);
-    this.hideTooltipDebounced?.cancel();
-    this.showTooltipDebounced?.cancel();
+    this.cancelTooltipTimers();
   }
 
   handleCitationMouseEnter() {
-    this.hideTooltipDebounced.cancel();
+    this.cancelTooltipTimers();
     this.showTooltipDebounced();
   }
 
   handleCitationMouseLeave() {
-    this.showTooltipDebounced.cancel();
+    this.cancelTooltipTimers();
     this.hideTooltipDebounced();
   }
 
-  /**
-   * Handles mouse enter on the tooltip to prevent it from hiding while hovering over it.
-   */
   handleTooltipMouseEnter() {
-    this.showTooltipDebounced.cancel();
     this.hideTooltipDebounced.cancel();
   }
 
@@ -152,6 +140,19 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       this.tooltipIsDisplayed = true;
       this.tooltipComponent?.showTooltip();
     }
+  }
+
+  hideTooltip() {
+    if (this.tooltipIsDisplayed) {
+      this.dispatchCitationHoverEvent();
+      this.tooltipIsDisplayed = false;
+      this.tooltipComponent?.hideTooltip();
+    }
+  }
+
+  cancelTooltipTimers() {
+    this.hideTooltipDebounced?.cancel();
+    this.showTooltipDebounced?.cancel();
   }
 
   /**
