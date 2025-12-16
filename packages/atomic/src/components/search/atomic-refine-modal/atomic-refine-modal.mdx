@@ -1,0 +1,42 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicRefineModalStories from './atomic-refine-modal.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicRefineModalStories} />
+
+<AtomicDocTemplate
+  stories={AtomicRefineModalStories}
+  githubPath="search/atomic-refine-modal/atomic-refine-modal.ts"
+  tagName="atomic-refine-modal"
+  className="AtomicRefineModal"
+  defaultStory="DefaultModal"
+>
+
+This component should not be used directly. It is internally used by the `atomic-refine-toggle` component to display the refine modal.
+To use the refine modal, you should use the `atomic-refine-toggle` component instead. It usually is placed within the "status" section of the layout.
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+      <atomic-layout-section section="status">
+
+            <atomic-refine-toggle></atomic-refine-toggle>
+
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+## Related Components
+
+- `atomic-refine-toggle`: The toggle button that opens the refine modal
+- `atomic-sort-dropdown`: Provides sort options for search results
+- `atomic-facet`: Individual facet components that can be placed in the refine modal
+- `atomic-breadbox`: Shows active filters and can be used alongside the refine modal
+
+</AtomicDocTemplate>
