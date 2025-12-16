@@ -82,18 +82,6 @@ export namespace Components {
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
     }
     /**
-     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
-     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
-     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
-     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
-     */
-    interface AtomicFacetManager {
-        /**
-          * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
-         */
-        "collapseFacetsAfter": number;
-    }
-    /**
      * Internal component made to be integrated in a NumericFacet.
      */
     interface AtomicFacetNumberInput {
@@ -1025,16 +1013,6 @@ export namespace Components {
         "openButton"?: HTMLElement;
     }
     /**
-     * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
-     */
-    interface AtomicRefineToggle {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter": number;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
@@ -1251,8 +1229,6 @@ export namespace Components {
         "side": 'left' | 'right';
         "suggestion": SearchBoxSuggestionElement;
     }
-    interface AtomicTabBar {
-    }
     interface AtomicTabButton {
         /**
           * Whether the tab button is active.
@@ -1440,18 +1416,6 @@ declare global {
     var HTMLAtomicCitationElement: {
         prototype: HTMLAtomicCitationElement;
         new (): HTMLAtomicCitationElement;
-    };
-    /**
-     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
-     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
-     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
-     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
-     */
-    interface HTMLAtomicFacetManagerElement extends Components.AtomicFacetManager, HTMLStencilElement {
-    }
-    var HTMLAtomicFacetManagerElement: {
-        prototype: HTMLAtomicFacetManagerElement;
-        new (): HTMLAtomicFacetManagerElement;
     };
     interface HTMLAtomicFacetNumberInputElementEventMap {
         "atomic/numberInputApply": any;
@@ -1944,16 +1908,6 @@ declare global {
         new (): HTMLAtomicRefineModalElement;
     };
     /**
-     * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
-     */
-    interface HTMLAtomicRefineToggleElement extends Components.AtomicRefineToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicRefineToggleElement: {
-        prototype: HTMLAtomicRefineToggleElement;
-        new (): HTMLAtomicRefineToggleElement;
-    };
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface HTMLAtomicResultPlaceholderElement extends Components.AtomicResultPlaceholder, HTMLStencilElement {
@@ -2132,12 +2086,6 @@ declare global {
         prototype: HTMLAtomicSuggestionRendererElement;
         new (): HTMLAtomicSuggestionRendererElement;
     };
-    interface HTMLAtomicTabBarElement extends Components.AtomicTabBar, HTMLStencilElement {
-    }
-    var HTMLAtomicTabBarElement: {
-        prototype: HTMLAtomicTabBarElement;
-        new (): HTMLAtomicTabBarElement;
-    };
     interface HTMLAtomicTabButtonElement extends Components.AtomicTabButton, HTMLStencilElement {
     }
     var HTMLAtomicTabButtonElement: {
@@ -2173,7 +2121,6 @@ declare global {
     interface HTMLElementTagNameMap {
         "atomic-automatic-facet-generator": HTMLAtomicAutomaticFacetGeneratorElement;
         "atomic-citation": HTMLAtomicCitationElement;
-        "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
         "atomic-generated-answer": HTMLAtomicGeneratedAnswerElement;
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
@@ -2226,7 +2173,6 @@ declare global {
         "atomic-recs-result": HTMLAtomicRecsResultElement;
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
-        "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
@@ -2238,7 +2184,6 @@ declare global {
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
-        "atomic-tab-bar": HTMLAtomicTabBarElement;
         "atomic-tab-button": HTMLAtomicTabButtonElement;
         "atomic-tab-popover": HTMLAtomicTabPopoverElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
@@ -2291,18 +2236,6 @@ declare namespace LocalJSX {
           * Callback function invoked when the user stops hovering over a citation. `citationHoverTimeMs` is the amount of time over which the citation has been hovered.
          */
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
-    }
-    /**
-     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
-     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
-     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
-     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
-     */
-    interface AtomicFacetManager {
-        /**
-          * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
-         */
-        "collapseFacetsAfter"?: number;
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
@@ -3200,16 +3133,6 @@ declare namespace LocalJSX {
         "openButton"?: HTMLElement;
     }
     /**
-     * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
-     */
-    interface AtomicRefineToggle {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter"?: number;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
@@ -3439,8 +3362,6 @@ declare namespace LocalJSX {
         "side": 'left' | 'right';
         "suggestion": SearchBoxSuggestionElement;
     }
-    interface AtomicTabBar {
-    }
     interface AtomicTabButton {
         /**
           * Whether the tab button is active.
@@ -3544,7 +3465,6 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "atomic-automatic-facet-generator": AtomicAutomaticFacetGenerator;
         "atomic-citation": AtomicCitation;
-        "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-number-input": AtomicFacetNumberInput;
         "atomic-generated-answer": AtomicGeneratedAnswer;
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
@@ -3597,7 +3517,6 @@ declare namespace LocalJSX {
         "atomic-recs-result": AtomicRecsResult;
         "atomic-recs-result-template": AtomicRecsResultTemplate;
         "atomic-refine-modal": AtomicRefineModal;
-        "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-search-box": AtomicSearchBox;
         "atomic-segmented-facet": AtomicSegmentedFacet;
@@ -3609,7 +3528,6 @@ declare namespace LocalJSX {
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
-        "atomic-tab-bar": AtomicTabBar;
         "atomic-tab-button": AtomicTabButton;
         "atomic-tab-popover": AtomicTabPopover;
         "atomic-timeframe": AtomicTimeframe;
@@ -3633,13 +3551,6 @@ declare module "@stencil/core" {
              * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
              */
             "atomic-citation": LocalJSX.AtomicCitation & JSXBase.HTMLAttributes<HTMLAtomicCitationElement>;
-            /**
-             * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
-             * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
-             * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
-             * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
-             */
-            "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             /**
              * Internal component made to be integrated in a NumericFacet.
              */
@@ -3759,11 +3670,6 @@ declare module "@stencil/core" {
              */
             "atomic-refine-modal": LocalJSX.AtomicRefineModal & JSXBase.HTMLAttributes<HTMLAtomicRefineModalElement>;
             /**
-             * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-             * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
-             */
-            "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
-            /**
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
@@ -3827,7 +3733,6 @@ declare module "@stencil/core" {
              * use native Elements.
              */
             "atomic-suggestion-renderer": LocalJSX.AtomicSuggestionRenderer & JSXBase.HTMLAttributes<HTMLAtomicSuggestionRendererElement>;
-            "atomic-tab-bar": LocalJSX.AtomicTabBar & JSXBase.HTMLAttributes<HTMLAtomicTabBarElement>;
             "atomic-tab-button": LocalJSX.AtomicTabButton & JSXBase.HTMLAttributes<HTMLAtomicTabButtonElement>;
             "atomic-tab-popover": LocalJSX.AtomicTabPopover & JSXBase.HTMLAttributes<HTMLAtomicTabPopoverElement>;
             /**

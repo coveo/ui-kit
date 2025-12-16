@@ -13,6 +13,8 @@ export default {
   'atomic-external': async () =>
     await import('./atomic-external/atomic-external.js'),
   'atomic-facet': async () => await import('./atomic-facet/atomic-facet.js'),
+  'atomic-facet-manager': async () =>
+    await import('./atomic-facet-manager/atomic-facet-manager.js'),
   'atomic-field-condition': async () =>
     await import('./atomic-field-condition/atomic-field-condition.js'),
   'atomic-folded-result-list': async () =>
@@ -41,6 +43,8 @@ export default {
     await import('./atomic-rating-facet/atomic-rating-facet.js'),
   'atomic-rating-range-facet': async () =>
     await import('./atomic-rating-range-facet/atomic-rating-range-facet.js'),
+  'atomic-refine-toggle': async () =>
+    await import('./atomic-refine-toggle/atomic-refine-toggle.js'),
   'atomic-relevance-inspector': async () =>
     await import('./atomic-relevance-inspector/atomic-relevance-inspector.js'),
   'atomic-result': async () => await import('./atomic-result/atomic-result.js'),
