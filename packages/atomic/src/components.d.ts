@@ -82,18 +82,6 @@ export namespace Components {
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
     }
     /**
-     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
-     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
-     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
-     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
-     */
-    interface AtomicFacetManager {
-        /**
-          * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
-         */
-        "collapseFacetsAfter": number;
-    }
-    /**
      * Internal component made to be integrated in a NumericFacet.
      */
     interface AtomicFacetNumberInput {
@@ -102,47 +90,6 @@ export namespace Components {
         "filterState": NumericFilterState;
         "label": string;
         "type": NumberInputType;
-    }
-    /**
-     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
-     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
-     */
-    interface AtomicGeneratedAnswer {
-        /**
-          * The unique identifier of the answer configuration to use to generate the answer.
-         */
-        "answerConfigurationId"?: string;
-        /**
-          * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
-          * @default false
-         */
-        "collapsible"?: boolean;
-        /**
-          * Option to disable citation anchoring.
-          * @default false
-         */
-        "disableCitationAnchoring"?: boolean;
-        /**
-          * A list of fields to include with the citations used to generate the answer.
-         */
-        "fieldsToIncludeInCitations"?: string;
-        /**
-          * The maximum height (in rem units) of the answer when collapsed.
-         */
-        "maxCollapsedHeight": number;
-        /**
-          * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded": string[] | string;
-        /**
-          * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-generated-answer tabs-included='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer can only be displayed on the specified tabs.
-         */
-        "tabsIncluded": string[] | string;
-        /**
-          * Whether to render a toggle button that lets the user hide or show the answer.
-          * @default false
-         */
-        "withToggle"?: boolean;
     }
     /**
      * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
@@ -843,18 +790,6 @@ export namespace Components {
         "withInput"?: NumberInputType;
     }
     /**
-     * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
-     * about a result.
-     * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (for example, custom styles and embedded
-     * images/links may not work as expected in an `atomic-quickview`).
-     */
-    interface AtomicQuickview {
-        /**
-          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
-         */
-        "sandbox": string;
-    }
-    /**
      * The modal opened when clicking a quickview button.
      * Do not use this component directly; use `atomic-quickview` instead.
      */
@@ -1025,30 +960,12 @@ export namespace Components {
         "openButton"?: HTMLElement;
     }
     /**
-     * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
-     */
-    interface AtomicRefineToggle {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter": number;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
         "density": ItemDisplayDensity;
         "display": ItemDisplayLayout;
         "imageSize": ItemDisplayImageSize;
-    }
-    /**
-     * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface AtomicResultTablePlaceholder {
-        "density": ItemDisplayDensity;
-        "imageSize": ItemDisplayImageSize;
-        "rows": number;
     }
     /**
      * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -1275,8 +1192,6 @@ export namespace Components {
         "side": 'left' | 'right';
         "suggestion": SearchBoxSuggestionElement;
     }
-    interface AtomicTabBar {
-    }
     interface AtomicTabButton {
         /**
           * Whether the tab button is active.
@@ -1469,18 +1384,6 @@ declare global {
         prototype: HTMLAtomicCitationElement;
         new (): HTMLAtomicCitationElement;
     };
-    /**
-     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
-     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
-     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
-     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
-     */
-    interface HTMLAtomicFacetManagerElement extends Components.AtomicFacetManager, HTMLStencilElement {
-    }
-    var HTMLAtomicFacetManagerElement: {
-        prototype: HTMLAtomicFacetManagerElement;
-        new (): HTMLAtomicFacetManagerElement;
-    };
     interface HTMLAtomicFacetNumberInputElementEventMap {
         "atomic/numberInputApply": any;
     }
@@ -1500,16 +1403,6 @@ declare global {
     var HTMLAtomicFacetNumberInputElement: {
         prototype: HTMLAtomicFacetNumberInputElement;
         new (): HTMLAtomicFacetNumberInputElement;
-    };
-    /**
-     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
-     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
-     */
-    interface HTMLAtomicGeneratedAnswerElement extends Components.AtomicGeneratedAnswer, HTMLStencilElement {
-    }
-    var HTMLAtomicGeneratedAnswerElement: {
-        prototype: HTMLAtomicGeneratedAnswerElement;
-        new (): HTMLAtomicGeneratedAnswerElement;
     };
     interface HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap {
         "feedbackSent": any;
@@ -1887,18 +1780,6 @@ declare global {
         prototype: HTMLAtomicNumericFacetElement;
         new (): HTMLAtomicNumericFacetElement;
     };
-    /**
-     * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
-     * about a result.
-     * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (for example, custom styles and embedded
-     * images/links may not work as expected in an `atomic-quickview`).
-     */
-    interface HTMLAtomicQuickviewElement extends Components.AtomicQuickview, HTMLStencilElement {
-    }
-    var HTMLAtomicQuickviewElement: {
-        prototype: HTMLAtomicQuickviewElement;
-        new (): HTMLAtomicQuickviewElement;
-    };
     interface HTMLAtomicQuickviewModalElementEventMap {
         "atomic/quickview/next": any;
         "atomic/quickview/previous": any;
@@ -1972,16 +1853,6 @@ declare global {
         new (): HTMLAtomicRefineModalElement;
     };
     /**
-     * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
-     */
-    interface HTMLAtomicRefineToggleElement extends Components.AtomicRefineToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicRefineToggleElement: {
-        prototype: HTMLAtomicRefineToggleElement;
-        new (): HTMLAtomicRefineToggleElement;
-    };
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface HTMLAtomicResultPlaceholderElement extends Components.AtomicResultPlaceholder, HTMLStencilElement {
@@ -1989,15 +1860,6 @@ declare global {
     var HTMLAtomicResultPlaceholderElement: {
         prototype: HTMLAtomicResultPlaceholderElement;
         new (): HTMLAtomicResultPlaceholderElement;
-    };
-    /**
-     * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface HTMLAtomicResultTablePlaceholderElement extends Components.AtomicResultTablePlaceholder, HTMLStencilElement {
-    }
-    var HTMLAtomicResultTablePlaceholderElement: {
-        prototype: HTMLAtomicResultTablePlaceholderElement;
-        new (): HTMLAtomicResultTablePlaceholderElement;
     };
     interface HTMLAtomicSearchBoxElementEventMap {
         "redirect": RedirectionPayload;
@@ -2190,12 +2052,6 @@ declare global {
         prototype: HTMLAtomicSuggestionRendererElement;
         new (): HTMLAtomicSuggestionRendererElement;
     };
-    interface HTMLAtomicTabBarElement extends Components.AtomicTabBar, HTMLStencilElement {
-    }
-    var HTMLAtomicTabBarElement: {
-        prototype: HTMLAtomicTabBarElement;
-        new (): HTMLAtomicTabBarElement;
-    };
     interface HTMLAtomicTabButtonElement extends Components.AtomicTabButton, HTMLStencilElement {
     }
     var HTMLAtomicTabButtonElement: {
@@ -2231,9 +2087,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "atomic-automatic-facet-generator": HTMLAtomicAutomaticFacetGeneratorElement;
         "atomic-citation": HTMLAtomicCitationElement;
-        "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
-        "atomic-generated-answer": HTMLAtomicGeneratedAnswerElement;
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
@@ -2277,16 +2131,13 @@ declare global {
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
         "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
-        "atomic-quickview": HTMLAtomicQuickviewElement;
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
         "atomic-recs-error": HTMLAtomicRecsErrorElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-recs-result": HTMLAtomicRecsResultElement;
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
-        "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
-        "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
@@ -2298,7 +2149,6 @@ declare global {
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
-        "atomic-tab-bar": HTMLAtomicTabBarElement;
         "atomic-tab-button": HTMLAtomicTabButtonElement;
         "atomic-tab-popover": HTMLAtomicTabPopoverElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
@@ -2353,18 +2203,6 @@ declare namespace LocalJSX {
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
     }
     /**
-     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
-     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
-     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
-     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
-     */
-    interface AtomicFacetManager {
-        /**
-          * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
-         */
-        "collapseFacetsAfter"?: number;
-    }
-    /**
      * Internal component made to be integrated in a NumericFacet.
      */
     interface AtomicFacetNumberInput {
@@ -2374,47 +2212,6 @@ declare namespace LocalJSX {
         "label": string;
         "onAtomic/numberInputApply"?: (event: AtomicFacetNumberInputCustomEvent<any>) => void;
         "type": NumberInputType;
-    }
-    /**
-     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
-     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
-     */
-    interface AtomicGeneratedAnswer {
-        /**
-          * The unique identifier of the answer configuration to use to generate the answer.
-         */
-        "answerConfigurationId"?: string;
-        /**
-          * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
-          * @default false
-         */
-        "collapsible"?: boolean;
-        /**
-          * Option to disable citation anchoring.
-          * @default false
-         */
-        "disableCitationAnchoring"?: boolean;
-        /**
-          * A list of fields to include with the citations used to generate the answer.
-         */
-        "fieldsToIncludeInCitations"?: string;
-        /**
-          * The maximum height (in rem units) of the answer when collapsed.
-         */
-        "maxCollapsedHeight"?: number;
-        /**
-          * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded"?: string[] | string;
-        /**
-          * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-generated-answer tabs-included='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer can only be displayed on the specified tabs.
-         */
-        "tabsIncluded"?: string[] | string;
-        /**
-          * Whether to render a toggle button that lets the user hide or show the answer.
-          * @default false
-         */
-        "withToggle"?: boolean;
     }
     /**
      * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
@@ -3094,18 +2891,6 @@ declare namespace LocalJSX {
         "withInput"?: NumberInputType;
     }
     /**
-     * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
-     * about a result.
-     * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (for example, custom styles and embedded
-     * images/links may not work as expected in an `atomic-quickview`).
-     */
-    interface AtomicQuickview {
-        /**
-          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
-         */
-        "sandbox"?: string;
-    }
-    /**
      * The modal opened when clicking a quickview button.
      * Do not use this component directly; use `atomic-quickview` instead.
      */
@@ -3260,30 +3045,12 @@ declare namespace LocalJSX {
         "openButton"?: HTMLElement;
     }
     /**
-     * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
-     */
-    interface AtomicRefineToggle {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter"?: number;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
         "density": ItemDisplayDensity;
         "display": ItemDisplayLayout;
         "imageSize": ItemDisplayImageSize;
-    }
-    /**
-     * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface AtomicResultTablePlaceholder {
-        "density": ItemDisplayDensity;
-        "imageSize": ItemDisplayImageSize;
-        "rows": number;
     }
     /**
      * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -3528,8 +3295,6 @@ declare namespace LocalJSX {
         "side": 'left' | 'right';
         "suggestion": SearchBoxSuggestionElement;
     }
-    interface AtomicTabBar {
-    }
     interface AtomicTabButton {
         /**
           * Whether the tab button is active.
@@ -3633,9 +3398,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "atomic-automatic-facet-generator": AtomicAutomaticFacetGenerator;
         "atomic-citation": AtomicCitation;
-        "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-number-input": AtomicFacetNumberInput;
-        "atomic-generated-answer": AtomicGeneratedAnswer;
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
         "atomic-insight-facet": AtomicInsightFacet;
@@ -3679,16 +3442,13 @@ declare namespace LocalJSX {
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
         "atomic-ipx-result-link": AtomicIpxResultLink;
         "atomic-numeric-facet": AtomicNumericFacet;
-        "atomic-quickview": AtomicQuickview;
         "atomic-quickview-modal": AtomicQuickviewModal;
         "atomic-recs-error": AtomicRecsError;
         "atomic-recs-list": AtomicRecsList;
         "atomic-recs-result": AtomicRecsResult;
         "atomic-recs-result-template": AtomicRecsResultTemplate;
         "atomic-refine-modal": AtomicRefineModal;
-        "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-result-placeholder": AtomicResultPlaceholder;
-        "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
         "atomic-search-box": AtomicSearchBox;
         "atomic-segmented-facet": AtomicSegmentedFacet;
         "atomic-smart-snippet": AtomicSmartSnippet;
@@ -3700,7 +3460,6 @@ declare namespace LocalJSX {
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
-        "atomic-tab-bar": AtomicTabBar;
         "atomic-tab-button": AtomicTabButton;
         "atomic-tab-popover": AtomicTabPopover;
         "atomic-timeframe": AtomicTimeframe;
@@ -3725,21 +3484,9 @@ declare module "@stencil/core" {
              */
             "atomic-citation": LocalJSX.AtomicCitation & JSXBase.HTMLAttributes<HTMLAtomicCitationElement>;
             /**
-             * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
-             * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
-             * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
-             * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
-             */
-            "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
-            /**
              * Internal component made to be integrated in a NumericFacet.
              */
             "atomic-facet-number-input": LocalJSX.AtomicFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicFacetNumberInputElement>;
-            /**
-             * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
-             * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
-             */
-            "atomic-generated-answer": LocalJSX.AtomicGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerElement>;
             /**
              * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
              */
@@ -3813,13 +3560,6 @@ declare module "@stencil/core" {
              */
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             /**
-             * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
-             * about a result.
-             * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (for example, custom styles and embedded
-             * images/links may not work as expected in an `atomic-quickview`).
-             */
-            "atomic-quickview": LocalJSX.AtomicQuickview & JSXBase.HTMLAttributes<HTMLAtomicQuickviewElement>;
-            /**
              * The modal opened when clicking a quickview button.
              * Do not use this component directly; use `atomic-quickview` instead.
              */
@@ -3850,18 +3590,9 @@ declare module "@stencil/core" {
              */
             "atomic-refine-modal": LocalJSX.AtomicRefineModal & JSXBase.HTMLAttributes<HTMLAtomicRefineModalElement>;
             /**
-             * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-             * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
-             */
-            "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
-            /**
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
-            /**
-             * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-             */
-            "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
             /**
              * The `atomic-search-box` component creates a search box with built-in support for suggestions.
              */
@@ -3923,7 +3654,6 @@ declare module "@stencil/core" {
              * use native Elements.
              */
             "atomic-suggestion-renderer": LocalJSX.AtomicSuggestionRenderer & JSXBase.HTMLAttributes<HTMLAtomicSuggestionRendererElement>;
-            "atomic-tab-bar": LocalJSX.AtomicTabBar & JSXBase.HTMLAttributes<HTMLAtomicTabBarElement>;
             "atomic-tab-button": LocalJSX.AtomicTabButton & JSXBase.HTMLAttributes<HTMLAtomicTabButtonElement>;
             "atomic-tab-popover": LocalJSX.AtomicTabPopover & JSXBase.HTMLAttributes<HTMLAtomicTabPopoverElement>;
             /**

@@ -1,8 +1,23 @@
 import {html} from 'lit';
-import {describe, expect, it} from 'vitest';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicInsightInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-interface-fixture';
 import type {AtomicInsightTabs} from './atomic-insight-tabs';
 import './atomic-insight-tabs';
+
+vi.mock('@/src/components/common/atomic-tab-bar/atomic-tab-bar', {spy: true});
+
+// Mock atomic-tab-popover to prevent errors
+class MockTabPopover extends HTMLElement {
+  async toggle() {}
+  async setButtonVisibility(_isVisible: boolean) {}
+  async closePopoverOnFocusOut(_event: FocusEvent) {}
+}
+
+beforeAll(() => {
+  if (!customElements.get('atomic-tab-popover')) {
+    customElements.define('atomic-tab-popover', MockTabPopover);
+  }
+});
 
 describe('atomic-insight-tabs', () => {
   const renderInsightTabs = async ({

@@ -1,7 +1,7 @@
 import type {IRuntimeEnvironment} from 'coveo.analytics';
-import dayjs from 'dayjs/esm/index.js';
-import timezone from 'dayjs/esm/plugin/timezone/index.js';
-import utc from 'dayjs/esm/plugin/utc/index.js';
+import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone.js';
+import utc from 'dayjs/plugin/utc.js';
 import type {PlatformEnvironment} from '../../utils/url-utils.js';
 import type {CoveoFramework} from '../../utils/version.js';
 
