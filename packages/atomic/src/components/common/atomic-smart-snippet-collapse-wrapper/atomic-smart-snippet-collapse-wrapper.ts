@@ -1,7 +1,7 @@
 import {css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
-import type {AnyBindings} from '@/src/components';
+import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -20,7 +20,7 @@ import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 @withTailwindStyles
 export class AtomicSmartSnippetCollapseWrapper
   extends InitializeBindingsMixin(LitElement)
-  implements InitializableComponent<AnyBindings>
+  implements InitializableComponent<Bindings>
 {
   static styles = css`
     @reference '../../../utils/tailwind.global.tw.css';
@@ -68,7 +68,7 @@ export class AtomicSmartSnippetCollapseWrapper
   `;
 
   @state()
-  bindings!: AnyBindings;
+  bindings!: Bindings;
 
   @state()
   error!: Error;
