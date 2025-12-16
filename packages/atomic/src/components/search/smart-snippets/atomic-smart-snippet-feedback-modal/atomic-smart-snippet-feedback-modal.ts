@@ -1,0 +1,175 @@
+import {
+  buildSmartSnippet,
+  type SmartSnippet,
+  type SmartSnippetFeedback,
+} from '@coveo/headless';
+import {css, html, LitElement} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {createRef, type Ref} from 'lit/directives/ref.js';
+import {ATOMIC_MODAL_EXPORT_PARTS} from '@/src/components/common/atomic-modal/export-parts';
+import {feedbackOptions} from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/feedback-options';
+import {renderModalBody} from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-body';
+import {renderModalDetails} from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-details';
+import {renderModalFooter} from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-footer';
+import {renderModalHeader} from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-header';
+import {renderModalOption} from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-option';
+import {renderModalOptions} from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-options';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {InitializableComponent} from '@/src/decorators/types';
+import {watch} from '@/src/decorators/watch';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
+import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
+import {randomID} from '@/src/utils/utils';
+import type {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+
+/**
+ * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
+ *
+ * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
+ *
+ * @part backdrop - The transparent backdrop hiding the content behind the modal.
+ * @part container - The modal's outermost container with the outline and background.
+ * @part header-wrapper - The wrapper around the header.
+ * @part header - The header of the modal, containing the title.
+ * @part header-ruler - The horizontal ruler underneath the header.
+ * @part body-wrapper - The wrapper around the body.
+ * @part body - The body of the modal, between the header and the footer.
+ * @part form - The wrapper around the reason and details.
+ * @part reason-title - The title above the reason radio buttons.
+ * @part reason - A wrapper around the radio button and the label of a reason.
+ * @part reason-radio - A radio button representing a reason.
+ * @part reason-label - A label linked to a radio button representing a reason.
+ * @part details-title - The title above the details input.
+ * @part details-input - The input to specify additional details.
+ * @part footer-wrapper - The wrapper with a shadow around the footer.
+ * @part footer - The footer at the bottom of the modal.
+ * @part buttons - The wrapper around the cancel and submit buttons.
+ * @part cancel-button - The cancel button.
+ * @part submit-button - The submit button.
+ */
+@customElement('atomic-smart-snippet-feedback-modal')
+@bindings()
+@withTailwindStyles
+export class AtomicSmartSnippetFeedbackModal
+  extends InitializeBindingsMixin(LitElement)
+  implements InitializableComponent<Bindings>
+{
+  static styles = css`
+    @reference '../../../utils/tailwind.global.tw.css';
+  `;
+
+  @state()
+  bindings!: Bindings;
+
+  @state()
+  error!: Error;
+
+  /**
+   * The element that triggers the feedback modal.
+   */
+  @property({type: Object, attribute: false})
+  source?: HTMLElement;
+
+  /**
+   * Whether the modal is open.
+   */
+  @property({type: Boolean, reflect: true, attribute: 'is-open'})
+  isOpen = false;
+
+  @state()
+  private currentAnswer?: SmartSnippetFeedback | 'other';
+
+  private detailsInputRef: Ref<HTMLTextAreaElement> = createRef();
+  private readonly formId = randomID(
+    'atomic-smart-snippet-feedback-modal-form-'
+  );
+  private smartSnippet!: SmartSnippet;
+
+  public initialize() {
+    this.smartSnippet = buildSmartSnippet(this.bindings.engine);
+  }
+
+  @watch('isOpen')
+  watchToggleOpen(newValue: boolean) {
+    if (newValue) {
+      this.smartSnippet.openFeedbackModal();
+      this.currentAnswer = undefined;
+    }
+  }
+
+  @errorGuard()
+  render() {
+    updateBreakpoints(this);
+
+    return html`
+      <atomic-modal
+        .fullscreen=${false}
+        .source=${this.source}
+        .container=${this as HTMLElement}
+        .isOpen=${this.isOpen}
+        .close=${() => this.close()}
+        exportparts=${ATOMIC_MODAL_EXPORT_PARTS}
+      >
+        ${renderModalHeader({props: {i18n: this.bindings.i18n}})}
+        ${renderModalBody({
+          props: {
+            formId: this.formId,
+            onSubmit: (e: Event) => this.sendFeedback(e),
+          },
+        })(html`
+          ${renderModalOptions({props: {i18n: this.bindings.i18n}})(
+            html`${feedbackOptions.map(({id, localeKey, correspondingAnswer}) =>
+              renderModalOption({
+                props: {
+                  correspondingAnswer,
+                  currentAnswer: this.currentAnswer,
+                  i18n: this.bindings.i18n,
+                  id,
+                  localeKey,
+                  onChange: () => {
+                    this.currentAnswer = correspondingAnswer;
+                  },
+                },
+              })
+            )}`
+          )}
+          ${renderModalDetails({
+            props: {
+              currentAnswer: this.currentAnswer!,
+              i18n: this.bindings.i18n,
+              detailsInputRef: this.detailsInputRef,
+            },
+          })}
+        `)}
+        ${renderModalFooter({
+          props: {
+            formId: this.formId,
+            i18n: this.bindings.i18n,
+            onClick: () => this.close(),
+          },
+        })}
+      </atomic-modal>
+    `;
+  }
+
+  private close() {
+    this.isOpen = false;
+    this.smartSnippet.closeFeedbackModal();
+  }
+
+  private sendFeedback(e: Event) {
+    e.preventDefault();
+
+    if (this.currentAnswer === 'other') {
+      this.smartSnippet.sendDetailedFeedback(this.detailsInputRef.value!.value);
+    } else {
+      this.smartSnippet.sendFeedback(
+        this.currentAnswer as SmartSnippetFeedback
+      );
+    }
+    this.dispatchEvent(new Event('feedbackSent'));
+    this.isOpen = false;
+  }
+}
