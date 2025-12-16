@@ -13,15 +13,15 @@ export const insertMetaTags = (page: PageEvent) => {
   const isHandwrittenDoc = page.model instanceof DocumentReflection;
 
   if (!isHandwrittenDoc) {
-    const titleMatch = page.contents.match(/<title>(.*?)<\/title>/);
+    const titleMatch = page.contents.match(/<title>\s*([^<]*)<\/title>/i);
     if (titleMatch) {
       const originalTitle = titleMatch[1];
       const parts = originalTitle.split(' | ');
       const name = parts[0];
       const splitName = name.replace(/([a-z])([A-Z])/g, '$1 $2');
-      const lowerCaseName = splitName.toLowerCase();
+      const formattedName = splitName.toLowerCase();
       metaTags.push(
-        `<meta name="docsSiteMeta" content="${lowerCaseName} reference" />`
+        `<meta name="docsSiteMeta" content="${formattedName} reference" />`
       );
     }
   }
