@@ -269,7 +269,7 @@ function findTsFiles(dir, files = []) {
   return files;
 }
 
-async function main() {
+function main() {
   console.log('🔍 Checking for :host selectors in Light DOM components...\n');
 
   const componentsDir = join(ATOMIC_SRC, 'components');
@@ -316,7 +316,4 @@ async function main() {
   process.exit(1);
 }
 
-main().catch((error) => {
-  console.error('Script error:', error);
-  process.exit(1);
-});
+main();
