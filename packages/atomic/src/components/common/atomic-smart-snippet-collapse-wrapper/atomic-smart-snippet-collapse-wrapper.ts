@@ -2,16 +2,17 @@ import {css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import ArrowDown from '@/images/arrow-down.svg';
-import type {AnyBindings} from '@/src/components/interface/bindings';
+import type {AnyBindings} from '@/src/components';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
-import {withTailwindStyles} from '@/src/mixins/tailwind-styles';
 
 /**
  * @internal
+ * The `atomic-smart-snippet-collapse-wrapper` component is an internal utility component that provides collapsible content functionality with expand/collapse controls. It's primarily used within smart snippet components to manage the display of long answers.
  */
 @customElement('atomic-smart-snippet-collapse-wrapper')
 @bindings()
@@ -21,7 +22,7 @@ export class AtomicSmartSnippetCollapseWrapper
   implements InitializableComponent<AnyBindings>
 {
   static styles = css`
-    @reference '../../../../utils/tailwind.global.tw.css';
+    @reference '../../../utils/tailwind.global.tw.css';
 
     :host {
       display: block;
@@ -35,13 +36,22 @@ export class AtomicSmartSnippetCollapseWrapper
       height: auto;
       max-height: var(--collapsed-size);
       transition: max-height 2s cubic-bezier(0, 1, 0.16, 1) -1.82s;
-      
+
       --gradient-start: var(
         --atomic-smart-snippet-gradient-start,
-        calc(max(var(--collapsed-size) - (var(--line-height) * 1.5), var(--collapsed-size) * 0.5))
+        calc(
+          max(
+            var(--collapsed-size) - (var(--line-height) * 1.5),
+            var(--collapsed-size) * 0.5
+          )
+        )
       );
-      
-      mask-image: linear-gradient(black, black var(--gradient-start), transparent 100%);
+
+      mask-image: linear-gradient(
+        black,
+        black var(--gradient-start),
+        transparent 100%
+      );
     }
 
     :host(.expanded) .smart-snippet-content {
@@ -156,18 +166,17 @@ export class AtomicSmartSnippetCollapseWrapper
     if (this.fullHeight === undefined && this.shouldRenderButton) {
       this.initializeFullHeight();
     }
+
+    const isExpanded =
+      this.isExpanded && (!!this.fullHeight || !this.shouldRenderButton);
+    const isInvisible = !this.fullHeight && this.shouldRenderButton;
+
+    this.classList.toggle('expanded', isExpanded);
+    this.classList.toggle('invisible', isInvisible);
   }
 
   @errorGuard()
   render() {
-    const hostClass = tw({
-      expanded:
-        this.isExpanded && (this.fullHeight || !this.shouldRenderButton),
-      invisible: !this.fullHeight && this.shouldRenderButton,
-    });
-
-    this.className = multiClassMap(hostClass);
-
     return html`
       <div
         part="smart-snippet-collapse-wrapper"
