@@ -47,7 +47,7 @@ describe('atomic-facet-manager', () => {
         bindings.store = {
           ...bindings.store,
           getAllFacets: vi.fn(() => ({})),
-        } as never;
+        };
         return bindings;
       },
     });
