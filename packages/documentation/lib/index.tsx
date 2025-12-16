@@ -20,7 +20,6 @@ import {hoistOtherCategoryInArray, hoistOtherCategoryInNav} from './hoist.js';
 import {insertAtomicSearchBox} from './insertAtomicSearchBox.js';
 import {insertBetaNote} from './insertBetaNote.js';
 import {insertCustomComments} from './insertCustomComments.js';
-import {insertIndexingMeta} from './insertIndexingMeta.js';
 import {insertMetaTags} from './insertMetaTags.js';
 import {insertSiteHeaderBar} from './insertSiteHeaderBar.js';
 import {applyTopLevelRenameArray} from './renaming.js';
@@ -164,15 +163,6 @@ export const load = (app: Application) => {
     };
   });
 
-  // Need the Meta Tags to be inserted first, or it causes issues with the navigation sidebar
-  app.renderer.hooks.on('head.begin', () => (
-    <>
-      <script>
-        <JSX.Raw html={`(${insertMetaTags.toString()})();`} />
-      </script>
-    </>
-  ));
-
   app.renderer.hooks.on('head.end', (event) => (
     <>
       <script>
@@ -307,7 +297,7 @@ export const load = (app: Application) => {
     cpSync(darkModeJs.from, darkModeJs.to);
   });
 
-  app.renderer.on(PageEvent.END, insertIndexingMeta);
+  app.renderer.on(PageEvent.END, insertMetaTags);
 
   app.renderer.defineRouter('kebab', KebabRouter);
 
