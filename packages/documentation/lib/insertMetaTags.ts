@@ -18,7 +18,9 @@ export const insertMetaTags = (page: PageEvent) => {
       const originalTitle = titleMatch[1];
       const parts = originalTitle.split(' | ');
       const name = parts[0];
-      const splitName = name.replace(/([a-z])([A-Z])/g, '$1 $2');
+      const splitName = name
+        .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+        .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2');
       const formattedName = splitName.toLowerCase();
       metaTags.push(
         `<meta name="docsSiteMeta" content="${formattedName} reference" />`
