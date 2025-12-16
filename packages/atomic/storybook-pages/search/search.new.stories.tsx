@@ -28,6 +28,7 @@ const meta: Meta = {
     msw: {
       handlers: [...mockSearchApi.handlers],
     },
+    chromatic: {disableSnapshot: false},
   },
   beforeEach: async () => {
     mockSearchApi.searchEndpoint.mock(
@@ -152,7 +153,7 @@ const meta: Meta = {
                     </atomic-field-condition>
                   </atomic-result-section-badges>
                   <atomic-result-section-visual>
-                    <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/350"></atomic-result-image>
+                    <atomic-result-image field="ytthumbnailurl" fallback="https://picsum.photos/seed/picsum/350"></atomic-result-image>
                   </atomic-result-section-visual>
                   <atomic-result-section-title>
                     <atomic-result-link></atomic-result-link>
