@@ -95,6 +95,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-rating-facet',
   'atomic-rating-range-facet',
   'atomic-recs-interface',
+  'atomic-refine-modal',
   'atomic-refine-toggle',
   'atomic-relevance-inspector',
   'atomic-result',
