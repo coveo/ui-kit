@@ -940,3 +940,21 @@ jobs:
 
       - uses: ./.github/actions/setup
       - run: pnpm exec turbo chromatic --filter=@coveo/atomic -- --exit-zero-on-changes --auto-accept-changes --branchName=main
+  update-build-cold-cache:
+    name: "Update build cold cache (main)"
+    if: ${{ !cancelled() && needs.is-valid.result == 'success' && github.event_name == 'merge_group' }}
+    needs:
+      - is-valid
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - name: Update build cold cache
+        uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5
+        with:
+          path: .turbo
+          key: turbo-cache
