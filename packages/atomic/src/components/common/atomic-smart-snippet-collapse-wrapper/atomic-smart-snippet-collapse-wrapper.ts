@@ -1,13 +1,13 @@
 import {css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
-import ArrowDown from '@/images/arrow-down.svg';
 import type {AnyBindings} from '@/src/components';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map';
+import ArrowDown from '@/src/images/arrow-down.svg';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 
 /**
