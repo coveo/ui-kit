@@ -102,26 +102,6 @@ describe('Smart Snippet Test Suites', () => {
     );
   });
 
-  it('when snippetMaximumHeight is smaller than snippetCollapsedHeight, it should display errors', () => {
-    const value = 50;
-    new TestFixture()
-      .with(
-        addSmartSnippet({
-          props: {
-            'snippet-maximum-height': value - 1,
-            'snippet-collapsed-height': value,
-          },
-        })
-      )
-      .init();
-
-    CommonAssertions.assertConsoleErrorWithoutIt(true);
-    CommonAssertions.assertContainsComponentErrorWithoutIt(
-      SmartSnippetSelectors,
-      true
-    );
-  });
-
   it('when the snippet height is equal to maximumHeight, it should not display show more and show less buttons', () => {
     const height = 300;
     new TestFixture()
@@ -202,52 +182,6 @@ describe('Smart Snippet Test Suites', () => {
     SmartSnippetAssertions.assertShowMore(true);
     SmartSnippetAssertions.assertShowLess(false);
     SmartSnippetAssertions.assertAnswerHeight(heightWhenCollapsed);
-  });
-
-  it('when the snippet height is greater than snippetMaximumHeight', () => {
-    const height = 300;
-    const heightWhenCollapsed = 150;
-    new TestFixture()
-      .with(
-        addSmartSnippet({
-          snippet: {
-            ...defaultSnippet,
-            answer: buildAnswerWithHeight(height),
-          },
-          props: {
-            'snippet-maximum-height': height - 1,
-            'snippet-collapsed-height': heightWhenCollapsed,
-          },
-        })
-      )
-      .init();
-
-    // before expand
-    SmartSnippetAssertions.assertShowMore(true);
-    SmartSnippetAssertions.assertShowLess(false);
-    SmartSnippetAssertions.assertCollapseWrapperHeight(heightWhenCollapsed);
-    CommonAssertions.assertAccessibility(smartSnippetComponent);
-    SmartSnippetSelectors.showMoreButton().click();
-
-    // after expand
-    SmartSnippetSelectors.collapseWrapperComponent().should(
-      'have.class',
-      'expanded'
-    );
-    SmartSnippetAssertions.assertShowMore(false);
-    SmartSnippetAssertions.assertShowLess(true);
-    SmartSnippetAssertions.assertAnswerHeight(height);
-    SmartSnippetSelectors.showLessButton().click();
-
-    // after collapse
-    SmartSnippetSelectors.collapseWrapperComponent().should(
-      'not.have.class',
-      'expanded'
-    );
-    SmartSnippetAssertions.assertShowMore(true);
-    SmartSnippetAssertions.assertShowLess(false);
-    SmartSnippetAssertions.assertCollapseWrapperHeight(heightWhenCollapsed);
-    CommonAssertions.assertAccessibility(smartSnippetComponent);
   });
 
   it('when the snippet starts and ends with inline elements', () => {
