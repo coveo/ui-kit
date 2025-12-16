@@ -67,6 +67,7 @@ import {
   AtomicSearchInterface as LitAtomicSearchInterface,
   AtomicSearchLayout as LitAtomicSearchLayout,
   AtomicSegmentedFacetScrollable as LitAtomicSegmentedFacetScrollable,
+  AtomicSmartSnippetFeedbackModal as LitAtomicSmartSnippetFeedbackModal,
   AtomicSortDropdown as LitAtomicSortDropdown,
   AtomicSortExpression as LitAtomicSortExpression,
   AtomicTab as LitAtomicTab,
@@ -483,6 +484,12 @@ export const AtomicSegmentedFacetScrollable = createComponent({
   tagName: 'atomic-segmented-facet-scrollable',
   react: React,
   elementClass: LitAtomicSegmentedFacetScrollable,
+});
+
+export const AtomicSmartSnippetFeedbackModal = createComponent({
+  tagName: 'atomic-smart-snippet-feedback-modal',
+  react: React,
+  elementClass: LitAtomicSmartSnippetFeedbackModal,
 });
 
 export const AtomicSortDropdown = createComponent({
