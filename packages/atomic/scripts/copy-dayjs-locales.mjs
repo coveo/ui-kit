@@ -25,7 +25,7 @@ async function copyDayjsLocales() {
     const key = locale.key;
     const i18nKey = getI18nLocaleKey(locale.key);
     const mapKey = i18nKey.includes('-') ? `'${i18nKey}'` : i18nKey;
-    fileContent += `\n  ${mapKey}: () => import('dayjs/esm/locale/${key}'),`;
+    fileContent += `\n  ${mapKey}: () => import('dayjs/locale/${key}'),`;
   });
   fileContent += '\n};\n';
 
