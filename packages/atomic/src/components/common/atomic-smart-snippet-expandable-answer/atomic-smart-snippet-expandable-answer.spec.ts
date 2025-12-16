@@ -155,7 +155,7 @@ describe('atomic-smart-snippet-expandable-answer', () => {
 
     it('should not apply expanded class when expanded prop is false', async () => {
       const {element, container} = await renderComponent({expanded: false});
-      await setElementHeight(element, 100220);
+      await setElementHeight(element, 1000);
       expect(container).not.toHaveClass('expanded');
     });
   });
