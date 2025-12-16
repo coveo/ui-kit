@@ -75,7 +75,7 @@ describe('atomic-generated-answer', () => {
           .collapsible=${props.collapsible ?? false}
           .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
           .answerConfigurationId=${props.answerConfigurationId}
-          .fieldsToIncludeInCitations=${props.fieldsToIncludeInCitations}
+          fields-to-include-in-citations=${props.fieldsToIncludeInCitations}
           .maxCollapsedHeight=${props.maxCollapsedHeight}
         ></atomic-generated-answer>`,
         selector: 'atomic-generated-answer',
@@ -218,11 +218,18 @@ describe('atomic-generated-answer', () => {
   });
 
   describe('when answer is visible', () => {
-    it('should render the generated content', async () => {
+    it('should render the generated container', async () => {
       const {generatedContainer} = await renderGeneratedAnswer({
         generatedAnswerState: {isVisible: true, answer: 'Test answer'},
       });
       expect(generatedContainer).toBeInTheDocument();
+    });
+
+    it('should render the generated content', async () => {
+      const {generatedContent} = await renderGeneratedAnswer({
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+      expect(generatedContent).toBeInTheDocument();
     });
 
     it('should render the feedback buttons when not streaming', async () => {
@@ -438,7 +445,6 @@ describe('atomic-generated-answer', () => {
 
     await expect.element(showMoreButton).toBeInTheDocument();
   });
-  // TODO: show more
 
   it('should toggle visibility when toggle is clicked when toggle is activated and deactivated', async () => {
     const {toggle} = await renderGeneratedAnswer({
@@ -465,16 +471,13 @@ describe('atomic-generated-answer', () => {
     expect(container).not.toBeInTheDocument();
   });
 
-  it('should not render when no search has been executed when no first search is executed', async () => {
-    const {container} = await renderGeneratedAnswer({
-      searchStatusState: {hasError: false},
+  it('should not render when no search has been executed', async () => {
+    const {generatedContent} = await renderGeneratedAnswer({
       generatedAnswerState: {
-        isVisible: true,
-        answer: 'Test answer',
+        answer: undefined,
       },
     });
-    // Component should still render if answer is available
-    expect(container).toBeInTheDocument();
+    expect(generatedContent).not.toBeInTheDocument();
   });
 
   it('should not render feedback buttons when streaming', async () => {
@@ -592,8 +595,10 @@ describe('atomic-generated-answer', () => {
   });
 
   describe('fieldsToIncludeInCitations property', () => {
+    // TODO V4 (KIT-5306): Remove legacy comma-separated string support and update tests
     it('should parse comma-separated fields and pass to buildGeneratedAnswer', async () => {
       await renderGeneratedAnswer({
+        // @ts-expect-error Testing legacy string input
         props: {fieldsToIncludeInCitations: 'author,date,custom_field'},
         generatedAnswerState: {isVisible: true, answer: 'Test'},
       });
@@ -612,6 +617,7 @@ describe('atomic-generated-answer', () => {
 
     it('should handle empty fieldsToIncludeInCitations', async () => {
       await renderGeneratedAnswer({
+        // @ts-expect-error Testing legacy string input
         props: {fieldsToIncludeInCitations: ''},
         generatedAnswerState: {isVisible: true, answer: 'Test'},
       });
@@ -626,6 +632,7 @@ describe('atomic-generated-answer', () => {
 
     it('should trim whitespace from field names', async () => {
       await renderGeneratedAnswer({
+        // @ts-expect-error Testing legacy string input
         props: {fieldsToIncludeInCitations: ' field1 , field2 , field3 '},
         generatedAnswerState: {isVisible: true, answer: 'Test'},
       });
@@ -644,10 +651,6 @@ describe('atomic-generated-answer', () => {
   });
 
   describe('maxCollapsedHeight property', () => {
-    beforeEach(() => {
-      vi.spyOn(console, 'warn').mockImplementation(() => {});
-    });
-
     it('should use maxCollapsedHeight when collapsible is true', async () => {
       const {element} = await renderGeneratedAnswer({
         props: {collapsible: true, maxCollapsedHeight: 20},

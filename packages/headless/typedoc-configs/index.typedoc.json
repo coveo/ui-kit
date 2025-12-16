@@ -5,14 +5,7 @@
     "includeFolders": true
   },
   "categorizeByGroup": true,
-  "groupOrder": [
-    "Engine",
-    "Controllers",
-    "Buildable controllers",
-    "Sub-controllers",
-    "Actions",
-    "*"
-  ],
+  "groupOrder": ["*"],
   "name": "Search",
   "readme": "none",
   "entryPoints": ["../src/index.ts"],

@@ -22,6 +22,7 @@ import {ValidatePropsController} from '@/src/components/common/validate-props-co
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {arrayConverter} from '@/src/converters/array-converter';
 import {booleanConverter} from '@/src/converters/boolean-converter';
+import {createLegacyArrayStringConverter} from '@/src/converters/legacy-array-string-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -88,6 +89,14 @@ export class AtomicGeneratedAnswer
     }),
   });
 
+  // TODO V4 (KIT-5306): Remove converter and use arrayConverter directly.
+  private static readonly fieldsToIncludeInCitationsConverter =
+    createLegacyArrayStringConverter((value) => {
+      console.warn(
+        `Starting from Atomic v4, the "fields-to-include-in-citations" property will only accept an array of strings. Using a comma-separated string value ("${value}") is now deprecated. Please update the value to be a JSON array. For example: fields-to-include-in-citations='["fieldA","fieldB"]'`
+      );
+    });
+
   private readonly DEFAULT_COLLAPSED_HEIGHT = 16;
   private readonly MAX_COLLAPSED_HEIGHT = 32;
   private readonly MIN_COLLAPSED_HEIGHT = 9;
@@ -127,9 +136,18 @@ export class AtomicGeneratedAnswer
 
   /**
    * A list of fields to include with the citations used to generate the answer.
+   *
+   * Set this property as a stringified JSON array, for example:
+   * ```html
+   *  <atomic-generated-answer fields-to-include-in-citations='["fieldA", "fieldB"]'></atomic-generated-answer>
+   * ```
    */
-  @property({type: String, attribute: 'fields-to-include-in-citations'})
-  fieldsToIncludeInCitations?: string;
+  @property({
+    type: Array,
+    attribute: 'fields-to-include-in-citations',
+    converter: AtomicGeneratedAnswer.fieldsToIncludeInCitationsConverter,
+  })
+  fieldsToIncludeInCitations: string[] = [];
 
   /**
    * Whether to disable citation anchoring.
@@ -417,11 +435,9 @@ export class AtomicGeneratedAnswer
   }
 
   private getCitationFields() {
-    return (this.fieldsToIncludeInCitations ?? '')
-      .split(',')
-      .map((field) => field.trim())
-      .filter((field) => field.length > 0)
-      .concat(this.REQUIRED_FIELDS_TO_INCLUDE_IN_CITATIONS);
+    return this.fieldsToIncludeInCitations.concat(
+      this.REQUIRED_FIELDS_TO_INCLUDE_IN_CITATIONS
+    );
   }
 
   private validateMaxCollapsedHeight(): number {
