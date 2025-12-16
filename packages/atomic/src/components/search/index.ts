@@ -7,6 +7,7 @@ export {AtomicColorFacet} from './atomic-color-facet/atomic-color-facet.js';
 export {AtomicDidYouMean} from './atomic-did-you-mean/atomic-did-you-mean.js';
 export {AtomicExternal} from './atomic-external/atomic-external.js';
 export {AtomicFacet} from './atomic-facet/atomic-facet.js';
+export {AtomicFacetManager} from './atomic-facet-manager/atomic-facet-manager.js';
 export {AtomicFieldCondition} from './atomic-field-condition/atomic-field-condition.js';
 export {AtomicFoldedResultList} from './atomic-folded-result-list/atomic-folded-result-list.js';
 export {AtomicFormatCurrency} from './atomic-format-currency/atomic-format-currency.js';

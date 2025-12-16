@@ -1,50 +1,51 @@
 import {NumberValue, Schema} from '@coveo/bueno';
 import {
-  FacetManager,
   buildFacetManager,
-  FacetManagerState,
+  type FacetManager,
+  type FacetManagerState,
 } from '@coveo/headless';
-import {Component, h, Element, State, Prop} from '@stencil/core';
+import {html, LitElement} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
 import {
-  BindStateToController,
-  InitializableComponent,
-  InitializeBindings,
-} from '../../../utils/initialization-utils';
-import {
-  getFacetsInChildren,
-  getAutomaticFacetGenerator,
-  sortFacetVisibility,
+  type BaseFacetElement,
   collapseFacetsAfter,
-  BaseFacetElement,
-} from '../../common/facets/stencil-facet-common';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+  getAutomaticFacetGenerator,
+  getFacetsInChildren,
+  sortFacetVisibility,
+} from '@/src/components/common/facets/facet-common';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
+import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
+import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {InitializableComponent} from '@/src/decorators/types';
+import {LightDomMixin} from '@/src/mixins/light-dom';
 
 /**
  * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
  *
  * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
- * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
- * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
+ * 2. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
+ * 3. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
  *
  * @slot default - Facet components are slotted within to leverage this functionality.
- *
  */
-@Component({
-  tag: 'atomic-facet-manager',
-  shadow: false,
-})
-export class AtomicFacetManager implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
-  private facetManager!: FacetManager;
+@customElement('atomic-facet-manager')
+@bindings()
+export class AtomicFacetManager
+  extends LightDomMixin(LitElement)
+  implements InitializableComponent<Bindings>
+{
+  @state() public bindings!: Bindings;
 
-  @Element() private host!: HTMLDivElement;
+  public facetManager!: FacetManager;
 
-  @BindStateToController('facetManager', {
-    onUpdateCallbackMethod: 'sortFacets',
-  })
-  @State()
+  @bindStateToController('facetManager', {onUpdateCallbackMethod: 'sortFacets'})
+  @state()
   public facetManagerState!: FacetManagerState;
-  @State() public error!: Error;
+
+  @state() public error!: Error;
 
   /**
    * The number of expanded facets inside the manager.
@@ -53,10 +54,22 @@ export class AtomicFacetManager implements InitializableComponent {
    * Using the value `0` collapses all facets.
    * Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
    */
-  @Prop({reflect: true}) public collapseFacetsAfter = 4;
+  @property({type: Number, reflect: true, attribute: 'collapse-facets-after'})
+  public collapseFacetsAfter = 4;
+
+  constructor() {
+    super();
+
+    new ValidatePropsController(
+      this,
+      () => ({collapseFacetsAfter: this.collapseFacetsAfter}),
+      new Schema({
+        collapseFacetsAfter: new NumberValue({min: -1, required: true}),
+      })
+    );
+  }
 
   public initialize() {
-    this.validateProps();
     this.facetManager = buildFacetManager(this.bindings.engine);
 
     // An update has to be forced for the facets to be visually updated, without being interacted with.
@@ -64,7 +77,7 @@ export class AtomicFacetManager implements InitializableComponent {
   }
 
   private sortFacets = () => {
-    const facets = getFacetsInChildren(this.host);
+    const facets = getFacetsInChildren(this);
 
     const sortedFacets = this.sortFacetsUsingManager(facets, this.facetManager);
 
@@ -73,7 +86,7 @@ export class AtomicFacetManager implements InitializableComponent {
       this.bindings.store.getAllFacets()
     );
 
-    const generator = getAutomaticFacetGenerator(this.host);
+    const generator = getAutomaticFacetGenerator(this);
 
     collapseFacetsAfter(visibleFacets, this.collapseFacetsAfter);
 
@@ -82,7 +95,7 @@ export class AtomicFacetManager implements InitializableComponent {
       visibleFacets.length
     );
 
-    this.host.append(
+    this.append(
       ...[
         ...visibleFacets,
         ...invisibleFacets,
@@ -90,14 +103,6 @@ export class AtomicFacetManager implements InitializableComponent {
       ]
     );
   };
-
-  private validateProps() {
-    new Schema({
-      collapseFacetAfter: new NumberValue({min: -1, required: true}),
-    }).validate({
-      collapseFacetAfter: this.collapseFacetsAfter,
-    });
-  }
 
   private sortFacetsUsingManager(
     facets: BaseFacetElement[],
@@ -111,10 +116,13 @@ export class AtomicFacetManager implements InitializableComponent {
   }
 
   disconnectedCallback() {
+    super.disconnectedCallback();
     this.bindings?.i18n.off('languageChanged', this.sortFacets);
   }
 
-  public render() {
-    return <slot />;
+  @bindingGuard()
+  @errorGuard()
+  protected render() {
+    return html`<slot></slot>`;
   }
 }

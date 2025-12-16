@@ -17,6 +17,8 @@ export default {
   'atomic-external': async () =>
     await import('./atomic-external/atomic-external.js'),
   'atomic-facet': async () => await import('./atomic-facet/atomic-facet.js'),
+  'atomic-facet-manager': async () =>
+    await import('./atomic-facet-manager/atomic-facet-manager.js'),
   'atomic-field-condition': async () =>
     await import('./atomic-field-condition/atomic-field-condition.js'),
   'atomic-folded-result-list': async () =>
