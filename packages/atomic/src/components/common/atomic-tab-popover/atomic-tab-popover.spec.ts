@@ -56,17 +56,13 @@ describe('atomic-tab-popover', () => {
     it('should render with visibility-hidden class', async () => {
       const {element} = await renderTabPopover();
 
-      const container = element.shadowRoot?.querySelector('.visibility-hidden');
-      expect(container).not.toBeNull();
+      expect(element.classList.contains('visibility-hidden')).toBe(true);
     });
 
     it('should have aria-hidden true', async () => {
       const {element} = await renderTabPopover();
 
-      const container = element.shadowRoot?.querySelector(
-        '[aria-hidden="true"]'
-      );
-      expect(container).not.toBeNull();
+      expect(element.getAttribute('aria-hidden')).toBe('true');
     });
   });
 
@@ -81,10 +77,7 @@ describe('atomic-tab-popover', () => {
     it('should have aria-hidden false when show is true', async () => {
       const {element} = await renderTabPopover({show: true});
 
-      const container = element.shadowRoot?.querySelector(
-        '[aria-hidden="false"]'
-      );
-      expect(container).not.toBeNull();
+      expect(element.getAttribute('aria-hidden')).toBe('false');
     });
 
     it('should render the popover button', async () => {
@@ -183,7 +176,7 @@ describe('atomic-tab-popover', () => {
   });
 
   describe('#toggle', () => {
-    it('should toggle isOpen state', async () => {
+    it('should toggle isOpen state when', async () => {
       const {element, parts} = await renderTabPopover({show: true});
 
       expect(parts(element).overflowTabs?.classList.contains('hidden')).toBe(
@@ -223,33 +216,28 @@ describe('atomic-tab-popover', () => {
       element.setButtonVisibility(false);
       await element.updateComplete;
 
-      const container = element.shadowRoot?.querySelector('.visibility-hidden');
-      expect(container).not.toBeNull();
+      expect(element.classList.contains('visibility-hidden')).toBe(true);
     });
   });
 
-  describe('keyboard navigation', () => {
-    it('should close popover when Escape key is pressed', async () => {
-      const {element, parts} = await renderTabPopover({show: true});
+  it('should close popover when Escape key is pressed', async () => {
+    const {element, parts} = await renderTabPopover({show: true});
 
-      element.toggle();
-      await element.updateComplete;
-      expect(parts(element).overflowTabs?.classList.contains('flex')).toBe(
-        true
-      );
+    element.toggle();
+    await element.updateComplete;
+    expect(parts(element).overflowTabs?.classList.contains('flex')).toBe(true);
 
-      // Focus the element before sending keyboard events
-      element.focus();
-      const keyEvent = new KeyboardEvent('keydown', {
-        key: 'Escape',
-        bubbles: true,
-      });
-      element.dispatchEvent(keyEvent);
-      await element.updateComplete;
-
-      expect(parts(element).overflowTabs?.classList.contains('hidden')).toBe(
-        true
-      );
+    // Focus the element before sending keyboard events
+    element.focus();
+    const keyEvent = new KeyboardEvent('keydown', {
+      key: 'Escape',
+      bubbles: true,
     });
+    element.dispatchEvent(keyEvent);
+    await element.updateComplete;
+
+    expect(parts(element).overflowTabs?.classList.contains('hidden')).toBe(
+      true
+    );
   });
 });

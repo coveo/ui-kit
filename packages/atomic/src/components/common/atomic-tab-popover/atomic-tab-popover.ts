@@ -36,8 +36,6 @@ export class AtomicTabPopover
   implements InitializableComponent<Bindings>
 {
   static styles = css`
-    @reference '@/src/utils/tailwind.global.tw.css';
-
     :host {
       position: absolute;
     }
@@ -282,13 +280,11 @@ export class AtomicTabPopover
   @bindingGuard()
   @errorGuard()
   render() {
+    this.classList.toggle('visibility-hidden', !this.show);
+    this.ariaHidden = String(!this.show);
     return html`
-      <div
-        class=${this.show ? '' : 'visibility-hidden'}
-        aria-hidden=${!this.show}
-      >
+
         ${this.renderPopover()} ${when(this.isOpen, () => this.renderBackdrop())}
-      </div>
     `;
   }
 }
