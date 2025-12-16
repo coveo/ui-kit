@@ -1,10 +1,12 @@
+import '@/src/components/common/atomic-modal/atomic-modal';
 import {
   buildSmartSnippet,
   type SmartSnippet,
   type SmartSnippetFeedback,
 } from '@coveo/headless';
-import {css, html, LitElement, type PropertyValues} from 'lit';
+import {html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {keyed} from 'lit/directives/keyed.js';
 import {createRef, type Ref} from 'lit/directives/ref.js';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '@/src/components/common/atomic-modal/export-parts';
 import {feedbackOptions} from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/feedback-options';
@@ -56,10 +58,6 @@ export class AtomicSmartSnippetFeedbackModal
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
-  static styles = css`
-    @reference '../../../utils/tailwind.global.tw.css';
-  `;
-
   @state()
   bindings!: Bindings;
 
@@ -125,18 +123,21 @@ export class AtomicSmartSnippetFeedbackModal
         })(html`
           ${renderModalOptions({props: {i18n: this.bindings.i18n}})(
             html`${feedbackOptions.map(({id, localeKey, correspondingAnswer}) =>
-              renderModalOption({
-                props: {
-                  correspondingAnswer,
-                  currentAnswer: this.currentAnswer,
-                  i18n: this.bindings.i18n,
-                  id,
-                  localeKey,
-                  onChange: () => {
-                    this.currentAnswer = correspondingAnswer;
+              keyed(
+                id,
+                renderModalOption({
+                  props: {
+                    correspondingAnswer,
+                    currentAnswer: this.currentAnswer,
+                    i18n: this.bindings.i18n,
+                    id,
+                    localeKey,
+                    onChange: () => {
+                      this.currentAnswer = correspondingAnswer;
+                    },
                   },
-                },
-              })
+                })
+              )
             )}`
           )}
           ${renderModalDetails({
@@ -175,5 +176,11 @@ export class AtomicSmartSnippetFeedbackModal
     }
     this.dispatchEvent(new Event('feedbackSent'));
     this.isOpen = false;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-smart-snippet-feedback-modal': AtomicSmartSnippetFeedbackModal;
   }
 }
