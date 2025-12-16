@@ -2,6 +2,10 @@
 export default {
   'atomic-automatic-facet': async () =>
     await import('./atomic-automatic-facet/atomic-automatic-facet.js'),
+  'atomic-automatic-facet-generator': async () =>
+    await import(
+      './atomic-automatic-facet-generator/atomic-automatic-facet-generator.js'
+    ),
   'atomic-breadbox': async () =>
     await import('./atomic-breadbox/atomic-breadbox.js'),
   'atomic-category-facet': async () =>
