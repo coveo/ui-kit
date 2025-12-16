@@ -3,6 +3,7 @@ import {describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import type {AtomicTimeframe} from './atomic-timeframe';
 import './atomic-timeframe';
+import type {RelativeDateUnit} from '@coveo/headless';
 
 describe('atomic-timeframe', () => {
   const renderTimeframe = async ({
@@ -12,7 +13,7 @@ describe('atomic-timeframe', () => {
     label,
   }: {
     period?: 'past' | 'next';
-    unit?: string;
+    unit?: RelativeDateUnit;
     amount?: number;
     label?: string;
   } = {}) => {
@@ -54,7 +55,7 @@ describe('atomic-timeframe', () => {
     expect(timeframe.period).toBe('next');
   });
 
-  it.each<string>([
+  it.each<RelativeDateUnit>([
     'minute',
     'hour',
     'day',
