@@ -1,9 +1,9 @@
-import type {CommerceSuccessResponse} from '../api/commerce/common/response.js';
+import type {ListingCommerceSuccessResponse} from '../api/commerce/listing/response.js';
 import type {QueryCommerceAPIThunkReturn} from '../features/commerce/product-listing/product-listing-actions.js';
 import {SortBy} from '../features/sort/sort.js';
 
 export function buildFetchProductListingResponse(
-  response: Partial<CommerceSuccessResponse> = {}
+  response: Partial<ListingCommerceSuccessResponse> = {}
 ): QueryCommerceAPIThunkReturn {
   return {
     response: {
@@ -19,6 +19,7 @@ export function buildFetchProductListingResponse(
       },
       facets: response.facets ?? [],
       products: response.products ?? [],
+      results: response.results ?? [],
       responseId: response.responseId ?? '',
       triggers: response.triggers ?? [],
     },

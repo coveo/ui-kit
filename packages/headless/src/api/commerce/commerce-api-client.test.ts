@@ -9,6 +9,7 @@ import {
 } from './commerce-api-client.js';
 import type {FilterableCommerceAPIRequest} from './common/request.js';
 import type {CommerceResponse} from './common/response.js';
+import type {CommerceListingRequest} from './listing/request.js';
 import type {CommerceRecommendationsRequest} from './recommendations/recommendations-request.js';
 
 describe('commerce api client', () => {
@@ -81,7 +82,10 @@ describe('commerce api client', () => {
   };
 
   it('#getProductListing should call the platform endpoint with the correct arguments', async () => {
-    const request = await buildCommerceAPIRequest();
+    const request: CommerceListingRequest = {
+      ...(await buildCommerceAPIRequest()),
+      enableResults: false,
+    };
 
     mockPlatformCall({
       ok: true,
@@ -278,8 +282,43 @@ describe('commerce api client', () => {
     });
   });
 
+  it('#getBadges should call the platform endpoint with the correct arguments', async () => {
+    const request = {
+      ...(await buildCommerceAPIRequest()),
+      placementIds: ['placement1', 'placement2'],
+    };
+
+    mockPlatformCall({
+      ok: true,
+      json: () => Promise.resolve('some content'),
+    });
+
+    await client.getBadges(request);
+
+    expect(platformCallMock).toHaveBeenCalled();
+    const mockRequest = platformCallMock.mock.calls[0][0];
+    expect(mockRequest).toMatchObject({
+      method: 'POST',
+      contentType: 'application/json',
+      url: `${getCommerceApiBaseUrl(organizationId)}/tracking-ids/${trackingId}/badges`,
+      accessToken: request.accessToken,
+      origin: 'commerceApiFetch',
+      requestParams: {
+        placementIds: ['placement1', 'placement2'],
+        context: request.context,
+        language: request.language,
+        country: request.country,
+        currency: request.currency,
+      },
+      requestMetadata: {method: 'badges'},
+    });
+  });
+
   it('should return error response on failure', async () => {
-    const request = await buildCommerceAPIRequest();
+    const request: CommerceListingRequest = {
+      ...(await buildCommerceAPIRequest()),
+      enableResults: false,
+    };
 
     const expectedError = {
       statusCode: 401,
@@ -300,7 +339,10 @@ describe('commerce api client', () => {
   });
 
   it('should return success response on success', async () => {
-    const request = await buildCommerceAPIRequest();
+    const request: CommerceListingRequest = {
+      ...(await buildCommerceAPIRequest()),
+      enableResults: false,
+    };
 
     const expectedBody: CommerceResponse = {
       products: [],

@@ -1,4 +1,4 @@
-export function insertCoveoLogo(imagePath: string) {
+export const insertCoveoLogo = (imagePath: string) => {
   document.addEventListener('DOMContentLoaded', () => {
     const toolbarContents = document.getElementsByClassName(
       'tsd-toolbar-contents'
@@ -24,4 +24,4 @@ export function insertCoveoLogo(imagePath: string) {
   faviconLink.rel = 'icon';
   faviconLink.href = `${imagePath}/favicon.ico`;
   document.head.appendChild(faviconLink);
-}
+};

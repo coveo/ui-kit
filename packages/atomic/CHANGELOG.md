@@ -1,3 +1,48 @@
+## <small>3.42.1 (2025-12-12)</small>
+
+* test(atomic): Create test shell for timeframe-facet-common (Step 0: Stencil→Lit migration) (#6797) ([43115dd](https://github.com/coveo/ui-kit/commits/43115dd)), closes [#6797](https://github.com/coveo/ui-kit/issues/6797)
+* chore: publish all storybook on chromatic (#6758) ([b84a0bd](https://github.com/coveo/ui-kit/commits/b84a0bd)), closes [#6758](https://github.com/coveo/ui-kit/issues/6758)
+* chore: seed all picsum pictures (#6755) ([62aa6e0](https://github.com/coveo/ui-kit/commits/62aa6e0)), closes [#6755](https://github.com/coveo/ui-kit/issues/6755)
+* refactor(atomic): migrate atomic-category-facet from Stencil to Lit (#6690) ([acb6d28](https://github.com/coveo/ui-kit/commits/acb6d28)), closes [#6690](https://github.com/coveo/ui-kit/issues/6690)
+* refactor(atomic): migrate atomic-did-you-mean to Lit (#6749) ([ea3d558](https://github.com/coveo/ui-kit/commits/ea3d558)), closes [#6749](https://github.com/coveo/ui-kit/issues/6749)
+* refactor(atomic): migrate atomic-folded-result-list to Lit (#6718) ([3eb45da](https://github.com/coveo/ui-kit/commits/3eb45da)), closes [#6718](https://github.com/coveo/ui-kit/issues/6718)
+* refactor(atomic): migrate atomic-insight-tabs to Lit (#6741) ([a3cb198](https://github.com/coveo/ui-kit/commits/a3cb198)), closes [#6741](https://github.com/coveo/ui-kit/issues/6741)
+* refactor(atomic): migrate atomic-notifications to Lit (#6747) ([68ef911](https://github.com/coveo/ui-kit/commits/68ef911)), closes [#6747](https://github.com/coveo/ui-kit/issues/6747)
+* refactor(atomic): migrate atomic-result-fields-list to Lit (#6667) ([75ed908](https://github.com/coveo/ui-kit/commits/75ed908)), closes [#6667](https://github.com/coveo/ui-kit/issues/6667)
+* refactor(atomic): migrate atomic-table-element (#6750) ([22b56e8](https://github.com/coveo/ui-kit/commits/22b56e8)), closes [#6750](https://github.com/coveo/ui-kit/issues/6750)
+
+
+
+## 3.42.0 (2025-12-10)
+
+* refactor(atomic): migrate atomic-color-facet to Lit (#6498) ([5f64b78](https://github.com/coveo/ui-kit/commits/5f64b78)), closes [#6498](https://github.com/coveo/ui-kit/issues/6498)
+* refactor(atomic): migrate atomic-format-* components (#6705) ([7a95a98](https://github.com/coveo/ui-kit/commits/7a95a98)), closes [#6705](https://github.com/coveo/ui-kit/issues/6705)
+* refactor(atomic): migrate atomic-ipx-tabs from Stencil to Lit (#6743) ([6133654](https://github.com/coveo/ui-kit/commits/6133654)), closes [#6743](https://github.com/coveo/ui-kit/issues/6743)
+* refactor(atomic): migrate atomic-rating-range-facet from Stencil to Lit (#6641) ([9b34a63](https://github.com/coveo/ui-kit/commits/9b34a63)), closes [#6641](https://github.com/coveo/ui-kit/issues/6641)
+* refactor(atomic): migrate atomic-result-children to Lit (#6700) ([2e78a7b](https://github.com/coveo/ui-kit/commits/2e78a7b)), closes [#6700](https://github.com/coveo/ui-kit/issues/6700)
+* refactor(atomic): migrate atomic-result-icon to Lit (#6672) ([190ed0b](https://github.com/coveo/ui-kit/commits/190ed0b)), closes [#6672](https://github.com/coveo/ui-kit/issues/6672)
+* refactor(atomic): migrate atomic-result-printable-uri (#6673) ([b0f394d](https://github.com/coveo/ui-kit/commits/b0f394d)), closes [#6673](https://github.com/coveo/ui-kit/issues/6673)
+* refactor(atomic): migrate atomic-result-rating to Lit (#6455) ([7c62356](https://github.com/coveo/ui-kit/commits/7c62356)), closes [#6455](https://github.com/coveo/ui-kit/issues/6455)
+* refactor(atomic): migrate FacetSegmentedValue functional component to Lit (#6545) ([cf772ad](https://github.com/coveo/ui-kit/commits/cf772ad)), closes [#6545](https://github.com/coveo/ui-kit/issues/6545)
+* docs: migrating facet manager documentation (#6564) ([dcc72ce](https://github.com/coveo/ui-kit/commits/dcc72ce)), closes [#6564](https://github.com/coveo/ui-kit/issues/6564)
+* docs(atomic): Migrating `atomic-did-you-mean` doc to storybook (#6669) ([b104d1c](https://github.com/coveo/ui-kit/commits/b104d1c)), closes [#6669](https://github.com/coveo/ui-kit/issues/6669)
+* docs(atomic): Migrating `atomic-facet` to storybook (#6721) ([36c0507](https://github.com/coveo/ui-kit/commits/36c0507)), closes [#6721](https://github.com/coveo/ui-kit/issues/6721)
+* feat(atomic): add localization for datepicker placeholder text (#6729) ([fa02e71](https://github.com/coveo/ui-kit/commits/fa02e71)), closes [#6729](https://github.com/coveo/ui-kit/issues/6729)
+* feat(atomic): made the citation tooltip hoverable (#6693) ([d0aab18](https://github.com/coveo/ui-kit/commits/d0aab18)), closes [#6693](https://github.com/coveo/ui-kit/issues/6693)
+* feat(atomic): migrate atomic-popover from Stencil to Lit (#6638) ([1b1186d](https://github.com/coveo/ui-kit/commits/1b1186d)), closes [#6638](https://github.com/coveo/ui-kit/issues/6638)
+* feat(atomic): migrate atomic-rating-facet from Stencil to Lit (#6640) ([5b23931](https://github.com/coveo/ui-kit/commits/5b23931)), closes [#6640](https://github.com/coveo/ui-kit/issues/6640)
+* feat(atomic): migration of functional generated content components to lit (#6668) ([561bcb6](https://github.com/coveo/ui-kit/commits/561bcb6)), closes [#6668](https://github.com/coveo/ui-kit/issues/6668)
+* fix(atomic): css from atomic-result-image should only affect itself (#6722) ([c3f5e42](https://github.com/coveo/ui-kit/commits/c3f5e42)), closes [#6722](https://github.com/coveo/ui-kit/issues/6722)
+* chore: add rich search page Storybook story with comprehensive Search API coverage (#6731) ([c79fdb2](https://github.com/coveo/ui-kit/commits/c79fdb2)), closes [#6731](https://github.com/coveo/ui-kit/issues/6731)
+* chore: basic setup w/ chromatic (#6725) ([93cfdfa](https://github.com/coveo/ui-kit/commits/93cfdfa)), closes [#6725](https://github.com/coveo/ui-kit/issues/6725)
+* chore: set server host to 127.0.0.1 in Vite config (#6714) ([bb49295](https://github.com/coveo/ui-kit/commits/bb49295)), closes [#6714](https://github.com/coveo/ui-kit/issues/6714)
+* chore: setup msw for commerce page stories (#6730) ([f395640](https://github.com/coveo/ui-kit/commits/f395640)), closes [#6730](https://github.com/coveo/ui-kit/issues/6730)
+* chore(atomic): Migrate atomic-result-link from Stencil to Lit (#6456) ([3768a66](https://github.com/coveo/ui-kit/commits/3768a66)), closes [#6456](https://github.com/coveo/ui-kit/issues/6456)
+* chore(chromatic): disable turbosnap (#6733) ([91398bf](https://github.com/coveo/ui-kit/commits/91398bf)), closes [#6733](https://github.com/coveo/ui-kit/issues/6733)
+* test(atomic): add unit tests for atomic search store (#6688) ([aa0c3a1](https://github.com/coveo/ui-kit/commits/aa0c3a1)), closes [#6688](https://github.com/coveo/ui-kit/issues/6688)
+
+
+
 ## 3.41.0 (2025-12-03)
 
 * [Version Bump][skip ci]: ui-kit publish ([cfc527e](https://github.com/coveo/ui-kit/commits/cfc527e))

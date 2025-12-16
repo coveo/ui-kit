@@ -100,6 +100,13 @@ describe('atomic-facet-date-input', () => {
     expect(endInput).toHaveAttribute('type', 'date');
   });
 
+  it('should have the localized placeholder on inputs', async () => {
+    const {startInput, endInput} = await setupElement();
+
+    expect(startInput).toHaveAttribute('placeholder', 'yyyy-mm-dd');
+    expect(endInput).toHaveAttribute('placeholder', 'yyyy-mm-dd');
+  });
+
   it('should render apply button', async () => {
     const {applyButton} = await setupElement();
 
