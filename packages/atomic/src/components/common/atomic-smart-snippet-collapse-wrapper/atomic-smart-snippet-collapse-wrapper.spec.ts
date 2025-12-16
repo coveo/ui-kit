@@ -6,13 +6,17 @@ import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/hea
 import {AtomicSmartSnippetCollapseWrapper} from './atomic-smart-snippet-collapse-wrapper';
 import './atomic-smart-snippet-collapse-wrapper';
 import '@/src/components/common/atomic-icon/atomic-icon';
+import type {i18n} from 'i18next';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 
 vi.mock('@coveo/headless', {spy: true});
 
 describe('atomic-smart-snippet-collapse-wrapper', () => {
+  let i18n: i18n;
   const mockedEngine = buildFakeSearchEngine();
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    i18n = await createTestI18n();
     console.error = vi.fn();
   });
 
@@ -34,6 +38,7 @@ describe('atomic-smart-snippet-collapse-wrapper', () => {
         selector: 'atomic-smart-snippet-collapse-wrapper',
         bindings: (bindings) => {
           bindings.engine = mockedEngine;
+          bindings.i18n = i18n;
           return bindings;
         },
       });
@@ -115,12 +120,18 @@ describe('atomic-smart-snippet-collapse-wrapper', () => {
 
     describe('when maximumHeight and collapsedHeight are set', () => {
       it('should render initially with invisible class until height is calculated', async () => {
+        const mock = vi
+          .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+          .mockReturnValue({
+            height: 0,
+          } as DOMRect);
         const {element} = await renderComponent({
           maximumHeight: 300,
           collapsedHeight: 100,
         });
 
         expect(element.className).toContain('invisible');
+        mock.mockRestore();
       });
     });
   });

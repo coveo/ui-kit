@@ -2,6 +2,7 @@ import {css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import type {AnyBindings} from '@/src/components';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
@@ -100,6 +101,9 @@ export class AtomicSmartSnippetCollapseWrapper
   connectedCallback() {
     super.connectedCallback();
     this.shouldRenderButton = !!this.maximumHeight;
+    if (this.shouldRenderButton) {
+      this.classList.add('invisible');
+    }
   }
 
   // Public methods
@@ -176,6 +180,7 @@ export class AtomicSmartSnippetCollapseWrapper
   }
 
   @errorGuard()
+  @bindingGuard()
   render() {
     return html`
       <div
