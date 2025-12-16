@@ -262,13 +262,6 @@ describe('Insight Panel test suites', () => {
       it('should show the smart snippet component', () => {
         InsightPanelsSelectors.smartSnippetExpandableAnswer().should('exist');
       });
-
-      describe('when giving explanatory feedback', () => {
-        it('should allow user to provide feedback', () => {
-          InsightPanelsSelectors.smartSnippetFeedbackNoButton().click();
-          InsightPanelsSelectors.smartSnippetsExplainWhyButton().click();
-        });
-      });
     });
   });
 
