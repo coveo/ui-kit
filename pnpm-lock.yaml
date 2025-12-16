@@ -126,9 +126,6 @@ patchedDependencies:
   '@wc-toolkit/storybook-helpers@10.0.0':
     hash: faa3d80e4fe5c26a948e0387112f223337748e98d4e1537126dddddf2569576a
     path: patches/@wc-toolkit+storybook-helpers+10.0.0.patch
-  dayjs:
-    hash: 4c4c1bfff6dadc040115c35f58ca725b84867b54b189dc683ecb3ce17bb2b987
-    path: patches/dayjs.patch
   fix-esm-import-path@1.10.1:
     hash: d8c4a243b0a6082b2f2f0dedd8551ff16da1e9adcda2a63b337f2664708a7f7d
     path: patches/fix-esm-import-path+1.10.1.patch
@@ -241,7 +238,7 @@ importers:
         version: 7.1.1(postcss@8.5.6)
       dayjs:
         specifier: 'catalog:'
-        version: 1.11.13(patch_hash=4c4c1bfff6dadc040115c35f58ca725b84867b54b189dc683ecb3ce17bb2b987)
+        version: 1.11.13
       dompurify:
         specifier: 3.2.6
         version: 3.2.6
@@ -816,7 +813,7 @@ importers:
         version: 2.30.51(encoding@0.1.13)(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@19.2.1))
       dayjs:
         specifier: 'catalog:'
-        version: 1.11.13(patch_hash=4c4c1bfff6dadc040115c35f58ca725b84867b54b189dc683ecb3ce17bb2b987)
+        version: 1.11.13
       encoding:
         specifier: ^0.1.13
         version: 0.1.13
@@ -1524,7 +1521,7 @@ importers:
         version: 19.2.3(@types/react@19.2.7)
       dayjs:
         specifier: 'catalog:'
-        version: 1.11.13(patch_hash=4c4c1bfff6dadc040115c35f58ca725b84867b54b189dc683ecb3ce17bb2b987)
+        version: 1.11.13
       escape-html:
         specifier: 1.0.3
         version: 1.0.3
@@ -10737,6 +10734,7 @@ packages:
   next@15.5.7:
     resolution: {integrity: sha512-+t2/0jIJ48kUpGKkdlhgkv+zPTEOoXyr60qXe68eB/pl3CMJaLeIGjzp5D6Oqt25hCBiBTt8wEeeAzfJvUKnPQ==}
     engines: {node: ^18.18.0 || ^19.8.0 || >= 20.0.0}
+    deprecated: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/security-update-2025-12-11 for more details.
     hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.1.0
@@ -20663,7 +20661,7 @@ snapshots:
       cli-table3: 0.6.5
       commander: 6.2.1
       common-tags: 1.8.2
-      dayjs: 1.11.13(patch_hash=4c4c1bfff6dadc040115c35f58ca725b84867b54b189dc683ecb3ce17bb2b987)
+      dayjs: 1.11.13
       debug: 4.4.3(supports-color@8.1.1)
       enquirer: 2.4.1
       eventemitter2: 6.4.7
@@ -20727,7 +20725,7 @@ snapshots:
 
   dateformat@4.6.3: {}
 
-  dayjs@1.11.13(patch_hash=4c4c1bfff6dadc040115c35f58ca725b84867b54b189dc683ecb3ce17bb2b987): {}
+  dayjs@1.11.13: {}
 
   debounce@1.2.1: {}
 
