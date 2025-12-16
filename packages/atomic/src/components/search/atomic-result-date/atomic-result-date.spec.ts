@@ -1,5 +1,5 @@
 import type {Result} from '@coveo/headless';
-import dayjs from 'dayjs/esm/index.js';
+import dayjs from 'dayjs';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
