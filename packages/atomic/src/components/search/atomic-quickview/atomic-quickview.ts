@@ -36,6 +36,13 @@ export class AtomicQuickview
   extends LitElement
   implements InitializableComponent<Bindings>
 {
+  /**
+   * The sandbox attribute to apply to the iframe containing the quickview content.
+   * This attribute restricts the capabilities of the iframe for security reasons (e.g., to prevent XSS attacks).
+   * The default value is `'allow-popups allow-top-navigation allow-same-origin'`.
+   * The `allow-same-origin` directive is required for the quickview to function properly.
+   * You may override this value to further restrict or expand the iframe's capabilities, but removing `allow-same-origin` will break the component.
+   */
   @property({type: String})
   public sandbox = 'allow-popups allow-top-navigation allow-same-origin';
 
