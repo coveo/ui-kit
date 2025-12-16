@@ -73,7 +73,7 @@ export class AtomicSmartSnippetExpandableAnswer
   private validateProps() {
     if (this.maximumHeight < this.collapsedHeight) {
       throw new Error(
-        'maximumHeight must be equal or greater than collapsedHeight'
+        'maximumHeight must be greater than or equal to collapsedHeight'
       );
     }
   }
