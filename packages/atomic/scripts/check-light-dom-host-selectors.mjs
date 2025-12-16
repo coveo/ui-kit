@@ -27,7 +27,7 @@ import {dirname, extname, join, resolve} from 'node:path';
 const ATOMIC_SRC = new URL('../src', import.meta.url).pathname;
 
 const STATIC_STYLES_PATTERN = /static\s+(?:(?:override\s+)?styles)\s*[=:]/;
-const HOST_SELECTOR_PATTERN = /:host(?:\s*\(|[\s{,]|$)/;
+const HOST_SELECTOR_PATTERN = /:host(?![a-z-])/;
 const IMPORT_PATTERN = /import\s+(?:[\w{}\s,*]+\s+from\s+)?['"]([^'"]+)['"]/g;
 const CSS_IMPORT_PATTERN =
   /import\s+\w+\s+from\s+['"]([^'"]+\.tw\.css(?:\.ts|\.js)?)['"]/g;
