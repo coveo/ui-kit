@@ -4,8 +4,12 @@ export default {
     await import('./atomic-automatic-facet/atomic-automatic-facet.js'),
   'atomic-breadbox': async () =>
     await import('./atomic-breadbox/atomic-breadbox.js'),
+  'atomic-category-facet': async () =>
+    await import('./atomic-category-facet/atomic-category-facet.js'),
   'atomic-color-facet': async () =>
     await import('./atomic-color-facet/atomic-color-facet.js'),
+  'atomic-did-you-mean': async () =>
+    await import('./atomic-did-you-mean/atomic-did-you-mean.js'),
   'atomic-external': async () =>
     await import('./atomic-external/atomic-external.js'),
   'atomic-facet': async () => await import('./atomic-facet/atomic-facet.js'),
@@ -13,6 +17,8 @@ export default {
     await import('./atomic-facet-manager/atomic-facet-manager.js'),
   'atomic-field-condition': async () =>
     await import('./atomic-field-condition/atomic-field-condition.js'),
+  'atomic-folded-result-list': async () =>
+    await import('./atomic-folded-result-list/atomic-folded-result-list.js'),
   'atomic-format-currency': async () =>
     await import('./atomic-format-currency/atomic-format-currency.js'),
   'atomic-format-number': async () =>
@@ -24,6 +30,8 @@ export default {
     await import('./atomic-load-more-results/atomic-load-more-results.js'),
   'atomic-no-results': async () =>
     await import('./atomic-no-results/atomic-no-results.js'),
+  'atomic-notifications': async () =>
+    await import('./atomic-notifications/atomic-notifications.js'),
   'atomic-pager': async () => await import('./atomic-pager/atomic-pager.js'),
   'atomic-popover': async () =>
     await import('./atomic-popover/atomic-popover.js'),
@@ -35,6 +43,8 @@ export default {
     await import('./atomic-rating-facet/atomic-rating-facet.js'),
   'atomic-rating-range-facet': async () =>
     await import('./atomic-rating-range-facet/atomic-rating-range-facet.js'),
+  'atomic-refine-toggle': async () =>
+    await import('./atomic-refine-toggle/atomic-refine-toggle.js'),
   'atomic-relevance-inspector': async () =>
     await import('./atomic-relevance-inspector/atomic-relevance-inspector.js'),
   'atomic-result': async () => await import('./atomic-result/atomic-result.js'),
@@ -111,6 +121,10 @@ export default {
   'atomic-result-section-visual': async () =>
     await import(
       './atomic-result-section-visual/atomic-result-section-visual.js'
+    ),
+  'atomic-result-table-placeholder': async () =>
+    await import(
+      './atomic-result-table-placeholder/atomic-result-table-placeholder.js'
     ),
   'atomic-result-template': async () =>
     await import('./atomic-result-template/atomic-result-template.js'),

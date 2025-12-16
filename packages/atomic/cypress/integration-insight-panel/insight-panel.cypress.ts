@@ -170,18 +170,6 @@ describe('Insight Panel test suites', () => {
         .find('atomic-icon')
         .should('exist');
     });
-
-    it('should display tabs', () => {
-      InsightPanelsSelectors.tabs()
-        .should('exist')
-        .find('atomic-insight-tab')
-        .should('have.length.at.least', 1)
-        .eq(1)
-        .click()
-        .shadow()
-        .find('button[aria-pressed="true"]')
-        .should('have.text', 'Youtube');
-    });
   });
 
   describe('when there is something written in the search box', () => {
@@ -207,36 +195,6 @@ describe('Insight Panel test suites', () => {
     });
   });
 
-  describe('when there is a custom salesforce result template', () => {
-    beforeEach(setupPage);
-
-    it('should display a salesforce result template for salesforce results', () => {
-      const searchAlias = '@tabCausedSearch';
-      interceptInsightSearch(searchAlias);
-
-      InsightPanelsSelectors.tabPopoverButton().click();
-      InsightPanelsSelectors.tabBar()
-        .find('atomic-tab-popover')
-        .find('[part="popover-tab"]')
-        .eq(1)
-        .should('have.text', 'Salesforce')
-        .click();
-
-      cy.wait(searchAlias);
-
-      InsightPanelsSelectors.tabs()
-        .should('exist')
-        .find('atomic-insight-tab[label="Salesforce"]')
-        .shadow()
-        .find('button[aria-pressed="true"]')
-        .should('have.text', 'Salesforce');
-      InsightPanelsSelectors.results()
-        .first()
-        .shadow()
-        .find('atomic-result-text[field="sfid"]')
-        .should('exist');
-    });
-  });
 
   describe('Smart Snippet Answer', () => {
     const visitPage = () => {

@@ -1,3 +1,6 @@
+---
+title: Home
+---
 # Headless React Utils for SSR
 
 

@@ -6,15 +6,13 @@ import {
 import * as CommonAssertions from '../common-assertions';
 import {pagerComponent, PagerSelectors} from '../pager-selectors';
 import {getSearchInterface} from '../search-interface-utils';
-import {FoldedResultListSelectors} from './folded-result-list-selectors';
 import {buildTemplateWithSections} from './result-list-actions';
 import {ResultListSelectors} from './result-list-selectors';
 import {withAnySectionnableResultList} from './result-list-utils';
 
 export default (
   componentSelectors:
-    | typeof ResultListSelectors
-    | typeof FoldedResultListSelectors,
+    | typeof ResultListSelectors,
   componentTag: string,
   addResultFn: (
     template?: HTMLElement,

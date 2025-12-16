@@ -5,12 +5,12 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
+import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
-import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
@@ -19,12 +19,12 @@ import { RecsStore } from "./components/recommendations/atomic-recs-interface/st
 import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
-export { CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
+export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
-export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
@@ -56,76 +56,6 @@ export namespace Components {
         "updateCollapseFacetsDependingOnFacetsVisibility": (collapseAfter: number, numberOfVisibleFacets: number) => Promise<void>;
     }
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
-     * An `atomic-category-facet` displays a facet of values in a browsable, hierarchical fashion.
-     */
-    interface AtomicCategoryFacet {
-        /**
-          * The base path shared by all values for the facet.  Specify the property as an array using a JSON string representation: ```html  <atomic-category-facet base-path='["first value", "second value"]' ></atomic-category-facet> ```
-         */
-        "basePath": string[] | string;
-        /**
-          * The character that separates values of a multi-value field.  *Note:* If you use the [example formatting](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-category-facet/#usage-notes) for the associated multi-value field, you must set this value to `|` or the facet won't display properly.
-         */
-        "delimitingCharacter": string;
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc   ... ></atomic-category-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc="doc"   ... ></atomic-category-facet> ```
-         */
-        "dependsOn": Record<string, string>;
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to use basePath as a filter for the results.
-         */
-        "filterByBasePath": boolean;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount": boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel": number;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth": number;
-        /**
-          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
-         */
-        "isCollapsed": boolean;
-        /**
-          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label": string;
-        /**
-          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
-         */
-        "numberOfValues": number;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'. For this criterion to apply to the top-layer facet values, disable [facet value ordering](https://docs.coveo.com/en/l1qf4156/#facet-value-ordering) in your Dynamic Navigation Experience configuration.
-         */
-        "sortCriteria": CategoryFacetSortCriterion;
-        /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded": string[] | string;
-        /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded": string[] | string;
-        /**
-          * Whether this facet should contain a search box.
-         */
-        "withSearch": boolean;
-    }
-    /**
      * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
      */
     interface AtomicCitation {
@@ -152,17 +82,16 @@ export namespace Components {
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
     }
     /**
-     * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
+     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
+     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
+     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
+     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
      */
-    interface AtomicDidYouMean {
+    interface AtomicFacetManager {
         /**
-          * Whether to automatically apply corrections for queries that would otherwise return no results. When `automaticallyCorrectQuery` is `true`, the component automatically triggers a new query using the suggested term. When `automaticallyCorrectQuery` is `false`, the component returns the suggested term without triggering a new query.  The default value is `true`.
+          * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
          */
-        "automaticallyCorrectQuery": boolean;
-        /**
-          * Define which query correction system to use  `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms. `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.  Default value is `next`.
-         */
-        "queryCorrectionMode": 'legacy' | 'next';
+        "collapseFacetsAfter": number;
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
@@ -173,52 +102,6 @@ export namespace Components {
         "filterState": NumericFilterState;
         "label": string;
         "type": NumberInputType;
-    }
-    /**
-     * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
-     */
-    interface AtomicFoldedResultList {
-        /**
-          * The name of the field that uniquely identifies a result within a collection.
-          * @defaultValue `foldingchild`
-         */
-        "childField"?: string;
-        /**
-          * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
-          * @defaultValue `foldingcollection`
-         */
-        "collectionField"?: string;
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density": ItemDisplayDensity;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * The initial number of child results to request for each folded collection, before expansion.
-          * @defaultValue `2`
-          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (that is, not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (that is, not necessarily by date). For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
-         */
-        "numberOfFoldedResults": number;
-        /**
-          * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
-          * @defaultValue `foldingparent`
-         */
-        "parentField"?: string;
-        /**
-          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax such as React, Angular, or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-         */
-        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
-        /**
-          * The tabs on which this folded result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-folded-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-folded-result-list> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded": string[] | string;
-        /**
-          * The tabs on which the folded result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-folded-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-folded-result-list snippet> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list can only be displayed on the specified tabs.
-         */
-        "tabsIncluded": string[] | string;
     }
     /**
      * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
@@ -672,26 +555,6 @@ export namespace Components {
          */
         "snippetStyle"?: string;
     }
-    interface AtomicInsightTab {
-        /**
-          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
-         */
-        "active": boolean;
-        /**
-          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
-         */
-        "expression": string;
-        /**
-          * The label that will be shown to the user.
-         */
-        "label": string;
-        /**
-          * Activates the tab.
-         */
-        "select": () => Promise<void>;
-    }
-    interface AtomicInsightTabs {
-    }
     interface AtomicInsightTimeframeFacet {
         /**
           * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc   ... ></atomic-insight-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc="doc"   ... ></atomic-insight-timeframe-facet> ```
@@ -912,37 +775,6 @@ export namespace Components {
           * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-ipx-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-ipx-result-link> ```
          */
         "hrefTemplate"?: string;
-    }
-    interface AtomicIpxTab {
-        /**
-          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
-         */
-        "active": boolean;
-        /**
-          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
-         */
-        "expression": string;
-        /**
-          * The label that will be shown to the user.
-         */
-        "label": string;
-        /**
-          * Activates the tab.
-         */
-        "select": () => Promise<void>;
-    }
-    /**
-     * The `atomic-notifications` component is responsible for displaying notifications generated by the Coveo Search API (see [Trigger](https://docs.coveo.com/en/1458)).
-     */
-    interface AtomicNotifications {
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use above the notifications, from 1 to 6.
-         */
-        "headingLevel": number;
-        /**
-          * Specifies an icon to display at the left-end of a notification.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
-         */
-        "icon"?: string;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
@@ -1193,30 +1025,12 @@ export namespace Components {
         "openButton"?: HTMLElement;
     }
     /**
-     * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
-     */
-    interface AtomicRefineToggle {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter": number;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
         "density": ItemDisplayDensity;
         "display": ItemDisplayLayout;
         "imageSize": ItemDisplayImageSize;
-    }
-    /**
-     * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface AtomicResultTablePlaceholder {
-        "density": ItemDisplayDensity;
-        "imageSize": ItemDisplayImageSize;
-        "rows": number;
     }
     /**
      * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -1629,16 +1443,6 @@ declare global {
         new (): HTMLAtomicAutomaticFacetGeneratorElement;
     };
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
-     * An `atomic-category-facet` displays a facet of values in a browsable, hierarchical fashion.
-     */
-    interface HTMLAtomicCategoryFacetElement extends Components.AtomicCategoryFacet, HTMLStencilElement {
-    }
-    var HTMLAtomicCategoryFacetElement: {
-        prototype: HTMLAtomicCategoryFacetElement;
-        new (): HTMLAtomicCategoryFacetElement;
-    };
-    /**
      * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
      */
     interface HTMLAtomicCitationElement extends Components.AtomicCitation, HTMLStencilElement {
@@ -1648,13 +1452,16 @@ declare global {
         new (): HTMLAtomicCitationElement;
     };
     /**
-     * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
+     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
+     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
+     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
+     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
      */
-    interface HTMLAtomicDidYouMeanElement extends Components.AtomicDidYouMean, HTMLStencilElement {
+    interface HTMLAtomicFacetManagerElement extends Components.AtomicFacetManager, HTMLStencilElement {
     }
-    var HTMLAtomicDidYouMeanElement: {
-        prototype: HTMLAtomicDidYouMeanElement;
-        new (): HTMLAtomicDidYouMeanElement;
+    var HTMLAtomicFacetManagerElement: {
+        prototype: HTMLAtomicFacetManagerElement;
+        new (): HTMLAtomicFacetManagerElement;
     };
     interface HTMLAtomicFacetNumberInputElementEventMap {
         "atomic/numberInputApply": any;
@@ -1675,15 +1482,6 @@ declare global {
     var HTMLAtomicFacetNumberInputElement: {
         prototype: HTMLAtomicFacetNumberInputElement;
         new (): HTMLAtomicFacetNumberInputElement;
-    };
-    /**
-     * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
-     */
-    interface HTMLAtomicFoldedResultListElement extends Components.AtomicFoldedResultList, HTMLStencilElement {
-    }
-    var HTMLAtomicFoldedResultListElement: {
-        prototype: HTMLAtomicFoldedResultListElement;
-        new (): HTMLAtomicFoldedResultListElement;
     };
     /**
      * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
@@ -1928,18 +1726,6 @@ declare global {
         prototype: HTMLAtomicInsightSmartSnippetSuggestionsElement;
         new (): HTMLAtomicInsightSmartSnippetSuggestionsElement;
     };
-    interface HTMLAtomicInsightTabElement extends Components.AtomicInsightTab, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightTabElement: {
-        prototype: HTMLAtomicInsightTabElement;
-        new (): HTMLAtomicInsightTabElement;
-    };
-    interface HTMLAtomicInsightTabsElement extends Components.AtomicInsightTabs, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightTabsElement: {
-        prototype: HTMLAtomicInsightTabsElement;
-        new (): HTMLAtomicInsightTabsElement;
-    };
     interface HTMLAtomicInsightTimeframeFacetElement extends Components.AtomicInsightTimeframeFacet, HTMLStencilElement {
     }
     var HTMLAtomicInsightTimeframeFacetElement: {
@@ -2073,21 +1859,6 @@ declare global {
         prototype: HTMLAtomicIpxResultLinkElement;
         new (): HTMLAtomicIpxResultLinkElement;
     };
-    interface HTMLAtomicIpxTabElement extends Components.AtomicIpxTab, HTMLStencilElement {
-    }
-    var HTMLAtomicIpxTabElement: {
-        prototype: HTMLAtomicIpxTabElement;
-        new (): HTMLAtomicIpxTabElement;
-    };
-    /**
-     * The `atomic-notifications` component is responsible for displaying notifications generated by the Coveo Search API (see [Trigger](https://docs.coveo.com/en/1458)).
-     */
-    interface HTMLAtomicNotificationsElement extends Components.AtomicNotifications, HTMLStencilElement {
-    }
-    var HTMLAtomicNotificationsElement: {
-        prototype: HTMLAtomicNotificationsElement;
-        new (): HTMLAtomicNotificationsElement;
-    };
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
      * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
@@ -2183,16 +1954,6 @@ declare global {
         new (): HTMLAtomicRefineModalElement;
     };
     /**
-     * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
-     */
-    interface HTMLAtomicRefineToggleElement extends Components.AtomicRefineToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicRefineToggleElement: {
-        prototype: HTMLAtomicRefineToggleElement;
-        new (): HTMLAtomicRefineToggleElement;
-    };
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface HTMLAtomicResultPlaceholderElement extends Components.AtomicResultPlaceholder, HTMLStencilElement {
@@ -2200,15 +1961,6 @@ declare global {
     var HTMLAtomicResultPlaceholderElement: {
         prototype: HTMLAtomicResultPlaceholderElement;
         new (): HTMLAtomicResultPlaceholderElement;
-    };
-    /**
-     * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface HTMLAtomicResultTablePlaceholderElement extends Components.AtomicResultTablePlaceholder, HTMLStencilElement {
-    }
-    var HTMLAtomicResultTablePlaceholderElement: {
-        prototype: HTMLAtomicResultTablePlaceholderElement;
-        new (): HTMLAtomicResultTablePlaceholderElement;
     };
     interface HTMLAtomicSearchBoxElementEventMap {
         "redirect": RedirectionPayload;
@@ -2441,11 +2193,9 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "atomic-automatic-facet-generator": HTMLAtomicAutomaticFacetGeneratorElement;
-        "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-citation": HTMLAtomicCitationElement;
-        "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
+        "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
-        "atomic-folded-result-list": HTMLAtomicFoldedResultListElement;
         "atomic-generated-answer": HTMLAtomicGeneratedAnswerElement;
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
@@ -2476,8 +2226,6 @@ declare global {
         "atomic-insight-smart-snippet": HTMLAtomicInsightSmartSnippetElement;
         "atomic-insight-smart-snippet-feedback-modal": HTMLAtomicInsightSmartSnippetFeedbackModalElement;
         "atomic-insight-smart-snippet-suggestions": HTMLAtomicInsightSmartSnippetSuggestionsElement;
-        "atomic-insight-tab": HTMLAtomicInsightTabElement;
-        "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
         "atomic-insight-user-actions-modal": HTMLAtomicInsightUserActionsModalElement;
         "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
@@ -2491,8 +2239,6 @@ declare global {
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
         "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
-        "atomic-ipx-tab": HTMLAtomicIpxTabElement;
-        "atomic-notifications": HTMLAtomicNotificationsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-quickview": HTMLAtomicQuickviewElement;
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
@@ -2501,9 +2247,7 @@ declare global {
         "atomic-recs-result": HTMLAtomicRecsResultElement;
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
-        "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
-        "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
@@ -2544,76 +2288,6 @@ declare namespace LocalJSX {
         "numberOfValues"?: number;
     }
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
-     * An `atomic-category-facet` displays a facet of values in a browsable, hierarchical fashion.
-     */
-    interface AtomicCategoryFacet {
-        /**
-          * The base path shared by all values for the facet.  Specify the property as an array using a JSON string representation: ```html  <atomic-category-facet base-path='["first value", "second value"]' ></atomic-category-facet> ```
-         */
-        "basePath"?: string[] | string;
-        /**
-          * The character that separates values of a multi-value field.  *Note:* If you use the [example formatting](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-category-facet/#usage-notes) for the associated multi-value field, you must set this value to `|` or the facet won't display properly.
-         */
-        "delimitingCharacter"?: string;
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc   ... ></atomic-category-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc="doc"   ... ></atomic-category-facet> ```
-         */
-        "dependsOn"?: Record<string, string>;
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to use basePath as a filter for the results.
-         */
-        "filterByBasePath"?: boolean;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount"?: boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel"?: number;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth"?: number;
-        /**
-          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
-         */
-        "isCollapsed"?: boolean;
-        /**
-          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
-         */
-        "numberOfValues"?: number;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'. For this criterion to apply to the top-layer facet values, disable [facet value ordering](https://docs.coveo.com/en/l1qf4156/#facet-value-ordering) in your Dynamic Navigation Experience configuration.
-         */
-        "sortCriteria"?: CategoryFacetSortCriterion;
-        /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded"?: string[] | string;
-        /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded"?: string[] | string;
-        /**
-          * Whether this facet should contain a search box.
-         */
-        "withSearch"?: boolean;
-    }
-    /**
      * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
      */
     interface AtomicCitation {
@@ -2640,17 +2314,16 @@ declare namespace LocalJSX {
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
     }
     /**
-     * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
+     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
+     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
+     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
+     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
      */
-    interface AtomicDidYouMean {
+    interface AtomicFacetManager {
         /**
-          * Whether to automatically apply corrections for queries that would otherwise return no results. When `automaticallyCorrectQuery` is `true`, the component automatically triggers a new query using the suggested term. When `automaticallyCorrectQuery` is `false`, the component returns the suggested term without triggering a new query.  The default value is `true`.
+          * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
          */
-        "automaticallyCorrectQuery"?: boolean;
-        /**
-          * Define which query correction system to use  `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms. `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.  Default value is `next`.
-         */
-        "queryCorrectionMode"?: 'legacy' | 'next';
+        "collapseFacetsAfter"?: number;
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
@@ -2662,48 +2335,6 @@ declare namespace LocalJSX {
         "label": string;
         "onAtomic/numberInputApply"?: (event: AtomicFacetNumberInputCustomEvent<any>) => void;
         "type": NumberInputType;
-    }
-    /**
-     * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
-     */
-    interface AtomicFoldedResultList {
-        /**
-          * The name of the field that uniquely identifies a result within a collection.
-          * @defaultValue `foldingchild`
-         */
-        "childField"?: string;
-        /**
-          * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
-          * @defaultValue `foldingcollection`
-         */
-        "collectionField"?: string;
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density"?: ItemDisplayDensity;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * The initial number of child results to request for each folded collection, before expansion.
-          * @defaultValue `2`
-          * @example For an email thread with a total of 20 messages, using the default value of `2` will request the top two child messages, based on the current sort criteria and query, to be returned as children of the parent message. The user can then click to expand the collection and see the remaining messages that match the current query (that is, not necessarily all remaining 18 messages). Those messages will be sorted based on the current sort criteria (that is, not necessarily by date). For more info on Result Folding, see [Result Folding](https://docs.coveo.com/en/1884).
-         */
-        "numberOfFoldedResults"?: number;
-        /**
-          * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
-          * @defaultValue `foldingparent`
-         */
-        "parentField"?: string;
-        /**
-          * The tabs on which this folded result list must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-folded-result-list tabs-excluded='["tabIDA", "tabIDB"]'></atomic-folded-result-list> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded"?: string[] | string;
-        /**
-          * The tabs on which the folded result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-folded-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-folded-result-list snippet> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list can only be displayed on the specified tabs.
-         */
-        "tabsIncluded"?: string[] | string;
     }
     /**
      * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
@@ -3146,22 +2777,6 @@ declare namespace LocalJSX {
          */
         "snippetStyle"?: string;
     }
-    interface AtomicInsightTab {
-        /**
-          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
-         */
-        "active"?: boolean;
-        /**
-          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
-         */
-        "expression": string;
-        /**
-          * The label that will be shown to the user.
-         */
-        "label"?: string;
-    }
-    interface AtomicInsightTabs {
-    }
     interface AtomicInsightTimeframeFacet {
         /**
           * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc   ... ></atomic-insight-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc="doc"   ... ></atomic-insight-timeframe-facet> ```
@@ -3372,33 +2987,6 @@ declare namespace LocalJSX {
           * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-ipx-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-ipx-result-link> ```
          */
         "hrefTemplate"?: string;
-    }
-    interface AtomicIpxTab {
-        /**
-          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
-         */
-        "active"?: boolean;
-        /**
-          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
-         */
-        "expression": string;
-        /**
-          * The label that will be shown to the user.
-         */
-        "label"?: string;
-    }
-    /**
-     * The `atomic-notifications` component is responsible for displaying notifications generated by the Coveo Search API (see [Trigger](https://docs.coveo.com/en/1458)).
-     */
-    interface AtomicNotifications {
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use above the notifications, from 1 to 6.
-         */
-        "headingLevel"?: number;
-        /**
-          * Specifies an icon to display at the left-end of a notification.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
-         */
-        "icon"?: string;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
@@ -3633,30 +3221,12 @@ declare namespace LocalJSX {
         "openButton"?: HTMLElement;
     }
     /**
-     * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
-     */
-    interface AtomicRefineToggle {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter"?: number;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
         "density": ItemDisplayDensity;
         "display": ItemDisplayLayout;
         "imageSize": ItemDisplayImageSize;
-    }
-    /**
-     * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface AtomicResultTablePlaceholder {
-        "density": ItemDisplayDensity;
-        "imageSize": ItemDisplayImageSize;
-        "rows": number;
     }
     /**
      * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -4005,11 +3575,9 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "atomic-automatic-facet-generator": AtomicAutomaticFacetGenerator;
-        "atomic-category-facet": AtomicCategoryFacet;
         "atomic-citation": AtomicCitation;
-        "atomic-did-you-mean": AtomicDidYouMean;
+        "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-number-input": AtomicFacetNumberInput;
-        "atomic-folded-result-list": AtomicFoldedResultList;
         "atomic-generated-answer": AtomicGeneratedAnswer;
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
@@ -4040,8 +3608,6 @@ declare namespace LocalJSX {
         "atomic-insight-smart-snippet": AtomicInsightSmartSnippet;
         "atomic-insight-smart-snippet-feedback-modal": AtomicInsightSmartSnippetFeedbackModal;
         "atomic-insight-smart-snippet-suggestions": AtomicInsightSmartSnippetSuggestions;
-        "atomic-insight-tab": AtomicInsightTab;
-        "atomic-insight-tabs": AtomicInsightTabs;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
         "atomic-insight-user-actions-modal": AtomicInsightUserActionsModal;
         "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
@@ -4055,8 +3621,6 @@ declare namespace LocalJSX {
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
         "atomic-ipx-result-link": AtomicIpxResultLink;
-        "atomic-ipx-tab": AtomicIpxTab;
-        "atomic-notifications": AtomicNotifications;
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-quickview": AtomicQuickview;
         "atomic-quickview-modal": AtomicQuickviewModal;
@@ -4065,9 +3629,7 @@ declare namespace LocalJSX {
         "atomic-recs-result": AtomicRecsResult;
         "atomic-recs-result-template": AtomicRecsResultTemplate;
         "atomic-refine-modal": AtomicRefineModal;
-        "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-result-placeholder": AtomicResultPlaceholder;
-        "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
         "atomic-search-box": AtomicSearchBox;
         "atomic-segmented-facet": AtomicSegmentedFacet;
         "atomic-smart-snippet": AtomicSmartSnippet;
@@ -4100,26 +3662,20 @@ declare module "@stencil/core" {
              */
             "atomic-automatic-facet-generator": LocalJSX.AtomicAutomaticFacetGenerator & JSXBase.HTMLAttributes<HTMLAtomicAutomaticFacetGeneratorElement>;
             /**
-             * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
-             * An `atomic-category-facet` displays a facet of values in a browsable, hierarchical fashion.
-             */
-            "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
-            /**
              * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
              */
             "atomic-citation": LocalJSX.AtomicCitation & JSXBase.HTMLAttributes<HTMLAtomicCitationElement>;
             /**
-             * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
+             * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
+             * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
+             * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
+             * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
              */
-            "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
+            "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             /**
              * Internal component made to be integrated in a NumericFacet.
              */
             "atomic-facet-number-input": LocalJSX.AtomicFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicFacetNumberInputElement>;
-            /**
-             * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (that is, to the result, child, and grandchild).
-             */
-            "atomic-folded-result-list": LocalJSX.AtomicFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicFoldedResultListElement>;
             /**
              * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
              * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
@@ -4157,8 +3713,6 @@ declare module "@stencil/core" {
             "atomic-insight-smart-snippet": LocalJSX.AtomicInsightSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetElement>;
             "atomic-insight-smart-snippet-feedback-modal": LocalJSX.AtomicInsightSmartSnippetFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetFeedbackModalElement>;
             "atomic-insight-smart-snippet-suggestions": LocalJSX.AtomicInsightSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetSuggestionsElement>;
-            "atomic-insight-tab": LocalJSX.AtomicInsightTab & JSXBase.HTMLAttributes<HTMLAtomicInsightTabElement>;
-            "atomic-insight-tabs": LocalJSX.AtomicInsightTabs & JSXBase.HTMLAttributes<HTMLAtomicInsightTabsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
             "atomic-insight-user-actions-modal": LocalJSX.AtomicInsightUserActionsModal & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsModalElement>;
             /**
@@ -4194,11 +3748,6 @@ declare module "@stencil/core" {
              * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
              */
             "atomic-ipx-result-link": LocalJSX.AtomicIpxResultLink & JSXBase.HTMLAttributes<HTMLAtomicIpxResultLinkElement>;
-            "atomic-ipx-tab": LocalJSX.AtomicIpxTab & JSXBase.HTMLAttributes<HTMLAtomicIpxTabElement>;
-            /**
-             * The `atomic-notifications` component is responsible for displaying notifications generated by the Coveo Search API (see [Trigger](https://docs.coveo.com/en/1458)).
-             */
-            "atomic-notifications": LocalJSX.AtomicNotifications & JSXBase.HTMLAttributes<HTMLAtomicNotificationsElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
              * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
@@ -4242,18 +3791,9 @@ declare module "@stencil/core" {
              */
             "atomic-refine-modal": LocalJSX.AtomicRefineModal & JSXBase.HTMLAttributes<HTMLAtomicRefineModalElement>;
             /**
-             * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-             * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
-             */
-            "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
-            /**
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
-            /**
-             * The `atomic-result-table-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-             */
-            "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
             /**
              * The `atomic-search-box` component creates a search box with built-in support for suggestions.
              */
