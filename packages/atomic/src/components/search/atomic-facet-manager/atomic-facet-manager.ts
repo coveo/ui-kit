@@ -93,7 +93,7 @@ export class AtomicFacetManager
 
     collapseFacetsAfter(visibleFacets, this.collapseFacetsAfter);
 
-    generator?.updateCollapseFacetsDependingOnFacetsVisibility(
+    generator?.updateCollapseFacetsDependingOnFacetsVisibility?.(
       this.collapseFacetsAfter,
       visibleFacets.length
     );
