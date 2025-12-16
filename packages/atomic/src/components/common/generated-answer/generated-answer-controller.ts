@@ -14,8 +14,8 @@ import {
 export interface GeneratedAnswerControllerOptions {
   withToggle?: boolean;
   getGeneratedAnswer: () => GeneratedAnswer | undefined;
-  getGeneratedAnswerState: () => GeneratedAnswerState | undefined;
-  getSearchStatusState: () => SearchStatusState | undefined;
+  getGeneratedAnswerState: () => Partial<GeneratedAnswerState> | undefined;
+  getSearchStatusState: () => Partial<SearchStatusState> | undefined;
   getBindings: () => AnyBindings;
 }
 

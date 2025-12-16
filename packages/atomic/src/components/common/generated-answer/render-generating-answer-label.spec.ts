@@ -64,81 +64,21 @@ describe('#renderGeneratingAnswerLabel', () => {
     });
   });
 
-  describe('when collapsible is false', () => {
-    it('should not render anything', async () => {
-      const {element} = await renderComponent({
-        collapsible: false,
-        isStreaming: true,
-      });
-
-      expect(element.children.length).toBe(0);
+  it('should not render anything when collapsible is false', async () => {
+    const {element} = await renderComponent({
+      collapsible: false,
+      isStreaming: true,
     });
 
-    it('should not render the label', async () => {
-      const {label} = await renderComponent({
-        collapsible: false,
-        isStreaming: true,
-      });
-
-      expect(label).not.toBeInTheDocument();
-    });
-
-    it('should not render the generating text', async () => {
-      const {element} = await renderComponent({
-        collapsible: false,
-        isStreaming: true,
-      });
-
-      await expect.element(element).not.toHaveTextContent('Generating answer');
-    });
+    expect(element.children.length).toBe(0);
   });
 
-  describe('when isStreaming is false', () => {
-    it('should not render anything', async () => {
-      const {element} = await renderComponent({
-        collapsible: true,
-        isStreaming: false,
-      });
-
-      expect(element.children.length).toBe(0);
+  it('should not render anything when isStreaming is false', async () => {
+    const {element} = await renderComponent({
+      collapsible: true,
+      isStreaming: false,
     });
 
-    it('should not render the label', async () => {
-      const {label} = await renderComponent({
-        collapsible: true,
-        isStreaming: false,
-      });
-
-      expect(label).not.toBeInTheDocument();
-    });
-
-    it('should not render the generating text', async () => {
-      const {element} = await renderComponent({
-        collapsible: true,
-        isStreaming: false,
-      });
-
-      await expect.element(element).not.toHaveTextContent('Generating answer');
-    });
-  });
-
-  describe('when both collapsible and isStreaming are false', () => {
-    it('should not render anything', async () => {
-      const {element} = await renderComponent({
-        collapsible: false,
-        isStreaming: false,
-      });
-
-      expect(element.children.length).toBe(0);
-    });
-
-    it('should not render the label', async () => {
-      const {label} = await renderComponent({
-        collapsible: false,
-        isStreaming: false,
-      });
-
-      expect(label).not.toBeInTheDocument();
-    });
+    expect(element.children.length).toBe(0);
   });
 });

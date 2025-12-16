@@ -1,5 +1,6 @@
 import type {i18n} from 'i18next';
-import {html, nothing} from 'lit';
+import {html} from 'lit';
+import {when} from 'lit-html/directives/when.js';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
 export interface RenderGeneratingAnswerLabelProps {
@@ -18,13 +19,15 @@ export const renderGeneratingAnswerLabel: FunctionalComponent<
 
   const canRender = collapsible && isStreaming;
 
-  if (!canRender) {
-    return nothing;
-  }
-
-  return html`
-    <div part="is-generating" class="text-primary hidden text-base font-light">
-      ${i18n.t('generating-answer')}...
-    </div>
-  `;
+  return html`${when(
+    canRender,
+    () => html`
+      <div
+        part="is-generating"
+        class="text-primary hidden text-base font-light"
+      >
+        ${i18n.t('generating-answer')}...
+      </div>
+    `
+  )}`;
 };

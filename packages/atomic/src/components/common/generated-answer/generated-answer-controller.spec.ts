@@ -1,4 +1,5 @@
 import type {GeneratedAnswer} from '@coveo/headless';
+import type {ReactiveControllerHost} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import type {AnyBindings} from '@/src/components/common/interface/bindings';
 import {type SafeStorage, StorageItems} from '@/src/utils/local-storage-utils';
@@ -12,15 +13,13 @@ vi.mock('@/src/utils/local-storage-utils');
 
 describe('GeneratedAnswerController', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
-  // @ts-expect-error Test fixture requires flexible mock type
   let mockHost: ReactiveControllerHost & HTMLElement;
   let mockGeneratedAnswer: GeneratedAnswer;
   let mockBindings: AnyBindings;
-  let mockStorage: SafeStorage;
+  let mockStorage: Partial<SafeStorage>;
 
   beforeEach(async () => {
     i18n = await createTestI18n();
-    // @ts-expect-error Test fixture with partial mock
     mockStorage = {
       getParsedJSON: vi.fn().mockReturnValue({isVisible: true}),
       setJSON: vi.fn(),
@@ -48,7 +47,7 @@ describe('GeneratedAnswerController', () => {
     mockHost = {
       addController: vi.fn(),
       insertAdjacentElement: vi.fn(),
-    };
+    } as unknown as ReactiveControllerHost & HTMLElement;
   });
 
   const createController = (
@@ -57,7 +56,6 @@ describe('GeneratedAnswerController', () => {
     const defaultOptions: GeneratedAnswerControllerOptions = {
       withToggle: false,
       getGeneratedAnswer: () => mockGeneratedAnswer,
-      // @ts-expect-error Test fixture with partial mock
       getGeneratedAnswerState: () => ({
         isVisible: true,
         isStreaming: false,
@@ -67,7 +65,6 @@ describe('GeneratedAnswerController', () => {
         feedbackSubmitted: false,
         expanded: true,
       }),
-      // @ts-expect-error Test fixture with partial mock
       getSearchStatusState: () => ({hasError: false}),
       getBindings: () => mockBindings,
       ...options,
@@ -106,7 +103,6 @@ describe('GeneratedAnswerController', () => {
   describe('#getGeneratedAnswerStatus', () => {
     it('should return translated key when state is hidden', () => {
       const controller = createController({
-        // @ts-expect-error Test fixture with partial mock
         getGeneratedAnswerState: () => ({isVisible: false}),
       });
 
@@ -122,16 +118,53 @@ describe('GeneratedAnswerController', () => {
 
       expect(controller.getGeneratedAnswerStatus()).toBe('');
     });
+
+    it('should return correct translated key when it is generating', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: true,
+          isStreaming: true,
+        }),
+      });
+
+      expect(controller.getGeneratedAnswerStatus()).toBe('Generating answer');
+    });
+
+    it('should return correct translated key when it has an error', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: true,
+          isStreaming: false,
+          error: {message: 'error', code: 500},
+        }),
+      });
+
+      expect(controller.getGeneratedAnswerStatus()).toBe(
+        'Answer could not be generated'
+      );
+    });
+
+    it('should return correct translated key with answer when it has answer', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({
+          isVisible: true,
+          isStreaming: false,
+          answer: 'Test answer',
+        }),
+      });
+
+      expect(controller.getGeneratedAnswerStatus()).toBe(
+        'Generated answer: Test answer'
+      );
+    });
   });
 
   describe('#hasRetryableError', () => {
     it('should return true when answer has retryable error and search has no error', () => {
       const controller = createController({
-        // @ts-expect-error Test fixture with partial mock
         getGeneratedAnswerState: () => ({
           error: {isRetryable: true},
         }),
-        // @ts-expect-error Test fixture with partial mock
         getSearchStatusState: () => ({hasError: false}),
       });
 
@@ -140,11 +173,9 @@ describe('GeneratedAnswerController', () => {
 
     it('should return false when search has error', () => {
       const controller = createController({
-        // @ts-expect-error Test fixture with partial mock
         getGeneratedAnswerState: () => ({
           error: {isRetryable: true},
         }),
-        // @ts-expect-error Test fixture with partial mock
         getSearchStatusState: () => ({hasError: true}),
       });
 
@@ -155,7 +186,6 @@ describe('GeneratedAnswerController', () => {
   describe('#hasNoAnswerGenerated', () => {
     it('should return true when no answer and no citations', () => {
       const controller = createController({
-        // @ts-expect-error Test fixture with partial mock
         getGeneratedAnswerState: () => ({
           answer: undefined,
           citations: [],
@@ -167,7 +197,6 @@ describe('GeneratedAnswerController', () => {
 
     it('should return false when answer exists', () => {
       const controller = createController({
-        // @ts-expect-error Test fixture with partial mock
         getGeneratedAnswerState: () => ({
           answer: 'Test',
         }),
@@ -224,10 +253,96 @@ describe('GeneratedAnswerController', () => {
     });
   });
 
+  describe('#insertFeedbackModal', () => {
+    it('should create and insert feedback modal', () => {
+      const controller = createController();
+
+      controller.insertFeedbackModal();
+
+      expect(mockHost.insertAdjacentElement).toHaveBeenCalledWith(
+        'beforebegin',
+        expect.objectContaining({
+          tagName: 'ATOMIC-GENERATED-ANSWER-FEEDBACK-MODAL',
+          generatedAnswer: mockGeneratedAnswer,
+        })
+      );
+    });
+  });
+
+  describe('#isAnswerVisible', () => {
+    it('should return true when state is visible', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({isVisible: true}),
+      });
+
+      expect(controller.isAnswerVisible).toBe(true);
+    });
+
+    it('should return false when state is not visible', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({isVisible: false}),
+      });
+
+      expect(controller.isAnswerVisible).toBe(false);
+    });
+  });
+
+  describe('#getToggleTooltip', () => {
+    it('should return "generated-answer-toggle-on" when answer is visible', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({isVisible: true}),
+      });
+
+      expect(controller.getToggleTooltip()).toBe('Generated answer ON');
+    });
+
+    it('should return "generated-answer-toggle-off" when answer is hidden', () => {
+      const controller = createController({
+        getGeneratedAnswerState: () => ({isVisible: false}),
+      });
+
+      expect(controller.getToggleTooltip()).toBe('Generated answer OFF');
+    });
+  });
+
+  describe('#getCopyToClipboardTooltip', () => {
+    it('should return error message when copyError is true', () => {
+      const controller = createController();
+
+      expect(controller.getCopyToClipboardTooltip(false, true)).toBe(
+        'Failed to copy the answer'
+      );
+    });
+
+    it('should return copied message when copied is true', () => {
+      const controller = createController();
+
+      expect(controller.getCopyToClipboardTooltip(true, false)).toBe('Copied!');
+    });
+
+    it('should return copy message when not copied and no error', () => {
+      const controller = createController();
+
+      expect(controller.getCopyToClipboardTooltip(false, false)).toBe(
+        'Copy answer'
+      );
+    });
+  });
+
+  describe('data getter/setter', () => {
+    it('should get and set data', () => {
+      const controller = createController();
+      const newData = {isVisible: false};
+
+      controller.data = newData;
+
+      expect(controller.data).toEqual(newData);
+    });
+  });
+
   describe('#clickOnShowButton', () => {
     it('should call collapse when answer is expanded', () => {
       const controller = createController({
-        // @ts-expect-error Test fixture with partial mock
         getGeneratedAnswerState: () => ({expanded: true}),
       });
 
@@ -238,7 +353,6 @@ describe('GeneratedAnswerController', () => {
 
     it('should call expand when answer is collapsed', () => {
       const controller = createController({
-        // @ts-expect-error Test fixture with partial mock
         getGeneratedAnswerState: () => ({expanded: false}),
       });
 
