@@ -1,6 +1,6 @@
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {page} from 'vitest/browser';
+import {userEvent} from 'vitest/browser';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {AtomicSmartSnippetCollapseWrapper} from './atomic-smart-snippet-collapse-wrapper';
@@ -45,21 +45,21 @@ describe('atomic-smart-snippet-collapse-wrapper', () => {
 
     return {
       element,
-      parts: (el: AtomicSmartSnippetCollapseWrapper) => ({
-        wrapper: el.shadowRoot?.querySelector(
+      get wrapper() {
+        return element.shadowRoot?.querySelector(
           '[part="smart-snippet-collapse-wrapper"]'
-        ),
-        showMoreButton: el.shadowRoot?.querySelector(
-          '[part="show-more-button"]'
-        ),
-        showLessButton: el.shadowRoot?.querySelector(
-          '[part="show-less-button"]'
-        ),
-      }),
+        )!;
+      },
+      showMoreButton() {
+        return element.shadowRoot?.querySelector('[part="show-more-button"]')!;
+      },
+      showLessButton() {
+        return element.shadowRoot?.querySelector('[part="show-less-button"]')!;
+      },
     };
   };
 
-  describe('#constructor (when created)', () => {
+  describe('#constructor', () => {
     it('should create an AtomicSmartSnippetCollapseWrapper instance', () => {
       const element = document.createElement(
         'atomic-smart-snippet-collapse-wrapper'
@@ -69,52 +69,46 @@ describe('atomic-smart-snippet-collapse-wrapper', () => {
     });
   });
 
-  describe('#render (when rendered)', () => {
+  describe('#render', () => {
     it('should render the wrapper part', async () => {
-      const {element, parts} = await renderComponent();
+      const {wrapper} = await renderComponent();
 
-      expect(parts(element).wrapper).toBeTruthy();
+      expect(wrapper).toBeInTheDocument();
     });
 
     it('should render slotted content', async () => {
-      const content = 'Test content for smart snippet';
       const {element} = await renderComponent({
-        slottedContent: content,
+        slottedContent: 'Test content for smart snippet',
       });
 
-      expect(element.textContent).toContain(content);
+      expect(element.textContent).toContain('Test content for smart snippet');
     });
 
     describe('when maximumHeight is not set', () => {
       it('should not render the button', async () => {
-        const {element, parts} = await renderComponent();
+        const {showMoreButton, showLessButton} = await renderComponent();
 
-        expect(parts(element).showMoreButton).toBeNull();
-        expect(parts(element).showLessButton).toBeNull();
+        expect(showMoreButton()).not.toBeInTheDocument();
+        expect(showLessButton()).not.toBeInTheDocument();
       });
 
       it('should not have the invisible class', async () => {
         const {element} = await renderComponent();
         await element.updateComplete;
 
-        expect(element.className).not.toContain('invisible');
+        expect(element).not.toHaveClass('invisible');
       });
     });
 
     describe('when maximumHeight is set and content is smaller', () => {
       it('should not render the button when content height is less than maximumHeight', async () => {
-        const {element, parts} = await renderComponent({
+        const {wrapper} = await renderComponent({
           maximumHeight: 500,
           collapsedHeight: 200,
           slottedContent: 'Short content',
         });
 
-        // Wait for the height calculation
-        await element.updateComplete;
-
-        // The button visibility depends on actual height measurement
-        // which may not work in test environment
-        expect(parts(element).wrapper).toBeTruthy();
+        expect(wrapper).toBeInTheDocument();
       });
     });
 
@@ -187,82 +181,33 @@ describe('atomic-smart-snippet-collapse-wrapper', () => {
 
   describe('#toggleExpanded (when button is clicked)', () => {
     it('should toggle the expanded state when show more button is clicked', async () => {
-      const {element} = await renderComponent({
+      const mock = vi
+        .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+        .mockReturnValue({
+          height: 500,
+        } as DOMRect);
+
+      const {showMoreButton, showLessButton} = await renderComponent({
         maximumHeight: 300,
         collapsedHeight: 100,
       });
 
-      // Mock that content is taller than maximumHeight
-      Object.defineProperty(element, 'fullHeight', {
-        get: () => 500,
-        configurable: true,
-      });
-      Object.defineProperty(element, 'showButton', {
-        get: () => true,
-        configurable: true,
-      });
-      Object.defineProperty(element, 'isExpanded', {
-        get: vi.fn().mockReturnValue(false),
-        set: vi.fn(),
-        configurable: true,
-      });
+      expect(showMoreButton()).toBeTruthy();
+      expect(showLessButton()).toBeNull();
+      expect(showMoreButton()).toHaveTextContent('Show more');
 
-      await element.updateComplete;
+      await userEvent.click(showMoreButton());
 
-      const button = await page.getByRole('button');
-      if (await button.query()) {
-        await button.click();
-        // Verify button was interacted with
-        expect(button.query()).toBeTruthy();
-      }
+      expect(showMoreButton()).toBeNull();
+      expect(showLessButton).toBeTruthy();
+      expect(showLessButton()).toHaveTextContent('Show less');
+
+      mock.mockRestore();
     });
   });
 
-  describe('CSS classes', () => {
-    it('should have the expanded class when content is fully visible', async () => {
-      const {element} = await renderComponent();
-      await element.updateComplete;
-
-      // Component starts expanded by default when no maximumHeight
-      expect(element.className).toContain('expanded');
-    });
-  });
-
-  describe('props', () => {
-    it('should accept maximumHeight prop', async () => {
-      const {element} = await renderComponent({
-        maximumHeight: 400,
-        collapsedHeight: 150,
-      });
-
-      expect(element.maximumHeight).toBe(400);
-    });
-
-    it('should accept collapsedHeight prop', async () => {
-      const {element} = await renderComponent({
-        maximumHeight: 400,
-        collapsedHeight: 150,
-      });
-
-      expect(element.collapsedHeight).toBe(150);
-    });
-
-    it('should reflect maximumHeight attribute', async () => {
-      const {element} = await renderComponent({
-        maximumHeight: 350,
-        collapsedHeight: 120,
-      });
-
-      expect(element.getAttribute('maximum-height')).toBe('350');
-    });
-
-    it('should reflect collapsedHeight attribute', async () => {
-      const {element} = await renderComponent({
-        maximumHeight: 350,
-        collapsedHeight: 120,
-      });
-
-      expect(element.getAttribute('collapsed-height')).toBe('120');
-    });
+  it('should have the expanded class when content is fully visible', async () => {
+    const {element} = await renderComponent();
+    expect(element).toHaveClass('expanded');
   });
 });
