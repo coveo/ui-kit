@@ -1,6 +1,6 @@
 import type {PageEvent} from 'typedoc';
 
-export const insertSentenceCaseMeta = (page: PageEvent) => {
+export const insertIndexingMeta = (page: PageEvent) => {
   if (!page.contents) return;
 
   const titleMatch = page.contents.match(/<title>(.*?)<\/title>/);
@@ -10,11 +10,10 @@ export const insertSentenceCaseMeta = (page: PageEvent) => {
   const parts = originalTitle.split(' | ');
   const name = parts[0];
   const splitName = name.replace(/([a-z])([A-Z])/g, '$1 $2');
-  const sentenceCaseName =
-    splitName.charAt(0).toUpperCase() + splitName.slice(1).toLowerCase();
+  const lowerCaseName = splitName.toLowerCase();
 
   page.contents = page.contents.replace(
     /<\/head>/,
-    `<meta name="coveo-headless-indexing-sentence-case" content="${sentenceCaseName}" />\n</head>`
+    `<meta name="coveo-headless-indexing-meta" content="${lowerCaseName}" />\n</head>`
   );
 };
