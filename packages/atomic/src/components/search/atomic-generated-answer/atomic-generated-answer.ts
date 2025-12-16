@@ -143,11 +143,11 @@ export class AtomicGeneratedAnswer
    * ```
    */
   @property({
-    type: Array,
+    type: String,
     attribute: 'fields-to-include-in-citations',
     converter: AtomicGeneratedAnswer.fieldsToIncludeInCitationsConverter,
   })
-  fieldsToIncludeInCitations: string[] = [];
+  fieldsToIncludeInCitations?: string;
 
   /**
    * Whether to disable citation anchoring.
@@ -435,9 +435,18 @@ export class AtomicGeneratedAnswer
   }
 
   private getCitationFields() {
-    return this.fieldsToIncludeInCitations.concat(
-      this.REQUIRED_FIELDS_TO_INCLUDE_IN_CITATIONS
-    );
+    // Defensive: handle both string and array for backward compatibility
+    // TODO V4 (KIT-5306): remove string handling
+    let fields: string[] = [];
+    if (Array.isArray(this.fieldsToIncludeInCitations)) {
+      fields = this.fieldsToIncludeInCitations;
+    } else if (typeof this.fieldsToIncludeInCitations === 'string') {
+      fields = this.fieldsToIncludeInCitations
+        .split(',')
+        .map((f) => f.trim())
+        .filter((f) => f.length > 0);
+    }
+    return fields.concat(this.REQUIRED_FIELDS_TO_INCLUDE_IN_CITATIONS);
   }
 
   private validateMaxCollapsedHeight(): number {

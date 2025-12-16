@@ -598,7 +598,6 @@ describe('atomic-generated-answer', () => {
     // TODO V4 (KIT-5306): Remove legacy comma-separated string support and update tests
     it('should parse comma-separated fields and pass to buildGeneratedAnswer', async () => {
       await renderGeneratedAnswer({
-        // @ts-expect-error Testing legacy string input
         props: {fieldsToIncludeInCitations: 'author,date,custom_field'},
         generatedAnswerState: {isVisible: true, answer: 'Test'},
       });
@@ -617,7 +616,6 @@ describe('atomic-generated-answer', () => {
 
     it('should handle empty fieldsToIncludeInCitations', async () => {
       await renderGeneratedAnswer({
-        // @ts-expect-error Testing legacy string input
         props: {fieldsToIncludeInCitations: ''},
         generatedAnswerState: {isVisible: true, answer: 'Test'},
       });
@@ -632,7 +630,6 @@ describe('atomic-generated-answer', () => {
 
     it('should trim whitespace from field names', async () => {
       await renderGeneratedAnswer({
-        // @ts-expect-error Testing legacy string input
         props: {fieldsToIncludeInCitations: ' field1 , field2 , field3 '},
         generatedAnswerState: {isVisible: true, answer: 'Test'},
       });
