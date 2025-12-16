@@ -106,7 +106,7 @@ describe('atomic-smart-snippet-expandable-answer', () => {
       } as any;
 
       expect(() => element.initialize()).toThrow(
-        'maximumHeight must be equal or greater than collapsedHeight'
+        'maximumHeight must be greater than or equal to collapsedHeight'
       );
     });
 
