@@ -39,9 +39,9 @@ catalog:
   '@testing-library/react': 16.3.0
   '@types/jest': 29.5.14
   '@types/node': 22.16.5
-  '@types/react': 19.2.2
-  '@types/react-dom': 19.2.2
-  '@vitejs/plugin-react': 5.0.4
+  '@types/react': 19.2.7
+  '@types/react-dom': 19.2.3
+  '@vitejs/plugin-react': 5.1.1
   coveo.analytics: 2.30.49
   cypress: 13.7.3
   cypress-repeat: 2.3.9
@@ -51,12 +51,12 @@ catalog:
   jest: 29.7.0
   jest-cli: 29.7.0
   local-web-server: 5.4.0
-  next: 15.5.6
+  next: 15.5.7
   prettier: 3.6.2
   puppeteer: 24.15.0
   playwright: 1.56.1
-  react: 19.2.0
-  react-dom: 19.2.0
+  react: 19.2.1
+  react-dom: 19.2.1
   rollup-plugin-string: 3.0.0
   rollup-plugin-node-polyfills: 0.2.1
   typedoc: 0.28.13
@@ -81,5 +81,9 @@ minimumReleaseAgeExclude:
   - '@angular-devkit/*'
   - '@angular/*'
   - ng-packagr
-  - '@react-router/*'
+  - '@next/*'
+  - next
+  - react
+  - react-dom
   - react-router
+  - '@react-router/*'

@@ -14,15 +14,19 @@ import type {
   CommerceAPIErrorResponse,
   CommerceAPIErrorStatusResponse,
 } from './commerce-api-error-response.js';
-import {
-  type FilterableCommerceAPIRequest,
-  getRequestOptions,
-} from './common/request.js';
+import {getRequestOptions} from './common/request.js';
 import type {CommerceSuccessResponse} from './common/response.js';
 import type {
   CommerceFacetSearchRequest,
   FacetSearchType,
 } from './facet-search/facet-search-request.js';
+import type {CommerceListingRequest} from './listing/request.js';
+import type {ListingCommerceSuccessResponse} from './listing/response.js';
+import {
+  buildProductEnrichmentBadgesRequest,
+  type ProductEnrichmentBadgesRequest,
+} from './product-enrichment/product-enrichment-request.js';
+import type {ProductEnrichmentSuccessBadgesResponse} from './product-enrichment/product-enrichment-response.js';
 import {
   buildRecommendationsRequest,
   type CommerceRecommendationsRequest,
@@ -74,10 +78,15 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
   constructor(private options: CommerceAPIClientOptions) {}
 
   async getProductListing(
-    req: FilterableCommerceAPIRequest
-  ): Promise<CommerceAPIResponse<CommerceSuccessResponse>> {
+    req: CommerceListingRequest
+  ): Promise<CommerceAPIResponse<ListingCommerceSuccessResponse>> {
+    const requestOptions = getRequestOptions(req, 'listing');
     return this.query({
-      ...getRequestOptions(req, 'listing'),
+      ...requestOptions,
+      requestParams: {
+        ...requestOptions.requestParams,
+        enableResults: req.enableResults,
+      },
       ...this.options,
     });
   }
@@ -148,6 +157,15 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
         query: req?.query,
         numberOfValues: req?.numberOfValues,
       },
+      ...this.options,
+    });
+  }
+
+  async getBadges(
+    req: ProductEnrichmentBadgesRequest
+  ): Promise<CommerceAPIResponse<ProductEnrichmentSuccessBadgesResponse>> {
+    return this.query<ProductEnrichmentSuccessBadgesResponse>({
+      ...buildProductEnrichmentBadgesRequest(req),
       ...this.options,
     });
   }

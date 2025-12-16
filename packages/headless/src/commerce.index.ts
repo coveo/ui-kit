@@ -27,6 +27,12 @@ export type {
   ChildProduct,
   Product,
 } from './api/commerce/common/product.js';
+export type {
+  BaseResult,
+  Result,
+  SpotlightContent,
+} from './api/commerce/common/result.js';
+export {ResultType} from './api/commerce/common/result.js';
 export {
   getAnalyticsNextApiBaseUrl,
   getOrganizationEndpoint,
@@ -66,6 +72,7 @@ export * from './features/commerce/facets/regular-facet/regular-facet-actions-lo
 export * from './features/commerce/instant-products/instant-products-actions-loader.js';
 export * from './features/commerce/pagination/pagination-actions-loader.js';
 export * from './features/commerce/product/product-actions-loaders.js';
+export * from './features/commerce/product-enrichment/product-enrichment-actions-loader.js';
 export * from './features/commerce/product-listing/product-listing-actions-loader.js';
 export * from './features/commerce/product-listing-parameters/product-listing-parameters-actions-loader.js';
 export * from './features/commerce/query/query-actions-loader.js';
@@ -85,6 +92,11 @@ export type {PlatformEnvironment} from './utils/url-utils.js';
 export {Selectors};
 
 export type {CartItemParam} from './api/commerce/commerce-api-params.js';
+export type {
+  Badge,
+  BadgePlacement,
+  BadgesProduct,
+} from './api/commerce/product-enrichment/product-enrichment-response.js';
 export type {CategoryFacetSearchResult} from './api/search/facet-search/category-facet-search/category-facet-search-response.js';
 export type {SpecificFacetSearchResult as RegularFacetSearchResult} from './api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
 export type {
@@ -238,7 +250,15 @@ export type {
 } from './controllers/commerce/instant-products/headless-instant-products.js';
 export {buildInstantProducts} from './controllers/commerce/instant-products/headless-instant-products.js';
 export type {
+  ProductEnrichment,
+  ProductEnrichmentOptions,
+  ProductEnrichmentProps,
+  ProductEnrichmentState,
+} from './controllers/commerce/product-enrichment/headless-product-enrichment.js';
+export {buildProductEnrichment} from './controllers/commerce/product-enrichment/headless-product-enrichment.js';
+export type {
   ProductListing,
+  ProductListingOptions,
   ProductListingState,
 } from './controllers/commerce/product-listing/headless-product-listing.js';
 export {buildProductListing} from './controllers/commerce/product-listing/headless-product-listing.js';
