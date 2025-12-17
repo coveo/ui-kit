@@ -112,12 +112,12 @@ export class AtomicSmartSnippetExpandableAnswer {
           exportparts="answer"
           htmlContent={this.htmlContent}
           innerStyle={this.snippetStyle}
-          onAnswerSizeUpdated={(e) => (this.fullHeight = e.detail.height)}
-          onSelectInlineLink={(e) => this.selectInlineLink.emit(e.detail)}
-          onBeginDelayedSelectInlineLink={(e) =>
+          onAnswerSizeUpdated={(e: CustomEvent) => (this.fullHeight = e.detail.height)}
+          onSelectInlineLink={(e: CustomEvent) => this.selectInlineLink.emit(e.detail)}
+          onBeginDelayedSelectInlineLink={(e: CustomEvent) =>
             this.beginDelayedSelectInlineLink.emit(e.detail)
           }
-          onCancelPendingSelectInlineLink={(e) =>
+          onCancelPendingSelectInlineLink={(e: CustomEvent) =>
             this.cancelPendingSelectInlineLink.emit(e.detail)
           }
         ></atomic-smart-snippet-answer>

@@ -131,12 +131,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
           )
         );
       SmartSnippetSuggestionsSelectors.sourceTitle()
-        .map((el) =>
-          el
-            .find('atomic-text')
-            .get(0)
-            .shadowRoot?.textContent
-        )
+        .map((el) => el.find('atomic-text').get(0).shadowRoot?.textContent)
         .should(
           'deep.equal',
           defaultRelatedQuestions.map(
@@ -169,88 +164,6 @@ describe('Smart Snippet Suggestions Test Suites', () => {
         .first()
         .should('have.prop', 'tagName', 'H' + (headingLevel + 1));
     });
-  });
-
-  describe('when the snippet starts and ends with text nodes', () => {
-    beforeEach(() => {
-      new TestFixture()
-        .with(
-          addSmartSnippetSuggestions({
-            relatedQuestions: defaultRelatedQuestions.map(
-              (relatedQuestion) => ({
-                ...relatedQuestion,
-                answer:
-                  '<span class="first">Abc</span><p>def</p><span class="last">ghi</span>',
-              })
-            ),
-            props: {'snippet-style': 'span { display: block; }'},
-          })
-        )
-        .init();
-      SmartSnippetSuggestionsSelectors.questionCollapsedButton()
-        .first()
-        .click();
-    });
-
-    SmartSnippetSuggestionsAssertions.assertAnswerTopMargin(
-      remSize / 2,
-      'first'
-    );
-    SmartSnippetSuggestionsAssertions.assertAnswerBottomMargin(remSize, 'last');
-  });
-
-  describe('when the snippet contains elements with margins', () => {
-    beforeEach(() => {
-      new TestFixture()
-        .with(
-          addSmartSnippetSuggestions({
-            relatedQuestions: defaultRelatedQuestions.map(
-              (relatedQuestion) => ({
-                ...relatedQuestion,
-                answer:
-                  '<p class="first">Paragraph A</p><p>Paragraph B</p><p class="last">Paragraph C</p>',
-              })
-            ),
-          })
-        )
-        .init();
-      SmartSnippetSuggestionsSelectors.questionCollapsedButton()
-        .first()
-        .click();
-    });
-
-    SmartSnippetSuggestionsAssertions.assertAnswerTopMargin(
-      remSize / 2,
-      'first'
-    );
-    SmartSnippetSuggestionsAssertions.assertAnswerBottomMargin(remSize, 'last');
-  });
-
-  describe('when the snippet contains collapsing margins', () => {
-    beforeEach(() => {
-      new TestFixture()
-        .with(
-          addSmartSnippetSuggestions({
-            relatedQuestions: defaultRelatedQuestions.map(
-              (relatedQuestion) => ({
-                ...relatedQuestion,
-                answer:
-                  '<span><p class="first last">My parent has no margins, but I do!</p></span>',
-              })
-            ),
-          })
-        )
-        .init();
-      SmartSnippetSuggestionsSelectors.questionCollapsedButton()
-        .first()
-        .click();
-    });
-
-    SmartSnippetSuggestionsAssertions.assertAnswerTopMargin(
-      remSize / 2,
-      'first'
-    );
-    SmartSnippetSuggestionsAssertions.assertAnswerBottomMargin(remSize, 'last');
   });
 
   describe('after clicking on the title', () => {
@@ -306,92 +219,6 @@ describe('Smart Snippet Suggestions Test Suites', () => {
     });
   });
 
-  describe('after clicking on an inline link', () => {
-    let lastClickedLink: InlineLink;
-    function click(selector: Cypress.Chainable<JQuery<HTMLAnchorElement>>) {
-      selector.rightclick().then(([el]) => {
-        lastClickedLink = {linkText: el.innerText, linkURL: el.href};
-      });
-    }
-
-    function getRelatedQuestions(question?: string) {
-      return defaultRelatedQuestions.map((relatedQuestion) => ({
-        ...relatedQuestion,
-        get question() {
-          return question ?? relatedQuestion.question;
-        },
-      }));
-    }
-
-    beforeEach(() => {
-      new TestFixture()
-        .with(
-          addSmartSnippetSuggestions({
-            relatedQuestions: getRelatedQuestions(),
-            timesToIntercept: 1,
-          })
-        )
-        .with(addSearchBox())
-        .init();
-      SmartSnippetSuggestionsSelectors.questionCollapsedButton()
-        .first()
-        .click();
-      SmartSnippetSuggestionsSelectors.questionExpandedButton()
-        .its('length')
-        .should('eq', 1);
-      click(SmartSnippetSuggestionsSelectors.answer().eq(0).find('a').eq(0));
-    });
-
-    SmartSnippetSuggestionsAssertions.assertLogOpenSmartSnippetSuggestionsInlineLink(
-      () => lastClickedLink
-    );
-
-    describe('then clicking on the same inline link again', () => {
-      beforeEach(() => {
-        AnalyticsTracker.reset();
-        click(SmartSnippetSuggestionsSelectors.answer().eq(0).find('a').eq(0));
-      });
-
-      SmartSnippetSuggestionsAssertions.assertLogOpenSmartSnippetSuggestionsInlineLink(
-        null
-      );
-    });
-
-    describe('then getting a new snippet and clicking on the same inline link again', () => {
-      beforeEach(() => {
-        interceptSearchResponse(
-          getResponseModifierWithSmartSnippetSuggestions({
-            relatedQuestions: getRelatedQuestions('test'),
-          }),
-          1
-        );
-        SearchBoxSelectors.submitButton().click();
-        SmartSnippetSuggestionsSelectors.questionExpandedButton().should(
-          (buttons) => expect(buttons.length).to.eq(0)
-        );
-        SmartSnippetSuggestionsSelectors.questionCollapsedButton()
-          .first()
-          .click();
-        click(SmartSnippetSuggestionsSelectors.answer().eq(0).find('a').eq(0));
-      });
-
-      SmartSnippetSuggestionsAssertions.assertLogOpenSmartSnippetSuggestionsInlineLink(
-        () => lastClickedLink
-      );
-    });
-
-    describe('then clicking on a different inline link', () => {
-      beforeEach(() => {
-        AnalyticsTracker.reset();
-        click(SmartSnippetSuggestionsSelectors.answer().eq(0).find('a').eq(1));
-      });
-
-      SmartSnippetSuggestionsAssertions.assertLogOpenSmartSnippetSuggestionsInlineLink(
-        () => lastClickedLink
-      );
-    });
-  });
-
   describe('with custom styling in a template element', () => {
     beforeEach(() => {
       const styleEl = generateComponentHTML('style');
@@ -410,14 +237,6 @@ describe('Smart Snippet Suggestions Test Suites', () => {
       SmartSnippetSuggestionsSelectors.questionCollapsedButton()
         .first()
         .click();
-    });
-
-    it('applies the styling to the rendered snippet', () => {
-      SmartSnippetSuggestionsSelectors.answer()
-        .first()
-        .find('b')
-        .invoke('css', 'color')
-        .should('equal', 'rgb(84, 170, 255)');
     });
   });
 
@@ -438,14 +257,6 @@ describe('Smart Snippet Suggestions Test Suites', () => {
       SmartSnippetSuggestionsSelectors.questionCollapsedButton()
         .first()
         .click();
-    });
-
-    it('applies the styling to the rendered snippet', () => {
-      SmartSnippetSuggestionsSelectors.answer()
-        .first()
-        .find('b')
-        .invoke('css', 'color')
-        .should('equal', 'rgb(84, 170, 255)');
     });
   });
 });

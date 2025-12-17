@@ -161,19 +161,19 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
           exportparts="answer"
           htmlContent={relatedQuestion.answer}
           innerStyle={this.style}
-          onSelectInlineLink={(e) =>
+          onSelectInlineLink={(e: CustomEvent) =>
             this.smartSnippetQuestionsList.selectInlineLink(
               relatedQuestion.questionAnswerId,
               e.detail
             )
           }
-          onBeginDelayedSelectInlineLink={(e) =>
+          onBeginDelayedSelectInlineLink={(e: CustomEvent) =>
             this.smartSnippetQuestionsList.beginDelayedSelectInlineLink(
               relatedQuestion.questionAnswerId,
               e.detail
             )
           }
-          onCancelPendingSelectInlineLink={(e) =>
+          onCancelPendingSelectInlineLink={(e: CustomEvent) =>
             this.smartSnippetQuestionsList.cancelPendingSelectInlineLink(
               relatedQuestion.questionAnswerId,
               e.detail
