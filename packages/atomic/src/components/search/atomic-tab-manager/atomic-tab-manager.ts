@@ -17,6 +17,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import styles from './atomic-tab-manager.tw.css';
+import '@/src/components/common/atomic-tab-bar/atomic-tab-bar';
 
 interface TabInfo {
   label: string;
