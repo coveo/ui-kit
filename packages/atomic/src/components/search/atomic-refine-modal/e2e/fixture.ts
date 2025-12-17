@@ -1,13 +1,13 @@
 import {test as base} from '@playwright/test';
-import {AtomicRefineModalPageObject} from './page-object';
+import {RefineModalPageObject} from './page-object';
 
 type Fixtures = {
-  refineModal: AtomicRefineModalPageObject;
+  refineModal: RefineModalPageObject;
 };
 
 export const test = base.extend<Fixtures>({
   refineModal: async ({page}, use) => {
-    await use(new AtomicRefineModalPageObject(page));
+    await use(new RefineModalPageObject(page));
   },
 });
 

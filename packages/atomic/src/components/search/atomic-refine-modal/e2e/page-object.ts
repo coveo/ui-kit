@@ -1,11 +1,14 @@
 import type {Page} from '@playwright/test';
 import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
-export class AtomicRefineModalPageObject extends BasePageObject {
+export class RefineModalPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-refine-modal');
   }
 
+  get modal() {
+    return this.page.getByRole('dialog', {name: 'Sort & Filter'});
+  }
   get title() {
     return this.page.getByRole('heading', {name: 'Sort & Filter'});
   }
