@@ -29,9 +29,20 @@ export const renderFeedbackButton: FunctionalComponent<FeedbackButtonProps> = ({
   const classNames = multiClassMap(
     tw({
       [baseClassName]: true,
-      'feedback-button rounded-md p-2': true,
+      'feedback-button rounded-md p-2 text-neutral-dark': true,
       [props.variant]: true,
       active: props.active,
+      'hover:text-success': props.variant === 'like',
+      'hover:text-error': props.variant === 'dislike',
+      'text-success': props.active && props.variant === 'like',
+      'text-error': props.active && props.variant === 'dislike',
+    })
+  );
+
+  const iconClassNames = multiClassMap(
+    tw({
+      'w-5': true,
+      'rotate-180': props.variant === 'dislike',
     })
   );
 
@@ -44,6 +55,6 @@ export const renderFeedbackButton: FunctionalComponent<FeedbackButtonProps> = ({
     @mousedown=${(e: MouseEvent) => createRipple(e, {color: rippleColor})}
     @click=${props.onClick}
   >
-    <atomic-icon class="w-5" .icon=${Thumbs}></atomic-icon>
+    <atomic-icon class=${iconClassNames} .icon=${Thumbs}></atomic-icon>
   </button>`;
 };

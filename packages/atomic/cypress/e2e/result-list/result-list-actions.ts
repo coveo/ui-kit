@@ -5,7 +5,6 @@ import {
   TagProps,
 } from '../../fixtures/test-fixture';
 import {toArray} from '../../utils/arrayUtils';
-import {foldedResultListComponent} from './folded-result-list-selectors';
 import {
   resultListComponent,
   ResultSection,
@@ -65,18 +64,6 @@ export const addResultList =
       resultList.appendChild(template);
     }
     fixture.withElement(resultList);
-  };
-
-export const addFoldedResultList =
-  (template?: HTMLElement, tags?: TagProps) => (fixture: TestFixture) => {
-    const foldedResultList = generateComponentHTML(
-      foldedResultListComponent,
-      tags
-    );
-    if (template) {
-      foldedResultList.appendChild(template);
-    }
-    fixture.withElement(foldedResultList);
   };
 
 export const addGridResultList =

@@ -16,6 +16,7 @@ import type {
   FieldSuggestionsOrderSection,
   InstantProductsSection,
   ManualRangeSection,
+  ProductEnrichmentSection,
   ProductListingSection,
   QuerySetSection,
   QuerySuggestionSection,
@@ -54,4 +55,5 @@ export type CommerceAppState = CommerceConfigurationSection &
   FieldSuggestionsOrderSection &
   TriggerSection &
   ManualRangeSection &
+  ProductEnrichmentSection &
   VersionSection;

@@ -1,3 +1,10 @@
+## 3.37.0 (2025-12-12)
+
+* feat: migrating content from docs.coveo.com to typedoc (#6624) ([8a85527](https://github.com/coveo/ui-kit/commits/8a85527)), closes [#6624](https://github.com/coveo/ui-kit/issues/6624)
+* feat(headless-commerce) Create ProductEnrichment Controller in Headless Commerce to retrieve badgesP ([43325b7](https://github.com/coveo/ui-kit/commits/43325b7)), closes [#6745](https://github.com/coveo/ui-kit/issues/6745)
+
+
+
 ## 3.36.0 (2025-12-10)
 
 * chore(headless): remember to export types for spotlight content results COMHUB2-1318 (#6735) ([f92f202](https://github.com/coveo/ui-kit/commits/f92f202)), closes [#6735](https://github.com/coveo/ui-kit/issues/6735)

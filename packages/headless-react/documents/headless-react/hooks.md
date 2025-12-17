@@ -1,5 +1,5 @@
 ---
-title: Controller hooks
+title: Commerce Controller hooks
 ---
 
 # Hooks

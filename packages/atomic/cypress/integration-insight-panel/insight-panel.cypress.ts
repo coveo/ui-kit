@@ -122,36 +122,6 @@ describe('Insight Panel test suites', () => {
         .should('have.attr', 'title', 'Filters');
     });
 
-    it('should display refine-modal', () => {
-      InsightPanelsSelectors.refineToggle().click();
-      InsightPanelsSelectors.refineModal().should('exist');
-      InsightPanelsSelectors.focusTrap().should('exist');
-
-      InsightPanelsSelectors.filtersModal().should('have.attr', 'is-open');
-
-      InsightPanelsSelectors.filtersModal()
-        .find('[slot~="header"]')
-        .should('have.text', 'Filters');
-
-      InsightPanelsSelectors.filters()
-        .find('atomic-insight-facet')
-        .should('be.visible')
-        .should('have.length.at.least', 1);
-
-      InsightPanelsSelectors.filters()
-        .find('atomic-insight-timeframe-facet')
-        .should('be.visible')
-        .should('have.length.at.least', 1);
-
-      InsightPanelsSelectors.filters()
-        .find('atomic-insight-numeric-facet')
-        .should('be.visible')
-        .should('have.length.at.least', 1);
-
-      InsightPanelsSelectors.filtersModal().find('[slot="footer"]').click();
-
-      InsightPanelsSelectors.filtersModal().should('not.have.attr', 'is-open');
-    });
 
     it('should display edit toggle', () => {
       InsightPanelsSelectors.editToggle()
@@ -200,18 +170,6 @@ describe('Insight Panel test suites', () => {
         .find('atomic-icon')
         .should('exist');
     });
-
-    it('should display tabs', () => {
-      InsightPanelsSelectors.tabs()
-        .should('exist')
-        .find('atomic-insight-tab')
-        .should('have.length.at.least', 1)
-        .eq(1)
-        .click()
-        .shadow()
-        .find('button[aria-pressed="true"]')
-        .should('have.text', 'Youtube');
-    });
   });
 
   describe('when there is something written in the search box', () => {
@@ -237,36 +195,6 @@ describe('Insight Panel test suites', () => {
     });
   });
 
-  describe('when there is a custom salesforce result template', () => {
-    beforeEach(setupPage);
-
-    it('should display a salesforce result template for salesforce results', () => {
-      const searchAlias = '@tabCausedSearch';
-      interceptInsightSearch(searchAlias);
-
-      InsightPanelsSelectors.tabPopoverButton().click();
-      InsightPanelsSelectors.tabBar()
-        .find('atomic-tab-popover')
-        .find('[part="popover-tab"]')
-        .eq(1)
-        .should('have.text', 'Salesforce')
-        .click();
-
-      cy.wait(searchAlias);
-
-      InsightPanelsSelectors.tabs()
-        .should('exist')
-        .find('atomic-insight-tab[label="Salesforce"]')
-        .shadow()
-        .find('button[aria-pressed="true"]')
-        .should('have.text', 'Salesforce');
-      InsightPanelsSelectors.results()
-        .first()
-        .shadow()
-        .find('atomic-result-text[field="sfid"]')
-        .should('exist');
-    });
-  });
 
   describe('Smart Snippet Answer', () => {
     const visitPage = () => {

@@ -1,3 +1,18 @@
+## <small>3.42.1 (2025-12-12)</small>
+
+* test(atomic): Create test shell for timeframe-facet-common (Step 0: Stencil→Lit migration) (#6797) ([43115dd](https://github.com/coveo/ui-kit/commits/43115dd)), closes [#6797](https://github.com/coveo/ui-kit/issues/6797)
+* chore: publish all storybook on chromatic (#6758) ([b84a0bd](https://github.com/coveo/ui-kit/commits/b84a0bd)), closes [#6758](https://github.com/coveo/ui-kit/issues/6758)
+* chore: seed all picsum pictures (#6755) ([62aa6e0](https://github.com/coveo/ui-kit/commits/62aa6e0)), closes [#6755](https://github.com/coveo/ui-kit/issues/6755)
+* refactor(atomic): migrate atomic-category-facet from Stencil to Lit (#6690) ([acb6d28](https://github.com/coveo/ui-kit/commits/acb6d28)), closes [#6690](https://github.com/coveo/ui-kit/issues/6690)
+* refactor(atomic): migrate atomic-did-you-mean to Lit (#6749) ([ea3d558](https://github.com/coveo/ui-kit/commits/ea3d558)), closes [#6749](https://github.com/coveo/ui-kit/issues/6749)
+* refactor(atomic): migrate atomic-folded-result-list to Lit (#6718) ([3eb45da](https://github.com/coveo/ui-kit/commits/3eb45da)), closes [#6718](https://github.com/coveo/ui-kit/issues/6718)
+* refactor(atomic): migrate atomic-insight-tabs to Lit (#6741) ([a3cb198](https://github.com/coveo/ui-kit/commits/a3cb198)), closes [#6741](https://github.com/coveo/ui-kit/issues/6741)
+* refactor(atomic): migrate atomic-notifications to Lit (#6747) ([68ef911](https://github.com/coveo/ui-kit/commits/68ef911)), closes [#6747](https://github.com/coveo/ui-kit/issues/6747)
+* refactor(atomic): migrate atomic-result-fields-list to Lit (#6667) ([75ed908](https://github.com/coveo/ui-kit/commits/75ed908)), closes [#6667](https://github.com/coveo/ui-kit/issues/6667)
+* refactor(atomic): migrate atomic-table-element (#6750) ([22b56e8](https://github.com/coveo/ui-kit/commits/22b56e8)), closes [#6750](https://github.com/coveo/ui-kit/issues/6750)
+
+
+
 ## 3.42.0 (2025-12-10)
 
 * refactor(atomic): migrate atomic-color-facet to Lit (#6498) ([5f64b78](https://github.com/coveo/ui-kit/commits/5f64b78)), closes [#6498](https://github.com/coveo/ui-kit/issues/6498)

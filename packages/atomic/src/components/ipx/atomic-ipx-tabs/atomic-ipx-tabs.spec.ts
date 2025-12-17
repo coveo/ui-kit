@@ -1,8 +1,23 @@
 import {html} from 'lit';
-import {describe, expect, it} from 'vitest';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import type {AtomicIpxTabs} from './atomic-ipx-tabs';
 import './atomic-ipx-tabs';
+
+vi.mock('@/src/components/common/atomic-tab-bar/atomic-tab-bar', {spy: true});
+
+// Mock atomic-tab-popover to prevent errors
+class MockTabPopover extends HTMLElement {
+  async toggle() {}
+  async setButtonVisibility(_isVisible: boolean) {}
+  async closePopoverOnFocusOut(_event: FocusEvent) {}
+}
+
+beforeAll(() => {
+  if (!customElements.get('atomic-tab-popover')) {
+    customElements.define('atomic-tab-popover', MockTabPopover);
+  }
+});
 
 describe('atomic-ipx-tabs', () => {
   const renderComponent = async ({

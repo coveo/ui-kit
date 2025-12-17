@@ -97,6 +97,7 @@ export const parameters: Parameters = {
     // 'off' - skip a11y checks entirely
     test: 'error',
   },
+  chromatic: {disableSnapshot: true},
 };
 
 export const decorators = [

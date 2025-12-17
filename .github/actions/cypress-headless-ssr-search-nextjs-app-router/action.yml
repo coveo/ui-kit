@@ -11,7 +11,7 @@ runs:
     - run: pnpm exec cypress install
       shell: bash
       working-directory: samples/headless-ssr/search-nextjs
-    - uses: cypress-io/github-action@v5
+    - uses: cypress-io/github-action@248bde77443c376edc45906ede03a1aba9da0462 # v5.8.4
       name: Run Cypress
       with:
         command: >-

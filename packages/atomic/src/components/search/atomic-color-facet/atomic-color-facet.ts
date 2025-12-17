@@ -106,6 +106,51 @@ export class AtomicColorFacet
   extends LitElement
   implements InitializableComponent<Bindings>
 {
+  private static readonly propsSchema = new Schema({
+    field: new StringValue({required: true, emptyAllowed: false}),
+    numberOfValues: new NumberValue({min: 1, required: false}),
+    headingLevel: new NumberValue({min: 0, max: 6, required: false}),
+    injectionDepth: new NumberValue({min: 0, required: false}),
+    sortCriteria: new StringValue({
+      constrainTo: [
+        'score',
+        'alphanumeric',
+        'alphanumericDescending',
+        'occurrences',
+        'alphanumericNatural',
+        'alphanumericNaturalDescending',
+        'automatic',
+      ],
+      required: false,
+    }),
+    resultsMustMatch: new StringValue({
+      constrainTo: ['atLeastOneValue', 'allValues'],
+      required: false,
+    }),
+    displayValuesAs: new StringValue({
+      constrainTo: ['checkbox', 'box'],
+      required: false,
+    }),
+    allowedValues: new ArrayValue({
+      each: new StringValue({emptyAllowed: false}),
+      max: 25,
+      required: false,
+    }),
+    customSort: new ArrayValue({
+      each: new StringValue({emptyAllowed: false}),
+      max: 25,
+      required: false,
+    }),
+    tabsExcluded: new ArrayValue({
+      each: new StringValue({emptyAllowed: false}),
+      required: false,
+    }),
+    tabsIncluded: new ArrayValue({
+      each: new StringValue({emptyAllowed: false}),
+      required: false,
+    }),
+  });
+
   static styles = [
     facetCommonStyles,
     facetSearchStyles,
@@ -244,7 +289,9 @@ export class AtomicColorFacet
   })
   public isCollapsed = false;
   /**
-   * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+   * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet.
+   * Valid values are 1 to 6, where each number corresponds to a heading element (h1, h2, etc.).
+   * A value of 0 (default) will render a div instead of a heading element.
    */
   @property({type: Number, attribute: 'heading-level', reflect: true})
   public headingLevel = 0;
@@ -370,50 +417,7 @@ export class AtomicColorFacet
         tabsExcluded: this.tabsExcluded,
         tabsIncluded: this.tabsIncluded,
       }),
-      new Schema({
-        field: new StringValue({required: true, emptyAllowed: false}),
-        numberOfValues: new NumberValue({min: 1, required: false}),
-        headingLevel: new NumberValue({min: 0, max: 6, required: false}),
-        injectionDepth: new NumberValue({min: 0, required: false}),
-        sortCriteria: new StringValue({
-          constrainTo: [
-            'score',
-            'alphanumeric',
-            'alphanumericDescending',
-            'occurrences',
-            'alphanumericNatural',
-            'alphanumericNaturalDescending',
-            'automatic',
-          ],
-          required: false,
-        }),
-        resultsMustMatch: new StringValue({
-          constrainTo: ['atLeastOneValue', 'allValues'],
-          required: false,
-        }),
-        displayValuesAs: new StringValue({
-          constrainTo: ['checkbox', 'box'],
-          required: false,
-        }),
-        allowedValues: new ArrayValue({
-          each: new StringValue({emptyAllowed: false}),
-          max: 25,
-          required: false,
-        }),
-        customSort: new ArrayValue({
-          each: new StringValue({emptyAllowed: false}),
-          max: 25,
-          required: false,
-        }),
-        tabsExcluded: new ArrayValue({
-          each: new StringValue({emptyAllowed: false}),
-          required: false,
-        }),
-        tabsIncluded: new ArrayValue({
-          each: new StringValue({emptyAllowed: false}),
-          required: false,
-        }),
-      }),
+      AtomicColorFacet.propsSchema,
       false
     );
   }

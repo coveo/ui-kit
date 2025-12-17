@@ -1,3 +1,9 @@
+## <small>1.5.11 (2025-12-12)</small>
+
+* chore: seed all picsum pictures (#6755) ([62aa6e0](https://github.com/coveo/ui-kit/commits/62aa6e0)), closes [#6755](https://github.com/coveo/ui-kit/issues/6755)
+
+
+
 ## <small>1.5.10 (2025-10-30)</small>
 
 * ci: fix pnpm pack including node_modules for create-atomic packages (#6333) ([c9debba](https://github.com/coveo/ui-kit/commits/c9debba)), closes [#6333](https://github.com/coveo/ui-kit/issues/6333)

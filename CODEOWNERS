@@ -2,6 +2,18 @@
 
 * @coveo/dxui
 
+# Doc owners
+## Doc files
+
+packages/**/*.mdx @coveo/dx
+packages/**/*.md @coveo/dx
+packages/**/typedoc.json @coveo/dx
+packages/**/*.typedoc.json @coveo/dx
+
+## Doc package
+
+packages/documentation/ @coveo/dx
+
 # Knowledge Owners
 ## Quantic package
 

@@ -1,5 +1,5 @@
-import dayjs, {type ConfigType} from 'dayjs/esm/index.js';
-import customParseFormat from 'dayjs/esm/plugin/customParseFormat/index.js';
+import dayjs, {type ConfigType} from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 
 dayjs.extend(customParseFormat);
 

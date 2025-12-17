@@ -282,6 +282,38 @@ describe('commerce api client', () => {
     });
   });
 
+  it('#getBadges should call the platform endpoint with the correct arguments', async () => {
+    const request = {
+      ...(await buildCommerceAPIRequest()),
+      placementIds: ['placement1', 'placement2'],
+    };
+
+    mockPlatformCall({
+      ok: true,
+      json: () => Promise.resolve('some content'),
+    });
+
+    await client.getBadges(request);
+
+    expect(platformCallMock).toHaveBeenCalled();
+    const mockRequest = platformCallMock.mock.calls[0][0];
+    expect(mockRequest).toMatchObject({
+      method: 'POST',
+      contentType: 'application/json',
+      url: `${getCommerceApiBaseUrl(organizationId)}/tracking-ids/${trackingId}/badges`,
+      accessToken: request.accessToken,
+      origin: 'commerceApiFetch',
+      requestParams: {
+        placementIds: ['placement1', 'placement2'],
+        context: request.context,
+        language: request.language,
+        country: request.country,
+        currency: request.currency,
+      },
+      requestMetadata: {method: 'badges'},
+    });
+  });
+
   it('should return error response on failure', async () => {
     const request: CommerceListingRequest = {
       ...(await buildCommerceAPIRequest()),
