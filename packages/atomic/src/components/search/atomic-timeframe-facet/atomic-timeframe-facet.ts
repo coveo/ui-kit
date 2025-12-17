@@ -19,10 +19,11 @@ import {
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
-import {type CSSResultGroup, LitElement} from 'lit';
+import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
 import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.css';
+import {renderFacetPlaceholder} from '@/src/components/common/facets/facet-placeholder/facet-placeholder';
 import {TimeframeFacetCommon} from '@/src/components/common/facets/timeframe-facet-common';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
@@ -69,14 +70,10 @@ export class AtomicTimeframeFacet
     min: new StringValue({
       required: false,
       regex: /^\d{4}-\d{2}-\d{2}$/,
-      regexMessage:
-        'The "min" property must be a valid date string in the format YYYY-MM-DD.',
     }),
     max: new StringValue({
       required: false,
       regex: /^\d{4}-\d{2}-\d{2}$/,
-      regexMessage:
-        'The "max" property must be a valid date string in the format YYYY-MM-DD.',
     }),
     sortCriteria: new StringValue({
       constrainTo: ['ascending', 'descending'],
@@ -251,7 +248,7 @@ export class AtomicTimeframeFacet
         headingLevel: this.headingLevel,
         min: this.min,
         max: this.max,
-        sortCriteria: this.sortCriteria,
+        sortCriteria: this.sortCriteria as string,
       }),
       AtomicTimeframeFacet.propsSchema
     );
@@ -383,15 +380,15 @@ export class AtomicTimeframeFacet
   @errorGuard()
   protected render() {
     if (!this.timeframeFacetCommon) {
-      return renderFacetPlaceholder({
+      return html`${renderFacetPlaceholder({
         props: {
           numberOfValues: 5,
           isCollapsed: this.isCollapsed,
         },
-      });
+      })}`;
     }
 
-    return this.timeframeFacetCommon.render({
+    return html`${this.timeframeFacetCommon.render({
       hasError: this.searchStatusState.hasError,
       firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
       isCollapsed: this.isCollapsed,
@@ -400,11 +397,11 @@ export class AtomicTimeframeFacet
         this.isCollapsed = !this.isCollapsed;
         return this.isCollapsed;
       },
-    });
+    })}`;
   }
 }
 
-mapProperty(AtomicTimeframeFacet, 'dependsOn');
+mapProperty()(AtomicTimeframeFacet.prototype, 'dependsOn');
 
 declare global {
   interface HTMLElementTagNameMap {
