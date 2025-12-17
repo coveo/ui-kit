@@ -200,18 +200,21 @@ export default function ProductDescriptionPage(
             <div
               key={`${placement.placementId}-${badge.text}`}
               className="ProductBadge"
+              style={{
+                color: badge.textColor,
+                backgroundColor: badge.backgroundColor,
+                padding: '2px 4px',
+                borderRadius: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                width: 'fit-content',
+                gap: '4px',
+              }}
             >
-              {badge.iconUrl && <img src={badge.iconUrl} alt={badge.text} />}
-              <span
-                style={{
-                  color: badge.textColor,
-                  backgroundColor: badge.backgroundColor,
-                  padding: '2px 4px',
-                  borderRadius: '4px',
-                }}
-              >
-                {badge.text}
-              </span>
+              {badge.iconUrl && (
+                <img src={badge.iconUrl} alt={badge.text} height={16} />
+              )}
+              {badge.text}
             </div>
           ))
         )}
