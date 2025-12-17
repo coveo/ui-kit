@@ -86,7 +86,6 @@ const externalizeDependencies: PluginImpl = () => {
   };
 };
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
-const isChromatic = process.env.IS_CHROMATIC === 'true';
 
 function getPackageVersion(): string {
   return JSON.parse(
@@ -95,15 +94,13 @@ function getPackageVersion(): string {
 }
 
 const config: StorybookConfig = {
-  stories: isChromatic
-    ? ['../storybook-pages/**/*.new.stories.tsx']
-    : [
-        './Introduction.stories.tsx',
-        '../src/**/*.new.stories.tsx',
-        '../src/**/*.mdx',
-        '../storybook-pages/**/*.new.stories.tsx',
-        '../storybook-pages/**/*.mdx',
-      ],
+  stories: [
+    './Introduction.stories.tsx',
+    '../src/**/*.new.stories.tsx',
+    '../src/**/*.mdx',
+    '../storybook-pages/**/*.new.stories.tsx',
+    '../storybook-pages/**/*.mdx',
+  ],
   staticDirs: [
     {from: '../dist/atomic/assets', to: '/assets'},
     {from: '../dist/atomic/lang', to: '/lang'},
