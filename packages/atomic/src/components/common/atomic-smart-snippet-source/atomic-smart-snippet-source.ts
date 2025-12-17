@@ -1,5 +1,5 @@
 import type {Result} from '@coveo/headless';
-import {type CSSResultGroup, css, html, LitElement} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import type {AnyBindings} from '@/src/components/common/interface/bindings';
@@ -10,6 +10,7 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import '@/src/components/search/atomic-result-text/atomic-result-text';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 
 /**
  * The `atomic-smart-snippet-source` component displays the source information for a smart snippet.
@@ -23,9 +24,6 @@ export class AtomicSmartSnippetSource
   extends LightDomMixin(LitElement)
   implements InitializableComponent<AnyBindings>
 {
-  static styles: CSSResultGroup =
-    css`@reference '../../../../utils/tailwind.global.tw.css';`;
-
   /**
    * The search result source.
    */
@@ -42,15 +40,10 @@ export class AtomicSmartSnippetSource
   @state() public error!: Error;
 
   public initialize() {
-    // Dispatch custom event to provide result context
     this.addEventListener(
       'atomic/resolveResult',
       this.handleResolveResult as EventListener
     );
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
   }
 
   disconnectedCallback() {
@@ -74,6 +67,7 @@ export class AtomicSmartSnippetSource
   }
 
   @errorGuard()
+  @bindingGuard()
   render() {
     return html`${when(
       this.source,
@@ -109,7 +103,6 @@ export class AtomicSmartSnippetSource
           html`<atomic-result-text
             field="title"
             default="no-title"
-            key=${this.source.uniqueId}
           ></atomic-result-text>`
         )}
       `

@@ -1,6 +1,5 @@
 import type {Result} from '@coveo/headless';
 import {html} from 'lit';
-import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import {renderInAtomicResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-result-fixture';
@@ -45,7 +44,7 @@ describe('atomic-smart-snippet-source', () => {
       await renderInAtomicResult<AtomicSmartSnippetSource>({
         template: html`<atomic-smart-snippet-source
           .source=${source}
-          .anchorAttributes=${ifDefined(anchorAttributes)}
+          .anchorAttributes=${anchorAttributes}
         ></atomic-smart-snippet-source>`,
         selector: 'atomic-smart-snippet-source',
         result: source,
