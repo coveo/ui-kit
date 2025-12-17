@@ -159,99 +159,85 @@ describe('atomic-timeframe-facet', () => {
   });
 
   describe('props', () => {
-    describe('field', () => {
-      it('should pass field to TimeframeFacetCommon', async () => {
-        await setupElement({field: 'customfield'});
-        expect(TimeframeFacetCommon).toHaveBeenCalledWith(
-          expect.objectContaining({
-            field: 'customfield',
-          })
-        );
-      });
+    it('should pass field to TimeframeFacetCommon', async () => {
+      await setupElement({field: 'customfield'});
+      expect(TimeframeFacetCommon).toHaveBeenCalledWith(
+        expect.objectContaining({
+          field: 'customfield',
+        })
+      );
     });
 
-    describe('facetId', () => {
-      it('should pass facetId to TimeframeFacetCommon when provided', async () => {
-        await setupElement({facetId: 'my-facet-id'});
-        expect(TimeframeFacetCommon).toHaveBeenCalledWith(
-          expect.objectContaining({
-            facetId: 'my-facet-id',
-          })
-        );
-      });
+    it('should pass facetId to TimeframeFacetCommon when provided', async () => {
+      await setupElement({facetId: 'my-facet-id'});
+      expect(TimeframeFacetCommon).toHaveBeenCalledWith(
+        expect.objectContaining({
+          facetId: 'my-facet-id',
+        })
+      );
     });
 
-    describe('sortCriteria', () => {
-      it('should pass sortCriteria to TimeframeFacetCommon', async () => {
-        await setupElement({sortCriteria: 'ascending'});
-        expect(TimeframeFacetCommon).toHaveBeenCalledWith(
-          expect.objectContaining({
-            sortCriteria: 'ascending',
-          })
-        );
-      });
+    it('should pass sortCriteria to TimeframeFacetCommon', async () => {
+      await setupElement({sortCriteria: 'ascending'});
+      expect(TimeframeFacetCommon).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sortCriteria: 'ascending',
+        })
+      );
     });
 
-    describe('injectionDepth', () => {
-      it('should validate injectionDepth is non-negative', async () => {
-        const consoleWarnSpy = vi
-          .spyOn(console, 'warn')
-          .mockImplementation(() => {});
+    it('should validate injectionDepth is non-negative', async () => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
 
-        await setupElement({injectionDepth: -1});
-        expect(consoleWarnSpy).toHaveBeenCalled();
-      });
+      await setupElement({injectionDepth: -1});
+      expect(consoleWarnSpy).toHaveBeenCalled();
     });
 
-    describe('headingLevel', () => {
-      it('should pass headingLevel to TimeframeFacetCommon', async () => {
-        await setupElement({headingLevel: 3});
-        expect(TimeframeFacetCommon).toHaveBeenCalledWith(
-          expect.objectContaining({
-            headingLevel: 3,
-          })
-        );
-      });
+    it('should pass headingLevel to TimeframeFacetCommon', async () => {
+      await setupElement({headingLevel: 3});
+      expect(TimeframeFacetCommon).toHaveBeenCalledWith(
+        expect.objectContaining({
+          headingLevel: 3,
+        })
+      );
     });
 
-    describe('min', () => {
-      it('should pass min to TimeframeFacetCommon', async () => {
-        await setupElement({min: '2020-01-01', withDatePicker: true});
-        expect(TimeframeFacetCommon).toHaveBeenCalledWith(
-          expect.objectContaining({
-            min: '2020-01-01',
-          })
-        );
-      });
-
-      it('should validate min format', async () => {
-        const consoleWarnSpy = vi
-          .spyOn(console, 'warn')
-          .mockImplementation(() => {});
-
-        await setupElement({min: 'invalid-date'});
-        expect(consoleWarnSpy).toHaveBeenCalled();
-      });
+    it('should pass min to TimeframeFacetCommon', async () => {
+      await setupElement({min: '2020-01-01', withDatePicker: true});
+      expect(TimeframeFacetCommon).toHaveBeenCalledWith(
+        expect.objectContaining({
+          min: '2020-01-01',
+        })
+      );
     });
 
-    describe('max', () => {
-      it('should pass max to TimeframeFacetCommon', async () => {
-        await setupElement({max: '2025-12-31', withDatePicker: true});
-        expect(TimeframeFacetCommon).toHaveBeenCalledWith(
-          expect.objectContaining({
-            max: '2025-12-31',
-          })
-        );
-      });
+    it('should validate min format', async () => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
 
-      it('should validate max format', async () => {
-        const consoleWarnSpy = vi
-          .spyOn(console, 'warn')
-          .mockImplementation(() => {});
+      await setupElement({min: 'invalid-date'});
+      expect(consoleWarnSpy).toHaveBeenCalled();
+    });
 
-        await setupElement({max: 'invalid-date'});
-        expect(consoleWarnSpy).toHaveBeenCalled();
-      });
+    it('should pass max to TimeframeFacetCommon', async () => {
+      await setupElement({max: '2025-12-31', withDatePicker: true});
+      expect(TimeframeFacetCommon).toHaveBeenCalledWith(
+        expect.objectContaining({
+          max: '2025-12-31',
+        })
+      );
+    });
+
+    it('should validate max format', async () => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+
+      await setupElement({max: 'invalid-date'});
+      expect(consoleWarnSpy).toHaveBeenCalled();
     });
 
     it('should warn when both tabsIncluded and tabsExcluded are provided', async () => {
@@ -269,82 +255,74 @@ describe('atomic-timeframe-facet', () => {
     });
   });
 
-  describe('#controllers', () => {
-    it('should build search status controller', async () => {
-      await setupElement();
-      expect(buildSearchStatus).toHaveBeenCalled();
-    });
-
-    it('should build tab manager controller', async () => {
-      await setupElement();
-      expect(buildTabManager).toHaveBeenCalled();
-    });
+  it('should build search status controller', async () => {
+    await setupElement();
+    expect(buildSearchStatus).toHaveBeenCalled();
   });
 
-  describe('when removed from the DOM (#disconnectedCallback)', () => {
-    it('should call disconnectedCallback on TimeframeFacetCommon', async () => {
-      const disconnectedCallbackSpy = vi.fn();
-      vi.mocked(TimeframeFacetCommon).mockImplementation(
-        () =>
-          ({
-            render: vi.fn(),
-            disconnectedCallback: disconnectedCallbackSpy,
-          }) as unknown as TimeframeFacetCommon
-      );
-
-      const {element} = await setupElement();
-      element.remove();
-
-      expect(disconnectedCallbackSpy).toHaveBeenCalled();
-    });
+  it('should build tab manager controller', async () => {
+    await setupElement();
+    expect(buildTabManager).toHaveBeenCalled();
   });
 
-  describe('#interactions', () => {
-    it('should handle date input apply event', async () => {
-      const {element} = await setupElement({withDatePicker: true});
+  it('should call disconnectedCallback on TimeframeFacetCommon when removed from the DOM', async () => {
+    const disconnectedCallbackSpy = vi.fn();
+    vi.mocked(TimeframeFacetCommon).mockImplementation(
+      () =>
+        ({
+          render: vi.fn(),
+          disconnectedCallback: disconnectedCallbackSpy,
+        }) as unknown as TimeframeFacetCommon
+    );
 
-      // Simulate date input event - the event listener is registered in the component
-      const customEvent = new CustomEvent('atomic-date-input-apply', {
-        detail: {
-          start: '2023-01-01',
-          end: '2023-12-31',
-          endInclusive: true,
-        },
-        bubbles: true,
-        composed: true,
-      });
+    const {element} = await setupElement();
+    element.remove();
 
-      element.dispatchEvent(customEvent);
-
-      // The event should be handled by the component
-      expect(element).toBeDefined();
-    });
+    expect(disconnectedCallbackSpy).toHaveBeenCalled();
   });
 
-  describe('isCollapsed', () => {
-    it('should pass isCollapsed state to TimeframeFacetCommon render', async () => {
-      await setupElement({isCollapsed: true});
-      expect(mockTimeframeFacetCommonRender).toHaveBeenCalledWith(
-        expect.objectContaining({
-          isCollapsed: true,
-        })
-      );
+  it('should handle date input apply event', async () => {
+    const {element} = await setupElement({withDatePicker: true});
+
+    // Simulate date input event - the event listener is registered in the component
+    const customEvent = new CustomEvent('atomic-date-input-apply', {
+      detail: {
+        start: '2023-01-01',
+        end: '2023-12-31',
+        endInclusive: true,
+      },
+      bubbles: true,
+      composed: true,
     });
 
-    it('should toggle isCollapsed when onToggleCollapse is called', async () => {
-      const {element} = await setupElement({isCollapsed: false});
+    element.dispatchEvent(customEvent);
 
-      // Get the onToggleCollapse callback
-      const renderCall = mockTimeframeFacetCommonRender.mock.calls[0][0];
-      const onToggleCollapse = renderCall.onToggleCollapse;
+    // The event should be handled by the component
+    expect(element).toBeDefined();
+  });
 
-      // Call the toggle function
-      onToggleCollapse();
+  it('should pass isCollapsed state to TimeframeFacetCommon render', async () => {
+    await setupElement({isCollapsed: true});
+    expect(mockTimeframeFacetCommonRender).toHaveBeenCalledWith(
+      expect.objectContaining({
+        isCollapsed: true,
+      })
+    );
+  });
 
-      // The component should re-render with the new isCollapsed state
-      await element.updateComplete;
+  it('should toggle isCollapsed when onToggleCollapse is called', async () => {
+    const {element} = await setupElement({isCollapsed: false});
 
-      expect(element.isCollapsed).toBe(true);
-    });
+    // Get the onToggleCollapse callback
+    const renderCall = mockTimeframeFacetCommonRender.mock.calls[0][0];
+    const onToggleCollapse = renderCall.onToggleCollapse;
+
+    // Call the toggle function
+    onToggleCollapse();
+
+    // The component should re-render with the new isCollapsed state
+    await element.updateComplete;
+
+    expect(element.isCollapsed).toBe(true);
   });
 });
