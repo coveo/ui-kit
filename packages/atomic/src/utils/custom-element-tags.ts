@@ -9,6 +9,7 @@
 export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-aria-live',
   'atomic-automatic-facet',
+  'atomic-automatic-facet-generator',
   'atomic-breadbox',
   'atomic-category-facet',
   'atomic-color-facet',
@@ -134,14 +135,17 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-search-box-recent-queries',
   'atomic-search-interface',
   'atomic-search-layout',
+  'atomic-segmented-facet',
   'atomic-segmented-facet-scrollable',
   'atomic-sort-dropdown',
   'atomic-sort-expression',
   'atomic-tab',
   'atomic-tab-bar',
   'atomic-tab-manager',
+  'atomic-tab-popover',
   'atomic-table-element',
   'atomic-text',
+  'atomic-timeframe',
 ]);
 
 /**

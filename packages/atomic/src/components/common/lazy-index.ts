@@ -18,6 +18,10 @@ export default {
     await import('./atomic-numeric-range/atomic-numeric-range.js'),
   'atomic-tab-bar': async () =>
     await import('./atomic-tab-bar/atomic-tab-bar.js'),
+  'atomic-tab-popover': async () =>
+    await import('./atomic-tab-popover/atomic-tab-popover.js'),
+  'atomic-timeframe': async () =>
+    await import('./atomic-timeframe/atomic-timeframe.js'),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';
