@@ -17,6 +17,7 @@ import {renderModalHeader} from '@/src/components/common/smart-snippets/atomic-s
 import {renderModalOption} from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-option';
 import {renderModalOptions} from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/modal-options';
 import {booleanConverter} from '@/src/converters/boolean-converter';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
@@ -95,13 +96,14 @@ export class AtomicSmartSnippetFeedbackModal
   }
 
   updated(changedProperties: PropertyValues) {
-    if (changedProperties.has('isOpen') && this.isOpen) {
+    if (changedProperties.has('isOpen') && this.isOpen && this.smartSnippet) {
       this.smartSnippet.openFeedbackModal();
       this.currentAnswer = undefined;
     }
   }
 
   @errorGuard()
+  @bindingGuard()
   render() {
     updateBreakpoints(this);
 
