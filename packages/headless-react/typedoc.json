@@ -1,13 +1,42 @@
 {
   "entryPointStrategy": "merge",
+  "projectDocuments": ["documents/headless-react/hooks.md", "README.md"],
   "navigation": {
     "includeCategories": true,
     "includeGroups": true,
     "includeFolders": true
   },
+  "hoistOther.topLevelOrder": [
+    "Home",
+    "Usage",
+    "Commerce Controller hooks",
+    "Reference"
+  ],
   "categorizeByGroup": true,
   "entryPoints": ["./temp/ssr-commerce.json", "./temp/ssr.json"],
   "gitRevision": "main",
   "plugin": ["@coveo/documentation"],
-  "projectDocuments": ["./README.md"]
+  "hoistOther.renameModulesTo": "Reference",
+  "router": "kebab",
+  "hoistOther.nestedOrder": {
+    "reference ssr commerce": [
+      "Engine",
+      "Providers",
+      "Definers",
+      "Controllers",
+      "Buildable controllers",
+      "Sub-controllers",
+      "Actions",
+      "*"
+    ],
+    "reference ssr search": [
+      "Engine",
+      "Definers",
+      "Controllers",
+      "Buildable controllers",
+      "Sub-controllers",
+      "Actions",
+      "*"
+    ]
+  }
 }

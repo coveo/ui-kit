@@ -1,3 +1,36 @@
+## 3.37.0 (2025-12-12)
+
+* feat: migrating content from docs.coveo.com to typedoc (#6624) ([8a85527](https://github.com/coveo/ui-kit/commits/8a85527)), closes [#6624](https://github.com/coveo/ui-kit/issues/6624)
+* feat(headless-commerce) Create ProductEnrichment Controller in Headless Commerce to retrieve badgesP ([43325b7](https://github.com/coveo/ui-kit/commits/43325b7)), closes [#6745](https://github.com/coveo/ui-kit/issues/6745)
+
+
+
+## 3.36.0 (2025-12-10)
+
+* chore(headless): remember to export types for spotlight content results COMHUB2-1318 (#6735) ([f92f202](https://github.com/coveo/ui-kit/commits/f92f202)), closes [#6735](https://github.com/coveo/ui-kit/issues/6735)
+* feat(headless): support spotlight content for commerce COMHUB2-1228 (#6646) ([ba8c990](https://github.com/coveo/ui-kit/commits/ba8c990)), closes [#6646](https://github.com/coveo/ui-kit/issues/6646)
+
+
+
+## <small>3.35.4 (2025-12-03)</small>
+
+* [Version Bump][skip ci]: ui-kit publish ([cfc527e](https://github.com/coveo/ui-kit/commits/cfc527e))
+* Add standalone engine definition to SSR-Next search (#6613) ([04a7205](https://github.com/coveo/ui-kit/commits/04a7205)), closes [#6613](https://github.com/coveo/ui-kit/issues/6613)
+* docs(headless): remove a broken handwritten link (#6659) ([d312e18](https://github.com/coveo/ui-kit/commits/d312e18)), closes [#6659](https://github.com/coveo/ui-kit/issues/6659)
+* fix(headless): ensure capture depends on `clientId` value (#6608) ([58d12a2](https://github.com/coveo/ui-kit/commits/58d12a2)), closes [#6608](https://github.com/coveo/ui-kit/issues/6608)
+* chore(headless-ssr): apply token fix to search (#6422) ([98f2577](https://github.com/coveo/ui-kit/commits/98f2577)), closes [#6422](https://github.com/coveo/ui-kit/issues/6422)
+
+
+
+## <small>3.35.3 (2025-12-03)</small>
+
+* Add standalone engine definition to SSR-Next search (#6613) ([04a7205](https://github.com/coveo/ui-kit/commits/04a7205)), closes [#6613](https://github.com/coveo/ui-kit/issues/6613)
+* docs(headless): remove a broken handwritten link (#6659) ([d312e18](https://github.com/coveo/ui-kit/commits/d312e18)), closes [#6659](https://github.com/coveo/ui-kit/issues/6659)
+* fix(headless): ensure capture depends on `clientId` value (#6608) ([58d12a2](https://github.com/coveo/ui-kit/commits/58d12a2)), closes [#6608](https://github.com/coveo/ui-kit/issues/6608)
+* chore(headless-ssr): apply token fix to search (#6422) ([98f2577](https://github.com/coveo/ui-kit/commits/98f2577)), closes [#6422](https://github.com/coveo/ui-kit/issues/6422)
+
+
+
 ## <small>3.35.2 (2025-11-20)</small>
 
 * chore(headless): fix pnpm `pnpm run dev` in Headless (#6335) ([a5e4e95](https://github.com/coveo/ui-kit/commits/a5e4e95)), closes [#6335](https://github.com/coveo/ui-kit/issues/6335)
