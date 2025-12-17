@@ -16,12 +16,11 @@ export const insertMetaTags = (page: PageEvent) => {
     const titleMatch = page.contents.match(/<title>\s*([^<]*)<\/title>/i);
     if (titleMatch) {
       const originalTitle = titleMatch[1];
-      const parts = originalTitle.split(' | ');
-      const name = parts[0];
-      const splitName = name
+      const formattedName = originalTitle
+        .split(' | ')[0]
         .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
-        .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2');
-      const formattedName = splitName.toLowerCase();
+        .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
+        .toLowerCase();
       metaTags.push(
         `<meta name="docsSiteMeta" content="${formattedName} reference" />`
       );
