@@ -21,6 +21,7 @@ import {
 } from '@coveo/headless';
 import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
 import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.css';
 import {renderFacetPlaceholder} from '@/src/components/common/facets/facet-placeholder/facet-placeholder';
@@ -186,7 +187,8 @@ export class AtomicTimeframeFacet
    * ></atomic-timeframe-facet>
    * ```
    */
-  @property() dependsOn!: Record<string, string>;
+  @mapProperty({attributePrefix: 'depends-on'})
+  public dependsOn!: Record<string, string>;
   /**
    * The earliest date to accept from user input when the `withDatepicker` option is enabled.
    *
@@ -379,29 +381,29 @@ export class AtomicTimeframeFacet
   @bindingGuard()
   @errorGuard()
   protected render() {
-    if (!this.timeframeFacetCommon) {
-      return html`${renderFacetPlaceholder({
-        props: {
-          numberOfValues: 5,
+    return html`${when(
+      this.timeframeFacetCommon,
+      () =>
+        this.timeframeFacetCommon!.render({
+          hasError: this.searchStatusState.hasError,
+          firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
           isCollapsed: this.isCollapsed,
-        },
-      })}`;
-    }
-
-    return html`${this.timeframeFacetCommon.render({
-      hasError: this.searchStatusState.hasError,
-      firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
-      isCollapsed: this.isCollapsed,
-      headerFocus: this.focusTarget,
-      onToggleCollapse: () => {
-        this.isCollapsed = !this.isCollapsed;
-        return this.isCollapsed;
-      },
-    })}`;
+          headerFocus: this.focusTarget,
+          onToggleCollapse: () => {
+            this.isCollapsed = !this.isCollapsed;
+            return this.isCollapsed;
+          },
+        }),
+      () =>
+        renderFacetPlaceholder({
+          props: {
+            numberOfValues: 5,
+            isCollapsed: this.isCollapsed,
+          },
+        })
+    )}`;
   }
 }
-
-mapProperty()(AtomicTimeframeFacet.prototype, 'dependsOn');
 
 declare global {
   interface HTMLElementTagNameMap {
