@@ -175,28 +175,24 @@ describe('atomic-tab-popover', () => {
     });
   });
 
-  describe('#toggle', () => {
-    it('should toggle isOpen state when', async () => {
-      const {element, parts} = await renderTabPopover({show: true});
+  it('should toggle isOpen state when toggle is called', async () => {
+    const {element, parts} = await renderTabPopover({show: true});
 
-      expect(parts(element).overflowTabs?.classList.contains('hidden')).toBe(
-        true
-      );
+    expect(parts(element).overflowTabs?.classList.contains('hidden')).toBe(
+      true
+    );
 
-      element.toggle();
-      await element.updateComplete;
+    element.toggle();
+    await element.updateComplete;
 
-      expect(parts(element).overflowTabs?.classList.contains('flex')).toBe(
-        true
-      );
+    expect(parts(element).overflowTabs?.classList.contains('flex')).toBe(true);
 
-      element.toggle();
-      await element.updateComplete;
+    element.toggle();
+    await element.updateComplete;
 
-      expect(parts(element).overflowTabs?.classList.contains('hidden')).toBe(
-        true
-      );
-    });
+    expect(parts(element).overflowTabs?.classList.contains('hidden')).toBe(
+      true
+    );
   });
 
   describe('#setButtonVisibility', () => {

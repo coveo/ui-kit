@@ -80,6 +80,40 @@ export class AtomicTabPopover
     this.popperInstance?.destroy();
   }
 
+  public toggle() {
+    this.isOpen = !this.isOpen;
+  }
+
+  public setButtonVisibility(isVisible: boolean) {
+    this.show = isVisible;
+  }
+
+  public closePopoverOnFocusOut(event: FocusEvent) {
+    const popup = this.popupRef.value;
+    if (!popup) {
+      return;
+    }
+    const slot = popup.children[0] as HTMLSlotElement | undefined;
+    if (!slot) {
+      return;
+    }
+    const assignedElements = slot.assignedElements() as HTMLElement[];
+
+    const isMovingToSlottedElement = assignedElements.some(
+      (element) =>
+        element === event.relatedTarget ||
+        element.contains(event.relatedTarget as Node)
+    );
+
+    if (isMovingToSlottedElement) {
+      return;
+    }
+
+    if (!popup.contains(event.relatedTarget as Node)) {
+      this.closePopover();
+    }
+  }
+
   private handleKeyDown = (e: KeyboardEvent) => {
     if (!this.isOpen) {
       return;
@@ -157,40 +191,6 @@ export class AtomicTabPopover
   get hasTabs() {
     const popup = this.popupRef.value;
     return popup ? !!popup.children.length : false;
-  }
-
-  public toggle() {
-    this.isOpen = !this.isOpen;
-  }
-
-  public setButtonVisibility(isVisible: boolean) {
-    this.show = isVisible;
-  }
-
-  public closePopoverOnFocusOut(event: FocusEvent) {
-    const popup = this.popupRef.value;
-    if (!popup) {
-      return;
-    }
-    const slot = popup.children[0] as HTMLSlotElement | undefined;
-    if (!slot) {
-      return;
-    }
-    const assignedElements = slot.assignedElements() as HTMLElement[];
-
-    const isMovingToSlottedElement = assignedElements.some(
-      (element) =>
-        element === event.relatedTarget ||
-        element.contains(event.relatedTarget as Node)
-    );
-
-    if (isMovingToSlottedElement) {
-      return;
-    }
-
-    if (!popup.contains(event.relatedTarget as Node)) {
-      this.closePopover();
-    }
   }
 
   private closePopover() {
@@ -283,7 +283,6 @@ export class AtomicTabPopover
     this.classList.toggle('visibility-hidden', !this.show);
     this.ariaHidden = String(!this.show);
     return html`
-
         ${this.renderPopover()} ${when(this.isOpen, () => this.renderBackdrop())}
     `;
   }
