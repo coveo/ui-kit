@@ -69,6 +69,11 @@ export class AtomicAutomaticFacetGenerator
 
   @state() private collapseFacetsAfter = -1;
 
+  private static readonly propsSchema = new Schema({
+    desiredCount: new NumberValue({min: 1, max: 20, required: false}),
+    numberOfValues: new NumberValue({min: 1, required: false}),
+  });
+
   constructor() {
     super();
     new ValidatePropsController(
@@ -77,10 +82,7 @@ export class AtomicAutomaticFacetGenerator
         desiredCount: this.desiredCount,
         numberOfValues: this.numberOfValues,
       }),
-      new Schema({
-        desiredCount: new NumberValue({min: 1, max: 20, required: false}),
-        numberOfValues: new NumberValue({min: 1, required: false}),
-      }),
+      AtomicAutomaticFacetGenerator.propsSchema,
       false
     );
   }
