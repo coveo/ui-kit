@@ -1,12 +1,9 @@
 import type {SmartSnippet} from '@coveo/headless';
-import {buildMockSearchEngine} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
 
 export function buildFakeSmartSnippet(
   config: Partial<SmartSnippet> = {}
 ): SmartSnippet {
-  const _engine = buildMockSearchEngine();
-
   return {
     state: {
       answerFound: false,
