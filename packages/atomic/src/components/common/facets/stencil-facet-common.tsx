@@ -1,5 +1,6 @@
 import {FacetValue, SearchStatusState} from '@coveo/headless';
 import {i18n} from 'i18next';
+import { AtomicAutomaticFacetGenerator } from '../../search/atomic-automatic-facet-generator/atomic-automatic-facet-generator';
 
 export interface FacetValueProps {
   i18n: i18n;
@@ -83,7 +84,7 @@ export function collapseFacetsAfter(
 
 export function isAutomaticFacetGenerator(
   element: HTMLElement
-): element is HTMLAtomicAutomaticFacetGeneratorElement {
+): element is AtomicAutomaticFacetGenerator {
   return element.tagName === 'ATOMIC-AUTOMATIC-FACET-GENERATOR';
 }
 
@@ -100,7 +101,7 @@ export function getFacetsInChildren(parent: HTMLElement): BaseFacetElement[] {
 }
 export function getAutomaticFacetGenerator(
   parent: HTMLElement
-): HTMLAtomicAutomaticFacetGeneratorElement | undefined {
+): AtomicAutomaticFacetGenerator | undefined {
   return (Array.from(parent.children) as HTMLElement[]).find(
     isAutomaticFacetGenerator
   );
