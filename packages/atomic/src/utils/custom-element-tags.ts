@@ -145,6 +145,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-tab-popover',
   'atomic-table-element',
   'atomic-text',
+  'atomic-timeframe',
 ]);
 
 /**
