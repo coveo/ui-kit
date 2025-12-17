@@ -1,5 +1,6 @@
 // Auto-generated file
 export {AtomicAutomaticFacet} from './atomic-automatic-facet/atomic-automatic-facet.js';
+export {AtomicAutomaticFacetGenerator} from './atomic-automatic-facet-generator/atomic-automatic-facet-generator.js';
 export {AtomicBreadbox} from './atomic-breadbox/atomic-breadbox.js';
 export {AtomicCategoryFacet} from './atomic-category-facet/atomic-category-facet.js';
 export {AtomicColorFacet} from './atomic-color-facet/atomic-color-facet.js';
@@ -21,6 +22,7 @@ export {AtomicPager} from './atomic-pager/atomic-pager.js';
 export {AtomicPopover} from './atomic-popover/atomic-popover.js';
 export {AtomicQueryError} from './atomic-query-error/atomic-query-error.js';
 export {AtomicQuerySummary} from './atomic-query-summary/atomic-query-summary.js';
+export {AtomicQuickview} from './atomic-quickview/atomic-quickview.js';
 export {AtomicRatingFacet} from './atomic-rating-facet/atomic-rating-facet.js';
 export {AtomicRatingRangeFacet} from './atomic-rating-range-facet/atomic-rating-range-facet.js';
 export {AtomicRefineToggle} from './atomic-refine-toggle/atomic-refine-toggle.js';
@@ -60,6 +62,7 @@ export {AtomicSearchBoxQuerySuggestions} from './atomic-search-box-query-suggest
 export {AtomicSearchBoxRecentQueries} from './atomic-search-box-recent-queries/atomic-search-box-recent-queries.js';
 export {AtomicSearchInterface} from './atomic-search-interface/atomic-search-interface.js';
 export {AtomicSearchLayout} from './atomic-search-layout/atomic-search-layout.js';
+export {AtomicSegmentedFacet} from './atomic-segmented-facet/atomic-segmented-facet.js';
 export {AtomicSegmentedFacetScrollable} from './atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.js';
 export {AtomicSortDropdown} from './atomic-sort-dropdown/atomic-sort-dropdown.js';
 export {AtomicSortExpression} from './atomic-sort-expression/atomic-sort-expression.js';
