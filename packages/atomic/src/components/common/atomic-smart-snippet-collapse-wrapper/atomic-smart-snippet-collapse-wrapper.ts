@@ -10,6 +10,7 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map';
 import ArrowDown from '@/src/images/arrow-down.svg';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
+import '@/src/components/common/atomic-icon/atomic-icon';
 
 /**
  * @internal
@@ -23,8 +24,6 @@ export class AtomicSmartSnippetCollapseWrapper
   implements InitializableComponent<Bindings>
 {
   static styles = css`
-    @reference '../../../utils/tailwind.global.tw.css';
-
     :host {
       display: block;
     }
@@ -153,7 +152,7 @@ export class AtomicSmartSnippetCollapseWrapper
       >
         ${this.bindings.i18n.t(this.isExpanded ? 'show-less' : 'show-more')}
         <atomic-icon
-          icon=${ArrowDown}
+          .icon=${ArrowDown}
           class=${multiClassMap(
             tw({
               'ml-2 w-3 align-baseline': true,
@@ -185,11 +184,7 @@ export class AtomicSmartSnippetCollapseWrapper
     return html`
       <div
         part="smart-snippet-collapse-wrapper"
-        class=${multiClassMap(
-          tw({
-            'block overflow-hidden text-lg text-on-background smart-snippet-content': true,
-          })
-        )}
+        class="block overflow-hidden text-lg text-on-background smart-snippet-content"
       >
         <slot></slot>
       </div>
