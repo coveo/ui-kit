@@ -12,46 +12,28 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   className="AtomicTimeframe"
 >
 
-## Usage
+The `atomic-timeframe` component defines a relative date range for filtering results in a timeframe facet. It allows users to filter by periods like "past week", "next month", or other custom time ranges.
 
-The `atomic-timeframe` component defines a timeframe for an `atomic-timeframe-facet` component. It must be defined within an `atomic-timeframe-facet` component to function properly.
-
-A timeframe represents a span of time from now to a specific time in the past (or future).
-
-### Basic Example
+This component must be placed as a child of `atomic-timeframe-facet` (for search interfaces) or `atomic-insight-timeframe-facet` (for insight panels).
 
 ```html
-<atomic-timeframe-facet field="date">
-  <atomic-timeframe unit="day"></atomic-timeframe>
-  <atomic-timeframe unit="week"></atomic-timeframe>
-  <atomic-timeframe unit="month"></atomic-timeframe>
-  <atomic-timeframe unit="year"></atomic-timeframe>
-</atomic-timeframe-facet>
-```
-
-### With Custom Amounts
-
-```html
-<atomic-timeframe-facet field="date">
-  <atomic-timeframe unit="day" amount="7" label="Last week"></atomic-timeframe>
-  <atomic-timeframe unit="month" amount="3" label="Last quarter"></atomic-timeframe>
-  <atomic-timeframe unit="year" amount="1" label="Last year"></atomic-timeframe>
-</atomic-timeframe-facet>
-```
-
-### Future Timeframes
-
-```html
-<atomic-timeframe-facet field="date">
-  <atomic-timeframe period="next" unit="day" amount="7" label="Next week"></atomic-timeframe>
-  <atomic-timeframe period="next" unit="month" label="Next month"></atomic-timeframe>
-</atomic-timeframe-facet>
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="facets">
+      ...
+      <atomic-timeframe-facet field="date" label="Date">
+        <atomic-timeframe period="past" unit="week" amount="1"></atomic-timeframe>
+      </atomic-timeframe-facet>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
 ```
 
 ## Related Components
 
 - [atomic-timeframe-facet](../?path=/docs/atomic-timeframe-facet--default) - Search timeframe facet
-- [atomic-commerce-timeframe-facet](../?path=/docs/atomic-commerce-timeframe-facet--default) - Commerce timeframe facet
 - [atomic-insight-timeframe-facet](../?path=/docs/atomic-insight-timeframe-facet--default) - Insight timeframe facet
 
 </AtomicDocTemplate>
