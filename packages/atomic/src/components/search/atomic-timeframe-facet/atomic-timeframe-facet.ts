@@ -8,10 +8,7 @@ import {
   buildTabManager,
   type CategoryFacetValueRequest,
   type DateFacet,
-  type DateFacetState,
-  type DateFacetValue,
   type DateFilter,
-  type DateFilterState,
   type DateRangeRequest,
   deserializeRelativeDate,
   type FacetValueRequest,
@@ -22,20 +19,11 @@ import {
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
-import {type CSSResultGroup, html, LitElement} from 'lit';
+import {type CSSResultGroup, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {when} from 'lit/directives/when.js';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
-import {shouldDisplayInputForFacetRange} from '@/src/components/common/facets/facet-common';
 import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.css';
-import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
-import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
-import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
-import {renderFacetPlaceholder} from '@/src/components/common/facets/facet-placeholder/facet-placeholder';
-import {renderFacetValueLabelHighlight} from '@/src/components/common/facets/facet-value-label-highlight/facet-value-label-highlight';
-import {renderFacetValueLink} from '@/src/components/common/facets/facet-value-link/facet-value-link';
-import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-values-group/facet-values-group';
-import {initializePopover} from '@/src/components/common/facets/popover/popover-type';
+import {TimeframeFacetCommon} from '@/src/components/common/facets/timeframe-facet-common';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {arrayConverter} from '@/src/converters/array-converter';
@@ -47,19 +35,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
-import {parseDate} from '@/src/utils/date-utils';
-import {getFieldValueCaption} from '@/src/utils/field-utils';
 import {mapProperty} from '@/src/utils/props-utils';
-import {randomID} from '@/src/utils/utils';
-import '@/src/components/common/atomic-facet-date-input/atomic-facet-date-input';
-import type {FacetDateInputEventDetails} from '@/src/components/common/atomic-facet-date-input/atomic-facet-date-input';
-
-interface Timeframe {
-  period: 'past' | 'next' | 'now';
-  unit?: 'day' | 'week' | 'month' | 'quarter' | 'year';
-  amount?: number;
-  label?: string;
-}
 
 /**
  * The `atomic-timeframe-facet` component displays a facet of results for the current query as date intervals.
@@ -90,8 +66,18 @@ export class AtomicTimeframeFacet
   private static readonly propsSchema = new Schema({
     injectionDepth: new NumberValue({min: 0, required: false}),
     headingLevel: new NumberValue({min: 0, max: 6, required: false}),
-    min: new StringValue({required: false}),
-    max: new StringValue({required: false}),
+    min: new StringValue({
+      required: false,
+      regex: /^\d{4}-\d{2}-\d{2}$/,
+      regexMessage:
+        'The "min" property must be a valid date string in the format YYYY-MM-DD.',
+    }),
+    max: new StringValue({
+      required: false,
+      regex: /^\d{4}-\d{2}-\d{2}$/,
+      regexMessage:
+        'The "max" property must be a valid date string in the format YYYY-MM-DD.',
+    }),
     sortCriteria: new StringValue({
       constrainTo: ['ascending', 'descending'],
       required: false,
@@ -203,8 +189,7 @@ export class AtomicTimeframeFacet
    * ></atomic-timeframe-facet>
    * ```
    */
-  @mapProperty({attributePrefix: 'depends-on'})
-  public dependsOn!: Record<string, string>;
+  @property() dependsOn!: Record<string, string>;
   /**
    * The earliest date to accept from user input when the `withDatepicker` option is enabled.
    *
@@ -242,21 +227,6 @@ export class AtomicTimeframeFacet
   @state() bindings!: Bindings;
   @state() error!: Error;
 
-  public facetForDateRange?: DateFacet;
-  public facetForDatePicker?: DateFacet;
-  public filter?: DateFilter;
-  public searchStatus!: SearchStatus;
-  public tabManager!: TabManager;
-
-  @state()
-  facetState?: DateFacetState;
-
-  @state()
-  facetForDatePickerState?: DateFacetState;
-
-  @state()
-  filterState?: DateFilterState;
-
   @bindStateToController('searchStatus')
   @state()
   searchStatusState!: SearchStatusState;
@@ -265,17 +235,11 @@ export class AtomicTimeframeFacet
   @state()
   tabManagerState!: TabManagerState;
 
+  public searchStatus!: SearchStatus;
+  public tabManager!: TabManager;
+
   private headerFocus?: FocusTargetController;
-  private manualTimeframes: Timeframe[] = [];
-  private facetForDateRangeDependenciesManager?: ReturnType<
-    typeof buildFacetConditionsManager
-  >;
-  private facetForDatePickerDependenciesManager?: ReturnType<
-    typeof buildFacetConditionsManager
-  >;
-  private filterDependenciesManager?: ReturnType<
-    typeof buildFacetConditionsManager
-  >;
+  private timeframeFacetCommon?: TimeframeFacetCommon;
 
   constructor() {
     super();
@@ -287,10 +251,9 @@ export class AtomicTimeframeFacet
         headingLevel: this.headingLevel,
         min: this.min,
         max: this.max,
-        sortCriteria: this.sortCriteria as string,
+        sortCriteria: this.sortCriteria,
       }),
-      AtomicTimeframeFacet.propsSchema,
-      false
+      AtomicTimeframeFacet.propsSchema
     );
   }
 
@@ -301,96 +264,6 @@ export class AtomicTimeframeFacet
     return this.headerFocus;
   }
 
-  private get determineFacetId() {
-    if (this.facetId) {
-      return this.facetId;
-    }
-
-    if (this.bindings.store.state.dateFacets[this.field]) {
-      return randomID(`${this.field}_`);
-    }
-
-    return this.field;
-  }
-
-  private get enabled() {
-    return (
-      this.facetForDateRange?.state.enabled ??
-      this.filter?.state.enabled ??
-      true
-    );
-  }
-
-  private get valuesToRender() {
-    return (
-      this.facetState?.values.filter(
-        (value) => value.numberOfResults || value.state !== 'idle'
-      ) || []
-    );
-  }
-
-  private get shouldRenderValues() {
-    return !this.hasInputRange && !!this.valuesToRender.length;
-  }
-
-  private get shouldRenderFacet() {
-    return (
-      this.enabled &&
-      !this.searchStatusState.hasError &&
-      (this.shouldRenderInput || this.shouldRenderValues)
-    );
-  }
-
-  private get shouldRenderInput() {
-    return shouldDisplayInputForFacetRange({
-      hasInput: this.withDatePicker,
-      hasInputRange: this.hasInputRange,
-      searchStatusState: this.searchStatusState,
-      facetValues: this.facetForDatePickerState?.values || [],
-    });
-  }
-
-  private get hasValues() {
-    if (this.facetForDatePickerState?.values.length) {
-      return true;
-    }
-
-    return !!this.valuesToRender.length;
-  }
-
-  private get numberOfSelectedValues() {
-    if (this.filterState?.range) {
-      return 1;
-    }
-
-    return (
-      this.facetState?.values.filter(({state}) => state === 'selected')
-        .length || 0
-    );
-  }
-
-  private get hasInputRange() {
-    return !!this.filterState?.range;
-  }
-
-  private get currentValues(): DateRangeRequest[] {
-    return this.manualTimeframes.map(({period, amount, unit}) =>
-      period === 'past'
-        ? buildDateRange({
-            start: {period, unit, amount},
-            end: {period: 'now'},
-          })
-        : buildDateRange({
-            start: {period: 'now'},
-            end: {period, unit, amount},
-          })
-    );
-  }
-
-  private get isHidden() {
-    return !this.shouldRenderFacet || !this.enabled;
-  }
-
   public initialize() {
     if (this.tabsIncluded.length > 0 && this.tabsExcluded.length > 0) {
       console.warn(
@@ -398,104 +271,79 @@ export class AtomicTimeframeFacet
       );
     }
 
-    this.facetId = this.determineFacetId;
-    this.manualTimeframes = this.getManualTimeframes();
-
-    if (this.manualTimeframes.length > 0) {
-      this.initializeFacetForDateRange();
-    }
-
-    if (this.withDatePicker) {
-      this.facetForDatePicker = buildDateFacet(this.bindings.engine, {
-        options: {
-          facetId: `${this.facetId}_input_range`,
-          numberOfValues: 1,
-          generateAutomaticRanges: true,
-          field: this.field,
-          filterFacetCount: this.filterFacetCount,
-          injectionDepth: this.injectionDepth,
-          tabs: {
-            included: this.tabsIncluded,
-            excluded: this.tabsExcluded,
-          },
-        },
-      });
-
-      if (parseDependsOn(this.dependsOn)) {
-        this.facetForDatePickerDependenciesManager =
-          buildFacetConditionsManager(this.bindings.engine, {
-            facetId: this.facetForDatePicker.state.facetId,
-            conditions: parseDependsOn<
-              FacetValueRequest | CategoryFacetValueRequest
-            >(this.dependsOn),
-          });
-      }
-
-      this.filter = buildDateFilter(this.bindings.engine, {
-        options: {
-          facetId: `${this.facetId}_input`,
-          field: this.field,
-          tabs: {
-            included: this.tabsIncluded,
-            excluded: this.tabsExcluded,
-          },
-        },
-      });
-
-      if (parseDependsOn(this.dependsOn)) {
-        this.filterDependenciesManager = buildFacetConditionsManager(
-          this.bindings.engine,
-          {
-            facetId: this.filter.state.facetId,
-            conditions: parseDependsOn<
-              FacetValueRequest | CategoryFacetValueRequest
-            >(this.dependsOn),
-          }
-        );
-      }
-    }
+    this.timeframeFacetCommon = new TimeframeFacetCommon({
+      facetId: this.facetId,
+      host: this,
+      bindings: this.bindings,
+      label: this.label,
+      field: this.field,
+      headingLevel: this.headingLevel,
+      dependsOn: parseDependsOn(this.dependsOn) ? this.dependsOn : {},
+      withDatePicker: this.withDatePicker,
+      setFacetId: (id: string) => {
+        this.facetId = id;
+        return id;
+      },
+      getSearchStatusState: () => this.searchStatusState,
+      buildDependenciesManager: (facetId: string) =>
+        buildFacetConditionsManager(this.bindings.engine, {
+          facetId,
+          conditions: parseDependsOn<
+            FacetValueRequest | CategoryFacetValueRequest
+          >(this.dependsOn),
+        }),
+      deserializeRelativeDate,
+      buildDateRange,
+      initializeFacetForDatePicker: () => this.initializeFacetForDatePicker(),
+      initializeFacetForDateRange: (values: DateRangeRequest[]) =>
+        this.initializeFacetForDateRange(values),
+      initializeFilter: () => this.initializeFilter(),
+      min: this.min,
+      max: this.max,
+      sortCriteria: this.sortCriteria,
+    });
 
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.tabManager = buildTabManager(this.bindings.engine);
 
-    // Subscribe to optional controllers to sync their state
-    if (this.facetForDateRange) {
-      this.facetForDateRange.subscribe(() => {
-        this.facetState = this.facetForDateRange!.state;
-      });
-    }
-
-    if (this.facetForDatePicker) {
-      this.facetForDatePicker.subscribe(() => {
-        this.facetForDatePickerState = this.facetForDatePicker!.state;
-      });
-    }
-
-    if (this.filter) {
-      this.filter.subscribe(() => {
-        this.filterState = this.filter!.state;
-      });
-    }
-
-    this.registerFacetToStore();
+    this.addEventListener(
+      'atomic-date-input-apply',
+      this.handleDateInputApply as EventListener
+    );
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this.isConnected) {
-      return;
-    }
-    this.facetForDateRangeDependenciesManager?.stopWatching();
-    this.facetForDatePickerDependenciesManager?.stopWatching();
-    this.filterDependenciesManager?.stopWatching();
+    this.timeframeFacetCommon?.disconnectedCallback();
+    this.removeEventListener(
+      'atomic-date-input-apply',
+      this.handleDateInputApply as EventListener
+    );
   }
 
-  private initializeFacetForDateRange() {
-    this.facetForDateRange = buildDateFacet(this.bindings.engine, {
+  private initializeFacetForDatePicker(): DateFacet {
+    return buildDateFacet(this.bindings.engine, {
       options: {
-        facetId: this.facetId,
+        facetId: `${this.facetId}_input_range`,
+        numberOfValues: 1,
+        generateAutomaticRanges: true,
         field: this.field,
-        currentValues: this.currentValues,
+        filterFacetCount: this.filterFacetCount,
+        injectionDepth: this.injectionDepth,
+        tabs: {
+          included: this.tabsIncluded,
+          excluded: this.tabsExcluded,
+        },
+      },
+    });
+  }
+
+  private initializeFacetForDateRange(values: DateRangeRequest[]): DateFacet {
+    return buildDateFacet(this.bindings.engine, {
+      options: {
+        facetId: this.facetId!,
+        field: this.field,
+        currentValues: values,
         generateAutomaticRanges: false,
         sortCriteria: this.sortCriteria,
         filterFacetCount: this.filterFacetCount,
@@ -506,221 +354,57 @@ export class AtomicTimeframeFacet
         },
       },
     });
-
-    if (parseDependsOn(this.dependsOn)) {
-      this.facetForDateRangeDependenciesManager = buildFacetConditionsManager(
-        this.bindings.engine,
-        {
-          facetId: this.facetForDateRange.state.facetId,
-          conditions: parseDependsOn<
-            FacetValueRequest | CategoryFacetValueRequest
-          >(this.dependsOn),
-        }
-      );
-    }
   }
 
-  private registerFacetToStore() {
-    const facetInfo: FacetInfo = {
-      label: () => this.bindings.i18n.t(this.label),
-      facetId: this.facetId!,
-      element: this,
-      isHidden: () => this.isHidden,
-    };
-
-    this.bindings.store.registerFacet('dateFacets', {
-      ...facetInfo,
-      format: (value) => this.formatFacetValue(value),
-    });
-
-    initializePopover(this, {
-      ...facetInfo,
-      hasValues: () => this.hasValues,
-      numberOfActiveValues: () => this.numberOfSelectedValues,
-    });
-
-    if (this.filter) {
-      this.bindings.store.state.dateFacets[this.filter.state.facetId] =
-        this.bindings.store.state.dateFacets[this.facetId!];
-    }
-  }
-
-  private getManualTimeframes(): Timeframe[] {
-    const timeframeElements = Array.from(
-      this.querySelectorAll('atomic-timeframe')
-    );
-
-    return timeframeElements.map((element) => {
-      const timeframeElement = element as unknown as {
-        label?: string;
-        amount?: number;
-        unit?: 'day' | 'week' | 'month' | 'quarter' | 'year';
-        period: 'past' | 'next' | 'now';
-      };
-      return {
-        label: timeframeElement.label,
-        amount: timeframeElement.amount,
-        unit: timeframeElement.unit,
-        period: timeframeElement.period,
-      };
-    });
-  }
-
-  private formatFacetValue(facetValue: DateFacetValue) {
-    try {
-      const startDate = deserializeRelativeDate(facetValue.start);
-      const relativeDate =
-        startDate.period === 'past'
-          ? startDate
-          : deserializeRelativeDate(facetValue.end);
-      const timeframe = this.manualTimeframes.find(
-        (timeframe) =>
-          timeframe.period === relativeDate.period &&
-          timeframe.unit === relativeDate.unit &&
-          timeframe.amount === relativeDate.amount
-      );
-
-      if (timeframe?.label) {
-        return getFieldValueCaption(
-          this.field,
-          timeframe.label,
-          this.bindings.i18n
-        );
-      }
-      return this.bindings.i18n.t(
-        `${relativeDate.period}-${relativeDate.unit}`,
-        {
-          count: relativeDate.amount,
-        }
-      );
-    } catch (_error) {
-      return this.bindings.i18n.t('to', {
-        start: parseDate(facetValue.start).format('YYYY-MM-DD'),
-        end: parseDate(facetValue.end).format('YYYY-MM-DD'),
-      });
-    }
-  }
-
-  private renderValues() {
-    return this.renderValuesContainer(
-      this.valuesToRender.map((value) => this.renderValue(value))
-    );
-  }
-
-  private renderValue(facetValue: DateFacetValue) {
-    const displayValue = this.formatFacetValue(facetValue);
-    const isSelected = facetValue.state === 'selected';
-    const isExcluded = facetValue.state === 'excluded';
-    return renderFacetValueLink({
-      props: {
-        displayValue,
-        isSelected,
-        numberOfResults: facetValue.numberOfResults,
-        i18n: this.bindings.i18n,
-        onClick: () => this.facetForDateRange!.toggleSingleSelect(facetValue),
-      },
-    })(
-      renderFacetValueLabelHighlight({
-        props: {
-          displayValue,
-          isSelected,
-          isExcluded,
+  private initializeFilter(): DateFilter {
+    return buildDateFilter(this.bindings.engine, {
+      options: {
+        facetId: `${this.facetId}_input`,
+        field: this.field,
+        tabs: {
+          included: this.tabsIncluded,
+          excluded: this.tabsExcluded,
         },
-      })
-    );
-  }
-
-  private renderValuesContainer(children: unknown[]) {
-    return renderFacetValuesGroup({
-      props: {
-        i18n: this.bindings.i18n,
-        label: this.label,
-      },
-    })(
-      html`<ul class="mt-3" part="values">
-        ${children}
-      </ul>`
-    );
-  }
-
-  private renderHeader() {
-    return renderFacetHeader({
-      props: {
-        i18n: this.bindings.i18n,
-        label: this.label,
-        onClearFilters: () => {
-          this.focusTarget.focusAfterSearch();
-          if (this.filterState?.range) {
-            this.filter?.clear();
-            return;
-          }
-          this.facetForDateRange?.deselectAll();
-        },
-        numberOfActiveValues: this.numberOfSelectedValues,
-        isCollapsed: this.isCollapsed,
-        headingLevel: this.headingLevel,
-        onToggleCollapse: () => {
-          this.isCollapsed = !this.isCollapsed;
-        },
-        headerRef: (el) => this.focusTarget.setTarget(el),
       },
     });
   }
 
-  private renderDateInput() {
-    return html`
-      <atomic-facet-date-input
-        .min=${this.min}
-        .max=${this.max}
-        .label=${this.label}
-        .inputRange=${this.filterState?.range}
-        .facetId=${this.filter!.state.facetId}
-        @atomic-date-input-apply=${(
-          event: CustomEvent<FacetDateInputEventDetails>
-        ) => {
-          const {start, end} = event.detail;
-          this.filter!.setRange({
-            start,
-            end,
-          });
-          if (this.facetId) {
-            this.bindings.engine.dispatch(
-              loadDateFacetSetActions(
-                this.bindings.engine
-              ).deselectAllDateFacetValues(this.facetId)
-            );
-          }
-        }}
-      ></atomic-facet-date-input>
-    `;
-  }
+  private handleDateInputApply = () => {
+    if (this.facetId) {
+      this.bindings.engine.dispatch(
+        loadDateFacetSetActions(
+          this.bindings.engine
+        ).deselectAllDateFacetValues(this.facetId)
+      );
+    }
+  };
 
   @bindingGuard()
   @errorGuard()
-  render() {
-    return html`<slot style="display: none;"></slot>${when(
-      this.shouldRenderFacet,
-      () =>
-        this.searchStatusState.firstSearchExecuted
-          ? renderFacetContainer()(
-              html`${this.renderHeader()}
-                ${when(
-                  !this.isCollapsed,
-                  () => html`
-                    ${when(this.shouldRenderValues, () => this.renderValues())}
-                    ${when(this.shouldRenderInput, () => this.renderDateInput())}
-                  `
-                )}`
-            )
-          : renderFacetPlaceholder({
-              props: {
-                numberOfValues: this.currentValues.length || 5,
-                isCollapsed: this.isCollapsed,
-              },
-            })
-    )}`;
+  protected render() {
+    if (!this.timeframeFacetCommon) {
+      return renderFacetPlaceholder({
+        props: {
+          numberOfValues: 5,
+          isCollapsed: this.isCollapsed,
+        },
+      });
+    }
+
+    return this.timeframeFacetCommon.render({
+      hasError: this.searchStatusState.hasError,
+      firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
+      isCollapsed: this.isCollapsed,
+      headerFocus: this.focusTarget,
+      onToggleCollapse: () => {
+        this.isCollapsed = !this.isCollapsed;
+        return this.isCollapsed;
+      },
+    });
   }
 }
+
+mapProperty(AtomicTimeframeFacet, 'dependsOn');
 
 declare global {
   interface HTMLElementTagNameMap {
