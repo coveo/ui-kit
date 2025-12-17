@@ -9,4 +9,5 @@ export {AtomicLayoutSection} from './atomic-layout-section/atomic-layout-section
 export {AtomicModal} from './atomic-modal/atomic-modal.js';
 export {AtomicNumericRange} from './atomic-numeric-range/atomic-numeric-range.js';
 export {AtomicTabBar} from './atomic-tab-bar/atomic-tab-bar.js';
+export {AtomicTabButton} from './atomic-tab-button/atomic-tab-button.js';
 export {AtomicTabPopover} from './atomic-tab-popover/atomic-tab-popover.js';

@@ -1,6 +1,5 @@
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
-import {page} from 'vitest/browser';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import './atomic-tab-button';
 import type {AtomicTabButton} from './atomic-tab-button';
@@ -21,26 +20,20 @@ describe('atomic-tab-button', () => {
       ></atomic-tab-button>`
     );
 
-    const getButton = () =>
-      element.shadowRoot?.querySelector('button') as HTMLButtonElement;
-
     return {
       element,
-      button: getButton(),
-      locators: {
-        button: page.getByRole('button'),
-      },
+      button: element.querySelector('button'),
     };
   };
 
   it('should render in the document', async () => {
     const {element} = await renderTabButton();
-    await expect.element(element).toBeInTheDocument();
+    expect(element).toBeInTheDocument();
   });
 
   it('should render the label text', async () => {
-    const {locators} = await renderTabButton({label: 'Products'});
-    await expect.element(locators.button).toHaveTextContent('Products');
+    const {button} = await renderTabButton({label: 'Products'});
+    expect(button).toHaveTextContent('Products');
   });
 
   it('should render with listitem role on host element', async () => {
