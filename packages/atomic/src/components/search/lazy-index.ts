@@ -2,6 +2,10 @@
 export default {
   'atomic-automatic-facet': async () =>
     await import('./atomic-automatic-facet/atomic-automatic-facet.js'),
+  'atomic-automatic-facet-generator': async () =>
+    await import(
+      './atomic-automatic-facet-generator/atomic-automatic-facet-generator.js'
+    ),
   'atomic-breadbox': async () =>
     await import('./atomic-breadbox/atomic-breadbox.js'),
   'atomic-category-facet': async () =>
@@ -25,6 +29,8 @@ export default {
     await import('./atomic-format-number/atomic-format-number.js'),
   'atomic-format-unit': async () =>
     await import('./atomic-format-unit/atomic-format-unit.js'),
+  'atomic-generated-answer': async () =>
+    await import('./atomic-generated-answer/atomic-generated-answer.js'),
   'atomic-html': async () => await import('./atomic-html/atomic-html.js'),
   'atomic-load-more-results': async () =>
     await import('./atomic-load-more-results/atomic-load-more-results.js'),
@@ -39,6 +45,8 @@ export default {
     await import('./atomic-query-error/atomic-query-error.js'),
   'atomic-query-summary': async () =>
     await import('./atomic-query-summary/atomic-query-summary.js'),
+  'atomic-quickview': async () =>
+    await import('./atomic-quickview/atomic-quickview.js'),
   'atomic-rating-facet': async () =>
     await import('./atomic-rating-facet/atomic-rating-facet.js'),
   'atomic-rating-range-facet': async () =>

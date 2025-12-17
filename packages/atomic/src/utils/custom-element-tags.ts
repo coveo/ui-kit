@@ -9,6 +9,7 @@
 export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-aria-live',
   'atomic-automatic-facet',
+  'atomic-automatic-facet-generator',
   'atomic-breadbox',
   'atomic-category-facet',
   'atomic-color-facet',
@@ -52,6 +53,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-format-currency',
   'atomic-format-number',
   'atomic-format-unit',
+  'atomic-generated-answer',
   'atomic-html',
   'atomic-icon',
   'atomic-insight-generate-answer-button',
@@ -92,6 +94,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-product-text',
   'atomic-query-error',
   'atomic-query-summary',
+  'atomic-quickview',
   'atomic-rating-facet',
   'atomic-rating-range-facet',
   'atomic-recs-interface',
@@ -139,6 +142,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-tab',
   'atomic-tab-bar',
   'atomic-tab-manager',
+  'atomic-tab-popover',
   'atomic-table-element',
   'atomic-text',
 ]);

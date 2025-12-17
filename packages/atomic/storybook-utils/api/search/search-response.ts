@@ -38,6 +38,9 @@ interface Response {
   groupByResults: unknown[];
   facets: unknown[];
   suggestedFacets: unknown[];
+  generateAutomaticFacets?: {
+    facets: unknown[];
+  };
   categoryFacets: unknown[];
   results: unknown[];
   questionAnswer: Record<string, unknown>;
@@ -211,6 +214,61 @@ export const baseResponse: Response = {
     },
   ],
   suggestedFacets: [],
+  generateAutomaticFacets: {
+    facets: [
+      {
+        field: 'documenttype',
+        label: 'Document Type',
+        moreValuesAvailable: true,
+        values: [
+          {
+            value: 'Article',
+            state: 'idle',
+            numberOfResults: 45,
+          },
+          {
+            value: 'Document',
+            state: 'idle',
+            numberOfResults: 38,
+          },
+          {
+            value: 'Report',
+            state: 'idle',
+            numberOfResults: 22,
+          },
+          {
+            value: 'Presentation',
+            state: 'idle',
+            numberOfResults: 15,
+          },
+        ],
+        indexScore: 0.28,
+      },
+      {
+        field: 'category',
+        label: 'Category',
+        moreValuesAvailable: true,
+        values: [
+          {
+            value: 'Technology',
+            state: 'idle',
+            numberOfResults: 52,
+          },
+          {
+            value: 'Business',
+            state: 'idle',
+            numberOfResults: 41,
+          },
+          {
+            value: 'Science',
+            state: 'idle',
+            numberOfResults: 27,
+          },
+        ],
+        indexScore: 0.23,
+      },
+    ],
+  },
   categoryFacets: [],
   results: Array.from({length: 120}, (_, n) => getNthResult(n)),
   questionAnswer: {

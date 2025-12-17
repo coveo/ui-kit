@@ -1,6 +1,7 @@
 import {
   AtomicAriaLive as LitAtomicAriaLive,
   AtomicAutomaticFacet as LitAtomicAutomaticFacet,
+  AtomicAutomaticFacetGenerator as LitAtomicAutomaticFacetGenerator,
   AtomicBreadbox as LitAtomicBreadbox,
   AtomicCategoryFacet as LitAtomicCategoryFacet,
   AtomicColorFacet as LitAtomicColorFacet,
@@ -14,6 +15,7 @@ import {
   AtomicFormatCurrency as LitAtomicFormatCurrency,
   AtomicFormatNumber as LitAtomicFormatNumber,
   AtomicFormatUnit as LitAtomicFormatUnit,
+  AtomicGeneratedAnswer as LitAtomicGeneratedAnswer,
   AtomicHtml as LitAtomicHtml,
   AtomicIcon as LitAtomicIcon,
   AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
@@ -27,6 +29,7 @@ import {
   AtomicPopover as LitAtomicPopover,
   AtomicQueryError as LitAtomicQueryError,
   AtomicQuerySummary as LitAtomicQuerySummary,
+  AtomicQuickview as LitAtomicQuickview,
   AtomicRatingFacet as LitAtomicRatingFacet,
   AtomicRatingRangeFacet as LitAtomicRatingRangeFacet,
   AtomicRecsInterface as LitAtomicRecsInterface,
@@ -86,6 +89,12 @@ export const AtomicAutomaticFacet = createComponent({
   tagName: 'atomic-automatic-facet',
   react: React,
   elementClass: LitAtomicAutomaticFacet,
+});
+
+export const AtomicAutomaticFacetGenerator = createComponent({
+  tagName: 'atomic-automatic-facet-generator',
+  react: React,
+  elementClass: LitAtomicAutomaticFacetGenerator,
 });
 
 export const AtomicBreadbox = createComponent({
@@ -166,6 +175,12 @@ export const AtomicFormatUnit = createComponent({
   elementClass: LitAtomicFormatUnit,
 });
 
+export const AtomicGeneratedAnswer = createComponent({
+  tagName: 'atomic-generated-answer',
+  react: React,
+  elementClass: LitAtomicGeneratedAnswer,
+});
+
 export const AtomicHtml = createComponent({
   tagName: 'atomic-html',
   react: React,
@@ -242,6 +257,12 @@ export const AtomicQuerySummary = createComponent({
   tagName: 'atomic-query-summary',
   react: React,
   elementClass: LitAtomicQuerySummary,
+});
+
+export const AtomicQuickview = createComponent({
+  tagName: 'atomic-quickview',
+  react: React,
+  elementClass: LitAtomicQuickview,
 });
 
 export const AtomicRatingFacet = createComponent({
