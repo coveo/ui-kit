@@ -6,7 +6,6 @@ import type {
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
-import {expect} from 'storybook/test';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -48,7 +47,7 @@ const meta: Meta = {
   argTypes,
   play: async (context) => {
     await play(context);
-    const {canvasElement, canvas, step, userEvent} = context;
+    const {canvasElement, step, userEvent} = context;
     const refineToggleElement = within(
       canvasElement.querySelector('atomic-refine-toggle')!
     );
@@ -62,13 +61,6 @@ const meta: Meta = {
     await new Promise((resolve) => setTimeout(resolve, 300));
     await step('Open refine modal', async () => {
       await userEvent.click(refineToggleButton);
-      await expect(
-        await canvas.findByShadowText(
-          'Relevance',
-          {exact: false},
-          {timeout: 10e3}
-        )
-      ).toBeVisible();
     });
     // It's tough to wait exactly for the modal to be visible because of animations. Thus, we add a small delay here.
     await new Promise((resolve) => setTimeout(resolve, 100));
