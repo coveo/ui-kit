@@ -49,7 +49,7 @@ const RequiredAttachedResultRecord = new RecordValue({
 });
 
 export const setAttachedResults = createAction(
-  'insight/attachToCase/setAttachedResults',
+  'insight/attachedResults/setAttachedResults',
   (payload: SetAttachedResultsActionCreatorPayload) =>
     validatePayload(payload, {
       results: new ArrayValue({
@@ -63,12 +63,12 @@ export const setAttachedResults = createAction(
 );
 
 export const attachResult = createAction(
-  'insight/attachToCase/attach',
+  'insight/attachedResults/attach',
   (payload: AttachedResult) => validatePayloadAndPermanentIdOrUriHash(payload)
 );
 
 export const detachResult = createAction(
-  'insight/attachToCase/detach',
+  'insight/attachedResults/detach',
   (payload: AttachedResult) => validatePayloadAndPermanentIdOrUriHash(payload)
 );
 
