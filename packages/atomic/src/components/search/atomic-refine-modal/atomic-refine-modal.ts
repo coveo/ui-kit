@@ -72,6 +72,8 @@ import type {SortDropdownOption} from '../atomic-search-interface/store';
  * @part footer-button - The button in the footer that closes the modal.
  * @part footer-button-text - The text inside the button in the footer that closes the modal.
  * @part footer-button-count - The count inside the button in the footer that closes the modal.
+ *
+ * @cssprop --atomic-refine-modal-facet-margin - The margin between facets in the refine modal. Default is `20px`.
  */
 @customElement('atomic-refine-modal')
 @bindings()
@@ -82,9 +84,10 @@ export class AtomicRefineModal
 {
   static styles: CSSResultGroup = [
     css`
-      :host {
-        position: absolute;
-      }
+    select:hover + div,
+    select:focus-visible + div {
+      @apply text-primary-light;
+    }
     `,
   ];
 

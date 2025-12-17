@@ -1,5 +1,5 @@
 import {test as base} from '@playwright/test';
-import {AtomicRefineModalPageObject} from './atomic-refine-modal-page-object';
+import {AtomicRefineModalPageObject} from './page-object';
 
 type Fixtures = {
   refineModal: AtomicRefineModalPageObject;

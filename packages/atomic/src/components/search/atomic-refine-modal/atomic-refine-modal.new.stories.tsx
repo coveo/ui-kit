@@ -1,4 +1,8 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import type {
+  Decorator,
+  Meta,
+  StoryObj as Story,
+} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
@@ -9,22 +13,29 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 
 const searchApiHarness = new MockSearchApi();
 const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, styleTemplate} = getStorybookHelpers(
+const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-refine-modal',
   {excludeCategories: ['methods']}
 );
+const commerceFacetWidthDecorator: Decorator = (story) =>
+  html`<div style="min-width: 470px;">${story()}</div> `;
 
 const meta: Meta = {
   component: 'atomic-refine-modal',
   title: 'Search/Refine Modal',
   id: 'atomic-refine-modal',
-  render: (args) =>
-    html`${styleTemplate(args)}<atomic-refine-toggle></atomic-refine-toggle>`,
-  decorators: [decorator],
+  render: (args) => template(args),
   parameters: {
     ...commonParameters,
     actions: {
       handles: events,
+    },
+    docs: {
+      ...commonParameters.docs,
+      story: {
+        ...commonParameters.docs?.story,
+        height: '600px',
+      },
     },
     msw: {
       handlers: [...searchApiHarness.handlers],
@@ -34,46 +45,7 @@ const meta: Meta = {
     ...args,
     'collapse-facets-after': '0',
   },
-  argTypes: {
-    ...argTypes,
-    'open-button': {
-      ...argTypes['open-button'],
-      control: {
-        disable: true,
-      },
-      table: {
-        defaultValue: {summary: undefined},
-      },
-    },
-    'is-open': {
-      ...argTypes['is-open'],
-      control: {
-        disable: true,
-      },
-      table: {
-        defaultValue: {summary: undefined},
-      },
-    },
-    'collapse-facets-after': {
-      ...argTypes['collapse-facets-after'],
-      control: {
-        disable: true,
-      },
-      table: {
-        defaultValue: {summary: undefined},
-      },
-    },
-  },
-  globals: {
-    layout: 'fullscreen',
-    docs: {
-      ...commonParameters.docs,
-      story: {
-        ...commonParameters.docs?.story,
-        height: '1000px',
-      },
-    },
-  },
+  argTypes,
   play: async (context) => {
     await play(context);
     const {canvasElement, canvas, step, userEvent} = context;
@@ -86,6 +58,8 @@ const meta: Meta = {
         name: 'Sort & Filter',
       }
     );
+    // Small await to make sure everything is loaded in and the facets are registred for the modal to render them.
+    await new Promise((resolve) => setTimeout(resolve, 300));
     await step('Open refine modal', async () => {
       await userEvent.click(refineToggleButton);
       await expect(
@@ -103,32 +77,27 @@ const meta: Meta = {
 
 export default meta;
 
-export const DefaultModal: Story = {
-  name: 'Default modal',
-};
-
-export const NoResultsModal: Story = {
-  name: 'No results modal',
-  beforeEach: () => {
-    searchApiHarness.searchEndpoint.mockOnce((response) => ({
-      ...response,
-      results: [],
-      totalCount: 0,
-      totalCountFiltered: 0,
-    }));
-  },
-  play,
-};
-
-export const FewResultsModal: Story = {
-  name: 'Few results modal',
-  beforeEach: () => {
-    searchApiHarness.searchEndpoint.mockOnce((response) => ({
-      ...response,
-      results: response.results.slice(0, 5),
-      totalCount: 5,
-      totalCountFiltered: 5,
-    }));
-  },
-  play,
+export const Default: Story = {
+  decorators: [
+    () => html`
+     <atomic-refine-toggle></atomic-refine-toggle>
+      <div style="display:none;">
+        <atomic-sort-dropdown><atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression></atomic-sort-dropdown>
+        <atomic-facet field="author" label="Authors"></atomic-facet>
+        <atomic-facet field="language" label="Language"></atomic-facet>
+        <atomic-facet
+          field="objecttype"
+          label="Type"
+          display-values-as="link"
+        ></atomic-facet>
+        <atomic-facet
+          field="year"
+          label="Year"
+          display-values-as="box"
+        ></atomic-facet>
+      </div>
+    `,
+    decorator,
+    commerceFacetWidthDecorator,
+  ],
 };

@@ -79,6 +79,12 @@ describe('atomic-refine-modal', () => {
       breadcrumbManagerState?: Partial<BreadcrumbManagerState>;
       facetManagerState?: Partial<FacetManagerState>;
       tabManagerState?: Partial<TabManagerState>;
+      sortOptions?: Array<{
+        expression: string;
+        criteria: Array<{by: string; order?: string}>;
+        label: string;
+        tabs: {included: string[]; excluded: string[]};
+      }>;
     } = {}
   ) => {
     const {
@@ -89,6 +95,18 @@ describe('atomic-refine-modal', () => {
       breadcrumbManagerState,
       facetManagerState,
       tabManagerState,
+      sortOptions = [
+        {
+          expression: 'relevancy',
+          criteria: [
+            {
+              by: 'relevancy' as const,
+            },
+          ],
+          label: 'Relevance',
+          tabs: {included: [], excluded: []},
+        },
+      ],
     } = options;
 
     mockedBreadcrumbManager = buildFakeBreadcrumbManager({
@@ -115,18 +133,19 @@ describe('atomic-refine-modal', () => {
       selector: 'atomic-refine-modal',
       bindings: (bindings) => {
         bindings.engine = mockedEngine;
-        bindings.store.state.sortOptions = [
-          {
-            expression: 'relevancy',
-            criteria: [
-              {
-                by: 'relevancy' as const,
-              },
-            ],
-            label: 'Relevance',
-            tabs: {included: [], excluded: []},
-          },
+        bindings.store.state.sortOptions = sortOptions;
+        bindings.store.getFacetElements = () => [
+          document.createElement('div'),
+          document.createElement('div'),
         ];
+        bindings.store.getAllFacets = () => ({
+          '1': {
+            facetId: '1',
+            label: () => 'Test Facet',
+            element: document.createElement('div'),
+            isHidden: () => false,
+          },
+        });
         return bindings;
       },
     });
@@ -172,90 +191,88 @@ describe('atomic-refine-modal', () => {
     };
   };
 
-  describe('#initialize', () => {
-    it('should build breadcrumb manager with engine', async () => {
-      const {element} = await renderRefineModal();
+  it('should build breadcrumb manager with engine', async () => {
+    const {element} = await renderRefineModal();
 
-      expect(buildBreadcrumbManager).toHaveBeenCalledWith(mockedEngine);
-      expect(element.breadcrumbManager).toBe(mockedBreadcrumbManager);
+    expect(buildBreadcrumbManager).toHaveBeenCalledWith(mockedEngine);
+    expect(element.breadcrumbManager).toBe(mockedBreadcrumbManager);
+  });
+
+  it('should build sort with engine', async () => {
+    const {element} = await renderRefineModal();
+
+    expect(buildSort).toHaveBeenCalledWith(mockedEngine);
+    expect(element.sort).toBe(mockedSort);
+  });
+
+  it('should build query summary with engine', async () => {
+    const {element} = await renderRefineModal();
+
+    expect(buildQuerySummary).toHaveBeenCalledWith(mockedEngine);
+    expect(element.querySummary).toBe(mockedQuerySummary);
+  });
+
+  it('should build search status with engine', async () => {
+    const {element} = await renderRefineModal();
+
+    expect(buildSearchStatus).toHaveBeenCalledWith(mockedEngine);
+    expect(element.searchStatus).toBe(mockedSearchStatus);
+  });
+
+  it('should build facet manager with engine', async () => {
+    const {element} = await renderRefineModal();
+
+    expect(buildFacetManager).toHaveBeenCalledWith(mockedEngine);
+    expect(element.facetManager).toBe(mockedFacetManager);
+  });
+
+  it('should build tab manager with engine', async () => {
+    const {element} = await renderRefineModal();
+
+    expect(buildTabManager).toHaveBeenCalledWith(mockedEngine);
+    expect(element.tabManager).toBe(mockedTabManager);
+  });
+
+  it('should bind query summary state to controller', async () => {
+    const {element} = await renderRefineModal({
+      querySummaryState: {total: 42},
     });
 
-    it('should build sort with engine', async () => {
-      const {element} = await renderRefineModal();
+    expect(element.querySummaryState.total).toBe(42);
+  });
 
-      expect(buildSort).toHaveBeenCalledWith(mockedEngine);
-      expect(element.sort).toBe(mockedSort);
+  it('should bind sort state to controller', async () => {
+    const {element} = await renderRefineModal({
+      sortState: {
+        sortCriteria: 'relevancy' as unknown as SortCriterion,
+      },
     });
 
-    it('should build query summary with engine', async () => {
-      const {element} = await renderRefineModal();
+    expect(element.sortState.sortCriteria).toBe('relevancy');
+  });
 
-      expect(buildQuerySummary).toHaveBeenCalledWith(mockedEngine);
-      expect(element.querySummary).toBe(mockedQuerySummary);
+  it('should bind breadcrumb manager state to controller', async () => {
+    const {element} = await renderRefineModal({
+      breadcrumbManagerState: {hasBreadcrumbs: true},
     });
 
-    it('should build search status with engine', async () => {
-      const {element} = await renderRefineModal();
+    expect(element.breadcrumbManagerState?.hasBreadcrumbs).toBe(true);
+  });
 
-      expect(buildSearchStatus).toHaveBeenCalledWith(mockedEngine);
-      expect(element.searchStatus).toBe(mockedSearchStatus);
+  it('should bind facet manager state to controller', async () => {
+    const {element} = await renderRefineModal({
+      facetManagerState: {},
     });
 
-    it('should build facet manager with engine', async () => {
-      const {element} = await renderRefineModal();
+    expect(element.facetManagerState).toBeDefined();
+  });
 
-      expect(buildFacetManager).toHaveBeenCalledWith(mockedEngine);
-      expect(element.facetManager).toBe(mockedFacetManager);
+  it('should bind tab manager state to controller', async () => {
+    const {element} = await renderRefineModal({
+      tabManagerState: {},
     });
 
-    it('should build tab manager with engine', async () => {
-      const {element} = await renderRefineModal();
-
-      expect(buildTabManager).toHaveBeenCalledWith(mockedEngine);
-      expect(element.tabManager).toBe(mockedTabManager);
-    });
-
-    it('should bind query summary state to controller', async () => {
-      const {element} = await renderRefineModal({
-        querySummaryState: {total: 42},
-      });
-
-      expect(element.querySummaryState.total).toBe(42);
-    });
-
-    it('should bind sort state to controller', async () => {
-      const {element} = await renderRefineModal({
-        sortState: {
-          sortCriteria: 'relevancy' as unknown as SortCriterion,
-        },
-      });
-
-      expect(element.sortState.sortCriteria).toBe('relevancy');
-    });
-
-    it('should bind breadcrumb manager state to controller', async () => {
-      const {element} = await renderRefineModal({
-        breadcrumbManagerState: {hasBreadcrumbs: true},
-      });
-
-      expect(element.breadcrumbManagerState?.hasBreadcrumbs).toBe(true);
-    });
-
-    it('should bind facet manager state to controller', async () => {
-      const {element} = await renderRefineModal({
-        facetManagerState: {},
-      });
-
-      expect(element.facetManagerState).toBeDefined();
-    });
-
-    it('should bind tab manager state to controller', async () => {
-      const {element} = await renderRefineModal({
-        tabManagerState: {},
-      });
-
-      expect(element.tabManagerState).toBeDefined();
-    });
+    expect(element.tabManagerState).toBeDefined();
   });
 
   describe('rendering', () => {
@@ -389,10 +406,7 @@ describe('atomic-refine-modal', () => {
     });
 
     it('should not render sort section when no sort options', async () => {
-      const {element, sortTitle} = await renderRefineModal();
-      element.bindings.store.state.sortOptions = [];
-      element.requestUpdate();
-      await element.updateComplete();
+      const {sortTitle} = await renderRefineModal({sortOptions: []});
 
       expect(sortTitle).not.toBeInTheDocument();
     });
