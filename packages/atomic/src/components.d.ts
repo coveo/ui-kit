@@ -1185,11 +1185,6 @@ export namespace Components {
          */
         "select": () => void;
     }
-    interface AtomicTabPopover {
-        "closePopoverOnFocusOut": (event: FocusEvent) => Promise<void>;
-        "setButtonVisibility": (isVisible: boolean) => Promise<void>;
-        "toggle": () => Promise<void>;
-    }
     /**
      * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
      * A timeframe is a span of time from now to a specific time in the past.
@@ -2023,12 +2018,6 @@ declare global {
         prototype: HTMLAtomicTabButtonElement;
         new (): HTMLAtomicTabButtonElement;
     };
-    interface HTMLAtomicTabPopoverElement extends Components.AtomicTabPopover, HTMLStencilElement {
-    }
-    var HTMLAtomicTabPopoverElement: {
-        prototype: HTMLAtomicTabPopoverElement;
-        new (): HTMLAtomicTabPopoverElement;
-    };
     /**
      * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
      * A timeframe is a span of time from now to a specific time in the past.
@@ -2114,7 +2103,6 @@ declare global {
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
         "atomic-tab-button": HTMLAtomicTabButtonElement;
-        "atomic-tab-popover": HTMLAtomicTabPopoverElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
     }
@@ -3253,8 +3241,6 @@ declare namespace LocalJSX {
          */
         "select": () => void;
     }
-    interface AtomicTabPopover {
-    }
     /**
      * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
      * A timeframe is a span of time from now to a specific time in the past.
@@ -3404,7 +3390,6 @@ declare namespace LocalJSX {
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
         "atomic-tab-button": AtomicTabButton;
-        "atomic-tab-popover": AtomicTabPopover;
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
     }
@@ -3589,7 +3574,6 @@ declare module "@stencil/core" {
              */
             "atomic-suggestion-renderer": LocalJSX.AtomicSuggestionRenderer & JSXBase.HTMLAttributes<HTMLAtomicSuggestionRendererElement>;
             "atomic-tab-button": LocalJSX.AtomicTabButton & JSXBase.HTMLAttributes<HTMLAtomicTabButtonElement>;
-            "atomic-tab-popover": LocalJSX.AtomicTabPopover & JSXBase.HTMLAttributes<HTMLAtomicTabPopoverElement>;
             /**
              * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
              * A timeframe is a span of time from now to a specific time in the past.
