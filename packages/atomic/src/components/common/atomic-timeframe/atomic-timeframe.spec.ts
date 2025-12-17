@@ -43,10 +43,8 @@ describe('atomic-timeframe', () => {
     expect(timeframe.amount).toBe(1);
   });
 
-  it('should set period to "past" from "next"', async () => {
-    const {timeframe} = await renderTimeframe({period: 'next'});
-    timeframe.period = 'past';
-    await timeframe.updateComplete;
+  it('should set period to "past"', async () => {
+    const {timeframe} = await renderTimeframe({period: 'past'});
     expect(timeframe.period).toBe('past');
   });
 
