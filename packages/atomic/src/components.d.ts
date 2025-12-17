@@ -16,7 +16,6 @@ import { Actions, InsightResultActionClickedEvent } from "./components/insight/a
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
-import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
 export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
@@ -30,7 +29,6 @@ export { Actions, InsightResultActionClickedEvent } from "./components/insight/a
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
-export { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 export { i18n } from "i18next";
 export { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
 export namespace Components {
@@ -947,43 +945,6 @@ export namespace Components {
         "imageSize": ItemDisplayImageSize;
     }
     /**
-     * The `atomic-search-box` component creates a search box with built-in support for suggestions.
-     */
-    interface AtomicSearchBox {
-        /**
-          * Whether to clear all active query filters when the end user submits a new query from the search box. Setting this option to "false" is not recommended and can lead to an increasing number of queries returning no results.
-         */
-        "clearFilters": boolean;
-        /**
-          * Whether to prevent the user from triggering searches and query suggestions from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
-         */
-        "disableSearch": boolean;
-        /**
-          * Whether to interpret advanced [Coveo query syntax](https://docs.coveo.com/en/1552/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
-         */
-        "enableQuerySyntax": boolean;
-        /**
-          * The minimum query length required to enable search. For example, to disable the search for empty queries, set this to `1`.
-         */
-        "minimumQueryLength": number;
-        /**
-          * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
-         */
-        "numberOfQueries": number;
-        /**
-          * Defining this option makes the search box standalone (see [Use a Standalone Search Box](https://docs.coveo.com/en/atomic/latest/usage/ssb/)).  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
-         */
-        "redirectionUrl"?: string;
-        /**
-          * The delay for suggestion queries on input, in milliseconds.  The suggestion request will be delayed until the end user stops typing for at least the specified amount of time.  This delay is used to avoid sending too many requests to the Coveo Platform when the user is typing, as well as reducing potential input lag on low end devices. A higher delay will reduce input lag, at the cost of suggestions freshness.
-         */
-        "suggestionDelay": number;
-        /**
-          * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
-         */
-        "suggestionTimeout": number;
-    }
-    /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
      * You can style the snippet by inserting a template element as follows:
      * ```html
@@ -1256,10 +1217,6 @@ export interface AtomicIpxModalCustomEvent<T> extends CustomEvent<T> {
 export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicQuickviewModalElement;
-}
-export interface AtomicSearchBoxCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicSearchBoxElement;
 }
 export interface AtomicSmartSnippetAnswerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1768,26 +1725,6 @@ declare global {
         prototype: HTMLAtomicResultPlaceholderElement;
         new (): HTMLAtomicResultPlaceholderElement;
     };
-    interface HTMLAtomicSearchBoxElementEventMap {
-        "redirect": RedirectionPayload;
-    }
-    /**
-     * The `atomic-search-box` component creates a search box with built-in support for suggestions.
-     */
-    interface HTMLAtomicSearchBoxElement extends Components.AtomicSearchBox, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicSearchBoxElementEventMap>(type: K, listener: (this: HTMLAtomicSearchBoxElement, ev: AtomicSearchBoxCustomEvent<HTMLAtomicSearchBoxElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicSearchBoxElementEventMap>(type: K, listener: (this: HTMLAtomicSearchBoxElement, ev: AtomicSearchBoxCustomEvent<HTMLAtomicSearchBoxElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicSearchBoxElement: {
-        prototype: HTMLAtomicSearchBoxElement;
-        new (): HTMLAtomicSearchBoxElement;
-    };
     /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
      * You can style the snippet by inserting a template element as follows:
@@ -2029,7 +1966,6 @@ declare global {
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
-        "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
         "atomic-smart-snippet-collapse-wrapper": HTMLAtomicSmartSnippetCollapseWrapperElement;
@@ -2922,47 +2858,6 @@ declare namespace LocalJSX {
         "imageSize": ItemDisplayImageSize;
     }
     /**
-     * The `atomic-search-box` component creates a search box with built-in support for suggestions.
-     */
-    interface AtomicSearchBox {
-        /**
-          * Whether to clear all active query filters when the end user submits a new query from the search box. Setting this option to "false" is not recommended and can lead to an increasing number of queries returning no results.
-         */
-        "clearFilters"?: boolean;
-        /**
-          * Whether to prevent the user from triggering searches and query suggestions from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
-         */
-        "disableSearch"?: boolean;
-        /**
-          * Whether to interpret advanced [Coveo query syntax](https://docs.coveo.com/en/1552/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
-         */
-        "enableQuerySyntax"?: boolean;
-        /**
-          * The minimum query length required to enable search. For example, to disable the search for empty queries, set this to `1`.
-         */
-        "minimumQueryLength"?: number;
-        /**
-          * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
-         */
-        "numberOfQueries"?: number;
-        /**
-          * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.  Example: ```html <script>   document.querySelector('atomic-search-box').addEventListener((e) => {     e.preventDefault();     // handle redirection   }); </script> ... <atomic-search-box redirection-url="/search"></atomic-search-box> ```
-         */
-        "onRedirect"?: (event: AtomicSearchBoxCustomEvent<RedirectionPayload>) => void;
-        /**
-          * Defining this option makes the search box standalone (see [Use a Standalone Search Box](https://docs.coveo.com/en/atomic/latest/usage/ssb/)).  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
-         */
-        "redirectionUrl"?: string;
-        /**
-          * The delay for suggestion queries on input, in milliseconds.  The suggestion request will be delayed until the end user stops typing for at least the specified amount of time.  This delay is used to avoid sending too many requests to the Coveo Platform when the user is typing, as well as reducing potential input lag on low end devices. A higher delay will reduce input lag, at the cost of suggestions freshness.
-         */
-        "suggestionDelay"?: number;
-        /**
-          * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
-         */
-        "suggestionTimeout"?: number;
-    }
-    /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
      * You can style the snippet by inserting a template element as follows:
      * ```html
@@ -3262,7 +3157,6 @@ declare namespace LocalJSX {
         "atomic-recs-result-template": AtomicRecsResultTemplate;
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-result-placeholder": AtomicResultPlaceholder;
-        "atomic-search-box": AtomicSearchBox;
         "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
         "atomic-smart-snippet-collapse-wrapper": AtomicSmartSnippetCollapseWrapper;
@@ -3395,10 +3289,6 @@ declare module "@stencil/core" {
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
-            /**
-             * The `atomic-search-box` component creates a search box with built-in support for suggestions.
-             */
-            "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             /**
              * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
              * You can style the snippet by inserting a template element as follows:
