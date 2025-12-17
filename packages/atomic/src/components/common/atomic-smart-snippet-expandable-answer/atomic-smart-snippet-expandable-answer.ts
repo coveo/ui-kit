@@ -4,12 +4,17 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import type {AnyBindings} from '@/src/components/common/interface/bindings.js';
 import {booleanConverter} from '@/src/converters/boolean-converter.js';
+import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
+import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import ArrowDown from '@/src/images/arrow-down.svg';
 import {listenOnce} from '@/src/utils/event-utils.js';
 import styles from './atomic-smart-snippet-expandable-answer.tw.css.js';
+import '@/src/components/common/atomic-icon/atomic-icon.js';
+// TODO: uncomment when PR #6781 is merged
+// import '@/src/components/common/smart-snippets/atomic-smart-snippet-answer/atomic-smart-snippet-answer.js';
 
 /**
  * The `atomic-smart-snippet-expandable-answer` component displays an expandable smart snippet answer.
@@ -219,6 +224,8 @@ export class AtomicSmartSnippetExpandableAnswer
     );
   }
 
+  @errorGuard()
+  @bindingGuard()
   render() {
     return html`
       <div class=${this.isExpanded ? 'expanded' : ''}>

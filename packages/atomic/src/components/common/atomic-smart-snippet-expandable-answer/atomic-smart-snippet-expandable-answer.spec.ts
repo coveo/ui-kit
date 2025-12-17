@@ -1,6 +1,6 @@
 import type {i18n} from 'i18next';
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {beforeEach, describe, expect, it} from 'vitest';
 import {page} from 'vitest/browser';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
@@ -8,10 +8,11 @@ import {AtomicSmartSnippetExpandableAnswer} from './atomic-smart-snippet-expanda
 import './atomic-smart-snippet-expandable-answer';
 
 // Mock atomic-smart-snippet-answer to prevent actual rendering
-vi.mock(
-  '../atomic-smart-snippet-answer/atomic-smart-snippet-answer',
-  () => ({})
-);
+// TODO: uncomment when PR #6781 is merged
+// vi.mock(
+//   '../atomic-smart-snippet-answer/atomic-smart-snippet-answer',
+//   () => ({})
+// );
 
 describe('atomic-smart-snippet-expandable-answer', () => {
   async function setElementHeight(
