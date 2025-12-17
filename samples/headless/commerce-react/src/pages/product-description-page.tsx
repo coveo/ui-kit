@@ -1,4 +1,6 @@
 import {
+  type BadgePlacement,
+  buildProductEnrichment,
   buildProductView,
   buildRecommendations,
   type Cart,
@@ -28,6 +30,9 @@ export default function ProductDescriptionPage(
 ) {
   const {engine, cartController, contextController, url, navigate} = props;
   const [cartState, setCartState] = useState(cartController.state);
+  const [productBadgePlacements, setProductBadgePlacements] = useState<
+    BadgePlacement[] | undefined
+  >(undefined);
 
   /**
    * It is important to log the `ec.productView` event only once per PDP load. This is why we use a ref here.
@@ -68,6 +73,33 @@ export default function ProductDescriptionPage(
       productId: product?.productId ?? '',
     },
   });
+
+  const productEnrichmentController = buildProductEnrichment(engine, {
+    options: {
+      productId: product?.productId,
+      placementIds: ['b3ab2c04-db5f-4864-8d13-f54c1129eb03'],
+    },
+  });
+
+  useEffect(() => {
+    if (
+      !productEnrichmentController.state.isLoading &&
+      !productBadgePlacements
+    ) {
+      productEnrichmentController.getBadges();
+    }
+  }, [productEnrichmentController, productBadgePlacements]);
+
+  useEffect(() => {
+    productEnrichmentController.subscribe(() => {
+      const productWithBadges = productEnrichmentController.state.products.find(
+        (p) => p.productId === product?.productId
+      );
+      setProductBadgePlacements(
+        productWithBadges ? productWithBadges.badgePlacements : []
+      );
+    });
+  }, [productEnrichmentController]);
 
   useEffect(() => {
     if (
@@ -153,9 +185,44 @@ export default function ProductDescriptionPage(
     );
   };
 
+  const renderProductBadges = () => {
+    if (
+      !productBadgePlacements?.length ||
+      productEnrichmentController.state.isLoading
+    ) {
+      return null;
+    }
+
+    return (
+      <div className="ProductBadges">
+        {productBadgePlacements.map((placement) =>
+          placement.badges.map((badge) => (
+            <div
+              key={`${placement.placementId}-${badge.text}`}
+              className="ProductBadge"
+            >
+              {badge.iconUrl && <img src={badge.iconUrl} alt={badge.text} />}
+              <span
+                style={{
+                  color: badge.textColor,
+                  backgroundColor: badge.backgroundColor,
+                  padding: '2px 4px',
+                  borderRadius: '4px',
+                }}
+              >
+                {badge.text}
+              </span>
+            </div>
+          ))
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="ProductDescriptionPage">
       <h2 className="PageTitle">{product.name}</h2>
+      {renderProductBadges()}
       <p className="ProductPrice">
         Price:<span> {formatCurrency(product.price)}</span>
       </p>
