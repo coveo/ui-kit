@@ -7,7 +7,7 @@ import type {
   SmartSnippetRelatedQuestion,
 } from '@coveo/headless';
 import {buildSmartSnippetQuestionsList} from '@coveo/headless';
-import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
+import {type CSSResultGroup, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {getAttributesFromLinkSlotContent} from '@/src/components/common/item-link/attributes-slot';
@@ -29,6 +29,7 @@ import ArrowDown from '@/src/images/arrow-down.svg';
 import ArrowRight from '@/src/images/arrow-right.svg';
 import {randomID} from '@/src/utils/utils';
 import '@/src/components/common/atomic-icon/atomic-icon';
+import styles from './atomic-smart-snippet-suggestions.tw.css';
 
 /**
  * The `atomic-smart-snippet-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
@@ -77,11 +78,7 @@ export class AtomicSmartSnippetSuggestions
     headingLevel: new NumberValue({min: 0, max: 5, required: false}),
   });
 
-  static styles: CSSResultGroup = css`
-    :host {
-      display: block;
-    }
-  `;
+  static styles: CSSResultGroup = styles;
 
   @state() public bindings!: Bindings;
   @state() public error!: Error;
