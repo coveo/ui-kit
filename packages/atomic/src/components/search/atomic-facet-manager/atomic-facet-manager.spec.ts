@@ -118,7 +118,7 @@ describe('atomic-facet-manager', () => {
 
       const getAllFacetsSpy = vi.spyOn(element!.bindings.store, 'getAllFacets');
 
-      element?.['sortFacets']();
+      await element?.['sortFacets']();
 
       expect(getAllFacetsSpy).toHaveBeenCalled();
     });
@@ -167,7 +167,7 @@ describe('atomic-facet-manager', () => {
       element?.appendChild(mockFacet2);
       element?.appendChild(mockFacet3);
 
-      element?.['sortFacets']();
+      await element?.['sortFacets']();
 
       expect(mockSort).toHaveBeenCalled();
 
@@ -189,7 +189,7 @@ describe('atomic-facet-manager', () => {
       element?.appendChild(mockFacet1);
       element?.appendChild(mockFacet2);
 
-      element?.['sortFacets']();
+      await element?.['sortFacets']();
 
       expect(mockSort).toHaveBeenCalled();
 
@@ -212,7 +212,7 @@ describe('atomic-facet-manager', () => {
       element?.appendChild(mockFacet2);
       element?.appendChild(mockFacet3);
 
-      element?.['sortFacets']();
+      await element?.['sortFacets']();
 
       expect(mockSort).toHaveBeenCalled();
 
@@ -236,7 +236,7 @@ describe('atomic-facet-manager', () => {
       element?.appendChild(mockFacet2);
       element?.appendChild(mockGenerator);
 
-      element?.['sortFacets']();
+      await element?.['sortFacets']();
 
       expect(
         mockGenerator.updateCollapseFacetsDependingOnFacetsVisibility

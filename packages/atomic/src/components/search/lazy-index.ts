@@ -2,6 +2,10 @@
 export default {
   'atomic-automatic-facet': async () =>
     await import('./atomic-automatic-facet/atomic-automatic-facet.js'),
+  'atomic-automatic-facet-generator': async () =>
+    await import(
+      './atomic-automatic-facet-generator/atomic-automatic-facet-generator.js'
+    ),
   'atomic-breadbox': async () =>
     await import('./atomic-breadbox/atomic-breadbox.js'),
   'atomic-category-facet': async () =>
@@ -154,6 +158,8 @@ export default {
     await import('./atomic-search-interface/atomic-search-interface.js'),
   'atomic-search-layout': async () =>
     await import('./atomic-search-layout/atomic-search-layout.js'),
+  'atomic-segmented-facet': async () =>
+    await import('./atomic-segmented-facet/atomic-segmented-facet.js'),
   'atomic-segmented-facet-scrollable': async () =>
     await import(
       './atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.js'

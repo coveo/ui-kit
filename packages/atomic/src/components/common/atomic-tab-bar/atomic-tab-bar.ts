@@ -11,6 +11,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import type {TabCommonElement} from '../tabs/tab-common';
+import '../atomic-tab-popover/atomic-tab-popover';
 
 interface TabPopoverElement extends HTMLElement {
   toggle: () => Promise<void>;
