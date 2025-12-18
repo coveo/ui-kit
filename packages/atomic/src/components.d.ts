@@ -5,30 +5,24 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-import { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
-export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-export { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 export { i18n } from "i18next";
@@ -278,8 +272,6 @@ export namespace Components {
     interface AtomicInsightRefineModal {
         "isOpen": boolean;
         "openButton"?: HTMLElement;
-    }
-    interface AtomicInsightRefineToggle {
     }
     interface AtomicInsightResult {
         /**
@@ -1374,12 +1366,6 @@ declare global {
         prototype: HTMLAtomicInsightRefineModalElement;
         new (): HTMLAtomicInsightRefineModalElement;
     };
-    interface HTMLAtomicInsightRefineToggleElement extends Components.AtomicInsightRefineToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightRefineToggleElement: {
-        prototype: HTMLAtomicInsightRefineToggleElement;
-        new (): HTMLAtomicInsightRefineToggleElement;
-    };
     interface HTMLAtomicInsightResultElement extends Components.AtomicInsightResult, HTMLStencilElement {
     }
     var HTMLAtomicInsightResultElement: {
@@ -1910,7 +1896,6 @@ declare global {
         "atomic-insight-query-error": HTMLAtomicInsightQueryErrorElement;
         "atomic-insight-query-summary": HTMLAtomicInsightQuerySummaryElement;
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
-        "atomic-insight-refine-toggle": HTMLAtomicInsightRefineToggleElement;
         "atomic-insight-result": HTMLAtomicInsightResultElement;
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
         "atomic-insight-result-action-bar": HTMLAtomicInsightResultActionBarElement;
@@ -2202,8 +2187,6 @@ declare namespace LocalJSX {
     interface AtomicInsightRefineModal {
         "isOpen"?: boolean;
         "openButton"?: HTMLElement;
-    }
-    interface AtomicInsightRefineToggle {
     }
     interface AtomicInsightResult {
         /**
@@ -3093,7 +3076,6 @@ declare namespace LocalJSX {
         "atomic-insight-query-error": AtomicInsightQueryError;
         "atomic-insight-query-summary": AtomicInsightQuerySummary;
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
-        "atomic-insight-refine-toggle": AtomicInsightRefineToggle;
         "atomic-insight-result": AtomicInsightResult;
         "atomic-insight-result-action": AtomicInsightResultAction;
         "atomic-insight-result-action-bar": AtomicInsightResultActionBar;
@@ -3170,7 +3152,6 @@ declare module "@stencil/core" {
             "atomic-insight-query-error": LocalJSX.AtomicInsightQueryError & JSXBase.HTMLAttributes<HTMLAtomicInsightQueryErrorElement>;
             "atomic-insight-query-summary": LocalJSX.AtomicInsightQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicInsightQuerySummaryElement>;
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
-            "atomic-insight-refine-toggle": LocalJSX.AtomicInsightRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineToggleElement>;
             "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
             "atomic-insight-result-action-bar": LocalJSX.AtomicInsightResultActionBar & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionBarElement>;
