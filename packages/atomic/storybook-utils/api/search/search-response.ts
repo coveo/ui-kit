@@ -285,8 +285,8 @@ export const baseFoldedResponse: Response = {
 };
 
 export const richResponse = {
-  totalCount: 458475,
-  totalCountFiltered: 458475,
+  totalCount: 20,
+  totalCountFiltered: 20,
   duration: 93,
   indexDuration: 66,
   requestDuration: 87,
