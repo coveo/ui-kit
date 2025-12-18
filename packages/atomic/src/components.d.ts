@@ -1102,20 +1102,6 @@ export namespace Components {
         "side": 'left' | 'right';
         "suggestion": SearchBoxSuggestionElement;
     }
-    interface AtomicTabButton {
-        /**
-          * Whether the tab button is active.
-         */
-        "active": boolean;
-        /**
-          * The label to display on the tab button.
-         */
-        "label": string;
-        /**
-          * Click handler for the tab button.
-         */
-        "select": () => void;
-    }
     /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
@@ -1887,12 +1873,6 @@ declare global {
         prototype: HTMLAtomicSuggestionRendererElement;
         new (): HTMLAtomicSuggestionRendererElement;
     };
-    interface HTMLAtomicTabButtonElement extends Components.AtomicTabButton, HTMLStencilElement {
-    }
-    var HTMLAtomicTabButtonElement: {
-        prototype: HTMLAtomicTabButtonElement;
-        new (): HTMLAtomicTabButtonElement;
-    };
     /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
@@ -1965,7 +1945,6 @@ declare global {
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
-        "atomic-tab-button": HTMLAtomicTabButtonElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
     }
 }
@@ -3015,20 +2994,6 @@ declare namespace LocalJSX {
         "side": 'left' | 'right';
         "suggestion": SearchBoxSuggestionElement;
     }
-    interface AtomicTabButton {
-        /**
-          * Whether the tab button is active.
-         */
-        "active"?: boolean;
-        /**
-          * The label to display on the tab button.
-         */
-        "label": string;
-        /**
-          * Click handler for the tab button.
-         */
-        "select": () => void;
-    }
     /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
@@ -3153,7 +3118,6 @@ declare namespace LocalJSX {
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
-        "atomic-tab-button": AtomicTabButton;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
     }
 }
@@ -3331,7 +3295,6 @@ declare module "@stencil/core" {
              * use native Elements.
              */
             "atomic-suggestion-renderer": LocalJSX.AtomicSuggestionRenderer & JSXBase.HTMLAttributes<HTMLAtomicSuggestionRendererElement>;
-            "atomic-tab-button": LocalJSX.AtomicTabButton & JSXBase.HTMLAttributes<HTMLAtomicTabButtonElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results.
              * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
