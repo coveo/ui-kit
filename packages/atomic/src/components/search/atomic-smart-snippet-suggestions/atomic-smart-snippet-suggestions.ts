@@ -1,5 +1,6 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {NumberValue, Schema} from '@coveo/bueno';
 import type {
+  Controller,
   Result,
   SmartSnippetQuestionsList,
   SmartSnippetQuestionsListState,
@@ -19,13 +20,15 @@ import {renderSuggestionsWrapper} from '@/src/components/common/smart-snippets/a
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import ArrowDown from '@/src/images/arrow-down.svg';
+import ArrowRight from '@/src/images/arrow-right.svg';
 import {randomID} from '@/src/utils/utils';
-import ArrowDown from '../../../../images/arrow-down.svg';
-import ArrowRight from '../../../../images/arrow-right.svg';
+import '@/src/components/common/atomic-icon/atomic-icon';
 
 /**
  * The `atomic-smart-snippet-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
@@ -70,6 +73,10 @@ export class AtomicSmartSnippetSuggestions
   extends LitElement
   implements InitializableComponent<Bindings>
 {
+  private static readonly propsSchema = new Schema({
+    headingLevel: new NumberValue({min: 0, max: 5, required: false}),
+  });
+
   static styles: CSSResultGroup = css`
     :host {
       display: block;
@@ -82,7 +89,7 @@ export class AtomicSmartSnippetSuggestions
   @bindStateToController('smartSnippetQuestionsList')
   @state()
   public smartSnippetQuestionsListState!: SmartSnippetQuestionsListState;
-  public smartSnippetQuestionsList!: SmartSnippetQuestionsList;
+  public smartSnippetQuestionsList!: SmartSnippetQuestionsList & Controller;
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
@@ -104,7 +111,7 @@ export class AtomicSmartSnippetSuggestions
    */
   @property({type: String, attribute: 'snippet-style'}) snippetStyle?: string;
 
-  private id!: string;
+  private accordionId!: string;
 
   constructor() {
     super();
@@ -112,35 +119,37 @@ export class AtomicSmartSnippetSuggestions
     new ValidatePropsController(
       this,
       () => ({headingLevel: this.headingLevel}),
-      new Schema({
-        headingLevel: new StringValue({required: false}),
-      })
+      AtomicSmartSnippetSuggestions.propsSchema,
+      false
     );
   }
 
   public initialize() {
-    this.id = randomID('atomic-smart-snippet-suggestions-');
+    this.accordionId = randomID('atomic-smart-snippet-suggestions-');
     this.smartSnippetQuestionsList = buildSmartSnippetQuestionsList(
       this.bindings.engine
     );
   }
 
   @errorGuard()
-  protected render() {
-    if (!this.smartSnippetQuestionsListState.questions.length) {
-      return nothing;
-    }
-
-    return renderSuggestionsWrapper({
-      props: {
-        headingLevel: this.headingLevel,
-        i18n: this.bindings.i18n,
-      },
-    })(html`
-      ${this.smartSnippetQuestionsListState.questions.map(
-        (relatedQuestion, i) => this.renderRelatedQuestion(relatedQuestion, i)
-      )}
-    `);
+  @bindingGuard()
+  public render() {
+    return html`${when(
+      this.smartSnippetQuestionsListState.questions.length > 0,
+      () =>
+        renderSuggestionsWrapper({
+          props: {
+            headingLevel: this.headingLevel,
+            i18n: this.bindings.i18n,
+          },
+        })(html`
+          ${this.smartSnippetQuestionsListState.questions.map(
+            (relatedQuestion, i) =>
+              this.renderRelatedQuestion(relatedQuestion, i)
+          )}
+        `),
+      () => nothing
+    )}`;
   }
 
   private renderRelatedQuestion(
@@ -166,7 +175,7 @@ export class AtomicSmartSnippetSuggestions
   ) {
     return renderQuestion({
       props: {
-        ariaControls: `${this.id}-${index}`,
+        ariaControls: `${this.accordionId}-${index}`,
         expanded: relatedQuestion.expanded,
         headingLevel: this.headingLevel,
         onClick: () => this.toggleQuestion(relatedQuestion),
@@ -174,7 +183,7 @@ export class AtomicSmartSnippetSuggestions
       },
     })(html`
       <atomic-icon
-        icon=${relatedQuestion.expanded ? ArrowDown : ArrowRight}
+        .icon=${relatedQuestion.expanded ? ArrowDown : ArrowRight}
         part=${getQuestionPart('icon', relatedQuestion.expanded)}
         class="mr-3 w-2.5 stroke-[1.25]"
       ></atomic-icon>
@@ -187,13 +196,13 @@ export class AtomicSmartSnippetSuggestions
   ) {
     return renderAnswerAndSourceWrapper({
       props: {
-        id: `${this.id}-${index}`,
+        id: `${this.accordionId}-${index}`,
       },
     })(html`
       <atomic-smart-snippet-answer
         exportparts="answer"
         .htmlContent=${relatedQuestion.answer}
-        .innerStyle=${this.style}
+        .innerStyle=${this.computedSnippetStyle}
         @selectInlineLink=${(e: CustomEvent) =>
           this.smartSnippetQuestionsList.selectInlineLink(
             relatedQuestion.questionAnswerId,
@@ -245,7 +254,7 @@ export class AtomicSmartSnippetSuggestions
     `);
   }
 
-  private get style() {
+  private get computedSnippetStyle() {
     const styleTag =
       this.querySelector('template')?.content.querySelector('style');
     if (!styleTag) {
