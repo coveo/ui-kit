@@ -1030,10 +1030,6 @@ export namespace Components {
         "htmlContent": string;
         "innerStyle"?: string;
     }
-    interface AtomicSmartSnippetCollapseWrapper {
-        "collapsedHeight"?: number;
-        "maximumHeight"?: number;
-    }
     /**
      * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
      * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
@@ -1787,12 +1783,6 @@ declare global {
         prototype: HTMLAtomicSmartSnippetAnswerElement;
         new (): HTMLAtomicSmartSnippetAnswerElement;
     };
-    interface HTMLAtomicSmartSnippetCollapseWrapperElement extends Components.AtomicSmartSnippetCollapseWrapper, HTMLStencilElement {
-    }
-    var HTMLAtomicSmartSnippetCollapseWrapperElement: {
-        prototype: HTMLAtomicSmartSnippetCollapseWrapperElement;
-        new (): HTMLAtomicSmartSnippetCollapseWrapperElement;
-    };
     interface HTMLAtomicSmartSnippetFeedbackModalElementEventMap {
         "feedbackSent": any;
     }
@@ -1959,7 +1949,6 @@ declare global {
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
-        "atomic-smart-snippet-collapse-wrapper": HTMLAtomicSmartSnippetCollapseWrapperElement;
         "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
         "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
@@ -2938,10 +2927,6 @@ declare namespace LocalJSX {
         "onCancelPendingSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
         "onSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
     }
-    interface AtomicSmartSnippetCollapseWrapper {
-        "collapsedHeight"?: number;
-        "maximumHeight"?: number;
-    }
     /**
      * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
      * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
@@ -3147,7 +3132,6 @@ declare namespace LocalJSX {
         "atomic-search-box": AtomicSearchBox;
         "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
-        "atomic-smart-snippet-collapse-wrapper": AtomicSmartSnippetCollapseWrapper;
         "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
         "atomic-smart-snippet-source": AtomicSmartSnippetSource;
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
@@ -3296,7 +3280,6 @@ declare module "@stencil/core" {
              */
             "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
             "atomic-smart-snippet-answer": LocalJSX.AtomicSmartSnippetAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetAnswerElement>;
-            "atomic-smart-snippet-collapse-wrapper": LocalJSX.AtomicSmartSnippetCollapseWrapper & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetCollapseWrapperElement>;
             /**
              * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
              * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
