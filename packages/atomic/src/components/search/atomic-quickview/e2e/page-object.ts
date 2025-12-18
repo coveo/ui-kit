@@ -1,9 +1,29 @@
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
-export class AtomicQuickviewLocators extends BasePageObject<'atomic-quickview'> {
+export class AtomicQuickviewLocators extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-quickview');
+  }
+
+  /**
+   * Wait for component to be stable before taking screenshots.
+   */
+  async waitForVisualStability(): Promise<void> {
+    await this.hydrated.waitFor();
+    await this.page.evaluate(() => document.fonts.ready);
+  }
+
+  /**
+   * Capture a screenshot of the component for visual regression testing.
+   */
+  async captureScreenshot(options?: {
+    animations?: 'disabled' | 'allow';
+  }): Promise<Buffer> {
+    await this.waitForVisualStability();
+    return await this.hydrated.screenshot({
+      animations: options?.animations ?? 'disabled',
+    });
   }
 
   get resultButton() {
