@@ -283,7 +283,12 @@ export class AtomicNumericFacet
     this.initializeFilter();
     this.initializeSearchStatus();
     this.registerFacetToStore();
-    this.registerEventListeners();
+    this.registerNumberInputApplyListener();
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.registerNumberFormatListener();
   }
 
   disconnectedCallback() {
@@ -529,13 +534,27 @@ export class AtomicNumericFacet
     }
   }
 
-  private registerEventListeners() {
+  private registerNumberFormatListener() {
     const handleNumberFormat = (event: Event) => {
       event.preventDefault();
       event.stopPropagation();
       this.formatter = (event as CustomEvent<NumberFormatter>).detail;
     };
 
+    this.addEventListener(
+      'atomic/numberFormat',
+      handleNumberFormat as EventListener
+    );
+
+    this.removeNumberFormatListener = () => {
+      this.removeEventListener(
+        'atomic/numberFormat',
+        handleNumberFormat as EventListener
+      );
+    };
+  }
+
+  private registerNumberInputApplyListener() {
     const handleNumberInputApply = () => {
       if (this.facetId) {
         this.bindings.engine.dispatch(
@@ -546,18 +565,8 @@ export class AtomicNumericFacet
       }
     };
 
-    this.addEventListener(
-      'atomic/numberFormat',
-      handleNumberFormat as EventListener
-    );
     this.addEventListener('atomic/numberInputApply', handleNumberInputApply);
 
-    this.removeNumberFormatListener = () => {
-      this.removeEventListener(
-        'atomic/numberFormat',
-        handleNumberFormat as EventListener
-      );
-    };
     this.removeNumberInputApplyListener = () => {
       this.removeEventListener(
         'atomic/numberInputApply',
