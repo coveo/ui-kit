@@ -15,7 +15,10 @@ export interface ModalOptionProps {
 export const renderModalOption: FunctionalComponent<ModalOptionProps> = ({
   props: {correspondingAnswer, currentAnswer, i18n, id, localeKey, onChange},
 }) =>
-  html`<div class="flex items-center" part="reason">
+  html`<div
+    class="text-neutral-dark text-base leading-4 mt-4 desktop:mt-2 flex items-center"
+    part="reason"
+  >
     <input
       part="reason-radio"
       type="radio"

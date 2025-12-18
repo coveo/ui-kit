@@ -26,6 +26,7 @@ import {shouldDisplayOnCurrentTab} from '../../../../utils/tab-utils';
 import {getAttributesFromLinkSlotContent} from '../../../common/item-link/attributes-slot';
 import {Hidden} from '../../../common/stencil-hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {AtomicSmartSnippetFeedbackModal} from '../../atomic-smart-snippet-feedback-modal/atomic-smart-snippet-feedback-modal';
 
 /**
  * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
@@ -90,7 +91,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
     this.id ||= randomID();
   }
 
-  private modalRef?: HTMLAtomicSmartSnippetFeedbackModalElement;
+  private modalRef?: AtomicSmartSnippetFeedbackModal;
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
@@ -268,7 +269,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
   }
 
   private setModalRef(ref: HTMLElement) {
-    this.modalRef = ref as HTMLAtomicSmartSnippetFeedbackModalElement;
+    this.modalRef = ref as AtomicSmartSnippetFeedbackModal;
   }
 
   private setFeedbackSent(isSent: boolean) {

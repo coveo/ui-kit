@@ -42,7 +42,7 @@ export class AtomicInsightSmartSnippet
   @Element() public host!: HTMLElement;
 
   private id!: string;
-  private modalRef?: HTMLAtomicSmartSnippetFeedbackModalElement;
+  private modalRef?: HTMLAtomicInsightSmartSnippetFeedbackModalElement;
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.

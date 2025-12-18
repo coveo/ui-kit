@@ -138,6 +138,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-segmented-facet',
   'atomic-segmented-facet-scrollable',
   'atomic-smart-snippet-expandable-answer',
+  'atomic-smart-snippet-feedback-modal',
   'atomic-sort-dropdown',
   'atomic-sort-expression',
   'atomic-tab',
