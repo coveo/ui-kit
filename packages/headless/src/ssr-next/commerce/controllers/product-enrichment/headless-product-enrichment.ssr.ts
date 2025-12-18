@@ -4,12 +4,16 @@ import {
   type ProductEnrichmentProps,
   type ProductEnrichmentState,
 } from '../../../../controllers/commerce/product-enrichment/headless-product-enrichment.js';
-import type {StandaloneControllerWithoutProps} from '../../types/controller-definitions.js';
+import {MissingControllerProps} from '../../../common/errors.js';
+import type {StandaloneControllerWithProps} from '../../types/controller-definitions.js';
 
 export type {ProductEnrichmentState, ProductEnrichment, ProductEnrichmentProps};
 
 export interface ProductEnrichmentDefinition
-  extends StandaloneControllerWithoutProps<ProductEnrichment> {}
+  extends StandaloneControllerWithProps<
+    ProductEnrichment,
+    ProductEnrichmentProps
+  > {}
 
 /**
  * Defines the `ProductEnrichment` controller for the purpose of server-side rendering.
@@ -18,11 +22,14 @@ export interface ProductEnrichmentDefinition
  * @param props - The configurable `ProductEnrichment` properties.
  * @returns The `ProductEnrichment` controller definition.
  */
-export function defineProductEnrichment(
-  props: ProductEnrichmentProps
-): ProductEnrichmentDefinition {
+export function defineProductEnrichment(): ProductEnrichmentDefinition {
   return {
     standalone: true,
-    build: (engine) => buildProductEnrichment(engine, props),
+    buildWithProps: (engine, props) => {
+      if (props === undefined) {
+        throw new MissingControllerProps('ProductEnrichment');
+      }
+      return buildProductEnrichment(engine, props);
+    },
   };
 }

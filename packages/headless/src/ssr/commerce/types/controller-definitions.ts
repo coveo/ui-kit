@@ -351,8 +351,10 @@ export type ListingAndStandaloneControllerWithoutProps<
 > = ControllerDefinitionWithoutProps<TController> &
   ListingAndStandaloneController;
 
-export type StandaloneControllerWithoutProps<TController extends Controller> =
-  ControllerDefinitionWithoutProps<TController> & StandaloneController;
+export type StandaloneControllerWithProps<
+  TController extends Controller,
+  TProps,
+> = ControllerDefinitionWithProps<TController, TProps> & StandaloneController;
 
 type ListingOnlyControllerDefinitionWithoutProps<
   TController extends Controller,

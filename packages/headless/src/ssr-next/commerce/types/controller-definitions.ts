@@ -206,5 +206,7 @@ export type SearchAndListingControllerDefinitionWithProps<
 > = ControllerDefinitionWithProps<TController, TProps> &
   SearchAndListingController;
 
-export type StandaloneControllerWithoutProps<TController extends Controller> =
-  ControllerDefinitionWithoutProps<TController> & StandaloneController;
+export type StandaloneControllerWithProps<
+  TController extends Controller,
+  TProps,
+> = ControllerDefinitionWithProps<TController, TProps> & StandaloneController;
