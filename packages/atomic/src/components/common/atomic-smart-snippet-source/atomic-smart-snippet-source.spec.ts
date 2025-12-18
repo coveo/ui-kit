@@ -2,11 +2,15 @@ import type {Result} from '@coveo/headless';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
+import {renderLinkWithItemAnalytics} from '@/src/components/common/item-link/item-link';
 import {renderInAtomicResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-result-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
+import type {AtomicSmartSnippetSource as AtomicSmartSnippetSourceType} from './atomic-smart-snippet-source';
 import {AtomicSmartSnippetSource} from './atomic-smart-snippet-source';
 import './atomic-smart-snippet-source';
+
+vi.mock('@/src/components/common/item-link/item-link', {spy: true});
 
 vi.mock('@coveo/headless', {spy: true});
 
@@ -19,7 +23,7 @@ describe('atomic-smart-snippet-source', () => {
     getSourceTitleLink: () => page.getByRole('link', {name: mockResult.title}),
   };
 
-  const parts = (element: AtomicSmartSnippetSource) => ({
+  const parts = (element: AtomicSmartSnippetSourceType) => ({
     sourceUrl: element?.shadowRoot?.querySelector('[part="source-url"]'),
     sourceTitle: element?.shadowRoot?.querySelector('[part="source-title"]'),
   });
@@ -47,7 +51,7 @@ describe('atomic-smart-snippet-source', () => {
     onSelectSource?: () => void;
   } = {}) => {
     const {element, atomicResult, atomicInterface} =
-      await renderInAtomicResult<AtomicSmartSnippetSource>({
+      await renderInAtomicResult<AtomicSmartSnippetSourceType>({
         template: html`<atomic-smart-snippet-source
           .source=${source}
           .anchorAttributes=${anchorAttributes}
@@ -114,13 +118,51 @@ describe('atomic-smart-snippet-source', () => {
   });
 
   describe('#connectedCallback', () => {
-    it('should render source URL link when source is provided', async () => {
-      const {sourceUrlLink} = await renderComponent();
-      await expect.element(sourceUrlLink).toBeInTheDocument();
+    it('should call renderLinkWithItemAnalytics with expected props', async () => {
+      const anchorAttributes = [
+        Object.assign(document.createAttribute('data-test'), {
+          value: 'test-value',
+        }),
+      ];
+
+      const renderLinkSpy = vi.mocked(renderLinkWithItemAnalytics);
+      renderLinkSpy.mockClear();
+      await renderComponent({anchorAttributes});
+
+      expect(renderLinkSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          props: expect.objectContaining({
+            title: mockResult.clickUri,
+            href: mockResult.clickUri,
+            className: 'block truncate',
+            part: 'source-url',
+            attributes: anchorAttributes,
+            onSelect: expect.any(Function),
+            onBeginDelayedSelect: expect.any(Function),
+            onCancelPendingSelect: expect.any(Function),
+          }),
+        })
+      );
+
+      expect(renderLinkSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          props: expect.objectContaining({
+            title: mockResult.title,
+            href: mockResult.clickUri,
+            className: 'block',
+            part: 'source-title',
+            attributes: anchorAttributes,
+            onSelect: expect.any(Function),
+            onBeginDelayedSelect: expect.any(Function),
+            onCancelPendingSelect: expect.any(Function),
+          }),
+        })
+      );
     });
 
-    it('should render source title link when source is provided', async () => {
-      const {sourceTitleLink} = await renderComponent();
+    it('should render source links when source is provided', async () => {
+      const {sourceTitleLink, sourceUrlLink} = await renderComponent();
+      await expect.element(sourceUrlLink).toBeInTheDocument();
       await expect.element(sourceTitleLink).toBeInTheDocument();
     });
 
@@ -135,19 +177,6 @@ describe('atomic-smart-snippet-source', () => {
       const {element} = await renderComponent();
       const resultText = element?.querySelector('atomic-result-text');
       expect(resultText).toBeTruthy();
-    });
-
-    it('should apply correct CSS classes to source URL link', async () => {
-      const {sourceUrlLink} = await renderComponent();
-      const linkElement = sourceUrlLink.query();
-      expect(linkElement?.classList.contains('block')).toBe(true);
-      expect(linkElement?.classList.contains('truncate')).toBe(true);
-    });
-
-    it('should apply correct CSS classes to source title link', async () => {
-      const {sourceTitleLink} = await renderComponent();
-      const linkElement = sourceTitleLink.query();
-      expect(linkElement?.classList.contains('block')).toBe(true);
     });
   });
 
