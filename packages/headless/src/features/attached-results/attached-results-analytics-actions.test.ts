@@ -15,6 +15,7 @@ import {
   logCaseAttach,
   logCaseDetach,
   logCitationDocumentAttach,
+  logCitationDocumentDetach,
 } from './attached-results-analytics-actions.js';
 
 const mockLogCaseAttach = vi.fn();
@@ -167,7 +168,7 @@ describe('attached results analytics actions', () => {
       );
     });
 
-    describe('logCaseAttach', () => {
+    describe('#logCaseAttach', () => {
       it('should call coveo.analytics.logCaseAttach properly', async () => {
         await logCaseAttach(testResult)()(
           engine.dispatch,
@@ -188,7 +189,7 @@ describe('attached results analytics actions', () => {
       });
     });
 
-    describe('logCaseDetach', () => {
+    describe('#logCaseDetach', () => {
       it('should call coveo.analytics.logCaseDetach properly', async () => {
         await logCaseDetach(testResult)()(
           engine.dispatch,
@@ -206,7 +207,7 @@ describe('attached results analytics actions', () => {
       });
     });
 
-    describe('logCitationDocumentAttach', () => {
+    describe('#logCitationDocumentAttach', () => {
       it('should call coveo.analytics.logGeneratedAnswerCitationDocumentAttach properly', async () => {
         await logCitationDocumentAttach(testCitation)()(
           engine.dispatch,
@@ -235,6 +236,24 @@ describe('attached results analytics actions', () => {
         ).toStrictEqual(expectedMetadata);
       });
     });
+
+    describe('#logCitationDocumentDetach', () => {
+      it('should call coveo.analytics.logCaseDetach properly', async () => {
+        await logCitationDocumentDetach(testCitation)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
+
+        expect(mockLogCaseDetach).toHaveBeenCalledTimes(1);
+        expect(mockLogCaseDetach.mock.calls[0][0]).toStrictEqual(
+          testCitation.fields.urihash
+        );
+        expect(mockLogCaseDetach.mock.calls[0][1]).toStrictEqual(
+          expectedMetadata
+        );
+      });
+    });
   });
 
   describe('when analyticsMode is `next`', () => {
@@ -255,7 +274,7 @@ describe('attached results analytics actions', () => {
       );
     });
 
-    describe('logCaseAttach', () => {
+    describe('#logCaseAttach', () => {
       it('should call relay.emit properly', async () => {
         await logCaseAttach(testResult)()(
           engine.dispatch,
@@ -269,7 +288,7 @@ describe('attached results analytics actions', () => {
       });
     });
 
-    describe('logCaseDetach', () => {
+    describe('#logCaseDetach', () => {
       it('should call relay.emit properly', async () => {
         await logCaseDetach(testResult)()(
           engine.dispatch,
@@ -277,6 +296,20 @@ describe('attached results analytics actions', () => {
           {} as ThunkExtraArguments
         );
 
+        await clearMicrotaskQueue();
+
+        expect(emit).toHaveBeenCalledTimes(1);
+        expect(emit.mock.calls[0]).toMatchSnapshot();
+      });
+    });
+
+    describe('#logCitationDocumentDetach', () => {
+      it('should call relay.emit properly', async () => {
+        await logCitationDocumentDetach(testCitation)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
         await clearMicrotaskQueue();
 
         expect(emit).toHaveBeenCalledTimes(1);
