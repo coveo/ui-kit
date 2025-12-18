@@ -48,7 +48,10 @@ describe('Smart Snippet Test Suites', () => {
       const href = $el.attr('href')?.trim();
       expect(href).to.eq(defaultSourceUrl);
     });
-    SmartSnippetSelectors.sourceUrl().should('have.text', defaultSourceUrl);
+    SmartSnippetSelectors.sourceUrl().should(($el) => {
+      const href = $el.attr('href')?.trim();
+      expect(href).to.eq(defaultSourceUrl);
+    });
     SmartSnippetSelectors.sourceTitle().should(($el) => {
       const href = $el.attr('href')?.trim();
       expect(href).to.eq(defaultSourceUrl);
