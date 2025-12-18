@@ -1,7 +1,8 @@
 import type {NumericFilter, NumericFilterState} from '@coveo/headless';
 import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {ref} from 'lit/directives/ref.js';
+import {createRef, type Ref, ref} from 'lit/directives/ref.js';
+import {renderButton} from '@/src/components/common/button';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -45,8 +46,8 @@ export class AtomicFacetNumberInput
   @state() private start?: number;
   @state() private end?: number;
 
-  private startRef?: HTMLInputElement;
-  private endRef?: HTMLInputElement;
+  private startRef: Ref<HTMLInputElement> = createRef();
+  private endRef: Ref<HTMLInputElement> = createRef();
 
   static styles = css`
     [part='input-form'] {
@@ -128,9 +129,7 @@ export class AtomicFacetNumberInput
           @input=${(e: Event) => {
             this.start = (e.target as HTMLInputElement).valueAsNumber;
           }}
-          ${ref((ref) => {
-            this.startRef = ref as HTMLInputElement;
-          })}
+          ${ref(this.startRef)}
         />
         <label
           part="label-end"
@@ -153,25 +152,27 @@ export class AtomicFacetNumberInput
           @input=${(e: Event) => {
             this.end = (e.target as HTMLInputElement).valueAsNumber;
           }}
-          ${ref((ref) => {
-            this.endRef = ref as HTMLInputElement;
-          })}
+          ${ref(this.endRef)}
         />
-        <button
-          type="submit"
-          part="input-apply-button"
-          class="flex-none truncate p-2.5"
-          style="outline-primary"
-          aria-label=${applyAria}
-        >
-          ${apply}
-        </button>
+        ${renderButton({
+          props: {
+            style: 'outline-primary',
+            type: 'submit',
+            part: 'input-apply-button',
+            class: 'flex-none truncate p-2.5',
+            ariaLabel: applyAria,
+            text: apply,
+          },
+        })(html``)}
       </form>
     `;
   }
 
   private apply() {
-    if (!this.startRef?.validity.valid || !this.endRef?.validity.valid) {
+    if (
+      !this.startRef.value?.validity.valid ||
+      !this.endRef.value?.validity.valid
+    ) {
       return;
     }
     this.dispatchEvent(
