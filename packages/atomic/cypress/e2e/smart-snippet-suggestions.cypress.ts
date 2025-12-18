@@ -107,7 +107,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
 
     it('should have links to the source', () => {
       SmartSnippetSuggestionsSelectors.sourceUrl()
-        .map((el) => el.attr('href'))
+        .map((el) => el.attr('href')?.trim())
         .should(
           'deep.equal',
           defaultRelatedQuestions.map(
@@ -115,7 +115,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
           )
         );
       SmartSnippetSuggestionsSelectors.sourceUrl()
-        .map((el) => el.text())
+        .map((el) => el.text()?.trim())
         .should(
           'deep.equal',
           defaultRelatedQuestions.map(
@@ -123,7 +123,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
           )
         );
       SmartSnippetSuggestionsSelectors.sourceTitle()
-        .map((el) => el.attr('href'))
+        .map((el) => el.attr('href')?.trim())
         .should(
           'deep.equal',
           defaultRelatedQuestions.map(

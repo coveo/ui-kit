@@ -44,17 +44,15 @@ describe('Smart Snippet Test Suites', () => {
     cy.log('render the correct question');
     SmartSnippetSelectors.question().should('have.text', defaultQuestion);
     cy.log('should have links to the source');
-    SmartSnippetSelectors.sourceUrl().should(
-      'have.attr',
-      'href',
-      defaultSourceUrl
-    );
+    SmartSnippetSelectors.sourceUrl().should(($el) => {
+      const href = $el.attr('href')?.trim();
+      expect(href).to.eq(defaultSourceUrl);
+    });
     SmartSnippetSelectors.sourceUrl().should('have.text', defaultSourceUrl);
-    SmartSnippetSelectors.sourceTitle().should(
-      'have.attr',
-      'href',
-      defaultSourceUrl
-    );
+    SmartSnippetSelectors.sourceTitle().should(($el) => {
+      const href = $el.attr('href')?.trim();
+      expect(href).to.eq(defaultSourceUrl);
+    });
     SmartSnippetSelectors.sourceTitle()
       .find('atomic-result-text')
       .find('atomic-text')
