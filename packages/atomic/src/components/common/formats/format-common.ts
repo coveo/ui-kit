@@ -9,6 +9,11 @@ export const dispatchNumberFormatEvent = async (
 ) => {
   const event = buildCustomEvent('atomic/numberFormat', formatter);
 
+  const tagName = element.parentElement?.tagName.toLowerCase();
+  if (tagName?.includes('atomic-')) {
+    await customElements.whenDefined(tagName);
+  }
+
   if (element.parentElement && 'updateComplete' in element.parentElement) {
     await (element.parentElement as {updateComplete: Promise<boolean>})
       .updateComplete;
