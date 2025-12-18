@@ -6,6 +6,8 @@ export default {
     await import('./atomic-component-error/atomic-component-error.js'),
   'atomic-facet-date-input': async () =>
     await import('./atomic-facet-date-input/atomic-facet-date-input.js'),
+  'atomic-facet-number-input': async () =>
+    await import('./atomic-facet-number-input/atomic-facet-number-input.js'),
   'atomic-facet-placeholder': async () =>
     await import('./atomic-facet-placeholder/atomic-facet-placeholder.js'),
   'atomic-focus-trap': async () =>
@@ -26,6 +28,8 @@ export default {
     ),
   'atomic-tab-bar': async () =>
     await import('./atomic-tab-bar/atomic-tab-bar.js'),
+  'atomic-tab-button': async () =>
+    await import('./atomic-tab-button/atomic-tab-button.js'),
   'atomic-tab-popover': async () =>
     await import('./atomic-tab-popover/atomic-tab-popover.js'),
   'atomic-timeframe': async () =>
