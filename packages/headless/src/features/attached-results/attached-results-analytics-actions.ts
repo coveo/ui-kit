@@ -91,3 +91,35 @@ export const logCitationDocumentAttach = (citation: GeneratedAnswerCitation) =>
       );
     },
   });
+
+export const logCitationDocumentDetach = (citation: GeneratedAnswerCitation) =>
+  makeInsightAnalyticsActionFactory(SearchPageEvents.caseDetach)({
+    prefix: 'insight/caseDetach',
+    __legacy__getBuilder: (client, state) => {
+      const uriHash =
+        citation.fields?.urihash || citation.permanentid || citation.id || '';
+      return client.logCaseDetach(
+        uriHash,
+        getCaseContextAnalyticsMetadata(state.insightCaseContext)
+      );
+    },
+    analyticsType: 'InsightPanel.DetachItem',
+    analyticsPayloadBuilder: (state): InsightPanel.DetachItem => {
+      const identifier = {
+        contentIDKey: 'permanentid',
+        contentIDValue:
+          citation.permanentid || citation.fields?.permanentid || '',
+      };
+      const information = partialCitationInformation(citation, state);
+      return {
+        itemMetadata: {
+          uniqueFieldName: identifier.contentIDKey,
+          uniqueFieldValue: identifier.contentIDValue,
+          title: information.documentTitle,
+          author: information.documentAuthor,
+          url: information.documentUri,
+        },
+        context: analyticsEventCaseContext(state),
+      };
+    },
+  });
