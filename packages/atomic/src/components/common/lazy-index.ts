@@ -28,6 +28,8 @@ export default {
     ),
   'atomic-tab-bar': async () =>
     await import('./atomic-tab-bar/atomic-tab-bar.js'),
+  'atomic-tab-button': async () =>
+    await import('./atomic-tab-button/atomic-tab-button.js'),
   'atomic-tab-popover': async () =>
     await import('./atomic-tab-popover/atomic-tab-popover.js'),
   'atomic-timeframe': async () =>
