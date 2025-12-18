@@ -67,7 +67,7 @@ describe('attached results', () => {
     expect(controller).toBeTruthy();
   });
 
-  it('it adds the correct reducers to the engine', () => {
+  it('adds the correct reducers to the engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       configuration,
       attachedResults: attachedResultsReducer,
