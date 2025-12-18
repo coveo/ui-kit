@@ -849,4 +849,214 @@ describe('atomic-numeric-facet', () => {
       });
     });
   });
+
+  describe('when selecting multiple values', () => {
+    it('should render multiple selected checkboxes', async () => {
+      mockedNumericFacet = buildFakeNumericFacet({
+        state: {
+          values: [
+            {
+              start: 0,
+              end: 100,
+              endInclusive: false,
+              state: 'selected',
+              numberOfResults: 10,
+            },
+            {
+              start: 100,
+              end: 200,
+              endInclusive: false,
+              state: 'selected',
+              numberOfResults: 5,
+            },
+            {
+              start: 200,
+              end: 300,
+              endInclusive: false,
+              state: 'idle',
+              numberOfResults: 3,
+            },
+          ],
+        },
+      });
+
+      const {locators} = await setupElement();
+      expect(locators.valueCheckboxChecked.length).toBe(2);
+    });
+
+    it('should call toggleSelect for each clicked value', async () => {
+      const toggleSelectMock = vi.fn();
+      mockedNumericFacet = buildFakeNumericFacet({
+        implementation: {
+          toggleSelect: toggleSelectMock,
+        },
+        state: {
+          values: [
+            {
+              start: 0,
+              end: 100,
+              endInclusive: false,
+              state: 'idle',
+              numberOfResults: 10,
+            },
+            {
+              start: 100,
+              end: 200,
+              endInclusive: false,
+              state: 'idle',
+              numberOfResults: 5,
+            },
+          ],
+        },
+      });
+
+      const {locators} = await setupElement();
+      await userEvent.click(locators.getFacetValueButtonByPosition(0));
+      await userEvent.click(locators.getFacetValueButtonByPosition(1));
+
+      expect(toggleSelectMock).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('when configuring numberOfValues', () => {
+    it('should pass numberOfValues to buildNumericFacet', async () => {
+      await setupElement({
+        props: {
+          numberOfValues: 5,
+        },
+      });
+
+      expect(buildNumericFacet).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          options: expect.objectContaining({
+            numberOfValues: 5,
+          }),
+        })
+      );
+    });
+
+    it('should not render facet values when numberOfValues is 0 and no input range', async () => {
+      mockedNumericFacet = buildFakeNumericFacet({
+        state: {
+          values: [],
+        },
+      });
+
+      const {locators} = await setupElement({
+        props: {
+          numberOfValues: 0,
+        },
+      });
+
+      expect(locators.values).not.toBeInTheDocument();
+    });
+  });
+
+  describe('when configuring sortCriteria', () => {
+    it('should pass ascending sortCriteria to buildNumericFacet', async () => {
+      await setupElement({
+        props: {
+          sortCriteria: 'ascending',
+        },
+      });
+
+      expect(buildNumericFacet).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          options: expect.objectContaining({
+            sortCriteria: 'ascending',
+          }),
+        })
+      );
+    });
+
+    it('should pass descending sortCriteria to buildNumericFacet', async () => {
+      await setupElement({
+        props: {
+          sortCriteria: 'descending',
+        },
+      });
+
+      expect(buildNumericFacet).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          options: expect.objectContaining({
+            sortCriteria: 'descending',
+          }),
+        })
+      );
+    });
+  });
+
+  describe('when configuring rangeAlgorithm', () => {
+    it('should pass even rangeAlgorithm to buildNumericFacet', async () => {
+      await setupElement({
+        props: {
+          rangeAlgorithm: 'even',
+        },
+      });
+
+      expect(buildNumericFacet).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          options: expect.objectContaining({
+            rangeAlgorithm: 'even',
+          }),
+        })
+      );
+    });
+
+    it('should pass equiprobable rangeAlgorithm to buildNumericFacet', async () => {
+      await setupElement({
+        props: {
+          rangeAlgorithm: 'equiprobable',
+        },
+      });
+
+      expect(buildNumericFacet).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          options: expect.objectContaining({
+            rangeAlgorithm: 'equiprobable',
+          }),
+        })
+      );
+    });
+  });
+
+  describe('when facet has no results', () => {
+    it('should not render facet when field returns no values', async () => {
+      mockedNumericFacet = buildFakeNumericFacet({
+        state: {
+          values: [],
+        },
+      });
+
+      const {locators} = await setupElement();
+      expect(locators.facet).not.toBeInTheDocument();
+    });
+
+    it('should render facet with input when filter has range even with no facet values', async () => {
+      mockedNumericFacet = buildFakeNumericFacet({
+        state: {
+          values: [],
+        },
+      });
+      mockedNumericFilter = buildFakeNumericFilter({
+        state: {
+          range: {
+            start: 50,
+            end: 150,
+            endInclusive: true,
+            state: 'selected',
+            numberOfResults: 10,
+          },
+        },
+      });
+
+      const {locators} = await setupElement({withInput: true});
+      await expect.element(locators.numberInput).toBeInTheDocument();
+    });
+  });
 });
