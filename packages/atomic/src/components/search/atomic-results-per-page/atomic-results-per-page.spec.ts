@@ -212,4 +212,84 @@ describe('atomic-results-per-page', () => {
       expect(element.shadowRoot?.textContent?.trim()).toBe('');
     });
   });
+
+  describe('keyboard navigation and focus escape', () => {
+    it('should allow focus to escape the radio group with Tab/Shift+Tab', async () => {
+      // Create a fixture with input elements before and after the component
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+
+      const inputBefore = document.createElement('input');
+      inputBefore.type = 'text';
+      inputBefore.id = 'input-before';
+      container.appendChild(inputBefore);
+
+      vi.mocked(buildSearchStatus).mockReturnValue(buildFakeSearchStatus());
+      vi.mocked(buildResultsPerPage).mockReturnValue(
+        buildFakeResultsPerPage({
+          numberOfResults: 10,
+        })
+      );
+
+      const {element} =
+        await renderInAtomicSearchInterface<AtomicResultsPerPage>({
+          template: html`<atomic-results-per-page></atomic-results-per-page>`,
+          selector: 'atomic-results-per-page',
+          bindings: (bindings) => {
+            bindings.engine = mockedEngine;
+            return bindings;
+          },
+        });
+      container.appendChild(element);
+
+      const inputAfter = document.createElement('input');
+      inputAfter.type = 'text';
+      inputAfter.id = 'input-after';
+      container.appendChild(inputAfter);
+
+      const radioButtons = element.shadowRoot?.querySelectorAll(
+        'input[type="radio"]'
+      ) as NodeListOf<HTMLInputElement>;
+
+      expect(radioButtons).toBeDefined();
+      expect(radioButtons.length).toBeGreaterThan(0);
+
+      const firstRadio = radioButtons[0];
+      const lastRadio = radioButtons[radioButtons.length - 1];
+
+      // Test Tab from last radio button - should allow focus to escape
+      lastRadio.focus();
+      expect(document.activeElement).toBe(lastRadio);
+
+      // Simulate Tab key on last radio button
+      const tabEvent = new KeyboardEvent('keydown', {
+        key: 'Tab',
+        bubbles: true,
+      });
+      lastRadio.dispatchEvent(tabEvent);
+
+      // Focus should stay on last radio (not wrap to first)
+      // This allows browser's natural tab order to move focus to inputAfter
+      expect(document.activeElement).toBe(lastRadio);
+
+      // Test Shift+Tab from first radio button - should allow focus to escape
+      firstRadio.focus();
+      expect(document.activeElement).toBe(firstRadio);
+
+      // Simulate Shift+Tab key on first radio button
+      const shiftTabEvent = new KeyboardEvent('keydown', {
+        key: 'Tab',
+        shiftKey: true,
+        bubbles: true,
+      });
+      firstRadio.dispatchEvent(shiftTabEvent);
+
+      // Focus should stay on first radio (not wrap to last)
+      // This allows browser's natural tab order to move focus to inputBefore
+      expect(document.activeElement).toBe(firstRadio);
+
+      // Cleanup
+      container.remove();
+    });
+  });
 });
