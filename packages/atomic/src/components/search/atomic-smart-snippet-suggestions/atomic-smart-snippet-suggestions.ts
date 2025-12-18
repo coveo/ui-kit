@@ -1,6 +1,5 @@
 import {NumberValue, Schema} from '@coveo/bueno';
 import type {
-  Controller,
   Result,
   SmartSnippetQuestionsList,
   SmartSnippetQuestionsListState,
@@ -86,7 +85,7 @@ export class AtomicSmartSnippetSuggestions
   @bindStateToController('smartSnippetQuestionsList')
   @state()
   public smartSnippetQuestionsListState!: SmartSnippetQuestionsListState;
-  public smartSnippetQuestionsList!: SmartSnippetQuestionsList & Controller;
+  public smartSnippetQuestionsList!: SmartSnippetQuestionsList;
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
