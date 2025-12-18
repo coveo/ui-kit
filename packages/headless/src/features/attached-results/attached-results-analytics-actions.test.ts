@@ -10,6 +10,7 @@ import {buildMockSearchResponse} from '../../test/mock-search-response.js';
 import {buildMockSearchState} from '../../test/mock-search-state.js';
 import {clearMicrotaskQueue} from '../../test/unit-test-utils.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
+import {getGeneratedAnswerInitialState} from '../generated-answer/generated-answer-state.js';
 import {
   logCaseAttach,
   logCaseDetach,
@@ -127,8 +128,14 @@ describe('attached results analytics actions', () => {
     results: [testResult],
     response: buildMockSearchResponse({
       searchUid: 'example searchUid',
+      extendedResults: {
+        generativeQuestionAnsweringId: 'example-answer-id',
+      },
     }),
   });
+  const generatedAnswerState = {
+    ...getGeneratedAnswerInitialState(),
+  };
   const caseContextState = {
     caseContext: {
       Case_Subject: exampleSubject,
@@ -154,6 +161,7 @@ describe('attached results analytics actions', () => {
               analyticsMode: 'legacy',
             },
           },
+          generatedAnswer: generatedAnswerState,
           insightCaseContext: caseContextState,
         })
       );
@@ -215,7 +223,7 @@ describe('attached results analytics actions', () => {
         expect(
           mockLogGeneratedAnswerCitationDocumentAttach.mock.calls[0][1]
         ).toStrictEqual({
-          generativeQuestionAnsweringId: 'unknown',
+          generativeQuestionAnsweringId: 'example-answer-id',
           citationId: 'citation-123',
           documentId: {
             contentIdKey: 'permanentid',
@@ -241,6 +249,7 @@ describe('attached results analytics actions', () => {
               analyticsMode: 'next',
             },
           },
+          generatedAnswer: generatedAnswerState,
           insightCaseContext: caseContextState,
         })
       );

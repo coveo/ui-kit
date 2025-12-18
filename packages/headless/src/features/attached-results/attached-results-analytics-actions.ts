@@ -68,9 +68,15 @@ export const logCitationDocumentAttach = (citation: GeneratedAnswerCitation) =>
       const metadata = getCaseContextAnalyticsMetadata(
         state.insightCaseContext
       );
+      const generativeQuestionAnsweringId =
+        generativeQuestionAnsweringIdSelector(state);
+
+      if (!generativeQuestionAnsweringId || !citation) {
+        return null;
+      }
+
       const citationPayload = {
-        generativeQuestionAnsweringId:
-          generativeQuestionAnsweringIdSelector(state) || 'unknown',
+        generativeQuestionAnsweringId,
         citationId: citation.id,
         documentId: {
           contentIdKey: 'permanentid',
