@@ -212,6 +212,19 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - run: pnpm run lint:check
+  validate-light-dom-styles:
+    name: "Validate Light DOM styles"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - run: pnpm --filter @coveo/atomic run validate:light-dom-styles
   unit-test:
     name: "Run unit tests"
     needs: build
