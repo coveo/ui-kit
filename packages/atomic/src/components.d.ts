@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
@@ -19,7 +19,7 @@ import { RecsStore } from "./components/recommendations/atomic-recs-interface/st
 import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
-export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
@@ -1024,26 +1024,6 @@ export namespace Components {
         "htmlContent": string;
         "innerStyle"?: string;
     }
-    interface AtomicSmartSnippetCollapseWrapper {
-        "collapsedHeight"?: number;
-        "maximumHeight"?: number;
-    }
-    interface AtomicSmartSnippetExpandableAnswer {
-        /**
-          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
-         */
-        "collapsedHeight": number;
-        "expanded": boolean;
-        "htmlContent": string;
-        /**
-          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
-         */
-        "maximumHeight": number;
-        /**
-          * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
-    }
     /**
      * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
      * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
@@ -1125,28 +1105,6 @@ export namespace Components {
           * Click handler for the tab button.
          */
         "select": () => void;
-    }
-    /**
-     * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
-     * A timeframe is a span of time from now to a specific time in the past.
-     */
-    interface AtomicTimeframe {
-        /**
-          * The amount of units from which to count.  For example, 10 days, 1 year, etc.
-         */
-        "amount": number;
-        /**
-          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The relative period of time to now.
-         */
-        "period": 'past' | 'next';
-        /**
-          * The unit used to define: - the start date of the timeframe, if the period is `past` - the end date of the timeframe, if the period is `future`
-         */
-        "unit": RelativeDateUnit;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results.
@@ -1258,10 +1216,6 @@ export interface AtomicSearchBoxCustomEvent<T> extends CustomEvent<T> {
 export interface AtomicSmartSnippetAnswerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicSmartSnippetAnswerElement;
-}
-export interface AtomicSmartSnippetExpandableAnswerCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicSmartSnippetExpandableAnswerElement;
 }
 export interface AtomicSmartSnippetFeedbackModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1817,33 +1771,6 @@ declare global {
         prototype: HTMLAtomicSmartSnippetAnswerElement;
         new (): HTMLAtomicSmartSnippetAnswerElement;
     };
-    interface HTMLAtomicSmartSnippetCollapseWrapperElement extends Components.AtomicSmartSnippetCollapseWrapper, HTMLStencilElement {
-    }
-    var HTMLAtomicSmartSnippetCollapseWrapperElement: {
-        prototype: HTMLAtomicSmartSnippetCollapseWrapperElement;
-        new (): HTMLAtomicSmartSnippetCollapseWrapperElement;
-    };
-    interface HTMLAtomicSmartSnippetExpandableAnswerElementEventMap {
-        "expand": any;
-        "collapse": any;
-        "selectInlineLink": InlineLink;
-        "beginDelayedSelectInlineLink": InlineLink;
-        "cancelPendingSelectInlineLink": InlineLink;
-    }
-    interface HTMLAtomicSmartSnippetExpandableAnswerElement extends Components.AtomicSmartSnippetExpandableAnswer, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicSmartSnippetExpandableAnswerElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetExpandableAnswerElement, ev: AtomicSmartSnippetExpandableAnswerCustomEvent<HTMLAtomicSmartSnippetExpandableAnswerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicSmartSnippetExpandableAnswerElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetExpandableAnswerElement, ev: AtomicSmartSnippetExpandableAnswerCustomEvent<HTMLAtomicSmartSnippetExpandableAnswerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicSmartSnippetExpandableAnswerElement: {
-        prototype: HTMLAtomicSmartSnippetExpandableAnswerElement;
-        new (): HTMLAtomicSmartSnippetExpandableAnswerElement;
-    };
     interface HTMLAtomicSmartSnippetFeedbackModalElementEventMap {
         "feedbackSent": any;
     }
@@ -1945,16 +1872,6 @@ declare global {
         new (): HTMLAtomicTabButtonElement;
     };
     /**
-     * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
-     * A timeframe is a span of time from now to a specific time in the past.
-     */
-    interface HTMLAtomicTimeframeElement extends Components.AtomicTimeframe, HTMLStencilElement {
-    }
-    var HTMLAtomicTimeframeElement: {
-        prototype: HTMLAtomicTimeframeElement;
-        new (): HTMLAtomicTimeframeElement;
-    };
-    /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
      */
@@ -2019,15 +1936,12 @@ declare global {
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
-        "atomic-smart-snippet-collapse-wrapper": HTMLAtomicSmartSnippetCollapseWrapperElement;
-        "atomic-smart-snippet-expandable-answer": HTMLAtomicSmartSnippetExpandableAnswerElement;
         "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
         "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
         "atomic-tab-button": HTMLAtomicTabButtonElement;
-        "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
     }
 }
@@ -2994,31 +2908,6 @@ declare namespace LocalJSX {
         "onCancelPendingSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
         "onSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
     }
-    interface AtomicSmartSnippetCollapseWrapper {
-        "collapsedHeight"?: number;
-        "maximumHeight"?: number;
-    }
-    interface AtomicSmartSnippetExpandableAnswer {
-        /**
-          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
-         */
-        "collapsedHeight"?: number;
-        "expanded": boolean;
-        "htmlContent": string;
-        /**
-          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
-         */
-        "maximumHeight"?: number;
-        "onBeginDelayedSelectInlineLink"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<InlineLink>) => void;
-        "onCancelPendingSelectInlineLink"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<InlineLink>) => void;
-        "onCollapse"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<any>) => void;
-        "onExpand"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<any>) => void;
-        "onSelectInlineLink"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<InlineLink>) => void;
-        /**
-          * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
-    }
     /**
      * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
      * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
@@ -3105,28 +2994,6 @@ declare namespace LocalJSX {
           * Click handler for the tab button.
          */
         "select": () => void;
-    }
-    /**
-     * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
-     * A timeframe is a span of time from now to a specific time in the past.
-     */
-    interface AtomicTimeframe {
-        /**
-          * The amount of units from which to count.  For example, 10 days, 1 year, etc.
-         */
-        "amount"?: number;
-        /**
-          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The relative period of time to now.
-         */
-        "period"?: 'past' | 'next';
-        /**
-          * The unit used to define: - the start date of the timeframe, if the period is `past` - the end date of the timeframe, if the period is `future`
-         */
-        "unit": RelativeDateUnit;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results.
@@ -3245,15 +3112,12 @@ declare namespace LocalJSX {
         "atomic-search-box": AtomicSearchBox;
         "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
-        "atomic-smart-snippet-collapse-wrapper": AtomicSmartSnippetCollapseWrapper;
-        "atomic-smart-snippet-expandable-answer": AtomicSmartSnippetExpandableAnswer;
         "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
         "atomic-smart-snippet-source": AtomicSmartSnippetSource;
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
         "atomic-tab-button": AtomicTabButton;
-        "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
     }
 }
@@ -3395,8 +3259,6 @@ declare module "@stencil/core" {
              */
             "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
             "atomic-smart-snippet-answer": LocalJSX.AtomicSmartSnippetAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetAnswerElement>;
-            "atomic-smart-snippet-collapse-wrapper": LocalJSX.AtomicSmartSnippetCollapseWrapper & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetCollapseWrapperElement>;
-            "atomic-smart-snippet-expandable-answer": LocalJSX.AtomicSmartSnippetExpandableAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetExpandableAnswerElement>;
             /**
              * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
              * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
@@ -3432,11 +3294,6 @@ declare module "@stencil/core" {
              */
             "atomic-suggestion-renderer": LocalJSX.AtomicSuggestionRenderer & JSXBase.HTMLAttributes<HTMLAtomicSuggestionRendererElement>;
             "atomic-tab-button": LocalJSX.AtomicTabButton & JSXBase.HTMLAttributes<HTMLAtomicTabButtonElement>;
-            /**
-             * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
-             * A timeframe is a span of time from now to a specific time in the past.
-             */
-            "atomic-timeframe": LocalJSX.AtomicTimeframe & JSXBase.HTMLAttributes<HTMLAtomicTimeframeElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results.
              * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
