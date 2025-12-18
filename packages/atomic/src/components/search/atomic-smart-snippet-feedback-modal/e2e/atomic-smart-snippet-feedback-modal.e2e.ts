@@ -3,17 +3,15 @@ import {expect, test} from './fixture';
 test.describe('atomic-smart-snippet-feedback-modal', () => {
   test.beforeEach(async ({feedbackModal}) => {
     await feedbackModal.load({story: 'default'});
-    await feedbackModal.hydrated.waitFor();
-  });
-
-  test('should render the component', async ({feedbackModal}) => {
-    await expect(feedbackModal.hydrated).toBeVisible();
+    await feedbackModal.hydrated.waitFor({state: 'attached'});
   });
 
   test('should open the modal when open button is clicked', async ({
     feedbackModal,
   }) => {
     await feedbackModal.openModalButton.click();
-    await expect(feedbackModal.modal).toBeVisible();
+    await expect(feedbackModal.feedbackOptions).toBeVisible();
+    await expect(feedbackModal.explainWhyHeading).toBeVisible();
+    await expect(feedbackModal.selectReasonHeading).toBeVisible();
   });
 });

@@ -13,4 +13,16 @@ export class AtomicSmartSnippetFeedbackModalPageObject extends BasePageObject {
   get modal() {
     return this.page.locator('atomic-modal');
   }
+
+  get feedbackOptions() {
+    return this.page.getByText("This didn't answer my");
+  }
+
+  get explainWhyHeading() {
+    return this.page.getByRole('heading', {name: 'Explain why'});
+  }
+
+  get selectReasonHeading() {
+    return this.page.getByText('Select the reason');
+  }
 }

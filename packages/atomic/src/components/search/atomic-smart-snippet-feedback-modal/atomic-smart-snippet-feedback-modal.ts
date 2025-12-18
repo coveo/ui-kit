@@ -22,7 +22,6 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {randomID} from '@/src/utils/utils';
 import type {Bindings} from '../atomic-search-interface/interfaces';
@@ -56,7 +55,7 @@ import type {Bindings} from '../atomic-search-interface/interfaces';
 @bindings()
 @withTailwindStyles
 export class AtomicSmartSnippetFeedbackModal
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<Bindings>
 {
   @state()
