@@ -1,9 +1,11 @@
 import type {InsightPanel} from '@coveo/relay-event-types';
 import type {Result} from '../../api/search/search/result.js';
+import type {GeneratedAnswerCitation} from '../../index.js';
 import {
   analyticsEventItemMetadata,
   documentIdentifier,
   makeInsightAnalyticsActionFactory,
+  partialCitationInformation,
   partialDocumentInformation,
   validateResultPayload,
 } from '../analytics/analytics-utils.js';
@@ -57,28 +59,28 @@ export const logCaseDetach = (result: Result) =>
     },
   });
 
-export const logCitationDocumentAttach = (result: Result) =>
+export const logCitationDocumentAttach = (citation: GeneratedAnswerCitation) =>
   makeInsightAnalyticsActionFactory(
     SearchPageEvents.generatedAnswerCitationDocumentAttach
   )({
     prefix: 'insight/generatedAnswerCitationDocumentAttach',
     __legacy__getBuilder: (client, state) => {
-      validateResultPayload(result);
       const metadata = getCaseContextAnalyticsMetadata(
         state.insightCaseContext
       );
-      const citation = {
+      const citationPayload = {
         generativeQuestionAnsweringId:
           generativeQuestionAnsweringIdSelector(state) || 'unknown',
-        citationId: result.raw.urihash || result.raw.permanentid || 'unknown',
+        citationId: citation.id,
         documentId: {
           contentIdKey: 'permanentid',
-          contentIdValue: result.raw.permanentid || result.uniqueId,
+          contentIdValue:
+            citation.permanentid || citation.fields?.permanentid || '',
         },
       };
       return client.logGeneratedAnswerCitationDocumentAttach(
-        partialDocumentInformation(result, state),
-        citation,
+        partialCitationInformation(citation, state),
+        citationPayload,
         metadata
       );
     },

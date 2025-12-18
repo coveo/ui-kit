@@ -70,6 +70,15 @@ const expectedDocumentInfo = {
   documentAuthor: 'example author',
 };
 
+const expectedCitationDocumentInfo = {
+  queryPipeline: '',
+  documentUri: 'example documentUri',
+  sourceName: 'example sourceName',
+  documentPosition: 1,
+  documentTitle: 'example documentTitle',
+  documentUrl: 'example documentUrl',
+};
+
 const expectedDocumentIdentifier = {
   contentIDKey: 'permanentid',
   contentIDValue: 'example contentIDValue',
@@ -95,6 +104,22 @@ const resultParams = {
 };
 
 const testResult = buildMockResult(resultParams);
+
+const testCitation = {
+  id: 'citation-123',
+  permanentid: 'example contentIDValue',
+  title: 'example documentTitle',
+  uri: 'example documentUri',
+  clickUri: 'example documentUrl',
+  text: 'example citation text',
+  fields: {
+    urihash: 'example documentUriHash',
+    source: 'example sourceName',
+    permanentid: 'example contentIDValue',
+    author: 'example author',
+  },
+  source: 'example sourceName',
+};
 
 describe('attached results analytics actions', () => {
   let engine: InsightEngine;
@@ -175,7 +200,7 @@ describe('attached results analytics actions', () => {
 
     describe('logCitationDocumentAttach', () => {
       it('should call coveo.analytics.logGeneratedAnswerCitationDocumentAttach properly', async () => {
-        await logCitationDocumentAttach(testResult)()(
+        await logCitationDocumentAttach(testCitation)()(
           engine.dispatch,
           () => engine.state,
           {} as ThunkExtraArguments
@@ -186,12 +211,12 @@ describe('attached results analytics actions', () => {
         ).toHaveBeenCalledTimes(1);
         expect(
           mockLogGeneratedAnswerCitationDocumentAttach.mock.calls[0][0]
-        ).toStrictEqual(expectedDocumentInfo);
+        ).toStrictEqual(expectedCitationDocumentInfo);
         expect(
           mockLogGeneratedAnswerCitationDocumentAttach.mock.calls[0][1]
         ).toStrictEqual({
           generativeQuestionAnsweringId: 'unknown',
-          citationId: 'example documentUriHash',
+          citationId: 'citation-123',
           documentId: {
             contentIdKey: 'permanentid',
             contentIdValue: 'example contentIDValue',
