@@ -36,15 +36,27 @@ describe('atomic-smart-snippet-source', () => {
   const renderComponent = async ({
     source = mockResult,
     anchorAttributes,
+    onBeginDelayedSelectSource,
+    onCancelPendingSelectSource,
+    onSelectSource,
   }: {
     source?: Result;
     anchorAttributes?: Attr[];
+    onBeginDelayedSelectSource?: () => void;
+    onCancelPendingSelectSource?: () => void;
+    onSelectSource?: () => void;
   } = {}) => {
     const {element, atomicResult, atomicInterface} =
       await renderInAtomicResult<AtomicSmartSnippetSource>({
         template: html`<atomic-smart-snippet-source
           .source=${source}
           .anchorAttributes=${anchorAttributes}
+          @begin-delayed-select-source=${onBeginDelayedSelectSource}
+          @cancel-pending-select-source=${onCancelPendingSelectSource}
+          @select-source=${onSelectSource}
+          .onBeginDelayedSelectSource=${onBeginDelayedSelectSource}
+          .onCancelPendingSelectSource=${onCancelPendingSelectSource}
+          .onSelectSource=${onSelectSource}
         ></atomic-smart-snippet-source>`,
         selector: 'atomic-smart-snippet-source',
         result: source,
@@ -211,7 +223,7 @@ describe('atomic-smart-snippet-source', () => {
     it('should dispatch selectSource event when source URL link is clicked', async () => {
       const {element, sourceUrlLink} = await renderComponent();
       const eventSpy = vi.fn();
-      element.addEventListener('selectSource', eventSpy);
+      element.addEventListener('select-source', eventSpy);
 
       await sourceUrlLink.click();
 
@@ -221,11 +233,65 @@ describe('atomic-smart-snippet-source', () => {
     it('should dispatch selectSource event when source title link is clicked', async () => {
       const {element, sourceTitleLink} = await renderComponent();
       const eventSpy = vi.fn();
-      element.addEventListener('selectSource', eventSpy);
+      element.addEventListener('select-source', eventSpy);
 
       await sourceTitleLink.click();
 
       expect(eventSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('with callback properties (backward compatibility)', () => {
+    it('should call onSelectSource callback when source URL link is clicked', async () => {
+      const onSelectSource = vi.fn();
+      const {sourceUrlLink} = await renderComponent({onSelectSource});
+
+      await sourceUrlLink.click();
+
+      expect(onSelectSource).toHaveBeenCalled();
+    });
+
+    it('should call onSelectSource callback when source title link is clicked', async () => {
+      const onSelectSource = vi.fn();
+      const {sourceTitleLink} = await renderComponent({onSelectSource});
+
+      await sourceTitleLink.click();
+
+      expect(onSelectSource).toHaveBeenCalled();
+    });
+
+    it('should call both event dispatch and callback for selectSource', async () => {
+      const onSelectSource = vi.fn();
+      const {element, sourceUrlLink} = await renderComponent({onSelectSource});
+      const eventSpy = vi.fn();
+      element.addEventListener('select-source', eventSpy);
+
+      await sourceUrlLink.click();
+
+      expect(eventSpy).toHaveBeenCalled();
+      expect(onSelectSource).toHaveBeenCalled();
+    });
+
+    it('should call onBeginDelayedSelectSource callback', async () => {
+      const onBeginDelayedSelectSource = vi.fn();
+      const {sourceUrlLink} = await renderComponent({
+        onBeginDelayedSelectSource,
+      });
+
+      sourceUrlLink.query()?.dispatchEvent(new Event('touchstart'));
+
+      expect(onBeginDelayedSelectSource).toHaveBeenCalled();
+    });
+
+    it('should call onCancelPendingSelectSource callback', async () => {
+      const onCancelPendingSelectSource = vi.fn();
+      const {sourceUrlLink} = await renderComponent({
+        onCancelPendingSelectSource,
+      });
+
+      sourceUrlLink.query()?.dispatchEvent(new Event('touchend'));
+
+      expect(onCancelPendingSelectSource).toHaveBeenCalled();
     });
   });
 });

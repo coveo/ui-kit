@@ -8,7 +8,6 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
-import {buildCustomEvent} from '@/src/utils/event-utils';
 import '@/src/components/search/atomic-result-text/atomic-result-text';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 
@@ -16,6 +15,9 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
  * The `atomic-smart-snippet-source` component displays the source information for a smart snippet.
  * @part source-url - The clickable URL of the source.
  * @part source-title - The clickable title of the source.
+ * @fires select-source - Emitted when the source link is selected.
+ * @fires begin-delayed-select-source - Emitted when a delayed source selection begins.
+ * @fires cancel-delayed-select-source - Emitted when a pending source selection is cancelled.
  * @internal
  */
 @customElement('atomic-smart-snippet-source')
@@ -35,6 +37,27 @@ export class AtomicSmartSnippetSource
    */
   @property({type: Array})
   public anchorAttributes?: Attr[];
+
+  /**
+   * @deprecated Only here to support backward compatibility with Stencil components. Lit components should listen to the event using the `@on-select-source` expression instead.
+   * Callback function for when the source is selected (backward compatibility).
+   */
+  @property({attribute: 'onSelectSource'})
+  public onSelectSource?: () => void;
+
+  /**
+   * @deprecated Only here to support backward compatibility with Stencil components. Lit components should listen to the event using the `@on-begin-delayed-select-source` expression instead.
+   * Callback function for when a delayed source selection begins (backward compatibility).
+   */
+  @property({attribute: 'onBeginDelayedSelectSource'})
+  public onBeginDelayedSelectSource?: () => void;
+
+  /**
+   * @deprecated Only here to support backward compatibility with Stencil components. Lit components should listen to the event using the `@on-cancel-pending-select-source` expression instead.
+   * Callback function for when a pending source selection is cancelled (backward compatibility).
+   */
+  @property({attribute: 'onCancelPendingSelectSource'})
+  public onCancelPendingSelectSource?: () => void;
 
   @state() public bindings!: AnyBindings;
   @state() public error!: Error;
@@ -62,8 +85,36 @@ export class AtomicSmartSnippetSource
     }
   };
 
-  private dispatchSelectEvent(eventName: string) {
-    this.dispatchEvent(buildCustomEvent(eventName, undefined));
+  private dispatchSourceEvent(eventName: string) {
+    this.dispatchEvent(
+      new CustomEvent(eventName, {
+        bubbles: true,
+        composed: true,
+      })
+    );
+  }
+
+  private handleSourceEvent(
+    eventName:
+      | 'select-source'
+      | 'begin-delayed-select-source'
+      | 'cancel-pending-select-source'
+  ) {
+    // Dispatch event for Lit components
+    this.dispatchSourceEvent(eventName);
+
+    // Call callback for Stencil backward compatibility
+    switch (eventName) {
+      case 'select-source':
+        this.onSelectSource?.();
+        break;
+      case 'begin-delayed-select-source':
+        this.onBeginDelayedSelectSource?.();
+        break;
+      case 'cancel-pending-select-source':
+        this.onCancelPendingSelectSource?.();
+        break;
+    }
   }
 
   @errorGuard()
@@ -79,11 +130,11 @@ export class AtomicSmartSnippetSource
             className: 'block truncate',
             part: 'source-url',
             attributes: this.anchorAttributes,
-            onSelect: () => this.dispatchSelectEvent('selectSource'),
+            onSelect: () => this.handleSourceEvent('select-source'),
             onBeginDelayedSelect: () =>
-              this.dispatchSelectEvent('beginDelayedSelectSource'),
+              this.handleSourceEvent('begin-delayed-select-source'),
             onCancelPendingSelect: () =>
-              this.dispatchSelectEvent('cancelPendingSelectSource'),
+              this.handleSourceEvent('cancel-pending-select-source'),
           },
         })(html`${this.source.clickUri}`)}
         ${renderLinkWithItemAnalytics({
@@ -93,11 +144,11 @@ export class AtomicSmartSnippetSource
             attributes: this.anchorAttributes,
             className: 'block',
             part: 'source-title',
-            onSelect: () => this.dispatchSelectEvent('selectSource'),
+            onSelect: () => this.handleSourceEvent('select-source'),
             onBeginDelayedSelect: () =>
-              this.dispatchSelectEvent('beginDelayedSelectSource'),
+              this.handleSourceEvent('begin-delayed-select-source'),
             onCancelPendingSelect: () =>
-              this.dispatchSelectEvent('cancelPendingSelectSource'),
+              this.handleSourceEvent('cancel-pending-select-source'),
           },
         })(
           html`<atomic-result-text
