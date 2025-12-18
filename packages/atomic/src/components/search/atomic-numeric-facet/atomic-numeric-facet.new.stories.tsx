@@ -158,7 +158,6 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'Default',
   decorators: [facetDecorator],
   args: {
     field: 'ytviewcount',
@@ -166,7 +165,7 @@ export const Default: Story = {
 };
 
 export const WithInputInteger: Story = {
-  name: 'atomic-numeric-facet-with-input-integer',
+  name: 'With Input (Integer)',
   tags: ['test'],
   decorators: [facetDecorator, withBreadboxDecorator('before')],
   args: {
@@ -177,7 +176,7 @@ export const WithInputInteger: Story = {
 };
 
 export const WithDependsOn: Story = {
-  name: 'atomic-numeric-facet-with-depends-on',
+  name: 'With Depends On',
   tags: ['test'],
   decorators: [withRegularFacet('before'), withBreadboxDecorator('before')],
   args: {
@@ -202,7 +201,7 @@ export const WithDependsOn: Story = {
 };
 
 export const DisplayAsLink: Story = {
-  name: 'atomic-numeric-facet-display-as-link',
+  name: 'Display As Link',
   decorators: [facetDecorator],
   args: {
     field: 'ytviewcount',
@@ -212,7 +211,6 @@ export const DisplayAsLink: Story = {
 };
 
 export const Collapsed: Story = {
-  name: 'atomic-numeric-facet-collapsed',
   decorators: [facetDecorator],
   args: {
     field: 'ytviewcount',
