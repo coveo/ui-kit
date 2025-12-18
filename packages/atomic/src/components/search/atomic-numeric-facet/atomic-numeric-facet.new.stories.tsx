@@ -220,3 +220,31 @@ export const Collapsed: Story = {
     'is-collapsed': true,
   },
 };
+
+export const WithSelectedValue: Story = {
+  name: 'With Selected Value',
+  tags: ['test'],
+  decorators: [facetDecorator],
+  args: {
+    field: 'ytviewcount',
+    label: 'YouTube View Count',
+  },
+  beforeEach: () => {
+    const selectedValues = numericFacetValues.map((v, i) =>
+      i === 0 ? {...v, state: 'selected'} : v
+    );
+    mockSearchApi.searchEndpoint.mockOnce((response) => ({
+      ...response,
+      facets: [
+        {
+          facetId: 'ytviewcount',
+          field: 'ytviewcount',
+          moreValuesAvailable: false,
+          values: selectedValues,
+          indexScore: 0.23,
+          domain: {start: 8, end: 70261098},
+        },
+      ],
+    }));
+  },
+};
