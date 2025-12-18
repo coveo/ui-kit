@@ -19,16 +19,19 @@ const styles = css`
   */
     margin-top: -0.5rem;
   }
+
+  [part='source-title'],
   [part='source-url'] {
     @apply link-style;
-    @apply set-font-size-base;
     display: block;
   }
 
+  [part='source-url'] {
+    @apply set-font-size-base;
+  }
+
   [part='source-title'] {
-    @apply link-style;
     @apply set-font-size-xl;
-    display: block;
   }
 `;
 
