@@ -4,8 +4,8 @@ import {
   detachResult,
 } from '../../../features/attached-results/attached-results-actions.js';
 import {
-  logCaseDetach,
   logCitationDocumentAttach,
+  logCitationDocumentDetach,
 } from '../../../features/attached-results/attached-results-analytics-actions.js';
 import {attachedResultsReducer} from '../../../features/attached-results/attached-results-slice.js';
 import {buildMockCitation} from '../../../test/mock-citation.js';
@@ -27,6 +27,7 @@ vi.mock(
     logCaseAttach: vi.fn(() => () => {}),
     logCaseDetach: vi.fn(() => () => {}),
     logCitationDocumentAttach: vi.fn(() => () => {}),
+    logCitationDocumentDetach: vi.fn(() => () => {}),
   })
 );
 
@@ -306,11 +307,11 @@ describe('attached citations', () => {
       expect(detachResult).toHaveBeenCalledWith(resultToDetach);
     });
 
-    it('calling #detach should trigger the #logCaseDetach usage analytics action', () => {
+    it('calling #detach should trigger the #logCitationDocumentDetach usage analytics action', () => {
       controller.detach(testCitation);
 
-      expect(logCaseDetach).toHaveBeenCalledTimes(1);
-      expect(logCaseDetach).toHaveBeenCalledWith(testCitation);
+      expect(logCitationDocumentDetach).toHaveBeenCalledTimes(1);
+      expect(logCitationDocumentDetach).toHaveBeenCalledWith(testCitation);
     });
   });
 });

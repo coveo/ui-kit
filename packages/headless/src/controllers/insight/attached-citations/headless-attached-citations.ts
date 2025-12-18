@@ -1,5 +1,4 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import type {Result} from '../../../api/search/search/result.js';
 import {configuration} from '../../../app/common-reducers.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {
@@ -7,8 +6,8 @@ import {
   detachResult,
 } from '../../../features/attached-results/attached-results-actions.js';
 import {
-  logCaseDetach,
   logCitationDocumentAttach,
+  logCitationDocumentDetach,
 } from '../../../features/attached-results/attached-results-analytics-actions.js';
 import {attachedResultsReducer as attachedResults} from '../../../features/attached-results/attached-results-slice.js';
 import type {AttachedResult} from '../../../features/attached-results/attached-results-state.js';
@@ -128,7 +127,7 @@ export function buildAttachedCitations(
     return typeof value === 'string' ? value : undefined;
   };
 
-  const mapCitationToAttachedResult = (
+  const buildAttachedResultFromCitation = (
     citation: GeneratedAnswerCitation
   ): AttachedResult => {
     return {
@@ -154,46 +153,6 @@ export function buildAttachedCitations(
     };
   };
 
-  const mapCitationToResult = (citation: GeneratedAnswerCitation): Result => {
-    return {
-      title: citation.title || '',
-      uri: citation.uri || '',
-      clickUri: citation.clickUri || citation.uri || '',
-      uniqueId: citation.id || '',
-      raw: {
-        permanentid: citation.permanentid || '',
-        urihash: validateStringOrUndefined(citation.fields?.urihash) || '',
-        collection:
-          validateStringOrUndefined(citation.fields?.collection) || 'default',
-        source:
-          citation.source ||
-          validateStringOrUndefined(citation.fields?.source) ||
-          '',
-        author: validateStringOrUndefined(citation.fields?.author) || '',
-      },
-      // Minimal required fields with defaults
-      printableUri: '',
-      excerpt: '',
-      firstSentences: '',
-      summary: null,
-      flags: '',
-      hasHtmlVersion: false,
-      score: 0,
-      percentScore: 0,
-      rankingInfo: null,
-      isTopResult: false,
-      isRecommendation: false,
-      titleHighlights: [],
-      firstSentencesHighlights: [],
-      excerptHighlights: [],
-      printableUriHighlights: [],
-      summaryHighlights: [],
-      absentTerms: [],
-      isUserActionView: false,
-      searchUid: '',
-    } as Result;
-  };
-
   return {
     ...controller,
 
@@ -208,17 +167,15 @@ export function buildAttachedCitations(
     },
 
     attach(citation: GeneratedAnswerCitation): void {
-      const resultToAttach = mapCitationToAttachedResult(citation);
+      const resultToAttach = buildAttachedResultFromCitation(citation);
       dispatch(attachResult(resultToAttach));
       dispatch(logCitationDocumentAttach(citation));
     },
 
     detach(citation: GeneratedAnswerCitation): void {
-      const resultToDetach = mapCitationToAttachedResult(citation);
+      const resultToDetach = buildAttachedResultFromCitation(citation);
       dispatch(detachResult(resultToDetach));
-      // logCaseDetach takes a result as param
-      const citationAsResult = mapCitationToResult(citation);
-      dispatch(logCaseDetach(citationAsResult));
+      dispatch(logCitationDocumentDetach(citation));
     },
   };
 }
