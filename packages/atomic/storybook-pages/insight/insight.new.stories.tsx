@@ -58,14 +58,24 @@ const meta: Meta = {
       }
     </style>
     <atomic-insight-interface language-assets-path="./lang" icon-assets-path="./assets">
+      <atomic-insight-full-search-button
+        slot="full-search"
+        tooltip="Full Search Button Tooltip"
+      ></atomic-insight-full-search-button>
       <atomic-insight-layout>
         <atomic-layout-section section="search">
           <atomic-insight-search-box></atomic-insight-search-box>
           <atomic-insight-refine-toggle></atomic-insight-refine-toggle>
+          <atomic-insight-edit-toggle tooltip="This is a tooltip"></atomic-insight-edit-toggle>
+          <atomic-insight-history-toggle tooltip="This is a tooltip"></atomic-insight-history-toggle>
           <atomic-insight-tabs>
             <atomic-insight-tab label="All" expression="" active></atomic-insight-tab>
-            <atomic-insight-tab label="Knowledge Base" expression="@source==&quot;Support Knowledge Base&quot;"></atomic-insight-tab>
-            <atomic-insight-tab label="Documentation" expression="@source==Documentation"></atomic-insight-tab>
+            <atomic-insight-tab label="Youtube" expression="@filetype==YouTubeVideo"></atomic-insight-tab>
+            <atomic-insight-tab label="Folding" expression="@source=iNaturalistTaxons"></atomic-insight-tab>
+            <atomic-insight-tab label="Service Cases" expression="@objecttype==Case"></atomic-insight-tab>
+            <atomic-insight-tab label="Users" expression="@objecttype==User"></atomic-insight-tab>
+            <atomic-insight-tab label="PDF" expression="@filetype==pdf"></atomic-insight-tab>
+            <atomic-insight-tab label="Salesforce" expression="@filetype==SalesforceItem"></atomic-insight-tab>
           </atomic-insight-tabs>
         </atomic-layout-section>
         <atomic-layout-section section="facets">
@@ -209,6 +219,16 @@ const meta: Meta = {
       'atomic-insight-interface'
     );
     await insightInterface!.executeFirstSearch();
+
+    await customElements.whenDefined('atomic-insight-full-search-button');
+    const insightFullSearchButton = context.canvasElement.querySelector(
+      'atomic-insight-full-search-button'
+    );
+    if (insightFullSearchButton) {
+      insightFullSearchButton.clickCallback = () => {
+        console.log('Full Search Button Clicked');
+      };
+    }
   },
 };
 
