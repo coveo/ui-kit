@@ -383,10 +383,13 @@ describe('InsightClient', () => {
         });
 
         it('should send proper payload for #caseDetach', async () => {
+            const mockResultUriHash = fakeDocInfo.documentUriHash;
+            const mockPermanentId = fakeDocID.contentIDValue;
             const expectedMetadata = {
                 resultUriHash: fakeDocInfo.documentUriHash,
+                permanentId: fakeDocID.contentIDValue,
             };
-            await client.logCaseDetach(fakeDocInfo.documentUriHash);
+            await client.logCaseDetach(mockResultUriHash, mockPermanentId);
             expectMatchCustomEventPayload(SearchPageEvents.caseDetach, expectedMetadata);
         });
 
@@ -453,7 +456,7 @@ describe('InsightClient', () => {
             await client.logCollapseSmartSnippetSuggestion(exampleSmartSnippetSuggestion);
             expectMatchCustomEventPayload(
                 SearchPageEvents.collapseSmartSnippetSuggestion,
-                exampleSmartSnippetSuggestion,
+                exampleSmartSnippetSuggestion
             );
         });
 
@@ -490,7 +493,7 @@ describe('InsightClient', () => {
             expectMatchDocumentPayload(
                 SearchPageEvents.openSmartSnippetSuggestionSource,
                 fakeDocInfo,
-                expectedMetadata,
+                expectedMetadata
             );
         });
 
@@ -512,7 +515,7 @@ describe('InsightClient', () => {
             expectMatchDocumentPayload(
                 SearchPageEvents.openSmartSnippetSuggestionInlineLink,
                 fakeDocInfo,
-                expectedMetadata,
+                expectedMetadata
             );
         });
         it('should send proper payload for #showMoreFoldedResults', async () => {
@@ -591,7 +594,7 @@ describe('InsightClient', () => {
             await client.logGeneratedAnswerCopyToClipboard(exampleGeneratedAnswerMetadata);
             expectMatchCustomEventPayload(
                 SearchPageEvents.generatedAnswerCopyToClipboard,
-                exampleGeneratedAnswerMetadata,
+                exampleGeneratedAnswerMetadata
             );
         });
 
@@ -641,7 +644,7 @@ describe('InsightClient', () => {
             await client.logGeneratedAnswerFeedbackSubmit(exampleGeneratedAnswerMetadata);
             expectMatchCustomEventPayload(
                 SearchPageEvents.generatedAnswerFeedbackSubmit,
-                exampleGeneratedAnswerMetadata,
+                exampleGeneratedAnswerMetadata
             );
         });
 
@@ -688,7 +691,7 @@ describe('InsightClient', () => {
             expectMatchDocumentPayload(
                 SearchPageEvents.generatedAnswerCitationDocumentAttach,
                 fakeDocInfo,
-                expectedMetadata,
+                expectedMetadata
             );
         });
 
@@ -724,7 +727,7 @@ describe('InsightClient', () => {
             await client.logGeneratedAnswerFeedbackSubmitV2(exampleGeneratedAnswerMetadata);
             expectMatchCustomEventPayload(
                 SearchPageEvents.generatedAnswerFeedbackSubmitV2,
-                exampleGeneratedAnswerMetadata,
+                exampleGeneratedAnswerMetadata
             );
         });
     });
@@ -1199,7 +1202,7 @@ describe('InsightClient', () => {
                 ...expectedBaseCaseMetadata,
                 resultUriHash: fakeDocInfo.documentUriHash,
             };
-            await client.logCaseDetach(fakeDocInfo.documentUriHash, metadata);
+            await client.logCaseDetach(fakeDocInfo.documentUriHash, undefined, metadata);
             expectMatchCustomEventPayload(SearchPageEvents.caseDetach, expectedMetadata);
         });
 
@@ -1318,7 +1321,7 @@ describe('InsightClient', () => {
             expectMatchDocumentPayload(
                 SearchPageEvents.openSmartSnippetSuggestionSource,
                 fakeDocInfo,
-                expectedMetadata,
+                expectedMetadata
             );
         });
 
@@ -1341,7 +1344,7 @@ describe('InsightClient', () => {
             expectMatchDocumentPayload(
                 SearchPageEvents.openSmartSnippetSuggestionInlineLink,
                 fakeDocInfo,
-                expectedMetadata,
+                expectedMetadata
             );
         });
 
@@ -1592,7 +1595,7 @@ describe('InsightClient', () => {
             expectMatchDocumentPayload(
                 SearchPageEvents.generatedAnswerCitationDocumentAttach,
                 fakeDocInfo,
-                expectedMetadata,
+                expectedMetadata
             );
         });
 
