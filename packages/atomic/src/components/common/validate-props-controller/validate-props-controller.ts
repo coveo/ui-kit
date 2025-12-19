@@ -7,7 +7,7 @@ import {deepEqual} from '@/src/utils/compare-utils';
  * provided Bueno schema.
  *
  * It validates the props when the host is connected to the DOM and whenever
- * the host updates, revalidating only if the props have changed since the last
+ * the host updates, re-validating only if the props have changed since the last
  * validation.
  *
  * If validation fails, the controller either sets the `error` property on the host
@@ -22,10 +22,10 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
   /**
    * Creates a `ValidatePropsController`.
    *
-   * @param host The host element.
-   * @param getProps A function that returns the current props to validate.
-   * @param schema The Bueno schema to validate the props against.
-   * @param throwOnError Whether to throw an error (true) or log a warning (false) when validation fails. Defaults to true.
+   * @param `host` The host element.
+   * @param `getProps` A function that returns the current props to validate.
+   * @param `schema` The Bueno schema to validate the props against.
+   * @param `throwOnError` Whether to throw an error (true) or log a warning (false) when validation fails. Defaults to true.
    */
   constructor(
     private host: ReactiveControllerHost & HTMLElement & {error: Error},
