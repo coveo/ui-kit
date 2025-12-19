@@ -1493,8 +1493,8 @@ importers:
   samples/headless/search-react:
     dependencies:
       '@coveo/auth':
-        specifier: 2.1.1
-        version: 2.1.1
+        specifier: workspace:*
+        version: link:../../../packages/auth
       '@coveo/headless':
         specifier: workspace:*
         version: link:../../../packages/headless
@@ -2655,10 +2655,6 @@ packages:
   '@coveo/atomic-component-health-check@2.2.19':
     resolution: {integrity: sha512-n/llxt8mLYW5P9G8R0ozbrMrqtnDT03oMix7tQ796+F2AFwL6F3FcXyRPVMqsWuTnKH6jOwZ04HcAoP+868Ejw==}
     hasBin: true
-
-  '@coveo/auth@2.1.1':
-    resolution: {integrity: sha512-m51EdkcG47/LJmCXOPrpKvYBaeiyNrs0JXpA0BaFiqnhdje/ap84iJxpXKnRUHMZvC9vxufdWExGTwXyt2NdNA==}
-    engines: {node: ^20.9.0 || ^22.11.0}
 
   '@coveo/create-atomic-component-project@1.4.2':
     resolution: {integrity: sha512-CC83e/8uO4fEqgf1pLcIotvEcR9jE5YS31wuSGbWRPA03Wjm1/nPKhGec5lDDcq1jyHp0harKMRkePiUDdb0fQ==}
@@ -4134,7 +4130,6 @@ packages:
   '@mswjs/source@0.5.0':
     resolution: {integrity: sha512-0zZT5wHnutBWInb/IAl2wGCy9M4i5nm4mRdunw7Pe5tyei07MvLATZEckC/uvNVTSEJMgJ0Kgj5GKzL/I9ZIMQ==}
     engines: {node: '>=20'}
-    deprecated: This package is renamed to . It will no longer receive any updates. Please migrate to the new package name. Thank you.
     peerDependencies:
       msw: ^2.10.0
 
@@ -15637,8 +15632,6 @@ snapshots:
     dependencies:
       chalk: 4.1.2
       zod: 3.22.4
-
-  '@coveo/auth@2.1.1': {}
 
   '@coveo/create-atomic-component-project@1.4.2': {}
 
