@@ -24,7 +24,6 @@ const meta: Meta = {
   args,
   argTypes,
   play,
-  tags: ['!dev'],
 };
 
 export default meta;

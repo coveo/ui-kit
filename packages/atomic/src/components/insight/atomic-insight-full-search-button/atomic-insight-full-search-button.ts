@@ -1,4 +1,4 @@
-import {html, LitElement} from 'lit';
+import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {renderIconButton} from '@/src/components/common/icon-button';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
@@ -7,15 +7,17 @@ import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import styles from './atomic-insight-full-search-button.tw.css';
+import ArrowFull from '../../../images/arrow-full.svg';
 
 /**
  * The `atomic-insight-full-search-button` component is an internal button that links to the full search interface.
  *
- * @internal
  * @part full-search-container - The container wrapper for the button.
  * @part full-search-button - The button element.
  * @part full-search-icon - The icon within the button.
+ *
+ * @cssprop --full-search-background-color - The background color of the button.
+ * @cssprop --full-search-secondary-background-color - The background color of the button on hover.
  */
 @customElement('atomic-insight-full-search-button')
 @bindings()
@@ -24,7 +26,30 @@ export class AtomicInsightFullSearchButton
   extends LitElement
   implements InitializableComponent<InsightBindings>
 {
-  static styles = styles;
+  static styles = css`
+   @reference '../../../utils/tailwind.global.tw.css';
+
+  :host {
+    @apply absolute right-0;
+    --full-search-background-color: var(--atomic-neutral-dark);
+    --full-search-secondary-background-color: #333536;
+  }
+
+  :host::part(full-search-button) {
+    @apply size-[27px] rounded-none border-none;
+    background-color: var(--full-search-background-color);
+    clip-path: polygon(0 0, 100% 100%, 100% 0);
+  }
+
+  :host::part(full-search-button):hover {
+    background-color: var(--full-search-secondary-background-color);
+    border-color: var(--full-search-secondary-background-color);
+  }
+
+  :host::part(full-search-icon) {
+    @apply absolute top-[4px] left-[15px] h-[9px] w-[9px];
+  }
+  `;
 
   @state() bindings!: InsightBindings;
   @state() error!: Error;
@@ -34,9 +59,7 @@ export class AtomicInsightFullSearchButton
    */
   @property({type: String, attribute: 'tooltip'}) tooltip = '';
 
-  public initialize() {
-    // This component doesn't require any controllers
-  }
+  public initialize() {}
 
   @errorGuard()
   @bindingGuard()
@@ -46,7 +69,7 @@ export class AtomicInsightFullSearchButton
         props: {
           partPrefix: 'full-search',
           style: 'outline-neutral',
-          icon: 'assets://arrow-full.svg',
+          icon: ArrowFull,
           ariaLabel: this.bindings.i18n.t('full-search'),
           title: this.tooltip,
         },

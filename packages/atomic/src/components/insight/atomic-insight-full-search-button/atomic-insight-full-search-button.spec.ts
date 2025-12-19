@@ -1,43 +1,27 @@
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {fixture} from '@/vitest-utils/testing-helpers/fixture.js';
-import {buildFakeInsightEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/engine.js';
+import {beforeEach, describe, expect, it} from 'vitest';
+import {renderInAtomicInsightInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-interface-fixture.js';
 import type {AtomicInsightFullSearchButton} from './atomic-insight-full-search-button.js';
 import './atomic-insight-full-search-button.js';
 
 describe('atomic-insight-full-search-button', () => {
-  let mockEngine: ReturnType<typeof buildFakeInsightEngine>;
   let element: AtomicInsightFullSearchButton;
 
   const setupElement = async (props: {tooltip?: string} = {}) => {
-    element = await fixture<AtomicInsightFullSearchButton>(
-      html`<atomic-insight-full-search-button
-        .tooltip=${props.tooltip ?? ''}
-      ></atomic-insight-full-search-button>`
-    );
+    const result =
+      await renderInAtomicInsightInterface<AtomicInsightFullSearchButton>({
+        template: html`<atomic-insight-full-search-button
+          .tooltip=${props.tooltip ?? ''}
+        ></atomic-insight-full-search-button>`,
+        selector: 'atomic-insight-full-search-button',
+      });
 
-    // Mock the bindings
-    element.bindings = {
-      engine: mockEngine,
-      i18n: {
-        t: vi.fn((key: string) => key),
-      } as never,
-      store: {} as never,
-      interfaceElement: {} as never,
-      createStyleElement: vi.fn(),
-      createScriptElement: vi.fn(),
-    };
-
-    // Initialize the component
-    element.initialize();
-
+    element = result.element;
     await element.updateComplete;
     return element;
   };
 
-  beforeEach(() => {
-    mockEngine = buildFakeInsightEngine();
-  });
+  beforeEach(() => {});
 
   describe('#initialize', () => {
     it('should not throw an error', async () => {
@@ -75,8 +59,9 @@ describe('atomic-insight-full-search-button', () => {
       await setupElement();
 
       const button = element.shadowRoot?.querySelector('button');
-      expect(button?.getAttribute('aria-label')).toBe('full-search');
-      expect(element.bindings.i18n.t).toHaveBeenCalledWith('full-search');
+      expect(button?.getAttribute('aria-label')).toBe(
+        'Button to access full search'
+      );
     });
 
     it('should render the button with an empty title by default', async () => {
@@ -99,7 +84,7 @@ describe('atomic-insight-full-search-button', () => {
 
       const icon = element.shadowRoot?.querySelector('atomic-icon');
       expect(icon).toBeInTheDocument();
-      expect(icon?.getAttribute('icon')).toBe('assets://arrow-full.svg');
+      expect(icon?.getAttribute('icon')).toContain('<svg');
     });
 
     it('should render the button with the correct style', async () => {
