@@ -43,6 +43,7 @@ import {
 } from '@/src/components/common/formats/format-common';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
+import {arrayConverter} from '@/src/converters/array-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -50,6 +51,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
+import {mapProperty} from '@/src/utils/props-utils';
 import {randomID} from '@/src/utils/utils';
 import '@/src/components/common/atomic-facet-number-input/atomic-facet-number-input';
 
@@ -121,7 +123,11 @@ export class AtomicNumericFacet
    * ```
    * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
    */
-  @property({type: Array, attribute: 'tabs-included'})
+  @property({
+    type: Array,
+    attribute: 'tabs-included',
+    converter: arrayConverter,
+  })
   tabsIncluded: string[] = [];
 
   /**
@@ -133,7 +139,11 @@ export class AtomicNumericFacet
    * ```
    * If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
    */
-  @property({type: Array, attribute: 'tabs-excluded'})
+  @property({
+    type: Array,
+    attribute: 'tabs-excluded',
+    converter: arrayConverter,
+  })
   tabsExcluded: string[] = [];
 
   /**
@@ -220,8 +230,8 @@ export class AtomicNumericFacet
    * ></atomic-numeric-facet>
    * ```
    */
-  @property({type: Object, attribute: 'depends-on'})
-  dependsOn: Record<string, string> = {};
+  @mapProperty({attributePrefix: 'depends-on'})
+  dependsOn!: Record<string, string>;
 
   @state() bindings!: Bindings;
 
