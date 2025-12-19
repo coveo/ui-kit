@@ -9,13 +9,12 @@ slug: usage/usage-analytics/coveo-ua
 When used correctly, Headless controllers take care of logging standard Coveo UA search and click [Coveo Analytics events](https://docs.coveo.com/en/260/) for you.
 This article covers various topics that you may find helpful if you require further customization when using the Coveo UA protocol with Headless.
 
-<dl><dt><strong>📌 Notes</strong></dt><dd>
-
-* For brevity, this article mainly focuses on the [`Search Engine`](https://docs.coveo.com/en/headless/latest/reference/modules/Search.html).
-However, similar logic applies when configuring UA for other Headless engines (except the Commerce Engine, which only supports [Event Protocol](https://docs.coveo.com/en/o3r90189/)).
-* Take a look at the [Log view events with Coveo UA](https://docs.coveo.com/en/headless/latest/usage/headless-usage-analytics/headless-view-events/) article to understand how to log view events.
-View event tracking with the Coveo UA protocol requires the `coveoua.js` script rather than the [Atomic](https://docs.coveo.com/en/lcdf0264/) or Headless libraries.
-</dd></dl>
+> [!NOTE]
+> 
+> * For brevity, this article mainly focuses on the [`Search Engine`](https://docs.coveo.com/en/headless/latest/reference/modules/Search.html).
+> However, similar logic applies when configuring UA for other Headless engines (except the Commerce Engine, which only supports [Event Protocol](https://docs.coveo.com/en/o3r90189/)).
+> * Take a look at the [Log view events with Coveo UA](https://docs.coveo.com/en/headless/latest/usage/headless-usage-analytics/headless-view-events/) article to understand how to log view events.
+> View event tracking with the Coveo UA protocol requires the `coveoua.js` script rather than the [Atomic](https://docs.coveo.com/en/lcdf0264/) or Headless libraries.
 
 ## Modify the metadata to send with UA events
 
@@ -65,11 +64,9 @@ Click events are intended to record item view and preview actions, such as:
 * Opening a result link
 * Opening a result Quick view
 
-<dl><dt><strong>⚠️ WARNING</strong></dt><dd>
-
-We strongly recommend using the [`InteractiveResult`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.InteractiveResult.html) controller when implementing your result components.
-The controller can automatically extract relevant data from result items and log click events for you, as in the following interactive example.
-</dd></dl>
+> [!WARNING]
+> We strongly recommend using the [`InteractiveResult`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.InteractiveResult.html) controller when implementing your result components.
+> The controller can automatically extract relevant data from result items and log click events for you, as in the following interactive example.
 
 <iframe src="https://stackblitz.com/github/coveo/headless-documentation-material-ui-react-codesandbox/tree/main?embed=1&view=split&file=src%2FComponents%2FResultLink.tsx"
      style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
@@ -166,10 +163,9 @@ This will lets you return a dictionary of possible search analytics action creat
 This is the analytics event you will log.
 6. Dispatch an action to execute a search query, with the search analytic action passed in as input to log it.
 
-<dl><dt><strong>📌 Note</strong></dt><dd>
-
-Take a look at [Custom events](#send-custom-events) to see a code example of how to log a search event using `GenericAnalyticsActions`.
-</dd></dl>
+> [!NOTE]
+> 
+> Take a look at [Custom events](#send-custom-events) to see a code example of how to log a search event using `GenericAnalyticsActions`.
 
 ## Send custom events
 
@@ -233,11 +229,10 @@ While we recommend the use of a search token for request authentication, it’s 
 
 When using an API key, user information can be sent to Coveo by [modifying the UA event](#modify-the-metadata-to-send-with-ua-events), as shown in the following code snippet:
 
-<dl><dt><strong>❗ IMPORTANT</strong></dt><dd>
-
-When you [create the API Key](https://docs.coveo.com/en/1718#create-an-api-key), use the **Anonymous search** [template](https://docs.coveo.com/en/1718#api-key-templates).
-It will provide the right [privileges](https://docs.coveo.com/en/228/) for this use case.
-</dd></dl>
+>[!IMPORTANT]
+>
+>When you [create the API Key](https://docs.coveo.com/en/1718#create-an-api-key), use the **Anonymous search** [template](https://docs.coveo.com/en/1718#api-key-templates).
+>It will provide the right [privileges](https://docs.coveo.com/en/228/) for this use case.
 
 ```typescript
 export const headlessEngine = buildSearchEngine({
@@ -289,11 +284,10 @@ const pushToGoogleDataLayer = (payload: Record<string, unknown>) => {
 
 Coveo front-end libraries use the `coveo_visitorId` cookie to track individual users and sessions.
 
-<dl><dt><strong>📌 Note</strong></dt><dd>
-
-Coveo now uses the [client ID](https://docs.coveo.com/en/lbjf0131/) value to track individual users and sessions.
-For compatibility with legacy implementations, however, the associated cookie and local storage value are [still labeled `visitorID`](https://docs.coveo.com/en/mc2e2218#why-do-i-still-see-the-name-visitor-id-in-the-local-storage).
-</dd></dl>
+> [!NOTE]
+> 
+> Coveo now uses the [client ID](https://docs.coveo.com/en/lbjf0131/) value to track individual users and sessions.
+> For compatibility with legacy implementations, however, the associated cookie and local storage value are [still labeled `visitorID`](https://docs.coveo.com/en/mc2e2218#why-do-i-still-see-the-name-visitor-id-in-the-local-storage).
 
 When implementing a cookie policy, you may need to disable UA tracking for end-users under specific circumstances (for example, when a user opts out of cookies).
 To do so, call the [`disableAnalytics`](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.SearchEngine.html#disableAnalytics) method on an engine instance.
@@ -315,20 +309,17 @@ headlessEngine.disableAnalytics()
 [`doNotTrack`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/doNotTrack) is a browser property which reflects the value of the [`DNT`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/DNT) HTTP header.
 It’s used to indicate whether the user is requesting sites and advertisers not to track them.
 
-<dl><dt><strong>📌 Note</strong></dt><dd>
-
-This property is deprecated, but it’s still supported in many browsers.
-</dd></dl>
+> [!NOTE]
+> 
+> This property is deprecated, but it’s still supported in many browsers.
 
 Headless v2 complies with the value of this property.
 It automatically disables analytics tracking whenever `DNT` is enabled.
 
-<dl><dt><strong>❗ IMPORTANT</strong></dt><dd>
+> [!IMPORTANT]
+> 
+> Headless v3 will no longer support this property.
 
-Headless v3 will no longer support this property.
-</dd></dl>
-
-<dl><dt><strong>📌 NOTE</strong></dt><dd>
-
-To understand how Coveo Usage Analytics tracks users and sessions, see [What’s a user visit?](https://docs.coveo.com/en/1873/).
-</dd></dl>
+> [!NOTE]
+> 
+> To understand how Coveo Usage Analytics tracks users and sessions, see [What’s a user visit?](https://docs.coveo.com/en/1873/).

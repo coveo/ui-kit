@@ -1,0 +1,17 @@
+{
+  "name": "@samples/headless-rga-native",
+  "version": "0.1.0",
+  "description": "Native JavaScript example for Coveo Headless Relevance Generative Answering (RGA)",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node scripts/server.js"
+  },
+  "keywords": [
+    "coveo",
+    "headless",
+    "rga",
+    "generative-answering",
+    "native-javascript"
+  ]
+}

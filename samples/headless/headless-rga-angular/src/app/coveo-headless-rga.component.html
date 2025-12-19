@@ -1,0 +1,23 @@
+<!-- src/app/coveo-headless-rga.component.ts -->
+<div class="coveo">
+  <form class="search-row" (ngSubmit)="onSearchSubmit()">
+    <input
+      type="search"
+      [(ngModel)]="searchBoxState().value"
+      name="q"
+      placeholder="Ask your question..."
+      autocomplete="off"
+    />
+    <button type="submit">Search</button>
+    <button type="button" class="ghost" (click)="onClear()">Clear</button>
+  </form>
+
+  <div class="layout">
+    <main class="results">
+      <div class="empty" *ngIf="generatedAnswerState()?.isLoading === false">
+        {{generatedAnswerState()?.answer}}
+      </div>
+    </main>
+  </div>
+</div>
+

@@ -29,3 +29,5 @@ packages/atomic/custom-elements.json
 
 # Test screenshots
 **/__screenshots__/
+
+samples/headless/headless-rga-angular/.angular
