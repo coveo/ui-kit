@@ -92,6 +92,24 @@ export class AtomicResultList
     gridDisplayStyles,
   ];
 
+  private static readonly propsSchema = new Schema({
+    density: new StringValue({
+      constrainTo: ['normal', 'comfortable', 'compact'],
+    }),
+    display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
+    imageSize: new StringValue({
+      constrainTo: ['small', 'large', 'icon', 'none'],
+    }),
+    tabsIncluded: new ArrayValue({
+      each: new StringValue({}),
+      required: false,
+    }),
+    tabsExcluded: new ArrayValue({
+      each: new StringValue({}),
+      required: false,
+    }),
+  });
+
   public resultList!: ResultList;
   public resultsPerPage!: ResultsPerPage;
   public tabManager!: TabManager;
@@ -188,23 +206,7 @@ export class AtomicResultList
         tabsIncluded: this.tabsIncluded,
         tabsExcluded: this.tabsExcluded,
       }),
-      new Schema({
-        density: new StringValue({
-          constrainTo: ['normal', 'comfortable', 'compact'],
-        }),
-        display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
-        imageSize: new StringValue({
-          constrainTo: ['small', 'large', 'icon', 'none'],
-        }),
-        tabsIncluded: new ArrayValue({
-          each: new StringValue({}),
-          required: false,
-        }),
-        tabsExcluded: new ArrayValue({
-          each: new StringValue({}),
-          required: false,
-        }),
-      }),
+      AtomicResultList.propsSchema,
       // TODO V4: KIT-5197 - Remove false
       false
     );

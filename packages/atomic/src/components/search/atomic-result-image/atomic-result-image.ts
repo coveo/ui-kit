@@ -39,6 +39,10 @@ atomic-result-image {
 }
   `;
 
+  private static readonly propsSchema = new Schema({
+    field: new StringValue({required: true, emptyAllowed: false}),
+  });
+
   /**
    * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the `atomic-search-interface` component.
    */
@@ -73,9 +77,7 @@ atomic-result-image {
     new ValidatePropsController(
       this,
       () => ({field: this.field}),
-      new Schema({
-        field: new StringValue({required: true, emptyAllowed: false}),
-      }),
+      AtomicResultImage.propsSchema,
       // TODO V4: KIT-5197 - Remove false
       false
     );

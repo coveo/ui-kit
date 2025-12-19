@@ -70,6 +70,22 @@ export class AtomicFoldedResultList
 {
   static styles: CSSResultGroup = [placeholderStyles, listDisplayStyles];
 
+  private static readonly propsSchema = new Schema({
+    density: new StringValue({
+      constrainTo: ['normal', 'comfortable', 'compact'],
+    }),
+    imageSize: new StringValue({
+      constrainTo: ['small', 'large', 'icon', 'none'],
+    }),
+    tabsIncluded: new ArrayValue({
+      each: new StringValue({}),
+    }),
+    tabsExcluded: new ArrayValue({
+      each: new StringValue({}),
+    }),
+    numberOfFoldedResults: new NumberValue({min: 0}),
+  });
+
   public foldedResultList!: FoldedResultList;
   public resultsPerPage!: ResultsPerPage;
   public tabManager!: TabManager;
@@ -202,21 +218,7 @@ export class AtomicFoldedResultList
         tabsExcluded: this.tabsExcluded,
         numberOfFoldedResults: this.numberOfFoldedResults,
       }),
-      new Schema({
-        density: new StringValue({
-          constrainTo: ['normal', 'comfortable', 'compact'],
-        }),
-        imageSize: new StringValue({
-          constrainTo: ['small', 'large', 'icon', 'none'],
-        }),
-        tabsIncluded: new ArrayValue({
-          each: new StringValue({}),
-        }),
-        tabsExcluded: new ArrayValue({
-          each: new StringValue({}),
-        }),
-        numberOfFoldedResults: new NumberValue({min: 0}),
-      })
+      AtomicFoldedResultList.propsSchema
     );
   }
 
