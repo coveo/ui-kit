@@ -1,15 +1,15 @@
 import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {renderIconButton} from '@/src/components/common/icon-button';
-import EditIcon from '@/src/images/edit.svg';
-import {LightDomMixin} from '@/src/mixins/light-dom';
+import EditIcon from '../../../images/edit.svg';
 
 /**
  * The `atomic-insight-edit-toggle` component provides an edit button for insight interfaces.
- * @internal
+ *
+ * @part insight-edit-toggle-button - The edit button element.
  */
 @customElement('atomic-insight-edit-toggle')
-export class AtomicInsightEditToggle extends LightDomMixin(LitElement) {
+export class AtomicInsightEditToggle extends LitElement {
   /**
    * The callback function to be executed when the button is clicked.
    */

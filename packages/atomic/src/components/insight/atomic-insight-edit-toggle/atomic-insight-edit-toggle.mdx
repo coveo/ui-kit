@@ -1,29 +1,19 @@
-import {Meta, Canvas, Story, Controls} from '@storybook/blocks';
-import * as InsightEditToggleStories from './atomic-insight-edit-toggle.new.stories';
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicInsightEditToggleStories from './atomic-insight-edit-toggle.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta of={InsightEditToggleStories} />
+<Meta of={AtomicInsightEditToggleStories} />
 
-# Atomic Insight Edit Toggle
+<AtomicDocTemplate
+  stories={AtomicInsightEditToggleStories}
+  githubPath="insight/atomic-insight-edit-toggle/atomic-insight-edit-toggle.ts"
+  tagName="atomic-insight-edit-toggle"
+  className="AtomicInsightEditToggle"
+>
 
 The `atomic-insight-edit-toggle` component provides an edit button for insight interfaces. This is an internal component typically used within other Insight components to provide editing functionality.
 
-<Canvas of={InsightEditToggleStories.Default} />
-
-## Properties
-
-<Controls />
-
-## Usage
-
-The component is primarily used internally but can be configured with a callback function and optional tooltip.
-
-### With Tooltip
-
-<Canvas of={InsightEditToggleStories.WithTooltip} />
-
-### With Long Tooltip
-
-<Canvas of={InsightEditToggleStories.WithLongTooltip} />
+The component can be configured with a callback function and optional tooltip.
 
 ## Styling
 
@@ -33,14 +23,4 @@ The component uses the following part attributes for styling:
 - `insight-edit-toggle-button`: The button element
 - `insight-edit-toggle-icon`: The edit icon
 
-## Accessibility
-
-- The button has an `aria-label` of "Edit" for screen reader users
-- Supports keyboard navigation and activation
-- Tooltip text is displayed via the `title` attribute
-
-## Notes
-
-- This is an internal component marked with `@internal`
-- The edit icon is built into the component
-- The component uses light DOM for rendering
+</AtomicDocTemplate>

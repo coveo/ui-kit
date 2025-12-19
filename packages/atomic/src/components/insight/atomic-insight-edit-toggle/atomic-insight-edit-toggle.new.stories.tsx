@@ -1,15 +1,13 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import './atomic-insight-edit-toggle';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 
-const {decorator, play} = wrapInInsightInterface({
-  skipFirstSearch: true,
-});
+const {decorator, play} = wrapInInsightInterface();
 
 const meta: Meta = {
   component: 'atomic-insight-edit-toggle',
-  title: 'Insight/InsightEditToggle',
+  title: 'Insight/Edit Toggle',
   decorators: [decorator],
   play,
   argTypes: {
@@ -38,12 +36,5 @@ export const Default: Story = {};
 export const WithTooltip: Story = {
   args: {
     tooltip: 'Click to edit this item',
-  },
-};
-
-export const WithLongTooltip: Story = {
-  args: {
-    tooltip:
-      'Click here to edit and customize this item according to your preferences',
   },
 };
