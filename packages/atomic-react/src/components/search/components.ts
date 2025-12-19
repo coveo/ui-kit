@@ -6,7 +6,6 @@ import {
   AtomicCategoryFacet as LitAtomicCategoryFacet,
   AtomicColorFacet as LitAtomicColorFacet,
   AtomicComponentError as LitAtomicComponentError,
-  AtomicDidYouMean as LitAtomicDidYouMean,
   AtomicExternal as LitAtomicExternal,
   AtomicFacet as LitAtomicFacet,
   AtomicFacetManager as LitAtomicFacetManager,
@@ -120,12 +119,6 @@ export const AtomicComponentError = createComponent({
   tagName: 'atomic-component-error',
   react: React,
   elementClass: LitAtomicComponentError,
-});
-
-export const AtomicDidYouMean = createComponent({
-  tagName: 'atomic-did-you-mean',
-  react: React,
-  elementClass: LitAtomicDidYouMean,
 });
 
 export const AtomicExternal = createComponent({
