@@ -87,9 +87,9 @@ export class AtomicTabManager
     }
 
     tabElements.forEach((tabElement) => {
-      const name = tabElement.getAttribute('name');
+      const name = tabElement.getAttribute('name') || '';
       const expression = tabElement.getAttribute('expression') ?? '';
-      const label = tabElement.getAttribute('label');
+      const label = tabElement.getAttribute('label') || '';
 
       if (!name) {
         this.error = new Error(
