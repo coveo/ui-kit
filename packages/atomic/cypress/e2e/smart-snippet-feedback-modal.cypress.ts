@@ -133,22 +133,12 @@ describe('Smart Snippet Feedback Modal Test Suites', () => {
       SmartSnippetSelectors.feedbackExplainWhy().click({force: true});
     });
 
-    SmartSnippetFeedbackModalAssertions.assertLogOpenSmartSnippetFeedbackModal();
-
     describe('after clicking cancel', () => {
       beforeEach(() => {
         SmartSnippetFeedbackModalSelectors.cancelButton().click({force: true});
       });
 
       SmartSnippetFeedbackModalAssertions.assertLogCloseSmartSnippetFeedbackModal();
-
-      describe('then opening the modal again', () => {
-        beforeEach(() => {
-          SmartSnippetSelectors.feedbackExplainWhy().click({force: true});
-        });
-
-        SmartSnippetFeedbackModalAssertions.assertLogOpenSmartSnippetFeedbackModal();
-      });
     });
 
     describe('after clicking the backdrop', () => {

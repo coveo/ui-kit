@@ -80,7 +80,8 @@
     "release:phase1": "pnpm --filter @coveo/ci bump",
     "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
-    "chromatic": "chromatic -d=dist-storybook"
+    "chromatic": "chromatic -d=dist-storybook",
+    "validate:light-dom-styles": "node ./scripts/check-light-dom-host-selectors.mjs"
   },
   "dependencies": {
     "@coveo/bueno": "workspace:*",
@@ -176,7 +177,7 @@
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": "^20.9.0 || ^22.11.0"
+    "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
   },
   "msw": {
     "workerDirectory": [
