@@ -5,32 +5,32 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
-import { AnyBindings } from "./components/common/interface/bindings";
-import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
+import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
+import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
+import { AnyBindings } from "./components/common/interface/bindings";
 import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
-export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
-export { AnyBindings } from "./components/common/interface/bindings";
-export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
+export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
+export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { RedirectionPayload } from "./components/common/search-box/redirection-payload";
+export { AnyBindings } from "./components/common/interface/bindings";
 export { i18n } from "i18next";
 export { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
 export namespace Components {
@@ -59,16 +59,6 @@ export namespace Components {
           * Callback function invoked when the user stops hovering over a citation. `citationHoverTimeMs` is the amount of time over which the citation has been hovered.
          */
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
-    }
-    /**
-     * Internal component made to be integrated in a NumericFacet.
-     */
-    interface AtomicFacetNumberInput {
-        "bindings": AnyBindings;
-        "filter": NumericFilter;
-        "filterState": NumericFilterState;
-        "label": string;
-        "type": NumberInputType;
     }
     /**
      * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
@@ -1030,10 +1020,6 @@ export namespace Components {
         "htmlContent": string;
         "innerStyle"?: string;
     }
-    interface AtomicSmartSnippetCollapseWrapper {
-        "collapsedHeight"?: number;
-        "maximumHeight"?: number;
-    }
     /**
      * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
      * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
@@ -1102,20 +1088,6 @@ export namespace Components {
         "side": 'left' | 'right';
         "suggestion": SearchBoxSuggestionElement;
     }
-    interface AtomicTabButton {
-        /**
-          * Whether the tab button is active.
-         */
-        "active": boolean;
-        /**
-          * The label to display on the tab button.
-         */
-        "label": string;
-        /**
-          * Click handler for the tab button.
-         */
-        "select": () => void;
-    }
     /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
@@ -1178,10 +1150,6 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
-}
-export interface AtomicFacetNumberInputCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicFacetNumberInputElement;
 }
 export interface AtomicGeneratedAnswerFeedbackModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1248,26 +1216,6 @@ declare global {
     var HTMLAtomicCitationElement: {
         prototype: HTMLAtomicCitationElement;
         new (): HTMLAtomicCitationElement;
-    };
-    interface HTMLAtomicFacetNumberInputElementEventMap {
-        "atomic/numberInputApply": any;
-    }
-    /**
-     * Internal component made to be integrated in a NumericFacet.
-     */
-    interface HTMLAtomicFacetNumberInputElement extends Components.AtomicFacetNumberInput, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicFacetNumberInputElementEventMap>(type: K, listener: (this: HTMLAtomicFacetNumberInputElement, ev: AtomicFacetNumberInputCustomEvent<HTMLAtomicFacetNumberInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicFacetNumberInputElementEventMap>(type: K, listener: (this: HTMLAtomicFacetNumberInputElement, ev: AtomicFacetNumberInputCustomEvent<HTMLAtomicFacetNumberInputElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicFacetNumberInputElement: {
-        prototype: HTMLAtomicFacetNumberInputElement;
-        new (): HTMLAtomicFacetNumberInputElement;
     };
     interface HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap {
         "feedbackSent": any;
@@ -1787,12 +1735,6 @@ declare global {
         prototype: HTMLAtomicSmartSnippetAnswerElement;
         new (): HTMLAtomicSmartSnippetAnswerElement;
     };
-    interface HTMLAtomicSmartSnippetCollapseWrapperElement extends Components.AtomicSmartSnippetCollapseWrapper, HTMLStencilElement {
-    }
-    var HTMLAtomicSmartSnippetCollapseWrapperElement: {
-        prototype: HTMLAtomicSmartSnippetCollapseWrapperElement;
-        new (): HTMLAtomicSmartSnippetCollapseWrapperElement;
-    };
     interface HTMLAtomicSmartSnippetFeedbackModalElementEventMap {
         "feedbackSent": any;
     }
@@ -1887,12 +1829,6 @@ declare global {
         prototype: HTMLAtomicSuggestionRendererElement;
         new (): HTMLAtomicSuggestionRendererElement;
     };
-    interface HTMLAtomicTabButtonElement extends Components.AtomicTabButton, HTMLStencilElement {
-    }
-    var HTMLAtomicTabButtonElement: {
-        prototype: HTMLAtomicTabButtonElement;
-        new (): HTMLAtomicTabButtonElement;
-    };
     /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
@@ -1905,7 +1841,6 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "atomic-citation": HTMLAtomicCitationElement;
-        "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
@@ -1959,13 +1894,11 @@ declare global {
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
-        "atomic-smart-snippet-collapse-wrapper": HTMLAtomicSmartSnippetCollapseWrapperElement;
         "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
         "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
-        "atomic-tab-button": HTMLAtomicTabButtonElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
     }
 }
@@ -1995,17 +1928,6 @@ declare namespace LocalJSX {
           * Callback function invoked when the user stops hovering over a citation. `citationHoverTimeMs` is the amount of time over which the citation has been hovered.
          */
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
-    }
-    /**
-     * Internal component made to be integrated in a NumericFacet.
-     */
-    interface AtomicFacetNumberInput {
-        "bindings": AnyBindings;
-        "filter": NumericFilter;
-        "filterState": NumericFilterState;
-        "label": string;
-        "onAtomic/numberInputApply"?: (event: AtomicFacetNumberInputCustomEvent<any>) => void;
-        "type": NumberInputType;
     }
     /**
      * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
@@ -2938,10 +2860,6 @@ declare namespace LocalJSX {
         "onCancelPendingSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
         "onSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
     }
-    interface AtomicSmartSnippetCollapseWrapper {
-        "collapsedHeight"?: number;
-        "maximumHeight"?: number;
-    }
     /**
      * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
      * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
@@ -3015,20 +2933,6 @@ declare namespace LocalJSX {
         "side": 'left' | 'right';
         "suggestion": SearchBoxSuggestionElement;
     }
-    interface AtomicTabButton {
-        /**
-          * Whether the tab button is active.
-         */
-        "active"?: boolean;
-        /**
-          * The label to display on the tab button.
-         */
-        "label": string;
-        /**
-          * Click handler for the tab button.
-         */
-        "select": () => void;
-    }
     /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
@@ -3093,7 +2997,6 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "atomic-citation": AtomicCitation;
-        "atomic-facet-number-input": AtomicFacetNumberInput;
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
         "atomic-insight-facet": AtomicInsightFacet;
@@ -3147,13 +3050,11 @@ declare namespace LocalJSX {
         "atomic-search-box": AtomicSearchBox;
         "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
-        "atomic-smart-snippet-collapse-wrapper": AtomicSmartSnippetCollapseWrapper;
         "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
         "atomic-smart-snippet-source": AtomicSmartSnippetSource;
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
-        "atomic-tab-button": AtomicTabButton;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
     }
 }
@@ -3165,10 +3066,6 @@ declare module "@stencil/core" {
              * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
              */
             "atomic-citation": LocalJSX.AtomicCitation & JSXBase.HTMLAttributes<HTMLAtomicCitationElement>;
-            /**
-             * Internal component made to be integrated in a NumericFacet.
-             */
-            "atomic-facet-number-input": LocalJSX.AtomicFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicFacetNumberInputElement>;
             /**
              * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
              */
@@ -3296,7 +3193,6 @@ declare module "@stencil/core" {
              */
             "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
             "atomic-smart-snippet-answer": LocalJSX.AtomicSmartSnippetAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetAnswerElement>;
-            "atomic-smart-snippet-collapse-wrapper": LocalJSX.AtomicSmartSnippetCollapseWrapper & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetCollapseWrapperElement>;
             /**
              * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
              * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
@@ -3331,7 +3227,6 @@ declare module "@stencil/core" {
              * use native Elements.
              */
             "atomic-suggestion-renderer": LocalJSX.AtomicSuggestionRenderer & JSXBase.HTMLAttributes<HTMLAtomicSuggestionRendererElement>;
-            "atomic-tab-button": LocalJSX.AtomicTabButton & JSXBase.HTMLAttributes<HTMLAtomicTabButtonElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results.
              * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
