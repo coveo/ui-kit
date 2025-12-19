@@ -5,7 +5,7 @@ import {page} from 'vitest/browser';
 import '@/src/components/common/atomic-layout-section/atomic-layout-section';
 import './atomic-insight-layout';
 import {renderInAtomicInsightInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-interface-fixture';
-import {AtomicInsightLayout} from './atomic-insight-layout';
+import type {AtomicInsightLayout} from './atomic-insight-layout';
 
 describe('atomic-insight-layout', () => {
   const renderInsightLayout = async (
@@ -63,11 +63,6 @@ describe('atomic-insight-layout', () => {
   it('should use default mobileBreakpoint if not set', async () => {
     const {element} = await renderInsightLayout();
     expect(element).toHaveAttribute('mobile-breakpoint', '1024px');
-  });
-
-  it('should add layout css on connectedCallback', async () => {
-    await renderInsightLayout();
-    expect(AtomicInsightLayout.styles.length).toBeGreaterThan(0);
   });
 
   describe('#layoutStylesController', () => {

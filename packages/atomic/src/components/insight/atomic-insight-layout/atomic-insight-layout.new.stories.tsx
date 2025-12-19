@@ -5,18 +5,17 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 
 const {decorator, play} = wrapInInsightInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-insight-layout',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes} = getStorybookHelpers('atomic-insight-layout', {
+  excludeCategories: ['methods'],
+});
 
 const meta: Meta = {
   component: 'atomic-insight-layout',
   title: 'Insight/Layout',
   id: 'atomic-insight-layout',
-  render: (args) => html`<atomic-insight-layout>
-   <atomic-layout-section section="search"> Search</atomic-layout-section>
-  <atomic-layout-section section="results"> results   </atomic-layout-section>
+  render: () => html`<atomic-insight-layout>
+   <atomic-layout-section section="search"> search section</atomic-layout-section>
+  <atomic-layout-section section="results"> results section</atomic-layout-section>
   </atomic-insight-layout>`,
   decorators: [decorator],
   parameters: {
@@ -28,18 +27,9 @@ const meta: Meta = {
   argTypes,
 
   play,
-  args: {
-    ...args,
-    'default-slot': `<span>Layout content</span>`,
-  },
+  args,
 };
 
 export default meta;
 
 export const Default: Story = {};
-
-export const WidgetMode: Story = {
-  args: {
-    'attributes-widget': true,
-  },
-};
