@@ -219,16 +219,6 @@ const meta: Meta = {
       'atomic-insight-interface'
     );
     await insightInterface!.executeFirstSearch();
-
-    await customElements.whenDefined('atomic-insight-full-search-button');
-    const insightFullSearchButton = context.canvasElement.querySelector(
-      'atomic-insight-full-search-button'
-    );
-    if (insightFullSearchButton) {
-      insightFullSearchButton.clickCallback = () => {
-        console.log('Full Search Button Clicked');
-      };
-    }
   },
 };
 
