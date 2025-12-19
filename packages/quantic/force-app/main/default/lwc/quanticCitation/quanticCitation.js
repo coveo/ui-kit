@@ -5,7 +5,8 @@ import {LightningElement, api} from 'lwc';
 /** @typedef {import("coveo").InteractiveCitation} InteractiveCitation */
 
 const minimumTooltipDisplayDurationMs = 1000;
-const tooltipHideDelayMs = 200;
+const hoverTooltipDelayMs = 200;
+const closeTooltipDelayMs = 100;
 const supportedFileTypesForTextFragment = ['html', 'SalesforceItem'];
 
 /**
@@ -71,6 +72,8 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   isHrefWithTextFragment = false;
   /** @type {Object} */
   hideTooltipDebounced;
+  /** @type {Object} */
+  showTooltipDebounced;
 
   connectedCallback() {
     const fileType = this.citation?.fields?.filetype;
@@ -79,14 +82,13 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       supportedFileTypesForTextFragment.includes(fileType) &&
       !!this.text;
 
-    // Initialize the debounced hide tooltip function
     this.hideTooltipDebounced = debounce(() => {
-      if (this.tooltipIsDisplayed) {
-        this.dispatchCitationHoverEvent();
-      }
-      this.tooltipIsDisplayed = false;
-      this.tooltipComponent?.hideTooltip();
-    }, tooltipHideDelayMs);
+      this.hideTooltip();
+    }, closeTooltipDelayMs);
+
+    this.showTooltipDebounced = debounce(() => {
+      this.showTooltip();
+    }, hoverTooltipDelayMs);
   }
 
   renderedCallback() {
@@ -111,14 +113,16 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   disconnectedCallback() {
     this.removeBindings?.();
     clearTimeout(this.timeout);
-    this.hideTooltipDebounced?.cancel();
+    this.cancelTooltipTimers();
   }
 
   handleCitationMouseEnter() {
-    this.showTooltip();
+    this.cancelTooltipTimers();
+    this.showTooltipDebounced();
   }
 
   handleCitationMouseLeave() {
+    this.cancelTooltipTimers();
     this.hideTooltipDebounced();
   }
 
@@ -127,19 +131,28 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   }
 
   handleTooltipMouseLeave() {
-    this.hideTooltipDebounced();
+    this.handleCitationMouseLeave();
   }
 
-  /**
-   * Shows the tooltip immediately and cancels any pending hide.
-   */
   showTooltip() {
-    this.hideTooltipDebounced.cancel();
     if (!this.tooltipIsDisplayed) {
       this.hoverStartTimestamp = Date.now();
       this.tooltipIsDisplayed = true;
       this.tooltipComponent?.showTooltip();
     }
+  }
+
+  hideTooltip() {
+    if (this.tooltipIsDisplayed) {
+      this.dispatchCitationHoverEvent();
+      this.tooltipIsDisplayed = false;
+      this.tooltipComponent?.hideTooltip();
+    }
+  }
+
+  cancelTooltipTimers() {
+    this.hideTooltipDebounced?.cancel();
+    this.showTooltipDebounced?.cancel();
   }
 
   /**
