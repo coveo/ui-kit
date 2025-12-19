@@ -1,5 +1,9 @@
 // Auto-generated file
 export default {
+  'atomic-insight-full-search-button': async () =>
+    await import(
+      './atomic-insight-full-search-button/atomic-insight-full-search-button.js'
+    ),
   'atomic-insight-generate-answer-button': async () =>
     await import(
       './atomic-insight-generate-answer-button/atomic-insight-generate-answer-button.js'

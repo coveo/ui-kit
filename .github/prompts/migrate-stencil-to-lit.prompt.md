@@ -85,7 +85,7 @@ Migrate files according to this mapping:
 **From Stencil format:**
 
 - `atomic-{name}.tsx` → `atomic-{name}.ts` (main component)
-- `atomic-{name}.pcss` → if there's a small number of styles, put them directly as Lit `css` in the static `style` property of the main component file; otherwise create a separate `atomic-{name}.tw.css.ts` file.
+- `atomic-{name}.pcss` → **Prefer putting styles directly in the component's `static styles = css\`...\`` property.** Only create a separate `atomic-{name}.tw.css.ts` file when the styles are extensive (e.g., 100+ lines) or need to be shared across multiple components.
 - Keep existing: `.spec.ts`, `.new.stories.tsx`, `.mdx`, `e2e/` files (do not modify tests)
 
 ### 4. Component Code Migration
