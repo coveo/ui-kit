@@ -39,9 +39,3 @@ declare global {
     'atomic-insight-edit-toggle': AtomicInsightEditToggle;
   }
 }
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'atomic-insight-edit-toggle': AtomicInsightEditToggle;
-  }
-}
