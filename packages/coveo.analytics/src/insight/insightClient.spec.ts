@@ -386,8 +386,8 @@ describe('InsightClient', () => {
             const mockResultUriHash = fakeDocInfo.documentUriHash;
             const mockPermanentId = fakeDocID.contentIDValue;
             const expectedMetadata = {
-                resultUriHash: fakeDocInfo.documentUriHash,
-                permanentId: fakeDocID.contentIDValue,
+                resultUriHash: mockResultUriHash,
+                permanentId: mockPermanentId,
             };
             await client.logCaseDetach(mockResultUriHash, mockPermanentId);
             expectMatchCustomEventPayload(SearchPageEvents.caseDetach, expectedMetadata);
