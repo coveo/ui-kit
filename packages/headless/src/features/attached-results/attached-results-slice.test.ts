@@ -35,7 +35,7 @@ describe('attached results slice', () => {
     });
     const finalState = attachedResultsReducer(state, action);
     expect(finalState.results).toBe(action.payload.results);
-    expect(finalState.results.length).toEqual(1);
+    expect(finalState.results.length).toBe(1);
     expect(finalState.results).toContainEqual(testAttachedResult);
   });
 
@@ -46,7 +46,7 @@ describe('attached results slice', () => {
     });
     const finalState = attachedResultsReducer(state, action);
     expect(finalState).toStrictEqual(action.payload);
-    expect(finalState.results.length).toEqual(0);
+    expect(finalState.results.length).toBe(0);
     expect(finalState.loading).toBe(true);
   });
 
@@ -54,7 +54,7 @@ describe('attached results slice', () => {
     const testAttachedResult = createMockAttachedResult();
     const action = attachResult(testAttachedResult);
     const finalState = attachedResultsReducer(state, action);
-    expect(finalState.results.length).toEqual(1);
+    expect(finalState.results.length).toBe(1);
     expect(finalState.results).toStrictEqual([testAttachedResult]);
   });
 
@@ -71,7 +71,7 @@ describe('attached results slice', () => {
       finalState = attachedResultsReducer(finalState, action);
     });
 
-    expect(finalState.results.length).toEqual(attachedResults.length);
+    expect(finalState.results.length).toBe(attachedResults.length);
     expect(finalState.results).toStrictEqual([...attachedResults]);
   });
 
@@ -91,7 +91,7 @@ describe('attached results slice', () => {
     const action = detachResult(testDetachResult);
 
     const finalState = attachedResultsReducer(state, action);
-    expect(finalState.results.length).toEqual(0);
+    expect(finalState.results.length).toBe(0);
   });
 
   it('#detachResult will detach an attached result', () => {
@@ -106,7 +106,7 @@ describe('attached results slice', () => {
     const detachAction = detachResult(testDetachResult);
     const finalState = attachedResultsReducer(intermediateState, detachAction);
 
-    expect(finalState.results.length).toEqual(0);
+    expect(finalState.results.length).toBe(0);
   });
 
   it('#detachResult will detach the correct result among multiple attached results', () => {

@@ -787,3 +787,18 @@ export const analyticsEventItemMetadata = (
     url: information.documentUri,
   };
 };
+
+export const analyticsEventItemMetadataForCitations = (
+  citation: GeneratedAnswerCitation,
+  state: Partial<SearchAppState>
+): ItemMetaData => {
+  const identifier = citationDocumentIdentifier(citation);
+  const information = partialCitationInformation(citation, state);
+  return {
+    uniqueFieldName: identifier.contentIdKey,
+    uniqueFieldValue: identifier.contentIdValue,
+    title: information.documentTitle,
+    author: information.documentAuthor,
+    url: information.documentUri,
+  };
+};

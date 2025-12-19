@@ -52,8 +52,8 @@ catalogs:
       specifier: 4.0.10
       version: 4.0.10
     coveo.analytics:
-      specifier: 2.30.49
-      version: 2.30.49
+      specifier: 2.30.51
+      version: 2.30.51
     cypress:
       specifier: 13.7.3
       version: 13.7.3
@@ -810,7 +810,7 @@ importers:
         version: 1.7.8
       coveo.analytics:
         specifier: 'catalog:'
-        version: 2.30.49(encoding@0.1.13)(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@19.2.1))
+        version: 2.30.51(encoding@0.1.13)(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@19.2.1))
       dayjs:
         specifier: 'catalog:'
         version: 1.11.13
@@ -7411,8 +7411,8 @@ packages:
   coveo.analytics@2.30.45:
     resolution: {integrity: sha512-14ogHXPatwdzkvXzECsiAHTktukyfEjcy0ES7acooXe/uUb55ztWb8NXcnIEMFbn4wTf9y4P2g5BvYOLH8janA==}
 
-  coveo.analytics@2.30.49:
-    resolution: {integrity: sha512-FGpJXZVDVPaSLS/cXSSH9seynPoy7NDHGgxYwb0tuKRYcHVmh9LMp0h0rG7+fkPUkXc2FAb6MHyEKSraOjWxug==}
+  coveo.analytics@2.30.51:
+    resolution: {integrity: sha512-EDwXsVQDfMhhOcqYqMm2Qc0QcTyM8oHp56YNfuygTu3QPIkkprsgP9XS5bG4s/U5/Wg9puUIcbviaWDH+fmXcg==}
 
   create-jest@29.7.0:
     resolution: {integrity: sha512-Adz2bdH0Vq3F53KEMJOoftQFutWCukm6J24wbPWRO4k1kMY7gS7ds/uoJkNuV8wDCtWWnuwGcJwpWcih+zEW1Q==}
@@ -20638,7 +20638,7 @@ snapshots:
       - encoding
       - react-native
 
-  coveo.analytics@2.30.49(encoding@0.1.13)(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@19.2.1)):
+  coveo.analytics@2.30.51(encoding@0.1.13)(react-native@0.82.1(@babel/core@7.28.5)(@types/react@19.2.7)(react@19.2.1)):
     dependencies:
       '@types/uuid': 9.0.8
       cross-fetch: 3.2.0(encoding@0.1.13)
