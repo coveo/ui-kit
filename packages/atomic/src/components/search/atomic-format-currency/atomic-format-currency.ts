@@ -31,14 +31,12 @@ export class AtomicFormatCurrency
   connectedCallback() {
     super.connectedCallback();
     this.format = defaultCurrencyFormatter(this.currency);
-    try {
-      dispatchNumberFormatEvent(
-        (value, languages) => this.format(value, languages),
-        this
-      );
-    } catch (error) {
+    dispatchNumberFormatEvent(
+      (value, languages) => this.format(value, languages),
+      this
+    ).catch((error) => {
       this.error = error as Error;
-    }
+    });
   }
 
   @errorGuard()

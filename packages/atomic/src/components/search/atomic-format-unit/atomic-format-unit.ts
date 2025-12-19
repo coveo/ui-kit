@@ -46,14 +46,12 @@ export class AtomicFormatUnit
 
   connectedCallback() {
     super.connectedCallback();
-    try {
-      dispatchNumberFormatEvent(
-        (value, languages) => this.format(value, languages),
-        this
-      );
-    } catch (error) {
+    dispatchNumberFormatEvent(
+      (value, languages) => this.format(value, languages),
+      this
+    ).catch((error) => {
       this.error = error as Error;
-    }
+    });
   }
 
   @errorGuard()

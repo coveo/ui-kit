@@ -1,0 +1,39 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicTimeframeStories from './atomic-timeframe.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicTimeframeStories} />
+
+<AtomicDocTemplate
+  stories={AtomicTimeframeStories}
+  githubPath="common/atomic-timeframe/atomic-timeframe.ts"
+  tagName="atomic-timeframe"
+  className="AtomicTimeframe"
+>
+
+The `atomic-timeframe` component defines a relative date range for filtering results in a timeframe facet. It allows users to filter by periods like "past week", "next month", or other custom time ranges.
+
+This component must be placed as a child of `atomic-timeframe-facet` (for search interfaces) or `atomic-insight-timeframe-facet` (for insight panels).
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-search-layout>
+    ...
+    <atomic-layout-section section="facets">
+      ...
+      <atomic-timeframe-facet field="date" label="Date">
+        <atomic-timeframe period="past" unit="week" amount="1"></atomic-timeframe>
+      </atomic-timeframe-facet>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+## Related Components
+
+- [atomic-timeframe-facet](../?path=/docs/atomic-timeframe-facet--default) - Search timeframe facet
+- [atomic-insight-timeframe-facet](../?path=/docs/atomic-insight-timeframe-facet--default) - Insight timeframe facet
+
+</AtomicDocTemplate>

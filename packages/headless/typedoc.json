@@ -1,4 +1,5 @@
 {
+  "name": "Coveo Headless",
   "highlightLanguages": [
     "typescript",
     "javascript",

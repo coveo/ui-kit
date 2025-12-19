@@ -28,12 +28,6 @@ export function assertDisplayDetails(display: boolean) {
   });
 }
 
-export function assertLogOpenSmartSnippetFeedbackModal() {
-  it('should log a openSmartSnippetFeedbackModal custom event', () => {
-    cy.expectCustomEvent('smartSnippet', 'openSmartSnippetFeedbackModal');
-  });
-}
-
 export function assertLogCloseSmartSnippetFeedbackModal() {
   it('should log a closeSmartSnippetFeedbackModal custom event', () => {
     cy.expectCustomEvent('smartSnippet', 'closeSmartSnippetFeedbackModal');

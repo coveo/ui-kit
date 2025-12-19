@@ -46,6 +46,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-facet',
   'atomic-facet-date-input',
   'atomic-facet-manager',
+  'atomic-facet-number-input',
   'atomic-facet-placeholder',
   'atomic-field-condition',
   'atomic-focus-trap',
@@ -137,15 +138,18 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-search-layout',
   'atomic-segmented-facet',
   'atomic-segmented-facet-scrollable',
+  'atomic-smart-snippet-collapse-wrapper',
+  'atomic-smart-snippet-expandable-answer',
   'atomic-sort-dropdown',
   'atomic-sort-expression',
   'atomic-tab',
   'atomic-tab-bar',
+  'atomic-tab-button',
   'atomic-tab-manager',
   'atomic-tab-popover',
   'atomic-table-element',
   'atomic-text',
-  'atomic-timeframe-facet',
+  'atomic-timeframe',
 ]);
 
 /**
