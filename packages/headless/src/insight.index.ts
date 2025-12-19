@@ -54,6 +54,13 @@ export type {
 } from './controllers/insight/attach-to-case/headless-attach-to-case.js';
 export {buildAttachToCase} from './controllers/insight/attach-to-case/headless-attach-to-case.js';
 export type {
+  AttachedCitations,
+  AttachedCitationsOptions,
+  AttachedCitationsProps,
+  AttachedCitationsState,
+} from './controllers/insight/attached-citations/headless-attached-citations.js';
+export {buildAttachedCitations} from './controllers/insight/attached-citations/headless-attached-citations.js';
+export type {
   AttachedResults,
   AttachedResultsOptions,
   AttachedResultsProps,
