@@ -3,6 +3,8 @@ import type {Result} from '../../api/search/search/result.js';
 import type {GeneratedAnswerCitation} from '../../index.js';
 import {
   analyticsEventItemMetadata,
+  analyticsEventItemMetadataForCitations,
+  citationDocumentIdentifier,
   documentIdentifier,
   makeInsightAnalyticsActionFactory,
   partialCitationInformation,
@@ -78,11 +80,7 @@ export const logCitationDocumentAttach = (citation: GeneratedAnswerCitation) =>
       const citationPayload = {
         generativeQuestionAnsweringId,
         citationId: citation.id,
-        documentId: {
-          contentIdKey: 'permanentid',
-          contentIdValue:
-            citation.permanentid || citation.fields?.permanentid || '',
-        },
+        documentId: citationDocumentIdentifier(citation),
       };
       return client.logGeneratedAnswerCitationDocumentAttach(
         partialCitationInformation(citation, state),
@@ -105,20 +103,8 @@ export const logCitationDocumentDetach = (citation: GeneratedAnswerCitation) =>
     },
     analyticsType: 'InsightPanel.DetachItem',
     analyticsPayloadBuilder: (state): InsightPanel.DetachItem => {
-      const identifier = {
-        contentIDKey: 'permanentid',
-        contentIDValue:
-          citation.permanentid || citation.fields?.permanentid || '',
-      };
-      const information = partialCitationInformation(citation, state);
       return {
-        itemMetadata: {
-          uniqueFieldName: identifier.contentIDKey,
-          uniqueFieldValue: identifier.contentIDValue,
-          title: information.documentTitle,
-          author: information.documentAuthor,
-          url: information.documentUri,
-        },
+        itemMetadata: analyticsEventItemMetadataForCitations(citation, state),
         context: analyticsEventCaseContext(state),
       };
     },

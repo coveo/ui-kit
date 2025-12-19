@@ -40,9 +40,9 @@ export interface AttachedResult {
    */
   uriHash?: string;
   /**
-   * Whether the attached result is a citation.
+   * Whether the attached result is a document that was attached from a citation.
    */
-  isCitation?: boolean;
+  isAttachedFromCitation?: boolean;
 }
 
 export interface AttachedResultsState {
