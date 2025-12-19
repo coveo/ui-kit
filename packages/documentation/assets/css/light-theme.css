@@ -1727,3 +1727,19 @@ summary:hover {
 .image.bordered img {
   border: 1px solid #e5e8e8;
 }
+
+.code-callout-ref {
+  cursor: pointer;
+  user-select: none;
+  display: inline-block;
+  white-space: normal;
+}
+
+.code-callout-ref circle {
+  fill: #fff;
+}
+.code-callout-ref text {
+  fill: #000;
+  user-select: none;
+  -webkit-user-select: none;
+}

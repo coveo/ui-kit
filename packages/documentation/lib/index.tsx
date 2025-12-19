@@ -13,8 +13,10 @@ import {
   PageEvent,
   ParameterType,
   type ProjectReflection,
+  Renderer,
   RendererEvent,
 } from 'typedoc';
+import {handleRendererEndPage} from './calloutParsing.js';
 import {formatTypeDocToolbar} from './formatTypeDocToolbar.js';
 import {hoistOtherCategoryInArray, hoistOtherCategoryInNav} from './hoist.js';
 import {insertAtomicSearchBox} from './insertAtomicSearchBox.js';
@@ -298,6 +300,7 @@ export const load = (app: Application) => {
   });
 
   app.renderer.on(PageEvent.END, insertMetaTags);
+  app.renderer.on(Renderer.EVENT_END_PAGE, handleRendererEndPage);
 
   app.renderer.defineRouter('kebab', KebabRouter);
 
