@@ -94,8 +94,7 @@ export const logCitationDocumentDetach = (citation: GeneratedAnswerCitation) =>
   makeInsightAnalyticsActionFactory(SearchPageEvents.caseDetach)({
     prefix: 'insight/caseDetach',
     __legacy__getBuilder: (client, state) => {
-      const uriHash =
-        citation.fields?.urihash || citation.permanentid || citation.id || '';
+      const uriHash = citation.fields?.urihash || '';
       return client.logCaseDetach(
         uriHash,
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
