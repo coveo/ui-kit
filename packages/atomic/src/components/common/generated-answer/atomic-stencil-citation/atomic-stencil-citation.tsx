@@ -1,12 +1,12 @@
-import { GeneratedAnswerCitation, InteractiveCitation } from '@coveo/headless';
+import {GeneratedAnswerCitation, InteractiveCitation} from '@coveo/headless';
 import {
   createPopper,
   preventOverflow,
   Instance as PopperInstance,
 } from '@popperjs/core';
-import { Component, h, State, Prop, Element, Watch } from '@stencil/core';
-import { LinkWithItemAnalytics } from '../../item-link/stencil-item-link';
-import { Heading } from '../../stencil-heading';
+import {Component, h, State, Prop, Element, Watch} from '@stencil/core';
+import {LinkWithItemAnalytics} from '../../item-link/stencil-item-link';
+import {Heading} from '../../stencil-heading';
 import {
   generateTextFragmentUrl,
   generatePdfPageUrl,
@@ -14,10 +14,11 @@ import {
 
 /**
  * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
+ * @deprecated use `atomic-citation` instead. This component is meant for stencil component only
  */
 @Component({
-  tag: 'atomic-citation',
-  styleUrl: 'atomic-citation.pcss',
+  tag: 'atomic-stencil-citation',
+  styleUrl: 'atomic-stencil-citation.pcss',
 })
 export class AtomicCitation {
   @Element() public host!: HTMLElement;

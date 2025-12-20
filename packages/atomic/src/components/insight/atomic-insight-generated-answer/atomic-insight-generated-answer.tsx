@@ -16,6 +16,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {GeneratedAnswerCommon} from '../../common/generated-answer/generated-answer-common';
+import '../../common/generated-answer/atomic-stencil-citation/atomic-stencil-citation';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
