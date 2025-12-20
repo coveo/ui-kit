@@ -32,24 +32,24 @@ export class AtomicFieldCondition
   private resultController = createResultContextController(this);
 
   /**
-   * A condition that is satisfied when the specified field is defined on a result (e.g., `if-defined="author"` is satisfied when a result has the `author` field).
+   * A condition that is satisfied when the specified field is defined on a result (for example, `if-defined="author"` is satisfied when a result has the `author` field).
    */
   @property({type: String, attribute: 'if-defined'}) ifDefined?: string;
 
   /**
-   * A condition that is satisfied when the specified field is not defined on a result (e.g., `if-not-defined="author"` is satisfied when a result does not have the `author` field).
+   * A condition that is satisfied when the specified field is not defined on a result (for example, `if-not-defined="author"` is satisfied when a result does not have the `author` field).
    */
   @property({type: String, attribute: 'if-not-defined'}) ifNotDefined?: string;
 
   /**
-   * A condition that is satisfied when the specified field matches one of the specified values on a result (e.g., `must-match-filetype="pdf,docx"` is satisfied when a result has a filetype of either pdf or docx).
+   * A condition that is satisfied when the specified field matches one of the specified values on a result (for example, `must-match-filetype="pdf,docx"` is satisfied when a result has a filetype of either pdf or docx).
    * @type {Record<string, string[]>}
    */
   @mapProperty({splitValues: true, attributePrefix: 'must-match'})
   mustMatch!: Record<string, string[]>;
 
   /**
-   * A condition that is satisfied when the specified field does not match any of the specified values on a result (e.g., `must-not-match-filetype="pdf"` is satisfied when a result does not have a filetype of pdf).
+   * A condition that is satisfied when the specified field does not match any of the specified values on a result (for example, `must-not-match-filetype="pdf"` is satisfied when a result does not have a filetype of pdf).
    * @type {Record<string, string[]>}
    */
   @mapProperty({splitValues: true, attributePrefix: 'must-not-match'})

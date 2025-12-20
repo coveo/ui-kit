@@ -7,7 +7,7 @@ import {deepEqual} from '@/src/utils/compare-utils';
  * provided Bueno schema.
  *
  * It validates the props when the host is connected to the DOM and whenever
- * the host updates, revalidating only if the props have changed since the last
+ * the host updates, re-validating only if the props have changed since the last
  * validation.
  *
  * If validation fails, the controller either sets the `error` property on the host

@@ -62,12 +62,12 @@ import {randomID} from '@/src/utils/utils';
  * @part result-table - The table element when the display prop is set to "table".
  * @part result-table-heading - The thead element when the display prop is set to "table".
  * @part result-table-heading-row - The tr element nested under the thead when the display prop is set to "table".
- * @part result-table-heading-cell - The th elements nested under thead > tr when the display prop is set to "table".
+ * @part result-table-heading-cell - The `th` elements nested under `thead` > `tr` when the display prop is set to "table".
  * @part result-table-body - The tbody element when the display prop is set to "table".
  * @part result-table-row - All tr elements nested under tbody when the display prop is set to "table".
  * @part result-table-row-even - The even tr elements nested under tbody when the display prop is set to "table".
  * @part result-table-row-odd - The odd tr elements nested under tbody when the display prop is set to "table".
- * @part result-table-cell - The td elements nested under each tbody > tr when the display prop is set to "table".
+ * @part result-table-cell - The `td` elements nested under each `tbody` > `tr` when the display prop is set to "table".
  *
  * @slot default - The default slot where the product templates are defined.
  */
