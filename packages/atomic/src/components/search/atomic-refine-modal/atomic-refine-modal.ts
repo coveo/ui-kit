@@ -1,64 +1,63 @@
 import {
-  BreadcrumbManager,
+  type BreadcrumbManager,
+  type BreadcrumbManagerState,
   buildBreadcrumbManager,
-  BreadcrumbManagerState,
-  QuerySummary,
-  QuerySummaryState,
-  FacetManagerState,
-  Sort,
-  buildSort,
-  SortState,
+  buildFacetManager,
   buildQuerySummary,
   buildSearchStatus,
-  SearchStatus,
-  FacetManager,
-  buildFacetManager,
-  TabManager,
-  TabManagerState,
+  buildSort,
   buildTabManager,
+  type FacetManager,
+  type FacetManagerState,
+  type QuerySummary,
+  type QuerySummaryState,
+  type SearchStatus,
+  type Sort,
+  type SortState,
+  type TabManager,
+  type TabManagerState,
 } from '@coveo/headless';
-import {Component, h, State, Prop, Element, Watch} from '@stencil/core';
+import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {findSection} from '@/src/components/common/atomic-layout-section/atomic-layout-section-utils';
+import {popoverClass} from '@/src/components/common/facets/popover/popover-type';
+
+import {isRefineModalFacet} from '@/src/components/common/interface/store';
+import {renderRefineModalBody} from '@/src/components/common/refine-modal/body';
 import {
-  BindStateToController,
-  InitializableComponent,
-  InitializeBindings,
-} from '../../../utils/initialization-utils';
-import {shouldDisplayOnCurrentTab} from '../../../utils/tab-utils';
-import {sortByDocumentPosition} from '../../../utils/utils';
-import {findSection} from '../../common/atomic-layout-section/atomic-layout-section-utils';
-import {popoverClass} from '../../common/facets/popover/popover-type';
+  renderRefineModalFiltersClearButton,
+  renderRefineModalFiltersSection,
+} from '@/src/components/common/refine-modal/filters';
+import {renderRefineModal} from '@/src/components/common/refine-modal/modal';
+import {renderRefineModalSortSection} from '@/src/components/common/refine-modal/sort';
+import {booleanConverter} from '@/src/converters/boolean-converter';
+import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import type {InitializableComponent} from '@/src/decorators/types';
+import {watch} from '@/src/decorators/watch';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import type {AtomicInterface} from '@/src/utils/initialization-lit-stencil-common-utils';
+import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
+import {sortByDocumentPosition} from '@/src/utils/utils';
 import {
-  BaseFacetElement,
+  type BaseFacetElement,
+  collapseFacetsAfter,
   sortFacetVisibility,
   triageFacetsByParents,
-  collapseFacetsAfter,
-} from '../../common/facets/stencil-facet-common';
-import {isRefineModalFacet} from '../../common/interface/store';
-import {RefineModalBody} from '../../common/refine-modal/stencil-body';
-import {
-  RefineModalFiltersClearButton,
-  RefineModalFiltersSection,
-} from '../../common/refine-modal/stencil-filters';
-import {RefineModal} from '../../common/refine-modal/stencil-modal';
-import {RefineModalSortSection} from '../../common/refine-modal/stencil-sort';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
-import {SortDropdownOption} from '../atomic-search-interface/store';
-import { AtomicInterface } from '@/src/utils/initialization-lit-stencil-common-utils';
+} from '../../common/facets/facet-common';
+import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import type {SortDropdownOption} from '../atomic-search-interface/store';
 
 /**
- * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
+ * The `atomic-refine-modal` component is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
  *
  * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
  *
- * @part container - The modal's outermost container.
- * @part header-wrapper - The wrapper around the header.
- * @part header - The header of the modal, containing the title.
  * @part title - The title of the modal.
  * @part close-button - The button in the header that closes the modal.
  * @part close-icon - The icon of the close button.
- * @part header-ruler - The horizontal ruler underneath the header.
- * @part body-wrapper - The wrapper around the body.
- * @part body - The body of the modal, between the header and the footer.
  * @part content - The wrapper around the content inside the body of the modal.
  * @part section-title - The title for each section.
  * @part section-sort-title - The title for the sort section.
@@ -69,46 +68,51 @@ import { AtomicInterface } from '@/src/utils/initialization-lit-stencil-common-u
  * @part select-icon - The select dropdown's sort icon.
  * @part filter-section - The section containing facets and the "filters" title.
  * @part filter-clear-all - The button that resets all actively selected facet values.
- * @part footer-wrapper - The wrapper with a shadow or background color around the footer.
- * @part footer - The footer of the modal.
  * @part footer-content - The wrapper around the content inside the footer of the modal, containing the button to view results.
  * @part footer-button - The button in the footer that closes the modal.
  * @part footer-button-text - The text inside the button in the footer that closes the modal.
  * @part footer-button-count - The count inside the button in the footer that closes the modal.
+ *
+ * @cssprop --atomic-refine-modal-facet-margin - The margin between facets in the refine modal. Default is `20px`.
  */
-@Component({
-  tag: 'atomic-refine-modal',
-  styleUrl: 'atomic-refine-modal.pcss',
-  shadow: true,
-})
-export class AtomicRefineModal implements InitializableComponent {
-  private sort!: Sort;
-  private breadcrumbManager!: BreadcrumbManager;
-  public querySummary!: QuerySummary;
-  public searchStatus!: SearchStatus;
-  public facetManager!: FacetManager;
-  @InitializeBindings() public bindings!: Bindings;
-  @Element() public host!: HTMLElement;
+@customElement('atomic-refine-modal')
+@bindings()
+@withTailwindStyles
+export class AtomicRefineModal
+  extends LitElement
+  implements InitializableComponent<Bindings>
+{
+  static styles: CSSResultGroup = [
+    css`
+    select:hover + div,
+    select:focus-visible + div {
+      @apply text-primary-light;
+    }
+    `,
+  ];
 
-  @BindStateToController('querySummary')
-  @State()
-  public querySummaryState!: QuerySummaryState;
-  @BindStateToController('breadcrumbManager')
-  @State()
-  private breadcrumbManagerState!: BreadcrumbManagerState;
-  @BindStateToController('facetManager')
-  @State()
-  public facetManagerState!: FacetManagerState;
-  @State() @BindStateToController('sort') public sortState!: SortState;
-  public tabManager!: TabManager;
-  @BindStateToController('tabManager')
-  @State()
-  public tabManagerState!: TabManagerState;
-  @State() public error!: Error;
+  @state()
+  bindings!: Bindings;
 
-  @Prop({mutable: true}) openButton?: HTMLElement;
+  @state()
+  error!: Error;
 
-  @Prop({reflect: true, mutable: true}) isOpen = false;
+  /**
+   * The element that opens the modal when clicked.
+   */
+  @property({attribute: 'open-button', type: Object})
+  openButton?: HTMLElement;
+
+  /**
+   * Whether the modal is open.
+   */
+  @property({
+    type: Boolean,
+    converter: booleanConverter,
+    reflect: true,
+    attribute: 'is-open',
+  })
+  isOpen = false;
 
   /**
    * The number of expanded facets inside the refine modal.
@@ -116,18 +120,35 @@ export class AtomicRefineModal implements InitializableComponent {
    *
    * Using the value `0` collapses all facets.
    */
-  @Prop({reflect: true}) public collapseFacetsAfter = 0;
+  @property({type: Number, reflect: true, attribute: 'collapse-facets-after'})
+  collapseFacetsAfter = 0;
 
-  @Watch('isOpen')
-  watchEnabled(isOpen: boolean) {
-    if (isOpen) {
-      if (this.host.querySelector('div[slot="facets"]')) {
-        return;
-      }
+  public sort!: Sort;
+  @bindStateToController('sort')
+  @state()
+  public sortState!: SortState;
 
-      this.host.append(this.createFacetSlot());
-    }
-  }
+  public breadcrumbManager!: BreadcrumbManager;
+  @bindStateToController('breadcrumbManager')
+  @state()
+  private breadcrumbManagerState!: BreadcrumbManagerState;
+
+  public querySummary!: QuerySummary;
+  @bindStateToController('querySummary')
+  @state()
+  public querySummaryState!: QuerySummaryState;
+
+  public searchStatus!: SearchStatus;
+
+  public facetManager!: FacetManager;
+  @bindStateToController('facetManager')
+  @state()
+  public facetManagerState!: FacetManagerState;
+
+  public tabManager!: TabManager;
+  @bindStateToController('tabManager')
+  @state()
+  public tabManagerState!: TabManagerState;
 
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
@@ -136,9 +157,26 @@ export class AtomicRefineModal implements InitializableComponent {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.facetManager = buildFacetManager(this.bindings.engine);
     this.tabManager = buildTabManager(this.bindings.engine);
-    this.watchEnabled(this.isOpen);
+    this.watchEnabled();
   }
 
+  @watch('isOpen')
+  watchEnabled() {
+    if (this.isOpen) {
+      if (this.querySelector('div[slot="facets"]')) {
+        return;
+      }
+
+      this.appendChild(this.createFacetSlot());
+    }
+  }
+
+  /**
+   * This method is necessary to ensure that the facets slot is rendered outside of the component's shadow DOM, preserving
+   * correct CSS inheritance and slot behavior. If this logic were placed in the render
+   * function, the slot would be rendered inside the shadow DOM, which would break
+   * expected CSS styling and slot distribution.
+   */
   private createFacetSlot(): HTMLDivElement {
     const divSlot = document.createElement('div');
     divSlot.setAttribute('slot', 'facets');
@@ -208,8 +246,8 @@ export class AtomicRefineModal implements InitializableComponent {
 
   private getBoundInterfaces(): AtomicInterface[] {
     const mainInterface: AtomicInterface | null =
-      this.host.closest('atomic-search-interface') ??
-      this.host.closest('atomic-external')?.boundInterface ??
+      this.closest('atomic-search-interface') ??
+      this.closest('atomic-external')?.boundInterface ??
       null;
     if (!mainInterface) {
       throw new Error('Cannot find bound interface');
@@ -258,19 +296,24 @@ export class AtomicRefineModal implements InitializableComponent {
     el.style.gap = 'var(--atomic-refine-modal-facet-margin, 20px)';
   }
 
-  private get options() {
+  private get options(): SortDropdownOption[] {
     return this.bindings.store.state.sortOptions;
   }
 
-  private select(e: Event) {
+  private onSelectSortOption = (e: Event) => {
     const select = e.composedPath()[0] as HTMLSelectElement;
     const option = this.options.find(
       (option) => option.expression === select.value
     );
     option && this.sort.sortBy(option.criteria);
-  }
+  };
 
-  private buildOption({expression, criteria, label, tabs}: SortDropdownOption) {
+  private renderSortOption({
+    expression,
+    criteria,
+    label,
+    tabs,
+  }: SortDropdownOption) {
     if (
       !shouldDisplayOnCurrentTab(
         [...tabs.included],
@@ -278,28 +321,26 @@ export class AtomicRefineModal implements InitializableComponent {
         this.tabManagerState?.activeTab
       )
     ) {
-      return;
+      return nothing;
     }
-    return (
-      <option value={expression} selected={this.sort.isSortedBy(criteria)}>
-        {this.bindings.i18n.t(label)}
+    return html`
+      <option value=${expression} ?selected=${this.sort.isSortedBy(criteria)}>
+        ${this.bindings.i18n.t(label)}
       </option>
-    );
+    `;
   }
 
   private renderSort() {
     if (!this.options.length) {
-      return;
+      return nothing;
     }
 
-    return (
-      <RefineModalSortSection
-        i18n={this.bindings.i18n}
-        onSelect={(option) => this.select(option)}
-      >
-        {this.options.map((option) => this.buildOption(option))}
-      </RefineModalSortSection>
-    );
+    return renderRefineModalSortSection({
+      props: {
+        i18n: this.bindings.i18n,
+        onSelect: this.onSelectSortOption,
+      },
+    })(html`${this.options.map((option) => this.renderSortOption(option))}`);
   }
 
   private renderFilters() {
@@ -308,47 +349,55 @@ export class AtomicRefineModal implements InitializableComponent {
       this.bindings.engine.state.automaticFacetSet?.set !== undefined;
 
     if (!hasFacetElements && !hasAutomaticFacets) {
-      return;
+      return nothing;
     }
 
     const {i18n} = this.bindings;
 
-    return (
-      <RefineModalFiltersSection
-        i18n={i18n}
-        withFacets={hasFacetElements}
-        withAutomaticFacets={hasAutomaticFacets}
-      >
-        {this.breadcrumbManagerState.hasBreadcrumbs && (
-          <RefineModalFiltersClearButton
-            i18n={i18n}
-            onClick={() => this.breadcrumbManager.deselectAll()}
-          />
-        )}
-      </RefineModalFiltersSection>
+    return renderRefineModalFiltersSection({
+      props: {
+        i18n,
+        withFacets: hasFacetElements,
+        withAutomaticFacets: hasAutomaticFacets,
+      },
+    })(
+      this.breadcrumbManagerState.hasBreadcrumbs
+        ? renderRefineModalFiltersClearButton({
+            props: {
+              i18n,
+              onClick: () => this.breadcrumbManager.deselectAll(),
+            },
+          })
+        : nothing
     );
   }
 
-  public render() {
-    return (
-      <RefineModal
-        i18n={this.bindings.i18n}
-        host={this.host}
-        isOpen={this.isOpen}
-        onClose={() => (this.isOpen = false)}
-        title={this.bindings.i18n.t('sort-and-filter')}
-        numberOfItems={this.querySummaryState.total}
-        openButton={this.openButton}
-      >
-        <RefineModalBody ariaLabel={this.bindings.i18n.t('refine-modal-content')}>
-          {this.renderSort()}
-          {this.renderFilters()}
-        </RefineModalBody>
-      </RefineModal>
-    );
+  @bindingGuard()
+  @errorGuard()
+  render() {
+    return html`${renderRefineModal({
+      props: {
+        i18n: this.bindings.i18n,
+        i18nFooterButtonTextKey: 'view-results',
+        host: this,
+        isOpen: this.isOpen,
+        onClose: () => {
+          this.isOpen = false;
+        },
+        title: this.bindings.i18n.t('sort-and-filter'),
+        numberOfItems: this.querySummaryState.total,
+        openButton: this.openButton,
+      },
+    })(
+      renderRefineModalBody(this.bindings.i18n)(html`
+        ${this.renderSort()} ${this.renderFilters()}
+      `)
+    )}`;
   }
+}
 
-  public componentDidLoad() {
-    this.host.style.display = '';
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-refine-modal': AtomicRefineModal;
   }
 }

@@ -1,7 +1,7 @@
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
-export class RefineTogglePageObject extends BasePageObject<'atomic-refine-toggle'> {
+export class RefineTogglePageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-refine-toggle');
   }

@@ -13,6 +13,7 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {renderRefineToggleButton} from '../../common/refine-modal/button';
 import {refineToggleGuard} from '../../common/refine-modal/guard';
+import type {AtomicRefineModal} from '../atomic-refine-modal/atomic-refine-modal';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -51,7 +52,7 @@ export class AtomicRefineToggle
   @property({type: Number, reflect: true, attribute: 'collapse-facets-after'})
   collapseFacetsAfter = 0;
 
-  private modalRef?: HTMLAtomicRefineModalElement;
+  private modalRef?: AtomicRefineModal;
   private buttonRef?: HTMLButtonElement;
 
   public initialize() {
