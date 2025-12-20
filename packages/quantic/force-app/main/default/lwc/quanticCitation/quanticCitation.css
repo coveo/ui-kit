@@ -38,3 +38,7 @@
   color: rgb(26, 27, 30);
   cursor: default;
 }
+
+.citation__title--active {
+  color: var(--lwc-brandAccessible, #0176d3);
+}
