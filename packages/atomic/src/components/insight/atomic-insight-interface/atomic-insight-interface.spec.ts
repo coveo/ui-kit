@@ -200,8 +200,6 @@ describe('atomic-insight-interface', () => {
         i18n: element.i18n,
         store: mockedCreateInsightStore.mock.results[0].value,
         interfaceElement: element,
-        createStyleElement: expect.any(Function), // TODO - KIT-4839: Remove once atomic-insight-layout migration is complete.
-        createScriptElement: expect.any(Function), // TODO - KIT-4839: Remove once atomic-insight-layout migration is complete.
       });
     });
 

@@ -193,12 +193,6 @@ export namespace Components {
         "clickCallback": () => void;
         "tooltip": string;
     }
-    interface AtomicInsightLayout {
-        /**
-          * Whether the interface should be shown in widget format.
-         */
-        "widget": boolean;
-    }
     interface AtomicInsightNoResults {
     }
     interface AtomicInsightNumericFacet {
@@ -1273,12 +1267,6 @@ declare global {
         prototype: HTMLAtomicInsightHistoryToggleElement;
         new (): HTMLAtomicInsightHistoryToggleElement;
     };
-    interface HTMLAtomicInsightLayoutElement extends Components.AtomicInsightLayout, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightLayoutElement: {
-        prototype: HTMLAtomicInsightLayoutElement;
-        new (): HTMLAtomicInsightLayoutElement;
-    };
     interface HTMLAtomicInsightNoResultsElement extends Components.AtomicInsightNoResults, HTMLStencilElement {
     }
     var HTMLAtomicInsightNoResultsElement: {
@@ -1848,7 +1836,6 @@ declare global {
         "atomic-insight-full-search-button": HTMLAtomicInsightFullSearchButtonElement;
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
         "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
-        "atomic-insight-layout": HTMLAtomicInsightLayoutElement;
         "atomic-insight-no-results": HTMLAtomicInsightNoResultsElement;
         "atomic-insight-numeric-facet": HTMLAtomicInsightNumericFacetElement;
         "atomic-insight-pager": HTMLAtomicInsightPagerElement;
@@ -2058,12 +2045,6 @@ declare namespace LocalJSX {
     interface AtomicInsightHistoryToggle {
         "clickCallback"?: () => void;
         "tooltip"?: string;
-    }
-    interface AtomicInsightLayout {
-        /**
-          * Whether the interface should be shown in widget format.
-         */
-        "widget"?: boolean;
     }
     interface AtomicInsightNoResults {
     }
@@ -3004,7 +2985,6 @@ declare namespace LocalJSX {
         "atomic-insight-full-search-button": AtomicInsightFullSearchButton;
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
         "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
-        "atomic-insight-layout": AtomicInsightLayout;
         "atomic-insight-no-results": AtomicInsightNoResults;
         "atomic-insight-numeric-facet": AtomicInsightNumericFacet;
         "atomic-insight-pager": AtomicInsightPager;
@@ -3076,7 +3056,6 @@ declare module "@stencil/core" {
             "atomic-insight-full-search-button": LocalJSX.AtomicInsightFullSearchButton & JSXBase.HTMLAttributes<HTMLAtomicInsightFullSearchButtonElement>;
             "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
             "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
-            "atomic-insight-layout": LocalJSX.AtomicInsightLayout & JSXBase.HTMLAttributes<HTMLAtomicInsightLayoutElement>;
             "atomic-insight-no-results": LocalJSX.AtomicInsightNoResults & JSXBase.HTMLAttributes<HTMLAtomicInsightNoResultsElement>;
             "atomic-insight-numeric-facet": LocalJSX.AtomicInsightNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightNumericFacetElement>;
             "atomic-insight-pager": LocalJSX.AtomicInsightPager & JSXBase.HTMLAttributes<HTMLAtomicInsightPagerElement>;

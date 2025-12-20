@@ -37,24 +37,6 @@ describe('Insight Panel test suites', () => {
         .should('have.length.at.least', 1);
     });
 
-    it('should not add any unexpected style tags', () => {
-      const numTopLevelStyleTags = 4;
-      const numLayoutStyleTags = 1;
-
-      cy.get('style').should(
-        'have.length',
-        numTopLevelStyleTags + numLayoutStyleTags
-      );
-      InsightPanelsSelectors.topLevelStyleTags().should(
-        'have.length',
-        numTopLevelStyleTags
-      );
-      InsightPanelsSelectors.layoutStyleTags().should(
-        'have.length',
-        numLayoutStyleTags
-      );
-    });
-
     it('should display results', () => {
       InsightPanelsSelectors.results()
         .should('exist')
