@@ -144,7 +144,7 @@ export class AtomicPager
     const pagesRange = getCurrentPagesRange(
       this.pagerState.currentPage - 1,
       this.numberOfPages,
-      this.pagerState.maxPage
+      this.pagerState.maxPage - 1
     );
 
     return html`${when(
