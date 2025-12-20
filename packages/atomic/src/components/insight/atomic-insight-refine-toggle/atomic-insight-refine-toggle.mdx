@@ -1,0 +1,34 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicInsightRefineToggleStories from './atomic-insight-refine-toggle.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicInsightRefineToggleStories} name="Docs"/>
+
+<AtomicDocTemplate
+  stories={AtomicInsightRefineToggleStories}
+  githubPath="insight/atomic-insight-refine-toggle/atomic-insight-refine-toggle.ts"
+  tagName="atomic-insight-refine-toggle"
+  className="AtomicInsightRefineToggle"
+>
+
+The `atomic-insight-refine-toggle` component displays a button that, when clicked, opens a modal containing facets and sort components. This is particularly useful for mobile or narrow viewport experiences where facets need to be accessed through a modal interface.
+
+When this component is added to the `atomic-insight-interface`, an `atomic-insight-refine-modal` component is automatically created and managed by the toggle.
+
+## Usage
+
+This component is typically placed within the layout of an Insight interface:
+
+```html
+<atomic-insight-interface>
+  <atomic-insight-refine-toggle></atomic-insight-refine-toggle>
+  <atomic-insight-facet field="author" label="Authors"></atomic-insight-facet>
+  <atomic-insight-facet field="language" label="Language"></atomic-insight-facet>
+</atomic-insight-interface>
+```
+
+## Facet Management
+
+The refine modal will automatically include all facets defined in your insight interface. Facets can be placed anywhere in the interface, and they will be displayed in the modal when the toggle button is clicked.
+</AtomicDocTemplate>
