@@ -24,19 +24,19 @@ export class AtomicResultImage
   implements InitializableComponent<Bindings>
 {
   static styles = css`
-atomic-result-image {
-  display: grid;
-  place-items: center;
-  grid-template-rows: 100%;
-  width: 100%;
-  height: 100%;
+    :host {
+      display: grid;
+      place-items: center;
+      grid-template-rows: 100%;
+      width: 100%;
+      height: 100%;
+    }
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-}
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
   `;
 
   /**
