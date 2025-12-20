@@ -129,9 +129,9 @@ export const renderRadioButton: FunctionalComponent<RadioButtonProps> = ({
         return (currentIndex + 1) % length;
       case 'Tab':
         if (isShiftPressed) {
-          return (currentIndex - 1 + length) % length;
+          return Math.max(0, currentIndex - 1);
         } else {
-          return (currentIndex + 1) % length;
+          return Math.min(length - 1, currentIndex + 1);
         }
       default:
         return currentIndex;

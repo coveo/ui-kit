@@ -48,7 +48,7 @@ describe('#renderRadioButton', () => {
     expect(onChecked).toHaveBeenCalled();
   });
 
-  it('should handle keyboard navigation', async () => {
+  it('should handle keyboard navigation with arrow keys (wrapping)', async () => {
     const props = {
       groupName: 'test-group',
       selectWhenFocused: false,
@@ -65,6 +65,7 @@ describe('#renderRadioButton', () => {
       'input[type="radio"]'
     ) as NodeListOf<HTMLInputElement>;
 
+    // Test ArrowRight navigation and wrapping
     inputs[0].focus();
     expect(document.activeElement).toBe(inputs[0]);
 
@@ -83,20 +84,99 @@ describe('#renderRadioButton', () => {
     );
     expect(document.activeElement).toBe(inputs[3]);
 
+    // Arrow keys should wrap around
     inputs[3].dispatchEvent(
       new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true})
     );
     expect(document.activeElement).toBe(inputs[0]);
 
+    // Test ArrowLeft navigation and wrapping
     inputs[0].dispatchEvent(
       new KeyboardEvent('keydown', {key: 'ArrowLeft', bubbles: true})
     );
     expect(document.activeElement).toBe(inputs[3]);
+  });
 
+  it('should handle Tab key navigation without wrapping', async () => {
+    const props = {
+      groupName: 'test-group',
+      selectWhenFocused: false,
+    };
+
+    const element = await renderFunctionFixture(
+      html`${renderRadioButton({props: {...props, text: 'radio-1'}})}
+      ${renderRadioButton({props: {...props, text: 'radio-2'}})}
+      ${renderRadioButton({props: {...props, text: 'radio-3'}})}
+      ${renderRadioButton({props: {...props, text: 'radio-4'}})}`
+    );
+
+    const inputs = element.querySelectorAll(
+      'input[type="radio"]'
+    ) as NodeListOf<HTMLInputElement>;
+
+    // Test Tab forward navigation within group
+    inputs[0].focus();
+    inputs[0].dispatchEvent(
+      new KeyboardEvent('keydown', {key: 'Tab', bubbles: true})
+    );
+    expect(document.activeElement).toBe(inputs[1]);
+
+    inputs[1].dispatchEvent(
+      new KeyboardEvent('keydown', {key: 'Tab', bubbles: true})
+    );
+    expect(document.activeElement).toBe(inputs[2]);
+
+    inputs[2].dispatchEvent(
+      new KeyboardEvent('keydown', {key: 'Tab', bubbles: true})
+    );
+    expect(document.activeElement).toBe(inputs[3]);
+
+    // Tab from last button should NOT wrap - focus should stay on last button
+    inputs[3].dispatchEvent(
+      new KeyboardEvent('keydown', {key: 'Tab', bubbles: true})
+    );
+    expect(document.activeElement).toBe(inputs[3]);
+  });
+
+  it('should handle Shift+Tab key navigation without wrapping', async () => {
+    const props = {
+      groupName: 'test-group',
+      selectWhenFocused: false,
+    };
+
+    const element = await renderFunctionFixture(
+      html`${renderRadioButton({props: {...props, text: 'radio-1'}})}
+      ${renderRadioButton({props: {...props, text: 'radio-2'}})}
+      ${renderRadioButton({props: {...props, text: 'radio-3'}})}
+      ${renderRadioButton({props: {...props, text: 'radio-4'}})}`
+    );
+
+    const inputs = element.querySelectorAll(
+      'input[type="radio"]'
+    ) as NodeListOf<HTMLInputElement>;
+
+    // Test Shift+Tab backward navigation within group
+    inputs[3].focus();
     inputs[3].dispatchEvent(
       new KeyboardEvent('keydown', {key: 'Tab', shiftKey: true, bubbles: true})
     );
     expect(document.activeElement).toBe(inputs[2]);
+
+    inputs[2].dispatchEvent(
+      new KeyboardEvent('keydown', {key: 'Tab', shiftKey: true, bubbles: true})
+    );
+    expect(document.activeElement).toBe(inputs[1]);
+
+    inputs[1].dispatchEvent(
+      new KeyboardEvent('keydown', {key: 'Tab', shiftKey: true, bubbles: true})
+    );
+    expect(document.activeElement).toBe(inputs[0]);
+
+    // Shift+Tab from first button should NOT wrap - focus should stay on first button
+    inputs[0].dispatchEvent(
+      new KeyboardEvent('keydown', {key: 'Tab', shiftKey: true, bubbles: true})
+    );
+    expect(document.activeElement).toBe(inputs[0]);
   });
 
   it('should create a ripple effect on mousedown', async () => {
