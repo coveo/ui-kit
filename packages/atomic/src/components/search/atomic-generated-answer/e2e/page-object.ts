@@ -45,4 +45,65 @@ export class GeneratedAnswerPageObject extends BasePageObject<'atomic-generated-
       );
     });
   }
+
+  get likeButton() {
+    return this.page.locator('atomic-generated-answer-feedback-button[feedback="like"]');
+  }
+
+  get dislikeButton() {
+    return this.page.locator('atomic-generated-answer-feedback-button[feedback="dislike"]');
+  }
+
+  get feedbackModal() {
+    return this.page.locator('atomic-generated-answer-feedback-modal');
+  }
+
+  get feedbackModalSubmitButton() {
+    return this.feedbackModal.locator('button[type="submit"]');
+  }
+
+  get feedbackModalSkipButton() {
+    return this.feedbackModal.locator('button[type="button"]');
+  }
+
+  get feedbackModalCloseButton() {
+    return this.feedbackModal.locator('button[part^="close"]');
+  }
+
+  get feedbackModalOptions() {
+    return this.feedbackModal.locator('input[type="radio"]');
+  }
+
+  get feedbackModalCorrectAnswerInput() {
+    return this.feedbackModal.locator('input[type="text"][placeholder="https://URL"]');
+  }
+
+  get feedbackModalAdditionalNotesInput() {
+    return this.feedbackModal.locator('textarea[name="answer-details"]');
+  }
+
+  get feedbackModalSuccessMessage() {
+    return this.feedbackModal.locator('atomic-icon');
+  }
+
+  get correctTopicOptions() {
+    return this.feedbackModal.locator('.correctTopic input[type="radio"]');
+  }
+
+  get hallucinationFreeOptions() {
+    return this.feedbackModal.locator('.hallucinationFree input[type="radio"]');
+  }
+
+  get documentedOptions() {
+    return this.feedbackModal.locator('.documented input[type="radio"]');
+  }
+
+  get readableOptions() {
+    return this.feedbackModal.locator('.readable input[type="radio"]');
+  }
+
+  async selectOption(questionType: 'correctTopic' | 'hallucinationFree' | 'documented' | 'readable', option: 'yes' | 'unknown' | 'no') {
+    const selector = `.${questionType} input[type="radio"][value="${option === 'unknown' ? 'Not sure' : option === 'yes' ? 'Yes' : 'No'}"]`;
+    await this.feedbackModal.locator(selector).click();
+  }
 }
