@@ -56,7 +56,7 @@ const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
 const DEFAULT_CITATION_FIELDS = ['sfid', 'sfkbid', 'sfkavid', 'filetype'];
 
 /**
- * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
+ * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo Machine Learning models to answer the query executed by the user.
  * This component includes a slot, "no-answer-message", which allows for rendering a custom message when no answer is generated.
  * @category Search
  * @slot no-answer-message - Slot that allows the rendering of a custom message when no answer is generated.
