@@ -47,11 +47,11 @@ export class GeneratedAnswerPageObject extends BasePageObject<'atomic-generated-
   }
 
   get likeButton() {
-    return this.page.locator('atomic-generated-answer-feedback-button[feedback="like"]');
+    return this.page.locator('button[part="feedback-button"].like');
   }
 
   get dislikeButton() {
-    return this.page.locator('atomic-generated-answer-feedback-button[feedback="dislike"]');
+    return this.page.locator('button[part="feedback-button"].dislike');
   }
 
   get feedbackModal() {
@@ -59,51 +59,121 @@ export class GeneratedAnswerPageObject extends BasePageObject<'atomic-generated-
   }
 
   get feedbackModalSubmitButton() {
-    return this.feedbackModal.locator('button[type="submit"]');
+    return this.page.locator(
+      'atomic-generated-answer-feedback-modal[is-open] button[type="submit"]'
+    );
   }
 
   get feedbackModalSkipButton() {
-    return this.feedbackModal.locator('button[type="button"]');
+    return this.page.locator(
+      'atomic-generated-answer-feedback-modal[is-open] button[type="button"]'
+    );
   }
 
   get feedbackModalCloseButton() {
-    return this.feedbackModal.locator('button[part^="close"]');
+    return this.page.locator(
+      'atomic-generated-answer-feedback-modal[is-open] button[part^="close"]'
+    );
   }
 
   get feedbackModalOptions() {
-    return this.feedbackModal.locator('input[type="radio"]');
+    return this.page.locator(
+      'atomic-generated-answer-feedback-modal[is-open] input[type="radio"]'
+    );
   }
 
   get feedbackModalCorrectAnswerInput() {
-    return this.feedbackModal.locator('input[type="text"][placeholder="https://URL"]');
+    return this.page.locator(
+      'atomic-generated-answer-feedback-modal[is-open] input[type="text"][placeholder="https://URL"]'
+    );
   }
 
   get feedbackModalAdditionalNotesInput() {
-    return this.feedbackModal.locator('textarea[name="answer-details"]');
+    return this.page.locator(
+      'atomic-generated-answer-feedback-modal[is-open] textarea[name="answer-details"]'
+    );
   }
 
   get feedbackModalSuccessMessage() {
-    return this.feedbackModal.locator('atomic-icon');
+    return this.page.locator(
+      'atomic-generated-answer-feedback-modal[is-open] atomic-icon'
+    );
   }
 
   get correctTopicOptions() {
-    return this.feedbackModal.locator('.correctTopic input[type="radio"]');
+    return this.page.locator(
+      'atomic-generated-answer-feedback-modal[is-open] .correctTopic input[type="radio"]'
+    );
   }
 
   get hallucinationFreeOptions() {
-    return this.feedbackModal.locator('.hallucinationFree input[type="radio"]');
+    return this.page.locator(
+      'atomic-generated-answer-feedback-modal[is-open] .hallucinationFree input[type="radio"]'
+    );
   }
 
   get documentedOptions() {
-    return this.feedbackModal.locator('.documented input[type="radio"]');
+    return this.page.locator(
+      'atomic-generated-answer-feedback-modal[is-open] .documented input[type="radio"]'
+    );
   }
 
   get readableOptions() {
-    return this.feedbackModal.locator('.readable input[type="radio"]');
+    return this.page.locator(
+      'atomic-generated-answer-feedback-modal[is-open] .readable input[type="radio"]'
+    );
   }
 
-  async selectOption(questionType: 'correctTopic' | 'hallucinationFree' | 'documented' | 'readable', option: 'yes' | 'unknown' | 'no') {
-    const selector = `.${questionType} input[type="radio"][value="${option === 'unknown' ? 'Not sure' : option === 'yes' ? 'Yes' : 'No'}"]`;
-    await this.feedbackModal.locator(selector).click();
+  async selectOption(
+    questionType:
+      | 'correctTopic'
+      | 'hallucinationFree'
+      | 'documented'
+      | 'readable',
+    option: 'yes' | 'unknown' | 'no'
+  ) {
+    const selector = `atomic-generated-answer-feedback-modal[is-open] .${questionType} input[type="radio"][value="${option === 'unknown' ? 'Not sure' : option === 'yes' ? 'Yes' : 'No'}"]`;
+    await this.page.locator(selector).click();
+  }
+
+  // Method to fill all required feedback options
+  async fillAllRequiredOptions() {
+    await this.selectOption('correctTopic', 'yes');
+    await this.selectOption('hallucinationFree', 'yes');
+    await this.selectOption('documented', 'yes');
+    await this.selectOption('readable', 'yes');
+  }
+
+  // Method to check if modal is open
+  async isModalOpen(): Promise<boolean> {
+    const modal = this.feedbackModal;
+    return await modal.isVisible();
+  }
+
+  // Method to wait for modal to be visible
+  async waitForModal() {
+    await this.page
+      .locator('atomic-modal[part="generated-answer-feedback-modal"]')
+      .waitFor();
+  }
+
+  // Method to wait for modal to be hidden
+  async waitForModalToClose() {
+    const modal = this.page.locator(
+      'atomic-modal[part="generated-answer-feedback-modal"]'
+    );
+    await modal.waitFor({state: 'hidden'});
+  }
+
+  async waitForLikeAndDislikeButtons() {
+    await this.likeButton.waitFor();
+    await this.dislikeButton.waitFor();
+  }
+
+  // Method to check if validation errors are shown
+  get validationErrors() {
+    return this.page.locator(
+      'atomic-generated-answer-feedback-modal[is-open] .required'
+    );
   }
 }
