@@ -14,7 +14,7 @@ import DidYouMean from '../components/did-you-mean/did-you-mean.js';
 import SearchBox from '../components/search-box/search-box.js';
 import NotifyTrigger from '../components/triggers/notify-trigger.js';
 import QueryTrigger from '../components/triggers/query-trigger.js';
-import SearchAndListingInterface from '../components/use-cases/search-and-listing-interface/search-and-listing-interface.js';
+import SearchInterface from '../components/use-cases/search-interface/search-interface.js';
 import {highlightOptions} from '../utils/highlight-options.js';
 
 interface ISearchProps {
@@ -111,8 +111,8 @@ export default function Search(props: ISearchProps) {
       <NotifyTrigger controller={buildNotifyTrigger(engine)}></NotifyTrigger>
       <QueryTrigger controller={buildQueryTrigger(engine)} />
       <DidYouMean controller={searchController.didYouMean()} />
-      <SearchAndListingInterface
-        searchOrListingController={searchController}
+      <SearchInterface
+        searchController={searchController}
         cartController={cartController}
         navigate={navigate}
       />
