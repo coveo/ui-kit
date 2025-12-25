@@ -1,5 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client.js';
+import type {GeneratedAnswerStream} from '../../api/knowledge/generated-answer-stream.js';
 import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import {
   closeGeneratedAnswerFeedbackModal,
@@ -28,6 +29,7 @@ import {
   updateMessage,
   updateResponseFormat,
 } from './generated-answer-actions.js';
+import {hydrateAnswerFromCache} from './generated-answer-conversation-actions.js';
 import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
 import {filterOutDuplicatedCitations} from './utils/generated-answer-citation-utils.js';
 
@@ -142,5 +144,20 @@ export const generatedAnswerReducer = createReducer(
       })
       .addCase(setAnswerGenerationMode, (state, {payload}) => {
         state.answerGenerationMode = payload;
+      })
+      .addCase(hydrateAnswerFromCache, (state, {payload}) => {
+        const {answerId, answer, citations, contentFormat, error, generated} =
+          payload as GeneratedAnswerStream;
+        state.answerId = answerId;
+        state.answer = answer || '';
+        state.citations = citations || [];
+        state.answerContentFormat = contentFormat;
+        state.isLoading = false;
+        state.isStreaming = false;
+        state.isAnswerGenerated = generated || false;
+        state.error = {
+          ...error,
+          isRetryable: error?.code === RETRYABLE_STREAM_ERROR_CODE,
+        };
       })
 );

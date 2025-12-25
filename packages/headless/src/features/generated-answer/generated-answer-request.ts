@@ -1,6 +1,7 @@
 import type {HistoryElement} from '../../api/analytics/coveo.analytics/history-store.js';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
+import type {AnswerGenerationApiState} from '../../api/knowledge/answer-generation/answer-generation-api-state.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
 import type {BaseParam} from '../../api/platform-service-params.js';
@@ -31,6 +32,7 @@ import {
 import {selectSearchActionCause} from '../../features/search/search-selectors.js';
 import {selectSearchHub} from '../../features/search-hub/search-hub-selectors.js';
 import {selectActiveTab} from '../../features/tab-set/tab-set-selectors.js';
+import type {SearchAppState} from '../../state/search-app-state.js';
 import type {
   ConfigurationSection,
   GeneratedAnswerSection,
@@ -74,7 +76,7 @@ export const buildStreamingRequest = async (
 export const constructAnswerAPIQueryParams = (
   state: StreamAnswerAPIState,
   navigatorContext: NavigatorContext
-): AnswerApiQueryParams => {
+) => {
   const q = selectQuery(state)?.q;
 
   const {aq, cq, dq, lq} = buildAdvancedSearchQueryParams(state);
@@ -161,6 +163,52 @@ export const constructAnswerAPIQueryParams = (
   };
 };
 
+export type HeadAnswerParams = ReturnType<
+  typeof constructGenerateHeadAnswerParams
+>;
+
+export const constructGenerateHeadAnswerParams = (
+  state: AnswerGenerationApiState,
+  navigatorContext: NavigatorContext
+) => {
+  const q = selectQuery(state)?.q;
+
+  const {aq, cq, dq, lq} = buildAdvancedSearchQueryParams(state);
+
+  const context = selectContext(state);
+
+  const analyticsParams = fromAnalyticsStateToAnalyticsParams(
+    state.configuration.analytics,
+    navigatorContext,
+    {actionCause: selectSearchActionCause(state)}
+  );
+
+  const searchHub = selectSearchHub(state);
+  const pipeline = selectPipeline(state);
+  const citationsFieldToInclude = selectFieldsToIncludeInCitation(state) ?? [];
+
+  return {
+    q,
+    ...(aq && {aq}),
+    ...(cq && {cq}),
+    ...(dq && {dq}),
+    ...(lq && {lq}),
+    ...(state.query && {enableQuerySyntax: selectEnableQuerySyntax(state)}),
+    ...(context?.contextValues && {
+      context: context.contextValues,
+    }),
+    pipelineRuleParameters: {
+      mlGenerativeQuestionAnswering: {
+        responseFormat: state.generatedAnswer.responseFormat,
+        citationsFieldToInclude,
+      },
+    },
+    ...(searchHub?.length && {searchHub}),
+    ...(pipeline?.length && {pipeline}),
+    ...analyticsParams,
+  };
+};
+
 const getGeneratedFacetParams = (
   state: StreamAnswerAPIState
 ): AnyFacetRequest[] =>
@@ -180,7 +228,7 @@ const getActionsHistory = (
     : [],
 });
 
-const buildAdvancedSearchQueryParams = (state: StreamAnswerAPIState) => {
+const buildAdvancedSearchQueryParams = (state: Partial<SearchAppState>) => {
   const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
   const mergedCq = buildConstantQuery(state);
 
