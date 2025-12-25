@@ -5,18 +5,15 @@ import type {
   GeneratedResponseFormat,
 } from './generated-response-format.js';
 
-/**
- * A scoped and simplified part of the headless state that is relevant to the `GeneratedAnswer` component.
- *
- * @group Controllers
- * @category GeneratedAnswer
- */
-export interface GeneratedAnswerState {
-  id: string;
+interface GeneratedAnswerConversationTurn {
   /**
    * Determines if the generated answer is visible.
    */
   isVisible: boolean;
+  /**
+   * The question that prompted the generated answer.
+   */
+  question: string;
   /**
    * Determines if the generated answer is loading.
    */
@@ -25,10 +22,6 @@ export interface GeneratedAnswerState {
    * Determines if the generated answer is streaming.
    */
   isStreaming: boolean;
-  /**
-   * Determines if the generated answer is enabled.
-   */
-  isEnabled: boolean;
   /**
    * The generated answer.
    */
@@ -52,14 +45,6 @@ export interface GeneratedAnswerState {
    */
   disliked: boolean;
   /**
-   * The desired format options for the generated answer.
-   */
-  responseFormat: GeneratedResponseFormat;
-  /**
-   * Determines if the feedback modal is currently opened.
-   */
-  feedbackModalOpen: boolean;
-  /**
    * The generated answer error.
    */
   error?: {
@@ -72,21 +57,46 @@ export interface GeneratedAnswerState {
    */
   feedbackSubmitted: boolean;
   /**
-   * A list of indexed fields to include in the citations returned with the generated answer.
-   */
-  fieldsToIncludeInCitations: string[];
-  /**
    * Determines if the answer is generated.
    */
   isAnswerGenerated: boolean;
   /**
-   * Whether the answer is expanded.
-   */
-  expanded: boolean;
-  /**
    * Whether an answer cannot be generated after a query is executed.
    */
   cannotAnswer: boolean;
+  /** The unique identifier of the answer returned by the Answer API. */
+  answerId?: string;
+}
+
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `GeneratedAnswer` component.
+ *
+ * @group Controllers
+ * @category GeneratedAnswer
+ */
+export interface GeneratedAnswerState
+  extends Omit<GeneratedAnswerConversationTurn, 'question'> {
+  id: string;
+  /**
+   * Determines if the feedback modal is currently opened.
+   */
+  feedbackModalOpen: boolean;
+  /**
+   * Determines if the generated answer is enabled.
+   */
+  isEnabled: boolean;
+  /**
+   * The desired format options for the generated answer.
+   */
+  responseFormat: GeneratedResponseFormat;
+  /**
+   * A list of indexed fields to include in the citations returned with the generated answer.
+   */
+  fieldsToIncludeInCitations: string[];
+  /**
+   * Whether the answer is expanded.
+   */
+  expanded: boolean;
   /**
    * The answer configuration unique identifier.
    */
@@ -95,10 +105,10 @@ export interface GeneratedAnswerState {
    * The query parameters used for the answer API request cache key
    */
   answerApiQueryParams?: AnswerApiQueryParams;
-  /** The unique identifier of the answer returned by the Answer API. */
-  answerId?: string;
   /** The current mode of answer generation. */
   answerGenerationMode: 'automatic' | 'manual';
+  /** The list of follow-up answers in a conversational context. */
+  followUpAnswers: GeneratedAnswerConversationTurn[];
 }
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
@@ -123,5 +133,6 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     answerApiQueryParams: undefined,
     answerId: undefined,
     answerGenerationMode: 'automatic',
+    followUpAnswers: [],
   };
 }
