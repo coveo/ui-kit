@@ -31,7 +31,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@coveo/create-atomic-component-project": "1.4.2"
+    "@coveo/create-atomic-component-project": "1.5.11"
   },
   "repository": {
     "type": "git",
