@@ -52,13 +52,13 @@
     "access": "public"
   },
   "dependencies": {
-    "@coveo/platform-client": "60.4.0",
+    "@coveo/platform-client": "60.8.0",
     "abortcontroller-polyfill": "1.7.8",
     "https-proxy-agent": "7.0.6",
     "isomorphic-fetch": "3.0.0",
     "minimist": "1.2.8",
     "node-plop": "^0.32.0",
-    "plop": "4.0.1"
+    "plop": "4.0.4"
   },
   "devDependencies": {
     "@types/node": "catalog:",
