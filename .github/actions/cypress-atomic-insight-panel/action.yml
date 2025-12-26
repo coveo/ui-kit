@@ -11,7 +11,7 @@ runs:
     - run: pnpm exec cypress install
       shell: bash
       working-directory: packages/atomic
-    - uses: cypress-io/github-action@248bde77443c376edc45906ede03a1aba9da0462 # v5.8.4
+    - uses: cypress-io/github-action@2ad32e649e4db26c07674ebae31a297601dbcbaf # v6.10.8
       name: Run Cypress
       with:
         browser: chrome

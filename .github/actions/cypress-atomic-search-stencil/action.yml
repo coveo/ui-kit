@@ -11,7 +11,7 @@ runs:
     - run: pnpm exec cypress install
       shell: bash
       working-directory: samples/atomic/search-stencil
-    - uses: cypress-io/github-action@248bde77443c376edc45906ede03a1aba9da0462 # v5.8.4
+    - uses: cypress-io/github-action@2ad32e649e4db26c07674ebae31a297601dbcbaf # v6.10.8
       name: Run Cypress
       with:
         browser: chrome
@@ -21,7 +21,7 @@ runs:
         wait-on-timeout: 600000
         install: false
         record: false
-    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+    - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
       if: failure()
       with:
         name: stencil-sample-screenshots
