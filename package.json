@@ -28,7 +28,7 @@
     "knip": "knip"
   },
   "devDependencies": {
-    "@actions/core": "1.11.1",
+    "@actions/core": "2.0.1",
     "@actions/github": "6.0.1",
     "@biomejs/biome": "2.1.4",
     "@coveo/ci": "workspace:*",
