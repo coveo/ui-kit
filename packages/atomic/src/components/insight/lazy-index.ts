@@ -6,6 +6,8 @@ export default {
     ),
   'atomic-insight-interface': async () =>
     await import('./atomic-insight-interface/atomic-insight-interface.js'),
+  'atomic-insight-query-error': async () =>
+    await import('./atomic-insight-query-error/atomic-insight-query-error.js'),
   'atomic-insight-tab': async () =>
     await import('./atomic-insight-tab/atomic-insight-tab.js'),
   'atomic-insight-tabs': async () =>
