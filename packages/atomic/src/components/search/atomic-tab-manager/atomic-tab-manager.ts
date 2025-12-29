@@ -87,7 +87,11 @@ export class AtomicTabManager
     }
 
     tabElements.forEach((tabElement) => {
-      if (!tabElement.name) {
+      const name = tabElement.getAttribute('name') || '';
+      const expression = tabElement.getAttribute('expression') ?? '';
+      const label = tabElement.getAttribute('label') || '';
+
+      if (!name) {
         this.error = new Error(
           'The "name" attribute must be defined on all "atomic-tab" children.'
         );
@@ -95,15 +99,15 @@ export class AtomicTabManager
       }
       const tabController = buildTab(this.bindings.engine, {
         options: {
-          expression: tabElement.expression,
-          id: tabElement.name,
+          expression,
+          id: name,
           clearFiltersOnTabChange: this.clearFiltersOnTabChange,
         },
       });
 
       this.tabs.push({
-        label: tabElement.label,
-        name: tabElement.name,
+        label,
+        name,
         tabController,
       });
     });
