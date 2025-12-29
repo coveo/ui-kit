@@ -1,6 +1,7 @@
 import {
   AtomicAriaLive as LitAtomicAriaLive,
   AtomicAutomaticFacet as LitAtomicAutomaticFacet,
+  AtomicAutomaticFacetGenerator as LitAtomicAutomaticFacetGenerator,
   AtomicBreadbox as LitAtomicBreadbox,
   AtomicCategoryFacet as LitAtomicCategoryFacet,
   AtomicColorFacet as LitAtomicColorFacet,
@@ -23,11 +24,13 @@ import {
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
   AtomicNoResults as LitAtomicNoResults,
   AtomicNotifications as LitAtomicNotifications,
+  AtomicNumericFacet as LitAtomicNumericFacet,
   AtomicNumericRange as LitAtomicNumericRange,
   AtomicPager as LitAtomicPager,
   AtomicPopover as LitAtomicPopover,
   AtomicQueryError as LitAtomicQueryError,
   AtomicQuerySummary as LitAtomicQuerySummary,
+  AtomicQuickview as LitAtomicQuickview,
   AtomicRatingFacet as LitAtomicRatingFacet,
   AtomicRatingRangeFacet as LitAtomicRatingRangeFacet,
   AtomicRecsInterface as LitAtomicRecsInterface,
@@ -65,6 +68,7 @@ import {
   AtomicSearchBoxRecentQueries as LitAtomicSearchBoxRecentQueries,
   AtomicSearchInterface as LitAtomicSearchInterface,
   AtomicSearchLayout as LitAtomicSearchLayout,
+  AtomicSegmentedFacet as LitAtomicSegmentedFacet,
   AtomicSegmentedFacetScrollable as LitAtomicSegmentedFacetScrollable,
   AtomicSortDropdown as LitAtomicSortDropdown,
   AtomicSortExpression as LitAtomicSortExpression,
@@ -72,6 +76,7 @@ import {
   AtomicTableElement as LitAtomicTableElement,
   AtomicTabManager as LitAtomicTabManager,
   AtomicText as LitAtomicText,
+  AtomicTimeframe as LitAtomicTimeframe,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
@@ -86,6 +91,12 @@ export const AtomicAutomaticFacet = createComponent({
   tagName: 'atomic-automatic-facet',
   react: React,
   elementClass: LitAtomicAutomaticFacet,
+});
+
+export const AtomicAutomaticFacetGenerator = createComponent({
+  tagName: 'atomic-automatic-facet-generator',
+  react: React,
+  elementClass: LitAtomicAutomaticFacetGenerator,
 });
 
 export const AtomicBreadbox = createComponent({
@@ -220,6 +231,12 @@ export const AtomicNotifications = createComponent({
   elementClass: LitAtomicNotifications,
 });
 
+export const AtomicNumericFacet = createComponent({
+  tagName: 'atomic-numeric-facet',
+  react: React,
+  elementClass: LitAtomicNumericFacet,
+});
+
 export const AtomicNumericRange = createComponent({
   tagName: 'atomic-numeric-range',
   react: React,
@@ -248,6 +265,12 @@ export const AtomicQuerySummary = createComponent({
   tagName: 'atomic-query-summary',
   react: React,
   elementClass: LitAtomicQuerySummary,
+});
+
+export const AtomicQuickview = createComponent({
+  tagName: 'atomic-quickview',
+  react: React,
+  elementClass: LitAtomicQuickview,
 });
 
 export const AtomicRatingFacet = createComponent({
@@ -472,6 +495,12 @@ export const AtomicSearchLayout = createComponent({
   elementClass: LitAtomicSearchLayout,
 });
 
+export const AtomicSegmentedFacet = createComponent({
+  tagName: 'atomic-segmented-facet',
+  react: React,
+  elementClass: LitAtomicSegmentedFacet,
+});
+
 export const AtomicSegmentedFacetScrollable = createComponent({
   tagName: 'atomic-segmented-facet-scrollable',
   react: React,
@@ -512,4 +541,10 @@ export const AtomicText = createComponent({
   tagName: 'atomic-text',
   react: React,
   elementClass: LitAtomicText,
+});
+
+export const AtomicTimeframe = createComponent({
+  tagName: 'atomic-timeframe',
+  react: React,
+  elementClass: LitAtomicTimeframe,
 });
