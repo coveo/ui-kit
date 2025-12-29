@@ -32,8 +32,6 @@ import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-i
  * @part icon - The magnifying glass icon.
  *
  * @slot default - Any additional content slotted inside of its element will be displayed as well.
- *
- * @internal
  */
 @customElement('atomic-insight-no-results')
 @bindings()

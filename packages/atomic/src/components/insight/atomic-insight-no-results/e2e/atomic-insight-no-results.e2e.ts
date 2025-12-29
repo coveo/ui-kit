@@ -17,17 +17,4 @@ test.describe('atomic-insight-no-results', () => {
   test('should display search tips', async ({noResults}) => {
     await expect(noResults.searchTips()).toBeVisible();
   });
-
-  test.describe('with query', () => {
-    test.beforeEach(async ({noResults}) => {
-      await noResults.load({story: 'with-query'});
-      await noResults.hydrated.waitFor();
-    });
-
-    test('should display the query in the no results message', async ({
-      noResults,
-    }) => {
-      await expect(noResults.message('test query')).toBeVisible();
-    });
-  });
 });

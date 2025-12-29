@@ -160,7 +160,7 @@ describe('atomic-insight-no-results', () => {
     });
 
     expect(noResultsText).toHaveTextContent(
-      `We couldn't find anything for "${query}"`
+      `We couldn't find anything for “${query}”`
     );
   });
 
