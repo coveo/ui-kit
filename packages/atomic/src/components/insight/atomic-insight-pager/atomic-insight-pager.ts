@@ -57,7 +57,7 @@ export class AtomicInsightPager
   implements InitializableComponent<InsightBindings>
 {
   static styles = css`
-    @reference '../../../utils/coveo.tw.css';
+    @reference '../../../utils/tailwind.global.tw.css';
 
   [part='page-button'] {
     @apply bg-transparent;
