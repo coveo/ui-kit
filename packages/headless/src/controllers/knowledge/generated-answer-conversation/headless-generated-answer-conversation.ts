@@ -6,7 +6,10 @@ import {
   resetAnswer,
   updateAnswerConfigurationId,
 } from '../../../features/generated-answer/generated-answer-actions.js';
-import type {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
+import {
+  generateFollowUpAnswer,
+  generateHeadAnswer,
+} from '../../../features/generated-answer/generated-answer-conversation-actions.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
 import type {
   GeneratedAnswerSection,
@@ -20,17 +23,16 @@ import {
   type GeneratedAnswerProps,
 } from '../../core/generated-answer/headless-core-generated-answer.js';
 
-interface AnswerApiGeneratedAnswer
-  extends Omit<GeneratedAnswer, 'sendFeedback'> {
+interface GeneratedAnswerConversation extends GeneratedAnswer {
   /**
    * Resets the last answer.
    */
   reset(): void;
   /**
-   * Sends feedback about why the generated answer was not relevant.
-   * @param feedback - The feedback that the end user wishes to send.
+   * Asks a follow-up question.
+   * @param question - The follow-up question to ask.
    */
-  sendFeedback(feedback: GeneratedAnswerFeedback): void;
+  ask(question: string): void;
 }
 
 interface AnswerApiGeneratedAnswerProps extends GeneratedAnswerProps {}
@@ -52,7 +54,7 @@ export function buildGeneratedAnswerConversation(
   engine: SearchEngine | InsightEngine,
   analyticsClient: SearchAPIGeneratedAnswerAnalyticsClient,
   props: AnswerApiGeneratedAnswerProps = {}
-): AnswerApiGeneratedAnswer {
+): GeneratedAnswerConversation {
   if (!loadAnswerApiReducers(engine)) {
     throw loadReducerError;
   }
@@ -74,10 +76,9 @@ export function buildGeneratedAnswerConversation(
       const state = getState().generatedAnswer;
       return state;
     },
-    // retry() {
-    //   const answerApiQueryParams = selectAnswerApiQueryParams(getState());
-    //   engine.dispatch(fetchAnswer(answerApiQueryParams));
-    // },
+    retry() {
+      engine.dispatch(generateHeadAnswer());
+    },
     reset() {
       engine.dispatch(resetAnswer());
     },
@@ -90,6 +91,9 @@ export function buildGeneratedAnswerConversation(
       // });
       // engine.dispatch(answerEvaluation.endpoints.post.initiate(args));
       // engine.dispatch(sendGeneratedAnswerFeedback());
+    },
+    ask(question: string) {
+      engine.dispatch(generateFollowUpAnswer(question));
     },
   };
 }
