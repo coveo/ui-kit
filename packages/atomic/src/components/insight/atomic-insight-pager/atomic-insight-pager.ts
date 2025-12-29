@@ -7,7 +7,7 @@ import {
   type SearchStatus as InsightSearchStatus,
   type SearchStatusState as InsightSearchStatusState,
 } from '@coveo/headless/insight';
-import {html, LitElement} from 'lit';
+import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {when} from 'lit/directives/when.js';
@@ -34,12 +34,9 @@ import {
 import {randomID} from '@/src/utils/utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
-import styles from './atomic-insight-pager.tw.css?inline';
 
 /**
  * The `atomic-insight-pager` provides buttons that allow the end user to navigate through the different result pages.
- *
- * @internal
  *
  * @part buttons - The list of the next/previous buttons and page-buttons.
  * @part page-buttons - The list of page buttons.
@@ -59,7 +56,17 @@ export class AtomicInsightPager
   extends LitElement
   implements InitializableComponent<InsightBindings>
 {
-  static styles = styles;
+  static styles = css`
+    @reference '../../../utils/coveo.tw.css';
+
+  [part='page-button'] {
+    @apply bg-transparent;
+  }
+
+  :host {
+    @apply bg-neutral-light box-content flex h-full items-center justify-center px-6 py-4;
+  }
+  `;
 
   @state() public bindings!: InsightBindings;
   @state() public error!: Error;
