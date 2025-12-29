@@ -274,8 +274,6 @@ export class AtomicNumericFacet
       AtomicNumericFacet.propsSchema
     );
   }
-  private facetForRangeDependenciesManager?: FacetConditionsManager;
-  private facetForInputDependenciesManager?: FacetConditionsManager;
   private filterDependenciesManager?: FacetConditionsManager;
   private headerFocus?: FocusTargetController;
   private removeNumberFormatListener?: () => void;
@@ -303,8 +301,6 @@ export class AtomicNumericFacet
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.facetForRangeDependenciesManager?.stopWatching();
-    this.facetForInputDependenciesManager?.stopWatching();
     this.filterDependenciesManager?.stopWatching();
     this.removeNumberFormatListener?.();
     this.removeNumberInputApplyListener?.();
@@ -415,10 +411,6 @@ export class AtomicNumericFacet
       },
     });
 
-    this.facetForInputDependenciesManager = this.initializeDependenciesManager(
-      this.facetForInput.state.facetId
-    );
-
     this.facetForInputState = this.facetForInput.state;
     this.unsubscribeFacetForInput = this.facetForInput.subscribe(() => {
       this.facetForInputState = this.facetForInput!.state;
@@ -465,10 +457,6 @@ export class AtomicNumericFacet
       },
     });
 
-    this.facetForRangeDependenciesManager = this.initializeDependenciesManager(
-      this.facetForRange.state.facetId
-    );
-
     this.facetState = this.facetForRange.state;
     this.unsubscribeFacetForRange = this.facetForRange.subscribe(() => {
       this.facetState = this.facetForRange!.state;
@@ -503,6 +491,10 @@ export class AtomicNumericFacet
   }
 
   private initializeDependenciesManager(facetId: string) {
+    if (!this.dependsOn || Object.keys(this.dependsOn).length === 0) {
+      return;
+    }
+
     return buildFacetConditionsManager(this.bindings.engine, {
       facetId,
       conditions: parseDependsOn<FacetValueRequest | CategoryFacetValueRequest>(
