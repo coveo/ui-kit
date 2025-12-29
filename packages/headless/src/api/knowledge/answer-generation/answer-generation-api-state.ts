@@ -34,6 +34,19 @@ export interface AnswerGenerationApiSection {
         GeneratedAnswerDraft,
         'answerGenerationApi'
       >;
+      generateFollowUpAnswer: QueryDefinition<
+        Partial<SearchRequest>,
+        BaseQueryFn<
+          string | FetchArgs,
+          unknown,
+          FetchBaseQueryError,
+          {} & RetryOptions,
+          {}
+        >,
+        never,
+        GeneratedAnswerDraft,
+        'answerGenerationApi'
+      >;
     },
     never,
     'answerGenerationApi'
