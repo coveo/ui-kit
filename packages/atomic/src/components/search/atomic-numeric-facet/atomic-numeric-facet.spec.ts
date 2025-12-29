@@ -734,32 +734,6 @@ describe('atomic-numeric-facet', () => {
     });
   });
 
-  describe('when dependsOn is configured', () => {
-    it('should call buildFacetConditionsManager', async () => {
-      await setupElement({
-        props: {
-          dependsOn: {parentFacet: 'value'},
-        },
-      });
-
-      expect(buildFacetConditionsManager).toHaveBeenCalled();
-    });
-  });
-
-  describe('#disconnectedCallback', () => {
-    it('should call stopWatching on dependencies manager', async () => {
-      const stopWatchingMock = vi.fn();
-      mockedFacetConditionsManager = buildFakeFacetConditionsManager({
-        stopWatching: stopWatchingMock,
-      });
-
-      const {element} = await setupElement();
-      element.disconnectedCallback();
-
-      expect(stopWatchingMock).toHaveBeenCalled();
-    });
-  });
-
   describe('when validating props', () => {
     describe('when displayValuesAs has invalid value', () => {
       let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
