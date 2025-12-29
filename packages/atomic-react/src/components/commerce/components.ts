@@ -31,6 +31,7 @@ import {
   AtomicIcon as LitAtomicIcon,
   AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
   AtomicInsightInterface as LitAtomicInsightInterface,
+  AtomicInsightNoResults as LitAtomicInsightNoResults,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicNumericRange as LitAtomicNumericRange,
   AtomicProduct as LitAtomicProduct,
@@ -249,6 +250,12 @@ export const AtomicInsightInterface = createComponent({
   tagName: 'atomic-insight-interface',
   react: React,
   elementClass: LitAtomicInsightInterface,
+});
+
+export const AtomicInsightNoResults = createComponent({
+  tagName: 'atomic-insight-no-results',
+  react: React,
+  elementClass: LitAtomicInsightNoResults,
 });
 
 export const AtomicLayoutSection = createComponent({
