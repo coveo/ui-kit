@@ -12,12 +12,12 @@ vi.mock('@/src/utils/date-utils', () => ({
   parseTimestampToDateDetails: vi.fn((timestamp: number) => {
     const date = new Date(timestamp);
     return {
-      hours: date.getHours(),
-      minutes: date.getMinutes(),
-      year: date.getFullYear(),
-      month: date.toLocaleString('en', {month: 'short'}),
-      day: date.getDate(),
-      dayOfWeek: date.toLocaleString('en', {weekday: 'short'}),
+      hours: date.getUTCHours(),
+      minutes: date.getUTCMinutes(),
+      year: date.getUTCFullYear(),
+      month: date.toLocaleString('en', {month: 'short', timeZone: 'UTC'}),
+      day: date.getUTCDate(),
+      dayOfWeek: date.toLocaleString('en', {weekday: 'short', timeZone: 'UTC'}),
     };
   }),
 }));
