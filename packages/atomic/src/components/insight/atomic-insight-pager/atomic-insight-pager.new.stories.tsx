@@ -40,10 +40,3 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {};
-
-export const WithACustomNumberOfPages: Story = {
-  name: 'With a custom number of pages',
-  args: {
-    'number-of-pages': '10',
-  },
-};

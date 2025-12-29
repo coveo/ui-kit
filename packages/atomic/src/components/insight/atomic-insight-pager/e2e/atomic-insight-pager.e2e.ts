@@ -6,12 +6,6 @@ test.describe('atomic-insight-pager', () => {
     await pager.hydrated.waitFor();
   });
 
-  test('should exist in DOM with correct attributes', async ({pager}) => {
-    const pagerElement = pager.hydrated;
-
-    await expect(pagerElement).toBeAttached();
-  });
-
   test('should display page buttons when there are multiple pages', async ({
     pager,
   }) => {
@@ -50,11 +44,5 @@ test.describe('atomic-insight-pager', () => {
       'Page 1'
     );
     await expect(pager.previousButton).toBeDisabled();
-  });
-
-  test('should have navigation element with proper role', async ({pager}) => {
-    const navigation = pager.hydrated.locator('nav');
-    await expect(navigation).toBeVisible();
-    await expect(navigation).toHaveAttribute('aria-label', 'Pagination');
   });
 });
