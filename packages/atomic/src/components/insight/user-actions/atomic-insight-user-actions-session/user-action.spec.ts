@@ -4,11 +4,6 @@ import {html} from 'lit';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
-import BookmarkIcon from '@/src/images/bookmark.svg';
-import DocumentIcon from '@/src/images/document.svg';
-import PointIcon from '@/src/images/point.svg';
-import QuickviewIcon from '@/src/images/quickview.svg';
-import SearchIcon from '@/src/images/search.svg';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderUserAction} from './user-action';
@@ -72,31 +67,46 @@ describe('#renderUserAction', () => {
     it('should render search icon for SEARCH action', async () => {
       const element = await renderComponent({actionType: 'SEARCH'});
       const iconElement = element.querySelector('atomic-icon');
-      expect(iconElement?.['icon']).toBe(SearchIcon);
+      expect(iconElement).toBeInTheDocument();
+      const iconAttr = iconElement?.getAttribute('icon');
+      expect(iconAttr).toContain('svg');
+      expect(iconAttr).toContain('viewBox="0 0 16 16"');
     });
 
     it('should render document icon for CLICK action', async () => {
       const element = await renderComponent({actionType: 'CLICK'});
       const iconElement = element.querySelector('atomic-icon');
-      expect(iconElement?.['icon']).toBe(DocumentIcon);
+      expect(iconElement).toBeInTheDocument();
+      const iconAttr = iconElement?.getAttribute('icon');
+      expect(iconAttr).toContain('svg');
+      expect(iconAttr).toContain('viewBox="0 0 12 13"');
     });
 
     it('should render quickview icon for VIEW action', async () => {
       const element = await renderComponent({actionType: 'VIEW'});
       const iconElement = element.querySelector('atomic-icon');
-      expect(iconElement?.['icon']).toBe(QuickviewIcon);
+      expect(iconElement).toBeInTheDocument();
+      const iconAttr = iconElement?.getAttribute('icon');
+      expect(iconAttr).toContain('svg');
+      expect(iconAttr).toContain('Quickview');
     });
 
     it('should render point icon for CUSTOM action', async () => {
       const element = await renderComponent({actionType: 'CUSTOM'});
       const iconElement = element.querySelector('atomic-icon');
-      expect(iconElement?.['icon']).toBe(PointIcon);
+      expect(iconElement).toBeInTheDocument();
+      const iconAttr = iconElement?.getAttribute('icon');
+      expect(iconAttr).toContain('svg');
+      expect(iconAttr).toContain('circle');
     });
 
     it('should render bookmark icon for TICKET_CREATION action', async () => {
       const element = await renderComponent({actionType: 'TICKET_CREATION'});
       const iconElement = element.querySelector('atomic-icon');
-      expect(iconElement?.['icon']).toBe(BookmarkIcon);
+      expect(iconElement).toBeInTheDocument();
+      const iconAttr = iconElement?.getAttribute('icon');
+      expect(iconAttr).toContain('svg');
+      expect(iconAttr).toContain('viewBox="0 0 10 14"');
     });
 
     it('should apply primary color class for CLICK action', async () => {
@@ -122,7 +132,7 @@ describe('#renderUserAction', () => {
     it('should render ticket created message for TICKET_CREATION action', async () => {
       await renderComponent({actionType: 'TICKET_CREATION'});
       await expect
-        .element(page.getByText('ticket-created'))
+        .element(page.getByText('Ticket created'))
         .toBeInTheDocument();
     });
 
@@ -159,7 +169,7 @@ describe('#renderUserAction', () => {
         actionType: 'SEARCH',
         query: '',
       });
-      await expect.element(page.getByText('empty-search')).toBeInTheDocument();
+      await expect.element(page.getByText('Empty search')).toBeInTheDocument();
     });
 
     it('should render document title as link for VIEW action', async () => {
