@@ -5,7 +5,7 @@ import type {
   GeneratedResponseFormat,
 } from './generated-response-format.js';
 
-interface GeneratedAnswerConversationTurn {
+export interface GeneratedAnswerConversationTurn {
   /**
    * Determines if the generated answer is visible.
    */
@@ -107,6 +107,8 @@ export interface GeneratedAnswerState
   answerApiQueryParams?: AnswerApiQueryParams;
   /** The current mode of answer generation. */
   answerGenerationMode: 'automatic' | 'manual';
+  /** The unique identifier of the current conversation. */
+  conversationId: string;
   /** The list of follow-up answers in a conversational context. */
   followUpAnswers: GeneratedAnswerConversationTurn[];
 }
@@ -133,6 +135,7 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     answerApiQueryParams: undefined,
     answerId: undefined,
     answerGenerationMode: 'automatic',
+    conversationId: '',
     followUpAnswers: [],
   };
 }
