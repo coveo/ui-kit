@@ -72,13 +72,5 @@ describe('#renderDisclaimer', () => {
       expect(container).not.toBeInTheDocument();
       expect(slot).not.toBeInTheDocument();
     });
-
-    it('should not render the disclaimer text', async () => {
-      const {element} = await renderComponent({isStreaming: true});
-
-      await expect
-        .element(element)
-        .not.toHaveTextContent('Generative AI can make mistakes');
-    });
   });
 });

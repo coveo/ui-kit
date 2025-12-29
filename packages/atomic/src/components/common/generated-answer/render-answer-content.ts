@@ -66,7 +66,7 @@ export const renderAnswerContent: FunctionalComponent<
           ${renderSwitch({
             props: {
               part: 'toggle',
-              checked: !!isAnswerVisible,
+              checked: isAnswerVisible,
               onToggle,
               ariaLabel: i18n.t('generated-answer-title'),
               title: toggleTooltip,

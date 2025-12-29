@@ -4,10 +4,10 @@ import {renderGeneratedContentContainer} from '@/src/components/common/generated
 import {renderRetryPrompt} from '@/src/components/common/generated-answer/retry-prompt';
 import {renderShowButton} from '@/src/components/common/generated-answer/show-button';
 import {renderSourceCitations} from '@/src/components/common/generated-answer/source-citations';
+import {renderHeading} from '@/src/components/common/heading';
+import {renderSwitch} from '@/src/components/common/switch';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {renderHeading} from '../heading';
-import {renderSwitch} from '../switch';
 import {
   type RenderAnswerContentProps,
   renderAnswerContent,
@@ -77,7 +77,7 @@ describe('#renderAnswerContent', () => {
   };
 
   it('should call renderHeading with correct arguments', async () => {
-    await renderComponent();
+    const {element} = await renderComponent();
 
     expect(renderHeading).toHaveBeenCalledWith({
       props: expect.objectContaining({
@@ -85,6 +85,11 @@ describe('#renderAnswerContent', () => {
         part: 'header-label',
       }),
     });
+
+    const headerLabel = element.querySelector('[part="header-label"]');
+    expect(headerLabel?.textContent?.trim()).toBe(
+      i18n.t('generated-answer-title')
+    );
   });
 
   it('should call renderSwitch with correct arguments', async () => {
@@ -110,33 +115,54 @@ describe('#renderAnswerContent', () => {
     });
   });
 
-  describe('when hasRetryableError is true and answer is visible', () => {
-    it('should call renderRetryPrompt with correct arguments', async () => {
-      const onRetry = vi.fn();
+  it('should pass switch props when answer is hidden and withToggle is false', async () => {
+    const onToggle = vi.fn();
 
-      await renderComponent({
-        hasRetryableError: true,
-        isAnswerVisible: true,
-        onRetry,
-      });
-
-      expect(renderRetryPrompt).toHaveBeenCalledWith({
-        props: expect.objectContaining({
-          onClick: onRetry,
-          buttonLabel: 'Retry',
-          message: expect.any(String),
-        }),
-      });
+    await renderComponent({
+      isAnswerVisible: false,
+      withToggle: false,
+      toggleTooltip: 'Another tooltip',
+      onToggle,
     });
 
-    it('should not call renderRetryPrompt when answer is not visible', async () => {
-      await renderComponent({
-        hasRetryableError: true,
-        isAnswerVisible: false,
-      });
-
-      expect(renderRetryPrompt).not.toHaveBeenCalled();
+    expect(renderSwitch).toHaveBeenCalledWith({
+      props: expect.objectContaining({
+        part: 'toggle',
+        checked: false,
+        onToggle,
+        ariaLabel: 'Generated answer',
+        title: 'Another tooltip',
+        withToggle: false,
+        tabIndex: 0,
+      }),
     });
+  });
+
+  it('should call renderRetryPrompt with correct arguments', async () => {
+    const onRetry = vi.fn();
+
+    await renderComponent({
+      hasRetryableError: true,
+      isAnswerVisible: true,
+      onRetry,
+    });
+
+    expect(renderRetryPrompt).toHaveBeenCalledWith({
+      props: expect.objectContaining({
+        onClick: onRetry,
+        buttonLabel: 'Retry',
+        message: expect.any(String),
+      }),
+    });
+  });
+
+  it('should not call renderRetryPrompt when answer is not visible', async () => {
+    await renderComponent({
+      hasRetryableError: true,
+      isAnswerVisible: false,
+    });
+
+    expect(renderRetryPrompt).not.toHaveBeenCalled();
   });
 
   describe('when answer is visible and no retryable error', () => {
@@ -161,6 +187,47 @@ describe('#renderAnswerContent', () => {
       });
     });
 
+    it('should call renderFeedbackAndCopyButtonsSlot', async () => {
+      const renderFeedbackAndCopyButtonsSlot = vi.fn(() => html``);
+
+      await renderComponent({
+        renderFeedbackAndCopyButtonsSlot,
+      });
+
+      expect(renderFeedbackAndCopyButtonsSlot).toHaveBeenCalled();
+    });
+
+    it('should call renderCitationsSlot', async () => {
+      const renderCitationsSlot = vi.fn(() => html``);
+
+      await renderComponent({
+        renderCitationsSlot,
+      });
+
+      expect(renderCitationsSlot).toHaveBeenCalled();
+    });
+
+    it('should pass streaming plain text answer to renderGeneratedContentContainer', async () => {
+      await renderComponent({
+        isAnswerVisible: true,
+        hasRetryableError: false,
+        // @ts-expect-error Test fixture with partial mock
+        generatedAnswerState: {
+          answer: 'Another answer',
+          answerContentFormat: 'text/plain',
+          isStreaming: true,
+        },
+      });
+
+      expect(renderGeneratedContentContainer).toHaveBeenCalledWith({
+        props: expect.objectContaining({
+          answer: 'Another answer',
+          answerContentFormat: 'text/plain',
+          isStreaming: true,
+        }),
+      });
+    });
+
     it('should call renderSourceCitations with correct arguments', async () => {
       await renderComponent({
         isAnswerVisible: true,
@@ -175,6 +242,24 @@ describe('#renderAnswerContent', () => {
         props: expect.objectContaining({
           label: 'Citations',
           isVisible: true,
+        }),
+      });
+    });
+
+    it('should call renderSourceCitations with isVisible false when citations are empty', async () => {
+      await renderComponent({
+        isAnswerVisible: true,
+        hasRetryableError: false,
+        // @ts-expect-error Test fixture with partial mock
+        generatedAnswerState: {
+          citations: [],
+        },
+      });
+
+      expect(renderSourceCitations).toHaveBeenCalledWith({
+        props: expect.objectContaining({
+          label: 'Citations',
+          isVisible: false,
         }),
       });
     });
@@ -197,6 +282,24 @@ describe('#renderAnswerContent', () => {
       });
     });
 
+    it('should call renderDisclaimer with correct arguments when streaming', async () => {
+      await renderComponent({
+        isAnswerVisible: true,
+        hasRetryableError: false,
+        // @ts-expect-error Test fixture with partial mock
+        generatedAnswerState: {
+          isStreaming: true,
+        },
+      });
+
+      expect(renderDisclaimer).toHaveBeenCalledWith({
+        props: expect.objectContaining({
+          i18n,
+          isStreaming: true,
+        }),
+      });
+    });
+
     it('should call renderGeneratingAnswerLabel with correct arguments', async () => {
       await renderComponent({
         isAnswerVisible: true,
@@ -215,6 +318,38 @@ describe('#renderAnswerContent', () => {
           collapsible: true,
         }),
       });
+    });
+
+    it('should call renderGeneratingAnswerLabel with correct arguments when not streaming', async () => {
+      await renderComponent({
+        isAnswerVisible: true,
+        hasRetryableError: false,
+        collapsible: false,
+        // @ts-expect-error Test fixture with partial mock
+        generatedAnswerState: {
+          isStreaming: false,
+        },
+      });
+
+      expect(renderGeneratingAnswerLabel).toHaveBeenCalledWith({
+        props: expect.objectContaining({
+          i18n,
+          isStreaming: false,
+          collapsible: false,
+        }),
+      });
+    });
+
+    it('should not call renderShowButton when streaming', async () => {
+      await renderComponent({
+        collapsible: true,
+        // @ts-expect-error Test fixture with partial mock
+        generatedAnswerState: {
+          isStreaming: true,
+        },
+      });
+
+      expect(renderShowButton).not.toHaveBeenCalled();
     });
 
     describe('when collapsible is true and not streaming', () => {
@@ -255,18 +390,6 @@ describe('#renderAnswerContent', () => {
             isCollapsed: true,
           }),
         });
-      });
-
-      it('should not call renderShowButton when streaming', async () => {
-        await renderComponent({
-          collapsible: true,
-          // @ts-expect-error Test fixture with partial mock
-          generatedAnswerState: {
-            isStreaming: true,
-          },
-        });
-
-        expect(renderShowButton).not.toHaveBeenCalled();
       });
     });
 

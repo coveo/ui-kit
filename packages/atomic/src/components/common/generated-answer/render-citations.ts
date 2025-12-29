@@ -5,6 +5,7 @@ import type {
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {keyed} from 'lit/directives/keyed.js';
+import {when} from 'lit-html/directives/when.js';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {getCitationWithTitle} from './generated-answer-utils';
 
@@ -32,12 +33,8 @@ export const renderCitations: FunctionalComponent<RenderCitationsProps> = ({
     disableCitationAnchoring,
   } = props;
 
-  if (!citations) {
-    return html``;
-  }
-
-  return html`${citations.map(
-    (citation: GeneratedAnswerCitation, index: number) => {
+  return html`${when(citations && citations.length > 0, () =>
+    citations?.map((citation: GeneratedAnswerCitation, index: number) => {
       const interactiveCitation = buildInteractiveCitation(citation);
       return keyed(
         citation.id,
@@ -56,6 +53,6 @@ export const renderCitations: FunctionalComponent<RenderCitationsProps> = ({
         </li>
       `
       );
-    }
+    })
   )}`;
 };

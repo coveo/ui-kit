@@ -62,10 +62,6 @@ describe('#renderFeedbackAndCopyButtons', () => {
     };
   };
 
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   describe('when streaming', () => {
     it('should return nothing', async () => {
       const {element} = await renderComponent({

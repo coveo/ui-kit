@@ -1,5 +1,6 @@
 import {html} from 'lit';
-import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {renderHeading} from '@/src/components/common/heading';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {
@@ -7,19 +8,13 @@ import {
   renderCustomNoAnswerMessage,
 } from './render-custom-no-answer-message';
 
-vi.mock('@/src/components/common/heading', () => ({
-  renderHeading: vi.fn(() => vi.fn()),
-}));
+vi.mock('@/src/components/common/heading', {spy: true});
 
 describe('#renderCustomNoAnswerMessage', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
   beforeAll(async () => {
     i18n = await createTestI18n();
-  });
-
-  beforeEach(() => {
-    vi.clearAllMocks();
   });
 
   const renderComponent = async (
@@ -43,9 +38,7 @@ describe('#renderCustomNoAnswerMessage', () => {
   };
 
   it('should call renderHeading with correct arguments', async () => {
-    const {renderHeading} = await import('@/src/components/common/heading');
-
-    await renderComponent();
+    const {element} = await renderComponent();
 
     expect(renderHeading).toHaveBeenCalledWith({
       props: expect.objectContaining({
@@ -55,6 +48,11 @@ describe('#renderCustomNoAnswerMessage', () => {
           'text-primary bg-primary-background inline-block rounded-md px-2.5 py-2 font-medium',
       }),
     });
+
+    const headerLabel = element.querySelector('[part="header-label"]');
+    expect(headerLabel?.textContent?.trim()).toBe(
+      i18n.t('generated-answer-title')
+    );
   });
 
   it('should render the generated content container', async () => {

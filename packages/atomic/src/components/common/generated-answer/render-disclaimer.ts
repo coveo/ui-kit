@@ -1,5 +1,6 @@
 import type {i18n} from 'i18next';
-import {html, nothing} from 'lit';
+import {html} from 'lit';
+import {when} from 'lit/directives/when.js';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
 export interface RenderDisclaimerProps {
@@ -15,13 +16,12 @@ export const renderDisclaimer: FunctionalComponent<RenderDisclaimerProps> = ({
 }) => {
   const {i18n, isStreaming} = props;
 
-  if (isStreaming) {
-    return nothing;
-  }
-
-  return html`
-    <div class="text-neutral-dark text-xs/[1rem]">
-      <slot name="disclaimer">${i18n.t('generated-answer-disclaimer')}</slot>
-    </div>
-  `;
+  return html`${when(
+    !isStreaming,
+    () => html`
+      <div class="text-neutral-dark text-xs/[1rem]">
+        <slot name="disclaimer">${i18n.t('generated-answer-disclaimer')}</slot>
+      </div>
+    `
+  )}`;
 };

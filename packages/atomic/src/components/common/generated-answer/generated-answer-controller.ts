@@ -213,6 +213,24 @@ export class GeneratedAnswerController implements ReactiveController {
   }
 
   /**
+   * Handles the dislike action.
+   */
+  public clickDislike(): void {
+    this.setIsAnswerHelpful(false);
+    this.options.getGeneratedAnswer()?.dislike();
+    this.openFeedbackModal();
+  }
+
+  /**
+   * Handles the like action.
+   */
+  public clickLike(): void {
+    this.setIsAnswerHelpful(true);
+    this.options.getGeneratedAnswer()?.like();
+    this.openFeedbackModal();
+  }
+
+  /**
    * Sets whether the answer was helpful (for the feedback modal).
    */
   private setIsAnswerHelpful(isHelpful: boolean): void {
@@ -229,23 +247,5 @@ export class GeneratedAnswerController implements ReactiveController {
     if (this.modalRef && !state?.feedbackSubmitted) {
       this.modalRef.isOpen = true;
     }
-  }
-
-  /**
-   * Handles the dislike action.
-   */
-  public clickDislike(): void {
-    this.setIsAnswerHelpful(false);
-    this.options.getGeneratedAnswer()?.dislike();
-    this.openFeedbackModal();
-  }
-
-  /**
-   * Handles the like action.
-   */
-  public clickLike(): void {
-    this.setIsAnswerHelpful(true);
-    this.options.getGeneratedAnswer()?.like();
-    this.openFeedbackModal();
   }
 }

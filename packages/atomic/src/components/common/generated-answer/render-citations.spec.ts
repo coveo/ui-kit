@@ -1,6 +1,6 @@
 import type {GeneratedAnswerCitation} from '@coveo/headless';
 import {html} from 'lit';
-import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {type RenderCitationsProps, renderCitations} from './render-citations';
@@ -14,10 +14,6 @@ describe('#renderCitations', () => {
 
   beforeAll(async () => {
     i18n = await createTestI18n();
-  });
-
-  beforeEach(() => {
-    vi.clearAllMocks();
   });
 
   const createMockCitation = (
