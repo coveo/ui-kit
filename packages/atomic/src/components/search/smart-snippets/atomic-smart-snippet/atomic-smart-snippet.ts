@@ -13,13 +13,13 @@ import {when} from 'lit/directives/when.js';
 import '@/src/components/common/atomic-icon/atomic-icon';
 import '@/src/components/common/atomic-smart-snippet-collapse-wrapper/atomic-smart-snippet-collapse-wrapper';
 import '@/src/components/common/atomic-smart-snippet-expandable-answer/atomic-smart-snippet-expandable-answer';
+import {getAttributesFromLinkSlotContent} from '@/src/components/common/item-link/attributes-slot';
 import {renderSnippetFooter} from '@/src/components/common/smart-snippets/atomic-smart-snippet/snippet-footer';
 import {renderSnippetQuestion} from '@/src/components/common/smart-snippets/atomic-smart-snippet/snippet-question';
 import {renderSnippetTruncatedAnswer} from '@/src/components/common/smart-snippets/atomic-smart-snippet/snippet-truncated-answer';
 import {renderSnippetWrapper} from '@/src/components/common/smart-snippets/atomic-smart-snippet/snippet-wrapper';
 import {renderSmartSnippetFeedbackBanner} from '@/src/components/common/smart-snippets/smart-snippet-feedback-banner';
 import '@/src/components/common/smart-snippets/atomic-smart-snippet-source';
-import {getAttributesFromLinkSlotContent} from '@/src/components/common/item-link/attributes-slot';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {arrayConverter} from '@/src/converters/array-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
@@ -27,8 +27,10 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
 import {randomID} from '@/src/utils/utils';
+import styles from './atomic-smart-snippet.tw.css';
 
 /**
  * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
@@ -71,10 +73,13 @@ import {randomID} from '@/src/utils/utils';
  */
 @customElement('atomic-smart-snippet')
 @bindings()
+@withTailwindStyles
 export class AtomicSmartSnippet
   extends LitElement
   implements InitializableComponent<Bindings>
 {
+  static styles = styles;
+
   @state() public bindings!: Bindings;
   @state() public error!: Error;
 
@@ -90,7 +95,7 @@ export class AtomicSmartSnippet
 
   @state() private feedbackSent = false;
 
-  private id!: string;
+  #id!: string;
   private modalRef?: HTMLAtomicSmartSnippetFeedbackModalElement;
 
   /**
@@ -180,7 +185,7 @@ export class AtomicSmartSnippet
 
   connectedCallback(): void {
     super.connectedCallback();
-    this.id ||= randomID();
+    this.#id ||= randomID();
     this.addEventListener(
       'selectInlineLink',
       this.onSelectInlineLink as EventListener
@@ -354,7 +359,7 @@ export class AtomicSmartSnippet
                 }
               },
               feedbackSent: this.feedbackSent,
-              id: this.id,
+              id: this.#id,
               i18n: this.bindings.i18n,
               liked: this.smartSnippetState.liked,
               onDislike: () => {

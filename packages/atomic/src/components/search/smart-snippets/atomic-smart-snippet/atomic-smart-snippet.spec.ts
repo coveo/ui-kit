@@ -25,7 +25,8 @@ describe('atomic-smart-snippet', () => {
       state: {
         answerFound: true,
         question: 'What is the meaning of life?',
-        answer: '<p>The answer is <b>42</b>.</p>',
+        answer:
+          '<p>The answer is <b>42</b>. <a href="https://example.com/link1">Link 1</a> and <a href="https://example.com/link2">Link 2</a></p>',
         source: {
           title: "The Hitchhiker's Guide to the Galaxy",
           clickUri: 'https://example.com/guide',
@@ -88,6 +89,9 @@ describe('atomic-smart-snippet', () => {
       ),
       feedbackDislikeButton: el.shadowRoot?.querySelector(
         '[part~="feedback-dislike-button"]'
+      ),
+      feedbackThankYou: el.shadowRoot?.querySelector(
+        '[part~="feedback-thank-you"]'
       ),
     });
 
@@ -158,6 +162,25 @@ describe('atomic-smart-snippet', () => {
     it('should render the feedback banner', async () => {
       const {element, parts} = await renderAtomicSmartSnippet();
       await expect.element(parts(element).feedbackBanner!).toBeInTheDocument();
+    });
+
+    it('should render source url and title with correct href', async () => {
+      const {element} = await renderAtomicSmartSnippet();
+      const sourceUrl = element.shadowRoot?.querySelector(
+        '[part~="source-url"]'
+      );
+      const sourceTitle = element.shadowRoot?.querySelector(
+        '[part~="source-title"]'
+      );
+
+      await expect.element(sourceUrl!).toBeInTheDocument();
+      await expect.element(sourceTitle!).toBeInTheDocument();
+      expect(sourceUrl?.getAttribute('href')).toBe(
+        mockedSmartSnippet.state.source?.clickUri
+      );
+      expect(sourceTitle?.getAttribute('href')).toBe(
+        mockedSmartSnippet.state.source?.clickUri
+      );
     });
   });
 
@@ -256,6 +279,47 @@ describe('atomic-smart-snippet', () => {
         expect(modal).not.toBeNull();
       });
     });
+
+    it('should show thank you message after liking', async () => {
+      mockedSmartSnippet.state.liked = false;
+      const {element, parts} = await renderAtomicSmartSnippet();
+
+      await page.getByRole('radiogroup').getByText('yes').click();
+      mockedSmartSnippet.state.liked = true;
+      element.requestUpdate();
+      await element.updateComplete;
+
+      await expect
+        .element(parts(element).feedbackThankYou!)
+        .toBeInTheDocument();
+    });
+
+    it('should show thank you message after disliking', async () => {
+      mockedSmartSnippet.state.disliked = false;
+      const {element, parts} = await renderAtomicSmartSnippet();
+
+      await page.getByRole('radiogroup').getByText('no').click();
+      mockedSmartSnippet.state.disliked = true;
+      element.requestUpdate();
+      await element.updateComplete;
+
+      await expect
+        .element(parts(element).feedbackThankYou!)
+        .toBeInTheDocument();
+    });
+
+    it('should reset feedbackSent when liked state changes to false', async () => {
+      mockedSmartSnippet.state.liked = true;
+      const {element} = await renderAtomicSmartSnippet();
+
+      expect(element.feedbackSent).toBe(false);
+
+      mockedSmartSnippet.state.liked = false;
+      element.requestUpdate();
+      await element.updateComplete;
+
+      expect(element.feedbackSent).toBe(false);
+    });
   });
 
   describe('inline link events', () => {
@@ -339,6 +403,17 @@ describe('atomic-smart-snippet', () => {
       await expect.element(parts(element).question!).toBeInTheDocument();
     });
 
+    it('should use heading level 0 when no heading level is specified', async () => {
+      const {element, parts} = await renderAtomicSmartSnippet({
+        props: {headingLevel: 0},
+      });
+      expect(element.headingLevel).toBe(0);
+      await expect.element(parts(element).question!).toBeInTheDocument();
+
+      const question = parts(element).question!;
+      expect(question.tagName).toBe('DIV');
+    });
+
     it('should pass maximumHeight prop to expandable answer', async () => {
       const {element} = await renderAtomicSmartSnippet({
         props: {maximumHeight: 300},
@@ -368,6 +443,29 @@ describe('atomic-smart-snippet', () => {
       });
       expect(element.snippetStyle).toBe(customStyle);
     });
+
+    it('should apply snippet style from template element', async () => {
+      const {element} = await renderAtomicSmartSnippet();
+
+      const template = document.createElement('template');
+      const style = document.createElement('style');
+      style.innerHTML = 'b { color: red; }';
+      template.content.appendChild(style);
+      element.appendChild(template);
+
+      const appliedStyle = element.style;
+      expect(appliedStyle).toBe('b { color: red; }');
+    });
+
+    it('should use snippetStyle attribute when no template is present', async () => {
+      const customStyle = 'b { color: green; }';
+      const {element} = await renderAtomicSmartSnippet({
+        props: {snippetStyle: customStyle},
+      });
+
+      const appliedStyle = element.style;
+      expect(appliedStyle).toBe(customStyle);
+    });
   });
 
   describe('event listener cleanup', () => {
@@ -387,6 +485,50 @@ describe('atomic-smart-snippet', () => {
         'cancelPendingSelectInlineLink',
         expect.any(Function)
       );
+    });
+  });
+
+  describe('dynamic updates', () => {
+    it('should update question when smartSnippetState changes', async () => {
+      const {element, parts} = await renderAtomicSmartSnippet();
+
+      const newQuestion = 'What is the answer to everything?';
+      mockedSmartSnippet.state.question = newQuestion;
+      element.requestUpdate();
+      await element.updateComplete;
+
+      const question = parts(element).question!;
+      expect(question.textContent?.trim()).toBe(newQuestion);
+    });
+
+    it('should update answer when smartSnippetState changes', async () => {
+      const {element} = await renderAtomicSmartSnippet();
+
+      const newAnswer = '<p>New answer content</p>';
+      mockedSmartSnippet.state.answer = newAnswer;
+      element.requestUpdate();
+      await element.updateComplete;
+
+      const answer = element.shadowRoot?.querySelector(
+        'atomic-smart-snippet-answer'
+      );
+      await expect.element(answer!).toBeInTheDocument();
+    });
+  });
+
+  describe('slot attributes', () => {
+    it('should pass slot attributes to source anchor', async () => {
+      const {element} = await renderAtomicSmartSnippet();
+
+      const slotElement = document.createElement('a');
+      slotElement.setAttribute('slot', 'source-anchor-attributes');
+      slotElement.setAttribute('target', '_blank');
+      element.appendChild(slotElement);
+
+      const source = element.shadowRoot?.querySelector(
+        'atomic-smart-snippet-source'
+      );
+      await expect.element(source!).toBeInTheDocument();
     });
   });
 });
