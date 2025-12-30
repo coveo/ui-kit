@@ -1,0 +1,42 @@
+import {css} from 'lit';
+
+const styles = css`
+@reference './mixins.pcss';
+@reference '../../../../global/global.pcss';
+
+[part~='divider'] {
+  &:not(:last-child) {
+    @apply border-b-neutral border-b;
+    padding-bottom: 1rem;
+  }
+  margin-bottom: 1rem;
+}
+
+.list-root {
+  &.display-list {
+    display: flex;
+    flex-direction: column;
+
+    .result-component,
+    atomic-result-placeholder {
+      width: auto;
+    }
+
+    @apply atomic-list-with-dividers;
+
+    .result-component[part~='outline']::before {
+      @apply mx-6 my-0;
+    }
+  }
+
+  &.placeholder {
+    padding: 0.5rem 1.5rem;
+  }
+}
+
+atomic-result:not(.hydrated) {
+  visibility: hidden;
+}
+`;
+
+export default styles;
