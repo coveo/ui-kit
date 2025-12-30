@@ -155,7 +155,6 @@ test.describe('atomic-generated-answer', () => {
           // const analyticsRequest = await analytics.expectAnalyticsRequest();
           // expect(analyticsRequest).toBeDefined();
 
-          // Verify modal opens
           await generatedAnswer.waitForModal();
         });
 
@@ -169,14 +168,11 @@ test.describe('atomic-generated-answer', () => {
               ? generatedAnswer.likeButton
               : generatedAnswer.dislikeButton;
 
-          // Open the modal
           await feedbackButton.click();
           await generatedAnswer.waitForModal();
 
-          // Click skip button
           await generatedAnswer.feedbackModalSkipButton.click();
 
-          // Verify modal closes
           await generatedAnswer.waitForModalToClose();
         });
 
@@ -191,11 +187,9 @@ test.describe('atomic-generated-answer', () => {
                 ? generatedAnswer.likeButton
                 : generatedAnswer.dislikeButton;
 
-            // Open the modal
             await feedbackButton.click();
             await generatedAnswer.waitForModal();
 
-            // Fill all required options
             await generatedAnswer.fillAllRequiredOptions();
 
             // Clear analytics requests to capture only the submit event
@@ -208,7 +202,6 @@ test.describe('atomic-generated-answer', () => {
             // const analyticsRequest = await analytics.expectAnalyticsRequest();
             // expect(analyticsRequest).toBeDefined();
 
-            // Verify success message is displayed
             await expect(
               generatedAnswer.feedbackModalSuccessMessage
             ).toBeVisible();
@@ -225,14 +218,11 @@ test.describe('atomic-generated-answer', () => {
                   ? generatedAnswer.likeButton
                   : generatedAnswer.dislikeButton;
 
-              // Open the modal
               await feedbackButton.click();
               await generatedAnswer.waitForModal();
 
-              // Submit without filling required fields
               await generatedAnswer.feedbackModalSubmitButton.click();
 
-              // Verify validation errors are shown
               const validationErrors = generatedAnswer.validationErrors;
               await expect(validationErrors.first()).toBeVisible();
             });
@@ -247,14 +237,12 @@ test.describe('atomic-generated-answer', () => {
                   ? generatedAnswer.likeButton
                   : generatedAnswer.dislikeButton;
 
-              // Open the modal
               await feedbackButton.click();
               await generatedAnswer.waitForModal();
 
               // Clear analytics requests
               // analytics.clearRequests();
 
-              // Submit without filling required fields
               await generatedAnswer.feedbackModalSubmitButton.click();
 
               // Wait a moment and verify no analytics request was sent
