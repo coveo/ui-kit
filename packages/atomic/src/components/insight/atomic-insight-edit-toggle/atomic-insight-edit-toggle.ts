@@ -1,6 +1,7 @@
 import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {renderIconButton} from '@/src/components/common/icon-button';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import EditIcon from '../../../images/edit.svg';
 
 /**
@@ -9,6 +10,7 @@ import EditIcon from '../../../images/edit.svg';
  * @part insight-edit-toggle-button - The edit button element.
  */
 @customElement('atomic-insight-edit-toggle')
+@withTailwindStyles
 export class AtomicInsightEditToggle extends LitElement {
   /**
    * The callback function to be executed when the button is clicked.

@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import './atomic-insight-edit-toggle';
@@ -24,10 +24,6 @@ describe('atomic-insight-edit-toggle', () => {
       button,
     };
   };
-
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
 
   it('should render the edit button', async () => {
     const {button} = await renderComponent();

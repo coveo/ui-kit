@@ -8,6 +8,7 @@ const {decorator, play} = wrapInInsightInterface();
 const meta: Meta = {
   component: 'atomic-insight-edit-toggle',
   title: 'Insight/Edit Toggle',
+  id: 'atomic-insight-edit-toggle',
   decorators: [decorator],
   play,
   argTypes: {
