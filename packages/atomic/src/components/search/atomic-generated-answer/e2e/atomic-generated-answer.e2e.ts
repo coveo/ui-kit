@@ -139,9 +139,7 @@ test.describe('atomic-generated-answer', () => {
 
     ['like', 'dislike'].forEach((feedbackType) => {
       test.describe(`when clicking the ${feedbackType} generated answer button`, () => {
-        test(`should send analytics event and open feedback modal`, async ({
-          generatedAnswer,
-        }) => {
+        test(`should open the feedback modal`, async ({generatedAnswer}) => {
           await generatedAnswer.waitForLikeAndDislikeButtons();
 
           const feedbackButton =
@@ -150,11 +148,6 @@ test.describe('atomic-generated-answer', () => {
               : generatedAnswer.dislikeButton;
 
           await feedbackButton.click();
-
-          // Wait for and verify analytics request was sent
-          // const analyticsRequest = await analytics.expectAnalyticsRequest();
-          // expect(analyticsRequest).toBeDefined();
-
           await generatedAnswer.waitForModal();
         });
 
@@ -172,42 +165,54 @@ test.describe('atomic-generated-answer', () => {
           await generatedAnswer.waitForModal();
 
           await generatedAnswer.feedbackModalSkipButton.click();
-
           await generatedAnswer.waitForModalToClose();
         });
 
         test.describe('when submitting feedback', () => {
-          test('should send analytics event with the feedback and display the success message', async ({
-            generatedAnswer,
-          }) => {
-            await generatedAnswer.waitForLikeAndDislikeButtons();
+          test.describe('when selecting all the required options', () => {
+            test('should submit the feedback request and display the success message', async ({
+              generatedAnswer,
+            }) => {
+              await generatedAnswer.waitForLikeAndDislikeButtons();
 
-            const feedbackButton =
-              feedbackType === 'like'
-                ? generatedAnswer.likeButton
-                : generatedAnswer.dislikeButton;
+              const feedbackButton =
+                feedbackType === 'like'
+                  ? generatedAnswer.likeButton
+                  : generatedAnswer.dislikeButton;
 
-            await feedbackButton.click();
-            await generatedAnswer.waitForModal();
+              const expectedHelpfulness = feedbackType === 'like';
 
-            await generatedAnswer.fillAllRequiredOptions();
+              await feedbackButton.click();
+              await generatedAnswer.waitForModal();
 
-            // Clear analytics requests to capture only the submit event
-            // analytics.clearRequests();
+              // Fill the feedback modal form
+              await generatedAnswer.fillAllRequiredOptions();
+              await generatedAnswer.feedbackModalCorrectAnswerInput.fill(
+                'https://www.example.com/correct-answer'
+              );
+              await generatedAnswer.feedbackModalAdditionalNotesInput.fill(
+                'Additional notes for testing purposes.'
+              );
 
-            // Submit the form
-            await generatedAnswer.feedbackModalSubmitButton.click();
+              const evaluationRequestPromise =
+                generatedAnswer.waitForEvaluationRequest(expectedHelpfulness);
 
-            // Wait for and verify analytics request was sent
-            // const analyticsRequest = await analytics.expectAnalyticsRequest();
-            // expect(analyticsRequest).toBeDefined();
+              await generatedAnswer.feedbackModalSubmitButton.click();
 
-            await expect(
-              generatedAnswer.feedbackModalSuccessMessage
-            ).toBeVisible();
+              const evaluationRequest = await evaluationRequestPromise;
+              const requestBody = evaluationRequest.postDataJSON();
+              expect(requestBody.helpful).toBe(expectedHelpfulness);
+
+              await expect(
+                generatedAnswer.feedbackModalSuccessMessage
+              ).toBeVisible();
+
+              await generatedAnswer.feedbackModalSuccessMessageDoneButton.click();
+              await generatedAnswer.waitForModalToClose();
+            });
           });
 
-          test.describe('when submitting without selecting the required options', () => {
+          test.describe('when submitting without selecting all the required options', () => {
             test('should display validation message', async ({
               generatedAnswer,
             }) => {
@@ -225,68 +230,12 @@ test.describe('atomic-generated-answer', () => {
 
               const validationErrors = generatedAnswer.validationErrors;
               await expect(validationErrors.first()).toBeVisible();
-            });
 
-            test('should not send analytics event', async ({
-              generatedAnswer,
-            }) => {
-              await generatedAnswer.waitForLikeAndDislikeButtons();
-
-              const feedbackButton =
-                feedbackType === 'like'
-                  ? generatedAnswer.likeButton
-                  : generatedAnswer.dislikeButton;
-
-              await feedbackButton.click();
-              await generatedAnswer.waitForModal();
-
-              // Clear analytics requests
-              // analytics.clearRequests();
-
-              await generatedAnswer.feedbackModalSubmitButton.click();
-
-              // Wait a moment and verify no analytics request was sent
-              // await generatedAnswer.page.waitForTimeout(500);
-              // const requests = analytics.getAnalyticsRequests();
-              // expect(requests).toHaveLength(0);
+              await expect(
+                generatedAnswer.feedbackModalSuccessMessage
+              ).not.toBeVisible();
             });
           });
-        });
-
-        test(`should send analytics event again when clicking the ${feedbackType === 'like' ? 'dislike' : 'like'} after clicking the ${feedbackType} button`, async ({
-          generatedAnswer,
-          // analytics,
-        }) => {
-          await generatedAnswer.waitForLikeAndDislikeButtons();
-
-          const firstButton =
-            feedbackType === 'like'
-              ? generatedAnswer.likeButton
-              : generatedAnswer.dislikeButton;
-          const secondButton =
-            feedbackType === 'like'
-              ? generatedAnswer.dislikeButton
-              : generatedAnswer.likeButton;
-
-          // Clear analytics requests
-          // analytics.clearRequests();
-
-          // Click first button
-          await firstButton.click();
-          await generatedAnswer.waitForModal();
-
-          // Close modal by clicking skip
-          await generatedAnswer.feedbackModalSkipButton.click();
-          await generatedAnswer.waitForModalToClose();
-
-          // Click second button
-          await secondButton.click();
-          await generatedAnswer.waitForModal();
-
-          // Wait for analytics requests (should be 2: one for each click)
-          await generatedAnswer.page.waitForTimeout(500);
-          // const requests = analytics.getAnalyticsRequests();
-          // expect(requests.length).toBeGreaterThanOrEqual(2);
         });
       });
     });

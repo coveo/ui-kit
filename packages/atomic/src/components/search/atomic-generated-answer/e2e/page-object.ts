@@ -2,6 +2,8 @@ import type {GeneratedAnswerCitation} from '@coveo/headless';
 import type {Page} from '@playwright/test';
 import {BasePageObject} from '@/playwright-utils/base-page-object';
 
+const MODAL_OPEN_TIMEOUT_MS = 5000;
+
 interface AtomicCitationElement extends HTMLElement {
   citation?: GeneratedAnswerCitation;
 }
@@ -58,24 +60,12 @@ export class GeneratedAnswerPageObject extends BasePageObject<'atomic-generated-
     return this.page.locator('atomic-generated-answer-feedback-modal');
   }
 
-  get feedbackModalContainer() {
-    return this.feedbackModal.locator('atomic-modal');
-  }
-
   get feedbackModalSubmitButton() {
     return this.feedbackModal.locator('button[part="submit-button"]');
   }
 
   get feedbackModalSkipButton() {
     return this.feedbackModal.locator('button[part="cancel-button"]');
-  }
-
-  get feedbackModalCloseButton() {
-    return this.feedbackModal.locator('button[part^="close"]');
-  }
-
-  get feedbackModalOptions() {
-    return this.feedbackModal.locator('input[type="radio"]');
   }
 
   get feedbackModalCorrectAnswerInput() {
@@ -90,6 +80,12 @@ export class GeneratedAnswerPageObject extends BasePageObject<'atomic-generated-
 
   get feedbackModalSuccessMessage() {
     return this.feedbackModal.locator('atomic-icon.w-48');
+  }
+
+  get feedbackModalSuccessMessageDoneButton() {
+    return this.feedbackModal
+      .locator('button[part="cancel-button"]')
+      .filter({hasText: 'Done'});
   }
 
   async selectOption(
@@ -122,7 +118,7 @@ export class GeneratedAnswerPageObject extends BasePageObject<'atomic-generated-
         );
         return modal?.hasAttribute('is-open');
       },
-      {timeout: 10000}
+      {timeout: MODAL_OPEN_TIMEOUT_MS}
     );
   }
 
@@ -134,7 +130,7 @@ export class GeneratedAnswerPageObject extends BasePageObject<'atomic-generated-
         );
         return !modal?.hasAttribute('is-open');
       },
-      {timeout: 10000}
+      {timeout: MODAL_OPEN_TIMEOUT_MS}
     );
   }
 
@@ -145,5 +141,23 @@ export class GeneratedAnswerPageObject extends BasePageObject<'atomic-generated-
 
   get validationErrors() {
     return this.feedbackModal.locator('.required');
+  }
+
+  async waitForEvaluationRequest(expectedHelpful: boolean) {
+    const rgaEvaluationsRequestRegex =
+      /\/rest\/organizations\/.*\/answer\/v1\/configs\/.*\/evaluations/;
+
+    const evaluationRequest = await this.page.waitForRequest((request) => {
+      if (
+        request.method() === 'POST' &&
+        rgaEvaluationsRequestRegex.test(request.url())
+      ) {
+        const body = request.postDataJSON();
+        return body?.helpful === expectedHelpful;
+      }
+      return false;
+    });
+
+    return evaluationRequest;
   }
 }
