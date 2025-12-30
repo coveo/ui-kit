@@ -1,6 +1,6 @@
 import type {GeneratedAnswerCitation} from '@coveo/headless';
 import type {Page} from '@playwright/test';
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
 const MODAL_OPEN_TIMEOUT_MS = 5000;
 
@@ -8,7 +8,7 @@ interface AtomicCitationElement extends HTMLElement {
   citation?: GeneratedAnswerCitation;
 }
 
-export class GeneratedAnswerPageObject extends BasePageObject<'atomic-generated-answer'> {
+export class GeneratedAnswerPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-generated-answer');
   }
