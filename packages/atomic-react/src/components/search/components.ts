@@ -19,6 +19,7 @@ import {
   AtomicHtml as LitAtomicHtml,
   AtomicIcon as LitAtomicIcon,
   AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
+  AtomicInsightHistoryToggle as LitAtomicInsightHistoryToggle,
   AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
@@ -199,6 +200,12 @@ export const AtomicInsightGenerateAnswerButton = createComponent({
   tagName: 'atomic-insight-generate-answer-button',
   react: React,
   elementClass: LitAtomicInsightGenerateAnswerButton,
+});
+
+export const AtomicInsightHistoryToggle = createComponent({
+  tagName: 'atomic-insight-history-toggle',
+  react: React,
+  elementClass: LitAtomicInsightHistoryToggle,
 });
 
 export const AtomicInsightInterface = createComponent({
