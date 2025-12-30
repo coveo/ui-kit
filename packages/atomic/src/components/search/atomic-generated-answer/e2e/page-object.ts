@@ -58,70 +58,38 @@ export class GeneratedAnswerPageObject extends BasePageObject<'atomic-generated-
     return this.page.locator('atomic-generated-answer-feedback-modal');
   }
 
+  get feedbackModalContainer() {
+    return this.feedbackModal.locator('atomic-modal');
+  }
+
   get feedbackModalSubmitButton() {
-    return this.page.locator(
-      'atomic-generated-answer-feedback-modal[is-open] button[type="submit"]'
-    );
+    return this.feedbackModal.locator('button[part="submit-button"]');
   }
 
   get feedbackModalSkipButton() {
-    return this.page.locator(
-      'atomic-generated-answer-feedback-modal[is-open] button[type="button"]'
-    );
+    return this.feedbackModal.locator('button[part="cancel-button"]');
   }
 
   get feedbackModalCloseButton() {
-    return this.page.locator(
-      'atomic-generated-answer-feedback-modal[is-open] button[part^="close"]'
-    );
+    return this.feedbackModal.locator('button[part^="close"]');
   }
 
   get feedbackModalOptions() {
-    return this.page.locator(
-      'atomic-generated-answer-feedback-modal[is-open] input[type="radio"]'
-    );
+    return this.feedbackModal.locator('input[type="radio"]');
   }
 
   get feedbackModalCorrectAnswerInput() {
-    return this.page.locator(
-      'atomic-generated-answer-feedback-modal[is-open] input[type="text"][placeholder="https://URL"]'
+    return this.feedbackModal.locator(
+      'input[type="text"][placeholder="https://URL"]'
     );
   }
 
   get feedbackModalAdditionalNotesInput() {
-    return this.page.locator(
-      'atomic-generated-answer-feedback-modal[is-open] textarea[name="answer-details"]'
-    );
+    return this.feedbackModal.locator('textarea[name="answer-details"]');
   }
 
   get feedbackModalSuccessMessage() {
-    return this.page.locator(
-      'atomic-generated-answer-feedback-modal[is-open] atomic-icon'
-    );
-  }
-
-  get correctTopicOptions() {
-    return this.page.locator(
-      'atomic-generated-answer-feedback-modal[is-open] .correctTopic input[type="radio"]'
-    );
-  }
-
-  get hallucinationFreeOptions() {
-    return this.page.locator(
-      'atomic-generated-answer-feedback-modal[is-open] .hallucinationFree input[type="radio"]'
-    );
-  }
-
-  get documentedOptions() {
-    return this.page.locator(
-      'atomic-generated-answer-feedback-modal[is-open] .documented input[type="radio"]'
-    );
-  }
-
-  get readableOptions() {
-    return this.page.locator(
-      'atomic-generated-answer-feedback-modal[is-open] .readable input[type="radio"]'
-    );
+    return this.feedbackModal.locator('atomic-icon.w-48');
   }
 
   async selectOption(
@@ -132,11 +100,12 @@ export class GeneratedAnswerPageObject extends BasePageObject<'atomic-generated-
       | 'readable',
     option: 'yes' | 'unknown' | 'no'
   ) {
-    const selector = `atomic-generated-answer-feedback-modal[is-open] .${questionType} input[type="radio"][value="${option === 'unknown' ? 'Not sure' : option === 'yes' ? 'Yes' : 'No'}"]`;
-    await this.page.locator(selector).click();
+    const value =
+      option === 'unknown' ? 'Not sure' : option === 'yes' ? 'Yes' : 'No';
+    const selector = `.${questionType} input[type="radio"][value="${value}"]`;
+    await this.feedbackModal.locator(selector).click();
   }
 
-  // Method to fill all required feedback options
   async fillAllRequiredOptions() {
     await this.selectOption('correctTopic', 'yes');
     await this.selectOption('hallucinationFree', 'yes');
@@ -144,36 +113,37 @@ export class GeneratedAnswerPageObject extends BasePageObject<'atomic-generated-
     await this.selectOption('readable', 'yes');
   }
 
-  // Method to check if modal is open
-  async isModalOpen(): Promise<boolean> {
-    const modal = this.feedbackModal;
-    return await modal.isVisible();
-  }
-
-  // Method to wait for modal to be visible
   async waitForModal() {
-    await this.page
-      .locator('atomic-modal[part="generated-answer-feedback-modal"]')
-      .waitFor();
+    await this.feedbackModal.waitFor({state: 'attached'});
+    await this.page.waitForFunction(
+      () => {
+        const modal = document.querySelector(
+          'atomic-generated-answer-feedback-modal'
+        );
+        return modal?.hasAttribute('is-open');
+      },
+      {timeout: 10000}
+    );
   }
 
-  // Method to wait for modal to be hidden
   async waitForModalToClose() {
-    const modal = this.page.locator(
-      'atomic-modal[part="generated-answer-feedback-modal"]'
+    await this.page.waitForFunction(
+      () => {
+        const modal = document.querySelector(
+          'atomic-generated-answer-feedback-modal'
+        );
+        return !modal?.hasAttribute('is-open');
+      },
+      {timeout: 10000}
     );
-    await modal.waitFor({state: 'hidden'});
   }
 
   async waitForLikeAndDislikeButtons() {
-    await this.likeButton.waitFor();
-    await this.dislikeButton.waitFor();
+    await this.likeButton.waitFor({state: 'visible'});
+    await this.dislikeButton.waitFor({state: 'visible'});
   }
 
-  // Method to check if validation errors are shown
   get validationErrors() {
-    return this.page.locator(
-      'atomic-generated-answer-feedback-modal[is-open] .required'
-    );
+    return this.feedbackModal.locator('.required');
   }
 }

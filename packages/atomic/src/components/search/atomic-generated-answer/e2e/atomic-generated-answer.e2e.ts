@@ -156,7 +156,7 @@ test.describe('atomic-generated-answer', () => {
           // expect(analyticsRequest).toBeDefined();
 
           // Verify modal opens
-          await expect(generatedAnswer.isModalOpen()).toBeTruthy();
+          await generatedAnswer.waitForModal();
         });
 
         test('should close the modal when clicking the skip button', async ({
@@ -178,7 +178,6 @@ test.describe('atomic-generated-answer', () => {
 
           // Verify modal closes
           await generatedAnswer.waitForModalToClose();
-          await expect(generatedAnswer.feedbackModal).not.toBeVisible();
         });
 
         test.describe('when submitting feedback', () => {
