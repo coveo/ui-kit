@@ -1,33 +1,29 @@
-import {html} from 'lit';
-import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
-import './atomic-insight-edit-toggle';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 
 const {decorator, play} = wrapInInsightInterface();
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-insight-edit-toggle',
+  {excludeCategories: ['methods']}
+);
 
 const meta: Meta = {
   component: 'atomic-insight-edit-toggle',
   title: 'Insight/Edit Toggle',
   id: 'atomic-insight-edit-toggle',
+  render: (args) => template(args),
   decorators: [decorator],
-  play,
-  argTypes: {
-    tooltip: {
-      control: 'text',
-      description: 'The tooltip text to display on hover',
-      table: {
-        defaultValue: {summary: ''},
-      },
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
     },
   },
-  args: {
-    tooltip: '',
-  },
-  render: (args) =>
-    html`<atomic-insight-edit-toggle
-      .tooltip=${args.tooltip}
-      .clickCallback=${() => alert('Edit button clicked!')}
-    ></atomic-insight-edit-toggle>`,
+  args,
+  argTypes,
+  play,
 };
 
 export default meta;
@@ -35,6 +31,7 @@ export default meta;
 export const Default: Story = {};
 
 export const WithTooltip: Story = {
+  name: 'With tooltip',
   args: {
     tooltip: 'Click to edit this item',
   },

@@ -7,7 +7,9 @@ import EditIcon from '../../../images/edit.svg';
 /**
  * The `atomic-insight-edit-toggle` component provides an edit button for insight interfaces.
  *
+ * @part insight-edit-toggle-container - The container element wrapping the edit toggle icon button.
  * @part insight-edit-toggle-button - The edit button element.
+ * @part insight-edit-toggle-icon - The edit icon element displayed inside the button.
  */
 @customElement('atomic-insight-edit-toggle')
 @withTailwindStyles
