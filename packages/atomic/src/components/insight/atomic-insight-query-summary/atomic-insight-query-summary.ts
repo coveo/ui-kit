@@ -23,7 +23,6 @@ import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
  * The `atomic-insight-query-summary` component displays information about the current range of results.
  * This component is used within the Insight Panel interface.
  *
- * @internal
  * @part container - The container for the whole summary.
  * @part highlight - The summary highlights.
  * @part query - The summary highlighted query.

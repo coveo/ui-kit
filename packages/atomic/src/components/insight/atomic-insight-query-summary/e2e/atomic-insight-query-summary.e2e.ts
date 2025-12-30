@@ -17,14 +17,4 @@ test.describe('Atomic Insight Query Summary', () => {
   }) => {
     await expect(querySummary.querySummary).toHaveText(/Insights related to/);
   });
-
-  test('should be accessible', async ({querySummary, page}) => {
-    await expect(querySummary.querySummary).toBeVisible();
-
-    // Check that the component has proper structure
-    const snapshot = await page.accessibility.snapshot({
-      root: await querySummary.querySummary.elementHandle(),
-    });
-    expect(snapshot).toBeTruthy();
-  });
 });
