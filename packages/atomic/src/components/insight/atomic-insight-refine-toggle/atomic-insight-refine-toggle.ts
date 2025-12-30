@@ -22,7 +22,6 @@ import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-i
  *
  * @part button - The refine toggle button.
  * @part placeholder - The placeholder shown while the first request is being executed.
- * @internal
  */
 @customElement('atomic-insight-refine-toggle')
 @bindings()
