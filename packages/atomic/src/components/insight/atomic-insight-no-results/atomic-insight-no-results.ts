@@ -86,7 +86,7 @@ export class AtomicInsightNoResults
       },
       () =>
         renderNoItemsContainer()(html`
-          ${renderMagnifyingGlass()} 
+          ${renderMagnifyingGlass()}
           ${this.renderNoItems()}
           ${this.renderSearchTips()}
         `)
