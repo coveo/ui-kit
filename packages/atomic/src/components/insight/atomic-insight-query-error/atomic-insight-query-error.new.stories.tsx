@@ -78,22 +78,6 @@ export const WithDisconnected: Story = {
   },
 };
 
-export const WithNoEndpoints: Story = {
-  name: 'With No Endpoints Error',
-  beforeEach: async () => {
-    mockInsightApi.searchEndpoint.mockOnce(
-      () => ({
-        ok: false,
-        status: 404,
-        message: 'No content sources available',
-        statusCode: 404,
-        type: 'NoEndpointsException',
-      }),
-      {status: 404}
-    );
-  },
-};
-
 export const WithOrganizationPaused: Story = {
   name: 'With Organization Paused Error',
   beforeEach: async () => {

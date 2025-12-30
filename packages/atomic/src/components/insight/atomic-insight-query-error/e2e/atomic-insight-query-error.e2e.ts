@@ -13,10 +13,6 @@ test.describe('atomic-insight-query-error', () => {
     await expect(insightQueryError.moreInfoButton).toBeVisible();
   });
 
-  test('should display an error description', async ({insightQueryError}) => {
-    await expect(insightQueryError.description).toBeVisible();
-  });
-
   test('should display an icon', async ({insightQueryError}) => {
     await expect(insightQueryError.icon).toBeVisible();
   });

@@ -27,7 +27,6 @@ import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-i
 /**
  * The `atomic-insight-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
  *
- * @internal
  * @part icon - The svg related to the error.
  * @part title - The title of the error.
  * @part description - A description of the error.
