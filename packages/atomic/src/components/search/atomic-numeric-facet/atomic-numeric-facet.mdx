@@ -1,0 +1,33 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicNumericFacetStories from './atomic-numeric-facet.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={ AtomicNumericFacetStories } />
+
+<AtomicDocTemplate
+  stories={ AtomicNumericFacetStories }
+  githubPath="search/atomic-numeric-facet/atomic-numeric-facet.ts"
+  tagName="atomic-numeric-facet"
+  className="AtomicNumericFacet"
+>
+
+This component is typically placed within the "facets" section of the layout. It displays numeric ranges as checkboxes or links, commonly used for filtering by price, ratings, or view counts.
+
+```html
+<atomic-search-interface>
+  ...
+  <atomic-layout-section section="facets">
+    <atomic-facet-manager>
+
+      <atomic-numeric-facet
+        field="ec_price"
+        label="Price"
+        with-input="integer"
+      ></atomic-numeric-facet>
+
+    </atomic-facet-manager>
+  </atomic-layout-section>
+</atomic-search-interface>
+```
+
+</AtomicDocTemplate>
