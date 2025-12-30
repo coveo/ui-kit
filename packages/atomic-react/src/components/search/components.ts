@@ -20,6 +20,7 @@ import {
   AtomicIcon as LitAtomicIcon,
   AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
   AtomicInsightInterface as LitAtomicInsightInterface,
+  AtomicInsightQuerySummary as LitAtomicInsightQuerySummary,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
   AtomicNoResults as LitAtomicNoResults,
@@ -205,6 +206,12 @@ export const AtomicInsightInterface = createComponent({
   tagName: 'atomic-insight-interface',
   react: React,
   elementClass: LitAtomicInsightInterface,
+});
+
+export const AtomicInsightQuerySummary = createComponent({
+  tagName: 'atomic-insight-query-summary',
+  react: React,
+  elementClass: LitAtomicInsightQuerySummary,
 });
 
 export const AtomicLayoutSection = createComponent({
