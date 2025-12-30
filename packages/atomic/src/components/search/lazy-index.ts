@@ -38,6 +38,8 @@ export default {
     await import('./atomic-no-results/atomic-no-results.js'),
   'atomic-notifications': async () =>
     await import('./atomic-notifications/atomic-notifications.js'),
+  'atomic-numeric-facet': async () =>
+    await import('./atomic-numeric-facet/atomic-numeric-facet.js'),
   'atomic-pager': async () => await import('./atomic-pager/atomic-pager.js'),
   'atomic-popover': async () =>
     await import('./atomic-popover/atomic-popover.js'),
