@@ -60,6 +60,8 @@ export class AtomicInsightSearchBox
   @state()
   public error!: Error;
 
+  public searchBox!: InsightSearchBox;
+
   @bindStateToController('searchBox')
   @state()
   private searchBoxState!: InsightSearchBoxState;
@@ -78,8 +80,7 @@ export class AtomicInsightSearchBox
    */
   public numberOfSuggestions = 5;
 
-  private searchBox!: InsightSearchBox;
-  private id!: string;
+  private searchBoxId!: string;
   private textAreaRef: Ref<HTMLTextAreaElement> = createRef();
   private suggestionManager!: SuggestionManager<InsightSearchBox>;
   private searchBoxAriaMessage = new AriaLiveRegionController(
@@ -93,10 +94,10 @@ export class AtomicInsightSearchBox
   );
 
   public initialize() {
-    this.id = randomID('atomic-search-box-');
+    this.searchBoxId = randomID('atomic-search-box-');
 
     const searchBoxOptions = {
-      id: this.id,
+      id: this.searchBoxId,
       numberOfSuggestions: 0,
       highlightOptions: {
         notMatchDelimiters: {
@@ -118,7 +119,10 @@ export class AtomicInsightSearchBox
     });
 
     this.bindings.engine.dispatch(
-      registerQuerySuggest({id: this.id, count: this.numberOfSuggestions})
+      registerQuerySuggest({
+        id: this.searchBoxId,
+        count: this.numberOfSuggestions,
+      })
     );
 
     this.suggestionManager = new SuggestionManager({
@@ -138,7 +142,9 @@ export class AtomicInsightSearchBox
           this.renderSuggestionItem(suggestion)
         ),
       onInput: () =>
-        this.bindings.engine.dispatch(fetchQuerySuggestions({id: this.id})),
+        this.bindings.engine.dispatch(
+          fetchQuerySuggestions({id: this.searchBoxId})
+        ),
       panel: 'left',
     });
   }
@@ -194,7 +200,7 @@ export class AtomicInsightSearchBox
     index: number,
     lastIndex: number
   ): TemplateResult | typeof nothing {
-    const id = `${this.id}-suggestion-${item.key}`;
+    const id = `${this.searchBoxId}-suggestion-${item.key}`;
 
     const isSelected =
       id === this.suggestionManager.activeDescendant ||
@@ -265,7 +271,7 @@ export class AtomicInsightSearchBox
     return html`<div
       part="suggestions"
       ${ref((el) => {
-        setRef(el);
+        setRef(el as HTMLElement | undefined);
       })}
       class="flex grow basis-1/2 flex-col"
       @mousedown=${(e: MouseEvent) => {
@@ -292,7 +298,7 @@ export class AtomicInsightSearchBox
       : {};
 
     return html`<div
-      id="${this.id}-popup"
+      id="${this.searchBoxId}-popup"
       part="suggestions-wrapper"
       class="bg-background border-neutral absolute top-full left-0 z-10 flex w-full rounded-md border ${
         this.suggestionManager.hasSuggestions && this.isExpanded ? '' : 'hidden'
@@ -394,7 +400,7 @@ export class AtomicInsightSearchBox
             this.triggerTextAreaChange('');
           },
           popup: {
-            id: `${this.id}-popup`,
+            id: `${this.searchBoxId}-popup`,
             activeDescendant: this.suggestionManager.activeDescendant || '',
             expanded: this.isExpanded && this.suggestionManager.hasSuggestions,
             hasSuggestions: this.suggestionManager.hasSuggestions,
