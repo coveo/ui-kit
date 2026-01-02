@@ -6,7 +6,6 @@ import {
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import type {RefOrCallback} from 'lit/directives/ref.js';
-import Clockicon from '@/images/clock.svg';
 import {renderIconButton} from '@/src/components/common/icon-button';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
 import {bindStateToController} from '@/src/decorators/bind-state';
@@ -15,6 +14,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import Clockicon from '@/src/images/clock.svg';
 
 /**
  * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
