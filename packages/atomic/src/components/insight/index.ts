@@ -3,4 +3,3 @@ export {AtomicInsightGenerateAnswerButton} from './atomic-insight-generate-answe
 export {AtomicInsightInterface} from './atomic-insight-interface/atomic-insight-interface.js';
 export {AtomicInsightTab} from './atomic-insight-tab/atomic-insight-tab.js';
 export {AtomicInsightTabs} from './atomic-insight-tabs/atomic-insight-tabs.js';
-export {AtomicInsightUserActionsToggle} from './user-actions/atomic-insight-user-actions-toggle/atomic-insight-user-actions-toggle.js';

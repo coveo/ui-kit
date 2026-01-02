@@ -10,10 +10,6 @@ export default {
     await import('./atomic-insight-tab/atomic-insight-tab.js'),
   'atomic-insight-tabs': async () =>
     await import('./atomic-insight-tabs/atomic-insight-tabs.js'),
-  'atomic-insight-user-actions-toggle': async () =>
-    await import(
-      './user-actions/atomic-insight-user-actions-toggle/atomic-insight-user-actions-toggle.js'
-    ),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';
