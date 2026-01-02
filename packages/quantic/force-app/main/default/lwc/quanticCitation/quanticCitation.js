@@ -55,9 +55,9 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   isCitationHovered = false;
   /** @type {boolean} */
   isTooltipHovered = false;
-  /** @type {ReturnType<typeof setTimeout>|null} */
+  /** @type {number|null} */
   showTimer = null;
-  /** @type {ReturnType<typeof setTimeout>|null} */
+  /** @type {number|null} */
   hideTimer = null;
 
   connectedCallback() {
@@ -131,6 +131,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   scheduleShow() {
     if (this.showTimer !== null) return;
 
+    // @ts-ignore
     this.showTimer = setTimeout(() => {
       this.showTimer = null;
       if (this.isHovering()) this.showTooltip();
@@ -140,6 +141,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   scheduleHide() {
     if (this.hideTimer !== null) return;
 
+    // @ts-ignore
     this.hideTimer = setTimeout(() => {
       this.hideTimer = null;
       if (!this.isHovering()) this.hideTooltip();
