@@ -1,3 +1,14 @@
+## <small>3.7.1 (2025-12-12)</small>
+
+* refactor(atomic): migrate atomic-category-facet from Stencil to Lit (#6690) ([acb6d28](https://github.com/coveo/ui-kit/commits/acb6d28)), closes [#6690](https://github.com/coveo/ui-kit/issues/6690)
+* refactor(atomic): migrate atomic-did-you-mean to Lit (#6749) ([ea3d558](https://github.com/coveo/ui-kit/commits/ea3d558)), closes [#6749](https://github.com/coveo/ui-kit/issues/6749)
+* refactor(atomic): migrate atomic-folded-result-list to Lit (#6718) ([3eb45da](https://github.com/coveo/ui-kit/commits/3eb45da)), closes [#6718](https://github.com/coveo/ui-kit/issues/6718)
+* refactor(atomic): migrate atomic-notifications to Lit (#6747) ([68ef911](https://github.com/coveo/ui-kit/commits/68ef911)), closes [#6747](https://github.com/coveo/ui-kit/issues/6747)
+* refactor(atomic): migrate atomic-result-fields-list to Lit (#6667) ([75ed908](https://github.com/coveo/ui-kit/commits/75ed908)), closes [#6667](https://github.com/coveo/ui-kit/issues/6667)
+* refactor(atomic): migrate atomic-table-element (#6750) ([22b56e8](https://github.com/coveo/ui-kit/commits/22b56e8)), closes [#6750](https://github.com/coveo/ui-kit/issues/6750)
+
+
+
 ## 3.7.0 (2025-12-10)
 
 * feat(atomic): migrate atomic-popover from Stencil to Lit (#6638) ([1b1186d](https://github.com/coveo/ui-kit/commits/1b1186d)), closes [#6638](https://github.com/coveo/ui-kit/issues/6638)

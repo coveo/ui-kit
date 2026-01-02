@@ -104,3 +104,7 @@ export interface IgnorePathsParam {
 export interface SlotIdParam {
   slotId: string;
 }
+
+export interface PlacementIdsParam {
+  placementIds?: string[];
+}

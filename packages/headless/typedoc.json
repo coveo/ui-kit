@@ -1,10 +1,50 @@
 {
+  "name": "Coveo Headless",
+  "highlightLanguages": [
+    "typescript",
+    "javascript",
+    "jsx",
+    "tsx",
+    "json",
+    "bash",
+    "html"
+  ],
+  "projectDocuments": [
+    "source_docs/coveo-headless-home.md",
+    "source_docs/headless-code-samples.md",
+    "source_docs/coveo-headless-usage.md",
+    "source_docs/dependent-facets.md",
+    "source_docs/extend-headless-controllers.md",
+    "source_docs/headless-modify-requests-responses.md",
+    "source_docs/headless-proxy.md",
+    "source_docs/headless-saml-authentication.md",
+    "source_docs/headless-usage-analytics-coveo-ua.md",
+    "source_docs/headless-usage-analytics-ep.md",
+    "source_docs/headless-usage-analytics.md",
+    "source_docs/headless-view-events-ep.md",
+    "source_docs/headless-view-events.md",
+    "source_docs/highlighting.md",
+    "source_docs/product-lifecycle.md",
+    "source_docs/result-templates.md",
+    "source_docs/server-side-rendering.md",
+    "source_docs/ssr-extend-engine-definitons.md",
+    "source_docs/ssr-implement-search-parameter-support.md",
+    "source_docs/ssr-send-context.md",
+    "source_docs/ssr-usage.md",
+    "source_docs/standalone-search-box.md",
+    "source_docs/synchronize-search-parameters-with-the-url.md",
+    "source_docs/upgrade-from-v1-to-v2.md",
+    "source_docs/upgrade-from-v2-to-v3.md",
+    "source_docs/versions.md",
+    "README.md"
+  ],
   "entryPointStrategy": "merge",
   "navigation": {
     "includeCategories": true,
     "includeGroups": true,
     "includeFolders": true
   },
+  "readme": "source_docs/coveo-headless-home.md",
   "categorizeByGroup": true,
   "entryPoints": [
     "./temp/index.json",
@@ -15,5 +55,78 @@
     "./temp/insight.json",
     "./temp/recommendation.json"
   ],
-  "plugin": ["@coveo/documentation"]
+  "plugin": ["@coveo/documentation"],
+  "hoistOther.topLevelOrder": [
+    "Home",
+    "Usage",
+    "Reference",
+    "Code samples",
+    "Product lifecycle",
+    "Upgrade",
+    "Versioned documentation"
+  ],
+  "hoistOther.nestedOrder": {
+    "usage server-side rendering": ["Introduction", "*"],
+    "upgrade": ["Introduction", "*"],
+    "usage usage analytics": ["Introduction", "*"],
+    "usage": ["Introduction", "*"],
+    "reference search": [
+      "Engine",
+      "Controllers",
+      "Buildable controllers",
+      "Sub-controllers",
+      "Actions",
+      "*"
+    ],
+    "reference case assist": [
+      "Engine",
+      "Controllers",
+      "Buildable controllers",
+      "Sub-controllers",
+      "Actions",
+      "*"
+    ],
+    "reference commerce": [
+      "Engine",
+      "Controllers",
+      "Buildable controllers",
+      "Sub-controllers",
+      "Actions",
+      "*"
+    ],
+    "reference insight": [
+      "Engine",
+      "Controllers",
+      "Buildable controllers",
+      "Sub-controllers",
+      "Actions",
+      "*"
+    ],
+    "reference recommendation": [
+      "Engine",
+      "Controllers",
+      "Buildable controllers",
+      "Sub-controllers",
+      "Actions",
+      "*"
+    ],
+    "reference ssr commerce": [
+      "Engine",
+      "Controllers",
+      "Buildable controllers",
+      "Sub-controllers",
+      "Actions",
+      "*"
+    ],
+    "reference ssr search": [
+      "Engine",
+      "Controllers",
+      "Buildable controllers",
+      "Sub-controllers",
+      "Actions",
+      "*"
+    ]
+  },
+  "hoistOther.renameModulesTo": "Reference",
+  "router": "kebab"
 }
