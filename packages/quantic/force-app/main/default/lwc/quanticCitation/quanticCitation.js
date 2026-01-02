@@ -5,28 +5,9 @@ import {LightningElement, api} from 'lwc';
 /** @typedef {import("coveo").InteractiveCitation} InteractiveCitation */
 
 const minimumTooltipDisplayDurationMs = 1000;
-const hoverTooltipDelayMs = 200;
-const closeTooltipDelayMs = 100;
+const tooltipDelayMsShow = 200;
+const tooltipDelayMsHide = 100;
 const supportedFileTypesForTextFragment = ['html', 'SalesforceItem'];
-
-/**
- * Debounce function that delays invoking func until after wait milliseconds
- * have elapsed since the last time the debounced function was invoked.
- * Includes a cancel method to clear any pending timeout.
- * @param {Function} fn - The function to debounce
- * @param {number} delay - The number of milliseconds to delay
- * @returns {Function} The debounced function with cancel method
- */
-export function debounce(fn, delay) {
-  let timeout;
-  const debounced = (...args) => {
-    clearTimeout(timeout);
-    // eslint-disable-next-line @lwc/lwc/no-async-operation
-    timeout = setTimeout(() => fn(...args), delay);
-  };
-  debounced.cancel = () => clearTimeout(timeout);
-  return debounced;
-}
 
 /**
  * The `QuanticCitation` component renders an individual citation.
@@ -70,10 +51,14 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   salesforceRecordUrl;
   /** @type {boolean} */
   isHrefWithTextFragment = false;
-  /** @type {Object} */
-  hideTooltipDebounced;
-  /** @type {Object} */
-  showTooltipDebounced;
+  /** @type {boolean} */
+  isCitationHovered = false;
+  /** @type {boolean} */
+  isTooltipHovered = false;
+  /** @type {ReturnType<typeof setTimeout>|null} */
+  showTimer = null;
+  /** @type {ReturnType<typeof setTimeout>|null} */
+  hideTimer = null;
 
   connectedCallback() {
     const fileType = this.citation?.fields?.filetype;
@@ -81,14 +66,6 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       !this.disableCitationAnchoring &&
       supportedFileTypesForTextFragment.includes(fileType) &&
       !!this.text;
-
-    this.hideTooltipDebounced = debounce(() => {
-      this.hideTooltip();
-    }, closeTooltipDelayMs);
-
-    this.showTooltipDebounced = debounce(() => {
-      this.showTooltip();
-    }, hoverTooltipDelayMs);
   }
 
   renderedCallback() {
@@ -113,25 +90,72 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   disconnectedCallback() {
     this.removeBindings?.();
     clearTimeout(this.timeout);
-    this.cancelTooltipTimers();
+    this.cancelShow();
+    this.cancelHide();
   }
 
   handleCitationMouseEnter() {
-    this.cancelTooltipTimers();
-    this.showTooltipDebounced();
+    this.isCitationHovered = true;
+    this.updateTooltipHideShow();
   }
 
   handleCitationMouseLeave() {
-    this.cancelTooltipTimers();
-    this.hideTooltipDebounced();
+    this.isCitationHovered = false;
+    this.updateTooltipHideShow();
   }
 
   handleTooltipMouseEnter() {
-    this.hideTooltipDebounced.cancel();
+    this.isTooltipHovered = true;
+    this.updateTooltipHideShow();
   }
 
   handleTooltipMouseLeave() {
-    this.handleCitationMouseLeave();
+    this.isTooltipHovered = false;
+    this.updateTooltipHideShow();
+  }
+
+  isHovering() {
+    return this.isCitationHovered || this.isTooltipHovered;
+  }
+
+  updateTooltipHideShow() {
+    if (this.isHovering()) {
+      this.cancelHide();
+      this.scheduleShow();
+    } else {
+      this.cancelShow();
+      this.scheduleHide();
+    }
+  }
+
+  scheduleShow() {
+    if (this.showTimer !== null) return;
+
+    this.showTimer = setTimeout(() => {
+      this.showTimer = null;
+      if (this.isHovering()) this.showTooltip();
+    }, tooltipDelayMsShow);
+  }
+
+  scheduleHide() {
+    if (this.hideTimer !== null) return;
+
+    this.hideTimer = setTimeout(() => {
+      this.hideTimer = null;
+      if (!this.isHovering()) this.hideTooltip();
+    }, tooltipDelayMsHide);
+  }
+
+  cancelShow() {
+    if (this.showTimer === null) return;
+    clearTimeout(this.showTimer);
+    this.showTimer = null;
+  }
+
+  cancelHide() {
+    if (this.hideTimer === null) return;
+    clearTimeout(this.hideTimer);
+    this.hideTimer = null;
   }
 
   showTooltip() {
@@ -148,11 +172,6 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       this.tooltipIsDisplayed = false;
       this.tooltipComponent?.hideTooltip();
     }
-  }
-
-  cancelTooltipTimers() {
-    this.hideTooltipDebounced?.cancel();
-    this.showTooltipDebounced?.cancel();
   }
 
   /**

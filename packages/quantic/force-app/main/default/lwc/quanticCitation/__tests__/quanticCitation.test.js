@@ -5,7 +5,6 @@ import {
 // @ts-ignore
 import {createElement} from 'lwc';
 import QuanticCitation from '../quanticCitation';
-import {debounce} from '../quanticCitation';
 
 const functionsMocks = {
   eventHandler: jest.fn((event) => event),
@@ -113,67 +112,6 @@ describe('c-quantic-citation', () => {
     cleanup();
   });
 
-  describe('debounce function', () => {
-    let mockFnToDebounce;
-    const DEBOUNCE_DELAY = 200;
-
-    beforeEach(() => {
-      jest.useFakeTimers();
-      mockFnToDebounce = jest.fn();
-    });
-
-    afterEach(() => {
-      jest.useRealTimers();
-    });
-
-    // Ensures that rapid calls result in only one execution
-    test('should execute once after the delay and use the arguments from the last call', () => {
-      const debouncedFn = debounce(mockFnToDebounce, DEBOUNCE_DELAY);
-
-      debouncedFn('first');
-      expect(mockFnToDebounce).not.toHaveBeenCalled();
-
-      jest.advanceTimersByTime(DEBOUNCE_DELAY - 100);
-      debouncedFn('middle');
-
-      jest.advanceTimersByTime(DEBOUNCE_DELAY - 100);
-      debouncedFn('last');
-
-      expect(mockFnToDebounce).not.toHaveBeenCalled();
-      jest.advanceTimersByTime(DEBOUNCE_DELAY);
-
-      expect(mockFnToDebounce).toHaveBeenCalledTimes(1);
-      expect(mockFnToDebounce).toHaveBeenCalledWith('last');
-    });
-
-    // Ensures calls separated by more than the delay execute independently.
-    test('should execute multiple times if calls are spaced outside the delay', () => {
-      const debouncedFn = debounce(mockFnToDebounce, DEBOUNCE_DELAY);
-
-      debouncedFn(100);
-      jest.advanceTimersByTime(DEBOUNCE_DELAY);
-      expect(mockFnToDebounce).toHaveBeenCalledTimes(1);
-      expect(mockFnToDebounce).toHaveBeenCalledWith(100);
-
-      debouncedFn(200, {data: 'second'});
-      jest.advanceTimersByTime(DEBOUNCE_DELAY);
-      expect(mockFnToDebounce).toHaveBeenCalledTimes(2);
-      expect(mockFnToDebounce).toHaveBeenCalledWith(200, {data: 'second'});
-    });
-
-    // Ensures that the execution can be canceled before the delay expires.
-    test('should not execute the function if cancel is called before the delay', () => {
-      const debouncedFn = debounce(mockFnToDebounce, DEBOUNCE_DELAY);
-
-      debouncedFn('should not run');
-      jest.advanceTimersByTime(DEBOUNCE_DELAY / 2);
-      debouncedFn.cancel();
-
-      jest.advanceTimersByTime(DEBOUNCE_DELAY * 2);
-      expect(mockFnToDebounce).not.toHaveBeenCalled();
-    });
-  });
-
   it('should properly display the citation', async () => {
     const element = createTestComponent();
     await flushPromises();
@@ -236,20 +174,17 @@ describe('c-quantic-citation', () => {
       expect(citationLink).not.toBeNull();
       expect(citationTooltip).not.toBeNull();
 
-      // Spy on the tooltip's showTooltip method to verify it gets called
       const showTooltipSpy = jest.spyOn(citationTooltip, 'showTooltip');
 
       await citationLink.dispatchEvent(
         new CustomEvent('mouseenter', {bubbles: true})
       );
-      // The tooltip should not be shown immediately
       expect(showTooltipSpy).toHaveBeenCalledTimes(0);
-      // Wait 200ms debounce duration and verify tooltip is shown
       jest.advanceTimersByTime(200);
       expect(showTooltipSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('should dispatch a citation hover event after hovering over the the citation for more than 1200ms, 200ms debounce duration before hover + 1000ms minimum hover duration', async () => {
+    it('should dispatch a citation hover event after hovering over the the citation for more than 1200ms, 200ms delay before hover + 1000ms minimum hover duration', async () => {
       const element = createTestComponent();
       await flushPromises();
       setupEventDispatchTest('quantic__citationhover');
@@ -269,7 +204,7 @@ describe('c-quantic-citation', () => {
       await citationLink.dispatchEvent(
         new CustomEvent('mouseleave', {bubbles: true})
       );
-      // Additional 200ms delay for the new hide tooltip logic
+      // Additional 200ms delay for the hide tooltip logic
       jest.advanceTimersByTime(200);
 
       expect(functionsMocks.eventHandler).toHaveBeenCalledTimes(1);
