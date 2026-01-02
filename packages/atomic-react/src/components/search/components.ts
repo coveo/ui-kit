@@ -20,6 +20,7 @@ import {
   AtomicIcon as LitAtomicIcon,
   AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
   AtomicInsightInterface as LitAtomicInsightInterface,
+  AtomicInsightUserActionsToggle as LitAtomicInsightUserActionsToggle,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
   AtomicNoResults as LitAtomicNoResults,
@@ -205,6 +206,12 @@ export const AtomicInsightInterface = createComponent({
   tagName: 'atomic-insight-interface',
   react: React,
   elementClass: LitAtomicInsightInterface,
+});
+
+export const AtomicInsightUserActionsToggle = createComponent({
+  tagName: 'atomic-insight-user-actions-toggle',
+  react: React,
+  elementClass: LitAtomicInsightUserActionsToggle,
 });
 
 export const AtomicLayoutSection = createComponent({
