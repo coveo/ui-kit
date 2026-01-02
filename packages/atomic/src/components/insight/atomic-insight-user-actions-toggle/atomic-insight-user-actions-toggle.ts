@@ -19,8 +19,6 @@ import Clockicon from '@/src/images/clock.svg';
 /**
  * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
  * This is an internal component of the atomic-insight-interface.
- *
- * @internal
  */
 @customElement('atomic-insight-user-actions-toggle')
 @bindings()
@@ -44,7 +42,7 @@ export class AtomicInsightUserActionsToggle
   /**
    * The ID of the user whose actions are being displayed.
    */
-  @property({type: String})
+  @property({type: String, attribute: 'user-id'})
   public userId!: string;
 
   /**
