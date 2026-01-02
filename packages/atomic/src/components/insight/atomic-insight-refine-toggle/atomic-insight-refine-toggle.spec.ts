@@ -235,15 +235,15 @@ describe('atomic-insight-refine-toggle', () => {
     });
 
     expect(button).not.toBeDisabled();
+  });
 
-    it('should enable button when there are results', async () => {
-      const {button} = await renderRefineToggle({
-        searchStatusState: {
-          hasResults: true,
-        },
-      });
-
-      expect(button).not.toBeDisabled();
+  it('should enable button when there are results', async () => {
+    const {button} = await renderRefineToggle({
+      searchStatusState: {
+        hasResults: true,
+      },
     });
+
+    expect(button).not.toBeDisabled();
   });
 });
