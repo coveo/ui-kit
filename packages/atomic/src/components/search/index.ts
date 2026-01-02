@@ -1,6 +1,5 @@
-
-    // Auto-generated file
-    export {AtomicAutomaticFacet} from './atomic-automatic-facet/atomic-automatic-facet.js';
+// Auto-generated file
+export {AtomicAutomaticFacet} from './atomic-automatic-facet/atomic-automatic-facet.js';
 export {AtomicAutomaticFacetGenerator} from './atomic-automatic-facet-generator/atomic-automatic-facet-generator.js';
 export {AtomicBreadbox} from './atomic-breadbox/atomic-breadbox.js';
 export {AtomicCategoryFacet} from './atomic-category-facet/atomic-category-facet.js';
@@ -72,4 +71,3 @@ export {AtomicTab} from './atomic-tab/atomic-tab.js';
 export {AtomicTabManager} from './atomic-tab-manager/atomic-tab-manager.js';
 export {AtomicTableElement} from './atomic-table-element/atomic-table-element.js';
 export {AtomicText} from './atomic-text/atomic-text.js';
-  

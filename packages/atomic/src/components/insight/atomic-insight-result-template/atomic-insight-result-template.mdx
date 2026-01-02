@@ -1,18 +1,21 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import * as AtomicInsightInterfaceStories from '../atomic-insight-interface/atomic-insight-interface.new.stories';
+import * as AtomicInsightResultTemplateStories from './atomic-insight-result-template.new.stories';
 import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
 
-<Meta title="Atomic/Insight/ResultTemplate" />
+<Meta of={AtomicInsightResultTemplateStories} />
 
-# atomic-insight-result-template
+<AtomicDocTemplate
+  stories={AtomicInsightResultTemplateStories}
+  defaultStory="Default"
+  githubPath="insight/atomic-insight-result-template/atomic-insight-result-template.ts"
+  tagName="atomic-insight-result-template"
+  className="AtomicInsightResultTemplate"
+>
 
-The `atomic-insight-result-template` component defines the UI display of your search results within an Insight interface.
-
+This component defines the UI display of your search results within an Insight interface.
 A `template` element must be the child of an `atomic-insight-result-template`. Furthermore, an `atomic-insight-result-list` or `atomic-insight-folded-result-list` must be the parent of each `atomic-insight-result-template`.
 
 **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
-
-## Usage
 
 Example using the `atomic-insight-result-list`:
 
@@ -141,50 +144,4 @@ If you set both `must-match-*` and `must-not-match-*` for the same field and the
 </atomic-insight-result-list>
 ```
 
-## Properties
-
-### conditions
-
-A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.
-
-For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`:
-
-```javascript
-document.querySelector('#target-template').conditions = [
-  (result) => /singapore/i.test(result.title)
-];
-```
-
-### must-match-*
-
-The field and values that define which result items the condition must be applied to.
-
-For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`:
-
-```html
-<atomic-insight-result-template must-match-filetype="lithiummessage,YouTubePlaylist">
-```
-
-### must-not-match-*
-
-The field and values that define which result items the condition must not be applied to.
-
-For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`:
-
-```html
-<atomic-insight-result-template must-not-match-filetype="lithiummessage">
-```
-
-## Methods
-
-### getTemplate()
-
-Gets the appropriate result template based on conditions applied.
-
-Returns: `Promise<InsightResultTemplate<DocumentFragment> | null>`
-
-## Related Components
-
-- [atomic-insight-result-list](../?path=/docs/atomic-insight-resultlist--docs)
-- [atomic-insight-folded-result-list](../?path=/docs/atomic-insight-foldedresultlist--docs)
-- [atomic-insight-interface](../?path=/docs/atomic-insight-interface--docs)
+</AtomicDocTemplate>
