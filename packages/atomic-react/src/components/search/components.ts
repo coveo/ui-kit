@@ -33,6 +33,7 @@ import {
   AtomicQuickview as LitAtomicQuickview,
   AtomicRatingFacet as LitAtomicRatingFacet,
   AtomicRatingRangeFacet as LitAtomicRatingRangeFacet,
+  AtomicRecsError as LitAtomicRecsError,
   AtomicRecsInterface as LitAtomicRecsInterface,
   AtomicRefineToggle as LitAtomicRefineToggle,
   AtomicResult as LitAtomicResult,
@@ -283,6 +284,12 @@ export const AtomicRatingRangeFacet = createComponent({
   tagName: 'atomic-rating-range-facet',
   react: React,
   elementClass: LitAtomicRatingRangeFacet,
+});
+
+export const AtomicRecsError = createComponent({
+  tagName: 'atomic-recs-error',
+  react: React,
+  elementClass: LitAtomicRecsError,
 });
 
 export const AtomicRecsInterface = createComponent({

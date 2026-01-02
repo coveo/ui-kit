@@ -1,14 +1,14 @@
 import type {
-  RecommendationList,
+  RecommendationEngine,
   RecommendationListState,
 } from '@coveo/headless/recommendation';
 import {buildRecommendationList} from '@coveo/headless/recommendation';
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {buildFakeRecommendationEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/recommendation/engine';
+import {describe, expect, it, vi} from 'vitest';
+import {renderInAtomicRecsInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/recommendation/atomic-recs-interface-fixture';
+import {buildFakeRecommendationList} from '@/vitest-utils/testing-helpers/fixtures/headless/recommendation/recommendation-list-controller';
 import type {AtomicRecsError} from './atomic-recs-error';
-import '../atomic-recs-interface/atomic-recs-interface';
+import './atomic-recs-error';
 
 vi.mock('@coveo/headless/recommendation', {spy: true});
 vi.mock('@/src/components/common/query-error/utils', {spy: true});
@@ -18,35 +18,6 @@ describe('atomic-recs-error', () => {
     type: 'UnknownError',
     statusCode: 500,
     message: 'An error occurred',
-  };
-
-  const buildFakeRecommendationList = ({
-    implementation,
-    state,
-  }: Partial<{
-    implementation?: Partial<RecommendationList>;
-    state?: Partial<RecommendationListState>;
-  }> = {}): RecommendationList => {
-    const defaultState = {
-      error: null,
-      isLoading: false,
-      recommendations: [],
-      responseId: '',
-      headline: '',
-      searchUid: '',
-    };
-
-    return {
-      subscribe: vi.fn((callback) => {
-        callback();
-        return vi.fn();
-      }),
-      state: {
-        ...defaultState,
-        ...state,
-      },
-      ...implementation,
-    } as RecommendationList;
   };
 
   const renderRecsError = async (
@@ -70,36 +41,23 @@ describe('atomic-recs-error', () => {
       mockedRecommendationList
     );
 
-    const mockedEngine = buildFakeRecommendationEngine({
-      state: {
-        configuration: {
-          organizationId,
-          environment,
-          accessToken: 'fake-token',
-        },
-      },
+    const {element} = await renderInAtomicRecsInterface<AtomicRecsError>({
+      template: html`<atomic-recs-error></atomic-recs-error>`,
+      selector: 'atomic-recs-error',
+      bindings: (bindings) => ({
+        ...bindings,
+        engine: {
+          ...bindings.engine,
+          state: {
+            configuration: {
+              organizationId,
+              environment,
+              accessToken: 'fake-token',
+            },
+          },
+        } as Partial<RecommendationEngine> as RecommendationEngine,
+      }),
     });
-
-    const recsInterface = await fixture(html`
-      <atomic-recs-interface></atomic-recs-interface>
-    `);
-
-    await (
-      recsInterface as HTMLElement & {
-        initializeWithRecommendationEngine: (
-          engine: unknown
-        ) => Promise<unknown>;
-      }
-    ).initializeWithRecommendationEngine(mockedEngine);
-
-    const element = await fixture<AtomicRecsError>(
-      html`
-      <atomic-recs-error></atomic-recs-error>
-    `,
-      recsInterface
-    );
-
-    await element.updateComplete;
 
     return {
       element,
@@ -123,10 +81,6 @@ describe('atomic-recs-error', () => {
       },
     };
   };
-
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
 
   it('should render correctly', async () => {
     const {element} = await renderRecsError();

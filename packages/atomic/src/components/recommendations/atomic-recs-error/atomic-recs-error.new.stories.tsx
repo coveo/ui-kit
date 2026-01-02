@@ -43,13 +43,6 @@ export default meta;
 
 export const Default: Story = {
   beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockErrorOnce();
-  },
-};
-
-export const WithInvalidToken: Story = {
-  name: 'With Invalid Token Error',
-  beforeEach: async () => {
     mockSearchApi.searchEndpoint.mockOnce(
       () => ({
         ok: false,
@@ -75,22 +68,6 @@ export const WithDisconnected: Story = {
         type: 'Disconnected',
       }),
       {status: 500}
-    );
-  },
-};
-
-export const WithNoEndpoints: Story = {
-  name: 'With No Endpoints Error',
-  beforeEach: async () => {
-    mockSearchApi.searchEndpoint.mockOnce(
-      () => ({
-        ok: false,
-        status: 404,
-        message: 'No content sources available',
-        statusCode: 404,
-        type: 'NoEndpointsException',
-      }),
-      {status: 404}
     );
   },
 };
