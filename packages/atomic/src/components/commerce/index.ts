@@ -1,5 +1,6 @@
-// Auto-generated file
-export {AtomicCommerceBreadbox} from './atomic-commerce-breadbox/atomic-commerce-breadbox.js';
+
+    // Auto-generated file
+    export {AtomicCommerceBreadbox} from './atomic-commerce-breadbox/atomic-commerce-breadbox.js';
 export {AtomicCommerceCategoryFacet} from './atomic-commerce-category-facet/atomic-commerce-category-facet.js';
 export {AtomicCommerceDidYouMean} from './atomic-commerce-did-you-mean/atomic-commerce-did-you-mean.js';
 export {AtomicCommerceFacet} from './atomic-commerce-facet/atomic-commerce-facet.js';
@@ -48,3 +49,4 @@ export {AtomicProductSectionName} from './atomic-product-section-name/atomic-pro
 export {AtomicProductSectionVisual} from './atomic-product-section-visual/atomic-product-section-visual.js';
 export {AtomicProductTemplate} from './atomic-product-template/atomic-product-template.js';
 export {AtomicProductText} from './atomic-product-text/atomic-product-text.js';
+  

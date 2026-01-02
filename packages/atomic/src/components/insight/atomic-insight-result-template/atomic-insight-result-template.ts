@@ -7,19 +7,17 @@ import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ResultTemplateController} from '@/src/components/common/result-templates/result-template-controller';
 import {makeMatchConditions} from '@/src/components/common/template-controller/template-utils';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {mapProperty} from '@/src/utils/props-utils';
-import '@/src/components/common/atomic-component-error/atomic-component-error';
 import {arrayConverter} from '@/src/converters/array-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {mapProperty} from '@/src/utils/props-utils';
 
 /**
  * The `atomic-insight-result-template` component determines the format of the query results for Insight interfaces, depending on the conditions that are defined for each template.
  *
  * @slot default - The default slot where to insert the template element.
  * @slot link - A `template` element that contains a single `atomic-result-link` component.
- * @internal
  */
 @customElement('atomic-insight-result-template')
 @withTailwindStyles
@@ -28,6 +26,8 @@ export class AtomicInsightResultTemplate
   implements LitElementWithError
 {
   private resultTemplateController: ResultTemplateController;
+  private static instanceCounter = 0;
+  private instanceId: number;
 
   @state() error!: Error;
 
@@ -63,6 +63,7 @@ export class AtomicInsightResultTemplate
 
   constructor() {
     super();
+    this.instanceId = ++AtomicInsightResultTemplate.instanceCounter;
     const validParent = [
       'atomic-insight-result-list',
       'atomic-insight-folded-result-list',
@@ -93,7 +94,25 @@ export class AtomicInsightResultTemplate
    * Gets the appropriate result template based on conditions applied.
    */
   public async getTemplate(): Promise<InsightResultTemplate<DocumentFragment> | null> {
-    return this.resultTemplateController?.getTemplate(this.conditions) || null;
+    console.log(
+      `[atomic-insight-result-template #${this.instanceId}] getTemplate() called with conditions:`,
+      this.conditions
+    );
+    console.log(
+      `[atomic-insight-result-template #${this.instanceId}] resultTemplateController exists:`,
+      !!this.resultTemplateController
+    );
+    const template =
+      this.resultTemplateController?.getTemplate(this.conditions) || null;
+    console.log(
+      `[atomic-insight-result-template #${this.instanceId}] getTemplate() returning:`,
+      template,
+      'content:',
+      template?.content,
+      'linkContent:',
+      template?.linkContent
+    );
+    return template;
   }
 }
 
