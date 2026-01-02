@@ -706,11 +706,6 @@ export namespace Components {
         "total"?: number;
     }
     /**
-     * The `atomic-recs-error` component handles fatal errors when performing a recommendations request on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
-     */
-    interface AtomicRecsError {
-    }
-    /**
      * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
      */
     interface AtomicRecsList {
@@ -1540,15 +1535,6 @@ declare global {
         new (): HTMLAtomicQuickviewModalElement;
     };
     /**
-     * The `atomic-recs-error` component handles fatal errors when performing a recommendations request on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
-     */
-    interface HTMLAtomicRecsErrorElement extends Components.AtomicRecsError, HTMLStencilElement {
-    }
-    var HTMLAtomicRecsErrorElement: {
-        prototype: HTMLAtomicRecsErrorElement;
-        new (): HTMLAtomicRecsErrorElement;
-    };
-    /**
      * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
      */
     interface HTMLAtomicRecsListElement extends Components.AtomicRecsList, HTMLStencilElement {
@@ -1808,7 +1794,6 @@ declare global {
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
         "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
-        "atomic-recs-error": HTMLAtomicRecsErrorElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-recs-result": HTMLAtomicRecsResultElement;
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
@@ -2478,11 +2463,6 @@ declare namespace LocalJSX {
         "total"?: number;
     }
     /**
-     * The `atomic-recs-error` component handles fatal errors when performing a recommendations request on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
-     */
-    interface AtomicRecsError {
-    }
-    /**
      * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
      */
     interface AtomicRecsList {
@@ -2897,7 +2877,6 @@ declare namespace LocalJSX {
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
         "atomic-ipx-result-link": AtomicIpxResultLink;
         "atomic-quickview-modal": AtomicQuickviewModal;
-        "atomic-recs-error": AtomicRecsError;
         "atomic-recs-list": AtomicRecsList;
         "atomic-recs-result": AtomicRecsResult;
         "atomic-recs-result-template": AtomicRecsResultTemplate;
@@ -2994,10 +2973,6 @@ declare module "@stencil/core" {
              * Do not use this component directly; use `atomic-quickview` instead.
              */
             "atomic-quickview-modal": LocalJSX.AtomicQuickviewModal & JSXBase.HTMLAttributes<HTMLAtomicQuickviewModalElement>;
-            /**
-             * The `atomic-recs-error` component handles fatal errors when performing a recommendations request on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
-             */
-            "atomic-recs-error": LocalJSX.AtomicRecsError & JSXBase.HTMLAttributes<HTMLAtomicRecsErrorElement>;
             /**
              * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
              */
