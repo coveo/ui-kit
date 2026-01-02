@@ -1,5 +1,6 @@
-// Auto-generated file
-export {AtomicAriaLive} from './atomic-aria-live/atomic-aria-live.js';
+
+    // Auto-generated file
+    export {AtomicAriaLive} from './atomic-aria-live/atomic-aria-live.js';
 export {AtomicComponentError} from './atomic-component-error/atomic-component-error.js';
 export {AtomicFacetDateInput} from './atomic-facet-date-input/atomic-facet-date-input.js';
 export {AtomicFacetNumberInput} from './atomic-facet-number-input/atomic-facet-number-input.js';
@@ -15,3 +16,4 @@ export {AtomicTabBar} from './atomic-tab-bar/atomic-tab-bar.js';
 export {AtomicTabButton} from './atomic-tab-button/atomic-tab-button.js';
 export {AtomicTabPopover} from './atomic-tab-popover/atomic-tab-popover.js';
 export {AtomicTimeframe} from './atomic-timeframe/atomic-timeframe.js';
+  
