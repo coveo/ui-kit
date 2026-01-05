@@ -57,7 +57,7 @@ const meta: Meta = {
         name: 'Sort & Filter',
       }
     );
-    // Small await to make sure everything is loaded in and the facets are registred for the modal to render them.
+    // Small await to make sure everything is loaded in and the facets are registered for the modal to render them.
     await new Promise((resolve) => setTimeout(resolve, 300));
     await step('Open refine modal', async () => {
       await userEvent.click(refineToggleButton);
