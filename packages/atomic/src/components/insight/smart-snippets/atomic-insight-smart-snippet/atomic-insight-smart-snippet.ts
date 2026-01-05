@@ -64,19 +64,19 @@ export class AtomicInsightSmartSnippet
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
    */
   @property({type: Number, reflect: true, attribute: 'heading-level'})
-  accessor headingLevel = 0;
+  headingLevel = 0;
 
   /**
    * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
    */
   @property({type: Number, reflect: true, attribute: 'maximum-height'})
-  accessor maximumHeight = 250;
+  maximumHeight = 250;
 
   /**
    * When the answer is partly hidden, how much of its height (in pixels) should be visible.
    */
   @property({type: Number, reflect: true, attribute: 'collapsed-height'})
-  accessor collapsedHeight = 180;
+  collapsedHeight = 180;
 
   /**
    * Sets the style of the snippet.
@@ -91,7 +91,7 @@ export class AtomicInsightSmartSnippet
    * ```
    */
   @property({type: String, reflect: true, attribute: 'snippet-style'})
-  accessor snippetStyle?: string;
+  snippetStyle?: string;
 
   public initialize() {
     this.id ||= randomID();
@@ -104,7 +104,7 @@ export class AtomicInsightSmartSnippet
     }
   }
 
-  private get style() {
+  private get customStyle() {
     const slot = this.shadowRoot?.querySelector(
       'slot[name="style"]'
     ) as HTMLSlotElement | null;
@@ -218,7 +218,7 @@ export class AtomicInsightSmartSnippet
           @collapse=${() => this.smartSnippet.collapse()}
           @expand=${() => this.smartSnippet.expand()}
           part="body"
-          .snippetStyle=${this.style}
+          .snippetStyle=${this.customStyle}
         ></atomic-smart-snippet-expandable-answer>
         ${renderSnippetFooter({
           props: {
