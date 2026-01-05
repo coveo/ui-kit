@@ -427,12 +427,13 @@ export class AtomicNumericFacet
     this.manualRanges = Array.from(
       this.querySelectorAll('atomic-numeric-range')
     ).map((range) => {
-      const {start, end, endInclusive, label} = range as HTMLElement & {
-        start: number;
-        end: number;
-        endInclusive: boolean;
-        label?: string;
-      };
+      const start = Number(range.getAttribute('start'));
+      const end = Number(range.getAttribute('end'));
+      // TODO v4: change the logic to simply check for the presence of the attribute
+      const endInclusive =
+        range.hasAttribute('end-inclusive') &&
+        range.getAttribute('end-inclusive') !== 'false';
+      const label = range.getAttribute('label') ?? undefined;
       return {
         ...buildNumericRange({start, end, endInclusive}),
         label,
