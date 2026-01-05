@@ -75,6 +75,11 @@
       "dependsOn": ["build"],
       "cache": false,
       "persistent": true
+    },
+    "web:cdn": {
+      "dependsOn": ["build:cdn"],
+      "cache": false,
+      "persistent": true
     }
   }
 }
