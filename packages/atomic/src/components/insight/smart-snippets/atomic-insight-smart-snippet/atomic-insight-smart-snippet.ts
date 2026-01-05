@@ -46,14 +46,14 @@ export class AtomicInsightSmartSnippet
   extends LitElement
   implements InitializableComponent<InsightBindings>
 {
-  @state() public bindings!: InsightBindings;
-  @state() public error!: Error;
+  @state() bindings!: InsightBindings;
+  @state() error!: Error;
 
   public smartSnippet!: InsightSmartSnippet;
 
   @bindStateToController('smartSnippet')
   @state()
-  public smartSnippetState!: InsightSmartSnippetState;
+  smartSnippetState!: InsightSmartSnippetState;
 
   @state() private feedbackSent = false;
 
