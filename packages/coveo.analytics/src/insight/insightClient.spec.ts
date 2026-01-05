@@ -383,10 +383,13 @@ describe('InsightClient', () => {
         });
 
         it('should send proper payload for #caseDetach', async () => {
+            const mockResultUriHash = fakeDocInfo.documentUriHash;
+            const mockPermanentId = fakeDocID.contentIDValue;
             const expectedMetadata = {
-                resultUriHash: fakeDocInfo.documentUriHash,
+                resultUriHash: mockResultUriHash,
+                permanentId: mockPermanentId,
             };
-            await client.logCaseDetach(fakeDocInfo.documentUriHash);
+            await client.logCaseDetach(mockResultUriHash, undefined, mockPermanentId);
             expectMatchCustomEventPayload(SearchPageEvents.caseDetach, expectedMetadata);
         });
 
@@ -1194,12 +1197,15 @@ describe('InsightClient', () => {
 
         it('should send proper payload for #caseDetach', async () => {
             const metadata = baseCaseMetadata;
+            const mockResultUriHash = fakeDocInfo.documentUriHash;
+            const mockPermanentId = fakeDocID.contentIDValue;
 
             const expectedMetadata = {
                 ...expectedBaseCaseMetadata,
-                resultUriHash: fakeDocInfo.documentUriHash,
+                resultUriHash: mockResultUriHash,
+                permanentId: mockPermanentId,
             };
-            await client.logCaseDetach(fakeDocInfo.documentUriHash, metadata);
+            await client.logCaseDetach(mockResultUriHash, metadata, mockPermanentId);
             expectMatchCustomEventPayload(SearchPageEvents.caseDetach, expectedMetadata);
         });
 

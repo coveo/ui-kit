@@ -373,11 +373,13 @@ export class CoveoInsightClient {
         );
     }
 
-    public logCaseDetach(resultUriHash: string, metadata?: CaseMetadata) {
-        return this.logCustomEvent(
-            SearchPageEvents.caseDetach,
-            metadata ? {...generateMetadataToSend(metadata, false), resultUriHash} : {resultUriHash},
-        );
+    public logCaseDetach(resultUriHash: string, metadata?: CaseMetadata, permanentId?: string) {
+        const generatedMetadata = {
+            ...(metadata && generateMetadataToSend(metadata, false)),
+            ...(permanentId && {permanentId}),
+            resultUriHash,
+        };
+        return this.logCustomEvent(SearchPageEvents.caseDetach, generatedMetadata);
     }
 
     public logLikeSmartSnippet(metadata?: CaseMetadata) {
