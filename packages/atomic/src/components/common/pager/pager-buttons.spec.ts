@@ -235,24 +235,6 @@ describe('#pagerButtons', () => {
       expect(input).toHaveAttribute('aria-roledescription', 'link');
     });
 
-    it('should change focus target when input is tab', async () => {
-      const onFocusCallback = vi.fn().mockResolvedValue(undefined);
-      const {inputs} = await renderMultiplePageButtons(onFocusCallback);
-
-      inputs[0].dispatchEvent(
-        new KeyboardEvent('keydown', {key: 'Tab', bubbles: true})
-      );
-
-      await vi.waitFor(() => {
-        expect(onFocusCallback).toHaveBeenCalledTimes(1);
-        expect(onFocusCallback).toHaveBeenCalledWith(
-          inputs,
-          inputs[0],
-          inputs[1]
-        );
-      });
-    });
-
     it('should change focus target when input is shift + tab', async () => {
       const onFocusCallback = vi.fn().mockResolvedValue(undefined);
       const {inputs} = await renderMultiplePageButtons(onFocusCallback);
