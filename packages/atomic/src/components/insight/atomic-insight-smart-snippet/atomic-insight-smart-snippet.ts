@@ -20,7 +20,9 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {randomID} from '@/src/utils/utils';
 import '@/src/components/common/atomic-smart-snippet-collapse-wrapper/atomic-smart-snippet-collapse-wrapper';
 import '@/src/components/common/atomic-smart-snippet-expandable-answer/atomic-smart-snippet-expandable-answer';
-import '@/src/components/common/atomic-stencil-smart-snippet-source';
+import '@/src/components/common/atomic-smart-snippet-source/atomic-smart-snippet-source';
+import {when} from 'lit-html/directives/when.js';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 
 /**
  * The `atomic-insight-smart-snippet` component displays a smart snippet for an Insight Panel query.
@@ -42,6 +44,7 @@ import '@/src/components/common/atomic-stencil-smart-snippet-source';
  */
 @customElement('atomic-insight-smart-snippet')
 @bindings()
+@withTailwindStyles
 export class AtomicInsightSmartSnippet
   extends LitElement
   implements InitializableComponent<InsightBindings>
@@ -49,34 +52,33 @@ export class AtomicInsightSmartSnippet
   @state() public bindings!: InsightBindings;
   @state() public error!: Error;
 
-  public smartSnippet!: InsightSmartSnippet;
-
   @bindStateToController('smartSnippet')
   @state()
   public smartSnippetState!: InsightSmartSnippetState;
+  public smartSnippet!: InsightSmartSnippet;
 
   @state() private feedbackSent = false;
 
-  private id!: string;
+  private smartSnippetId!: string;
   private modalRef?: HTMLAtomicInsightSmartSnippetFeedbackModalElement;
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
    */
   @property({type: Number, reflect: true, attribute: 'heading-level'})
-  accessor headingLevel = 0;
+  headingLevel = 0;
 
   /**
    * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
    */
   @property({type: Number, reflect: true, attribute: 'maximum-height'})
-  accessor maximumHeight = 250;
+  maximumHeight = 250;
 
   /**
    * When the answer is partly hidden, how much of its height (in pixels) should be visible.
    */
   @property({type: Number, reflect: true, attribute: 'collapsed-height'})
-  accessor collapsedHeight = 180;
+  collapsedHeight = 180;
 
   /**
    * Sets the style of the snippet.
@@ -91,10 +93,10 @@ export class AtomicInsightSmartSnippet
    * ```
    */
   @property({type: String, reflect: true, attribute: 'snippet-style'})
-  accessor snippetStyle?: string;
+  snippetStyle?: string;
 
   public initialize() {
-    this.id ||= randomID();
+    this.smartSnippetId ||= randomID();
     this.smartSnippet = buildInsightSmartSnippet(this.bindings.engine);
   }
 
@@ -104,7 +106,7 @@ export class AtomicInsightSmartSnippet
     }
   }
 
-  private get style() {
+  private get computedStyle() {
     const slot = this.shadowRoot?.querySelector(
       'slot[name="style"]'
     ) as HTMLSlotElement | null;
@@ -146,7 +148,7 @@ export class AtomicInsightSmartSnippet
       return nothing;
     }
 
-    return html`<atomic-stencil-smart-snippet-source
+    return html`<atomic-smart-snippet-source
       .anchorAttributes=${getAttributesFromLinkSlotContent(
         this,
         'source-anchor-attributes'
@@ -157,7 +159,7 @@ export class AtomicInsightSmartSnippet
       }
       .onSelectSource=${this.smartSnippet.selectSource}
       .source=${source}
-    ></atomic-stencil-smart-snippet-source>`;
+    ></atomic-smart-snippet-source>`;
   }
 
   private renderFeedbackBanner() {
@@ -172,7 +174,7 @@ export class AtomicInsightSmartSnippet
         disliked: this.smartSnippetState.disliked,
         explainWhyRef,
         feedbackSent: this.feedbackSent,
-        id: this.id,
+        id: this.smartSnippetId,
         i18n: this.bindings.i18n,
         liked: this.smartSnippetState.liked,
         onDislike: () => {
@@ -192,45 +194,43 @@ export class AtomicInsightSmartSnippet
   @errorGuard()
   @bindingGuard()
   render() {
-    if (!this.smartSnippetState.answerFound) {
-      return nothing;
-    }
+    const shouldDisplay = this.smartSnippetState.answerFound;
+    this.classList.toggle('atomic-hidden', !shouldDisplay);
 
-    return renderSnippetWrapper({
-      props: {
-        headingLevel: this.headingLevel,
-        i18n: this.bindings.i18n,
-      },
-    })(html`
-      <atomic-smart-snippet-collapse-wrapper>
-        ${renderSnippetQuestion({
-          props: {
-            headingLevel: this.headingLevel,
-            question: this.smartSnippetState.question,
-          },
-        })}
-        <atomic-smart-snippet-expandable-answer
-          .collapsedHeight=${this.collapsedHeight}
-          .expanded=${this.smartSnippetState.expanded}
-          exportparts="answer,show-more-button,show-less-button,truncated-answer"
-          .htmlContent=${this.smartSnippetState.answer}
-          .maximumHeight=${this.maximumHeight}
-          @collapse=${() => this.smartSnippet.collapse()}
-          @expand=${() => this.smartSnippet.expand()}
-          part="body"
-          .snippetStyle=${this.style}
-        ></atomic-smart-snippet-expandable-answer>
-        ${renderSnippetFooter({
-          props: {
-            i18n: this.bindings.i18n,
-          },
-        })(html`
-          ${this.renderSource()}
-          ${this.renderFeedbackBanner()}
-        `)}
-      </atomic-smart-snippet-collapse-wrapper>
-      <slot name="style" hidden></slot>
-    `);
+    return html`${when(shouldDisplay, () =>
+      renderSnippetWrapper({
+        props: {
+          headingLevel: this.headingLevel,
+          i18n: this.bindings.i18n,
+        },
+      })(html`
+        <atomic-smart-snippet-collapse-wrapper>
+          ${renderSnippetQuestion({
+            props: {
+              headingLevel: this.headingLevel,
+              question: this.smartSnippetState.question,
+            },
+          })}
+          <atomic-smart-snippet-expandable-answer
+            .collapsedHeight=${this.collapsedHeight}
+            .expanded=${this.smartSnippetState.expanded}
+            exportparts="answer,show-more-button,show-less-button,truncated-answer"
+            .htmlContent=${this.smartSnippetState.answer}
+            .maximumHeight=${this.maximumHeight}
+            @collapse=${() => this.smartSnippet.collapse()}
+            @expand=${() => this.smartSnippet.expand()}
+            part="body"
+            .snippetStyle=${this.computedStyle}
+          ></atomic-smart-snippet-expandable-answer>
+          ${renderSnippetFooter({
+            props: {
+              i18n: this.bindings.i18n,
+            },
+          })(html` ${this.renderSource()} ${this.renderFeedbackBanner()} `)}
+        </atomic-smart-snippet-collapse-wrapper>
+        <slot name="style" hidden></slot>
+      `)
+    )}`;
   }
 }
 

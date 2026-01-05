@@ -6,6 +6,10 @@ export default {
     ),
   'atomic-insight-interface': async () =>
     await import('./atomic-insight-interface/atomic-insight-interface.js'),
+  'atomic-insight-smart-snippet': async () =>
+    await import(
+      './atomic-insight-smart-snippet/atomic-insight-smart-snippet.js'
+    ),
   'atomic-insight-tab': async () =>
     await import('./atomic-insight-tab/atomic-insight-tab.js'),
   'atomic-insight-tabs': async () =>
