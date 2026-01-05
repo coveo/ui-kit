@@ -963,31 +963,6 @@ export namespace Components {
         "source"?: HTMLElement;
     }
     /**
-     * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
-     * You can style the snippets by inserting a template element like this:
-     * ```html
-     * <atomic-smart-snippet-suggestions>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet-suggestions>
-     * ```
-     */
-    interface AtomicSmartSnippetSuggestions {
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
-         */
-        "headingLevel": number;
-        /**
-          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
-    }
-    /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
      * Internal component made to be integrated in a TimeframeFacet.
      */
@@ -1683,26 +1658,24 @@ declare global {
         prototype: HTMLAtomicSmartSnippetFeedbackModalElement;
         new (): HTMLAtomicSmartSnippetFeedbackModalElement;
     };
-    /**
-     * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
-     * You can style the snippets by inserting a template element like this:
-     * ```html
-     * <atomic-smart-snippet-suggestions>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet-suggestions>
-     * ```
-     */
-    interface HTMLAtomicSmartSnippetSuggestionsElement extends Components.AtomicSmartSnippetSuggestions, HTMLStencilElement {
+    interface HTMLAtomicSmartSnippetSourceElementEventMap {
+        "selectSource": any;
+        "beginDelayedSelectSource": any;
+        "cancelPendingSelectSource": any;
     }
-    var HTMLAtomicSmartSnippetSuggestionsElement: {
-        prototype: HTMLAtomicSmartSnippetSuggestionsElement;
-        new (): HTMLAtomicSmartSnippetSuggestionsElement;
+    interface HTMLAtomicSmartSnippetSourceElement extends Components.AtomicSmartSnippetSource, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicSmartSnippetSourceElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetSourceElement, ev: AtomicSmartSnippetSourceCustomEvent<HTMLAtomicSmartSnippetSourceElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicSmartSnippetSourceElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetSourceElement, ev: AtomicSmartSnippetSourceCustomEvent<HTMLAtomicSmartSnippetSourceElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicSmartSnippetSourceElement: {
+        prototype: HTMLAtomicSmartSnippetSourceElement;
+        new (): HTMLAtomicSmartSnippetSourceElement;
     };
     interface HTMLAtomicStencilFacetDateInputElementEventMap {
         "atomic/dateInputApply": any;
@@ -1824,7 +1797,7 @@ declare global {
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
         "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
-        "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
+        "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-stencil-smart-snippet-source": HTMLAtomicStencilSmartSnippetSourceElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
@@ -2733,31 +2706,6 @@ declare namespace LocalJSX {
         "source"?: HTMLElement;
     }
     /**
-     * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
-     * You can style the snippets by inserting a template element like this:
-     * ```html
-     * <atomic-smart-snippet-suggestions>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet-suggestions>
-     * ```
-     */
-    interface AtomicSmartSnippetSuggestions {
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
-         */
-        "headingLevel"?: number;
-        /**
-          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
-    }
-    /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
      * Internal component made to be integrated in a TimeframeFacet.
      */
@@ -2916,7 +2864,7 @@ declare namespace LocalJSX {
         "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
         "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
-        "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
+        "atomic-smart-snippet-source": AtomicSmartSnippetSource;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-stencil-smart-snippet-source": AtomicStencilSmartSnippetSource;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
@@ -3058,22 +3006,6 @@ declare module "@stencil/core" {
              * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
              */
             "atomic-smart-snippet-feedback-modal": LocalJSX.AtomicSmartSnippetFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetFeedbackModalElement>;
-            /**
-             * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
-             * You can style the snippets by inserting a template element like this:
-             * ```html
-             * <atomic-smart-snippet-suggestions>
-             *   <template>
-             *     <style>
-             *       b {
-             *         color: blue;
-             *       }
-             *     </style>
-             *   </template>
-             * </atomic-smart-snippet-suggestions>
-             * ```
-             */
-            "atomic-smart-snippet-suggestions": LocalJSX.AtomicSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSuggestionsElement>;
             /**
              * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
              * Internal component made to be integrated in a TimeframeFacet.

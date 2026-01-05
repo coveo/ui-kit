@@ -87,7 +87,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
 
     it('render the correct questions', () => {
       SmartSnippetSuggestionsSelectors.questionCollapsedText()
-        .map((el) => el.text())
+        .map((el) => el.text().trim())
         .should(
           'deep.equal',
           defaultRelatedQuestions.map(
