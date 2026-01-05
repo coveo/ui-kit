@@ -166,6 +166,8 @@ export default {
     await import(
       './atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.js'
     ),
+  'atomic-smart-snippet': async () =>
+    await import('./atomic-smart-snippet/atomic-smart-snippet.js'),
   'atomic-sort-dropdown': async () =>
     await import('./atomic-sort-dropdown/atomic-sort-dropdown.js'),
   'atomic-sort-expression': async () =>

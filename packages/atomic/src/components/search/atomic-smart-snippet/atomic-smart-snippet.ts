@@ -7,7 +7,7 @@ import {
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
-import {html, LitElement, nothing} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import '@/src/components/common/atomic-icon/atomic-icon';
@@ -247,7 +247,7 @@ export class AtomicSmartSnippet
     this.feedbackSent = isSent;
   }
 
-  private get style() {
+  private get computedStyle() {
     const styleTag =
       this.querySelector('template')?.content.querySelector('style');
     if (!styleTag) {
@@ -270,23 +270,20 @@ export class AtomicSmartSnippet
     this.insertAdjacentElement('beforebegin', modalRef);
   }
 
-  @errorGuard()
   @bindingGuard()
-  protected render() {
-    if (
-      !shouldDisplayOnCurrentTab(
+  @errorGuard()
+  render() {
+    const shouldDisplay =
+      shouldDisplayOnCurrentTab(
         this.tabsIncluded,
         this.tabsExcluded,
         this.tabManagerState?.activeTab
-      )
-    ) {
-      return nothing;
-    }
+      ) && this.smartSnippetState.answerFound;
 
-    if (!this.smartSnippetState.answerFound) {
-      return nothing;
-    }
+    return html`${when(shouldDisplay, () => this.renderContent())}`;
+  }
 
+  private renderContent() {
     const source = this.smartSnippetState.source;
 
     return renderSnippetWrapper({
@@ -311,7 +308,7 @@ export class AtomicSmartSnippet
             renderSnippetTruncatedAnswer({
               props: {
                 answer: this.smartSnippetState.answer,
-                style: this.style,
+                style: this.computedStyle,
               },
             }),
           () => html`
@@ -324,7 +321,7 @@ export class AtomicSmartSnippet
               @collapse=${() => this.smartSnippet.collapse()}
               @expand=${() => this.smartSnippet.expand()}
               part="body"
-              .snippetStyle=${this.style}
+              .snippetStyle=${this.computedStyle}
             ></atomic-smart-snippet-expandable-answer>
           `
         )}
