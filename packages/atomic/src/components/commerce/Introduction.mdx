@@ -1,0 +1,163 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Commerce/Introduction" />
+
+# Atomic Commerce Components
+
+This section showcases interactive documentation for the [Coveo Atomic for Commerce](https://docs.coveo.com/en/p8bd0068) web components.
+
+You can explore the individual Commerce components in the sidebar. 
+Each component includes:
+
+* Interactive examples with configurable properties
+* Code snippets showing implementation details
+* Documentation for available attributes and events
+
+You can also find examples of full implementations below:
+* [Product List Page](/story/product-listing-page--default)
+* [Recommendation Carousel](/story/recommendations--default)
+* [Search Page](/story/search-page--default)
+
+
+
+## Getting Started
+These stories provide example usages of the Coveo Atomic web components for Commerce.
+Each of the components must be placed correctly within the component hierarchy in order to function.
+The top level of the tree must match the interface being initialized by the Headless engine.
+For example, most Coveo Commerce interfaces must start have `atomic-commerce-interface` at the top the component hierarchy.
+
+### Initialization
+Here is an example of initializing a `atomic-commerce-interface`.
+This example `getSampleCommerceEngineConfiguration` from `@coveo/headless/commerce` as its initialization configuration.
+This will not work in a production environment.
+See [Initialize the Headless commerce engine](https://docs.coveo.com/en/o6r70022#initialize-the-headless-commerce-engine).
+
+For a detailed breakdown of how to configure a commerce engine, please refer to the Coveo Headless documentation for [`buildCommerceEngine`](https://docs.coveo.com/en/headless/latest/reference/functions/Commerce.buildCommerceEngine.html).
+```html
+<html>
+  <head>
+    <title>Example Commerce Interface</title>
+        <script
+            type="module"
+            src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js">
+        </script>
+        <link
+            rel="stylesheet"
+            href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css" />
+      <script type="module">
+        const { getSampleCommerceEngineConfiguration } = await import('https://static.cloud.coveo.com/headless/v3/commerce/headless.esm.js');
+
+        const siteRoot = 'https://www.example.com/';
+        const fallbackResourceUrl = `${siteRoot}/search`;
+        const siteConfig = {
+          'Example': {href: 'index.html', label: 'Home', resourceUrl: `${siteRoot}/search`},
+        };
+
+        const {context, ...restOfConfiguration} = getSampleCommerceEngineConfiguration();
+
+        let viewUrl = siteConfig[document.title]?.resourceUrl;
+        if (!viewUrl) {
+          console.warn(`No resource URL found for page title "${document.title}". Using fallbackResourceUrl.`);
+          viewUrl = fallbackResourceUrl;
+        }
+
+        const configuration = {
+          context: {
+            ...context,
+            view: {
+              url: viewUrl
+            },
+          },
+          ...restOfConfiguration,
+        };
+
+        await customElements.whenDefined('atomic-commerce-interface');
+        const commerceInterface = document.querySelector('atomic-commerce-interface');
+        await commerceInterface.initialize(configuration);
+
+        commerceInterface.executeFirstRequest();
+      </script>
+  </head>
+  <body>
+    <atomic-commerce-interface>
+      <!-- The rest of your component hierarchy -->
+    </atomic-commerce-interface>
+  </body>
+</html>
+```
+
+### Initialization with an engine
+Here is an example of how to initialize an `atomic-commerce-interface` with an engine from `@coveo/headless` .
+The primary difference in the use cases between a standard initialization and using an engine is that an engine allows for a single instance to be shared across multiple interfaces.
+This eliminates boilerplate when initializing the engine across multiple pages, and it will ensure that all pages have access to the same resources on the engine.
+
+```javascript
+// engine.mjs
+const {
+  buildCommerceEngine, 
+  getSampleCommerceEngineConfiguration
+} = await import('https://static.cloud.coveo.com/headless/v3/commerce/headless.esm.js');
+
+const siteRoot = 'https://www.example.com/';
+const fallbackResourceUrl = `${siteRoot}/search`;
+const siteConfig = {
+  'Example': {href: 'index.html', label: 'Home', resourceUrl: `${siteRoot}/search`},
+};
+
+const {context, ...restOfConfiguration} = getSampleCommerceEngineConfiguration();
+
+let viewUrl = siteConfig[document.title]?.resourceUrl;
+if (!viewUrl) {
+  console.warn(`No resource URL found for page title "${document.title}". Using fallbackResourceUrl.`);
+  viewUrl = fallbackResourceUrl;
+}
+
+export const commerceEngine = buildCommerceEngine({
+  configuration: {
+    context: {
+      ...context,
+      view: {
+        url: viewUrl
+      },
+    },
+    ...restOfConfiguration,
+  },
+});
+```
+
+```html
+<!-- index.html -->
+<html>
+  <head>
+    <title>Example Commerce Interface</title>
+        <script
+            type="module"
+            src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js">
+        </script>
+        <link
+            rel="stylesheet"
+            href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css" />
+      <script type="module">
+        import {commerceEngine} from './engine.mjs';
+
+        await customElements.whenDefined('atomic-commerce-interface');
+        const commerceInterface = document.querySelector('atomic-commerce-interface');
+        await commerceInterface.initializeWithEngine(commerceEngine);
+
+        commerceInterface.executeFirstRequest();
+      </script>
+  </head>
+  <body>
+    <atomic-commerce-interface>
+      <!-- The rest of your component hierarchy -->
+    </atomic-commerce-interface>
+  </body>
+</html>
+```
+
+## Advanced Examples
+If you are looking to implement Coveo Atomic for Commerce in a framework, you can find reference code in our GitHub repo:
+* [Angular - Commerce Search](https://github.com/coveo/ui-kit/tree/main/samples/atomic/search-commerce-angular)
+* [React - Commerce Search](https://github.com/coveo/ui-kit/tree/main/samples/atomic/search-commerce-react)
+
+The Atomic library also provides more in-depth examples in the [GitHub repo](https://github.com/coveo/ui-kit/tree/main/packages/atomic/dev/examples/commerce-website) without using a framework which you can review.
