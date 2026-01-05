@@ -13,13 +13,8 @@
       "dependsOn": ["build:cem"],
       "outputs": ["./dist-storybook/**"]
     },
-    "chromatic:build": {
-      "dependsOn": ["build:cem"],
-      "outputs": ["./dist-chromatic/**"],
-      "env": ["IS_CHROMATIC"]
-    },
     "chromatic": {
-      "dependsOn": ["chromatic:build"],
+      "dependsOn": ["build:storybook"],
       "outputs": [],
       "env": [
         "CHROMATIC_PROJECT_TOKEN",

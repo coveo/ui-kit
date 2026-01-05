@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.80",
+  "version": "3.0.81",
   "scripts": {
     "postinstall": "husky install",
     "reset:install": "git checkout origin/main pnpm-lock.yaml && pnpm install",
@@ -66,8 +66,7 @@
       "@wc-toolkit/storybook-helpers@10.0.0": "patches/@wc-toolkit+storybook-helpers+10.0.0.patch",
       "fix-esm-import-path@1.10.1": "patches/fix-esm-import-path+1.10.1.patch",
       "jest-environment-jsdom@29.7.0": "patches/jest-environment-jsdom+29.7.0.patch",
-      "@stencil/react-output-target@0.5.3": "patches/@stencil__react-output-target@0.5.3.patch",
-      "dayjs": "patches/dayjs.patch"
+      "@stencil/react-output-target@0.5.3": "patches/@stencil__react-output-target@0.5.3.patch"
     },
     "overrides": {
       "braces": "3.0.3",
@@ -78,7 +77,7 @@
     }
   },
   "engines": {
-    "node": "^22.14.0",
+    "node": "^22.14.0 || ^24.11.0",
     "pnpm": ">=10.0.0"
   },
   "packageManager": "pnpm@10.24.0"

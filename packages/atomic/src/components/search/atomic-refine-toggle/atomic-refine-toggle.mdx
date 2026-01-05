@@ -1,0 +1,46 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicRefineToggleStories from './atomic-refine-toggle.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicRefineToggleStories} name="Docs"/>
+
+<AtomicDocTemplate
+  stories={AtomicRefineToggleStories}
+  githubPath="search/atomic-refine-toggle/atomic-refine-toggle.ts"
+  tagName="atomic-refine-toggle"
+  className="AtomicRefineToggle"
+>
+
+The `atomic-refine-toggle` component displays a button that, when clicked, opens a modal containing facets and sort components. This is particularly useful for mobile or narrow viewport experiences where facets need to be accessed through a modal interface.
+
+When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created and managed by the toggle.
+
+## Usage
+
+This component is typically placed within the "status" section of the layout:
+
+```html
+<atomic-search-interface>
+  <atomic-search-layout>
+    <atomic-layout-section section="main">
+      <atomic-layout-section section="status">
+        <atomic-refine-toggle collapse-facets-after="3"></atomic-refine-toggle>
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-search-layout>
+</atomic-search-interface>
+```
+
+## Facet Management
+
+The refine modal will automatically include all facets defined in your search interface. You can control how many facets are expanded by default using the `collapse-facets-after` attribute:
+
+```html
+<!-- Expand the first 3 facets, collapse the rest -->
+<atomic-refine-toggle collapse-facets-after="3"></atomic-refine-toggle>
+
+<!-- Collapse all facets by default -->
+<atomic-refine-toggle collapse-facets-after="0"></atomic-refine-toggle>
+```
+</AtomicDocTemplate>
