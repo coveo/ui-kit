@@ -222,7 +222,10 @@ export class AtomicSmartSnippet
   }
 
   willUpdate() {
-    if (!(this.smartSnippetState.liked || this.smartSnippetState.disliked)) {
+    if (
+      this.smartSnippetState &&
+      !(this.smartSnippetState.liked || this.smartSnippetState.disliked)
+    ) {
       this.setFeedbackSent(false);
     }
   }
