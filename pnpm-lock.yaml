@@ -4219,7 +4219,6 @@ packages:
   '@mswjs/source@0.5.0':
     resolution: {integrity: sha512-0zZT5wHnutBWInb/IAl2wGCy9M4i5nm4mRdunw7Pe5tyei07MvLATZEckC/uvNVTSEJMgJ0Kgj5GKzL/I9ZIMQ==}
     engines: {node: '>=20'}
-    deprecated: This package is renamed to . It will no longer receive any updates. Please migrate to the new package name. Thank you.
     peerDependencies:
       msw: ^2.10.0
 
