@@ -38,6 +38,8 @@ export default {
     await import('./atomic-no-results/atomic-no-results.js'),
   'atomic-notifications': async () =>
     await import('./atomic-notifications/atomic-notifications.js'),
+  'atomic-numeric-facet': async () =>
+    await import('./atomic-numeric-facet/atomic-numeric-facet.js'),
   'atomic-pager': async () => await import('./atomic-pager/atomic-pager.js'),
   'atomic-popover': async () =>
     await import('./atomic-popover/atomic-popover.js'),
@@ -160,9 +162,15 @@ export default {
     await import('./atomic-search-interface/atomic-search-interface.js'),
   'atomic-search-layout': async () =>
     await import('./atomic-search-layout/atomic-search-layout.js'),
+  'atomic-segmented-facet': async () =>
+    await import('./atomic-segmented-facet/atomic-segmented-facet.js'),
   'atomic-segmented-facet-scrollable': async () =>
     await import(
       './atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.js'
+    ),
+  'atomic-smart-snippet-suggestions': async () =>
+    await import(
+      './atomic-smart-snippet-suggestions/atomic-smart-snippet-suggestions.js'
     ),
   'atomic-sort-dropdown': async () =>
     await import('./atomic-sort-dropdown/atomic-sort-dropdown.js'),
