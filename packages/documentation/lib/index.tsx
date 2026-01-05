@@ -10,6 +10,7 @@ import {
   KindRouter,
   type Models,
   type NavigationElement,
+  PageEvent,
   ParameterType,
   type ProjectReflection,
   RendererEvent,
@@ -162,15 +163,6 @@ export const load = (app: Application) => {
     };
   });
 
-  // Need the Meta Tags to be inserted first, or it causes issues with the navigation sidebar
-  app.renderer.hooks.on('head.begin', () => (
-    <>
-      <script>
-        <JSX.Raw html={`(${insertMetaTags.toString()})();`} />
-      </script>
-    </>
-  ));
-
   app.renderer.hooks.on('head.end', (event) => (
     <>
       <script>
@@ -304,6 +296,8 @@ export const load = (app: Application) => {
 
     cpSync(darkModeJs.from, darkModeJs.to);
   });
+
+  app.renderer.on(PageEvent.END, insertMetaTags);
 
   app.renderer.defineRouter('kebab', KebabRouter);
 
