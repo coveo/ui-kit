@@ -192,7 +192,7 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
   private renderSource(questionAnswerId: string, source: Result) {
     return (
       <SmartSnippetSuggestionsFooter i18n={this.bindings.i18n}>
-        <atomic-smart-snippet-source
+        <atomic-stencil-smart-snippet-source
           anchorAttributes={getAttributesFromLinkSlotContent(
             this.host,
             'source-anchor-attributes'
@@ -211,7 +211,7 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
             this.smartSnippetQuestionsList.selectSource(questionAnswerId)
           }
           source={source}
-        ></atomic-smart-snippet-source>
+        ></atomic-stencil-smart-snippet-source>
       </SmartSnippetSuggestionsFooter>
     );
   }
