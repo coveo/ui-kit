@@ -4,7 +4,7 @@ const styles = css`
 @reference '../../../../utils/tailwind.global.tw.css';
 
 .value-box {
-  @apply relative;
+  @apply relative overflow-hidden;
 }
 
 li:first-child .value-box {
