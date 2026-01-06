@@ -13,7 +13,6 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {LightDomMixin} from '@/src/mixins/light-dom';
 import {parseDate} from '@/src/utils/date-utils';
 
 dayjs.extend(calendar);
@@ -25,7 +24,7 @@ dayjs.extend(updateLocale);
 @customElement('atomic-result-date')
 @bindings()
 export class AtomicResultDate
-  extends LightDomMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<Bindings>
 {
   /**

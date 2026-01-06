@@ -3,14 +3,13 @@ import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import {arrayConverter} from '@/src/converters/array-converter';
-import {LightDomMixin} from '@/src/mixins/light-dom';
 import '@/src/components/common/atomic-component-error/atomic-component-error';
 
 /**
  * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
  */
 @customElement('atomic-sort-expression')
-export class AtomicSortExpression extends LightDomMixin(LitElement) {
+export class AtomicSortExpression extends LitElement {
   /**
    * The non-localized label to display for this expression.
    */

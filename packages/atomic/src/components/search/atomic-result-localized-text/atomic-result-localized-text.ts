@@ -9,7 +9,6 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {LightDomMixin} from '@/src/mixins/light-dom';
 import {mapProperty} from '@/src/utils/props-utils';
 
 /**
@@ -30,7 +29,7 @@ import {mapProperty} from '@/src/utils/props-utils';
 @customElement('atomic-result-localized-text')
 @bindings()
 export class AtomicResultLocalizedText
-  extends LightDomMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<Bindings>
 {
   /**

@@ -5,7 +5,6 @@ import {customElement, property, state} from 'lit/decorators.js';
 import type {Timeframe} from '@/src/components/common/facets/timeframe-facet-common';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {LitElementWithError} from '@/src/decorators/types';
-import {LightDomMixin} from '@/src/mixins/light-dom';
 
 /**
  * The `atomic-timeframe` component defines a timeframe for an `atomic-timeframe-facet`.
@@ -15,7 +14,7 @@ import {LightDomMixin} from '@/src/mixins/light-dom';
  */
 @customElement('atomic-timeframe')
 export class AtomicTimeframe
-  extends LightDomMixin(LitElement)
+  extends LitElement
   implements Timeframe, LitElementWithError
 {
   private static readonly propsSchema = new Schema({

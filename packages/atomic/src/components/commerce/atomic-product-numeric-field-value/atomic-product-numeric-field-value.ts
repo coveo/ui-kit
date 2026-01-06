@@ -6,7 +6,6 @@ import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
-import {LightDomMixin} from '@/src/mixins/light-dom.js';
 import {
   defaultNumberFormatter,
   type NumberFormatter,
@@ -22,7 +21,7 @@ import {parseValue} from '../product-template-component-utils/product-utils.js';
 @customElement('atomic-product-numeric-field-value')
 @bindings()
 export class AtomicProductNumericFieldValue
-  extends LightDomMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
   @state()

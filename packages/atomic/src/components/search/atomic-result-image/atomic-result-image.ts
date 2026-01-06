@@ -11,7 +11,6 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {LightDomMixin} from '@/src/mixins/light-dom';
 import {filterProtocol} from '@/src/utils/xss-utils';
 
 /**
@@ -20,23 +19,23 @@ import {filterProtocol} from '@/src/utils/xss-utils';
 @customElement('atomic-result-image')
 @bindings()
 export class AtomicResultImage
-  extends LightDomMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<Bindings>
 {
   static styles = css`
-atomic-result-image {
-  display: grid;
-  place-items: center;
-  grid-template-rows: 100%;
-  width: 100%;
-  height: 100%;
+    :host {
+      display: grid;
+      place-items: center;
+      grid-template-rows: 100%;
+      width: 100%;
+      height: 100%;
+    }
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-}
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
   `;
 
   /**

@@ -14,7 +14,6 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
-import {LightDomMixin} from '@/src/mixins/light-dom';
 
 /**
  * The `atomic-result-number` component renders the value of a numeric result field.
@@ -23,7 +22,7 @@ import {LightDomMixin} from '@/src/mixins/light-dom';
 @customElement('atomic-result-number')
 @bindings()
 export class AtomicResultNumber
-  extends LightDomMixin(InitializeBindingsMixin(LitElement))
+  extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
   /**

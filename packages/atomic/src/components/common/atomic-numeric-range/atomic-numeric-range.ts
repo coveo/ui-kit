@@ -1,12 +1,11 @@
 import {LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import {LightDomMixin} from '@/src/mixins/light-dom';
 
 /**
  * The `atomic-numeric-range` component defines the range of an `atomic-numeric-facet`, and therefore must be defined within an `atomic-numeric-facet` component.
  */
 @customElement('atomic-numeric-range')
-export class AtomicNumericRange extends LightDomMixin(LitElement) {
+export class AtomicNumericRange extends LitElement {
   /**
    * The non-localized label for the facet. When defined, it will appear instead of the formatted value.
    * Used in the `atomic-breadbox` component through the bindings store.
