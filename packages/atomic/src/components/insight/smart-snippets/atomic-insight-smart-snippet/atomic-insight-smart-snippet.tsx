@@ -123,7 +123,7 @@ export class AtomicInsightSmartSnippet
           ></atomic-smart-snippet-expandable-answer>
           <SmartSnippetFooter i18n={this.bindings.i18n}>
             {source && (
-              <atomic-stencil-smart-snippet-source
+              <atomic-smart-snippet-source
                 anchorAttributes={getAttributesFromLinkSlotContent(
                   this.host,
                   'source-anchor-attributes'
@@ -136,7 +136,7 @@ export class AtomicInsightSmartSnippet
                 }
                 onSelectSource={this.smartSnippet.selectSource}
                 source={source}
-              ></atomic-stencil-smart-snippet-source>
+              ></atomic-smart-snippet-source>
             )}
             <SmartSnippetFeedbackBanner
               disliked={this.smartSnippetState.disliked}
