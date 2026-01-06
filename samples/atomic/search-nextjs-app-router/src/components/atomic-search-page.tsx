@@ -33,7 +33,11 @@ import {
   AtomicTimeframe,
   AtomicTimeframeFacet,
 } from '@coveo/atomic-react';
-import {buildSearchEngine, type Result} from '@coveo/headless';
+import {
+  buildSearchEngine,
+  loadFacetSetActions,
+  type Result,
+} from '@coveo/headless';
 import type {NextPage} from 'next';
 import {useMemo} from 'react';
 
@@ -49,15 +53,32 @@ const SearchPage: NextPage = () => {
     []
   );
 
+  const facetActions = loadFacetSetActions(engine);
+
   return (
-    <AtomicSearchInterface engine={engine}>
+    <AtomicSearchInterface
+      engine={engine}
+      onReady={async (executeFirstRequest) => {
+        engine.dispatch(
+          facetActions.toggleSelectFacetValue({
+            facetId: 'source',
+            selection: {
+              numberOfResults: 0,
+              state: 'selected',
+              value: 'Sports',
+            },
+          })
+        );
+        return executeFirstRequest?.();
+      }}
+    >
       <AtomicSearchLayout>
         <AtomicLayoutSection section="search">
           <AtomicSearchBox />
         </AtomicLayoutSection>
         <AtomicLayoutSection section="facets">
+          <AtomicFacet facetId="source" field="source" label="Source" />
           <AtomicFacetManager>
-            <AtomicFacet field="source" label="Source" />
             <AtomicFacet field="objecttype" label="Type" />
             <AtomicColorFacet
               field="cat_color"
