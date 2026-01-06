@@ -133,6 +133,20 @@
       "rangeStrategy": "replace",
       "description": "Isolate biome since it has memory issues in 2.1.1",
       "matchPackageNames": ["@biomejs/biome"]
+    },
+    {
+      "groupName": "knip",
+      "groupSlug": "knip",
+      "rangeStrategy": "replace",
+      "description": "Isolate knip since updates can break CI",
+      "matchPackageNames": ["knip"]
+    },
+    {
+      "groupName": "publint",
+      "groupSlug": "publint",
+      "rangeStrategy": "replace",
+      "description": "Isolate publint since updates can break CI",
+      "matchPackageNames": ["publint"]
     }
   ],
   "lockFileMaintenance": {
@@ -170,6 +184,8 @@
     "@storybook/addon-docs",
     "@storybook/addon-mcp",
     "@storybook/addon-vitest",
-    "msw-storybook-addon"
+    "msw-storybook-addon",
+    // Problems with angular. Just ignore it.
+    "zone.js"
   ]
 }
