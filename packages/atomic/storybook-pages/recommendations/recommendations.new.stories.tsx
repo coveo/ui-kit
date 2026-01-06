@@ -1,7 +1,6 @@
 import {getSampleRecommendationEngineConfiguration} from '@coveo/headless/recommendation';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
-import type {AtomicRecsInterface} from '@/src/components/recommendations/atomic-recs-interface/atomic-recs-interface.js';
 import {MockRecommendationApi} from '@/storybook-utils/api/recommendation/mock.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
 
@@ -256,12 +255,9 @@ const meta: Meta = {
       })
     );
 
-    // Fetch recommendations for all interfaces
     await Promise.all(
       Array.from(recsInterfaces).map(async (recsInterface) => {
-        await (
-          recsInterface as unknown as AtomicRecsInterface
-        ).getRecommendations();
+        await recsInterface.getRecommendations();
       })
     );
   },

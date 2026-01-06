@@ -192,7 +192,6 @@ const meta: Meta = {
     );
     await searchInterface!.executeFirstSearch();
 
-    // Click the IPX button to open the modal
     const ipxButton = context.canvasElement.querySelector('atomic-ipx-button');
     if (ipxButton) {
       const shadowRoot = ipxButton.shadowRoot;
