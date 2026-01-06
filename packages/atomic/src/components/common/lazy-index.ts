@@ -26,10 +26,6 @@ export default {
     await import(
       './atomic-smart-snippet-expandable-answer/atomic-smart-snippet-expandable-answer.js'
     ),
-  'atomic-smart-snippet-source': async () =>
-    await import(
-      './atomic-smart-snippet-source/atomic-smart-snippet-source.js'
-    ),
   'atomic-tab-bar': async () =>
     await import('./atomic-tab-bar/atomic-tab-bar.js'),
   'atomic-tab-button': async () =>

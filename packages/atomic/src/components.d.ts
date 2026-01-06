@@ -932,6 +932,10 @@ export namespace Components {
         "isOpen": boolean;
         "source"?: HTMLElement;
     }
+    interface AtomicSmartSnippetSource {
+        "anchorAttributes"?: Attr[];
+        "source": Result;
+    }
     /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
      * Internal component made to be integrated in a TimeframeFacet.
@@ -944,13 +948,6 @@ export namespace Components {
         "min"?: string;
         "rangeGetter": () => DateFilterRange | undefined;
         "rangeSetter": (range: DateRangeRequest) => void;
-    }
-    /**
-     * @deprecated use atomic-smart-snippet-source instead. this component is only meant to be used with Stencil components.
-     */
-    interface AtomicStencilSmartSnippetSource {
-        "anchorAttributes"?: Attr[];
-        "source": Result;
     }
     /**
      * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
@@ -1081,13 +1078,13 @@ export interface AtomicSmartSnippetFeedbackModalCustomEvent<T> extends CustomEve
     detail: T;
     target: HTMLAtomicSmartSnippetFeedbackModalElement;
 }
+export interface AtomicSmartSnippetSourceCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicSmartSnippetSourceElement;
+}
 export interface AtomicStencilFacetDateInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicStencilFacetDateInputElement;
-}
-export interface AtomicStencilSmartSnippetSourceCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicStencilSmartSnippetSourceElement;
 }
 declare global {
     /**
@@ -1652,28 +1649,6 @@ declare global {
         prototype: HTMLAtomicStencilFacetDateInputElement;
         new (): HTMLAtomicStencilFacetDateInputElement;
     };
-    interface HTMLAtomicStencilSmartSnippetSourceElementEventMap {
-        "selectSource": any;
-        "beginDelayedSelectSource": any;
-        "cancelPendingSelectSource": any;
-    }
-    /**
-     * @deprecated use atomic-smart-snippet-source instead. this component is only meant to be used with Stencil components.
-     */
-    interface HTMLAtomicStencilSmartSnippetSourceElement extends Components.AtomicStencilSmartSnippetSource, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicStencilSmartSnippetSourceElementEventMap>(type: K, listener: (this: HTMLAtomicStencilSmartSnippetSourceElement, ev: AtomicStencilSmartSnippetSourceCustomEvent<HTMLAtomicStencilSmartSnippetSourceElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicStencilSmartSnippetSourceElementEventMap>(type: K, listener: (this: HTMLAtomicStencilSmartSnippetSourceElement, ev: AtomicStencilSmartSnippetSourceCustomEvent<HTMLAtomicStencilSmartSnippetSourceElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicStencilSmartSnippetSourceElement: {
-        prototype: HTMLAtomicStencilSmartSnippetSourceElement;
-        new (): HTMLAtomicStencilSmartSnippetSourceElement;
-    };
     /**
      * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
      * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
@@ -1751,7 +1726,6 @@ declare global {
         "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
         "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
-        "atomic-stencil-smart-snippet-source": HTMLAtomicStencilSmartSnippetSourceElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
     }
@@ -2627,6 +2601,13 @@ declare namespace LocalJSX {
         "onFeedbackSent"?: (event: AtomicSmartSnippetFeedbackModalCustomEvent<any>) => void;
         "source"?: HTMLElement;
     }
+    interface AtomicSmartSnippetSource {
+        "anchorAttributes"?: Attr[];
+        "onBeginDelayedSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
+        "onCancelPendingSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
+        "onSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
+        "source": Result;
+    }
     /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
      * Internal component made to be integrated in a TimeframeFacet.
@@ -2640,16 +2621,6 @@ declare namespace LocalJSX {
         "onAtomic/dateInputApply"?: (event: AtomicStencilFacetDateInputCustomEvent<any>) => void;
         "rangeGetter": () => DateFilterRange | undefined;
         "rangeSetter": (range: DateRangeRequest) => void;
-    }
-    /**
-     * @deprecated use atomic-smart-snippet-source instead. this component is only meant to be used with Stencil components.
-     */
-    interface AtomicStencilSmartSnippetSource {
-        "anchorAttributes"?: Attr[];
-        "onBeginDelayedSelectSource"?: (event: AtomicStencilSmartSnippetSourceCustomEvent<any>) => void;
-        "onCancelPendingSelectSource"?: (event: AtomicStencilSmartSnippetSourceCustomEvent<any>) => void;
-        "onSelectSource"?: (event: AtomicStencilSmartSnippetSourceCustomEvent<any>) => void;
-        "source": Result;
     }
     /**
      * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
@@ -2786,7 +2757,6 @@ declare namespace LocalJSX {
         "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
         "atomic-smart-snippet-source": AtomicSmartSnippetSource;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
-        "atomic-stencil-smart-snippet-source": AtomicStencilSmartSnippetSource;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
     }
@@ -2920,15 +2890,12 @@ declare module "@stencil/core" {
              * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
              */
             "atomic-smart-snippet-feedback-modal": LocalJSX.AtomicSmartSnippetFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetFeedbackModalElement>;
+            "atomic-smart-snippet-source": LocalJSX.AtomicSmartSnippetSource & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSourceElement>;
             /**
              * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
              * Internal component made to be integrated in a TimeframeFacet.
              */
             "atomic-stencil-facet-date-input": LocalJSX.AtomicStencilFacetDateInput & JSXBase.HTMLAttributes<HTMLAtomicStencilFacetDateInputElement>;
-            /**
-             * @deprecated use atomic-smart-snippet-source instead. this component is only meant to be used with Stencil components.
-             */
-            "atomic-stencil-smart-snippet-source": LocalJSX.AtomicStencilSmartSnippetSource & JSXBase.HTMLAttributes<HTMLAtomicStencilSmartSnippetSourceElement>;
             /**
              * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
              * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
