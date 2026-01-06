@@ -851,18 +851,6 @@ export namespace Components {
   >;
     }
     /**
-     * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
-     */
-    interface AtomicRefineModal {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter": number;
-        "isOpen": boolean;
-        "openButton"?: HTMLElement;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
@@ -1555,16 +1543,6 @@ declare global {
         new (): HTMLAtomicRecsResultTemplateElement;
     };
     /**
-     * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
-     */
-    interface HTMLAtomicRefineModalElement extends Components.AtomicRefineModal, HTMLStencilElement {
-    }
-    var HTMLAtomicRefineModalElement: {
-        prototype: HTMLAtomicRefineModalElement;
-        new (): HTMLAtomicRefineModalElement;
-    };
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface HTMLAtomicResultPlaceholderElement extends Components.AtomicResultPlaceholder, HTMLStencilElement {
@@ -1766,7 +1744,6 @@ declare global {
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-recs-result": HTMLAtomicRecsResultElement;
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
-        "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
@@ -2559,18 +2536,6 @@ declare namespace LocalJSX {
   >;
     }
     /**
-     * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
-     */
-    interface AtomicRefineModal {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter"?: number;
-        "isOpen"?: boolean;
-        "openButton"?: HTMLElement;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
@@ -2829,7 +2794,6 @@ declare namespace LocalJSX {
         "atomic-recs-list": AtomicRecsList;
         "atomic-recs-result": AtomicRecsResult;
         "atomic-recs-result-template": AtomicRecsResultTemplate;
-        "atomic-refine-modal": AtomicRefineModal;
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-search-box": AtomicSearchBox;
         "atomic-smart-snippet": AtomicSmartSnippet;
@@ -2941,11 +2905,6 @@ declare module "@stencil/core" {
              * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
              */
             "atomic-recs-result-template": LocalJSX.AtomicRecsResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicRecsResultTemplateElement>;
-            /**
-             * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
-             * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
-             */
-            "atomic-refine-modal": LocalJSX.AtomicRefineModal & JSXBase.HTMLAttributes<HTMLAtomicRefineModalElement>;
             /**
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
