@@ -15,7 +15,6 @@ Use this component to display hierarchical facet values in a navigable tree stru
 
 Place this component within the "facets" section of your search layout. For Dynamic Navigation Experience (DNE) support, nest it inside an `atomic-facet-manager` component (see [DNE documentation](https://docs.coveo.com/en/2918)).
 
-## Usage
 
 ```html
 <atomic-search-interface>
@@ -79,11 +78,11 @@ searchInterface.i18n.addResourceBundle('en', 'translation', {
 - A Category Facet requires a multi-value field whose values are formatted hierarchically.
 The facet will determine the filter to apply based on the current selected path of values. 
 This can offer a powerful navigational experience, quickly leading a user to relevant results. 
-+
-This component uses `;` to separate individual values, and the character that's defined with the `delimiting-character` attribute to separate hierarchical levels within each value.
+
+  - This component uses `;` to separate individual values, and the character that's defined with the `delimiting-character` attribute to separate hierarchical levels within each value.
 Set this attribute to `|` instead of using the default, which is `;`.
-The following is an example of the recommended hierarchical formatting:
-+
+
+  - The following is an example of the recommended hierarchical formatting:
 `clothing; clothing|sale; clothing|sale|shoes; clothing|sale|shoes|kids; clothing|sale|shoes|kids|sneakers;`
 
 - It's only possible to select one value at a time in a category facet. 
@@ -94,11 +93,11 @@ This is because they're meant to ease navigation through their hierarchically or
 ### Use Cases and Examples
 
 On an ecommerce website, a user may want to start browsing by the category _Men_, and then narrow their results to _Bottoms_, then further to _Pants_, etc.
-Instead of selecting the facet value directly, this allows them to navigate hierarchically and determine the right starting point. // W: Glossary.Facet:A glossary entry exists for 'facet'. Use the glossary snippet instead.
+Instead of selecting the facet value directly, this allows them to navigate hierarchically and determine the right starting point. 
 
 ## References
 
-[Categories, Facets—and Browsable Facets?^](https://www.uxmatters.com/mt/archives/2011/08/categories-facetsand-browsable-facets.php)
-[Don't Lose Face with Facets^](https://source.coveo.com/2018/04/18/facets/)
+[Categories, Facets—and Browsable Facets?](https://www.uxmatters.com/mt/archives/2011/08/categories-facetsand-browsable-facets.php)
+[Don't Lose Face with Facets](https://source.coveo.com/2018/04/18/facets/)
 
 </AtomicDocTemplate>
