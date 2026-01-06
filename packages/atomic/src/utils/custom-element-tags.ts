@@ -134,6 +134,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-result-text',
   'atomic-result-timespan',
   'atomic-results-per-page',
+  'atomic-search-box',
   'atomic-search-box-instant-results',
   'atomic-search-box-query-suggestions',
   'atomic-search-box-recent-queries',
