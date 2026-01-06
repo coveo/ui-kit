@@ -5,56 +5,33 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
-import { AnyBindings } from "./components/common/interface/bindings";
-import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
+import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
+import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
-import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
+import { AnyBindings } from "./components/common/interface/bindings";
 import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
-export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
-export { AnyBindings } from "./components/common/interface/bindings";
-export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
+export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
+export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
-export { RedirectionPayload } from "./components/common/search-box/redirection-payload";
+export { AnyBindings } from "./components/common/interface/bindings";
 export { i18n } from "i18next";
 export { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
 export namespace Components {
-    /**
-     * The `atomic-automatic-facet-generator` is a component that renders the facets from
-     * the automatic facets feature. Unlike regular facets, which need to be explicitly defined
-     * and requested in the query, automatic facets are dynamically generated by the index
-     * in response to the search query.
-     * **Note:** This component renders one or more [automatic facets](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-automatic-facet/) based on the `desiredCount` property.
-     * To learn more about the automatic facet generator feature, see: [About the Facet Generator](https://docs.coveo.com/en/n9sd0159/).
-     */
-    interface AtomicAutomaticFacetGenerator {
-        /**
-          * The desired count of automatic facets.  Minimum: `1` Maximum: `20`
-          * @defaultValue `5`
-         */
-        "desiredCount": number;
-        /**
-          * The desired number of automatically generated facet values.  Minimum: `1`
-          * @defaultValue `8`
-         */
-        "numberOfValues": number;
-        "updateCollapseFacetsDependingOnFacetsVisibility": (collapseAfter: number, numberOfVisibleFacets: number) => Promise<void>;
-    }
     /**
      * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
      */
@@ -80,69 +57,6 @@ export namespace Components {
           * Callback function invoked when the user stops hovering over a citation. `citationHoverTimeMs` is the amount of time over which the citation has been hovered.
          */
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
-    }
-    /**
-     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
-     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
-     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
-     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
-     */
-    interface AtomicFacetManager {
-        /**
-          * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
-         */
-        "collapseFacetsAfter": number;
-    }
-    /**
-     * Internal component made to be integrated in a NumericFacet.
-     */
-    interface AtomicFacetNumberInput {
-        "bindings": AnyBindings;
-        "filter": NumericFilter;
-        "filterState": NumericFilterState;
-        "label": string;
-        "type": NumberInputType;
-    }
-    /**
-     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
-     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
-     */
-    interface AtomicGeneratedAnswer {
-        /**
-          * The unique identifier of the answer configuration to use to generate the answer.
-         */
-        "answerConfigurationId"?: string;
-        /**
-          * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
-          * @default false
-         */
-        "collapsible"?: boolean;
-        /**
-          * Option to disable citation anchoring.
-          * @default false
-         */
-        "disableCitationAnchoring"?: boolean;
-        /**
-          * A list of fields to include with the citations used to generate the answer.
-         */
-        "fieldsToIncludeInCitations"?: string;
-        /**
-          * The maximum height (in rem units) of the answer when collapsed.
-         */
-        "maxCollapsedHeight": number;
-        /**
-          * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded": string[] | string;
-        /**
-          * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-generated-answer tabs-included='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer can only be displayed on the specified tabs.
-         */
-        "tabsIncluded": string[] | string;
-        /**
-          * Whether to render a toggle button that lets the user hide or show the answer.
-          * @default false
-         */
-        "withToggle"?: boolean;
     }
     /**
      * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
@@ -777,84 +691,6 @@ export namespace Components {
         "hrefTemplate"?: string;
     }
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
-     * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
-     */
-    interface AtomicNumericFacet {
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc   ... ></atomic-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc="doc"   ... ></atomic-numeric-facet> ```
-         */
-        "dependsOn": Record<string, string>;
-        /**
-          * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
-         */
-        "displayValuesAs": 'checkbox' | 'link';
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount": boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel": number;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth": number;
-        /**
-          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
-         */
-        "isCollapsed": boolean;
-        /**
-          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label": string;
-        /**
-          * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
-         */
-        "numberOfValues": number;
-        /**
-          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
-         */
-        "rangeAlgorithm": RangeFacetRangeAlgorithm;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
-         */
-        "sortCriteria": RangeFacetSortCriterion;
-        /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded": string[] | string;
-        /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded": string[] | string;
-        /**
-          * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
-         */
-        "withInput"?: NumberInputType;
-    }
-    /**
-     * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
-     * about a result.
-     * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (for example, custom styles and embedded
-     * images/links may not work as expected in an `atomic-quickview`).
-     */
-    interface AtomicQuickview {
-        /**
-          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
-         */
-        "sandbox": string;
-    }
-    /**
      * The modal opened when clicking a quickview button.
      * Do not use this component directly; use `atomic-quickview` instead.
      */
@@ -1013,124 +849,12 @@ export namespace Components {
   >;
     }
     /**
-     * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
-     */
-    interface AtomicRefineModal {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter": number;
-        "isOpen": boolean;
-        "openButton"?: HTMLElement;
-    }
-    /**
-     * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
-     */
-    interface AtomicRefineToggle {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter": number;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
         "density": ItemDisplayDensity;
         "display": ItemDisplayLayout;
         "imageSize": ItemDisplayImageSize;
-    }
-    /**
-     * The `atomic-search-box` component creates a search box with built-in support for suggestions.
-     */
-    interface AtomicSearchBox {
-        /**
-          * Whether to clear all active query filters when the end user submits a new query from the search box. Setting this option to "false" is not recommended and can lead to an increasing number of queries returning no results.
-         */
-        "clearFilters": boolean;
-        /**
-          * Whether to prevent the user from triggering searches and query suggestions from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
-         */
-        "disableSearch": boolean;
-        /**
-          * Whether to interpret advanced [Coveo query syntax](https://docs.coveo.com/en/1552/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
-         */
-        "enableQuerySyntax": boolean;
-        /**
-          * The minimum query length required to enable search. For example, to disable the search for empty queries, set this to `1`.
-         */
-        "minimumQueryLength": number;
-        /**
-          * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
-         */
-        "numberOfQueries": number;
-        /**
-          * Defining this option makes the search box standalone (see [Use a Standalone Search Box](https://docs.coveo.com/en/atomic/latest/usage/ssb/)).  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
-         */
-        "redirectionUrl"?: string;
-        /**
-          * The delay for suggestion queries on input, in milliseconds.  The suggestion request will be delayed until the end user stops typing for at least the specified amount of time.  This delay is used to avoid sending too many requests to the Coveo Platform when the user is typing, as well as reducing potential input lag on low end devices. A higher delay will reduce input lag, at the cost of suggestions freshness.
-         */
-        "suggestionDelay": number;
-        /**
-          * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
-         */
-        "suggestionTimeout": number;
-    }
-    /**
-     * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
-     */
-    interface AtomicSegmentedFacet {
-        /**
-          * Specifies an explicit list of `allowedValues` in the Search API request. This list is in the form of a JSON string.  If you specify a list of values for this option, the facet only uses these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message` or `Product`, the facet does not use them.  ```html <atomic-segmented-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-segmented-facet> ```  The maximum amount of allowed values is 25.  The default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
-         */
-        "allowedValues": string[] | string;
-        /**
-          * Identifies the facet values that must appear at the top, in this order. This parameter can be used in conjunction with the `sortCriteria` parameter.  Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.  Example:  The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.  If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.  ```html <atomic-segmented-facet field="objecttype" custom-sort='["Contact","Account","File"]' sort-criteria='occurrences'></atomic-segmented-facet> ``` The maximum amount of custom sort values is 25.  The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
-         */
-        "customSort": string[] | string;
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-segmented-facet facet-id="abc" field="objecttype" ...></atomic-segmented-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-segmented-facet   depends-on-abc   ... ></atomic-segmented-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-segmented-facet> ```
-         */
-        "dependsOn": Record<string, string>;
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount": boolean;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth": number;
-        /**
-          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
-         */
-        "numberOfValues": number;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
-         */
-        "sortCriteria": FacetSortCriterion;
-        /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded": string[] | string;
-        /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded": string[] | string;
     }
     /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
@@ -1175,25 +899,9 @@ export namespace Components {
          */
         "tabsIncluded": string[] | string;
     }
-    interface AtomicSmartSnippetCollapseWrapper {
-        "collapsedHeight"?: number;
-        "maximumHeight"?: number;
-    }
-    interface AtomicSmartSnippetExpandableAnswer {
-        /**
-          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
-         */
-        "collapsedHeight": number;
-        "expanded": boolean;
+    interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
-        /**
-          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
-         */
-        "maximumHeight": number;
-        /**
-          * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
+        "innerStyle"?: string;
     }
     /**
      * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
@@ -1206,31 +914,6 @@ export namespace Components {
     interface AtomicSmartSnippetSource {
         "anchorAttributes"?: Attr[];
         "source": Result;
-    }
-    /**
-     * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
-     * You can style the snippets by inserting a template element like this:
-     * ```html
-     * <atomic-smart-snippet-suggestions>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet-suggestions>
-     * ```
-     */
-    interface AtomicSmartSnippetSuggestions {
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
-         */
-        "headingLevel": number;
-        /**
-          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
     }
     /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
@@ -1262,49 +945,6 @@ export namespace Components {
         "onMouseOver"?: (e: Event) => void;
         "side": 'left' | 'right';
         "suggestion": SearchBoxSuggestionElement;
-    }
-    interface AtomicTabBar {
-    }
-    interface AtomicTabButton {
-        /**
-          * Whether the tab button is active.
-         */
-        "active": boolean;
-        /**
-          * The label to display on the tab button.
-         */
-        "label": string;
-        /**
-          * Click handler for the tab button.
-         */
-        "select": () => void;
-    }
-    interface AtomicTabPopover {
-        "closePopoverOnFocusOut": (event: FocusEvent) => Promise<void>;
-        "setButtonVisibility": (isVisible: boolean) => Promise<void>;
-        "toggle": () => Promise<void>;
-    }
-    /**
-     * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
-     * A timeframe is a span of time from now to a specific time in the past.
-     */
-    interface AtomicTimeframe {
-        /**
-          * The amount of units from which to count.  For example, 10 days, 1 year, etc.
-         */
-        "amount": number;
-        /**
-          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The relative period of time to now.
-         */
-        "period": 'past' | 'next';
-        /**
-          * The unit used to define: - the start date of the timeframe, if the period is `past` - the end date of the timeframe, if the period is `future`
-         */
-        "unit": RelativeDateUnit;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results.
@@ -1369,10 +1009,6 @@ export namespace Components {
         "withDatePicker": boolean;
     }
 }
-export interface AtomicFacetNumberInputCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicFacetNumberInputElement;
-}
 export interface AtomicGeneratedAnswerFeedbackModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicGeneratedAnswerFeedbackModalElement;
@@ -1409,13 +1045,9 @@ export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicQuickviewModalElement;
 }
-export interface AtomicSearchBoxCustomEvent<T> extends CustomEvent<T> {
+export interface AtomicSmartSnippetAnswerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLAtomicSearchBoxElement;
-}
-export interface AtomicSmartSnippetExpandableAnswerCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicSmartSnippetExpandableAnswerElement;
+    target: HTMLAtomicSmartSnippetAnswerElement;
 }
 export interface AtomicSmartSnippetFeedbackModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1431,20 +1063,6 @@ export interface AtomicStencilFacetDateInputCustomEvent<T> extends CustomEvent<T
 }
 declare global {
     /**
-     * The `atomic-automatic-facet-generator` is a component that renders the facets from
-     * the automatic facets feature. Unlike regular facets, which need to be explicitly defined
-     * and requested in the query, automatic facets are dynamically generated by the index
-     * in response to the search query.
-     * **Note:** This component renders one or more [automatic facets](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-automatic-facet/) based on the `desiredCount` property.
-     * To learn more about the automatic facet generator feature, see: [About the Facet Generator](https://docs.coveo.com/en/n9sd0159/).
-     */
-    interface HTMLAtomicAutomaticFacetGeneratorElement extends Components.AtomicAutomaticFacetGenerator, HTMLStencilElement {
-    }
-    var HTMLAtomicAutomaticFacetGeneratorElement: {
-        prototype: HTMLAtomicAutomaticFacetGeneratorElement;
-        new (): HTMLAtomicAutomaticFacetGeneratorElement;
-    };
-    /**
      * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
      */
     interface HTMLAtomicCitationElement extends Components.AtomicCitation, HTMLStencilElement {
@@ -1452,48 +1070,6 @@ declare global {
     var HTMLAtomicCitationElement: {
         prototype: HTMLAtomicCitationElement;
         new (): HTMLAtomicCitationElement;
-    };
-    /**
-     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
-     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
-     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
-     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
-     */
-    interface HTMLAtomicFacetManagerElement extends Components.AtomicFacetManager, HTMLStencilElement {
-    }
-    var HTMLAtomicFacetManagerElement: {
-        prototype: HTMLAtomicFacetManagerElement;
-        new (): HTMLAtomicFacetManagerElement;
-    };
-    interface HTMLAtomicFacetNumberInputElementEventMap {
-        "atomic/numberInputApply": any;
-    }
-    /**
-     * Internal component made to be integrated in a NumericFacet.
-     */
-    interface HTMLAtomicFacetNumberInputElement extends Components.AtomicFacetNumberInput, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicFacetNumberInputElementEventMap>(type: K, listener: (this: HTMLAtomicFacetNumberInputElement, ev: AtomicFacetNumberInputCustomEvent<HTMLAtomicFacetNumberInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicFacetNumberInputElementEventMap>(type: K, listener: (this: HTMLAtomicFacetNumberInputElement, ev: AtomicFacetNumberInputCustomEvent<HTMLAtomicFacetNumberInputElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicFacetNumberInputElement: {
-        prototype: HTMLAtomicFacetNumberInputElement;
-        new (): HTMLAtomicFacetNumberInputElement;
-    };
-    /**
-     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
-     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
-     */
-    interface HTMLAtomicGeneratedAnswerElement extends Components.AtomicGeneratedAnswer, HTMLStencilElement {
-    }
-    var HTMLAtomicGeneratedAnswerElement: {
-        prototype: HTMLAtomicGeneratedAnswerElement;
-        new (): HTMLAtomicGeneratedAnswerElement;
     };
     interface HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap {
         "feedbackSent": any;
@@ -1861,28 +1437,6 @@ declare global {
         prototype: HTMLAtomicIpxResultLinkElement;
         new (): HTMLAtomicIpxResultLinkElement;
     };
-    /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
-     * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
-     */
-    interface HTMLAtomicNumericFacetElement extends Components.AtomicNumericFacet, HTMLStencilElement {
-    }
-    var HTMLAtomicNumericFacetElement: {
-        prototype: HTMLAtomicNumericFacetElement;
-        new (): HTMLAtomicNumericFacetElement;
-    };
-    /**
-     * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
-     * about a result.
-     * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (for example, custom styles and embedded
-     * images/links may not work as expected in an `atomic-quickview`).
-     */
-    interface HTMLAtomicQuickviewElement extends Components.AtomicQuickview, HTMLStencilElement {
-    }
-    var HTMLAtomicQuickviewElement: {
-        prototype: HTMLAtomicQuickviewElement;
-        new (): HTMLAtomicQuickviewElement;
-    };
     interface HTMLAtomicQuickviewModalElementEventMap {
         "atomic/quickview/next": any;
         "atomic/quickview/previous": any;
@@ -1946,26 +1500,6 @@ declare global {
         new (): HTMLAtomicRecsResultTemplateElement;
     };
     /**
-     * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
-     */
-    interface HTMLAtomicRefineModalElement extends Components.AtomicRefineModal, HTMLStencilElement {
-    }
-    var HTMLAtomicRefineModalElement: {
-        prototype: HTMLAtomicRefineModalElement;
-        new (): HTMLAtomicRefineModalElement;
-    };
-    /**
-     * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
-     */
-    interface HTMLAtomicRefineToggleElement extends Components.AtomicRefineToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicRefineToggleElement: {
-        prototype: HTMLAtomicRefineToggleElement;
-        new (): HTMLAtomicRefineToggleElement;
-    };
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface HTMLAtomicResultPlaceholderElement extends Components.AtomicResultPlaceholder, HTMLStencilElement {
@@ -1973,35 +1507,6 @@ declare global {
     var HTMLAtomicResultPlaceholderElement: {
         prototype: HTMLAtomicResultPlaceholderElement;
         new (): HTMLAtomicResultPlaceholderElement;
-    };
-    interface HTMLAtomicSearchBoxElementEventMap {
-        "redirect": RedirectionPayload;
-    }
-    /**
-     * The `atomic-search-box` component creates a search box with built-in support for suggestions.
-     */
-    interface HTMLAtomicSearchBoxElement extends Components.AtomicSearchBox, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicSearchBoxElementEventMap>(type: K, listener: (this: HTMLAtomicSearchBoxElement, ev: AtomicSearchBoxCustomEvent<HTMLAtomicSearchBoxElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicSearchBoxElementEventMap>(type: K, listener: (this: HTMLAtomicSearchBoxElement, ev: AtomicSearchBoxCustomEvent<HTMLAtomicSearchBoxElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicSearchBoxElement: {
-        prototype: HTMLAtomicSearchBoxElement;
-        new (): HTMLAtomicSearchBoxElement;
-    };
-    /**
-     * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
-     */
-    interface HTMLAtomicSegmentedFacetElement extends Components.AtomicSegmentedFacet, HTMLStencilElement {
-    }
-    var HTMLAtomicSegmentedFacetElement: {
-        prototype: HTMLAtomicSegmentedFacetElement;
-        new (): HTMLAtomicSegmentedFacetElement;
     };
     /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
@@ -2024,32 +1529,25 @@ declare global {
         prototype: HTMLAtomicSmartSnippetElement;
         new (): HTMLAtomicSmartSnippetElement;
     };
-    interface HTMLAtomicSmartSnippetCollapseWrapperElement extends Components.AtomicSmartSnippetCollapseWrapper, HTMLStencilElement {
-    }
-    var HTMLAtomicSmartSnippetCollapseWrapperElement: {
-        prototype: HTMLAtomicSmartSnippetCollapseWrapperElement;
-        new (): HTMLAtomicSmartSnippetCollapseWrapperElement;
-    };
-    interface HTMLAtomicSmartSnippetExpandableAnswerElementEventMap {
-        "expand": any;
-        "collapse": any;
+    interface HTMLAtomicSmartSnippetAnswerElementEventMap {
+        "answerSizeUpdated": {height: number};
         "selectInlineLink": InlineLink;
         "beginDelayedSelectInlineLink": InlineLink;
         "cancelPendingSelectInlineLink": InlineLink;
     }
-    interface HTMLAtomicSmartSnippetExpandableAnswerElement extends Components.AtomicSmartSnippetExpandableAnswer, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicSmartSnippetExpandableAnswerElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetExpandableAnswerElement, ev: AtomicSmartSnippetExpandableAnswerCustomEvent<HTMLAtomicSmartSnippetExpandableAnswerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    interface HTMLAtomicSmartSnippetAnswerElement extends Components.AtomicSmartSnippetAnswer, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicSmartSnippetAnswerElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetAnswerElement, ev: AtomicSmartSnippetAnswerCustomEvent<HTMLAtomicSmartSnippetAnswerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicSmartSnippetExpandableAnswerElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetExpandableAnswerElement, ev: AtomicSmartSnippetExpandableAnswerCustomEvent<HTMLAtomicSmartSnippetExpandableAnswerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicSmartSnippetAnswerElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetAnswerElement, ev: AtomicSmartSnippetAnswerCustomEvent<HTMLAtomicSmartSnippetAnswerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
-    var HTMLAtomicSmartSnippetExpandableAnswerElement: {
-        prototype: HTMLAtomicSmartSnippetExpandableAnswerElement;
-        new (): HTMLAtomicSmartSnippetExpandableAnswerElement;
+    var HTMLAtomicSmartSnippetAnswerElement: {
+        prototype: HTMLAtomicSmartSnippetAnswerElement;
+        new (): HTMLAtomicSmartSnippetAnswerElement;
     };
     interface HTMLAtomicSmartSnippetFeedbackModalElementEventMap {
         "feedbackSent": any;
@@ -2091,27 +1589,6 @@ declare global {
         prototype: HTMLAtomicSmartSnippetSourceElement;
         new (): HTMLAtomicSmartSnippetSourceElement;
     };
-    /**
-     * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
-     * You can style the snippets by inserting a template element like this:
-     * ```html
-     * <atomic-smart-snippet-suggestions>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet-suggestions>
-     * ```
-     */
-    interface HTMLAtomicSmartSnippetSuggestionsElement extends Components.AtomicSmartSnippetSuggestions, HTMLStencilElement {
-    }
-    var HTMLAtomicSmartSnippetSuggestionsElement: {
-        prototype: HTMLAtomicSmartSnippetSuggestionsElement;
-        new (): HTMLAtomicSmartSnippetSuggestionsElement;
-    };
     interface HTMLAtomicStencilFacetDateInputElementEventMap {
         "atomic/dateInputApply": any;
     }
@@ -2145,34 +1622,6 @@ declare global {
         prototype: HTMLAtomicSuggestionRendererElement;
         new (): HTMLAtomicSuggestionRendererElement;
     };
-    interface HTMLAtomicTabBarElement extends Components.AtomicTabBar, HTMLStencilElement {
-    }
-    var HTMLAtomicTabBarElement: {
-        prototype: HTMLAtomicTabBarElement;
-        new (): HTMLAtomicTabBarElement;
-    };
-    interface HTMLAtomicTabButtonElement extends Components.AtomicTabButton, HTMLStencilElement {
-    }
-    var HTMLAtomicTabButtonElement: {
-        prototype: HTMLAtomicTabButtonElement;
-        new (): HTMLAtomicTabButtonElement;
-    };
-    interface HTMLAtomicTabPopoverElement extends Components.AtomicTabPopover, HTMLStencilElement {
-    }
-    var HTMLAtomicTabPopoverElement: {
-        prototype: HTMLAtomicTabPopoverElement;
-        new (): HTMLAtomicTabPopoverElement;
-    };
-    /**
-     * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
-     * A timeframe is a span of time from now to a specific time in the past.
-     */
-    interface HTMLAtomicTimeframeElement extends Components.AtomicTimeframe, HTMLStencilElement {
-    }
-    var HTMLAtomicTimeframeElement: {
-        prototype: HTMLAtomicTimeframeElement;
-        new (): HTMLAtomicTimeframeElement;
-    };
     /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
@@ -2184,11 +1633,7 @@ declare global {
         new (): HTMLAtomicTimeframeFacetElement;
     };
     interface HTMLElementTagNameMap {
-        "atomic-automatic-facet-generator": HTMLAtomicAutomaticFacetGeneratorElement;
         "atomic-citation": HTMLAtomicCitationElement;
-        "atomic-facet-manager": HTMLAtomicFacetManagerElement;
-        "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
-        "atomic-generated-answer": HTMLAtomicGeneratedAnswerElement;
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
@@ -2231,54 +1676,22 @@ declare global {
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
         "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
-        "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
-        "atomic-quickview": HTMLAtomicQuickviewElement;
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
         "atomic-recs-error": HTMLAtomicRecsErrorElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-recs-result": HTMLAtomicRecsResultElement;
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
-        "atomic-refine-modal": HTMLAtomicRefineModalElement;
-        "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
-        "atomic-search-box": HTMLAtomicSearchBoxElement;
-        "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
-        "atomic-smart-snippet-collapse-wrapper": HTMLAtomicSmartSnippetCollapseWrapperElement;
-        "atomic-smart-snippet-expandable-answer": HTMLAtomicSmartSnippetExpandableAnswerElement;
+        "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
         "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
         "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
-        "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
-        "atomic-tab-bar": HTMLAtomicTabBarElement;
-        "atomic-tab-button": HTMLAtomicTabButtonElement;
-        "atomic-tab-popover": HTMLAtomicTabPopoverElement;
-        "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
     }
 }
 declare namespace LocalJSX {
-    /**
-     * The `atomic-automatic-facet-generator` is a component that renders the facets from
-     * the automatic facets feature. Unlike regular facets, which need to be explicitly defined
-     * and requested in the query, automatic facets are dynamically generated by the index
-     * in response to the search query.
-     * **Note:** This component renders one or more [automatic facets](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-automatic-facet/) based on the `desiredCount` property.
-     * To learn more about the automatic facet generator feature, see: [About the Facet Generator](https://docs.coveo.com/en/n9sd0159/).
-     */
-    interface AtomicAutomaticFacetGenerator {
-        /**
-          * The desired count of automatic facets.  Minimum: `1` Maximum: `20`
-          * @defaultValue `5`
-         */
-        "desiredCount"?: number;
-        /**
-          * The desired number of automatically generated facet values.  Minimum: `1`
-          * @defaultValue `8`
-         */
-        "numberOfValues"?: number;
-    }
     /**
      * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
      */
@@ -2304,70 +1717,6 @@ declare namespace LocalJSX {
           * Callback function invoked when the user stops hovering over a citation. `citationHoverTimeMs` is the amount of time over which the citation has been hovered.
          */
         "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
-    }
-    /**
-     * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
-     * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
-     * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
-     * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
-     */
-    interface AtomicFacetManager {
-        /**
-          * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
-         */
-        "collapseFacetsAfter"?: number;
-    }
-    /**
-     * Internal component made to be integrated in a NumericFacet.
-     */
-    interface AtomicFacetNumberInput {
-        "bindings": AnyBindings;
-        "filter": NumericFilter;
-        "filterState": NumericFilterState;
-        "label": string;
-        "onAtomic/numberInputApply"?: (event: AtomicFacetNumberInputCustomEvent<any>) => void;
-        "type": NumberInputType;
-    }
-    /**
-     * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
-     * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
-     */
-    interface AtomicGeneratedAnswer {
-        /**
-          * The unique identifier of the answer configuration to use to generate the answer.
-         */
-        "answerConfigurationId"?: string;
-        /**
-          * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
-          * @default false
-         */
-        "collapsible"?: boolean;
-        /**
-          * Option to disable citation anchoring.
-          * @default false
-         */
-        "disableCitationAnchoring"?: boolean;
-        /**
-          * A list of fields to include with the citations used to generate the answer.
-         */
-        "fieldsToIncludeInCitations"?: string;
-        /**
-          * The maximum height (in rem units) of the answer when collapsed.
-         */
-        "maxCollapsedHeight"?: number;
-        /**
-          * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded"?: string[] | string;
-        /**
-          * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-generated-answer tabs-included='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer can only be displayed on the specified tabs.
-         */
-        "tabsIncluded"?: string[] | string;
-        /**
-          * Whether to render a toggle button that lets the user hide or show the answer.
-          * @default false
-         */
-        "withToggle"?: boolean;
     }
     /**
      * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
@@ -2981,84 +2330,6 @@ declare namespace LocalJSX {
         "hrefTemplate"?: string;
     }
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
-     * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
-     */
-    interface AtomicNumericFacet {
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc   ... ></atomic-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc="doc"   ... ></atomic-numeric-facet> ```
-         */
-        "dependsOn"?: Record<string, string>;
-        /**
-          * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
-         */
-        "displayValuesAs"?: 'checkbox' | 'link';
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount"?: boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel"?: number;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth"?: number;
-        /**
-          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
-         */
-        "isCollapsed"?: boolean;
-        /**
-          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
-         */
-        "numberOfValues"?: number;
-        /**
-          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
-         */
-        "rangeAlgorithm"?: RangeFacetRangeAlgorithm;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
-         */
-        "sortCriteria"?: RangeFacetSortCriterion;
-        /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded"?: string[] | string;
-        /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded"?: string[] | string;
-        /**
-          * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
-         */
-        "withInput"?: NumberInputType;
-    }
-    /**
-     * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
-     * about a result.
-     * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (for example, custom styles and embedded
-     * images/links may not work as expected in an `atomic-quickview`).
-     */
-    interface AtomicQuickview {
-        /**
-          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
-         */
-        "sandbox"?: string;
-    }
-    /**
      * The modal opened when clicking a quickview button.
      * Do not use this component directly; use `atomic-quickview` instead.
      */
@@ -3201,128 +2472,12 @@ declare namespace LocalJSX {
   >;
     }
     /**
-     * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
-     */
-    interface AtomicRefineModal {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter"?: number;
-        "isOpen"?: boolean;
-        "openButton"?: HTMLElement;
-    }
-    /**
-     * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-     * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
-     */
-    interface AtomicRefineToggle {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter"?: number;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
         "density": ItemDisplayDensity;
         "display": ItemDisplayLayout;
         "imageSize": ItemDisplayImageSize;
-    }
-    /**
-     * The `atomic-search-box` component creates a search box with built-in support for suggestions.
-     */
-    interface AtomicSearchBox {
-        /**
-          * Whether to clear all active query filters when the end user submits a new query from the search box. Setting this option to "false" is not recommended and can lead to an increasing number of queries returning no results.
-         */
-        "clearFilters"?: boolean;
-        /**
-          * Whether to prevent the user from triggering searches and query suggestions from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
-         */
-        "disableSearch"?: boolean;
-        /**
-          * Whether to interpret advanced [Coveo query syntax](https://docs.coveo.com/en/1552/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
-         */
-        "enableQuerySyntax"?: boolean;
-        /**
-          * The minimum query length required to enable search. For example, to disable the search for empty queries, set this to `1`.
-         */
-        "minimumQueryLength"?: number;
-        /**
-          * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
-         */
-        "numberOfQueries"?: number;
-        /**
-          * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.  Example: ```html <script>   document.querySelector('atomic-search-box').addEventListener((e) => {     e.preventDefault();     // handle redirection   }); </script> ... <atomic-search-box redirection-url="/search"></atomic-search-box> ```
-         */
-        "onRedirect"?: (event: AtomicSearchBoxCustomEvent<RedirectionPayload>) => void;
-        /**
-          * Defining this option makes the search box standalone (see [Use a Standalone Search Box](https://docs.coveo.com/en/atomic/latest/usage/ssb/)).  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
-         */
-        "redirectionUrl"?: string;
-        /**
-          * The delay for suggestion queries on input, in milliseconds.  The suggestion request will be delayed until the end user stops typing for at least the specified amount of time.  This delay is used to avoid sending too many requests to the Coveo Platform when the user is typing, as well as reducing potential input lag on low end devices. A higher delay will reduce input lag, at the cost of suggestions freshness.
-         */
-        "suggestionDelay"?: number;
-        /**
-          * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
-         */
-        "suggestionTimeout"?: number;
-    }
-    /**
-     * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
-     */
-    interface AtomicSegmentedFacet {
-        /**
-          * Specifies an explicit list of `allowedValues` in the Search API request. This list is in the form of a JSON string.  If you specify a list of values for this option, the facet only uses these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message` or `Product`, the facet does not use them.  ```html <atomic-segmented-facet field="objecttype" allowed-values='["Contact","Account","File"]'></atomic-segmented-facet> ```  The maximum amount of allowed values is 25.  The default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
-         */
-        "allowedValues"?: string[] | string;
-        /**
-          * Identifies the facet values that must appear at the top, in this order. This parameter can be used in conjunction with the `sortCriteria` parameter.  Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.  Example:  The following facet will sort the `Contact`, `Account`, and `File` values at the top of the list for the `objecttype` field.  If there are more than these 3 values available, the rest of the list will be sorted using `occurrences`.  ```html <atomic-segmented-facet field="objecttype" custom-sort='["Contact","Account","File"]' sort-criteria='occurrences'></atomic-segmented-facet> ``` The maximum amount of custom sort values is 25.  The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
-         */
-        "customSort"?: string[] | string;
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-segmented-facet facet-id="abc" field="objecttype" ...></atomic-segmented-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-segmented-facet   depends-on-abc   ... ></atomic-segmented-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-segmented-facet> ```
-         */
-        "dependsOn"?: Record<string, string>;
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount"?: boolean;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth"?: number;
-        /**
-          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
-         */
-        "numberOfValues"?: number;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
-         */
-        "sortCriteria"?: FacetSortCriterion;
-        /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded"?: string[] | string;
-        /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded"?: string[] | string;
     }
     /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
@@ -3367,30 +2522,13 @@ declare namespace LocalJSX {
          */
         "tabsIncluded"?: string[] | string;
     }
-    interface AtomicSmartSnippetCollapseWrapper {
-        "collapsedHeight"?: number;
-        "maximumHeight"?: number;
-    }
-    interface AtomicSmartSnippetExpandableAnswer {
-        /**
-          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
-         */
-        "collapsedHeight"?: number;
-        "expanded": boolean;
+    interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
-        /**
-          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
-         */
-        "maximumHeight"?: number;
-        "onBeginDelayedSelectInlineLink"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<InlineLink>) => void;
-        "onCancelPendingSelectInlineLink"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<InlineLink>) => void;
-        "onCollapse"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<any>) => void;
-        "onExpand"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<any>) => void;
-        "onSelectInlineLink"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<InlineLink>) => void;
-        /**
-          * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
+        "innerStyle"?: string;
+        "onAnswerSizeUpdated"?: (event: AtomicSmartSnippetAnswerCustomEvent<{height: number}>) => void;
+        "onBeginDelayedSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
+        "onCancelPendingSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
+        "onSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
     }
     /**
      * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
@@ -3407,31 +2545,6 @@ declare namespace LocalJSX {
         "onCancelPendingSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
         "onSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
         "source": Result;
-    }
-    /**
-     * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
-     * You can style the snippets by inserting a template element like this:
-     * ```html
-     * <atomic-smart-snippet-suggestions>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet-suggestions>
-     * ```
-     */
-    interface AtomicSmartSnippetSuggestions {
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
-         */
-        "headingLevel"?: number;
-        /**
-          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
     }
     /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
@@ -3464,46 +2577,6 @@ declare namespace LocalJSX {
         "onMouseOver"?: (e: Event) => void;
         "side": 'left' | 'right';
         "suggestion": SearchBoxSuggestionElement;
-    }
-    interface AtomicTabBar {
-    }
-    interface AtomicTabButton {
-        /**
-          * Whether the tab button is active.
-         */
-        "active"?: boolean;
-        /**
-          * The label to display on the tab button.
-         */
-        "label": string;
-        /**
-          * Click handler for the tab button.
-         */
-        "select": () => void;
-    }
-    interface AtomicTabPopover {
-    }
-    /**
-     * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
-     * A timeframe is a span of time from now to a specific time in the past.
-     */
-    interface AtomicTimeframe {
-        /**
-          * The amount of units from which to count.  For example, 10 days, 1 year, etc.
-         */
-        "amount"?: number;
-        /**
-          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The relative period of time to now.
-         */
-        "period"?: 'past' | 'next';
-        /**
-          * The unit used to define: - the start date of the timeframe, if the period is `past` - the end date of the timeframe, if the period is `future`
-         */
-        "unit": RelativeDateUnit;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results.
@@ -3568,11 +2641,7 @@ declare namespace LocalJSX {
         "withDatePicker"?: boolean;
     }
     interface IntrinsicElements {
-        "atomic-automatic-facet-generator": AtomicAutomaticFacetGenerator;
         "atomic-citation": AtomicCitation;
-        "atomic-facet-manager": AtomicFacetManager;
-        "atomic-facet-number-input": AtomicFacetNumberInput;
-        "atomic-generated-answer": AtomicGeneratedAnswer;
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
         "atomic-insight-facet": AtomicInsightFacet;
@@ -3615,30 +2684,18 @@ declare namespace LocalJSX {
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
         "atomic-ipx-result-link": AtomicIpxResultLink;
-        "atomic-numeric-facet": AtomicNumericFacet;
-        "atomic-quickview": AtomicQuickview;
         "atomic-quickview-modal": AtomicQuickviewModal;
         "atomic-recs-error": AtomicRecsError;
         "atomic-recs-list": AtomicRecsList;
         "atomic-recs-result": AtomicRecsResult;
         "atomic-recs-result-template": AtomicRecsResultTemplate;
-        "atomic-refine-modal": AtomicRefineModal;
-        "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-result-placeholder": AtomicResultPlaceholder;
-        "atomic-search-box": AtomicSearchBox;
-        "atomic-segmented-facet": AtomicSegmentedFacet;
         "atomic-smart-snippet": AtomicSmartSnippet;
-        "atomic-smart-snippet-collapse-wrapper": AtomicSmartSnippetCollapseWrapper;
-        "atomic-smart-snippet-expandable-answer": AtomicSmartSnippetExpandableAnswer;
+        "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
         "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
         "atomic-smart-snippet-source": AtomicSmartSnippetSource;
-        "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
-        "atomic-tab-bar": AtomicTabBar;
-        "atomic-tab-button": AtomicTabButton;
-        "atomic-tab-popover": AtomicTabPopover;
-        "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
     }
 }
@@ -3647,34 +2704,9 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             /**
-             * The `atomic-automatic-facet-generator` is a component that renders the facets from
-             * the automatic facets feature. Unlike regular facets, which need to be explicitly defined
-             * and requested in the query, automatic facets are dynamically generated by the index
-             * in response to the search query.
-             * **Note:** This component renders one or more [automatic facets](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-automatic-facet/) based on the `desiredCount` property.
-             * To learn more about the automatic facet generator feature, see: [About the Facet Generator](https://docs.coveo.com/en/n9sd0159/).
-             */
-            "atomic-automatic-facet-generator": LocalJSX.AtomicAutomaticFacetGenerator & JSXBase.HTMLAttributes<HTMLAtomicAutomaticFacetGeneratorElement>;
-            /**
              * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
              */
             "atomic-citation": LocalJSX.AtomicCitation & JSXBase.HTMLAttributes<HTMLAtomicCitationElement>;
-            /**
-             * The `atomic-facet-manager` is a component that manages facets by performing three key functions:
-             * 1. **Sorting facets** - Reorders facets based on the search response to show the most relevant facets first.
-             * 1. **Managing visibility** - Controls which facets should be visible or hidden based on available values and dependencies.
-             * 1. **Managing collapse state** - Automatically expands or collapses facets based on the `collapse-facets-after` property.
-             */
-            "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
-            /**
-             * Internal component made to be integrated in a NumericFacet.
-             */
-            "atomic-facet-number-input": LocalJSX.AtomicFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicFacetNumberInputElement>;
-            /**
-             * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
-             * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
-             */
-            "atomic-generated-answer": LocalJSX.AtomicGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerElement>;
             /**
              * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
              */
@@ -3743,18 +2775,6 @@ declare module "@stencil/core" {
              */
             "atomic-ipx-result-link": LocalJSX.AtomicIpxResultLink & JSXBase.HTMLAttributes<HTMLAtomicIpxResultLinkElement>;
             /**
-             * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
-             * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
-             */
-            "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
-            /**
-             * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
-             * about a result.
-             * The `atomic-quickview` is not meant to replace the `atomic-result-link` to access an item in a result template; it has certain limitations (for example, custom styles and embedded
-             * images/links may not work as expected in an `atomic-quickview`).
-             */
-            "atomic-quickview": LocalJSX.AtomicQuickview & JSXBase.HTMLAttributes<HTMLAtomicQuickviewElement>;
-            /**
              * The modal opened when clicking a quickview button.
              * Do not use this component directly; use `atomic-quickview` instead.
              */
@@ -3780,27 +2800,9 @@ declare module "@stencil/core" {
              */
             "atomic-recs-result-template": LocalJSX.AtomicRecsResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicRecsResultTemplateElement>;
             /**
-             * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
-             * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
-             */
-            "atomic-refine-modal": LocalJSX.AtomicRefineModal & JSXBase.HTMLAttributes<HTMLAtomicRefineModalElement>;
-            /**
-             * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
-             * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
-             */
-            "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
-            /**
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
-            /**
-             * The `atomic-search-box` component creates a search box with built-in support for suggestions.
-             */
-            "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
-            /**
-             * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
-             */
-            "atomic-segmented-facet": LocalJSX.AtomicSegmentedFacet & JSXBase.HTMLAttributes<HTMLAtomicSegmentedFacetElement>;
             /**
              * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
              * You can style the snippet by inserting a template element as follows:
@@ -3817,30 +2819,13 @@ declare module "@stencil/core" {
              * ```
              */
             "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
-            "atomic-smart-snippet-collapse-wrapper": LocalJSX.AtomicSmartSnippetCollapseWrapper & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetCollapseWrapperElement>;
-            "atomic-smart-snippet-expandable-answer": LocalJSX.AtomicSmartSnippetExpandableAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetExpandableAnswerElement>;
+            "atomic-smart-snippet-answer": LocalJSX.AtomicSmartSnippetAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetAnswerElement>;
             /**
              * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
              * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
              */
             "atomic-smart-snippet-feedback-modal": LocalJSX.AtomicSmartSnippetFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetFeedbackModalElement>;
             "atomic-smart-snippet-source": LocalJSX.AtomicSmartSnippetSource & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSourceElement>;
-            /**
-             * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
-             * You can style the snippets by inserting a template element like this:
-             * ```html
-             * <atomic-smart-snippet-suggestions>
-             *   <template>
-             *     <style>
-             *       b {
-             *         color: blue;
-             *       }
-             *     </style>
-             *   </template>
-             * </atomic-smart-snippet-suggestions>
-             * ```
-             */
-            "atomic-smart-snippet-suggestions": LocalJSX.AtomicSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSuggestionsElement>;
             /**
              * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
              * Internal component made to be integrated in a TimeframeFacet.
@@ -3853,14 +2838,6 @@ declare module "@stencil/core" {
              * use native Elements.
              */
             "atomic-suggestion-renderer": LocalJSX.AtomicSuggestionRenderer & JSXBase.HTMLAttributes<HTMLAtomicSuggestionRendererElement>;
-            "atomic-tab-bar": LocalJSX.AtomicTabBar & JSXBase.HTMLAttributes<HTMLAtomicTabBarElement>;
-            "atomic-tab-button": LocalJSX.AtomicTabButton & JSXBase.HTMLAttributes<HTMLAtomicTabButtonElement>;
-            "atomic-tab-popover": LocalJSX.AtomicTabPopover & JSXBase.HTMLAttributes<HTMLAtomicTabPopoverElement>;
-            /**
-             * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
-             * A timeframe is a span of time from now to a specific time in the past.
-             */
-            "atomic-timeframe": LocalJSX.AtomicTimeframe & JSXBase.HTMLAttributes<HTMLAtomicTimeframeElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results.
              * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.

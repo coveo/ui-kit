@@ -1,4 +1,8 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import type {
+  Decorator,
+  Meta,
+  StoryObj as Story,
+} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
@@ -12,6 +16,9 @@ const {decorator, play} = wrapInSearchInterface();
 const {events, argTypes} = getStorybookHelpers('atomic-tab-manager', {
   excludeCategories: ['methods'],
 });
+
+const widthDecorator: Decorator = (story) =>
+  html`<div style="min-width: 350px;">${story()}</div> `;
 
 const meta: Meta = {
   component: 'atomic-tab-manager',
@@ -31,7 +38,7 @@ const meta: Meta = {
             name="articles"
           ></atomic-tab>
         </atomic-tab-manager>`,
-  decorators: [decorator],
+  decorators: [widthDecorator, decorator],
   parameters: {
     ...parameters,
     actions: {

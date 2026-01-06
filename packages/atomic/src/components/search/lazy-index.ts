@@ -2,6 +2,10 @@
 export default {
   'atomic-automatic-facet': async () =>
     await import('./atomic-automatic-facet/atomic-automatic-facet.js'),
+  'atomic-automatic-facet-generator': async () =>
+    await import(
+      './atomic-automatic-facet-generator/atomic-automatic-facet-generator.js'
+    ),
   'atomic-breadbox': async () =>
     await import('./atomic-breadbox/atomic-breadbox.js'),
   'atomic-category-facet': async () =>
@@ -13,6 +17,8 @@ export default {
   'atomic-external': async () =>
     await import('./atomic-external/atomic-external.js'),
   'atomic-facet': async () => await import('./atomic-facet/atomic-facet.js'),
+  'atomic-facet-manager': async () =>
+    await import('./atomic-facet-manager/atomic-facet-manager.js'),
   'atomic-field-condition': async () =>
     await import('./atomic-field-condition/atomic-field-condition.js'),
   'atomic-folded-result-list': async () =>
@@ -23,6 +29,8 @@ export default {
     await import('./atomic-format-number/atomic-format-number.js'),
   'atomic-format-unit': async () =>
     await import('./atomic-format-unit/atomic-format-unit.js'),
+  'atomic-generated-answer': async () =>
+    await import('./atomic-generated-answer/atomic-generated-answer.js'),
   'atomic-html': async () => await import('./atomic-html/atomic-html.js'),
   'atomic-load-more-results': async () =>
     await import('./atomic-load-more-results/atomic-load-more-results.js'),
@@ -30,6 +38,8 @@ export default {
     await import('./atomic-no-results/atomic-no-results.js'),
   'atomic-notifications': async () =>
     await import('./atomic-notifications/atomic-notifications.js'),
+  'atomic-numeric-facet': async () =>
+    await import('./atomic-numeric-facet/atomic-numeric-facet.js'),
   'atomic-pager': async () => await import('./atomic-pager/atomic-pager.js'),
   'atomic-popover': async () =>
     await import('./atomic-popover/atomic-popover.js'),
@@ -37,10 +47,16 @@ export default {
     await import('./atomic-query-error/atomic-query-error.js'),
   'atomic-query-summary': async () =>
     await import('./atomic-query-summary/atomic-query-summary.js'),
+  'atomic-quickview': async () =>
+    await import('./atomic-quickview/atomic-quickview.js'),
   'atomic-rating-facet': async () =>
     await import('./atomic-rating-facet/atomic-rating-facet.js'),
   'atomic-rating-range-facet': async () =>
     await import('./atomic-rating-range-facet/atomic-rating-range-facet.js'),
+  'atomic-refine-modal': async () =>
+    await import('./atomic-refine-modal/atomic-refine-modal.js'),
+  'atomic-refine-toggle': async () =>
+    await import('./atomic-refine-toggle/atomic-refine-toggle.js'),
   'atomic-relevance-inspector': async () =>
     await import('./atomic-relevance-inspector/atomic-relevance-inspector.js'),
   'atomic-result': async () => await import('./atomic-result/atomic-result.js'),
@@ -130,6 +146,8 @@ export default {
     await import('./atomic-result-timespan/atomic-result-timespan.js'),
   'atomic-results-per-page': async () =>
     await import('./atomic-results-per-page/atomic-results-per-page.js'),
+  'atomic-search-box': async () =>
+    await import('./atomic-search-box/atomic-search-box.js'),
   'atomic-search-box-instant-results': async () =>
     await import(
       './atomic-search-box-instant-results/atomic-search-box-instant-results.js'
@@ -146,9 +164,15 @@ export default {
     await import('./atomic-search-interface/atomic-search-interface.js'),
   'atomic-search-layout': async () =>
     await import('./atomic-search-layout/atomic-search-layout.js'),
+  'atomic-segmented-facet': async () =>
+    await import('./atomic-segmented-facet/atomic-segmented-facet.js'),
   'atomic-segmented-facet-scrollable': async () =>
     await import(
       './atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.js'
+    ),
+  'atomic-smart-snippet-suggestions': async () =>
+    await import(
+      './atomic-smart-snippet-suggestions/atomic-smart-snippet-suggestions.js'
     ),
   'atomic-sort-dropdown': async () =>
     await import('./atomic-sort-dropdown/atomic-sort-dropdown.js'),

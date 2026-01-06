@@ -1,14 +1,8 @@
-import {InlineLink} from '@coveo/headless';
-import {interceptSearchResponse} from '../fixtures/fixture-common';
 import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
-import {AnalyticsTracker} from '../utils/analyticsUtils';
 import * as CommonAssertions from './common-assertions';
-import {addSearchBox} from './search-box/search-box-actions';
-import {SearchBoxSelectors} from './search-box/search-box-selectors';
 import {
   addSmartSnippetSuggestions,
   addSmartSnippetSuggestionsDefaultOptions,
-  getResponseModifierWithSmartSnippetSuggestions,
 } from './smart-snippet-suggestions-actions';
 import * as SmartSnippetSuggestionsAssertions from './smart-snippet-suggestions-assertions';
 import {
@@ -87,7 +81,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
 
     it('render the correct questions', () => {
       SmartSnippetSuggestionsSelectors.questionCollapsedText()
-        .map((el) => el.text())
+        .map((el) => el.text().trim())
         .should(
           'deep.equal',
           defaultRelatedQuestions.map(
@@ -166,58 +160,91 @@ describe('Smart Snippet Suggestions Test Suites', () => {
     });
   });
 
-  describe('after clicking on the title', () => {
-    let currentQuestion: string | undefined = undefined;
+  describe('when the snippet starts and ends with text nodes', () => {
     beforeEach(() => {
-      currentQuestion = undefined;
       new TestFixture()
         .with(
           addSmartSnippetSuggestions({
             relatedQuestions: defaultRelatedQuestions.map(
               (relatedQuestion) => ({
                 ...relatedQuestion,
-                get question() {
-                  return currentQuestion ?? relatedQuestion.question;
-                },
+                answer:
+                  '<span class="first">Abc</span><p>def</p><span class="last">ghi</span>',
               })
             ),
+            props: {'snippet-style': 'span { display: block; }'},
           })
         )
-        .with(addSearchBox())
         .init();
       SmartSnippetSuggestionsSelectors.questionCollapsedButton()
         .first()
         .click();
-      SmartSnippetSuggestionsSelectors.sourceTitle().first().rightclick();
     });
 
-    SmartSnippetSuggestionsAssertions.assertLogOpenSmartSnippetSuggestionsSource(
-      true
+    SmartSnippetSuggestionsAssertions.assertAnswerTopMargin(
+      remSize / 2,
+      'first'
     );
-
-    describe('then clicking the snippet url with the same snippet', () => {
-      beforeEach(() => {
-        AnalyticsTracker.reset();
-        SmartSnippetSuggestionsSelectors.sourceUrl().first().rightclick();
-      });
-
-      SmartSnippetSuggestionsAssertions.assertLogOpenSmartSnippetSuggestionsSource(
-        false
-      );
-    });
-
-    describe('then getting a new snippet and clicking on the title again', () => {
-      beforeEach(() => {
-        currentQuestion = 'Hello, World!';
-        SearchBoxSelectors.submitButton().click();
-        SmartSnippetSuggestionsSelectors.sourceTitle().first().rightclick();
-      });
-
-      SmartSnippetSuggestionsAssertions.assertLogOpenSmartSnippetSuggestionsSource(
-        true
-      );
-    });
+    SmartSnippetSuggestionsAssertions.assertAnswerBottomMargin(remSize, 'last');
   });
+
+  describe('when the snippet contains elements with margins', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addSmartSnippetSuggestions({
+            relatedQuestions: defaultRelatedQuestions.map(
+              (relatedQuestion) => ({
+                ...relatedQuestion,
+                answer:
+                  '<p class="first">Paragraph A</p><p>Paragraph B</p><p class="last">Paragraph C</p>',
+              })
+            ),
+          })
+        )
+        .init();
+      SmartSnippetSuggestionsSelectors.questionCollapsedButton()
+        .first()
+        .click();
+    });
+
+    SmartSnippetSuggestionsAssertions.assertAnswerTopMargin(
+      remSize / 2,
+      'first'
+    );
+    SmartSnippetSuggestionsAssertions.assertAnswerBottomMargin(remSize, 'last');
+  });
+
+  describe('when the snippet contains collapsing margins', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addSmartSnippetSuggestions({
+            relatedQuestions: defaultRelatedQuestions.map(
+              (relatedQuestion) => ({
+                ...relatedQuestion,
+                answer:
+                  '<span><p class="first last">My parent has no margins, but I do!</p></span>',
+              })
+            ),
+          })
+        )
+        .init();
+      SmartSnippetSuggestionsSelectors.questionCollapsedButton()
+        .first()
+        .click();
+    });
+
+    SmartSnippetSuggestionsAssertions.assertAnswerTopMargin(
+      remSize / 2,
+      'first'
+    );
+    SmartSnippetSuggestionsAssertions.assertAnswerBottomMargin(remSize, 'last');
+  });
+
+  
+
+  
 
   describe('with custom styling in a template element', () => {
     beforeEach(() => {
