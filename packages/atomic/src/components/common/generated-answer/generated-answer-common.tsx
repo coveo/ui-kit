@@ -209,7 +209,7 @@ export class GeneratedAnswerCommon {
         });
         return (
           <li key={citation.id} class="max-w-full">
-            <atomic-stencil-citation
+            <atomic-citation
               citation={this.getCitation(citation)}
               index={index}
               sendHoverEndEvent={(citationHoverTimeMs: number) => {

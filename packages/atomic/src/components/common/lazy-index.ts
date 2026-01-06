@@ -2,6 +2,8 @@
 export default {
   'atomic-aria-live': async () =>
     await import('./atomic-aria-live/atomic-aria-live.js'),
+  'atomic-citation': async () =>
+    await import('./atomic-citation/atomic-citation.js'),
   'atomic-component-error': async () =>
     await import('./atomic-component-error/atomic-component-error.js'),
   'atomic-facet-date-input': async () =>
