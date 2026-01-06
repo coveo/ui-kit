@@ -154,6 +154,7 @@
     "prettier": "catalog:",
     "puppeteer": "catalog:",
     "react": "catalog:",
+    "remark-gfm": "4.0.1",
     "rollup": "4.46.2",
     "rollup-plugin-copy": "3.5.0",
     "shadow-dom-testing-library": "1.12.0",
