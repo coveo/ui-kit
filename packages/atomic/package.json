@@ -115,9 +115,9 @@
     "@stencil/angular-output-target": "0.8.4",
     "@stencil/react-output-target": "0.5.3",
     "@storybook/addon-a11y": "10.0.8",
-    "@storybook/addon-docs": "10.1.11",
-    "@storybook/addon-mcp": "0.1.6",
-    "@storybook/addon-vitest": "10.1.11",
+    "@storybook/addon-docs": "10.0.8",
+    "@storybook/addon-mcp": "0.1.3",
+    "@storybook/addon-vitest": "10.0.8",
     "@storybook/icons": "2.0.1",
     "@storybook/web-components-vite": "10.0.8",
     "@tailwindcss/postcss": "4.1.13",
@@ -143,7 +143,7 @@
     "lit-html": "3.3.2",
     "local-web-server": "catalog:",
     "msw": "2.12.7",
-    "msw-storybook-addon": "2.0.6",
+    "msw-storybook-addon": "2.0.5",
     "natural-orderby": "5.0.0",
     "openapi-types": "12.1.3",
     "playwright": "catalog:",
@@ -183,5 +183,6 @@
     "workerDirectory": [
       ".storybook/public"
     ]
-  }
+  },
+  "customElements": "custom-elements.json"
 }

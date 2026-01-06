@@ -166,6 +166,10 @@
     // Ignore storybook since it breaks because of stencil. We will update after migration.
     "@storybook/addon-a11y",
     "@storybook/web-components-vite",
-    "storybook"
+    "storybook",
+    "@storybook/addon-docs",
+    "@storybook/addon-mcp",
+    "@storybook/addon-vitest",
+    "msw-storybook-addon"
   ]
 }
