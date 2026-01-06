@@ -1,5 +1,6 @@
 # Coveo UI Kit
 
+
 ## Quick Start with GitHub Codespaces
 
 Get started in seconds with a fully configured development environment:
