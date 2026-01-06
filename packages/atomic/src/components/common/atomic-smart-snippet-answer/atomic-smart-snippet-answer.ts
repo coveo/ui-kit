@@ -43,10 +43,6 @@ export class AtomicSmartSnippetAnswer extends LitElement {
   private resizeObserver: ResizeObserver | undefined;
   private cleanupAnalyticsFunctions: (() => void)[] = [];
 
-  connectedCallback() {
-    super.connectedCallback();
-  }
-
   disconnectedCallback() {
     super.disconnectedCallback();
     this.resizeObserver?.disconnect();

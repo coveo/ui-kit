@@ -1,7 +1,8 @@
 import {css} from 'lit';
 
-// TODO: reference tailind globals!!!
 export default css`
+  @reference '../../../utils/tailwind.global.tw.css';
+
   @layer components {
     :host {
       @apply text-on-background text-lg;
