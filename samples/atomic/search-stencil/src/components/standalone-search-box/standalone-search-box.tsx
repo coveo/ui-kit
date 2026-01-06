@@ -23,8 +23,7 @@ export class StandaloneSearchBox {
       <atomic-search-interface id="searchbox" reflect-state-in-url="false">
         <atomic-search-box
           redirection-url="/search"
-          //@ts-expect-error lit does not provide typings for custom events
-          onRedirect={(e) => {
+          onRedirect={(e: CustomEvent) => {
             e.preventDefault();
             const {redirectTo, value} = e.detail;
             const path = `${redirectTo}#q=${value}`;

@@ -41,8 +41,7 @@ export class AppRoot {
             redirection-url={
               Router.activePath === homePath ? searchPath : undefined
             }
-            //@ts-expect-error lit does not provide typings for custom events
-            onRedirect={(e) => {
+            onRedirect={(e: CustomEvent) => {
               e.preventDefault();
               const {redirectTo, value} = e.detail;
               const path = `${redirectTo}#q=${value}`;
