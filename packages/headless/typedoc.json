@@ -1,5 +1,4 @@
 {
-  "name": "Coveo Headless",
   "highlightLanguages": [
     "typescript",
     "javascript",
@@ -11,6 +10,7 @@
   ],
   "projectDocuments": [
     "source_docs/coveo-headless-home.md",
+    "source_docs/relevance-generative-answering.md",
     "source_docs/headless-code-samples.md",
     "source_docs/coveo-headless-usage.md",
     "source_docs/dependent-facets.md",
