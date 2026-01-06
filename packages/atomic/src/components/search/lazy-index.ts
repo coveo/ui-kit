@@ -53,6 +53,8 @@ export default {
     await import('./atomic-rating-facet/atomic-rating-facet.js'),
   'atomic-rating-range-facet': async () =>
     await import('./atomic-rating-range-facet/atomic-rating-range-facet.js'),
+  'atomic-refine-modal': async () =>
+    await import('./atomic-refine-modal/atomic-refine-modal.js'),
   'atomic-refine-toggle': async () =>
     await import('./atomic-refine-toggle/atomic-refine-toggle.js'),
   'atomic-relevance-inspector': async () =>
@@ -166,8 +168,10 @@ export default {
     await import(
       './atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.js'
     ),
-  'atomic-smart-snippet': async () =>
-    await import('./atomic-smart-snippet/atomic-smart-snippet.js'),
+  'atomic-smart-snippet-suggestions': async () =>
+    await import(
+      './atomic-smart-snippet-suggestions/atomic-smart-snippet-suggestions.js'
+    ),
   'atomic-sort-dropdown': async () =>
     await import('./atomic-sort-dropdown/atomic-sort-dropdown.js'),
   'atomic-sort-expression': async () =>

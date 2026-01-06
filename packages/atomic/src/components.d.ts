@@ -851,18 +851,6 @@ export namespace Components {
   >;
     }
     /**
-     * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
-     */
-    interface AtomicRefineModal {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter": number;
-        "isOpen": boolean;
-        "openButton"?: HTMLElement;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
@@ -922,31 +910,6 @@ export namespace Components {
     interface AtomicSmartSnippetSource {
         "anchorAttributes"?: Attr[];
         "source": Result;
-    }
-    /**
-     * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
-     * You can style the snippets by inserting a template element like this:
-     * ```html
-     * <atomic-smart-snippet-suggestions>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet-suggestions>
-     * ```
-     */
-    interface AtomicSmartSnippetSuggestions {
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
-         */
-        "headingLevel": number;
-        /**
-          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
     }
     /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
@@ -1537,16 +1500,6 @@ declare global {
         new (): HTMLAtomicRecsResultTemplateElement;
     };
     /**
-     * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
-     */
-    interface HTMLAtomicRefineModalElement extends Components.AtomicRefineModal, HTMLStencilElement {
-    }
-    var HTMLAtomicRefineModalElement: {
-        prototype: HTMLAtomicRefineModalElement;
-        new (): HTMLAtomicRefineModalElement;
-    };
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface HTMLAtomicResultPlaceholderElement extends Components.AtomicResultPlaceholder, HTMLStencilElement {
@@ -1634,27 +1587,6 @@ declare global {
     var HTMLAtomicSmartSnippetSourceElement: {
         prototype: HTMLAtomicSmartSnippetSourceElement;
         new (): HTMLAtomicSmartSnippetSourceElement;
-    };
-    /**
-     * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
-     * You can style the snippets by inserting a template element like this:
-     * ```html
-     * <atomic-smart-snippet-suggestions>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet-suggestions>
-     * ```
-     */
-    interface HTMLAtomicSmartSnippetSuggestionsElement extends Components.AtomicSmartSnippetSuggestions, HTMLStencilElement {
-    }
-    var HTMLAtomicSmartSnippetSuggestionsElement: {
-        prototype: HTMLAtomicSmartSnippetSuggestionsElement;
-        new (): HTMLAtomicSmartSnippetSuggestionsElement;
     };
     interface HTMLAtomicStencilFacetDateInputElementEventMap {
         "atomic/dateInputApply": any;
@@ -1748,13 +1680,11 @@ declare global {
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-recs-result": HTMLAtomicRecsResultElement;
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
-        "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
         "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
         "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
-        "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
@@ -2541,18 +2471,6 @@ declare namespace LocalJSX {
   >;
     }
     /**
-     * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
-     */
-    interface AtomicRefineModal {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter"?: number;
-        "isOpen"?: boolean;
-        "openButton"?: HTMLElement;
-    }
-    /**
      * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
      */
     interface AtomicResultPlaceholder {
@@ -2624,31 +2542,6 @@ declare namespace LocalJSX {
         "onCancelPendingSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
         "onSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
         "source": Result;
-    }
-    /**
-     * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
-     * You can style the snippets by inserting a template element like this:
-     * ```html
-     * <atomic-smart-snippet-suggestions>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet-suggestions>
-     * ```
-     */
-    interface AtomicSmartSnippetSuggestions {
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
-         */
-        "headingLevel"?: number;
-        /**
-          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
     }
     /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
@@ -2793,13 +2686,11 @@ declare namespace LocalJSX {
         "atomic-recs-list": AtomicRecsList;
         "atomic-recs-result": AtomicRecsResult;
         "atomic-recs-result-template": AtomicRecsResultTemplate;
-        "atomic-refine-modal": AtomicRefineModal;
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-search-box": AtomicSearchBox;
         "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
         "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
         "atomic-smart-snippet-source": AtomicSmartSnippetSource;
-        "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
@@ -2906,11 +2797,6 @@ declare module "@stencil/core" {
              */
             "atomic-recs-result-template": LocalJSX.AtomicRecsResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicRecsResultTemplateElement>;
             /**
-             * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
-             * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
-             */
-            "atomic-refine-modal": LocalJSX.AtomicRefineModal & JSXBase.HTMLAttributes<HTMLAtomicRefineModalElement>;
-            /**
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
@@ -2925,22 +2811,6 @@ declare module "@stencil/core" {
              */
             "atomic-smart-snippet-feedback-modal": LocalJSX.AtomicSmartSnippetFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetFeedbackModalElement>;
             "atomic-smart-snippet-source": LocalJSX.AtomicSmartSnippetSource & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSourceElement>;
-            /**
-             * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
-             * You can style the snippets by inserting a template element like this:
-             * ```html
-             * <atomic-smart-snippet-suggestions>
-             *   <template>
-             *     <style>
-             *       b {
-             *         color: blue;
-             *       }
-             *     </style>
-             *   </template>
-             * </atomic-smart-snippet-suggestions>
-             * ```
-             */
-            "atomic-smart-snippet-suggestions": LocalJSX.AtomicSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSuggestionsElement>;
             /**
              * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
              * Internal component made to be integrated in a TimeframeFacet.
