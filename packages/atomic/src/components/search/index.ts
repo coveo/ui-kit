@@ -18,6 +18,7 @@ export {AtomicHtml} from './atomic-html/atomic-html.js';
 export {AtomicLoadMoreResults} from './atomic-load-more-results/atomic-load-more-results.js';
 export {AtomicNoResults} from './atomic-no-results/atomic-no-results.js';
 export {AtomicNotifications} from './atomic-notifications/atomic-notifications.js';
+export {AtomicNumericFacet} from './atomic-numeric-facet/atomic-numeric-facet.js';
 export {AtomicPager} from './atomic-pager/atomic-pager.js';
 export {AtomicPopover} from './atomic-popover/atomic-popover.js';
 export {AtomicQueryError} from './atomic-query-error/atomic-query-error.js';
@@ -25,6 +26,7 @@ export {AtomicQuerySummary} from './atomic-query-summary/atomic-query-summary.js
 export {AtomicQuickview} from './atomic-quickview/atomic-quickview.js';
 export {AtomicRatingFacet} from './atomic-rating-facet/atomic-rating-facet.js';
 export {AtomicRatingRangeFacet} from './atomic-rating-range-facet/atomic-rating-range-facet.js';
+export {AtomicRefineModal} from './atomic-refine-modal/atomic-refine-modal.js';
 export {AtomicRefineToggle} from './atomic-refine-toggle/atomic-refine-toggle.js';
 export {AtomicRelevanceInspector} from './atomic-relevance-inspector/atomic-relevance-inspector.js';
 export {AtomicResult} from './atomic-result/atomic-result.js';
@@ -65,6 +67,7 @@ export {AtomicSearchInterface} from './atomic-search-interface/atomic-search-int
 export {AtomicSearchLayout} from './atomic-search-layout/atomic-search-layout.js';
 export {AtomicSegmentedFacet} from './atomic-segmented-facet/atomic-segmented-facet.js';
 export {AtomicSegmentedFacetScrollable} from './atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.js';
+export {AtomicSmartSnippetSuggestions} from './atomic-smart-snippet-suggestions/atomic-smart-snippet-suggestions.js';
 export {AtomicSortDropdown} from './atomic-sort-dropdown/atomic-sort-dropdown.js';
 export {AtomicSortExpression} from './atomic-sort-expression/atomic-sort-expression.js';
 export {AtomicTab} from './atomic-tab/atomic-tab.js';
