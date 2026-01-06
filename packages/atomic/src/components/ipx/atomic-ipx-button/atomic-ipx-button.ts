@@ -9,19 +9,21 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import CloseIcon from '@/src/images/close.svg';
 import SearchIcon from '@/src/images/search.svg';
+import '@/src/components/common/atomic-icon/atomic-icon';
 
 const numberOrPixelValuePattern = new RegExp(/^(?=.*(?:\d+|px)$).*$/);
 
 /**
  * The `atomic-ipx-button` component represents a button that toggles the IPX modal.
  *
- * @internal
  * @part ipx-button - The main button element.
  * @part button-icon - The icon container within the button.
  * @part button-text - The text label within the button.
  * @part ipx-close-icon - The close icon.
  * @part ipx-open-icon - The open icon.
  * @part container - The container div.
+ *
+ * @cssprop --atomic-ipx-button-height - The height of the IPX button.
  */
 @customElement('atomic-ipx-button')
 @bindings()
