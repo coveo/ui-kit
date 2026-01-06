@@ -101,6 +101,9 @@ export class AtomicInsightSmartSnippet
   }
 
   willUpdate() {
+    if (!this.smartSnippetState) {
+      return;
+    }
     if (!(this.smartSnippetState.liked || this.smartSnippetState.disliked)) {
       this.feedbackSent = false;
     }

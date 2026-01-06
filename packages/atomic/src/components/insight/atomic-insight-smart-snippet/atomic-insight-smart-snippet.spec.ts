@@ -5,7 +5,6 @@ import {
 } from '@coveo/headless/insight';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {page} from 'vitest/browser';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture.js';
 import {buildFakeInsightEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/engine.js';
 import {buildFakeSmartSnippet} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/smart-snippet-controller.js';
@@ -58,12 +57,42 @@ describe('atomic-insight-smart-snippet', () => {
     element.initialize();
     await element.updateComplete;
 
+    const getShadowRoot = () => element.shadowRoot;
+
     return {
       element,
-      parts: (el: AtomicInsightSmartSnippet) => ({
-        smartSnippet: el.shadowRoot?.querySelector('[part="smart-snippet"]'),
-        body: el.shadowRoot?.querySelector('[part="body"]'),
-      }),
+      getSmartSnippet: () =>
+        getShadowRoot()?.querySelector<HTMLElement>('[part="smart-snippet"]') ??
+        null,
+      getBody: () =>
+        getShadowRoot()?.querySelector<HTMLElement>('[part="body"]') ?? null,
+      getQuestion: () =>
+        getShadowRoot()?.querySelector<HTMLElement>('[part="question"]') ??
+        null,
+      getExpandableAnswer: () =>
+        getShadowRoot()?.querySelector(
+          'atomic-smart-snippet-expandable-answer'
+        ) ?? null,
+      getFeedbackBanner: () =>
+        getShadowRoot()?.querySelector<HTMLElement>(
+          '[part="feedback-banner"]'
+        ) ?? null,
+      getSource: () =>
+        getShadowRoot()?.querySelector<HTMLElement>(
+          'atomic-smart-snippet-source'
+        ) ?? null,
+      getLikeButton: () =>
+        getShadowRoot()?.querySelector<HTMLInputElement>(
+          '[part="feedback-like-button"] input[type="radio"]'
+        ) ?? null,
+      getDislikeButton: () =>
+        getShadowRoot()?.querySelector<HTMLInputElement>(
+          '[part="feedback-dislike-button"] input[type="radio"]'
+        ) ?? null,
+      getThankYouMessage: () =>
+        getShadowRoot()?.querySelector<HTMLElement>(
+          '[part="feedback-thank-you"]'
+        ) ?? null,
     };
   };
 
@@ -97,64 +126,54 @@ describe('atomic-insight-smart-snippet', () => {
   describe('rendering', () => {
     describe('when answer is found', () => {
       it('should render the smart snippet', async () => {
-        const {parts, element} = await renderComponent({
+        const {getSmartSnippet} = await renderComponent({
           controllerState: {answerFound: true},
         });
 
-        await expect.element(parts(element).smartSnippet).toBeInTheDocument();
+        await expect.element(getSmartSnippet()).toBeInTheDocument();
       });
 
       it('should render the question', async () => {
-        const {element} = await renderComponent({
+        const {getQuestion} = await renderComponent({
           controllerState: {
             answerFound: true,
             question: 'What is AI?',
           },
         });
 
-        const questionElement = element.shadowRoot?.querySelector(
-          'h1, h2, h3, h4, h5, h6'
-        );
-        await expect.element(questionElement).toBeInTheDocument();
+        await expect.element(getQuestion()).toBeInTheDocument();
       });
 
       it('should render the expandable answer', async () => {
-        const {element} = await renderComponent({
+        const {getExpandableAnswer} = await renderComponent({
           controllerState: {answerFound: true},
         });
 
-        const answerElement = element.shadowRoot?.querySelector(
-          'atomic-smart-snippet-expandable-answer'
-        );
-        await expect.element(answerElement).toBeInTheDocument();
+        await expect.element(getExpandableAnswer()).toBeInTheDocument();
       });
 
       it('should render the feedback banner', async () => {
-        const {element} = await renderComponent({
+        const {getFeedbackBanner} = await renderComponent({
           controllerState: {answerFound: true},
         });
 
-        const feedbackBanner = element.shadowRoot?.querySelector(
-          '[part="feedback-banner"]'
-        );
-        await expect.element(feedbackBanner).toBeInTheDocument();
+        await expect.element(getFeedbackBanner()).toBeInTheDocument();
       });
     });
 
     describe('when answer is not found', () => {
       it('should not render the smart snippet', async () => {
-        const {element} = await renderComponent({
+        const {getSmartSnippet} = await renderComponent({
           controllerState: {answerFound: false},
         });
 
-        const content = element.shadowRoot?.textContent?.trim();
-        expect(content).toBe('');
+        expect(getSmartSnippet()).toBeNull();
       });
     });
 
     describe('when source is available', () => {
       it('should render the source link', async () => {
-        const {element} = await renderComponent({
+        const {getSource} = await renderComponent({
           controllerState: {
             answerFound: true,
             source: {
@@ -163,30 +182,24 @@ describe('atomic-insight-smart-snippet', () => {
               permanentid: 'test-id',
               clickUri: 'https://example.com/doc',
               uniqueId: 'unique-id',
-            },
+            } as unknown as InsightSmartSnippetState['source'],
           },
         });
 
-        const sourceElement = element.shadowRoot?.querySelector(
-          'atomic-stencil-smart-snippet-source'
-        );
-        await expect.element(sourceElement).toBeInTheDocument();
+        await expect.element(getSource()).toBeInTheDocument();
       });
     });
 
     describe('when source is not available', () => {
       it('should not render the source link', async () => {
-        const {element} = await renderComponent({
+        const {getSource} = await renderComponent({
           controllerState: {
             answerFound: true,
             source: undefined,
           },
         });
 
-        const sourceElement = element.shadowRoot?.querySelector(
-          'atomic-stencil-smart-snippet-source'
-        );
-        expect(sourceElement).toBeNull();
+        expect(getSource()).toBeNull();
       });
     });
   });
@@ -232,59 +245,51 @@ describe('atomic-insight-smart-snippet', () => {
 
   describe('feedback interactions', () => {
     it('should call like() when like button is clicked', async () => {
-      const likeSpy = vi.fn();
-      mockSmartSnippet.like = likeSpy;
-
-      await renderComponent({
+      const {element, getLikeButton} = await renderComponent({
         controllerState: {answerFound: true},
       });
 
-      const likeButton = page.getByRole('radio', {name: 'yes'});
-      await likeButton.click();
+      const likeSpy = vi.fn();
+      element.smartSnippet.like = likeSpy;
+
+      getLikeButton()?.click();
 
       expect(likeSpy).toHaveBeenCalled();
     });
 
     it('should call dislike() when dislike button is clicked', async () => {
-      const dislikeSpy = vi.fn();
-      mockSmartSnippet.dislike = dislikeSpy;
-
-      await renderComponent({
+      const {element, getDislikeButton} = await renderComponent({
         controllerState: {answerFound: true},
       });
 
-      const dislikeButton = page.getByRole('radio', {name: 'no'});
-      await dislikeButton.click();
+      const dislikeSpy = vi.fn();
+      element.smartSnippet.dislike = dislikeSpy;
+
+      getDislikeButton()?.click();
 
       expect(dislikeSpy).toHaveBeenCalled();
     });
 
     it('should show thank you message when liked', async () => {
-      const {element} = await renderComponent({
+      const {getThankYouMessage} = await renderComponent({
         controllerState: {
           answerFound: true,
           liked: true,
         },
       });
 
-      const thankYouMessage = element.shadowRoot?.querySelector(
-        '[part="feedback-thank-you"]'
-      );
-      await expect.element(thankYouMessage).toBeInTheDocument();
+      await expect.element(getThankYouMessage()).toBeInTheDocument();
     });
 
     it('should show thank you message when disliked', async () => {
-      const {element} = await renderComponent({
+      const {getThankYouMessage} = await renderComponent({
         controllerState: {
           answerFound: true,
           disliked: true,
         },
       });
 
-      const thankYouMessage = element.shadowRoot?.querySelector(
-        '[part="feedback-thank-you"]'
-      );
-      await expect.element(thankYouMessage).toBeInTheDocument();
+      await expect.element(getThankYouMessage()).toBeInTheDocument();
     });
   });
 
@@ -348,37 +353,35 @@ describe('atomic-insight-smart-snippet', () => {
 
   describe('expand/collapse interactions', () => {
     it('should call expand() when expand event is triggered', async () => {
-      const expandSpy = vi.fn();
-      mockSmartSnippet.expand = expandSpy;
-
-      const {element} = await renderComponent({
+      const {element, getExpandableAnswer} = await renderComponent({
         controllerState: {answerFound: true},
       });
 
-      const expandableAnswer = element.shadowRoot?.querySelector(
-        'atomic-smart-snippet-expandable-answer'
+      const expandSpy = vi.fn();
+      element.smartSnippet.expand = expandSpy;
+
+      getExpandableAnswer()?.dispatchEvent(
+        new CustomEvent('expand', {bubbles: true, composed: true})
       );
-      expandableAnswer?.dispatchEvent(new CustomEvent('expand'));
       await element.updateComplete;
 
       expect(expandSpy).toHaveBeenCalled();
     });
 
     it('should call collapse() when collapse event is triggered', async () => {
-      const collapseSpy = vi.fn();
-      mockSmartSnippet.collapse = collapseSpy;
-
-      const {element} = await renderComponent({
+      const {element, getExpandableAnswer} = await renderComponent({
         controllerState: {
           answerFound: true,
           expanded: true,
         },
       });
 
-      const expandableAnswer = element.shadowRoot?.querySelector(
-        'atomic-smart-snippet-expandable-answer'
+      const collapseSpy = vi.fn();
+      element.smartSnippet.collapse = collapseSpy;
+
+      getExpandableAnswer()?.dispatchEvent(
+        new CustomEvent('collapse', {bubbles: true, composed: true})
       );
-      expandableAnswer?.dispatchEvent(new CustomEvent('collapse'));
       await element.updateComplete;
 
       expect(collapseSpy).toHaveBeenCalled();
