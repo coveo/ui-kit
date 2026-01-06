@@ -21,10 +21,9 @@ import {ResultContextEvent} from '@/src/components/search/result-template-compon
  * @part source-url
  * @part source-title
  * @internal
- * @deprecated use atomic-smart-snippet-source instead. this component is only meant to be used with Stencil components.
  */
 @Component({
-  tag: 'atomic-stencil-smart-snippet-source',
+  tag: 'atomic-smart-snippet-source',
   shadow: false,
 })
 export class AtomicSmartSnippetSource

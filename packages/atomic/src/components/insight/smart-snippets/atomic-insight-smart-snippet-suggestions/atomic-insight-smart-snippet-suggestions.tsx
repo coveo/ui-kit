@@ -161,7 +161,7 @@ export class AtomicInsightSmartSnippetSuggestions
   private renderSource(questionAnswerId: string, source: Result) {
     return (
       <SmartSnippetSuggestionsFooter i18n={this.bindings.i18n}>
-        <atomic-stencil-smart-snippet-source
+        <atomic-smart-snippet-source
           anchorAttributes={getAttributesFromLinkSlotContent(
             this.host,
             'source-anchor-attributes'
@@ -180,7 +180,7 @@ export class AtomicInsightSmartSnippetSuggestions
             this.smartSnippetQuestionsList.selectSource(questionAnswerId)
           }
           source={source}
-        ></atomic-stencil-smart-snippet-source>
+        ></atomic-smart-snippet-source>
       </SmartSnippetSuggestionsFooter>
     );
   }
