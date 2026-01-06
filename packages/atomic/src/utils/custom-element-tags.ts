@@ -141,6 +141,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-search-layout',
   'atomic-segmented-facet',
   'atomic-segmented-facet-scrollable',
+  'atomic-smart-snippet-answer',
   'atomic-smart-snippet-collapse-wrapper',
   'atomic-smart-snippet-expandable-answer',
   'atomic-smart-snippet-suggestions',
