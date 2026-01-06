@@ -79,8 +79,8 @@ searchInterface.i18n.addResourceBundle('en', 'translation', {
 The facet will determine the filter to apply based on the current selected path of values. 
 This can offer a powerful navigational experience, quickly leading a user to relevant results. 
 
-  - This component uses `;` to separate individual values, and the character that's defined with the `delimiting-character` attribute to separate hierarchical levels within each value.
-Set this attribute to `|` instead of using the default, which is `;`.
+  - This component uses `;` to separate individual values in the multi-value field, and the character defined by the `delimiting-character` attribute to separate hierarchical levels within each value.
+    We recommend setting `delimiting-character="|"` so that `;` continues to separate individual values, while `|` separates hierarchical levels within each value.
 
   - The following is an example of the recommended hierarchical formatting:
 `clothing; clothing|sale; clothing|sale|shoes; clothing|sale|shoes|kids; clothing|sale|shoes|kids|sneakers;`
