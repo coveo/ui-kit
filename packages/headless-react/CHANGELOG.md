@@ -1,3 +1,9 @@
+## <small>2.8.1 (2026-01-06)</small>
+
+* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+
+
+
 ## 2.8.0 (2025-12-12)
 
 * feat: migrating content from docs.coveo.com to typedoc (#6624) ([8a85527](https://github.com/coveo/ui-kit/commits/8a85527)), closes [#6624](https://github.com/coveo/ui-kit/issues/6624)
