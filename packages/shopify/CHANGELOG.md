@@ -1,3 +1,9 @@
+## <small>1.9.10 (2026-01-06)</small>
+
+* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+
+
+
 ## <small>1.9.9 (2025-11-05)</small>
 
 * fix(shopify): correct malformed PR reference in CHANGELOG (#6330) ([74b1de7](https://github.com/coveo/ui-kit/commits/74b1de7)), closes [#6330](https://github.com/coveo/ui-kit/issues/6330)

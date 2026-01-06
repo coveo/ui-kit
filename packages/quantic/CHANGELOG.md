@@ -1,3 +1,9 @@
+## <small>3.34.1 (2026-01-06)</small>
+
+* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+
+
+
 ## 3.34.0 (2025-12-10)
 
 * fix(quantic): better handle pushing recent results to avoid salesforce proxy extensibility errors (# ([c0b0b71](https://github.com/coveo/ui-kit/commits/c0b0b71)), closes [#6706](https://github.com/coveo/ui-kit/issues/6706)
