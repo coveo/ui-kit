@@ -9,7 +9,7 @@
   "module": "./dist/bueno.esm.js",
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "files": [
     "dist/"
   ],
