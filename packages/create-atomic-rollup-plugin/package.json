@@ -1,6 +1,6 @@
 {
   "name": "@coveo/create-atomic-rollup-plugin",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Rollup plugin for resolving Coveo Atomic dependencies from CDN or npm",
   "type": "module",
   "main": "dist/index.js",

@@ -59,6 +59,7 @@ export {AtomicResultTemplate} from './atomic-result-template/atomic-result-templ
 export {AtomicResultText} from './atomic-result-text/atomic-result-text.js';
 export {AtomicResultTimespan} from './atomic-result-timespan/atomic-result-timespan.js';
 export {AtomicResultsPerPage} from './atomic-results-per-page/atomic-results-per-page.js';
+export {AtomicSearchBox} from './atomic-search-box/atomic-search-box.js';
 export {AtomicSearchBoxInstantResults} from './atomic-search-box-instant-results/atomic-search-box-instant-results.js';
 export {AtomicSearchBoxQuerySuggestions} from './atomic-search-box-query-suggestions/atomic-search-box-query-suggestions.js';
 export {AtomicSearchBoxRecentQueries} from './atomic-search-box-recent-queries/atomic-search-box-recent-queries.js';
