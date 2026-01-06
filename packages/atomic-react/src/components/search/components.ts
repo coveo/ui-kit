@@ -24,6 +24,7 @@ import {
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
   AtomicNoResults as LitAtomicNoResults,
   AtomicNotifications as LitAtomicNotifications,
+  AtomicNumericFacet as LitAtomicNumericFacet,
   AtomicNumericRange as LitAtomicNumericRange,
   AtomicPager as LitAtomicPager,
   AtomicPopover as LitAtomicPopover,
@@ -33,6 +34,7 @@ import {
   AtomicRatingFacet as LitAtomicRatingFacet,
   AtomicRatingRangeFacet as LitAtomicRatingRangeFacet,
   AtomicRecsInterface as LitAtomicRecsInterface,
+  AtomicRefineModal as LitAtomicRefineModal,
   AtomicRefineToggle as LitAtomicRefineToggle,
   AtomicResult as LitAtomicResult,
   AtomicResultBadge as LitAtomicResultBadge,
@@ -69,6 +71,7 @@ import {
   AtomicSearchLayout as LitAtomicSearchLayout,
   AtomicSegmentedFacet as LitAtomicSegmentedFacet,
   AtomicSegmentedFacetScrollable as LitAtomicSegmentedFacetScrollable,
+  AtomicSmartSnippetSuggestions as LitAtomicSmartSnippetSuggestions,
   AtomicSortDropdown as LitAtomicSortDropdown,
   AtomicSortExpression as LitAtomicSortExpression,
   AtomicTab as LitAtomicTab,
@@ -230,6 +233,12 @@ export const AtomicNotifications = createComponent({
   elementClass: LitAtomicNotifications,
 });
 
+export const AtomicNumericFacet = createComponent({
+  tagName: 'atomic-numeric-facet',
+  react: React,
+  elementClass: LitAtomicNumericFacet,
+});
+
 export const AtomicNumericRange = createComponent({
   tagName: 'atomic-numeric-range',
   react: React,
@@ -282,6 +291,12 @@ export const AtomicRecsInterface = createComponent({
   tagName: 'atomic-recs-interface',
   react: React,
   elementClass: LitAtomicRecsInterface,
+});
+
+export const AtomicRefineModal = createComponent({
+  tagName: 'atomic-refine-modal',
+  react: React,
+  elementClass: LitAtomicRefineModal,
 });
 
 export const AtomicRefineToggle = createComponent({
@@ -498,6 +513,12 @@ export const AtomicSegmentedFacetScrollable = createComponent({
   tagName: 'atomic-segmented-facet-scrollable',
   react: React,
   elementClass: LitAtomicSegmentedFacetScrollable,
+});
+
+export const AtomicSmartSnippetSuggestions = createComponent({
+  tagName: 'atomic-smart-snippet-suggestions',
+  react: React,
+  elementClass: LitAtomicSmartSnippetSuggestions,
 });
 
 export const AtomicSortDropdown = createComponent({
