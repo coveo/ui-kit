@@ -1,6 +1,6 @@
 {
   "name": "@coveo/create-atomic-rollup-plugin",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Rollup plugin for resolving Coveo Atomic dependencies from CDN or npm",
   "type": "module",
   "main": "dist/index.js",
@@ -37,5 +37,8 @@
   "devDependencies": {
     "@types/node": "catalog:",
     "typescript": "catalog:"
+  },
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
   }
 }
