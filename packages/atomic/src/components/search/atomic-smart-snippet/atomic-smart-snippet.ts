@@ -19,7 +19,6 @@ import {renderSnippetQuestion} from '@/src/components/common/smart-snippets/atom
 import {renderSnippetTruncatedAnswer} from '@/src/components/common/smart-snippets/atomic-smart-snippet/snippet-truncated-answer';
 import {renderSnippetWrapper} from '@/src/components/common/smart-snippets/atomic-smart-snippet/snippet-wrapper';
 import {renderSmartSnippetFeedbackBanner} from '@/src/components/common/smart-snippets/smart-snippet-feedback-banner';
-import '@/src/components/common/smart-snippets/atomic-smart-snippet-source';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {arrayConverter} from '@/src/converters/array-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
@@ -283,6 +282,7 @@ export class AtomicSmartSnippet
         this.tabManagerState?.activeTab
       ) && this.smartSnippetState.answerFound;
 
+    this.classList.toggle('atomic-hidden', !shouldDisplay);
     return html`${when(shouldDisplay, () => this.renderContent())}`;
   }
 
