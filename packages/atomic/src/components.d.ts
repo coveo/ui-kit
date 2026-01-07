@@ -16,8 +16,6 @@ import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insi
 import { InteractiveResult as RecsInteractiveResult, Result as RecsResult } from "@coveo/headless/recommendation";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { AnyBindings } from "./components/common/interface/bindings";
-import { i18n } from "i18next";
-import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
 export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InteractiveCitation, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, UserAction as IUserAction } from "@coveo/headless/insight";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
@@ -29,8 +27,6 @@ export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insi
 export { InteractiveResult as RecsInteractiveResult, Result as RecsResult } from "@coveo/headless/recommendation";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { AnyBindings } from "./components/common/interface/bindings";
-export { i18n } from "i18next";
-export { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
 export namespace Components {
     /**
      * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
@@ -804,24 +800,6 @@ export namespace Components {
         "rangeSetter": (range: DateRangeRequest) => void;
     }
     /**
-     * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
-     * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
-     * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
-     * use native Elements.
-     */
-    interface AtomicSuggestionRenderer {
-        "i18n": i18n;
-        "id": string;
-        "index": number;
-        "isDoubleList": boolean;
-        "isSelected": boolean;
-        "lastIndex": number;
-        "onClick"?: (e: Event) => void;
-        "onMouseOver"?: (e: Event) => void;
-        "side": 'left' | 'right';
-        "suggestion": SearchBoxSuggestionElement;
-    }
-    /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
      */
@@ -1320,18 +1298,6 @@ declare global {
         new (): HTMLAtomicStencilFacetDateInputElement;
     };
     /**
-     * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
-     * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
-     * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
-     * use native Elements.
-     */
-    interface HTMLAtomicSuggestionRendererElement extends Components.AtomicSuggestionRenderer, HTMLStencilElement {
-    }
-    var HTMLAtomicSuggestionRendererElement: {
-        prototype: HTMLAtomicSuggestionRendererElement;
-        new (): HTMLAtomicSuggestionRendererElement;
-    };
-    /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
      */
@@ -1382,7 +1348,6 @@ declare global {
         "atomic-recs-result": HTMLAtomicRecsResultElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
-        "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
     }
 }
@@ -2130,24 +2095,6 @@ declare namespace LocalJSX {
         "rangeSetter": (range: DateRangeRequest) => void;
     }
     /**
-     * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
-     * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
-     * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
-     * use native Elements.
-     */
-    interface AtomicSuggestionRenderer {
-        "i18n": i18n;
-        "id": string;
-        "index": number;
-        "isDoubleList": boolean;
-        "isSelected": boolean;
-        "lastIndex": number;
-        "onClick"?: (e: Event) => void;
-        "onMouseOver"?: (e: Event) => void;
-        "side": 'left' | 'right';
-        "suggestion": SearchBoxSuggestionElement;
-    }
-    /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
      */
@@ -2250,7 +2197,6 @@ declare namespace LocalJSX {
         "atomic-recs-result": AtomicRecsResult;
         "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
-        "atomic-suggestion-renderer": AtomicSuggestionRenderer;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
     }
 }
@@ -2355,13 +2301,6 @@ declare module "@stencil/core" {
              * Internal component made to be integrated in a TimeframeFacet.
              */
             "atomic-stencil-facet-date-input": LocalJSX.AtomicStencilFacetDateInput & JSXBase.HTMLAttributes<HTMLAtomicStencilFacetDateInputElement>;
-            /**
-             * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
-             * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
-             * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
-             * use native Elements.
-             */
-            "atomic-suggestion-renderer": LocalJSX.AtomicSuggestionRenderer & JSXBase.HTMLAttributes<HTMLAtomicSuggestionRendererElement>;
             /**
              * A facet is a list of values for a certain field occurring in the results.
              * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
