@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InteractiveCitation, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, UserAction as IUserAction } from "@coveo/headless/insight";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
@@ -18,7 +18,7 @@ import { RecsStore } from "./components/recommendations/atomic-recs-interface/st
 import { AnyBindings } from "./components/common/interface/bindings";
 import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
-export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InteractiveCitation, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, UserAction as IUserAction } from "@coveo/headless/insight";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
