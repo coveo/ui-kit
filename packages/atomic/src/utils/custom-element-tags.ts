@@ -65,6 +65,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-insight-pager',
   'atomic-insight-query-error',
   'atomic-insight-result-template',
+  'atomic-insight-smart-snippet',
   'atomic-insight-tab',
   'atomic-insight-tabs',
   'atomic-ipx-tab',
