@@ -51,7 +51,7 @@ describe('atomic-smart-snippet-answer', () => {
   };
 
   describe('rendering', () => {
-    it('should render answer part with sanitized HTML content', async () => {
+    it('should render answer part with safe HTML content', async () => {
       const {answer} = await renderComponent({
         htmlContent: '<p>Test <strong>content</strong></p>',
       });
