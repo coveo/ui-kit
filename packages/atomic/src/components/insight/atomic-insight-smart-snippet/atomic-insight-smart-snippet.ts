@@ -20,7 +20,7 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {randomID} from '@/src/utils/utils';
 import '@/src/components/common/atomic-smart-snippet-collapse-wrapper/atomic-smart-snippet-collapse-wrapper';
 import '@/src/components/common/atomic-smart-snippet-expandable-answer/atomic-smart-snippet-expandable-answer';
-import {when} from 'lit-html/directives/when.js';
+import {when} from 'lit/directives/when.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import styles from './atomic-insight-smart-snippet.tw.css.js';
 
