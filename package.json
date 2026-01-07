@@ -33,22 +33,22 @@
     "@biomejs/biome": "2.1.4",
     "@coveo/ci": "workspace:*",
     "@cspell/dict-fr-fr": "2.3.2",
-    "@tsconfig/node20": "20.1.6",
+    "@tsconfig/node20": "20.1.8",
     "@types/jest": "catalog:",
     "@types/node": "catalog:",
-    "concurrently": "9.2.0",
-    "cspell": "9.2.0",
+    "concurrently": "9.2.1",
+    "cspell": "9.4.0",
     "esbuild": "catalog:",
     "esbuild-plugin-alias": "0.2.1",
     "esbuild-plugin-umd-wrapper": "3.0.0",
     "husky": "9.1.7",
     "knip": "5.62.0",
-    "lint-staged": "16.1.2",
+    "lint-staged": "16.2.7",
     "@playwright/mcp": "catalog:",
     "playwright": "catalog:",
     "publint": "0.3.12",
-    "semver": "7.7.2",
-    "turbo": "2.5.5",
+    "semver": "7.7.3",
+    "turbo": "2.7.2",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
@@ -80,5 +80,5 @@
     "node": "^22.14.0 || ^24.11.0",
     "pnpm": ">=10.0.0"
   },
-  "packageManager": "pnpm@10.24.0"
+  "packageManager": "pnpm@10.26.2"
 }
