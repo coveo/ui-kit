@@ -1,5 +1,7 @@
 // Auto-generated file
 export default {
+  'atomic-insight-edit-toggle': async () =>
+    await import('./atomic-insight-edit-toggle/atomic-insight-edit-toggle.js'),
   'atomic-insight-full-search-button': async () =>
     await import(
       './atomic-insight-full-search-button/atomic-insight-full-search-button.js'
@@ -16,9 +18,9 @@ export default {
     await import('./atomic-insight-pager/atomic-insight-pager.js'),
   'atomic-insight-query-error': async () =>
     await import('./atomic-insight-query-error/atomic-insight-query-error.js'),
-  'atomic-insight-smart-snippet': async () =>
+  'atomic-insight-result-template': async () =>
     await import(
-      './atomic-insight-smart-snippet/atomic-insight-smart-snippet.js'
+      './atomic-insight-result-template/atomic-insight-result-template.js'
     ),
   'atomic-insight-tab': async () =>
     await import('./atomic-insight-tab/atomic-insight-tab.js'),
