@@ -15,7 +15,7 @@ import styles from './atomic-smart-snippet-answer.tw.css';
  *
  * @part answer - The container displaying the full document excerpt.
  *
- * @event answerSizeUpdated - Dispatched when the answer size changes.
+ * @event answerSizeUpdated - Dispatched when the content of the snippet size changes.
  * @event selectInlineLink - Dispatched when an inline link is selected.
  * @event beginDelayedSelectInlineLink - Dispatched when a delayed selection begins for an inline link.
  * @event cancelPendingSelectInlineLink - Dispatched when a pending selection is canceled for an inline link.
