@@ -8,6 +8,8 @@ export default {
     await import('./atomic-insight-interface/atomic-insight-interface.js'),
   'atomic-insight-layout': async () =>
     await import('./atomic-insight-layout/atomic-insight-layout.js'),
+  'atomic-insight-pager': async () =>
+    await import('./atomic-insight-pager/atomic-insight-pager.js'),
   'atomic-insight-tab': async () =>
     await import('./atomic-insight-tab/atomic-insight-tab.js'),
   'atomic-insight-tabs': async () =>
