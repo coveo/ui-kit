@@ -29,10 +29,3 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {};
-
-export const WithTooltip: Story = {
-  name: 'With tooltip',
-  args: {
-    tooltip: 'Go to full search',
-  },
-};
