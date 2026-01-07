@@ -1,0 +1,54 @@
+# Label PRs that require cross-team reviews
+# Used by scripts/reports/pr-review-times to generate reports
+name: Label Cross Team
+on:
+  pull_request_target:
+    types: [review_requested, opened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - name: Label Cross Team
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            try {
+              const { data: pr } = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+              });
+
+              const teams = pr.requested_teams || [];
+              console.log(`Requested teams: ${teams.map((t) => t.slug).join(', ')}`);
+
+              if (teams.length > 1) {
+                const hasLabel = pr.labels.some((l) => l.name === 'cross-team');
+                if (hasLabel) {
+                  console.log(`'cross-team' label already present. Skipping.`);
+                } else {
+                  console.log(`Found ${teams.length} teams requested. Adding 'cross-team' label.`);
+                  await github.rest.issues.addLabels({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: context.issue.number,
+                    labels: ['cross-team'],
+                  });
+                }
+              } else {
+                console.log(`Only ${teams.length} teams requested. No label needed.`);
+              }
+            } catch (error) {
+              console.error('Error in label-cross-team action:', error);
+              core.setFailed(error.message);
+            }
