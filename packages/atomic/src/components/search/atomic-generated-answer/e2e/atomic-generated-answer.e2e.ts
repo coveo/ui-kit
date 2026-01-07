@@ -214,7 +214,6 @@ test.describe('atomic-generated-answer', () => {
               expect(requestBodyDetails.hallucinationFree).toBe(false);
               expect(requestBodyDetails.documented).toBe(null);
               expect(requestBodyDetails.readable).toBe(true);
-              ``;
               expect(requestBody.correctAnswerUrl).toBe(
                 'https://www.example.com/correct-answer'
               );
