@@ -1,5 +1,7 @@
 // Auto-generated file
 export default {
+  'atomic-insight-edit-toggle': async () =>
+    await import('./atomic-insight-edit-toggle/atomic-insight-edit-toggle.js'),
   'atomic-insight-full-search-button': async () =>
     await import(
       './atomic-insight-full-search-button/atomic-insight-full-search-button.js'

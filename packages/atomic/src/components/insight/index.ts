@@ -1,4 +1,5 @@
 // Auto-generated file
+export {AtomicInsightEditToggle} from './atomic-insight-edit-toggle/atomic-insight-edit-toggle.js';
 export {AtomicInsightFullSearchButton} from './atomic-insight-full-search-button/atomic-insight-full-search-button.js';
 export {AtomicInsightGenerateAnswerButton} from './atomic-insight-generate-answer-button/atomic-insight-generate-answer-button.js';
 export {AtomicInsightInterface} from './atomic-insight-interface/atomic-insight-interface.js';

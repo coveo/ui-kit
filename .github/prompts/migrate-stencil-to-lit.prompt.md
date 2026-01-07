@@ -143,11 +143,14 @@ export class AtomicIcon
 
 **Conversion:** `../` → `@/src/` + full path from `src/` directory. Keep `./` (same-dir) imports.
 
+**Exception - SVG imports:** SVG files (icons, assets) **cannot** use path aliases. Always use relative paths for `.svg` imports.
+
 **Examples:**
 ```typescript
 '../../../utils/initialization-utils' → '@/src/utils/initialization-utils'
 '../../common/query-error/details' → '@/src/components/common/query-error/details'
 './local-helper' → './local-helper' // ✅ Same-dir OK
+'../../../assets/icons/arrow.svg' → '../../../assets/icons/arrow.svg' // ✅ SVG must use relative path
 ```
 
 **Verify after migration:** `grep -E "from '\.\./|from \"\.\\./" atomic-{name}.ts` → zero matches
@@ -307,15 +310,16 @@ import {renderButton} from '../../../common/button';
 import {bindings} from '../../../../decorators/bindings';
 ```
 
-**✅ All imports use path aliases:**
+**✅ All imports use path aliases (except SVG):**
 
 ```typescript
 import {renderButton} from '@/src/components/common/button';
 import {bindings} from '@/src/decorators/bindings';
 import {localHelper} from './local-helper'; // Same-dir OK
+import ArrowIcon from '../../../assets/icons/arrow.svg'; // SVG must use relative path
 ```
 
-Verify: `grep -E "from '\.\./|from \"\.\\./" atomic-{name}.ts` → zero matches
+Verify: `grep -E "from '\.\./|from \"\.\\./" atomic-{name}.ts` → only SVG imports should match
 
 **❌ Including empty styles:**
 
