@@ -30,6 +30,7 @@ import {
   SearchBoxSuggestionElement,
 } from '../../common/suggestions/suggestions-types';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import '@coveo/atomic-legacy/atomic-suggestion-renderer';
 
 /**
  * @internal
