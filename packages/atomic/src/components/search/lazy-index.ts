@@ -53,6 +53,8 @@ export default {
     await import('./atomic-rating-facet/atomic-rating-facet.js'),
   'atomic-rating-range-facet': async () =>
     await import('./atomic-rating-range-facet/atomic-rating-range-facet.js'),
+  'atomic-refine-modal': async () =>
+    await import('./atomic-refine-modal/atomic-refine-modal.js'),
   'atomic-refine-toggle': async () =>
     await import('./atomic-refine-toggle/atomic-refine-toggle.js'),
   'atomic-relevance-inspector': async () =>
@@ -144,6 +146,8 @@ export default {
     await import('./atomic-result-timespan/atomic-result-timespan.js'),
   'atomic-results-per-page': async () =>
     await import('./atomic-results-per-page/atomic-results-per-page.js'),
+  'atomic-search-box': async () =>
+    await import('./atomic-search-box/atomic-search-box.js'),
   'atomic-search-box-instant-results': async () =>
     await import(
       './atomic-search-box-instant-results/atomic-search-box-instant-results.js'

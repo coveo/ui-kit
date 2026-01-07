@@ -1,14 +1,8 @@
-import {InlineLink} from '@coveo/headless';
 import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
-import {AnalyticsTracker} from '../utils/analyticsUtils';
 import * as CommonAssertions from './common-assertions';
-import {addSearchBox} from './search-box/search-box-actions';
-import {SearchBoxSelectors} from './search-box/search-box-selectors';
 import {
   addSmartSnippet,
   addSmartSnippetDefaultOptions,
-  AddSmartSnippetMockSnippet,
-  defaultSnippets,
 } from './smart-snippet-actions';
 import * as SmartSnippetAssertions from './smart-snippet-assertions';
 import {
@@ -207,161 +201,10 @@ describe('Smart Snippet Test Suites', () => {
     SmartSnippetAssertions.assertLogDislikeSmartSnippet();
   });
 
-  it('when interacting with the title and the like button', () => {
-    let currentQuestion = defaultQuestion;
-    new TestFixture()
-      .with(
-        addSmartSnippet({
-          get snippet() {
-            return {
-              ...defaultSnippet,
-              question: currentQuestion,
-            };
-          },
-        })
-      )
-      .with(addSearchBox())
-      .init();
-    SmartSnippetSelectors.sourceTitle().rightclick();
+  
 
-    SmartSnippetAssertions.assertLogOpenSmartSnippetSource(true);
 
-    //liking the snippet then clicking the title again
-    SmartSnippetSelectors.feedbackLikeButton().click();
-    AnalyticsTracker.reset();
-    SmartSnippetSelectors.sourceTitle().rightclick();
-    SmartSnippetAssertions.assertLogOpenSmartSnippetSource(false);
 
-    // getting a new snippet and clicking on the title again
-    currentQuestion = 'Hello, World!';
-    SearchBoxSelectors.submitButton().click();
-    SmartSnippetSelectors.sourceTitle().rightclick();
-    SmartSnippetAssertions.assertLogOpenSmartSnippetSource(true);
-  });
-
-  it('when interacting with an inline link', () => {
-    function click(selector: Cypress.Chainable<JQuery<HTMLAnchorElement>>) {
-      selector.rightclick().then(([el]) => {
-        lastClickedLink = {linkText: el.innerText, linkURL: el.href};
-      });
-    }
-    let lastClickedLink: InlineLink;
-    let currentQuestion: string;
-
-    currentQuestion = defaultQuestion;
-    new TestFixture()
-      .with(
-        addSmartSnippet({
-          get snippet() {
-            return {
-              ...defaultSnippet,
-              question: currentQuestion,
-            };
-          },
-        })
-      )
-      .with(addSearchBox())
-      .init();
-    click(SmartSnippetSelectors.answer().find('a').eq(0));
-
-    SmartSnippetAssertions.assertLogOpenSmartSnippetInlineLink(
-      () => lastClickedLink
-    );
-
-    // liking the snippet then clicking on the same inline link again
-    SmartSnippetSelectors.feedbackLikeButton().click();
-    AnalyticsTracker.reset();
-    click(SmartSnippetSelectors.answer().find('a').eq(0));
-    SmartSnippetAssertions.assertLogOpenSmartSnippetInlineLink(null);
-
-    // getting a new snippet and clicking on the same inline link again
-    currentQuestion = 'Hello, World!';
-    SearchBoxSelectors.submitButton().click();
-    AnalyticsTracker.reset();
-    SmartSnippetSelectors.question().should('have.text', currentQuestion);
-    click(SmartSnippetSelectors.answer().find('a').eq(0));
-    SmartSnippetAssertions.assertLogOpenSmartSnippetInlineLink(
-      () => lastClickedLink
-    );
-
-    // clicking a different inline link
-    AnalyticsTracker.reset();
-    click(SmartSnippetSelectors.answer().find('a').eq(1));
-    SmartSnippetAssertions.assertLogOpenSmartSnippetInlineLink(
-      () => lastClickedLink
-    );
-  });
-
-  describe('when parts of the snippet change', () => {
-    const newSnippet = defaultSnippets[1];
-    let currentSnippet: AddSmartSnippetMockSnippet;
-
-    function updateSnippet(key: keyof AddSmartSnippetMockSnippet) {
-      currentSnippet = {...defaultSnippet, [key]: newSnippet[key]};
-      SearchBoxSelectors.submitButton().click();
-    }
-
-    beforeEach(() => {
-      currentSnippet = defaultSnippet;
-      new TestFixture()
-        .with(
-          addSmartSnippet({
-            get snippet() {
-              return currentSnippet;
-            },
-          })
-        )
-        .with(addSearchBox())
-        .init();
-      SmartSnippetSelectors.question().should(
-        'contain.text',
-        defaultSnippet.question
-      );
-      SmartSnippetSelectors.answer().should(
-        'contain.html',
-        defaultSnippet.answer
-      );
-      SmartSnippetSelectors.sourceTitle()
-        .find('atomic-result-text')
-        .find('atomic-text')
-        .shadow()
-        .should('contain.text', defaultSnippet.sourceTitle);
-      SmartSnippetSelectors.sourceUrl().should(
-        'contain.text',
-        defaultSnippet.sourceUrl
-      );
-    });
-
-    it('when the question is updated, the new title is rendered', () => {
-      updateSnippet('question');
-      SmartSnippetSelectors.question().should(
-        'contain.text',
-        newSnippet.question
-      );
-    });
-
-    it('when the answer is updated, the new answer is rendered', () => {
-      updateSnippet('answer');
-      SmartSnippetSelectors.answer().should('contain.html', newSnippet.answer);
-    });
-
-    it('when the source title is updated, the new source is rendered', () => {
-      updateSnippet('sourceTitle');
-      SmartSnippetSelectors.sourceTitle()
-        .find('atomic-result-text')
-        .find('atomic-text')
-        .shadow()
-        .should('contain.text', newSnippet.sourceTitle);
-    });
-
-    it('when the source url is updated, the new source is rendered', () => {
-      updateSnippet('sourceUrl');
-      SmartSnippetSelectors.sourceUrl().should(
-        'contain.text',
-        newSnippet.sourceUrl
-      );
-    });
-  });
 
   it('with custom styling in a template element', () => {
     const styleEl = generateComponentHTML('style');

@@ -26,6 +26,7 @@ export {AtomicQuerySummary} from './atomic-query-summary/atomic-query-summary.js
 export {AtomicQuickview} from './atomic-quickview/atomic-quickview.js';
 export {AtomicRatingFacet} from './atomic-rating-facet/atomic-rating-facet.js';
 export {AtomicRatingRangeFacet} from './atomic-rating-range-facet/atomic-rating-range-facet.js';
+export {AtomicRefineModal} from './atomic-refine-modal/atomic-refine-modal.js';
 export {AtomicRefineToggle} from './atomic-refine-toggle/atomic-refine-toggle.js';
 export {AtomicRelevanceInspector} from './atomic-relevance-inspector/atomic-relevance-inspector.js';
 export {AtomicResult} from './atomic-result/atomic-result.js';
@@ -58,6 +59,7 @@ export {AtomicResultTemplate} from './atomic-result-template/atomic-result-templ
 export {AtomicResultText} from './atomic-result-text/atomic-result-text.js';
 export {AtomicResultTimespan} from './atomic-result-timespan/atomic-result-timespan.js';
 export {AtomicResultsPerPage} from './atomic-results-per-page/atomic-results-per-page.js';
+export {AtomicSearchBox} from './atomic-search-box/atomic-search-box.js';
 export {AtomicSearchBoxInstantResults} from './atomic-search-box-instant-results/atomic-search-box-instant-results.js';
 export {AtomicSearchBoxQuerySuggestions} from './atomic-search-box-query-suggestions/atomic-search-box-query-suggestions.js';
 export {AtomicSearchBoxRecentQueries} from './atomic-search-box-recent-queries/atomic-search-box-recent-queries.js';
