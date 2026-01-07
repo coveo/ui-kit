@@ -134,7 +134,6 @@ test.describe('atomic-generated-answer', () => {
   test.describe('generated answer feedback', () => {
     test.beforeEach(async ({generatedAnswer}) => {
       await generatedAnswer.load({story: 'default'});
-      await generatedAnswer.waitForCitations();
     });
 
     ['like', 'dislike'].forEach((feedbackType) => {
@@ -185,8 +184,12 @@ test.describe('atomic-generated-answer', () => {
               await feedbackButton.click();
               await generatedAnswer.waitForModal();
 
-              // Fill the feedback modal form
-              await generatedAnswer.fillAllRequiredOptions();
+              await generatedAnswer.fillAllRequiredOptions({
+                correctTopic: 'yes',
+                hallucinationFree: 'no',
+                documented: 'not_sure',
+                readable: 'yes',
+              });
               await generatedAnswer.feedbackModalCorrectAnswerInput.fill(
                 'https://www.example.com/correct-answer'
               );
@@ -201,7 +204,18 @@ test.describe('atomic-generated-answer', () => {
 
               const evaluationRequest = await evaluationRequestPromise;
               const requestBody = evaluationRequest.postDataJSON();
+
+              console.log('Evaluation Request Body:', requestBody);
+              const requestBodyDetails = requestBody.details;
               expect(requestBody.helpful).toBe(expectedHelpfulness);
+              expect(requestBodyDetails.correctTopic).toBe(true);
+              expect(requestBodyDetails.hallucinationFree).toBe(false);
+              expect(requestBodyDetails.documented).toBe(null);
+              expect(requestBodyDetails.readable).toBe(true);
+              ``;
+              expect(requestBody.correctAnswerUrl).toBe(
+                'https://www.example.com/correct-answer'
+              );
 
               await expect(
                 generatedAnswer.feedbackModalSuccessMessage
@@ -235,6 +249,82 @@ test.describe('atomic-generated-answer', () => {
                 generatedAnswer.feedbackModalSuccessMessage
               ).not.toBeVisible();
             });
+          });
+        });
+
+        test.describe('after submitting feedback', () => {
+          test('should not reopen the feedback modal when clicking like/dislike button again', async ({
+            generatedAnswer,
+          }) => {
+            await generatedAnswer.waitForLikeAndDislikeButtons();
+
+            const feedbackButton =
+              feedbackType === 'like'
+                ? generatedAnswer.likeButton
+                : generatedAnswer.dislikeButton;
+
+            const expectedHelpfulness = feedbackType === 'like';
+
+            await feedbackButton.click();
+            await generatedAnswer.waitForModal();
+
+            await generatedAnswer.fillAllRequiredOptions();
+
+            const evaluationRequestPromise =
+              generatedAnswer.waitForEvaluationRequest(expectedHelpfulness);
+
+            await generatedAnswer.feedbackModalSubmitButton.click();
+            await evaluationRequestPromise;
+
+            await expect(
+              generatedAnswer.feedbackModalSuccessMessage
+            ).toBeVisible();
+
+            await generatedAnswer.feedbackModalSuccessMessageDoneButton.click();
+            await generatedAnswer.waitForModalToClose();
+
+            await feedbackButton.click();
+
+            await expect(generatedAnswer.feedbackModal).not.toHaveAttribute(
+              'is-open'
+            );
+          });
+
+          test('should allow reopening the feedback modal after a new query', async ({
+            generatedAnswer,
+          }) => {
+            await generatedAnswer.waitForLikeAndDislikeButtons();
+
+            const feedbackButton =
+              feedbackType === 'like'
+                ? generatedAnswer.likeButton
+                : generatedAnswer.dislikeButton;
+
+            const expectedHelpfulness = feedbackType === 'like';
+
+            await feedbackButton.click();
+            await generatedAnswer.waitForModal();
+
+            await generatedAnswer.fillAllRequiredOptions();
+
+            const evaluationRequestPromise =
+              generatedAnswer.waitForEvaluationRequest(expectedHelpfulness);
+
+            await generatedAnswer.feedbackModalSubmitButton.click();
+            await evaluationRequestPromise;
+
+            await expect(
+              generatedAnswer.feedbackModalSuccessMessage
+            ).toBeVisible();
+
+            await generatedAnswer.feedbackModalSuccessMessageDoneButton.click();
+            await generatedAnswer.waitForModalToClose();
+
+            await generatedAnswer.load({story: 'default'});
+            await generatedAnswer.waitForLikeAndDislikeButtons();
+
+            await feedbackButton.click();
+            await generatedAnswer.waitForModal();
           });
         });
       });

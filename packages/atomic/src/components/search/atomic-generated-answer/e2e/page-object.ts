@@ -2,10 +2,23 @@ import type {GeneratedAnswerCitation} from '@coveo/headless';
 import type {Page} from '@playwright/test';
 import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
-const MODAL_OPEN_TIMEOUT_MS = 5000;
-
 interface AtomicCitationElement extends HTMLElement {
   citation?: GeneratedAnswerCitation;
+}
+
+type FeedbackQuestion =
+  | 'correctTopic'
+  | 'hallucinationFree'
+  | 'documented'
+  | 'readable';
+
+type FeedbackValue = 'yes' | 'no' | 'not_sure';
+
+interface FeedbackParams {
+  correctTopic?: FeedbackValue;
+  hallucinationFree?: FeedbackValue;
+  documented?: FeedbackValue;
+  readable?: FeedbackValue;
 }
 
 export class GeneratedAnswerPageObject extends BasePageObject {
@@ -69,9 +82,9 @@ export class GeneratedAnswerPageObject extends BasePageObject {
   }
 
   get feedbackModalCorrectAnswerInput() {
-    return this.feedbackModal.locator(
-      'input[type="text"][placeholder="https://URL"]'
-    );
+    return this.feedbackModal.getByRole('textbox', {
+      name: 'Link to correct answer',
+    });
   }
 
   get feedbackModalAdditionalNotesInput() {
@@ -79,7 +92,9 @@ export class GeneratedAnswerPageObject extends BasePageObject {
   }
 
   get feedbackModalSuccessMessage() {
-    return this.feedbackModal.locator('atomic-icon.w-48');
+    return this.feedbackModal.getByText(
+      'Thank you! Your feedback will help us improve the answers generated.'
+    );
   }
 
   get feedbackModalSuccessMessageDoneButton() {
@@ -88,50 +103,40 @@ export class GeneratedAnswerPageObject extends BasePageObject {
       .filter({hasText: 'Done'});
   }
 
-  async selectOption(
-    questionType:
-      | 'correctTopic'
-      | 'hallucinationFree'
-      | 'documented'
-      | 'readable',
-    option: 'yes' | 'unknown' | 'no'
-  ) {
+  async selectOption(questionType: FeedbackQuestion, option: FeedbackValue) {
     const value =
-      option === 'unknown' ? 'Not sure' : option === 'yes' ? 'Yes' : 'No';
+      option === 'not_sure' ? 'Not sure' : option === 'yes' ? 'Yes' : 'No';
     const selector = `.${questionType} input[type="radio"][value="${value}"]`;
     await this.feedbackModal.locator(selector).click();
   }
 
-  async fillAllRequiredOptions() {
-    await this.selectOption('correctTopic', 'yes');
-    await this.selectOption('hallucinationFree', 'yes');
-    await this.selectOption('documented', 'yes');
-    await this.selectOption('readable', 'yes');
+  async fillAllRequiredOptions(params?: FeedbackParams) {
+    await this.selectOption('correctTopic', params?.correctTopic ?? 'yes');
+    await this.selectOption(
+      'hallucinationFree',
+      params?.hallucinationFree ?? 'yes'
+    );
+    await this.selectOption('documented', params?.documented ?? 'yes');
+    await this.selectOption('readable', params?.readable ?? 'yes');
   }
 
   async waitForModal() {
     await this.feedbackModal.waitFor({state: 'attached'});
-    await this.page.waitForFunction(
-      () => {
-        const modal = document.querySelector(
-          'atomic-generated-answer-feedback-modal'
-        );
-        return modal?.hasAttribute('is-open');
-      },
-      {timeout: MODAL_OPEN_TIMEOUT_MS}
-    );
+    await this.page.waitForFunction(() => {
+      const modal = document.querySelector(
+        'atomic-generated-answer-feedback-modal'
+      );
+      return modal?.hasAttribute('is-open');
+    });
   }
 
   async waitForModalToClose() {
-    await this.page.waitForFunction(
-      () => {
-        const modal = document.querySelector(
-          'atomic-generated-answer-feedback-modal'
-        );
-        return !modal?.hasAttribute('is-open');
-      },
-      {timeout: MODAL_OPEN_TIMEOUT_MS}
-    );
+    await this.page.waitForFunction(() => {
+      const modal = document.querySelector(
+        'atomic-generated-answer-feedback-modal'
+      );
+      return !modal?.hasAttribute('is-open');
+    });
   }
 
   async waitForLikeAndDislikeButtons() {
@@ -140,7 +145,7 @@ export class GeneratedAnswerPageObject extends BasePageObject {
   }
 
   get validationErrors() {
-    return this.feedbackModal.locator('.required');
+    return this.feedbackModal.getByText('This field is required.');
   }
 
   async waitForEvaluationRequest(expectedHelpful: boolean) {
