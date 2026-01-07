@@ -1,8 +1,44 @@
-import {isMacOS} from '@/src/utils/device-utils';
 import {Component, Fragment, Host, Prop, VNode, h} from '@stencil/core';
-import {i18n} from 'i18next';
-import {SearchBoxSuggestionElement} from '../suggestions/suggestions-types';
+import type {i18n} from 'i18next';
+const isMacOS = () => navigator.platform.startsWith('Mac');
 
+interface SearchBoxSuggestionElement {
+  /**
+   * Stable identity which enables Stencil to reuse DOM elements for better performance.
+   * The best way to pick a key is to use a string that uniquely identifies that list item among its siblings (often your data will already have IDs).
+   */
+  key: string;
+  /**
+   * Rendered content of the element.
+   *
+   * @remarks
+   * The `VNode` type will be deprecated in v4 as we are detaching from Stencil.
+   */
+  content: Element | VNode;
+  /**
+   * Hook called when the selection is selected.
+   * @param e DOM event.
+   */
+  onSelect?(e: Event): void;
+  /**
+   * The query associated with the suggestion which will replace the query in the search box if the suggestion is selected.
+   */
+  query?: string;
+  /**
+   * For improved accessibility, provide this property with additional information.
+   * https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
+   */
+  ariaLabel?: string;
+  /**
+   * Adds a specific shadow part attribute that can be selected with the CSS ::part pseudo-element.
+   * https://developer.mozilla.org/en-US/docs/Web/CSS/::part
+   */
+  part?: string;
+  /**
+   * Hide the suggestion if it's the last in the list.
+   */
+  hideIfLast?: boolean;
+}
 /**
  * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
  * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
