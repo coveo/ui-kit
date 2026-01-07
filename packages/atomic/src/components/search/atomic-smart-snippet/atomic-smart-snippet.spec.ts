@@ -13,12 +13,6 @@ import {buildFakeSmartSnippet} from '@/vitest-utils/testing-helpers/fixtures/hea
 import {buildFakeTabManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/tab-manager-controller';
 import type {AtomicSmartSnippet} from './atomic-smart-snippet';
 
-// Mock the Stencil component to avoid circular import issues with initialization-utils
-vi.mock(
-  '@/src/components/common/smart-snippets/atomic-smart-snippet-source',
-  () => ({})
-);
-
 import './atomic-smart-snippet';
 
 vi.mock('@coveo/headless', {spy: true});
@@ -321,17 +315,24 @@ describe('atomic-smart-snippet', () => {
         .toBeInTheDocument();
     });
 
-    it('should reset feedbackSent when liked state changes to false', async () => {
+    it('should hide thank you message when liked state changes to false', async () => {
       mockedSmartSnippet.state.liked = true;
-      const {element} = await renderAtomicSmartSnippet();
+      const {element, parts} = await renderAtomicSmartSnippet();
+      element.requestUpdate();
 
-      expect(element.feedbackSent).toBe(false);
+      await element.updateComplete;
+      await expect
+        .element(parts(element).feedbackThankYou!)
+        .toBeInTheDocument();
 
       mockedSmartSnippet.state.liked = false;
-      element.requestUpdate();
-      await element.updateComplete;
 
-      expect(element.feedbackSent).toBe(false);
+      element.requestUpdate();
+
+      await element.updateComplete;
+      await expect
+        .element(parts(element).feedbackThankYou!)
+        .not.toBeInTheDocument();
     });
   });
 
@@ -455,20 +456,6 @@ describe('atomic-smart-snippet', () => {
         props: {snippetStyle: customStyle},
       });
       expect(element.snippetStyle).toBe(customStyle);
-    });
-
-    // TODO: The template style extraction happens during rendering, not after appending
-    it.skip('should apply snippet style from template element', async () => {
-      const {element} = await renderAtomicSmartSnippet();
-
-      const template = document.createElement('template');
-      const style = document.createElement('style');
-      style.innerHTML = 'b { color: red; }';
-      template.content.appendChild(style);
-      element.appendChild(template);
-
-      // This test incorrectly compares element.style (CSSStyleDeclaration) to a string
-      expect(element.snippetStyle).toContain('color: red');
     });
 
     it('should use snippetStyle attribute when no template is present', async () => {

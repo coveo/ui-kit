@@ -92,7 +92,7 @@ export class AtomicSmartSnippet
   public tabManagerState!: TabManagerState;
   public tabManager!: TabManager;
 
-  @state() private feedbackSent = false;
+  @state() public feedbackSent = false;
 
   #id!: string;
   private modalRef?: HTMLAtomicSmartSnippetFeedbackModalElement;
