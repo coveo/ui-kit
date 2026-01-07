@@ -11,7 +11,7 @@ import {sanitizeStyle} from '@/src/utils/utils';
 import styles from './atomic-smart-snippet-answer.tw.css';
 
 /**
- * The `atomic-smart-snippet-answer` component displays the full document excerpt from a smart snippet.
+ * The `atomic-smart-snippet-answer` component displays a relevant snippet from the document.
  *
  * @part answer - The container displaying the snippet from the document.
  *
