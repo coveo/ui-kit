@@ -13,7 +13,7 @@ import styles from './atomic-smart-snippet-answer.tw.css';
 /**
  * The `atomic-smart-snippet-answer` component displays the full document excerpt from a smart snippet.
  *
- * @part answer - The container displaying the full document excerpt.
+ * @part answer - The container displaying the snippet from the document.
  *
  * @event answerSizeUpdated - Dispatched when the content of the snippet size changes.
  * @event selectInlineLink - Dispatched when an inline link is selected.
