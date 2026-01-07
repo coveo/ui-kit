@@ -82,9 +82,9 @@ export class GeneratedAnswerPageObject extends BasePageObject {
   }
 
   get feedbackModalCorrectAnswerInput() {
-    return this.feedbackModal.getByRole('textbox', {
-      name: 'Link to correct answer',
-    });
+    return this.feedbackModal.locator(
+      'input[type="text"][placeholder="https://URL"]'
+    );
   }
 
   get feedbackModalAdditionalNotesInput() {
@@ -149,13 +149,12 @@ export class GeneratedAnswerPageObject extends BasePageObject {
   }
 
   async waitForEvaluationRequest(expectedHelpful: boolean) {
-    const rgaEvaluationsRequestRegex =
-      /\/rest\/organizations\/.*\/answer\/v1\/configs\/.*\/evaluations/;
-
     const evaluationRequest = await this.page.waitForRequest((request) => {
       if (
         request.method() === 'POST' &&
-        rgaEvaluationsRequestRegex.test(request.url())
+        /\/rest\/organizations\/.*\/answer\/v1\/configs\/.*\/evaluations/.test(
+          request.url()
+        )
       ) {
         const body = request.postDataJSON();
         return body?.helpful === expectedHelpful;
@@ -164,5 +163,19 @@ export class GeneratedAnswerPageObject extends BasePageObject {
     });
 
     return evaluationRequest;
+  }
+
+  async waitForAnalyticsRequest() {
+    const analyticsRequest = await this.page.waitForRequest((request) => {
+      if (
+        request.method() === 'POST' &&
+        /\/rest\/organizations\/.*\/events\/v1/.test(request.url())
+      ) {
+        return true;
+      }
+      return false;
+    });
+
+    return analyticsRequest;
   }
 }

@@ -169,7 +169,7 @@ test.describe('atomic-generated-answer', () => {
 
         test.describe('when submitting feedback', () => {
           test.describe('when selecting all the required options', () => {
-            test('should submit the feedback request and display the success message', async ({
+            test('should submit the feedback request, log an analytics event and display the success message', async ({
               generatedAnswer,
             }) => {
               await generatedAnswer.waitForLikeAndDislikeButtons();
@@ -199,13 +199,15 @@ test.describe('atomic-generated-answer', () => {
 
               const evaluationRequestPromise =
                 generatedAnswer.waitForEvaluationRequest(expectedHelpfulness);
+              const analyticsRequestPromise =
+                generatedAnswer.waitForAnalyticsRequest();
 
               await generatedAnswer.feedbackModalSubmitButton.click();
 
               const evaluationRequest = await evaluationRequestPromise;
               const requestBody = evaluationRequest.postDataJSON();
+              await analyticsRequestPromise;
 
-              console.log('Evaluation Request Body:', requestBody);
               const requestBodyDetails = requestBody.details;
               expect(requestBody.helpful).toBe(expectedHelpfulness);
               expect(requestBodyDetails.correctTopic).toBe(true);
