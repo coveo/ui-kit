@@ -51,6 +51,7 @@ import type {SelectChildProductEventArgs} from '../atomic-product-children/selec
 import '../atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products';
 import '../atomic-commerce-search-box-query-suggestions/atomic-commerce-search-box-query-suggestions';
 import '../atomic-commerce-search-box-recent-queries/atomic-commerce-search-box-recent-queries';
+import '@coveo/atomic-legacy/atomic-suggestion-renderer';
 
 /**
  * The `atomic-commerce-search-box` component enables users to perform product searches with built-in query suggestions and optional redirection to a search page.
