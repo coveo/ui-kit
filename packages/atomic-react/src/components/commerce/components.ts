@@ -29,9 +29,12 @@ import {
   AtomicComponentError as LitAtomicComponentError,
   AtomicFocusTrap as LitAtomicFocusTrap,
   AtomicIcon as LitAtomicIcon,
-  AtomicInsightEditToggle as LitAtomicInsightEditToggle,
+  AtomicInsightFullSearchButton as LitAtomicInsightFullSearchButton,
   AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
   AtomicInsightInterface as LitAtomicInsightInterface,
+  AtomicInsightLayout as LitAtomicInsightLayout,
+  AtomicInsightPager as LitAtomicInsightPager,
+  AtomicInsightQueryError as LitAtomicInsightQueryError,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicNumericRange as LitAtomicNumericRange,
   AtomicProduct as LitAtomicProduct,
@@ -240,10 +243,10 @@ export const AtomicIcon = createComponent({
   elementClass: LitAtomicIcon,
 });
 
-export const AtomicInsightEditToggle = createComponent({
-  tagName: 'atomic-insight-edit-toggle',
+export const AtomicInsightFullSearchButton = createComponent({
+  tagName: 'atomic-insight-full-search-button',
   react: React,
-  elementClass: LitAtomicInsightEditToggle,
+  elementClass: LitAtomicInsightFullSearchButton,
 });
 
 export const AtomicInsightGenerateAnswerButton = createComponent({
@@ -256,6 +259,24 @@ export const AtomicInsightInterface = createComponent({
   tagName: 'atomic-insight-interface',
   react: React,
   elementClass: LitAtomicInsightInterface,
+});
+
+export const AtomicInsightLayout = createComponent({
+  tagName: 'atomic-insight-layout',
+  react: React,
+  elementClass: LitAtomicInsightLayout,
+});
+
+export const AtomicInsightPager = createComponent({
+  tagName: 'atomic-insight-pager',
+  react: React,
+  elementClass: LitAtomicInsightPager,
+});
+
+export const AtomicInsightQueryError = createComponent({
+  tagName: 'atomic-insight-query-error',
+  react: React,
+  elementClass: LitAtomicInsightQueryError,
 });
 
 export const AtomicLayoutSection = createComponent({

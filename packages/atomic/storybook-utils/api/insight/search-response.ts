@@ -1,3 +1,6 @@
+// Fixed reference timestamp (2025-12-18T00:00:00Z) for consistent snapshots
+const REFERENCE_TIMESTAMP = 1766054400000;
+
 const getNthResult = (n: number) => ({
   title: `Support Article ${n}: Troubleshooting Guide`,
   excerpt: `This article provides step-by-step instructions for resolving common issues. Follow the guidance below to troubleshoot problem #${n}.`,
@@ -33,10 +36,10 @@ const getNthResult = (n: number) => ({
     urihash: `insight-hash-${n}`,
     permanentid: `insight-perm-id-${n}`,
     syslanguage: ['English'],
-    date: Date.now() - n * 86400000,
+    date: REFERENCE_TIMESTAMP - n * 86400000,
     sourcetype: 'KnowledgeBase',
     syssource: 'Support Knowledge Base',
-    sysdate: Date.now() - n * 86400000,
+    sysdate: REFERENCE_TIMESTAMP - n * 86400000,
     author: ['Support Team'],
     source: 'Support Knowledge Base',
     collection: 'default',

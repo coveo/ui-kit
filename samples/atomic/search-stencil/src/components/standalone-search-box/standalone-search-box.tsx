@@ -23,7 +23,7 @@ export class StandaloneSearchBox {
       <atomic-search-interface id="searchbox" reflect-state-in-url="false">
         <atomic-search-box
           redirection-url="/search"
-          onRedirect={(e) => {
+          onRedirect={(e: CustomEvent) => {
             e.preventDefault();
             const {redirectTo, value} = e.detail;
             const path = `${redirectTo}#q=${value}`;

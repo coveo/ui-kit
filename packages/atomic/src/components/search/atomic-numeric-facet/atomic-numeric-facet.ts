@@ -54,6 +54,7 @@ import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {mapProperty} from '@/src/utils/props-utils';
 import {randomID} from '@/src/utils/utils';
 import '@/src/components/common/atomic-facet-number-input/atomic-facet-number-input';
+import '@/src/components/common/atomic-numeric-range/atomic-numeric-range';
 
 /**
  * The `atomic-numeric-facet` component displays a facet of the results for the current query as numeric ranges.

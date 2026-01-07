@@ -41,7 +41,7 @@ export class AppRoot {
             redirection-url={
               Router.activePath === homePath ? searchPath : undefined
             }
-            onRedirect={(e) => {
+            onRedirect={(e: CustomEvent) => {
               e.preventDefault();
               const {redirectTo, value} = e.detail;
               const path = `${redirectTo}#q=${value}`;
