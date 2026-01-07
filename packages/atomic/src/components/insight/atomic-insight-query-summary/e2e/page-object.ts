@@ -7,22 +7,6 @@ export class InsightQuerySummaryPageObject {
     return this.page.locator('atomic-insight-query-summary');
   }
 
-  get container() {
-    return this.querySummary.locator('[part="container"]');
-  }
-
-  get placeholder() {
-    return this.querySummary.locator('[part="placeholder"]');
-  }
-
-  get highlights() {
-    return this.querySummary.locator('[part*="highlight"]');
-  }
-
-  get queryHighlight() {
-    return this.querySummary.locator('[part*="query"]');
-  }
-
   async load({story}: {story: string}) {
     await this.page.goto(
       `/iframe.html?id=atomic-insight-query-summary--${story}&viewMode=story`

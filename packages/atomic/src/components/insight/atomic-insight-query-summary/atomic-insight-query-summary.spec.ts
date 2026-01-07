@@ -255,17 +255,15 @@ describe('atomic-insight-query-summary', () => {
     });
   });
 
-  describe('when hasQuery is false and hasError is true', () => {
-    it('should render nothing', async () => {
-      const {element} = await renderQuerySummary({
-        querySummaryState: {
-          hasQuery: false,
-          hasError: true,
-        },
-      });
-
-      expect(element).toBeEmptyDOMElement();
+  it('should render nothing when hasQuery is false and hasError is true', async () => {
+    const {element} = await renderQuerySummary({
+      querySummaryState: {
+        hasQuery: false,
+        hasError: true,
+      },
     });
+
+    expect(element).toBeEmptyDOMElement();
   });
 
   it('should create an AriaLiveRegionController', async () => {
@@ -275,6 +273,12 @@ describe('atomic-insight-query-summary', () => {
   });
 
   it('should update aria message when state changes', async () => {
+    const messageSetterSpy = vi.spyOn(
+      AriaLiveRegionController.prototype,
+      'message',
+      'set'
+    );
+
     const {element} = await renderQuerySummary({
       querySummaryState: {
         hasQuery: true,
@@ -288,6 +292,10 @@ describe('atomic-insight-query-summary', () => {
       },
     });
 
-    expect(element['ariaMessage']).toBeDefined();
+    expect(element).toBeDefined();
+    expect(messageSetterSpy).toHaveBeenCalledOnce();
+
+    const [[calledMessage]] = messageSetterSpy.mock.calls;
+    expect(calledMessage).toContain('Results 1-10 of 100 for test');
   });
 });
