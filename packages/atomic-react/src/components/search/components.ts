@@ -20,7 +20,8 @@ import {
   AtomicIcon as LitAtomicIcon,
   AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
   AtomicInsightInterface as LitAtomicInsightInterface,
-  AtomicInsightQueryError as LitAtomicInsightQueryError,
+  AtomicInsightLayout as LitAtomicInsightLayout,
+  AtomicInsightPager as LitAtomicInsightPager,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
   AtomicNoResults as LitAtomicNoResults,
@@ -35,6 +36,7 @@ import {
   AtomicRatingFacet as LitAtomicRatingFacet,
   AtomicRatingRangeFacet as LitAtomicRatingRangeFacet,
   AtomicRecsInterface as LitAtomicRecsInterface,
+  AtomicRefineModal as LitAtomicRefineModal,
   AtomicRefineToggle as LitAtomicRefineToggle,
   AtomicResult as LitAtomicResult,
   AtomicResultBadge as LitAtomicResultBadge,
@@ -64,6 +66,7 @@ import {
   AtomicResultsPerPage as LitAtomicResultsPerPage,
   AtomicResultText as LitAtomicResultText,
   AtomicResultTimespan as LitAtomicResultTimespan,
+  AtomicSearchBox as LitAtomicSearchBox,
   AtomicSearchBoxInstantResults as LitAtomicSearchBoxInstantResults,
   AtomicSearchBoxQuerySuggestions as LitAtomicSearchBoxQuerySuggestions,
   AtomicSearchBoxRecentQueries as LitAtomicSearchBoxRecentQueries,
@@ -71,6 +74,7 @@ import {
   AtomicSearchLayout as LitAtomicSearchLayout,
   AtomicSegmentedFacet as LitAtomicSegmentedFacet,
   AtomicSegmentedFacetScrollable as LitAtomicSegmentedFacetScrollable,
+  AtomicSmartSnippetSuggestions as LitAtomicSmartSnippetSuggestions,
   AtomicSortDropdown as LitAtomicSortDropdown,
   AtomicSortExpression as LitAtomicSortExpression,
   AtomicTab as LitAtomicTab,
@@ -208,10 +212,16 @@ export const AtomicInsightInterface = createComponent({
   elementClass: LitAtomicInsightInterface,
 });
 
-export const AtomicInsightQueryError = createComponent({
-  tagName: 'atomic-insight-query-error',
+export const AtomicInsightLayout = createComponent({
+  tagName: 'atomic-insight-layout',
   react: React,
-  elementClass: LitAtomicInsightQueryError,
+  elementClass: LitAtomicInsightLayout,
+});
+
+export const AtomicInsightPager = createComponent({
+  tagName: 'atomic-insight-pager',
+  react: React,
+  elementClass: LitAtomicInsightPager,
 });
 
 export const AtomicLayoutSection = createComponent({
@@ -296,6 +306,12 @@ export const AtomicRecsInterface = createComponent({
   tagName: 'atomic-recs-interface',
   react: React,
   elementClass: LitAtomicRecsInterface,
+});
+
+export const AtomicRefineModal = createComponent({
+  tagName: 'atomic-refine-modal',
+  react: React,
+  elementClass: LitAtomicRefineModal,
 });
 
 export const AtomicRefineToggle = createComponent({
@@ -472,6 +488,12 @@ export const AtomicResultTimespan = createComponent({
   elementClass: LitAtomicResultTimespan,
 });
 
+export const AtomicSearchBox = createComponent({
+  tagName: 'atomic-search-box',
+  react: React,
+  elementClass: LitAtomicSearchBox,
+});
+
 export const AtomicSearchBoxInstantResults = createComponent({
   tagName: 'atomic-search-box-instant-results',
   react: React,
@@ -512,6 +534,12 @@ export const AtomicSegmentedFacetScrollable = createComponent({
   tagName: 'atomic-segmented-facet-scrollable',
   react: React,
   elementClass: LitAtomicSegmentedFacetScrollable,
+});
+
+export const AtomicSmartSnippetSuggestions = createComponent({
+  tagName: 'atomic-smart-snippet-suggestions',
+  react: React,
+  elementClass: LitAtomicSmartSnippetSuggestions,
 });
 
 export const AtomicSortDropdown = createComponent({
