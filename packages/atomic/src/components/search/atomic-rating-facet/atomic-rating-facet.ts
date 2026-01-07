@@ -371,7 +371,7 @@ export class AtomicRatingFacet
     this.bindings.store.registerFacet('numericFacets', {
       ...facetInfo,
       format: (value) => this.formatFacetValue(value),
-      // @ts-ignore -- Because of Stencil VNode dependencies.
+      // @ts-expect-error -- Because of Stencil VNode dependencies.
       content: (value) => this.ratingContent(value),
     });
     initializePopover(this, {

@@ -8,6 +8,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
+import {buildCustomEvent} from '@/src/utils/event-utils';
 import '@/src/components/search/atomic-result-text/atomic-result-text';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 
@@ -86,12 +87,7 @@ export class AtomicSmartSnippetSource
   };
 
   private dispatchSourceEvent(eventName: string) {
-    this.dispatchEvent(
-      new CustomEvent(eventName, {
-        bubbles: true,
-        composed: true,
-      })
-    );
+    this.dispatchEvent(buildCustomEvent(eventName, undefined));
   }
 
   private handleSourceEvent(
