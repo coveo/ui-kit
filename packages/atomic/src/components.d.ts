@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InteractiveCitation, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, UserAction as IUserAction } from "@coveo/headless/insight";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
@@ -18,7 +18,7 @@ import { RecsStore } from "./components/recommendations/atomic-recs-interface/st
 import { AnyBindings } from "./components/common/interface/bindings";
 import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
-export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InteractiveCitation, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, UserAction as IUserAction } from "@coveo/headless/insight";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
@@ -184,8 +184,6 @@ export namespace Components {
         "clickCallback": () => void;
         "tooltip": string;
     }
-    interface AtomicInsightNoResults {
-    }
     interface AtomicInsightNumericFacet {
         /**
           * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc   ... ></atomic-insight-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc="doc"   ... ></atomic-insight-numeric-facet> ```
@@ -239,8 +237,6 @@ export namespace Components {
           * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
         "withInput"?: NumberInputType;
-    }
-    interface AtomicInsightQuerySummary {
     }
     interface AtomicInsightRefineModal {
         "isOpen": boolean;
@@ -803,9 +799,48 @@ export namespace Components {
         "display": ItemDisplayLayout;
         "imageSize": ItemDisplayImageSize;
     }
-    interface AtomicSmartSnippetAnswer {
-        "htmlContent": string;
-        "innerStyle"?: string;
+    /**
+     * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
+     * You can style the snippet by inserting a template element as follows:
+     * ```html
+     * <atomic-smart-snippet>
+     *   <template>
+     *     <style>
+     *       b {
+     *         color: blue;
+     *       }
+     *     </style>
+     *   </template>
+     * </atomic-smart-snippet>
+     * ```
+     */
+    interface AtomicSmartSnippet {
+        /**
+          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
+         */
+        "collapsedHeight": number;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
+         */
+        "headingLevel": number;
+        /**
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
+         */
+        "maximumHeight": number;
+        "snippetCollapsedHeight"?: number;
+        "snippetMaximumHeight"?: number;
+        /**
+          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
+        /**
+          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded": string[] | string;
+        /**
+          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded": string[] | string;
     }
     /**
      * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
@@ -945,10 +980,6 @@ export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicQuickviewModalElement;
 }
-export interface AtomicSmartSnippetAnswerCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicSmartSnippetAnswerElement;
-}
 export interface AtomicSmartSnippetFeedbackModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicSmartSnippetFeedbackModalElement;
@@ -1015,23 +1046,11 @@ declare global {
         prototype: HTMLAtomicInsightHistoryToggleElement;
         new (): HTMLAtomicInsightHistoryToggleElement;
     };
-    interface HTMLAtomicInsightNoResultsElement extends Components.AtomicInsightNoResults, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightNoResultsElement: {
-        prototype: HTMLAtomicInsightNoResultsElement;
-        new (): HTMLAtomicInsightNoResultsElement;
-    };
     interface HTMLAtomicInsightNumericFacetElement extends Components.AtomicInsightNumericFacet, HTMLStencilElement {
     }
     var HTMLAtomicInsightNumericFacetElement: {
         prototype: HTMLAtomicInsightNumericFacetElement;
         new (): HTMLAtomicInsightNumericFacetElement;
-    };
-    interface HTMLAtomicInsightQuerySummaryElement extends Components.AtomicInsightQuerySummary, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightQuerySummaryElement: {
-        prototype: HTMLAtomicInsightQuerySummaryElement;
-        new (): HTMLAtomicInsightQuerySummaryElement;
     };
     interface HTMLAtomicInsightRefineModalElement extends Components.AtomicInsightRefineModal, HTMLStencilElement {
     }
@@ -1361,25 +1380,26 @@ declare global {
         prototype: HTMLAtomicResultPlaceholderElement;
         new (): HTMLAtomicResultPlaceholderElement;
     };
-    interface HTMLAtomicSmartSnippetAnswerElementEventMap {
-        "answerSizeUpdated": {height: number};
-        "selectInlineLink": InlineLink;
-        "beginDelayedSelectInlineLink": InlineLink;
-        "cancelPendingSelectInlineLink": InlineLink;
+    /**
+     * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
+     * You can style the snippet by inserting a template element as follows:
+     * ```html
+     * <atomic-smart-snippet>
+     *   <template>
+     *     <style>
+     *       b {
+     *         color: blue;
+     *       }
+     *     </style>
+     *   </template>
+     * </atomic-smart-snippet>
+     * ```
+     */
+    interface HTMLAtomicSmartSnippetElement extends Components.AtomicSmartSnippet, HTMLStencilElement {
     }
-    interface HTMLAtomicSmartSnippetAnswerElement extends Components.AtomicSmartSnippetAnswer, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicSmartSnippetAnswerElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetAnswerElement, ev: AtomicSmartSnippetAnswerCustomEvent<HTMLAtomicSmartSnippetAnswerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicSmartSnippetAnswerElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetAnswerElement, ev: AtomicSmartSnippetAnswerCustomEvent<HTMLAtomicSmartSnippetAnswerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicSmartSnippetAnswerElement: {
-        prototype: HTMLAtomicSmartSnippetAnswerElement;
-        new (): HTMLAtomicSmartSnippetAnswerElement;
+    var HTMLAtomicSmartSnippetElement: {
+        prototype: HTMLAtomicSmartSnippetElement;
+        new (): HTMLAtomicSmartSnippetElement;
     };
     interface HTMLAtomicSmartSnippetFeedbackModalElementEventMap {
         "feedbackSent": any;
@@ -1471,9 +1491,7 @@ declare global {
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
         "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
-        "atomic-insight-no-results": HTMLAtomicInsightNoResultsElement;
         "atomic-insight-numeric-facet": HTMLAtomicInsightNumericFacetElement;
-        "atomic-insight-query-summary": HTMLAtomicInsightQuerySummaryElement;
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
         "atomic-insight-refine-toggle": HTMLAtomicInsightRefineToggleElement;
         "atomic-insight-result": HTMLAtomicInsightResultElement;
@@ -1508,7 +1526,7 @@ declare global {
         "atomic-recs-result": HTMLAtomicRecsResultElement;
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
-        "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
+        "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
         "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
@@ -1666,8 +1684,6 @@ declare namespace LocalJSX {
         "clickCallback"?: () => void;
         "tooltip"?: string;
     }
-    interface AtomicInsightNoResults {
-    }
     interface AtomicInsightNumericFacet {
         /**
           * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc   ... ></atomic-insight-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc="doc"   ... ></atomic-insight-numeric-facet> ```
@@ -1721,8 +1737,6 @@ declare namespace LocalJSX {
           * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
         "withInput"?: NumberInputType;
-    }
-    interface AtomicInsightQuerySummary {
     }
     interface AtomicInsightRefineModal {
         "isOpen"?: boolean;
@@ -2254,13 +2268,48 @@ declare namespace LocalJSX {
         "display": ItemDisplayLayout;
         "imageSize": ItemDisplayImageSize;
     }
-    interface AtomicSmartSnippetAnswer {
-        "htmlContent": string;
-        "innerStyle"?: string;
-        "onAnswerSizeUpdated"?: (event: AtomicSmartSnippetAnswerCustomEvent<{height: number}>) => void;
-        "onBeginDelayedSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
-        "onCancelPendingSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
-        "onSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
+    /**
+     * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
+     * You can style the snippet by inserting a template element as follows:
+     * ```html
+     * <atomic-smart-snippet>
+     *   <template>
+     *     <style>
+     *       b {
+     *         color: blue;
+     *       }
+     *     </style>
+     *   </template>
+     * </atomic-smart-snippet>
+     * ```
+     */
+    interface AtomicSmartSnippet {
+        /**
+          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
+         */
+        "collapsedHeight"?: number;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
+         */
+        "headingLevel"?: number;
+        /**
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
+         */
+        "maximumHeight"?: number;
+        "snippetCollapsedHeight"?: number;
+        "snippetMaximumHeight"?: number;
+        /**
+          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
+        /**
+          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
+         */
+        "tabsExcluded"?: string[] | string;
+        /**
+          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
+         */
+        "tabsIncluded"?: string[] | string;
     }
     /**
      * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
@@ -2379,9 +2428,7 @@ declare namespace LocalJSX {
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
         "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
-        "atomic-insight-no-results": AtomicInsightNoResults;
         "atomic-insight-numeric-facet": AtomicInsightNumericFacet;
-        "atomic-insight-query-summary": AtomicInsightQuerySummary;
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
         "atomic-insight-refine-toggle": AtomicInsightRefineToggle;
         "atomic-insight-result": AtomicInsightResult;
@@ -2416,7 +2463,7 @@ declare namespace LocalJSX {
         "atomic-recs-result": AtomicRecsResult;
         "atomic-recs-result-template": AtomicRecsResultTemplate;
         "atomic-result-placeholder": AtomicResultPlaceholder;
-        "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
+        "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
         "atomic-smart-snippet-source": AtomicSmartSnippetSource;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
@@ -2440,9 +2487,7 @@ declare module "@stencil/core" {
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
             "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
             "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
-            "atomic-insight-no-results": LocalJSX.AtomicInsightNoResults & JSXBase.HTMLAttributes<HTMLAtomicInsightNoResultsElement>;
             "atomic-insight-numeric-facet": LocalJSX.AtomicInsightNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightNumericFacetElement>;
-            "atomic-insight-query-summary": LocalJSX.AtomicInsightQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicInsightQuerySummaryElement>;
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
             "atomic-insight-refine-toggle": LocalJSX.AtomicInsightRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineToggleElement>;
             "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
@@ -2522,7 +2567,22 @@ declare module "@stencil/core" {
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
-            "atomic-smart-snippet-answer": LocalJSX.AtomicSmartSnippetAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetAnswerElement>;
+            /**
+             * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
+             * You can style the snippet by inserting a template element as follows:
+             * ```html
+             * <atomic-smart-snippet>
+             *   <template>
+             *     <style>
+             *       b {
+             *         color: blue;
+             *       }
+             *     </style>
+             *   </template>
+             * </atomic-smart-snippet>
+             * ```
+             */
+            "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
             /**
              * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
              * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.

@@ -34,8 +34,10 @@ import {
   AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
   AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicInsightLayout as LitAtomicInsightLayout,
+  AtomicInsightNoResults as LitAtomicInsightNoResults,
   AtomicInsightPager as LitAtomicInsightPager,
   AtomicInsightQueryError as LitAtomicInsightQueryError,
+  AtomicInsightQuerySummary as LitAtomicInsightQuerySummary,
   AtomicInsightResultTemplate as LitAtomicInsightResultTemplate,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicNumericRange as LitAtomicNumericRange,
@@ -275,6 +277,12 @@ export const AtomicInsightLayout = createComponent({
   elementClass: LitAtomicInsightLayout,
 });
 
+export const AtomicInsightNoResults = createComponent({
+  tagName: 'atomic-insight-no-results',
+  react: React,
+  elementClass: LitAtomicInsightNoResults,
+});
+
 export const AtomicInsightPager = createComponent({
   tagName: 'atomic-insight-pager',
   react: React,
@@ -285,6 +293,12 @@ export const AtomicInsightQueryError = createComponent({
   tagName: 'atomic-insight-query-error',
   react: React,
   elementClass: LitAtomicInsightQueryError,
+});
+
+export const AtomicInsightQuerySummary = createComponent({
+  tagName: 'atomic-insight-query-summary',
+  react: React,
+  elementClass: LitAtomicInsightQuerySummary,
 });
 
 export const AtomicInsightResultTemplate = createComponent({
