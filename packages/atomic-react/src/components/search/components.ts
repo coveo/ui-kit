@@ -24,6 +24,7 @@ import {
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
   AtomicNoResults as LitAtomicNoResults,
   AtomicNotifications as LitAtomicNotifications,
+  AtomicNumericFacet as LitAtomicNumericFacet,
   AtomicNumericRange as LitAtomicNumericRange,
   AtomicPager as LitAtomicPager,
   AtomicPopover as LitAtomicPopover,
@@ -228,6 +229,12 @@ export const AtomicNotifications = createComponent({
   tagName: 'atomic-notifications',
   react: React,
   elementClass: LitAtomicNotifications,
+});
+
+export const AtomicNumericFacet = createComponent({
+  tagName: 'atomic-numeric-facet',
+  react: React,
+  elementClass: LitAtomicNumericFacet,
 });
 
 export const AtomicNumericRange = createComponent({
