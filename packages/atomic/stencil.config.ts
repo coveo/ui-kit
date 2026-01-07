@@ -82,7 +82,8 @@ export const config: Config = {
           'atomic-recs-result-template',
           'atomic-field-condition',
         ].concat(
-          filterComponentsByUseCaseForReactOutput('src/components/commerce')
+          filterComponentsByUseCaseForReactOutput('src/components/commerce'),
+          filterComponentsByUseCaseForReactOutput('src/components/insight')
         ),
       }),
     !isDevWatch &&
@@ -99,7 +100,8 @@ export const config: Config = {
           filterComponentsByUseCaseForReactOutput('src/components/search'),
           filterComponentsByUseCaseForReactOutput(
             'src/components/recommendations'
-          )
+          ),
+          filterComponentsByUseCaseForReactOutput('src/components/insight')
         ),
       }),
     !isDevWatch &&

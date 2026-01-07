@@ -29,8 +29,6 @@ import {
   AtomicComponentError as LitAtomicComponentError,
   AtomicFocusTrap as LitAtomicFocusTrap,
   AtomicIcon as LitAtomicIcon,
-  AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
-  AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicNumericRange as LitAtomicNumericRange,
   AtomicProduct as LitAtomicProduct,
@@ -237,18 +235,6 @@ export const AtomicIcon = createComponent({
   tagName: 'atomic-icon',
   react: React,
   elementClass: LitAtomicIcon,
-});
-
-export const AtomicInsightGenerateAnswerButton = createComponent({
-  tagName: 'atomic-insight-generate-answer-button',
-  react: React,
-  elementClass: LitAtomicInsightGenerateAnswerButton,
-});
-
-export const AtomicInsightInterface = createComponent({
-  tagName: 'atomic-insight-interface',
-  react: React,
-  elementClass: LitAtomicInsightInterface,
 });
 
 export const AtomicLayoutSection = createComponent({
