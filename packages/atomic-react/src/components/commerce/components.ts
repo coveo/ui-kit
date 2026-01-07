@@ -36,6 +36,7 @@ import {
   AtomicInsightLayout as LitAtomicInsightLayout,
   AtomicInsightPager as LitAtomicInsightPager,
   AtomicInsightQueryError as LitAtomicInsightQueryError,
+  AtomicInsightResultTemplate as LitAtomicInsightResultTemplate,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicNumericRange as LitAtomicNumericRange,
   AtomicProduct as LitAtomicProduct,
@@ -284,6 +285,12 @@ export const AtomicInsightQueryError = createComponent({
   tagName: 'atomic-insight-query-error',
   react: React,
   elementClass: LitAtomicInsightQueryError,
+});
+
+export const AtomicInsightResultTemplate = createComponent({
+  tagName: 'atomic-insight-result-template',
+  react: React,
+  elementClass: LitAtomicInsightResultTemplate,
 });
 
 export const AtomicLayoutSection = createComponent({
