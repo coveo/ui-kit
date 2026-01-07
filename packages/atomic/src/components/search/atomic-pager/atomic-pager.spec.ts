@@ -151,6 +151,130 @@ describe('atomic-pager', () => {
     await expect.element(locators.page6).not.toBeInTheDocument();
   });
 
+  describe('page button display based on result count', () => {
+    it('should display correct number of page buttons for 100 results with 10 per page', async () => {
+      // With 100 results and 10 per page: maxPage = ceil(100/10) = 10
+      const totalResults = 100;
+      const resultsPerPage = 10;
+      const maxPage = Math.ceil(totalResults / resultsPerPage);
+
+      await renderPager({
+        pagerState: {
+          currentPage: 1,
+          maxPage: maxPage,
+        },
+      });
+
+      // Should show pages 1-5 (numberOfPages default is 5)
+      await expect.element(locators.page1).toBeInTheDocument();
+      await expect.element(locators.page2).toBeInTheDocument();
+      await expect.element(locators.page3).toBeInTheDocument();
+      await expect.element(locators.page4).toBeInTheDocument();
+      await expect.element(locators.page5).toBeInTheDocument();
+      await expect.element(locators.page6).not.toBeInTheDocument();
+    });
+
+    it('should display correct page buttons on last page without showing non-existent page', async () => {
+      // With 100 results and 10 per page: maxPage = ceil(100/10) = 10
+      const totalResults = 100;
+      const resultsPerPage = 10;
+      const maxPage = Math.ceil(totalResults / resultsPerPage);
+
+      await renderPager({
+        pagerState: {
+          currentPage: maxPage, // On last page (page 10)
+          maxPage: maxPage,
+        },
+      });
+
+      // Should show pages 6-10 (not 7-11 which was the bug)
+      await expect.element(locators.page6).toBeInTheDocument();
+      await expect.element(page.getByLabelText('Page 7')).toBeInTheDocument();
+      await expect.element(page.getByLabelText('Page 8')).toBeInTheDocument();
+      await expect.element(page.getByLabelText('Page 9')).toBeInTheDocument();
+      await expect.element(page.getByLabelText('Page 10')).toBeInTheDocument();
+
+      // Page 11 should NOT exist (this was the bug being fixed)
+      await expect
+        .element(page.getByLabelText('Page 11'))
+        .not.toBeInTheDocument();
+    });
+
+    it('should display correct page buttons for 47 results with 10 per page', async () => {
+      // With 47 results and 10 per page: maxPage = ceil(47/10) = 5
+      const totalResults = 47;
+      const resultsPerPage = 10;
+      const maxPage = Math.ceil(totalResults / resultsPerPage);
+
+      await renderPager({
+        pagerState: {
+          currentPage: maxPage, // On last page (page 5)
+          maxPage: maxPage,
+        },
+      });
+
+      // Should show pages 1-5 (all available pages)
+      await expect.element(locators.page1).toBeInTheDocument();
+      await expect.element(locators.page2).toBeInTheDocument();
+      await expect.element(locators.page3).toBeInTheDocument();
+      await expect.element(locators.page4).toBeInTheDocument();
+      await expect.element(locators.page5).toBeInTheDocument();
+
+      // Page 6 should NOT exist
+      await expect.element(locators.page6).not.toBeInTheDocument();
+    });
+
+    it('should display correct page buttons for 250 results with 25 per page', async () => {
+      // With 250 results and 25 per page: maxPage = ceil(250/25) = 10
+      const totalResults = 250;
+      const resultsPerPage = 25;
+      const maxPage = Math.ceil(totalResults / resultsPerPage);
+
+      await renderPager({
+        pagerState: {
+          currentPage: maxPage, // On last page (page 10)
+          maxPage: maxPage,
+        },
+      });
+
+      // Should show pages 6-10
+      await expect.element(locators.page6).toBeInTheDocument();
+      await expect.element(page.getByLabelText('Page 7')).toBeInTheDocument();
+      await expect.element(page.getByLabelText('Page 8')).toBeInTheDocument();
+      await expect.element(page.getByLabelText('Page 9')).toBeInTheDocument();
+      await expect.element(page.getByLabelText('Page 10')).toBeInTheDocument();
+
+      // Page 11 should NOT exist
+      await expect
+        .element(page.getByLabelText('Page 11'))
+        .not.toBeInTheDocument();
+    });
+
+    it('should display correct page buttons for 23 results with 5 per page', async () => {
+      // With 23 results and 5 per page: maxPage = ceil(23/5) = 5
+      const totalResults = 23;
+      const resultsPerPage = 5;
+      const maxPage = Math.ceil(totalResults / resultsPerPage);
+
+      await renderPager({
+        pagerState: {
+          currentPage: maxPage, // On last page (page 5)
+          maxPage: maxPage,
+        },
+      });
+
+      // Should show pages 1-5 (all available pages)
+      await expect.element(locators.page1).toBeInTheDocument();
+      await expect.element(locators.page2).toBeInTheDocument();
+      await expect.element(locators.page3).toBeInTheDocument();
+      await expect.element(locators.page4).toBeInTheDocument();
+      await expect.element(locators.page5).toBeInTheDocument();
+
+      // Page 6 should NOT exist
+      await expect.element(locators.page6).not.toBeInTheDocument();
+    });
+  });
+
   it('should update numberOfPages property', async () => {
     const element = await renderPager({
       props: {numberOfPages: 3},
