@@ -13,6 +13,7 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
 
 A facet allows users to drill down inside a result set by restricting the result to certain field values. 
 The _Timeframe Facet_ is used specifically with field values that are dates.
+
 An optional date picker is available to this facet, allowing users to set custom ranges. 
 
 ```html
@@ -22,7 +23,7 @@ An optional date picker is available to this facet, allowing users to set custom
     tabs-excluded
     filter-facet-count
     injection-depth="1000"
-    depends-on="[object Object]"
+    with-date-picker
   >
     <atomic-timeframe unit="hour"></atomic-timeframe>
     <atomic-timeframe unit="day"></atomic-timeframe>
