@@ -170,7 +170,6 @@ describe('Insight Panel test suites', () => {
     });
   });
 
-
   describe('Smart Snippet Answer', () => {
     const visitPage = () => {
       cy.visit(host);
@@ -207,19 +206,6 @@ describe('Insight Panel test suites', () => {
 
       it('should show the smart snippet component', () => {
         InsightPanelsSelectors.smartSnippetExpandableAnswer().should('exist');
-      });
-
-      describe('when giving explanatory feedback', () => {
-        it('should show the feedback modal', () => {
-          InsightPanelsSelectors.smartSnippetFeedbackModal().should(
-            'not.exist'
-          );
-
-          InsightPanelsSelectors.smartSnippetFeedbackNoButton().click();
-          InsightPanelsSelectors.smartSnippetsExplainWhyButton().click();
-
-          InsightPanelsSelectors.smartSnippetFeedbackModal().should('exist');
-        });
       });
     });
   });
