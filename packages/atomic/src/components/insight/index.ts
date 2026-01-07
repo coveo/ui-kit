@@ -4,6 +4,7 @@ export {AtomicInsightFullSearchButton} from './atomic-insight-full-search-button
 export {AtomicInsightGenerateAnswerButton} from './atomic-insight-generate-answer-button/atomic-insight-generate-answer-button.js';
 export {AtomicInsightInterface} from './atomic-insight-interface/atomic-insight-interface.js';
 export {AtomicInsightLayout} from './atomic-insight-layout/atomic-insight-layout.js';
+export {AtomicInsightNoResults} from './atomic-insight-no-results/atomic-insight-no-results.js';
 export {AtomicInsightPager} from './atomic-insight-pager/atomic-insight-pager.js';
 export {AtomicInsightQueryError} from './atomic-insight-query-error/atomic-insight-query-error.js';
 export {AtomicInsightQuerySummary} from './atomic-insight-query-summary/atomic-insight-query-summary.js';
