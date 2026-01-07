@@ -75,10 +75,6 @@ export namespace Components {
          */
         "isOpen": boolean;
     }
-    interface AtomicInsightEditToggle {
-        "clickCallback": () => void;
-        "tooltip": string;
-    }
     interface AtomicInsightFacet {
         /**
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
@@ -158,9 +154,6 @@ export namespace Components {
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
-    interface AtomicInsightFullSearchButton {
-        "tooltip": string;
-    }
     interface AtomicInsightGeneratedAnswer {
         "answerConfigurationId"?: string;
         /**
@@ -190,12 +183,6 @@ export namespace Components {
     interface AtomicInsightHistoryToggle {
         "clickCallback": () => void;
         "tooltip": string;
-    }
-    interface AtomicInsightLayout {
-        /**
-          * Whether the interface should be shown in widget format.
-         */
-        "widget": boolean;
     }
     interface AtomicInsightNoResults {
     }
@@ -252,14 +239,6 @@ export namespace Components {
           * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
         "withInput"?: NumberInputType;
-    }
-    interface AtomicInsightPager {
-        /**
-          * Specifies how many page buttons to display in the pager.
-         */
-        "numberOfPages": number;
-    }
-    interface AtomicInsightQueryError {
     }
     interface AtomicInsightQuerySummary {
     }
@@ -981,10 +960,6 @@ export interface AtomicGeneratedAnswerFeedbackModalCustomEvent<T> extends Custom
     detail: T;
     target: HTMLAtomicGeneratedAnswerFeedbackModalElement;
 }
-export interface AtomicInsightPagerCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicInsightPagerElement;
-}
 export interface AtomicInsightResultActionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicInsightResultActionElement;
@@ -1059,12 +1034,6 @@ declare global {
         prototype: HTMLAtomicGeneratedAnswerFeedbackModalElement;
         new (): HTMLAtomicGeneratedAnswerFeedbackModalElement;
     };
-    interface HTMLAtomicInsightEditToggleElement extends Components.AtomicInsightEditToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightEditToggleElement: {
-        prototype: HTMLAtomicInsightEditToggleElement;
-        new (): HTMLAtomicInsightEditToggleElement;
-    };
     interface HTMLAtomicInsightFacetElement extends Components.AtomicInsightFacet, HTMLStencilElement {
     }
     var HTMLAtomicInsightFacetElement: {
@@ -1076,12 +1045,6 @@ declare global {
     var HTMLAtomicInsightFoldedResultListElement: {
         prototype: HTMLAtomicInsightFoldedResultListElement;
         new (): HTMLAtomicInsightFoldedResultListElement;
-    };
-    interface HTMLAtomicInsightFullSearchButtonElement extends Components.AtomicInsightFullSearchButton, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightFullSearchButtonElement: {
-        prototype: HTMLAtomicInsightFullSearchButtonElement;
-        new (): HTMLAtomicInsightFullSearchButtonElement;
     };
     interface HTMLAtomicInsightGeneratedAnswerElement extends Components.AtomicInsightGeneratedAnswer, HTMLStencilElement {
     }
@@ -1095,12 +1058,6 @@ declare global {
         prototype: HTMLAtomicInsightHistoryToggleElement;
         new (): HTMLAtomicInsightHistoryToggleElement;
     };
-    interface HTMLAtomicInsightLayoutElement extends Components.AtomicInsightLayout, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightLayoutElement: {
-        prototype: HTMLAtomicInsightLayoutElement;
-        new (): HTMLAtomicInsightLayoutElement;
-    };
     interface HTMLAtomicInsightNoResultsElement extends Components.AtomicInsightNoResults, HTMLStencilElement {
     }
     var HTMLAtomicInsightNoResultsElement: {
@@ -1112,29 +1069,6 @@ declare global {
     var HTMLAtomicInsightNumericFacetElement: {
         prototype: HTMLAtomicInsightNumericFacetElement;
         new (): HTMLAtomicInsightNumericFacetElement;
-    };
-    interface HTMLAtomicInsightPagerElementEventMap {
-        "atomic/scrollToTop": any;
-    }
-    interface HTMLAtomicInsightPagerElement extends Components.AtomicInsightPager, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicInsightPagerElementEventMap>(type: K, listener: (this: HTMLAtomicInsightPagerElement, ev: AtomicInsightPagerCustomEvent<HTMLAtomicInsightPagerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicInsightPagerElementEventMap>(type: K, listener: (this: HTMLAtomicInsightPagerElement, ev: AtomicInsightPagerCustomEvent<HTMLAtomicInsightPagerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicInsightPagerElement: {
-        prototype: HTMLAtomicInsightPagerElement;
-        new (): HTMLAtomicInsightPagerElement;
-    };
-    interface HTMLAtomicInsightQueryErrorElement extends Components.AtomicInsightQueryError, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightQueryErrorElement: {
-        prototype: HTMLAtomicInsightQueryErrorElement;
-        new (): HTMLAtomicInsightQueryErrorElement;
     };
     interface HTMLAtomicInsightQuerySummaryElement extends Components.AtomicInsightQuerySummary, HTMLStencilElement {
     }
@@ -1597,17 +1531,12 @@ declare global {
     interface HTMLElementTagNameMap {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
-        "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
-        "atomic-insight-full-search-button": HTMLAtomicInsightFullSearchButtonElement;
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
         "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
-        "atomic-insight-layout": HTMLAtomicInsightLayoutElement;
         "atomic-insight-no-results": HTMLAtomicInsightNoResultsElement;
         "atomic-insight-numeric-facet": HTMLAtomicInsightNumericFacetElement;
-        "atomic-insight-pager": HTMLAtomicInsightPagerElement;
-        "atomic-insight-query-error": HTMLAtomicInsightQueryErrorElement;
         "atomic-insight-query-summary": HTMLAtomicInsightQuerySummaryElement;
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
         "atomic-insight-refine-toggle": HTMLAtomicInsightRefineToggleElement;
@@ -1697,10 +1626,6 @@ declare namespace LocalJSX {
         "isOpen"?: boolean;
         "onFeedbackSent"?: (event: AtomicGeneratedAnswerFeedbackModalCustomEvent<any>) => void;
     }
-    interface AtomicInsightEditToggle {
-        "clickCallback"?: () => void;
-        "tooltip"?: string;
-    }
     interface AtomicInsightFacet {
         /**
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
@@ -1776,9 +1701,6 @@ declare namespace LocalJSX {
          */
         "parentField"?: string;
     }
-    interface AtomicInsightFullSearchButton {
-        "tooltip"?: string;
-    }
     interface AtomicInsightGeneratedAnswer {
         "answerConfigurationId"?: string;
         /**
@@ -1808,12 +1730,6 @@ declare namespace LocalJSX {
     interface AtomicInsightHistoryToggle {
         "clickCallback"?: () => void;
         "tooltip"?: string;
-    }
-    interface AtomicInsightLayout {
-        /**
-          * Whether the interface should be shown in widget format.
-         */
-        "widget"?: boolean;
     }
     interface AtomicInsightNoResults {
     }
@@ -1870,15 +1786,6 @@ declare namespace LocalJSX {
           * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
         "withInput"?: NumberInputType;
-    }
-    interface AtomicInsightPager {
-        /**
-          * Specifies how many page buttons to display in the pager.
-         */
-        "numberOfPages"?: number;
-        "onAtomic/scrollToTop"?: (event: AtomicInsightPagerCustomEvent<any>) => void;
-    }
-    interface AtomicInsightQueryError {
     }
     interface AtomicInsightQuerySummary {
     }
@@ -2576,17 +2483,12 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "atomic-citation": AtomicCitation;
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
-        "atomic-insight-edit-toggle": AtomicInsightEditToggle;
         "atomic-insight-facet": AtomicInsightFacet;
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
-        "atomic-insight-full-search-button": AtomicInsightFullSearchButton;
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
         "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
-        "atomic-insight-layout": AtomicInsightLayout;
         "atomic-insight-no-results": AtomicInsightNoResults;
         "atomic-insight-numeric-facet": AtomicInsightNumericFacet;
-        "atomic-insight-pager": AtomicInsightPager;
-        "atomic-insight-query-error": AtomicInsightQueryError;
         "atomic-insight-query-summary": AtomicInsightQuerySummary;
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
         "atomic-insight-refine-toggle": AtomicInsightRefineToggle;
@@ -2643,17 +2545,12 @@ declare module "@stencil/core" {
              * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
              */
             "atomic-generated-answer-feedback-modal": LocalJSX.AtomicGeneratedAnswerFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerFeedbackModalElement>;
-            "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;
             "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
-            "atomic-insight-full-search-button": LocalJSX.AtomicInsightFullSearchButton & JSXBase.HTMLAttributes<HTMLAtomicInsightFullSearchButtonElement>;
             "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
             "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
-            "atomic-insight-layout": LocalJSX.AtomicInsightLayout & JSXBase.HTMLAttributes<HTMLAtomicInsightLayoutElement>;
             "atomic-insight-no-results": LocalJSX.AtomicInsightNoResults & JSXBase.HTMLAttributes<HTMLAtomicInsightNoResultsElement>;
             "atomic-insight-numeric-facet": LocalJSX.AtomicInsightNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightNumericFacetElement>;
-            "atomic-insight-pager": LocalJSX.AtomicInsightPager & JSXBase.HTMLAttributes<HTMLAtomicInsightPagerElement>;
-            "atomic-insight-query-error": LocalJSX.AtomicInsightQueryError & JSXBase.HTMLAttributes<HTMLAtomicInsightQueryErrorElement>;
             "atomic-insight-query-summary": LocalJSX.AtomicInsightQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicInsightQuerySummaryElement>;
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
             "atomic-insight-refine-toggle": LocalJSX.AtomicInsightRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineToggleElement>;
