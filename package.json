@@ -28,5 +28,5 @@
     "turbo": "latest"
   },
   "name": "relay",
-  "packageManager": "pnpm@10.24.0"
+  "packageManager": "pnpm@10.27.0"
 }
