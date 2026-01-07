@@ -29,9 +29,14 @@ import {
   AtomicComponentError as LitAtomicComponentError,
   AtomicFocusTrap as LitAtomicFocusTrap,
   AtomicIcon as LitAtomicIcon,
+  AtomicInsightEditToggle as LitAtomicInsightEditToggle,
+  AtomicInsightFullSearchButton as LitAtomicInsightFullSearchButton,
   AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
   AtomicInsightInterface as LitAtomicInsightInterface,
-  AtomicInsightNoResults as LitAtomicInsightNoResults,
+  AtomicInsightLayout as LitAtomicInsightLayout,
+  AtomicInsightPager as LitAtomicInsightPager,
+  AtomicInsightQueryError as LitAtomicInsightQueryError,
+  AtomicInsightResultTemplate as LitAtomicInsightResultTemplate,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicNumericRange as LitAtomicNumericRange,
   AtomicProduct as LitAtomicProduct,
@@ -240,6 +245,18 @@ export const AtomicIcon = createComponent({
   elementClass: LitAtomicIcon,
 });
 
+export const AtomicInsightEditToggle = createComponent({
+  tagName: 'atomic-insight-edit-toggle',
+  react: React,
+  elementClass: LitAtomicInsightEditToggle,
+});
+
+export const AtomicInsightFullSearchButton = createComponent({
+  tagName: 'atomic-insight-full-search-button',
+  react: React,
+  elementClass: LitAtomicInsightFullSearchButton,
+});
+
 export const AtomicInsightGenerateAnswerButton = createComponent({
   tagName: 'atomic-insight-generate-answer-button',
   react: React,
@@ -252,10 +269,28 @@ export const AtomicInsightInterface = createComponent({
   elementClass: LitAtomicInsightInterface,
 });
 
-export const AtomicInsightNoResults = createComponent({
-  tagName: 'atomic-insight-no-results',
+export const AtomicInsightLayout = createComponent({
+  tagName: 'atomic-insight-layout',
   react: React,
-  elementClass: LitAtomicInsightNoResults,
+  elementClass: LitAtomicInsightLayout,
+});
+
+export const AtomicInsightPager = createComponent({
+  tagName: 'atomic-insight-pager',
+  react: React,
+  elementClass: LitAtomicInsightPager,
+});
+
+export const AtomicInsightQueryError = createComponent({
+  tagName: 'atomic-insight-query-error',
+  react: React,
+  elementClass: LitAtomicInsightQueryError,
+});
+
+export const AtomicInsightResultTemplate = createComponent({
+  tagName: 'atomic-insight-result-template',
+  react: React,
+  elementClass: LitAtomicInsightResultTemplate,
 });
 
 export const AtomicLayoutSection = createComponent({

@@ -7,11 +7,13 @@ import {
   type MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2.js';
 import {buildMockProduct} from '../../../../test/mock-product.js';
+import {buildMockSpotlightContent} from '../../../../test/mock-spotlight-content.js';
 import * as DidYouMean from '../../search/did-you-mean/headless-did-you-mean.js';
 import type {SearchSummaryState} from '../../search/summary/headless-search-summary.js';
 import * as CoreBreadcrumbManager from '../breadcrumb-manager/headless-core-breadcrumb-manager.js';
 import * as CoreFacetGenerator from '../facets/generator/headless-commerce-facet-generator.js';
 import * as CoreInteractiveProduct from '../interactive-product/headless-core-interactive-product.js';
+import * as CoreInteractiveSpotlightContent from '../interactive-spotlight-content/headless-core-interactive-spotlight-content.js';
 import * as CorePagination from '../pagination/headless-core-commerce-pagination.js';
 import * as CoreParameterManager from '../parameter-manager/headless-core-parameter-manager.js';
 import * as CoreSort from '../sort/headless-core-commerce-sort.js';
@@ -19,6 +21,7 @@ import * as CoreUrlManager from '../url-manager/headless-core-url-manager.js';
 import {
   type BaseSolutionTypeSubControllers,
   buildBaseSubControllers,
+  buildProductListingSubControllers,
   buildSearchAndListingsSubControllers,
   buildSearchSubControllers,
   type SearchAndListingSubControllers,
@@ -103,6 +106,79 @@ describe('sub-controllers', () => {
 
       expect(didYouMean).toEqual(buildDidYouMean.mock.results[0].value);
       expect(buildDidYouMean).toHaveBeenCalledWith(engine);
+    });
+  });
+
+  describe('#buildProductListingSubControllers', () => {
+    let subControllers: ReturnType<typeof buildProductListingSubControllers>;
+
+    beforeEach(() => {
+      subControllers = buildProductListingSubControllers(engine, {
+        responseIdSelector: mockResponseIdSelector,
+        isLoadingSelector: mockIsLoadingSelector,
+        numberOfProductsSelector: mockNumberOfProductsSelector,
+        errorSelector: mockErrorSelector,
+        pageSelector: mockPageSelector,
+        perPageSelector: mockPerPageSelector,
+        totalEntriesSelector: mockTotalEntriesSelector,
+        enrichSummary: mockAugmentSummary,
+        fetchProductsActionCreator: mockFetchProductsActionCreator,
+        fetchMoreProductsActionCreator: mockFetchMoreProductsActionCreator,
+        facetResponseSelector: mockFacetResponseSelector,
+        isFacetLoadingResponseSelector: mockIsFacetLoadingResponseSelector,
+        requestIdSelector: mockRequestIdSelector,
+        serializer: mockSerializer,
+        parametersDefinition: mockParametersDefinition as SchemaDefinition<
+          Required<Parameters>
+        >,
+        activeParametersSelector: mockActiveParametersSelector,
+        restoreActionCreator: mockRestoreActionCreator,
+      });
+    });
+
+    it('exposes base sub-controllers', () => {
+      expect(subControllers).toHaveProperty('pagination');
+      expect(subControllers).toHaveProperty('interactiveProduct');
+    });
+
+    it('exposes search and listing sub-controllers', () => {
+      expect(subControllers).toHaveProperty('sort');
+      expect(subControllers).toHaveProperty('facetGenerator');
+      expect(subControllers).toHaveProperty('breadcrumbManager');
+      expect(subControllers).toHaveProperty('urlManager');
+      expect(subControllers).toHaveProperty('parameterManager');
+    });
+
+    it('exposes interactiveSpotlightContent for product listing', () => {
+      expect(subControllers).toHaveProperty('interactiveSpotlightContent');
+    });
+
+    it('#interactiveSpotlightContent builds interactive spotlight content controller', () => {
+      const buildCoreInteractiveSpotlightContentMock = vi.spyOn(
+        CoreInteractiveSpotlightContent,
+        'buildCoreInteractiveSpotlightContent'
+      );
+
+      const props = {
+        options: {
+          spotlightContent: buildMockSpotlightContent({
+            id: 'spotlight-1',
+            desktopImage: 'https://example.com/desktop.jpg',
+            position: 1,
+          }),
+        },
+      };
+
+      const interactiveSpotlightContent =
+        subControllers.interactiveSpotlightContent(props);
+
+      expect(interactiveSpotlightContent).toEqual(
+        buildCoreInteractiveSpotlightContentMock.mock.results[0].value
+      );
+      expect(buildCoreInteractiveSpotlightContentMock).toHaveBeenCalledWith(
+        engine,
+        {...props, responseIdSelector: mockResponseIdSelector}
+      );
     });
   });
 
