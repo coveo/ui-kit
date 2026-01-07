@@ -13,7 +13,7 @@ import {
   parseCommits,
   writeChangelog,
 } from '@coveo/semantic-monorepo-tools';
-// @ts-ignore no dts is ok
+// @ts-expect-error no dts is ok
 import changelogConvention from 'conventional-changelog-conventionalcommits';
 import {gt, SemVer} from 'semver';
 import {

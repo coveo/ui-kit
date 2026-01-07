@@ -80,7 +80,7 @@ describe('MinimizeButton (Lit)', () => {
     });
 
     const badge = container.querySelector(
-      '[part=\"sidebar-minimize-badge\"]'
+      '[part="sidebar-minimize-badge"]'
     ) as HTMLElement | null;
 
     expect(badge).toBeTruthy();
@@ -94,7 +94,7 @@ describe('MinimizeButton (Lit)', () => {
       highlightKeywords: baseHighlightKeywords,
     });
 
-    const badge = container.querySelector('[part=\"sidebar-minimize-badge\"]');
+    const badge = container.querySelector('[part="sidebar-minimize-badge"]');
 
     expect(badge).toBeNull();
   });
