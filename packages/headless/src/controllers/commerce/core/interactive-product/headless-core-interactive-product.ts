@@ -71,7 +71,7 @@ export function buildCoreInteractiveProduct(
       `- Could not retrieve '${property}' analytics property from field${lookupFields.length > 1 ? 's' : ''} \
 '${lookupFields.join("', '")}'; fell back to ${fallback}.`;
 
-    const warnings = [];
+    const warnings: string[] = [];
 
     const {ec_name, ec_promo_price, ec_price, ec_product_id} =
       props.options.product;
