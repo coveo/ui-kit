@@ -60,14 +60,14 @@ export class AtomicInsightResultTemplate
 
   constructor() {
     super();
-    const validParent = [
+    const validParents = [
       'atomic-insight-result-list',
       'atomic-insight-folded-result-list',
     ];
     const allowEmpty = true;
     this.resultTemplateController = new ResultTemplateController(
       this,
-      validParent,
+      validParents,
       allowEmpty
     );
   }
@@ -90,8 +90,9 @@ export class AtomicInsightResultTemplate
    * Gets the appropriate result template based on conditions applied.
    */
   public async getTemplate(): Promise<InsightResultTemplate<DocumentFragment> | null> {
-    const template =
-      this.resultTemplateController?.getTemplate(this.conditions) || null;
+    const template = this.resultTemplateController?.getTemplate(
+      this.conditions
+    );
     return template;
   }
 }

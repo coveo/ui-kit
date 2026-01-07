@@ -100,13 +100,12 @@ describe('atomic-insight-result-template', () => {
       };
       const spy = vi
         .spyOn(ResultTemplateController.prototype, 'getTemplate')
-        .mockResolvedValue(fakeTemplate);
+        .mockReturnValue(fakeTemplate);
       const element = await setupElement({conditions: [titleConditions]});
       const result = await element.getTemplate();
 
       expect(spy).toHaveBeenCalledWith([titleConditions]);
       expect(result).toBe(fakeTemplate);
-      spy.mockRestore();
     });
   });
 
