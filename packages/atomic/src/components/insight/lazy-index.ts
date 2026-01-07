@@ -18,6 +18,10 @@ export default {
     await import('./atomic-insight-pager/atomic-insight-pager.js'),
   'atomic-insight-query-error': async () =>
     await import('./atomic-insight-query-error/atomic-insight-query-error.js'),
+  'atomic-insight-query-summary': async () =>
+    await import(
+      './atomic-insight-query-summary/atomic-insight-query-summary.js'
+    ),
   'atomic-insight-result-template': async () =>
     await import(
       './atomic-insight-result-template/atomic-insight-result-template.js'
