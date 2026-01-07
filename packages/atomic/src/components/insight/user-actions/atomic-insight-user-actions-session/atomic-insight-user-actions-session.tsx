@@ -6,7 +6,7 @@ import {parseTimestampToDateDetails} from '../../../../utils/date-utils';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {Button} from '../../../common/stencil-button';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
-import {UserAction} from './user-action';
+import {UserAction} from './stencil-user-action';
 
 export type UserActionType =
   | 'SEARCH'
