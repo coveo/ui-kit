@@ -7,5 +7,6 @@ export {AtomicInsightLayout} from './atomic-insight-layout/atomic-insight-layout
 export {AtomicInsightPager} from './atomic-insight-pager/atomic-insight-pager.js';
 export {AtomicInsightQueryError} from './atomic-insight-query-error/atomic-insight-query-error.js';
 export {AtomicInsightResultTemplate} from './atomic-insight-result-template/atomic-insight-result-template.js';
+export {AtomicInsightSmartSnippet} from './atomic-insight-smart-snippet/atomic-insight-smart-snippet.js';
 export {AtomicInsightTab} from './atomic-insight-tab/atomic-insight-tab.js';
 export {AtomicInsightTabs} from './atomic-insight-tabs/atomic-insight-tabs.js';
