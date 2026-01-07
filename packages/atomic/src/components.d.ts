@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
-import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
+import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InteractiveCitation, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, UserAction as IUserAction } from "@coveo/headless/insight";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -18,8 +18,8 @@ import { RecsStore } from "./components/recommendations/atomic-recs-interface/st
 import { AnyBindings } from "./components/common/interface/bindings";
 import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
-export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
-export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
+export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InteractiveCitation, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, UserAction as IUserAction } from "@coveo/headless/insight";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -74,10 +74,6 @@ export namespace Components {
           * Indicates whether the modal is open.
          */
         "isOpen": boolean;
-    }
-    interface AtomicInsightEditToggle {
-        "clickCallback": () => void;
-        "tooltip": string;
     }
     interface AtomicInsightFacet {
         /**
@@ -158,9 +154,6 @@ export namespace Components {
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
-    interface AtomicInsightFullSearchButton {
-        "tooltip": string;
-    }
     interface AtomicInsightGeneratedAnswer {
         "answerConfigurationId"?: string;
         /**
@@ -190,12 +183,6 @@ export namespace Components {
     interface AtomicInsightHistoryToggle {
         "clickCallback": () => void;
         "tooltip": string;
-    }
-    interface AtomicInsightLayout {
-        /**
-          * Whether the interface should be shown in widget format.
-         */
-        "widget": boolean;
     }
     interface AtomicInsightNoResults {
     }
@@ -252,16 +239,6 @@ export namespace Components {
           * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
         "withInput"?: NumberInputType;
-    }
-    interface AtomicInsightPager {
-        /**
-          * Specifies how many page buttons to display in the pager.
-         */
-        "numberOfPages": number;
-    }
-    interface AtomicInsightQueryError {
-    }
-    interface AtomicInsightQuerySummary {
     }
     interface AtomicInsightRefineModal {
         "isOpen": boolean;
@@ -394,38 +371,6 @@ export namespace Components {
           * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
          */
         "sandbox": string;
-    }
-    interface AtomicInsightResultTemplate {
-        /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
-         */
-        "conditions": InsightResultTemplateCondition[];
-        /**
-          * Gets the appropriate result template based on conditions applied.
-         */
-        "getTemplate": () => Promise<InsightResultTemplate<DocumentFragment> | null>;
-        /**
-          * The field that, when defined on a result item, would allow the template to be applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
-         */
-        "ifDefined"?: string;
-        /**
-          * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
-         */
-        "ifNotDefined"?: string;
-        /**
-          * The field and values that define which result items the condition must be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
-         */
-        "mustMatch": Record<
-    string,
-    string[]
-  >;
-        /**
-          * The field and values that define which result items the condition must not be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
-         */
-        "mustNotMatch": Record<
-    string,
-    string[]
-  >;
     }
     interface AtomicInsightSearchBox {
         /**
@@ -899,10 +844,6 @@ export namespace Components {
          */
         "tabsIncluded": string[] | string;
     }
-    interface AtomicSmartSnippetAnswer {
-        "htmlContent": string;
-        "innerStyle"?: string;
-    }
     /**
      * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
      * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
@@ -1013,10 +954,6 @@ export interface AtomicGeneratedAnswerFeedbackModalCustomEvent<T> extends Custom
     detail: T;
     target: HTMLAtomicGeneratedAnswerFeedbackModalElement;
 }
-export interface AtomicInsightPagerCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicInsightPagerElement;
-}
 export interface AtomicInsightResultActionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicInsightResultActionElement;
@@ -1044,10 +981,6 @@ export interface AtomicIpxModalCustomEvent<T> extends CustomEvent<T> {
 export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicQuickviewModalElement;
-}
-export interface AtomicSmartSnippetAnswerCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicSmartSnippetAnswerElement;
 }
 export interface AtomicSmartSnippetFeedbackModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1091,12 +1024,6 @@ declare global {
         prototype: HTMLAtomicGeneratedAnswerFeedbackModalElement;
         new (): HTMLAtomicGeneratedAnswerFeedbackModalElement;
     };
-    interface HTMLAtomicInsightEditToggleElement extends Components.AtomicInsightEditToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightEditToggleElement: {
-        prototype: HTMLAtomicInsightEditToggleElement;
-        new (): HTMLAtomicInsightEditToggleElement;
-    };
     interface HTMLAtomicInsightFacetElement extends Components.AtomicInsightFacet, HTMLStencilElement {
     }
     var HTMLAtomicInsightFacetElement: {
@@ -1108,12 +1035,6 @@ declare global {
     var HTMLAtomicInsightFoldedResultListElement: {
         prototype: HTMLAtomicInsightFoldedResultListElement;
         new (): HTMLAtomicInsightFoldedResultListElement;
-    };
-    interface HTMLAtomicInsightFullSearchButtonElement extends Components.AtomicInsightFullSearchButton, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightFullSearchButtonElement: {
-        prototype: HTMLAtomicInsightFullSearchButtonElement;
-        new (): HTMLAtomicInsightFullSearchButtonElement;
     };
     interface HTMLAtomicInsightGeneratedAnswerElement extends Components.AtomicInsightGeneratedAnswer, HTMLStencilElement {
     }
@@ -1127,12 +1048,6 @@ declare global {
         prototype: HTMLAtomicInsightHistoryToggleElement;
         new (): HTMLAtomicInsightHistoryToggleElement;
     };
-    interface HTMLAtomicInsightLayoutElement extends Components.AtomicInsightLayout, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightLayoutElement: {
-        prototype: HTMLAtomicInsightLayoutElement;
-        new (): HTMLAtomicInsightLayoutElement;
-    };
     interface HTMLAtomicInsightNoResultsElement extends Components.AtomicInsightNoResults, HTMLStencilElement {
     }
     var HTMLAtomicInsightNoResultsElement: {
@@ -1144,35 +1059,6 @@ declare global {
     var HTMLAtomicInsightNumericFacetElement: {
         prototype: HTMLAtomicInsightNumericFacetElement;
         new (): HTMLAtomicInsightNumericFacetElement;
-    };
-    interface HTMLAtomicInsightPagerElementEventMap {
-        "atomic/scrollToTop": any;
-    }
-    interface HTMLAtomicInsightPagerElement extends Components.AtomicInsightPager, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicInsightPagerElementEventMap>(type: K, listener: (this: HTMLAtomicInsightPagerElement, ev: AtomicInsightPagerCustomEvent<HTMLAtomicInsightPagerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicInsightPagerElementEventMap>(type: K, listener: (this: HTMLAtomicInsightPagerElement, ev: AtomicInsightPagerCustomEvent<HTMLAtomicInsightPagerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicInsightPagerElement: {
-        prototype: HTMLAtomicInsightPagerElement;
-        new (): HTMLAtomicInsightPagerElement;
-    };
-    interface HTMLAtomicInsightQueryErrorElement extends Components.AtomicInsightQueryError, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightQueryErrorElement: {
-        prototype: HTMLAtomicInsightQueryErrorElement;
-        new (): HTMLAtomicInsightQueryErrorElement;
-    };
-    interface HTMLAtomicInsightQuerySummaryElement extends Components.AtomicInsightQuerySummary, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightQuerySummaryElement: {
-        prototype: HTMLAtomicInsightQuerySummaryElement;
-        new (): HTMLAtomicInsightQuerySummaryElement;
     };
     interface HTMLAtomicInsightRefineModalElement extends Components.AtomicInsightRefineModal, HTMLStencilElement {
     }
@@ -1262,12 +1148,6 @@ declare global {
     var HTMLAtomicInsightResultQuickviewActionElement: {
         prototype: HTMLAtomicInsightResultQuickviewActionElement;
         new (): HTMLAtomicInsightResultQuickviewActionElement;
-    };
-    interface HTMLAtomicInsightResultTemplateElement extends Components.AtomicInsightResultTemplate, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightResultTemplateElement: {
-        prototype: HTMLAtomicInsightResultTemplateElement;
-        new (): HTMLAtomicInsightResultTemplateElement;
     };
     interface HTMLAtomicInsightSearchBoxElement extends Components.AtomicInsightSearchBox, HTMLStencilElement {
     }
@@ -1529,26 +1409,6 @@ declare global {
         prototype: HTMLAtomicSmartSnippetElement;
         new (): HTMLAtomicSmartSnippetElement;
     };
-    interface HTMLAtomicSmartSnippetAnswerElementEventMap {
-        "answerSizeUpdated": {height: number};
-        "selectInlineLink": InlineLink;
-        "beginDelayedSelectInlineLink": InlineLink;
-        "cancelPendingSelectInlineLink": InlineLink;
-    }
-    interface HTMLAtomicSmartSnippetAnswerElement extends Components.AtomicSmartSnippetAnswer, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicSmartSnippetAnswerElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetAnswerElement, ev: AtomicSmartSnippetAnswerCustomEvent<HTMLAtomicSmartSnippetAnswerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicSmartSnippetAnswerElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetAnswerElement, ev: AtomicSmartSnippetAnswerCustomEvent<HTMLAtomicSmartSnippetAnswerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicSmartSnippetAnswerElement: {
-        prototype: HTMLAtomicSmartSnippetAnswerElement;
-        new (): HTMLAtomicSmartSnippetAnswerElement;
-    };
     interface HTMLAtomicSmartSnippetFeedbackModalElementEventMap {
         "feedbackSent": any;
     }
@@ -1635,18 +1495,12 @@ declare global {
     interface HTMLElementTagNameMap {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
-        "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
-        "atomic-insight-full-search-button": HTMLAtomicInsightFullSearchButtonElement;
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
         "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
-        "atomic-insight-layout": HTMLAtomicInsightLayoutElement;
         "atomic-insight-no-results": HTMLAtomicInsightNoResultsElement;
         "atomic-insight-numeric-facet": HTMLAtomicInsightNumericFacetElement;
-        "atomic-insight-pager": HTMLAtomicInsightPagerElement;
-        "atomic-insight-query-error": HTMLAtomicInsightQueryErrorElement;
-        "atomic-insight-query-summary": HTMLAtomicInsightQuerySummaryElement;
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
         "atomic-insight-refine-toggle": HTMLAtomicInsightRefineToggleElement;
         "atomic-insight-result": HTMLAtomicInsightResultElement;
@@ -1658,7 +1512,6 @@ declare global {
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
         "atomic-insight-result-quickview-action": HTMLAtomicInsightResultQuickviewActionElement;
-        "atomic-insight-result-template": HTMLAtomicInsightResultTemplateElement;
         "atomic-insight-search-box": HTMLAtomicInsightSearchBoxElement;
         "atomic-insight-smart-snippet": HTMLAtomicInsightSmartSnippetElement;
         "atomic-insight-smart-snippet-feedback-modal": HTMLAtomicInsightSmartSnippetFeedbackModalElement;
@@ -1683,7 +1536,6 @@ declare global {
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
-        "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
         "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
         "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
@@ -1735,10 +1587,6 @@ declare namespace LocalJSX {
          */
         "isOpen"?: boolean;
         "onFeedbackSent"?: (event: AtomicGeneratedAnswerFeedbackModalCustomEvent<any>) => void;
-    }
-    interface AtomicInsightEditToggle {
-        "clickCallback"?: () => void;
-        "tooltip"?: string;
     }
     interface AtomicInsightFacet {
         /**
@@ -1815,9 +1663,6 @@ declare namespace LocalJSX {
          */
         "parentField"?: string;
     }
-    interface AtomicInsightFullSearchButton {
-        "tooltip"?: string;
-    }
     interface AtomicInsightGeneratedAnswer {
         "answerConfigurationId"?: string;
         /**
@@ -1847,12 +1692,6 @@ declare namespace LocalJSX {
     interface AtomicInsightHistoryToggle {
         "clickCallback"?: () => void;
         "tooltip"?: string;
-    }
-    interface AtomicInsightLayout {
-        /**
-          * Whether the interface should be shown in widget format.
-         */
-        "widget"?: boolean;
     }
     interface AtomicInsightNoResults {
     }
@@ -1909,17 +1748,6 @@ declare namespace LocalJSX {
           * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
         "withInput"?: NumberInputType;
-    }
-    interface AtomicInsightPager {
-        /**
-          * Specifies how many page buttons to display in the pager.
-         */
-        "numberOfPages"?: number;
-        "onAtomic/scrollToTop"?: (event: AtomicInsightPagerCustomEvent<any>) => void;
-    }
-    interface AtomicInsightQueryError {
-    }
-    interface AtomicInsightQuerySummary {
     }
     interface AtomicInsightRefineModal {
         "isOpen"?: boolean;
@@ -2046,34 +1874,6 @@ declare namespace LocalJSX {
           * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
          */
         "sandbox"?: string;
-    }
-    interface AtomicInsightResultTemplate {
-        /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
-         */
-        "conditions"?: InsightResultTemplateCondition[];
-        /**
-          * The field that, when defined on a result item, would allow the template to be applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
-         */
-        "ifDefined"?: string;
-        /**
-          * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
-         */
-        "ifNotDefined"?: string;
-        /**
-          * The field and values that define which result items the condition must be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
-         */
-        "mustMatch"?: Record<
-    string,
-    string[]
-  >;
-        /**
-          * The field and values that define which result items the condition must not be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
-         */
-        "mustNotMatch"?: Record<
-    string,
-    string[]
-  >;
     }
     interface AtomicInsightSearchBox {
         /**
@@ -2522,14 +2322,6 @@ declare namespace LocalJSX {
          */
         "tabsIncluded"?: string[] | string;
     }
-    interface AtomicSmartSnippetAnswer {
-        "htmlContent": string;
-        "innerStyle"?: string;
-        "onAnswerSizeUpdated"?: (event: AtomicSmartSnippetAnswerCustomEvent<{height: number}>) => void;
-        "onBeginDelayedSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
-        "onCancelPendingSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
-        "onSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
-    }
     /**
      * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
      * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
@@ -2643,18 +2435,12 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "atomic-citation": AtomicCitation;
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
-        "atomic-insight-edit-toggle": AtomicInsightEditToggle;
         "atomic-insight-facet": AtomicInsightFacet;
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
-        "atomic-insight-full-search-button": AtomicInsightFullSearchButton;
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
         "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
-        "atomic-insight-layout": AtomicInsightLayout;
         "atomic-insight-no-results": AtomicInsightNoResults;
         "atomic-insight-numeric-facet": AtomicInsightNumericFacet;
-        "atomic-insight-pager": AtomicInsightPager;
-        "atomic-insight-query-error": AtomicInsightQueryError;
-        "atomic-insight-query-summary": AtomicInsightQuerySummary;
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
         "atomic-insight-refine-toggle": AtomicInsightRefineToggle;
         "atomic-insight-result": AtomicInsightResult;
@@ -2666,7 +2452,6 @@ declare namespace LocalJSX {
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
         "atomic-insight-result-list": AtomicInsightResultList;
         "atomic-insight-result-quickview-action": AtomicInsightResultQuickviewAction;
-        "atomic-insight-result-template": AtomicInsightResultTemplate;
         "atomic-insight-search-box": AtomicInsightSearchBox;
         "atomic-insight-smart-snippet": AtomicInsightSmartSnippet;
         "atomic-insight-smart-snippet-feedback-modal": AtomicInsightSmartSnippetFeedbackModal;
@@ -2691,7 +2476,6 @@ declare namespace LocalJSX {
         "atomic-recs-result-template": AtomicRecsResultTemplate;
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-smart-snippet": AtomicSmartSnippet;
-        "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
         "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
         "atomic-smart-snippet-source": AtomicSmartSnippetSource;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
@@ -2711,18 +2495,12 @@ declare module "@stencil/core" {
              * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
              */
             "atomic-generated-answer-feedback-modal": LocalJSX.AtomicGeneratedAnswerFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerFeedbackModalElement>;
-            "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;
             "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
-            "atomic-insight-full-search-button": LocalJSX.AtomicInsightFullSearchButton & JSXBase.HTMLAttributes<HTMLAtomicInsightFullSearchButtonElement>;
             "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
             "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
-            "atomic-insight-layout": LocalJSX.AtomicInsightLayout & JSXBase.HTMLAttributes<HTMLAtomicInsightLayoutElement>;
             "atomic-insight-no-results": LocalJSX.AtomicInsightNoResults & JSXBase.HTMLAttributes<HTMLAtomicInsightNoResultsElement>;
             "atomic-insight-numeric-facet": LocalJSX.AtomicInsightNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightNumericFacetElement>;
-            "atomic-insight-pager": LocalJSX.AtomicInsightPager & JSXBase.HTMLAttributes<HTMLAtomicInsightPagerElement>;
-            "atomic-insight-query-error": LocalJSX.AtomicInsightQueryError & JSXBase.HTMLAttributes<HTMLAtomicInsightQueryErrorElement>;
-            "atomic-insight-query-summary": LocalJSX.AtomicInsightQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicInsightQuerySummaryElement>;
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
             "atomic-insight-refine-toggle": LocalJSX.AtomicInsightRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineToggleElement>;
             "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
@@ -2734,7 +2512,6 @@ declare module "@stencil/core" {
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
             "atomic-insight-result-quickview-action": LocalJSX.AtomicInsightResultQuickviewAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultQuickviewActionElement>;
-            "atomic-insight-result-template": LocalJSX.AtomicInsightResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultTemplateElement>;
             "atomic-insight-search-box": LocalJSX.AtomicInsightSearchBox & JSXBase.HTMLAttributes<HTMLAtomicInsightSearchBoxElement>;
             "atomic-insight-smart-snippet": LocalJSX.AtomicInsightSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetElement>;
             "atomic-insight-smart-snippet-feedback-modal": LocalJSX.AtomicInsightSmartSnippetFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetFeedbackModalElement>;
@@ -2819,7 +2596,6 @@ declare module "@stencil/core" {
              * ```
              */
             "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
-            "atomic-smart-snippet-answer": LocalJSX.AtomicSmartSnippetAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetAnswerElement>;
             /**
              * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
              * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.

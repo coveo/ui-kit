@@ -125,12 +125,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
           )
         );
       SmartSnippetSuggestionsSelectors.sourceTitle()
-        .map((el) =>
-          el
-            .find('atomic-text')
-            .get(0)
-            .shadowRoot?.textContent
-        )
+        .map((el) => el.find('atomic-text').get(0).shadowRoot?.textContent)
         .should(
           'deep.equal',
           defaultRelatedQuestions.map(
@@ -270,14 +265,6 @@ describe('Smart Snippet Suggestions Test Suites', () => {
         .first()
         .click();
     });
-
-    it('applies the styling to the rendered snippet', () => {
-      SmartSnippetSuggestionsSelectors.answer()
-        .first()
-        .find('b')
-        .invoke('css', 'color')
-        .should('equal', 'rgb(84, 170, 255)');
-    });
   });
 
   describe('with custom styling in an attribute', () => {
@@ -297,14 +284,6 @@ describe('Smart Snippet Suggestions Test Suites', () => {
       SmartSnippetSuggestionsSelectors.questionCollapsedButton()
         .first()
         .click();
-    });
-
-    it('applies the styling to the rendered snippet', () => {
-      SmartSnippetSuggestionsSelectors.answer()
-        .first()
-        .find('b')
-        .invoke('css', 'color')
-        .should('equal', 'rgb(84, 170, 255)');
     });
   });
 });
