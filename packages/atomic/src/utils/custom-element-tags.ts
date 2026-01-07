@@ -12,6 +12,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-automatic-facet-generator',
   'atomic-breadbox',
   'atomic-category-facet',
+  'atomic-citation',
   'atomic-color-facet',
   'atomic-commerce-breadbox',
   'atomic-commerce-category-facet',
