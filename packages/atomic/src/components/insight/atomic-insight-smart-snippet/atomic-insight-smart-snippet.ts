@@ -22,6 +22,7 @@ import '@/src/components/common/atomic-smart-snippet-collapse-wrapper/atomic-sma
 import '@/src/components/common/atomic-smart-snippet-expandable-answer/atomic-smart-snippet-expandable-answer';
 import {when} from 'lit-html/directives/when.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import styles from './atomic-insight-smart-snippet.tw.css.js';
 
 /**
  * The `atomic-insight-smart-snippet` component displays a smart snippet for an Insight Panel query.
@@ -48,6 +49,8 @@ export class AtomicInsightSmartSnippet
   extends LitElement
   implements InitializableComponent<InsightBindings>
 {
+  static styles = styles;
+
   @state() bindings!: InsightBindings;
   @state() error!: Error;
 
@@ -199,7 +202,8 @@ export class AtomicInsightSmartSnippet
     const shouldDisplay = this.smartSnippetState.answerFound;
     this.classList.toggle('atomic-hidden', !shouldDisplay);
 
-    return html`${when(shouldDisplay, () =>
+    return html`
+    ${when(shouldDisplay, () =>
       renderSnippetWrapper({
         props: {
           headingLevel: this.headingLevel,
