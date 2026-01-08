@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import type {AtomicInsightHistoryToggle} from './atomic-insight-history-toggle';
@@ -40,10 +40,6 @@ describe('atomic-insight-history-toggle', () => {
       },
     };
   };
-
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
 
   describe('rendering', () => {
     it('should render the history toggle button', async () => {
