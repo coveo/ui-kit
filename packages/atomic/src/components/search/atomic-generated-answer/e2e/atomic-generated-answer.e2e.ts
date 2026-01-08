@@ -139,29 +139,25 @@ test.describe('atomic-generated-answer', () => {
     ['like', 'dislike'].forEach((feedbackType) => {
       test.describe(`when clicking the ${feedbackType} generated answer button`, () => {
         test(`should open the feedback modal`, async ({generatedAnswer}) => {
-          await generatedAnswer.waitForLikeAndDislikeButtons();
-
           const feedbackButton =
             feedbackType === 'like'
               ? generatedAnswer.likeButton
               : generatedAnswer.dislikeButton;
 
           await feedbackButton.click();
-          await generatedAnswer.waitForModal();
+          await generatedAnswer.waitForModalToOpen();
         });
 
         test('should close the modal when clicking the skip button', async ({
           generatedAnswer,
         }) => {
-          await generatedAnswer.waitForLikeAndDislikeButtons();
-
           const feedbackButton =
             feedbackType === 'like'
               ? generatedAnswer.likeButton
               : generatedAnswer.dislikeButton;
 
           await feedbackButton.click();
-          await generatedAnswer.waitForModal();
+          await generatedAnswer.waitForModalToOpen();
 
           await generatedAnswer.feedbackModalSkipButton.click();
           await generatedAnswer.waitForModalToClose();
@@ -172,8 +168,6 @@ test.describe('atomic-generated-answer', () => {
             test('should submit the feedback request, log an analytics event and display the success message', async ({
               generatedAnswer,
             }) => {
-              await generatedAnswer.waitForLikeAndDislikeButtons();
-
               const feedbackButton =
                 feedbackType === 'like'
                   ? generatedAnswer.likeButton
@@ -182,13 +176,13 @@ test.describe('atomic-generated-answer', () => {
               const expectedHelpfulness = feedbackType === 'like';
 
               await feedbackButton.click();
-              await generatedAnswer.waitForModal();
+              await generatedAnswer.waitForModalToOpen();
 
               await generatedAnswer.fillAllRequiredOptions({
-                correctTopic: 'yes',
-                hallucinationFree: 'no',
-                documented: 'not_sure',
-                readable: 'yes',
+                correctTopic: 'Yes',
+                hallucinationFree: 'No',
+                documented: 'Not Sure',
+                readable: 'Yes',
               });
               await generatedAnswer.feedbackModalCorrectAnswerInput.fill(
                 'https://www.example.com/correct-answer'
@@ -228,18 +222,16 @@ test.describe('atomic-generated-answer', () => {
           });
 
           test.describe('when submitting without selecting all the required options', () => {
-            test('should display validation message', async ({
+            test('should display a validation error message', async ({
               generatedAnswer,
             }) => {
-              await generatedAnswer.waitForLikeAndDislikeButtons();
-
               const feedbackButton =
                 feedbackType === 'like'
                   ? generatedAnswer.likeButton
                   : generatedAnswer.dislikeButton;
 
               await feedbackButton.click();
-              await generatedAnswer.waitForModal();
+              await generatedAnswer.waitForModalToOpen();
 
               await generatedAnswer.feedbackModalSubmitButton.click();
 
@@ -257,8 +249,6 @@ test.describe('atomic-generated-answer', () => {
           test('should not reopen the feedback modal when clicking like/dislike button again', async ({
             generatedAnswer,
           }) => {
-            await generatedAnswer.waitForLikeAndDislikeButtons();
-
             const feedbackButton =
               feedbackType === 'like'
                 ? generatedAnswer.likeButton
@@ -267,7 +257,7 @@ test.describe('atomic-generated-answer', () => {
             const expectedHelpfulness = feedbackType === 'like';
 
             await feedbackButton.click();
-            await generatedAnswer.waitForModal();
+            await generatedAnswer.waitForModalToOpen();
 
             await generatedAnswer.fillAllRequiredOptions();
 
@@ -294,8 +284,6 @@ test.describe('atomic-generated-answer', () => {
           test('should allow reopening the feedback modal after a new query', async ({
             generatedAnswer,
           }) => {
-            await generatedAnswer.waitForLikeAndDislikeButtons();
-
             const feedbackButton =
               feedbackType === 'like'
                 ? generatedAnswer.likeButton
@@ -304,7 +292,7 @@ test.describe('atomic-generated-answer', () => {
             const expectedHelpfulness = feedbackType === 'like';
 
             await feedbackButton.click();
-            await generatedAnswer.waitForModal();
+            await generatedAnswer.waitForModalToOpen();
 
             await generatedAnswer.fillAllRequiredOptions();
 
@@ -322,10 +310,9 @@ test.describe('atomic-generated-answer', () => {
             await generatedAnswer.waitForModalToClose();
 
             await generatedAnswer.load({story: 'default'});
-            await generatedAnswer.waitForLikeAndDislikeButtons();
 
             await feedbackButton.click();
-            await generatedAnswer.waitForModal();
+            await generatedAnswer.waitForModalToOpen();
           });
         });
       });

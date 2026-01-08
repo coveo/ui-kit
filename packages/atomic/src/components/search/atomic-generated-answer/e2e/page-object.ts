@@ -12,7 +12,7 @@ type FeedbackQuestion =
   | 'documented'
   | 'readable';
 
-type FeedbackValue = 'yes' | 'no' | 'not_sure';
+type FeedbackValue = 'Yes' | 'No' | 'Not Sure';
 
 interface FeedbackParams {
   correctTopic?: FeedbackValue;
@@ -20,6 +20,12 @@ interface FeedbackParams {
   documented?: FeedbackValue;
   readable?: FeedbackValue;
 }
+
+const feedbackValueLabels: Record<FeedbackValue, string> = {
+  Yes: 'Yes',
+  No: 'No',
+  'Not Sure': 'Not sure',
+};
 
 export class GeneratedAnswerPageObject extends BasePageObject {
   constructor(page: Page) {
@@ -62,11 +68,11 @@ export class GeneratedAnswerPageObject extends BasePageObject {
   }
 
   get likeButton() {
-    return this.page.locator('button[part="feedback-button"].like');
+    return this.page.getByRole('button', {name: /^helpful$/i});
   }
 
   get dislikeButton() {
-    return this.page.locator('button[part="feedback-button"].dislike');
+    return this.page.getByRole('button', {name: /^not helpful$/i});
   }
 
   get feedbackModal() {
@@ -104,23 +110,22 @@ export class GeneratedAnswerPageObject extends BasePageObject {
   }
 
   async selectOption(questionType: FeedbackQuestion, option: FeedbackValue) {
-    const value =
-      option === 'not_sure' ? 'Not sure' : option === 'yes' ? 'Yes' : 'No';
-    const selector = `.${questionType} input[type="radio"][value="${value}"]`;
+    const feedbackLabelHtmlValue = feedbackValueLabels[option];
+    const selector = `.${questionType} input[type="radio"][value="${feedbackLabelHtmlValue}"]`;
     await this.feedbackModal.locator(selector).click();
   }
 
   async fillAllRequiredOptions(params?: FeedbackParams) {
-    await this.selectOption('correctTopic', params?.correctTopic ?? 'yes');
+    await this.selectOption('correctTopic', params?.correctTopic ?? 'Yes');
     await this.selectOption(
       'hallucinationFree',
-      params?.hallucinationFree ?? 'yes'
+      params?.hallucinationFree ?? 'Yes'
     );
-    await this.selectOption('documented', params?.documented ?? 'yes');
-    await this.selectOption('readable', params?.readable ?? 'yes');
+    await this.selectOption('documented', params?.documented ?? 'Yes');
+    await this.selectOption('readable', params?.readable ?? 'Yes');
   }
 
-  async waitForModal() {
+  async waitForModalToOpen() {
     await this.feedbackModal.waitFor({state: 'attached'});
     await this.page.waitForFunction(() => {
       const modal = document.querySelector(
@@ -137,11 +142,6 @@ export class GeneratedAnswerPageObject extends BasePageObject {
       );
       return !modal?.hasAttribute('is-open');
     });
-  }
-
-  async waitForLikeAndDislikeButtons() {
-    await this.likeButton.waitFor({state: 'visible'});
-    await this.dislikeButton.waitFor({state: 'visible'});
   }
 
   get validationErrors() {
