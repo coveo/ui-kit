@@ -748,14 +748,6 @@ export namespace Components {
         "store"?: RecsStore;
     }
     /**
-     * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface AtomicResultPlaceholder {
-        "density": ItemDisplayDensity;
-        "display": ItemDisplayLayout;
-        "imageSize": ItemDisplayImageSize;
-    }
-    /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
      * You can style the snippet by inserting a template element as follows:
      * ```html
@@ -1294,15 +1286,6 @@ declare global {
         new (): HTMLAtomicRecsResultElement;
     };
     /**
-     * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface HTMLAtomicResultPlaceholderElement extends Components.AtomicResultPlaceholder, HTMLStencilElement {
-    }
-    var HTMLAtomicResultPlaceholderElement: {
-        prototype: HTMLAtomicResultPlaceholderElement;
-        new (): HTMLAtomicResultPlaceholderElement;
-    };
-    /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
      * You can style the snippet by inserting a template element as follows:
      * ```html
@@ -1424,7 +1407,6 @@ declare global {
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-recs-result": HTMLAtomicRecsResultElement;
-        "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
@@ -2119,14 +2101,6 @@ declare namespace LocalJSX {
         "store"?: RecsStore;
     }
     /**
-     * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface AtomicResultPlaceholder {
-        "density": ItemDisplayDensity;
-        "display": ItemDisplayLayout;
-        "imageSize": ItemDisplayImageSize;
-    }
-    /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
      * You can style the snippet by inserting a template element as follows:
      * ```html
@@ -2309,7 +2283,6 @@ declare namespace LocalJSX {
         "atomic-quickview-modal": AtomicQuickviewModal;
         "atomic-recs-list": AtomicRecsList;
         "atomic-recs-result": AtomicRecsResult;
-        "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-source": AtomicSmartSnippetSource;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
@@ -2397,10 +2370,6 @@ declare module "@stencil/core" {
              * The `atomic-recs-result` component is used internally by the `atomic-recs-list` component.
              */
             "atomic-recs-result": LocalJSX.AtomicRecsResult & JSXBase.HTMLAttributes<HTMLAtomicRecsResultElement>;
-            /**
-             * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-             */
-            "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
             /**
              * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
              * You can style the snippet by inserting a template element as follows:
