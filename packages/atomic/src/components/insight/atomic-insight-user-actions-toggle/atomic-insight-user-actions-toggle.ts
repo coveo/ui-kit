@@ -14,7 +14,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import Clockicon from '@/src/images/clock.svg';
+import ClockIcon from '../../../images/clock.svg';
 
 /**
  * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
@@ -97,7 +97,7 @@ export class AtomicInsightUserActionsToggle
       props: {
         partPrefix: 'insight-user-actions-toggle',
         style: 'outline-neutral',
-        icon: Clockicon,
+        icon: ClockIcon,
         ariaLabel: this.bindings.i18n.t('user-actions'),
         onClick: () => this.enableModal(),
         title: this.bindings.i18n.t('user-actions'),
