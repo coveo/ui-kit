@@ -299,6 +299,7 @@ export class AtomicCategoryFacet
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    *
+   * Note: The target folding field must be a facet field with the **Use cache for nested queries** options enabled (see [Manage fields](https://docs.coveo.com/en/1833/)).
    * TODO: KIT-4412 - Deprecate this property and replace with one that defaults to false.
    */
   @property({
