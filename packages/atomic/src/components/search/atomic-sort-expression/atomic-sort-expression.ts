@@ -11,6 +11,15 @@ import '@/src/components/common/atomic-component-error/atomic-component-error';
  */
 @customElement('atomic-sort-expression')
 export class AtomicSortExpression extends LightDomMixin(LitElement) {
+  private static readonly propsSchema = new Schema({
+    label: new StringValue({required: true, emptyAllowed: false}),
+    expression: new StringValue({required: true, emptyAllowed: false}),
+    tabsExcluded: new ArrayValue({
+      each: new StringValue({}),
+      required: false,
+    }),
+  });
+
   /**
    * The non-localized label to display for this expression.
    */
@@ -87,14 +96,7 @@ export class AtomicSortExpression extends LightDomMixin(LitElement) {
         expression: this.expression,
         tabsExcluded: this.tabsExcluded,
       }),
-      new Schema({
-        label: new StringValue({required: true, emptyAllowed: false}),
-        expression: new StringValue({required: true, emptyAllowed: false}),
-        tabsExcluded: new ArrayValue({
-          each: new StringValue({}),
-          required: false,
-        }),
-      }),
+      AtomicSortExpression.propsSchema,
       // TODO V4: KIT-5197 - Remove false
       false
     );
