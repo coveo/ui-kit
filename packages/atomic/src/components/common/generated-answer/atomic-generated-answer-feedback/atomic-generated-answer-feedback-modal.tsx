@@ -264,12 +264,14 @@ export class AtomicGeneratedAnswerFeedbackModal
           ({localeKey, correspondingAnswer}) => (
             <FieldsetGroup label={this.bindings.i18n.t(localeKey)}>
               <div
-                class={`answer-evaluation mt-3 flex items-center justify-between ${String(correspondingAnswer)}`}
+                class={`answer-evaluation mt-3 flex items-center ${String(correspondingAnswer)}`}
                 key={String(correspondingAnswer)}
               >
-                {this.renderAnswerEvaluation(localeKey, correspondingAnswer)}
+                <div class="flex-1 pr-4">
+                  {this.renderAnswerEvaluation(localeKey, correspondingAnswer)}
+                </div>
                 <div
-                  class="options flex text-base"
+                  class="options flex flex-shrink-0 text-base"
                   aria-label={this.bindings.i18n.t(localeKey)}
                 >
                   {this.renderFeedbackOption('yes', correspondingAnswer)}

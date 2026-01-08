@@ -9,6 +9,7 @@ export {AtomicIcon} from './atomic-icon/atomic-icon.js';
 export {AtomicLayoutSection} from './atomic-layout-section/atomic-layout-section.js';
 export {AtomicModal} from './atomic-modal/atomic-modal.js';
 export {AtomicNumericRange} from './atomic-numeric-range/atomic-numeric-range.js';
+export {AtomicSmartSnippetAnswer} from './atomic-smart-snippet-answer/atomic-smart-snippet-answer.js';
 export {AtomicSmartSnippetCollapseWrapper} from './atomic-smart-snippet-collapse-wrapper/atomic-smart-snippet-collapse-wrapper.js';
 export {AtomicSmartSnippetExpandableAnswer} from './atomic-smart-snippet-expandable-answer/atomic-smart-snippet-expandable-answer.js';
 export {AtomicTabBar} from './atomic-tab-bar/atomic-tab-bar.js';
