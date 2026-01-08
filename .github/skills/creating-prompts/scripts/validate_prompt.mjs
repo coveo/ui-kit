@@ -69,8 +69,8 @@ function validatePrompt(filepath) {
   }
 
   // Check required fields
-  if (!('mode' in frontmatter)) {
-    warnings.push("Missing 'mode' field - will use default");
+  if (!('agent' in frontmatter)) {
+    warnings.push("Missing 'agent' field - will use default");
   }
 
   if (!('tools' in frontmatter)) {

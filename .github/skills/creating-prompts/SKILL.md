@@ -37,7 +37,7 @@ Creates: `.github/prompts/{name}.prompt.md` with template structure.
 ### Step 3: Complete the Prompt
 
 Fill in the generated file:
-1. Set `mode` (usually `agent` for ui-kit)
+1. Set `agent` (usually `'agent'` for ui-kit)
 2. Set `tools` (common: `['codebase', 'editFiles', 'search']`)
 3. Write role definition (specific expertise)
 4. Add task description with `{{placeholders}}`

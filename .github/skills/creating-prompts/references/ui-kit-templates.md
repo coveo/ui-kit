@@ -8,7 +8,7 @@ For prompts that generate new Atomic components.
 
 ```markdown
 ---
-mode: 'agent'
+agent: 'agent'
 description: Creates a new [specific type] Atomic component
 tools:
   - changes
@@ -60,7 +60,7 @@ For prompts that generate tests for existing code.
 
 ```markdown
 ---
-mode: 'agent'
+agent: 'agent'
 description: Generates [test type] tests for [target]
 tools:
   - changes
@@ -117,7 +117,7 @@ For prompts that migrate between technologies.
 
 ```markdown
 ---
-mode: 'agent'
+agent: 'agent'
 description: Migrates [source] to [target]
 tools:
   - changes
@@ -165,7 +165,7 @@ For prompts that generate documentation.
 
 ```markdown
 ---
-mode: 'agent'
+agent: 'agent'
 description: Documents [target type]
 tools:
   - codebase
@@ -231,7 +231,7 @@ For prompts that review code quality.
 
 ```markdown
 ---
-mode: 'agent'
+agent: 'agent'
 description: Reviews [code type] for [quality aspects]
 tools:
   - codebase

@@ -23,7 +23,7 @@ function createPromptFile(name, outputPath) {
     .join(' ');
 
   const content = `---
-mode: 'agent'
+agent: 'agent'
 tools: ['codebase', 'search', 'editFiles']
 ---
 

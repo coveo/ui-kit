@@ -17,7 +17,7 @@ A prompt is a single Markdown file with YAML frontmatter:
 
 ```yaml
 ---
-mode: 'agent'
+agent: 'agent'
 tools: ['codebase', 'editFiles', 'search']
 description: 'Optional description shown in UI'
 ---
@@ -27,29 +27,29 @@ description: 'Optional description shown in UI'
 
 | Field | Required | Description | Example |
 |-------|----------|-------------|---------|
-| `agent` | Optional | Which agent to use | `'ask'`, `'agent'`, or custom agent name |
-| `mode` | Yes | Execution mode | `agent`, `edit`, `insert` |
+| `agent` | Yes | Which agent to use | `'ask'`, `'agent'`, `'edit'`, or custom agent name |
 | `model` | Optional | Specific model to use | `'GPT-4o'`, `'Claude Sonnet 4'` |
 | `tools` | Yes | Available tools list | `['codebase', 'editFiles']` |
 | `description` | Optional | UI description | `Migrate Stencil to Lit` |
 
-### Mode Options
+### Agent Options
 
-| Mode | Purpose | When to Use |
-|------|---------|-------------|
-| `agent` | Full agent with tool access | Complex tasks, file modifications, searches |
-| `edit` | Edit existing content | Simple text transformations |
-| `insert` | Add new content | Template insertion, scaffolding |
+| Agent | Purpose | When to Use |
+|-------|---------|-------------|
+| `'agent'` | Full agent with tool access | Complex tasks, file modifications, searches |
+| `'edit'` | Edit existing content | Simple text transformations, refactoring |
+| `'ask'` | Chat/question answering | Informational queries, explanations |
 
-**Default:** Use `agent` mode for most ui-kit prompts unless the task is purely text transformation.
+**Default:** Use `'agent'` for most ui-kit prompts unless the task is purely text transformation.
 
-### Agent Field
+### Agent Field Examples
 
 Specify which agent should handle the prompt:
 
 ```yaml
-agent: 'ask'    # Default chat agent
+agent: 'ask'    # Chat agent for questions/explanations
 agent: 'agent'  # Workspace agent (recommended for ui-kit)
+agent: 'edit'   # Edit agent for text transformations
 agent: 'custom-agent-name'  # Specific custom agent
 ```
 
@@ -344,7 +344,7 @@ node .github/skills/creating-prompts/scripts/validate_prompt.mjs .github/prompts
 **Validation checks:**
 - [ ] File ends with `.prompt.md`
 - [ ] Valid YAML frontmatter
-- [ ] Required fields present (`mode`, `tools`)
+- [ ] Required fields present (`agent`, `tools`)
 - [ ] Kebab-case file naming
 - [ ] Clear task description
 - [ ] Validation checklist included
