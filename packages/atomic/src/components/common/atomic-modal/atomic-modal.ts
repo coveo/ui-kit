@@ -17,7 +17,7 @@ import type {AtomicFocusTrap} from '../atomic-focus-trap/atomic-focus-trap.js';
 import type {AnyBindings} from '../interface/bindings.js';
 
 /**
- * When the modal is opened, the class `atomic-modal-opened` is added to the interfaceElement and the body, allowing further customization.
+ * When the modal is opened, the class `atomic-modal-opened` is added to the `interfaceElement` and the body, allowing further customization.
  *
  * @part backdrop - The transparent backdrop hiding the content behind the modal.
  * @part container - The modal's outermost container with the outline and background.
