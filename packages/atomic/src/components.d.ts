@@ -842,14 +842,6 @@ export namespace Components {
          */
         "tabsIncluded": string[] | string;
     }
-    /**
-     * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
-     */
-    interface AtomicSmartSnippetFeedbackModal {
-        "isOpen": boolean;
-        "source"?: HTMLElement;
-    }
     interface AtomicSmartSnippetSource {
         "anchorAttributes"?: Attr[];
         "source": Result;
@@ -979,10 +971,6 @@ export interface AtomicIpxModalCustomEvent<T> extends CustomEvent<T> {
 export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicQuickviewModalElement;
-}
-export interface AtomicSmartSnippetFeedbackModalCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicSmartSnippetFeedbackModalElement;
 }
 export interface AtomicSmartSnippetSourceCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1401,27 +1389,6 @@ declare global {
         prototype: HTMLAtomicSmartSnippetElement;
         new (): HTMLAtomicSmartSnippetElement;
     };
-    interface HTMLAtomicSmartSnippetFeedbackModalElementEventMap {
-        "feedbackSent": any;
-    }
-    /**
-     * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
-     */
-    interface HTMLAtomicSmartSnippetFeedbackModalElement extends Components.AtomicSmartSnippetFeedbackModal, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicSmartSnippetFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetFeedbackModalElement, ev: AtomicSmartSnippetFeedbackModalCustomEvent<HTMLAtomicSmartSnippetFeedbackModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicSmartSnippetFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetFeedbackModalElement, ev: AtomicSmartSnippetFeedbackModalCustomEvent<HTMLAtomicSmartSnippetFeedbackModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicSmartSnippetFeedbackModalElement: {
-        prototype: HTMLAtomicSmartSnippetFeedbackModalElement;
-        new (): HTMLAtomicSmartSnippetFeedbackModalElement;
-    };
     interface HTMLAtomicSmartSnippetSourceElementEventMap {
         "selectSource": any;
         "beginDelayedSelectSource": any;
@@ -1527,7 +1494,6 @@ declare global {
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
-        "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
         "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
@@ -2311,15 +2277,6 @@ declare namespace LocalJSX {
          */
         "tabsIncluded"?: string[] | string;
     }
-    /**
-     * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
-     */
-    interface AtomicSmartSnippetFeedbackModal {
-        "isOpen"?: boolean;
-        "onFeedbackSent"?: (event: AtomicSmartSnippetFeedbackModalCustomEvent<any>) => void;
-        "source"?: HTMLElement;
-    }
     interface AtomicSmartSnippetSource {
         "anchorAttributes"?: Attr[];
         "onBeginDelayedSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
@@ -2464,7 +2421,6 @@ declare namespace LocalJSX {
         "atomic-recs-result-template": AtomicRecsResultTemplate;
         "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-smart-snippet": AtomicSmartSnippet;
-        "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
         "atomic-smart-snippet-source": AtomicSmartSnippetSource;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
@@ -2583,11 +2539,6 @@ declare module "@stencil/core" {
              * ```
              */
             "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
-            /**
-             * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
-             * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
-             */
-            "atomic-smart-snippet-feedback-modal": LocalJSX.AtomicSmartSnippetFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetFeedbackModalElement>;
             "atomic-smart-snippet-source": LocalJSX.AtomicSmartSnippetSource & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSourceElement>;
             /**
              * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
