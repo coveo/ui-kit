@@ -1,6 +1,6 @@
 {
   "name": "@coveo/create-atomic-component-project",
-  "version": "1.5.11",
+  "version": "1.5.13",
   "description": "Initialize a Coveo Atomic Library Project",
   "type": "module",
   "main": "index.js",
