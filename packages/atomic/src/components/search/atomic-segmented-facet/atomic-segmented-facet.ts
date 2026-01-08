@@ -36,6 +36,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
+import {mapProperty} from '@/src/utils/props-utils';
 
 /**
  * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
@@ -142,6 +143,7 @@ export class AtomicSegmentedFacet
    *
    *
    * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
+   * The target folding field must be a facet field with the **Use cache for nested queries** options enabled (see [Manage fields](https://docs.coveo.com/en/1833/)).
    */
   @property({
     type: Boolean,
@@ -193,8 +195,8 @@ export class AtomicSegmentedFacet
    * ></atomic-segmented-facet>
    * ```
    */
-  @property({type: Object, attribute: 'depends-on'})
-  dependsOn: Record<string, string> = {};
+  @mapProperty({attributePrefix: 'depends-on'})
+  dependsOn!: Record<string, string>;
 
   /**
    * Specifies an explicit list of `allowedValues` in the Search API request. This list is in the form of a JSON string.
