@@ -14,10 +14,16 @@ export default {
     await import('./atomic-insight-interface/atomic-insight-interface.js'),
   'atomic-insight-layout': async () =>
     await import('./atomic-insight-layout/atomic-insight-layout.js'),
+  'atomic-insight-no-results': async () =>
+    await import('./atomic-insight-no-results/atomic-insight-no-results.js'),
   'atomic-insight-pager': async () =>
     await import('./atomic-insight-pager/atomic-insight-pager.js'),
   'atomic-insight-query-error': async () =>
     await import('./atomic-insight-query-error/atomic-insight-query-error.js'),
+  'atomic-insight-query-summary': async () =>
+    await import(
+      './atomic-insight-query-summary/atomic-insight-query-summary.js'
+    ),
   'atomic-insight-result-template': async () =>
     await import(
       './atomic-insight-result-template/atomic-insight-result-template.js'

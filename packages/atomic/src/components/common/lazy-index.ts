@@ -18,6 +18,12 @@ export default {
   'atomic-modal': async () => await import('./atomic-modal/atomic-modal.js'),
   'atomic-numeric-range': async () =>
     await import('./atomic-numeric-range/atomic-numeric-range.js'),
+  'atomic-result-placeholder': async () =>
+    await import('./atomic-result-placeholder/atomic-result-placeholder.js'),
+  'atomic-smart-snippet-answer': async () =>
+    await import(
+      './atomic-smart-snippet-answer/atomic-smart-snippet-answer.js'
+    ),
   'atomic-smart-snippet-collapse-wrapper': async () =>
     await import(
       './atomic-smart-snippet-collapse-wrapper/atomic-smart-snippet-collapse-wrapper.js'
