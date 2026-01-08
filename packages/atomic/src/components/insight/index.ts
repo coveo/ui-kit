@@ -8,6 +8,7 @@ export {AtomicInsightNoResults} from './atomic-insight-no-results/atomic-insight
 export {AtomicInsightPager} from './atomic-insight-pager/atomic-insight-pager.js';
 export {AtomicInsightQueryError} from './atomic-insight-query-error/atomic-insight-query-error.js';
 export {AtomicInsightQuerySummary} from './atomic-insight-query-summary/atomic-insight-query-summary.js';
+export {AtomicInsightResult} from './atomic-insight-result/atomic-insight-result.js';
 export {AtomicInsightResultTemplate} from './atomic-insight-result-template/atomic-insight-result-template.js';
 export {AtomicInsightTab} from './atomic-insight-tab/atomic-insight-tab.js';
 export {AtomicInsightTabs} from './atomic-insight-tabs/atomic-insight-tabs.js';
