@@ -282,7 +282,7 @@ pnpm --filter=@coveo/atomic exec playwright test
 pnpm --filter=@coveo/atomic exec playwright test src/components/commerce/atomic-product-list/e2e/atomic-product-list.e2e.ts
 ```
 
-### Project Structure
+## Project Structure
 
 - **`src/components/commerce/`** - Commerce components
 - **`src/components/common/`** - Shared functional components, utilities and CSS used across different interfaces
