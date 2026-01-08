@@ -1,9 +1,4 @@
 import type {AtomicCommerceProductList} from '@coveo/atomic/components';
-import type {
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-  ItemDisplayLayout,
-} from '@coveo/atomic/loader';
 import type {Product} from '@coveo/headless/commerce';
 import React, {type JSX, useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
@@ -22,15 +17,15 @@ interface AtomicCommerceProductListProps {
   /**
    * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
    */
-  density?: ItemDisplayDensity;
+  density?: AtomicCommerceProductList['density'];
   /**
    * The desired layout to use when displaying products. Layouts affect how many products to display per row and how visually distinct they are from each other.
    */
-  display?: ItemDisplayLayout;
+  display?: AtomicCommerceProductList['display'];
   /**
    * The expected size of the image displayed for products.
    */
-  imageSize?: ItemDisplayImageSize;
+  imageSize?: AtomicCommerceProductList['imageSize'];
   /**
    * The desired number of placeholders to display while the product list is loading.
    */
