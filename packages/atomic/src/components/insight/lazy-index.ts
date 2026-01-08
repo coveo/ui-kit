@@ -24,6 +24,8 @@ export default {
     await import(
       './atomic-insight-query-summary/atomic-insight-query-summary.js'
     ),
+  'atomic-insight-result': async () =>
+    await import('./atomic-insight-result/atomic-insight-result.js'),
   'atomic-insight-result-template': async () =>
     await import(
       './atomic-insight-result-template/atomic-insight-result-template.js'
