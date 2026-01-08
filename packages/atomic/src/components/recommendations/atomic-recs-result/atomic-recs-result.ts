@@ -185,15 +185,21 @@ atomic -
     });
   };
 
-  public handleClick = (event: MouseEvent) => {
-    if (this.stopPropagation) {
-      event.stopPropagation();
-    }
+  public clickLinkContainer = () => {
     this.shadowRoot
       ?.querySelector<HTMLAnchorElement>(
         '.link-container > atomic-result-link a:not([slot])'
       )
       ?.click();
+  };
+
+  public handleClick = (event: MouseEvent) => {
+    if (this.stopPropagation) {
+      event.stopPropagation();
+    }
+    if (this.display === 'grid') {
+      this.clickLinkContainer();
+    }
   };
 
   public async connectedCallback() {

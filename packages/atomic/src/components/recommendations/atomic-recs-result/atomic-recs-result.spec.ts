@@ -1,14 +1,14 @@
 import type {Result as RecsResult} from '@coveo/headless/recommendation';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
+import {renderInAtomicRecsInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/recommendation/atomic-recs-interface-fixture';
+import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
 import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
-} from '@/src/components';
-import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
-import {renderInAtomicRecsInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/recommendation/atomic-recs-interface-fixture';
-import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
+} from '../../common/layout/item-layout-utils';
 import {AtomicRecsResult} from './atomic-recs-result';
 
 vi.mock('@coveo/headless/recommendation', {spy: true});
@@ -162,6 +162,52 @@ describe('atomic-recs-result', () => {
     expect(stopPropagationSpy).toHaveBeenCalled();
   });
 
+  it('should click the link container when the display is "grid"', async () => {
+    const clickLinkContainerSpy = vi.fn();
+    const element = await renderResult({
+      display: 'grid',
+    });
+
+    element.clickLinkContainer = clickLinkContainerSpy;
+
+    const clickEvent = new MouseEvent('click');
+    element.dispatchEvent(clickEvent);
+    expect(clickLinkContainerSpy).toHaveBeenCalled();
+  });
+
+  it('should not click the link container when the display is "list"', async () => {
+    const clickLinkContainerSpy = vi.fn();
+    const element = await renderResult({
+      display: 'list',
+    });
+
+    element.clickLinkContainer = clickLinkContainerSpy;
+
+    const clickEvent = new MouseEvent('click');
+    element.dispatchEvent(clickEvent);
+    expect(clickLinkContainerSpy).not.toHaveBeenCalled();
+  });
+
+  it('should not click the link container when the display is "table"', async () => {
+    const clickLinkContainerSpy = vi.fn();
+    const element = await renderResult({
+      display: 'table',
+    });
+
+    element.clickLinkContainer = clickLinkContainerSpy;
+
+    const clickEvent = new MouseEvent('click');
+    element.dispatchEvent(clickEvent);
+    expect(clickLinkContainerSpy).not.toHaveBeenCalled();
+  });
+
+  it('should render default template content', async () => {
+    const element = await renderResult();
+    const resultRoot = element.shadowRoot!.querySelector('.result-root');
+    expect(resultRoot?.innerHTML).toContain('atomic-result-section-name');
+    expect(resultRoot?.innerHTML).toContain('atomic-result-link');
+  });
+
   it('should resolve result when requested', async () => {
     const element = await renderResult();
     const result = buildFakeResult();
@@ -264,13 +310,65 @@ describe('atomic-recs-result', () => {
     expect(linkContainer).toBeTruthy();
   });
 
-  describe('when using custom rendering function', () => {
+  describe('#clickLinkContainer', () => {
+    it('should click the anchor element when found', async () => {
+      const element = await renderResult();
+      const mockClick = vi.fn();
+      const mockAnchor = {click: mockClick};
+      const mockQuerySelector = vi.fn().mockReturnValue(mockAnchor);
+      vi.spyOn(element.shadowRoot!, 'querySelector').mockImplementation(
+        mockQuerySelector
+      );
+
+      element.clickLinkContainer();
+
+      expect(mockQuerySelector).toHaveBeenCalledWith(
+        '.link-container > atomic-result-link a:not([slot])'
+      );
+      expect(mockClick).toHaveBeenCalled();
+    });
+
+    it('should not throw when anchor element is not found', async () => {
+      const element = await renderResult();
+
+      vi.spyOn(element.shadowRoot!, 'querySelector').mockReturnValue(null);
+
+      expect(() => element.clickLinkContainer()).not.toThrow();
+    });
+
+    it('should not throw when shadowRoot is null', async () => {
+      const element = await renderResult();
+
+      Object.defineProperty(element, 'shadowRoot', {
+        get: () => null,
+        configurable: true,
+      });
+
+      expect(() => element.clickLinkContainer()).not.toThrow();
+    });
+  });
+
+  describe('when using the default rendering function', () => {
+    it('should not add "with-sections" class when content does not have sections', async () => {
+      const element = await renderResult({
+        content: renderTemplateContent('<div>No Sections</div>'),
+      });
+      const resultRoot = element.shadowRoot!.querySelector('.result-root');
+      expect(resultRoot?.classList).not.toContain('with-sections');
+    });
+
+    it('should add "with-sections" class when content has sections', async () => {
+      const element = await renderResult();
+      const resultRoot = element.shadowRoot!.querySelector('.result-root');
+      expect(resultRoot?.classList).toContain('with-sections');
+    });
+  });
+
+  describe('when using a custom rendering function', () => {
     const renderingFunction: ItemRenderingFunction = vi.fn(
-      (_result, resultRootRef, linkContainerRef) => {
-        resultRootRef.innerHTML = '<div>Custom Result: Custom content</div>';
-        if (linkContainerRef) {
-          linkContainerRef.innerHTML = '<a href="#">Custom Link Content</a>';
-        }
+      (result, resultRootRef, linkContainerRef) => {
+        resultRootRef.textContent = `Custom Result: ${result.ec_name}`;
+        linkContainerRef.textContent = 'Custom Link Content';
         return resultRootRef.outerHTML;
       }
     );
