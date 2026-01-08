@@ -81,10 +81,7 @@ export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
   /**
    * The result link to use when the result is clicked in a grid layout.
    *
-   * @default - An `;
-atomic -
-  result -
-  link` without any customization.
+   * @default An `atomic-result-link` without any customization.
    */
   @property({type: Object, attribute: 'link-content'}) linkContent: ParentNode =
     new DocumentFragment();
