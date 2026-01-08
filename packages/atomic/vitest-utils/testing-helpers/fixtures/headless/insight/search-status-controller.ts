@@ -1,15 +1,15 @@
-import type {SearchStatus, SearchStatusState} from '@coveo/headless/insight';
+import type {SearchStatus} from '@coveo/headless/insight';
 import {genericSubscribe} from '../common';
 
 export const buildFakeSearchStatus = (
-  options: {state?: Partial<SearchStatusState>} = {}
+  options: Partial<SearchStatus['state']> = {}
 ): SearchStatus => {
-  const defaultState: SearchStatusState = {
+  const defaultState = {
     hasResults: true,
     firstSearchExecuted: false,
     hasError: false,
     isLoading: false,
-    ...options.state,
+    ...options,
   };
 
   return {

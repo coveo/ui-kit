@@ -33,12 +33,10 @@ describe('atomic-insight-no-results', () => {
     } = options;
 
     mockedSearchStatus = buildFakeSearchStatus({
-      state: {
-        ...searchStatusState,
-        hasResults: false,
-        firstSearchExecuted: true,
-        isLoading: false,
-      },
+      hasResults: false,
+      firstSearchExecuted: true,
+      isLoading: false,
+      ...searchStatusState,
     });
 
     mockedQuerySummary = buildFakeQuerySummary({
