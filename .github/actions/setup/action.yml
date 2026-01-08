@@ -7,7 +7,7 @@ inputs:
     required: false
     default: 'false'
   load-cache:
-    description: 'Whether to load the turbo cache. Note: pnpm is cached via setup-node.'
+    description: 'Whether to load the turbo cache from the current run. Note: pnpm is cached via setup-node. If not true, loading the last cache from main will be attempted'
     required: false
     default: 'true'
   cache-prefix:
@@ -56,6 +56,11 @@ runs:
         restore-keys: |
           ${{ runner.os }}-${{ inputs.cache-prefix }}-cy-
     # Turbo cache (controlled by load-cache input)
+    - uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5
+      if: inputs.load-cache != 'true'
+      with:
+        path: .turbo
+        key: turbo-cache
     - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
       if: inputs.save-cache != 'true' && inputs.load-cache == 'true'
       with:
