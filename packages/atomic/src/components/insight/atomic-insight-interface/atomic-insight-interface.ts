@@ -1,7 +1,7 @@
-import {VERSION as HEADLESS_VERSION} from '@coveo/headless'; // TODO - KIT-4886 import from @coveo/headless/insight
 import {
   buildInsightEngine,
   buildResultsPerPage as buildInsightResultsPerPage,
+  VERSION as HEADLESS_VERSION,
   type InsightEngine,
   type InsightEngineConfiguration,
   type LogLevel as InsightLogLevel,
