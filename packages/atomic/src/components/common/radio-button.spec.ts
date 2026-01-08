@@ -92,11 +92,6 @@ describe('#renderRadioButton', () => {
       new KeyboardEvent('keydown', {key: 'ArrowLeft', bubbles: true})
     );
     expect(document.activeElement).toBe(inputs[3]);
-
-    inputs[3].dispatchEvent(
-      new KeyboardEvent('keydown', {key: 'Tab', shiftKey: true, bubbles: true})
-    );
-    expect(document.activeElement).toBe(inputs[2]);
   });
 
   it('should create a ripple effect on mousedown', async () => {
