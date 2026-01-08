@@ -12,7 +12,7 @@ Validation scenarios for the PromptEngineerV2 agent.
 
 ### Expected Behavior
 
-**Stage 0:** Is this one-time? YES → Ephemeral Response
+**Phase 1 (Understand):** Is this one-time? YES → Ephemeral Response
 
 Agent should:
 - Recognize no reuse expected
@@ -42,7 +42,7 @@ Pattern: ^([a-z]{2}-)?[a-z0-9]{8,32}$
 
 ### Expected Behavior
 
-**Stage 0:**
+**Phase 1 (Understand):**
 - One-time? NO (reusable)
 - User-invoked workflow? YES → Prompt
 
@@ -73,7 +73,7 @@ File: `.github/prompts/generate-release-notes.prompt.md`
 
 ### Expected Behavior
 
-**Stage 0:**
+**Phase 1 (Understand):**
 - One-time? NO
 - Agent-discoverable capability? YES → Skill
 
@@ -110,7 +110,7 @@ Agent should:
 
 ### Expected Behavior
 
-**Stage 0:**
+**Phase 1 (Understand):**
 - One-time? NO
 - Specialized persona with tool control? YES → Agent
 
@@ -144,7 +144,7 @@ Agent should:
 
 ### Expected Behavior
 
-**Stage 0:**
+**Phase 1 (Understand):**
 - One-time? NO
 - Coding standards for file patterns? YES → Instruction
 
@@ -175,7 +175,7 @@ File: `.github/instructions/headless.instructions.md`
 
 ### Expected Behavior
 
-**Stage 0 - Inventory:**
+**Phase 2 (Decide):**
 Agent should check existing artifacts and find:
 - Potential overlap with test-related prompts in `.github/prompts/`
 - Existing test instruction patterns (different artifact type)
@@ -210,7 +210,7 @@ Clarification request with inventory of existing prompts (not instructions, as t
 
 ### Expected Behavior
 
-**Stage 0:**
+**Phase 1 (Understand):**
 - Check for existing: test-related prompts, skills
 - User explicitly wants replacement → REPLACE action
 
@@ -309,7 +309,7 @@ Agent should:
 
 ### Expected Behavior
 
-**Stage 0 - Inventory:**
+**Phase 2 (Decide):**
 Agent should find `.github/agents/accessibility-v1.agent.md` exists
 
 **Decision:** MODIFY (exact match, needs update)
@@ -344,7 +344,7 @@ Modified `.github/agents/accessibility-v1.agent.md` with new capabilities added
 
 ### Expected Behavior
 
-**Stage 0 - Inventory:**
+**Phase 2 (Decide):**
 Agent finds `general.typescript.instructions.md` exists
 
 **Decision:** Recognize this is problematic - TypeScript instructions shouldn't contain Python content
@@ -377,7 +377,7 @@ Clarification request explaining the scope issue and suggesting alternatives
 
 ### Expected Behavior
 
-**Stage 0:**
+**Phase 1 (Understand):**
 User explicitly requests deletion → DELETE action
 
 Agent should:
@@ -411,7 +411,7 @@ Agent should:
 
 ### Expected Behavior
 
-**Stage 0 - Inventory:**
+**Phase 2 (Decide):**
 Agent finds `accessibility-v1.agent.md` already exists
 
 **Decision:** OVERLAP - exact match
@@ -444,7 +444,7 @@ Clarification request with existing agent details
 
 ### Expected Behavior
 
-**Stage 0:**
+**Phase 1 (Understand):**
 Agent recognizes artifact type mismatch:
 - User said "prompt" (manual invocation)
 - But "automatically fixes" suggests agent or skill (autonomous)
@@ -511,7 +511,7 @@ Agent should:
 
 ### Expected Behavior
 
-**Stage 0 - Inventory:**
+**Phase 2 (Decide):**
 Agent finds `atomic.instructions.md` with `applyTo: 'packages/atomic/**'`
 
 **Decision:** SCOPE CONFLICT - new pattern is subset of existing
@@ -545,7 +545,7 @@ Clarification request explaining scope overlap
 
 ### Expected Behavior
 
-**Stage 0 - Inventory:**
+**Phase 2 (Decide):**
 Agent finds `stencil-to-lit-migration-v1.agent.md` and `stencil-to-lit-migration-v2.agent.md`
 
 **Decision:** CREATE (new version)
@@ -578,7 +578,7 @@ Agent should:
 
 ### Expected Behavior
 
-**Stage 0 - Inventory:**
+**Phase 2 (Decide):**
 Agent finds `maintenance-v1.agent.md`
 
 **Decision:** EXTEND (add feature to existing)
@@ -612,7 +612,7 @@ Enhanced `maintenance-v1.agent.md` with bundle analysis capability
 
 ### Expected Behavior
 
-**Stage 0:**
+**Phase 1 (Understand):**
 Agent recognizes artifact type error:
 - User said "instruction" (auto-applied)
 - But "run to generate" suggests prompt (manual) or skill (with script)
@@ -646,7 +646,7 @@ Clarification request explaining instructions are auto-applied, suggesting promp
 
 ### Expected Behavior
 
-**Stage 0:**
+**Phase 1 (Understand):**
 Agent recognizes multiple valid interpretations:
 - Ephemeral: one-time review help
 - Prompt: manual review workflow per PR
@@ -673,3 +673,175 @@ Comprehensive clarification request with decision tree
 - [ ] Asked targeted clarifying questions
 - [ ] Explained artifact type mapping
 - [ ] Did NOT guess or create prematurely
+
+---
+
+## Scenario 21: Skill-First Decomposition (Persona USES Capability)
+
+### Input
+
+> Create an agent for creating and modifying Atomic components.
+
+### Expected Behavior
+
+**Phase 2 (Decide) - Step B: Architectural Decomposition:**
+Agent should recognize "Persona USES Capability" pattern:
+- Capability: Component creation knowledge (auxiliary, separable)
+- Persona: Not clearly specified or justified
+
+Agent should:
+1. Identify that component knowledge is AUXILIARY (any agent might need it)
+2. Recognize multiple agents could benefit from this capability
+3. Propose creating skill first: `creating-atomic-components`
+4. Ask: "Do you need a specialized agent, or is the discoverable skill sufficient?"
+
+### Expected Output
+
+1. Propose creating `creating-atomic-components` skill first
+2. Ask clarifying question about whether agent persona is needed
+3. If skill only: create skill
+4. If agent also needed: create skill, then create agent that discovers it
+
+### Validation Checklist
+
+- [ ] Recognized "Persona USES Capability" pattern
+- [ ] Did NOT immediately create an agent
+- [ ] Proposed skill-first approach
+- [ ] Asked about agent necessity
+- [ ] If agent created: it discovers the skill (not duplicates the knowledge)
+
+---
+
+## Scenario 22: Identity-Based Agent (Persona IS Capability)
+
+### Input
+
+> Create a security reviewer agent that audits code for vulnerabilities.
+
+### Expected Behavior
+
+**Phase 2 (Decide) - Step B: Architectural Decomposition:**
+Agent should recognize "Persona IS Capability" pattern:
+- Capability: Security knowledge
+- Persona: Security reviewer (the knowledge IS the agent's identity/purpose)
+
+Agent should:
+1. Identify that security expertise is the agent's PRIMARY PURPOSE
+2. Recognize this is NOT auxiliary knowledge other agents need
+3. Keep security knowledge built-in to the agent
+4. NOT extract a `security-reviewing` skill first
+
+### Expected Output
+
+Create `.github/agents/security-reviewer-v1.agent.md` with built-in security knowledge
+
+### Validation Checklist
+
+- [ ] Recognized "Persona IS Capability" pattern
+- [ ] Did NOT extract security knowledge as a skill
+- [ ] Created agent with built-in knowledge
+- [ ] Agent may discover procedural skills (e.g., `creating-security-reports`) but core expertise is built-in
+
+---
+
+## Scenario 23: Hybrid Skill + Agent Decomposition
+
+### Input
+
+> Create an agent that creates pull requests with accessibility checks included.
+
+### Expected Behavior
+
+**Phase 2 (Decide) - Step B: Architectural Decomposition:**
+Agent should decompose into two parts:
+- Capability: Accessibility checking knowledge (reusable, auxiliary)
+- Persona: PR automation workflow (specialized behavior)
+
+Agent should:
+1. Identify a11y knowledge as AUXILIARY (other agents might need it)
+2. Propose creating `accessibility-checking` skill first
+3. Then create PR agent that discovers the skill
+4. Agent persona handles PR workflow; skill provides a11y knowledge
+
+### Expected Output
+
+1. `.github/skills/accessibility-checking/SKILL.md`
+2. `.github/agents/pr-accessibility-v1.agent.md` (discovers the skill)
+
+### Validation Checklist
+
+- [ ] Decomposed request into capability + persona
+- [ ] Created skill first for reusable knowledge
+- [ ] Created agent second for persona/workflow
+- [ ] Agent discovers skill (not duplicates knowledge)
+- [ ] Both artifacts validated
+
+---
+
+## Scenario 24: Skill + Prompt Decomposition
+
+### Input
+
+> Create something to automate component migrations from Stencil to Lit.
+
+### Expected Behavior
+
+**Phase 2 (Decide) - Step B: Architectural Decomposition:**
+Agent should decompose:
+- Capability: Migration procedures (reusable, could be used by multiple contexts)
+- Invocation: User-triggered (manual)
+
+Agent should:
+1. Identify migration procedures as reusable capability → Skill
+2. Identify user trigger requirement → Prompt
+3. NOT create an agent (no specialized persona needed)
+4. Create skill with migration knowledge and scripts
+5. Create prompt that leverages the skill
+
+### Expected Output
+
+1. `.github/skills/stencil-to-lit-migration/SKILL.md` (with scripts)
+2. `.github/prompts/migrate-stencil-to-lit.prompt.md` (uses skill)
+
+### Validation Checklist
+
+- [ ] Recognized reusable capability + manual trigger pattern
+- [ ] Created skill for procedures
+- [ ] Created prompt for user invocation
+- [ ] Did NOT create agent (no persona needed)
+- [ ] Prompt can leverage skill's knowledge
+
+---
+
+## Scenario 25: Over-Extraction Anti-Pattern
+
+### Input
+
+> Create a skill for the PromptEngineer's decision-making workflow so other agents can use it.
+
+### Expected Behavior
+
+**Phase 2 (Decide) - Step B: Architectural Decomposition:**
+Agent should recognize this is an ANTI-PATTERN:
+- The decision-making workflow IS the PromptEngineer's identity
+- This is orchestration/judgment, not auxiliary knowledge
+- Other agents don't need prompt engineering decision-making
+
+Agent should:
+1. Identify this as "Persona IS Capability" (decision-making is identity)
+2. Recognize extraction would be over-engineering
+3. Decline to extract as skill
+4. Explain: "This is the agent's core orchestration logic, not separable domain knowledge"
+5. Suggest alternatives if user has a different need in mind
+
+### Expected Output
+
+Decline with explanation: orchestration/decision-making should stay built-in to agents
+
+### Validation Checklist
+
+- [ ] Recognized over-extraction anti-pattern
+- [ ] Did NOT create a skill for agent-specific orchestration
+- [ ] Explained difference between domain knowledge (extractable) and orchestration (built-in)
+- [ ] Applied "Don't over-extract" principle
+- [ ] Offered to clarify if user meant something different
