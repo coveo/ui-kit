@@ -27,6 +27,7 @@ import {
   AtomicInsightPager as LitAtomicInsightPager,
   AtomicInsightQueryError as LitAtomicInsightQueryError,
   AtomicInsightQuerySummary as LitAtomicInsightQuerySummary,
+  AtomicInsightRefineToggle as LitAtomicInsightRefineToggle,
   AtomicInsightResultTemplate as LitAtomicInsightResultTemplate,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
@@ -260,6 +261,12 @@ export const AtomicInsightQuerySummary = createComponent({
   tagName: 'atomic-insight-query-summary',
   react: React,
   elementClass: LitAtomicInsightQuerySummary,
+});
+
+export const AtomicInsightRefineToggle = createComponent({
+  tagName: 'atomic-insight-refine-toggle',
+  react: React,
+  elementClass: LitAtomicInsightRefineToggle,
 });
 
 export const AtomicInsightResultTemplate = createComponent({
