@@ -13,6 +13,7 @@ import '@/src/components/common/atomic-component-error/atomic-component-error';
 import {arrayConverter} from '@/src/converters/array-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
+import '../atomic-recs-result/atomic-recs-result';
 
 /**
  * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.

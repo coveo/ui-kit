@@ -36,7 +36,7 @@ export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
   private itemLayoutController!: ItemLayoutController;
 
   static styles: CSSResultGroup = css`
-@import "../../common/template-system/template-system.css";
+@import "../../common/template-system/template-system.pcss";
 
 :host {
   @apply atomic-template-system;
@@ -81,7 +81,10 @@ export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
   /**
    * The result link to use when the result is clicked in a grid layout.
    *
-   * @default - An `atomic-result-link` without any customization.
+   * @default - An `;
+atomic -
+  result -
+  link` without any customization.
    */
   @property({type: Object, attribute: 'link-content'}) linkContent: ParentNode =
     new DocumentFragment();
@@ -279,16 +282,18 @@ export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
 
   public render() {
     if (this.renderingFunction !== undefined) {
-      return html`
-        <div class=${resultComponentClass}>
+      return html` <
+  div;
+class=${resultComponentClass}
+>
           <div
-            class="result-root"
+class="result-root"
             ${ref((el) => {
               this.resultRootRef = el as HTMLElement;
             })}
           ></div>
           <div
-            class="link-container"
+class="link-container"
             ${ref((el) => {
               this.linkContainerRef = el as HTMLElement;
             })}
