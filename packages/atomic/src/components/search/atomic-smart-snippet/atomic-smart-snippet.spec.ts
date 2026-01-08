@@ -7,7 +7,6 @@ import {
 } from '@coveo/headless';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {page} from 'vitest/browser';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSmartSnippet} from '@/vitest-utils/testing-helpers/fixtures/headless/search/smart-snippet-controller';
 import {buildFakeTabManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/tab-manager-controller';
@@ -75,28 +74,38 @@ describe('atomic-smart-snippet', () => {
       selector: 'atomic-smart-snippet',
     });
 
-    const parts = (el: AtomicSmartSnippet) => ({
-      smartSnippet: el.shadowRoot?.querySelector('[part~="smart-snippet"]'),
-      question: el.shadowRoot?.querySelector('[part~="question"]'),
-      answer: el.shadowRoot?.querySelector('[part~="answer"]'),
-      truncatedAnswer: el.shadowRoot?.querySelector(
+    const getParts = () => ({
+      smartSnippet: element.shadowRoot?.querySelector(
+        '[part~="smart-snippet"]'
+      ),
+      question: element.shadowRoot?.querySelector('[part~="question"]'),
+      answer: element.shadowRoot?.querySelector('atomic-smart-snippet-answer'),
+      truncatedAnswer: element.shadowRoot?.querySelector(
         '[part~="truncated-answer"]'
       ),
-      body: el.shadowRoot?.querySelector('[part~="body"]'),
-      footer: el.shadowRoot?.querySelector('[part~="footer"]'),
-      feedbackBanner: el.shadowRoot?.querySelector('[part~="feedback-banner"]'),
-      feedbackLikeButton: el.shadowRoot?.querySelector(
+      body: element.shadowRoot?.querySelector('[part~="body"]'),
+      footer: element.shadowRoot?.querySelector('[part~="footer"]'),
+      feedbackBanner: element.shadowRoot?.querySelector(
+        '[part~="feedback-banner"]'
+      ),
+      feedbackLikeButton: element.shadowRoot?.querySelector(
         '[part~="feedback-like-button"]'
-      ),
-      feedbackDislikeButton: el.shadowRoot?.querySelector(
+      ) as HTMLElement | null,
+      feedbackDislikeButton: element.shadowRoot?.querySelector(
         '[part~="feedback-dislike-button"]'
-      ),
-      feedbackThankYou: el.shadowRoot?.querySelector(
+      ) as HTMLElement | null,
+      feedbackThankYou: element.shadowRoot?.querySelector(
         '[part~="feedback-thank-you"]'
       ),
+      expandableAnswer: element.shadowRoot?.querySelector(
+        'atomic-smart-snippet-expandable-answer'
+      ),
+      source: element.shadowRoot?.querySelector('atomic-smart-snippet-source'),
+      sourceUrl: element.shadowRoot?.querySelector('[part~="source-url"]'),
+      sourceTitle: element.shadowRoot?.querySelector('[part~="source-title"]'),
     });
 
-    return {element, parts};
+    return {element, getParts};
   };
 
   describe('when controller is initialized', () => {
@@ -117,66 +126,55 @@ describe('atomic-smart-snippet', () => {
     });
 
     it('should render the smart snippet', async () => {
-      const {element, parts} = await renderAtomicSmartSnippet();
-      await expect.element(parts(element).smartSnippet!).toBeInTheDocument();
+      const {getParts} = await renderAtomicSmartSnippet();
+      expect(getParts().smartSnippet).toBeInTheDocument();
     });
 
     it('should render the question', async () => {
-      const {element, parts} = await renderAtomicSmartSnippet();
-      const question = parts(element).question!;
-      await expect.element(question).toBeInTheDocument();
+      const {getParts} = await renderAtomicSmartSnippet();
+      const question = getParts().question!;
+      expect(question).toBeInTheDocument();
       expect(question.textContent?.trim()).toBe(
         mockedSmartSnippet.state.question
       );
     });
 
     it('should render the expandable answer when snippetMaximumHeight is undefined', async () => {
-      const {element} = await renderAtomicSmartSnippet({
+      const {getParts} = await renderAtomicSmartSnippet({
         props: {snippetMaximumHeight: undefined},
       });
-      const expandableAnswer = element.shadowRoot?.querySelector(
-        'atomic-smart-snippet-expandable-answer'
-      );
-      await expect.element(expandableAnswer!).toBeInTheDocument();
+      expect(getParts().expandableAnswer).toBeInTheDocument();
     });
 
     it('should render the truncated answer when snippetMaximumHeight is defined', async () => {
-      const {element, parts} = await renderAtomicSmartSnippet({
+      const {getParts} = await renderAtomicSmartSnippet({
         props: {snippetMaximumHeight: 200},
       });
-      await expect.element(parts(element).truncatedAnswer!).toBeInTheDocument();
+      expect(getParts().truncatedAnswer).toBeInTheDocument();
     });
 
     it('should render the footer', async () => {
-      const {element, parts} = await renderAtomicSmartSnippet();
-      await expect.element(parts(element).footer!).toBeInTheDocument();
+      const {getParts} = await renderAtomicSmartSnippet();
+      expect(getParts().footer).toBeInTheDocument();
     });
 
     it('should render the source when source is present', async () => {
-      const {element} = await renderAtomicSmartSnippet();
-      const source = element.shadowRoot?.querySelector(
-        'atomic-smart-snippet-source'
-      );
-      await expect.element(source!).toBeInTheDocument();
+      const {getParts} = await renderAtomicSmartSnippet();
+      expect(getParts().source).toBeInTheDocument();
     });
 
     it('should render the feedback banner', async () => {
-      const {element, parts} = await renderAtomicSmartSnippet();
-      await expect.element(parts(element).feedbackBanner!).toBeInTheDocument();
+      const {getParts} = await renderAtomicSmartSnippet();
+      expect(getParts().feedbackBanner).toBeInTheDocument();
     });
 
     // TODO: Enable when atomic-smart-snippet-source is migrated to Lit
     it.skip('should render source url and title with correct href', async () => {
-      const {element} = await renderAtomicSmartSnippet();
-      const sourceUrl = element.shadowRoot?.querySelector(
-        '[part~="source-url"]'
-      );
-      const sourceTitle = element.shadowRoot?.querySelector(
-        '[part~="source-title"]'
-      );
+      const {getParts} = await renderAtomicSmartSnippet();
+      const {sourceUrl, sourceTitle} = getParts();
 
-      await expect.element(sourceUrl!).toBeInTheDocument();
-      await expect.element(sourceTitle!).toBeInTheDocument();
+      expect(sourceUrl).toBeInTheDocument();
+      expect(sourceTitle).toBeInTheDocument();
       expect(sourceUrl?.getAttribute('href')).toBe(
         mockedSmartSnippet.state.source?.clickUri
       );
@@ -186,71 +184,53 @@ describe('atomic-smart-snippet', () => {
     });
   });
 
-  describe('when answer is not found', () => {
-    beforeEach(() => {
-      mockedSmartSnippet.state.answerFound = false;
-    });
-
-    it('should not render the smart snippet', async () => {
-      const {element, parts} = await renderAtomicSmartSnippet();
-      await expect
-        .element(parts(element).smartSnippet!)
-        .not.toBeInTheDocument();
-    });
+  it('should not render the smart snippet when answer is not found', async () => {
+    mockedSmartSnippet.state.answerFound = false;
+    const {getParts} = await renderAtomicSmartSnippet();
+    expect(getParts().smartSnippet).not.toBeInTheDocument();
   });
 
-  describe('when source is not present', () => {
-    beforeEach(() => {
-      mockedSmartSnippet.state.source = null;
-    });
-
-    it('should not render the source', async () => {
-      const {element} = await renderAtomicSmartSnippet();
-      const source = element.shadowRoot?.querySelector(
-        'atomic-smart-snippet-source'
-      );
-      expect(source).toBeNull();
-    });
+  it('should not render the source when source is not present', async () => {
+    // @ts-expect-error: Testing null source
+    mockedSmartSnippet.state.source = null;
+    const {getParts} = await renderAtomicSmartSnippet();
+    expect(getParts().source).toBeNull();
   });
 
   describe('tab filtering', () => {
     describe('when tabsIncluded is set', () => {
       it('should render when current tab is included', async () => {
         mockedTabManager.state.activeTab = 'tab1';
-        const {element, parts} = await renderAtomicSmartSnippet({
+        const {getParts} = await renderAtomicSmartSnippet({
           props: {tabsIncluded: ['tab1', 'tab2']},
         });
-        await expect.element(parts(element).smartSnippet!).toBeInTheDocument();
+        expect(getParts().smartSnippet).toBeInTheDocument();
       });
 
       it('should not render when current tab is not included', async () => {
         mockedTabManager.state.activeTab = 'tab3';
-        const {element, parts} = await renderAtomicSmartSnippet({
+        const {getParts} = await renderAtomicSmartSnippet({
           props: {tabsIncluded: ['tab1', 'tab2']},
         });
-        await expect
-          .element(parts(element).smartSnippet!)
-          .not.toBeInTheDocument();
+        expect(getParts().smartSnippet).not.toBeInTheDocument();
       });
     });
 
     describe('when tabsExcluded is set', () => {
       it('should not render when current tab is excluded', async () => {
         mockedTabManager.state.activeTab = 'tab1';
-        const {element, parts} = await renderAtomicSmartSnippet({
+        const {getParts} = await renderAtomicSmartSnippet({
           props: {tabsExcluded: ['tab1', 'tab2']},
         });
-        await expect
-          .element(parts(element).smartSnippet!)
-          .not.toBeInTheDocument();
+        expect(getParts().smartSnippet).not.toBeInTheDocument();
       });
 
       it('should render when current tab is not excluded', async () => {
         mockedTabManager.state.activeTab = 'tab3';
-        const {element, parts} = await renderAtomicSmartSnippet({
+        const {getParts} = await renderAtomicSmartSnippet({
           props: {tabsExcluded: ['tab1', 'tab2']},
         });
-        await expect.element(parts(element).smartSnippet!).toBeInTheDocument();
+        expect(getParts().smartSnippet).toBeInTheDocument();
       });
     });
   });
@@ -259,23 +239,23 @@ describe('atomic-smart-snippet', () => {
     // TODO: Enable when feedback button selectors are fixed
     it.skip('should call smartSnippet.like() when like button is clicked', async () => {
       const likeSpy = vi.spyOn(mockedSmartSnippet, 'like');
-      await renderAtomicSmartSnippet();
-      await page.getByRole('radiogroup').getByText('yes').click();
+      const {getParts} = await renderAtomicSmartSnippet();
+      getParts().feedbackLikeButton?.click();
       expect(likeSpy).toHaveBeenCalled();
     });
 
     // TODO: Enable when feedback button selectors are fixed
     it.skip('should call smartSnippet.dislike() when dislike button is clicked', async () => {
       const dislikeSpy = vi.spyOn(mockedSmartSnippet, 'dislike');
-      await renderAtomicSmartSnippet();
-      await page.getByRole('radiogroup').getByText('no').click();
+      const {getParts} = await renderAtomicSmartSnippet();
+      getParts().feedbackDislikeButton?.click();
       expect(dislikeSpy).toHaveBeenCalled();
     });
 
     // TODO: Enable when feedback button selectors are fixed
     it.skip('should load modal when dislike button is clicked', async () => {
-      const {element} = await renderAtomicSmartSnippet();
-      await page.getByRole('radiogroup').getByText('no').click();
+      const {element, getParts} = await renderAtomicSmartSnippet();
+      getParts().feedbackDislikeButton?.click();
 
       await vi.waitFor(() => {
         const modal = element
@@ -288,51 +268,43 @@ describe('atomic-smart-snippet', () => {
     // TODO: Enable when feedback button selectors are fixed
     it.skip('should show thank you message after liking', async () => {
       mockedSmartSnippet.state.liked = false;
-      const {element, parts} = await renderAtomicSmartSnippet();
+      const {element, getParts} = await renderAtomicSmartSnippet();
 
-      await page.getByRole('radiogroup').getByText('yes').click();
+      getParts().feedbackLikeButton?.click();
       mockedSmartSnippet.state.liked = true;
       element.requestUpdate();
       await element.updateComplete;
 
-      await expect
-        .element(parts(element).feedbackThankYou!)
-        .toBeInTheDocument();
+      expect(getParts().feedbackThankYou).toBeInTheDocument();
     });
 
     // TODO: Enable when feedback button selectors are fixed
     it.skip('should show thank you message after disliking', async () => {
       mockedSmartSnippet.state.disliked = false;
-      const {element, parts} = await renderAtomicSmartSnippet();
+      const {element, getParts} = await renderAtomicSmartSnippet();
 
-      await page.getByRole('radiogroup').getByText('no').click();
+      getParts().feedbackDislikeButton?.click();
       mockedSmartSnippet.state.disliked = true;
       element.requestUpdate();
       await element.updateComplete;
 
-      await expect
-        .element(parts(element).feedbackThankYou!)
-        .toBeInTheDocument();
+      expect(getParts().feedbackThankYou).toBeInTheDocument();
     });
 
     it('should hide thank you message when liked state changes to false', async () => {
       mockedSmartSnippet.state.liked = true;
-      const {element, parts} = await renderAtomicSmartSnippet();
+      const {element, getParts} = await renderAtomicSmartSnippet();
       element.requestUpdate();
 
       await element.updateComplete;
-      await expect
-        .element(parts(element).feedbackThankYou!)
-        .toBeInTheDocument();
+      expect(getParts().feedbackThankYou).toBeInTheDocument();
 
       mockedSmartSnippet.state.liked = false;
 
       element.requestUpdate();
 
       await element.updateComplete;
-      await expect
-        .element(parts(element).feedbackThankYou!)
-        .not.toBeInTheDocument();
+      expect(getParts().feedbackThankYou).not.toBeInTheDocument();
     });
   });
 
@@ -389,65 +361,53 @@ describe('atomic-smart-snippet', () => {
   describe('expandable answer integration', () => {
     it('should call smartSnippet.expand() when expand event is dispatched', async () => {
       const expandSpy = vi.spyOn(mockedSmartSnippet, 'expand');
-      const {element} = await renderAtomicSmartSnippet();
-      const expandableAnswer = element.shadowRoot?.querySelector(
-        'atomic-smart-snippet-expandable-answer'
-      );
-      expandableAnswer?.dispatchEvent(new CustomEvent('expand'));
+      const {getParts} = await renderAtomicSmartSnippet();
+      getParts().expandableAnswer?.dispatchEvent(new CustomEvent('expand'));
       expect(expandSpy).toHaveBeenCalled();
     });
 
     it('should call smartSnippet.collapse() when collapse event is dispatched', async () => {
       const collapseSpy = vi.spyOn(mockedSmartSnippet, 'collapse');
-      const {element} = await renderAtomicSmartSnippet();
-      const expandableAnswer = element.shadowRoot?.querySelector(
-        'atomic-smart-snippet-expandable-answer'
-      );
-      expandableAnswer?.dispatchEvent(new CustomEvent('collapse'));
+      const {getParts} = await renderAtomicSmartSnippet();
+      getParts().expandableAnswer?.dispatchEvent(new CustomEvent('collapse'));
       expect(collapseSpy).toHaveBeenCalled();
     });
   });
 
   describe('props', () => {
     it('should pass headingLevel prop to question renderer', async () => {
-      const {element, parts} = await renderAtomicSmartSnippet({
+      const {element, getParts} = await renderAtomicSmartSnippet({
         props: {headingLevel: 2},
       });
       expect(element.headingLevel).toBe(2);
-      await expect.element(parts(element).question!).toBeInTheDocument();
+      expect(getParts().question).toBeInTheDocument();
     });
 
     it('should use heading level 0 when no heading level is specified', async () => {
-      const {element, parts} = await renderAtomicSmartSnippet({
+      const {element, getParts} = await renderAtomicSmartSnippet({
         props: {headingLevel: 0},
       });
       expect(element.headingLevel).toBe(0);
-      await expect.element(parts(element).question!).toBeInTheDocument();
+      expect(getParts().question).toBeInTheDocument();
 
-      const question = parts(element).question!;
+      const question = getParts().question!;
       expect(question.tagName).toBe('DIV');
     });
 
     it('should pass maximumHeight prop to expandable answer', async () => {
-      const {element} = await renderAtomicSmartSnippet({
+      const {element, getParts} = await renderAtomicSmartSnippet({
         props: {maximumHeight: 300},
       });
-      const expandableAnswer = element.shadowRoot?.querySelector(
-        'atomic-smart-snippet-expandable-answer'
-      );
       expect(element.maximumHeight).toBe(300);
-      await expect.element(expandableAnswer!).toBeInTheDocument();
+      expect(getParts().expandableAnswer).toBeInTheDocument();
     });
 
     it('should pass collapsedHeight prop to expandable answer', async () => {
-      const {element} = await renderAtomicSmartSnippet({
+      const {element, getParts} = await renderAtomicSmartSnippet({
         props: {collapsedHeight: 150},
       });
-      const expandableAnswer = element.shadowRoot?.querySelector(
-        'atomic-smart-snippet-expandable-answer'
-      );
       expect(element.collapsedHeight).toBe(150);
-      await expect.element(expandableAnswer!).toBeInTheDocument();
+      expect(getParts().expandableAnswer).toBeInTheDocument();
     });
 
     it('should accept snippetStyle prop', async () => {
@@ -469,67 +429,57 @@ describe('atomic-smart-snippet', () => {
     });
   });
 
-  describe('event listener cleanup', () => {
-    it('should remove event listeners when disconnected', async () => {
-      const {element} = await renderAtomicSmartSnippet();
-      const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
-      element.disconnectedCallback();
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'selectInlineLink',
-        expect.any(Function)
-      );
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'beginDelayedSelectInlineLink',
-        expect.any(Function)
-      );
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'cancelPendingSelectInlineLink',
-        expect.any(Function)
-      );
-    });
+  it('should remove event listeners when disconnected', async () => {
+    const {element} = await renderAtomicSmartSnippet();
+    const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
+    element.disconnectedCallback();
+    expect(removeEventListenerSpy).toHaveBeenCalledWith(
+      'selectInlineLink',
+      expect.any(Function)
+    );
+    expect(removeEventListenerSpy).toHaveBeenCalledWith(
+      'beginDelayedSelectInlineLink',
+      expect.any(Function)
+    );
+    expect(removeEventListenerSpy).toHaveBeenCalledWith(
+      'cancelPendingSelectInlineLink',
+      expect.any(Function)
+    );
   });
 
   describe('dynamic updates', () => {
     it('should update question when smartSnippetState changes', async () => {
-      const {element, parts} = await renderAtomicSmartSnippet();
+      const {element, getParts} = await renderAtomicSmartSnippet();
 
       const newQuestion = 'What is the answer to everything?';
       mockedSmartSnippet.state.question = newQuestion;
       element.requestUpdate();
       await element.updateComplete;
 
-      const question = parts(element).question!;
+      const question = getParts().question!;
       expect(question.textContent?.trim()).toBe(newQuestion);
     });
 
     it('should update answer when smartSnippetState changes', async () => {
-      const {element} = await renderAtomicSmartSnippet();
+      const {element, getParts} = await renderAtomicSmartSnippet();
 
       const newAnswer = '<p>New answer content</p>';
       mockedSmartSnippet.state.answer = newAnswer;
       element.requestUpdate();
       await element.updateComplete;
 
-      const answer = element.shadowRoot?.querySelector(
-        'atomic-smart-snippet-answer'
-      );
-      await expect.element(answer!).toBeInTheDocument();
+      expect(getParts().answer).toBeInTheDocument();
     });
   });
 
-  describe('slot attributes', () => {
-    it('should pass slot attributes to source anchor', async () => {
-      const {element} = await renderAtomicSmartSnippet();
+  it('should pass slot attributes to source anchor', async () => {
+    const {element, getParts} = await renderAtomicSmartSnippet();
 
-      const slotElement = document.createElement('a');
-      slotElement.setAttribute('slot', 'source-anchor-attributes');
-      slotElement.setAttribute('target', '_blank');
-      element.appendChild(slotElement);
+    const slotElement = document.createElement('a');
+    slotElement.setAttribute('slot', 'source-anchor-attributes');
+    slotElement.setAttribute('target', '_blank');
+    element.appendChild(slotElement);
 
-      const source = element.shadowRoot?.querySelector(
-        'atomic-smart-snippet-source'
-      );
-      await expect.element(source!).toBeInTheDocument();
-    });
+    expect(getParts().source).toBeInTheDocument();
   });
 });
