@@ -825,68 +825,6 @@ export namespace Components {
         "side": 'left' | 'right';
         "suggestion": SearchBoxSuggestionElement;
     }
-    /**
-     * A facet is a list of values for a certain field occurring in the results.
-     * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
-     */
-    interface AtomicTimeframeFacet {
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc   ... ></atomic-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc="doc"   ... ></atomic-timeframe-facet> ```
-         */
-        "dependsOn": Record<string, string>;
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount": boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel": number;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth": number;
-        /**
-          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
-         */
-        "isCollapsed": boolean;
-        /**
-          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
-         */
-        "label": string;
-        /**
-          * The latest date to accept from user input when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `YYYY-MM-DD`.  If this format is not respected, the date picker ignores this property, behaving as if no `max` value had been set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#max).
-         */
-        "max"?: string;
-        /**
-          * The earliest date to accept from user input when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `YYYY-MM-DD`.  If this format is not respected, the date picker ignores this property, behaving as if no `min` value had been set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#min).
-         */
-        "min"?: string;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
-         */
-        "sortCriteria": RangeFacetSortCriterion;
-        /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded": string[] | string;
-        /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded": string[] | string;
-        /**
-          * Whether this facet should contain an datepicker allowing users to set custom ranges.
-         */
-        "withDatePicker": boolean;
-    }
 }
 export interface AtomicGeneratedAnswerFeedbackModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1358,16 +1296,6 @@ declare global {
         prototype: HTMLAtomicSuggestionRendererElement;
         new (): HTMLAtomicSuggestionRendererElement;
     };
-    /**
-     * A facet is a list of values for a certain field occurring in the results.
-     * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
-     */
-    interface HTMLAtomicTimeframeFacetElement extends Components.AtomicTimeframeFacet, HTMLStencilElement {
-    }
-    var HTMLAtomicTimeframeFacetElement: {
-        prototype: HTMLAtomicTimeframeFacetElement;
-        new (): HTMLAtomicTimeframeFacetElement;
-    };
     interface HTMLElementTagNameMap {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
@@ -1411,7 +1339,6 @@ declare global {
         "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
-        "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
     }
 }
 declare namespace LocalJSX {
@@ -2182,68 +2109,6 @@ declare namespace LocalJSX {
         "side": 'left' | 'right';
         "suggestion": SearchBoxSuggestionElement;
     }
-    /**
-     * A facet is a list of values for a certain field occurring in the results.
-     * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
-     */
-    interface AtomicTimeframeFacet {
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc   ... ></atomic-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc="doc"   ... ></atomic-timeframe-facet> ```
-         */
-        "dependsOn"?: Record<string, string>;
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field"?: string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount"?: boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel"?: number;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth"?: number;
-        /**
-          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
-         */
-        "isCollapsed"?: boolean;
-        /**
-          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The latest date to accept from user input when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `YYYY-MM-DD`.  If this format is not respected, the date picker ignores this property, behaving as if no `max` value had been set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#max).
-         */
-        "max"?: string;
-        /**
-          * The earliest date to accept from user input when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `YYYY-MM-DD`.  If this format is not respected, the date picker ignores this property, behaving as if no `min` value had been set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#min).
-         */
-        "min"?: string;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
-         */
-        "sortCriteria"?: RangeFacetSortCriterion;
-        /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded"?: string[] | string;
-        /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded"?: string[] | string;
-        /**
-          * Whether this facet should contain an datepicker allowing users to set custom ranges.
-         */
-        "withDatePicker"?: boolean;
-    }
     interface IntrinsicElements {
         "atomic-citation": AtomicCitation;
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
@@ -2287,7 +2152,6 @@ declare namespace LocalJSX {
         "atomic-smart-snippet-source": AtomicSmartSnippetSource;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
-        "atomic-timeframe-facet": AtomicTimeframeFacet;
     }
 }
 export { LocalJSX as JSX };
@@ -2399,11 +2263,6 @@ declare module "@stencil/core" {
              * use native Elements.
              */
             "atomic-suggestion-renderer": LocalJSX.AtomicSuggestionRenderer & JSXBase.HTMLAttributes<HTMLAtomicSuggestionRendererElement>;
-            /**
-             * A facet is a list of values for a certain field occurring in the results.
-             * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
-             */
-            "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;
         }
     }
 }

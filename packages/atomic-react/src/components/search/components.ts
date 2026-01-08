@@ -90,6 +90,7 @@ import {
   AtomicTabManager as LitAtomicTabManager,
   AtomicText as LitAtomicText,
   AtomicTimeframe as LitAtomicTimeframe,
+  AtomicTimeframeFacet as LitAtomicTimeframeFacet,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
@@ -638,4 +639,10 @@ export const AtomicTimeframe = createComponent({
   tagName: 'atomic-timeframe',
   react: React,
   elementClass: LitAtomicTimeframe,
+});
+
+export const AtomicTimeframeFacet = createComponent({
+  tagName: 'atomic-timeframe-facet',
+  react: React,
+  elementClass: LitAtomicTimeframeFacet,
 });
