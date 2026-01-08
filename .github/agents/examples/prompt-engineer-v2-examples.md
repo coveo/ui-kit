@@ -4,6 +4,81 @@ Validation scenarios for the PromptEngineerV2 agent.
 
 ---
 
+## Test Plan: Batched Real Execution
+
+### Methodology
+
+To avoid confirmation bias, use **batched real execution** rather than simulation:
+
+1. **Agent sees only raw inputs** (no expected behaviors or validation checklists)
+2. **Agent executes with real consequences** (creates actual files, runs actual scripts)
+3. **Human compares results** against expected behaviors after batch completion
+4. **Iterative feedback** between batches allows course correction
+
+### Why This Works
+
+- **No confirmation bias**: Agent can't rationalize toward known outcomes
+- **Real constraints**: Validation scripts actually fail, files conflict, errors happen
+- **Manageable verification**: Small batches prevent cognitive overload
+- **Learning loop**: Early deviations inform subsequent batches
+
+### Test Execution Instructions
+
+#### Batch 1: Foundation (Scenarios 1, 2, 3)
+
+**Focus:** Basic artifact type selection (ephemeral, prompt, skill)
+
+**Instructions:**
+1. Switch to PromptEngineerV2 agent mode
+2. Present only the **Input** text from Scenarios 1, 2, 3 (one at a time)
+3. Do NOT show Expected Behavior or Validation Checklist sections
+4. Let agent complete each scenario fully (including validation)
+5. After all three complete, compare results against Expected Behavior sections
+6. Document deviations before proceeding to Batch 2
+
+**Expected artifacts created:**
+- None (Scenario 1 - ephemeral)
+- `.github/prompts/generate-release-notes.prompt.md` (Scenario 2)
+- `.github/skills/test-generator/` (Scenario 3)
+
+#### Batch 2: Conflict Detection (Scenarios 6, 13, 16)
+
+**Focus:** Overlap detection and scope conflict handling
+
+**Instructions:**
+1. Present only Input text from Scenarios 6, 13, 16
+2. Agent should ASK questions rather than create artifacts (these test clarification behavior)
+3. Compare agent's questions/reasoning against Expected Behavior
+4. Document whether agent correctly identified conflicts
+
+**Expected behavior:**
+- Agent should request clarification, NOT create duplicate artifacts
+
+#### Batch 3: Architectural Decomposition (Scenarios 21, 22, 23)
+
+**Focus:** "Persona IS vs USES Capability" framework application
+
+**Instructions:**
+1. Present only Input text from Scenarios 21, 22, 23
+2. Verify agent applies skill-first thinking where appropriate
+3. Compare decomposition decisions against Expected Behavior
+4. Document whether agent correctly distinguished identity vs auxiliary knowledge
+
+**Expected artifacts:**
+- Scenario 21: Skill proposed first, clarifying question asked
+- Scenario 22: Agent created with built-in knowledge (no skill extraction)
+- Scenario 23: Skill created first, then agent that uses it
+
+### Post-Test Analysis
+
+After completing all batches:
+1. Count validation checklist items passed vs failed
+2. Identify systematic deviations (patterns of incorrect decisions)
+3. Determine if agent instructions need refinement
+4. Consider running remaining scenarios if fundamental issues found
+
+---
+
 ## Scenario 1: Ephemeral Response (One-Time Task)
 
 ### Input
