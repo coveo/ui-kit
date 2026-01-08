@@ -285,18 +285,16 @@ export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
 
   public render() {
     if (this.renderingFunction !== undefined) {
-      return html` <
-  div;
-class=${resultComponentClass}
->
+      return html`
+        <div class=${resultComponentClass}>
           <div
-class="result-root"
+            class="result-root"
             ${ref((el) => {
               this.resultRootRef = el as HTMLElement;
             })}
           ></div>
           <div
-class="link-container"
+            class="link-container"
             ${ref((el) => {
               this.linkContainerRef = el as HTMLElement;
             })}
