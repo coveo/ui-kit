@@ -800,49 +800,6 @@ export namespace Components {
         "imageSize": ItemDisplayImageSize;
     }
     /**
-     * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
-     * You can style the snippet by inserting a template element as follows:
-     * ```html
-     * <atomic-smart-snippet>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet>
-     * ```
-     */
-    interface AtomicSmartSnippet {
-        /**
-          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
-         */
-        "collapsedHeight": number;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
-         */
-        "headingLevel": number;
-        /**
-          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
-         */
-        "maximumHeight": number;
-        "snippetCollapsedHeight"?: number;
-        "snippetMaximumHeight"?: number;
-        /**
-          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
-        /**
-          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded": string[] | string;
-        /**
-          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded": string[] | string;
-    }
-    /**
      * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
      * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
      */
@@ -1380,27 +1337,6 @@ declare global {
         prototype: HTMLAtomicResultPlaceholderElement;
         new (): HTMLAtomicResultPlaceholderElement;
     };
-    /**
-     * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
-     * You can style the snippet by inserting a template element as follows:
-     * ```html
-     * <atomic-smart-snippet>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet>
-     * ```
-     */
-    interface HTMLAtomicSmartSnippetElement extends Components.AtomicSmartSnippet, HTMLStencilElement {
-    }
-    var HTMLAtomicSmartSnippetElement: {
-        prototype: HTMLAtomicSmartSnippetElement;
-        new (): HTMLAtomicSmartSnippetElement;
-    };
     interface HTMLAtomicSmartSnippetFeedbackModalElementEventMap {
         "feedbackSent": any;
     }
@@ -1526,7 +1462,6 @@ declare global {
         "atomic-recs-result": HTMLAtomicRecsResultElement;
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
-        "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
         "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
@@ -2269,49 +2204,6 @@ declare namespace LocalJSX {
         "imageSize": ItemDisplayImageSize;
     }
     /**
-     * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
-     * You can style the snippet by inserting a template element as follows:
-     * ```html
-     * <atomic-smart-snippet>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet>
-     * ```
-     */
-    interface AtomicSmartSnippet {
-        /**
-          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
-         */
-        "collapsedHeight"?: number;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
-         */
-        "headingLevel"?: number;
-        /**
-          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
-         */
-        "maximumHeight"?: number;
-        "snippetCollapsedHeight"?: number;
-        "snippetMaximumHeight"?: number;
-        /**
-          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
-        /**
-          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded"?: string[] | string;
-        /**
-          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded"?: string[] | string;
-    }
-    /**
      * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
      * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
      */
@@ -2463,7 +2355,6 @@ declare namespace LocalJSX {
         "atomic-recs-result": AtomicRecsResult;
         "atomic-recs-result-template": AtomicRecsResultTemplate;
         "atomic-result-placeholder": AtomicResultPlaceholder;
-        "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
         "atomic-smart-snippet-source": AtomicSmartSnippetSource;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
@@ -2567,22 +2458,6 @@ declare module "@stencil/core" {
              * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
              */
             "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
-            /**
-             * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
-             * You can style the snippet by inserting a template element as follows:
-             * ```html
-             * <atomic-smart-snippet>
-             *   <template>
-             *     <style>
-             *       b {
-             *         color: blue;
-             *       }
-             *     </style>
-             *   </template>
-             * </atomic-smart-snippet>
-             * ```
-             */
-            "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
             /**
              * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
              * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
