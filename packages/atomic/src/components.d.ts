@@ -180,10 +180,6 @@ export namespace Components {
          */
         "withToggle"?: boolean;
     }
-    interface AtomicInsightHistoryToggle {
-        "clickCallback": () => void;
-        "tooltip": string;
-    }
     interface AtomicInsightNumericFacet {
         /**
           * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc   ... ></atomic-insight-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc="doc"   ... ></atomic-insight-numeric-facet> ```
@@ -976,12 +972,6 @@ declare global {
         prototype: HTMLAtomicInsightGeneratedAnswerElement;
         new (): HTMLAtomicInsightGeneratedAnswerElement;
     };
-    interface HTMLAtomicInsightHistoryToggleElement extends Components.AtomicInsightHistoryToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightHistoryToggleElement: {
-        prototype: HTMLAtomicInsightHistoryToggleElement;
-        new (): HTMLAtomicInsightHistoryToggleElement;
-    };
     interface HTMLAtomicInsightNumericFacetElement extends Components.AtomicInsightNumericFacet, HTMLStencilElement {
     }
     var HTMLAtomicInsightNumericFacetElement: {
@@ -1374,7 +1364,6 @@ declare global {
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
-        "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
         "atomic-insight-numeric-facet": HTMLAtomicInsightNumericFacetElement;
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
         "atomic-insight-refine-toggle": HTMLAtomicInsightRefineToggleElement;
@@ -1559,10 +1548,6 @@ declare namespace LocalJSX {
           * @default false
          */
         "withToggle"?: boolean;
-    }
-    interface AtomicInsightHistoryToggle {
-        "clickCallback"?: () => void;
-        "tooltip"?: string;
     }
     interface AtomicInsightNumericFacet {
         /**
@@ -2250,7 +2235,6 @@ declare namespace LocalJSX {
         "atomic-insight-facet": AtomicInsightFacet;
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
-        "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
         "atomic-insight-numeric-facet": AtomicInsightNumericFacet;
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
         "atomic-insight-refine-toggle": AtomicInsightRefineToggle;
@@ -2305,7 +2289,6 @@ declare module "@stencil/core" {
             "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
             "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
-            "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
             "atomic-insight-numeric-facet": LocalJSX.AtomicInsightNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightNumericFacetElement>;
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
             "atomic-insight-refine-toggle": LocalJSX.AtomicInsightRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineToggleElement>;
