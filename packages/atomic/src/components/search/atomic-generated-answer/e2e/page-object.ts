@@ -88,9 +88,7 @@ export class GeneratedAnswerPageObject extends BasePageObject {
   }
 
   get feedbackModalCorrectAnswerInput() {
-    return this.feedbackModal.locator(
-      'input[type="text"][placeholder="https://URL"]'
-    );
+    return this.feedbackModal.locator('input[part="correct-answer-input"]');
   }
 
   get feedbackModalAdditionalNotesInput() {

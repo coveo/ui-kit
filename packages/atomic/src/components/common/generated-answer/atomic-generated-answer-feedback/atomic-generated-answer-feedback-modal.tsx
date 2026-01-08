@@ -294,6 +294,7 @@ export class AtomicGeneratedAnswerFeedbackModal
         </legend>
         <input
           type="text"
+          part="correct-answer-input"
           ref={(linkInputRef) => (this.linkInputRef = linkInputRef)}
           placeholder="https://URL"
           class="input-primary placeholder-neutral-dark mt-4 h-9 w-full rounded-md px-4"
