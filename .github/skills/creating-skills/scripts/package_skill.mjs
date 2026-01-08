@@ -42,11 +42,11 @@ function createTarEntry(filename, content) {
   header.write('0000000 ', 116, 8);
 
   // File size (12 bytes, octal)
-  header.write(`${size.toString(8).padStart(11, '0')}' '`, 124, 12);
+  header.write(`${size.toString(8).padStart(11, '0')} `, 124, 12);
 
   // Modification time (12 bytes, octal)
   const mtime = Math.floor(Date.now() / 1000);
-  header.write(`${mtime.toString(8).padStart(11, '0')}' '`, 136, 12);
+  header.write(`${mtime.toString(8).padStart(11, '0')} `, 136, 12);
 
   // Checksum placeholder (8 bytes, spaces)
   header.write('        ', 148, 8);
