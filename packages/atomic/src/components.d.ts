@@ -787,14 +787,6 @@ export namespace Components {
   >;
     }
     /**
-     * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface AtomicResultPlaceholder {
-        "density": ItemDisplayDensity;
-        "display": ItemDisplayLayout;
-        "imageSize": ItemDisplayImageSize;
-    }
-    /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
      * You can style the snippet by inserting a template element as follows:
      * ```html
@@ -1346,15 +1338,6 @@ declare global {
         new (): HTMLAtomicRecsResultTemplateElement;
     };
     /**
-     * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface HTMLAtomicResultPlaceholderElement extends Components.AtomicResultPlaceholder, HTMLStencilElement {
-    }
-    var HTMLAtomicResultPlaceholderElement: {
-        prototype: HTMLAtomicResultPlaceholderElement;
-        new (): HTMLAtomicResultPlaceholderElement;
-    };
-    /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
      * You can style the snippet by inserting a template element as follows:
      * ```html
@@ -1477,7 +1460,6 @@ declare global {
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-recs-result": HTMLAtomicRecsResultElement;
         "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
-        "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
@@ -2207,14 +2189,6 @@ declare namespace LocalJSX {
   >;
     }
     /**
-     * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface AtomicResultPlaceholder {
-        "density": ItemDisplayDensity;
-        "display": ItemDisplayLayout;
-        "imageSize": ItemDisplayImageSize;
-    }
-    /**
      * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
      * You can style the snippet by inserting a template element as follows:
      * ```html
@@ -2398,7 +2372,6 @@ declare namespace LocalJSX {
         "atomic-recs-list": AtomicRecsList;
         "atomic-recs-result": AtomicRecsResult;
         "atomic-recs-result-template": AtomicRecsResultTemplate;
-        "atomic-result-placeholder": AtomicResultPlaceholder;
         "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-source": AtomicSmartSnippetSource;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
@@ -2494,10 +2467,6 @@ declare module "@stencil/core" {
              * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
              */
             "atomic-recs-result-template": LocalJSX.AtomicRecsResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicRecsResultTemplateElement>;
-            /**
-             * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-             */
-            "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
             /**
              * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
              * You can style the snippet by inserting a template element as follows:
