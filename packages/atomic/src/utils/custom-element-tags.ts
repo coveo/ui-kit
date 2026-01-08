@@ -60,6 +60,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-insight-edit-toggle',
   'atomic-insight-full-search-button',
   'atomic-insight-generate-answer-button',
+  'atomic-insight-generated-answer',
   'atomic-insight-interface',
   'atomic-insight-layout',
   'atomic-insight-no-results',
