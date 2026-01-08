@@ -13,6 +13,9 @@ The @coveo/atomic package is built on [Lit](https://lit.dev/), a modern web comp
   - [Documentation (.mdx)](#documentation-mdx)
   - [Unit Tests (.spec.ts)](#unit-tests-spects)
   - [End-to-End Tests (e2e/)](#end-to-end-tests-e2e)
+- [Running Tests](#running-tests)
+  - [Unit Tests](#unit-tests)
+  - [Playwright E2E Tests](#playwright-e2e-tests)
 - [Project Structure](#project-structure)
 
 ## Creating a Component
@@ -238,6 +241,46 @@ Integration testing that validates component behavior in real browser environmen
 - **Keep it simple** - Usually should only include the default story and test a very simple golden path
 
 **Example:** See [`atomic-product-children.e2e.ts`](src/components/commerce/atomic-product-children/e2e/atomic-product-children.e2e.ts) for a reference implementation.
+
+## Running Tests
+
+### Unit Tests
+
+To run all unit tests:
+
+```bash
+pnpm turbo run test --filter=@coveo/atomic
+```
+
+To run unit tests in watch mode (useful during development):
+
+```bash
+pnpm turbo run test:watch --filter=@coveo/atomic
+```
+
+### Playwright E2E Tests
+
+Playwright tests are used for end-to-end testing of components in real browser environments.
+
+#### Using the Playwright VSCode Extension (Recommended)
+
+The team primarily uses the [Playwright Test for VSCode](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright) extension for running and debugging Playwright tests. Install the extension, open any `.e2e.ts` file, and click the play button (▶️) next to the test name to run it.
+
+#### Running Playwright Tests via CLI
+
+**Run all Playwright tests:**
+
+```bash
+# From the monorepo root
+pnpm --filter=@coveo/atomic exec playwright test
+```
+
+**Run a single test file:**
+
+```bash
+# From the monorepo root
+pnpm --filter=@coveo/atomic exec playwright test src/components/commerce/atomic-product-list/e2e/atomic-product-list.e2e.ts
+```
 
 ### Project Structure
 
