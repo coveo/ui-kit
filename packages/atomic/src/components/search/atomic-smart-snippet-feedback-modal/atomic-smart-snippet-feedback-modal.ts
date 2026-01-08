@@ -108,7 +108,6 @@ export class AtomicSmartSnippetFeedbackModal
 
     return html`
       <atomic-modal
-        .fullscreen=${false}
         .source=${this.source}
         .container=${this as HTMLElement}
         .isOpen=${this.isOpen}
