@@ -28,6 +28,7 @@ import {
   AtomicInsightQueryError as LitAtomicInsightQueryError,
   AtomicInsightQuerySummary as LitAtomicInsightQuerySummary,
   AtomicInsightResultTemplate as LitAtomicInsightResultTemplate,
+  AtomicInsightUserActionsToggle as LitAtomicInsightUserActionsToggle,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
   AtomicNoResults as LitAtomicNoResults,
@@ -266,6 +267,12 @@ export const AtomicInsightResultTemplate = createComponent({
   tagName: 'atomic-insight-result-template',
   react: React,
   elementClass: LitAtomicInsightResultTemplate,
+});
+
+export const AtomicInsightUserActionsToggle = createComponent({
+  tagName: 'atomic-insight-user-actions-toggle',
+  react: React,
+  elementClass: LitAtomicInsightUserActionsToggle,
 });
 
 export const AtomicLayoutSection = createComponent({
