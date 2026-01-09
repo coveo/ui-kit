@@ -43,6 +43,21 @@ describe('generated-answer-utils', () => {
       expect(result.title).toBe('No title');
     });
 
+    it('should return citation with fallback title when title is missing', () => {
+      // @ts-expect-error Test fixture with partial mock
+      const citation: GeneratedAnswerCitation = {
+        id: 'test-2',
+        uri: 'https://example.com',
+      };
+
+      const result = getCitationWithTitle(citation, i18n);
+
+      expect(result).not.toBe(citation);
+      expect(result.id).toBe('test-2');
+      expect(result.uri).toBe('https://example.com');
+      expect(result.title).toBe('No title');
+    });
+
     it('should return citation with fallback title when title is only whitespace', () => {
       // @ts-expect-error Test fixture with partial mock
       const citation: GeneratedAnswerCitation = {
