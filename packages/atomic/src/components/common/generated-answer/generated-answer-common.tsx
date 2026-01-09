@@ -21,7 +21,7 @@ import {FeedbackButton} from './stencil-feedback-button';
 import {GeneratedContentContainer} from './stencil-generated-content-container';
 import {ShowButton} from './stencil-show-button';
 import {RetryPrompt} from './stencil-retry-prompt';
-import {SourceCitations} from './source-citations';
+import {SourceCitations} from './stencil-source-citations';
 
 interface GeneratedAnswerCommonOptions {
   host: HTMLElement;
@@ -42,6 +42,9 @@ interface GeneratedAnswerCommonOptions {
   ) => InteractiveCitation;
 }
 
+/**
+ * @deprecated use the LitElement version instead: `GeneratedAnswerController`. This class is only meant to be used in legacy Stencil-based components.
+ */
 export class GeneratedAnswerCommon {
   private storage: SafeStorage = new SafeStorage();
   private _data: GeneratedAnswerData;

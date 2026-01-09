@@ -75,12 +75,7 @@ export const renderRadioButton: FunctionalComponent<RadioButtonProps> = ({
       event.currentTarget as HTMLInputElement
     );
 
-    const newIndex = getNewIndex(
-      key,
-      currentIndex,
-      buttons.length,
-      event.shiftKey
-    );
+    const newIndex = getNewIndex(key, currentIndex, buttons.length);
 
     if (buttons[newIndex]) {
       if (props.onFocusCallback) {
@@ -96,9 +91,7 @@ export const renderRadioButton: FunctionalComponent<RadioButtonProps> = ({
   };
 
   const isArrowKey = (key: string) => {
-    return ['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', 'Tab'].includes(
-      key
-    );
+    return ['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'].includes(key);
   };
 
   const getRadioButtons = (radioGroup: ParentNode) => {
@@ -114,12 +107,7 @@ export const renderRadioButton: FunctionalComponent<RadioButtonProps> = ({
     return buttons.findIndex((button) => button === currentButton);
   };
 
-  const getNewIndex = (
-    key: string,
-    currentIndex: number,
-    length: number,
-    isShiftPressed: boolean
-  ) => {
+  const getNewIndex = (key: string, currentIndex: number, length: number) => {
     switch (key) {
       case 'ArrowLeft':
       case 'ArrowUp':
@@ -127,12 +115,6 @@ export const renderRadioButton: FunctionalComponent<RadioButtonProps> = ({
       case 'ArrowRight':
       case 'ArrowDown':
         return (currentIndex + 1) % length;
-      case 'Tab':
-        if (isShiftPressed) {
-          return (currentIndex - 1 + length) % length;
-        } else {
-          return (currentIndex + 1) % length;
-        }
       default:
         return currentIndex;
     }

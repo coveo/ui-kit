@@ -1,6 +1,6 @@
 {
   "name": "@coveo/create-atomic-component",
-  "version": "1.5.10",
+  "version": "1.5.12",
   "description": "Initialize a Coveo Atomic Component",
   "type": "module",
   "main": "index.js",
@@ -37,5 +37,8 @@
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/create-atomic-component"
+  },
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
   }
 }

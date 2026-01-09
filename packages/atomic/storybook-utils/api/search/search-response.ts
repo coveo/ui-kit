@@ -38,6 +38,9 @@ interface Response {
   groupByResults: unknown[];
   facets: unknown[];
   suggestedFacets: unknown[];
+  generateAutomaticFacets?: {
+    facets: unknown[];
+  };
   categoryFacets: unknown[];
   results: unknown[];
   questionAnswer: Record<string, unknown>;
@@ -115,8 +118,157 @@ export const baseResponse: Response = {
       indexScore: 0.08949005905806505,
       label: 'Object type',
     },
+    {
+      facetId: 'author',
+      field: 'author',
+      moreValuesAvailable: true,
+      values: [
+        {
+          value: 'BBC News',
+          state: 'idle',
+          numberOfResults: 62794,
+        },
+        {
+          value: 'Susan Cook',
+          state: 'idle',
+          numberOfResults: 124,
+        },
+        {
+          value: 'Martin Laporte',
+          state: 'idle',
+          numberOfResults: 71,
+        },
+        {
+          value: 'BBCPanorama',
+          state: 'idle',
+          numberOfResults: 40,
+        },
+        {
+          value: 'democ',
+          state: 'idle',
+          numberOfResults: 34,
+        },
+      ],
+      indexScore: 0.1,
+    },
+    {
+      facetId: 'source',
+      field: 'source',
+      moreValuesAvailable: true,
+      values: [
+        {
+          value: 'Coveo Samples - Youtube BBC News',
+          state: 'idle',
+          numberOfResults: 62898,
+        },
+        {
+          value: 'Coveo Sample - Lithium Community',
+          state: 'idle',
+          numberOfResults: 161203,
+        },
+        {
+          value: 'Coveo Samples - Dynamics 365',
+          state: 'idle',
+          numberOfResults: 184232,
+        },
+        {
+          value: 'Sports',
+          state: 'idle',
+          numberOfResults: 34545,
+        },
+      ],
+      indexScore: 0.1,
+    },
+    {
+      facetId: 'year',
+      field: 'year',
+      moreValuesAvailable: true,
+      values: [
+        {
+          value: '2025',
+          state: 'idle',
+          numberOfResults: 175222,
+        },
+        {
+          value: '2019',
+          state: 'idle',
+          numberOfResults: 199094,
+        },
+        {
+          value: '2024',
+          state: 'idle',
+          numberOfResults: 13407,
+        },
+        {
+          value: '2022',
+          state: 'idle',
+          numberOfResults: 11290,
+        },
+        {
+          value: '2020',
+          state: 'idle',
+          numberOfResults: 8011,
+        },
+      ],
+      indexScore: 0.1,
+    },
   ],
   suggestedFacets: [],
+  generateAutomaticFacets: {
+    facets: [
+      {
+        field: 'documenttype',
+        label: 'Document Type',
+        moreValuesAvailable: true,
+        values: [
+          {
+            value: 'Article',
+            state: 'idle',
+            numberOfResults: 45,
+          },
+          {
+            value: 'Document',
+            state: 'idle',
+            numberOfResults: 38,
+          },
+          {
+            value: 'Report',
+            state: 'idle',
+            numberOfResults: 22,
+          },
+          {
+            value: 'Presentation',
+            state: 'idle',
+            numberOfResults: 15,
+          },
+        ],
+        indexScore: 0.28,
+      },
+      {
+        field: 'category',
+        label: 'Category',
+        moreValuesAvailable: true,
+        values: [
+          {
+            value: 'Technology',
+            state: 'idle',
+            numberOfResults: 52,
+          },
+          {
+            value: 'Business',
+            state: 'idle',
+            numberOfResults: 41,
+          },
+          {
+            value: 'Science',
+            state: 'idle',
+            numberOfResults: 27,
+          },
+        ],
+        indexScore: 0.23,
+      },
+    ],
+  },
   categoryFacets: [],
   results: Array.from({length: 120}, (_, n) => getNthResult(n)),
   questionAnswer: {
@@ -227,8 +379,8 @@ export const baseFoldedResponse: Response = {
 };
 
 export const richResponse = {
-  totalCount: 458475,
-  totalCountFiltered: 458475,
+  totalCount: 20,
+  totalCountFiltered: 20,
   duration: 93,
   indexDuration: 66,
   requestDuration: 87,
