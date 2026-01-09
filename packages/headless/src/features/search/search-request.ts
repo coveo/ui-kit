@@ -189,7 +189,7 @@ function getRangeFacetRequests<T extends RangeFacetSetState>(state: T) {
   });
 }
 
-export function buildConstantQuery(state: StateNeededBySearchRequest) {
+export function buildConstantQuery(state: Partial<SearchAppState>) {
   const cq = state.advancedSearchQueries?.cq.trim() || '';
   const activeTab = Object.values(state.tabSet || {}).find(
     (tab) => tab.isActive
