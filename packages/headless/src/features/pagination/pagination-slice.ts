@@ -26,7 +26,7 @@ import {
   updateNumericFacetValues,
 } from '../facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
 import {change} from '../history/history-actions.js';
-import {executeSearch} from '../search/search-actions.js';
+import {executeSearch, fetchPage} from '../search/search-actions.js';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
 import {updateActiveTab} from '../tab-set/tab-set-actions.js';
 import {
@@ -103,6 +103,10 @@ export const paginationReducer = createReducer(
           action.payload.numberOfResults ?? state.defaultNumberOfResults;
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
+        const {response} = action.payload;
+        state.totalCountFiltered = response.totalCountFiltered;
+      })
+      .addCase(fetchPage.fulfilled, (state, action) => {
         const {response} = action.payload;
         state.totalCountFiltered = response.totalCountFiltered;
       })
