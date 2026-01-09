@@ -28,6 +28,10 @@ export default {
     await import(
       './atomic-insight-result-template/atomic-insight-result-template.js'
     ),
+  'atomic-insight-smart-snippet-feedback-modal': async () =>
+    await import(
+      './atomic-insight-smart-snippet-feedback-modal/atomic-insight-smart-snippet-feedback-modal.js'
+    ),
   'atomic-insight-tab': async () =>
     await import('./atomic-insight-tab/atomic-insight-tab.js'),
   'atomic-insight-tabs': async () =>
