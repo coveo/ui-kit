@@ -159,7 +159,7 @@ skills-ref validate ./my-skill
 Or use the built-in validation in this skill:
 
 ```bash
-node .github/skills/creating-skills/scripts/quick_validate.mjs .github/skills/my-skill
+node <skills-dir>/creating-skills/scripts/quick_validate.mjs <skills-dir>/my-skill
 ```
 
 ---

@@ -10,6 +10,16 @@ metadata:
 
 # Creating Skills
 
+## Skill Location
+
+Skills following the [Agent Skills open standard](https://agentskills.io) can be stored in multiple locations:
+
+- **`.claude/skills/`** - Workspace-level (recommended for local development, maximum compatibility)
+- **`.skills/`** or `skills/`** - Alternative workspace conventions
+- **`~/.claude/skills/`** - User-level personal skills
+
+This skill recommends `.claude/skills/` for workspace development as it's compatible with multiple AI tools (GitHub Copilot, Claude Code, OpenCode, etc.).
+
 ## Process
 
 ### Step 1: Plan the Skill
@@ -24,8 +34,10 @@ Before creating, answer:
 ### Step 2: Initialize
 
 ```bash
-node .github/skills/creating-skills/scripts/init_skill.mjs <skill-name> --path .github/skills
+node <skills-dir>/creating-skills/scripts/init_skill.mjs <skill-name> --path <skills-dir>
 ```
+
+Default `<skills-dir>` is `.claude/skills` (workspace-level). Other common locations: `.skills`, `skills/`, `~/.claude/skills` (user-level).
 
 Creates: `SKILL.md` template, `scripts/`, `references/`, `assets/` directories.
 
@@ -42,19 +54,21 @@ For writing guidance, see [best-practices.md](references/best-practices.md).
 ### Step 4: Validate
 
 ```bash
-node .github/skills/creating-skills/scripts/quick_validate.mjs .github/skills/<skill-name>
+node <skills-dir>/creating-skills/scripts/quick_validate.mjs <skills-dir>/<skill-name>
 ```
 
 ### Step 5: Package (Optional)
 
 ```bash
-node .github/skills/creating-skills/scripts/package_skill.mjs .github/skills/<skill-name>
+node <skills-dir>/creating-skills/scripts/package_skill.mjs <skills-dir>/<skill-name>
 ```
+
+Produces a `.skill` archive (tar.gz) for distribution.
 
 ## Converting Prompts to Skills
 
 1. Identify reusable logic and determine gerund-form name
-2. Initialize: `node .github/skills/creating-skills/scripts/init_skill.mjs <name> --path .github/skills`
+2. Initialize: `node <skills-dir>/creating-skills/scripts/init_skill.mjs <name> --path <skills-dir>`
 3. Move prompt content to `SKILL.md`, rewrite description in third person
 4. Extract code examples to `scripts/`, detailed docs to `references/`
 5. Validate, then deprecate original prompt
@@ -70,7 +84,7 @@ node .github/skills/creating-skills/scripts/package_skill.mjs .github/skills/<sk
 **Renaming a skill:**
 1. Create new directory with new name
 2. Move all files, update `name` field in frontmatter
-3. Search for references: `grep -r "old-skill-name" .github/`
+3. Search for references in your workspace (e.g., `grep -r "old-skill-name"`)
 4. Update all references, delete old directory
 
 **Deprecating a skill:**
@@ -100,9 +114,10 @@ node .github/skills/creating-skills/scripts/package_skill.mjs .github/skills/<sk
 **Naming pattern:** `generating-*`, `migrating-*`, `validating-*`, `documenting-*`
 
 **Integration:**
-- Skills reference `.github/instructions/` for context
-- Agents in `.github/agents/` compose skills
-- Prompts in `.github/prompts/` should migrate to skills
+- Skills stored in `.claude/skills/` (workspace-level, compatible with all AI tools)
+- Skills reference workspace instructions for context
+- Agents compose skills for complex workflows
+- Prompts should migrate to skills for better portability
 
 ## Validation Checklist
 

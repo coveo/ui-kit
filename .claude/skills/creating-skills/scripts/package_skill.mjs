@@ -6,8 +6,8 @@
  *     node package_skill.mjs <path/to/skill-folder> [output-directory]
  *
  * Example:
- *     node package_skill.mjs .github/skills/my-skill
- *     node package_skill.mjs .github/skills/my-skill ./dist
+ *     node package_skill.mjs .claude/skills/my-skill
+ *     node package_skill.mjs .claude/skills/my-skill ./dist
  */
 
 import {
@@ -174,8 +174,9 @@ async function main() {
     );
     console.log('');
     console.log('Example:');
-    console.log('  node package_skill.mjs .github/skills/my-skill');
-    console.log('  node package_skill.mjs .github/skills/my-skill ./dist');
+    console.log('  node package_skill.mjs .claude/skills/my-skill');
+    console.log('  node package_skill.mjs .claude/skills/my-skill ./dist');
+    console.log('  node package_skill.mjs .skills/my-skill');
     process.exit(1);
   }
 

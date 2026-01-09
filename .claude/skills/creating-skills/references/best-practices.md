@@ -1,6 +1,6 @@
 # Skill Authoring Best Practices
 
-> Adapted from the [Agent Skills Best Practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices.md)
+> Adapted from multiple sources including the [Agent Skills open standard](https://agentskills.io), [Claude's Agent Skills documentation](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices.md), and [VS Code Copilot Skills documentation](https://code.visualstudio.com/docs/copilot/customization/agent-skills). These practices are tool-agnostic and apply to any AI agent implementing the Agent Skills standard.
 
 ## Core Principles
 
@@ -229,30 +229,45 @@ Error: Field 'signature_date' not found. Available fields: customer_name, order_
 
 ## Portability and Open Standard
 
-Skills follow the [open standard](https://agentskills.io) for agent capabilities, making them **portable across multiple AI agents**:
+Skills follow the [Agent Skills open standard](https://agentskills.io) for agent capabilities, making them **portable across multiple AI tools**:
 
-**Supported platforms:**
-- VS Code Copilot (via `.github/skills/`)
-- GitHub Copilot CLI
-- Claude Desktop
-- Other agents implementing the Agent Skills standard
+**Example platforms that support Agent Skills:**
+- GitHub Copilot (in VS Code and other editors)
+- Claude Desktop and Claude Code
+- OpenCode CLI
+- Other tools implementing the Agent Skills standard
 
 **What portability means:**
-- Same skill can be used across different AI coding assistants
-- Agents discover skills based on `description` field
-- Skills load when relevant to agent's current task
-- No platform-specific code or configuration needed
+- Same skill works across different AI coding assistants
+- Agents discover skills based on `description` field and trigger keywords
+- Skills load automatically when relevant to the agent's current task
+- No tool-specific code or configuration needed
+- Skills are just directories with standard structure (SKILL.md + optional resources)
 
-**VS Code Integration:**
-- Skills stored in `.github/skills/` for workspace-level access
-- Or in user profile directory for personal skills
-- Automatically discovered by VS Code Copilot agents
-- See [VS Code Agent Skills docs](https://code.visualstudio.com/docs/copilot/customization/agent-skills)
+**Standard skill locations:**
+- `.claude/skills/` - Workspace-level (recommended for local development)
+- `.skills/` or `skills/` - Alternative workspace conventions
+- `~/.claude/skills/` or `~/.skills/` - User-level (personal skills)
+- Remote registries - For shared/public skills
+
+**Discovery precedence** (implementation may vary by tool):
+1. Workspace-level skills (project-specific)
+2. Repository skills folders
+3. User-level skills (personal)
+4. Remote/registry skills (if supported)
 
 **Key benefits:**
-- Write once, use across multiple platforms
+- Write once, use across multiple AI tools
 - Share skills across teams and projects
-- Not locked into single AI platform
-- Future-proof as more agents adopt the standard
+- Not locked into a single AI platform or vendor
+- Future-proof as more tools adopt the standard
 
-This portability is what differentiates skills from VS Code-specific artifacts like instructions, prompts, and agents.
+**Platform-specific examples:**
+
+*GitHub Copilot (VS Code)*: Typically uses `.github/skills/` for workspace-level discovery. See [VS Code Agent Skills docs](https://code.visualstudio.com/docs/copilot/customization/agent-skills).
+
+*Claude Desktop*: Uses `.claude/skills/` convention. Skills portable with other Claude tools.
+
+*OpenCode*: Supports `.claude/skills/` for maximum cross-tool compatibility.
+
+This portability is what differentiates skills from tool-specific artifacts like IDE-specific instructions, prompts, or editor extensions.

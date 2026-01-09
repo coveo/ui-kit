@@ -6,8 +6,8 @@
  *     node init_skill.mjs <skill-name> --path <output-directory>
  *
  * Example:
- *     node init_skill.mjs generate-vitest-tests --path .github/skills
- *     node init_skill.mjs accessibility-audit --path .github/skills
+ *     node init_skill.mjs generate-vitest-tests --path .claude/skills
+ *     node init_skill.mjs accessibility-audit --path .claude/skills
  */
 
 import {chmodSync, existsSync, mkdirSync, writeFileSync} from 'node:fs';
@@ -246,7 +246,7 @@ function initSkill(skillName, path) {
     '2. Customize or delete example files in scripts/, references/, assets/'
   );
   console.log(
-    `3. Run validation: node .github/skills/creating-skills/scripts/quick_validate.mjs ${skillDir}`
+    `3. Run validation: node ${path}/creating-skills/scripts/quick_validate.mjs ${skillDir}`
   );
 
   return skillDir;
@@ -271,15 +271,22 @@ function main() {
     console.log('  - Max 64 characters');
     console.log('  - Must match directory name exactly');
     console.log('');
+    console.log('Path options:');
+    console.log(
+      '  - .claude/skills (workspace-level, recommended for local dev)'
+    );
+    console.log('  - .skills or skills/ (alternative workspace conventions)');
+    console.log('  - ~/.claude/skills (user-level)');
+    console.log('');
     console.log('Examples:');
     console.log(
-      '  node init_skill.mjs generate-vitest-tests --path .github/skills'
+      '  node init_skill.mjs generate-vitest-tests --path .claude/skills'
     );
     console.log(
-      '  node init_skill.mjs accessibility-audit --path .github/skills'
+      '  node init_skill.mjs accessibility-audit --path .claude/skills'
     );
     console.log(
-      '  node init_skill.mjs stencil-to-lit-migration --path .github/skills'
+      '  node init_skill.mjs stencil-to-lit-migration --path .skills'
     );
     process.exit(1);
   }
