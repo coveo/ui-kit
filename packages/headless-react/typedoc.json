@@ -1,4 +1,5 @@
 {
+  "name": "Coveo Headless React",
   "entryPointStrategy": "merge",
   "projectDocuments": ["documents/headless-react/hooks.md", "README.md"],
   "navigation": {
