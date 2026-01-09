@@ -4,17 +4,11 @@
   "share": "manual",
   "instructions": [
     ".github/instructions/general.instructions.md",
-    ".github/instructions/general.typescript.instructions.md",
-    ".github/instructions/a11y.instructions.md",
-    ".github/instructions/atomic.instructions.md",
-    ".github/instructions/tests-atomic.instructions.md",
-    ".github/instructions/playwright-typescript.instructions.md",
-    ".github/instructions/msw-api-mocking.instructions.md",
-    ".github/instructions/tests-atomic-stencil-functional-component.instructions.md"
+    ".github/instructions/general.typescript.instructions.md"
   ],
   "formatter": {
     "biome": {
-      "command": ["npx", "@biomejs/biome", "check", "--write", "$FILE"],
+      "command": ["pnpm", "exec", "biome", "check", "--write", "$FILE"],
       "extensions": [".js", ".ts", ".jsx", ".tsx", ".json", ".jsonc"]
     }
   },
@@ -29,41 +23,50 @@
       ],
       "enabled": true
     },
-    "github": {
-      "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "mcp-remote",
-        "https://api.githubcopilot.com/mcp/",
-        "--static-oauth-client-info",
-        "@~/.mcp-auth/github-client-info.json"
-      ],
-      "enabled": true
-    },
     "playwright": {
       "type": "local",
       "command": ["npx", "@playwright/mcp"],
       "enabled": true
-    },
-    "storybook": {
-      "type": "remote",
-      "url": "http://localhost:4400/mcp"
     }
-  },
-  "permission": {
-    "bash": "allow",
-    "edit": "allow",
-    "write": "allow",
-    "patch": "allow",
-    "webfetch": "allow",
-    "lsp": "allow",
-    "mcp": "allow",
-    "skill": "allow"
   },
   "compaction": {
     "auto": true,
     "prune": true
   },
-  "plugin": ["@mohak34/opencode-notifier@latest"]
+  "agent": {
+    "Planner-Sisyphus": {
+      "model": "github-copilot/claude-opus-4.5"
+    },
+    "Sisyphus": {
+      "model": "github-copilot/gpt-5.2"
+    },
+    "plan": {
+      "model": "github-copilot/gpt-5-mini"
+    },
+    "build": {
+      "model": "github-copilot/gpt-5-mini"
+    },
+    "oracle": {
+      "model": "github-copilot/claude-opus-4.5"
+    },
+    "explore": {
+      "model": "github-copilot/gpt-5-mini"
+    },
+    "librarian": {
+      "model": "github-copilot/gpt-5-mini"
+    },
+    "document-writer": {
+      "model": "github-copilot/gpt-5-mini"
+    },
+    "frontend-ui-ux-engineer": {
+      "model": "github-copilot/gpt-5.2"
+    },
+    "multimodal-looker": {
+      "model": "github-copilot/gpt-4o"
+    },
+    "general": {
+      "model": "github-copilot/gpt-5-mini"
+    }
+  },
+  "small_model": "github-copilot/gpt-5-mini"
 }
