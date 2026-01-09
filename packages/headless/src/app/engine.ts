@@ -40,7 +40,7 @@ import {
 } from './navigator-context-provider.js';
 import {createReducerManager, type ReducerManager} from './reducer-manager.js';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware.js';
-import {stateKey} from './state-key.js';
+import {redactEngine, selectPublicState, stateKey} from './state-key.js';
 import {type CoreExtraArguments, configureStore, type Store} from './store.js';
 import type {ThunkExtraArguments} from './thunk-extra-arguments.js';
 
@@ -295,7 +295,7 @@ export function buildCoreEngine<
     reducerManager
   );
 
-  const engine = {
+  const engine = redactEngine({
     addReducers(reducers: ReducersMapObject) {
       if (reducerManager.containsAll(reducers)) {
         return;
@@ -317,8 +317,12 @@ export function buildCoreEngine<
       store.dispatch(disableAnalytics());
     },
 
-    get state() {
+    get [stateKey]() {
       return store.getState();
+    },
+
+    get state() {
+      return selectPublicState(store.getState());
     },
 
     get relay() {
@@ -332,7 +336,7 @@ export function buildCoreEngine<
     logger,
 
     store,
-  };
+  });
   return engine;
 }
 

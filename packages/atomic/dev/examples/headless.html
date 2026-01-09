@@ -20,7 +20,7 @@
     </script>
 
     <script type="module">
-      const {loadAdvancedSearchQueryActions, loadContextActions} = await (import.meta.env
+      const {loadAdvancedSearchQueryActions, loadContextActions, buildPotato} = await (import.meta.env
         ? import('@coveo/headless')
         : import('http://localhost:3000/headless/v0.0.0/headless.esm.js'));
 
@@ -52,7 +52,8 @@
         const engine = searchInterface.engine;
         setExpression(engine);
         setContext(engine);
-
+        buildPotato(engine);
+        console.log('Potato state:', engine.state.potato);
         searchInterface.executeFirstSearch();
       }
       main();

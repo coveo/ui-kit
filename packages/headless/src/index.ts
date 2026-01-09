@@ -527,6 +527,7 @@ export type {
   PhrasesToHighlight,
   TermsToHighlight,
 } from './api/search/search/stemming.js';
+export {buildPotato} from './controllers/potato/headless-potato.js';
 export type {
   CategoryFacetSortCriterion,
   CategoryFacetValueRequest,
