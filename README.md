@@ -106,6 +106,12 @@ pnpm run lint:fix
 
 The project uses git hooks with [Husky](https://www.npmjs.com/package/husky). You can make sure hooks are correctly installed using the `pnpm rebuild` command.
 
+## Dev tooling / AI tooling
+
+This repo includes configuration for the [OpenCode](https://opencode.ai/) CLI (including the `Sisyphus` agent).
+
+- Setup guide: `internal-docs/opencode-setup.md`
+
 ## Recommended VS Code Settings
 
 To ensure a consistent development experience, add the following to your `.vscode/settings.json` in the project root:
