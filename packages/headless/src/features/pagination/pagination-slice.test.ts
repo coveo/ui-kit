@@ -31,7 +31,7 @@ import {
 import {change} from '../history/history-actions.js';
 import {getHistoryInitialState} from '../history/history-state.js';
 import {logSearchboxSubmit} from '../query/query-analytics-actions.js';
-import {executeSearch} from '../search/search-actions.js';
+import {executeSearch, fetchPage} from '../search/search-actions.js';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
 import {updateActiveTab} from '../tab-set/tab-set-actions.js';
 import {
@@ -174,6 +174,19 @@ describe('pagination slice', () => {
 
     state.firstResult = 4;
     expect(determinePage(state)).toBe(2);
+  });
+
+  it('fetchPage.fulfilled updates totalCountFiltered to the response value', () => {
+    const search = buildMockSearch();
+    search.response.totalCountFiltered = 100;
+    const action = fetchPage.fulfilled(search, '', {
+      legacy: logSearchboxSubmit(),
+    });
+
+    const finalState = paginationReducer(state, action);
+    expect(finalState.totalCountFiltered).toBe(
+      search.response.totalCountFiltered
+    );
   });
 
   it('executeSearch.fulfilled updates totalCountFiltered to the response value', () => {
