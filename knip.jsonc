@@ -13,7 +13,7 @@
   "workspaces": {
     ".": {
       "entry": [
-        ".github/skills/**/scripts/*.mjs",
+        ".claude/skills/**/scripts/*.mjs",
         "hooks/*.js",
         "scripts/**/*.{js,mjs}"
       ],
