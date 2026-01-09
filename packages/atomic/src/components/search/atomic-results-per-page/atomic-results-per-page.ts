@@ -123,7 +123,7 @@ export class AtomicResultsPerPage
           this.isAppLoaded &&
           this.searchStatusState.hasResults,
         () => html`
-          <div class="flex items-center" role="toolbar" aria-label=${this.label}>
+          <div class="flex items-center">
             ${renderLabel()(html`${this.label}`)}
             ${renderFieldsetGroup({
               props: {
