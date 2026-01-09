@@ -51,13 +51,27 @@ Creates: `SKILL.md` template, `scripts/`, `references/`, `assets/` directories.
 For format details, see [SPECIFICATION.md](references/SPECIFICATION.md).
 For writing guidance, see [best-practices.md](references/best-practices.md).
 
-### Step 4: Validate
+### Step 4: Clean Up
+
+Remove unused placeholder files and directories created during initialization:
+
+```bash
+# Remove .gitkeep files from unused directories
+find <skills-dir>/<skill-name> -name '.gitkeep' -delete
+
+# Remove empty directories
+find <skills-dir>/<skill-name> -type d -empty -delete
+```
+
+**The skill should only contain directories with actual content.** If you didn't add scripts, the `scripts/` directory should not exist. Same for `assets/` and unused subdirectories.
+
+### Step 5: Validate
 
 ```bash
 node <skills-dir>/creating-skills/scripts/quick_validate.mjs <skills-dir>/<skill-name>
 ```
 
-### Step 5: Package (Optional)
+### Step 6: Package (Optional)
 
 ```bash
 node <skills-dir>/creating-skills/scripts/package_skill.mjs <skills-dir>/<skill-name>
@@ -126,3 +140,5 @@ Produces a `.skill` archive (tar.gz) for distribution.
 - [ ] `SKILL.md` under 500 lines
 - [ ] References linked one level deep
 - [ ] Scripts tested and executable
+- [ ] All `.gitkeep` files removed
+- [ ] No empty directories remain
