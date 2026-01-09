@@ -2,6 +2,12 @@
 
 Operational commands and conventions for coding agents working in the Coveo UI-Kit monorepo.
 
+## About This Document
+
+This guide is for AI coding agents working in this repository. Different tools may handle features like instructions differently, but all the commands and workflows here are universal.
+
+Instructions (`.github/instructions/*.instructions.md`) use `applyTo` frontmatter to specify which files they apply to (e.g., `applyTo: '**/*.ts'`). Some tools auto-apply these, others require explicit reference.
+
 ## Quick Build & Test
 
 ```bash
@@ -22,20 +28,6 @@ cd packages/atomic && pnpm e2e
 pnpm lint:fix
 ```
 
-## Navigation Tips
-
-```bash
-# Find package location (faster than ls/cd)
-pnpm dlx turbo run where atomic
-pnpm dlx turbo run where headless
-
-# List all packages
-ls packages/
-
-# Check package name (use this, not top-level package.json)
-cat packages/atomic/package.json | grep '"name"'
-```
-
 ## Repository Structure
 
 ```
@@ -46,10 +38,10 @@ ui-kit/
 │   ├── quantic/         # Salesforce Lightning components
 │   └── headless-react/  # React bindings
 └── .github/
-    ├── instructions/    # Auto-applied coding standards (see below)
-    ├── agents/          # Custom VS Code Copilot agents (auto-discovered)
-    ├── prompts/         # Reusable task workflows (auto-discovered)
-    └── skills/          # Agent Skills (auto-discovered)
+    ├── instructions/    # Coding standards by file type (see Instructions System below)
+    ├── agents/          # Custom agent definitions
+    ├── prompts/         # Reusable task workflows
+    └── skills/          # Agent capabilities
 ```
 
 ## Technology Stack
@@ -62,24 +54,18 @@ ui-kit/
 
 ## Instructions System
 
-All code changes follow `.github/instructions/*.instructions.md` patterns. These **auto-apply** based on file paths—no need to reference manually.
+Coding standards are in `.github/instructions/*.instructions.md`. Each file has `applyTo` frontmatter specifying which files it covers (e.g., `applyTo: '**/*.ts'`).
 
-Key instructions:
-- `general.instructions.md` - Core development principles
-- `general.typescript.instructions.md` - TypeScript conventions
-- `atomic.instructions.md` - Atomic package patterns
-- `a11y.instructions.md` - WCAG 2.2 Level AA compliance
-- `tests-atomic.instructions.md` - Vitest testing patterns
-- `playwright-typescript.instructions.md` - E2E test patterns
+**Reference the appropriate instruction file when working on:**
+- Any file: `general.instructions.md` - Core development principles
+- TypeScript files: `general.typescript.instructions.md` - TypeScript conventions
+- Atomic package: `atomic.instructions.md` - Component patterns and structure
+- Atomic tests: `tests-atomic.instructions.md` - Vitest testing patterns
+- E2E tests: `playwright-typescript.instructions.md` - Playwright conventions
+- Any UI work: `a11y.instructions.md` - WCAG 2.2 Level AA compliance
+- API mocking: `msw-api-mocking.instructions.md` - MSW patterns
 
 ## Common Workflows
-
-### Generate New Component
-
-```bash
-cd packages/atomic
-node scripts/generate-component.mjs component-name src/components/common
-```
 
 ### Package-Specific Commands
 
@@ -95,20 +81,6 @@ pnpm storybook           # Dev server
 cd packages/headless
 pnpm build
 pnpm test
-```
-
-### Debugging Tests
-
-```bash
-# Verbose test output
-cd packages/atomic
-pnpm test -- <test-file> --reporter=verbose
-
-# Interactive E2E debugging
-pnpm e2e -- --debug --headed
-
-# Run single test by name
-pnpm test -- -t "test name pattern"
 ```
 
 ### Stencil → Lit Migrations
@@ -135,20 +107,16 @@ pnpm test -- -t "test name pattern"
 - Run `pnpm lint:fix` (required)
 - Run `pnpm build` (required)
 - Run `pnpm test` for affected packages
-- Verify type safety (no `any` without justification)
 
 ## Common Gotchas
 
-- **Path aliases:** Use path aliases for imports (configured in `tsconfig.json`)
-- **Package names:** Check `packages/*/package.json` `name` field, not top-level
-- **Test isolation:** Each test should verify one behavior
-- **Resource cleanup:** Always clean up in `disconnectedCallback` (Lit) or `disconnectedCallback` (Stencil)
-- **Accessibility:** Follow WCAG 2.2 Level AA (see `a11y.instructions.md`)
+- **Package names:** Check `packages/*/package.json` `name` field, not top-level package.json
 - **Build failures:** If tests pass locally but fail in CI, check Turbo cache with `pnpm build --force`
+- **Coding standards:** See `.github/instructions/*.instructions.md` for detailed rules (type safety, path aliases, testing, accessibility, resource cleanup, etc.)
 
 ## For Detailed Documentation
 
 - **Human contributors:** See [README.md](../README.md) for project overview and contribution guidelines
-- **Agents, prompts, skills:** Auto-discovered by VS Code Copilot (no catalog needed)
-- **Coding standards:** See `.github/instructions/*.instructions.md` (auto-applied)
+- **Agents, prompts, skills:** Available in `.github/agents/`, `.github/prompts/`, and `.github/skills/`
+- **Coding standards:** See `.github/instructions/*.instructions.md`
 
