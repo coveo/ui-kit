@@ -10,6 +10,10 @@ export default {
     await import(
       './atomic-insight-generate-answer-button/atomic-insight-generate-answer-button.js'
     ),
+  'atomic-insight-generated-answer': async () =>
+    await import(
+      './atomic-insight-generated-answer/atomic-insight-generated-answer.js'
+    ),
   'atomic-insight-interface': async () =>
     await import('./atomic-insight-interface/atomic-insight-interface.js'),
   'atomic-insight-layout': async () =>
