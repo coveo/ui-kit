@@ -6,6 +6,7 @@ import {
   SmartSnippetWrapper,
 } from '@/src/components/common/smart-snippets/atomic-smart-snippet/stencil-smart-snippet-common';
 import {Hidden} from '@/src/components/common/stencil-hidden';
+import type {AtomicInsightSmartSnippetFeedbackModal} from '@/src/components/insight/atomic-insight-smart-snippet-feedback-modal/atomic-insight-smart-snippet-feedback-modal';
 import {randomID} from '@/src/utils/utils';
 import {
   buildSmartSnippet as buildInsightSmartSnippet,
@@ -42,7 +43,7 @@ export class AtomicInsightSmartSnippet
   @Element() public host!: HTMLElement;
 
   private id!: string;
-  private modalRef?: HTMLAtomicInsightSmartSnippetFeedbackModalElement;
+  private modalRef?: AtomicInsightSmartSnippetFeedbackModal;
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
@@ -80,7 +81,7 @@ export class AtomicInsightSmartSnippet
   }
 
   private setModalRef(ref: HTMLElement) {
-    this.modalRef = ref as HTMLAtomicInsightSmartSnippetFeedbackModalElement;
+    this.modalRef = ref as AtomicInsightSmartSnippetFeedbackModal;
   }
 
   private setFeedbackSent(isSent: boolean) {

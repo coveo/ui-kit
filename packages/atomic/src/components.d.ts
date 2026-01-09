@@ -398,10 +398,6 @@ export namespace Components {
          */
         "snippetStyle"?: string;
     }
-    interface AtomicInsightSmartSnippetFeedbackModal {
-        "isOpen": boolean;
-        "source"?: HTMLElement;
-    }
     interface AtomicInsightSmartSnippetSuggestions {
         /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
@@ -900,10 +896,6 @@ export interface AtomicInsightResultAttachToCaseActionCustomEvent<T> extends Cus
     detail: T;
     target: HTMLAtomicInsightResultAttachToCaseActionElement;
 }
-export interface AtomicInsightSmartSnippetFeedbackModalCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicInsightSmartSnippetFeedbackModalElement;
-}
 export interface AtomicIpxBodyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicIpxBodyElement;
@@ -1088,23 +1080,6 @@ declare global {
     var HTMLAtomicInsightSmartSnippetElement: {
         prototype: HTMLAtomicInsightSmartSnippetElement;
         new (): HTMLAtomicInsightSmartSnippetElement;
-    };
-    interface HTMLAtomicInsightSmartSnippetFeedbackModalElementEventMap {
-        "feedbackSent": any;
-    }
-    interface HTMLAtomicInsightSmartSnippetFeedbackModalElement extends Components.AtomicInsightSmartSnippetFeedbackModal, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicInsightSmartSnippetFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicInsightSmartSnippetFeedbackModalElement, ev: AtomicInsightSmartSnippetFeedbackModalCustomEvent<HTMLAtomicInsightSmartSnippetFeedbackModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicInsightSmartSnippetFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicInsightSmartSnippetFeedbackModalElement, ev: AtomicInsightSmartSnippetFeedbackModalCustomEvent<HTMLAtomicInsightSmartSnippetFeedbackModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicInsightSmartSnippetFeedbackModalElement: {
-        prototype: HTMLAtomicInsightSmartSnippetFeedbackModalElement;
-        new (): HTMLAtomicInsightSmartSnippetFeedbackModalElement;
     };
     interface HTMLAtomicInsightSmartSnippetSuggestionsElement extends Components.AtomicInsightSmartSnippetSuggestions, HTMLStencilElement {
     }
@@ -1389,7 +1364,6 @@ declare global {
         "atomic-insight-result-quickview-action": HTMLAtomicInsightResultQuickviewActionElement;
         "atomic-insight-search-box": HTMLAtomicInsightSearchBoxElement;
         "atomic-insight-smart-snippet": HTMLAtomicInsightSmartSnippetElement;
-        "atomic-insight-smart-snippet-feedback-modal": HTMLAtomicInsightSmartSnippetFeedbackModalElement;
         "atomic-insight-smart-snippet-suggestions": HTMLAtomicInsightSmartSnippetSuggestionsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
         "atomic-insight-user-actions-modal": HTMLAtomicInsightUserActionsModalElement;
@@ -1771,11 +1745,6 @@ declare namespace LocalJSX {
           * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
-    }
-    interface AtomicInsightSmartSnippetFeedbackModal {
-        "isOpen"?: boolean;
-        "onFeedbackSent"?: (event: AtomicInsightSmartSnippetFeedbackModalCustomEvent<any>) => void;
-        "source"?: HTMLElement;
     }
     interface AtomicInsightSmartSnippetSuggestions {
         /**
@@ -2265,7 +2234,6 @@ declare namespace LocalJSX {
         "atomic-insight-result-quickview-action": AtomicInsightResultQuickviewAction;
         "atomic-insight-search-box": AtomicInsightSearchBox;
         "atomic-insight-smart-snippet": AtomicInsightSmartSnippet;
-        "atomic-insight-smart-snippet-feedback-modal": AtomicInsightSmartSnippetFeedbackModal;
         "atomic-insight-smart-snippet-suggestions": AtomicInsightSmartSnippetSuggestions;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
         "atomic-insight-user-actions-modal": AtomicInsightUserActionsModal;
@@ -2320,7 +2288,6 @@ declare module "@stencil/core" {
             "atomic-insight-result-quickview-action": LocalJSX.AtomicInsightResultQuickviewAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultQuickviewActionElement>;
             "atomic-insight-search-box": LocalJSX.AtomicInsightSearchBox & JSXBase.HTMLAttributes<HTMLAtomicInsightSearchBoxElement>;
             "atomic-insight-smart-snippet": LocalJSX.AtomicInsightSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetElement>;
-            "atomic-insight-smart-snippet-feedback-modal": LocalJSX.AtomicInsightSmartSnippetFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetFeedbackModalElement>;
             "atomic-insight-smart-snippet-suggestions": LocalJSX.AtomicInsightSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetSuggestionsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
             "atomic-insight-user-actions-modal": LocalJSX.AtomicInsightUserActionsModal & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsModalElement>;
