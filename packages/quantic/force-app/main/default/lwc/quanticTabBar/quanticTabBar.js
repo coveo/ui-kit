@@ -35,6 +35,8 @@ export default class QuanticTabBar extends LightningElement {
   isDropdownOpen = false;
   /** @type {Array<{value: string, label: string}>} */
   tabsInDropdown = [];
+  /** @type {Array<Element>} */
+  cachedOverflowingTabs = [];
   /** @type {number} */
   maxMoreButtonWidth = 0;
   /** @type {boolean} */
@@ -44,6 +46,12 @@ export default class QuanticTabBar extends LightningElement {
     window.addEventListener('click', this.closeDropdown);
     window.addEventListener('resize', this.updateTabsDisplay);
     this.addEventListener('quantic__tabrendered', this.updateTabsDisplay);
+  }
+
+  disconnectedCallback() {
+    window.removeEventListener('click', this.closeDropdown);
+    window.removeEventListener('resize', this.updateTabsDisplay);
+    this.removeEventListener('quantic__tabrendered', this.updateTabsDisplay);
   }
 
   renderedCallback() {
@@ -58,20 +66,42 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {void}
    */
   updateTabsDisplay = () => {
+    this.resetTabsForMeasurement();
+    const overflowingTabs = this.overflowingTabs;
+    this.cachedOverflowingTabs = overflowingTabs;
+    const displayedTabs = this.getTabsFromSlot().filter(
+      (el) => !overflowingTabs.includes(el)
+    );
+
     this.updateMoreButtonVisibility(this.isOverflow);
-    this.updateTabVisibility(this.overflowingTabs, false);
-    this.updateTabVisibility(this.displayedTabs, true);
-    this.updateDropdownOptions();
-    this.updateMoreButtonPosition();
+    this.updateTabVisibility(overflowingTabs, false);
+    this.updateTabVisibility(displayedTabs, true);
+    this.updateDropdownOptions(overflowingTabs);
+    this.updateMoreButtonPosition(displayedTabs);
     this.isDropdownOpen = false;
   };
+
+  /**
+   * Makes all tabs visible so their widths can be measured before computing overflow.
+   * @returns {void}
+   */
+  resetTabsForMeasurement() {
+    this.getTabsFromSlot().forEach((tab, index) => {
+      // @ts-ignore
+      tab.style.removeProperty('display');
+      // @ts-ignore
+      tab.style.removeProperty('visibility');
+      // @ts-ignore
+      tab.style.setProperty('order', index + 1);
+    });
+  }
 
   /**
    * Updates the dropdown options.
    * @returns {void}
    */
-  updateDropdownOptions() {
-    this.tabsInDropdown = this.overflowingTabs.map((el, index) => ({
+  updateDropdownOptions(overflowingTabs = this.cachedOverflowingTabs) {
+    this.tabsInDropdown = overflowingTabs.map((el, index) => ({
       id: index,
       // @ts-ignore
       label: el.label,
@@ -82,14 +112,22 @@ export default class QuanticTabBar extends LightningElement {
 
   /**
    * Updates the position of the "More" button element.
-   * We need to update the position of the "More" button so that it is always to the right of the last tab displayed, as hidden tabs are just hidden visually but there is always space allocated for them.
+    * We keep the button aligned to the last displayed tab.
    * @returns {void}
    */
-  updateMoreButtonPosition() {
-    this.moreButton?.style.setProperty(
-      'left',
-      `${this.displayedTabs.length ? this.lastVisibleTabRightPosition : 0}px`
-    );
+  updateMoreButtonPosition(displayedTabs = this.displayedTabs) {
+    const tabBarListContainer = this.tabBarListContainer;
+    if (!tabBarListContainer) {
+      return;
+    }
+
+    const lastVisibleTab = displayedTabs[displayedTabs.length - 1];
+    const offsetLeft = lastVisibleTab
+      ? lastVisibleTab.getBoundingClientRect().right -
+        tabBarListContainer.getBoundingClientRect().left
+      : 0;
+
+    this.moreButton?.style.setProperty('left', `${offsetLeft}px`);
   }
 
   /**
@@ -131,6 +169,8 @@ export default class QuanticTabBar extends LightningElement {
       );
       // @ts-ignore
       tab.style.setProperty('visibility', isVisible ? 'visible' : 'hidden');
+      // @ts-ignore
+      tab.style.setProperty('display', isVisible ? '' : 'none');
     });
   }
 
@@ -271,14 +311,6 @@ export default class QuanticTabBar extends LightningElement {
   }
 
   /**
-   * Returns the last visible tab element.
-   * @returns {Element}
-   */
-  get lastVisibleTab() {
-    return this.displayedTabs[this.displayedTabs.length - 1];
-  }
-
-  /**
    * Returns the currently selected tab element.
    * @returns {Element}
    */
@@ -293,17 +325,6 @@ export default class QuanticTabBar extends LightningElement {
    */
   get tabBarListContainer() {
     return this.template.querySelector('.tab-bar_list-container');
-  }
-
-  /**
-   * Returns the right position of the last visible tab.
-   * @returns {number}
-   */
-  get lastVisibleTabRightPosition() {
-    return (
-      this.lastVisibleTab.getBoundingClientRect().right -
-      this.tabBarListContainer.getBoundingClientRect().left
-    );
   }
 
   /**
@@ -343,7 +364,11 @@ export default class QuanticTabBar extends LightningElement {
     event.stopPropagation();
     const targetValue = event.currentTarget.getAttribute('data-value');
     const targetLabel = event.currentTarget.getAttribute('data-label');
-    const clickedtab = this.overflowingTabs.find(
+    const targetTabs =
+      this.cachedOverflowingTabs.length > 0
+        ? this.cachedOverflowingTabs
+        : this.overflowingTabs;
+    const clickedtab = targetTabs.find(
       // @ts-ignore
       (tab) => tab.expression === targetValue && tab.label === targetLabel
     );

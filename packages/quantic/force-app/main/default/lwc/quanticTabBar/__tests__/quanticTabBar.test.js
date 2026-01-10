@@ -234,6 +234,30 @@ describe('c-quantic-tab-bar', () => {
       expect(hiddenTabs.length).toBe(expectedNumberOfTabsToBeHidden);
     });
 
+    it('should remove the overflowing tabs from the layout', async () => {
+      const element = createTestComponent(defaultOptions, exampleTabSlots);
+      await flushPromises();
+
+      const expectedNumberOfTabsToBeHidden = 2;
+      const hiddenTabs = exampleTabSlots.filter(
+        (tab) => tab.style.display === 'none'
+      );
+
+      expect(hiddenTabs.length).toBe(expectedNumberOfTabsToBeHidden);
+
+      const expectedNumberOfTabsToBeVisible = 1;
+      const visibleTabs = exampleTabSlots.filter(
+        (tab) => tab.style.display !== 'none'
+      );
+
+      expect(visibleTabs.length).toBe(expectedNumberOfTabsToBeVisible);
+
+      const moreTabsSection = element.shadowRoot.querySelector(
+        selectors.moreTabsSection
+      );
+      expect(moreTabsSection.style.display).toBe('block');
+    });
+
     it('should display the correct tabs in the tabs dropdown list', async () => {
       const element = createTestComponent(defaultOptions, exampleTabSlots);
       await flushPromises();

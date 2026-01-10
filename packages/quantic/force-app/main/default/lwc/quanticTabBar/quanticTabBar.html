@@ -15,6 +15,8 @@
             data-testid="tab-bar_more-button"
             class="slds-button slds-var-p-horizontal_small tab-bar__more-button"
             aria-haspopup="true"
+            aria-expanded={isDropdownOpen}
+            type="button"
             onclick={toggleDropdown}
             name={labels.more}
           >
@@ -40,6 +42,7 @@
                     class="slds-size_1-of-1 slds-button slds-tabs_default__item"
                     role="menuitem"
                     tabindex={optionTabIndex}
+                    type="button"
                     onclick={handleDropdownTabSelect}
                     data-value={tab.value}
                     data-label={tab.label}
