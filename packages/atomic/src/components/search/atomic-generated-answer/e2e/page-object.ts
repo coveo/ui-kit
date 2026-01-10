@@ -80,15 +80,15 @@ export class GeneratedAnswerPageObject extends BasePageObject {
   }
 
   get feedbackModalSubmitButton() {
-    return this.feedbackModal.locator('button[part="submit-button"]');
+    return this.feedbackModal.getByRole('button', {name: /send feedback/i});
   }
 
   get feedbackModalSkipButton() {
-    return this.feedbackModal.locator('button[part="cancel-button"]');
+    return this.feedbackModal.getByRole('button', {name: /^skip$/i});
   }
 
   get feedbackModalCorrectAnswerInput() {
-    return this.feedbackModal.locator('input[part="correct-answer-input"]');
+    return this.feedbackModal.locator('input[type="text"]');
   }
 
   get feedbackModalAdditionalNotesInput() {
