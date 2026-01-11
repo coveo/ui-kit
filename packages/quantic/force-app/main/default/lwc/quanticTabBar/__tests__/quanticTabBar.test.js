@@ -343,7 +343,9 @@ describe('c-quantic-tab-bar', () => {
       const tabBarContainer = element.shadowRoot.querySelector(
         selectors.tabBarContainer
       );
-      tabBarContainer.getBoundingClientRect = () => ({right: mockContainerWidth});
+      tabBarContainer.getBoundingClientRect = () => ({
+        right: mockContainerWidth,
+      });
 
       window.dispatchEvent(new CustomEvent('resize'));
       await flushPromises();

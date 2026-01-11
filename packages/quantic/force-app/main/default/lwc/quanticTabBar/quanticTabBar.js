@@ -237,7 +237,10 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {boolean}
    */
   isTabListOverflowing(tabs) {
-    const slotContentWidth = tabs.reduce((total, el) => total + getAbsoluteWidth(el), 0);
+    const slotContentWidth = tabs.reduce(
+      (total, el) => total + getAbsoluteWidth(el),
+      0
+    );
     return slotContentWidth > this.containerWidth;
   }
 
