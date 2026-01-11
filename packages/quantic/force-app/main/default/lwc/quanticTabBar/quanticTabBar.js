@@ -67,13 +67,13 @@ export default class QuanticTabBar extends LightningElement {
    */
   updateTabsDisplay = () => {
     this.resetTabsForMeasurement();
-    const overflowingTabs = this.overflowingTabs;
+    const tabs = this.getTabsFromSlot();
+    const overflowingTabs = this.computeOverflowingTabs(tabs);
     this.cachedOverflowingTabs = overflowingTabs;
-    const displayedTabs = this.getTabsFromSlot().filter(
-      (el) => !overflowingTabs.includes(el)
-    );
+    const displayedTabs = tabs.filter((el) => !overflowingTabs.includes(el));
+    const shouldShowMore = this.isOverflowForTabs(tabs);
 
-    this.updateMoreButtonVisibility(this.isOverflow);
+    this.updateMoreButtonVisibility(shouldShowMore);
     this.updateTabVisibility(overflowingTabs, false);
     this.updateTabVisibility(displayedTabs, true);
     this.updateDropdownOptions(overflowingTabs);
@@ -112,7 +112,7 @@ export default class QuanticTabBar extends LightningElement {
 
   /**
    * Updates the position of the "More" button element.
-    * We keep the button aligned to the last displayed tab.
+   * We keep the button aligned to the last displayed tab.
    * @returns {void}
    */
   updateMoreButtonPosition(displayedTabs = this.displayedTabs) {
@@ -226,29 +226,73 @@ export default class QuanticTabBar extends LightningElement {
   }
 
   /**
+   * Indicates whether the tabs are causing an overflow for a given tab list.
+   * @param {Array<Element>} tabs
+   * @returns {boolean}
+   */
+  isOverflowForTabs(tabs) {
+    return this.getSlotContentWidthForTabs(tabs) > this.containerWidth;
+  }
+
+  /**
+   * Returns the width of the content of a set of tabs.
+   * @param {Array<Element>} tabs
+   * @returns {number}
+   */
+  getSlotContentWidthForTabs(tabs) {
+    return tabs.reduce((total, el) => total + getAbsoluteWidth(el), 0);
+  }
+
+  /**
+   * Returns the currently selected tab element from a given tab list.
+   * @param {Array<Element>} tabs
+   * @returns {Element | undefined}
+   */
+  getSelectedTabFromTabs(tabs) {
+    // @ts-ignore
+    return tabs.find((el) => el.isActive);
+  }
+
+  /**
    * Returns the overflowing tabs.
    * We compare the right position of each tab to the right position of the tab container to find the tabs that overflow.
    * We include in our calculations the minimum width needed to display the elements that should always be displayed, namely the More button and the currently selected tab.
    * @returns {Array<Element>}
    */
   get overflowingTabs() {
-    const containerRelativeRightPosition =
-      this.container.getBoundingClientRect().right;
-    const selectedTabRelativeRightPosition =
-      this.selectedTab?.getBoundingClientRect().right;
+    return this.computeOverflowingTabs(this.getTabsFromSlot());
+  }
 
-    return this.getTabsFromSlot().filter((element) => {
+  /**
+   * Computes the overflowing tabs for the provided tab list.
+   * @param {Array<Element>} tabs
+   * @returns {Array<Element>}
+   */
+  computeOverflowingTabs(tabs) {
+    const containerRect = this.container?.getBoundingClientRect();
+    if (!containerRect) {
+      return [];
+    }
+
+    const containerRelativeRightPosition = containerRect.right;
+    const selectedTab = this.getSelectedTabFromTabs(tabs);
+    const selectedTabRelativeRightPosition =
+      selectedTab?.getBoundingClientRect().right ?? 0;
+    const selectedTabWidth = selectedTab ? getAbsoluteWidth(selectedTab) : 0;
+    const isOverflow = this.isOverflowForTabs(tabs);
+
+    return tabs.filter((element) => {
+      const elementRight = element.getBoundingClientRect().right;
       const tabPositionedBeforeSelectedTab =
-        selectedTabRelativeRightPosition >
-        element.getBoundingClientRect().right;
+        selectedTabRelativeRightPosition > elementRight;
       const minimumWidthNeeded = tabPositionedBeforeSelectedTab
-        ? this.moreButtonWidth + this.selectedTabWidth
+        ? this.moreButtonWidth + selectedTabWidth
         : this.moreButtonWidth;
-      const rightPositionLimit = !this.isOverflow
+      const rightPositionLimit = !isOverflow
         ? containerRelativeRightPosition
         : containerRelativeRightPosition - minimumWidthNeeded;
       return (
-        element.getBoundingClientRect().right > rightPositionLimit &&
+        elementRight > rightPositionLimit &&
         // @ts-ignore
         !element.isActive
       );
