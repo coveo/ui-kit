@@ -101,7 +101,13 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {void}
    */
   updateDropdownOptions(overflowingTabs = this.cachedOverflowingTabs) {
-    this.tabsInDropdown = overflowingTabs.map((el, index) => ({
+    const sourceTabs = overflowingTabs.length
+      ? overflowingTabs
+      : this.computeOverflowingTabs(this.getTabsFromSlot());
+
+    this.cachedOverflowingTabs = sourceTabs;
+
+    this.tabsInDropdown = sourceTabs.map((el, index) => ({
       id: index,
       // @ts-ignore
       label: el.label,

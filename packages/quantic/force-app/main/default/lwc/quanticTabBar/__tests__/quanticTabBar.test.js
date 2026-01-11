@@ -66,6 +66,13 @@ function createExampleTabSlots(numberOfSlots) {
   return tabSlots;
 }
 
+function setActiveTab(tabSlots, index) {
+  tabSlots.forEach((slot, i) => {
+    // @ts-ignore
+    slot.isActive = i === index;
+  });
+}
+
 /**
  * Mocks the return value of the assignedNodes method.
  * @param {Array<Element>} assignedElements
@@ -326,6 +333,66 @@ describe('c-quantic-tab-bar', () => {
       expect(functionMocks.select).toHaveBeenCalledWith(
         expectedNumberOfTabsToBeVisible + exampleIndex
       );
+    });
+
+    it('should keep the active tab visible even when it would overflow and place other tabs in the dropdown', async () => {
+      const element = createTestComponent(defaultOptions, exampleTabSlots);
+      setActiveTab(exampleTabSlots, 2);
+
+      mockContainerWidth = 150;
+      const tabBarContainer = element.shadowRoot.querySelector(
+        selectors.tabBarContainer
+      );
+      tabBarContainer.getBoundingClientRect = () => ({right: mockContainerWidth});
+
+      window.dispatchEvent(new CustomEvent('resize'));
+      await flushPromises();
+
+      const activeTab = exampleTabSlots[2];
+      expect(activeTab.style.display).not.toBe('none');
+      expect(activeTab.style.visibility).toBe('visible');
+
+      const hiddenTabs = exampleTabSlots.filter(
+        (tab) => tab.style.display === 'none'
+      );
+      expect(hiddenTabs.length).toBe(2);
+
+      const tabItemsInDropdown = element.shadowRoot.querySelectorAll(
+        selectors.tabItemsInDropdown
+      );
+      expect(tabItemsInDropdown.length).toBe(2);
+
+      const moreTabsSection = element.shadowRoot.querySelector(
+        selectors.moreTabsSection
+      );
+      expect(moreTabsSection.style.display).toBe('block');
+    });
+
+    it('should rebuild dropdown options from recomputed overflow when the cache is empty', async () => {
+      const element = createTestComponent(defaultOptions, exampleTabSlots);
+      await flushPromises();
+
+      element.cachedOverflowingTabs = [];
+
+      // Trigger a recompute; the handler rebuilds the cache and dropdown.
+      window.dispatchEvent(new CustomEvent('resize'));
+      await flushPromises();
+
+      const tabItemsInDropdown = element.shadowRoot.querySelectorAll(
+        selectors.tabItemsInDropdown
+      );
+
+      const expectedNumberOfTabsToBeVisible = 1;
+      const expectedNumberOfTabsToBeHidden = 2;
+      expect(tabItemsInDropdown.length).toBe(expectedNumberOfTabsToBeHidden);
+
+      const tabsInDropdownLabels = Array.from(tabItemsInDropdown).map(
+        (tab) => tab.textContent
+      );
+      const expectedTabsInDropdownLabels = exampleTabSlots
+        .slice(expectedNumberOfTabsToBeVisible)
+        .map((tab) => tab.label);
+      expect(tabsInDropdownLabels).toEqual(expectedTabsInDropdownLabels);
     });
   });
 
