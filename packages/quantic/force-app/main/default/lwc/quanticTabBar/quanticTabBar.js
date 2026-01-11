@@ -98,14 +98,19 @@ export default class QuanticTabBar extends LightningElement {
 
   /**
    * Updates the dropdown options.
-   * @returns {void}
+   * @param {Array<Element>} [overflowingTabs=this.cachedOverflowingTabs] - The list of tabs that overflow the visible tab area.
+   *   When provided, this list is used directly to build the dropdown options.
+   *   When omitted, the method uses the cached overflowing tabs, and if none are cached, it recomputes them from the current slot content.
    */
   updateDropdownOptions(overflowingTabs = this.cachedOverflowingTabs) {
-    const sourceTabs = overflowingTabs.length
+    const usingProvidedList = overflowingTabs.length > 0;
+    const sourceTabs = usingProvidedList
       ? overflowingTabs
       : this.computeOverflowingTabs(this.getTabsFromSlot());
 
-    this.cachedOverflowingTabs = sourceTabs;
+    if (!usingProvidedList) {
+      this.cachedOverflowingTabs = sourceTabs;
+    }
 
     this.tabsInDropdown = sourceTabs.map((el, index) => ({
       id: index,
@@ -119,7 +124,8 @@ export default class QuanticTabBar extends LightningElement {
   /**
    * Updates the position of the "More" button element.
    * We keep the button aligned to the last displayed tab.
-   * @returns {void}
+   * @param {Element[]} [displayedTabs] - The list of currently displayed tab elements to align the "More" button with.
+   * When omitted, the method uses the component's `displayedTabs` value.
    */
   updateMoreButtonPosition(displayedTabs = this.displayedTabs) {
     const tabBarListContainer = this.tabBarListContainer;
@@ -173,8 +179,6 @@ export default class QuanticTabBar extends LightningElement {
         'order',
         isVisible ? index + 1 : tabsCount - tabElements.length + index + 1
       );
-      // @ts-ignore
-      tab.style.setProperty('visibility', isVisible ? 'visible' : 'hidden');
       // @ts-ignore
       tab.style.setProperty('display', isVisible ? '' : 'none');
     });
@@ -404,12 +408,12 @@ export default class QuanticTabBar extends LightningElement {
       this.cachedOverflowingTabs.length > 0
         ? this.cachedOverflowingTabs
         : this.overflowingTabs;
-    const clickedtab = targetTabs.find(
+    const clickedTab = targetTabs.find(
       // @ts-ignore
       (tab) => tab.expression === targetValue && tab.label === targetLabel
     );
     // @ts-ignore
-    clickedtab?.select();
+    clickedTab?.select();
     this.isDropdownOpen = false;
   };
 

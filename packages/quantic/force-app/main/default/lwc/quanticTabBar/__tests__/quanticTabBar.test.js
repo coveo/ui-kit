@@ -142,7 +142,7 @@ describe('c-quantic-tab-bar', () => {
 
       const expectedNumberOfTabsToBeVisible = 2;
       for (let i = 0; i < expectedNumberOfTabsToBeVisible - 1; i++) {
-        const tabIsVisible = exampleTabSlots[i].style.visibility === 'visible';
+        const tabIsVisible = exampleTabSlots[i].style.display !== 'none';
         expect(tabIsVisible).toBe(true);
       }
     });
@@ -230,13 +230,13 @@ describe('c-quantic-tab-bar', () => {
 
       const expectedNumberOfTabsToBeVisible = 1;
       const visibleTabs = exampleTabSlots.filter(
-        (tab) => tab.style.visibility === 'visible'
+        (tab) => tab.style.display !== 'none'
       );
       expect(visibleTabs.length).toBe(expectedNumberOfTabsToBeVisible);
 
       const expectedNumberOfTabsToBeHidden = 2;
       const hiddenTabs = exampleTabSlots.filter(
-        (tab) => tab.style.visibility === 'hidden'
+        (tab) => tab.style.display === 'none'
       );
       expect(hiddenTabs.length).toBe(expectedNumberOfTabsToBeHidden);
     });
@@ -352,7 +352,6 @@ describe('c-quantic-tab-bar', () => {
 
       const activeTab = exampleTabSlots[2];
       expect(activeTab.style.display).not.toBe('none');
-      expect(activeTab.style.visibility).toBe('visible');
 
       const hiddenTabs = exampleTabSlots.filter(
         (tab) => tab.style.display === 'none'
