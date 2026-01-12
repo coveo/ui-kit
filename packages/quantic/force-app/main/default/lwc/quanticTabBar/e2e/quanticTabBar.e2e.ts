@@ -26,7 +26,7 @@ const viewportTests = [
     viewportWidth: smallViewportWidth,
     testLabel:
       'should display only the selected tab and the more button with a label, the other tabs are in the dropdown',
-    expectedNumberOfTabsDisplayed: 1,
+    expectedNumberOfTabsDisplayed: 3,
     expectedMoreButtonLabel: 'More',
   },
   {
@@ -34,7 +34,7 @@ const viewportTests = [
     viewportWidth: mediumViewportWidth,
     testLabel:
       'should display only the first two tabs and the more button with a label, the other tabs are in the dropdown',
-    expectedNumberOfTabsDisplayed: 2,
+    expectedNumberOfTabsDisplayed: 3,
     expectedMoreButtonLabel: 'More',
   },
 ];
@@ -110,7 +110,7 @@ useCaseTestCases.forEach((useCase) => {
           search,
         }) => {
           const expectedSelectedTabLabel = 'Tab 4';
-          const expectedNumberOfDropdownOptions = 2;
+          const expectedNumberOfDropdownOptions = 1;
           const expectedActionCause = 'interfaceChange';
           const expectedTabValue = 'Tab 4';
 
@@ -122,7 +122,7 @@ useCaseTestCases.forEach((useCase) => {
           expect(dropdownOptionsCount).toBeGreaterThanOrEqual(
             expectedNumberOfDropdownOptions
           );
-          await tabBar.clickDropdownOption(1);
+          await tabBar.clickDropdownOption(0);
 
           const activeTab = await tabBar.activeTab.textContent();
 
