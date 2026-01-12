@@ -58,7 +58,7 @@ describe('generated-answer-utils', () => {
       expect(result.title).toBe('No title');
     });
 
-    it('should return citation with fallback title when title is missing', () => {
+    it('should return citation with fallback title when title is null', () => {
       const citation: GeneratedAnswerCitation = {
         id: 'test-2',
         // @ts-ignore - intentionally using null to verify fallback behavior
