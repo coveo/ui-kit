@@ -56,22 +56,6 @@ export class AtomicIpxButton
         transition: transform 500ms;
       }
     }
-
-    .btn-open [part='ipx-close-icon'] {
-      transform: translateY(0rem);
-    }
-
-    .btn-open [part='ipx-open-icon'] {
-      transform: translateY(3rem);
-    }
-
-    :host(:not(.btn-open)) [part='ipx-close-icon'] {
-      transform: translateY(3rem);
-    }
-
-    :host(:not(.btn-open)) [part='ipx-open-icon'] {
-      transform: translateY(0rem);
-    }
   `;
 
   /**
@@ -147,13 +131,36 @@ export class AtomicIpxButton
   }
 
   render() {
+    const [displayedIcon, hiddenIcon] = this.isModalOpen
+      ? ['ipx-close-icon', 'ipx-open-icon']
+      : ['ipx-open-icon', 'ipx-close-icon'];
     if (this.isModalOpen && !this.recommendationsLoaded) {
       this.getRecommendations();
     }
 
-    return html`<div class="flex flex-col items-center" part="container">
-      ${this.renderIPXButton()}
-    </div>`;
+    return html`
+      <style>
+        [part=${displayedIcon}] {
+          transform: translateY(0rem);
+        }
+        [part=${hiddenIcon}] {
+          transform: translateY(3rem);
+        }
+
+        .btn-open {
+          [part=${displayedIcon}] {
+            transform: translateY(3rem);
+          }
+
+          [part=${hiddenIcon}] {
+            transform: translateY(0rem);
+          }
+        }
+      </style>
+      <div class="flex flex-col items-center" part="container">
+        ${this.renderIPXButton()}
+      </div>
+    `;
   }
 
   private get ipxModal() {
