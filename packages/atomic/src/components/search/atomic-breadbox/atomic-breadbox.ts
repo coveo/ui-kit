@@ -62,6 +62,14 @@ export class AtomicBreadbox
     `,
   ];
 
+  private static readonly propsSchema = new Schema({
+    pathLimit: new NumberValue({
+      default: 3,
+      min: 1,
+      required: false,
+    }),
+  });
+
   private resizeObserver?: ResizeObserver;
   private lastRemovedBreadcrumbIndex = 0;
   private numberOfBreadcrumbs = 0;
@@ -115,13 +123,7 @@ export class AtomicBreadbox
     new ValidatePropsController(
       this,
       () => ({pathLimit: this.pathLimit}),
-      new Schema({
-        pathLimit: new NumberValue({
-          default: 3,
-          min: 1,
-          required: false,
-        }),
-      })
+      AtomicBreadbox.propsSchema
     );
   }
 

@@ -57,6 +57,10 @@ export class AtomicCommercePager
   extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
+  private static readonly propsSchema = new Schema({
+    numberOfPages: new NumberValue({min: 0}),
+  });
+
   @state() public bindings!: CommerceBindings;
   @state() public error!: Error;
   @state() private isAppLoaded = false;
@@ -109,9 +113,7 @@ export class AtomicCommercePager
       () => ({
         numberOfPages: this.numberOfPages,
       }),
-      new Schema({
-        numberOfPages: new NumberValue({min: 0}),
-      })
+      AtomicCommercePager.propsSchema
     );
   }
 
