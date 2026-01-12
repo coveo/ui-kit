@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-test.describe('history toggle', () => {
+test.describe('insight history toggle', () => {
   test.beforeEach(async ({historyToggle}) => {
     await historyToggle.load();
   });
