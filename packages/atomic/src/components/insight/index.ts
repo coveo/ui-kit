@@ -9,5 +9,6 @@ export {AtomicInsightPager} from './atomic-insight-pager/atomic-insight-pager.js
 export {AtomicInsightQueryError} from './atomic-insight-query-error/atomic-insight-query-error.js';
 export {AtomicInsightQuerySummary} from './atomic-insight-query-summary/atomic-insight-query-summary.js';
 export {AtomicInsightResultTemplate} from './atomic-insight-result-template/atomic-insight-result-template.js';
+export {AtomicInsightSmartSnippetSuggestions} from './atomic-insight-smart-snippet-suggestions/atomic-insight-smart-snippet-suggestions.js';
 export {AtomicInsightTab} from './atomic-insight-tab/atomic-insight-tab.js';
 export {AtomicInsightTabs} from './atomic-insight-tabs/atomic-insight-tabs.js';
