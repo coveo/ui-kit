@@ -1,4 +1,4 @@
-import {html, type TemplateResult} from 'lit';
+import {html} from 'lit';
 import type {TemplateResultType} from 'lit/directive-helpers.js';
 import '../components/common/atomic-component-error/atomic-component-error';
 import type {
@@ -29,13 +29,8 @@ export function errorGuard<
   Component extends LitElementWithError,
   T extends TemplateResultType,
 >(): RenderGuardDecorator<Component, T> {
-  return (
-    _,
-    propertyKey,
-    descriptor: TypedPropertyDescriptor<
-      () => TemplateResult<T> | typeof nothing
-    >
-  ) => {
+  // biome-ignore lint/suspicious/noExplicitAny: Decorator needs flexible parameter types
+  return (_: any, propertyKey: any, descriptor: any) => {
     if (descriptor?.value === undefined || propertyKey !== 'render') {
       throw new Error(
         '@errorGuard decorator can only be used on render method'
@@ -51,6 +46,6 @@ export function errorGuard<
       }
       return originalMethod.call(this);
     };
-    return descriptor as TypedPropertyDescriptor<() => GenericRender<T>>;
+    return descriptor;
   };
 }

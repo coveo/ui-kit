@@ -7,11 +7,13 @@ export type GenericRender<T extends TemplateResultType> =
   | TemplateResult<T>
   | typeof nothing;
 
-export type RenderGuardDecorator<Component, T extends TemplateResultType> = (
+export type RenderGuardDecorator<Component, _T extends TemplateResultType> = (
   target: Component,
   propertyKey: 'render',
-  descriptor: TypedPropertyDescriptor<() => TemplateResult<T> | typeof nothing>
-) => TypedPropertyDescriptor<() => GenericRender<T>> | undefined;
+  // biome-ignore lint/suspicious/noExplicitAny: Decorator needs to accept both TemplateResult and GenericRender return types
+  descriptor: any
+  // biome-ignore lint/suspicious/noExplicitAny: Decorator needs to return expanded type
+) => any;
 
 /**
  * Base interface for any Atomic component that needs to be initialized with bindings

@@ -1,4 +1,4 @@
-import {type LitElement, nothing, type TemplateResult} from 'lit';
+import {type LitElement, nothing} from 'lit';
 import type {TemplateResultType} from 'lit/directive-helpers.js';
 import type {
   GenericRender,
@@ -36,13 +36,8 @@ export function bindingGuard<
   Component extends LitElementWithBindings,
   T extends TemplateResultType,
 >(): RenderGuardDecorator<Component, T> {
-  return (
-    _,
-    propertyKey,
-    descriptor: TypedPropertyDescriptor<
-      () => TemplateResult<T> | typeof nothing
-    >
-  ) => {
+  // biome-ignore lint/suspicious/noExplicitAny: Decorator needs flexible parameter types
+  return (_: any, propertyKey: any, descriptor: any) => {
     if (descriptor?.value === undefined || propertyKey !== 'render') {
       throw new Error(
         '@bindingGuard decorator can only be used on render method'
@@ -54,6 +49,6 @@ export function bindingGuard<
         ? originalMethod?.call(this)
         : (nothing as GenericRender<T>);
     };
-    return descriptor as TypedPropertyDescriptor<() => GenericRender<T>>;
+    return descriptor;
   };
 }
