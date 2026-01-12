@@ -1086,8 +1086,9 @@ export const streamAnswerAPIStateMock: StreamAnswerAPIState = {
     answerConfigurationId: 'c36fd994-3eb7-4aaf-bfce-2dad4b15a622',
     cannotAnswer: false,
     answerGenerationMode: 'automatic',
-    conversationId: '',
     followUpAnswers: [],
+    canAskFollowUp: false,
+    followUpAnswerEnabled: false,
   },
 };
 

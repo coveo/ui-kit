@@ -43,17 +43,14 @@ import {
   updateActiveFollowUpError,
 } from './generated-answer-conversation-actions.js';
 import {
-  type GeneratedAnswerConversationTurn,
+  type FollowUpAnswer,
   type GeneratedAnswerState,
   getGeneratedAnswerInitialState,
 } from './generated-answer-state.js';
 import {filterOutDuplicatedCitations} from './utils/generated-answer-citation-utils.js';
 
-const createInitialFollowUpTurn = (
-  question: string
-): GeneratedAnswerConversationTurn => ({
+const createInitialFollowUpAnswer = (question: string): FollowUpAnswer => ({
   question: question,
-  isVisible: true,
   isLoading: false,
   isStreaming: false,
   citations: [],
@@ -66,7 +63,7 @@ const createInitialFollowUpTurn = (
 
 function getActiveFollowUp(
   state: GeneratedAnswerState
-): GeneratedAnswerConversationTurn | undefined {
+): FollowUpAnswer | undefined {
   return state.followUpAnswers[state.followUpAnswers.length - 1];
 }
 
@@ -198,7 +195,7 @@ export const generatedAnswerReducer = createReducer(
         };
       })
       .addCase(addFollowUpAnswer, (state, {payload}) => {
-        state.followUpAnswers.push(createInitialFollowUpTurn(payload));
+        state.followUpAnswers.push(createInitialFollowUpAnswer(payload));
       })
       .addCase(updateActiveFollowUpAnswerMessage, (state, {payload}) => {
         const followUp = getActiveFollowUp(state);

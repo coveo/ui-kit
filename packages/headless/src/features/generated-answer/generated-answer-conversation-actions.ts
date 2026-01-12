@@ -12,10 +12,7 @@ import type {
 } from '../../api/generated-answer/generated-answer-event-payload.js';
 import type {AnswerGenerationApiState} from '../../api/knowledge/answer-generation/answer-generation-api-state.js';
 import {initiateFollowUpAnswerGeneration} from '../../api/knowledge/answer-generation/endpoints/follow-up-answer-endpoint.js';
-import {
-  initiateHeadAnswerGeneration,
-  selectHeadAnswer,
-} from '../../api/knowledge/answer-generation/endpoints/head-answer-endpoint.js';
+import {initiateHeadAnswerGeneration} from '../../api/knowledge/answer-generation/endpoints/head-answer-endpoint.js';
 import type {GeneratedAnswerStream} from '../../api/knowledge/generated-answer-stream.js';
 import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
 import type {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments.js';
@@ -131,11 +128,6 @@ export const generateHeadAnswer = createAsyncThunk<
       state,
       navigatorContext
     );
-    const cachedResponse = selectHeadAnswer(generateHeadAnswerParams, state);
-    if (cachedResponse.status === 'fulfilled') {
-      dispatch(hydrateAnswerFromCache(cachedResponse.data));
-      return;
-    }
     await dispatch(initiateHeadAnswerGeneration(generateHeadAnswerParams));
   }
 );

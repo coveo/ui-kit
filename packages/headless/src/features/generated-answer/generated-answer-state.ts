@@ -5,15 +5,7 @@ import type {
   GeneratedResponseFormat,
 } from './generated-response-format.js';
 
-export interface GeneratedAnswerConversationTurn {
-  /**
-   * Determines if the generated answer is visible.
-   */
-  isVisible: boolean;
-  /**
-   * The question that prompted the generated answer.
-   */
-  question: string;
+interface GeneratedAnswerBase {
   /**
    * Determines if the generated answer is loading.
    */
@@ -68,14 +60,28 @@ export interface GeneratedAnswerConversationTurn {
   answerId?: string;
 }
 
+export interface FollowUpAnswer extends GeneratedAnswerBase {
+  /**
+   * The question that prompted the generated answer.
+   */
+  question: string;
+}
+
 /**
  * A scoped and simplified part of the headless state that is relevant to the `GeneratedAnswer` component.
  *
  * @group Controllers
  * @category GeneratedAnswer
  */
-export interface GeneratedAnswerState
-  extends Omit<GeneratedAnswerConversationTurn, 'question'> {
+export interface GeneratedAnswerState extends GeneratedAnswerBase {
+  /**
+   * Determines if the generated answer is visible.
+   */
+  isVisible: boolean;
+  /**
+   * Whether the answer is expanded.
+   */
+  expanded: boolean;
   id: string;
   /**
    * Determines if the feedback modal is currently opened.
@@ -94,10 +100,6 @@ export interface GeneratedAnswerState
    */
   fieldsToIncludeInCitations: string[];
   /**
-   * Whether the answer is expanded.
-   */
-  expanded: boolean;
-  /**
    * The answer configuration unique identifier.
    */
   answerConfigurationId?: string;
@@ -107,10 +109,31 @@ export interface GeneratedAnswerState
   answerApiQueryParams?: AnswerApiQueryParams;
   /** The current mode of answer generation. */
   answerGenerationMode: 'automatic' | 'manual';
-  /** The unique identifier of the current conversation. */
-  conversationId: string;
-  /** The list of follow-up answers in a conversational context. */
-  followUpAnswers: GeneratedAnswerConversationTurn[];
+
+  /** NEW: Follow-up capability */
+
+  /**
+   * Whether follow-up answers are enabled for this generated answer
+   * via agent configuration.
+   */
+  followUpAnswerEnabled: boolean;
+
+  /**
+   * Identifier used to scope follow-up generated answers to the
+   * current generated answer.
+   */
+  conversationId?: string;
+
+  /**
+   * Follow-up generated answers produced from follow-up questions
+   */
+  followUpAnswers: FollowUpAnswer[];
+
+  /**
+   * Indicates whether more follow-up questions can currently be asked,
+   * based on backend capabilities or limits.
+   */
+  canAskFollowUp: boolean;
 }
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
@@ -135,7 +158,8 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     answerApiQueryParams: undefined,
     answerId: undefined,
     answerGenerationMode: 'automatic',
-    conversationId: '',
+    followUpAnswerEnabled: false,
     followUpAnswers: [],
+    canAskFollowUp: false,
   };
 }

@@ -1,17 +1,16 @@
 import type {FollowUpAnswerParams} from '../../../../features/generated-answer/generated-answer-request.js';
-import type {SearchRequest} from '../../../search/search/search-request.js';
 import {answerGenerationApi} from '../answer-generation-api.js';
 import type {AnswerGenerationApiState} from '../answer-generation-api-state.js';
 import type {GeneratedAnswerDraft} from '../shared-types.js';
+import {streamAnswerWithStrategy} from '../streaming/answer-streaming-runner.js';
 import {followUpAnswerStrategy} from '../streaming/strategies/follow-up-answer-strategy.js';
-import {createStreamExecutor} from '../streaming/stream-executor.js';
 
 export const followUpAnswerEndpoint = answerGenerationApi.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     generateFollowUpAnswer: builder.query<
       GeneratedAnswerDraft,
-      Partial<SearchRequest>
+      FollowUpAnswerParams
     >({
       queryFn: () => {
         return {
@@ -46,12 +45,12 @@ export const followUpAnswerEndpoint = answerGenerationApi.injectEndpoints({
          * https://redux-toolkit.js.org/rtk-query/usage-with-typescript#typing-dispatch-and-getstate
          */
         const state = getState() as AnswerGenerationApiState;
-        const streamAnswerWithStrategy = createStreamExecutor<
-          GeneratedAnswerDraft,
-          AnswerGenerationApiState
-        >(followUpAnswerStrategy);
 
-        await streamAnswerWithStrategy(args, state, dispatch, updateCachedData);
+        await streamAnswerWithStrategy<
+          FollowUpAnswerParams,
+          AnswerGenerationApiState,
+          GeneratedAnswerDraft
+        >(args, {state, updateCachedData, dispatch}, followUpAnswerStrategy);
       },
     }),
   }),
@@ -62,14 +61,5 @@ export const initiateFollowUpAnswerGeneration = (
 ) => {
   return followUpAnswerEndpoint.endpoints.generateFollowUpAnswer.initiate(
     params
-  );
-};
-
-export const selectFollowUpAnswer = (
-  params: FollowUpAnswerParams,
-  state: AnswerGenerationApiState
-) => {
-  return followUpAnswerEndpoint.endpoints.generateFollowUpAnswer.select(params)(
-    state
   );
 };
