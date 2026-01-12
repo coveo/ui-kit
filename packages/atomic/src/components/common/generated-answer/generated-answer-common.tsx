@@ -185,7 +185,9 @@ export class GeneratedAnswerCommon {
     const {title} = citation;
     const {i18n} = this.props.getBindings();
 
-    return title.trim() !== ''
+    const normalizedTitle = (title ?? '').trim();
+
+    return normalizedTitle !== ''
       ? citation
       : {...citation, title: i18n.t('no-title')};
   }
