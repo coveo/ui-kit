@@ -25,6 +25,7 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {randomID} from '@/src/utils/utils';
+import styles from './atomic-insight-smart-snippet-feedback-modal.tw.css';
 
 /**
  * The `atomic-insight-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-insight-interface` when the `atomic-insight-smart-snippet` is initialized.
@@ -60,6 +61,8 @@ export class AtomicInsightSmartSnippetFeedbackModal
   extends LitElement
   implements InitializableComponent<InsightBindings>
 {
+  static styles = styles;
+
   @state()
   bindings!: InsightBindings;
 
