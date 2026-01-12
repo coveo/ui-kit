@@ -62,7 +62,12 @@ tools: ['codebase', 'editFiles', 'search']
 tools: ['codebase', 'editFiles', 'search', 'runCommands', 'new']
 ```
 
-**Available tools:**
+**Available tools (canonical reference):**
+
+The complete list of VS Code Copilot chat tools is maintained in the official docs:
+https://code.visualstudio.com/docs/copilot/reference/copilot-vscode-features#_chat-tools
+
+**Common tools used in this repo (not exhaustive):**
 - `search` - Search files and content
 - `codebase` - Understand code structure
 - `editFiles` / `changes` - Modify existing files

@@ -2,9 +2,11 @@
 
 Patterns for creating VS Code Copilot agents in ui-kit.
 
-## Pattern 1: Orchestrator
+## Pattern 1: Orchestrator (Skill-Oriented)
 
-For agents that delegate to specialized skills rather than doing everything themselves.
+For agents that act as a **single conversational orchestrator** (one agent persona) while delegating repeatable procedures and domain playbooks to **skills**.
+
+Use this when a single persona can own the experience end-to-end, but the domain has many specialized capabilities that should remain reusable and centrally maintained.
 
 <example name="orchestrator">
 ---
@@ -27,7 +29,12 @@ You orchestrate [domain] tasks by:
 3. **Unclear?** → Ask clarifying question
 </example>
 
-**When to use:** Complex domains with multiple specialized skills.
+**When to use:** Complex domains with multiple specialized skills where one persona can own execution.
+
+**Prefer handing off to other agents instead of skills when:**
+- Different personas are required (e.g., planner vs implementer vs reviewer)
+- Different tool permissions are required (e.g., read-only review vs file edits)
+- You want explicit, user-visible stage transitions
 
 ## Pattern 2: Autonomous Worker
 
@@ -84,9 +91,11 @@ tools: [codebase, terminalLastCommand]
 
 **When to use:** Troubleshooting, debugging, issue triage.
 
-## Pattern 4: Handoff Coordinator
+## Pattern 4: Handoff Coordinator (Agent-Oriented)
 
-For agents that transition to other specialized agents.
+For agents that coordinate **multi-agent workflows** by transitioning to other specialized agents.
+
+Use this when the work benefits from clear separation of personas, responsibilities, and tool permissions (e.g., plan → implement → review).
 
 <example name="handoff">
 ---
@@ -94,10 +103,14 @@ name: coordinator-v1
 description: Coordinates complex tasks, handing off to specialists as needed.
 tools: [changes, codebase]
 handoffs:
-  - name: specialist-a
-    description: Hand off when A expertise needed
-  - name: specialist-b
-    description: Hand off when B expertise needed
+  - label: Specialist A
+    agent: specialist-a
+    prompt: Handle the A portion of this task.
+    send: false
+  - label: Specialist B
+    agent: specialist-b
+    prompt: Handle the B portion of this task.
+    send: false
 ---
 
 # [Domain] Coordinator
@@ -113,20 +126,17 @@ handoffs:
 - Cases not matching any specialist
 </example>
 
-**When to use:** Complex workflows requiring different expertise areas.
+**When to use:** Complex workflows requiring different expertise areas, stages, or tool boundaries.
+
+**Note:** Non-orchestrator agents may also include handoffs for stage transitions (e.g., planner → implementer) even if they are not acting as a general coordinator.
 
 ## Tool Selection Guide
 
-| Tool | Use When |
-|------|----------|
-| `codebase` | Searching/reading code |
-| `changes` | Modifying files |
-| `edit/editFiles` | Editing existing files |
-| `new` | Creating new files |
-| `runCommands` | Running shell commands, builds, tests |
-| `githubRepo` | Interacting with GitHub (PRs, issues) |
-| `fetch` | Retrieving external URLs |
-| `problems` | Accessing diagnostics/errors |
+To avoid duplicating tool documentation, this file intentionally keeps tool guidance lightweight.
+
+For the canonical tool list and usage guidance, refer to:
+- `.claude/skills/creating-agents/references/SPECIFICATION.md`
+- Official VS Code tool list: https://code.visualstudio.com/docs/copilot/reference/copilot-vscode-features#_chat-tools
 
 ## Behavioral Directives
 
