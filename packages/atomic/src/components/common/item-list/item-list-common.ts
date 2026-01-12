@@ -10,7 +10,6 @@ import {defer, once} from '@/src/utils/utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint-utils';
 import type {CommerceStore} from '../../commerce/atomic-commerce-interface/store';
 import type {CommerceRecommendationStore} from '../../commerce/atomic-commerce-recommendation-interface/store';
-import type {InsightStore} from '../../insight/atomic-insight-interface/store';
 import type {RecsStore} from '../../recommendations/atomic-recs-interface/store';
 import type {SearchStore} from '../../search/atomic-search-interface/store';
 import type {AnyItem} from './unfolded-item';
@@ -26,12 +25,7 @@ export type ItemRenderingFunction<SpecificResult extends AnyItem = AnyItem> =
   | undefined;
 
 export interface ItemListCommonProps {
-  store:
-    | CommerceStore
-    | CommerceRecommendationStore
-    | RecsStore
-    | InsightStore
-    | SearchStore;
+  store: CommerceStore | CommerceRecommendationStore | RecsStore | SearchStore;
   loadingFlag: string;
   host: HTMLElement;
   nextNewItemTarget: FocusTargetController;

@@ -12,7 +12,6 @@ import type {
   SearchStatusState,
 } from '@coveo/headless';
 import {html, nothing, type TemplateResult} from 'lit';
-import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
 import type {Bindings as SearchBindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import type {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {parseDate} from '@/src/utils/date-utils';
@@ -38,7 +37,7 @@ export interface Timeframe {
 interface TimeframeFacetCommonOptions {
   facetId?: string;
   host: HTMLElement;
-  bindings: SearchBindings | InsightBindings;
+  bindings: SearchBindings;
   label: string;
   field: string;
   headingLevel: number;

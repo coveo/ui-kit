@@ -8,8 +8,8 @@ const directories = [
   'commerce',
   'common',
   'search',
-  'insight',
-  'ipx',
+  // 'insight',
+  // 'ipx',
   'recommendations',
 ];
 

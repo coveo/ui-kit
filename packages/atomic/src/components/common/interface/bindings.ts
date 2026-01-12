@@ -5,7 +5,6 @@ import type {RecommendationEngine} from '@coveo/headless/recommendation';
 import type {i18n} from 'i18next';
 import type {CommerceStore} from '../../commerce/atomic-commerce-interface/store';
 import type {CommerceRecommendationStore} from '../../commerce/atomic-commerce-recommendation-interface/store';
-import type {InsightStore} from '../../insight/atomic-insight-interface/store';
 import type {RecsStore} from '../../recommendations/atomic-recs-interface/store';
 import type {SearchStore} from '../../search/atomic-search-interface/store';
 
@@ -75,5 +74,4 @@ type AnyStore =
   | CommerceStore
   | CommerceRecommendationStore
   | RecsStore
-  | InsightStore
   | SearchStore;
