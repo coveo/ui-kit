@@ -124,25 +124,6 @@ export class AtomicInsightSmartSnippet
     }
   }
 
-  private get computedStyle() {
-    const slot = this.shadowRoot?.querySelector(
-      'slot[name="style"]'
-    ) as HTMLSlotElement | null;
-    if (!slot) {
-      return this.snippetStyle;
-    }
-
-    const template = slot.assignedElements()[0] as
-      | HTMLTemplateElement
-      | undefined;
-    const styleTag = template?.content.querySelector('style');
-
-    if (!styleTag) {
-      return this.snippetStyle;
-    }
-    return styleTag.innerHTML;
-  }
-
   private loadModal() {
     if (this.modalRef) {
       return;
@@ -237,7 +218,7 @@ export class AtomicInsightSmartSnippet
             @collapse=${() => this.smartSnippet.collapse()}
             @expand=${() => this.smartSnippet.expand()}
             part="body"
-            .snippetStyle=${this.computedStyle}
+            .snippetStyle=${this.snippetStyle}
           ></atomic-smart-snippet-expandable-answer>
           ${renderSnippetFooter({
             props: {
@@ -245,7 +226,6 @@ export class AtomicInsightSmartSnippet
             },
           })(html` ${this.renderSource()} ${this.renderFeedbackBanner()} `)}
         </atomic-smart-snippet-collapse-wrapper>
-        <slot name="style" hidden></slot>
       `)
     )}`;
   }
