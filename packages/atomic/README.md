@@ -7,6 +7,8 @@ A web-component library for building modern UIs interfacing with the Coveo platf
 
 Using the library: [Coveo Atomic Library Official Documentation](https://docs.coveo.com/en/atomic/latest/).
 
+**Contributing**: See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on developing Atomic components, running tests, and using development tools.
+
 ## Entry points
 
 The `@coveo/atomic` package exposes the following entry points:

@@ -1156,7 +1156,7 @@ describe('atomic-search-interface', () => {
       );
       const element = await setupElement({language: 'en'});
 
-      // @ts-ignore setting to undefined to simulate removing the attribute
+      // @ts-expect-error setting to undefined to simulate removing the attribute
       element.language = undefined;
       await element.updateComplete;
 
