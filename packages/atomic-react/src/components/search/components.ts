@@ -18,9 +18,16 @@ import {
   AtomicGeneratedAnswer as LitAtomicGeneratedAnswer,
   AtomicHtml as LitAtomicHtml,
   AtomicIcon as LitAtomicIcon,
+  AtomicInsightEditToggle as LitAtomicInsightEditToggle,
+  AtomicInsightFullSearchButton as LitAtomicInsightFullSearchButton,
   AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
   AtomicInsightInterface as LitAtomicInsightInterface,
   AtomicInsightLayout as LitAtomicInsightLayout,
+  AtomicInsightNoResults as LitAtomicInsightNoResults,
+  AtomicInsightPager as LitAtomicInsightPager,
+  AtomicInsightQueryError as LitAtomicInsightQueryError,
+  AtomicInsightQuerySummary as LitAtomicInsightQuerySummary,
+  AtomicInsightResultTemplate as LitAtomicInsightResultTemplate,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
   AtomicNoResults as LitAtomicNoResults,
@@ -34,6 +41,7 @@ import {
   AtomicQuickview as LitAtomicQuickview,
   AtomicRatingFacet as LitAtomicRatingFacet,
   AtomicRatingRangeFacet as LitAtomicRatingRangeFacet,
+  AtomicRecsError as LitAtomicRecsError,
   AtomicRecsInterface as LitAtomicRecsInterface,
   AtomicRefineModal as LitAtomicRefineModal,
   AtomicRefineToggle as LitAtomicRefineToggle,
@@ -73,6 +81,7 @@ import {
   AtomicSearchLayout as LitAtomicSearchLayout,
   AtomicSegmentedFacet as LitAtomicSegmentedFacet,
   AtomicSegmentedFacetScrollable as LitAtomicSegmentedFacetScrollable,
+  AtomicSmartSnippetFeedbackModal as LitAtomicSmartSnippetFeedbackModal,
   AtomicSmartSnippetSuggestions as LitAtomicSmartSnippetSuggestions,
   AtomicSortDropdown as LitAtomicSortDropdown,
   AtomicSortExpression as LitAtomicSortExpression,
@@ -199,6 +208,18 @@ export const AtomicIcon = createComponent({
   elementClass: LitAtomicIcon,
 });
 
+export const AtomicInsightEditToggle = createComponent({
+  tagName: 'atomic-insight-edit-toggle',
+  react: React,
+  elementClass: LitAtomicInsightEditToggle,
+});
+
+export const AtomicInsightFullSearchButton = createComponent({
+  tagName: 'atomic-insight-full-search-button',
+  react: React,
+  elementClass: LitAtomicInsightFullSearchButton,
+});
+
 export const AtomicInsightGenerateAnswerButton = createComponent({
   tagName: 'atomic-insight-generate-answer-button',
   react: React,
@@ -215,6 +236,36 @@ export const AtomicInsightLayout = createComponent({
   tagName: 'atomic-insight-layout',
   react: React,
   elementClass: LitAtomicInsightLayout,
+});
+
+export const AtomicInsightNoResults = createComponent({
+  tagName: 'atomic-insight-no-results',
+  react: React,
+  elementClass: LitAtomicInsightNoResults,
+});
+
+export const AtomicInsightPager = createComponent({
+  tagName: 'atomic-insight-pager',
+  react: React,
+  elementClass: LitAtomicInsightPager,
+});
+
+export const AtomicInsightQueryError = createComponent({
+  tagName: 'atomic-insight-query-error',
+  react: React,
+  elementClass: LitAtomicInsightQueryError,
+});
+
+export const AtomicInsightQuerySummary = createComponent({
+  tagName: 'atomic-insight-query-summary',
+  react: React,
+  elementClass: LitAtomicInsightQuerySummary,
+});
+
+export const AtomicInsightResultTemplate = createComponent({
+  tagName: 'atomic-insight-result-template',
+  react: React,
+  elementClass: LitAtomicInsightResultTemplate,
 });
 
 export const AtomicLayoutSection = createComponent({
@@ -293,6 +344,12 @@ export const AtomicRatingRangeFacet = createComponent({
   tagName: 'atomic-rating-range-facet',
   react: React,
   elementClass: LitAtomicRatingRangeFacet,
+});
+
+export const AtomicRecsError = createComponent({
+  tagName: 'atomic-recs-error',
+  react: React,
+  elementClass: LitAtomicRecsError,
 });
 
 export const AtomicRecsInterface = createComponent({
@@ -527,6 +584,12 @@ export const AtomicSegmentedFacetScrollable = createComponent({
   tagName: 'atomic-segmented-facet-scrollable',
   react: React,
   elementClass: LitAtomicSegmentedFacetScrollable,
+});
+
+export const AtomicSmartSnippetFeedbackModal = createComponent({
+  tagName: 'atomic-smart-snippet-feedback-modal',
+  react: React,
+  elementClass: LitAtomicSmartSnippetFeedbackModal,
 });
 
 export const AtomicSmartSnippetSuggestions = createComponent({
