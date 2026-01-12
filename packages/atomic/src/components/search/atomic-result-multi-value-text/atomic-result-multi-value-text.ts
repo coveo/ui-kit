@@ -35,6 +35,11 @@ export class AtomicResultMultiValueText
   extends LitElement
   implements InitializableComponent<Bindings>
 {
+  private static readonly propsSchema = new Schema({
+    field: new StringValue({required: true, emptyAllowed: false}),
+    maxValuesToDisplay: new NumberValue({min: 0, required: false}),
+  });
+
   public breadcrumbManager!: BreadcrumbManager;
 
   /**
@@ -76,10 +81,7 @@ export class AtomicResultMultiValueText
         field: this.field,
         maxValuesToDisplay: this.maxValuesToDisplay,
       }),
-      new Schema({
-        field: new StringValue({required: true, emptyAllowed: false}),
-        maxValuesToDisplay: new NumberValue({min: 0, required: false}),
-      })
+      AtomicResultMultiValueText.propsSchema
     );
   }
 

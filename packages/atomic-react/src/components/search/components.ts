@@ -41,6 +41,7 @@ import {
   AtomicQuickview as LitAtomicQuickview,
   AtomicRatingFacet as LitAtomicRatingFacet,
   AtomicRatingRangeFacet as LitAtomicRatingRangeFacet,
+  AtomicRecsError as LitAtomicRecsError,
   AtomicRecsInterface as LitAtomicRecsInterface,
   AtomicRefineModal as LitAtomicRefineModal,
   AtomicRefineToggle as LitAtomicRefineToggle,
@@ -80,7 +81,7 @@ import {
   AtomicSearchLayout as LitAtomicSearchLayout,
   AtomicSegmentedFacet as LitAtomicSegmentedFacet,
   AtomicSegmentedFacetScrollable as LitAtomicSegmentedFacetScrollable,
-  AtomicSmartSnippet as LitAtomicSmartSnippet,
+  AtomicSmartSnippetFeedbackModal as LitAtomicSmartSnippetFeedbackModal,
   AtomicSmartSnippetSuggestions as LitAtomicSmartSnippetSuggestions,
   AtomicSortDropdown as LitAtomicSortDropdown,
   AtomicSortExpression as LitAtomicSortExpression,
@@ -345,6 +346,12 @@ export const AtomicRatingRangeFacet = createComponent({
   elementClass: LitAtomicRatingRangeFacet,
 });
 
+export const AtomicRecsError = createComponent({
+  tagName: 'atomic-recs-error',
+  react: React,
+  elementClass: LitAtomicRecsError,
+});
+
 export const AtomicRecsInterface = createComponent({
   tagName: 'atomic-recs-interface',
   react: React,
@@ -579,10 +586,10 @@ export const AtomicSegmentedFacetScrollable = createComponent({
   elementClass: LitAtomicSegmentedFacetScrollable,
 });
 
-export const AtomicSmartSnippet = createComponent({
-  tagName: 'atomic-smart-snippet',
+export const AtomicSmartSnippetFeedbackModal = createComponent({
+  tagName: 'atomic-smart-snippet-feedback-modal',
   react: React,
-  elementClass: LitAtomicSmartSnippet,
+  elementClass: LitAtomicSmartSnippetFeedbackModal,
 });
 
 export const AtomicSmartSnippetSuggestions = createComponent({
