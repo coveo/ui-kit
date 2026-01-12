@@ -1,7 +1,7 @@
 import {ContextConsumer} from '@lit/context';
 import type {ReactiveElement} from 'lit';
-import type {AnyBindings} from '../components';
 import {bindingsContext} from '../components/common/context/bindings-context';
+import type {AnyBindings} from '../components/common/interface/bindings';
 import type {InitializableComponent} from './types';
 
 /**
