@@ -722,49 +722,6 @@ export namespace Components {
         "store"?: RecsStore;
     }
     /**
-     * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
-     * You can style the snippet by inserting a template element as follows:
-     * ```html
-     * <atomic-smart-snippet>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet>
-     * ```
-     */
-    interface AtomicSmartSnippet {
-        /**
-          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
-         */
-        "collapsedHeight": number;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
-         */
-        "headingLevel": number;
-        /**
-          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
-         */
-        "maximumHeight": number;
-        "snippetCollapsedHeight"?: number;
-        "snippetMaximumHeight"?: number;
-        /**
-          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
-        /**
-          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded": string[] | string;
-        /**
-          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded": string[] | string;
-    }
-    /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
      * Internal component made to be integrated in a TimeframeFacet.
      */
@@ -1242,27 +1199,6 @@ declare global {
         prototype: HTMLAtomicRecsResultElement;
         new (): HTMLAtomicRecsResultElement;
     };
-    /**
-     * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
-     * You can style the snippet by inserting a template element as follows:
-     * ```html
-     * <atomic-smart-snippet>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet>
-     * ```
-     */
-    interface HTMLAtomicSmartSnippetElement extends Components.AtomicSmartSnippet, HTMLStencilElement {
-    }
-    var HTMLAtomicSmartSnippetElement: {
-        prototype: HTMLAtomicSmartSnippetElement;
-        new (): HTMLAtomicSmartSnippetElement;
-    };
     interface HTMLAtomicStencilFacetDateInputElementEventMap {
         "atomic/dateInputApply": any;
     }
@@ -1344,7 +1280,6 @@ declare global {
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-recs-result": HTMLAtomicRecsResultElement;
-        "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
@@ -2011,49 +1946,6 @@ declare namespace LocalJSX {
         "store"?: RecsStore;
     }
     /**
-     * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
-     * You can style the snippet by inserting a template element as follows:
-     * ```html
-     * <atomic-smart-snippet>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet>
-     * ```
-     */
-    interface AtomicSmartSnippet {
-        /**
-          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
-         */
-        "collapsedHeight"?: number;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
-         */
-        "headingLevel"?: number;
-        /**
-          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
-         */
-        "maximumHeight"?: number;
-        "snippetCollapsedHeight"?: number;
-        "snippetMaximumHeight"?: number;
-        /**
-          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
-        /**
-          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded"?: string[] | string;
-        /**
-          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded"?: string[] | string;
-    }
-    /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
      * Internal component made to be integrated in a TimeframeFacet.
      */
@@ -2185,7 +2077,6 @@ declare namespace LocalJSX {
         "atomic-quickview-modal": AtomicQuickviewModal;
         "atomic-recs-list": AtomicRecsList;
         "atomic-recs-result": AtomicRecsResult;
-        "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
@@ -2267,22 +2158,6 @@ declare module "@stencil/core" {
              * The `atomic-recs-result` component is used internally by the `atomic-recs-list` component.
              */
             "atomic-recs-result": LocalJSX.AtomicRecsResult & JSXBase.HTMLAttributes<HTMLAtomicRecsResultElement>;
-            /**
-             * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
-             * You can style the snippet by inserting a template element as follows:
-             * ```html
-             * <atomic-smart-snippet>
-             *   <template>
-             *     <style>
-             *       b {
-             *         color: blue;
-             *       }
-             *     </style>
-             *   </template>
-             * </atomic-smart-snippet>
-             * ```
-             */
-            "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
             /**
              * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
              * Internal component made to be integrated in a TimeframeFacet.

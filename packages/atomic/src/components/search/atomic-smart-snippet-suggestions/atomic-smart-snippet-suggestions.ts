@@ -29,6 +29,8 @@ import ArrowRight from '@/src/images/arrow-right.svg';
 import {randomID} from '@/src/utils/utils';
 import '@/src/components/common/atomic-icon/atomic-icon';
 import '@/src/components/common/atomic-smart-snippet-source/atomic-smart-snippet-source';
+import '@/src/components/common/atomic-smart-snippet-answer/atomic-smart-snippet-answer';
+
 import styles from './atomic-smart-snippet-suggestions.tw.css';
 
 /**
