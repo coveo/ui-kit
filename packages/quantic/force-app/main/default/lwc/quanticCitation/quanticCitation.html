@@ -3,7 +3,7 @@
     class="citation slds-m-right_xx-small slds-m-vertical_xx-small slds-is-relative"
   >
     <a
-      class="citation__link slds-badge slds-badge_lightest slds-align_absolute-center slds-text-link_reset slds-p-left_xx-small slds-p-right_x-small"
+      class={citationLinkClasses}
       aria-label={citationTitle}
       href={hrefValue}
       target="_blank"
@@ -12,11 +12,14 @@
       onmouseleave={handleCitationMouseLeave}
       onclick={handleClick}
     >
-      <p
-        class="citation__title slds-m-left_x-small slds-truncate slds-has-flexi-truncate"
-      >
-        {citationTitle}
-      </p>
+      <template lwc:if={iconName}>
+        <lightning-icon
+          icon-name={iconName}
+          size="xx-small"
+          class={citationIconClasses}
+        ></lightning-icon>
+      </template>
+      <p class={citationTitleClasses}>{citationTitle}</p>
     </a>
     <c-quantic-tooltip
       light-theme
@@ -26,9 +29,24 @@
       onmouseleave={handleTooltipMouseLeave}
     >
       <div class="citation__tooltip" slot="content">
-        <div data-testid="citation__tooltip-uri" class="slds-text-body_small slds-text-color_weak slds-truncate slds-var-p-vertical_xxx-small">{hrefValue}</div>
-        <div data-testid="citation__tooltip-title" class="slds-text-title_bold slds-var-p-vertical_xx-small">{citationTitle}</div>
-        <div data-testid="citation__tooltip-text" class="citation__tooltip-text slds-text-body_small slds-var-p-vertical_xxx-small">{text}</div>
+        <div
+          data-testid="citation__tooltip-uri"
+          class="slds-text-body_small slds-text-color_weak slds-truncate slds-var-p-vertical_xxx-small"
+        >
+          {hrefValue}
+        </div>
+        <div
+          data-testid="citation__tooltip-title"
+          class="slds-text-title_bold slds-var-p-vertical_xx-small"
+        >
+          {citationTitle}
+        </div>
+        <div
+          data-testid="citation__tooltip-text"
+          class="citation__tooltip-text slds-text-body_small slds-var-p-vertical_xxx-small"
+        >
+          {text}
+        </div>
       </div>
     </c-quantic-tooltip>
   </li>

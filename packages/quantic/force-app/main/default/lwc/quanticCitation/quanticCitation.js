@@ -36,6 +36,21 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
    * @default false
    */
   @api disableCitationAnchoring = false;
+  /**
+   * Whether the citation is in an active state.
+   * A citation in an active state is displayed with a blue title and border.
+   * @api
+   * @type {boolean}
+   * @default false
+   */
+  @api isActive = false;
+  /**
+   * The name of the Salesforce icon to display before the citation title.
+   * @api
+   * @example 'utility:attach'
+   * @type {string}
+   */
+  @api iconName;
 
   /** @type {Object} */
   timeout;
@@ -280,5 +295,17 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
     return this.isSalesforceLink
       ? this.salesforceRecordUrl
       : (this.clickUri ?? this.citation?.uri);
+  }
+
+  get citationTitleClasses() {
+    return `citation__title slds-m-left_x-small slds-truncate slds-has-flexi-truncate ${this.isActive ? 'citation__title--active' : ''}`;
+  }
+
+  get citationLinkClasses() {
+    return `citation__link slds-badge slds-badge_lightest slds-align_absolute-center slds-text-link_reset slds-p-left_xx-small slds-p-right_x-small ${this.isActive ? 'citation__link--active' : ''}`;
+  }
+
+  get citationIconClasses() {
+    return `citation__icon slds-m-left_x-small ${this.isActive ? 'citation__icon--active' : ''}`;
   }
 }
