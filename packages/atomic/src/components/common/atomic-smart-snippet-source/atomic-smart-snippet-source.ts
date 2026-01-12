@@ -16,9 +16,9 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
  * The `atomic-smart-snippet-source` component displays the source information for a smart snippet.
  * @part source-url - The clickable URL of the source.
  * @part source-title - The clickable title of the source.
- * @fires select-source - Emitted when the source link is selected.
- * @fires begin-delayed-select-source - Emitted when a delayed source selection begins.
- * @fires cancel-delayed-select-source - Emitted when a pending source selection is cancelled.
+ * @event select-source - Emitted when the source link is selected.
+ * @event begin-delayed-select-source - Emitted when a delayed source selection begins.
+ * @event cancel-delayed-select-source - Emitted when a pending source selection is cancelled.
  * @internal
  */
 @customElement('atomic-smart-snippet-source')
