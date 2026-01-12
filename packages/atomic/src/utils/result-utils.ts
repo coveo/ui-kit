@@ -4,7 +4,6 @@ import {
   ResultTemplatesHelpers,
   type SearchEngine,
 } from '@coveo/headless';
-import type {RecsBindings} from '../components/recommendations/atomic-recs-interface/interfaces';
 import type {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 import {readFromObject} from './object-utils';
 
@@ -54,7 +53,7 @@ export function bindLogDocumentOpenOnResult(
 export function buildStringTemplateFromResult(
   template: string,
   result: Result,
-  bindings: Bindings | RecsBindings
+  bindings: Bindings
 ) {
   return template.replace(/\${(.*?)}/g, (value: string) => {
     const key = value.substring(2, value.length - 1);

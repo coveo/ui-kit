@@ -96,10 +96,7 @@ export const config: Config = {
           'atomic-recs-result-template',
           'atomic-field-condition',
         ].concat(
-          filterComponentsByUseCaseForReactOutput('src/components/search'),
-          filterComponentsByUseCaseForReactOutput(
-            'src/components/recommendations'
-          )
+          filterComponentsByUseCaseForReactOutput('src/components/search')
         ),
       }),
     !isDevWatch &&

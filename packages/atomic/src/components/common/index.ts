@@ -18,3 +18,5 @@ export {AtomicTabBar} from './atomic-tab-bar/atomic-tab-bar.js';
 export {AtomicTabButton} from './atomic-tab-button/atomic-tab-button.js';
 export {AtomicTabPopover} from './atomic-tab-popover/atomic-tab-popover.js';
 export {AtomicTimeframe} from './atomic-timeframe/atomic-timeframe.js';
+
+export type * from './interfaces.js';

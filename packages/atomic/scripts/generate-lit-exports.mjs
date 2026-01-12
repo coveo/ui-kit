@@ -10,7 +10,7 @@ const directories = [
   'search',
   // 'insight',
   // 'ipx',
-  'recommendations',
+  // 'recommendations',
 ];
 
 const baseComponentsDir = path.resolve(
@@ -55,7 +55,7 @@ async function generateLitExportsForDir(dir) {
     .map((file) => file.name)
     .sort();
 
-  const indexFileContent = `
+  let indexFileContent = `
     // Auto-generated file
     ${
       litComponents.length > 0
@@ -68,6 +68,11 @@ async function generateLitExportsForDir(dir) {
         : 'export {};'
     }
   `;
+  if (dir === 'common') {
+    indexFileContent += `
+      export type * from './interfaces.js';
+    `;
+  }
   const lazyIndexFileContent = `
     // Auto-generated file
     export default {

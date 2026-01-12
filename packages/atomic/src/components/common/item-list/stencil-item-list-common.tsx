@@ -6,7 +6,6 @@ import {
 import {defer, once} from '../../../utils/utils';
 import {CommerceStore} from '../../commerce/atomic-commerce-interface/store';
 import {CommerceRecommendationStore} from '../../commerce/atomic-commerce-recommendation-interface/store';
-import {RecsStore} from '../../recommendations/atomic-recs-interface/store';
 import {SearchStore} from '../../search/atomic-search-interface/store';
 import {AnyItem} from './unfolded-item';
 import {
@@ -28,7 +27,6 @@ export interface ItemListCommonProps {
   store:
     | CommerceStore
     | CommerceRecommendationStore
-    | RecsStore
     | SearchStore;
   loadingFlag: string;
   host: HTMLElement;

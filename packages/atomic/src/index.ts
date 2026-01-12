@@ -17,7 +17,6 @@ export {
   elementHasNoQuery,
   elementHasQuery,
 } from './components/common/suggestions/suggestions-utils';
-export {RecsBindings} from './components/recommendations/atomic-recs-interface/atomic-recs-interface';
 export {Bindings} from './components/search/atomic-search-interface/atomic-search-interface';
 export {resultContext} from './components/search/result-template-component-utils/context/stencil-result-template-decorators';
 export {
