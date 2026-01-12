@@ -74,6 +74,13 @@ describe('Insight Panel test suites', () => {
         .should('have.attr', 'value', '2');
     });
 
+    it('should display query summary', () => {
+      InsightPanelsSelectors.querySummary()
+        .should('exist')
+        .shadow()
+        .should('have.text', 'Insights related to this case');
+    });
+
     it('should display a search box', () => {
       InsightPanelsSelectors.searchbox()
         .should('exist')
@@ -188,6 +195,23 @@ describe('Insight Panel test suites', () => {
           'have.class',
           'atomic-hidden'
         );
+      });
+    });
+
+    describe('when a smart snippet answer is returned', () => {
+      beforeEach(() => {
+        mockSearchWithSmartSnippet();
+        visitPage();
+      });
+
+      describe('when giving explanatory feedback', () => {
+        it('should show the feedback modal', () => {
+          InsightPanelsSelectors.smartSnippetFeedbackModal().should(
+            'not.exist'
+          );
+
+          InsightPanelsSelectors.smartSnippetFeedbackModal().should('exist');
+        });
       });
     });
   });
