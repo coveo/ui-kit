@@ -1,6 +1,7 @@
 import {css} from 'lit';
 
 export default css`
+  @reference '../../../utils/tailwind.global.tw.css';
   [part='source-url'] {
     @apply link-style;
     @apply set-font-size-base;

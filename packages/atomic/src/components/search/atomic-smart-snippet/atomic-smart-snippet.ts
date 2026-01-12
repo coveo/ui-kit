@@ -30,6 +30,8 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
 import {randomID} from '@/src/utils/utils';
 import styles from './atomic-smart-snippet.tw.css';
+import '@/src/components/common/atomic-smart-snippet-source/atomic-smart-snippet-source';
+import type {AtomicSmartSnippetFeedbackModal} from '@/src/components/search/atomic-smart-snippet-feedback-modal/atomic-smart-snippet-feedback-modal.js';
 
 /**
  * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
@@ -95,7 +97,7 @@ export class AtomicSmartSnippet
   @state() public feedbackSent = false;
 
   #id!: string;
-  private modalRef?: HTMLAtomicSmartSnippetFeedbackModalElement;
+  private modalRef?: AtomicSmartSnippetFeedbackModal;
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
@@ -242,7 +244,7 @@ export class AtomicSmartSnippet
   }
 
   private setModalRef(ref: HTMLElement) {
-    this.modalRef = ref as HTMLAtomicSmartSnippetFeedbackModalElement;
+    this.modalRef = ref as AtomicSmartSnippetFeedbackModal;
   }
 
   private setFeedbackSent(isSent: boolean) {
@@ -335,7 +337,7 @@ export class AtomicSmartSnippet
             source,
             () => html`
               <atomic-smart-snippet-source
-                .source=${source}
+                .source=${source!}
                 .anchorAttributes=${getAttributesFromLinkSlotContent(
                   this,
                   'source-anchor-attributes'

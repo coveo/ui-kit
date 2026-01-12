@@ -468,7 +468,7 @@ describe('atomic-smart-snippet', () => {
       element.requestUpdate();
       await element.updateComplete;
 
-      expect(getParts().answer).toBeInTheDocument();
+      expect(getParts().expandableAnswer).toBeInTheDocument();
     });
   });
 
