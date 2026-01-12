@@ -27,3 +27,14 @@ export const selectAnswerApiQueryParams = createSelector(
   (state) => state.generatedAnswer?.answerApiQueryParams,
   (answerApiQueryParams) => answerApiQueryParams ?? skipToken
 );
+
+/**
+ * If answer params are not available, returns `skipToken`, a special value from RTK Query
+ * that tells RTK Query to "skip" running a query or selector until the params are ready.
+ *
+ * @see https://redux-toolkit.js.org/rtk-query/usage-with-typescript#skipping-queries-with-typescript-using-skiptoken
+ */
+export const selectHeadAnswerApiQueryParams = createSelector(
+  (state) => state.generatedAnswer?.headAnswerApiQueryParams,
+  (headAnswerApiQueryParams) => headAnswerApiQueryParams ?? skipToken
+);

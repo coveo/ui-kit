@@ -11,7 +11,7 @@ import type {
 } from '../core/generated-answer/headless-core-generated-answer.js';
 import {buildSearchAPIGeneratedAnswer} from '../core/generated-answer/headless-searchapi-generated-answer.js';
 import {buildAnswerApiGeneratedAnswer} from '../knowledge/generated-answer/headless-answerapi-generated-answer.js';
-import {buildGeneratedAnswerConversation} from '../knowledge/generated-answer-conversation/headless-generated-answer-conversation.js';
+import {buildGeneratedAnswerWithFollowUps} from '../knowledge/generated-answer-conversation/headless-generated-answer-with-follow-ups.js';
 
 export type {
   GeneratedAnswerCitation,
@@ -40,7 +40,7 @@ export function buildGeneratedAnswer(
     engine.state.configuration.analytics.analyticsMode
   );
   const controller = props.agentId
-    ? buildGeneratedAnswerConversation(
+    ? buildGeneratedAnswerWithFollowUps(
         engine,
         generatedAnswerAnalyticsClient,
         props

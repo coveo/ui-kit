@@ -12,8 +12,6 @@ import type {
 } from '../../api/generated-answer/generated-answer-event-payload.js';
 import type {AnswerGenerationApiState} from '../../api/knowledge/answer-generation/answer-generation-api-state.js';
 import {initiateFollowUpAnswerGeneration} from '../../api/knowledge/answer-generation/endpoints/follow-up-answer-endpoint.js';
-import {initiateHeadAnswerGeneration} from '../../api/knowledge/answer-generation/endpoints/head-answer-endpoint.js';
-import type {GeneratedAnswerStream} from '../../api/knowledge/generated-answer-stream.js';
 import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
 import type {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments.js';
 import {
@@ -24,18 +22,16 @@ import {
   answerContentFormatSchema,
   citationSchema,
   type GeneratedAnswerErrorPayload,
-  resetAnswer,
-} from './generated-answer-actions.js';
-import {
-  constructGenerateFollowUpAnswerParams,
-  constructGenerateHeadAnswerParams,
-} from './generated-answer-request.js';
-import type {GeneratedContentFormat} from './generated-response-format.js';
+} from '../generated-answer/generated-answer-actions.js';
+import type {GeneratedContentFormat} from '../generated-answer/generated-response-format.js';
+import {constructGenerateFollowUpAnswerParams} from './follow-up-answer-request.js';
 
 const stringValue = new StringValue({required: true});
 
-export const hydrateAnswerFromCache = createAction<GeneratedAnswerStream>(
-  'generatedAnswer/hydrateFromCache'
+export const setIsEnabled = createAction(
+  'generatedAnswer/setIsEnabled',
+  (payload: boolean) =>
+    validatePayload(payload, new BooleanValue({required: true}))
 );
 
 export const addFollowUpAnswer = createAction<string>(
@@ -107,38 +103,13 @@ export const setActiveFollowUpCannotAnswer = createAction(
     validatePayload(payload, new BooleanValue({required: true}))
 );
 
-export const generateHeadAnswer = createAsyncThunk<
-  void,
-  void,
-  AsyncThunkOptions<AnswerGenerationApiState, SearchThunkExtraArguments>
->(
-  'generatedAnswerConversation/generateHeadAnswer',
-  async (_, {getState, dispatch, extra: {navigatorContext, logger}}) => {
-    const state = getState() as AnswerGenerationApiState;
-    if (!state.generatedAnswer.answerConfigurationId) {
-      logger.warn(
-        'Missing answerConfigurationId in engine configuration. ' +
-          'The generateAnswer action requires an answer configuration ID.'
-      );
-      return;
-    }
-
-    dispatch(resetAnswer());
-    const generateHeadAnswerParams = constructGenerateHeadAnswerParams(
-      state,
-      navigatorContext
-    );
-    await dispatch(initiateHeadAnswerGeneration(generateHeadAnswerParams));
-  }
-);
-
 export const generateFollowUpAnswer = createAsyncThunk<
   void,
   string,
   AsyncThunkOptions<AnswerGenerationApiState, SearchThunkExtraArguments>
 >(
   'generatedAnswerConversation/generateFollowUpAnswer',
-  async (question, {getState, dispatch, extra: {navigatorContext, logger}}) => {
+  async (question, {getState, dispatch, extra: {logger}}) => {
     const state = getState() as AnswerGenerationApiState;
     if (!state.generatedAnswer.answerConfigurationId) {
       logger.warn(
@@ -150,8 +121,8 @@ export const generateFollowUpAnswer = createAsyncThunk<
 
     dispatch(addFollowUpAnswer(question));
     const generateFollowUpAnswerParams = constructGenerateFollowUpAnswerParams(
-      state,
-      navigatorContext
+      question,
+      state
     );
     await dispatch(
       initiateFollowUpAnswerGeneration({

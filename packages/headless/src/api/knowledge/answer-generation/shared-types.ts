@@ -1,7 +1,7 @@
 import type {GeneratedContentFormat} from '../../../features/generated-answer/generated-response-format.js';
 import type {GeneratedAnswerCitation} from '../../generated-answer/generated-answer-event-payload.js';
 
-export interface GeneratedAnswerDraft {
+export interface GeneratedAnswerServerState {
   answerId?: string;
   contentFormat?: GeneratedContentFormat;
   answer?: string;

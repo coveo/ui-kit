@@ -6,17 +6,16 @@ import type {
   QueryDefinition,
   RetryOptions,
 } from '@reduxjs/toolkit/query';
-import type {
-  FollowUpAnswerParams,
-  HeadAnswerParams,
-} from '../../../features/generated-answer/generated-answer-request.js';
+import type {FollowUpAnswerParams} from '../../../features/follow-up-answers/follow-up-answer-request.js';
+import type {HeadAnswerParams} from '../../../features/generated-answer/generated-answer-request.js';
 import type {SearchAppState} from '../../../state/search-app-state.js';
 import type {
   ConfigurationSection,
+  FollowUpAnswersSection,
   GeneratedAnswerSection,
   TabSection,
 } from '../../../state/state-sections.js';
-import type {GeneratedAnswerDraft} from './shared-types.js';
+import type {GeneratedAnswerServerState} from './shared-types.js';
 
 export interface AnswerGenerationApiSection {
   // CombinedState is an internal type from RTK Query that is used directly to break dependency on actual
@@ -34,7 +33,7 @@ export interface AnswerGenerationApiSection {
           {}
         >,
         never,
-        GeneratedAnswerDraft,
+        GeneratedAnswerServerState,
         'answerGenerationApi'
       >;
       generateFollowUpAnswer: QueryDefinition<
@@ -47,7 +46,7 @@ export interface AnswerGenerationApiSection {
           {}
         >,
         never,
-        GeneratedAnswerDraft,
+        GeneratedAnswerServerState,
         'answerGenerationApi'
       >;
     },
@@ -63,4 +62,5 @@ export type AnswerGenerationApiState = {
   ConfigurationSection &
   Partial<SearchAppState> &
   GeneratedAnswerSection &
+  FollowUpAnswersSection &
   Partial<TabSection>;

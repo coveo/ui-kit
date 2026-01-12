@@ -1,11 +1,11 @@
 import type {
-  GeneratedAnswerDraft,
+  GeneratedAnswerServerState,
   Message,
   StreamPayload,
 } from '../shared-types.js';
 
 export const handleAnswerId = (
-  draft: GeneratedAnswerDraft,
+  draft: GeneratedAnswerServerState,
   answerId: string
 ) => {
   if (answerId) {
@@ -14,8 +14,8 @@ export const handleAnswerId = (
 };
 
 export const handleHeaderMessage = (
-  draft: GeneratedAnswerDraft,
-  payload: Pick<GeneratedAnswerDraft, 'contentFormat'>
+  draft: GeneratedAnswerServerState,
+  payload: Pick<GeneratedAnswerServerState, 'contentFormat'>
 ) => {
   const {contentFormat} = payload;
   draft.contentFormat = contentFormat;
@@ -24,7 +24,7 @@ export const handleHeaderMessage = (
 };
 
 export const handleMessage = (
-  draft: GeneratedAnswerDraft,
+  draft: GeneratedAnswerServerState,
   payload: Pick<StreamPayload, 'textDelta'>
 ) => {
   if (draft.answer === undefined) {
@@ -35,14 +35,14 @@ export const handleMessage = (
 };
 
 export const handleCitations = (
-  draft: GeneratedAnswerDraft,
+  draft: GeneratedAnswerServerState,
   payload: Pick<StreamPayload, 'citations'>
 ) => {
   draft.citations = payload.citations;
 };
 
 export const handleEndOfStream = (
-  draft: GeneratedAnswerDraft,
+  draft: GeneratedAnswerServerState,
   payload: Pick<StreamPayload, 'answerGenerated'>
 ) => {
   draft.generated = payload.answerGenerated;
@@ -50,7 +50,7 @@ export const handleEndOfStream = (
 };
 
 export const handleError = (
-  draft: GeneratedAnswerDraft,
+  draft: GeneratedAnswerServerState,
   message: Required<Message>
 ) => {
   const errorMessage = message.errorMessage || 'Unknown error occurred';

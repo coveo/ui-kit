@@ -1,11 +1,14 @@
 import type {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
-import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
+import type {
+  AnswerApiQueryParams,
+  HeadAnswerParams,
+} from '../../features/generated-answer/generated-answer-request.js';
 import type {
   GeneratedContentFormat,
   GeneratedResponseFormat,
 } from './generated-response-format.js';
 
-interface GeneratedAnswerBase {
+export interface GeneratedAnswerBase {
   /**
    * Determines if the generated answer is loading.
    */
@@ -60,13 +63,6 @@ interface GeneratedAnswerBase {
   answerId?: string;
 }
 
-export interface FollowUpAnswer extends GeneratedAnswerBase {
-  /**
-   * The question that prompted the generated answer.
-   */
-  question: string;
-}
-
 /**
  * A scoped and simplified part of the headless state that is relevant to the `GeneratedAnswer` component.
  *
@@ -107,33 +103,12 @@ export interface GeneratedAnswerState extends GeneratedAnswerBase {
    * The query parameters used for the answer API request cache key
    */
   answerApiQueryParams?: AnswerApiQueryParams;
+  /**
+   * The query parameters used for the head answer API request
+   */
+  headAnswerApiQueryParams?: HeadAnswerParams;
   /** The current mode of answer generation. */
   answerGenerationMode: 'automatic' | 'manual';
-
-  /** NEW: Follow-up capability */
-
-  /**
-   * Whether follow-up answers are enabled for this generated answer
-   * via agent configuration.
-   */
-  followUpAnswerEnabled: boolean;
-
-  /**
-   * Identifier used to scope follow-up generated answers to the
-   * current generated answer.
-   */
-  conversationId?: string;
-
-  /**
-   * Follow-up generated answers produced from follow-up questions
-   */
-  followUpAnswers: FollowUpAnswer[];
-
-  /**
-   * Indicates whether more follow-up questions can currently be asked,
-   * based on backend capabilities or limits.
-   */
-  canAskFollowUp: boolean;
 }
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
@@ -158,8 +133,5 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     answerApiQueryParams: undefined,
     answerId: undefined,
     answerGenerationMode: 'automatic',
-    followUpAnswerEnabled: false,
-    followUpAnswers: [],
-    canAskFollowUp: false,
   };
 }

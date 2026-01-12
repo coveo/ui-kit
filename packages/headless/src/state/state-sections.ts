@@ -48,6 +48,7 @@ import type {DateFacetSetState} from '../features/facets/range-facets/date-facet
 import type {NumericFacetSetState} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state.js';
 import type {FieldsState} from '../features/fields/fields-state.js';
 import type {FoldingState} from '../features/folding/folding-state.js';
+import type {FollowUpAnswersState} from '../features/follow-up-answers/follow-up-answers-state.js';
 import type {AnswerApiQueryParams} from '../features/generated-answer/generated-answer-request.js';
 import type {GeneratedAnswerState} from '../features/generated-answer/generated-answer-state.js';
 import type {HistoryState} from '../features/history/history-state.js';
@@ -507,6 +508,13 @@ export interface GeneratedAnswerSection {
    * The properties related to generative question answering.
    */
   generatedAnswer: GeneratedAnswerState;
+}
+
+export interface FollowUpAnswersSection {
+  /**
+   * The properties related to generative question answering.
+   */
+  followUpAnswers: FollowUpAnswersState;
 }
 
 export interface InsightUserActionsSection {

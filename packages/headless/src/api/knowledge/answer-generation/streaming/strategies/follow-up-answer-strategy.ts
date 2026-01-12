@@ -1,8 +1,4 @@
 import {
-  logGeneratedAnswerResponseLinked,
-  logGeneratedAnswerStreamEnd,
-} from '../../../../../features/generated-answer/generated-answer-analytics-actions.js';
-import {
   setActiveFollowUpAnswerContentFormat,
   setActiveFollowUpAnswerId,
   setActiveFollowUpCannotAnswer,
@@ -11,9 +7,16 @@ import {
   setActiveFollowUpIsStreaming,
   updateActiveFollowUpAnswerCitations,
   updateActiveFollowUpAnswerMessage,
-} from '../../../../../features/generated-answer/generated-answer-conversation-actions.js';
+} from '../../../../../features/follow-up-answers/follow-up-answers-actions.js';
+import {
+  logGeneratedAnswerResponseLinked,
+  logGeneratedAnswerStreamEnd,
+} from '../../../../../features/generated-answer/generated-answer-analytics-actions.js';
 import type {AnswerGenerationApiState} from '../../answer-generation-api-state.js';
-import type {GeneratedAnswerDraft, StreamPayload} from '../../shared-types.js';
+import type {
+  GeneratedAnswerServerState,
+  StreamPayload,
+} from '../../shared-types.js';
 import {buildHeadAnswerEndpointUrl} from '../../url-builders/endpoint-url-builder.js';
 import {
   handleAnswerId,
@@ -26,7 +29,7 @@ import {
 import type {StreamingStrategy} from './strategy-types.js';
 
 export const followUpAnswerStrategy: StreamingStrategy<
-  GeneratedAnswerDraft,
+  GeneratedAnswerServerState,
   AnswerGenerationApiState
 > = {
   buildEndpointUrl: (state) => buildHeadAnswerEndpointUrl(state),

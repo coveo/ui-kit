@@ -4,7 +4,7 @@ import {
   type UnknownAction,
 } from '@reduxjs/toolkit';
 import type {AnswerGenerationApiState} from '../../api/knowledge/answer-generation/answer-generation-api-state.js';
-import {generateHeadAnswer} from '../../features/generated-answer/generated-answer-conversation-actions.js';
+import {generateHeadAnswer} from '../../features/generated-answer/generated-answer-actions.js';
 import {isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI} from '../../features/generated-answer/generated-answer-selectors.js';
 import {selectQuery} from '../../features/query/query-selectors.js';
 import {executeSearch} from '../../features/search/search-actions.js';

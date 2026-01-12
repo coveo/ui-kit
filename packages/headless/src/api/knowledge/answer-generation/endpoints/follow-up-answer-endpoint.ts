@@ -1,7 +1,7 @@
-import type {FollowUpAnswerParams} from '../../../../features/generated-answer/generated-answer-request.js';
+import type {FollowUpAnswerParams} from '../../../../features/follow-up-answers/follow-up-answer-request.js';
 import {answerGenerationApi} from '../answer-generation-api.js';
 import type {AnswerGenerationApiState} from '../answer-generation-api-state.js';
-import type {GeneratedAnswerDraft} from '../shared-types.js';
+import type {GeneratedAnswerServerState} from '../shared-types.js';
 import {streamAnswerWithStrategy} from '../streaming/answer-streaming-runner.js';
 import {followUpAnswerStrategy} from '../streaming/strategies/follow-up-answer-strategy.js';
 
@@ -9,7 +9,7 @@ export const followUpAnswerEndpoint = answerGenerationApi.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     generateFollowUpAnswer: builder.query<
-      GeneratedAnswerDraft,
+      GeneratedAnswerServerState,
       FollowUpAnswerParams
     >({
       queryFn: () => {
@@ -25,20 +25,7 @@ export const followUpAnswerEndpoint = answerGenerationApi.injectEndpoints({
           },
         };
       },
-      serializeQueryArgs: ({endpointName, queryArgs}) => {
-        // RTK Query serialize our endpoints and they're serialized state arguments as the key in the store.
-        // Keys must match, because if anything in the query changes, it's not the same query anymore.
-        // Analytics data is excluded entirely as it contains volatile fields that change during streaming.
-        const {analytics: _analytics, ...queryArgsWithoutAnalytics} = queryArgs;
-
-        // Standard RTK key, with analytics excluded
-        return `${endpointName}(${JSON.stringify(queryArgsWithoutAnalytics)})`;
-      },
-      async onCacheEntryAdded(
-        args,
-        {getState, cacheDataLoaded, updateCachedData, dispatch}
-      ) {
-        await cacheDataLoaded;
+      async onQueryStarted(args, {getState, updateCachedData, dispatch}) {
         /**
          * createApi has to be called prior to creating the redux store and is used as part of the store setup sequence.
          * It cannot use the inferred state used by Redux, thus the casting.
@@ -49,7 +36,7 @@ export const followUpAnswerEndpoint = answerGenerationApi.injectEndpoints({
         await streamAnswerWithStrategy<
           FollowUpAnswerParams,
           AnswerGenerationApiState,
-          GeneratedAnswerDraft
+          GeneratedAnswerServerState
         >(args, {state, updateCachedData, dispatch}, followUpAnswerStrategy);
       },
     }),

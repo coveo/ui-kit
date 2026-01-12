@@ -1,14 +1,18 @@
+import {selectHeadAnswerApiQueryParams} from '../../../../features/generated-answer/answer-api-selectors.js';
 import type {HeadAnswerParams} from '../../../../features/generated-answer/generated-answer-request.js';
 import {answerGenerationApi} from '../answer-generation-api.js';
 import type {AnswerGenerationApiState} from '../answer-generation-api-state.js';
-import type {GeneratedAnswerDraft} from '../shared-types.js';
+import type {GeneratedAnswerServerState} from '../shared-types.js';
 import {streamAnswerWithStrategy} from '../streaming/answer-streaming-runner.js';
 import {headAnswerStrategy} from '../streaming/strategies/head-answer-strategy.js';
 
 export const headAnswerEndpoint = answerGenerationApi.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
-    generateHeadAnswer: builder.query<GeneratedAnswerDraft, HeadAnswerParams>({
+    generateHeadAnswer: builder.query<
+      GeneratedAnswerServerState,
+      HeadAnswerParams
+    >({
       queryFn: () => {
         return {
           data: {
@@ -41,7 +45,7 @@ export const headAnswerEndpoint = answerGenerationApi.injectEndpoints({
         await streamAnswerWithStrategy<
           HeadAnswerParams,
           AnswerGenerationApiState,
-          GeneratedAnswerDraft
+          GeneratedAnswerServerState
         >(args, {state, updateCachedData, dispatch}, headAnswerStrategy);
       },
     }),
@@ -50,4 +54,9 @@ export const headAnswerEndpoint = answerGenerationApi.injectEndpoints({
 
 export const initiateHeadAnswerGeneration = (params: HeadAnswerParams) => {
   return headAnswerEndpoint.endpoints.generateHeadAnswer.initiate(params);
+};
+
+export const selectHeadAnswer = (state: AnswerGenerationApiState) => {
+  const params = selectHeadAnswerApiQueryParams(state);
+  return headAnswerEndpoint.endpoints.generateHeadAnswer.select(params)(state);
 };

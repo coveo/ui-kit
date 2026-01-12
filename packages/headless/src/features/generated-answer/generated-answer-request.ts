@@ -209,54 +209,6 @@ export const constructGenerateHeadAnswerParams = (
   };
 };
 
-export type FollowUpAnswerParams = ReturnType<
-  typeof constructGenerateFollowUpAnswerParams
->;
-
-export const constructGenerateFollowUpAnswerParams = (
-  state: AnswerGenerationApiState,
-  navigatorContext: NavigatorContext
-) => {
-  const conversationId = state.generatedAnswer.conversationId;
-  const q = selectQuery(state)?.q;
-
-  const {aq, cq, dq, lq} = buildAdvancedSearchQueryParams(state);
-
-  const context = selectContext(state);
-
-  const analyticsParams = fromAnalyticsStateToAnalyticsParams(
-    state.configuration.analytics,
-    navigatorContext,
-    {actionCause: selectSearchActionCause(state)}
-  );
-
-  const searchHub = selectSearchHub(state);
-  const pipeline = selectPipeline(state);
-  const citationsFieldToInclude = selectFieldsToIncludeInCitation(state) ?? [];
-
-  return {
-    conversationId,
-    q,
-    ...(aq && {aq}),
-    ...(cq && {cq}),
-    ...(dq && {dq}),
-    ...(lq && {lq}),
-    ...(state.query && {enableQuerySyntax: selectEnableQuerySyntax(state)}),
-    ...(context?.contextValues && {
-      context: context.contextValues,
-    }),
-    pipelineRuleParameters: {
-      mlGenerativeQuestionAnswering: {
-        responseFormat: state.generatedAnswer.responseFormat,
-        citationsFieldToInclude,
-      },
-    },
-    ...(searchHub?.length && {searchHub}),
-    ...(pipeline?.length && {pipeline}),
-    ...analyticsParams,
-  };
-};
-
 const getGeneratedFacetParams = (
   state: StreamAnswerAPIState
 ): AnyFacetRequest[] =>
@@ -276,7 +228,9 @@ const getActionsHistory = (
     : [],
 });
 
-const buildAdvancedSearchQueryParams = (state: Partial<SearchAppState>) => {
+export const buildAdvancedSearchQueryParams = (
+  state: Partial<SearchAppState>
+) => {
   const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
   const mergedCq = buildConstantQuery(state);
 
