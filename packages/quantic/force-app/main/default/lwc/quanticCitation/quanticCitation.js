@@ -13,6 +13,7 @@ const supportedFileTypesForTextFragment = ['html', 'SalesforceItem'];
  * The `QuanticCitation` component renders an individual citation.
  * @fires CustomEvent#quantic__citationhover
  * @category Internal
+ * @slot actions Slot for action controls (e.g., lightning-button-icon) rendered inside the citation tooltip.
  * @example
  * <c-quantic-citation citation={citation} interactive-citation={interactiveCitation} onclick={handleClick} onquantic__citationhover={handleHover}></c-quantic-citation>
  */

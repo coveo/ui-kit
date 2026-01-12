@@ -68,6 +68,7 @@ const selectors = {
   citationTooltip: 'c-quantic-tooltip',
   citationTooltipUrl: '[data-testid="citation__tooltip-uri"]',
   citationIcon: '.citation__icon',
+  actionsSlot: 'slot[name="actions"]',
 };
 
 function createTestComponent(options = defaultOptions) {
@@ -103,6 +104,10 @@ function setupEventDispatchTest(eventName) {
     document.removeEventListener(eventName, handler);
   };
   document.addEventListener(eventName, handler);
+}
+
+function getActionsSlot(element) {
+  return element.shadowRoot.querySelector(selectors.actionsSlot);
 }
 
 describe('c-quantic-citation', () => {
@@ -527,6 +532,30 @@ describe('c-quantic-citation', () => {
 
       const citationIcon = element.shadowRoot.querySelector('lightning-icon');
       expect(citationIcon).toBeNull();
+    });
+  });
+
+  describe('citation actions slot', () => {
+    it('should render provided actions in the slot', async () => {
+      const element = createTestComponent();
+      const action = document.createElement('span');
+      action.slot = 'actions';
+      action.textContent = 'Action';
+      element.appendChild(action);
+
+      await flushPromises();
+
+      const slot = getActionsSlot(element);
+      expect(slot).not.toBeNull();
+    });
+
+    it('should have no assigned actions when none are provided', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const slot = getActionsSlot(element);
+      expect(slot).not.toBeNull();
+      expect(slot.assignedElements()).toHaveLength(0);
     });
   });
 });
