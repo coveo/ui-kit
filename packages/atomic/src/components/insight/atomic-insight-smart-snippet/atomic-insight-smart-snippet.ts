@@ -63,6 +63,9 @@ export class AtomicInsightSmartSnippet
 
   private smartSnippetId!: string;
   private modalRef?: HTMLAtomicInsightSmartSnippetFeedbackModalElement;
+  private feedbackSentHandler = () => {
+    this.feedbackSent = true;
+  };
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
@@ -102,6 +105,16 @@ export class AtomicInsightSmartSnippet
     this.smartSnippet = buildInsightSmartSnippet(this.bindings.engine);
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this.modalRef) {
+      this.modalRef.removeEventListener(
+        'feedbackSent',
+        this.feedbackSentHandler
+      );
+    }
+  }
+
   willUpdate() {
     if (!this.smartSnippetState) {
       return;
@@ -137,9 +150,7 @@ export class AtomicInsightSmartSnippet
     const modalRef = document.createElement(
       'atomic-insight-smart-snippet-feedback-modal'
     );
-    modalRef.addEventListener('feedbackSent', () => {
-      this.feedbackSent = true;
-    });
+    modalRef.addEventListener('feedbackSent', this.feedbackSentHandler);
     this.modalRef = modalRef;
     this.renderRoot.parentElement?.insertAdjacentElement(
       'beforebegin',
