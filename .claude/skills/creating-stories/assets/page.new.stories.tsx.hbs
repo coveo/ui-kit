@@ -1,0 +1,56 @@
+import {{{engineConfig}}} from '{{headlessPath}}';
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {html} from 'lit';
+import {Mock{{apiClass}}} from '@/storybook-utils/api/{{apiPath}}/mock';
+import {
+  type baseResponse,
+  richResponse,
+} from '@/storybook-utils/api/{{apiPath}}/search-response';
+import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
+
+async function initialize{{interfaceType}}Interface(canvasElement: HTMLElement) {
+  await customElements.whenDefined('{{interfaceTag}}');
+  const {{interfaceVar}}Interface = canvasElement.querySelector(
+    '{{interfaceTag}}'
+  );
+  await {{interfaceVar}}Interface!.initialize({{engineConfig}}());
+}
+
+const mock{{apiClass}} = new Mock{{apiClass}}();
+
+const meta: Meta = {
+  component: '{{pageName}}',
+  title: '{{category}}/Example Pages',
+  id: '{{pageName}}',
+  parameters: {
+    ...parameters,
+    layout: 'fullscreen',
+    msw: {
+      handlers: [...mock{{apiClass}}.handlers],
+    },
+    chromatic: {disableSnapshot: false},
+  },
+  beforeEach: async () => {
+    mock{{apiClass}}.searchEndpoint.mock(
+      () => richResponse as unknown as typeof baseResponse
+    );
+  },
+  render: () => html`
+    <{{interfaceTag}} language-assets-path="./lang" icon-assets-path="./assets"{{interfaceTypeAttr}}>
+      <!-- Add your component markup here -->
+    </{{interfaceTag}}>
+  `,
+  play: async (context) => {
+    await initialize{{interfaceType}}Interface(context.canvasElement);
+    const {{interfaceVar}}Interface = context.canvasElement.querySelector(
+      '{{interfaceTag}}'
+    );
+    await {{interfaceVar}}Interface!.{{executeMethod}}();
+  },
+};
+
+export default meta;
+
+export const Default: Story = {
+  name: '{{titleName}}',
+};

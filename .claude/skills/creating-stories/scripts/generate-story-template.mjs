@@ -3,16 +3,29 @@
 /**
  * Generate Storybook story template for Atomic components or sample pages.
  *
+ * Note: This script uses handlebars which is available in packages/atomic.
+ * Run from repository root or ensure handlebars is available.
+ *
  * Usage:
- *   node scripts/generate-story-template.mjs <component-name> [--type component|page] [--category search|commerce|insight]
+ *   node .claude/skills/creating-stories/scripts/generate-story-template.mjs <name> [options]
+ *
+ * Options:
+ *   --type       Type of story: component (default) or page
+ *   --category   Category: search (default), commerce, insight, ipx, recommendations
+ *   --result     For result template components (adds result wrappers)
  *
  * Examples:
- *   node scripts/generate-story-template.mjs atomic-my-component
- *   node scripts/generate-story-template.mjs my-page --type page --category commerce
+ *   node .claude/skills/creating-stories/scripts/generate-story-template.mjs atomic-my-component
+ *   node .claude/skills/creating-stories/scripts/generate-story-template.mjs my-page --type page --category commerce
+ *   node .claude/skills/creating-stories/scripts/generate-story-template.mjs atomic-result-field --result
  */
 
-import {readFileSync} from 'fs';
-import {resolve} from 'path';
+import {readFileSync} from 'node:fs';
+import {dirname, resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const args = process.argv.slice(2);
 
@@ -21,7 +34,7 @@ if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
 Generate Storybook story template for Atomic components or sample pages.
 
 Usage:
-  node scripts/generate-story-template.mjs <name> [options]
+  node .claude/skills/creating-stories/scripts/generate-story-template.mjs <name> [options]
 
 Options:
   --type       Type of story: component (default) or page
@@ -29,9 +42,9 @@ Options:
   --result     For result template components (adds result wrappers)
 
 Examples:
-  node scripts/generate-story-template.mjs atomic-my-component
-  node scripts/generate-story-template.mjs my-page --type page --category commerce
-  node scripts/generate-story-template.mjs atomic-result-field --result
+  node .claude/skills/creating-stories/scripts/generate-story-template.mjs atomic-my-component
+  node .claude/skills/creating-stories/scripts/generate-story-template.mjs my-page --type page --category commerce
+  node .claude/skills/creating-stories/scripts/generate-story-template.mjs atomic-result-field --result
   `);
   process.exit(0);
 }
@@ -45,185 +58,6 @@ const category = args.includes('--category')
   : 'search';
 const isResult = args.includes('--result');
 
-function generateComponentStory(componentName, cat, isResultComponent) {
-  const apiMock = cat === 'commerce' ? 'MockCommerceApi' : 'MockSearchApi';
-  const apiPath = cat === 'commerce' ? 'commerce' : 'search';
-  const wrapper =
-    cat === 'commerce'
-      ? 'wrapInCommerceInterface'
-      : 'wrapInSearchInterface';
-  const wrapperPath =
-    cat === 'commerce'
-      ? '@/storybook-utils/commerce/commerce-interface-wrapper'
-      : '@/storybook-utils/search/search-interface-wrapper';
-
-  const resultWrappers = isResultComponent
-    ? `
-import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
-
-const customResultListDecorator: Decorator = (story) => html\`
-  <atomic-result-list
-    display="list"
-    number-of-placeholders="1"
-    density="compact"
-    image-size="small"
-  >
-    \${story()}
-  </atomic-result-list>
-\`;
-
-const {decorator: resultTemplateDecorator} = wrapInResultTemplate(false);`
-    : '';
-
-  const resultDecorators = isResultComponent
-    ? `resultTemplateDecorator,
-    customResultListDecorator,
-    `
-    : '';
-
-  const resultConfig = isResultComponent
-    ? `
-${apiPath}ApiHarness.searchEndpoint.mock((response) => ({
-  ...response,
-  results: response.results.slice(0, 1),
-  totalCount: 1,
-  totalCountFiltered: 1,
-}));
-
-const {decorator: searchInterfaceDecorator, play} = ${wrapper}({
-  skipFirstSearch: false,
-  includeCodeRoot: false,
-});`
-    : `const {decorator, play} = ${wrapper}();`;
-
-  const decoratorVar = isResultComponent ? 'searchInterfaceDecorator' : 'decorator';
-
-  return `import type {${isResultComponent ? 'Decorator, ' : ''}Meta, StoryObj as Story} from '@storybook/web-components-vite';
-import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';${isResultComponent ? "\nimport {html} from 'lit';" : ''}
-import {${apiMock}} from '@/storybook-utils/api/${apiPath}/mock';
-import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {${wrapper}} from '${wrapperPath}';${resultWrappers}
-
-const ${apiPath}ApiHarness = new ${apiMock}();
-
-${resultConfig}
-
-const {events, args, argTypes, template} = getStorybookHelpers(
-  '${componentName}',
-  {excludeCategories: ['methods']}
-);
-
-const meta: Meta = {
-  component: '${componentName}',
-  title: '${capitalize(cat)}/${toTitleCase(componentName.replace('atomic-', '').replace(/-/g, ' '))}',
-  id: '${componentName}',
-  render: (args) => template(args),
-  decorators: [${resultDecorators}${decoratorVar}],
-  parameters: {
-    ...parameters,
-    actions: {
-      handles: events,
-    },
-    msw: {
-      handlers: [...${apiPath}ApiHarness.handlers],
-    },
-  },
-  args,
-  argTypes,
-  beforeEach: () => {
-    ${apiPath}ApiHarness.searchEndpoint.clear();
-  },
-  play,
-};
-
-export default meta;
-
-export const Default: Story = {};
-
-export const CustomVariant: Story = {
-  name: 'Custom Variant',
-  args: {
-    // Add custom args here
-  },
-};
-`;
-}
-
-function generatePageStory(pageName, cat) {
-  const apiMock = cat === 'commerce' ? 'MockCommerceApi' : 'MockSearchApi';
-  const apiPath = cat === 'commerce' ? 'commerce' : 'search';
-  const interfaceType = cat === 'commerce' ? 'commerce' : 'search';
-  const interfaceTag =
-    cat === 'commerce'
-      ? 'atomic-commerce-interface'
-      : 'atomic-search-interface';
-  const engineConfig =
-    cat === 'commerce'
-      ? 'getSampleCommerceEngineConfiguration'
-      : 'getSampleSearchEngineConfiguration';
-  const headlessPath = cat === 'commerce' ? '@coveo/headless/commerce' : '@coveo/headless';
-  const executeMethod =
-    cat === 'commerce' ? 'executeFirstRequest' : 'executeFirstSearch';
-
-  return `import {${engineConfig}} from '${headlessPath}';
-import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
-import {html} from 'lit';
-import {${apiMock}} from '@/storybook-utils/api/${apiPath}/mock';
-import {
-  type baseResponse,
-  richResponse,
-} from '@/storybook-utils/api/${apiPath}/search-response';
-import {parameters} from '@/storybook-utils/common/common-meta-parameters.js';
-
-async function initialize${capitalize(interfaceType)}Interface(canvasElement: HTMLElement) {
-  await customElements.whenDefined('${interfaceTag}');
-  const ${interfaceType}Interface = canvasElement.querySelector(
-    '${interfaceTag}'
-  );
-  await ${interfaceType}Interface!.initialize(${engineConfig}());
-}
-
-const mock${capitalize(apiPath)}Api = new ${apiMock}();
-
-const meta: Meta = {
-  component: '${pageName}',
-  title: '${capitalize(cat)}/Example Pages',
-  id: '${pageName}',
-  parameters: {
-    ...parameters,
-    layout: 'fullscreen',
-    msw: {
-      handlers: [...mock${capitalize(apiPath)}Api.handlers],
-    },
-    chromatic: {disableSnapshot: false},
-  },
-  beforeEach: async () => {
-    mock${capitalize(apiPath)}Api.searchEndpoint.mock(
-      () => richResponse as unknown as typeof baseResponse
-    );
-  },
-  render: () => html\`
-    <${interfaceTag} language-assets-path="./lang" icon-assets-path="./assets"${cat === 'commerce' ? ' type="search"' : ''}>
-      <!-- Add your component markup here -->
-    </${interfaceTag}>
-  \`,
-  play: async (context) => {
-    await initialize${capitalize(interfaceType)}Interface(context.canvasElement);
-    const ${interfaceType}Interface = context.canvasElement.querySelector(
-      '${interfaceTag}'
-    );
-    await ${interfaceType}Interface!.${executeMethod}();
-  },
-};
-
-export default meta;
-
-export const Default: Story = {
-  name: '${toTitleCase(pageName.replace(/-/g, ' '))}',
-};
-`;
-}
-
 function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -235,9 +69,117 @@ function toTitleCase(str) {
     .join(' ');
 }
 
-// Generate the appropriate template
-if (type === 'page') {
-  console.log(generatePageStory(name, category));
-} else {
-  console.log(generateComponentStory(name, category, isResult));
+function getTemplateData(_storyType, componentName, cat, _isResultComponent) {
+  const apiConfig = {
+    search: {
+      apiClass: 'SearchApi',
+      apiPath: 'search',
+      wrapperImport: 'wrapInSearchInterface',
+      wrapperPath: '@/storybook-utils/search/search-interface-wrapper',
+      wrapperFunction: 'wrapInSearchInterface',
+      interfaceTag: 'atomic-search-interface',
+      interfaceType: 'Search',
+      interfaceVar: 'search',
+      engineConfig: 'getSampleSearchEngineConfiguration',
+      headlessPath: '@coveo/headless',
+      executeMethod: 'executeFirstSearch',
+      interfaceTypeAttr: '',
+    },
+    commerce: {
+      apiClass: 'CommerceApi',
+      apiPath: 'commerce',
+      wrapperImport: 'wrapInCommerceInterface',
+      wrapperPath: '@/storybook-utils/commerce/commerce-interface-wrapper',
+      wrapperFunction: 'wrapInCommerceInterface',
+      interfaceTag: 'atomic-commerce-interface',
+      interfaceType: 'Commerce',
+      interfaceVar: 'commerce',
+      engineConfig: 'getSampleCommerceEngineConfiguration',
+      headlessPath: '@coveo/headless/commerce',
+      executeMethod: 'executeFirstRequest',
+      interfaceTypeAttr: ' type="search"',
+    },
+    insight: {
+      apiClass: 'InsightApi',
+      apiPath: 'insight',
+      wrapperImport: 'wrapInInsightInterface',
+      wrapperPath: '@/storybook-utils/insight/insight-interface-wrapper',
+      wrapperFunction: 'wrapInInsightInterface',
+      interfaceTag: 'atomic-insight-interface',
+      interfaceType: 'Insight',
+      interfaceVar: 'insight',
+      engineConfig: 'getSampleInsightEngineConfiguration',
+      headlessPath: '@coveo/headless/insight',
+      executeMethod: 'executeFirstSearch',
+      interfaceTypeAttr: '',
+    },
+    ipx: {
+      apiClass: 'SearchApi',
+      apiPath: 'search',
+      wrapperImport: 'wrapInSearchInterface',
+      wrapperPath: '@/storybook-utils/search/search-interface-wrapper',
+      wrapperFunction: 'wrapInSearchInterface',
+      interfaceTag: 'atomic-search-interface',
+      interfaceType: 'Search',
+      interfaceVar: 'search',
+      engineConfig: 'getSampleSearchEngineConfiguration',
+      headlessPath: '@coveo/headless',
+      executeMethod: 'executeFirstSearch',
+      interfaceTypeAttr: '',
+    },
+    recommendations: {
+      apiClass: 'RecommendationApi',
+      apiPath: 'recommendation',
+      wrapperImport: 'wrapInSearchInterface',
+      wrapperPath: '@/storybook-utils/search/search-interface-wrapper',
+      wrapperFunction: 'wrapInSearchInterface',
+      interfaceTag: 'atomic-recs-interface',
+      interfaceType: 'Recs',
+      interfaceVar: 'recs',
+      engineConfig: 'getSampleRecommendationEngineConfiguration',
+      headlessPath: '@coveo/headless/recommendation',
+      executeMethod: 'getRecommendations',
+      interfaceTypeAttr: '',
+    },
+  };
+
+  const config = apiConfig[cat] || apiConfig.search;
+  const titleName = toTitleCase(
+    componentName.replace('atomic-', '').replace(/-/g, ' ')
+  );
+
+  return {
+    componentName,
+    pageName: componentName,
+    category: capitalize(cat),
+    titleName,
+    ...config,
+  };
 }
+
+// Simple template function (replaces handlebars for portability)
+function renderTemplate(template, data) {
+  return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+    return data[key] !== undefined ? data[key] : match;
+  });
+}
+
+// Load template
+const assetsDir = resolve(__dirname, '../assets');
+let templateFile;
+
+if (type === 'page') {
+  templateFile = 'page.new.stories.tsx.hbs';
+} else if (isResult) {
+  templateFile = 'result-component.new.stories.tsx.hbs';
+} else {
+  templateFile = 'component.new.stories.tsx.hbs';
+}
+
+const templatePath = resolve(assetsDir, templateFile);
+const templateContent = readFileSync(templatePath, 'utf8');
+
+const data = getTemplateData(type, name, category, isResult);
+const output = renderTemplate(templateContent, data);
+
+console.log(output);
