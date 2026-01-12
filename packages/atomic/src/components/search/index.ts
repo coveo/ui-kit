@@ -67,6 +67,8 @@ export {AtomicSearchInterface} from './atomic-search-interface/atomic-search-int
 export {AtomicSearchLayout} from './atomic-search-layout/atomic-search-layout.js';
 export {AtomicSegmentedFacet} from './atomic-segmented-facet/atomic-segmented-facet.js';
 export {AtomicSegmentedFacetScrollable} from './atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.js';
+export {AtomicSmartSnippet} from './atomic-smart-snippet/atomic-smart-snippet.js';
+export {AtomicSmartSnippetFeedbackModal} from './atomic-smart-snippet-feedback-modal/atomic-smart-snippet-feedback-modal.js';
 export {AtomicSmartSnippetSuggestions} from './atomic-smart-snippet-suggestions/atomic-smart-snippet-suggestions.js';
 export {AtomicSortDropdown} from './atomic-sort-dropdown/atomic-sort-dropdown.js';
 export {AtomicSortExpression} from './atomic-sort-expression/atomic-sort-expression.js';

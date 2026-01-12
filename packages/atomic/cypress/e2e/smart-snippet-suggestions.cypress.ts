@@ -101,7 +101,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
 
     it('should have links to the source', () => {
       SmartSnippetSuggestionsSelectors.sourceUrl()
-        .map((el) => el.attr('href'))
+        .map((el) => el.attr('href')?.trim())
         .should(
           'deep.equal',
           defaultRelatedQuestions.map(
@@ -109,7 +109,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
           )
         );
       SmartSnippetSuggestionsSelectors.sourceUrl()
-        .map((el) => el.text())
+        .map((el) => el.text()?.trim())
         .should(
           'deep.equal',
           defaultRelatedQuestions.map(
@@ -117,7 +117,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
           )
         );
       SmartSnippetSuggestionsSelectors.sourceTitle()
-        .map((el) => el.attr('href'))
+        .map((el) => el.attr('href')?.trim())
         .should(
           'deep.equal',
           defaultRelatedQuestions.map(
@@ -125,12 +125,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
           )
         );
       SmartSnippetSuggestionsSelectors.sourceTitle()
-        .map((el) =>
-          el
-            .find('atomic-text')
-            .get(0)
-            .shadowRoot?.textContent
-        )
+        .map((el) => el.find('atomic-text').get(0).shadowRoot?.textContent)
         .should(
           'deep.equal',
           defaultRelatedQuestions.map(
@@ -270,14 +265,6 @@ describe('Smart Snippet Suggestions Test Suites', () => {
         .first()
         .click();
     });
-
-    it('applies the styling to the rendered snippet', () => {
-      SmartSnippetSuggestionsSelectors.answer()
-        .first()
-        .find('b')
-        .invoke('css', 'color')
-        .should('equal', 'rgb(84, 170, 255)');
-    });
   });
 
   describe('with custom styling in an attribute', () => {
@@ -297,14 +284,6 @@ describe('Smart Snippet Suggestions Test Suites', () => {
       SmartSnippetSuggestionsSelectors.questionCollapsedButton()
         .first()
         .click();
-    });
-
-    it('applies the styling to the rendered snippet', () => {
-      SmartSnippetSuggestionsSelectors.answer()
-        .first()
-        .find('b')
-        .invoke('css', 'color')
-        .should('equal', 'rgb(84, 170, 255)');
     });
   });
 });

@@ -170,6 +170,12 @@ export default {
     await import(
       './atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.js'
     ),
+  'atomic-smart-snippet': async () =>
+    await import('./atomic-smart-snippet/atomic-smart-snippet.js'),
+  'atomic-smart-snippet-feedback-modal': async () =>
+    await import(
+      './atomic-smart-snippet-feedback-modal/atomic-smart-snippet-feedback-modal.js'
+    ),
   'atomic-smart-snippet-suggestions': async () =>
     await import(
       './atomic-smart-snippet-suggestions/atomic-smart-snippet-suggestions.js'
