@@ -1,4 +1,4 @@
-import {html, LitElement, nothing} from 'lit';
+import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {
   defaultCurrencyFormatter,
@@ -41,7 +41,7 @@ export class AtomicFormatCurrency
 
   @errorGuard()
   render() {
-    return html`${nothing}`;
+    return nothing;
   }
 }
 

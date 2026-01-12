@@ -142,7 +142,7 @@ export class AtomicAutomaticFacetGenerator
 
   private renderAutomaticFacets() {
     if (this.automaticFacetGeneratorState.automaticFacets.length === 0) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     return html`${this.automaticFacetGeneratorState.automaticFacets.map(

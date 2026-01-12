@@ -1,19 +1,17 @@
-import type {LitElement, TemplateResult} from 'lit';
+import type {LitElement, nothing, TemplateResult} from 'lit';
 import type {TemplateResultType} from 'lit/directive-helpers.js';
 import type {AnyBindings} from '../components/common/interface/bindings';
 import type {SearchBoxSuggestions} from '../components/common/suggestions/suggestions-types';
 
-export type GenericRender<T extends TemplateResultType> = TemplateResult<T>;
+export type GenericRender<T extends TemplateResultType> =
+  | TemplateResult<T>
+  | typeof nothing;
 
-export type RenderGuardDecorator<
-  Component,
-  T extends TemplateResultType,
-  Descriptor = TypedPropertyDescriptor<() => GenericRender<T>>,
-> = (
+export type RenderGuardDecorator<Component, T extends TemplateResultType> = (
   target: Component,
   propertyKey: 'render',
-  descriptor: Descriptor
-) => Descriptor;
+  descriptor: TypedPropertyDescriptor<() => TemplateResult<T> | typeof nothing>
+) => TypedPropertyDescriptor<() => GenericRender<T>> | undefined;
 
 /**
  * Base interface for any Atomic component that needs to be initialized with bindings
