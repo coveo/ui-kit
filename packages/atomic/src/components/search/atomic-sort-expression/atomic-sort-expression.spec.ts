@@ -178,7 +178,7 @@ describe('atomic-sort-expression', () => {
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         new Error(
-          'The \"atomic-sort-expression\" component has to be used inside an atomic-sort-dropdown element.'
+          'The "atomic-sort-expression" component has to be used inside an atomic-sort-dropdown element.'
         ),
         expect.anything()
       );
