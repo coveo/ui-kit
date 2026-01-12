@@ -37,6 +37,13 @@ export class AtomicQuickview
   extends LitElement
   implements InitializableComponent<Bindings>
 {
+  private static readonly propsSchema = new Schema({
+    sandbox: new StringValue({
+      required: true,
+      regex: /allow-same-origin/,
+    }),
+  });
+
   /**
    * The sandbox attribute to apply to the iframe containing the quickview content.
    * This attribute restricts the capabilities of the iframe for security reasons (e.g., to prevent XSS attacks).
@@ -78,12 +85,7 @@ export class AtomicQuickview
     new ValidatePropsController(
       this,
       () => ({sandbox: this.sandbox}),
-      new Schema({
-        sandbox: new StringValue({
-          required: true,
-          regex: /allow-same-origin/,
-        }),
-      })
+      AtomicQuickview.propsSchema
     );
   }
 
