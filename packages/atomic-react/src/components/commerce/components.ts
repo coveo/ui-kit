@@ -39,6 +39,7 @@ import {
   AtomicInsightQueryError as LitAtomicInsightQueryError,
   AtomicInsightQuerySummary as LitAtomicInsightQuerySummary,
   AtomicInsightResultTemplate as LitAtomicInsightResultTemplate,
+  AtomicIpxButton as LitAtomicIpxButton,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicNumericRange as LitAtomicNumericRange,
   AtomicProduct as LitAtomicProduct,
@@ -305,6 +306,12 @@ export const AtomicInsightResultTemplate = createComponent({
   tagName: 'atomic-insight-result-template',
   react: React,
   elementClass: LitAtomicInsightResultTemplate,
+});
+
+export const AtomicIpxButton = createComponent({
+  tagName: 'atomic-ipx-button',
+  react: React,
+  elementClass: LitAtomicIpxButton,
 });
 
 export const AtomicLayoutSection = createComponent({
