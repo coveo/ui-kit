@@ -26,7 +26,11 @@ const meta: Meta = {
     },
     msw: {handlers: [...mockMachineLearningApi.handlers]},
   },
-  args,
+  args: {
+    ...args,
+    'user-id': 'exampleUserId',
+    'ticket-creation-date-time': encodeURIComponent('2024-08-30'),
+  },
   argTypes,
   play,
 };

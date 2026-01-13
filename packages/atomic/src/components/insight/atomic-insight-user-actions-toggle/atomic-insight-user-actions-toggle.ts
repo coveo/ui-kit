@@ -1,3 +1,4 @@
+import {Schema, StringValue} from '@coveo/bueno';
 import {
   buildUserActions as buildInsightUserActions,
   type UserActions as InsightUserActions,
@@ -5,8 +6,8 @@ import {
 } from '@coveo/headless/insight';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import type {RefOrCallback} from 'lit/directives/ref.js';
 import {renderIconButton} from '@/src/components/common/icon-button';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
@@ -60,6 +61,26 @@ export class AtomicInsightUserActionsToggle
   private buttonRef?: HTMLButtonElement;
   private modalRef?: HTMLAtomicInsightUserActionsModalElement;
 
+  constructor() {
+    super();
+
+    new ValidatePropsController(
+      this,
+      () => ({
+        userId: this.userId,
+        ticketCreationDateTime: this.ticketCreationDateTime,
+      }),
+      new Schema({
+        userId: new StringValue({required: true, emptyAllowed: false}),
+        ticketCreationDateTime: new StringValue({
+          required: true,
+          emptyAllowed: false,
+        }),
+      }),
+      false
+    );
+  }
+
   public initialize() {
     this.userActions = buildInsightUserActions(this.bindings.engine, {
       options: {
@@ -101,13 +122,13 @@ export class AtomicInsightUserActionsToggle
         ariaLabel: this.bindings.i18n.t('user-actions'),
         onClick: () => this.enableModal(),
         title: this.bindings.i18n.t('user-actions'),
-        buttonRef: ((button) => {
+        buttonRef: (button) => {
           if (!button) {
             return;
           }
           this.buttonRef = button as HTMLButtonElement;
           this.loadModal();
-        }) as RefOrCallback,
+        },
       },
     })}`;
   }
