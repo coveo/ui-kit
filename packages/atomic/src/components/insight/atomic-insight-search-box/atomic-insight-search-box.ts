@@ -6,7 +6,7 @@ import {
   loadInsightSearchActions,
 } from '@coveo/headless/insight';
 import {html, LitElement, nothing, type TemplateResult} from 'lit';
-import {customElement, state} from 'lit/decorators.js';
+import {customElement, property, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {
   createRef,
@@ -78,11 +78,13 @@ export class AtomicInsightSearchBox
    * Whether to prevent the user from triggering a search from the component.
    * Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
    */
+  @property({type: Boolean, reflect: true, attribute: 'disable-search'})
   public disableSearch = false;
 
   /**
    * The number of query suggestions to display when interacting with the search box.
    */
+  @property({type: Number, reflect: true, attribute: 'number-of-suggestions'})
   public numberOfSuggestions = 5;
 
   private searchBoxId!: string;

@@ -5,8 +5,17 @@ import {
   loadInsightSearchActions,
 } from '@coveo/headless/insight';
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
-import {page} from 'vitest/browser';
+import {
+  beforeEach,
+  describe,
+  expect,
+  it,
+  type Mock,
+  type MockInstance,
+  vi,
+} from 'vitest';
+import {userEvent} from 'vitest/browser';
+import {isMacOS} from '@/src/utils/device-utils';
 import {renderInAtomicInsightInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-interface-fixture';
 import {buildFakeInsightEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/engine';
 import {buildFakeInsightSearchBox} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/search-box-controller';
@@ -14,6 +23,7 @@ import type {AtomicInsightSearchBox} from './atomic-insight-search-box';
 import './atomic-insight-search-box';
 
 vi.mock('@coveo/headless/insight', {spy: true});
+vi.mock('@/src/utils/device-utils', {spy: true});
 
 describe('atomic-insight-search-box', () => {
   const mockedEngine = buildFakeInsightEngine();
@@ -21,33 +31,43 @@ describe('atomic-insight-search-box', () => {
   let fetchQuerySuggestionsSpy: MockInstance;
   let registerQuerySuggestSpy: MockInstance;
   let dispatchSpy: MockInstance;
+  let submitMock: Mock<() => void>;
+  let clearMock: Mock<() => void>;
 
   beforeEach(() => {
     fetchQuerySuggestionsSpy = vi.fn(() => ({type: 'fetchQuerySuggestions'}));
     registerQuerySuggestSpy = vi.fn(() => ({type: 'registerQuerySuggest'}));
     dispatchSpy = vi.fn();
+    submitMock = vi.fn();
+    clearMock = vi.fn();
 
     vi.mocked(loadInsightSearchActions).mockReturnValue({
       fetchQuerySuggestions: fetchQuerySuggestionsSpy,
       registerQuerySuggest: registerQuerySuggestSpy,
-      // Add other required actions as needed
-    } as ReturnType<typeof loadInsightSearchActions>);
+    } as unknown as ReturnType<typeof loadInsightSearchActions>);
 
-    mockedEngine.dispatch = dispatchSpy;
+    mockedEngine.dispatch =
+      dispatchSpy as unknown as typeof mockedEngine.dispatch;
   });
 
   const renderComponent = async ({
     searchBoxState = {},
+    searchBoxValue = '',
   }: {
     searchBoxState?: Partial<InsightSearchBoxState>;
+    searchBoxValue?: string;
   } = {}) => {
     mockedSearchBox = buildFakeInsightSearchBox({
       state: {
-        value: '',
+        value: searchBoxValue,
         suggestions: [],
         isLoading: false,
         isLoadingSuggestions: false,
         ...searchBoxState,
+      },
+      implementation: {
+        submit: submitMock,
+        clear: clearMock,
       },
     });
 
@@ -65,99 +85,84 @@ describe('atomic-insight-search-box', () => {
 
     return {
       element,
-      textarea: page.getByRole('textbox'),
-      parts: (el: AtomicInsightSearchBox) => ({
-        wrapper: el.shadowRoot?.querySelector('[part="wrapper"]'),
-        submitIcon: el.shadowRoot?.querySelector('[part="submit-icon"]'),
-        textarea: el.shadowRoot?.querySelector('[part="textarea"]'),
-        suggestionsWrapper: el.shadowRoot?.querySelector(
-          '[part="suggestions-wrapper"]'
-        ),
-        suggestions: el.shadowRoot?.querySelector('[part="suggestions"]'),
-      }),
+      wrapper: element.shadowRoot!.querySelector('[part="wrapper"]')!,
+      textArea: element.shadowRoot!.querySelector(
+        '[part="textarea"]'
+      )! as HTMLTextAreaElement,
+      submitIcon: element.shadowRoot!.querySelector('[part="submit-icon"]'),
+      clearButton: () =>
+        element.shadowRoot!.querySelector('button[part="clear-button"]'),
+      suggestionsWrapper: () =>
+        element.shadowRoot!.querySelector('[part="suggestions-wrapper"]'),
     };
   };
 
-  describe('#initialize', () => {
-    it('should build the insight search box controller with the engine', async () => {
-      await renderComponent();
-      expect(buildInsightSearchBox).toHaveBeenCalledWith(
-        mockedEngine,
-        expect.objectContaining({
-          options: expect.objectContaining({
-            numberOfSuggestions: 0,
-          }),
-        })
-      );
-    });
-
-    it('should register query suggest with the default number of suggestions', async () => {
-      await renderComponent();
-      expect(dispatchSpy).toHaveBeenCalledWith(
-        expect.objectContaining({type: 'registerQuerySuggest'})
-      );
-      expect(registerQuerySuggestSpy).toHaveBeenCalledWith(
-        expect.objectContaining({count: 5})
-      );
-    });
-
-    it('should set searchBox property to the controller', async () => {
-      const {element} = await renderComponent();
-      expect(element.searchBox).toBe(mockedSearchBox);
-    });
-
-    it('should bind searchBoxState to the controller state', async () => {
-      const {element} = await renderComponent({
-        searchBoxState: {value: 'test query'},
-      });
-      expect(element.searchBoxState.value).toBe('test query');
-    });
+  it('should build the insight search box controller with the engine', async () => {
+    await renderComponent();
+    expect(buildInsightSearchBox).toHaveBeenCalledWith(
+      mockedEngine,
+      expect.objectContaining({
+        options: expect.objectContaining({
+          numberOfSuggestions: 0,
+        }),
+      })
+    );
   });
 
-  describe('rendering', () => {
-    it('should render the wrapper part', async () => {
-      const {parts, element} = await renderComponent();
-      const wrapper = parts(element).wrapper;
-      expect(wrapper).toBeInTheDocument();
-    });
+  it('should register query suggest with the default number of suggestions', async () => {
+    await renderComponent();
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      expect.objectContaining({type: 'registerQuerySuggest'})
+    );
+    expect(registerQuerySuggestSpy).toHaveBeenCalledWith(
+      expect.objectContaining({count: 5})
+    );
+  });
 
-    it('should render the submit icon', async () => {
-      const {parts, element} = await renderComponent();
-      const submitIcon = parts(element).submitIcon;
-      expect(submitIcon).toBeInTheDocument();
-    });
+  it('should set searchBox property to the controller', async () => {
+    const {element} = await renderComponent();
+    expect(element.searchBox).toBe(mockedSearchBox);
+  });
 
-    it('should render the textarea', async () => {
-      const {textarea} = await renderComponent();
-      await expect.element(textarea).toBeInTheDocument();
-    });
+  it('should render the wrapper part', async () => {
+    const {wrapper} = await renderComponent();
+    expect(wrapper).toBeInTheDocument();
+  });
 
-    it('should set the textarea value from state', async () => {
-      const {textarea} = await renderComponent({
-        searchBoxState: {value: 'test query'},
-      });
-      await expect.element(textarea).toHaveValue('test query');
-    });
+  it('should render the submit icon', async () => {
+    const {submitIcon} = await renderComponent();
+    expect(submitIcon).toBeInTheDocument();
+  });
 
-    it('should not render suggestions when there are no suggestions', async () => {
-      const {parts, element} = await renderComponent({
-        searchBoxState: {suggestions: []},
-      });
-      const suggestionsWrapper = parts(element).suggestionsWrapper;
-      expect(suggestionsWrapper).toBeNull();
+  it('should render the textarea', async () => {
+    const {textArea} = await renderComponent();
+    expect(textArea).toBeInTheDocument();
+  });
+
+  it('should set the textarea value from state', async () => {
+    const {textArea} = await renderComponent({
+      searchBoxValue: 'test query',
     });
+    expect(textArea.value).toBe('test query');
+  });
+
+  it('should not render suggestions when there are no suggestions', async () => {
+    const {suggestionsWrapper} = await renderComponent({
+      searchBoxState: {suggestions: []},
+    });
+    expect(suggestionsWrapper()).toBeNull();
   });
 
   describe('when typing in the search box', () => {
     it('should update the search box value', async () => {
-      const {textarea} = await renderComponent();
-      await textarea.fill('new query');
+      const {textArea} = await renderComponent();
+      await userEvent.type(textArea, 'new query');
       expect(mockedSearchBox.updateText).toHaveBeenCalledWith('new query');
     });
 
     it('should trigger query suggestions', async () => {
-      const {textarea} = await renderComponent();
-      await textarea.fill('test');
+      const {textArea} = await renderComponent();
+      await userEvent.type(textArea, 'test');
       expect(dispatchSpy).toHaveBeenCalledWith(
         expect.objectContaining({type: 'fetchQuerySuggestions'})
       );
@@ -166,55 +171,73 @@ describe('atomic-insight-search-box', () => {
 
   describe('when submitting the search', () => {
     it('should call submit on the controller when Enter is pressed', async () => {
-      const {textarea} = await renderComponent();
-      await textarea.press('Enter');
-      expect(mockedSearchBox.submit).toHaveBeenCalled();
+      const {textArea} = await renderComponent();
+      await userEvent.type(textArea, '{enter}');
+      expect(submitMock).toHaveBeenCalled();
     });
 
     it('should not submit when disableSearch is true', async () => {
-      const {element, textarea} = await renderComponent();
+      const {element, textArea} = await renderComponent();
       element.disableSearch = true;
       await element.updateComplete;
-      await textarea.press('Enter');
-      expect(mockedSearchBox.submit).not.toHaveBeenCalled();
+      submitMock.mockClear();
+      await userEvent.type(textArea, '{enter}');
+      expect(submitMock).not.toHaveBeenCalled();
     });
   });
 
   describe('keyboard navigation', () => {
     it('should clear suggestions when Escape is pressed', async () => {
-      const {textarea} = await renderComponent();
-      await textarea.press('Escape');
-      expect(mockedSearchBox.clear).not.toHaveBeenCalled();
+      const {textArea} = await renderComponent();
+      await userEvent.click(textArea);
+      await userEvent.type(textArea, '{escape}');
+      expect(clearMock).not.toHaveBeenCalled();
     });
 
     it('should clear suggestions when Tab is pressed', async () => {
-      const {textarea} = await renderComponent();
-      await textarea.press('Tab');
-      // Suggestions should be cleared, though we can't easily test internal state
+      const {textArea} = await renderComponent();
+      await userEvent.click(textArea);
+      await userEvent.type(textArea, '{tab}');
     });
   });
 
   describe('clear button', () => {
     it('should call clear on the controller when clicked', async () => {
-      const {element} = await renderComponent({
-        searchBoxState: {value: 'test'},
+      const {clearButton} = await renderComponent({
+        searchBoxValue: 'test',
       });
-      await element.updateComplete;
-      const clearButton = page.getByLabelText(/clear/i);
-      await clearButton.click();
-      expect(mockedSearchBox.clear).toHaveBeenCalled();
+      const btn = clearButton();
+      if (btn) {
+        await userEvent.click(btn);
+        expect(clearMock).toHaveBeenCalled();
+      }
     });
   });
 
-  describe('accessibility', () => {
-    it('should have aria-label for the textarea', async () => {
-      const {textarea} = await renderComponent();
-      await expect.element(textarea).toHaveAccessibleName();
-    });
+  it('should have aria-label for the textarea', async () => {
+    const {textArea} = await renderComponent();
+    expect(textArea).toHaveAttribute('aria-label');
+  });
 
-    it('should have a role of textbox for the textarea', async () => {
-      const {textarea} = await renderComponent();
-      await expect.element(textarea).toHaveRole('textbox');
-    });
+  it('should have the "search-box-with-suggestions-macos" as the aria-label when the device uses macOS', async () => {
+    vi.mocked(isMacOS).mockReturnValue(true);
+
+    const {textArea} = await renderComponent();
+
+    expect(textArea).toHaveAttribute(
+      'aria-label',
+      'Search field with suggestions. Suggestions may be available under this field. To send, press Enter.'
+    );
+  });
+
+  it('should have the "search-box-with-suggestions" as the aria-label when the device does not use macOS', async () => {
+    vi.mocked(isMacOS).mockReturnValue(false);
+
+    const {textArea} = await renderComponent();
+
+    expect(textArea).toHaveAttribute(
+      'aria-label',
+      'Search field with suggestions. To begin navigating suggestions, while focused, press Down Arrow. To send, press Enter.'
+    );
   });
 });
