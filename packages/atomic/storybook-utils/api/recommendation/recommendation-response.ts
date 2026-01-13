@@ -1,3 +1,6 @@
+// Fixed reference timestamp (2026-01-13T00:00:00Z) for consistent snapshots
+const REFERENCE_TIMESTAMP = 1768348800000;
+
 export const baseRecommendationResponse = {
   totalCount: 10,
   totalCountFiltered: 10,
@@ -50,7 +53,7 @@ export const baseRecommendationResponse = {
       absentTerms: [],
       raw: {
         author: 'Sarah Johnson',
-        date: Date.now() - 86400000 * 2,
+        date: REFERENCE_TIMESTAMP - 86400000 * 2,
         category: 'Technology',
         source: 'Tech Blog',
         filetype: 'Article',
@@ -100,7 +103,7 @@ export const baseRecommendationResponse = {
       absentTerms: [],
       raw: {
         author: 'Michael Chen',
-        date: Date.now() - 86400000 * 5,
+        date: REFERENCE_TIMESTAMP - 86400000 * 5,
         category: 'Cloud',
         source: 'Dev Weekly',
         filetype: 'Article',
@@ -150,7 +153,7 @@ export const baseRecommendationResponse = {
       absentTerms: [],
       raw: {
         author: 'Emma Williams',
-        date: Date.now() - 86400000 * 7,
+        date: REFERENCE_TIMESTAMP - 86400000 * 7,
         category: 'Accessibility',
         source: 'Web Dev Today',
         filetype: 'Article',
@@ -201,7 +204,7 @@ export const baseRecommendationResponse = {
       absentTerms: [],
       raw: {
         author: 'David Park',
-        date: Date.now() - 86400000 * 10,
+        date: REFERENCE_TIMESTAMP - 86400000 * 10,
         category: 'Programming',
         source: 'Code Academy',
         filetype: 'Tutorial',
@@ -252,7 +255,7 @@ export const baseRecommendationResponse = {
       absentTerms: [],
       raw: {
         author: 'Lisa Anderson',
-        date: Date.now() - 86400000 * 14,
+        date: REFERENCE_TIMESTAMP - 86400000 * 14,
         category: 'API Design',
         source: 'Backend Weekly',
         filetype: 'Guide',
@@ -302,7 +305,7 @@ export const baseRecommendationResponse = {
       absentTerms: [],
       raw: {
         author: 'Robert Taylor',
-        date: Date.now() - 86400000 * 3,
+        date: REFERENCE_TIMESTAMP - 86400000 * 3,
         category: 'Frontend',
         source: 'CSS Tricks',
         filetype: 'Article',
@@ -353,7 +356,7 @@ export const baseRecommendationResponse = {
       absentTerms: [],
       raw: {
         author: 'Jessica Martinez',
-        date: Date.now() - 86400000 * 6,
+        date: REFERENCE_TIMESTAMP - 86400000 * 6,
         category: 'React',
         source: 'React Weekly',
         filetype: 'Tutorial',
@@ -404,7 +407,7 @@ export const baseRecommendationResponse = {
       absentTerms: [],
       raw: {
         author: 'Kevin Zhang',
-        date: Date.now() - 86400000 * 12,
+        date: REFERENCE_TIMESTAMP - 86400000 * 12,
         category: 'Database',
         source: 'DB Weekly',
         filetype: 'Guide',
@@ -454,7 +457,7 @@ export const baseRecommendationResponse = {
       absentTerms: [],
       raw: {
         author: 'Tom Wilson',
-        date: Date.now() - 86400000 * 8,
+        date: REFERENCE_TIMESTAMP - 86400000 * 8,
         category: 'DevOps',
         source: 'K8s Blog',
         filetype: 'Article',
@@ -506,7 +509,7 @@ export const baseRecommendationResponse = {
       absentTerms: [],
       raw: {
         author: 'Amanda White',
-        date: Date.now() - 86400000 * 4,
+        date: REFERENCE_TIMESTAMP - 86400000 * 4,
         category: 'Security',
         source: 'Security News',
         filetype: 'Article',
