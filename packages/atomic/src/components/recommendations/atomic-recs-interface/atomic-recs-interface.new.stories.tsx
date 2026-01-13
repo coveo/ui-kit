@@ -66,11 +66,18 @@ export const Default: Story = {
 
 const {play: playNoFirstQuery} = wrapInRecommendationInterface({
   skipFirstQuery: true,
+  skipInitialization: true,
 });
 
 export const RecsBeforeInit: Story = {
   tags: ['!dev'],
-  play: playNoFirstQuery,
+  play: async (context) => {
+    await playNoFirstQuery(context);
+    const recsInterface = context.canvasElement.querySelector(
+      'atomic-recs-interface'
+    );
+    await recsInterface?.getRecommendations();
+  },
 };
 
 export const WithRecsList: Story = {
