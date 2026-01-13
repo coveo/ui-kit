@@ -72,7 +72,7 @@ ${(declaration.events || [])
 
 let atomicAngularComponentFileContent = `
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, NgZone } from '@angular/core';
-import { ProxyCmp, proxyOutputs, proxyInputs, proxyMethods, defineCustomElement } from './angular-component-lib/utils';
+import { ProxyCmp, proxyOutputs, proxyInputs, proxyMethods, defineCustomElement } from '../../utils';
 `;
 
 function processLitDeclaration(declaration) {
