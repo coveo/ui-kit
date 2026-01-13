@@ -25,6 +25,15 @@ export const followUpAnswerEndpoint = answerGenerationApi.injectEndpoints({
           },
         };
       },
+      serializeQueryArgs: ({endpointName, queryArgs}) => {
+        // RTK Query serialize our endpoints and they're serialized state arguments as the key in the store.
+        // Keys must match, because if anything in the query changes, it's not the same query anymore.
+        // Analytics data is excluded entirely as it contains volatile fields that change during streaming.
+        const {q} = queryArgs;
+
+        // Standard RTK key, with analytics excluded
+        return `${endpointName}_${JSON.stringify(q)}`;
+      },
       async onQueryStarted(args, {getState, updateCachedData, dispatch}) {
         /**
          * createApi has to be called prior to creating the redux store and is used as part of the store setup sequence.
