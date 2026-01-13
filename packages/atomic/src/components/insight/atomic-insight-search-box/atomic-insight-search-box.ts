@@ -8,13 +8,12 @@ import {
 import {html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {createRef, type Ref, ref} from 'lit/directives/ref.js';
-import SearchSlimIcon from '@/images/search-slim.svg';
 import {renderSearchBoxWrapper} from '@/src/components/common/search-box/search-box-wrapper';
 import {renderSearchBoxTextArea} from '@/src/components/common/search-box/search-text-area';
-import {renderQuerySuggestionContainer} from '@/src/components/common/suggestions/query-suggestion-container';
-import {renderQuerySuggestionIcon} from '@/src/components/common/suggestions/query-suggestion-icon';
-import {renderQuerySuggestionText} from '@/src/components/common/suggestions/query-suggestion-text';
-import {getPartialSearchBoxSuggestionElement} from '@/src/components/common/suggestions/query-suggestions';
+import {
+  getPartialSearchBoxSuggestionElement,
+  renderQuerySuggestion,
+} from '@/src/components/common/suggestions/query-suggestions';
 import {SuggestionManager} from '@/src/components/common/suggestions/suggestion-manager';
 import type {SearchBoxSuggestionElement} from '@/src/components/common/suggestions/suggestions-types';
 import {elementHasQuery} from '@/src/components/common/suggestions/suggestions-utils';
@@ -27,9 +26,10 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {hasKeyboard, isMacOS} from '@/src/utils/device-utils';
 import {isFocusingOut, randomID} from '@/src/utils/utils';
-import '@/src/components/common/atomic-suggestion-renderer/atomic-suggestion-renderer';
+import SearchSlimIcon from '../../../images/search-slim.svg';
 import '@/src/components/common/atomic-icon/atomic-icon';
-import styles from './atomic-insight-search-box.tw.css?inline';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import styles from './atomic-insight-search-box.tw.css';
 
 /**
  * The `atomic-insight-search-box` component allows users to enter and submit search queries within the Insight interface.
@@ -239,20 +239,13 @@ export class AtomicInsightSearchBox
 
     return {
       ...partialItem,
-      content: renderQuerySuggestionContainer()(html`
-        ${renderQuerySuggestionIcon({
-          props: {
-            icon: SearchSlimIcon,
-            hasSuggestion: this.searchBoxState.suggestions.length > 1,
-          },
-        })}
-        ${renderQuerySuggestionText({
-          props: {
-            suggestion,
-            hasQuery,
-          },
-        })}
-      `),
+      content: renderQuerySuggestion({
+        icon: SearchSlimIcon,
+        hasQuery,
+        suggestion,
+        hasMultipleKindOfSuggestions: false,
+        alwaysShowIcon: this.searchBoxState.suggestions.length > 1,
+      }),
       onSelect: () => {
         this.searchBox.selectSuggestion(suggestion.rawValue);
       },
@@ -369,8 +362,9 @@ export class AtomicInsightSearchBox
   }
 
   @errorGuard()
+  @bindingGuard()
   render() {
-    return renderSearchBoxWrapper({
+    return html`${renderSearchBoxWrapper({
       props: {
         disabled: this.disableSearch,
         onFocusout: (event) => {
@@ -411,7 +405,7 @@ export class AtomicInsightSearchBox
         },
       })}
       ${this.renderSuggestions()}
-    `);
+    `)}`;
   }
 }
 
