@@ -1,4 +1,4 @@
-import type {Meta, StoryObj} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit';
 
 const meta: Meta = {
@@ -14,7 +14,7 @@ export default meta;
  * Expands all sidebar folders so crawlers can discover all component links.
  * Not visible in dev mode or sidebar navigation.
  */
-export const Crawling: StoryObj = {
+export const Crawling: Story = {
   render: () => html`
     <div style="font-family: 'Nunito Sans', sans-serif; padding: 20px;">
       <h1>Coveo Atomic Component Index</h1>

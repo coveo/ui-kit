@@ -96,8 +96,8 @@ function getPackageVersion(): string {
 
 const config: StorybookConfig = {
   stories: [
-    './Crawling.stories.tsx',
     './Introduction.mdx',
+    './Crawling.stories.tsx',
     '../src/**/*.new.stories.tsx',
     '../src/**/*.mdx',
     '../storybook-pages/**/*.new.stories.tsx',
