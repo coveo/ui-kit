@@ -15,7 +15,6 @@ export default meta;
  * Not visible in dev mode or sidebar navigation.
  */
 export const Crawling: StoryObj = {
-  name: 'Crawling',
   render: () => html`
     <div style="font-family: 'Nunito Sans', sans-serif; padding: 20px;">
       <h1>Coveo Atomic Component Index</h1>
