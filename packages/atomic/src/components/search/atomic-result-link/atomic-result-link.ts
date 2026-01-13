@@ -32,8 +32,8 @@ export class AtomicResultLink
   extends LightDomMixin(SlotsForNoShadowDOMMixin(LitElement))
   implements InitializableComponent<Bindings>
 {
-  static styles: CSSResultGroup =
-    css`@reference '../../../../utils/tailwind.global.tw.css';
+  static styles: CSSResultGroup = css`
+    @reference '../../../utils/tailwind.global.tw.css';
 
 atomic-result-link {
   a {
