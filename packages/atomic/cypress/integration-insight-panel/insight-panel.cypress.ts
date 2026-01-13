@@ -190,12 +190,6 @@ describe('Insight Panel test suites', () => {
         );
       });
     });
-
-    describe('when a smart snippet answer is returned', () => {
-      beforeEach(() => {
-        mockSearchWithSmartSnippet();
-        visitPage();
-      });
   });
 
   describe('Smart Snippet Suggestions', () => {
