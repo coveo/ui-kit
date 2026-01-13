@@ -1,18 +1,18 @@
 # Headless Search SSR with Next.js
 
-This sample demonstrates server-side rendering (SSR) with Coveo Headless search controllers using both Next.js App Router and Pages Router. It shows how to build high-performance search experiences with improved SEO and initial load times.
+This sample demonstrates server-side rendering (SSR) with Coveo Headless search controllers using Next.js App Router. It shows how to build high-performance search experiences with improved SEO and initial load times.
 
 ## Features
 
 - Server-side rendering for search interfaces
-- Examples for both Next.js App Router and Pages Router
+- Next.js App Router implementation
 - Framework-agnostic `@coveo/headless/ssr` utilities
 - React-specific `@coveo/headless-react/ssr` utilities
 - Client-side hydration for interactive search
 
 ## Technology Stack
 
-- **Next.js**: React framework with SSR
+- **Next.js**: React framework with SSR (App Router)
 - **React**: UI framework
 - **@coveo/headless/ssr**: Framework-agnostic SSR utilities
 - **@coveo/headless-react/ssr**: React-specific SSR utilities
@@ -25,25 +25,12 @@ This sample demonstrates server-side rendering (SSR) with Coveo Headless search 
 
 ## Project Structure
 
-This sample contains two implementations:
+This sample contains:
 
-- **[pages-router](./pages-router/)**: Next.js Pages Router implementation
 - **[app-router](./app-router/)**: Next.js App Router implementation
-- **[common](./common/)**: Shared code between both implementations
+- **[common](./common/)**: Shared code and utilities
 
 ## Getting Started
-
-Choose either the Pages Router or App Router implementation:
-
-### Using Pages Router
-
-```bash
-cd ./pages-router
-npm install
-npm run dev
-```
-
-### Using App Router
 
 ```bash
 cd ./app-router
@@ -53,7 +40,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to view the application.
 
-## Available Scripts (in each subdirectory)
+## Available Scripts
 
 ```bash
 npm run dev       # Start development server
@@ -68,13 +55,6 @@ npm run e2e       # Run end-to-end tests
 
 The `@coveo/headless/ssr` utilities are framework-agnostic and can be used with any SSR framework, not just Next.js. This sample uses Next.js for convenience and demonstration.
 
-### Pages Router vs App Router
-
-Both implementations demonstrate the same functionality but use different Next.js routing paradigms:
-
-- **Pages Router**: Traditional Next.js routing with `pages/` directory
-- **App Router**: Modern Next.js routing with `app/` directory and React Server Components
-
 ### Server-Side Rendering Benefits
 
 SSR provides:
@@ -87,5 +67,4 @@ SSR provides:
 
 - [Coveo Headless SSR Documentation](https://docs.coveo.com/en/headless/latest/usage/ssr/)
 - [Next.js App Router](https://nextjs.org/docs/app)
-- [Next.js Pages Router](https://nextjs.org/docs/pages)
 - [React Server Components](https://react.dev/reference/react/use-server)
