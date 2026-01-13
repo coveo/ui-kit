@@ -548,6 +548,7 @@ describe('atomic-commerce-recommendation-interface', () => {
   // TODO - (v4) KIT-4365: Remove these tests.
   describe('when the language attribute changes', () => {
     it('should do nothing when the engine has not been created', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
       const onLanguageChangeSpy = vi.spyOn(
         InterfaceController.prototype,
         'onLanguageChange'
@@ -562,6 +563,7 @@ describe('atomic-commerce-recommendation-interface', () => {
     });
 
     it('should do nothing when the new language attribute is undefined', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
       const onLanguageChangeSpy = vi.spyOn(
         InterfaceController.prototype,
         'onLanguageChange'
@@ -576,6 +578,7 @@ describe('atomic-commerce-recommendation-interface', () => {
     });
 
     it('should do nothing when the context is not defined', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
       const onLanguageChangeSpy = vi.spyOn(
         InterfaceController.prototype,
         'onLanguageChange'
