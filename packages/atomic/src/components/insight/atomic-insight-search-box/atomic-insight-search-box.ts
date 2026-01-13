@@ -7,7 +7,8 @@ import {
 } from '@coveo/headless/insight';
 import {html, LitElement, nothing, type TemplateResult} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {createRef, type Ref, ref} from 'lit/directives/ref.js';
+import {classMap} from 'lit/directives/class-map.js';
+import {type Ref, type RefOrCallback, ref, createRef} from 'lit/directives/ref.js';
 import {renderSearchBoxWrapper} from '@/src/components/common/search-box/search-box-wrapper';
 import {renderSearchBoxTextArea} from '@/src/components/common/search-box/search-text-area';
 import {
@@ -35,7 +36,6 @@ import styles from './atomic-insight-search-box.tw.css';
  * The `atomic-insight-search-box` component allows users to enter and submit search queries within the Insight interface.
  * It provides query suggestions as the user types.
  *
- * @internal
  * @part wrapper - The wrapper around the entire search box.
  * @part submit-icon - The search icon displayed in the search box.
  * @part textarea - The text area where users enter their search queries.
@@ -263,9 +263,7 @@ export class AtomicInsightSearchBox
 
     return html`<div
       part="suggestions"
-      ${ref((el) => {
-        setRef(el as HTMLElement | undefined);
-      })}
+      ${ref(setRef as RefOrCallback<Element>)}
       class="flex grow basis-1/2 flex-col"
       @mousedown=${(e: MouseEvent) => {
         if (e.target === getRef()) {
@@ -285,20 +283,20 @@ export class AtomicInsightSearchBox
       return nothing;
     }
 
-    const hasActiveSuggestion = !!this.suggestionManager.activeDescendant;
-    const activeDescendantAttr = hasActiveSuggestion
-      ? {'aria-activedescendant': this.suggestionManager.activeDescendant}
-      : {};
+    const isVisible = this.suggestionManager.hasSuggestions && this.isExpanded;
+
+    const classes = {
+      'bg-background border-neutral absolute top-full left-0 z-10 flex w-full rounded-md border': true,
+      hidden: !isVisible,
+    };
 
     return html`<div
       id="${this.searchBoxId}-popup"
       part="suggestions-wrapper"
-      class="bg-background border-neutral absolute top-full left-0 z-10 flex w-full rounded-md border ${
-        this.suggestionManager.hasSuggestions && this.isExpanded ? '' : 'hidden'
-      }"
+      class=${classMap(classes)}
       role="application"
       aria-label=${this.bindings.i18n.t('search-suggestions-single-list')}
-      ${hasActiveSuggestion ? activeDescendantAttr : nothing}
+      aria-activedescendant=${this.suggestionManager.activeDescendant}
     >
       ${this.renderPanel(
         this.suggestionManager.allSuggestionElements,
