@@ -36,8 +36,7 @@ export function bindingGuard<
   Component extends LitElementWithBindings,
   T extends TemplateResultType,
 >(): RenderGuardDecorator<Component, T> {
-  // biome-ignore lint/suspicious/noExplicitAny: Decorator needs flexible parameter types
-  return (_: any, propertyKey: any, descriptor: any) => {
+  return (_, propertyKey, descriptor) => {
     if (descriptor?.value === undefined || propertyKey !== 'render') {
       throw new Error(
         '@bindingGuard decorator can only be used on render method'
