@@ -269,7 +269,7 @@ describe('atomic-insight-query-summary', () => {
   it('should create an AriaLiveRegionController', async () => {
     const {element} = await renderQuerySummary();
 
-    expect(element.ariaMessage).toBeInstanceOf(AriaLiveRegionController);
+    expect(element['ariaMessage']).toBeInstanceOf(AriaLiveRegionController);
   });
 
   it('should update aria message when state changes', async () => {
