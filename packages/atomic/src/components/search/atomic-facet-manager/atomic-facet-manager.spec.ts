@@ -118,7 +118,8 @@ describe('atomic-facet-manager', () => {
 
       const getAllFacetsSpy = vi.spyOn(element!.bindings.store, 'getAllFacets');
 
-      await element?.['sortFacets']();
+      // biome-ignore lint/suspicious/noExplicitAny: <accessing private properties in tests>
+      await (element as any).sortFacets();
 
       expect(getAllFacetsSpy).toHaveBeenCalled();
     });
@@ -167,7 +168,8 @@ describe('atomic-facet-manager', () => {
       element?.appendChild(mockFacet2);
       element?.appendChild(mockFacet3);
 
-      await element?.['sortFacets']();
+      // biome-ignore lint/suspicious/noExplicitAny: <accessing private properties in tests>
+      await (element as any).sortFacets();
 
       expect(mockSort).toHaveBeenCalled();
 
@@ -189,7 +191,8 @@ describe('atomic-facet-manager', () => {
       element?.appendChild(mockFacet1);
       element?.appendChild(mockFacet2);
 
-      await element?.['sortFacets']();
+      // biome-ignore lint/suspicious/noExplicitAny: <accessing private properties in tests>
+      await (element as any).sortFacets();
 
       expect(mockSort).toHaveBeenCalled();
 
@@ -212,7 +215,8 @@ describe('atomic-facet-manager', () => {
       element?.appendChild(mockFacet2);
       element?.appendChild(mockFacet3);
 
-      await element?.['sortFacets']();
+      // biome-ignore lint/suspicious/noExplicitAny: <accessing private properties in tests>
+      await (element as any).sortFacets();
 
       expect(mockSort).toHaveBeenCalled();
 
@@ -236,7 +240,8 @@ describe('atomic-facet-manager', () => {
       element?.appendChild(mockFacet2);
       element?.appendChild(mockGenerator);
 
-      await element?.['sortFacets']();
+      // biome-ignore lint/suspicious/noExplicitAny: <accessing private properties in tests>
+      await (element as any).sortFacets();
 
       expect(
         mockGenerator.updateCollapseFacetsDependingOnFacetsVisibility

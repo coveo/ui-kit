@@ -165,19 +165,22 @@ describe('atomic-automatic-facet-generator', () => {
     it('should set collapseFacetsAfter to -1 when collapseAfter is -1', async () => {
       const {element} = await renderAutomaticFacetGenerator();
       element.updateCollapseFacetsDependingOnFacetsVisibility(-1, 5);
-      expect(element['collapseFacetsAfter']).toBe(-1);
+      // biome-ignore lint/suspicious/noExplicitAny: <accessing private properties in tests>
+      expect((element as any).collapseFacetsAfter).toBe(-1);
     });
 
     it('should calculate correct collapse value based on visible facets', async () => {
       const {element} = await renderAutomaticFacetGenerator();
       element.updateCollapseFacetsDependingOnFacetsVisibility(5, 2);
-      expect(element['collapseFacetsAfter']).toBe(3);
+      // biome-ignore lint/suspicious/noExplicitAny: <accessing private properties in tests>
+      expect((element as any).collapseFacetsAfter).toBe(3);
     });
 
     it('should not allow negative collapseFacetsAfter value', async () => {
       const {element} = await renderAutomaticFacetGenerator();
       element.updateCollapseFacetsDependingOnFacetsVisibility(2, 5);
-      expect(element['collapseFacetsAfter']).toBe(0);
+      // biome-ignore lint/suspicious/noExplicitAny: <accessing private properties in tests>
+      expect((element as any).collapseFacetsAfter).toBe(0);
     });
   });
 
