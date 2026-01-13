@@ -11,10 +11,8 @@
   },
   "scripts": {
     "clean": "node ../../utils/ci/rm-rf.mjs dist",
-    "gen:lit": "node ./scripts/build-lit.mjs && pnpm run build:fixLoaderImportPaths && pnpm run build:fixGeneratedImportPaths",
+    "gen:lit": "node ./scripts/build-lit.mjs",
     "build": "pnpm run build:bundles && pnpm run build:types && pnpm run build:assets",
-    "build:fixLoaderImportPaths": "node ./scripts/fix-loader-import-paths.js",
-    "build:fixGeneratedImportPaths": "fix-esm-import-path src/components/stencil-generated",
     "build:bundles": "rollup --config rollup.config.js",
     "build:types": "tsc --project tsconfig.types.json",
     "build:assets": "node ../../utils/ci/copy-files.mjs ../atomic/dist/atomic/assets dist/assets ../atomic/dist/atomic/lang dist/lang",

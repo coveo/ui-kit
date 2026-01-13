@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AtomicAriaLive } from '../components/common/atomic-aria-live/atomic-aria-live';
-import {AnyBindings} from '../components/common/interface/bindings';
+import type {AnyBindings} from '../components/common/interface/bindings';
 import {buildCustomEvent} from './event-utils';
 import {InitializableComponent} from './initialization-utils';
 import {defer} from './utils';

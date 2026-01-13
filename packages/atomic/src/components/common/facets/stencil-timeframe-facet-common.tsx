@@ -16,10 +16,9 @@ import {h, VNode} from '@stencil/core';
 import {parseDate} from '../../../utils/date-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {randomID} from '../../../utils/utils';
-import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
 import {Bindings as SearchBindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {Hidden} from '../stencil-hidden';
-import {FacetInfo} from './facet-common-store';
+import {FacetInfo} from './stencil-facet-common-store';
 import {FacetContainer} from './facet-container/stencil-facet-container';
 import {FacetHeader} from './facet-header/stencil-facet-header';
 import {FacetPlaceholder} from './facet-placeholder/stencil-facet-placeholder';
@@ -39,7 +38,7 @@ export interface Timeframe {
 interface TimeframeFacetCommonOptions {
   facetId?: string;
   host: HTMLElement;
-  bindings: SearchBindings | InsightBindings;
+  bindings: SearchBindings;
   label: string;
   field: string;
   headingLevel: number;

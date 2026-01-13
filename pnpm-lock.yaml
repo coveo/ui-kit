@@ -206,6 +206,9 @@ importers:
 
   packages/atomic:
     dependencies:
+      '@coveo/atomic-legacy':
+        specifier: workspace:*
+        version: link:../atomic-legacy
       '@coveo/bueno':
         specifier: workspace:*
         version: link:../bueno
@@ -521,6 +524,19 @@ importers:
       vite:
         specifier: 'catalog:'
         version: 7.2.2(@types/node@22.16.5)(jiti@2.6.1)(less@4.5.1)(lightningcss@1.30.1)(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2)
+
+  packages/atomic-legacy:
+    dependencies:
+      '@coveo/headless':
+        specifier: workspace:*
+        version: link:../headless
+      '@stencil/core':
+        specifier: 'catalog:'
+        version: 4.20.0(patch_hash=2123526aa2d364115336a3e2011c3176111fbe4942b3c2eef9ab94d76e6c18f9)
+    devDependencies:
+      i18next:
+        specifier: 25.3.2
+        version: 25.3.2(typescript@5.8.3)
 
   packages/atomic-react:
     dependencies:
@@ -4127,7 +4143,6 @@ packages:
   '@mswjs/source@0.5.0':
     resolution: {integrity: sha512-0zZT5wHnutBWInb/IAl2wGCy9M4i5nm4mRdunw7Pe5tyei07MvLATZEckC/uvNVTSEJMgJ0Kgj5GKzL/I9ZIMQ==}
     engines: {node: '>=20'}
-    deprecated: This package is renamed to . It will no longer receive any updates. Please migrate to the new package name. Thank you.
     peerDependencies:
       msw: ^2.10.0
 

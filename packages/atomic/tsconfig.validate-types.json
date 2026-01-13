@@ -8,5 +8,5 @@
     "module": "ES2022",
     "target": "ES2021"
   },
-  "include": ["./dist/types/components.d.ts"]
+  "include": ["./dist/types/components/index.d.ts"]
 }

@@ -1,6 +1,6 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {JSXBase} from '@stencil/core/internal';
-import {AnyBindings} from '../interface/bindings';
+import type {AnyBindings} from '../interface/bindings';
 import {TextAreaClearButton} from './stencil-text-area-clear-button';
 
 interface Props extends JSXBase.TextareaHTMLAttributes<HTMLTextAreaElement> {

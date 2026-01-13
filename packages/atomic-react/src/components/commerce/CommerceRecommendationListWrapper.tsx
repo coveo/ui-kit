@@ -1,9 +1,9 @@
-import type {AtomicCommerceRecommendationList} from '@coveo/atomic/components';
 import type {
+  AtomicCommerceRecommendationList,
   ItemDisplayBasicLayout,
   ItemDisplayDensity,
   ItemDisplayImageSize,
-} from '@coveo/atomic/loader';
+} from '@coveo/atomic/components';
 import type {Product} from '@coveo/headless/commerce';
 import React, {type JSX, useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';

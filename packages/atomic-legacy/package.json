@@ -1,0 +1,29 @@
+{
+  "name": "@coveo/atomic-legacy",
+  "type": "module",
+  "private": "true",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./atomic-suggestion-renderer": {
+      "types": "./dist/components/atomic-suggestion-renderer.d.ts",
+      "import": "./dist/components/atomic-suggestion-renderer.js"
+    },
+    "./item-context-functions": {
+      "types": "./dist/item-context-functions.d.ts",
+      "import": "./dist/item-context-functions.js"
+    }
+  },
+  "dependencies": {
+    "@stencil/core": "catalog:",
+    "@coveo/headless": "workspace:*"
+  },
+  "devDependencies": {
+    "i18next": "25.3.2"
+  },
+  "scripts": {
+    "build": "pnpm exec node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.json && tsc -b"
+  }
+}

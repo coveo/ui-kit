@@ -12,5 +12,5 @@ const {version} = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
  * Custom transformer to replace process.env.VERSION with the actual version from package.json.
  */
 export default function versionTransformer(context) {
-  return coreVersionTransformer(context, version);
+  return coreVersionTransformer(context, version, 'VERSION');
 }

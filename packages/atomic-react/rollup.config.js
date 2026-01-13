@@ -160,18 +160,6 @@ export default defineConfig([
     plugins: plugins,
   },
   {
-    input: 'src/recommendation.index.ts',
-    output: [outputCJS({useCase: 'recommendation/'})],
-    external: isCDN ? cdnExternal : commonExternal,
-    plugins: plugins,
-  },
-  {
-    input: 'src/recommendation.index.ts',
-    output: [outputESM({useCase: 'recommendation/'})],
-    external: isCDN ? cdnExternal : esmExternal,
-    plugins: plugins,
-  },
-  {
     input: 'src/commerce.index.ts',
     output: [outputCJS({useCase: 'commerce/'})],
     external: isCDN ? cdnExternal : commonExternal,

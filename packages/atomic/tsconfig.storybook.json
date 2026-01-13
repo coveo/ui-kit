@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "sourceMap": true,
     "emitDecoratorMetadata": true,
     "composite": true,
     "jsxFactory": "h",

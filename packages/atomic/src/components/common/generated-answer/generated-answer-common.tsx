@@ -13,7 +13,7 @@ import {
   StorageItems,
 } from '../../../utils/local-storage-utils';
 import {getNamedSlotContent} from '../../../utils/slot-utils';
-import {AnyBindings} from '../interface/bindings';
+import type {AnyBindings} from '../interface/bindings';
 import {Heading} from '../stencil-heading';
 import {CopyButton} from './stencil-copy-button';
 import {Switch} from '../stencil-switch';
@@ -41,6 +41,9 @@ interface GeneratedAnswerCommonOptions {
     props: InteractiveCitationProps
   ) => InteractiveCitation;
 }
+
+// biome-ignore lint/suspicious/noExplicitAny: hack
+type HTMLAtomicGeneratedAnswerFeedbackModalElement = HTMLElement & any;
 
 /**
  * @deprecated use the LitElement version instead: `GeneratedAnswerController`. This class is only meant to be used in legacy Stencil-based components.

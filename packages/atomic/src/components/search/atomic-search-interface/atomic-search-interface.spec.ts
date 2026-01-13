@@ -841,6 +841,7 @@ describe('atomic-search-interface', () => {
     });
 
     it('should handle invalid JSON in fieldsToInclude attribute gracefully', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
       const element = await setupElement();
       element.setAttribute('fields-to-include', 'invalid-json');
       await element.updateComplete;
@@ -1029,6 +1030,7 @@ describe('atomic-search-interface', () => {
   // #updateSearchHub
   describe('when the searchHub attribute changes', () => {
     it('should do nothing when the engine has not been created', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
       const element = await setupElement({searchHub: 'test-hub'});
       const updateSearchConfigurationMock = vi.fn();
       vi.mocked(loadSearchConfigurationActions).mockReturnValue({
@@ -1083,6 +1085,7 @@ describe('atomic-search-interface', () => {
   // #updatePipeline
   describe('when the pipeline attribute changes', () => {
     it('should do nothing when the engine has not been created', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
       const element = await setupElement({pipeline: 'test-pipeline'});
       const updateSearchConfigurationMock = vi.fn();
       vi.mocked(loadSearchConfigurationActions).mockReturnValue({
@@ -1137,6 +1140,7 @@ describe('atomic-search-interface', () => {
   // #updateLanguage
   describe('when the language attribute changes', () => {
     it('should do nothing when the engine has not been created', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
       const onLanguageChangeSpy = vi.spyOn(
         InterfaceController.prototype,
         'onLanguageChange'
@@ -1150,6 +1154,7 @@ describe('atomic-search-interface', () => {
     });
 
     it('should do nothing when the new language attribute is undefined', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
       const onLanguageChangeSpy = vi.spyOn(
         InterfaceController.prototype,
         'onLanguageChange'

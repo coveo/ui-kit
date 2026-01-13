@@ -18,7 +18,7 @@ import {generateLitExports} from './generate-lit-exports.mjs';
 import pathTransformer from './path-transform.mjs';
 import {processAllCss} from './process-css.mjs';
 import svgTransformer from './svg-transform.mjs';
-import versionTransformer from './version-transform.mjs';
+import versionTransformers from './version-transform.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -32,7 +32,7 @@ const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const transformers = [
   pathTransformer,
   svgTransformer,
-  versionTransformer,
+  ...versionTransformers,
   ...(isCDN ? [resourceUrlTransformer] : []),
 ];
 

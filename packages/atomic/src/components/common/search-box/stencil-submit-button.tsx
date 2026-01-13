@@ -1,6 +1,6 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import SearchSlimIcon from '../../../images/search-slim.svg';
-import {AnyBindings} from '../interface/bindings';
+import type {AnyBindings} from '../interface/bindings';
 import {Button} from '../stencil-button';
 
 interface Props {

@@ -32,7 +32,6 @@ import {renderCategoryFacetTreeValueContainer} from '@/src/components/common/fac
 import {renderCategoryFacetValueLink} from '@/src/components/common/facets/category-facet/value-link';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
 import facetCommonStyles from '@/src/components/common/facets/facet-common.tw.css';
-import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
 import {renderFacetPlaceholder} from '@/src/components/common/facets/facet-placeholder/facet-placeholder';
@@ -47,6 +46,7 @@ import {
 import {renderFacetShowMoreLess} from '@/src/components/common/facets/facet-show-more-less/facet-show-more-less';
 import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '@/src/components/common/facets/popover/popover-type';
+import type {FacetInfo} from '@/src/components/common/facets/stencil-facet-common-store';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
 import {arrayConverter} from '@/src/converters/array-converter';

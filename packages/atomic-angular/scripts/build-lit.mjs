@@ -1,21 +1,19 @@
-import {readFileSync, writeFileSync} from 'node:fs';
+import {mkdirSync, writeFileSync} from 'node:fs';
+import {join} from 'node:path';
 import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
 
-const atomicAngularModuleFilePath =
-  'projects/atomic-angular/src/lib/stencil-generated/atomic-angular.module.ts';
-const atomicAngularComponentFilePath =
-  'projects/atomic-angular/src/lib/stencil-generated/components.ts';
-const atomicAngularModuleFileContent = readFileSync(
-  atomicAngularModuleFilePath,
-  'utf-8'
+const stencilGeneratedDir = 'projects/atomic-angular/src/lib/stencil-generated';
+
+const atomicAngularModuleFilePath = join(
+  stencilGeneratedDir,
+  'atomic-angular.module.ts'
 );
-let atomicAngularComponentFileContent = readFileSync(
-  atomicAngularComponentFilePath,
-  'utf-8'
+const atomicAngularComponentFilePath = join(
+  stencilGeneratedDir,
+  'components.ts'
 );
 
-const startTag = '//#region Lit Declarations';
-const endTag = '//#endregion Lit Declarations';
+mkdirSync(stencilGeneratedDir, {recursive: true});
 
 const litDeclarations = [];
 const litImports = new Set();
@@ -27,13 +25,21 @@ const isLitDeclaration = (declaration) =>
 const declarationToLitImport = (declaration) =>
   `${declaration.name} as Lit${declaration.name}`;
 
-const declarationToDefineCustomElementImport = (declaration) =>
-  `defineCustomElement${declaration.name}`;
-
 const declarationToProxyCmp = (declaration, defineCustomElementFn) =>
   `
 @ProxyCmp({
-  inputs: [${(declaration.attributes || []).map((attr) => `'${attr.fieldName}'`).join(', ')}],
+  inputs: [${(declaration.members || [])
+    .flatMap((member) => {
+      if (!member.privacy === 'public' || member.kind !== 'field') {
+        return [];
+      }
+      const inputs = [`'${member.name}'`];
+      if (member.attribute) {
+        inputs.push(`'${member.attribute}'`);
+      }
+      return inputs;
+    })
+    .join(', ')}],
   methods: [${(declaration.members || [])
     .filter((member) => member.privacy === 'public' && member.kind === 'method')
     .map((method) => `'${method.name}'`)
@@ -64,7 +70,10 @@ ${(declaration.events || [])
 }
 `;
 
-atomicAngularComponentFileContent = `${atomicAngularComponentFileContent.replace(new RegExp(`${startTag.replaceAll('/', '\\/')}.*?${endTag.replaceAll('/', '\\/')}`, 'gms'), '').trimEnd()}\n\n${startTag}\n`;
+let atomicAngularComponentFileContent = `
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, NgZone } from '@angular/core';
+import { ProxyCmp, proxyOutputs, proxyInputs, proxyMethods, defineCustomElement } from '../../utils';
+`;
 
 function processLitDeclaration(declaration) {
   atomicAngularComponentFileContent += declarationToProxyCmp(
@@ -73,36 +82,6 @@ function processLitDeclaration(declaration) {
   );
   litImports.add(declarationToLitImport(declaration));
   litDeclarations.push(`${declaration.name}`);
-}
-
-function processNonLitDeclaration(declaration) {
-  const defineCustomElementFn = `defineCustomElement${declaration.name}`;
-
-  const regex = new RegExp(
-    `@ProxyCmp\\(\\{([^}]*)\\}\\)\\s*\\n@Component\\(\\{([^}]*)\\}\\)\\s*\\nexport class\\s+${declaration.name}\\b`,
-    'gms'
-  );
-
-  if (!regex.test(atomicAngularComponentFileContent)) {
-    return;
-  }
-
-  atomicAngularComponentFileContent =
-    atomicAngularComponentFileContent.replaceAll(regex, (_match, p1, p2) => {
-      let newP1;
-      if (p1.includes('defineCustomElementFn')) {
-        newP1 = p1;
-      } else if (p1.trim()) {
-        newP1 = `${p1}, defineCustomElementFn: ${defineCustomElementFn}`;
-      } else {
-        newP1 = `defineCustomElementFn: ${defineCustomElementFn}`;
-      }
-      return `@ProxyCmp({${newP1}})\n@Component({standalone:false,${p2}})\nexport class ${declaration.name}`;
-    });
-
-  defineCustomElementImports.add(
-    declarationToDefineCustomElementImport(declaration)
-  );
 }
 
 // Sort modules by path to ensure deterministic processing order
@@ -117,34 +96,80 @@ for (const module of sortedModules) {
   for (const declaration of sortedDeclarations) {
     if (isLitDeclaration(declaration)) {
       processLitDeclaration(declaration);
-    } else {
-      processNonLitDeclaration(declaration);
     }
   }
 }
 
 if (litImports.size > 0) {
-  atomicAngularComponentFileContent += `\nimport {${[...litImports].sort().join(', ')}} from '@coveo/atomic/components';\n`;
+  atomicAngularComponentFileContent += `\n
+import {
+  ${[...litImports].sort().join(',\n  ')}
+} from '@coveo/atomic/components';\n`;
 }
 
 if (defineCustomElementImports.size > 0) {
-  atomicAngularComponentFileContent += `\nimport {${[...defineCustomElementImports].sort().join(', ')}} from '@coveo/atomic/components';\n`;
+  atomicAngularComponentFileContent += `
+import {
+  ${[...defineCustomElementImports].sort().join(',\n  ')}
+} from '@coveo/atomic/components';\n`;
 }
-atomicAngularComponentFileContent += `${endTag}`;
 
 if (litDeclarations.length > 0) {
-  writeFileSync(
-    atomicAngularModuleFilePath,
-    atomicAngularModuleFileContent
-      .replace(
-        /const DECLARATIONS = \[\n/m,
-        `const DECLARATIONS = [\n${[...litDeclarations].sort().join(',\n')},\n`
-      )
-      .replace(
-        /^import \{$/m,
-        `import {\n${[...litDeclarations].sort().join(',\n')},`
-      )
-  );
+  const atomicAngularModuleFileContent = `
+import {CommonModule} from '@angular/common';
+import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular/core';
+
+import {
+  ${[...litDeclarations].sort().join(',\n  ')}
+} from './components';
+
+const DECLARATIONS = [
+  ${[...litDeclarations].sort().join(',\n  ')}
+];
+
+const shimTemplates = ()=> {
+  // Angular's renderer will add children to a <template> instead of to its
+  // content. This shim will force any children added to a <template> to be
+  // added to its content instead.
+  // https://github.com/angular/angular/issues/15557
+  const nativeAppend = HTMLTemplateElement && HTMLTemplateElement.prototype && HTMLTemplateElement.prototype.appendChild;
+  if(!nativeAppend) {
+    return;
+  }
+  HTMLTemplateElement.prototype.appendChild = function<T extends Node>(
+    childNode: T
+  ) {
+    if (this.content) {
+      return this.content.appendChild(childNode);
+    } else {
+      return <T>nativeAppend.apply(this, [childNode]);
+    }
+  };
+}
+
+        
+const SHIM_TEMPLATES_PROVIDER: Provider = {
+  provide: APP_INITIALIZER,
+  multi: true,
+  useValue: shimTemplates
+}
+
+        
+@NgModule({
+  declarations: DECLARATIONS,
+  exports: DECLARATIONS,
+  providers: [SHIM_TEMPLATES_PROVIDER],
+  imports: [CommonModule],
+})
+export class AtomicAngularModule {
+  static forRoot(): ModuleWithProviders<AtomicAngularModule> {
+    return {
+      ngModule: AtomicAngularModule,
+      providers: [],
+    };
+  }
+}`;
+  writeFileSync(atomicAngularModuleFilePath, atomicAngularModuleFileContent);
 }
 
 writeFileSync(

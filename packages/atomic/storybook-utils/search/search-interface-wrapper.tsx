@@ -7,6 +7,7 @@ import { html } from 'lit';
 import type * as _ from '../../src/components.js';
 import { spreadProps } from '@open-wc/lit-helpers';
 import { AtomicSearchInterface } from '@/src/components/search/atomic-search-interface/atomic-search-interface';
+import '@/src/components/search/atomic-search-interface/atomic-search-interface';
 
 export const wrapInSearchInterface = ({
   config = {},

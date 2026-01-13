@@ -20,6 +20,9 @@ import {
 import QuickviewIcon from '../../../images/quickview.svg';
 import '@/src/components/common/atomic-icon/atomic-icon';
 
+// biome-ignore lint/suspicious/noExplicitAny: hack
+type HTMLAtomicQuickviewModalElement = HTMLElement & any;
+
 /**
  * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
  * about a result.

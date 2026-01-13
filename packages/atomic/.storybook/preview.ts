@@ -1,4 +1,4 @@
-import '@coveo/atomic/themes/coveo.css';
+import '../src/themes/coveo.css';
 import type {Preview} from '@storybook/web-components-vite';
 import {
   type Parameters,
@@ -9,7 +9,7 @@ import {render} from 'lit';
 import {initialize, mswLoader} from 'msw-storybook-addon';
 import {within} from 'shadow-dom-testing-library';
 import customElements from '../custom-elements.json';
-import {defineCustomElements} from '../dist/atomic/loader/index.js';
+import {defineCustomElements} from '../src/entries/loader.js';
 
 initialize(
   import.meta.env.DEV || import.meta.env.VITE_IS_CDN === 'true'

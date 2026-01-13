@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import type {ItemDisplayLayout} from '@/src/components';
+import type {ItemDisplayLayout} from '@/src/components/common/layout/display-options';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 
 export interface DisplayWrapperProps {

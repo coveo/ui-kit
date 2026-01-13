@@ -1,0 +1,21 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "dev:bundles": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true
+    },
+    "dev:definitions": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true
+    },
+    "dev": {
+      "dependsOn": ["build"],
+      "with": ["dev:bundles", "dev:definitions"],
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

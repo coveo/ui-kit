@@ -1,5 +1,5 @@
 export {Bindings, i18n} from '@coveo/atomic';
-export * from '../stencil-generated/search/index.js';
+// export * from '../stencil-generated/search/index.js'; //TODO: Lightweight lazy-loader for Search Components exclusively
 export * from './components.js';
 export {FoldedResultListWrapper as AtomicFoldedResultList} from './FoldedResultListWrapper.js';
 export {ResultListWrapper as AtomicResultList} from './ResultListWrapper.js';

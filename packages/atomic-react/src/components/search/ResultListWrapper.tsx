@@ -1,9 +1,9 @@
-import type {AtomicResultList} from '@coveo/atomic/components';
 import type {
+  AtomicResultList,
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
-} from '@coveo/atomic/loader';
+} from '@coveo/atomic/components';
 import type {Result} from '@coveo/headless';
 import React, {type JSX, useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';

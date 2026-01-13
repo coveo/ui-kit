@@ -19,6 +19,9 @@ export interface GeneratedAnswerControllerOptions {
   getBindings: () => AnyBindings;
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: hack
+type HTMLAtomicGeneratedAnswerFeedbackModalElement = HTMLElement & any;
+
 /**
  * Reactive controller managing shared logic for generated answer components.
  * Handles storage, modal interactions, feedback, and clipboard operations.

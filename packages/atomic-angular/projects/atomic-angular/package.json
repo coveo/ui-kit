@@ -15,5 +15,17 @@
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
-  }
+  },
+  "module": "fesm2022/coveo-atomic-angular.mjs",
+  "typings": "index.d.ts",
+  "exports": {
+    "./package.json": {
+      "default": "./dist/package.json"
+    },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/fesm2022/coveo-atomic-angular.mjs"
+    }
+  },
+  "sideEffects": false
 }
