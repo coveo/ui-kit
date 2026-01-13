@@ -38,6 +38,11 @@ import {
   type InteractiveProductProps,
 } from '../interactive-product/headless-core-interactive-product.js';
 import {
+  buildCoreInteractiveSpotlightContent,
+  type InteractiveSpotlightContent,
+  type InteractiveSpotlightContentProps,
+} from '../interactive-spotlight-content/headless-core-interactive-spotlight-content.js';
+import {
   buildCorePagination,
   type Pagination,
   type PaginationProps,
@@ -135,6 +140,21 @@ export interface SearchSubControllers
   didYouMean(): DidYouMean;
 }
 
+export interface ProductListingSubControllers
+  extends SearchAndListingSubControllers<
+    ProductListingParameters,
+    ProductListingSummaryState
+  > {
+  /**
+   * Creates an `InteractiveSpotlightContent` sub-controller, for use when `enableResults` is set on the controller.
+   * @param props - The properties for the `InteractiveSpotlightContent` sub-controller.
+   * @returns An `InteractiveSpotlightContent` sub-controller.
+   */
+  interactiveSpotlightContent(
+    props: InteractiveSpotlightContentProps
+  ): InteractiveSpotlightContent;
+}
+
 interface BaseSubControllerProps<S extends SummaryState> {
   responseIdSelector: (state: CommerceEngineState) => string;
   isLoadingSelector: (state: CommerceEngineState) => boolean;
@@ -214,14 +234,20 @@ export function buildProductListingSubControllers(
     >,
     'facetSearchType'
   >
-): SearchAndListingSubControllers<
-  ProductListingParameters,
-  ProductListingSummaryState
-> {
-  return buildSearchAndListingsSubControllers(engine, {
-    ...subControllerProps,
-    facetSearchType: 'LISTING',
-  });
+): ProductListingSubControllers {
+  const {responseIdSelector} = subControllerProps;
+  return {
+    ...buildSearchAndListingsSubControllers(engine, {
+      ...subControllerProps,
+      facetSearchType: 'LISTING',
+    }),
+    interactiveSpotlightContent(props: InteractiveSpotlightContentProps) {
+      return buildCoreInteractiveSpotlightContent(engine, {
+        ...props,
+        responseIdSelector,
+      });
+    },
+  };
 }
 
 /**

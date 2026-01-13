@@ -64,6 +64,8 @@ export class AtomicTabButton
   @errorGuard()
   render() {
     const buttonClasses = [
+      'relative',
+      'overflow-hidden',
       'w-full',
       'truncate',
       'px-2',

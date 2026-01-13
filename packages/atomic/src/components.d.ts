@@ -5,31 +5,29 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
-import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
+import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InteractiveCitation, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, UserAction as IUserAction } from "@coveo/headless/insight";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-import { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
+import { InteractiveResult as RecsInteractiveResult, Result as RecsResult } from "@coveo/headless/recommendation";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
-import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
-export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
-export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "@coveo/headless/insight";
+export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InteractiveCitation, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, UserAction as IUserAction } from "@coveo/headless/insight";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-export { InteractiveResult as RecsInteractiveResult, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
+export { InteractiveResult as RecsInteractiveResult, Result as RecsResult } from "@coveo/headless/recommendation";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
-export { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { i18n } from "i18next";
 export { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
@@ -76,10 +74,6 @@ export namespace Components {
           * Indicates whether the modal is open.
          */
         "isOpen": boolean;
-    }
-    interface AtomicInsightEditToggle {
-        "clickCallback": () => void;
-        "tooltip": string;
     }
     interface AtomicInsightFacet {
         /**
@@ -160,9 +154,6 @@ export namespace Components {
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
-    interface AtomicInsightFullSearchButton {
-        "tooltip": string;
-    }
     interface AtomicInsightGeneratedAnswer {
         "answerConfigurationId"?: string;
         /**
@@ -192,14 +183,6 @@ export namespace Components {
     interface AtomicInsightHistoryToggle {
         "clickCallback": () => void;
         "tooltip": string;
-    }
-    interface AtomicInsightLayout {
-        /**
-          * Whether the interface should be shown in widget format.
-         */
-        "widget": boolean;
-    }
-    interface AtomicInsightNoResults {
     }
     interface AtomicInsightNumericFacet {
         /**
@@ -254,16 +237,6 @@ export namespace Components {
           * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
         "withInput"?: NumberInputType;
-    }
-    interface AtomicInsightPager {
-        /**
-          * Specifies how many page buttons to display in the pager.
-         */
-        "numberOfPages": number;
-    }
-    interface AtomicInsightQueryError {
-    }
-    interface AtomicInsightQuerySummary {
     }
     interface AtomicInsightRefineModal {
         "isOpen": boolean;
@@ -396,38 +369,6 @@ export namespace Components {
           * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
          */
         "sandbox": string;
-    }
-    interface AtomicInsightResultTemplate {
-        /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
-         */
-        "conditions": InsightResultTemplateCondition[];
-        /**
-          * Gets the appropriate result template based on conditions applied.
-         */
-        "getTemplate": () => Promise<InsightResultTemplate<DocumentFragment> | null>;
-        /**
-          * The field that, when defined on a result item, would allow the template to be applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
-         */
-        "ifDefined"?: string;
-        /**
-          * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
-         */
-        "ifNotDefined"?: string;
-        /**
-          * The field and values that define which result items the condition must be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
-         */
-        "mustMatch": Record<
-    string,
-    string[]
-  >;
-        /**
-          * The field and values that define which result items the condition must not be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
-         */
-        "mustNotMatch": Record<
-    string,
-    string[]
-  >;
     }
     interface AtomicInsightSearchBox {
         /**
@@ -565,24 +506,6 @@ export namespace Components {
          */
         "userId": string;
     }
-    /**
-     * Internal component of the atomic-insight-interface
-     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
-     */
-    interface AtomicInsightUserActionsToggle {
-        /**
-          * The names of custom events to exclude.
-         */
-        "excludedCustomActions": string[];
-        /**
-          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
-         */
-        "ticketCreationDateTime": string;
-        /**
-          * The ID of the user whose actions are being displayed.
-         */
-        "userId": string;
-    }
     interface AtomicIpxBody {
         "displayFooterSlot": boolean;
         "isOpen"?: boolean;
@@ -693,72 +616,6 @@ export namespace Components {
         "hrefTemplate"?: string;
     }
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
-     * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
-     */
-    interface AtomicNumericFacet {
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc   ... ></atomic-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc="doc"   ... ></atomic-numeric-facet> ```
-         */
-        "dependsOn": Record<string, string>;
-        /**
-          * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
-         */
-        "displayValuesAs": 'checkbox' | 'link';
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount": boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel": number;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth": number;
-        /**
-          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
-         */
-        "isCollapsed": boolean;
-        /**
-          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label": string;
-        /**
-          * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
-         */
-        "numberOfValues": number;
-        /**
-          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
-         */
-        "rangeAlgorithm": RangeFacetRangeAlgorithm;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
-         */
-        "sortCriteria": RangeFacetSortCriterion;
-        /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded": string[] | string;
-        /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded": string[] | string;
-        /**
-          * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
-         */
-        "withInput"?: NumberInputType;
-    }
-    /**
      * The modal opened when clicking a quickview button.
      * Do not use this component directly; use `atomic-quickview` instead.
      */
@@ -770,11 +627,6 @@ export namespace Components {
         "result"?: Result;
         "sandbox"?: string;
         "total"?: number;
-    }
-    /**
-     * The `atomic-recs-error` component handles fatal errors when performing a recommendations request on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
-     */
-    interface AtomicRecsError {
     }
     /**
      * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
@@ -878,186 +730,6 @@ export namespace Components {
         "store"?: RecsStore;
     }
     /**
-     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * A `template` element must be the child of an `atomic-recs-result-template`, and an `atomic-recs-list` must be the parent of each `atomic-recs-result-template`.
-     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface AtomicRecsResultTemplate {
-        /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
-         */
-        "conditions": RecsResultTemplateCondition[];
-        /**
-          * Gets the appropriate result template based on the conditions applied.
-         */
-        "getTemplate": () => Promise<RecsResultTemplate<DocumentFragment> | null>;
-        /**
-          * The field that, when defined on a result item, would allow the template to be applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
-         */
-        "ifDefined"?: string;
-        /**
-          * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
-         */
-        "ifNotDefined"?: string;
-        /**
-          * The field and values that define which result items the condition must be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
-         */
-        "mustMatch": Record<
-    string,
-    string[]
-  >;
-        /**
-          * The field and values that define which result items the condition must not be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
-         */
-        "mustNotMatch": Record<
-    string,
-    string[]
-  >;
-    }
-    /**
-     * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
-     */
-    interface AtomicRefineModal {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter": number;
-        "isOpen": boolean;
-        "openButton"?: HTMLElement;
-    }
-    /**
-     * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface AtomicResultPlaceholder {
-        "density": ItemDisplayDensity;
-        "display": ItemDisplayLayout;
-        "imageSize": ItemDisplayImageSize;
-    }
-    /**
-     * The `atomic-search-box` component creates a search box with built-in support for suggestions.
-     */
-    interface AtomicSearchBox {
-        /**
-          * Whether to clear all active query filters when the end user submits a new query from the search box. Setting this option to "false" is not recommended and can lead to an increasing number of queries returning no results.
-         */
-        "clearFilters": boolean;
-        /**
-          * Whether to prevent the user from triggering searches and query suggestions from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
-         */
-        "disableSearch": boolean;
-        /**
-          * Whether to interpret advanced [Coveo query syntax](https://docs.coveo.com/en/1552/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
-         */
-        "enableQuerySyntax": boolean;
-        /**
-          * The minimum query length required to enable search. For example, to disable the search for empty queries, set this to `1`.
-         */
-        "minimumQueryLength": number;
-        /**
-          * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
-         */
-        "numberOfQueries": number;
-        /**
-          * Defining this option makes the search box standalone (see [Use a Standalone Search Box](https://docs.coveo.com/en/atomic/latest/usage/ssb/)).  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
-         */
-        "redirectionUrl"?: string;
-        /**
-          * The delay for suggestion queries on input, in milliseconds.  The suggestion request will be delayed until the end user stops typing for at least the specified amount of time.  This delay is used to avoid sending too many requests to the Coveo Platform when the user is typing, as well as reducing potential input lag on low end devices. A higher delay will reduce input lag, at the cost of suggestions freshness.
-         */
-        "suggestionDelay": number;
-        /**
-          * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
-         */
-        "suggestionTimeout": number;
-    }
-    /**
-     * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
-     * You can style the snippet by inserting a template element as follows:
-     * ```html
-     * <atomic-smart-snippet>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet>
-     * ```
-     */
-    interface AtomicSmartSnippet {
-        /**
-          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
-         */
-        "collapsedHeight": number;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
-         */
-        "headingLevel": number;
-        /**
-          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
-         */
-        "maximumHeight": number;
-        "snippetCollapsedHeight"?: number;
-        "snippetMaximumHeight"?: number;
-        /**
-          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
-        /**
-          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded": string[] | string;
-        /**
-          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded": string[] | string;
-    }
-    interface AtomicSmartSnippetAnswer {
-        "htmlContent": string;
-        "innerStyle"?: string;
-    }
-    /**
-     * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
-     */
-    interface AtomicSmartSnippetFeedbackModal {
-        "isOpen": boolean;
-        "source"?: HTMLElement;
-    }
-    interface AtomicSmartSnippetSource {
-        "anchorAttributes"?: Attr[];
-        "source": Result;
-    }
-    /**
-     * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
-     * You can style the snippets by inserting a template element like this:
-     * ```html
-     * <atomic-smart-snippet-suggestions>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet-suggestions>
-     * ```
-     */
-    interface AtomicSmartSnippetSuggestions {
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
-         */
-        "headingLevel": number;
-        /**
-          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
-    }
-    /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
      * Internal component made to be integrated in a TimeframeFacet.
      */
@@ -1155,10 +827,6 @@ export interface AtomicGeneratedAnswerFeedbackModalCustomEvent<T> extends Custom
     detail: T;
     target: HTMLAtomicGeneratedAnswerFeedbackModalElement;
 }
-export interface AtomicInsightPagerCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicInsightPagerElement;
-}
 export interface AtomicInsightResultActionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicInsightResultActionElement;
@@ -1186,22 +854,6 @@ export interface AtomicIpxModalCustomEvent<T> extends CustomEvent<T> {
 export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicQuickviewModalElement;
-}
-export interface AtomicSearchBoxCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicSearchBoxElement;
-}
-export interface AtomicSmartSnippetAnswerCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicSmartSnippetAnswerElement;
-}
-export interface AtomicSmartSnippetFeedbackModalCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicSmartSnippetFeedbackModalElement;
-}
-export interface AtomicSmartSnippetSourceCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicSmartSnippetSourceElement;
 }
 export interface AtomicStencilFacetDateInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1237,12 +889,6 @@ declare global {
         prototype: HTMLAtomicGeneratedAnswerFeedbackModalElement;
         new (): HTMLAtomicGeneratedAnswerFeedbackModalElement;
     };
-    interface HTMLAtomicInsightEditToggleElement extends Components.AtomicInsightEditToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightEditToggleElement: {
-        prototype: HTMLAtomicInsightEditToggleElement;
-        new (): HTMLAtomicInsightEditToggleElement;
-    };
     interface HTMLAtomicInsightFacetElement extends Components.AtomicInsightFacet, HTMLStencilElement {
     }
     var HTMLAtomicInsightFacetElement: {
@@ -1254,12 +900,6 @@ declare global {
     var HTMLAtomicInsightFoldedResultListElement: {
         prototype: HTMLAtomicInsightFoldedResultListElement;
         new (): HTMLAtomicInsightFoldedResultListElement;
-    };
-    interface HTMLAtomicInsightFullSearchButtonElement extends Components.AtomicInsightFullSearchButton, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightFullSearchButtonElement: {
-        prototype: HTMLAtomicInsightFullSearchButtonElement;
-        new (): HTMLAtomicInsightFullSearchButtonElement;
     };
     interface HTMLAtomicInsightGeneratedAnswerElement extends Components.AtomicInsightGeneratedAnswer, HTMLStencilElement {
     }
@@ -1273,52 +913,11 @@ declare global {
         prototype: HTMLAtomicInsightHistoryToggleElement;
         new (): HTMLAtomicInsightHistoryToggleElement;
     };
-    interface HTMLAtomicInsightLayoutElement extends Components.AtomicInsightLayout, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightLayoutElement: {
-        prototype: HTMLAtomicInsightLayoutElement;
-        new (): HTMLAtomicInsightLayoutElement;
-    };
-    interface HTMLAtomicInsightNoResultsElement extends Components.AtomicInsightNoResults, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightNoResultsElement: {
-        prototype: HTMLAtomicInsightNoResultsElement;
-        new (): HTMLAtomicInsightNoResultsElement;
-    };
     interface HTMLAtomicInsightNumericFacetElement extends Components.AtomicInsightNumericFacet, HTMLStencilElement {
     }
     var HTMLAtomicInsightNumericFacetElement: {
         prototype: HTMLAtomicInsightNumericFacetElement;
         new (): HTMLAtomicInsightNumericFacetElement;
-    };
-    interface HTMLAtomicInsightPagerElementEventMap {
-        "atomic/scrollToTop": any;
-    }
-    interface HTMLAtomicInsightPagerElement extends Components.AtomicInsightPager, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicInsightPagerElementEventMap>(type: K, listener: (this: HTMLAtomicInsightPagerElement, ev: AtomicInsightPagerCustomEvent<HTMLAtomicInsightPagerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicInsightPagerElementEventMap>(type: K, listener: (this: HTMLAtomicInsightPagerElement, ev: AtomicInsightPagerCustomEvent<HTMLAtomicInsightPagerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicInsightPagerElement: {
-        prototype: HTMLAtomicInsightPagerElement;
-        new (): HTMLAtomicInsightPagerElement;
-    };
-    interface HTMLAtomicInsightQueryErrorElement extends Components.AtomicInsightQueryError, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightQueryErrorElement: {
-        prototype: HTMLAtomicInsightQueryErrorElement;
-        new (): HTMLAtomicInsightQueryErrorElement;
-    };
-    interface HTMLAtomicInsightQuerySummaryElement extends Components.AtomicInsightQuerySummary, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightQuerySummaryElement: {
-        prototype: HTMLAtomicInsightQuerySummaryElement;
-        new (): HTMLAtomicInsightQuerySummaryElement;
     };
     interface HTMLAtomicInsightRefineModalElement extends Components.AtomicInsightRefineModal, HTMLStencilElement {
     }
@@ -1409,12 +1008,6 @@ declare global {
         prototype: HTMLAtomicInsightResultQuickviewActionElement;
         new (): HTMLAtomicInsightResultQuickviewActionElement;
     };
-    interface HTMLAtomicInsightResultTemplateElement extends Components.AtomicInsightResultTemplate, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightResultTemplateElement: {
-        prototype: HTMLAtomicInsightResultTemplateElement;
-        new (): HTMLAtomicInsightResultTemplateElement;
-    };
     interface HTMLAtomicInsightSearchBoxElement extends Components.AtomicInsightSearchBox, HTMLStencilElement {
     }
     var HTMLAtomicInsightSearchBoxElement: {
@@ -1485,16 +1078,6 @@ declare global {
     var HTMLAtomicInsightUserActionsTimelineElement: {
         prototype: HTMLAtomicInsightUserActionsTimelineElement;
         new (): HTMLAtomicInsightUserActionsTimelineElement;
-    };
-    /**
-     * Internal component of the atomic-insight-interface
-     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
-     */
-    interface HTMLAtomicInsightUserActionsToggleElement extends Components.AtomicInsightUserActionsToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightUserActionsToggleElement: {
-        prototype: HTMLAtomicInsightUserActionsToggleElement;
-        new (): HTMLAtomicInsightUserActionsToggleElement;
     };
     interface HTMLAtomicIpxBodyElementEventMap {
         "animationEnded": never;
@@ -1583,16 +1166,6 @@ declare global {
         prototype: HTMLAtomicIpxResultLinkElement;
         new (): HTMLAtomicIpxResultLinkElement;
     };
-    /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
-     * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
-     */
-    interface HTMLAtomicNumericFacetElement extends Components.AtomicNumericFacet, HTMLStencilElement {
-    }
-    var HTMLAtomicNumericFacetElement: {
-        prototype: HTMLAtomicNumericFacetElement;
-        new (): HTMLAtomicNumericFacetElement;
-    };
     interface HTMLAtomicQuickviewModalElementEventMap {
         "atomic/quickview/next": any;
         "atomic/quickview/previous": any;
@@ -1616,15 +1189,6 @@ declare global {
         new (): HTMLAtomicQuickviewModalElement;
     };
     /**
-     * The `atomic-recs-error` component handles fatal errors when performing a recommendations request on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
-     */
-    interface HTMLAtomicRecsErrorElement extends Components.AtomicRecsError, HTMLStencilElement {
-    }
-    var HTMLAtomicRecsErrorElement: {
-        prototype: HTMLAtomicRecsErrorElement;
-        new (): HTMLAtomicRecsErrorElement;
-    };
-    /**
      * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
      */
     interface HTMLAtomicRecsListElement extends Components.AtomicRecsList, HTMLStencilElement {
@@ -1641,160 +1205,6 @@ declare global {
     var HTMLAtomicRecsResultElement: {
         prototype: HTMLAtomicRecsResultElement;
         new (): HTMLAtomicRecsResultElement;
-    };
-    /**
-     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * A `template` element must be the child of an `atomic-recs-result-template`, and an `atomic-recs-list` must be the parent of each `atomic-recs-result-template`.
-     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface HTMLAtomicRecsResultTemplateElement extends Components.AtomicRecsResultTemplate, HTMLStencilElement {
-    }
-    var HTMLAtomicRecsResultTemplateElement: {
-        prototype: HTMLAtomicRecsResultTemplateElement;
-        new (): HTMLAtomicRecsResultTemplateElement;
-    };
-    /**
-     * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
-     */
-    interface HTMLAtomicRefineModalElement extends Components.AtomicRefineModal, HTMLStencilElement {
-    }
-    var HTMLAtomicRefineModalElement: {
-        prototype: HTMLAtomicRefineModalElement;
-        new (): HTMLAtomicRefineModalElement;
-    };
-    /**
-     * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface HTMLAtomicResultPlaceholderElement extends Components.AtomicResultPlaceholder, HTMLStencilElement {
-    }
-    var HTMLAtomicResultPlaceholderElement: {
-        prototype: HTMLAtomicResultPlaceholderElement;
-        new (): HTMLAtomicResultPlaceholderElement;
-    };
-    interface HTMLAtomicSearchBoxElementEventMap {
-        "redirect": RedirectionPayload;
-    }
-    /**
-     * The `atomic-search-box` component creates a search box with built-in support for suggestions.
-     */
-    interface HTMLAtomicSearchBoxElement extends Components.AtomicSearchBox, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicSearchBoxElementEventMap>(type: K, listener: (this: HTMLAtomicSearchBoxElement, ev: AtomicSearchBoxCustomEvent<HTMLAtomicSearchBoxElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicSearchBoxElementEventMap>(type: K, listener: (this: HTMLAtomicSearchBoxElement, ev: AtomicSearchBoxCustomEvent<HTMLAtomicSearchBoxElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicSearchBoxElement: {
-        prototype: HTMLAtomicSearchBoxElement;
-        new (): HTMLAtomicSearchBoxElement;
-    };
-    /**
-     * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
-     * You can style the snippet by inserting a template element as follows:
-     * ```html
-     * <atomic-smart-snippet>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet>
-     * ```
-     */
-    interface HTMLAtomicSmartSnippetElement extends Components.AtomicSmartSnippet, HTMLStencilElement {
-    }
-    var HTMLAtomicSmartSnippetElement: {
-        prototype: HTMLAtomicSmartSnippetElement;
-        new (): HTMLAtomicSmartSnippetElement;
-    };
-    interface HTMLAtomicSmartSnippetAnswerElementEventMap {
-        "answerSizeUpdated": {height: number};
-        "selectInlineLink": InlineLink;
-        "beginDelayedSelectInlineLink": InlineLink;
-        "cancelPendingSelectInlineLink": InlineLink;
-    }
-    interface HTMLAtomicSmartSnippetAnswerElement extends Components.AtomicSmartSnippetAnswer, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicSmartSnippetAnswerElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetAnswerElement, ev: AtomicSmartSnippetAnswerCustomEvent<HTMLAtomicSmartSnippetAnswerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicSmartSnippetAnswerElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetAnswerElement, ev: AtomicSmartSnippetAnswerCustomEvent<HTMLAtomicSmartSnippetAnswerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicSmartSnippetAnswerElement: {
-        prototype: HTMLAtomicSmartSnippetAnswerElement;
-        new (): HTMLAtomicSmartSnippetAnswerElement;
-    };
-    interface HTMLAtomicSmartSnippetFeedbackModalElementEventMap {
-        "feedbackSent": any;
-    }
-    /**
-     * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
-     */
-    interface HTMLAtomicSmartSnippetFeedbackModalElement extends Components.AtomicSmartSnippetFeedbackModal, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicSmartSnippetFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetFeedbackModalElement, ev: AtomicSmartSnippetFeedbackModalCustomEvent<HTMLAtomicSmartSnippetFeedbackModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicSmartSnippetFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetFeedbackModalElement, ev: AtomicSmartSnippetFeedbackModalCustomEvent<HTMLAtomicSmartSnippetFeedbackModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicSmartSnippetFeedbackModalElement: {
-        prototype: HTMLAtomicSmartSnippetFeedbackModalElement;
-        new (): HTMLAtomicSmartSnippetFeedbackModalElement;
-    };
-    interface HTMLAtomicSmartSnippetSourceElementEventMap {
-        "selectSource": any;
-        "beginDelayedSelectSource": any;
-        "cancelPendingSelectSource": any;
-    }
-    interface HTMLAtomicSmartSnippetSourceElement extends Components.AtomicSmartSnippetSource, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicSmartSnippetSourceElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetSourceElement, ev: AtomicSmartSnippetSourceCustomEvent<HTMLAtomicSmartSnippetSourceElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicSmartSnippetSourceElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetSourceElement, ev: AtomicSmartSnippetSourceCustomEvent<HTMLAtomicSmartSnippetSourceElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicSmartSnippetSourceElement: {
-        prototype: HTMLAtomicSmartSnippetSourceElement;
-        new (): HTMLAtomicSmartSnippetSourceElement;
-    };
-    /**
-     * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
-     * You can style the snippets by inserting a template element like this:
-     * ```html
-     * <atomic-smart-snippet-suggestions>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet-suggestions>
-     * ```
-     */
-    interface HTMLAtomicSmartSnippetSuggestionsElement extends Components.AtomicSmartSnippetSuggestions, HTMLStencilElement {
-    }
-    var HTMLAtomicSmartSnippetSuggestionsElement: {
-        prototype: HTMLAtomicSmartSnippetSuggestionsElement;
-        new (): HTMLAtomicSmartSnippetSuggestionsElement;
     };
     interface HTMLAtomicStencilFacetDateInputElementEventMap {
         "atomic/dateInputApply": any;
@@ -1842,18 +1252,11 @@ declare global {
     interface HTMLElementTagNameMap {
         "atomic-citation": HTMLAtomicCitationElement;
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
-        "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
-        "atomic-insight-full-search-button": HTMLAtomicInsightFullSearchButtonElement;
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
         "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
-        "atomic-insight-layout": HTMLAtomicInsightLayoutElement;
-        "atomic-insight-no-results": HTMLAtomicInsightNoResultsElement;
         "atomic-insight-numeric-facet": HTMLAtomicInsightNumericFacetElement;
-        "atomic-insight-pager": HTMLAtomicInsightPagerElement;
-        "atomic-insight-query-error": HTMLAtomicInsightQueryErrorElement;
-        "atomic-insight-query-summary": HTMLAtomicInsightQuerySummaryElement;
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
         "atomic-insight-refine-toggle": HTMLAtomicInsightRefineToggleElement;
         "atomic-insight-result": HTMLAtomicInsightResultElement;
@@ -1865,7 +1268,6 @@ declare global {
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
         "atomic-insight-result-quickview-action": HTMLAtomicInsightResultQuickviewActionElement;
-        "atomic-insight-result-template": HTMLAtomicInsightResultTemplateElement;
         "atomic-insight-search-box": HTMLAtomicInsightSearchBoxElement;
         "atomic-insight-smart-snippet": HTMLAtomicInsightSmartSnippetElement;
         "atomic-insight-smart-snippet-feedback-modal": HTMLAtomicInsightSmartSnippetFeedbackModalElement;
@@ -1874,7 +1276,6 @@ declare global {
         "atomic-insight-user-actions-modal": HTMLAtomicInsightUserActionsModalElement;
         "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
         "atomic-insight-user-actions-timeline": HTMLAtomicInsightUserActionsTimelineElement;
-        "atomic-insight-user-actions-toggle": HTMLAtomicInsightUserActionsToggleElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-button": HTMLAtomicIpxButtonElement;
         "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
@@ -1883,20 +1284,9 @@ declare global {
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
         "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
-        "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
-        "atomic-recs-error": HTMLAtomicRecsErrorElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-recs-result": HTMLAtomicRecsResultElement;
-        "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
-        "atomic-refine-modal": HTMLAtomicRefineModalElement;
-        "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
-        "atomic-search-box": HTMLAtomicSearchBoxElement;
-        "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
-        "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
-        "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
-        "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
-        "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
@@ -1946,10 +1336,6 @@ declare namespace LocalJSX {
          */
         "isOpen"?: boolean;
         "onFeedbackSent"?: (event: AtomicGeneratedAnswerFeedbackModalCustomEvent<any>) => void;
-    }
-    interface AtomicInsightEditToggle {
-        "clickCallback"?: () => void;
-        "tooltip"?: string;
     }
     interface AtomicInsightFacet {
         /**
@@ -2026,9 +1412,6 @@ declare namespace LocalJSX {
          */
         "parentField"?: string;
     }
-    interface AtomicInsightFullSearchButton {
-        "tooltip"?: string;
-    }
     interface AtomicInsightGeneratedAnswer {
         "answerConfigurationId"?: string;
         /**
@@ -2058,14 +1441,6 @@ declare namespace LocalJSX {
     interface AtomicInsightHistoryToggle {
         "clickCallback"?: () => void;
         "tooltip"?: string;
-    }
-    interface AtomicInsightLayout {
-        /**
-          * Whether the interface should be shown in widget format.
-         */
-        "widget"?: boolean;
-    }
-    interface AtomicInsightNoResults {
     }
     interface AtomicInsightNumericFacet {
         /**
@@ -2120,17 +1495,6 @@ declare namespace LocalJSX {
           * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
          */
         "withInput"?: NumberInputType;
-    }
-    interface AtomicInsightPager {
-        /**
-          * Specifies how many page buttons to display in the pager.
-         */
-        "numberOfPages"?: number;
-        "onAtomic/scrollToTop"?: (event: AtomicInsightPagerCustomEvent<any>) => void;
-    }
-    interface AtomicInsightQueryError {
-    }
-    interface AtomicInsightQuerySummary {
     }
     interface AtomicInsightRefineModal {
         "isOpen"?: boolean;
@@ -2257,34 +1621,6 @@ declare namespace LocalJSX {
           * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
          */
         "sandbox"?: string;
-    }
-    interface AtomicInsightResultTemplate {
-        /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
-         */
-        "conditions"?: InsightResultTemplateCondition[];
-        /**
-          * The field that, when defined on a result item, would allow the template to be applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
-         */
-        "ifDefined"?: string;
-        /**
-          * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
-         */
-        "ifNotDefined"?: string;
-        /**
-          * The field and values that define which result items the condition must be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
-         */
-        "mustMatch"?: Record<
-    string,
-    string[]
-  >;
-        /**
-          * The field and values that define which result items the condition must not be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
-         */
-        "mustNotMatch"?: Record<
-    string,
-    string[]
-  >;
     }
     interface AtomicInsightSearchBox {
         /**
@@ -2423,24 +1759,6 @@ declare namespace LocalJSX {
          */
         "userId": string;
     }
-    /**
-     * Internal component of the atomic-insight-interface
-     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
-     */
-    interface AtomicInsightUserActionsToggle {
-        /**
-          * The names of custom events to exclude.
-         */
-        "excludedCustomActions"?: string[];
-        /**
-          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
-         */
-        "ticketCreationDateTime": string;
-        /**
-          * The ID of the user whose actions are being displayed.
-         */
-        "userId": string;
-    }
     interface AtomicIpxBody {
         "displayFooterSlot"?: boolean;
         "isOpen"?: boolean;
@@ -2541,72 +1859,6 @@ declare namespace LocalJSX {
         "hrefTemplate"?: string;
     }
     /**
-     * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
-     * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
-     */
-    interface AtomicNumericFacet {
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc   ... ></atomic-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc="doc"   ... ></atomic-numeric-facet> ```
-         */
-        "dependsOn"?: Record<string, string>;
-        /**
-          * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
-         */
-        "displayValuesAs"?: 'checkbox' | 'link';
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount"?: boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel"?: number;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth"?: number;
-        /**
-          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
-         */
-        "isCollapsed"?: boolean;
-        /**
-          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
-         */
-        "numberOfValues"?: number;
-        /**
-          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
-         */
-        "rangeAlgorithm"?: RangeFacetRangeAlgorithm;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
-         */
-        "sortCriteria"?: RangeFacetSortCriterion;
-        /**
-          * The tabs on which this facet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded"?: string[] | string;
-        /**
-          * The tabs on which the facet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-timeframe-facet tabs-included='["tabIDA", "tabIDB"]'></atomic-timeframe-facet> ``` If you don't set this property, the facet can be displayed on any tab. Otherwise, the facet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded"?: string[] | string;
-        /**
-          * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
-         */
-        "withInput"?: NumberInputType;
-    }
-    /**
      * The modal opened when clicking a quickview button.
      * Do not use this component directly; use `atomic-quickview` instead.
      */
@@ -2619,11 +1871,6 @@ declare namespace LocalJSX {
         "result"?: Result;
         "sandbox"?: string;
         "total"?: number;
-    }
-    /**
-     * The `atomic-recs-error` component handles fatal errors when performing a recommendations request on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
-     */
-    interface AtomicRecsError {
     }
     /**
      * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
@@ -2712,194 +1959,6 @@ declare namespace LocalJSX {
           * Global Atomic state.
          */
         "store"?: RecsStore;
-    }
-    /**
-     * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-     * A `template` element must be the child of an `atomic-recs-result-template`, and an `atomic-recs-list` must be the parent of each `atomic-recs-result-template`.
-     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface AtomicRecsResultTemplate {
-        /**
-          * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
-         */
-        "conditions"?: RecsResultTemplateCondition[];
-        /**
-          * The field that, when defined on a result item, would allow the template to be applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
-         */
-        "ifDefined"?: string;
-        /**
-          * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
-         */
-        "ifNotDefined"?: string;
-        /**
-          * The field and values that define which result items the condition must be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
-         */
-        "mustMatch"?: Record<
-    string,
-    string[]
-  >;
-        /**
-          * The field and values that define which result items the condition must not be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
-         */
-        "mustNotMatch"?: Record<
-    string,
-    string[]
-  >;
-    }
-    /**
-     * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
-     */
-    interface AtomicRefineModal {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter"?: number;
-        "isOpen"?: boolean;
-        "openButton"?: HTMLElement;
-    }
-    /**
-     * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-     */
-    interface AtomicResultPlaceholder {
-        "density": ItemDisplayDensity;
-        "display": ItemDisplayLayout;
-        "imageSize": ItemDisplayImageSize;
-    }
-    /**
-     * The `atomic-search-box` component creates a search box with built-in support for suggestions.
-     */
-    interface AtomicSearchBox {
-        /**
-          * Whether to clear all active query filters when the end user submits a new query from the search box. Setting this option to "false" is not recommended and can lead to an increasing number of queries returning no results.
-         */
-        "clearFilters"?: boolean;
-        /**
-          * Whether to prevent the user from triggering searches and query suggestions from the component. Perfect for use cases where you need to disable the search conditionally. For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
-         */
-        "disableSearch"?: boolean;
-        /**
-          * Whether to interpret advanced [Coveo query syntax](https://docs.coveo.com/en/1552/) in the query. You should only enable query syntax in the search box if you have good reasons to do so, as it requires end users to be familiar with Coveo query syntax, otherwise they will likely be surprised by the search box behaviour.  When the `redirection-url` property is set and redirects to a page with more `atomic-search-box` components, all `atomic-search-box` components need to have the same `enable-query-syntax` value.
-         */
-        "enableQuerySyntax"?: boolean;
-        /**
-          * The minimum query length required to enable search. For example, to disable the search for empty queries, set this to `1`.
-         */
-        "minimumQueryLength"?: number;
-        /**
-          * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
-         */
-        "numberOfQueries"?: number;
-        /**
-          * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.  Example: ```html <script>   document.querySelector('atomic-search-box').addEventListener((e) => {     e.preventDefault();     // handle redirection   }); </script> ... <atomic-search-box redirection-url="/search"></atomic-search-box> ```
-         */
-        "onRedirect"?: (event: AtomicSearchBoxCustomEvent<RedirectionPayload>) => void;
-        /**
-          * Defining this option makes the search box standalone (see [Use a Standalone Search Box](https://docs.coveo.com/en/atomic/latest/usage/ssb/)).  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
-         */
-        "redirectionUrl"?: string;
-        /**
-          * The delay for suggestion queries on input, in milliseconds.  The suggestion request will be delayed until the end user stops typing for at least the specified amount of time.  This delay is used to avoid sending too many requests to the Coveo Platform when the user is typing, as well as reducing potential input lag on low end devices. A higher delay will reduce input lag, at the cost of suggestions freshness.
-         */
-        "suggestionDelay"?: number;
-        /**
-          * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
-         */
-        "suggestionTimeout"?: number;
-    }
-    /**
-     * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
-     * You can style the snippet by inserting a template element as follows:
-     * ```html
-     * <atomic-smart-snippet>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet>
-     * ```
-     */
-    interface AtomicSmartSnippet {
-        /**
-          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
-         */
-        "collapsedHeight"?: number;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
-         */
-        "headingLevel"?: number;
-        /**
-          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
-         */
-        "maximumHeight"?: number;
-        "snippetCollapsedHeight"?: number;
-        "snippetMaximumHeight"?: number;
-        /**
-          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
-        /**
-          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded"?: string[] | string;
-        /**
-          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded"?: string[] | string;
-    }
-    interface AtomicSmartSnippetAnswer {
-        "htmlContent": string;
-        "innerStyle"?: string;
-        "onAnswerSizeUpdated"?: (event: AtomicSmartSnippetAnswerCustomEvent<{height: number}>) => void;
-        "onBeginDelayedSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
-        "onCancelPendingSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
-        "onSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
-    }
-    /**
-     * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
-     * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
-     */
-    interface AtomicSmartSnippetFeedbackModal {
-        "isOpen"?: boolean;
-        "onFeedbackSent"?: (event: AtomicSmartSnippetFeedbackModalCustomEvent<any>) => void;
-        "source"?: HTMLElement;
-    }
-    interface AtomicSmartSnippetSource {
-        "anchorAttributes"?: Attr[];
-        "onBeginDelayedSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
-        "onCancelPendingSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
-        "onSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
-        "source": Result;
-    }
-    /**
-     * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
-     * You can style the snippets by inserting a template element like this:
-     * ```html
-     * <atomic-smart-snippet-suggestions>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet-suggestions>
-     * ```
-     */
-    interface AtomicSmartSnippetSuggestions {
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
-         */
-        "headingLevel"?: number;
-        /**
-          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
     }
     /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
@@ -2998,18 +2057,11 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "atomic-citation": AtomicCitation;
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
-        "atomic-insight-edit-toggle": AtomicInsightEditToggle;
         "atomic-insight-facet": AtomicInsightFacet;
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
-        "atomic-insight-full-search-button": AtomicInsightFullSearchButton;
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
         "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
-        "atomic-insight-layout": AtomicInsightLayout;
-        "atomic-insight-no-results": AtomicInsightNoResults;
         "atomic-insight-numeric-facet": AtomicInsightNumericFacet;
-        "atomic-insight-pager": AtomicInsightPager;
-        "atomic-insight-query-error": AtomicInsightQueryError;
-        "atomic-insight-query-summary": AtomicInsightQuerySummary;
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
         "atomic-insight-refine-toggle": AtomicInsightRefineToggle;
         "atomic-insight-result": AtomicInsightResult;
@@ -3021,7 +2073,6 @@ declare namespace LocalJSX {
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
         "atomic-insight-result-list": AtomicInsightResultList;
         "atomic-insight-result-quickview-action": AtomicInsightResultQuickviewAction;
-        "atomic-insight-result-template": AtomicInsightResultTemplate;
         "atomic-insight-search-box": AtomicInsightSearchBox;
         "atomic-insight-smart-snippet": AtomicInsightSmartSnippet;
         "atomic-insight-smart-snippet-feedback-modal": AtomicInsightSmartSnippetFeedbackModal;
@@ -3030,7 +2081,6 @@ declare namespace LocalJSX {
         "atomic-insight-user-actions-modal": AtomicInsightUserActionsModal;
         "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
         "atomic-insight-user-actions-timeline": AtomicInsightUserActionsTimeline;
-        "atomic-insight-user-actions-toggle": AtomicInsightUserActionsToggle;
         "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-button": AtomicIpxButton;
         "atomic-ipx-embedded": AtomicIpxEmbedded;
@@ -3039,20 +2089,9 @@ declare namespace LocalJSX {
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
         "atomic-ipx-result-link": AtomicIpxResultLink;
-        "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-quickview-modal": AtomicQuickviewModal;
-        "atomic-recs-error": AtomicRecsError;
         "atomic-recs-list": AtomicRecsList;
         "atomic-recs-result": AtomicRecsResult;
-        "atomic-recs-result-template": AtomicRecsResultTemplate;
-        "atomic-refine-modal": AtomicRefineModal;
-        "atomic-result-placeholder": AtomicResultPlaceholder;
-        "atomic-search-box": AtomicSearchBox;
-        "atomic-smart-snippet": AtomicSmartSnippet;
-        "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
-        "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
-        "atomic-smart-snippet-source": AtomicSmartSnippetSource;
-        "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
@@ -3070,18 +2109,11 @@ declare module "@stencil/core" {
              * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
              */
             "atomic-generated-answer-feedback-modal": LocalJSX.AtomicGeneratedAnswerFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerFeedbackModalElement>;
-            "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;
             "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
-            "atomic-insight-full-search-button": LocalJSX.AtomicInsightFullSearchButton & JSXBase.HTMLAttributes<HTMLAtomicInsightFullSearchButtonElement>;
             "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
             "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
-            "atomic-insight-layout": LocalJSX.AtomicInsightLayout & JSXBase.HTMLAttributes<HTMLAtomicInsightLayoutElement>;
-            "atomic-insight-no-results": LocalJSX.AtomicInsightNoResults & JSXBase.HTMLAttributes<HTMLAtomicInsightNoResultsElement>;
             "atomic-insight-numeric-facet": LocalJSX.AtomicInsightNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightNumericFacetElement>;
-            "atomic-insight-pager": LocalJSX.AtomicInsightPager & JSXBase.HTMLAttributes<HTMLAtomicInsightPagerElement>;
-            "atomic-insight-query-error": LocalJSX.AtomicInsightQueryError & JSXBase.HTMLAttributes<HTMLAtomicInsightQueryErrorElement>;
-            "atomic-insight-query-summary": LocalJSX.AtomicInsightQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicInsightQuerySummaryElement>;
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
             "atomic-insight-refine-toggle": LocalJSX.AtomicInsightRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineToggleElement>;
             "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
@@ -3093,7 +2125,6 @@ declare module "@stencil/core" {
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
             "atomic-insight-result-quickview-action": LocalJSX.AtomicInsightResultQuickviewAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultQuickviewActionElement>;
-            "atomic-insight-result-template": LocalJSX.AtomicInsightResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultTemplateElement>;
             "atomic-insight-search-box": LocalJSX.AtomicInsightSearchBox & JSXBase.HTMLAttributes<HTMLAtomicInsightSearchBoxElement>;
             "atomic-insight-smart-snippet": LocalJSX.AtomicInsightSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetElement>;
             "atomic-insight-smart-snippet-feedback-modal": LocalJSX.AtomicInsightSmartSnippetFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetFeedbackModalElement>;
@@ -3114,11 +2145,6 @@ declare module "@stencil/core" {
              * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
              */
             "atomic-insight-user-actions-timeline": LocalJSX.AtomicInsightUserActionsTimeline & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsTimelineElement>;
-            /**
-             * Internal component of the atomic-insight-interface
-             * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
-             */
-            "atomic-insight-user-actions-toggle": LocalJSX.AtomicInsightUserActionsToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsToggleElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
             "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
@@ -3134,19 +2160,10 @@ declare module "@stencil/core" {
              */
             "atomic-ipx-result-link": LocalJSX.AtomicIpxResultLink & JSXBase.HTMLAttributes<HTMLAtomicIpxResultLinkElement>;
             /**
-             * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, ascending, descending).
-             * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
-             */
-            "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
-            /**
              * The modal opened when clicking a quickview button.
              * Do not use this component directly; use `atomic-quickview` instead.
              */
             "atomic-quickview-modal": LocalJSX.AtomicQuickviewModal & JSXBase.HTMLAttributes<HTMLAtomicQuickviewModalElement>;
-            /**
-             * The `atomic-recs-error` component handles fatal errors when performing a recommendations request on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
-             */
-            "atomic-recs-error": LocalJSX.AtomicRecsError & JSXBase.HTMLAttributes<HTMLAtomicRecsErrorElement>;
             /**
              * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
              */
@@ -3155,66 +2172,6 @@ declare module "@stencil/core" {
              * The `atomic-recs-result` component is used internally by the `atomic-recs-list` component.
              */
             "atomic-recs-result": LocalJSX.AtomicRecsResult & JSXBase.HTMLAttributes<HTMLAtomicRecsResultElement>;
-            /**
-             * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
-             * A `template` element must be the child of an `atomic-recs-result-template`, and an `atomic-recs-list` must be the parent of each `atomic-recs-result-template`.
-             * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the results are being rendered.
-             * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-             * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-             */
-            "atomic-recs-result-template": LocalJSX.AtomicRecsResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicRecsResultTemplateElement>;
-            /**
-             * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
-             * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
-             */
-            "atomic-refine-modal": LocalJSX.AtomicRefineModal & JSXBase.HTMLAttributes<HTMLAtomicRefineModalElement>;
-            /**
-             * The `atomic-result-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
-             */
-            "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
-            /**
-             * The `atomic-search-box` component creates a search box with built-in support for suggestions.
-             */
-            "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
-            /**
-             * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
-             * You can style the snippet by inserting a template element as follows:
-             * ```html
-             * <atomic-smart-snippet>
-             *   <template>
-             *     <style>
-             *       b {
-             *         color: blue;
-             *       }
-             *     </style>
-             *   </template>
-             * </atomic-smart-snippet>
-             * ```
-             */
-            "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
-            "atomic-smart-snippet-answer": LocalJSX.AtomicSmartSnippetAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetAnswerElement>;
-            /**
-             * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
-             * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
-             */
-            "atomic-smart-snippet-feedback-modal": LocalJSX.AtomicSmartSnippetFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetFeedbackModalElement>;
-            "atomic-smart-snippet-source": LocalJSX.AtomicSmartSnippetSource & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSourceElement>;
-            /**
-             * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
-             * You can style the snippets by inserting a template element like this:
-             * ```html
-             * <atomic-smart-snippet-suggestions>
-             *   <template>
-             *     <style>
-             *       b {
-             *         color: blue;
-             *       }
-             *     </style>
-             *   </template>
-             * </atomic-smart-snippet-suggestions>
-             * ```
-             */
-            "atomic-smart-snippet-suggestions": LocalJSX.AtomicSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSuggestionsElement>;
             /**
              * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
              * Internal component made to be integrated in a TimeframeFacet.

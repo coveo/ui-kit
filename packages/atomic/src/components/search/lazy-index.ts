@@ -38,6 +38,8 @@ export default {
     await import('./atomic-no-results/atomic-no-results.js'),
   'atomic-notifications': async () =>
     await import('./atomic-notifications/atomic-notifications.js'),
+  'atomic-numeric-facet': async () =>
+    await import('./atomic-numeric-facet/atomic-numeric-facet.js'),
   'atomic-pager': async () => await import('./atomic-pager/atomic-pager.js'),
   'atomic-popover': async () =>
     await import('./atomic-popover/atomic-popover.js'),
@@ -51,6 +53,8 @@ export default {
     await import('./atomic-rating-facet/atomic-rating-facet.js'),
   'atomic-rating-range-facet': async () =>
     await import('./atomic-rating-range-facet/atomic-rating-range-facet.js'),
+  'atomic-refine-modal': async () =>
+    await import('./atomic-refine-modal/atomic-refine-modal.js'),
   'atomic-refine-toggle': async () =>
     await import('./atomic-refine-toggle/atomic-refine-toggle.js'),
   'atomic-relevance-inspector': async () =>
@@ -142,6 +146,8 @@ export default {
     await import('./atomic-result-timespan/atomic-result-timespan.js'),
   'atomic-results-per-page': async () =>
     await import('./atomic-results-per-page/atomic-results-per-page.js'),
+  'atomic-search-box': async () =>
+    await import('./atomic-search-box/atomic-search-box.js'),
   'atomic-search-box-instant-results': async () =>
     await import(
       './atomic-search-box-instant-results/atomic-search-box-instant-results.js'
@@ -163,6 +169,16 @@ export default {
   'atomic-segmented-facet-scrollable': async () =>
     await import(
       './atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.js'
+    ),
+  'atomic-smart-snippet': async () =>
+    await import('./atomic-smart-snippet/atomic-smart-snippet.js'),
+  'atomic-smart-snippet-feedback-modal': async () =>
+    await import(
+      './atomic-smart-snippet-feedback-modal/atomic-smart-snippet-feedback-modal.js'
+    ),
+  'atomic-smart-snippet-suggestions': async () =>
+    await import(
+      './atomic-smart-snippet-suggestions/atomic-smart-snippet-suggestions.js'
     ),
   'atomic-sort-dropdown': async () =>
     await import('./atomic-sort-dropdown/atomic-sort-dropdown.js'),

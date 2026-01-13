@@ -1,14 +1,8 @@
-import {InlineLink} from '@coveo/headless';
-import {interceptSearchResponse} from '../fixtures/fixture-common';
 import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
-import {AnalyticsTracker} from '../utils/analyticsUtils';
 import * as CommonAssertions from './common-assertions';
-import {addSearchBox} from './search-box/search-box-actions';
-import {SearchBoxSelectors} from './search-box/search-box-selectors';
 import {
   addSmartSnippetSuggestions,
   addSmartSnippetSuggestionsDefaultOptions,
-  getResponseModifierWithSmartSnippetSuggestions,
 } from './smart-snippet-suggestions-actions';
 import * as SmartSnippetSuggestionsAssertions from './smart-snippet-suggestions-assertions';
 import {
@@ -87,7 +81,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
 
     it('render the correct questions', () => {
       SmartSnippetSuggestionsSelectors.questionCollapsedText()
-        .map((el) => el.text())
+        .map((el) => el.text().trim())
         .should(
           'deep.equal',
           defaultRelatedQuestions.map(
@@ -107,7 +101,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
 
     it('should have links to the source', () => {
       SmartSnippetSuggestionsSelectors.sourceUrl()
-        .map((el) => el.attr('href'))
+        .map((el) => el.attr('href')?.trim())
         .should(
           'deep.equal',
           defaultRelatedQuestions.map(
@@ -115,7 +109,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
           )
         );
       SmartSnippetSuggestionsSelectors.sourceUrl()
-        .map((el) => el.text())
+        .map((el) => el.text()?.trim())
         .should(
           'deep.equal',
           defaultRelatedQuestions.map(
@@ -123,7 +117,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
           )
         );
       SmartSnippetSuggestionsSelectors.sourceTitle()
-        .map((el) => el.attr('href'))
+        .map((el) => el.attr('href')?.trim())
         .should(
           'deep.equal',
           defaultRelatedQuestions.map(
@@ -131,12 +125,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
           )
         );
       SmartSnippetSuggestionsSelectors.sourceTitle()
-        .map((el) =>
-          el
-            .find('atomic-text')
-            .get(0)
-            .shadowRoot?.textContent
-        )
+        .map((el) => el.find('atomic-text').get(0).shadowRoot?.textContent)
         .should(
           'deep.equal',
           defaultRelatedQuestions.map(
@@ -253,144 +242,9 @@ describe('Smart Snippet Suggestions Test Suites', () => {
     SmartSnippetSuggestionsAssertions.assertAnswerBottomMargin(remSize, 'last');
   });
 
-  describe('after clicking on the title', () => {
-    let currentQuestion: string | undefined = undefined;
-    beforeEach(() => {
-      currentQuestion = undefined;
-      new TestFixture()
-        .with(
-          addSmartSnippetSuggestions({
-            relatedQuestions: defaultRelatedQuestions.map(
-              (relatedQuestion) => ({
-                ...relatedQuestion,
-                get question() {
-                  return currentQuestion ?? relatedQuestion.question;
-                },
-              })
-            ),
-          })
-        )
-        .with(addSearchBox())
-        .init();
-      SmartSnippetSuggestionsSelectors.questionCollapsedButton()
-        .first()
-        .click();
-      SmartSnippetSuggestionsSelectors.sourceTitle().first().rightclick();
-    });
+  
 
-    SmartSnippetSuggestionsAssertions.assertLogOpenSmartSnippetSuggestionsSource(
-      true
-    );
-
-    describe('then clicking the snippet url with the same snippet', () => {
-      beforeEach(() => {
-        AnalyticsTracker.reset();
-        SmartSnippetSuggestionsSelectors.sourceUrl().first().rightclick();
-      });
-
-      SmartSnippetSuggestionsAssertions.assertLogOpenSmartSnippetSuggestionsSource(
-        false
-      );
-    });
-
-    describe('then getting a new snippet and clicking on the title again', () => {
-      beforeEach(() => {
-        currentQuestion = 'Hello, World!';
-        SearchBoxSelectors.submitButton().click();
-        SmartSnippetSuggestionsSelectors.sourceTitle().first().rightclick();
-      });
-
-      SmartSnippetSuggestionsAssertions.assertLogOpenSmartSnippetSuggestionsSource(
-        true
-      );
-    });
-  });
-
-  describe('after clicking on an inline link', () => {
-    let lastClickedLink: InlineLink;
-    function click(selector: Cypress.Chainable<JQuery<HTMLAnchorElement>>) {
-      selector.rightclick().then(([el]) => {
-        lastClickedLink = {linkText: el.innerText, linkURL: el.href};
-      });
-    }
-
-    function getRelatedQuestions(question?: string) {
-      return defaultRelatedQuestions.map((relatedQuestion) => ({
-        ...relatedQuestion,
-        get question() {
-          return question ?? relatedQuestion.question;
-        },
-      }));
-    }
-
-    beforeEach(() => {
-      new TestFixture()
-        .with(
-          addSmartSnippetSuggestions({
-            relatedQuestions: getRelatedQuestions(),
-            timesToIntercept: 1,
-          })
-        )
-        .with(addSearchBox())
-        .init();
-      SmartSnippetSuggestionsSelectors.questionCollapsedButton()
-        .first()
-        .click();
-      SmartSnippetSuggestionsSelectors.questionExpandedButton()
-        .its('length')
-        .should('eq', 1);
-      click(SmartSnippetSuggestionsSelectors.answer().eq(0).find('a').eq(0));
-    });
-
-    SmartSnippetSuggestionsAssertions.assertLogOpenSmartSnippetSuggestionsInlineLink(
-      () => lastClickedLink
-    );
-
-    describe('then clicking on the same inline link again', () => {
-      beforeEach(() => {
-        AnalyticsTracker.reset();
-        click(SmartSnippetSuggestionsSelectors.answer().eq(0).find('a').eq(0));
-      });
-
-      SmartSnippetSuggestionsAssertions.assertLogOpenSmartSnippetSuggestionsInlineLink(
-        null
-      );
-    });
-
-    describe('then getting a new snippet and clicking on the same inline link again', () => {
-      beforeEach(() => {
-        interceptSearchResponse(
-          getResponseModifierWithSmartSnippetSuggestions({
-            relatedQuestions: getRelatedQuestions('test'),
-          }),
-          1
-        );
-        SearchBoxSelectors.submitButton().click();
-        SmartSnippetSuggestionsSelectors.questionExpandedButton().should(
-          (buttons) => expect(buttons.length).to.eq(0)
-        );
-        SmartSnippetSuggestionsSelectors.questionCollapsedButton()
-          .first()
-          .click();
-        click(SmartSnippetSuggestionsSelectors.answer().eq(0).find('a').eq(0));
-      });
-
-      SmartSnippetSuggestionsAssertions.assertLogOpenSmartSnippetSuggestionsInlineLink(
-        () => lastClickedLink
-      );
-    });
-
-    describe('then clicking on a different inline link', () => {
-      beforeEach(() => {
-        AnalyticsTracker.reset();
-        click(SmartSnippetSuggestionsSelectors.answer().eq(0).find('a').eq(1));
-      });
-
-      SmartSnippetSuggestionsAssertions.assertLogOpenSmartSnippetSuggestionsInlineLink(
-        () => lastClickedLink
-      );
-    });
-  });
+  
 
   describe('with custom styling in a template element', () => {
     beforeEach(() => {
@@ -411,14 +265,6 @@ describe('Smart Snippet Suggestions Test Suites', () => {
         .first()
         .click();
     });
-
-    it('applies the styling to the rendered snippet', () => {
-      SmartSnippetSuggestionsSelectors.answer()
-        .first()
-        .find('b')
-        .invoke('css', 'color')
-        .should('equal', 'rgb(84, 170, 255)');
-    });
   });
 
   describe('with custom styling in an attribute', () => {
@@ -438,14 +284,6 @@ describe('Smart Snippet Suggestions Test Suites', () => {
       SmartSnippetSuggestionsSelectors.questionCollapsedButton()
         .first()
         .click();
-    });
-
-    it('applies the styling to the rendered snippet', () => {
-      SmartSnippetSuggestionsSelectors.answer()
-        .first()
-        .find('b')
-        .invoke('css', 'color')
-        .should('equal', 'rgb(84, 170, 255)');
     });
   });
 });

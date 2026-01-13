@@ -68,7 +68,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.37.0",
+  "version": "3.39.0",
   "files": [
     "dist/"
   ],
@@ -132,6 +132,6 @@
     "vitest": "catalog:"
   },
   "engines": {
-    "node": "^20.9.0 || ^22.11.0"
+    "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
   }
 }
