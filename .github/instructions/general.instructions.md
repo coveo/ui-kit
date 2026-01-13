@@ -80,6 +80,37 @@ Don't suggest boilerplate unless necessary and relevant.
 
 **Follow package-specific conventions** (see `.github/instructions/tests-*.instructions.md`).
 
+## Path References
+
+**Always use project-relative paths.** Omit everything before the `ui-kit` segment.
+
+**Examples:**
+
+❌ **Bad - Absolute paths with username:**
+```
+/Users/username/Projects/ui-kit/packages/headless/...
+/home/user/workspace/ui-kit/...
+C:\Users\username\projects\ui-kit\packages\...
+```
+
+✅ **Good - Project-relative paths:**
+```
+packages/headless/src/controllers/...
+.github/instructions/general.instructions.md
+samples/headless-react/src/components/...
+```
+
+**In generated files and scripts**, use relative paths from the file's location:
+```typescript
+// From a skill directory to packages
+../../../../packages/headless/...
+
+// Within same package
+../../controllers/...
+```
+
+**Rationale:** Absolute paths expose usernames, break portability across environments (local, CI, Codespaces, different operating systems), and create maintenance issues.
+
 ## Communication
 
 Be **cautious, not pedantic**. Be **collaborative, not submissive**. Be **helpful, but not over-eager**.
