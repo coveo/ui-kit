@@ -475,7 +475,9 @@ describe('c-quantic-citation', () => {
       const citationTitle = element.shadowRoot.querySelector(
         selectors.citationTitle
       );
-      const citationIcon = element.shadowRoot.querySelector(selectors.citationIcon);
+      const citationIcon = element.shadowRoot.querySelector(
+        selectors.citationIcon
+      );
 
       expect(citationLink.classList).toContain(activeCitationLinkClass);
       expect(citationTitle.classList).toContain(activeCitationTitleClass);
@@ -499,7 +501,9 @@ describe('c-quantic-citation', () => {
       const citationTitle = element.shadowRoot.querySelector(
         selectors.citationTitle
       );
-      const citationIcon = element.shadowRoot.querySelector(selectors.citationIcon);
+      const citationIcon = element.shadowRoot.querySelector(
+        selectors.citationIcon
+      );
 
       expect(citationLink.classList).not.toContain(activeCitationLinkClass);
       expect(citationTitle.classList).not.toContain(activeCitationTitleClass);
