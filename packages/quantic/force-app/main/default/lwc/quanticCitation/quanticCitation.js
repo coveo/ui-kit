@@ -39,7 +39,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   @api disableCitationAnchoring = false;
   /**
    * Whether the citation is in an active state.
-   * A citation in an active state is displayed with a blue title and border.
+   * A citation in an active state is displayed with a different title and border color based on the theme set on the community.
    * @api
    * @type {boolean}
    * @default false
@@ -47,6 +47,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   @api isActive = false;
   /**
    * The name of the Salesforce icon to display before the citation title.
+   * See https://www.lightningdesignsystem.com/2e1ef8501/p/83309d-icons for a list of valid icon names.
    * @api
    * @example 'utility:attach'
    * @type {string}

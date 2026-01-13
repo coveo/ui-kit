@@ -71,7 +71,19 @@ const selectors = {
   actionsSlot: 'slot[name="actions"]',
 };
 
-function createTestComponent(options = defaultOptions) {
+/**
+ * Mocks the return value of the assignedNodes method.
+ * @param {Array<Element>} assignedElements
+ */
+function mockSlotAssignedNodes(assignedElements) {
+  HTMLSlotElement.prototype.assignedNodes = function () {
+    return assignedElements;
+  };
+}
+
+function createTestComponent(options = defaultOptions, assignedElements = []) {
+  mockSlotAssignedNodes(assignedElements);
+
   const element = createElement('c-quantic-citation', {
     is: QuanticCitation,
   });
@@ -104,10 +116,6 @@ function setupEventDispatchTest(eventName) {
     document.removeEventListener(eventName, handler);
   };
   document.addEventListener(eventName, handler);
-}
-
-function getActionsSlot(element) {
-  return element.shadowRoot.querySelector(selectors.actionsSlot);
 }
 
 describe('c-quantic-citation', () => {
@@ -541,25 +549,33 @@ describe('c-quantic-citation', () => {
 
   describe('citation actions slot', () => {
     it('should render provided actions in the slot', async () => {
-      const element = createTestComponent();
-      const action = document.createElement('span');
-      action.slot = 'actions';
-      action.textContent = 'Action';
-      element.appendChild(action);
+      const exampleAction = document.createElement('span');
+      exampleAction.textContent = 'Test Action';
+      const exampleAssignedElements = [exampleAction];
 
+      const element = createTestComponent(
+        defaultOptions,
+        exampleAssignedElements
+      );
       await flushPromises();
 
-      const slot = getActionsSlot(element);
+      const slot = element.shadowRoot.querySelector(selectors.actionsSlot);
       expect(slot).not.toBeNull();
+
+      const assignedActions = slot.assignedNodes();
+      expect(assignedActions).toHaveLength(1);
+      expect(assignedActions[0].textContent).toBe('Test Action');
     });
 
     it('should have no assigned actions when none are provided', async () => {
       const element = createTestComponent();
       await flushPromises();
 
-      const slot = getActionsSlot(element);
+      const slot = element.shadowRoot.querySelector(selectors.actionsSlot);
       expect(slot).not.toBeNull();
-      expect(slot.assignedElements()).toHaveLength(0);
+
+      const assignedActions = element.querySelectorAll('[slot="actions"]');
+      expect(assignedActions).toHaveLength(0);
     });
   });
 });
