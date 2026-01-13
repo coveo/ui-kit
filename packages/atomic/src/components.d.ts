@@ -506,24 +506,6 @@ export namespace Components {
          */
         "userId": string;
     }
-    /**
-     * Internal component of the atomic-insight-interface
-     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
-     */
-    interface AtomicInsightUserActionsToggle {
-        /**
-          * The names of custom events to exclude.
-         */
-        "excludedCustomActions": string[];
-        /**
-          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
-         */
-        "ticketCreationDateTime": string;
-        /**
-          * The ID of the user whose actions are being displayed.
-         */
-        "userId": string;
-    }
     interface AtomicIpxBody {
         "displayFooterSlot": boolean;
         "isOpen"?: boolean;
@@ -1097,16 +1079,6 @@ declare global {
         prototype: HTMLAtomicInsightUserActionsTimelineElement;
         new (): HTMLAtomicInsightUserActionsTimelineElement;
     };
-    /**
-     * Internal component of the atomic-insight-interface
-     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
-     */
-    interface HTMLAtomicInsightUserActionsToggleElement extends Components.AtomicInsightUserActionsToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightUserActionsToggleElement: {
-        prototype: HTMLAtomicInsightUserActionsToggleElement;
-        new (): HTMLAtomicInsightUserActionsToggleElement;
-    };
     interface HTMLAtomicIpxBodyElementEventMap {
         "animationEnded": never;
     }
@@ -1304,7 +1276,6 @@ declare global {
         "atomic-insight-user-actions-modal": HTMLAtomicInsightUserActionsModalElement;
         "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
         "atomic-insight-user-actions-timeline": HTMLAtomicInsightUserActionsTimelineElement;
-        "atomic-insight-user-actions-toggle": HTMLAtomicInsightUserActionsToggleElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-button": HTMLAtomicIpxButtonElement;
         "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
@@ -1788,24 +1759,6 @@ declare namespace LocalJSX {
          */
         "userId": string;
     }
-    /**
-     * Internal component of the atomic-insight-interface
-     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
-     */
-    interface AtomicInsightUserActionsToggle {
-        /**
-          * The names of custom events to exclude.
-         */
-        "excludedCustomActions"?: string[];
-        /**
-          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
-         */
-        "ticketCreationDateTime": string;
-        /**
-          * The ID of the user whose actions are being displayed.
-         */
-        "userId": string;
-    }
     interface AtomicIpxBody {
         "displayFooterSlot"?: boolean;
         "isOpen"?: boolean;
@@ -2128,7 +2081,6 @@ declare namespace LocalJSX {
         "atomic-insight-user-actions-modal": AtomicInsightUserActionsModal;
         "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
         "atomic-insight-user-actions-timeline": AtomicInsightUserActionsTimeline;
-        "atomic-insight-user-actions-toggle": AtomicInsightUserActionsToggle;
         "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-button": AtomicIpxButton;
         "atomic-ipx-embedded": AtomicIpxEmbedded;
@@ -2193,11 +2145,6 @@ declare module "@stencil/core" {
              * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
              */
             "atomic-insight-user-actions-timeline": LocalJSX.AtomicInsightUserActionsTimeline & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsTimelineElement>;
-            /**
-             * Internal component of the atomic-insight-interface
-             * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
-             */
-            "atomic-insight-user-actions-toggle": LocalJSX.AtomicInsightUserActionsToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsToggleElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
             "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
