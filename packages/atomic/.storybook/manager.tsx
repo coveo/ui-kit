@@ -17,7 +17,7 @@ declare global {
 addons.setConfig({
   theme: {
     ...themes.dark,
-    brandUrl: '?path=/docs/introduction--docs',
+    brandUrl: '?path=/docs/introduction--default',
     brandTarget: '_self',
   },
 });
