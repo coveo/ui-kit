@@ -250,6 +250,9 @@ describe('attached results analytics actions', () => {
         expect(mockLogCaseDetach.mock.calls[0][1]).toStrictEqual(
           expectedMetadata
         );
+        expect(mockLogCaseDetach.mock.calls[0][2]).toStrictEqual(
+          testCitation.permanentId
+        );
       });
     });
   });
