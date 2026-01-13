@@ -1,14 +1,13 @@
 #!/usr/bin/env node
-
 /**
  * Validates the creating-stories skill structure and content.
  *
  * Usage:
- *   node scripts/validate_skill.mjs
+ *   node .claude/skills/creating-stories/scripts/validate_skill.mjs
  */
 
 import {existsSync, readdirSync, readFileSync, statSync} from 'node:fs';
-import {dirname, join, resolve} from 'node:path';
+import {basename, dirname, join, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -32,63 +31,174 @@ function info(message) {
   console.log(`✓ ${message}`);
 }
 
+function parseFrontmatterManual(content) {
+  if (!content.startsWith('---')) {
+    return {frontmatter: null, error: 'No YAML frontmatter found'};
+  }
+
+  const lines = content.split('\n');
+  let endIdx = null;
+  for (let i = 1; i < lines.length; i++) {
+    if (lines[i].trim() === '---') {
+      endIdx = i;
+      break;
+    }
+  }
+
+  if (endIdx === null) {
+    return {
+      frontmatter: null,
+      error: 'Invalid frontmatter format (no closing ---)',
+    };
+  }
+
+  const frontmatter = {};
+  let currentKey = null;
+  let currentValue = [];
+
+  for (let i = 1; i < endIdx; i++) {
+    const line = lines[i];
+    if (!line.trim()) {
+      continue;
+    }
+
+    const match = line.match(/^(\w[\w-]*)\s*:\s*(.*)$/);
+    if (match) {
+      if (currentKey) {
+        frontmatter[currentKey] = currentValue.join('\n').trim();
+      }
+
+      currentKey = match[1];
+      currentValue = match[2] ? [match[2]] : [];
+      continue;
+    }
+
+    if (currentKey && line.startsWith('  ')) {
+      currentValue.push(line.trim());
+    }
+  }
+
+  if (currentKey) {
+    frontmatter[currentKey] = currentValue.join('\n').trim();
+  }
+
+  return {frontmatter, error: null, endLine: endIdx + 1};
+}
+
 console.log('🔍 Validating creating-stories skill...\n');
 
-// Check SKILL.md exists
 const skillMdPath = join(skillDir, 'SKILL.md');
 if (!existsSync(skillMdPath)) {
   error('SKILL.md not found');
   process.exit(1);
 }
 
-// Parse and validate SKILL.md
 const skillContent = readFileSync(skillMdPath, 'utf8');
-const frontmatterMatch = skillContent.match(/^---\n([\s\S]*?)\n---/);
+const {
+  frontmatter,
+  error: frontmatterError,
+  endLine,
+} = parseFrontmatterManual(skillContent);
 
-if (!frontmatterMatch) {
-  error('SKILL.md missing frontmatter');
+if (frontmatterError || !frontmatter) {
+  error(frontmatterError ?? 'SKILL.md missing frontmatter');
   process.exit(1);
 }
 
-const frontmatter = frontmatterMatch[1];
-const body = skillContent.slice(frontmatterMatch[0].length).trim();
+const body = skillContent
+  .split('\n')
+  .slice(endLine ?? 0)
+  .join('\n')
+  .trim();
 
-// Check required frontmatter fields
-const requiredFields = ['name', 'description'];
-for (const field of requiredFields) {
-  if (!frontmatter.includes(`${field}:`)) {
-    error(`Missing required frontmatter field: ${field}`);
-  }
+const ALLOWED_PROPERTIES = new Set([
+  'name',
+  'description',
+  'license',
+  'allowed-tools',
+  'metadata',
+  'compatibility',
+]);
+
+const unexpectedKeys = Object.keys(frontmatter).filter(
+  (k) => !ALLOWED_PROPERTIES.has(k)
+);
+if (unexpectedKeys.length > 0) {
+  error(
+    `Unexpected key(s) in frontmatter: ${unexpectedKeys.sort().join(', ')}. Allowed: ${[...ALLOWED_PROPERTIES].sort().join(', ')}`
+  );
 }
 
-// Check name matches directory
-if (frontmatter.includes('name:')) {
-  const nameMatch = frontmatter.match(/name:\s*(\S+)/);
-  if (nameMatch && nameMatch[1] !== 'creating-stories') {
+if (!('name' in frontmatter)) {
+  error("Missing required 'name' field in frontmatter");
+}
+
+if (!('description' in frontmatter)) {
+  error("Missing required 'description' field in frontmatter");
+}
+
+if (typeof frontmatter.name === 'string') {
+  const name = frontmatter.name.trim();
+  if (!name) {
+    error('Name cannot be empty');
+  }
+
+  if (!/^[a-z0-9-]+$/.test(name)) {
     error(
-      `Name in frontmatter (${nameMatch[1]}) doesn't match directory name (creating-stories)`
+      `Name '${name}' must use only lowercase letters, numbers, and hyphens (no uppercase, underscores, or special characters)`
     );
+  }
+
+  if (name.startsWith('-') || name.endsWith('-')) {
+    error(`Name '${name}' cannot start or end with a hyphen`);
+  }
+
+  if (name.includes('--')) {
+    error(`Name '${name}' cannot contain consecutive hyphens (--)`);
+  }
+
+  if (name.length > 64) {
+    error(
+      `Name is too long (${name.length} characters). Maximum is 64 characters.`
+    );
+  }
+
+  if (name !== basename(skillDir)) {
+    error(`Name '${name}' must match directory name '${basename(skillDir)}'`);
   } else {
     info('Name matches directory');
   }
+} else if ('name' in frontmatter) {
+  error(`Name must be a string, got ${typeof frontmatter.name}`);
 }
 
-// Check description quality
-if (frontmatter.includes('description:')) {
-  const descMatch = frontmatter.match(/description:\s*(.+)/);
-  if (descMatch) {
-    const desc = descMatch[1];
-    if (desc.length < 50) {
-      warn('Description is quite short (< 50 chars)');
-    }
-    if (!desc.toLowerCase().includes('use when')) {
-      warn('Description should include "Use when" trigger keywords');
-    }
-    info('Description present');
+if (typeof frontmatter.description === 'string') {
+  const description = frontmatter.description.trim();
+  if (!description) {
+    error('Description cannot be empty');
   }
+
+  if (description.includes('<') || description.includes('>')) {
+    error('Description cannot contain XML tags (< or >)');
+  }
+
+  if (description.length > 1024) {
+    error(
+      `Description is too long (${description.length} characters). Maximum is 1024 characters.`
+    );
+  }
+
+  if (description.includes('[TODO')) {
+    error('Description contains [TODO] placeholder - please complete it');
+  }
+
+  if (!description.toLowerCase().includes('use when')) {
+    warn('Description should include "Use when" trigger keywords');
+  }
+} else if ('description' in frontmatter) {
+  error(`Description must be a string, got ${typeof frontmatter.description}`);
 }
 
-// Check body length
 const bodyLines = body.split('\n').length;
 if (bodyLines > 500) {
   warn(`SKILL.md body is ${bodyLines} lines (recommended max: 500)`);
@@ -96,7 +206,6 @@ if (bodyLines > 500) {
   info(`Body length acceptable (${bodyLines} lines)`);
 }
 
-// Check for required directories and files
 const requiredPaths = [
   'scripts',
   'references',
@@ -116,14 +225,16 @@ for (const path of requiredPaths) {
   }
 }
 
-// Check for .gitkeep files (should be removed)
 function findGitkeepFiles(dir) {
   const files = readdirSync(dir);
   for (const file of files) {
     const fullPath = join(dir, file);
     if (statSync(fullPath).isDirectory()) {
       findGitkeepFiles(fullPath);
-    } else if (file === '.gitkeep') {
+      continue;
+    }
+
+    if (file === '.gitkeep') {
       warn(`Found .gitkeep file at ${fullPath.replace(skillDir, '')}`);
     }
   }
@@ -131,7 +242,6 @@ function findGitkeepFiles(dir) {
 
 findGitkeepFiles(skillDir);
 
-// Check scripts are executable
 const scriptsDir = join(skillDir, 'scripts');
 if (existsSync(scriptsDir)) {
   const scripts = readdirSync(scriptsDir).filter((f) => f.endsWith('.mjs'));
@@ -144,7 +254,6 @@ if (existsSync(scriptsDir)) {
   }
 }
 
-// Check reference files exist and are referenced in SKILL.md
 const referencesDir = join(skillDir, 'references');
 if (existsSync(referencesDir)) {
   const referenceFiles = readdirSync(referencesDir).filter((f) =>
@@ -157,15 +266,16 @@ if (existsSync(referencesDir)) {
   }
 }
 
-// Summary
 console.log(`\n${'='.repeat(50)}`);
 if (hasErrors) {
   console.log('❌ Validation failed with errors');
   process.exit(1);
-} else if (hasWarnings) {
+}
+
+if (hasWarnings) {
   console.log('⚠️  Validation passed with warnings');
   process.exit(0);
-} else {
-  console.log('✅ Skill is valid!');
-  process.exit(0);
 }
+
+console.log('✅ Skill is valid!');
+process.exit(0);

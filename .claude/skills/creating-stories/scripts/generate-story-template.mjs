@@ -27,9 +27,42 @@ import {fileURLToPath} from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const args = process.argv.slice(2);
+const handlebars = await loadHandlebars();
 
-if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
+async function loadHandlebars() {
+  try {
+    const imported = await import('handlebars');
+    return imported.default;
+  } catch {
+    // In this repo, Handlebars is installed via the Atomic package.
+    try {
+      const imported = await import(
+        resolve(
+          __dirname,
+          '../../../..',
+          'packages/atomic/node_modules/handlebars/lib/index.js'
+        )
+      );
+      return imported.default;
+    } catch {
+      console.error(
+        "Error: Cannot resolve 'handlebars'. Install dependencies (e.g., run 'pnpm install') or run this script from an environment where 'handlebars' is available."
+      );
+      process.exit(1);
+    }
+  }
+}
+
+const ALLOWED_TYPES = ['component', 'page'];
+const ALLOWED_CATEGORIES = [
+  'search',
+  'commerce',
+  'insight',
+  'ipx',
+  'recommendations',
+];
+
+function printHelp() {
   console.log(`
 Generate Storybook story template for Atomic components or sample pages.
 
@@ -46,17 +79,55 @@ Examples:
   node .claude/skills/creating-stories/scripts/generate-story-template.mjs my-page --type page --category commerce
   node .claude/skills/creating-stories/scripts/generate-story-template.mjs atomic-result-field --result
   `);
+}
+
+function fail(message) {
+  console.error(`Error: ${message}`);
+  process.exit(1);
+}
+
+function getFlagValue(args, flag) {
+  const idx = args.indexOf(flag);
+  if (idx === -1) {
+    return undefined;
+  }
+
+  const value = args[idx + 1];
+  if (!value || value.startsWith('-')) {
+    fail(`Missing value for ${flag}`);
+  }
+
+  return value;
+}
+
+const args = process.argv.slice(2);
+
+if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
+  printHelp();
   process.exit(0);
 }
 
 const name = args[0];
-const type = args.includes('--type')
-  ? args[args.indexOf('--type') + 1]
-  : 'component';
-const category = args.includes('--category')
-  ? args[args.indexOf('--category') + 1]
-  : 'search';
+if (!name || name.startsWith('-')) {
+  fail('Missing required <name> positional argument');
+}
+
+const type = getFlagValue(args, '--type') ?? 'component';
+if (!ALLOWED_TYPES.includes(type)) {
+  fail(`Invalid --type '${type}'. Allowed: ${ALLOWED_TYPES.join(', ')}`);
+}
+
+const category = getFlagValue(args, '--category') ?? 'search';
+if (!ALLOWED_CATEGORIES.includes(category)) {
+  fail(
+    `Invalid --category '${category}'. Allowed: ${ALLOWED_CATEGORIES.join(', ')}`
+  );
+}
+
 const isResult = args.includes('--result');
+if (type === 'page' && isResult) {
+  fail(`--result cannot be used with --type page`);
+}
 
 function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -69,7 +140,7 @@ function toTitleCase(str) {
     .join(' ');
 }
 
-function getTemplateData(_storyType, componentName, cat, _isResultComponent) {
+function getTemplateData(componentName, cat) {
   const apiConfig = {
     search: {
       apiClass: 'SearchApi',
@@ -143,7 +214,7 @@ function getTemplateData(_storyType, componentName, cat, _isResultComponent) {
     },
   };
 
-  const config = apiConfig[cat] || apiConfig.search;
+  const config = apiConfig[cat];
   const titleName = toTitleCase(
     componentName.replace('atomic-', '').replace(/-/g, ' ')
   );
@@ -157,11 +228,14 @@ function getTemplateData(_storyType, componentName, cat, _isResultComponent) {
   };
 }
 
-// Simple template function (replaces handlebars for portability)
 function renderTemplate(template, data) {
-  return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
-    return data[key] !== undefined ? data[key] : match;
-  });
+  // Handlebars treats `}}}` as the end of a triple-stache. Some of our templates
+  // intentionally include braces around interpolations (e.g., `import {Mock{{x}}}`
+  // and `import {{{y}}} ...`). Normalize to equivalent source that Handlebars can
+  // parse by inserting whitespace.
+  const normalizedTemplate = template.replaceAll('}}}', '}} }');
+  const compiled = handlebars.compile(normalizedTemplate, {noEscape: true});
+  return compiled(data);
 }
 
 // Load template
@@ -179,7 +253,7 @@ if (type === 'page') {
 const templatePath = resolve(assetsDir, templateFile);
 const templateContent = readFileSync(templatePath, 'utf8');
 
-const data = getTemplateData(type, name, category, isResult);
+const data = getTemplateData(name, category);
 const output = renderTemplate(templateContent, data);
 
 console.log(output);

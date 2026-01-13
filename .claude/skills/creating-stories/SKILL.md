@@ -27,6 +27,8 @@ Answer these questions:
 
 ### Step 2: Generate Template
 
+This skill includes a small generator that renders Handlebars templates from `.claude/skills/creating-stories/assets/`.
+
 ```bash
 # Component story
 node .claude/skills/creating-stories/scripts/generate-story-template.mjs \
@@ -40,6 +42,13 @@ node .claude/skills/creating-stories/scripts/generate-story-template.mjs \
 node .claude/skills/creating-stories/scripts/generate-story-template.mjs \
   page-name --type page --category commerce
 ```
+
+Allowed values:
+- `--type`: `component` (default), `page`
+- `--category`: `search` (default), `commerce`, `insight`, `ipx`, `recommendations`
+
+Notes:
+- `--result` is only valid for `--type component` (using it with `--type page` is an error).
 
 ### Step 3: Complete the Story
 

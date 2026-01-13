@@ -4,7 +4,7 @@ import {html} from 'lit';
 import {Mock{{apiClass}}} from '@/storybook-utils/api/{{apiPath}}/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
-import {{{wrapperImport}}} from '{{wrapperPath}}';
+import {{wrapperImport}} from '{{wrapperPath}}';
 
 const {{apiPath}}ApiHarness = new Mock{{apiClass}}();
 
@@ -27,7 +27,7 @@ const customResultListDecorator: Decorator = (story) => html`
     density="compact"
     image-size="small"
   >
-    \${story()}
+    ${story()}
   </atomic-result-list>
 `;
 
