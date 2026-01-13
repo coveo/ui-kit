@@ -28,6 +28,7 @@ import {
   AtomicInsightQueryError as LitAtomicInsightQueryError,
   AtomicInsightQuerySummary as LitAtomicInsightQuerySummary,
   AtomicInsightResultTemplate as LitAtomicInsightResultTemplate,
+  AtomicInsightSearchBox as LitAtomicInsightSearchBox,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
   AtomicNoResults as LitAtomicNoResults,
@@ -267,6 +268,12 @@ export const AtomicInsightResultTemplate = createComponent({
   tagName: 'atomic-insight-result-template',
   react: React,
   elementClass: LitAtomicInsightResultTemplate,
+});
+
+export const AtomicInsightSearchBox = createComponent({
+  tagName: 'atomic-insight-search-box',
+  react: React,
+  elementClass: LitAtomicInsightSearchBox,
 });
 
 export const AtomicLayoutSection = createComponent({
