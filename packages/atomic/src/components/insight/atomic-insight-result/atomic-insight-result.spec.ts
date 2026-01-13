@@ -296,30 +296,21 @@ describe('atomic-insight-result', () => {
     });
 
     it('should unset loading flag on firstUpdated', async () => {
-      const {element, bindings} =
-        await renderInAtomicInsightInterface<AtomicInsightResult>({
-          template: html`<atomic-insight-result
-            .result=${buildFakeInsightResult()}
-            .content=${renderTemplateContent(defaultTemplateContent)}
-            .loadingFlag=${'test-flag'}
-          ></atomic-insight-result>`,
-          selector: 'atomic-insight-result',
-          bindings: (bindings) => {
-            bindings.store.state.loadingFlags = [];
-            bindings.store.onChange = vi.fn();
-            bindings.store.state.resultList = {
-              focusOnFirstResultAfterNextSearch: vi.fn(),
-              focusOnNextNewResult: vi.fn(),
-            };
-            return bindings;
-          },
-        });
+      const mockUnsetLoadingFlag = vi.fn();
+      const loadingFlag = 'test-flag';
 
-      const unsetLoadingFlagSpy = vi.spyOn(bindings.store, 'unsetLoadingFlag');
+      const element = await renderResult({
+        loadingFlag,
+      });
+
+      element.store = {
+        ...element.store!,
+        unsetLoadingFlag: mockUnsetLoadingFlag,
+      };
 
       element.firstUpdated(new Map());
 
-      expect(unsetLoadingFlagSpy).toHaveBeenCalledWith('test-flag');
+      expect(mockUnsetLoadingFlag).toHaveBeenCalledWith(loadingFlag);
     });
 
     it('should remove event listeners on disconnectedCallback', async () => {

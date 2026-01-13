@@ -7,6 +7,7 @@ import type {
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import type {DisplayConfig} from '@/src/components/common/item-list/context/item-display-config-context-controller';
 import {
   type ItemRenderingFunction,
@@ -33,7 +34,6 @@ export type InsightInteractiveResultContextEvent<
 
 /**
  * The `atomic-insight-result` component is used internally by the `atomic-insight-result-list` component.
- * @internal
  */
 @customElement('atomic-insight-result')
 @withTailwindStyles
@@ -301,8 +301,9 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
           class="result-root ${this.itemLayoutController
             .getCombinedClasses()
             .join(' ')}"
-          .innerHTML=${this.getContentHTML()}
-        ></div>
+        >
+          ${unsafeHTML(this.getContentHTML())}
+        </div>
       </div>
     `;
   }
