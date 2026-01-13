@@ -17,7 +17,7 @@ declare global {
 addons.setConfig({
   theme: {
     ...themes.dark,
-    brandUrl: '?path=/story/introduction--default',
+    brandUrl: '?path=/docs/introduction--docs',
     brandTarget: '_self',
   },
 });
@@ -92,9 +92,6 @@ addons.register('expand-all-folders-on-intro', () => {
   addons.getChannel().on(STORY_RENDERED, (storyId) => {
     if (storyId === 'introduction--crawling') {
       observeAndExpandButtons();
-      addNoIndexMetaTag();
-    }
-    if (storyId === 'introduction--default') {
       addNoIndexMetaTag();
     }
   });
