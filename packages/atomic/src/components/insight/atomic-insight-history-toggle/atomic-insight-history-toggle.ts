@@ -5,7 +5,12 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import Clockicon from '../../../images/clock.svg';
 
 /**
- * The `atomic-insight-history-toggle` component displays a button to toggle the history panel.
+ * The `atomic-insight-history-toggle` component displays a button that toggles the visibility of the User Actions history panel.
+ * This is useful for showing an agent the history of actions performed by the user who opened a support case within an insight interface.
+ *
+ * This is an internal component intended for use by Coveo developers only.
+ *
+ * @internal
  */
 @customElement('atomic-insight-history-toggle')
 @withTailwindStyles
