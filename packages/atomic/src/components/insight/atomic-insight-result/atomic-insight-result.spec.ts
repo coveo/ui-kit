@@ -1,6 +1,6 @@
 import type {Result as InsightResult} from '@coveo/headless/insight';
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
 import type {
   ItemDisplayDensity,
@@ -18,6 +18,15 @@ const defaultTemplateContent = `
   </template>
 `;
 
+const templateContentWithSections = `<atomic-result-section-name>
+  <atomic-result-link class="font-bold"></atomic-result-link>
+</atomic-result-section-name>
+<atomic-result-section-visual>
+  <atomic-result-field-condition if-defined="ec_thumbnails">
+    <atomic-result-image field="ec_thumbnails"></atomic-result-image>
+  </atomic-result-field-condition>
+</atomic-result-section-visual>`;
+
 const renderTemplateContent = (templateHtml: string) => {
   const template = document.createElement('template');
   template.innerHTML = templateHtml;
@@ -25,13 +34,6 @@ const renderTemplateContent = (templateHtml: string) => {
 };
 
 describe('atomic-insight-result', () => {
-  let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
-
-  beforeEach(() => {
-    consoleWarnSpy?.mockRestore();
-    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-  });
-
   const renderResult = async (
     options: {
       result?: InsightResult;
@@ -85,66 +87,67 @@ describe('atomic-insight-result', () => {
     expect(element).toBeInstanceOf(AtomicInsightResult);
   });
 
-  it.each<{
-    prop: 'density' | 'imageSize';
-    invalidValue: string;
-  }>([
-    {
-      prop: 'density',
-      invalidValue: 'invalid',
-    },
-    {
-      prop: 'imageSize',
-      invalidValue: 'invalid',
-    },
-  ])(
-    'should set error when #$prop is invalid',
-    async ({prop, invalidValue}) => {
+  describe('when density prop is invalid', () => {
+    it('should set error', async () => {
       const element = await renderResult();
 
       expect(element.error).toBeUndefined();
 
       // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-      (element as any)[prop] = invalidValue;
+      (element as any).density = 'invalid';
       await element.updateComplete;
 
       expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
-    }
-  );
+      expect(element.error.message).toMatch(/density/i);
+    });
+  });
 
-  it.each<{
-    prop: 'density' | 'imageSize';
-    validValue: ItemDisplayDensity | ItemDisplayImageSize;
-    invalidValue: string;
-  }>([
-    {
-      prop: 'density',
-      validValue: 'normal',
-      invalidValue: 'invalid',
-    },
-    {
-      prop: 'imageSize',
-      validValue: 'icon',
-      invalidValue: 'invalid',
-    },
-  ])(
-    'should set error when valid #$prop is updated to an invalid value',
-    async ({prop, validValue, invalidValue}) => {
-      const element = await renderResult({[prop]: validValue});
+  describe('when imageSize prop is invalid', () => {
+    it('should set error', async () => {
+      const element = await renderResult();
 
       expect(element.error).toBeUndefined();
 
       // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-      (element as any)[prop] = invalidValue;
+      (element as any).imageSize = 'invalid';
       await element.updateComplete;
 
       expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(new RegExp(prop, 'i'));
-    }
-  );
+      expect(element.error.message).toMatch(/imageSize/i);
+    });
+  });
 
-  describe('rendering', () => {
+  describe('when valid density is updated to invalid value', () => {
+    it('should set error', async () => {
+      const element = await renderResult({density: 'normal'});
+
+      expect(element.error).toBeUndefined();
+
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      (element as any).density = 'invalid';
+      await element.updateComplete;
+
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(/density/i);
+    });
+  });
+
+  describe('when valid imageSize is updated to invalid value', () => {
+    it('should set error', async () => {
+      const element = await renderResult({imageSize: 'icon'});
+
+      expect(element.error).toBeUndefined();
+
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
+      (element as any).imageSize = 'invalid';
+      await element.updateComplete;
+
+      expect(element.error).toBeDefined();
+      expect(element.error.message).toMatch(/imageSize/i);
+    });
+  });
+
+  describe('when content is provided', () => {
     it('should render content HTML', async () => {
       const element = await renderResult();
       const contentHTML = element.shadowRoot
@@ -153,30 +156,51 @@ describe('atomic-insight-result', () => {
       expect(contentHTML).toContain('atomic-result-text');
     });
 
-    it('should warn when content is undefined', async () => {
-      const element = await renderResult({content: undefined});
-      await element.updateComplete;
+    it('should not add "with-sections" class when content does not have sections', async () => {
+      const element = await renderResult({
+        content: renderTemplateContent('<div>No Sections</div>'),
+      });
+      const resultRoot = element.shadowRoot!.querySelector('.result-root');
+      expect(resultRoot?.classList).not.toContain('with-sections');
+    });
 
+    it('should add "with-sections" class when content has sections', async () => {
+      const element = await renderResult({
+        content: renderTemplateContent(templateContentWithSections),
+      });
+      const resultRoot = element.shadowRoot!.querySelector('.result-root');
+      expect(resultRoot?.classList).toContain('with-sections');
+    });
+  });
+
+  describe('when content is undefined', () => {
+    let consoleWarnSpy: MockInstance;
+
+    beforeEach(() => {
+      consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    });
+
+    it('should log warning about missing content', async () => {
+      await renderResult({content: undefined});
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining(
-          'atomic-insight-result: content property is undefined'
-        ),
-        element
+        'atomic-insight-result: content property is undefined. Cannot create layout.',
+        expect.any(AtomicInsightResult)
       );
     });
 
-    it('should handle rendering function', async () => {
-      const renderingFunction: ItemRenderingFunction = () => {
-        return '<div class="custom-render">Custom</div>';
-      };
-      const element = await renderResult({renderingFunction});
-      await element.updateComplete;
-
-      const resultRoot = element.shadowRoot?.querySelector('.result-root');
-      expect(resultRoot).toBeDefined();
+    it('should not create layout', async () => {
+      const element = await renderResult({content: undefined});
+      const layoutProperty = (element as unknown as {layout: unknown}).layout;
+      expect(layoutProperty).toBeUndefined();
     });
 
-    it('should return empty div when layout is not created', async () => {
+    it('should not throw error', async () => {
+      expect(async () => {
+        await renderResult({content: undefined});
+      }).not.toThrow();
+    });
+
+    it('should render empty result-component div', async () => {
       const element = await renderResult({
         content: undefined,
         renderingFunction: undefined,
@@ -188,10 +212,152 @@ describe('atomic-insight-result', () => {
       expect(resultComponent).toBeDefined();
       expect(resultComponent?.innerHTML.trim()).toBe('');
     });
+
+    describe('#getContentHTML', () => {
+      it('should log warning', async () => {
+        const element = await renderResult({content: undefined});
+        const getContentHTMLMethod = (
+          element as unknown as {getContentHTML: () => string}
+        ).getContentHTML.bind(element);
+
+        getContentHTMLMethod();
+
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          'atomic-insight-result: content property is undefined. Cannot get content HTML.',
+          expect.any(AtomicInsightResult)
+        );
+      });
+
+      it('should return empty string', async () => {
+        const element = await renderResult({content: undefined});
+        const getContentHTMLMethod = (
+          element as unknown as {getContentHTML: () => string}
+        ).getContentHTML.bind(element);
+        const result = getContentHTMLMethod();
+        expect(result).toBe('');
+      });
+
+      it('should not throw error', async () => {
+        const element = await renderResult({content: undefined});
+        const getContentHTMLMethod = (
+          element as unknown as {getContentHTML: () => string}
+        ).getContentHTML.bind(element);
+
+        expect(() => getContentHTMLMethod()).not.toThrow();
+      });
+    });
+
+    describe('#render', () => {
+      it('should not call layout methods when layout is undefined', async () => {
+        const element = await renderResult({content: undefined});
+
+        expect(() => element.render()).not.toThrow();
+
+        const componentRoot =
+          element.shadowRoot!.querySelector('.result-component');
+        const resultRoot = element.shadowRoot!.querySelector('.result-root');
+        expect(componentRoot).toBeTruthy();
+        expect(resultRoot).toBeNull();
+      });
+
+      it('should handle custom rendering function mode', async () => {
+        const renderingFunction: ItemRenderingFunction = vi.fn(
+          (_result, resultRootRef) => {
+            resultRootRef.textContent = 'Custom content without layout';
+            return resultRootRef.outerHTML;
+          }
+        );
+
+        const element = await renderResult({
+          content: undefined,
+          renderingFunction,
+        });
+
+        expect(renderingFunction).toHaveBeenCalled();
+        const resultRoot = element.shadowRoot!.querySelector('.result-root');
+        expect(resultRoot?.textContent).toContain(
+          'Custom content without layout'
+        );
+      });
+    });
+
+    describe('#updated', () => {
+      it('should not throw error when layout is undefined in custom rendering mode', async () => {
+        const renderingFunction: ItemRenderingFunction = vi.fn(
+          (_result, resultRootRef) => {
+            resultRootRef.textContent = 'Updated content';
+            return '<div>Updated HTML</div>';
+          }
+        );
+
+        const element = await renderResult({
+          content: undefined,
+          renderingFunction,
+        });
+
+        expect(() => {
+          element.requestUpdate();
+        }).not.toThrow();
+
+        await element.updateComplete;
+        expect(renderingFunction).toHaveBeenCalled();
+      });
+    });
   });
 
-  describe('event listeners', () => {
-    it('should resolve result on atomic/resolveResult event', async () => {
+  describe('when using a custom rendering function', () => {
+    const renderingFunction: ItemRenderingFunction = vi.fn(
+      (result, resultRootRef) => {
+        resultRootRef.textContent = `Custom Result: ${result.title}`;
+        return resultRootRef.outerHTML;
+      }
+    );
+
+    it('should call the custom rendering function', async () => {
+      await renderResult({renderingFunction});
+      expect(renderingFunction).toHaveBeenCalled();
+    });
+
+    it('should render custom result content in result root', async () => {
+      const element = await renderResult({
+        renderingFunction,
+      });
+      const resultRoot = element.shadowRoot!.querySelector('.result-root');
+      expect(resultRoot?.textContent).toContain('Custom Result:');
+    });
+
+    it('should not add "with-sections" class when content does not have sections', async () => {
+      const element = await renderResult({
+        renderingFunction,
+      });
+      const resultRoot = element.shadowRoot!.querySelector('.result-root');
+      expect(resultRoot?.classList).not.toContain('with-sections');
+    });
+
+    it('should add "with-sections" class when content has sections', async () => {
+      const renderingFunctionWithSections: ItemRenderingFunction = vi.fn(
+        () =>
+          '<atomic-result-section-visual>Custom</atomic-result-section-visual>'
+      );
+      const element = await renderResult({
+        renderingFunction: renderingFunctionWithSections,
+      });
+      expect(renderingFunctionWithSections).toHaveBeenCalled();
+      const resultRoot = element.shadowRoot!.querySelector('.result-root');
+      expect(resultRoot?.classList).toContain('with-sections');
+    });
+
+    it('should render result-root element', async () => {
+      const element = await renderResult({renderingFunction});
+      await element.updateComplete;
+
+      const resultRoot = element.shadowRoot?.querySelector('.result-root');
+      expect(resultRoot).toBeDefined();
+    });
+  });
+
+  describe('when atomic/resolveResult event is dispatched', () => {
+    it('should resolve result and prevent default', async () => {
       const result = buildFakeInsightResult();
       const element = await renderResult({result});
       const mockCallback = vi.fn();
@@ -207,8 +373,10 @@ describe('atomic-insight-result', () => {
       expect(mockCallback).toHaveBeenCalledWith(result);
       expect(event.defaultPrevented).toBe(true);
     });
+  });
 
-    it('should resolve interactive result on atomic/resolveInteractiveResult event', async () => {
+  describe('when atomic/resolveInteractiveResult event is dispatched', () => {
+    it('should resolve interactive result when set', async () => {
       const element = await renderResult();
       const mockCallback = vi.fn();
       const mockInteractiveResult = {
@@ -249,8 +417,10 @@ describe('atomic-insight-result', () => {
       expect(mockCallback).not.toHaveBeenCalled();
       expect(event.defaultPrevented).toBe(true);
     });
+  });
 
-    it('should resolve stop propagation on atomic/resolveStopPropagation event', async () => {
+  describe('when atomic/resolveStopPropagation event is dispatched', () => {
+    it('should resolve stop propagation value', async () => {
       const element = await renderResult();
       const mockCallback = vi.fn();
 
@@ -264,8 +434,10 @@ describe('atomic-insight-result', () => {
 
       expect(mockCallback).toHaveBeenCalledWith(true);
     });
+  });
 
-    it('should resolve display config on atomic/resolveResultDisplayConfig event', async () => {
+  describe('when atomic/resolveResultDisplayConfig event is dispatched', () => {
+    it('should resolve display config and prevent default', async () => {
       const element = await renderResult({
         density: 'comfortable',
         imageSize: 'large',
@@ -288,14 +460,16 @@ describe('atomic-insight-result', () => {
     });
   });
 
-  describe('lifecycle', () => {
-    it('should add hydrated class on connectedCallback', async () => {
+  describe('#connectedCallback', () => {
+    it('should add hydrated class', async () => {
       const element = await renderResult();
       await element.updateComplete;
       expect(element.classList.contains('hydrated')).toBe(true);
     });
+  });
 
-    it('should unset loading flag on firstUpdated', async () => {
+  describe('#firstUpdated', () => {
+    it('should unset loading flag when store is available', async () => {
       const mockUnsetLoadingFlag = vi.fn();
       const loadingFlag = 'test-flag';
 
@@ -312,8 +486,10 @@ describe('atomic-insight-result', () => {
 
       expect(mockUnsetLoadingFlag).toHaveBeenCalledWith(loadingFlag);
     });
+  });
 
-    it('should remove event listeners on disconnectedCallback', async () => {
+  describe('#disconnectedCallback', () => {
+    it('should remove event listeners', async () => {
       const element = await renderResult();
       const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
 
@@ -338,7 +514,7 @@ describe('atomic-insight-result', () => {
     });
   });
 
-  describe('display properties', () => {
+  describe('when density prop is set', () => {
     it.each<{density: ItemDisplayDensity}>([
       {density: 'normal'},
       {density: 'comfortable'},
@@ -349,7 +525,9 @@ describe('atomic-insight-result', () => {
       await element.updateComplete;
       expect(element.shadowRoot).toBeDefined();
     });
+  });
 
+  describe('when imageSize prop is set', () => {
     it.each<{imageSize: ItemDisplayImageSize}>([
       {imageSize: 'icon'},
       {imageSize: 'small'},
