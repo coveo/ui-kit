@@ -57,9 +57,8 @@ Notes:
 3. **Add custom props** - Set component-specific arguments
 4. **Test interactions** - Verify story renders and behaves correctly
 
-For MSW required reading, see [msw-required-reading.md](references/msw-required-reading.md).
-For API mocking patterns, see [msw-patterns.md](references/msw-patterns.md).
-For `EndpointHarness` methods, see [endpoint-harness-quick-reference.md](references/endpoint-harness-quick-reference.md).
+For `EndpointHarness` overview and methods, see [endpoint-harness-reference.md](references/endpoint-harness-reference.md).
+For advanced API mocking patterns, see [msw-patterns.md](references/msw-patterns.md).
 For creating a new API mock domain, see [creating-new-api-mock.md](references/creating-new-api-mock.md).
 For component examples, see [component-examples.md](references/component-examples.md).
 For page examples, see [sample-page-examples.md](references/sample-page-examples.md).
@@ -67,8 +66,11 @@ For page examples, see [sample-page-examples.md](references/sample-page-examples
 ### Step 4: Validate
 
 ```bash
-# From packages/atomic directory
-npx vitest ./src/**/*.spec.ts --run
+# Validate the story file
+node .claude/skills/creating-stories/scripts/validate_story.mjs packages/atomic/src/components/.../component.new.stories.tsx
+
+# Run Storybook to verify visually
+cd packages/atomic && pnpm storybook
 ```
 
 ## Story Structure
@@ -154,9 +156,8 @@ export const NoResults: Story = {
 
 | Reference | When to Load |
 |-----------|--------------|
-| [msw-required-reading.md](references/msw-required-reading.md) | Starting point: API harness docs |
+| [endpoint-harness-reference.md](references/endpoint-harness-reference.md) | `EndpointHarness` overview, methods, type safety |
 | [msw-patterns.md](references/msw-patterns.md) | Advanced MSW techniques, pagination, errors |
-| [endpoint-harness-quick-reference.md](references/endpoint-harness-quick-reference.md) | `EndpointHarness` API quick reference |
 | [creating-new-api-mock.md](references/creating-new-api-mock.md) | Add a new mock domain when needed |
 | [component-examples.md](references/component-examples.md) | Facets, search box, pager, result components |
 | [sample-page-examples.md](references/sample-page-examples.md) | Full page patterns for all interfaces |
@@ -166,7 +167,7 @@ export const NoResults: Story = {
 | Script | Purpose |
 |--------|---------|
 | `generate-story-template.mjs` | Generate story boilerplate from templates |
-| `validate_skill.mjs` | Validate skill structure |
+| `validate_story.mjs` | Validate created story files for correctness |
 
 ## Templates
 
@@ -193,3 +194,55 @@ Before completing:
 3. **Wrong import paths** - Use `@/storybook-utils/...` not relative paths
 4. **Missing handlers** - Include all harness handlers in `msw.handlers`
 5. **Wrong decorator order** - Result templates need specific order
+
+## Common Edge Cases
+
+### MSW Responses Not Being Consumed
+
+**Symptom:** API calls return default responses instead of mocked ones.
+
+**Check:**
+- Endpoint path in harness matches actual API call
+- HTTP method (GET/POST) is correct
+- Handlers are included in MSW parameters: `msw: { handlers: [...harness.handlers] }`
+
+### Responses Returned in Wrong Order
+
+**Symptom:** Wrong response is returned for a queued sequence.
+
+**Solution:** Ensure you're clearing in `beforeEach`, not `afterEach`:
+
+```typescript
+beforeEach: () => {
+  harness.searchEndpoint.clear();
+  // Then enqueue in correct order
+}
+```
+
+### TypeScript Errors on Response Modification
+
+**Symptom:** Type errors when modifying response objects.
+
+**Solution:** Spread base response to maintain all required fields:
+
+```typescript
+mockOnce((response) => ({
+  ...response,
+  results: [], // Modify only what you need
+}))
+```
+
+### Multiple Stories Interfere With Each Other
+
+**Symptom:** Stories fail when run together but pass individually.
+
+**Solution:** Always clear queued responses in `beforeEach`:
+
+```typescript
+const meta: Meta = {
+  beforeEach: () => {
+    searchApiHarness.searchEndpoint.clear();
+    // Then queue responses specific to each story
+  },
+};
+```

@@ -2,8 +2,6 @@
 
 Only create a new mock if the API domain you need does not already exist under `packages/atomic/storybook-utils/api/`.
 
-If you do need to add a new domain, follow the patterns in `packages/atomic/storybook-utils/api/README.md`.
-
 ## 1) Create a new domain directory
 
 Create `packages/atomic/storybook-utils/api/<api-domain>/`.
@@ -66,5 +64,6 @@ get handlers(): HttpHandler[] {
 
 ## Special cases
 
-- Streaming/SSE endpoints: follow `packages/atomic/storybook-utils/api/answer/`.
-- Paths with multiple dynamic segments: use MSW path parameters like `:orgId`.
+**Streaming/SSE endpoints:** For Server-Sent Events responses (like RGA), the endpoint returns a function that generates the stream rather than a static response. Use the pattern of building response generators that yield chunks over time.
+
+**Dynamic path segments:** Use MSW path parameters like `:orgId` or `:configId` for variable URL parts.

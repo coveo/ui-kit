@@ -31,25 +31,17 @@ const handlebars = await loadHandlebars();
 
 async function loadHandlebars() {
   try {
-    const imported = await import('handlebars');
+    const handlebarsPath = new URL(
+      '../../../../packages/atomic/node_modules/handlebars/lib/index.js',
+      import.meta.url
+    );
+    const imported = await import(handlebarsPath);
     return imported.default;
   } catch {
-    // In this repo, Handlebars is installed via the Atomic package.
-    try {
-      const imported = await import(
-        resolve(
-          __dirname,
-          '../../../..',
-          'packages/atomic/node_modules/handlebars/lib/index.js'
-        )
-      );
-      return imported.default;
-    } catch {
-      console.error(
-        "Error: Cannot resolve 'handlebars'. Install dependencies (e.g., run 'pnpm install') or run this script from an environment where 'handlebars' is available."
-      );
-      process.exit(1);
-    }
+    console.error(
+      "Error: Cannot resolve 'handlebars'. Install dependencies (e.g., run 'pnpm install') or run this script from an environment where 'handlebars' is available."
+    );
+    process.exit(1);
   }
 }
 
