@@ -57,7 +57,10 @@ Notes:
 3. **Add custom props** - Set component-specific arguments
 4. **Test interactions** - Verify story renders and behaves correctly
 
+For MSW required reading, see [msw-required-reading.md](references/msw-required-reading.md).
 For API mocking patterns, see [msw-patterns.md](references/msw-patterns.md).
+For `EndpointHarness` methods, see [endpoint-harness-quick-reference.md](references/endpoint-harness-quick-reference.md).
+For creating a new API mock domain, see [creating-new-api-mock.md](references/creating-new-api-mock.md).
 For component examples, see [component-examples.md](references/component-examples.md).
 For page examples, see [sample-page-examples.md](references/sample-page-examples.md).
 
@@ -151,7 +154,10 @@ export const NoResults: Story = {
 
 | Reference | When to Load |
 |-----------|--------------|
+| [msw-required-reading.md](references/msw-required-reading.md) | Starting point: API harness docs |
 | [msw-patterns.md](references/msw-patterns.md) | Advanced MSW techniques, pagination, errors |
+| [endpoint-harness-quick-reference.md](references/endpoint-harness-quick-reference.md) | `EndpointHarness` API quick reference |
+| [creating-new-api-mock.md](references/creating-new-api-mock.md) | Add a new mock domain when needed |
 | [component-examples.md](references/component-examples.md) | Facets, search box, pager, result components |
 | [sample-page-examples.md](references/sample-page-examples.md) | Full page patterns for all interfaces |
 
