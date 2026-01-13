@@ -11,7 +11,7 @@ import type {
 } from '../core/generated-answer/headless-core-generated-answer.js';
 import {buildSearchAPIGeneratedAnswer} from '../core/generated-answer/headless-searchapi-generated-answer.js';
 import {buildAnswerApiGeneratedAnswer} from '../knowledge/generated-answer/headless-answerapi-generated-answer.js';
-import {buildGeneratedAnswerWithFollowUps} from '../knowledge/generated-answer-conversation/headless-generated-answer-with-follow-ups.js';
+import {buildGeneratedAnswerWithFollowUps} from '../knowledge/generated-answer/headless-generated-answer-with-follow-ups.js';
 
 export type {
   GeneratedAnswerCitation,
