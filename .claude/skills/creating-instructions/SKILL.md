@@ -114,8 +114,6 @@ node .github/skills/creating-instructions/scripts/validate_instruction.mjs .gith
 | `playwright-typescript.instructions.md` | `**/*.e2e.ts, **/*.spec.ts` | E2E patterns |
 | `msw-api-mocking.instructions.md` | `packages/atomic/**/*.stories.tsx` | Storybook MSW |
 
-**Note:** Accessibility guidelines were moved to the `applying-wcag-guidelines` skill for better discoverability and to avoid context bloat.
-
 **Update this table when creating new instructions.**
 
 ## Reference Documentation

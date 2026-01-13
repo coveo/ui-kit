@@ -62,8 +62,14 @@ Coding standards are in `.github/instructions/*.instructions.md`. Each file has 
 - Atomic package: `atomic.instructions.md` - Component patterns and structure
 - Atomic tests: `tests-atomic.instructions.md` - Vitest testing patterns
 - E2E tests: `playwright-typescript.instructions.md` - Playwright conventions
-- Any UI work: Use `applying-wcag-guidelines` skill - WCAG 2.2 Level AA compliance
 - API mocking: `msw-api-mocking.instructions.md` - MSW patterns
+
+## Agent Skills
+
+Agent-discoverable capabilities are in `.claude/skills/`. Skills follow the [agentskills.io](https://agentskills.io) open standard and contain domain-specific knowledge that agents can discover and load on demand.
+
+**Use these skills when:**
+- `applying-wcag-guidelines` - Creating or modifying UI components in Atomic, Quantic, atomic-react, or atomic-angular packages
 
 ## Common Workflows
 
