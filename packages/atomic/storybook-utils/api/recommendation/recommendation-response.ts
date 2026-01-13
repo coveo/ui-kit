@@ -1,7 +1,3 @@
-/**
- * Sample recommendations response for non-commerce content (articles, tutorials, guides, documentation).
- * For commerce-specific recommendations, see commerce-recommendation-response.ts.
- */
 export const baseRecommendationResponse = {
   totalCount: 10,
   totalCountFiltered: 10,
