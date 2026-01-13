@@ -15,7 +15,10 @@ const entries = [
       'atomic-field-condition',
     ],
     declarations: [],
-    excludedComponentDirectories: ['src/components/commerce'],
+    excludedComponentDirectories: [
+      'src/components/commerce',
+      'src/components/insight',
+    ],
     computedComponentImports: [],
   },
   {
@@ -30,6 +33,7 @@ const entries = [
     excludedComponentDirectories: [
       'src/components/search',
       'src/components/recommendations',
+      'src/components/insight',
     ],
     computedComponentImports: [],
   },
