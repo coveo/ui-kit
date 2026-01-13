@@ -84,9 +84,7 @@ export class AtomicIpxButton
 
   private recommendationsLoaded = false;
 
-  public initialize() {
-    // No controller initialization needed for this component
-  }
+  public initialize() {}
 
   private async getRecommendations() {
     const recsEngine = this.bindings.interfaceElement.querySelector(
@@ -108,12 +106,16 @@ export class AtomicIpxButton
   }
 
   private renderIPXButton() {
+    const ariaLabel = this.isModalOpen ? 'Close' : 'Open';
     return renderButton({
       props: {
         style: 'primary',
         part: 'ipx-button',
         class: 'my-2',
         onClick: () => this.onClick(),
+        ariaLabel: this.label ?? ariaLabel,
+        ariaExpanded: this.isModalOpen ? 'true' : 'false',
+        ariaControls: this.ipxModal?.id,
       },
     })(html`
       <span part="button-icon">
@@ -164,19 +166,19 @@ export class AtomicIpxButton
   }
 
   private get ipxModal() {
-    return this.bindings.interfaceElement.querySelector('atomic-ipx-modal')!;
+    return this.bindings?.interfaceElement?.querySelector('atomic-ipx-modal');
   }
 
   private open() {
     this.isModalOpen = true;
     this.classList.add('btn-open');
-    this.ipxModal.setAttribute('is-open', 'true');
+    this.ipxModal?.setAttribute('is-open', 'true');
   }
 
   private close() {
     this.isModalOpen = false;
     this.classList.remove('btn-open');
-    this.ipxModal.setAttribute('is-open', 'false');
+    this.ipxModal?.setAttribute('is-open', 'false');
   }
 
   private getIcon(icon: string) {
