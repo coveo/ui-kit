@@ -88,9 +88,9 @@ const addNoIndexMetaTag = () => {
   }
 };
 
-addons.register('expand-all-folders-on-intro', () => {
+addons.register('expand-all-folders-on-crawling', () => {
   addons.getChannel().on(STORY_RENDERED, (storyId) => {
-    if (storyId === 'introduction--crawling') {
+    if (storyId === 'crawling--crawling') {
       observeAndExpandButtons();
       addNoIndexMetaTag();
     }
