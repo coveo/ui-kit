@@ -2,50 +2,53 @@ import {css} from 'lit';
 
 const styles = css`
   @reference '../../../utils/tailwind.global.tw.css';
+  @import '../../common/search-box/search-box.pcss';
 
-  :host {
-    position: relative;
-  }
+[part='wrapper'] {
+  @apply z-10;
+}
 
-  [part='wrapper'] {
-    @apply z-10;
-  }
+:host {
+  position: relative;
+}
 
-  [part='textarea'] {
-    padding-top: 0.675rem;
-    padding-bottom: 0.675rem;
-  }
+[part='input'] {
+  padding-top: 0.675rem;
+  padding-bottom: 0.675rem;
+}
 
-  [part='submit-icon'] {
-    @apply text-on-background;
-  }
+[part='submit-icon'] {
+  @apply text-on-background;
+}
 
-  [part='submit-button'] {
-    @apply flex w-10 items-center justify-center;
-  }
+[part='submit-button'] {
+  @apply flex w-10 items-center justify-center;
+}
 
-  .loading::after {
-    content: '';
-    @apply bg-background absolute h-5/6 w-5/6 rounded-full;
-  }
+.loading::after {
+  content: '';
+  @apply bg-background absolute h-5/6 w-5/6 rounded-full;
+}
 
-  [part='clear-button-wrapper'] {
-    @apply mr-2 py-0;
-  }
+[part='clear-button-wrapper'] {
+  @apply mr-2 py-0;
+}
 
-  [part='clear-icon'] {
-    @apply h-3 w-3;
-  }
+[part='clear-icon'] {
+  @apply h-3 w-3;
+}
 
-  [part='textarea-expander'] {
-    &::after {
-      @apply p-2 px-4;
-    }
-  }
-
-  [part='textarea-expander'] [part='textarea'] {
+[part='textarea-expander'] {
+  &::after {
     @apply p-2 px-4;
   }
+}
+
+[part='textarea-expander'] {
+  [part='textarea'] {
+    @apply p-2 px-4;
+  }
+}
 `;
 
 export default styles;
