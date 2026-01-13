@@ -29,7 +29,6 @@ import {
   AtomicComponentError as LitAtomicComponentError,
   AtomicFocusTrap as LitAtomicFocusTrap,
   AtomicIcon as LitAtomicIcon,
-  AtomicIpxButton as LitAtomicIpxButton,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicNumericRange as LitAtomicNumericRange,
   AtomicProduct as LitAtomicProduct,
@@ -236,12 +235,6 @@ export const AtomicIcon = createComponent({
   tagName: 'atomic-icon',
   react: React,
   elementClass: LitAtomicIcon,
-});
-
-export const AtomicIpxButton = createComponent({
-  tagName: 'atomic-ipx-button',
-  react: React,
-  elementClass: LitAtomicIpxButton,
 });
 
 export const AtomicLayoutSection = createComponent({
