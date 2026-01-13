@@ -7,13 +7,15 @@ import {
   type Instance as PopperInstance,
   preventOverflow,
 } from '@popperjs/core';
-import {html, LitElement} from 'lit';
+import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {createRef, type Ref, ref} from 'lit/directives/ref.js';
 import {watch} from '@/src/decorators/watch';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {renderHeading} from '../heading';
 import {renderLinkWithItemAnalytics} from '../item-link/item-link';
+import styles from './atomic-citation.tw.css';
 import {
   generatePdfPageUrl,
   generateTextFragmentUrl,
@@ -29,7 +31,9 @@ import {
  * @part citation-popover - The popover container that appears on hover.
  */
 @customElement('atomic-citation')
+@withTailwindStyles
 export class AtomicCitation extends LitElement {
+  static styles: CSSResultGroup = styles;
   /**
    * The citation item information.
    */
