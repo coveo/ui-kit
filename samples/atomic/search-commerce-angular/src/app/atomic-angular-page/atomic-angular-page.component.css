@@ -141,7 +141,7 @@ atomic-load-more-results {
     grid-template-columns: 1fr minmax(150px, 325px) minmax(500px, 1100px) 1fr;
     grid-template-areas:
       ". .      search      ."
-      ". facets breadbox ."
+      ". facets breadbox    ."
       ". facets topbar      ."
       ". facets results     ."
       ". facets pagination  ."
