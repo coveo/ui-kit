@@ -82,31 +82,21 @@ describe('atomic-insight-refine-toggle', () => {
     };
   };
 
-  it('should call buildSearchStatus with the engine', async () => {
-    await renderRefineToggle();
-
-    expect(buildSearchStatus).toHaveBeenCalledWith(mockedEngine);
-  });
-
-  it('should call buildBreadcrumbManager with the engine', async () => {
-    await renderRefineToggle();
-
-    expect(buildBreadcrumbManager).toHaveBeenCalledWith(mockedEngine);
-  });
-
-  it('should set this.searchStatus to the search status controller', async () => {
+  it('should build and set the search status controller', async () => {
     const {element} = await renderRefineToggle();
 
+    expect(buildSearchStatus).toHaveBeenCalledWith(mockedEngine);
     expect(element.searchStatus).toBe(mockedSearchStatus);
   });
 
-  it('should set this.breadcrumbManager to the breadcrumb manager controller', async () => {
+  it('should build and set the breadcrumb manager controller', async () => {
     const {element} = await renderRefineToggle();
 
+    expect(buildBreadcrumbManager).toHaveBeenCalledWith(mockedEngine);
     expect(element.breadcrumbManager).toBe(mockedBreadcrumbManager);
   });
 
-  it('should render nothing if there is an error', async () => {
+  it('should render nothing if there is an error within the searchStatusState', async () => {
     const {element} = await renderRefineToggle({
       searchStatusState: {
         hasError: true,
@@ -140,28 +130,30 @@ describe('atomic-insight-refine-toggle', () => {
     expect(element).toBeEmptyDOMElement();
   });
 
-  it('should render the button when there are results', async () => {
-    const {button} = await renderRefineToggle({
-      searchStatusState: {
-        hasResults: true,
-      },
+  describe('should render the button', () => {
+    it('when there are results', async () => {
+      const {button} = await renderRefineToggle({
+        searchStatusState: {
+          hasResults: true,
+        },
+      });
+
+      expect(button).toBeInTheDocument();
     });
 
-    expect(button).toBeInTheDocument();
-  });
+    it('when there are breadcrumbs but no results', async () => {
+      const {button} = await renderRefineToggle({
+        searchStatusState: {
+          hasResults: false,
+        },
+        breadcrumbManagerState: {
+          hasBreadcrumbs: true,
+          facetBreadcrumbs: [{field: 'test', values: []} as never],
+        },
+      });
 
-  it('should render the button when there are breadcrumbs but no results', async () => {
-    const {button} = await renderRefineToggle({
-      searchStatusState: {
-        hasResults: false,
-      },
-      breadcrumbManagerState: {
-        hasBreadcrumbs: true,
-        facetBreadcrumbs: [{field: 'test', values: []} as never],
-      },
+      expect(button).toBeInTheDocument();
     });
-
-    expect(button).toBeInTheDocument();
   });
 
   it('should render the button with the correct part', async () => {
@@ -196,34 +188,32 @@ describe('atomic-insight-refine-toggle', () => {
     expect(modal?.isOpen).toBe(true);
   });
 
-  describe('badge', () => {
-    it('should not display badge when there are no breadcrumbs', async () => {
-      const {badge} = await renderRefineToggle({
-        breadcrumbManagerState: {
-          hasBreadcrumbs: false,
-        },
-      });
-
-      expect(badge).not.toBeInTheDocument();
+  it('should not display the active filters badge when hasBreadcrumbs is false', async () => {
+    const {badge} = await renderRefineToggle({
+      breadcrumbManagerState: {
+        hasBreadcrumbs: false,
+      },
     });
 
-    it('should display badge with breadcrumb count when there are breadcrumbs', async () => {
-      const {badge} = await renderRefineToggle({
-        breadcrumbManagerState: {
-          hasBreadcrumbs: true,
-          facetBreadcrumbs: [
-            {field: 'test1', values: []} as never,
-            {field: 'test2', values: []} as never,
-          ],
-        },
-      });
-
-      expect(badge).toBeInTheDocument();
-      expect(badge).toHaveTextContent('2');
-    });
+    expect(badge).not.toBeInTheDocument();
   });
 
-  it('should not be disabled when there are breadcrumbs but no results', async () => {
+  it('should display the active filters badge with the total breadcrumb count when hasBreadcrumbs is true', async () => {
+    const {badge} = await renderRefineToggle({
+      breadcrumbManagerState: {
+        hasBreadcrumbs: true,
+        facetBreadcrumbs: [
+          {field: 'test1', values: []} as never,
+          {field: 'test2', values: []} as never,
+        ],
+      },
+    });
+
+    expect(badge).toBeInTheDocument();
+    expect(badge).toHaveTextContent('2');
+  });
+
+  it('should not disable the button when there are breadcrumbs but no results', async () => {
     const {button} = await renderRefineToggle({
       searchStatusState: {
         hasResults: false,
@@ -237,7 +227,7 @@ describe('atomic-insight-refine-toggle', () => {
     expect(button).not.toBeDisabled();
   });
 
-  it('should enable button when there are results', async () => {
+  it('should not disable the button when there are results', async () => {
     const {button} = await renderRefineToggle({
       searchStatusState: {
         hasResults: true,

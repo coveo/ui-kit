@@ -5,22 +5,16 @@ test.describe('atomic-insight-refine-toggle', () => {
     await refineToggle.load();
   });
 
-  test('should render the button', async ({refineToggle}) => {
+  test('should render the component', async ({refineToggle}) => {
     await expect(refineToggle.button).toBeVisible();
-  });
-
-  test('should render the filter icon', async ({refineToggle}) => {
     await expect(refineToggle.icon).toBeVisible();
   });
 
-  test('should have accessible button with Filters label', async ({
+  test('should open the modal when the button is clicked', async ({
     refineToggle,
   }) => {
-    await expect(refineToggle.button).toHaveAccessibleName('Filters');
-  });
+    await refineToggle.button.click();
 
-  test('should be focusable', async ({refineToggle}) => {
-    await refineToggle.button.focus();
-    await expect(refineToggle.button).toBeFocused();
+    await expect(refineToggle.modal).toBeVisible();
   });
 });

@@ -17,4 +17,8 @@ export class RefineTogglePageObject extends BasePageObject {
   get icon() {
     return this.page.locator('[part="insight-refine-toggle-icon"]');
   }
+
+  get modal() {
+    return this.page.getByRole('dialog', {name: 'Filters'});
+  }
 }
