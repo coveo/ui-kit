@@ -20,23 +20,27 @@ export default function ProductBadges() {
     )
   );
 
-  return allBadges.map(({key, badge}) => (
-    <div
-      style={{
-        backgroundColor: badge.backgroundColor,
-        color: badge.textColor,
-        display: 'flex',
-        gap: '4px',
-        width: 'fit-content',
-        padding: '4px 8px',
-        borderRadius: '4px',
-        alignItems: 'center',
-        marginBottom: '4px',
-      }}
-      key={key}
-    >
-      {badge.iconUrl && <img src={badge.iconUrl} alt="" />}
-      <span>{badge.text}</span>
-    </div>
-  ));
+  return (
+    <>
+      {allBadges.map(({key, badge}) => (
+        <div
+          style={{
+            backgroundColor: badge.backgroundColor,
+            color: badge.textColor,
+            display: 'flex',
+            gap: '4px',
+            width: 'fit-content',
+            padding: '4px 8px',
+            borderRadius: '4px',
+            alignItems: 'center',
+            marginBottom: '4px',
+          }}
+          key={key}
+        >
+          {badge.iconUrl && <img src={badge.iconUrl} alt="" width={20} />}
+          <span>{badge.text}</span>
+        </div>
+      ))}
+    </>
+  );
 }
