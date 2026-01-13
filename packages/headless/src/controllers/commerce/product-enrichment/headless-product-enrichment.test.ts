@@ -81,19 +81,23 @@ describe('ProductEnrichment', () => {
       expect(controller.state).toEqual(getProductEnrichmentInitialState());
     });
 
-    it('returns products from state', () => {
+    it('returns valid state', () => {
       const mockProduct = buildMockBadgesProduct({productId: 'test-product'});
       const state = buildMockCommerceState({
         productEnrichment: {
           products: [mockProduct],
           isLoading: false,
           error: null,
+          productId: 'test-product',
+          placementIds: ['placement1'],
         },
       });
       engine = buildMockCommerceEngine(state);
       controller = buildProductEnrichment(engine);
 
       expect(controller.state.products).toEqual([mockProduct]);
+      expect(controller.state.productId).toEqual('test-product');
+      expect(controller.state.placementIds).toEqual(['placement1']);
       expect(controller.state.products[0].productId).toBe('test-product');
     });
 
@@ -103,6 +107,7 @@ describe('ProductEnrichment', () => {
           products: [],
           isLoading: true,
           error: null,
+          placementIds: [],
         },
       });
       engine = buildMockCommerceEngine(state);
@@ -122,6 +127,7 @@ describe('ProductEnrichment', () => {
           products: [],
           isLoading: false,
           error: mockError,
+          placementIds: [],
         },
       });
       engine = buildMockCommerceEngine(state);

@@ -61,6 +61,14 @@ export interface ProductEnrichmentState {
    * The error returned when executing a badge fetch request, if any. This is `null` otherwise.
    */
   error: CommerceAPIErrorResponse | SerializedError | null;
+  /**
+   * The product ID used for fetching badges.
+   */
+  productId?: string;
+  /**
+   * The placement IDs used for fetching badges.
+   */
+  placementIds: string[];
 }
 
 function validateProductEnrichmentProps(
@@ -112,7 +120,10 @@ export function buildProductEnrichment(
 
     get state() {
       const state = getState();
-      return state.productEnrichment;
+      return {
+        ...state.productEnrichment,
+        ...props?.options,
+      };
     },
 
     getBadges() {
