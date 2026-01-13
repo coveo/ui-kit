@@ -1,3 +1,22 @@
+## 3.39.0 (2026-01-07)
+
+* [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
+* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+* DOC-18329: typedoc indexing improvements (#6817) ([14213f1](https://github.com/coveo/ui-kit/commits/14213f1)), closes [#6817](https://github.com/coveo/ui-kit/issues/6817)
+* feat(headless): implement events for spotlight content for commerce COMHUB2-1314 (#6791) ([83bc395](https://github.com/coveo/ui-kit/commits/83bc395)), closes [#6791](https://github.com/coveo/ui-kit/issues/6791)
+* fix(atomic): revert dayjs custom imports (#6804) ([f3ac1ab](https://github.com/coveo/ui-kit/commits/f3ac1ab)), closes [#6804](https://github.com/coveo/ui-kit/issues/6804)
+
+
+
+## 3.38.0 (2026-01-06)
+
+* feat(headless): implement events for spotlight content for commerce COMHUB2-1314 (#6791) ([83bc395](https://github.com/coveo/ui-kit/commits/83bc395)), closes [#6791](https://github.com/coveo/ui-kit/issues/6791)
+* Add Node.js 24 (Krypton LTS) support and update CI (#6756) ([1ee69fa](https://github.com/coveo/ui-kit/commits/1ee69fa)), closes [#6756](https://github.com/coveo/ui-kit/issues/6756)
+* DOC-18329: typedoc indexing improvements (#6817) ([14213f1](https://github.com/coveo/ui-kit/commits/14213f1)), closes [#6817](https://github.com/coveo/ui-kit/issues/6817)
+* fix(atomic): revert dayjs custom imports (#6804) ([f3ac1ab](https://github.com/coveo/ui-kit/commits/f3ac1ab)), closes [#6804](https://github.com/coveo/ui-kit/issues/6804)
+
+
+
 ## 3.37.0 (2025-12-12)
 
 * feat: migrating content from docs.coveo.com to typedoc (#6624) ([8a85527](https://github.com/coveo/ui-kit/commits/8a85527)), closes [#6624](https://github.com/coveo/ui-kit/issues/6624)

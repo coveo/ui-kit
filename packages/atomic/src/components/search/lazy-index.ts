@@ -146,6 +146,8 @@ export default {
     await import('./atomic-result-timespan/atomic-result-timespan.js'),
   'atomic-results-per-page': async () =>
     await import('./atomic-results-per-page/atomic-results-per-page.js'),
+  'atomic-search-box': async () =>
+    await import('./atomic-search-box/atomic-search-box.js'),
   'atomic-search-box-instant-results': async () =>
     await import(
       './atomic-search-box-instant-results/atomic-search-box-instant-results.js'
@@ -167,6 +169,12 @@ export default {
   'atomic-segmented-facet-scrollable': async () =>
     await import(
       './atomic-segmented-facet-scrollable/atomic-segmented-facet-scrollable.js'
+    ),
+  'atomic-smart-snippet': async () =>
+    await import('./atomic-smart-snippet/atomic-smart-snippet.js'),
+  'atomic-smart-snippet-feedback-modal': async () =>
+    await import(
+      './atomic-smart-snippet-feedback-modal/atomic-smart-snippet-feedback-modal.js'
     ),
   'atomic-smart-snippet-suggestions': async () =>
     await import(
