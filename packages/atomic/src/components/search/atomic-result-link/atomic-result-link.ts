@@ -33,7 +33,7 @@ export class AtomicResultLink
   implements InitializableComponent<Bindings>
 {
   static styles: CSSResultGroup =
-    css`@reference '../../../../utils/tailwind.global.tw.css';
+    css`@reference '../../../utils/tailwind.global.tw.css';
 
 atomic-result-link {
   a {

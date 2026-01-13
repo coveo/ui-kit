@@ -47,4 +47,5 @@ copyFileSync(
 );
 
 const files = readdirSync('dist/atomic/assets').toSorted();
+mkdirSync('docs', {recursive: true});
 writeFileSync('docs/assets.json', JSON.stringify({assets: files}));

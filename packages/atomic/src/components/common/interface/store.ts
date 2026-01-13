@@ -5,7 +5,7 @@ import type {
   FacetStore,
   FacetType,
   FacetValueFormat,
-} from '../facets/facet-common-store';
+} from '../facets/stencil-facet-common-store';
 import type {AnyEngineType} from './bindings';
 
 export const isRefineModalFacet = 'is-refine-modal';

@@ -9,16 +9,18 @@
     "declarationDir": "dist/types",
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
-    "outDir": "dist/atomic/components",
+    "sourceMap": true,
+    "outDir": "dist",
     "paths": {
       "@/*": ["./*"]
     }
   },
   "files": [
-    "src/components/index.ts",
-    "src/components/lazy-index.ts",
-    "src/components.d.ts",
-    "src/lit-components.d.ts",
+    "src/index.ts",
+    "src/entries/autoloader.ts",
+    "src/entries/loader.ts",
+    "src/entries/components.ts",
+    // "src/lit-components.d.ts",
     "src/icons.d.ts"
   ]
 }

@@ -32,7 +32,6 @@ import {
 import {mapProperty} from '@/src/utils/props-utils';
 import {getFieldCaptions} from '../../../utils/field-utils';
 import {parseDependsOn} from '../../common/facets/depends-on';
-import type {FacetInfo} from '../../common/facets/facet-common-store';
 import {renderFacetContainer} from '../../common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '../../common/facets/facet-header/facet-header';
 import {announceFacetSearchResultsWithAriaLive} from '../../common/facets/facet-search/facet-search-aria-live';
@@ -50,6 +49,7 @@ import {
 } from '../../common/facets/facet-value/facet-value';
 import {renderFacetValuesGroup} from '../../common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '../../common/facets/popover/popover-type';
+import type {FacetInfo} from '../../common/facets/stencil-facet-common-store';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import '../../common/atomic-facet-placeholder/atomic-facet-placeholder';
 import {arrayConverter} from '@/src/converters/array-converter';

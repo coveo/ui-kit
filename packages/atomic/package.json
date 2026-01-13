@@ -14,9 +14,8 @@
   "types": "dist/types/index.d.ts",
   "exports": {
     "./loader": {
-      "types": "./dist/atomic/loader/index.d.ts",
-      "import": "./dist/atomic/loader/index.js",
-      "require": "./dist/atomic/loader/index.cjs.js"
+      "types": "./dist/types/entries/loader.d.ts",
+      "import": "./dist/entries/loader.js"
     },
     ".": {
       "types": "./dist/types/index.d.ts",
@@ -36,8 +35,8 @@
       "require": "./dist/atomic/lang/*"
     },
     "./components": {
-      "types": "./dist/atomic/components/index.d.ts",
-      "import": "./dist/atomic/components/index.js"
+      "types": "./dist/types/components/index.d.ts",
+      "import": "./dist/components/index.js"
     },
     "./custom-elements-manifest": "./custom-elements.json"
   },
@@ -50,14 +49,15 @@
     "clean": "node ../../utils/ci/rm-rf.mjs dist/* dist-storybook/* www/* docs/* playwright-report/*",
     "build:storybook": "storybook build -o dist-storybook --stats-json",
     "build:cem": "cem analyze",
-    "build:stencil-lit": "pnpm exec node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json && node ./scripts/stencil-proxy.mjs && node ./scripts/build.mjs --config=tsconfig.lit.json && esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js && esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js && node ../../utils/ci/rm-rf.mjs ./dist/atomic/loader/package.json && tsc --project tsconfig.validate-types.json",
+    "build:stencil-lit": "node ./scripts/build.mjs --config=tsconfig.lit.json && tsc --project tsconfig.validate-types.json",
     "build:cdn": "rollup -c rollup.config.js",
     "build:angular": "npx turbo gen:lit --filter=@coveo/atomic-angular-builder",
     "build:react": "npx turbo gen:lit --filter=@coveo/atomic-react",
     "build:locales": "node ./scripts/create-generated-folder.mjs && node ./scripts/split-locales.mjs && node ./scripts/copy-dayjs-locales.mjs",
     "build:copy-assets": "node ./scripts/copy-assets.mjs",
     "build:list-assets": "node ./scripts/list-assets.mjs",
-    "dev": "node ./scripts/dev.mjs",
+    "dev:storybook": "storybook dev -p 4400",
+    "dev:vite": "vite serve dev",
     "web:dev": "npx vite serve dev",
     "web:cdn": "node ./scripts/start-cdn.mjs",
     "prod": "npx serve www -l 3333 --no-request-logging",

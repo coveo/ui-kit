@@ -102,8 +102,7 @@ export class AtomicSearchBox
   extends LitElement
   implements InitializableComponent<Bindings>
 {
-  static styles: CSSResultGroup =
-    css`@import "../atomic-search-box/atomic-search-box.pcss";`;
+  static styles: CSSResultGroup = css`@import "./atomic-search-box.css";`;
 
   @state() bindings!: Bindings;
   @state() error!: Error;

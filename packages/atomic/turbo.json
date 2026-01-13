@@ -71,6 +71,22 @@
       "dependsOn": ["^build", "build"],
       "outputs": []
     },
+    "dev:storybook": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true
+    },
+    "dev:vite": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true
+    },
+    "dev": {
+      "dependsOn": ["build"],
+      "with": ["dev:storybook", "dev:vite", "@coveo/headless#dev"],
+      "cache": false,
+      "persistent": true
+    },
     "web:dev": {
       "dependsOn": ["build"],
       "cache": false,

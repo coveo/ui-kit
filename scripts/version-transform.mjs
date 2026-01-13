@@ -9,7 +9,7 @@ import {
 /**
  * Custom transformer to replace process.env.VERSION with the actual version from package.json.
  */
-export default function versionTransformer(context, version) {
+export default function versionTransformer(context, version, envKey) {
   const {factory} = context;
 
   function visit(node) {
@@ -20,7 +20,7 @@ export default function versionTransformer(context, version) {
       isIdentifier(node.expression.expression) &&
       node.expression.expression.escapedText === 'process' &&
       node.expression.name.escapedText === 'env' &&
-      node.name.escapedText === 'VERSION'
+      node.name.escapedText === envKey
     ) {
       console.log('Replacing process.env.VERSION with:', version);
       return factory.createStringLiteral(version);
@@ -34,9 +34,9 @@ export default function versionTransformer(context, version) {
       isIdentifier(node.expression.expression.expression) &&
       node.expression.expression.expression.escapedText === 'process' &&
       node.expression.expression.name.escapedText === 'env' &&
-      node.expression.name.escapedText === 'VERSION'
+      node.expression.name.escapedText === envKey
     ) {
-      console.log('Replacing process.env.VERSION! with:', version);
+      console.log(`Replacing process.env.${envKey}! with:`, version);
       return factory.createStringLiteral(version);
     }
 

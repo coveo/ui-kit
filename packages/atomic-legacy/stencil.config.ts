@@ -7,6 +7,7 @@ export const config: Config = {
   tsconfig: 'tsconfig.json',
   outputTargets: [
     {
+      externalRuntime: false,
       type: 'dist-custom-elements',
       customElementsExportBehavior: 'auto-define-custom-elements',
     },

@@ -18,7 +18,6 @@ import {parseDate} from '@/src/utils/date-utils';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 import {randomID} from '@/src/utils/utils';
 import {shouldDisplayInputForFacetRange} from './facet-common';
-import type {FacetInfo} from './facet-common-store';
 import {renderFacetContainer} from './facet-container/facet-container';
 import {renderFacetHeader} from './facet-header/facet-header';
 import {renderFacetPlaceholder} from './facet-placeholder/facet-placeholder';
@@ -26,6 +25,7 @@ import {renderFacetValueLabelHighlight} from './facet-value-label-highlight/face
 import {renderFacetValueLink} from './facet-value-link/facet-value-link';
 import {renderFacetValuesGroup} from './facet-values-group/facet-values-group';
 import {initializePopover} from './popover/popover-type';
+import type {FacetInfo} from './stencil-facet-common-store';
 
 export interface Timeframe {
   period: RelativeDatePeriod;

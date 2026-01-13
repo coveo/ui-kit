@@ -1,5 +1,4 @@
-//@ts-expect-error TODO: Simplify path to target some kind of index file?
-import elementMap from '../components/components/lazy-index.js';
+import elementMap from '../components/lazy-index.js';
 
 export function registerAutoloader(
   roots?:
@@ -57,8 +56,8 @@ export function registerAutoloader(
         ? root.tagName.toLowerCase()
         : '';
     const rootIsCustomElement = rootTagName?.includes('-');
-    const allCustomElements = [...root.querySelectorAll('*')].filter((el) =>
-      el.tagName.toLowerCase().includes('-')
+    const allCustomElements = Array.from(root.querySelectorAll('*')).filter(
+      (el) => el.tagName.toLowerCase().includes('-')
     );
 
     // If the root element is an undefined Atomic component, add it to the list
@@ -86,7 +85,7 @@ export function registerAutoloader(
 
     const childTemplates = root.querySelectorAll('template');
     //This is necessary to load the components that are inside the templates
-    for (const template of childTemplates) {
+    for (const template of Array.from(childTemplates)) {
       if (visitedNodes.has(template.content)) {
         continue;
       }
@@ -134,7 +133,7 @@ export function registerAutoloader(
 
   const observer = new MutationObserver(async (mutations) => {
     for (const {addedNodes} of mutations) {
-      for (const node of addedNodes) {
+      for (const node of Array.from(addedNodes)) {
         if (node.nodeType === Node.ELEMENT_NODE) {
           await discover(node as Element);
         }

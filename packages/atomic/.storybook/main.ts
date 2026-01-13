@@ -6,6 +6,7 @@ import remarkGfm from 'remark-gfm';
 import type {PluginImpl} from 'rollup';
 import {mergeConfig} from 'vite';
 import {generateExternalPackageMappings} from '../scripts/externalPackageMappings.mjs';
+import {preprocessTwCssTs} from './plugins/preprocess-tw-css-ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -105,8 +106,6 @@ const config: StorybookConfig = {
   staticDirs: [
     {from: '../dist/atomic/assets', to: '/assets'},
     {from: '../dist/atomic/lang', to: '/lang'},
-    {from: '../dist/atomic', to: './assets'},
-    {from: '../dist/atomic/lang', to: './lang'},
     {from: './public', to: '/'},
   ],
   addons: [
@@ -143,6 +142,7 @@ const config: StorybookConfig = {
       },
       plugins: [
         virtualOpenApiModules(),
+        preprocessTwCssTs(),
         tailwindcss(),
         resolvePathAliases(),
         forceInlineCssImports(),
@@ -175,7 +175,8 @@ const forceInlineCssImports: PluginImpl = () => {
       if (id.endsWith('.ts')) {
         return {
           code: code.replace(
-            /import\s+([^'"]+)\s+from\s+['"]([^'"]+\.css)['"]/g,
+            // /import\s+([^'"]+)\s+from\s+['"]([^'"]+\.css)['"]/g,
+            /import\s+([^'"]+)\s+from\s+['"](.*(coveo|tailwind).*.css)['"]/g,
             (_, importName, cssPath) =>
               `import ${importName} from '${cssPath}?inline'`
           ),
@@ -196,8 +197,13 @@ const svgTransform: PluginImpl = () => {
         return code.replace(
           /import\s+([a-zA-Z]+)\s+from\s+['"]([^'"]+\.svg)['"]/g,
           (_, importName, importPath) => {
+            let resolvedPath = importPath;
+            if (importPath.startsWith('@/')) {
+              const aliasPath = importPath.slice(2); // Remove the "@/" prefix
+              resolvedPath = path.resolve(__dirname, `../${aliasPath}`);
+            }
             const svgContent = readFileSync(
-              resolve(dirname(id), importPath),
+              resolve(dirname(id), resolvedPath),
               'utf8'
             )
               .replace(/\r?\n/g, '')

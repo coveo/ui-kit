@@ -27,7 +27,6 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {parseDependsOn} from '@/src/components/common/facets/depends-on';
 import {shouldDisplayInputForFacetRange} from '@/src/components/common/facets/facet-common';
-import type {FacetInfo} from '@/src/components/common/facets/facet-common-store';
 import {renderFacetContainer} from '@/src/components/common/facets/facet-container/facet-container';
 import {renderFacetHeader} from '@/src/components/common/facets/facet-header/facet-header';
 import type {NumberInputType} from '@/src/components/common/facets/facet-number-input/number-input-type';
@@ -37,6 +36,7 @@ import {renderNumericFacetValue} from '@/src/components/common/facets/numeric-fa
 import {renderNumericFacetValuesGroup} from '@/src/components/common/facets/numeric-facet/values-container';
 import numericFacetCommonStyles from '@/src/components/common/facets/numeric-facet-common.tw.css';
 import {initializePopover} from '@/src/components/common/facets/popover/popover-type';
+import type {FacetInfo} from '@/src/components/common/facets/stencil-facet-common-store';
 import {
   defaultNumberFormatter,
   type NumberFormatter,

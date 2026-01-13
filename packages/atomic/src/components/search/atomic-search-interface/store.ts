@@ -10,7 +10,7 @@ import type {
   FacetStore,
   FacetType,
   FacetValueFormat,
-} from '../../common/facets/facet-common-store';
+} from '../../common/facets/stencil-facet-common-store';
 import {
   type BaseStore,
   createBaseStore,
