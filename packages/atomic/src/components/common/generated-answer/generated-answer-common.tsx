@@ -42,6 +42,9 @@ interface GeneratedAnswerCommonOptions {
   ) => InteractiveCitation;
 }
 
+/**
+ * @deprecated use the LitElement version instead: `GeneratedAnswerController`. This class is only meant to be used in legacy Stencil-based components.
+ */
 export class GeneratedAnswerCommon {
   private storage: SafeStorage = new SafeStorage();
   private _data: GeneratedAnswerData;
@@ -182,7 +185,9 @@ export class GeneratedAnswerCommon {
     const {title} = citation;
     const {i18n} = this.props.getBindings();
 
-    return title.trim() !== ''
+    const normalizedTitle = (title ?? '').trim();
+
+    return normalizedTitle
       ? citation
       : {...citation, title: i18n.t('no-title')};
   }

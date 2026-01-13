@@ -42,6 +42,12 @@ export class AtomicDidYouMean
   extends LitElement
   implements InitializableComponent<Bindings>
 {
+  private static readonly propsSchema = new Schema({
+    queryCorrectionMode: new StringValue({
+      constrainTo: ['legacy', 'next'],
+    }),
+  });
+
   public bindings!: Bindings;
   didYouMean!: DidYouMean;
   queryTrigger!: QueryTrigger;
@@ -91,11 +97,7 @@ export class AtomicDidYouMean
       () => ({
         queryCorrectionMode: this.queryCorrectionMode,
       }),
-      new Schema({
-        queryCorrectionMode: new StringValue({
-          constrainTo: ['legacy', 'next'],
-        }),
-      }),
+      AtomicDidYouMean.propsSchema,
       false
     );
   }
