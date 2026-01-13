@@ -511,7 +511,7 @@ describe('c-quantic-citation', () => {
     });
   });
 
-  describe('when the an icon name is provided', () => {
+  describe('when an icon name is provided', () => {
     it('should set the icon name on the citation icon', async () => {
       const element = createTestComponent({
         ...defaultOptions,

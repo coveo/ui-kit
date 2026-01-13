@@ -17,6 +17,7 @@
           icon-name={iconName}
           size="xx-small"
           class={citationIconClasses}
+          aria-hidden="true"
         ></lightning-icon>
       </template>
       <p class={citationTitleClasses}>{citationTitle}</p>
@@ -47,9 +48,7 @@
         >
           {text}
         </div>
-        <div>
-          <slot name="actions"></slot>
-        </div>
+        <slot name="actions"></slot>
       </div>
     </c-quantic-tooltip>
   </li>
