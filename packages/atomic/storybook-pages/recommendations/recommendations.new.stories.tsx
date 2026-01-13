@@ -55,7 +55,7 @@ const meta: Meta = {
 
       .rating-wrapper span {
         margin-left: 5px;
-        color: #8e959d;
+        color: #6c757d;
       }
 
       atomic-recs-list::part(label) {
@@ -105,7 +105,7 @@ const meta: Meta = {
                 }
                 .rating-wrapper span {
                   margin-left: 5px;
-                  color: #8e959d;
+                  color: #6c757d;
                 }
               </style>
               <atomic-result-section-visual>
@@ -155,7 +155,7 @@ const meta: Meta = {
                 }
                 .rating-wrapper span {
                   margin-left: 5px;
-                  color: #8e959d;
+                  color: #6c757d;
                 }
               </style>
               <atomic-result-section-visual>
@@ -210,7 +210,7 @@ const meta: Meta = {
                 }
                 .rating-wrapper span {
                   margin-left: 5px;
-                  color: #8e959d;
+                  color: #6c757d;
                 }
               </style>
               <atomic-result-section-visual>
