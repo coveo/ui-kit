@@ -5,10 +5,6 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DateFilterRange, DateRangeRequest, GeneratedAnswer, GeneratedAnswerCitation, InteractiveCitation, RangeFacetSortCriterion, Result } from "@coveo/headless";
-import { AnyBindings } from "./components/common/interface/bindings";
-export { DateFilterRange, DateRangeRequest, GeneratedAnswer, GeneratedAnswerCitation, InteractiveCitation, RangeFacetSortCriterion, Result } from "@coveo/headless";
-export { AnyBindings } from "./components/common/interface/bindings";
 export namespace Components {
 }
 declare global {

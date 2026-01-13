@@ -2,8 +2,19 @@
   "extends": ["//"],
   "tasks": {
     "build": {
+      "dependsOn": ["^build", "build:assets", "gen:lit"],
+      "outputs": [
+        "projects/atomic-angular/dist/**/*",
+        "!projects/atomic-angular/dist/assets/**",
+        "!projects/atomic-angular/dist/lang/**"
+      ]
+    },
+    "build:assets": {
       "dependsOn": ["^build"],
-      "outputs": ["projects/atomic-angular/dist/**/*"]
+      "outputs": [
+        "projects/atomic-angular/dist/assets/**",
+        "projects/atomic-angular/dist/lang/**"
+      ]
     },
     "gen:lit": {
       "dependsOn": ["@coveo/atomic#build:cem"],
