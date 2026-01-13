@@ -70,6 +70,10 @@ Agent-discoverable capabilities are in `.claude/skills/`. Skills follow the [age
 
 **Use these skills when:**
 - `applying-wcag-guidelines` - Creating or modifying UI components in Atomic, Quantic, atomic-react, or atomic-angular packages
+- `creating-agents` - Building role-based workflows (planner, reviewer, architect) or guided multi-agent sequences
+- `creating-instructions` - Defining coding standards, conventions, or context that should automatically apply to specific file patterns
+- `creating-prompts` - Building repeatable tasks users trigger manually
+- `creating-skills` - Building agent-discoverable capabilities with scripts, references, or assets
 
 ## Common Workflows
 
