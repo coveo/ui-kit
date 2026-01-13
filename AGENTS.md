@@ -62,7 +62,7 @@ Coding standards are in `.github/instructions/*.instructions.md`. Each file has 
 - Atomic package: `atomic.instructions.md` - Component patterns and structure
 - Atomic tests: `tests-atomic.instructions.md` - Vitest testing patterns
 - E2E tests: `playwright-typescript.instructions.md` - Playwright conventions
-- Any UI work: `a11y.instructions.md` - WCAG 2.2 Level AA compliance
+- Any UI work: Use `applying-wcag-guidelines` skill - WCAG 2.2 Level AA compliance
 - API mocking: `msw-api-mocking.instructions.md` - MSW patterns
 
 ## Common Workflows

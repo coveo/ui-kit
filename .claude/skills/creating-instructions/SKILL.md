@@ -113,7 +113,8 @@ node .github/skills/creating-instructions/scripts/validate_instruction.mjs .gith
 | `tests-atomic.instructions.md` | `**/atomic/**/*.spec.ts` | Atomic test patterns |
 | `playwright-typescript.instructions.md` | `**/*.e2e.ts, **/*.spec.ts` | E2E patterns |
 | `msw-api-mocking.instructions.md` | `packages/atomic/**/*.stories.tsx` | Storybook MSW |
-| `a11y.instructions.md` | `**` | Accessibility |
+
+**Note:** Accessibility guidelines were moved to the `applying-wcag-guidelines` skill for better discoverability and to avoid context bloat.
 
 **Update this table when creating new instructions.**
 
