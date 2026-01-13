@@ -83,6 +83,7 @@ export * from './features/commerce/recommendations/recommendations-actions-loade
 export * from './features/commerce/search/search-actions-loader.js';
 export * from './features/commerce/search-parameters/search-parameters-actions-loader.js';
 export * from './features/commerce/sort/sort-actions-loader.js';
+export * from './features/commerce/spotlight-content/spotlight-content-actions-loaders.js';
 export * from './features/commerce/standalone-search-box-set/standalone-search-box-set-actions-loader.js';
 export * from './features/commerce/triggers/triggers-actions-loader.js';
 export type {HighlightKeyword} from './utils/highlight.js';
@@ -177,6 +178,11 @@ export type {
   InteractiveProductOptions,
   InteractiveProductProps,
 } from './controllers/commerce/core/interactive-product/headless-core-interactive-product.js';
+export type {
+  InteractiveSpotlightContent,
+  InteractiveSpotlightContentOptions,
+  InteractiveSpotlightContentProps,
+} from './controllers/commerce/core/interactive-spotlight-content/headless-core-interactive-spotlight-content.js';
 export type {
   Pagination,
   PaginationOptions,

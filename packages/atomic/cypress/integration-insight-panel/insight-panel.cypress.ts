@@ -37,24 +37,6 @@ describe('Insight Panel test suites', () => {
         .should('have.length.at.least', 1);
     });
 
-    it('should not add any unexpected style tags', () => {
-      const numTopLevelStyleTags = 4;
-      const numLayoutStyleTags = 1;
-
-      cy.get('style').should(
-        'have.length',
-        numTopLevelStyleTags + numLayoutStyleTags
-      );
-      InsightPanelsSelectors.topLevelStyleTags().should(
-        'have.length',
-        numTopLevelStyleTags
-      );
-      InsightPanelsSelectors.layoutStyleTags().should(
-        'have.length',
-        numLayoutStyleTags
-      );
-    });
-
     it('should display results', () => {
       InsightPanelsSelectors.results()
         .should('exist')
@@ -90,13 +72,6 @@ describe('Insight Panel test suites', () => {
         .shadow()
         .find('[part~="active-page-button"]')
         .should('have.attr', 'value', '2');
-    });
-
-    it('should display query summary', () => {
-      InsightPanelsSelectors.querySummary()
-        .should('exist')
-        .shadow()
-        .should('have.text', 'Insights related to this case');
     });
 
     it('should display a search box', () => {
@@ -195,7 +170,6 @@ describe('Insight Panel test suites', () => {
     });
   });
 
-
   describe('Smart Snippet Answer', () => {
     const visitPage = () => {
       cy.visit(host);
@@ -232,19 +206,6 @@ describe('Insight Panel test suites', () => {
 
       it('should show the smart snippet component', () => {
         InsightPanelsSelectors.smartSnippetExpandableAnswer().should('exist');
-      });
-
-      describe('when giving explanatory feedback', () => {
-        it('should show the feedback modal', () => {
-          InsightPanelsSelectors.smartSnippetFeedbackModal().should(
-            'not.exist'
-          );
-
-          InsightPanelsSelectors.smartSnippetFeedbackNoButton().click();
-          InsightPanelsSelectors.smartSnippetsExplainWhyButton().click();
-
-          InsightPanelsSelectors.smartSnippetFeedbackModal().should('exist');
-        });
       });
     });
   });

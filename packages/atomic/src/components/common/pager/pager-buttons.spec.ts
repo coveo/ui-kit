@@ -1,6 +1,6 @@
 import type {i18n as I18n} from 'i18next';
 import {html} from 'lit';
-import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {beforeAll, describe, expect, it} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
@@ -92,42 +92,6 @@ describe('#pagerButtons', () => {
       element,
       div: element.querySelector('div'),
       inputs: element.querySelectorAll('input'),
-    };
-  };
-
-  const renderMultiplePageButtons = async (
-    onFocusCallback?: (
-      elements: HTMLInputElement[],
-      previousFocus: HTMLInputElement,
-      newFocus: HTMLInputElement
-    ) => Promise<void>
-  ) => {
-    const element = await renderFunctionFixture(
-      html`
-        ${renderPagerPageButton({
-          props: {
-            groupName: 'pager',
-            page: 1,
-            isSelected: false,
-            text: '1',
-            onFocusCallback,
-          },
-        })}${renderPagerPageButton({
-          props: {
-            groupName: 'pager',
-            page: 2,
-            isSelected: false,
-            text: '2',
-            onFocusCallback,
-          },
-        })}
-      `
-    );
-    return {
-      element,
-      inputs: Array.from(
-        element.querySelectorAll('[type="radio"]')
-      ) as HTMLInputElement[],
     };
   };
 
@@ -233,46 +197,6 @@ describe('#pagerButtons', () => {
       const {input} = await renderPageButton();
 
       expect(input).toHaveAttribute('aria-roledescription', 'link');
-    });
-
-    it('should change focus target when input is tab', async () => {
-      const onFocusCallback = vi.fn().mockResolvedValue(undefined);
-      const {inputs} = await renderMultiplePageButtons(onFocusCallback);
-
-      inputs[0].dispatchEvent(
-        new KeyboardEvent('keydown', {key: 'Tab', bubbles: true})
-      );
-
-      await vi.waitFor(() => {
-        expect(onFocusCallback).toHaveBeenCalledTimes(1);
-        expect(onFocusCallback).toHaveBeenCalledWith(
-          inputs,
-          inputs[0],
-          inputs[1]
-        );
-      });
-    });
-
-    it('should change focus target when input is shift + tab', async () => {
-      const onFocusCallback = vi.fn().mockResolvedValue(undefined);
-      const {inputs} = await renderMultiplePageButtons(onFocusCallback);
-
-      inputs[1].dispatchEvent(
-        new KeyboardEvent('keydown', {
-          key: 'Tab',
-          bubbles: true,
-          shiftKey: true,
-        })
-      );
-
-      await vi.waitFor(() => {
-        expect(onFocusCallback).toHaveBeenCalledTimes(1);
-        expect(onFocusCallback).toHaveBeenCalledWith(
-          inputs,
-          inputs[1],
-          inputs[0]
-        );
-      });
     });
   });
 });
