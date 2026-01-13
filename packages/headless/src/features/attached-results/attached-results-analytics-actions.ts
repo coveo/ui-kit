@@ -98,7 +98,7 @@ export const logCitationDocumentDetach = (citation: GeneratedAnswerCitation) =>
       return client.logCaseDetach(
         uriHash,
         getCaseContextAnalyticsMetadata(state.insightCaseContext),
-        citation.permanentId
+        citation.permanentid
       );
     },
     analyticsType: 'InsightPanel.DetachItem',
