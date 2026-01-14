@@ -74,16 +74,6 @@ describe('Insight Panel test suites', () => {
         .should('have.attr', 'value', '2');
     });
 
-    it('should display refine-toggle', () => {
-      InsightPanelsSelectors.refineToggle()
-        .should('exist')
-        .shadow()
-        .find('button')
-        .should('exist')
-        .should('have.attr', 'title', 'Filters');
-    });
-
-
     it('should display edit toggle', () => {
       InsightPanelsSelectors.editToggle()
         .should('exist')

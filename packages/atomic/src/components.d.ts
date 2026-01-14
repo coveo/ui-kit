@@ -180,10 +180,6 @@ export namespace Components {
          */
         "withToggle"?: boolean;
     }
-    interface AtomicInsightHistoryToggle {
-        "clickCallback": () => void;
-        "tooltip": string;
-    }
     interface AtomicInsightNumericFacet {
         /**
           * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc   ... ></atomic-insight-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc="doc"   ... ></atomic-insight-numeric-facet> ```
@@ -241,8 +237,6 @@ export namespace Components {
     interface AtomicInsightRefineModal {
         "isOpen": boolean;
         "openButton"?: HTMLElement;
-    }
-    interface AtomicInsightRefineToggle {
     }
     interface AtomicInsightResult {
         /**
@@ -493,24 +487,6 @@ export namespace Components {
         "ticketCreationDateTime": string;
         /**
           * The ID of the user whose actions are being displayed. For example in email format "someone@company.com".
-         */
-        "userId": string;
-    }
-    /**
-     * Internal component of the atomic-insight-interface
-     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
-     */
-    interface AtomicInsightUserActionsToggle {
-        /**
-          * The names of custom events to exclude.
-         */
-        "excludedCustomActions": string[];
-        /**
-          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
-         */
-        "ticketCreationDateTime": string;
-        /**
-          * The ID of the user whose actions are being displayed.
          */
         "userId": string;
     }
@@ -915,12 +891,6 @@ declare global {
         prototype: HTMLAtomicInsightGeneratedAnswerElement;
         new (): HTMLAtomicInsightGeneratedAnswerElement;
     };
-    interface HTMLAtomicInsightHistoryToggleElement extends Components.AtomicInsightHistoryToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightHistoryToggleElement: {
-        prototype: HTMLAtomicInsightHistoryToggleElement;
-        new (): HTMLAtomicInsightHistoryToggleElement;
-    };
     interface HTMLAtomicInsightNumericFacetElement extends Components.AtomicInsightNumericFacet, HTMLStencilElement {
     }
     var HTMLAtomicInsightNumericFacetElement: {
@@ -932,12 +902,6 @@ declare global {
     var HTMLAtomicInsightRefineModalElement: {
         prototype: HTMLAtomicInsightRefineModalElement;
         new (): HTMLAtomicInsightRefineModalElement;
-    };
-    interface HTMLAtomicInsightRefineToggleElement extends Components.AtomicInsightRefineToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightRefineToggleElement: {
-        prototype: HTMLAtomicInsightRefineToggleElement;
-        new (): HTMLAtomicInsightRefineToggleElement;
     };
     interface HTMLAtomicInsightResultElement extends Components.AtomicInsightResult, HTMLStencilElement {
     }
@@ -1080,16 +1044,6 @@ declare global {
     var HTMLAtomicInsightUserActionsTimelineElement: {
         prototype: HTMLAtomicInsightUserActionsTimelineElement;
         new (): HTMLAtomicInsightUserActionsTimelineElement;
-    };
-    /**
-     * Internal component of the atomic-insight-interface
-     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
-     */
-    interface HTMLAtomicInsightUserActionsToggleElement extends Components.AtomicInsightUserActionsToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightUserActionsToggleElement: {
-        prototype: HTMLAtomicInsightUserActionsToggleElement;
-        new (): HTMLAtomicInsightUserActionsToggleElement;
     };
     interface HTMLAtomicIpxBodyElementEventMap {
         "animationEnded": never;
@@ -1267,10 +1221,8 @@ declare global {
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
-        "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
         "atomic-insight-numeric-facet": HTMLAtomicInsightNumericFacetElement;
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
-        "atomic-insight-refine-toggle": HTMLAtomicInsightRefineToggleElement;
         "atomic-insight-result": HTMLAtomicInsightResultElement;
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
         "atomic-insight-result-action-bar": HTMLAtomicInsightResultActionBarElement;
@@ -1287,7 +1239,6 @@ declare global {
         "atomic-insight-user-actions-modal": HTMLAtomicInsightUserActionsModalElement;
         "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
         "atomic-insight-user-actions-timeline": HTMLAtomicInsightUserActionsTimelineElement;
-        "atomic-insight-user-actions-toggle": HTMLAtomicInsightUserActionsToggleElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-button": HTMLAtomicIpxButtonElement;
         "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
@@ -1450,10 +1401,6 @@ declare namespace LocalJSX {
          */
         "withToggle"?: boolean;
     }
-    interface AtomicInsightHistoryToggle {
-        "clickCallback"?: () => void;
-        "tooltip"?: string;
-    }
     interface AtomicInsightNumericFacet {
         /**
           * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc   ... ></atomic-insight-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc="doc"   ... ></atomic-insight-numeric-facet> ```
@@ -1511,8 +1458,6 @@ declare namespace LocalJSX {
     interface AtomicInsightRefineModal {
         "isOpen"?: boolean;
         "openButton"?: HTMLElement;
-    }
-    interface AtomicInsightRefineToggle {
     }
     interface AtomicInsightResult {
         /**
@@ -1758,24 +1703,6 @@ declare namespace LocalJSX {
         "ticketCreationDateTime": string;
         /**
           * The ID of the user whose actions are being displayed. For example in email format "someone@company.com".
-         */
-        "userId": string;
-    }
-    /**
-     * Internal component of the atomic-insight-interface
-     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
-     */
-    interface AtomicInsightUserActionsToggle {
-        /**
-          * The names of custom events to exclude.
-         */
-        "excludedCustomActions"?: string[];
-        /**
-          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
-         */
-        "ticketCreationDateTime": string;
-        /**
-          * The ID of the user whose actions are being displayed.
          */
         "userId": string;
     }
@@ -2080,10 +2007,8 @@ declare namespace LocalJSX {
         "atomic-insight-facet": AtomicInsightFacet;
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
-        "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
         "atomic-insight-numeric-facet": AtomicInsightNumericFacet;
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
-        "atomic-insight-refine-toggle": AtomicInsightRefineToggle;
         "atomic-insight-result": AtomicInsightResult;
         "atomic-insight-result-action": AtomicInsightResultAction;
         "atomic-insight-result-action-bar": AtomicInsightResultActionBar;
@@ -2100,7 +2025,6 @@ declare namespace LocalJSX {
         "atomic-insight-user-actions-modal": AtomicInsightUserActionsModal;
         "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
         "atomic-insight-user-actions-timeline": AtomicInsightUserActionsTimeline;
-        "atomic-insight-user-actions-toggle": AtomicInsightUserActionsToggle;
         "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-button": AtomicIpxButton;
         "atomic-ipx-embedded": AtomicIpxEmbedded;
@@ -2132,10 +2056,8 @@ declare module "@stencil/core" {
             "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
             "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
-            "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
             "atomic-insight-numeric-facet": LocalJSX.AtomicInsightNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightNumericFacetElement>;
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
-            "atomic-insight-refine-toggle": LocalJSX.AtomicInsightRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineToggleElement>;
             "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
             "atomic-insight-result-action-bar": LocalJSX.AtomicInsightResultActionBar & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionBarElement>;
@@ -2164,11 +2086,6 @@ declare module "@stencil/core" {
              * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
              */
             "atomic-insight-user-actions-timeline": LocalJSX.AtomicInsightUserActionsTimeline & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsTimelineElement>;
-            /**
-             * Internal component of the atomic-insight-interface
-             * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
-             */
-            "atomic-insight-user-actions-toggle": LocalJSX.AtomicInsightUserActionsToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsToggleElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
             "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
