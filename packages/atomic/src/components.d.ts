@@ -5,28 +5,22 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InteractiveCitation, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
-import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, UserAction as IUserAction } from "@coveo/headless/insight";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-import { InteractiveResult as RecsInteractiveResult, Result as RecsResult } from "@coveo/headless/recommendation";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
-export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, GeneratedAnswerCitation, InteractiveCitation, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
-export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, UserAction as IUserAction } from "@coveo/headless/insight";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-export { InteractiveResult as RecsInteractiveResult, Result as RecsResult } from "@coveo/headless/recommendation";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { i18n } from "i18next";
@@ -530,14 +524,6 @@ export namespace Components {
          */
         "container"?: HTMLElement;
     }
-    interface AtomicIpxModal {
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
-         */
-        "container"?: HTMLElement;
-        "isOpen": boolean;
-        "source"?: HTMLElement;
-    }
     /**
      * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
      */
@@ -843,10 +829,6 @@ export interface AtomicIpxEmbeddedCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicIpxEmbeddedElement;
 }
-export interface AtomicIpxModalCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicIpxModalElement;
-}
 export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicQuickviewModalElement;
@@ -1109,23 +1091,6 @@ declare global {
         prototype: HTMLAtomicIpxEmbeddedElement;
         new (): HTMLAtomicIpxEmbeddedElement;
     };
-    interface HTMLAtomicIpxModalElementEventMap {
-        "animationEnded": never;
-    }
-    interface HTMLAtomicIpxModalElement extends Components.AtomicIpxModal, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicIpxModalElementEventMap>(type: K, listener: (this: HTMLAtomicIpxModalElement, ev: AtomicIpxModalCustomEvent<HTMLAtomicIpxModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicIpxModalElementEventMap>(type: K, listener: (this: HTMLAtomicIpxModalElement, ev: AtomicIpxModalCustomEvent<HTMLAtomicIpxModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicIpxModalElement: {
-        prototype: HTMLAtomicIpxModalElement;
-        new (): HTMLAtomicIpxModalElement;
-    };
     /**
      * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
      */
@@ -1268,7 +1233,6 @@ declare global {
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-button": HTMLAtomicIpxButtonElement;
         "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
-        "atomic-ipx-modal": HTMLAtomicIpxModalElement;
         "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
@@ -1774,15 +1738,6 @@ declare namespace LocalJSX {
         "container"?: HTMLElement;
         "onAnimationEnded"?: (event: AtomicIpxEmbeddedCustomEvent<never>) => void;
     }
-    interface AtomicIpxModal {
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
-         */
-        "container"?: HTMLElement;
-        "isOpen"?: boolean;
-        "onAnimationEnded"?: (event: AtomicIpxModalCustomEvent<never>) => void;
-        "source"?: HTMLElement;
-    }
     /**
      * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
      */
@@ -2068,7 +2023,6 @@ declare namespace LocalJSX {
         "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-button": AtomicIpxButton;
         "atomic-ipx-embedded": AtomicIpxEmbedded;
-        "atomic-ipx-modal": AtomicIpxModal;
         "atomic-ipx-recs-list": AtomicIpxRecsList;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
@@ -2131,7 +2085,6 @@ declare module "@stencil/core" {
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
             "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
-            "atomic-ipx-modal": LocalJSX.AtomicIpxModal & JSXBase.HTMLAttributes<HTMLAtomicIpxModalElement>;
             /**
              * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
              */
