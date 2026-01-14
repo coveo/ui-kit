@@ -1,5 +1,5 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
+import type {HighlightKeywords} from '../../atomic-quickview-modal/highlight-keywords';
 import type {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
 import {buildQuickviewPreviewBar} from './quickview-preview-bar';
 

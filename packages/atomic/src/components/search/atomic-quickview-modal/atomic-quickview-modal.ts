@@ -5,15 +5,15 @@ import {
   type Result,
   type TermsToHighlight,
 } from '@coveo/headless';
-import {type CSSResultGroup, html, LitElement, nothing} from 'lit';
+import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '@/src/components/common/atomic-modal/export-parts';
 import {renderButton} from '@/src/components/common/button';
 import {renderIconButton} from '@/src/components/common/icon-button';
 import {renderLinkWithItemAnalytics} from '@/src/components/common/item-link/item-link';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/interfaces';
-import {QuickviewSidebar} from '@/src/components/search/result-template-components/atomic-quickview-sidebar/atomic-quickview-sidebar';
-import {QuickviewIframe} from '@/src/components/search/result-template-components/quickview-iframe/quickview-iframe';
+import {renderQuickviewSidebar} from '@/src/components/search/result-template-components/atomic-quickview-sidebar/atomic-quickview-sidebar';
+import {renderQuickviewIframe} from '@/src/components/search/result-template-components/quickview-iframe/quickview-iframe';
 import {buildQuickviewPreviewBar} from '@/src/components/search/result-template-components/quickview-preview-bar/quickview-preview-bar';
 import {
   getWordsHighlights,
@@ -25,17 +25,8 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import CloseIcon from '../../../../images/close.svg';
-
-export interface HighlightKeywords {
-  highlightNone: boolean;
-  keywords: {
-    [text: string]: {
-      indexIdentifier: string;
-      enabled: boolean;
-    };
-  };
-}
+import CloseIcon from '../../../images/close.svg';
+import type {HighlightKeywords} from './highlight-keywords';
 
 /**
  * The `atomic-quickview-modal` component is the modal opened when clicking a quickview button.
@@ -226,35 +217,40 @@ export class AtomicQuickviewModal
           class="h-full overflow-y-auto"
           style="background-color: var(--atomic-neutral-light)"
         >
-          ${QuickviewSidebar({
-            words: this.words,
-            i18n: this.bindings.i18n,
-            highlightKeywords: this.highlightKeywords,
-            onHighlightKeywords: (highlight) => {
-              this.highlightKeywords = highlight;
-            },
-            minimized: this.minimizeSidebar,
-            onMinimize: (minimize) => {
-              this.minimizeSidebar = minimize;
+          ${renderQuickviewSidebar({
+            props: {
+              words: this.words,
+              i18n: this.bindings.i18n,
+              highlightKeywords: this.highlightKeywords,
+              onHighlightKeywords: (highlight: HighlightKeywords) => {
+                this.highlightKeywords = highlight;
+              },
+              minimized: this.minimizeSidebar,
+              onMinimize: (minimize: boolean) => {
+                this.minimizeSidebar = minimize;
+              },
             },
           })}
         </div>
         <div class="relative overflow-auto">
-          ${QuickviewIframe({
-            title:
-              this.result?.title ?? this.bindings.i18n.t('preview-modal-title'),
-            logger: this.logger,
-            src: this.quickviewSrc,
-            sandbox: this.sandbox,
-            uniqueIdentifier: this.quickviewUniqueIdentifier,
-            content: this.content,
-            onSetIframeRef: async (ref) => {
-              this.iframeRef = ref;
-              this.words = getWordsHighlights(
-                this.termsToHighlight,
-                this.iframeRef
-              );
-              this.handleHighlightsScripts();
+          ${renderQuickviewIframe({
+            props: {
+              title:
+                this.result?.title ??
+                this.bindings.i18n.t('preview-modal-title'),
+              logger: this.logger,
+              src: this.quickviewSrc,
+              sandbox: this.sandbox,
+              uniqueIdentifier: this.quickviewUniqueIdentifier,
+              content: this.content,
+              onSetIframeRef: async (ref: HTMLIFrameElement) => {
+                this.iframeRef = ref;
+                this.words = getWordsHighlights(
+                  this.termsToHighlight,
+                  this.iframeRef
+                );
+                this.handleHighlightsScripts();
+              },
             },
           })}
           ${buildQuickviewPreviewBar(
@@ -282,7 +278,7 @@ export class AtomicQuickviewModal
             disabled: this.current === 1,
             text: this.bindings.i18n.t('quickview-previous'),
           },
-        })}
+        })(nothing)}
         <p class="text-center">
           ${this.bindings.i18n.t('showing-results-of', {
             first: this.current,
@@ -301,7 +297,7 @@ export class AtomicQuickviewModal
             disabled: this.current === this.total,
             text: this.bindings.i18n.t('quickview-next'),
           },
-        })}
+        })(nothing)}
       </div>
     `;
   }

@@ -6,7 +6,7 @@ import ArrowUp from '../../../../images/arrow-top-rounded.svg';
 import Remove from '../../../../images/remove.svg';
 import {IconButton} from '../../../common/stencil-iconButton';
 import {FieldsetGroup} from '../../../common/stencil-fieldset-group';
-import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
+import type {HighlightKeywords} from '../../atomic-quickview-modal/highlight-keywords';
 import {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
 
 export const identifierKeywordsSection = 'coveo-quickview-sidebar-keywords';

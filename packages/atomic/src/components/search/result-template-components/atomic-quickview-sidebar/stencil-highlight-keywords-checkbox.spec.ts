@@ -11,7 +11,7 @@ import {
 } from 'vitest';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderStencilVNode} from '@/vitest-utils/testing-helpers/stencil-vnode-renderer';
-import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
+import type {HighlightKeywords} from '../../atomic-quickview-modal/highlight-keywords';
 import {HighlightKeywordsCheckbox} from './stencil-highlight-keywords-checkbox';
 
 describe('HighlightKeywordsCheckbox (Stencil)', () => {

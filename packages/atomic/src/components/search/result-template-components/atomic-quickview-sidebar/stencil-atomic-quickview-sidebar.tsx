@@ -1,10 +1,10 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
-import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
 import {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
 import {HighlightKeywordsCheckbox} from './stencil-highlight-keywords-checkbox';
 import {Keywords} from './stencil-keywords';
 import {MinimizeButton} from './stencil-minimize-button';
+import type {HighlightKeywords} from '../../atomic-quickview-modal/highlight-keywords';
 
 interface QuickviewSidebarProps {
   words: Record<string, QuickviewWordHighlight>;

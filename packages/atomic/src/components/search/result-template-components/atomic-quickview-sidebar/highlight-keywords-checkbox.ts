@@ -3,7 +3,7 @@ import {html} from 'lit';
 import {when} from 'lit/directives/when.js';
 import {renderCheckbox} from '@/src/components/common/checkbox';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
+import type {HighlightKeywords} from '../../atomic-quickview-modal/highlight-keywords';
 
 const highlightKeywordsCheckboxId =
   'atomic-quickview-sidebar-highlight-keywords';

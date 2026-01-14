@@ -2,8 +2,8 @@ import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import MinimizeIcon from '../../../../images/menu.svg';
 import {IconButton} from '../../../common/stencil-iconButton';
-import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
 import {identifierKeywordsSection} from './stencil-keywords';
+import type {HighlightKeywords} from '../../atomic-quickview-modal/highlight-keywords';
 
 /**
  * @internal

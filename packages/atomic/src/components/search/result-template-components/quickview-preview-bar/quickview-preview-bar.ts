@@ -1,4 +1,4 @@
-import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
+import type {HighlightKeywords} from '../../atomic-quickview-modal/highlight-keywords';
 import type {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
 
 export const buildQuickviewPreviewBar = (
