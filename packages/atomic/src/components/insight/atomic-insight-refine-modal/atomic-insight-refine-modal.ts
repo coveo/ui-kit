@@ -27,7 +27,29 @@ import {rectEquals} from '@/src/utils/dom-utils';
 
 /**
  * The `atomic-insight-refine-modal` component displays a modal with filters for refining search results.
- * @internal
+ *
+ * This component should not be used directly. It is internally used by the `atomic-insight-refine-toggle` component to display the refine modal.
+ *
+ * @part title - The title of the modal.
+ * @part close-button - The button in the header that closes the modal.
+ * @part close-icon - The icon of the close button.
+ * @part content - The wrapper around the content inside the body of the modal.
+ * @part section-title - The title for each section.
+ * @part section-filters-title - The title for the filters section.
+ * @part filter-section - The section containing facets and the "filters" title.
+ * @part filter-clear-all - The button that resets all actively selected facet values.
+ * @part footer-content - The wrapper around the content inside the footer of the modal, containing the button to view results.
+ * @part footer-button - The button in the footer that closes the modal.
+ * @part footer-button-text - The text inside the button in the footer that closes the modal.
+ * @part footer-button-count - The count inside the button in the footer that closes the modal.
+ * @part footer-wrapper - The wrapper with a shadow or background color around the footer.
+ * @part footer - The footer of the modal.
+ * @part header-ruler - The horizontal ruler underneath the header.
+ * @part body-wrapper - The wrapper around the body.
+ * @part body - The body of the modal, between the header and the footer.
+ * @part header-wrapper - The wrapper around the header.
+ * @part header - The header of the modal, containing the title.
+ * @part container - The modal's outermost container.
  */
 @customElement('atomic-insight-refine-modal')
 @bindings()
