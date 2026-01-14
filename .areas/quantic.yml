@@ -1,0 +1,8 @@
+description: Salesforce Lightning Web Components (Quantic)
+file_patterns:
+  - packages/quantic/**
+
+reviewers:
+  knowledge-ui-kit-reviewers: ~
+  salesforce-integration: ~
+  dxui: ~

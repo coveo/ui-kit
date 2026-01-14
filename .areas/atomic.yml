@@ -1,0 +1,15 @@
+description: Atomic UI components package
+file_patterns:
+  - packages/atomic/**
+  - packages/atomic-angular/**
+  - packages/atomic-react/**
+  - packages/atomic-hosted-page/**
+  - packages/create-atomic/**
+  - packages/create-atomic-component/**
+  - packages/create-atomic-component-project/**
+  - packages/create-atomic-result-component/**
+  - packages/create-atomic-rollup-plugin/**
+  - packages/create-atomic-template/**
+
+reviewers:
+  dxui: ~

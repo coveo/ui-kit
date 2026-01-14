@@ -1,0 +1,8 @@
+description: SSR (Server-Side Rendering) features
+file_patterns:
+  - packages/headless/src/ssr/**
+  - packages/headless/src/ssr-next/**
+
+reviewers:
+  dxui:
+    minimum_approvals: 1

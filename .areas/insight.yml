@@ -1,0 +1,18 @@
+description: Insight Panel features
+file_patterns:
+  # Atomic IPX components
+  - packages/atomic/src/components/ipx/**
+  - packages/atomic/src/components/insight/**
+
+  # Headless Insight
+  - packages/headless/src/app/insight-engine/**
+  - packages/headless/src/controllers/insight/**
+  - packages/headless/src/controllers/insight-interface/**
+  - packages/headless/src/features/insight-interface/**
+  - packages/headless/src/features/insight-search/**
+  - packages/headless/src/features/insight-user-actions/**
+  - packages/headless/src/features/insight-configuration/**
+
+reviewers:
+  knowledge-ui-kit-reviewers: ~
+  dxui: ~
