@@ -1,3 +1,9 @@
+## <small>1.5.14 (2026-01-14)</small>
+
+* fix(deps): Replace catalog:* with workspace:* for @coveo/create-atomic-rollup-plugin (#6808) ([2872e4b](https://github.com/coveo/ui-kit/commits/2872e4b)), closes [#6808](https://github.com/coveo/ui-kit/issues/6808)
+
+
+
 ## <small>1.5.13 (2026-01-07)</small>
 
 * [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
