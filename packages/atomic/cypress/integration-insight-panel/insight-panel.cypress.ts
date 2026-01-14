@@ -74,20 +74,6 @@ describe('Insight Panel test suites', () => {
         .should('have.attr', 'value', '2');
     });
 
-    it('should display a search box', () => {
-      InsightPanelsSelectors.searchbox()
-        .should('exist')
-        .shadow()
-        .find('textarea[part="textarea"]')
-        .should('exist')
-        .should('have.attr', 'placeholder', 'Search...');
-
-      InsightPanelsSelectors.searchbox()
-        .shadow()
-        .find('atomic-icon')
-        .should('have.attr', 'icon');
-    });
-
     it('should display edit toggle', () => {
       InsightPanelsSelectors.editToggle()
         .should('exist')

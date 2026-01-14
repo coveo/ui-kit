@@ -36,6 +36,8 @@ export default {
     await import(
       './atomic-insight-result-template/atomic-insight-result-template.js'
     ),
+  'atomic-insight-search-box': async () =>
+    await import('./atomic-insight-search-box/atomic-insight-search-box.js'),
   'atomic-insight-tab': async () =>
     await import('./atomic-insight-tab/atomic-insight-tab.js'),
   'atomic-insight-tabs': async () =>
