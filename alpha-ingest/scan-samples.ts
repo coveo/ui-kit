@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import * as glob from 'glob';
+import * as fs from 'fs';
 import neo4j from 'neo4j-driver';
 import * as path from 'path';
 import {Project, SyntaxKind} from 'ts-morph';
@@ -10,94 +10,337 @@ const driver = neo4j.driver(
   neo4j.auth.basic(process.env.NEO4J_USER!, process.env.NEO4J_PASSWORD!)
 );
 
+interface SampleInfo {
+  name: string;
+  category: string;
+  path: string;
+  srcPath: string;
+}
+
+interface ScanStats {
+  samples: number;
+  controllerLinks: number;
+  componentLinks: number;
+}
+
+/**
+ * Recursively find all sample directories that contain a src/ folder.
+ * Samples are organized as: samples/{category}/{sample-name}/src/
+ */
+function findSampleDirectories(samplesRoot: string): SampleInfo[] {
+  const samples: SampleInfo[] = [];
+
+  // Get top-level categories: atomic, headless, headless-ssr
+  const categories = fs
+    .readdirSync(samplesRoot, {withFileTypes: true})
+    .filter(
+      (d) =>
+        d.isDirectory() && !d.name.startsWith('.') && d.name !== 'node_modules'
+    )
+    .map((d) => d.name);
+
+  for (const category of categories) {
+    const categoryPath = path.join(samplesRoot, category);
+
+    // Check if the category itself has a src/ folder (unlikely but possible)
+    const directSrcPath = path.join(categoryPath, 'src');
+    if (
+      fs.existsSync(directSrcPath) &&
+      fs.statSync(directSrcPath).isDirectory()
+    ) {
+      samples.push({
+        name: category,
+        category: 'root',
+        path: categoryPath,
+        srcPath: directSrcPath,
+      });
+      continue;
+    }
+
+    // Look for sample subdirectories within the category
+    const subDirs = fs
+      .readdirSync(categoryPath, {withFileTypes: true})
+      .filter(
+        (d) =>
+          d.isDirectory() &&
+          !d.name.startsWith('.') &&
+          d.name !== 'node_modules'
+      );
+
+    for (const subDir of subDirs) {
+      const samplePath = path.join(categoryPath, subDir.name);
+      const srcPath = path.join(samplePath, 'src');
+
+      // Check for src/ directly in the sample
+      if (fs.existsSync(srcPath) && fs.statSync(srcPath).isDirectory()) {
+        samples.push({
+          name: subDir.name,
+          category,
+          path: samplePath,
+          srcPath,
+        });
+      } else {
+        // Some samples might have deeper nesting (e.g., headless-ssr/search-nextjs/app-router)
+        const nestedDirs = fs
+          .readdirSync(samplePath, {withFileTypes: true})
+          .filter(
+            (d) =>
+              d.isDirectory() &&
+              !d.name.startsWith('.') &&
+              d.name !== 'node_modules'
+          );
+
+        for (const nestedDir of nestedDirs) {
+          const nestedPath = path.join(samplePath, nestedDir.name);
+          const nestedSrcPath = path.join(nestedPath, 'src');
+
+          if (
+            fs.existsSync(nestedSrcPath) &&
+            fs.statSync(nestedSrcPath).isDirectory()
+          ) {
+            samples.push({
+              name: `${subDir.name}/${nestedDir.name}`,
+              category,
+              path: nestedPath,
+              srcPath: nestedSrcPath,
+            });
+          }
+        }
+      }
+    }
+  }
+
+  return samples;
+}
+
+/**
+ * Find all source files in a directory, including common locations like:
+ * - src/
+ * - app/ (for Next.js app router)
+ * - pages/ (for Next.js pages router)
+ * - components/
+ * - lib/
+ */
+function findSourceFiles(samplePath: string): string[] {
+  const extensions = ['.ts', '.tsx', '.js', '.jsx'];
+  const ignoreDirs = ['node_modules', '.next', 'dist', 'build', '.git'];
+  const files: string[] = [];
+
+  const visitedDirectories = new Set<string>();
+
+  function walk(dir: string) {
+    if (!fs.existsSync(dir)) return;
+
+    let realPath: string;
+    try {
+      realPath = fs.realpathSync.native(dir);
+    } catch {
+      return;
+    }
+
+    if (visitedDirectories.has(realPath)) {
+      return;
+    }
+    visitedDirectories.add(realPath);
+
+    let entries: fs.Dirent[];
+    try {
+      entries = fs.readdirSync(dir, {withFileTypes: true});
+    } catch {
+      return;
+    }
+
+    for (const entry of entries) {
+      if (ignoreDirs.includes(entry.name)) continue;
+
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        try {
+          if (!fs.lstatSync(fullPath).isSymbolicLink()) {
+            walk(fullPath);
+          }
+        } catch {}
+      } else if (extensions.some((ext) => entry.name.endsWith(ext))) {
+        files.push(fullPath);
+      }
+    }
+  }
+
+  // Walk through common source directories
+  const commonDirs = [
+    'src',
+    'app',
+    'pages',
+    'components',
+    'lib',
+    'utils',
+    'hooks',
+  ];
+  for (const dir of commonDirs) {
+    walk(path.join(samplePath, dir));
+  }
+
+  // Also check root-level files (some samples have files at root)
+  const rootFiles = fs
+    .readdirSync(samplePath, {withFileTypes: true})
+    .filter((e) => e.isFile() && extensions.some((ext) => e.name.endsWith(ext)))
+    .map((e) => path.join(samplePath, e.name));
+
+  return [...files, ...rootFiles];
+}
+
+async function linkApplicationToPackage(
+  session: neo4j.Session,
+  appName: string,
+  absolutePath: string
+) {
+  const relativePath = absolutePath.replace(process.env.REPO_ROOT + '/', '');
+  await session.run(
+    `
+    MATCH (app:Application {name: $appName})
+    MATCH (pkg:Package)
+    WHERE pkg.path = $relativePath
+    MERGE (app)-[:IS_PACKAGE]->(pkg)
+    `,
+    {appName, relativePath}
+  );
+}
+
 async function scanSamples() {
   const session = driver.session();
-  const project = new Project({compilerOptions: {allowJs: true, jsx: 1}}); // Enable JSX/TSX
+  const project = new Project({
+    compilerOptions: {allowJs: true, jsx: 2}, // jsx: 2 = react
+  });
 
-  // 1. Locate Samples Directory
-  // Assuming a folder structure like /samples or /apps
   const samplesRoot = path.join(process.env.REPO_ROOT!, 'samples');
-  // OR if they are inside /packages: path.join(process.env.REPO_ROOT!, "packages", "samples");
+  console.log(`Scanning Samples from: ${samplesRoot}\n`);
 
-  console.log(`Scanning Samples from: ${samplesRoot}`);
+  // Find all sample directories
+  const samples = findSampleDirectories(samplesRoot);
+  console.log(`Found ${samples.length} samples:\n`);
 
-  // Find all sample subdirectories
-  const sampleDirs = glob.sync(`${samplesRoot}/*/`);
+  const stats: ScanStats = {
+    samples: 0,
+    controllerLinks: 0,
+    componentLinks: 0,
+  };
 
-  for (const dir of sampleDirs) {
-    const sampleName = path.basename(dir);
+  for (const sample of samples) {
+    const fullName = `${sample.category}/${sample.name}`;
 
-    // Create Application Node
+    // Create Application node
     await session.run(
       `
-        MERGE (app:Application {name: $name, type: 'sample'})
+      MERGE (app:Application {name: $name})
+      SET app.type = 'sample',
+          app.category = $category,
+          app.path = $path
       `,
-      {name: sampleName}
+      {name: fullName, category: sample.category, path: sample.path}
     );
 
-    console.log(`Processing Sample: ${sampleName}`);
+    await linkApplicationToPackage(session, fullName, sample.path);
 
-    // 2. Scan source files in this sample
-    const sourceFiles = glob.sync(`${dir}/src/**/*.{ts,tsx,js,jsx}`);
-    project.addSourceFilesAtPaths(sourceFiles);
+    stats.samples++;
 
-    for (const sourceFile of project.getSourceFiles()) {
-      // A. Check for Atomic Component Usage (DOM Analysis)
-      // Look for JSX tags like <atomic-search-box>
-      if (
-        sourceFile.getBaseName().endsWith('tsx') ||
-        sourceFile.getBaseName().endsWith('jsx')
-      ) {
+    console.log(`[${sample.category}] ${sample.name}`);
+
+    // Find source files
+    const sourceFiles = findSourceFiles(sample.path);
+    console.log(`  Found ${sourceFiles.length} source files`);
+
+    if (sourceFiles.length === 0) {
+      console.log(`  Skipping - no source files found`);
+      continue;
+    }
+
+    const sourceFileObjects = sourceFiles.map((f) =>
+      project.addSourceFileAtPath(f)
+    );
+
+    const controllersFound = new Set<string>();
+    const componentsFound = new Set<string>();
+
+    for (const sourceFile of sourceFileObjects) {
+      // Check for Headless Controller Usage (Direct Imports)
+      const imports = sourceFile.getImportDeclarations();
+      for (const imp of imports) {
+        const moduleSpec = imp.getModuleSpecifierValue();
+        if (moduleSpec.includes('@coveo/headless')) {
+          const namedImports = imp.getNamedImports();
+          for (const named of namedImports) {
+            const importName = named.getName();
+            if (importName.startsWith('build') && importName.length > 5) {
+              const controllerName = importName.replace('build', '');
+              if (!controllersFound.has(controllerName)) {
+                controllersFound.add(controllerName);
+                await session.run(
+                  `
+                  MATCH (app:Application {name: $appName})
+                  MERGE (cont:Controller {name: $cName})
+                  MERGE (app)-[:CONSUMES]->(cont)
+                  `,
+                  {appName: fullName, cName: controllerName}
+                );
+                stats.controllerLinks++;
+              }
+            }
+          }
+        }
+      }
+
+      // Check for Atomic Component Usage in JSX/TSX
+      const fileName = sourceFile.getBaseName();
+      if (fileName.endsWith('.tsx') || fileName.endsWith('.jsx')) {
         sourceFile.forEachDescendant((node) => {
           if (
             node.getKind() === SyntaxKind.JsxSelfClosingElement ||
             node.getKind() === SyntaxKind.JsxOpeningElement
           ) {
-            const split = node.getText().split(/[ >]/);
-            const tagName = (split.at(0) ?? '').replace('<', '');
-            if (tagName.startsWith('atomic-')) {
-              session.run(
-                `
-                              MATCH (app:Application {name: $appName})
-                              MATCH (comp:Component {tag: $tagName})
-                              MERGE (app)-[:USES_COMPONENT]->(comp)
-                          `,
-                {appName: sampleName, tagName: tagName}
-              );
+            const text = node.getText();
+            const match = text.match(/^<(atomic-[a-z-]+)/);
+            if (match?.[1]) {
+              const tagName = match[1];
+              if (!componentsFound.has(tagName)) {
+                componentsFound.add(tagName);
+                // Don't await inside forEachDescendant, collect and process after
+              }
             }
           }
         });
       }
-
-      // B. Check for Headless Controller Usage (Direct Imports)
-      // e.g. import { buildSearchBox } from '@coveo/headless';
-      const imports = sourceFile.getImportDeclarations();
-      for (const imp of imports) {
-        if (imp.getModuleSpecifierValue().includes('@coveo/headless')) {
-          const namedImports = imp.getNamedImports();
-          for (const named of namedImports) {
-            const importName = named.getName();
-            if (importName.startsWith('build')) {
-              const controllerName = importName.replace('build', '');
-              session.run(
-                `
-                              MATCH (app:Application {name: $appName})
-                              MERGE (cont:Controller {name: $cName})
-                              MERGE (app)-[:CONSUMES]->(cont)
-                          `,
-                {appName: sampleName, cName: controllerName}
-              );
-              console.log(`[${sampleName}] Uses Controller: ${controllerName}`);
-            }
-          }
-        }
-      }
     }
-    // Clear project memory after each sample to avoid OOM
-    for (const file of project.getSourceFiles()) {
+
+    // Create component links (outside the forEachDescendant)
+    for (const tagName of componentsFound) {
+      await session.run(
+        `
+        MATCH (app:Application {name: $appName})
+        MATCH (comp:Component {tag: $tagName})
+        MERGE (app)-[:USES_COMPONENT]->(comp)
+        `,
+        {appName: fullName, tagName}
+      );
+      stats.componentLinks++;
+    }
+
+    // Log what was found
+    if (controllersFound.size > 0) {
+      console.log(`  Controllers: ${Array.from(controllersFound).join(', ')}`);
+    }
+    if (componentsFound.size > 0) {
+      console.log(`  Components: ${Array.from(componentsFound).join(', ')}`);
+    }
+
+    for (const file of sourceFileObjects) {
       project.removeSourceFile(file);
     }
   }
+
+  console.log('\n=== Scan Complete ===');
+  console.log(`  Samples: ${stats.samples}`);
+  console.log(`  Controller links: ${stats.controllerLinks}`);
+  console.log(`  Component links: ${stats.componentLinks}`);
 
   await session.close();
   await driver.close();

@@ -205,6 +205,36 @@ const TOOLS: Tool[] = [
       required: [],
     },
   },
+  {
+    name: 'find_export_usage',
+    description:
+      "Find which packages import a specific exported function, type, or constant (e.g., 'defineParameterManager', 'SearchEngine'). Useful for deprecation impact analysis.",
+    inputSchema: {
+      type: 'object' as const,
+      properties: {
+        export_name: {
+          type: 'string',
+          description: 'The name of the exported function, type, or constant',
+        },
+      },
+      required: ['export_name'],
+    },
+  },
+  {
+    name: 'find_export',
+    description:
+      "Find an exported symbol by name. Returns which package exports it and the file where it's defined.",
+    inputSchema: {
+      type: 'object' as const,
+      properties: {
+        name: {
+          type: 'string',
+          description: 'Export name or partial match',
+        },
+      },
+      required: ['name'],
+    },
+  },
 ];
 
 // =============================================================================
@@ -350,13 +380,20 @@ async function analyzePropertyImpact(
 
   if (propResults.length) {
     const p = propResults[0];
-    output.push('Property Details:');
-    output.push(`  Name: ${p.name}`);
-    output.push(`  HTML Attribute: ${p.attribute}`);
-    output.push(`  Type: ${p.type}`);
-    output.push(`  Default Value: ${p.defaultValue ?? 'undefined'}`);
-    if (p.description) output.push(`  Description: ${p.description}`);
-    output.push('');
+    if (!p) {
+      output.push(
+        `WARNING: Property '${propertyName}' not found in ${componentTag}`
+      );
+      output.push('');
+    } else {
+      output.push('Property Details:');
+      output.push(`  Name: ${p.name}`);
+      output.push(`  HTML Attribute: ${p.attribute}`);
+      output.push(`  Type: ${p.type}`);
+      output.push(`  Default Value: ${p.defaultValue ?? 'undefined'}`);
+      if (p.description) output.push(`  Description: ${p.description}`);
+      output.push('');
+    }
   } else {
     output.push(
       `WARNING: Property '${propertyName}' not found in ${componentTag}`
@@ -552,6 +589,77 @@ async function getGraphSchema(): Promise<string> {
   return output.join('\n');
 }
 
+async function findExportUsage(exportName: string): Promise<string> {
+  const exportInfo = await runQuery(
+    `
+    MATCH (e:Export)
+    WHERE e.name = $name
+    RETURN e.name as name, e.kind as kind, e.package as package, e.file as file
+    `,
+    {name: exportName}
+  );
+
+  const importers = await runQuery(
+    `
+    MATCH (pkg:Package)-[r:IMPORTS]->(e:Export {name: $name})
+    RETURN DISTINCT pkg.name as importer, pkg.path as path, r.file as importFile
+    ORDER BY pkg.name
+    `,
+    {name: exportName}
+  );
+
+  const output: string[] = [];
+
+  if (exportInfo.length) {
+    output.push(`=== Export: ${exportName} ===\n`);
+    for (const e of exportInfo) {
+      output.push(`Defined in: ${e.package}`);
+      output.push(`  Kind: ${e.kind}`);
+      output.push(`  File: ${e.file}\n`);
+    }
+  } else {
+    output.push(`Export '${exportName}' not found in the graph.\n`);
+    output.push('Try a partial match with find_export tool.');
+    return output.join('\n');
+  }
+
+  if (importers.length) {
+    output.push(`Imported by ${importers.length} package(s):\n`);
+    for (const r of importers) {
+      output.push(`- ${r.importer}`);
+      output.push(`    Path: ${r.path}`);
+      if (r.importFile) output.push(`    In file: ${r.importFile}`);
+    }
+  } else {
+    output.push('No packages import this export.');
+  }
+
+  return output.join('\n');
+}
+
+async function findExport(name: string): Promise<string> {
+  const results = await runQuery(
+    `
+    MATCH (e:Export)
+    WHERE e.name CONTAINS $name
+    RETURN e.name as name, e.kind as kind, e.package as package, e.file as file
+    ORDER BY e.name
+    LIMIT 20
+    `,
+    {name}
+  );
+
+  if (!results.length) return `No exports found matching '${name}'`;
+
+  const output = [`Exports matching '${name}':\n`];
+  for (const r of results) {
+    output.push(`- ${r.name} (${r.kind})`);
+    output.push(`    Package: ${r.package}`);
+    output.push(`    File: ${r.file}`);
+  }
+  return output.join('\n');
+}
+
 // =============================================================================
 // MCP SERVER
 // =============================================================================
@@ -620,6 +728,14 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         break;
       case 'get_graph_schema':
         result = await getGraphSchema();
+        break;
+      case 'find_export_usage':
+        result = await findExportUsage(
+          (args as {export_name: string}).export_name
+        );
+        break;
+      case 'find_export':
+        result = await findExport((args as {name: string}).name);
         break;
       default:
         throw new Error(`Unknown tool: ${name}`);

@@ -11,7 +11,8 @@
     "scan:headless": "node --enable-source-maps dist/scan-headless.js",
     "scan:atomic": "node --enable-source-maps dist/scan-atomic.js",
     "scan:samples": "node --enable-source-maps dist/scan-samples.js",
-    "scan:all": "npm run wipe && npm run scan:packages && npm run scan:headless && npm run scan:atomic && npm run scan:samples",
+    "scan:exports": "node --enable-source-maps dist/scan-exports.js",
+    "scan:all": "npm run wipe && npm run scan:packages && npm run scan:headless && npm run scan:atomic && npm run scan:samples && npm run scan:exports",
     "check": "node --enable-source-maps dist/check-graph.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
