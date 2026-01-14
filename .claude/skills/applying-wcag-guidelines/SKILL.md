@@ -1,11 +1,10 @@
 ---
 name: applying-wcag-guidelines
-description: Applies WCAG 2.2 Level AA accessibility standards to UI components in Atomic, Quantic, atomic-react, and atomic-angular packages. Use when creating or modifying UI components, reviewing accessibility, or writing component tests.
+description: Applies WCAG 2.2 Level AA accessibility standards to UI components. Use when creating or modifying UI components, reviewing accessibility, or when users mention accessibility-related terms or concepts (e.g., WCAG, ARIA, a11y, screen readers, keyboard navigation, or contrast).
 license: Apache-2.0
 metadata:
   author: coveo
   version: "1.0"
-  package: atomic | quantic | atomic-react | atomic-angular
 ---
 
 # Applying WCAG Guidelines
@@ -144,14 +143,19 @@ For detailed implementation patterns, see [wcag-patterns.md](references/wcag-pat
 - Include reasoning and references to standards
 - Neutral, helpful, respectful tone
 
-## ui-kit Context
+## Automated Validation
 
-**Packages:** `packages/atomic`, `packages/quantic`, `packages/atomic-react`, `packages/atomic-angular`
+**Storybook automatically runs Axe-core accessibility checks** on all stories in the Atomic package:
+- Configured in `packages/atomic/.storybook/preview.ts` with `a11y: {test: 'error'}`
+- CI fails if any WCAG violations detected
+- Axe-core checks 50+ rules including color contrast, ARIA attributes, keyboard accessibility, form labels, semantic HTML, and focus management
+- Creates comprehensive coverage when components have stories for all states
 
-**Related resources:**
-- `.github/instructions/atomic.instructions.md` - Component patterns
-- `.github/instructions/tests-atomic.instructions.md` - Testing patterns
-- `.github/agents/accessibility-v1.agent.md` - Comprehensive reviews with Storybook integration
+**Best practice:** When creating or modifying components, ensure Storybook stories cover:
+- All interactive states (enabled, disabled, focused, error)
+- All visual variants (themes, sizes, layouts)
+- Keyboard navigation scenarios
+- This maximizes automated accessibility validation coverage
 
 ## Validation Checklist
 
