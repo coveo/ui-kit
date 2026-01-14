@@ -354,7 +354,8 @@ describe('commerce api client', () => {
         perPage: 0,
         totalEntries: 0,
         totalPages: 0,
-        // todo: would totalProducts and totalSpotlights be missing? Or null?
+        totalProducts: 0,
+        totalSpotlights: 0,
       },
       responseId: '',
       sort: {
