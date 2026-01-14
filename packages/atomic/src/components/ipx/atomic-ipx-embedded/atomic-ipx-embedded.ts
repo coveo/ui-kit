@@ -8,9 +8,7 @@ import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils.js';
 import {once, randomID} from '@/src/utils/utils.js';
 
 /**
- * The `atomic-ipx-embedded` component is an internal component used for IPX embedded interfaces.
- *
- * @internal
+ * The `atomic-ipx-embedded` component is used for IPX embedded interfaces.
  *
  * @part backdrop - The backdrop container element.
  */

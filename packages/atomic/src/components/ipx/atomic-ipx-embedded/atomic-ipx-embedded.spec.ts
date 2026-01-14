@@ -92,14 +92,14 @@ describe('atomic-ipx-embedded', () => {
         </atomic-ipx-embedded>
       `);
       // Component checks slots in connectedCallback, so this should be set
-      expect(element['hasFooterSlotElements']).toBe(true);
+      expect(element.hasFooterSlotElements).toBe(true);
     });
 
     it('should detect when footer slot is empty', async () => {
       const element = await fixture<AtomicIPXEmbedded>(html`
         <atomic-ipx-embedded></atomic-ipx-embedded>
       `);
-      expect(element['hasFooterSlotElements']).toBe(false);
+      expect(element.hasFooterSlotElements).toBe(false);
     });
   });
 

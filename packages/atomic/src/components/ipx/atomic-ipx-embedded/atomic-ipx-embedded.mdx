@@ -1,0 +1,45 @@
+import {Meta} from '@storybook/addon-docs/blocks';
+import * as AtomicIpxEmbeddedStories from './atomic-ipx-embedded.new.stories';
+import {AtomicDocTemplate} from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicIpxEmbeddedStories} />
+
+<AtomicDocTemplate
+  stories={AtomicIpxEmbeddedStories}
+  githubPath="ipx/atomic-ipx-embedded/atomic-ipx-embedded.ts"
+  tagName="atomic-ipx-embedded"
+  className="AtomicIPXEmbedded"
+>
+
+## Usage
+
+The `atomic-ipx-embedded` component is used to create embedded IPX (In-Product Experience) interfaces. It provides a container with three slot areas for header, body, and footer content.
+
+```html
+<atomic-ipx-embedded>
+  <div slot="header">
+    <h2>Your Header</h2>
+  </div>
+  <div slot="body">
+    <p>Your main content goes here</p>
+  </div>
+  <div slot="footer">
+    <button>Action</button>
+  </div>
+</atomic-ipx-embedded>
+```
+
+## Slots
+
+- **header**: Content to display in the header area
+- **body**: Main content area
+- **footer**: Footer content area (optional)
+
+## Features
+
+- Automatically detects if footer slot has content
+- Generates a unique ID if one is not provided
+- Supports responsive breakpoints
+- Integrates with `atomic-ipx-body` for consistent styling
+
+</AtomicDocTemplate>
