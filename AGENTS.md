@@ -69,7 +69,7 @@ Coding standards are in `.github/instructions/*.instructions.md`. Each file has 
 Agent-discoverable capabilities are in `.claude/skills/`. Skills follow the [agentskills.io](https://agentskills.io) open standard and contain domain-specific knowledge that agents can discover and load on demand.
 
 **Use these skills when:**
-- `applying-wcag-guidelines` - Creating or modifying UI components in Atomic, Quantic, atomic-react, or atomic-angular packages
+- `applying-wcag-guidelines` - Creating or modifying UI components or reviewing accessibility
 - `creating-agents` - Building role-based workflows (planner, reviewer, architect) or guided multi-agent sequences
 - `creating-instructions` - Defining coding standards, conventions, or context that should automatically apply to specific file patterns
 - `creating-prompts` - Building repeatable tasks users trigger manually
