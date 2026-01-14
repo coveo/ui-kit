@@ -13,9 +13,10 @@ import type {AnyBindings} from '../../common/interface/bindings';
 import '../atomic-ipx-body/atomic-ipx-body';
 
 /**
- * The `atomic-ipx-modal` component is an internal modal component used for the In-Product Experience use case.
+ * The `atomic-ipx-modal` component is a modal component used for the In-Product Experience use case.
  *
- * @internal
+ * It provides a modal dialog that can display header, body, and footer content through slots.
+ * The modal can be controlled through the `isOpen` property and emits events when animations complete.
  *
  * @part atomic-ipx-modal - The main modal container.
  * @part backdrop - The backdrop behind the modal.
