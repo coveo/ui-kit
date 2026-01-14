@@ -28,6 +28,10 @@ export default {
     await import(
       './atomic-insight-query-summary/atomic-insight-query-summary.js'
     ),
+  'atomic-insight-refine-toggle': async () =>
+    await import(
+      './atomic-insight-refine-toggle/atomic-insight-refine-toggle.js'
+    ),
   'atomic-insight-result-template': async () =>
     await import(
       './atomic-insight-result-template/atomic-insight-result-template.js'
