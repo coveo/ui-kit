@@ -38,6 +38,10 @@ export class AtomicFacetManager
   extends ChildrenUpdateCompleteMixin(LightDomMixin(LitElement))
   implements InitializableComponent<Bindings>
 {
+  private static readonly propsSchema = new Schema({
+    collapseFacetsAfter: new NumberValue({min: -1, required: true}),
+  });
+
   @state() public bindings!: Bindings;
 
   public facetManager!: FacetManager;
@@ -64,9 +68,7 @@ export class AtomicFacetManager
     new ValidatePropsController(
       this,
       () => ({collapseFacetsAfter: this.collapseFacetsAfter}),
-      new Schema({
-        collapseFacetsAfter: new NumberValue({min: -1, required: true}),
-      })
+      AtomicFacetManager.propsSchema
     );
   }
 

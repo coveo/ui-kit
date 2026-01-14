@@ -12,3 +12,4 @@ export {AtomicInsightQuerySummary} from './atomic-insight-query-summary/atomic-i
 export {AtomicInsightResultTemplate} from './atomic-insight-result-template/atomic-insight-result-template.js';
 export {AtomicInsightTab} from './atomic-insight-tab/atomic-insight-tab.js';
 export {AtomicInsightTabs} from './atomic-insight-tabs/atomic-insight-tabs.js';
+export {AtomicInsightUserActionsToggle} from './atomic-insight-user-actions-toggle/atomic-insight-user-actions-toggle.js';

@@ -480,24 +480,6 @@ export namespace Components {
          */
         "userId": string;
     }
-    /**
-     * Internal component of the atomic-insight-interface
-     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
-     */
-    interface AtomicInsightUserActionsToggle {
-        /**
-          * The names of custom events to exclude.
-         */
-        "excludedCustomActions": string[];
-        /**
-          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
-         */
-        "ticketCreationDateTime": string;
-        /**
-          * The ID of the user whose actions are being displayed.
-         */
-        "userId": string;
-    }
     interface AtomicIpxBody {
         "displayFooterSlot": boolean;
         "isOpen"?: boolean;
@@ -722,53 +704,6 @@ export namespace Components {
         "store"?: RecsStore;
     }
     /**
-     * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
-     * You can style the snippet by inserting a template element as follows:
-     * ```html
-     * <atomic-smart-snippet>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet>
-     * ```
-     */
-    interface AtomicSmartSnippet {
-        /**
-          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
-         */
-        "collapsedHeight": number;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
-         */
-        "headingLevel": number;
-        /**
-          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
-         */
-        "maximumHeight": number;
-        "snippetCollapsedHeight"?: number;
-        "snippetMaximumHeight"?: number;
-        /**
-          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
-        /**
-          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded": string[] | string;
-        /**
-          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded": string[] | string;
-    }
-    interface AtomicSmartSnippetSource {
-        "anchorAttributes"?: Attr[];
-        "source": Result;
-    }
-    /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
      * Internal component made to be integrated in a TimeframeFacet.
      */
@@ -893,10 +828,6 @@ export interface AtomicIpxModalCustomEvent<T> extends CustomEvent<T> {
 export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicQuickviewModalElement;
-}
-export interface AtomicSmartSnippetSourceCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicSmartSnippetSourceElement;
 }
 export interface AtomicStencilFacetDateInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1116,16 +1047,6 @@ declare global {
         prototype: HTMLAtomicInsightUserActionsTimelineElement;
         new (): HTMLAtomicInsightUserActionsTimelineElement;
     };
-    /**
-     * Internal component of the atomic-insight-interface
-     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
-     */
-    interface HTMLAtomicInsightUserActionsToggleElement extends Components.AtomicInsightUserActionsToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightUserActionsToggleElement: {
-        prototype: HTMLAtomicInsightUserActionsToggleElement;
-        new (): HTMLAtomicInsightUserActionsToggleElement;
-    };
     interface HTMLAtomicIpxBodyElementEventMap {
         "animationEnded": never;
     }
@@ -1253,46 +1174,6 @@ declare global {
         prototype: HTMLAtomicRecsResultElement;
         new (): HTMLAtomicRecsResultElement;
     };
-    /**
-     * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
-     * You can style the snippet by inserting a template element as follows:
-     * ```html
-     * <atomic-smart-snippet>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet>
-     * ```
-     */
-    interface HTMLAtomicSmartSnippetElement extends Components.AtomicSmartSnippet, HTMLStencilElement {
-    }
-    var HTMLAtomicSmartSnippetElement: {
-        prototype: HTMLAtomicSmartSnippetElement;
-        new (): HTMLAtomicSmartSnippetElement;
-    };
-    interface HTMLAtomicSmartSnippetSourceElementEventMap {
-        "selectSource": any;
-        "beginDelayedSelectSource": any;
-        "cancelPendingSelectSource": any;
-    }
-    interface HTMLAtomicSmartSnippetSourceElement extends Components.AtomicSmartSnippetSource, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicSmartSnippetSourceElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetSourceElement, ev: AtomicSmartSnippetSourceCustomEvent<HTMLAtomicSmartSnippetSourceElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicSmartSnippetSourceElementEventMap>(type: K, listener: (this: HTMLAtomicSmartSnippetSourceElement, ev: AtomicSmartSnippetSourceCustomEvent<HTMLAtomicSmartSnippetSourceElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicSmartSnippetSourceElement: {
-        prototype: HTMLAtomicSmartSnippetSourceElement;
-        new (): HTMLAtomicSmartSnippetSourceElement;
-    };
     interface HTMLAtomicStencilFacetDateInputElementEventMap {
         "atomic/dateInputApply": any;
     }
@@ -1362,7 +1243,6 @@ declare global {
         "atomic-insight-user-actions-modal": HTMLAtomicInsightUserActionsModalElement;
         "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
         "atomic-insight-user-actions-timeline": HTMLAtomicInsightUserActionsTimelineElement;
-        "atomic-insight-user-actions-toggle": HTMLAtomicInsightUserActionsToggleElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-button": HTMLAtomicIpxButtonElement;
         "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
@@ -1374,8 +1254,6 @@ declare global {
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-recs-result": HTMLAtomicRecsResultElement;
-        "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
-        "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
@@ -1822,24 +1700,6 @@ declare namespace LocalJSX {
          */
         "userId": string;
     }
-    /**
-     * Internal component of the atomic-insight-interface
-     * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
-     */
-    interface AtomicInsightUserActionsToggle {
-        /**
-          * The names of custom events to exclude.
-         */
-        "excludedCustomActions"?: string[];
-        /**
-          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
-         */
-        "ticketCreationDateTime": string;
-        /**
-          * The ID of the user whose actions are being displayed.
-         */
-        "userId": string;
-    }
     interface AtomicIpxBody {
         "displayFooterSlot"?: boolean;
         "isOpen"?: boolean;
@@ -2042,56 +1902,6 @@ declare namespace LocalJSX {
         "store"?: RecsStore;
     }
     /**
-     * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
-     * You can style the snippet by inserting a template element as follows:
-     * ```html
-     * <atomic-smart-snippet>
-     *   <template>
-     *     <style>
-     *       b {
-     *         color: blue;
-     *       }
-     *     </style>
-     *   </template>
-     * </atomic-smart-snippet>
-     * ```
-     */
-    interface AtomicSmartSnippet {
-        /**
-          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
-         */
-        "collapsedHeight"?: number;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
-         */
-        "headingLevel"?: number;
-        /**
-          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
-         */
-        "maximumHeight"?: number;
-        "snippetCollapsedHeight"?: number;
-        "snippetMaximumHeight"?: number;
-        /**
-          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
-        /**
-          * The tabs on which this smart snippet must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-excluded='["tabIDA", "tabIDB"]'></atomic-smart-snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet won't be displayed on any of the specified tabs.
-         */
-        "tabsExcluded"?: string[] | string;
-        /**
-          * The tabs on which the smart snippet can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, for example: ```html  <atomic-smart-snippet tabs-included='["tabIDA", "tabIDB"]'></atomic-smart-snippet snippet> ``` If you don't set this property, the smart snippet can be displayed on any tab. Otherwise, the smart snippet can only be displayed on the specified tabs.
-         */
-        "tabsIncluded"?: string[] | string;
-    }
-    interface AtomicSmartSnippetSource {
-        "anchorAttributes"?: Attr[];
-        "onBeginDelayedSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
-        "onCancelPendingSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
-        "onSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
-        "source": Result;
-    }
-    /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
      * Internal component made to be integrated in a TimeframeFacet.
      */
@@ -2211,7 +2021,6 @@ declare namespace LocalJSX {
         "atomic-insight-user-actions-modal": AtomicInsightUserActionsModal;
         "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
         "atomic-insight-user-actions-timeline": AtomicInsightUserActionsTimeline;
-        "atomic-insight-user-actions-toggle": AtomicInsightUserActionsToggle;
         "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-button": AtomicIpxButton;
         "atomic-ipx-embedded": AtomicIpxEmbedded;
@@ -2223,8 +2032,6 @@ declare namespace LocalJSX {
         "atomic-quickview-modal": AtomicQuickviewModal;
         "atomic-recs-list": AtomicRecsList;
         "atomic-recs-result": AtomicRecsResult;
-        "atomic-smart-snippet": AtomicSmartSnippet;
-        "atomic-smart-snippet-source": AtomicSmartSnippetSource;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
@@ -2277,11 +2084,6 @@ declare module "@stencil/core" {
              * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
              */
             "atomic-insight-user-actions-timeline": LocalJSX.AtomicInsightUserActionsTimeline & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsTimelineElement>;
-            /**
-             * Internal component of the atomic-insight-interface
-             * The `atomic-insight-user-actions-toggle` component displays a button that opens a modal containing the user actions timeline component.
-             */
-            "atomic-insight-user-actions-toggle": LocalJSX.AtomicInsightUserActionsToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsToggleElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
             "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
@@ -2309,23 +2111,6 @@ declare module "@stencil/core" {
              * The `atomic-recs-result` component is used internally by the `atomic-recs-list` component.
              */
             "atomic-recs-result": LocalJSX.AtomicRecsResult & JSXBase.HTMLAttributes<HTMLAtomicRecsResultElement>;
-            /**
-             * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
-             * You can style the snippet by inserting a template element as follows:
-             * ```html
-             * <atomic-smart-snippet>
-             *   <template>
-             *     <style>
-             *       b {
-             *         color: blue;
-             *       }
-             *     </style>
-             *   </template>
-             * </atomic-smart-snippet>
-             * ```
-             */
-            "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
-            "atomic-smart-snippet-source": LocalJSX.AtomicSmartSnippetSource & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSourceElement>;
             /**
              * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
              * Internal component made to be integrated in a TimeframeFacet.

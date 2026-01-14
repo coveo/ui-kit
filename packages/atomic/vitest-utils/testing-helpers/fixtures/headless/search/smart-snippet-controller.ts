@@ -1,31 +1,52 @@
-import type {SmartSnippet} from '@coveo/headless';
+import type {SmartSnippet, SmartSnippetState} from '@coveo/headless';
 import {vi} from 'vitest';
+import {genericSubscribe} from '../common';
 
-export function buildFakeSmartSnippet(
-  config: Partial<SmartSnippet> = {}
-): SmartSnippet {
-  return {
-    state: {
-      answerFound: false,
-      liked: false,
-      disliked: false,
-      feedbackModalOpen: false,
-      question: '',
-      answer: null,
-      documentId: {
-        contentIdKey: '',
-        contentIdValue: '',
-      },
-      source: null,
-      relatedQuestions: [],
-    },
-    ...config,
-    subscribe: config.subscribe ?? vi.fn(),
-    openFeedbackModal: config.openFeedbackModal ?? vi.fn(),
-    closeFeedbackModal: config.closeFeedbackModal ?? vi.fn(),
-    sendFeedback: config.sendFeedback ?? vi.fn(),
-    sendDetailedFeedback: config.sendDetailedFeedback ?? vi.fn(),
-    like: config.like ?? vi.fn(),
-    dislike: config.dislike ?? vi.fn(),
-  } as SmartSnippet;
-}
+export const defaultState = {
+  question: '',
+  answer: '',
+  documentId: {
+    contentIdKey: '',
+    contentIdValue: '',
+  },
+  expanded: false,
+  answerFound: false,
+  liked: false,
+  disliked: false,
+  feedbackModalOpen: false,
+  source: undefined,
+} satisfies SmartSnippetState;
+
+export const defaultImplementation = {
+  subscribe: genericSubscribe,
+  state: defaultState,
+  expand: vi.fn() as () => void,
+  collapse: vi.fn() as () => void,
+  like: vi.fn() as () => void,
+  dislike: vi.fn() as () => void,
+  openFeedbackModal: vi.fn() as () => void,
+  closeFeedbackModal: vi.fn() as () => void,
+  sendFeedback: vi.fn() as SmartSnippet['sendFeedback'],
+  sendDetailedFeedback: vi.fn() as SmartSnippet['sendDetailedFeedback'],
+  selectSource: vi.fn() as () => void,
+  beginDelayedSelectSource: vi.fn() as () => void,
+  cancelPendingSelectSource: vi.fn() as () => void,
+  selectInlineLink: vi.fn() as SmartSnippet['selectInlineLink'],
+  beginDelayedSelectInlineLink:
+    vi.fn() as SmartSnippet['beginDelayedSelectInlineLink'],
+  cancelPendingSelectInlineLink:
+    vi.fn() as SmartSnippet['cancelPendingSelectInlineLink'],
+} satisfies SmartSnippet;
+
+export const buildFakeSmartSnippet = ({
+  implementation,
+  state,
+}: Partial<{
+  implementation?: Partial<SmartSnippet>;
+  state?: Partial<SmartSnippetState>;
+}> = {}): SmartSnippet =>
+  ({
+    ...defaultImplementation,
+    ...implementation,
+    ...{state: {...defaultState, ...(state || {})}},
+  }) as SmartSnippet;
