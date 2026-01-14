@@ -1,5 +1,8 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import * as ProductEnrichmentActions from '../../../features/commerce/product-enrichment/product-enrichment-actions.js';
+import {
+  fetchBadges,
+  registerProductEnrichmentOptions,
+} from '../../../features/commerce/product-enrichment/product-enrichment-actions.js';
 import {productEnrichmentReducer} from '../../../features/commerce/product-enrichment/product-enrichment-slice.js';
 import {getProductEnrichmentInitialState} from '../../../features/commerce/product-enrichment/product-enrichment-state.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
@@ -75,6 +78,61 @@ describe('ProductEnrichment', () => {
     });
   });
 
+  describe('#registerProductEnrichmentOptions', () => {
+    it('dispatches registerProductEnrichmentOptions with default options when no props provided', () => {
+      const mockedRegister = vi.mocked(registerProductEnrichmentOptions);
+
+      buildProductEnrichment(engine);
+
+      expect(mockedRegister).toHaveBeenCalledWith({
+        placementIds: [],
+        productId: undefined,
+      });
+      expect(engine.dispatch).toHaveBeenCalledWith(
+        mockedRegister.mock.results[0].value
+      );
+    });
+
+    it('dispatches registerProductEnrichmentOptions with provided placementIds', () => {
+      const mockedRegister = vi.mocked(registerProductEnrichmentOptions);
+      const props: ProductEnrichmentProps = {
+        options: {
+          placementIds: ['placement1', 'placement2'],
+        },
+      };
+
+      buildProductEnrichment(engine, props);
+
+      expect(mockedRegister).toHaveBeenCalledWith({
+        placementIds: ['placement1', 'placement2'],
+        productId: undefined,
+      });
+      expect(engine.dispatch).toHaveBeenCalledWith(
+        mockedRegister.mock.results[0].value
+      );
+    });
+
+    it('dispatches registerProductEnrichmentOptions with provided placementIds and productId', () => {
+      const mockedRegister = vi.mocked(registerProductEnrichmentOptions);
+      const props: ProductEnrichmentProps = {
+        options: {
+          placementIds: ['placement1'],
+          productId: 'product123',
+        },
+      };
+
+      buildProductEnrichment(engine, props);
+
+      expect(mockedRegister).toHaveBeenCalledWith({
+        placementIds: ['placement1'],
+        productId: 'product123',
+      });
+      expect(engine.dispatch).toHaveBeenCalledWith(
+        mockedRegister.mock.results[0].value
+      );
+    });
+  });
+
   describe('#state', () => {
     it('returns the productEnrichment state from the engine', () => {
       controller = buildProductEnrichment(engine);
@@ -139,7 +197,7 @@ describe('ProductEnrichment', () => {
 
   describe('#getBadges', () => {
     it('dispatches fetchBadges with configured placementIds', () => {
-      const fetchBadges = vi.spyOn(ProductEnrichmentActions, 'fetchBadges');
+      const mockedFetchBadges = vi.mocked(fetchBadges);
       const props: ProductEnrichmentProps = {
         options: {
           placementIds: ['placement1', 'placement2'],
@@ -149,14 +207,14 @@ describe('ProductEnrichment', () => {
       controller = buildProductEnrichment(engine, props);
       controller.getBadges();
 
-      expect(fetchBadges).toHaveBeenCalledWith({
+      expect(mockedFetchBadges).toHaveBeenCalledWith({
         placementIds: ['placement1', 'placement2'],
         productId: undefined,
       });
     });
 
     it('dispatches fetchBadges with configured placementIds and productId', () => {
-      const fetchBadges = vi.spyOn(ProductEnrichmentActions, 'fetchBadges');
+      const mockedFetchBadges = vi.mocked(fetchBadges);
       const props: ProductEnrichmentProps = {
         options: {
           placementIds: ['placement1'],
@@ -167,7 +225,7 @@ describe('ProductEnrichment', () => {
       controller = buildProductEnrichment(engine, props);
       controller.getBadges();
 
-      expect(fetchBadges).toHaveBeenCalledWith({
+      expect(mockedFetchBadges).toHaveBeenCalledWith({
         placementIds: ['placement1'],
         productId: 'product123',
       });

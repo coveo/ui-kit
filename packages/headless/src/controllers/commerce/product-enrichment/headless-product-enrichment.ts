@@ -7,6 +7,7 @@ import {productEnrichmentOptionsSchema} from '../../../features/commerce/product
 import {
   type FetchBadgesPayload,
   fetchBadges,
+  registerProductEnrichmentOptions,
 } from '../../../features/commerce/product-enrichment/product-enrichment-actions.js';
 import {productEnrichmentReducer as productEnrichment} from '../../../features/commerce/product-enrichment/product-enrichment-slice.js';
 import type {ProductEnrichmentSection} from '../../../state/state-sections.js';
@@ -115,15 +116,19 @@ export function buildProductEnrichment(
     options: props?.options,
   });
 
+  // Register the options in state so they can be recovered during SSR hydration
+  dispatch(
+    registerProductEnrichmentOptions({
+      productId: registrationOptions.productId,
+      placementIds: registrationOptions.placementIds,
+    })
+  );
+
   return {
     ...controller,
 
     get state() {
-      const state = getState();
-      return {
-        ...state.productEnrichment,
-        ...props?.options,
-      };
+      return getState().productEnrichment;
     },
 
     getBadges() {
