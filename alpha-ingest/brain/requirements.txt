@@ -1,0 +1,13 @@
+# Core LangGraph/LangChain stack - pinned for stable resolution
+langgraph==0.3.5
+langgraph-prebuilt==0.1.7
+langchain==0.3.23
+langchain-core==0.3.83
+
+# LLM providers
+langchain-anthropic==0.3.7
+langchain-ollama==0.3.3
+
+# Database and utilities
+neo4j==5.27.0
+python-dotenv==1.0.1

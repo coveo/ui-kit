@@ -1,0 +1,33 @@
+{
+  "name": "alpha-ingest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "wipe": "node --enable-source-maps dist/wipe-database.js",
+    "scan:packages": "node --enable-source-maps dist/scan-packages.js",
+    "scan:headless": "node --enable-source-maps dist/scan-headless.js",
+    "scan:atomic": "node --enable-source-maps dist/scan-atomic.js",
+    "scan:samples": "node --enable-source-maps dist/scan-samples.js",
+    "scan:all": "npm run wipe && npm run scan:packages && npm run scan:headless && npm run scan:atomic && npm run scan:samples",
+    "check": "node --enable-source-maps dist/check-graph.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@types/node": "^25.0.8",
+    "dotenv": "^17.2.3",
+    "glob": "^13.0.0",
+    "neo4j-driver": "^6.0.1",
+    "ts-morph": "^27.0.2",
+    "typescript": "^5.9.3"
+  }
+}
