@@ -41,6 +41,7 @@ const ALLOWED_LIGHT_DOM_COMPONENTS = new Set([
   'src/components/common/atomic-numeric-range/atomic-numeric-range.ts',
   'src/components/common/atomic-tab-button/atomic-tab-button.ts',
   'src/components/common/atomic-timeframe/atomic-timeframe.ts',
+  'src/components/common/atomic-smart-snippet-source/atomic-smart-snippet-source.ts',
 
   // Commerce components
   'src/components/commerce/atomic-commerce-facet-number-input/atomic-commerce-facet-number-input.ts',
