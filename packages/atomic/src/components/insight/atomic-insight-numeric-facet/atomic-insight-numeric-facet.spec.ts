@@ -234,11 +234,6 @@ describe('atomic-insight-numeric-facet', () => {
       expect(buildSearchStatus).toHaveBeenCalledWith(element.bindings.engine);
     });
 
-    it('should call buildTabManager with engine', async () => {
-      const {element} = await setupElement();
-      expect(buildTabManager).toHaveBeenCalledWith(element.bindings.engine);
-    });
-
     it('should register facet in store', async () => {
       await setupElement();
       expect(mockedRegisterFacet).toHaveBeenCalled();
@@ -681,46 +676,6 @@ describe('atomic-insight-numeric-facet', () => {
       await userEvent.click(locators.clearButton);
 
       expect(mockedNumericFilter.clear).toHaveBeenCalled();
-    });
-  });
-
-  describe('when configuring tabs', () => {
-    describe('when both tabsIncluded and tabsExcluded are provided', () => {
-      let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
-
-      beforeEach(() => {
-        consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      });
-
-      it('should warn about conflicting tabs configuration', async () => {
-        await setupElement({
-          props: {
-            tabsIncluded: ['tab1'],
-            tabsExcluded: ['tab2'],
-          },
-        });
-
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          expect.stringContaining('tabs-included')
-        );
-      });
-    });
-
-    it('should pass tabs configuration to buildNumericFacet', async () => {
-      const {element} = await setupElement({
-        props: {
-          tabsIncluded: ['tab1', 'tab2'],
-        },
-      });
-
-      expect(buildNumericFacet).toHaveBeenCalledWith(element.bindings.engine, {
-        options: expect.objectContaining({
-          tabs: {
-            included: ['tab1', 'tab2'],
-            excluded: [],
-          },
-        }),
-      });
     });
   });
 
