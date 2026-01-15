@@ -42,6 +42,10 @@ export default {
     await import('./atomic-insight-tab/atomic-insight-tab.js'),
   'atomic-insight-tabs': async () =>
     await import('./atomic-insight-tabs/atomic-insight-tabs.js'),
+  'atomic-insight-user-actions-timeline': async () =>
+    await import(
+      './user-actions/atomic-insight-user-actions-timeline/atomic-insight-user-actions-timeline.js'
+    ),
   'atomic-insight-user-actions-toggle': async () =>
     await import(
       './atomic-insight-user-actions-toggle/atomic-insight-user-actions-toggle.js'
