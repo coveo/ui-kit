@@ -73,6 +73,9 @@
     },
     "multimodal-looker": {
       "model": "github-copilot/gemini-3-flash-preview"
+    },
+    "daedalus": {
+      "model": "github-copilot/claude-sonnet-4.5"
     }
   },
   "model": "github-copilot/claude-sonnet-4.5",

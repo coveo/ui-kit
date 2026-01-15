@@ -1,0 +1,662 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "description": "Semantic taxonomy for Atomic components enabling AI-driven UI generation",
+
+  "domains": {
+    "search": {
+      "description": "Full-text search experiences for content discovery",
+      "interface": "atomic-search-interface",
+      "engine": "SearchEngine",
+      "useCases": [
+        "documentation search",
+        "site search",
+        "content discovery",
+        "knowledge base"
+      ]
+    },
+    "commerce": {
+      "description": "E-commerce product search and listing experiences",
+      "interface": "atomic-commerce-interface",
+      "engine": "CommerceEngine",
+      "useCases": [
+        "product catalog",
+        "shopping",
+        "product discovery",
+        "e-commerce"
+      ]
+    },
+    "recommendations": {
+      "description": "AI-powered content recommendations",
+      "interface": "atomic-recs-interface",
+      "engine": "RecommendationEngine",
+      "useCases": [
+        "personalization",
+        "related content",
+        "suggested products",
+        "you may also like"
+      ]
+    },
+    "insight": {
+      "description": "Agent-assist and case management search",
+      "interface": "atomic-insight-interface",
+      "engine": "InsightEngine",
+      "useCases": [
+        "support agent",
+        "case deflection",
+        "knowledge articles",
+        "help desk"
+      ]
+    }
+  },
+
+  "semanticCategories": {
+    "textInput": {
+      "description": "Components for text-based user input and query entry",
+      "keywords": [
+        "search box",
+        "query",
+        "input",
+        "type",
+        "enter text",
+        "search bar"
+      ],
+      "components": {
+        "search": ["atomic-search-box"],
+        "commerce": ["atomic-commerce-search-box"],
+        "insight": []
+      },
+      "childComponents": {
+        "suggestions": [
+          "atomic-search-box-query-suggestions",
+          "atomic-commerce-search-box-query-suggestions"
+        ],
+        "recentQueries": [
+          "atomic-search-box-recent-queries",
+          "atomic-commerce-search-box-recent-queries"
+        ],
+        "instantResults": [
+          "atomic-search-box-instant-results",
+          "atomic-commerce-search-box-instant-products"
+        ]
+      }
+    },
+
+    "filtering": {
+      "description": "Components for narrowing down results through faceted navigation",
+      "keywords": [
+        "filter",
+        "facet",
+        "refine",
+        "narrow",
+        "category",
+        "price range",
+        "attribute"
+      ],
+      "components": {
+        "search": [
+          "atomic-facet",
+          "atomic-numeric-facet",
+          "atomic-category-facet",
+          "atomic-color-facet",
+          "atomic-rating-facet",
+          "atomic-rating-range-facet",
+          "atomic-timeframe-facet"
+        ],
+        "commerce": [
+          "atomic-commerce-facet",
+          "atomic-commerce-numeric-facet",
+          "atomic-commerce-category-facet",
+          "atomic-commerce-timeframe-facet"
+        ],
+        "insight": ["atomic-insight-timeframe-facet"]
+      },
+      "supportComponents": {
+        "manager": ["atomic-facet-manager"],
+        "automatic": [
+          "atomic-automatic-facet-generator",
+          "atomic-automatic-facet"
+        ],
+        "mobile": [
+          "atomic-refine-toggle",
+          "atomic-refine-modal",
+          "atomic-commerce-refine-toggle",
+          "atomic-commerce-refine-modal"
+        ]
+      },
+      "propertyMappings": {
+        "numericFiltering": {
+          "property": "field",
+          "type": "numeric",
+          "components": [
+            "atomic-numeric-facet",
+            "atomic-commerce-numeric-facet"
+          ]
+        },
+        "categoryFiltering": {
+          "property": "field",
+          "type": "hierarchical",
+          "components": [
+            "atomic-category-facet",
+            "atomic-commerce-category-facet"
+          ]
+        },
+        "colorFiltering": {
+          "property": "field",
+          "type": "color",
+          "components": ["atomic-color-facet"]
+        },
+        "ratingFiltering": {
+          "property": "field",
+          "type": "rating",
+          "components": ["atomic-rating-facet", "atomic-rating-range-facet"]
+        },
+        "dateFiltering": {
+          "property": "field",
+          "type": "date",
+          "components": [
+            "atomic-timeframe-facet",
+            "atomic-commerce-timeframe-facet"
+          ]
+        }
+      }
+    },
+
+    "resultDisplay": {
+      "description": "Components for displaying search/product results",
+      "keywords": [
+        "results",
+        "list",
+        "grid",
+        "products",
+        "items",
+        "cards",
+        "display"
+      ],
+      "components": {
+        "search": ["atomic-result-list", "atomic-folded-result-list"],
+        "commerce": ["atomic-commerce-product-list"],
+        "recommendations": [
+          "atomic-recs-list",
+          "atomic-commerce-recommendation-list"
+        ]
+      },
+      "displayModes": {
+        "list": {
+          "property": "display",
+          "value": "list",
+          "description": "Vertical stacked layout"
+        },
+        "grid": {
+          "property": "display",
+          "value": "grid",
+          "description": "Card-based grid layout"
+        },
+        "table": {
+          "property": "display",
+          "value": "table",
+          "description": "Tabular data layout"
+        }
+      },
+      "densityOptions": {
+        "comfortable": {"property": "density", "value": "comfortable"},
+        "normal": {"property": "density", "value": "normal"},
+        "compact": {"property": "density", "value": "compact"}
+      }
+    },
+
+    "resultTemplating": {
+      "description": "Components for customizing how individual results appear",
+      "keywords": [
+        "template",
+        "result card",
+        "product card",
+        "item display",
+        "custom result"
+      ],
+      "components": {
+        "search": ["atomic-result-template", "atomic-result"],
+        "commerce": ["atomic-product-template", "atomic-product"],
+        "recommendations": ["atomic-recs-result-template"],
+        "insight": ["atomic-insight-result-template"]
+      },
+      "resultParts": {
+        "title": ["atomic-result-link", "atomic-product-link"],
+        "description": [
+          "atomic-result-text",
+          "atomic-product-description",
+          "atomic-product-excerpt"
+        ],
+        "image": ["atomic-result-image", "atomic-product-image"],
+        "metadata": [
+          "atomic-result-date",
+          "atomic-result-number",
+          "atomic-product-price",
+          "atomic-product-rating"
+        ],
+        "badges": ["atomic-result-badge"],
+        "sections": [
+          "atomic-result-section-visual",
+          "atomic-result-section-title",
+          "atomic-result-section-excerpt",
+          "atomic-result-section-bottom-metadata",
+          "atomic-product-section-visual",
+          "atomic-product-section-name",
+          "atomic-product-section-description"
+        ]
+      }
+    },
+
+    "pagination": {
+      "description": "Components for navigating through result pages",
+      "keywords": [
+        "pager",
+        "pagination",
+        "next page",
+        "load more",
+        "pages",
+        "results per page"
+      ],
+      "components": {
+        "search": [
+          "atomic-pager",
+          "atomic-load-more-results",
+          "atomic-results-per-page"
+        ],
+        "commerce": [
+          "atomic-commerce-pager",
+          "atomic-commerce-load-more-products",
+          "atomic-commerce-products-per-page"
+        ],
+        "insight": ["atomic-insight-pager"]
+      }
+    },
+
+    "queryFeedback": {
+      "description": "Components that provide feedback about the search query and results",
+      "keywords": [
+        "summary",
+        "did you mean",
+        "no results",
+        "query correction",
+        "result count"
+      ],
+      "components": {
+        "search": [
+          "atomic-query-summary",
+          "atomic-did-you-mean",
+          "atomic-no-results",
+          "atomic-query-error"
+        ],
+        "commerce": [
+          "atomic-commerce-query-summary",
+          "atomic-commerce-did-you-mean",
+          "atomic-commerce-no-products",
+          "atomic-commerce-query-error"
+        ],
+        "insight": [
+          "atomic-insight-query-summary",
+          "atomic-insight-no-results",
+          "atomic-insight-query-error"
+        ]
+      }
+    },
+
+    "breadcrumbs": {
+      "description": "Components showing active filters and navigation state",
+      "keywords": [
+        "breadcrumb",
+        "active filters",
+        "selected filters",
+        "clear filters",
+        "filter pills"
+      ],
+      "components": {
+        "search": ["atomic-breadbox"],
+        "commerce": ["atomic-commerce-breadbox"]
+      }
+    },
+
+    "sorting": {
+      "description": "Components for ordering results",
+      "keywords": [
+        "sort",
+        "order by",
+        "relevance",
+        "date",
+        "price",
+        "alphabetical"
+      ],
+      "components": {
+        "search": ["atomic-sort-dropdown", "atomic-sort-expression"],
+        "commerce": ["atomic-commerce-sort-dropdown"]
+      }
+    },
+
+    "aiAnswers": {
+      "description": "AI-generated answers and smart snippets",
+      "keywords": [
+        "generated answer",
+        "AI answer",
+        "smart snippet",
+        "RGA",
+        "generative",
+        "answer"
+      ],
+      "components": {
+        "search": [
+          "atomic-generated-answer",
+          "atomic-smart-snippet",
+          "atomic-smart-snippet-suggestions"
+        ],
+        "insight": ["atomic-insight-generate-answer-button"]
+      }
+    },
+
+    "layout": {
+      "description": "Structural components for page organization",
+      "keywords": [
+        "layout",
+        "section",
+        "structure",
+        "grid",
+        "columns",
+        "sidebar"
+      ],
+      "components": {
+        "search": ["atomic-search-layout", "atomic-layout-section"],
+        "commerce": ["atomic-commerce-layout"],
+        "insight": ["atomic-insight-layout"]
+      },
+      "sections": {
+        "search": {
+          "component": "atomic-layout-section",
+          "attribute": "section"
+        },
+        "facets": {
+          "component": "atomic-layout-section",
+          "attribute": "section"
+        },
+        "main": {"component": "atomic-layout-section", "attribute": "section"},
+        "status": {
+          "component": "atomic-layout-section",
+          "attribute": "section"
+        },
+        "results": {
+          "component": "atomic-layout-section",
+          "attribute": "section"
+        }
+      }
+    },
+
+    "tabs": {
+      "description": "Components for organizing content into tabs",
+      "keywords": ["tabs", "categories", "sections", "content types"],
+      "components": {
+        "search": ["atomic-tab-manager", "atomic-tab"],
+        "insight": ["atomic-insight-tabs", "atomic-insight-tab"]
+      }
+    },
+
+    "accessibility": {
+      "description": "Components for accessibility and screen reader support",
+      "keywords": ["aria", "screen reader", "accessibility", "live region"],
+      "components": {
+        "common": ["atomic-aria-live"]
+      }
+    }
+  },
+
+  "interfaceTemplates": {
+    "simpleSearch": {
+      "description": "Basic search with search box and results",
+      "domain": "search",
+      "requiredComponents": [
+        "atomic-search-interface",
+        "atomic-search-box",
+        "atomic-result-list"
+      ],
+      "optionalComponents": ["atomic-query-summary", "atomic-pager"],
+      "example": "A simple documentation search page"
+    },
+    "facetedSearch": {
+      "description": "Search with filtering capabilities",
+      "domain": "search",
+      "requiredComponents": [
+        "atomic-search-interface",
+        "atomic-search-layout",
+        "atomic-search-box",
+        "atomic-facet-manager",
+        "atomic-result-list"
+      ],
+      "optionalComponents": [
+        "atomic-facet",
+        "atomic-breadbox",
+        "atomic-query-summary",
+        "atomic-sort-dropdown",
+        "atomic-pager"
+      ],
+      "example": "A knowledge base with category and date filters"
+    },
+    "ecommerceSearch": {
+      "description": "Product search with commerce-specific features",
+      "domain": "commerce",
+      "requiredComponents": [
+        "atomic-commerce-interface",
+        "atomic-commerce-layout",
+        "atomic-commerce-search-box",
+        "atomic-commerce-product-list"
+      ],
+      "optionalComponents": [
+        "atomic-commerce-facets",
+        "atomic-commerce-breadbox",
+        "atomic-commerce-sort-dropdown",
+        "atomic-commerce-pager"
+      ],
+      "example": "A product catalog page with price and category filters"
+    },
+    "recommendationCarousel": {
+      "description": "AI-powered recommendations display",
+      "domain": "recommendations",
+      "requiredComponents": [
+        "atomic-recs-interface",
+        "atomic-recs-list",
+        "atomic-recs-result-template"
+      ],
+      "optionalComponents": [],
+      "example": "A 'You might also like' section"
+    },
+    "aiPoweredSearch": {
+      "description": "Search with AI-generated answers",
+      "domain": "search",
+      "requiredComponents": [
+        "atomic-search-interface",
+        "atomic-search-box",
+        "atomic-generated-answer",
+        "atomic-result-list"
+      ],
+      "optionalComponents": ["atomic-smart-snippet", "atomic-query-summary"],
+      "example": "A help center with AI answers"
+    }
+  },
+
+  "compatibilityRules": {
+    "interfaceConstraints": {
+      "description": "Components must be children of their respective interface",
+      "rules": [
+        {
+          "components": [
+            "atomic-search-box",
+            "atomic-facet",
+            "atomic-result-list"
+          ],
+          "requires": "atomic-search-interface"
+        },
+        {
+          "components": [
+            "atomic-commerce-search-box",
+            "atomic-commerce-facet",
+            "atomic-commerce-product-list"
+          ],
+          "requires": "atomic-commerce-interface"
+        },
+        {
+          "components": ["atomic-recs-list"],
+          "requires": "atomic-recs-interface"
+        },
+        {
+          "components": ["atomic-insight-pager", "atomic-insight-tabs"],
+          "requires": "atomic-insight-interface"
+        }
+      ]
+    },
+    "parentChildConstraints": {
+      "description": "Some components must be direct children of specific parents",
+      "rules": [
+        {
+          "child": "atomic-search-box-query-suggestions",
+          "parent": "atomic-search-box"
+        },
+        {
+          "child": "atomic-search-box-instant-results",
+          "parent": "atomic-search-box"
+        },
+        {"child": "atomic-result-template", "parent": "atomic-result-list"},
+        {"child": "atomic-recs-result-template", "parent": "atomic-recs-list"},
+        {
+          "child": "atomic-facet",
+          "parent": "atomic-facet-manager",
+          "note": "recommended but not required"
+        },
+        {"child": "atomic-sort-expression", "parent": "atomic-sort-dropdown"}
+      ]
+    },
+    "layoutConstraints": {
+      "description": "Layout section usage",
+      "rules": [
+        {
+          "parent": "atomic-search-layout",
+          "allowedSections": [
+            "search",
+            "facets",
+            "main",
+            "status",
+            "results",
+            "pagination"
+          ]
+        },
+        {
+          "parent": "atomic-commerce-layout",
+          "allowedSections": [
+            "search",
+            "facets",
+            "main",
+            "status",
+            "products",
+            "pagination"
+          ]
+        }
+      ]
+    }
+  },
+
+  "promptMappings": {
+    "description": "Natural language to component mappings for common requests",
+    "mappings": [
+      {
+        "phrases": [
+          "search box",
+          "search bar",
+          "search input",
+          "type to search"
+        ],
+        "category": "textInput"
+      },
+      {
+        "phrases": [
+          "filter by",
+          "narrow by",
+          "facet",
+          "refine by",
+          "filter results"
+        ],
+        "category": "filtering"
+      },
+      {
+        "phrases": ["price filter", "price range", "filter by price"],
+        "category": "filtering",
+        "component": "atomic-numeric-facet",
+        "config": {"field": "ec_price"}
+      },
+      {
+        "phrases": ["color filter", "filter by color"],
+        "category": "filtering",
+        "component": "atomic-color-facet"
+      },
+      {
+        "phrases": [
+          "category filter",
+          "filter by category",
+          "browse categories"
+        ],
+        "category": "filtering",
+        "component": "atomic-category-facet"
+      },
+      {
+        "phrases": [
+          "show results",
+          "display results",
+          "list results",
+          "result list"
+        ],
+        "category": "resultDisplay"
+      },
+      {
+        "phrases": ["grid layout", "card layout", "grid view"],
+        "category": "resultDisplay",
+        "config": {"display": "grid"}
+      },
+      {
+        "phrases": ["list layout", "list view"],
+        "category": "resultDisplay",
+        "config": {"display": "list"}
+      },
+      {
+        "phrases": ["sort by", "order by", "sort results"],
+        "category": "sorting"
+      },
+      {
+        "phrases": ["pagination", "page numbers", "next page", "pager"],
+        "category": "pagination",
+        "component": "atomic-pager"
+      },
+      {
+        "phrases": ["load more", "infinite scroll", "show more"],
+        "category": "pagination",
+        "component": "atomic-load-more-results"
+      },
+      {
+        "phrases": ["AI answer", "generated answer", "smart answer", "RGA"],
+        "category": "aiAnswers"
+      },
+      {
+        "phrases": [
+          "recommendations",
+          "suggested",
+          "you may also like",
+          "related products"
+        ],
+        "category": "resultDisplay",
+        "domain": "recommendations"
+      },
+      {
+        "phrases": ["breadcrumbs", "active filters", "selected filters"],
+        "category": "breadcrumbs"
+      },
+      {
+        "phrases": ["result count", "showing X results", "query summary"],
+        "category": "queryFeedback"
+      }
+    ]
+  }
+}
