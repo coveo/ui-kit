@@ -766,7 +766,7 @@ export class AtomicCategoryFacet
   @errorGuard()
   render() {
     if (!this.facetState || !this.searchStatusState) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     const {
@@ -781,7 +781,7 @@ export class AtomicCategoryFacet
       !enabled ||
       (firstSearchExecuted && !valuesAsTrees.length)
     ) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     if (!firstSearchExecuted) {

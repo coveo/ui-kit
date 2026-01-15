@@ -160,7 +160,7 @@ export class AtomicBreadbox
     const breadcrumbs = this.allBreadcrumbs;
 
     if (!breadcrumbs.length) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     return html`${renderBreadcrumbContainer({

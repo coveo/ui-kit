@@ -5,53 +5,33 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, UserAction as IUserAction } from "@coveo/headless/insight";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
+import { InteractiveResult as RecsInteractiveResult, Result as RecsResult } from "@coveo/headless/recommendation";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
+export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, UserAction as IUserAction } from "@coveo/headless/insight";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
+export { InteractiveResult as RecsInteractiveResult, Result as RecsResult } from "@coveo/headless/recommendation";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { i18n } from "i18next";
 export { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
 export namespace Components {
-    /**
-     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
-     */
-    interface AtomicCitation {
-        /**
-          * The citation item information.
-         */
-        "citation": GeneratedAnswerCitation;
-        /**
-          * Option to disable citation anchoring.
-          * @default false
-         */
-        "disableCitationAnchoring": boolean;
-        /**
-          * The citation index.
-         */
-        "index": number;
-        /**
-          * An `InteractiveCitation` controller instance. It is used when the user interacts with the citation by selecting or hovering over it.
-         */
-        "interactiveCitation": InteractiveCitation;
-        /**
-          * Callback function invoked when the user stops hovering over a citation. `citationHoverTimeMs` is the amount of time over which the citation has been hovered.
-         */
-        "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
-    }
     /**
      * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
      */
@@ -232,8 +212,6 @@ export namespace Components {
         "isOpen": boolean;
         "openButton"?: HTMLElement;
     }
-    interface AtomicInsightRefineToggle {
-    }
     interface AtomicInsightResult {
         /**
           * The classes to add to the result element.
@@ -359,16 +337,6 @@ export namespace Components {
           * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
          */
         "sandbox": string;
-    }
-    interface AtomicInsightSearchBox {
-        /**
-          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
-         */
-        "disableSearch": boolean;
-        /**
-          * The number of query suggestions to display when interacting with the search box.
-         */
-        "numberOfSuggestions": number;
     }
     interface AtomicInsightSmartSnippet {
         /**
@@ -523,6 +491,14 @@ export namespace Components {
           * The container to hide from the tabindex and accessibility DOM when the modal is closed.
          */
         "container"?: HTMLElement;
+    }
+    interface AtomicIpxModal {
+        /**
+          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
+         */
+        "container"?: HTMLElement;
+        "isOpen": boolean;
+        "source"?: HTMLElement;
     }
     /**
      * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
@@ -829,6 +805,10 @@ export interface AtomicIpxEmbeddedCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicIpxEmbeddedElement;
 }
+export interface AtomicIpxModalCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicIpxModalElement;
+}
 export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicQuickviewModalElement;
@@ -838,15 +818,6 @@ export interface AtomicStencilFacetDateInputCustomEvent<T> extends CustomEvent<T
     target: HTMLAtomicStencilFacetDateInputElement;
 }
 declare global {
-    /**
-     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
-     */
-    interface HTMLAtomicCitationElement extends Components.AtomicCitation, HTMLStencilElement {
-    }
-    var HTMLAtomicCitationElement: {
-        prototype: HTMLAtomicCitationElement;
-        new (): HTMLAtomicCitationElement;
-    };
     interface HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap {
         "feedbackSent": any;
     }
@@ -896,12 +867,6 @@ declare global {
     var HTMLAtomicInsightRefineModalElement: {
         prototype: HTMLAtomicInsightRefineModalElement;
         new (): HTMLAtomicInsightRefineModalElement;
-    };
-    interface HTMLAtomicInsightRefineToggleElement extends Components.AtomicInsightRefineToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightRefineToggleElement: {
-        prototype: HTMLAtomicInsightRefineToggleElement;
-        new (): HTMLAtomicInsightRefineToggleElement;
     };
     interface HTMLAtomicInsightResultElement extends Components.AtomicInsightResult, HTMLStencilElement {
     }
@@ -979,12 +944,6 @@ declare global {
     var HTMLAtomicInsightResultQuickviewActionElement: {
         prototype: HTMLAtomicInsightResultQuickviewActionElement;
         new (): HTMLAtomicInsightResultQuickviewActionElement;
-    };
-    interface HTMLAtomicInsightSearchBoxElement extends Components.AtomicInsightSearchBox, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightSearchBoxElement: {
-        prototype: HTMLAtomicInsightSearchBoxElement;
-        new (): HTMLAtomicInsightSearchBoxElement;
     };
     interface HTMLAtomicInsightSmartSnippetElement extends Components.AtomicInsightSmartSnippet, HTMLStencilElement {
     }
@@ -1090,6 +1049,23 @@ declare global {
     var HTMLAtomicIpxEmbeddedElement: {
         prototype: HTMLAtomicIpxEmbeddedElement;
         new (): HTMLAtomicIpxEmbeddedElement;
+    };
+    interface HTMLAtomicIpxModalElementEventMap {
+        "animationEnded": never;
+    }
+    interface HTMLAtomicIpxModalElement extends Components.AtomicIpxModal, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicIpxModalElementEventMap>(type: K, listener: (this: HTMLAtomicIpxModalElement, ev: AtomicIpxModalCustomEvent<HTMLAtomicIpxModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicIpxModalElementEventMap>(type: K, listener: (this: HTMLAtomicIpxModalElement, ev: AtomicIpxModalCustomEvent<HTMLAtomicIpxModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicIpxModalElement: {
+        prototype: HTMLAtomicIpxModalElement;
+        new (): HTMLAtomicIpxModalElement;
     };
     /**
      * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
@@ -1205,14 +1181,12 @@ declare global {
         new (): HTMLAtomicTimeframeFacetElement;
     };
     interface HTMLElementTagNameMap {
-        "atomic-citation": HTMLAtomicCitationElement;
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
         "atomic-insight-numeric-facet": HTMLAtomicInsightNumericFacetElement;
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
-        "atomic-insight-refine-toggle": HTMLAtomicInsightRefineToggleElement;
         "atomic-insight-result": HTMLAtomicInsightResultElement;
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
         "atomic-insight-result-action-bar": HTMLAtomicInsightResultActionBarElement;
@@ -1222,7 +1196,6 @@ declare global {
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
         "atomic-insight-result-quickview-action": HTMLAtomicInsightResultQuickviewActionElement;
-        "atomic-insight-search-box": HTMLAtomicInsightSearchBoxElement;
         "atomic-insight-smart-snippet": HTMLAtomicInsightSmartSnippetElement;
         "atomic-insight-smart-snippet-feedback-modal": HTMLAtomicInsightSmartSnippetFeedbackModalElement;
         "atomic-insight-smart-snippet-suggestions": HTMLAtomicInsightSmartSnippetSuggestionsElement;
@@ -1233,6 +1206,7 @@ declare global {
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-button": HTMLAtomicIpxButtonElement;
         "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
+        "atomic-ipx-modal": HTMLAtomicIpxModalElement;
         "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
@@ -1246,32 +1220,6 @@ declare global {
     }
 }
 declare namespace LocalJSX {
-    /**
-     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
-     */
-    interface AtomicCitation {
-        /**
-          * The citation item information.
-         */
-        "citation": GeneratedAnswerCitation;
-        /**
-          * Option to disable citation anchoring.
-          * @default false
-         */
-        "disableCitationAnchoring"?: boolean;
-        /**
-          * The citation index.
-         */
-        "index": number;
-        /**
-          * An `InteractiveCitation` controller instance. It is used when the user interacts with the citation by selecting or hovering over it.
-         */
-        "interactiveCitation": InteractiveCitation;
-        /**
-          * Callback function invoked when the user stops hovering over a citation. `citationHoverTimeMs` is the amount of time over which the citation has been hovered.
-         */
-        "sendHoverEndEvent": (citationHoverTimeMs: number) => void;
-    }
     /**
      * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
      */
@@ -1449,8 +1397,6 @@ declare namespace LocalJSX {
         "isOpen"?: boolean;
         "openButton"?: HTMLElement;
     }
-    interface AtomicInsightRefineToggle {
-    }
     interface AtomicInsightResult {
         /**
           * The classes to add to the result element.
@@ -1570,16 +1516,6 @@ declare namespace LocalJSX {
           * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
          */
         "sandbox"?: string;
-    }
-    interface AtomicInsightSearchBox {
-        /**
-          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
-         */
-        "disableSearch"?: boolean;
-        /**
-          * The number of query suggestions to display when interacting with the search box.
-         */
-        "numberOfSuggestions"?: number;
     }
     interface AtomicInsightSmartSnippet {
         /**
@@ -1737,6 +1673,15 @@ declare namespace LocalJSX {
          */
         "container"?: HTMLElement;
         "onAnimationEnded"?: (event: AtomicIpxEmbeddedCustomEvent<never>) => void;
+    }
+    interface AtomicIpxModal {
+        /**
+          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
+         */
+        "container"?: HTMLElement;
+        "isOpen"?: boolean;
+        "onAnimationEnded"?: (event: AtomicIpxModalCustomEvent<never>) => void;
+        "source"?: HTMLElement;
     }
     /**
      * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
@@ -1995,14 +1940,12 @@ declare namespace LocalJSX {
         "withDatePicker"?: boolean;
     }
     interface IntrinsicElements {
-        "atomic-citation": AtomicCitation;
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
         "atomic-insight-facet": AtomicInsightFacet;
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
         "atomic-insight-numeric-facet": AtomicInsightNumericFacet;
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
-        "atomic-insight-refine-toggle": AtomicInsightRefineToggle;
         "atomic-insight-result": AtomicInsightResult;
         "atomic-insight-result-action": AtomicInsightResultAction;
         "atomic-insight-result-action-bar": AtomicInsightResultActionBar;
@@ -2012,7 +1955,6 @@ declare namespace LocalJSX {
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
         "atomic-insight-result-list": AtomicInsightResultList;
         "atomic-insight-result-quickview-action": AtomicInsightResultQuickviewAction;
-        "atomic-insight-search-box": AtomicInsightSearchBox;
         "atomic-insight-smart-snippet": AtomicInsightSmartSnippet;
         "atomic-insight-smart-snippet-feedback-modal": AtomicInsightSmartSnippetFeedbackModal;
         "atomic-insight-smart-snippet-suggestions": AtomicInsightSmartSnippetSuggestions;
@@ -2023,6 +1965,7 @@ declare namespace LocalJSX {
         "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-button": AtomicIpxButton;
         "atomic-ipx-embedded": AtomicIpxEmbedded;
+        "atomic-ipx-modal": AtomicIpxModal;
         "atomic-ipx-recs-list": AtomicIpxRecsList;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
@@ -2042,17 +1985,12 @@ declare module "@stencil/core" {
             /**
              * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
              */
-            "atomic-citation": LocalJSX.AtomicCitation & JSXBase.HTMLAttributes<HTMLAtomicCitationElement>;
-            /**
-             * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
-             */
             "atomic-generated-answer-feedback-modal": LocalJSX.AtomicGeneratedAnswerFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerFeedbackModalElement>;
             "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
             "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
             "atomic-insight-numeric-facet": LocalJSX.AtomicInsightNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightNumericFacetElement>;
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
-            "atomic-insight-refine-toggle": LocalJSX.AtomicInsightRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineToggleElement>;
             "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
             "atomic-insight-result-action-bar": LocalJSX.AtomicInsightResultActionBar & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionBarElement>;
@@ -2062,7 +2000,6 @@ declare module "@stencil/core" {
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
             "atomic-insight-result-quickview-action": LocalJSX.AtomicInsightResultQuickviewAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultQuickviewActionElement>;
-            "atomic-insight-search-box": LocalJSX.AtomicInsightSearchBox & JSXBase.HTMLAttributes<HTMLAtomicInsightSearchBoxElement>;
             "atomic-insight-smart-snippet": LocalJSX.AtomicInsightSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetElement>;
             "atomic-insight-smart-snippet-feedback-modal": LocalJSX.AtomicInsightSmartSnippetFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetFeedbackModalElement>;
             "atomic-insight-smart-snippet-suggestions": LocalJSX.AtomicInsightSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetSuggestionsElement>;
@@ -2085,6 +2022,7 @@ declare module "@stencil/core" {
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
             "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
+            "atomic-ipx-modal": LocalJSX.AtomicIpxModal & JSXBase.HTMLAttributes<HTMLAtomicIpxModalElement>;
             /**
              * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
              */
