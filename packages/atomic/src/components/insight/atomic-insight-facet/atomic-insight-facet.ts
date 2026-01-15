@@ -1,9 +1,9 @@
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
+import type {FacetResultsMustMatch} from '@coveo/headless';
 import {
   buildFacet as buildInsightFacet,
   buildFacetConditionsManager as buildInsightFacetConditionsManager,
   buildSearchStatus as buildInsightSearchStatus,
-  type FacetResultsMustMatch,
   type CategoryFacetValueRequest as InsightCategoryFacetValueRequest,
   type Facet as InsightFacet,
   type FacetConditionsManager as InsightFacetConditionsManager,
@@ -235,13 +235,13 @@ export class AtomicInsightFacet
     header: FocusTargetController;
   } {
     if (!this.showLessFocus) {
-      this.showLessFocus = new FocusTargetController(this);
+      this.showLessFocus = new FocusTargetController(this, 'show-less');
     }
     if (!this.showMoreFocus) {
-      this.showMoreFocus = new FocusTargetController(this);
+      this.showMoreFocus = new FocusTargetController(this, 'show-more');
     }
     if (!this.headerFocus) {
-      this.headerFocus = new FocusTargetController(this);
+      this.headerFocus = new FocusTargetController(this, 'header');
     }
     return {
       showLess: this.showLessFocus,
@@ -291,9 +291,9 @@ export class AtomicInsightFacet
         onToggleCollapse: () => {
           this.isCollapsed = !this.isCollapsed;
         },
-        headerRef: (el: HTMLElement) => this.focusTargets.header.setTarget(el),
+        headerRef: (el) => this.focusTargets.header.setTarget(el),
       },
-    })()}`;
+    })}`;
   }
 
   private renderBody() {
@@ -337,7 +337,7 @@ export class AtomicInsightFacet
               : this.facet.toggleSelect(value),
           facetValue: value.value,
           facetState: value.state,
-          setRef: (btn: HTMLElement) => {
+          setRef: (btn) => {
             if (shouldFocusOnShowLessAfterInteraction) {
               this.showLessFocus?.setTarget(btn);
             }
@@ -400,7 +400,9 @@ export class AtomicInsightFacet
     announceFacetSearchResultsWithAriaLive(
       this.facet,
       this.label,
-      (msg) => this.facetSearchAriaLiveController.announce(msg),
+      (msg) => {
+        this.facetSearchAriaLiveController.message = msg;
+      },
       this.bindings.i18n
     );
   }
