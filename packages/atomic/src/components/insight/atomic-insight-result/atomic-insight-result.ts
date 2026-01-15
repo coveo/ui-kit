@@ -4,15 +4,12 @@ import type {
   InteractiveResult as InsightInteractiveResult,
   Result as InsightResult,
 } from '@coveo/headless/insight';
-import {type CSSResultGroup, css, html, LitElement} from 'lit';
+import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import type {DisplayConfig} from '@/src/components/common/item-list/context/item-display-config-context-controller';
-import {
-  type ItemRenderingFunction,
-  resultComponentClass,
-} from '@/src/components/common/item-list/item-list-common';
+import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
 import {CustomRenderController} from '@/src/components/common/layout/custom-render-controller';
 import {ItemLayoutController} from '@/src/components/common/layout/item-layout-controller';
 import type {
@@ -44,19 +41,21 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
   private itemLayoutController!: ItemLayoutController;
 
   static styles: CSSResultGroup = css`
-    @import '../../common/template-system/template-system.css';
+    @import '../../common/template-system/template-system.pcss';
 
     :host {
       @apply atomic-template-system;
       @apply relative;
-    }
 
-    .with-sections:not(.child-result) {
+      .with-sections:not(.child-result) {
       padding-top: var(--atomic-layout-spacing-y);
       padding-bottom: var(--atomic-layout-spacing-y);
       padding-right: var(--atomic-layout-spacing-x);
       padding-left: var(--atomic-layout-spacing-x);
+      }
     }
+
+
 
     :host(:hover) .with-sections {
       @apply bg-neutral-lighter;
@@ -222,6 +221,7 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
         imageSize: this.imageSize,
       }),
       itemClasses: () => this.classes,
+      classesOnly: true,
     });
 
     this.addEventListener(
@@ -243,6 +243,7 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
 
     await this.getUpdateComplete();
     this.classList.add('hydrated');
+    this.classList.add('result-component');
   }
 
   public disconnectedCallback() {
@@ -280,23 +281,20 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
   public render() {
     if (this.renderingFunction !== undefined) {
       return html`
-        <div class=${resultComponentClass}>
           <div
             class="result-root"
             ${ref((el) => {
               this.resultRootRef = el as HTMLElement;
             })}
           ></div>
-        </div>
       `;
     }
     // Handle case where content is undefined and layout was not created
     if (!this.itemLayoutController.getLayout()) {
-      return html`<div class=${resultComponentClass}></div>`;
+      return nothing;
     }
 
     return html`
-      <div class=${resultComponentClass}>
         <div
           class="result-root ${this.itemLayoutController
             .getCombinedClasses()
@@ -304,7 +302,6 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
         >
           ${unsafeHTML(this.getContentHTML())}
         </div>
-      </div>
     `;
   }
 
