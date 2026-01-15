@@ -6,6 +6,7 @@ export {AtomicInsightHistoryToggle} from './atomic-insight-history-toggle/atomic
 export {AtomicInsightInterface} from './atomic-insight-interface/atomic-insight-interface.js';
 export {AtomicInsightLayout} from './atomic-insight-layout/atomic-insight-layout.js';
 export {AtomicInsightNoResults} from './atomic-insight-no-results/atomic-insight-no-results.js';
+export {AtomicInsightNumericFacet} from './atomic-insight-numeric-facet/atomic-insight-numeric-facet.js';
 export {AtomicInsightPager} from './atomic-insight-pager/atomic-insight-pager.js';
 export {AtomicInsightQueryError} from './atomic-insight-query-error/atomic-insight-query-error.js';
 export {AtomicInsightQuerySummary} from './atomic-insight-query-summary/atomic-insight-query-summary.js';
