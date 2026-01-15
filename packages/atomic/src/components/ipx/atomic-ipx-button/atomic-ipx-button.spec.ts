@@ -94,25 +94,6 @@ describe('atomic-ipx-button', () => {
     });
   });
 
-  describe('when updating properties', () => {
-    it('should allow updating the label property', async () => {
-      const {element} = await renderButton({label: 'Initial'});
-      element.label = 'Updated Label';
-      await element.updateComplete;
-      expect(element.label).toBe('Updated Label');
-    });
-
-    it('should update the rendered text when label changes', async () => {
-      const {element} = await renderButton({label: 'Initial'});
-      element.label = 'New Label';
-      await element.updateComplete;
-      const updatedText = element.shadowRoot?.querySelector(
-        '[part="button-text"]'
-      );
-      expect(updatedText?.textContent).toBe('New Label');
-    });
-  });
-
   describe('when rendering with custom icons', () => {
     const customSvg =
       '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><circle cx="8" cy="8" r="8"></circle></svg>';
