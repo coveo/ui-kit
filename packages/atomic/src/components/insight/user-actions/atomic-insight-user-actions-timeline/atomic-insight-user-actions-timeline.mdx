@@ -1,0 +1,67 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicInsightUserActionsTimelineStories from './atomic-insight-user-actions-timeline.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicInsightUserActionsTimelineStories} />
+
+<AtomicDocTemplate
+  stories={AtomicInsightUserActionsTimelineStories}
+  githubPath="insight/user-actions/atomic-insight-user-actions-timeline/atomic-insight-user-actions-timeline.ts"
+  tagName="atomic-insight-user-actions-timeline"
+  className="AtomicInsightUserActionsTimeline"
+>
+
+The `atomic-insight-user-actions-timeline` component displays all the actions performed by a user around the time they created a case.
+The actions are grouped into multiple sessions, including the session during which the case was created,
+the sessions preceding the case creation, and the sessions following the case creation.
+
+**Note:** This is an internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.
+
+This component should be placed within an `atomic-insight-interface` component.
+
+```html
+<atomic-insight-interface>
+  <atomic-insight-user-actions-timeline
+    user-id="user@example.com"
+    ticket-creation-date-time="2024-08-15T10:00:00Z"
+  ></atomic-insight-user-actions-timeline>
+</atomic-insight-interface>
+```
+
+## Configuration
+
+### Required Properties
+
+- **user-id**: The ID of the user whose actions are being displayed (e.g., email format: `someone@company.com`)
+- **ticket-creation-date-time**: The date and time when the case was created (e.g., `2024-01-01T00:00:00Z`)
+
+### Optional Properties
+
+- **excluded-custom-actions**: An array of custom event names to exclude from the timeline
+
+```html
+<atomic-insight-user-actions-timeline
+  user-id="user@example.com"
+  ticket-creation-date-time="2024-08-15T10:00:00Z"
+  .excludedCustomActions=${['custom-event-1', 'custom-event-2']}
+></atomic-insight-user-actions-timeline>
+```
+
+## Behavior
+
+The component automatically organizes user actions into three session groups:
+
+1. **Active Session**: The session during which the case was created (always visible)
+2. **Following Sessions**: Sessions that occurred after the case creation (collapsed by default)
+3. **Preceding Sessions**: Sessions that occurred before the case creation (collapsed by default)
+
+Users can toggle the visibility of following and preceding sessions using the expand/collapse buttons.
+
+## Error States
+
+The component displays an error screen when:
+- No user actions are available for the specified user
+- The user actions fetch fails (e.g., access denied)
+- The timeline data is unavailable
+
+</AtomicDocTemplate>
