@@ -99,6 +99,38 @@ mockInsightApi.searchEndpoint.mock((response) => ({
   ],
 }));
 
+const mockDefaultFacetResponse = () => {
+  mockInsightApi.searchEndpoint.mockOnce((response) => ({
+    ...response,
+    facets: [
+      {
+        facetId: 'ytviewcount',
+        field: 'ytviewcount',
+        moreValuesAvailable: false,
+        values: numericFacetValues,
+        indexScore: 0.23,
+        domain: {start: 8, end: 70261098},
+      },
+      {
+        facetId: 'ytviewcount_input_range',
+        field: 'ytviewcount',
+        moreValuesAvailable: false,
+        values: [
+          {
+            start: 0,
+            end: 100000000,
+            endInclusive: true,
+            state: 'idle',
+            numberOfResults: 500,
+          },
+        ],
+        indexScore: 0.23,
+        domain: {start: 8, end: 70261098},
+      },
+    ],
+  }));
+};
+
 const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-insight-numeric-facet',
   {excludeCategories: ['methods']}
@@ -143,6 +175,9 @@ export const Default: Story = {
   args: {
     field: 'ytviewcount',
   },
+  beforeEach: () => {
+    mockDefaultFacetResponse();
+  },
 };
 
 export const WithInputInteger: Story = {
@@ -154,6 +189,9 @@ export const WithInputInteger: Story = {
     field: 'ytviewcount',
     'with-input': 'integer',
   },
+  beforeEach: () => {
+    mockDefaultFacetResponse();
+  },
 };
 
 export const DisplayAsLink: Story = {
@@ -164,6 +202,9 @@ export const DisplayAsLink: Story = {
     label: 'YouTube View Count',
     'display-values-as': 'link',
   },
+  beforeEach: () => {
+    mockDefaultFacetResponse();
+  },
 };
 
 export const Collapsed: Story = {
@@ -172,6 +213,9 @@ export const Collapsed: Story = {
     field: 'ytviewcount',
     label: 'YouTube View Count',
     'is-collapsed': true,
+  },
+  beforeEach: () => {
+    mockDefaultFacetResponse();
   },
 };
 
