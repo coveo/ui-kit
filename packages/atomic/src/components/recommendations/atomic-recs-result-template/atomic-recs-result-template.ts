@@ -3,7 +3,7 @@ import {
   type ResultTemplateCondition as RecsResultTemplateCondition,
   ResultTemplatesHelpers,
 } from '@coveo/headless/recommendation';
-import {html, LitElement, nothing} from 'lit';
+import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {RecsResultTemplateController} from '@/src/components/common/result-templates/recs-result-template-controller';
 import {makeMatchConditions} from '@/src/components/common/template-controller/template-utils';
@@ -87,7 +87,7 @@ export class AtomicRecsResultTemplate
 
   @errorGuard()
   render() {
-    return html`${nothing}`;
+    return nothing;
   }
 
   /**

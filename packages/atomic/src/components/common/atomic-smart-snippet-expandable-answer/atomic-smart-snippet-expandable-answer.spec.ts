@@ -1,7 +1,6 @@
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it} from 'vitest';
-import {page} from 'vitest/browser';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {AtomicSmartSnippetExpandableAnswer} from './atomic-smart-snippet-expandable-answer';
@@ -202,7 +201,7 @@ describe('atomic-smart-snippet-expandable-answer', () => {
 
   describe('events', () => {
     it('should emit expand event when show-more button is clicked', async () => {
-      const {element} = await renderComponent({expanded: false});
+      const {element, parts} = await renderComponent({expanded: false});
 
       await setElementHeight(element, 300);
       await element.requestUpdate();
@@ -213,14 +212,14 @@ describe('atomic-smart-snippet-expandable-answer', () => {
         expandEventFired = true;
       });
 
-      const button = page.getByRole('button');
-      await button.click();
+      const showMoreButton = parts(element).showMoreButton as HTMLElement;
+      showMoreButton.click();
 
       expect(expandEventFired).toBe(true);
     });
 
     it('should emit collapse event when show-less button is clicked', async () => {
-      const {element} = await renderComponent({expanded: true});
+      const {element, parts} = await renderComponent({expanded: true});
 
       await setElementHeight(element, 300);
       await element.requestUpdate();
@@ -231,8 +230,8 @@ describe('atomic-smart-snippet-expandable-answer', () => {
         collapseEventFired = true;
       });
 
-      const button = page.getByRole('button');
-      await button.click();
+      const showLessButton = parts(element).showLessButton as HTMLElement;
+      showLessButton.click();
 
       expect(collapseEventFired).toBe(true);
     });
