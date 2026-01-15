@@ -2,29 +2,41 @@ import {buildInteractiveResult, type Result} from '@coveo/headless';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {page} from 'vitest/browser';
+import {renderQuickviewSidebar} from '@/src/components/search/result-template-components/atomic-quickview-sidebar/atomic-quickview-sidebar';
+import {renderQuickviewIframe} from '@/src/components/search/result-template-components/quickview-iframe/quickview-iframe';
+import {buildQuickviewPreviewBar} from '@/src/components/search/result-template-components/quickview-preview-bar/quickview-preview-bar';
+import {getWordsHighlights} from '@/src/components/search/result-template-components/quickview-word-highlight/quickview-word-highlight';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
-import {QuickviewSidebar} from '../atomic-quickview-sidebar/atomic-quickview-sidebar';
-import {QuickviewIframe} from '../quickview-iframe/quickview-iframe';
-import {buildQuickviewPreviewBar} from '../quickview-preview-bar/quickview-preview-bar';
-import {getWordsHighlights} from '../quickview-word-highlight/quickview-word-highlight';
 import type {AtomicQuickviewModal} from './atomic-quickview-modal';
 import './atomic-quickview-modal';
 
 vi.mock('@coveo/headless', {spy: true});
-vi.mock('../quickview-iframe/quickview-iframe', () => ({
-  QuickviewIframe: vi.fn(() => html``),
-}));
-vi.mock('../atomic-quickview-sidebar/atomic-quickview-sidebar', () => ({
-  QuickviewSidebar: vi.fn(() => html``),
-}));
-vi.mock('../quickview-preview-bar/quickview-preview-bar', () => ({
-  buildQuickviewPreviewBar: vi.fn(() => html``),
-}));
-vi.mock('../quickview-word-highlight/quickview-word-highlight', () => ({
-  getWordsHighlights: vi.fn(() => ({})),
-  HIGHLIGHT_PREFIX: 'coveo-highlight',
-}));
+vi.mock(
+  '@/src/components/search/result-template-components/quickview-iframe/quickview-iframe',
+  () => ({
+    renderQuickviewIframe: vi.fn(() => html``),
+  })
+);
+vi.mock(
+  '@/src/components/search/result-template-components/atomic-quickview-sidebar/atomic-quickview-sidebar',
+  () => ({
+    renderQuickviewSidebar: vi.fn(() => html``),
+  })
+);
+vi.mock(
+  '@/src/components/search/result-template-components/quickview-preview-bar/quickview-preview-bar',
+  () => ({
+    buildQuickviewPreviewBar: vi.fn(() => html``),
+  })
+);
+vi.mock(
+  '@/src/components/search/result-template-components/quickview-word-highlight/quickview-word-highlight',
+  () => ({
+    getWordsHighlights: vi.fn(() => ({})),
+    HIGHLIGHT_PREFIX: 'coveo-highlight',
+  })
+);
 
 describe('atomic-quickview-modal', () => {
   const mockedEngine = buildFakeSearchEngine();
@@ -80,6 +92,11 @@ describe('atomic-quickview-modal', () => {
               phrasesToHighlight: {},
             },
           };
+          bindings.store = {
+            ...bindings.store,
+            isMobile: vi.fn().mockReturnValue(false),
+          };
+          bindings.createStyleElement = () => document.createElement('style');
           return bindings;
         },
       }
@@ -98,7 +115,7 @@ describe('atomic-quickview-modal', () => {
     };
   };
 
-  describe('#initialize', () => {
+  describe('when initializing', () => {
     it('should initialize minimizeSidebar based on mobile state', async () => {
       const {element} = await renderQuickviewModal();
       // biome-ignore lint/suspicious/noExplicitAny: accessing private property for testing
@@ -115,12 +132,12 @@ describe('atomic-quickview-modal', () => {
   });
 
   describe('when modal is closed', () => {
-    it('should not render header when result is undefined', async () => {
+    it('should not render header content when result is undefined', async () => {
       const {parts, element} = await renderQuickviewModal({
         props: {content: mockContent},
       });
       const header = parts(element).header;
-      expect(header?.textContent?.trim()).toBe('');
+      expect(header).toBeNull();
     });
 
     it('should have isOpen as false when content or result is missing', async () => {
@@ -188,15 +205,15 @@ describe('atomic-quickview-modal', () => {
       );
     });
 
-    it('should render QuickviewSidebar component', async () => {
+    it('should render renderQuickviewSidebar component', async () => {
       await renderQuickviewModal({
         props: {content: mockContent, result: mockResult},
       });
 
-      expect(vi.mocked(QuickviewSidebar)).toHaveBeenCalled();
+      expect(vi.mocked(renderQuickviewSidebar)).toHaveBeenCalled();
     });
 
-    it('should render QuickviewIframe component with correct props', async () => {
+    it('should render renderQuickviewIframe component with correct props', async () => {
       await renderQuickviewModal({
         props: {
           content: mockContent,
@@ -205,13 +222,15 @@ describe('atomic-quickview-modal', () => {
         },
       });
 
-      expect(vi.mocked(QuickviewIframe)).toHaveBeenCalledWith(
+      expect(vi.mocked(renderQuickviewIframe)).toHaveBeenCalledWith(
         expect.objectContaining({
-          title: mockResult.title,
-          src: 'https://example.com/preview',
-          sandbox: 'allow-scripts',
-          uniqueIdentifier: 'test-id-123request-123',
-          content: mockContent,
+          props: expect.objectContaining({
+            title: mockResult.title,
+            src: 'https://example.com/preview',
+            sandbox: 'allow-scripts',
+            uniqueIdentifier: 'test-id-123request-123',
+            content: mockContent,
+          }),
         })
       );
     });
@@ -225,7 +244,7 @@ describe('atomic-quickview-modal', () => {
     });
   });
 
-  describe('#renderFooter', () => {
+  describe('when rendering footer', () => {
     it('should render previous button', async () => {
       const {element} = await renderQuickviewModal({
         props: {
@@ -282,7 +301,7 @@ describe('atomic-quickview-modal', () => {
     });
 
     it('should disable previous button when current is 1', async () => {
-      await renderQuickviewModal({
+      const {element} = await renderQuickviewModal({
         props: {
           content: mockContent,
           result: mockResult,
@@ -291,13 +310,16 @@ describe('atomic-quickview-modal', () => {
         },
       });
 
-      // Note: renderButton functional component handles disabled state
-      // We verify it's called with the correct disabled prop
-      expect(vi.mocked(QuickviewIframe)).toHaveBeenCalled();
+      const prevButton = await page
+        .getByRole('button', {
+          name: element.bindings.i18n.t('quickview-previous'),
+        })
+        .element();
+      expect(prevButton).toHaveProperty('disabled', true);
     });
 
     it('should disable next button when current equals total', async () => {
-      await renderQuickviewModal({
+      const {element} = await renderQuickviewModal({
         props: {
           content: mockContent,
           result: mockResult,
@@ -306,12 +328,14 @@ describe('atomic-quickview-modal', () => {
         },
       });
 
-      // Note: renderButton functional component handles disabled state
-      expect(vi.mocked(QuickviewIframe)).toHaveBeenCalled();
+      const nextButton = await page
+        .getByRole('button', {name: element.bindings.i18n.t('quickview-next')})
+        .element();
+      expect(nextButton).toHaveProperty('disabled', true);
     });
   });
 
-  describe('#reset', () => {
+  describe('when calling reset', () => {
     it('should reset all state properties', async () => {
       const {element} = await renderQuickviewModal({
         props: {content: mockContent, result: mockResult},
@@ -331,7 +355,7 @@ describe('atomic-quickview-modal', () => {
     });
   });
 
-  describe('#onClose', () => {
+  describe('when closing modal', () => {
     it('should clear content and result', async () => {
       const {modal, element} = await renderQuickviewModal({
         props: {content: mockContent, result: mockResult},
@@ -363,7 +387,7 @@ describe('atomic-quickview-modal', () => {
     });
   });
 
-  describe('event dispatching', () => {
+  describe('when dispatching events', () => {
     it('should dispatch atomic/quickview/next event when next button is clicked', async () => {
       const {element} = await renderQuickviewModal({
         props: {
@@ -379,7 +403,6 @@ describe('atomic-quickview-modal', () => {
         eventFired = true;
       });
 
-      // Trigger the next button click through the event dispatcher
       element.dispatchEvent(
         new CustomEvent('atomic/quickview/next', {bubbles: true})
       );
@@ -402,7 +425,6 @@ describe('atomic-quickview-modal', () => {
         eventFired = true;
       });
 
-      // Trigger the previous button click through the event dispatcher
       element.dispatchEvent(
         new CustomEvent('atomic/quickview/previous', {bubbles: true})
       );
@@ -411,7 +433,7 @@ describe('atomic-quickview-modal', () => {
     });
   });
 
-  describe('#quickviewUniqueIdentifier', () => {
+  describe('when computing unique identifier', () => {
     it('should combine result uniqueId with requestId', async () => {
       const {element} = await renderQuickviewModal({
         props: {content: mockContent, result: mockResult},
@@ -423,7 +445,7 @@ describe('atomic-quickview-modal', () => {
     });
   });
 
-  describe('#quickviewSrc', () => {
+  describe('when getting quickview source', () => {
     it('should get contentURL from engine state', async () => {
       const {element} = await renderQuickviewModal({
         props: {content: mockContent, result: mockResult},
@@ -435,15 +457,14 @@ describe('atomic-quickview-modal', () => {
     });
   });
 
-  describe('highlight scripts management', () => {
+  describe('when managing highlight scripts', () => {
     it('should call getWordsHighlights when iframe ref is set', async () => {
       await renderQuickviewModal({
         props: {content: mockContent, result: mockResult},
       });
 
-      // Get the onSetIframeRef callback from the QuickviewIframe mock call
-      const iframeMockCall = vi.mocked(QuickviewIframe).mock.calls[0];
-      const onSetIframeRef = iframeMockCall?.[0].onSetIframeRef;
+      const iframeMockCall = vi.mocked(renderQuickviewIframe).mock.calls[0];
+      const onSetIframeRef = iframeMockCall?.[0].props.onSetIframeRef;
 
       if (onSetIframeRef) {
         const mockIframeRef = document.createElement('iframe');
@@ -454,8 +475,8 @@ describe('atomic-quickview-modal', () => {
     });
   });
 
-  describe('willUpdate lifecycle', () => {
-    it('should call handleHighlightsScripts when highlightKeywords change', async () => {
+  describe('when updating component', () => {
+    it('should remain connected after highlightKeywords change', async () => {
       const {element} = await renderQuickviewModal({
         props: {content: mockContent, result: mockResult},
       });
@@ -468,7 +489,6 @@ describe('atomic-quickview-modal', () => {
 
       await element.updateComplete;
 
-      // Verify the component updated (this indirectly tests handleHighlightsScripts was called)
       expect(element.isConnected).toBe(true);
     });
   });
