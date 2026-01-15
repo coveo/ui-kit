@@ -177,6 +177,6 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'atomic-ipx-modal': AtomicIPXModal;
+    'atomic-ipx-modal': AtomicIpxModal;
   }
 }
