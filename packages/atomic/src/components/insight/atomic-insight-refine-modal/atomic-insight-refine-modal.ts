@@ -92,7 +92,7 @@ export class AtomicInsightRefineModal
   isOpen = false;
 
   public querySummary!: InsightQuerySummary;
-  private breadcrumbManager!: InsightBreadcrumbManager;
+  public breadcrumbManager!: InsightBreadcrumbManager;
 
   public initialize() {
     this.querySummary = buildInsightQuerySummary(this.bindings.engine);
