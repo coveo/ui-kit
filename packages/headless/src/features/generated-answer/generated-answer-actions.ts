@@ -17,15 +17,15 @@ import type {
 } from '../../api/generated-answer/generated-answer-event-payload.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
 import type {AnswerGenerationApiState} from '../../api/knowledge/answer-generation/answer-generation-api-state.js';
-import {initiateHeadAnswerGeneration} from '../../api/knowledge/answer-generation/endpoints/head-answer-endpoint.js';
+import {
+  type HeadAnswerEndpointArgs,
+  initiateHeadAnswerGeneration,
+} from '../../api/knowledge/answer-generation/endpoints/head-answer-endpoint.js';
 import {fetchAnswer} from '../../api/knowledge/stream-answer-api.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
 import type {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments.js';
-import type {
-  AnswerApiQueryParams,
-  HeadAnswerParams,
-} from '../../features/generated-answer/generated-answer-request.js';
+import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import type {
   ConfigurationSection,
   DebugSection,
@@ -224,7 +224,8 @@ export const setAnswerApiQueryParams = createAction(
 
 export const setHeadAnswerApiQueryParams = createAction(
   'generatedAnswer/setHeadAnswerApiQueryParams',
-  (payload: HeadAnswerParams) => validatePayload(payload, new RecordValue({}))
+  (payload: HeadAnswerEndpointArgs) =>
+    validatePayload(payload, new RecordValue({}))
 );
 
 interface StreamAnswerArgs {

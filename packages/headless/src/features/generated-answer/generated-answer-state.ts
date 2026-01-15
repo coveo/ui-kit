@@ -1,8 +1,6 @@
 import type {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
-import type {
-  AnswerApiQueryParams,
-  HeadAnswerParams,
-} from '../../features/generated-answer/generated-answer-request.js';
+import type {HeadAnswerEndpointArgs} from '../../api/knowledge/answer-generation/endpoints/head-answer-endpoint.js';
+import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
 import type {
   GeneratedContentFormat,
   GeneratedResponseFormat,
@@ -106,7 +104,7 @@ export interface GeneratedAnswerState extends GeneratedAnswerBase {
   /**
    * The query parameters used for the head answer API request
    */
-  headAnswerApiQueryParams?: HeadAnswerParams;
+  headAnswerApiQueryParams?: HeadAnswerEndpointArgs;
   /** The current mode of answer generation. */
   answerGenerationMode: 'automatic' | 'manual';
 }
