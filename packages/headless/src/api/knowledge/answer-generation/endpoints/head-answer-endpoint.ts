@@ -17,7 +17,7 @@ export type HeadAnswerEndpointArgs = {
   searchHub?: string;
   pipeline?: string;
   pipelineRuleParameters: PipelineRuleParameters;
-  local: string;
+  locale: string;
 } & AnalyticsParam;
 
 export const headAnswerEndpoint = answerGenerationApi.injectEndpoints({
