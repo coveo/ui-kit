@@ -29,7 +29,6 @@ license: Apache-2.0
 metadata:
   author: coveo
   version: "1.0"
-  package: [TODO: atomic | headless | quantic | all]
 ---
 
 # ${skillTitle}

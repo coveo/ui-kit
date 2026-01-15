@@ -13,8 +13,7 @@ import ArrowDown from '@/src/images/arrow-down.svg';
 import {listenOnce} from '@/src/utils/event-utils.js';
 import styles from './atomic-smart-snippet-expandable-answer.tw.css.js';
 import '@/src/components/common/atomic-icon/atomic-icon.js';
-// TODO: uncomment when PR #6781 is merged
-// import '@/src/components/common/smart-snippets/atomic-smart-snippet-answer/atomic-smart-snippet-answer.js';
+import '@/src/components/common/atomic-smart-snippet-answer/atomic-smart-snippet-answer.js';
 
 /**
  * The `atomic-smart-snippet-expandable-answer` component displays an expandable smart snippet answer.
