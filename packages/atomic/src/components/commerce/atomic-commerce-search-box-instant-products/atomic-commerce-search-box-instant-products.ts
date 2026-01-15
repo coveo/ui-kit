@@ -274,7 +274,7 @@ export class AtomicCommerceSearchBoxInstantProducts
 
   @errorGuard()
   render() {
-    return html`${nothing}`;
+    return nothing;
   }
 }
 

@@ -12,9 +12,13 @@
   "biome": false,
   "workspaces": {
     ".": {
-      "entry": ["hooks/*.js", "scripts/**/*.{js,mjs}"],
+      "entry": [
+        ".claude/skills/**/scripts/*.mjs",
+        "hooks/*.js",
+        "scripts/**/*.{js,mjs}"
+      ],
       "ignoreBinaries": ["ts-node", "dev"],
-      "ignoreDependencies": ["@playwright/mcp"]
+      "ignoreDependencies": ["@playwright/mcp", "handlebars"]
     },
     "packages/headless": {
       "entry": ["src/*index.ts", "ponyfills/*.js"],

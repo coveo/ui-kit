@@ -372,7 +372,7 @@ export class AtomicRatingFacet
     this.bindings.store.registerFacet('numericFacets', {
       ...facetInfo,
       format: (value) => this.formatFacetValue(value),
-      // @ts-ignore -- Because of Stencil VNode dependencies.
+      // @ts-expect-error -- Because of Stencil VNode dependencies.
       content: (value) => this.ratingContent(value),
     });
     initializePopover(this, {
@@ -534,7 +534,7 @@ export class AtomicRatingFacet
   @errorGuard()
   render() {
     if (this.searchStatusState.hasError || !this.facet.state.enabled) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     if (!this.searchStatusState.firstSearchExecuted) {
@@ -547,7 +547,7 @@ export class AtomicRatingFacet
     }
 
     if (!this.valuesToRender.length) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     return renderFacetContainer()(html`
