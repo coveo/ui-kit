@@ -1,10 +1,10 @@
 import {buildSSRSearchParameterSerializer} from '@coveo/headless/ssr';
 import {headers} from 'next/headers';
-import SearchPage from '@/common/components/generic/search-page';
+import SearchPage from '../../components/generic/search-page';
 import {
   fetchStaticState,
   setNavigatorContextProvider,
-} from '@/common/lib/generic/engine';
+} from '../../lib/generic/engine';
 import {NextJsAppRouterNavigatorContext} from '../../navigatorContextProvider';
 
 /**

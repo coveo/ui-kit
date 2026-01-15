@@ -1,15 +1,15 @@
 import {buildSSRSearchParameterSerializer} from '@coveo/headless-react/ssr';
 import {headers} from 'next/headers';
-import {AuthorFacet} from '@/common/components/react/facets';
-import ResultList from '@/common/components/react/result-list';
-import SearchBox from '@/common/components/react/search-box';
-import {SearchPageProvider} from '@/common/components/react/search-page';
-import SearchParameterManager from '@/common/components/react/search-parameter-manager';
-import TabManager from '@/common/components/react/tab-manager';
+import {AuthorFacet} from '../../components/react/facets';
+import ResultList from '../../components/react/result-list';
+import SearchBox from '../../components/react/search-box';
+import {SearchPageProvider} from '../../components/react/search-page';
+import SearchParameterManager from '../../components/react/search-parameter-manager';
+import TabManager from '../../components/react/tab-manager';
 import {
   fetchStaticState,
   setNavigatorContextProvider,
-} from '@/common/lib/react/engine';
+} from '../../lib/react/engine';
 import {NextJsAppRouterNavigatorContext} from '../../navigatorContextProvider';
 
 /**

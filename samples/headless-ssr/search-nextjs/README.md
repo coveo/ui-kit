@@ -6,8 +6,8 @@ This sample demonstrates server-side rendering (SSR) with Coveo Headless search 
 
 - Server-side rendering for search interfaces
 - Next.js App Router implementation
-- Framework-agnostic `@coveo/headless/ssr` utilities
-- React-specific `@coveo/headless-react/ssr` utilities
+- Framework-agnostic example using `@coveo/headless/ssr` utilities (`/generic` route)
+- React-specific example using `@coveo/headless-react/ssr` utilities (`/react` route)
 - Client-side hydration for interactive search
 
 ## Technology Stack
@@ -23,22 +23,14 @@ This sample demonstrates server-side rendering (SSR) with Coveo Headless search 
 - Node.js 18+ (LTS recommended)
 - npm 9+
 
-## Project Structure
-
-This sample contains:
-
-- **[app-router](./app-router/)**: Next.js App Router implementation
-- **[common](./common/)**: Shared code and utilities
-
 ## Getting Started
 
 ```bash
-cd ./app-router
 npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the application.
+Open [http://localhost:3000/generic](http://localhost:3000/generic) for the framework-agnostic example or [http://localhost:3000/react](http://localhost:3000/react) for the React-specific example.
 
 ## Available Scripts
 
@@ -46,10 +38,21 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 npm run dev       # Start development server
 npm run build     # Build for production
 npm run prod      # Start production server (run after build)
+npm run lint      # Lint the code
 npm run e2e       # Run end-to-end tests
+npm run e2e:watch # Run end-to-end tests in watch mode
 ```
 
 ## Key Implementation Details
+
+### Two Example Implementations
+
+This sample includes two routes:
+
+- **`/generic`**: Framework-agnostic implementation using `@coveo/headless/ssr`
+- **`/react`**: React-specific implementation using `@coveo/headless-react/ssr`
+
+Both demonstrate server-side rendering with Coveo Headless controllers.
 
 ### Framework-Agnostic SSR
 
