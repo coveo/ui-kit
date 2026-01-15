@@ -200,17 +200,15 @@ describe('atomic-insight-result', () => {
       }).not.toThrow();
     });
 
-    it('should render empty result-component div', async () => {
+    it('should render nothing when content is undefined and no rendering function', async () => {
       const element = await renderResult({
         content: undefined,
         renderingFunction: undefined,
       });
       await element.updateComplete;
 
-      const resultComponent =
-        element.shadowRoot?.querySelector('.result-component');
-      expect(resultComponent).toBeDefined();
-      expect(resultComponent?.innerHTML.trim()).toBe('');
+      const resultRoot = element.shadowRoot?.querySelector('.result-root');
+      expect(resultRoot).toBeNull();
     });
 
     describe('#getContentHTML', () => {
@@ -248,15 +246,12 @@ describe('atomic-insight-result', () => {
     });
 
     describe('#render', () => {
-      it('should not call layout methods when layout is undefined', async () => {
+      it('should render nothing when layout is undefined', async () => {
         const element = await renderResult({content: undefined});
 
         expect(() => element.render()).not.toThrow();
 
-        const componentRoot =
-          element.shadowRoot!.querySelector('.result-component');
         const resultRoot = element.shadowRoot!.querySelector('.result-root');
-        expect(componentRoot).toBeTruthy();
         expect(resultRoot).toBeNull();
       });
 
