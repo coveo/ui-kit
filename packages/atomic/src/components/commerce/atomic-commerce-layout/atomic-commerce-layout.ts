@@ -47,6 +47,7 @@ export class AtomicCommerceLayout extends LightDomMixin(
         detail: {breakpoint: this.mobileBreakpoint},
         bubbles: true,
         composed: true,
+        cancelable: true,
       })
     );
   }

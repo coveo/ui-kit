@@ -207,7 +207,7 @@ export class AtomicModal
     if (e.key?.toLowerCase() === 'escape') {
       if (this.isOpen) {
         this.dispatchEvent(
-          new CustomEvent('close', {bubbles: true, composed: true})
+          new CustomEvent('close', {bubbles: true, composed: true, cancelable: true})
         );
       }
       if (this.close) {

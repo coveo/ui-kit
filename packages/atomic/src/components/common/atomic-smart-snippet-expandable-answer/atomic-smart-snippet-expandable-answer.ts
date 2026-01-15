@@ -138,6 +138,7 @@ export class AtomicSmartSnippetExpandableAnswer
       new CustomEvent('expand', {
         bubbles: true,
         composed: true,
+        cancelable: true,
       })
     );
   }
@@ -147,6 +148,7 @@ export class AtomicSmartSnippetExpandableAnswer
       new CustomEvent('collapse', {
         bubbles: true,
         composed: true,
+        cancelable: true,
       })
     );
   }
@@ -157,6 +159,7 @@ export class AtomicSmartSnippetExpandableAnswer
         detail: e.detail,
         bubbles: true,
         composed: true,
+        cancelable: true,
       })
     );
   }
@@ -167,6 +170,7 @@ export class AtomicSmartSnippetExpandableAnswer
         detail: e.detail,
         bubbles: true,
         composed: true,
+        cancelable: true,
       })
     );
   }
@@ -177,6 +181,7 @@ export class AtomicSmartSnippetExpandableAnswer
         detail: e.detail,
         bubbles: true,
         composed: true,
+        cancelable: true,
       })
     );
   }

@@ -79,6 +79,13 @@ export class AtomicQuickviewModal implements InitializableComponent {
     this.handleHighlightsScripts();
   }
 
+  /**
+   * @migration Stencil's @Event() decorator defaults to: bubbles=true, composed=true, cancelable=true.
+   * Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false.
+   * When migrating to Lit, explicitly set all three options to preserve behavior:
+   * `new CustomEvent('atomic/quickview/next', { bubbles: true, composed: true, cancelable: true })`
+   * `new CustomEvent('atomic/quickview/previous', { bubbles: true, composed: true, cancelable: true })`
+   */
   @Event({eventName: 'atomic/quickview/next'}) nextQuickview?: EventEmitter;
   @Event({eventName: 'atomic/quickview/previous'})
   previousQuickview?: EventEmitter;

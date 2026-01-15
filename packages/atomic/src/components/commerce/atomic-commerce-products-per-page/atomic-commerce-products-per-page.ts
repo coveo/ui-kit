@@ -98,6 +98,7 @@ export class AtomicCommerceProductsPerPage
       new CustomEvent('atomic/scrollToTop', {
         bubbles: true,
         composed: true,
+        cancelable: true,
       })
     );
   }

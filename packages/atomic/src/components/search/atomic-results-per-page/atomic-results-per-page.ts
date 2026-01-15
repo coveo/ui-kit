@@ -102,6 +102,7 @@ export class AtomicResultsPerPage
       new CustomEvent('atomic/scrollToTop', {
         bubbles: true,
         composed: true,
+        cancelable: true,
       })
     );
   }

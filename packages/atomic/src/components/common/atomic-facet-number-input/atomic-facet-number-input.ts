@@ -179,6 +179,7 @@ export class AtomicFacetNumberInput
       new CustomEvent('atomic/numberInputApply', {
         bubbles: true,
         composed: true,
+        cancelable: true,
       })
     );
     this.filter.setRange({

@@ -81,6 +81,7 @@ export class AtomicProductChildren
         detail: {child} as SelectChildProductEventArgs,
         bubbles: true,
         composed: true,
+        cancelable: true,
       })
     );
   }

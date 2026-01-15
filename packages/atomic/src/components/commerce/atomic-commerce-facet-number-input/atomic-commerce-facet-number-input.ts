@@ -93,6 +93,7 @@ export class AtomicCommerceFacetNumberInput
         },
         bubbles: true,
         composed: true,
+        cancelable: true,
       })
     );
   }

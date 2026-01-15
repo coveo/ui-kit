@@ -271,6 +271,8 @@ export class AtomicSearchBox
     this.searchBox.afterRedirection();
     const event = new CustomEvent<RedirectionPayload>('redirect', {
       detail: {redirectTo, value},
+      bubbles: true,
+      composed: true,
       cancelable: true,
     });
     this.dispatchEvent(event);

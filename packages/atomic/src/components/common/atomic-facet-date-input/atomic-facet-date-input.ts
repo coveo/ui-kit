@@ -126,6 +126,8 @@ export class AtomicFacetDateInput
         endInclusive: rangeRequest.endInclusive,
       },
       bubbles: true,
+      composed: true,
+      cancelable: true,
     };
 
     this.dispatchEvent(
