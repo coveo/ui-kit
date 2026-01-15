@@ -109,7 +109,7 @@ export const renderAnswerContent: FunctionalComponent<
       ${
         !hasRetryableError && isAnswerVisible
           ? html`
-            <div part="generated-answer-footer" class="mt-6 flex justify-end">
+            <div part="generated-answer-footer" class="mt-6">
               ${renderGeneratingAnswerLabel({props: {i18n, isStreaming: !!isStreaming, collapsible}})}
               ${
                 collapsible && !isStreaming
@@ -122,7 +122,9 @@ export const renderAnswerContent: FunctionalComponent<
                     })
                   : nothing
               }
-              ${renderDisclaimer({props: {i18n, isStreaming: !!isStreaming}})}
+              <div class="flex justify-end">
+                ${renderDisclaimer({props: {i18n, isStreaming: !!isStreaming}})}
+              </div>
             </div>
           `
           : nothing
