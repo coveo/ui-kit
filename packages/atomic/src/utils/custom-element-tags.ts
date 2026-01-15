@@ -70,6 +70,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-insight-query-summary',
   'atomic-insight-refine-toggle',
   'atomic-insight-result-template',
+  'atomic-insight-search-box',
   'atomic-insight-smart-snippet-feedback-modal',
   'atomic-insight-tab',
   'atomic-insight-tabs',
