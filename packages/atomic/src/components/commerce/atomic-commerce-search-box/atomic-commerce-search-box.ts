@@ -249,7 +249,10 @@ export class AtomicCommerceSearchBox
 
     this.searchBox.afterRedirection();
 
-    const event = new CustomEvent<RedirectionPayload>('redirect');
+    const event = new CustomEvent<RedirectionPayload>('redirect', {
+      detail: {redirectTo, value},
+      cancelable: true,
+    });
     this.dispatchEvent(event);
     if (!event.defaultPrevented) {
       window.location.href = redirectTo;

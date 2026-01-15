@@ -99,6 +99,7 @@ describe('atomic-commerce-search-box', () => {
       buildFakeStandaloneSearchBox(
         {
           redirectTo,
+          value: searchBoxValue,
         },
         {
           afterRedirection: afterRedirectionMock,
@@ -571,6 +572,78 @@ describe('atomic-commerce-search-box', () => {
     });
 
     expect(consoleSpy).not.toHaveBeenCalled();
+  });
+
+  describe('when the search box is a standalone search box', () => {
+    it('should initialize the standalone search box controller with the correct options', async () => {
+      await renderSearchBox({
+        searchBoxProps: {redirectionUrl: '/search'},
+      });
+
+      expect(buildStandaloneSearchBox).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          options: expect.objectContaining({
+            ...commonSearchBoxOptions,
+            redirectionUrl: '/search',
+            overwrite: true,
+          }),
+        })
+      );
+    });
+
+    describe('when redirectTo state is set', () => {
+      it('should dispatch a cancelable redirect event with the correct detail', async () => {
+        let capturedEvent: CustomEvent | null = null;
+
+        const {element} = await renderSearchBox({
+          searchBoxProps: {redirectionUrl: '/search'},
+          redirectTo: '/search?q=test',
+          searchBoxValue: 'test',
+        });
+
+        element.addEventListener('redirect', (event) => {
+          capturedEvent = event as CustomEvent;
+        });
+
+        element.requestUpdate();
+        await element.updateComplete;
+
+        expect(capturedEvent).not.toBeNull();
+        expect(capturedEvent!.cancelable).toBe(true);
+        expect(capturedEvent!.detail).toEqual({
+          redirectTo: '/search?q=test',
+          value: 'test',
+        });
+      });
+
+      it('should call afterRedirection when redirectTo is set', async () => {
+        await renderSearchBox({
+          searchBoxProps: {redirectionUrl: '/search'},
+          redirectTo: '/search?q=test',
+        });
+
+        expect(afterRedirectionMock).toHaveBeenCalled();
+      });
+
+      it('should not redirect when preventDefault is called on the redirect event', async () => {
+        const originalLocation = window.location.href;
+
+        const {element} = await renderSearchBox({
+          searchBoxProps: {redirectionUrl: '/search'},
+          redirectTo: '/search?q=test',
+        });
+
+        element.addEventListener('redirect', (event) => {
+          event.preventDefault();
+        });
+
+        element.requestUpdate();
+        await element.updateComplete;
+
+        expect(window.location.href).toBe(originalLocation);
+      });
+    });
   });
 });
 
