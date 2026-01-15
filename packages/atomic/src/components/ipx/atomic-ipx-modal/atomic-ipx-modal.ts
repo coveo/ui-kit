@@ -31,7 +31,7 @@ import '../atomic-ipx-body/atomic-ipx-body';
 @customElement('atomic-ipx-modal')
 @bindings()
 @withTailwindStyles
-export class AtomicIPXModal extends InitializeBindingsMixin(LitElement) {
+export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
   static styles: CSSResultGroup = css`
     atomic-focus-trap {
       @apply contents;
@@ -74,6 +74,8 @@ export class AtomicIPXModal extends InitializeBindingsMixin(LitElement) {
 
   @state()
   error!: Error;
+
+  public initialize() {}
 
   /**
    * The element that triggered opening the modal.
