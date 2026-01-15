@@ -1,5 +1,5 @@
 import type {UserAction as IUserAction} from '@coveo/headless/insight';
-import {html, LitElement} from 'lit';
+import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {renderButton} from '@/src/components/common/button';
@@ -10,7 +10,6 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {parseTimestampToDateDetails} from '@/src/utils/date-utils';
 import Flag from '../../../../images/flag.svg';
 import ThreeDotsIcon from '../../../../images/three-dots.svg';
-import styles from './atomic-insight-user-actions-session.tw.css';
 import {renderUserAction} from './user-action';
 
 export type UserActionType =
@@ -34,7 +33,23 @@ export class AtomicInsightUserActionsSession
   extends LitElement
   implements InitializableComponent<InsightBindings>
 {
-  static styles = styles;
+  static styles = css`
+    .session-start-icon__container {
+      background-color: #fbb439;
+    }
+
+    .user-action__separator {
+      @apply bg-neutral;
+    }
+
+    .ticket-creation-action__text {
+      @apply text-success;
+    }
+
+    .text-xxs {
+      font-size: 0.625rem;
+    }
+  `;
 
   @state()
   public bindings!: InsightBindings;
