@@ -14,7 +14,7 @@ Samples using `@coveo/atomic` or `@coveo/atomic-react` components for pre-built,
 |--------|-------------|-----------|----------|
 | [search-commerce-angular](./atomic/search-commerce-angular/) | Search and commerce interfaces with Atomic components in Angular | Angular | Search & Commerce |
 | [search-commerce-react](./atomic/search-commerce-react/) | Multiple search and commerce interface examples with Atomic React components | React + Vite | Search & Commerce |
-| [search-nextjs-app-router](./atomic/search-nextjs-app-router/) | Atomic React with Next.js App Router | Next.js (App Router) | Search |
+| [search-nextjs](./atomic/search-nextjs/) | Atomic React with Next.js App Router | Next.js (App Router) | Search |
 | [search-vuejs](./atomic/search-vuejs/) | Atomic components integrated with Vue.js | Vue.js + Vite | Search |
 
 ### [Headless Samples](./headless/)
