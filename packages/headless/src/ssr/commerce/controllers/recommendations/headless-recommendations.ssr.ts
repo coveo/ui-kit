@@ -2,7 +2,6 @@ import {
   buildRecommendations,
   type Recommendations,
   type RecommendationsOptions,
-  type RecommendationsProps,
   type RecommendationsState,
 } from '../../../../controllers/commerce/recommendations/headless-recommendations.js';
 import {recommendationInternalOptionKey} from '../../types/controller-constants.js';
@@ -11,8 +10,29 @@ import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {Recommendations, RecommendationsState};
 
+/**
+ * The options for the `defineRecommendations` function.
+ */
+export interface DefineRecommendationsOptions
+  extends Omit<RecommendationsOptions, 'productId'> {
+  /**
+   * The unique identifier of the product to use for seeded recommendations.
+   */
+  productId: string;
+}
+
+/**
+ * The props for the `defineRecommendations` function.
+ */
+export interface DefineRecommendationsProps {
+  /**
+   * The options for the `Recommendations` controller.
+   */
+  options: DefineRecommendationsOptions;
+}
+
 export type RecommendationsDefinitionMeta = {
-  [recommendationInternalOptionKey]: {} & RecommendationsProps['options'];
+  [recommendationInternalOptionKey]: {} & DefineRecommendationsProps['options'];
 };
 
 export interface RecommendationsDefinition
@@ -29,7 +49,7 @@ export interface RecommendationsDefinition
  * @returns The `Recommendations` controller definition.
  * */
 export function defineRecommendations(
-  props: RecommendationsProps
+  props: DefineRecommendationsProps
 ): RecommendationsDefinition & RecommendationsDefinitionMeta {
   return {
     recommendation: true,

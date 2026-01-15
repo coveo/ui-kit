@@ -107,8 +107,11 @@ async function scanAtomic() {
     skipAddingFilesFromTsConfig: true,
   });
 
-  const atomicPath = `${process.env.REPO_ROOT}/packages/atomic/src/components/**/*.ts`;
-  project.addSourceFilesAtPaths(atomicPath);
+  const atomicPaths = [
+    `${process.env.REPO_ROOT}/packages/atomic/src/components/**/*.ts`,
+    `${process.env.REPO_ROOT}/packages/atomic/src/components/**/*.tsx`,
+  ];
+  project.addSourceFilesAtPaths(atomicPaths);
 
   console.log(
     `Scanning ${project.getSourceFiles().length} files for Lit components...`
@@ -132,12 +135,16 @@ async function scanAtomic() {
 
     const classes = sourceFile.getClasses();
     for (const cls of classes) {
-      const decorator = cls.getDecorator('customElement');
-      if (!decorator) {
+      const isLit = Boolean(cls.getDecorator('customElement'));
+      const isStencil = Boolean(cls.getDecorator('Component'));
+
+      if (!isLit && !isStencil) {
         continue;
       }
 
-      const args = decorator.getArguments();
+      const decorator =
+        cls.getDecorator('customElement') ?? cls.getDecorator('Component');
+      const args = decorator?.getArguments() ?? [];
       const firstArg = args[0];
       if (!firstArg) {
         continue;

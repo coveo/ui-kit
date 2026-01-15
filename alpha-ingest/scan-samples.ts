@@ -14,7 +14,6 @@ interface SampleInfo {
   name: string;
   category: string;
   path: string;
-  srcPath: string;
 }
 
 interface ScanStats {
@@ -23,14 +22,75 @@ interface ScanStats {
   componentLinks: number;
 }
 
-/**
- * Recursively find all sample directories that contain a src/ folder.
- * Samples are organized as: samples/{category}/{sample-name}/src/
- */
+const SOURCE_DIRECTORIES = [
+  'src',
+  'app',
+  'pages',
+  'lib',
+  'components',
+  'hooks',
+  'actions',
+];
+
+function pascalToKebab(str: string): string {
+  return str
+    .replace(/([a-z])([A-Z])/g, '$1-$2')
+    .replace(/([A-Z])([A-Z][a-z])/g, '$1-$2')
+    .toLowerCase();
+}
+
+function findComponentsInHtmlFiles(
+  samplePath: string,
+  componentsFound: Set<string>
+) {
+  const htmlExtensions = ['.html', '.vue'];
+
+  function walkForHtml(dir: string) {
+    if (!fs.existsSync(dir)) return;
+
+    let entries: fs.Dirent[];
+    try {
+      entries = fs.readdirSync(dir, {withFileTypes: true});
+    } catch {
+      return;
+    }
+
+    for (const entry of entries) {
+      if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;
+
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walkForHtml(fullPath);
+      } else if (htmlExtensions.some((ext) => entry.name.endsWith(ext))) {
+        try {
+          const content = fs.readFileSync(fullPath, 'utf-8');
+          const matches = content.matchAll(/<(atomic-[a-z-]+)/g);
+          for (const match of matches) {
+            if (match[1]) {
+              componentsFound.add(match[1]);
+            }
+          }
+        } catch {}
+      }
+    }
+  }
+
+  walkForHtml(samplePath);
+}
+
+function hasSourceDirectory(samplePath: string): boolean {
+  for (const dir of SOURCE_DIRECTORIES) {
+    const dirPath = path.join(samplePath, dir);
+    if (fs.existsSync(dirPath) && fs.statSync(dirPath).isDirectory()) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function findSampleDirectories(samplesRoot: string): SampleInfo[] {
   const samples: SampleInfo[] = [];
 
-  // Get top-level categories: atomic, headless, headless-ssr
   const categories = fs
     .readdirSync(samplesRoot, {withFileTypes: true})
     .filter(
@@ -42,22 +102,6 @@ function findSampleDirectories(samplesRoot: string): SampleInfo[] {
   for (const category of categories) {
     const categoryPath = path.join(samplesRoot, category);
 
-    // Check if the category itself has a src/ folder (unlikely but possible)
-    const directSrcPath = path.join(categoryPath, 'src');
-    if (
-      fs.existsSync(directSrcPath) &&
-      fs.statSync(directSrcPath).isDirectory()
-    ) {
-      samples.push({
-        name: category,
-        category: 'root',
-        path: categoryPath,
-        srcPath: directSrcPath,
-      });
-      continue;
-    }
-
-    // Look for sample subdirectories within the category
     const subDirs = fs
       .readdirSync(categoryPath, {withFileTypes: true})
       .filter(
@@ -69,18 +113,14 @@ function findSampleDirectories(samplesRoot: string): SampleInfo[] {
 
     for (const subDir of subDirs) {
       const samplePath = path.join(categoryPath, subDir.name);
-      const srcPath = path.join(samplePath, 'src');
 
-      // Check for src/ directly in the sample
-      if (fs.existsSync(srcPath) && fs.statSync(srcPath).isDirectory()) {
+      if (hasSourceDirectory(samplePath)) {
         samples.push({
           name: subDir.name,
           category,
           path: samplePath,
-          srcPath,
         });
       } else {
-        // Some samples might have deeper nesting (e.g., headless-ssr/search-nextjs/app-router)
         const nestedDirs = fs
           .readdirSync(samplePath, {withFileTypes: true})
           .filter(
@@ -92,17 +132,12 @@ function findSampleDirectories(samplesRoot: string): SampleInfo[] {
 
         for (const nestedDir of nestedDirs) {
           const nestedPath = path.join(samplePath, nestedDir.name);
-          const nestedSrcPath = path.join(nestedPath, 'src');
 
-          if (
-            fs.existsSync(nestedSrcPath) &&
-            fs.statSync(nestedSrcPath).isDirectory()
-          ) {
+          if (hasSourceDirectory(nestedPath)) {
             samples.push({
               name: `${subDir.name}/${nestedDir.name}`,
               category,
               path: nestedPath,
-              srcPath: nestedSrcPath,
             });
           }
         }
@@ -262,10 +297,10 @@ async function scanSamples() {
     const componentsFound = new Set<string>();
 
     for (const sourceFile of sourceFileObjects) {
-      // Check for Headless Controller Usage (Direct Imports)
       const imports = sourceFile.getImportDeclarations();
       for (const imp of imports) {
         const moduleSpec = imp.getModuleSpecifierValue();
+
         if (moduleSpec.includes('@coveo/headless')) {
           const namedImports = imp.getNamedImports();
           for (const named of namedImports) {
@@ -287,9 +322,21 @@ async function scanSamples() {
             }
           }
         }
+
+        if (moduleSpec.includes('@coveo/atomic-react')) {
+          const namedImports = imp.getNamedImports();
+          for (const named of namedImports) {
+            const importName = named.getName();
+            if (importName.startsWith('Atomic')) {
+              const tagName = pascalToKebab(importName);
+              if (!componentsFound.has(tagName)) {
+                componentsFound.add(tagName);
+              }
+            }
+          }
+        }
       }
 
-      // Check for Atomic Component Usage in JSX/TSX
       const fileName = sourceFile.getBaseName();
       if (fileName.endsWith('.tsx') || fileName.endsWith('.jsx')) {
         sourceFile.forEachDescendant((node) => {
@@ -303,13 +350,14 @@ async function scanSamples() {
               const tagName = match[1];
               if (!componentsFound.has(tagName)) {
                 componentsFound.add(tagName);
-                // Don't await inside forEachDescendant, collect and process after
               }
             }
           }
         });
       }
     }
+
+    findComponentsInHtmlFiles(sample.path, componentsFound);
 
     // Create component links (outside the forEachDescendant)
     for (const tagName of componentsFound) {

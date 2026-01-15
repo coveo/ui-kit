@@ -76,7 +76,7 @@ Once configured, OpenCode will have access to these tools:
 | `find_component_properties` | Get all properties of a component |
 | `find_property_usage` | Find which components use a property |
 | `analyze_property_impact` | Analyze impact of removing a property |
-| `find_controller` | Find Headless controllers by name |
+| `find_controller` | Find Headless controllers by name and category |
 | `trace_component_to_actions` | Trace Component → Controller → Actions |
 | `find_action_handlers` | Find reducers handling actions |
 | `list_package_dependencies` | Show package dependencies |
@@ -91,6 +91,81 @@ Once the MCP is configured, you can ask OpenCode questions like:
 - "What's the impact of removing numberOfQueries from atomic-search-box?"
 - "Trace the actions from atomic-result-list to the reducers"
 - "What packages depend on @coveo/headless?"
+
+### Sample Application Queries
+
+The graph also includes **Application nodes** for samples in `samples/`. Different sample categories have different relationship types:
+
+| Category | Uses `USES_COMPONENT` | Uses `CONSUMES` |
+|----------|----------------------|-----------------|
+| `atomic` | Yes (web components) | Yes (engines) |
+| `headless` | No | Yes (controllers) |
+| `headless-ssr` | No | Yes (controllers) |
+
+**Example queries:**
+
+```cypher
+-- List all samples by category
+MATCH (app:Application)
+RETURN app.category, collect(app.name) as samples
+
+-- Find samples using headless controllers
+MATCH (app:Application)-[:CONSUMES]->(ctrl:Controller)
+WHERE app.category IN ['headless', 'headless-ssr']
+RETURN app.name, collect(DISTINCT ctrl.name) as controllers
+
+-- Full trace: Sample → Controller → Action
+MATCH (app:Application)-[:CONSUMES]->(ctrl:Controller)
+OPTIONAL MATCH (ctrl)-[:DISPATCHES]->(action:Action)
+RETURN app.name, ctrl.name, collect(DISTINCT action.name) as actions
+```
+
+### Action Analysis Queries
+
+The graph tracks action properties to help identify orphaned or dead code:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `kind` | `'sync'` or `'async'` | How the action was created |
+| `emitsRelay` | boolean | True if action calls `relay.emit()` |
+| `validateOnly` | boolean | True if action only validates payload |
+
+**Find true orphan actions (dead code):**
+```cypher
+-- Sync actions that only validate, aren't handled, and don't dispatch others
+MATCH (a:Action)
+WHERE a.kind = 'sync'
+  AND a.type IS NOT NULL
+  AND NOT EXISTS { MATCH (:Reducer)-[:HANDLES]->(a) }
+  AND NOT EXISTS { MATCH (a)-[:DISPATCHES]->(:Action) }
+OPTIONAL MATCH (src)-[:DISPATCHES]->(a)
+RETURN DISTINCT a.name, a.type, collect(src.name) as dispatchedBy
+```
+
+**Find action-to-action dispatch chains:**
+```cypher
+MATCH (a:Action)-[:DISPATCHES]->(b:Action)
+RETURN a.name, b.name, b.type
+```
+
+### Controller Categories
+
+Controllers are categorized by use-case to distinguish same-named controllers with different implementations:
+
+| Category | Description |
+|----------|-------------|
+| `search` | Standard search controllers |
+| `insight` | Insight panel controllers |
+| `commerce` | Commerce/product listing controllers |
+| `recommendation` | Recommendation controllers |
+| `case-assist` | Case assist controllers |
+| `ssr` | Server-side rendering controllers |
+
+**Query controllers by category:**
+```cypher
+MATCH (c:Controller {category: 'insight'})-[:DISPATCHES]->(a:Action)
+RETURN c.name, a.name
+```
 
 ## Troubleshooting
 
