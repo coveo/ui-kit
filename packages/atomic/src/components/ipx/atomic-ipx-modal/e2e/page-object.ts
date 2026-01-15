@@ -10,19 +10,15 @@ export class AtomicIpxModalPageObject extends BasePageObject {
     return this.hydrated.locator('[part="backdrop"]');
   }
 
-  get modalContainer() {
-    return this.hydrated.locator('[part="atomic-ipx-modal"]');
-  }
-
   get headerSlot() {
-    return this.page.locator('atomic-ipx-modal [slot="header"]');
+    return this.page.locator('atomic-ipx-modal > [slot="header"]');
   }
 
   get bodySlot() {
-    return this.page.locator('atomic-ipx-modal [slot="body"]');
+    return this.page.locator('atomic-ipx-modal > [slot="body"]');
   }
 
   get footerSlot() {
-    return this.page.locator('atomic-ipx-modal [slot="footer"]');
+    return this.page.locator('atomic-ipx-modal > [slot="footer"]');
   }
 }

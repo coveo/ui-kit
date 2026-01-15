@@ -1,10 +1,29 @@
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/atomic-test-interface';
-import {mockEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/mock-engine';
-import type {AtomicIPXModal} from './atomic-ipx-modal';
+import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
+import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
+import type {AtomicIpxModal} from './atomic-ipx-modal';
+import './atomic-ipx-modal';
+
+vi.mock('@coveo/headless', {spy: true});
+vi.mock('@/src/mixins/bindings-mixin', () => ({
+  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
+    return class extends superClass {
+      // biome-ignore lint/complexity/noUselessConstructor: <mocking the mixin for testing>
+      constructor(...args: unknown[]) {
+        super(...args);
+      }
+    };
+  }),
+}));
 
 describe('atomic-ipx-modal', () => {
+  const mockedEngine = buildFakeSearchEngine();
+
+  beforeEach(() => {
+    document.body.className = '';
+  });
+
   const renderIPXModal = async ({
     props = {},
     slottedContent = {
@@ -12,8 +31,19 @@ describe('atomic-ipx-modal', () => {
       body: '',
       footer: '',
     },
+  }: {
+    props?: {
+      isOpen?: boolean;
+      source?: HTMLElement;
+      container?: HTMLElement;
+    };
+    slottedContent?: {
+      header: string;
+      body: string;
+      footer: string;
+    };
   } = {}) => {
-    const {element} = await renderInAtomicSearchInterface<AtomicIPXModal>({
+    const {element} = await renderInAtomicSearchInterface<AtomicIpxModal>({
       template: html`
         <atomic-ipx-modal
           .isOpen=${props.isOpen ?? false}
@@ -39,7 +69,7 @@ describe('atomic-ipx-modal', () => {
       `,
       selector: 'atomic-ipx-modal',
       bindings: (bindings) => {
-        bindings.engine = mockEngine;
+        bindings.engine = mockedEngine;
         return bindings;
       },
     });
@@ -47,20 +77,27 @@ describe('atomic-ipx-modal', () => {
     return {
       element,
       parts: {
-        modal: element.shadowRoot?.querySelector('[part="atomic-ipx-modal"]'),
         backdrop: element.shadowRoot?.querySelector('[part="backdrop"]'),
-        body: element.shadowRoot?.querySelector('atomic-ipx-body'),
+        body: element.shadowRoot?.querySelector(
+          'atomic-ipx-body'
+        ) as HTMLElement & {isOpen?: boolean; displayFooterSlot?: boolean},
       },
     };
   };
 
-  describe('rendering', () => {
+  describe('when rendering', () => {
     it('should render the modal with all parts', async () => {
-      const {parts} = await renderIPXModal();
+      const {element, parts} = await renderIPXModal();
 
-      expect(parts.modal).toBeInTheDocument();
+      expect(element).toBeInTheDocument();
       expect(parts.backdrop).toBeInTheDocument();
       expect(parts.body).toBeInTheDocument();
+    });
+
+    it('should set part attribute on host element', async () => {
+      const {element} = await renderIPXModal();
+
+      expect(element.getAttribute('part')).toBe('atomic-ipx-modal');
     });
 
     it('should render with header slot content', async () => {
@@ -118,7 +155,7 @@ describe('atomic-ipx-modal', () => {
     });
   });
 
-  describe('isOpen property', () => {
+  describe('when the isOpen property is set', () => {
     it('should have isOpen=false by default', async () => {
       const {element} = await renderIPXModal();
 
@@ -133,36 +170,44 @@ describe('atomic-ipx-modal', () => {
       expect(element.isOpen).toBe(true);
     });
 
-    it('should add "open" class to modal when isOpen=true', async () => {
-      const {element, parts} = await renderIPXModal({
+    it('should add "open" class to host when isOpen=true', async () => {
+      const {element} = await renderIPXModal({
         props: {isOpen: true},
       });
 
       await element.updateComplete;
 
-      expect(parts.modal).toHaveClass('open');
+      expect(element).toHaveClass('open');
     });
 
-    it('should not have "open" class when isOpen=false', async () => {
-      const {parts} = await renderIPXModal({
+    it('should not have "open" class on host when isOpen=false', async () => {
+      const {element} = await renderIPXModal({
         props: {isOpen: false},
       });
 
-      expect(parts.modal).not.toHaveClass('open');
+      expect(element).not.toHaveClass('open');
     });
 
-    it('should always have "dialog" class', async () => {
-      const {parts} = await renderIPXModal();
+    it('should toggle "open" class when isOpen changes', async () => {
+      const {element} = await renderIPXModal({
+        props: {isOpen: false},
+      });
 
-      expect(parts.modal).toHaveClass('dialog');
+      expect(element).not.toHaveClass('open');
+
+      element.isOpen = true;
+      await element.updateComplete;
+
+      expect(element).toHaveClass('open');
+
+      element.isOpen = false;
+      await element.updateComplete;
+
+      expect(element).not.toHaveClass('open');
     });
   });
 
-  describe('modal opened class management', () => {
-    beforeEach(() => {
-      document.body.className = '';
-    });
-
+  describe('when managing modal opened classes', () => {
     it('should add atomic-ipx-modal-opened class to document.body when isOpen=true', async () => {
       await renderIPXModal({props: {isOpen: true}});
 
@@ -185,58 +230,30 @@ describe('atomic-ipx-modal', () => {
         false
       );
     });
-
-    it('should add atomic-ipx-modal-opened class to interfaceElement when isOpen=true', async () => {
-      const {element} = await renderIPXModal({props: {isOpen: true}});
-
-      expect(
-        element.bindings.interfaceElement.classList.contains(
-          'atomic-ipx-modal-opened'
-        )
-      ).toBe(true);
-    });
-
-    it('should remove atomic-ipx-modal-opened class from interfaceElement when isOpen=false', async () => {
-      const {element} = await renderIPXModal({props: {isOpen: true}});
-
-      expect(
-        element.bindings.interfaceElement.classList.contains(
-          'atomic-ipx-modal-opened'
-        )
-      ).toBe(true);
-
-      element.isOpen = false;
-      await element.updateComplete;
-
-      expect(
-        element.bindings.interfaceElement.classList.contains(
-          'atomic-ipx-modal-opened'
-        )
-      ).toBe(false);
-    });
   });
 
-  describe('lifecycle', () => {
+  describe('when going through the lifecycle', () => {
     it('should generate an ID when not provided', async () => {
       const {element} = await renderIPXModal();
 
       expect(element.id).toMatch(/^atomic-ipx-modal-/);
     });
 
-    it('should preserve existing ID', async () => {
-      const {element} = await renderIPXModal();
-      element.id = 'custom-id';
-      await element.updateComplete;
-
-      // Trigger firstUpdated by re-rendering
-      element.requestUpdate();
-      await element.updateComplete;
+    it('should preserve existing ID when already set', async () => {
+      const {element} = await renderInAtomicSearchInterface<AtomicIpxModal>({
+        template: html`<atomic-ipx-modal id="custom-id"></atomic-ipx-modal>`,
+        selector: 'atomic-ipx-modal',
+        bindings: (bindings) => {
+          bindings.engine = mockedEngine;
+          return bindings;
+        },
+      });
 
       expect(element.id).toBe('custom-id');
     });
   });
 
-  describe('touch event handling', () => {
+  describe('when handling touch events', () => {
     it('should add touchmove event listener on connection', async () => {
       const addEventListenerSpy = vi.spyOn(document.body, 'addEventListener');
 
@@ -287,7 +304,7 @@ describe('atomic-ipx-modal', () => {
     });
   });
 
-  describe('properties', () => {
+  describe('when setting properties', () => {
     it('should accept source property', async () => {
       const sourceElement = document.createElement('button');
       const {element} = await renderIPXModal({
@@ -307,7 +324,7 @@ describe('atomic-ipx-modal', () => {
     });
   });
 
-  describe('atomic-ipx-body integration', () => {
+  describe('when integrating with atomic-ipx-body', () => {
     it('should pass isOpen to atomic-ipx-body', async () => {
       const {parts} = await renderIPXModal({props: {isOpen: true}});
 

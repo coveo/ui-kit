@@ -1,6 +1,5 @@
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {classMap} from 'lit/directives/class-map.js';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -10,7 +9,6 @@ import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {once, randomID} from '@/src/utils/utils';
 import type {AnyBindings} from '../../common/interface/bindings';
-import '../atomic-ipx-body/atomic-ipx-body';
 
 /**
  * The `atomic-ipx-modal` component is a modal component used for the In-Product Experience use case.
@@ -26,6 +24,9 @@ import '../atomic-ipx-body/atomic-ipx-body';
  * @slot body - The main body content of the modal.
  * @slot footer - The footer content of the modal (optional).
  *
+ * @cssprop [--atomic-ipx-width=31.25rem] - The width of the modal.
+ * @cssprop [--atomic-ipx-height=43.75rem] - The height of the modal.
+ *
  * @event animationEnded - Emitted when the modal animation ends.
  */
 @customElement('atomic-ipx-modal')
@@ -33,40 +34,42 @@ import '../atomic-ipx-body/atomic-ipx-body';
 @withTailwindStyles
 export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
   static styles: CSSResultGroup = css`
-    atomic-focus-trap {
-      @apply contents;
-      height: inherit;
-    }
+  @reference '../../../utils/tailwind.global.tw.css';
 
-    :host {
-      width: var(--atomic-ipx-width, 31.25rem);
-      height: var(--atomic-ipx-height, 43.75rem);
-      max-width: calc(100vw - 3rem);
-      max-height: calc(100vh - 4.25rem);
-      box-shadow: rgb(0 0 0 / 50%) 0 0 0.5rem;
-      inset: auto 3rem 4.25rem auto;
-      position: fixed;
-      z-index: 1000;
-    }
+  atomic-focus-trap {
+  @apply contents;
+  height: inherit;
+}
 
-    :host(.open) {
-      display: block;
-    }
+:host {
+  width: var(--atomic-ipx-width, 31.25rem);
+  height: var(--atomic-ipx-height, 43.75rem);
+  max-width: calc(100vw - 3rem);
+  max-height: calc(100vh - 4.25rem);
+  box-shadow: rgb(0 0 0 / 50%) 0 0 0.5rem;
+  inset: auto 3rem 4.25rem auto;
+  position: fixed;
+  z-index: 1000;
+}
 
-    :host(.open) [part='backdrop'] {
-      pointer-events: auto;
-      height: inherit;
-      max-height: calc(100vh - 4.25rem);
-    }
+:host(.open) {
+  display: block;
 
-    :host {
-      display: none;
-    }
+  [part='backdrop'] {
+    @apply pointer-events-auto;
+    height: inherit;
+    max-height: calc(100vh - 4.25rem);
+  }
+}
 
-    [part='backdrop'] {
-      pointer-events: none;
-      height: inherit;
-    }
+:host {
+  display: none;
+
+  [part='backdrop'] {
+    @apply pointer-events-none;
+    height: inherit;
+  }
+}
   `;
 
   @state()
@@ -104,8 +107,6 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
 
   private updateBreakpoints = once(() => updateBreakpoints(this));
 
-  // Lifecycle methods
-
   connectedCallback() {
     super.connectedCallback();
     document.body.addEventListener('touchmove', this.onWindowTouchMove, {
@@ -124,11 +125,11 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
 
     if (this.isOpen) {
       document.body.classList.add(modalOpenedClass);
-      this.bindings.interfaceElement.classList.add(modalOpenedClass);
+      this.bindings?.interfaceElement?.classList.add(modalOpenedClass);
       return;
     }
     document.body.classList.remove(modalOpenedClass);
-    this.bindings.interfaceElement.classList.remove(modalOpenedClass);
+    this.bindings?.interfaceElement?.classList.remove(modalOpenedClass);
   }
 
   willUpdate() {
@@ -138,6 +139,7 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
   firstUpdated() {
     const id = this.id || randomID('atomic-ipx-modal-');
     this.id = id;
+    this.setAttribute('part', 'atomic-ipx-modal');
     this.watchToggleOpen();
   }
 
@@ -147,29 +149,26 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
     }
   };
 
+  private updateHostClasses() {
+    this.classList.toggle('open', this.isOpen);
+  }
+
   @errorGuard()
   render() {
     this.updateBreakpoints();
+    this.updateHostClasses();
 
     return html`
-      <div
-        part="atomic-ipx-modal"
-        class=${classMap({
-          open: this.isOpen,
-          dialog: true,
-        })}
-      >
-        <div part="backdrop">
-          <atomic-ipx-body
-            .isOpen=${this.isOpen}
-            .displayFooterSlot=${this.hasFooterSlotElements}
-            exportparts="container"
-          >
-            <slot name="header" slot="header"></slot>
-            <slot name="body" slot="body"></slot>
-            <slot name="footer" slot="footer"></slot>
-          </atomic-ipx-body>
-        </div>
+      <div part="backdrop">
+        <atomic-ipx-body
+          .isOpen=${this.isOpen}
+          .displayFooterSlot=${this.hasFooterSlotElements}
+          exportparts="container"
+        >
+          <slot name="header" slot="header"></slot>
+          <slot name="body" slot="body"></slot>
+          <slot name="footer" slot="footer"></slot>
+        </atomic-ipx-body>
       </div>
     `;
   }

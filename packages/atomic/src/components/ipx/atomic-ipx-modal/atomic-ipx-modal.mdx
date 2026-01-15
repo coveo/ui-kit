@@ -38,34 +38,4 @@ The modal can be controlled programmatically by setting the `is-open` property:
 </atomic-search-interface>
 ```
 
-## Slots
-
-- **header**: Content displayed at the top of the modal
-- **body**: Main content area of the modal
-- **footer** (optional): Content displayed at the bottom of the modal. If no content is provided, the footer will not be displayed.
-
-## Behavior
-
-- When `is-open` is `true`, the modal is displayed and a class `atomic-ipx-modal-opened` is added to both `document.body` and the interface element
-- Touch events are prevented when the modal is open to avoid unwanted scrolling
-- The modal automatically detects if footer content is present and adjusts accordingly
-- The component emits an `animationEnded` event when modal animations complete
-
-## Styling
-
-The modal can be styled using CSS parts:
-
-- `atomic-ipx-modal`: The main modal container
-- `backdrop`: The backdrop element behind the modal
-- `container`: The content container (exported from atomic-ipx-body)
-
-You can also customize the modal dimensions using CSS variables:
-
-```css
-atomic-ipx-modal {
-  --atomic-ipx-width: 40rem;
-  --atomic-ipx-height: 50rem;
-}
-```
-
 </AtomicDocTemplate>
