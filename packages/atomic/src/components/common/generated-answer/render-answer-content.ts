@@ -11,6 +11,7 @@ import {renderSwitch} from '@/src/components/common/switch';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderDisclaimer} from './render-disclaimer';
 import {renderGeneratingAnswerLabel} from './render-generating-answer-label';
+import '@/src/components/common/atomic-icon/atomic-icon';
 
 export interface RenderAnswerContentProps {
   i18n: i18n;
@@ -54,12 +55,17 @@ export const renderAnswerContent: FunctionalComponent<
   return html`
     <div part="generated-content">
       <div class="flex items-center">
+        <atomic-icon
+          part="header-icon"
+          class="text-primary h-4 w-4 fill-current"
+          .icon=${'assets://sparkles.svg'}>
+        </atomic-icon>
         ${renderHeading({
           props: {
             level: 0,
             part: 'header-label',
             class:
-              'text-primary bg-primary-background inline-block rounded-md px-2.5 py-2 font-medium',
+              'text-primary inline-block rounded-md px-2.5 py-2 font-medium',
           },
         })(html`${i18n.t('generated-answer-title')}`)}
         <div class="ml-auto flex h-9 items-center">
