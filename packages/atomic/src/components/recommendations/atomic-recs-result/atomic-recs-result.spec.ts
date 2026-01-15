@@ -175,7 +175,7 @@ describe('atomic-recs-result', () => {
     expect(clickLinkContainerSpy).toHaveBeenCalled();
   });
 
-  it('should not click the link container when the display is "list"', async () => {
+  it('should click the link container when the display is "list"', async () => {
     const clickLinkContainerSpy = vi.fn();
     const element = await renderResult({
       display: 'list',
@@ -185,10 +185,10 @@ describe('atomic-recs-result', () => {
 
     const clickEvent = new MouseEvent('click');
     element.dispatchEvent(clickEvent);
-    expect(clickLinkContainerSpy).not.toHaveBeenCalled();
+    expect(clickLinkContainerSpy).toHaveBeenCalled();
   });
 
-  it('should not click the link container when the display is "table"', async () => {
+  it('should click the link container when the display is "table"', async () => {
     const clickLinkContainerSpy = vi.fn();
     const element = await renderResult({
       display: 'table',
@@ -198,7 +198,7 @@ describe('atomic-recs-result', () => {
 
     const clickEvent = new MouseEvent('click');
     element.dispatchEvent(clickEvent);
-    expect(clickLinkContainerSpy).not.toHaveBeenCalled();
+    expect(clickLinkContainerSpy).toHaveBeenCalled();
   });
 
   it('should render default template content', async () => {

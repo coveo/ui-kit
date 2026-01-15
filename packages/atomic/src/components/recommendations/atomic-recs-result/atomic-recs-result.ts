@@ -194,9 +194,7 @@ export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
     if (this.stopPropagation) {
       event.stopPropagation();
     }
-    if (this.display === 'grid') {
-      this.clickLinkContainer();
-    }
+    this.clickLinkContainer();
   };
 
   public async connectedCallback() {
