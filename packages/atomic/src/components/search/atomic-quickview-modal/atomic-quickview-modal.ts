@@ -55,39 +55,43 @@ export class AtomicQuickviewModal
   implements InitializableComponent<Bindings>
 {
   static styles: CSSResultGroup = css`
-    @reference '../../../../utils/tailwind.global.tw.css';
+    @reference '../../../utils/tailwind.global.tw.css';
+   @reference '../../../utils/tailwind-utilities/link-style.css';
 
-    :host::part(backdrop) {
-      grid-template-columns: 1fr max(80vw, 30rem) 1fr;
-      grid-template-rows: 1fr 100% 3fr;
-    }
+.atomic-quickview-modal {
+  &::part(backdrop) {
+    grid-template-columns: 1fr max(80vw, 30rem) 1fr;
+  }
+  &::part(body),
+  &::part(header),
+  &::part(footer) {
+    @apply max-w-full;
+  }
 
-    :host::part(body),
-    :host::part(header),
-    :host::part(footer) {
-      @apply max-w-full;
-    }
+  &::part(footer) {
+    @apply flex justify-center;
+  }
 
-    :host::part(footer) {
-      @apply flex justify-center;
-    }
+  &::part(body-wrapper) {
+    @apply h-full overflow-hidden p-0;
+  }
 
-    :host::part(body-wrapper) {
-      @apply h-full overflow-hidden p-0;
-    }
+  &::part(body) {
+    @apply h-full;
+  }
 
-    :host::part(body) {
-      @apply h-full;
-    }
+  &::part(backdrop) {
+    grid-template-rows: 1fr 100% 3fr;
+  }
 
-    :host::part(header-wrapper) {
-      @apply bg-neutral-light;
-    }
+  &::part(header-wrapper) {
+    @apply bg-neutral-light;
+  }
 
-    a {
-      text-decoration: underline;
-      @apply text-primary hover:underline;
-    }
+  a {
+    @apply link-style;
+  }
+} 
   `;
 
   @state()
