@@ -1,11 +1,11 @@
 import {test as base} from '@playwright/test';
 import {IpxButtonPageObject} from './page-object';
 
-interface TestFixture {
+interface IpxButtonFixture {
   ipxButton: IpxButtonPageObject;
 }
 
-export const test = base.extend<TestFixture>({
+export const test = base.extend<IpxButtonFixture>({
   ipxButton: async ({page}, use) => {
     await use(new IpxButtonPageObject(page));
   },
