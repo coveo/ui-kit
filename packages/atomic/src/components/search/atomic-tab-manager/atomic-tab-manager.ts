@@ -117,13 +117,14 @@ export class AtomicTabManager
   @errorGuard()
   render() {
     return html`
-      <atomic-tab-bar>
+      <atomic-tab-bar
+        exportparts="popover-button, value-label, arrow-icon, backdrop, overflow-tabs, popover-tab"
+      >
         <div
           role="list"
           aria-label="tab-area"
           part="tab-area"
           class="border-neutral mb-2 flex w-full flex-row border-b"
-          exportparts="popover-button, value-label, arrow-icon, backdrop, overflow-tabs, popover-tab"
         >
           ${this.tabs.map((tab) => {
             const isActive = this.tabManagerState.activeTab === tab.name;
