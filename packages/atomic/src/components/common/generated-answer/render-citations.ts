@@ -8,6 +8,7 @@ import {keyed} from 'lit/directives/keyed.js';
 import {when} from 'lit-html/directives/when.js';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {getCitationWithTitle} from './generated-answer-utils';
+import '@/src/components/common/atomic-citation/atomic-citation';
 
 export interface RenderCitationsProps {
   citations: GeneratedAnswerCitation[] | undefined;
