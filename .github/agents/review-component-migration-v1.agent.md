@@ -46,7 +46,7 @@ The developer will provide you with the path to the Lit-migrated component. Your
 4. **Review instruction files** relevant to the component:
    - `.github/instructions/atomic.instructions.md`
    - `.github/instructions/general.typescript.instructions.md`
-   - `.github/instructions/a11y.instructions.md`
+   - Use `applying-wcag-guidelines` skill for accessibility requirements
    - Component-specific instruction files if applicable
 5. **Examine tests**:
    - Unit tests (`.spec.ts`)

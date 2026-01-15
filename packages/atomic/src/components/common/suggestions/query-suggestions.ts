@@ -28,6 +28,11 @@ export interface RenderQuerySuggestionOptions {
   hasQuery: boolean;
   suggestion: Suggestion;
   hasMultipleKindOfSuggestions: boolean;
+  /**
+   * When true, the icon will always be displayed regardless of hasMultipleKindOfSuggestions.
+   * Used by the insight search box where icons should always be visible.
+   */
+  alwaysShowIcon?: boolean;
 }
 
 export const renderQuerySuggestion = ({
@@ -35,10 +40,12 @@ export const renderQuerySuggestion = ({
   hasQuery,
   suggestion,
   hasMultipleKindOfSuggestions,
+  alwaysShowIcon = false,
 }: RenderQuerySuggestionOptions): HTMLElement => {
+  const shouldShowIcon = alwaysShowIcon || hasMultipleKindOfSuggestions;
   const template = html`
     <div part="query-suggestion-content" class="pointer-events-none flex items-center">${
-      hasMultipleKindOfSuggestions
+      shouldShowIcon
         ? html`<atomic-icon
           part="query-suggestion-icon"
           icon=${icon}

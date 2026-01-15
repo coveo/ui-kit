@@ -1,6 +1,6 @@
 import type {
-  BreadcrumbManager as InsightBreadcrumbManager,
-  BreadcrumbManagerState as InsightBreadcrumbManagerState,
+  BreadcrumbManager,
+  BreadcrumbManagerState,
 } from '@coveo/headless/insight';
 import {vi} from 'vitest';
 
@@ -11,8 +11,7 @@ export const defaultState = {
   dateFacetBreadcrumbs: [],
   staticFilterBreadcrumbs: [],
   hasBreadcrumbs: false,
-  automaticFacetBreadcrumbs: [],
-} satisfies InsightBreadcrumbManagerState;
+} satisfies BreadcrumbManagerState;
 
 export const defaultImplementation = {
   subscribe: (subscribedFunction: () => void) => {
@@ -22,17 +21,17 @@ export const defaultImplementation = {
   state: defaultState,
   deselectAll: vi.fn(),
   deselectBreadcrumb: vi.fn(),
-} satisfies InsightBreadcrumbManager;
+} satisfies BreadcrumbManager;
 
 export const buildFakeBreadcrumbManager = ({
   implementation,
   state,
 }: Partial<{
-  implementation?: Partial<InsightBreadcrumbManager>;
-  state?: Partial<InsightBreadcrumbManagerState>;
-}> = {}): InsightBreadcrumbManager =>
+  implementation?: Partial<BreadcrumbManager>;
+  state?: Partial<BreadcrumbManagerState>;
+}> = {}): BreadcrumbManager =>
   ({
     ...defaultImplementation,
     ...implementation,
     ...{state: {...defaultState, ...(state || {})}},
-  }) as InsightBreadcrumbManager;
+  }) as BreadcrumbManager;

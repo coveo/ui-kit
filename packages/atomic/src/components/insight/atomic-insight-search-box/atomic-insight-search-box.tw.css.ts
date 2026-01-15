@@ -1,5 +1,8 @@
-@import '../../../global/global.pcss';
-@import '../../common/search-box/search-box.pcss';
+import {css} from 'lit';
+
+const styles = css`
+  @reference '../../../utils/tailwind.global.tw.css';
+  @import '../../common/search-box/search-box.pcss';
 
 [part='wrapper'] {
   @apply z-10;
@@ -46,3 +49,6 @@
     @apply p-2 px-4;
   }
 }
+`;
+
+export default styles;

@@ -9,8 +9,9 @@ export {AtomicInsightNoResults} from './atomic-insight-no-results/atomic-insight
 export {AtomicInsightPager} from './atomic-insight-pager/atomic-insight-pager.js';
 export {AtomicInsightQueryError} from './atomic-insight-query-error/atomic-insight-query-error.js';
 export {AtomicInsightQuerySummary} from './atomic-insight-query-summary/atomic-insight-query-summary.js';
-export {AtomicInsightRefineModal} from './atomic-insight-refine-modal/atomic-insight-refine-modal.js';
+export {AtomicInsightRefineToggle} from './atomic-insight-refine-toggle/atomic-insight-refine-toggle.js';
 export {AtomicInsightResultTemplate} from './atomic-insight-result-template/atomic-insight-result-template.js';
+export {AtomicInsightSearchBox} from './atomic-insight-search-box/atomic-insight-search-box.js';
 export {AtomicInsightTab} from './atomic-insight-tab/atomic-insight-tab.js';
 export {AtomicInsightTabs} from './atomic-insight-tabs/atomic-insight-tabs.js';
 export {AtomicInsightUserActionsToggle} from './atomic-insight-user-actions-toggle/atomic-insight-user-actions-toggle.js';
