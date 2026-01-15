@@ -6,9 +6,6 @@ export class InsightRefineModalPageObject extends BasePageObject {
     super(page, 'atomic-insight-refine-modal');
   }
 
-  get modal() {
-    return this.page.getByRole('dialog', {name: 'Filters'});
-  }
   get title() {
     return this.page.getByRole('heading', {name: 'Filters'});
   }
@@ -23,9 +20,5 @@ export class InsightRefineModalPageObject extends BasePageObject {
 
   get viewResultsButton() {
     return this.page.getByRole('button', {name: /View/});
-  }
-
-  get clearFiltersButton() {
-    return this.page.getByRole('button', {name: 'Clear'});
   }
 }

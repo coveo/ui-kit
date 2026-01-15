@@ -7,6 +7,10 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
+import {
+  type baseResponse,
+  richResponse,
+} from '@/storybook-utils/api/insight/search-response';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 
@@ -44,6 +48,11 @@ const meta: Meta = {
     ...args,
   },
   argTypes,
+  beforeEach: async () => {
+    insightApiHarness.searchEndpoint.mock(
+      () => richResponse as unknown as typeof baseResponse
+    );
+  },
   play: async (context) => {
     await play(context);
     const {canvasElement, step, userEvent} = context;
@@ -73,18 +82,8 @@ export const Default: Story = {
     () => html`
      <atomic-insight-refine-toggle></atomic-insight-refine-toggle>
       <div style="display:none;">
-        <atomic-insight-facet field="author" label="Authors"></atomic-insight-facet>
-        <atomic-insight-facet field="language" label="Language"></atomic-insight-facet>
-        <atomic-insight-facet
-          field="objecttype"
-          label="Type"
-          display-values-as="link"
-        ></atomic-insight-facet>
-        <atomic-insight-facet
-          field="year"
-          label="Year"
-          display-values-as="box"
-        ></atomic-insight-facet>
+        <atomic-insight-facet field="source" label="Source"></atomic-insight-facet>
+        <atomic-insight-facet field="filetype" label="File Type"></atomic-insight-facet>
       </div>
     `,
     decorator,

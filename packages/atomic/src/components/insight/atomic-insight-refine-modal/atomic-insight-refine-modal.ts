@@ -6,13 +6,10 @@ import {
   type QuerySummary as InsightQuerySummary,
   type QuerySummaryState as InsightQuerySummaryState,
 } from '@coveo/headless/insight';
-import {css, html, LitElement, nothing} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {renderButton} from '@/src/components/common/button';
 import {getClonedFacetElements} from '@/src/components/common/refine-modal/cloned-facet-elements';
-import {
-  renderRefineModalFiltersClearButton,
-  renderRefineModalFiltersSection,
-} from '@/src/components/common/refine-modal/filters';
 import {renderRefineModal} from '@/src/components/common/refine-modal/modal';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
 import {booleanConverter} from '@/src/converters/boolean-converter';
@@ -58,8 +55,6 @@ export class AtomicInsightRefineModal
   extends LitElement
   implements InitializableComponent<InsightBindings>
 {
-  static styles = css``;
-
   @state() public bindings!: InsightBindings;
   @state() public error!: Error;
 
@@ -148,29 +143,40 @@ export class AtomicInsightRefineModal
       this.bindings.interfaceElement.getBoundingClientRect();
   }
 
-  private renderFilters() {
+  private renderHeader() {
+    if (!this.breadcrumbManagerState.hasBreadcrumbs) {
+      return nothing;
+    }
+
+    return html`
+      <div class="mb-3 flex w-full justify-between">
+        ${renderButton({
+          props: {
+            onClick: () => this.breadcrumbManager.deselectAll(),
+            style: 'text-primary',
+            text: this.bindings.i18n.t('clear-all-filters'),
+            class: 'px-2 py-1',
+          },
+        })(nothing)}
+      </div>
+    `;
+  }
+
+  private renderBody() {
     if (!this.bindings.store.getFacetElements().length) {
       return nothing;
     }
 
-    const {i18n} = this.bindings;
-
-    return renderRefineModalFiltersSection({
-      props: {
-        i18n,
-        withFacets: true,
-        withAutomaticFacets: false,
-      },
-    })(
-      this.breadcrumbManagerState.hasBreadcrumbs
-        ? renderRefineModalFiltersClearButton({
-            props: {
-              i18n,
-              onClick: () => this.breadcrumbManager.deselectAll(),
-            },
-          })
-        : nothing
-    );
+    return html`
+      <aside
+        slot="body"
+        class="flex w-full flex-col"
+        aria-label=${this.bindings.i18n.t('refine-modal-content')}
+      >
+        ${this.renderHeader()}
+        <slot name="facets"></slot>
+      </aside>
+    `;
   }
 
   @bindingGuard()
@@ -205,7 +211,7 @@ export class AtomicInsightRefineModal
           openButton: this.openButton,
           scope: this.bindings.interfaceElement,
         },
-      })(html` ${this.renderFilters()} `)}
+      })(this.renderBody())}
     `;
   }
 }

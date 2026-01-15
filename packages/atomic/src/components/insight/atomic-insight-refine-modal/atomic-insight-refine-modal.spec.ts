@@ -12,7 +12,7 @@ import {userEvent} from 'vitest/browser';
 import {renderInAtomicInsightInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-interface-fixture';
 import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/breadcrumb-manager';
 import {buildFakeInsightEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/engine';
-import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/query-summary-controller';
+import {buildFakeQuerySummary} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/query-summary-controller';
 import type {AtomicInsightRefineModal} from './atomic-insight-refine-modal';
 import './atomic-insight-refine-modal';
 
@@ -35,7 +35,7 @@ describe('atomic-insight-refine-modal', () => {
     mockedBreadcrumbManager = buildFakeBreadcrumbManager({
       state: breadcrumbManagerState,
     });
-    mockedQuerySummary = buildFakeSummary({state: querySummaryState});
+    mockedQuerySummary = buildFakeQuerySummary({state: querySummaryState});
 
     vi.mocked(buildInsightBreadcrumbManager).mockReturnValue(
       mockedBreadcrumbManager
@@ -82,20 +82,16 @@ describe('atomic-insight-refine-modal', () => {
         '[part="footer-button-count"]'
       ),
       atomicModal: element.shadowRoot?.querySelector('atomic-modal'),
-      filterSection: element.shadowRoot?.querySelector(
-        '[part="filter-section"]'
-      ),
-      sectionFiltersTitle: element.shadowRoot?.querySelector(
-        '[part*="section-filters-title"]'
-      ),
+      body: element.shadowRoot?.querySelector('aside[slot="body"]'),
       facetSlot: element.shadowRoot?.querySelector('slot[name="facets"]'),
-      filterClearAllButton: element.shadowRoot?.querySelector(
-        '[part="filter-clear-all"]'
-      ),
+      getClearAllButton: () =>
+        element.shadowRoot?.querySelector(
+          'aside[slot="body"] button[style="text-primary"]'
+        ) ?? element.shadowRoot?.querySelector('aside[slot="body"] button'),
     };
   };
 
-  describe('#initialize', () => {
+  describe('when initializing', () => {
     it('should build breadcrumb manager with engine', async () => {
       const {element} = await renderRefineModal();
 
@@ -111,7 +107,7 @@ describe('atomic-insight-refine-modal', () => {
     });
   });
 
-  describe('state binding', () => {
+  describe('when binding state', () => {
     it('should bind query summary state to controller', async () => {
       const {element} = await renderRefineModal({
         querySummaryState: {total: 42},
@@ -129,7 +125,7 @@ describe('atomic-insight-refine-modal', () => {
     });
   });
 
-  describe('rendering', () => {
+  describe('when rendering', () => {
     it('should render modal when isOpen is true', async () => {
       const {atomicModal} = await renderRefineModal({isOpen: true});
 
@@ -184,23 +180,12 @@ describe('atomic-insight-refine-modal', () => {
     });
   });
 
-  describe('filters section', () => {
-    it('should render the filter section', async () => {
-      const {filterSection} = await renderRefineModal();
+  describe('when rendering the body section', () => {
+    it('should render the body section', async () => {
+      const {body} = await renderRefineModal();
 
-      expect(filterSection).toBeInTheDocument();
-      expect(filterSection).toHaveAttribute('part', 'filter-section');
-    });
-
-    it('should render the filters section title', async () => {
-      const {sectionFiltersTitle} = await renderRefineModal();
-
-      expect(sectionFiltersTitle).toBeInTheDocument();
-      expect(sectionFiltersTitle).toHaveAttribute(
-        'part',
-        'section-title section-filters-title'
-      );
-      expect(sectionFiltersTitle).toHaveTextContent('Filters');
+      expect(body).toBeInTheDocument();
+      expect(body).toHaveAttribute('slot', 'body');
     });
 
     it('should render the facet slot', async () => {
@@ -209,45 +194,45 @@ describe('atomic-insight-refine-modal', () => {
       expect(facetSlot).toBeInTheDocument();
     });
 
-    it('should render filter clear all button when hasBreadcrumbs is true', async () => {
-      const {filterClearAllButton} = await renderRefineModal({
+    it('should render clear all button when hasBreadcrumbs is true', async () => {
+      const {getClearAllButton} = await renderRefineModal({
         breadcrumbManagerState: {hasBreadcrumbs: true},
       });
 
-      expect(filterClearAllButton).toBeInTheDocument();
-      expect(filterClearAllButton).toHaveAttribute('part', 'filter-clear-all');
-      expect(filterClearAllButton).toHaveTextContent('Clear');
+      const clearAllButton = getClearAllButton();
+      expect(clearAllButton).toBeInTheDocument();
+      expect(clearAllButton).toHaveTextContent('Clear All Filters');
     });
 
-    it('should not render filter clear all button when hasBreadcrumbs is false', async () => {
-      const {filterClearAllButton} = await renderRefineModal({
+    it('should not render clear all button when hasBreadcrumbs is false', async () => {
+      const {getClearAllButton} = await renderRefineModal({
         breadcrumbManagerState: {hasBreadcrumbs: false},
       });
 
-      expect(filterClearAllButton).not.toBeInTheDocument();
+      expect(getClearAllButton()).not.toBeInTheDocument();
     });
 
     it('should call breadcrumbManager.deselectAll when clear button is clicked', async () => {
-      const {filterClearAllButton} = await renderRefineModal({
+      const {getClearAllButton} = await renderRefineModal({
         breadcrumbManagerState: {hasBreadcrumbs: true},
       });
 
-      await userEvent.click(filterClearAllButton!);
+      await userEvent.click(getClearAllButton()!);
 
       expect(mockedBreadcrumbManager.deselectAll).toHaveBeenCalled();
     });
 
-    it('should not render filters section when no facets', async () => {
-      const {element, filterSection} = await renderRefineModal();
+    it('should not render body section when no facets', async () => {
+      const {element, body} = await renderRefineModal();
       element.bindings.store.getFacetElements = () => [];
       element.requestUpdate();
       await element.updateComplete;
 
-      expect(filterSection).not.toBeInTheDocument();
+      expect(body).not.toBeInTheDocument();
     });
   });
 
-  describe('properties', () => {
+  describe('when setting properties', () => {
     it('should accept isOpen property', async () => {
       const {element} = await renderRefineModal({
         isOpen: false,
@@ -265,7 +250,7 @@ describe('atomic-insight-refine-modal', () => {
     });
   });
 
-  describe('close behavior', () => {
+  describe('when closing the modal', () => {
     it('should set isOpen to false when close button is clicked', async () => {
       const {element, closeButton} = await renderRefineModal({isOpen: true});
 
@@ -287,7 +272,7 @@ describe('atomic-insight-refine-modal', () => {
     });
   });
 
-  describe('#connectedCallback', () => {
+  describe('when connected to the DOM', () => {
     it('should set display style to empty string', async () => {
       const {element} = await renderRefineModal();
 
@@ -295,7 +280,7 @@ describe('atomic-insight-refine-modal', () => {
     });
   });
 
-  describe('#watchEnabled', () => {
+  describe('when isOpen changes', () => {
     it('should append facet slot when modal is opened', async () => {
       const {element} = await renderRefineModal({isOpen: false});
 
@@ -310,11 +295,16 @@ describe('atomic-insight-refine-modal', () => {
     });
 
     it('should not append duplicate facet slot when already exists', async () => {
-      const {element} = await renderRefineModal({isOpen: true});
+      const {element} = await renderRefineModal({isOpen: false});
+
+      // Open first time
+      element.isOpen = true;
+      await element.updateComplete;
 
       const firstSlot = element.querySelector('div[slot="facets"]');
       expect(firstSlot).toBeInTheDocument();
 
+      // Close and reopen
       element.isOpen = false;
       await element.updateComplete;
       element.isOpen = true;
