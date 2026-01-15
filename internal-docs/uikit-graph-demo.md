@@ -1,23 +1,25 @@
 # GraphRAG dans UI-Kit
-VOir si je pouvais ajouter Graphe de Connaissance (Knowledge Graph) couplé à un mécanisme de Retrieval-Augmented-Generation (RAG) pour permettre à l'AI de mieux raisonner sur le repo ui-kit. d'autant plus qu'il risque de continuer à grossir
+Voir si je pouvais ajouter Graphe de Connaissance (Knowledge Graph) couplé à un mécanisme de Retrieval-Augmented-Generation (RAG) pour permettre à l'AI de mieux raisonner sur le repo ui-kit. d'autant plus qu'il risque de continuer à grossir et que l'agent n'est pas tous les fichiers en context.
+
 
 ## Partie 1 : Le « Pourquoi » (2 minutes)
 
 ### Le Problème que Nous Résolvons
 
-Chaque fois qu'on fait donne des requêtes à qui exigent de traverser plusieurs couches de profondeurs qui contiennent énormément de relation, le pure LLM a ses limites. Par exemple
+Chaque fois qu'on fait des requêtes qui exigent de traverser plusieurs couches de profondeurs (ou qui contiennent bcp de relations), du genre
 
 - *« If I modify `executeSearch` action, what's the full blast radius ? »*
 - *« If I deprecate `buildSearchBox`, what breaks? »*
 
+C'est sure que
 ### Pourquoi Ne Pas Simplement Demander à Claude/Opus ?
 
-Les modèles avancé comme Cloud Opus vont arriver à une réponse presque similaire. Mais pour ça le model doit lire tous les fichiers concernés dans le repo
+Les modèles avancé comme Cloud Opus vont arriver à une réponse acceptable. Mais pour ça le model doit lire tous les fichiers concernés dans le repo et la reponse est pas deterministe. 
 
-Approche LLM:
+en plus:
 Cout: Énorme (consomme plus de token)
 latence: minutes
-Risque: Peut se perdre au milieu avec le context qui grandit. Et il risque d'oublier des élémnts
+Risque: Peut se perdre au milieu avec le context qui grossis. Et il risque d'oublier des élémnts
 
 Approche GraphRAG:
 L'agent execute des requetes spécifiques à la database
@@ -26,7 +28,7 @@ Latency: millisecondes, secondes.
 Resultat: deterministe.
 
 ---
-
+<!-- 
 ## Partie 2 : Qu'est-ce que ce Graphe ? (1 minute)
 ### Comment C'est Construit
 
@@ -36,7 +38,7 @@ Run un script qui analyse le code source en utilisant l'AST TypeScript (ts-morph
 
 
 3. **Requêtes via MCP** - Ajout du MCP dans UI kit
-
+ -->
 
 ---
 
@@ -85,30 +87,6 @@ Run un script qui analyse le code source en utilisant l'AST TypeScript (ts-morph
 ---
 
 
-### Démo 5 : Couplage de Composants
-
-**Question :** *« Quels composants sont architecturalement similaires ? »*
-
-```cypher
-MATCH (c1:Component)-[:CONSUMES]->(ctrl:Controller)<-[:CONSUMES]-(c2:Component)
-WHERE c1.tag < c2.tag
-WITH c1.tag as comp1, c2.tag as comp2, count(ctrl) as shared
-WHERE shared >= 3
-RETURN comp1, comp2, shared
-ORDER BY shared DESC
-LIMIT 5
-```
-
-| Composant 1 | Composant 2 | Contrôleurs Partagés |
-|-------------|-------------|---------------------|
-| atomic-numeric-facet | atomic-rating-range-facet | 7 |
-| atomic-color-facet | atomic-segmented-facet | 6 |
-| atomic-facet | atomic-segmented-facet | 6 |
-
-**Insight :** Ces paires de composants partagent une logique significative. Refactoriser l'un ? Vérifiez l'autre.
-
----
-
 ## Référence Rapide
 
 ### Quand Utiliser le Graphe
@@ -117,8 +95,7 @@ LIMIT 5
 |-----------|---------------------|
 | Trouver une chaîne dans les fichiers | Non, utilisez grep |
 | Trouver une définition de fonction | Non, utilisez LSP |
-| **Compter tous les usages de X** | **Oui** |
-| **Tracer Composant → Contrôleur → Action → Reducer** | **Oui** |
+| **Tracer relation complexe Composant → Contrôleur → Action → Reducer** | **Oui** |
 | **Analyse d'impact pour dépréciation** | **Oui** |
 | **Trouver les dépendances partagées** | **Oui** |
 | **Détecter le code mort/orphelin** | **Oui** |
@@ -166,14 +143,15 @@ uikit-graph_run_cypher(query: "MATCH (c:Component) RETURN count(c)")
 
 ## The "Killer Feature": Graphe de Connaissance dans le CI
 
-Skip avec precision les tests qui ne sont pas affectés utilisant un approach par graph avec plus de granularité de TUrbo repo. TurboRepo opère sur un niveau des packages alors qu'avec un system avec un systeme. il se base sur le hashage des fichiers mais il a pas la compréhension sémantique pour savoir pourquoi un fichier a changé.
+Skip avec precision les tests qui ne sont pas affecté avec plus de granularité de TUrbo repo. TurboRepo opère sur un niveau des packages. il se base sur le hashage des fichiers mais il a pas la compréhension sémantique pour savoir pourquoi un fichier a changé.
 
-En ce moment, ya un script pour determiner la selection de test en fonction des fichiers changé mais c'est un peu bobche. 
+Ça fait un bout, j'vais un script pour determiner la selection de test en fonction des fichiers changé mais c'est un peu bobche. 
+
 Scenario: You change a documentation file in headless.
 
-Turborepo (Standard): Sees a file change in the package inputs -> Invalidates cache -> Rebuilds Headless -> Rebuilds Atomic -> Rebuilds Samples. Waste of compute.
+au lieu de rebuilder Rebuilds Headless -> Rebuilds Atomic -> Rebuilds Samples. et runner tous les test pck un fichier dans headless a été touché
 
-Epsilon (Predictive): The Agent queries the Graph: "Does any code depend on README.md?" The answer is No. The Agent then instructs the CI pipeline to skip the atomic and sample build stages entirely for this PR.
+Avec un graph: L'agent query le graph et regarde s'il y a une dependance
 
 <!-- ### Analogie avec Turborepo ?
 
@@ -186,3 +164,25 @@ Epsilon (Predictive): The Agent queries the Graph: "Does any code depend on READ
 
 Turborepo dit : *« atomic dépend de headless »*
 Notre graphe dit : *« atomic-search-box utilise le contrôleur SearchBox qui dispatche executeSearch qui affecte 25 reducers »* -->
+
+## UI generator using semantic understanding
+
+Dédale , Inventeur, sculpeur, architecte légendaire
+
+
+@daedalus Construit une search page qui utilise des tabs dont les resulats contiennent quickview.
+le 1er Tab montre des pdf. 
+le 2e un FAQ avec des smart snippets,
+et le 3 Tab, montre du contenu multimedia
+Le user doit pouvoir clicker sur des recent queries
+
+avec Daedalus, il a été capable de me generer une search page quand meme solide sans halluciner des component atomic alors que sans le graph, il a eu de la misere a construire 
+
+par example au lieu de `atomic-quickview`, il a écrit
+```html
+<div class="quickview-button">
+    <atomic-result-quickview></atomic-result-quickview>
+</div>
+```
+
+il a inventer le nouveau component `<atomic-tab-label>`
