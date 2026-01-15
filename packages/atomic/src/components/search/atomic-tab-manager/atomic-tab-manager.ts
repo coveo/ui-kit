@@ -117,7 +117,9 @@ export class AtomicTabManager
   @errorGuard()
   render() {
     return html`
-      <atomic-tab-bar>
+      <atomic-tab-bar
+        exportparts="popover-button, value-label, arrow-icon, backdrop, overflow-tabs, popover-tab"
+      >
         <div
           role="list"
           aria-label="tab-area"

@@ -79,6 +79,19 @@ describe('atomic-tab-manager', () => {
       const tabBar = element.shadowRoot?.querySelector('atomic-tab-bar');
       expect(tabBar).toBeDefined();
     });
+
+    it('should export parts from atomic-tab-bar', async () => {
+      const {element} = await renderTabManager();
+      const tabBar = element.shadowRoot?.querySelector('atomic-tab-bar');
+      const exportparts = tabBar?.getAttribute('exportparts');
+
+      expect(exportparts).toContain('popover-button');
+      expect(exportparts).toContain('value-label');
+      expect(exportparts).toContain('arrow-icon');
+      expect(exportparts).toContain('backdrop');
+      expect(exportparts).toContain('overflow-tabs');
+      expect(exportparts).toContain('popover-tab');
+    });
   });
 
   describe('when initializing', () => {
