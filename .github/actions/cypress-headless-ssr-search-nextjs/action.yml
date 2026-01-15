@@ -1,5 +1,5 @@
-name: "Headless SSR E2E App router tests"
-description: "Runs Cypress tests for Headless SSR App router"
+name: "Headless SSR E2E tests"
+description: "Runs Cypress tests for Headless SSR"
 inputs:
   github-token:
     description: The GitHub token for accurately detecting a build vs a re-run build
@@ -15,10 +15,10 @@ runs:
       name: Run Cypress
       with:
         command: >-
-          pnpm --filter @samples/headless-ssr-search-nextjs-app-router exec
+          pnpm --filter @samples/headless-ssr-search-nextjs exec
           cypress-repeat run -n 3 --until-passes --rerun-failed-only -- cypress
           run --browser chrome --project . --env NEXTJS_ROUTER=app
-        start: pnpm exec turbo prod --filter=@samples/headless-ssr-search-nextjs-app-router
+        start: pnpm exec turbo prod --filter=@samples/headless-ssr-search-nextjs
         wait-on: "http://localhost:3000"
         wait-on-timeout: 600000
         install: false
