@@ -7,7 +7,7 @@ slug: usage/server-side-rendering/implement-search-parameter-support
 # Implement search parameter support
 
 We recommend that you use the [Coveo Headless](https://docs.coveo.com/en/lcdf0493/) SSR utilities with the latest [Next.js](https://nextjs.org/) [App Router](https://nextjs.org/docs/app).
-We don’t fully support the [Pages Router](https://nextjs.org/docs/pages).
+We don't fully support the [Pages Router](https://nextjs.org/docs/pages).
 This article uses the App Router paradigm.
 
 If you decide to use the Pages Router paradigm, there are potential issues which might lead to server reruns during client-side navigation.
@@ -172,7 +172,7 @@ Whenever there’s a change, the state’s parameters are serialized (using the 
 
 <dl><dt><strong>📌 Note</strong></dt><dd>
 
-You can consult a [working demo](https://github.com/coveo/ui-kit/tree/master/samples/headless-ssr/search-nextjs/app-router) of the component.
+You can consult a [working demo](https://github.com/coveo/ui-kit/tree/master/samples/headless-ssr/search-nextjs) of the component.
 </dd></dl>
 
 ## Add the component to the search page

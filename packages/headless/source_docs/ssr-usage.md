@@ -7,12 +7,12 @@ slug: usage/server-side-rendering/implement-server-side-rendering
 # Implement server-side rendering
 
 We recommend using the [Coveo Headless](https://docs.coveo.com/en/lcdf0493/) SSR utilities with the latest [Next.js](https://nextjs.org/) [App Router](https://nextjs.org/docs/app).
-We don’t fully support the [Pages Router](https://nextjs.org/docs/pages) and using it may result in unexpected behavior.
+We don't fully support the [Pages Router](https://nextjs.org/docs/pages) and using it may result in unexpected behavior.
 This article uses the App Router paradigm.
 
 **Notes**
 
-* You can also consult a [working demo](https://github.com/coveo/ui-kit/tree/master/samples/headless-ssr/search-nextjs/app-router) of a [Headless](https://docs.coveo.com/en/lcdf0493/) SSR search page.
+* You can also consult a [working demo](https://github.com/coveo/ui-kit/tree/master/samples/headless-ssr/search-nextjs) of a [Headless](https://docs.coveo.com/en/lcdf0493/) SSR search page.
 * For a Coveo Commerce implementation, see [Headless for Commerce: Server-side rendering](https://docs.coveo.com/en/obif0156/).
 
 ## Overview
