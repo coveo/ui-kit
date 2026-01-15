@@ -56,8 +56,6 @@ import '@/src/components/common/atomic-numeric-range/atomic-numeric-range';
  * The `atomic-insight-numeric-facet` component displays a facet of the results for the current query as numeric ranges.
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria.
  *
- * @internal
- *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
  * @part label-button - The button that displays the label and allows to expand/collapse the facet.

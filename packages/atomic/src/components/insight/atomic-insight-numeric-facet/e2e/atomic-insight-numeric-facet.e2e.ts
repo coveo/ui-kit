@@ -43,9 +43,7 @@ test.describe('atomic-insight-numeric-facet', () => {
       await expect(facet.valuesContainer).toBeVisible();
     });
   });
-});
 
-test.describe('atomic-insight-numeric-facet with selected value', () => {
   test('should display selected value with clear button', async ({facet}) => {
     await facet.load({story: 'with-selected-value'});
 
@@ -57,9 +55,7 @@ test.describe('atomic-insight-numeric-facet with selected value', () => {
       await expect(facet.clearButton).toBeVisible();
     });
   });
-});
 
-test.describe('atomic-insight-numeric-facet with input', () => {
   test('should render input fields', async ({facet}) => {
     await facet.load({story: 'with-input-integer'});
 
@@ -72,9 +68,7 @@ test.describe('atomic-insight-numeric-facet with input', () => {
       await expect(facet.applyButton).toBeVisible();
     });
   });
-});
 
-test.describe('atomic-insight-numeric-facet display as link', () => {
   test('should render values as links', async ({facet}) => {
     await facet.load({story: 'display-as-link'});
 
