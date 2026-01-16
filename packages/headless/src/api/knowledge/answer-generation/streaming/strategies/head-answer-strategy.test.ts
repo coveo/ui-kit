@@ -16,7 +16,7 @@ vi.mock(
   '../../../../../features/generated-answer/generated-answer-analytics-actions.js'
 );
 vi.mock('../../url-builders/endpoint-url-builder.js');
-vi.mock('../event-handlers.js');
+vi.mock('../event-handlers/event-handlers.js');
 
 describe('head-answer-strategy', () => {
   let mockState: AnswerGenerationApiState;
