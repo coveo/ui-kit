@@ -13,27 +13,11 @@ const styles = css`
     color: var(--atomic-error);
   }
 
-    [part='copy-button'] {
-      width: 2.2rem;
-      height: 2.2rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    [part='copy-button'] .icon-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100%;
-      line-height: 0;
-    }
-
-    [part='copy-button'] .icon-container atomic-icon {
-      width: 1.25rem;
-      height: 1.25rem;
-    }
+  [part='copy-button'] .icon-container atomic-icon {
+    line-height: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
 `;
 
 export default styles;
