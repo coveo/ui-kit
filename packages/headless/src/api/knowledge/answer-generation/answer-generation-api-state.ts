@@ -29,7 +29,7 @@ export interface GeneratedAnswerServerState {
   error?: {message: string; code: number};
 }
 
-export interface AnswerGenerationApiSection {
+interface AnswerGenerationApiSection {
   // CombinedState is an internal type from RTK Query that is used directly to break dependency on actual
   // use of RTK Query for the Stream Answer API. This exposes the internal state of RTKQ but allows us to
   // type this object over using an `unknown` type.
