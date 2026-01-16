@@ -21,7 +21,7 @@ export interface FollowUpAnswersState {
    */
   answers: FollowUpAnswer[];
   /**
-   * Can ask more follow-up answers.
+   * Determines if more follow-up answers can be asked.
    */
   canAskMore: boolean;
 }
