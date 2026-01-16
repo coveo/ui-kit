@@ -210,8 +210,8 @@ export class AtomicResultPrintableUri
           this.interactiveResult.cancelPendingSelect(),
         attributes: this.linkAttributes,
         ref: shouldSetTarget
-          ? (el?: HTMLAnchorElement) => {
-              if (el) {
+          ? (el?: Element) => {
+              if (el instanceof HTMLAnchorElement) {
                 this.expandedPartElement = el;
               }
             }

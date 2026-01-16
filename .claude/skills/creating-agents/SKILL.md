@@ -5,7 +5,6 @@ license: Apache-2.0
 metadata:
   author: coveo
   version: "1.0"
-  package: all
 ---
 
 # Creating Agents

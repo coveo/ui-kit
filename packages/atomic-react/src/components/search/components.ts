@@ -18,16 +18,6 @@ import {
   AtomicGeneratedAnswer as LitAtomicGeneratedAnswer,
   AtomicHtml as LitAtomicHtml,
   AtomicIcon as LitAtomicIcon,
-  AtomicInsightEditToggle as LitAtomicInsightEditToggle,
-  AtomicInsightFullSearchButton as LitAtomicInsightFullSearchButton,
-  AtomicInsightGenerateAnswerButton as LitAtomicInsightGenerateAnswerButton,
-  AtomicInsightInterface as LitAtomicInsightInterface,
-  AtomicInsightLayout as LitAtomicInsightLayout,
-  AtomicInsightNoResults as LitAtomicInsightNoResults,
-  AtomicInsightPager as LitAtomicInsightPager,
-  AtomicInsightQueryError as LitAtomicInsightQueryError,
-  AtomicInsightQuerySummary as LitAtomicInsightQuerySummary,
-  AtomicInsightResultTemplate as LitAtomicInsightResultTemplate,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
   AtomicNoResults as LitAtomicNoResults,
@@ -91,6 +81,7 @@ import {
   AtomicTabManager as LitAtomicTabManager,
   AtomicText as LitAtomicText,
   AtomicTimeframe as LitAtomicTimeframe,
+  AtomicTimeframeFacet as LitAtomicTimeframeFacet,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
@@ -207,66 +198,6 @@ export const AtomicIcon = createComponent({
   tagName: 'atomic-icon',
   react: React,
   elementClass: LitAtomicIcon,
-});
-
-export const AtomicInsightEditToggle = createComponent({
-  tagName: 'atomic-insight-edit-toggle',
-  react: React,
-  elementClass: LitAtomicInsightEditToggle,
-});
-
-export const AtomicInsightFullSearchButton = createComponent({
-  tagName: 'atomic-insight-full-search-button',
-  react: React,
-  elementClass: LitAtomicInsightFullSearchButton,
-});
-
-export const AtomicInsightGenerateAnswerButton = createComponent({
-  tagName: 'atomic-insight-generate-answer-button',
-  react: React,
-  elementClass: LitAtomicInsightGenerateAnswerButton,
-});
-
-export const AtomicInsightInterface = createComponent({
-  tagName: 'atomic-insight-interface',
-  react: React,
-  elementClass: LitAtomicInsightInterface,
-});
-
-export const AtomicInsightLayout = createComponent({
-  tagName: 'atomic-insight-layout',
-  react: React,
-  elementClass: LitAtomicInsightLayout,
-});
-
-export const AtomicInsightNoResults = createComponent({
-  tagName: 'atomic-insight-no-results',
-  react: React,
-  elementClass: LitAtomicInsightNoResults,
-});
-
-export const AtomicInsightPager = createComponent({
-  tagName: 'atomic-insight-pager',
-  react: React,
-  elementClass: LitAtomicInsightPager,
-});
-
-export const AtomicInsightQueryError = createComponent({
-  tagName: 'atomic-insight-query-error',
-  react: React,
-  elementClass: LitAtomicInsightQueryError,
-});
-
-export const AtomicInsightQuerySummary = createComponent({
-  tagName: 'atomic-insight-query-summary',
-  react: React,
-  elementClass: LitAtomicInsightQuerySummary,
-});
-
-export const AtomicInsightResultTemplate = createComponent({
-  tagName: 'atomic-insight-result-template',
-  react: React,
-  elementClass: LitAtomicInsightResultTemplate,
 });
 
 export const AtomicLayoutSection = createComponent({
@@ -645,4 +576,10 @@ export const AtomicTimeframe = createComponent({
   tagName: 'atomic-timeframe',
   react: React,
   elementClass: LitAtomicTimeframe,
+});
+
+export const AtomicTimeframeFacet = createComponent({
+  tagName: 'atomic-timeframe-facet',
+  react: React,
+  elementClass: LitAtomicTimeframeFacet,
 });

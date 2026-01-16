@@ -10,6 +10,10 @@ export default {
     await import(
       './atomic-insight-generate-answer-button/atomic-insight-generate-answer-button.js'
     ),
+  'atomic-insight-history-toggle': async () =>
+    await import(
+      './atomic-insight-history-toggle/atomic-insight-history-toggle.js'
+    ),
   'atomic-insight-interface': async () =>
     await import('./atomic-insight-interface/atomic-insight-interface.js'),
   'atomic-insight-layout': async () =>
@@ -24,18 +28,28 @@ export default {
     await import(
       './atomic-insight-query-summary/atomic-insight-query-summary.js'
     ),
+  'atomic-insight-refine-toggle': async () =>
+    await import(
+      './atomic-insight-refine-toggle/atomic-insight-refine-toggle.js'
+    ),
   'atomic-insight-result-template': async () =>
     await import(
       './atomic-insight-result-template/atomic-insight-result-template.js'
     ),
-  'atomic-insight-smart-snippet': async () =>
+  'atomic-insight-search-box': async () =>
+    await import('./atomic-insight-search-box/atomic-insight-search-box.js'),
+  'atomic-insight-smart-snippet-feedback-modal': async () =>
     await import(
-      './atomic-insight-smart-snippet/atomic-insight-smart-snippet.js'
+      './atomic-insight-smart-snippet-feedback-modal/atomic-insight-smart-snippet-feedback-modal.js'
     ),
   'atomic-insight-tab': async () =>
     await import('./atomic-insight-tab/atomic-insight-tab.js'),
   'atomic-insight-tabs': async () =>
     await import('./atomic-insight-tabs/atomic-insight-tabs.js'),
+  'atomic-insight-user-actions-toggle': async () =>
+    await import(
+      './atomic-insight-user-actions-toggle/atomic-insight-user-actions-toggle.js'
+    ),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';
