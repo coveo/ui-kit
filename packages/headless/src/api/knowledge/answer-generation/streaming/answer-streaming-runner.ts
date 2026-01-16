@@ -14,13 +14,14 @@ export const streamAnswerWithStrategy = <
 >(
   args: TArgs,
   api: {
-    state: TState;
+    getState: () => TState;
     dispatch: ThunkDispatch<TState, unknown, UnknownAction>;
     updateCachedData: (updater: (draft: TDraft) => void) => void;
   },
   strategy: StreamingStrategy<TDraft, TState>
 ) => {
-  const {state, dispatch, updateCachedData} = api;
+  const {getState, dispatch, updateCachedData} = api;
+  const state = getState();
   const endpointUrl = strategy.buildEndpointUrl(state);
   const {
     configuration: {accessToken},
