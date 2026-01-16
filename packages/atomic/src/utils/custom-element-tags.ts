@@ -71,6 +71,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-insight-refine-toggle',
   'atomic-insight-result-template',
   'atomic-insight-search-box',
+  'atomic-insight-smart-snippet-feedback-modal',
   'atomic-insight-tab',
   'atomic-insight-tabs',
   'atomic-insight-user-actions-toggle',
@@ -174,6 +175,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-table-element',
   'atomic-text',
   'atomic-timeframe',
+  'atomic-timeframe-facet',
 ]);
 
 /**

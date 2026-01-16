@@ -331,7 +331,7 @@ export class AtomicGeneratedAnswer
         this.tabManagerState?.activeTab
       )
     ) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     const contentClasses =
@@ -354,7 +354,7 @@ export class AtomicGeneratedAnswer
           </div>
         `;
       }
-      return html`${nothing}`;
+      return nothing;
     }
 
     return html`

@@ -127,7 +127,7 @@ export class AtomicNotifications
   @errorGuard()
   render() {
     if (!this.notifications.length) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     this.ariaMessage.message = this.generateAriaMessage();
