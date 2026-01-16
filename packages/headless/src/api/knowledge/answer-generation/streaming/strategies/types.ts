@@ -37,7 +37,7 @@ export interface StreamingStrategy<TDraft, TState> {
       Record<
         EventType,
         (
-          message: Required<Message>,
+          message: Message,
           updateCachedData: (updater: (draft: TDraft) => void) => void,
           dispatch: ThunkDispatch<TState, unknown, UnknownAction>
         ) => void

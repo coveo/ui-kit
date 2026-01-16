@@ -58,7 +58,7 @@ export const handleEndOfStream = (
 
 export const handleError = (
   draft: GeneratedAnswerServerState,
-  message: Required<Message>
+  message: Message
 ) => {
   const errorMessage = message.errorMessage || 'Unknown error occurred';
 
