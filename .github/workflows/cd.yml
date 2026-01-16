@@ -42,6 +42,8 @@ jobs:
       id-token: write
     env:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    outputs:
+      headless-published: ${{ steps.check-headless.outputs.published }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -75,6 +77,21 @@ jobs:
         run: node ./scripts/deploy/trigger-ui-kit-cd.mjs
         env:
           GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
+      - name: Check if Headless was published
+        id: check-headless
+        run: |
+          if [ -f .git-message ]; then
+            if grep -q '@coveo/headless@' .git-message; then
+              echo "published=true" >> $GITHUB_OUTPUT
+              echo "Headless was published in this release"
+            else
+              echo "published=false" >> $GITHUB_OUTPUT
+              echo "Headless was not published in this release"
+            fi
+          else
+            echo "published=false" >> $GITHUB_OUTPUT
+            echo "No .git-message file found, assuming no packages were published"
+          fi
   npm-prod:
     if: ${{ !cancelled() && needs.release.result == 'success' }}
     needs: release
@@ -130,7 +147,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: ./packages/quantic
   typedoc-headless:
-    if: ${{ !cancelled() && needs.release.result == 'success' }}
+    if: ${{ !cancelled() && needs.release.result == 'success' && needs.release.outputs.headless-published == 'true' }}
     needs: release
     runs-on: ubuntu-latest
     steps:
@@ -171,7 +188,7 @@ jobs:
           name: headless-docs-${{ env.version }}
           path: typedoc-headless-site/
   typedoc-headless-react:
-    if: ${{ !cancelled() && needs.release.result == 'success' }}
+    if: ${{ !cancelled() && needs.release.result == 'success' && needs.release.outputs.headless-published == 'true' }}
     needs: release
     runs-on: ubuntu-latest
     steps:
@@ -212,7 +229,7 @@ jobs:
           name: headless-react-docs-${{ env.version }}
           path: typedoc-headless-react-site/
   docs-prod:
-    if: ${{ !cancelled() && needs.release.result == 'success' }}
+    if: ${{ !cancelled() && needs.release.result == 'success' && needs.release.outputs.headless-published == 'true' }}
     needs: release
     runs-on: ubuntu-latest
     environment: 'Docs Production'
