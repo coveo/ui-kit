@@ -7,7 +7,7 @@ import type {
   GeneratedAnswerServerState,
 } from '../../answer-generation-api-state.js';
 import * as endpointUrlBuilder from '../../url-builders/endpoint-url-builder.js';
-import * as eventHandlers from '../event-handlers/event-handlers.js';
+import * as eventHandlers from '../answer-draft-handlers/answer-draft-handlers.js';
 import {headAnswerStrategy} from './head-answer-strategy.js';
 import type {Message} from './types.js';
 
@@ -16,7 +16,7 @@ vi.mock(
   '../../../../../features/generated-answer/generated-answer-analytics-actions.js'
 );
 vi.mock('../../url-builders/endpoint-url-builder.js');
-vi.mock('../event-handlers/event-handlers.js');
+vi.mock('../answer-draft-handlers/answer-draft-handlers.js');
 
 describe('head-answer-strategy', () => {
   let mockState: AnswerGenerationApiState;

@@ -9,9 +9,9 @@ import {
   handleHeaderMessage,
   handleMessage,
   type StreamPayload,
-} from './event-handlers.js';
+} from './answer-draft-handlers.js';
 
-describe('event-handlers', () => {
+describe('answer draft handlers', () => {
   let draft: GeneratedAnswerServerState;
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
 
