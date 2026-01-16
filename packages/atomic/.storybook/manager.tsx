@@ -17,7 +17,7 @@ declare global {
 addons.setConfig({
   theme: {
     ...themes.dark,
-    brandUrl: '?path=/story/introduction--default',
+    brandUrl: '?path=/docs/introduction--default',
     brandTarget: '_self',
   },
 });
@@ -88,13 +88,10 @@ const addNoIndexMetaTag = () => {
   }
 };
 
-addons.register('expand-all-folders-on-intro', () => {
+addons.register('expand-all-folders-on-crawling', () => {
   addons.getChannel().on(STORY_RENDERED, (storyId) => {
-    if (storyId === 'introduction--crawling') {
+    if (storyId === 'crawling--crawling') {
       observeAndExpandButtons();
-      addNoIndexMetaTag();
-    }
-    if (storyId === 'introduction--default') {
       addNoIndexMetaTag();
     }
   });
