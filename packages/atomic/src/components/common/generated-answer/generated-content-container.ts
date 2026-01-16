@@ -25,7 +25,6 @@ export const renderGeneratedContentContainer: FunctionalComponentWithChildren<
       <div
         part="generated-container"
         class=${classMap({
-          'mt-6': true,
           'answer-collapsed': props.isCollapsed ?? false,
         })}
       >

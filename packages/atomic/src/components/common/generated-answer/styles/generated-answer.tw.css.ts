@@ -105,6 +105,15 @@ const baseStyle = css`
   [part='generated-container'].answer-collapsed .feedback-buttons {
     @apply hidden;
   }
+
+  /* Allow query label up to 3 lines before truncating */
+  .query-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
 
 export default [

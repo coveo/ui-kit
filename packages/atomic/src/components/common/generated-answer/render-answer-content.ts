@@ -52,6 +52,12 @@ export const renderAnswerContent: FunctionalComponent<
 
   const {isStreaming, answer, citations, answerContentFormat, expanded} =
     generatedAnswerState ?? {};
+  const isExpanded = collapsible ? !!expanded : true;
+  const isCollapsed = collapsible && !isExpanded;
+  const queryFromState =
+    generatedAnswerState?.answerApiQueryParams?.q?.trim() ?? '';
+  const latestQuery = queryFromState || i18n.t('generated-answer-title');
+  const showInlineActions = !hasRetryableError && isExpanded;
 
   return html`
     <div part="generated-content">
@@ -87,6 +93,19 @@ export const renderAnswerContent: FunctionalComponent<
         isAnswerVisible,
         () => html`
           <div part="generated-content-container" class="px-6 pb-6">
+            <div class="flex justify-between gap-3 mt-6">
+              <p class="query-text text-base font-semibold leading-6">
+                ${latestQuery ?? ''}
+              </p>
+              ${when(
+                showInlineActions,
+                () => html`
+                <div class="flex items-center gap-2 h-9">
+                  ${renderFeedbackAndCopyButtonsSlot()}
+                </div>
+              `
+              )}
+            </div>
             ${
               hasRetryableError
                 ? renderRetryPrompt({
@@ -105,10 +124,9 @@ export const renderAnswerContent: FunctionalComponent<
                       answer,
                       answerContentFormat,
                       isStreaming: !!isStreaming,
-                      isCollapsed: collapsible && !expanded,
+                      isCollapsed,
                     },
                   })(html`
-                  ${renderFeedbackAndCopyButtonsSlot()}
                   ${renderSourceCitations({
                     props: {
                       label: i18n.t('citations'),
