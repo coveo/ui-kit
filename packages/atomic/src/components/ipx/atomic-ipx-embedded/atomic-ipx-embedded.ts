@@ -15,7 +15,7 @@ import {once, randomID} from '@/src/utils/utils.js';
 @customElement('atomic-ipx-embedded')
 @bindings()
 @withTailwindStyles
-export class AtomicIPXEmbedded
+export class AtomicIpxEmbedded
   extends LitElement
   implements InitializableComponent<AnyBindings>
 {
@@ -51,9 +51,7 @@ export class AtomicIPXEmbedded
 
   private updateBreakpoints = once(() => updateBreakpoints(this));
 
-  public initialize() {
-    // Initialize component
-  }
+  public initialize() {}
 
   connectedCallback() {
     super.connectedCallback();
@@ -88,6 +86,6 @@ export class AtomicIPXEmbedded
 
 declare global {
   interface HTMLElementTagNameMap {
-    'atomic-ipx-embedded': AtomicIPXEmbedded;
+    'atomic-ipx-embedded': AtomicIpxEmbedded;
   }
 }

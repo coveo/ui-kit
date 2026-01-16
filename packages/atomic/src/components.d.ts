@@ -482,12 +482,6 @@ export namespace Components {
          */
         "openIcon": string;
     }
-    interface AtomicIpxEmbedded {
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
-         */
-        "container"?: HTMLElement;
-    }
     interface AtomicIpxModal {
         /**
           * The container to hide from the tabindex and accessibility DOM when the modal is closed.
@@ -731,10 +725,6 @@ export interface AtomicIpxBodyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicIpxBodyElement;
 }
-export interface AtomicIpxEmbeddedCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicIpxEmbeddedElement;
-}
 export interface AtomicIpxModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicIpxModalElement;
@@ -946,23 +936,6 @@ declare global {
         prototype: HTMLAtomicIpxButtonElement;
         new (): HTMLAtomicIpxButtonElement;
     };
-    interface HTMLAtomicIpxEmbeddedElementEventMap {
-        "animationEnded": never;
-    }
-    interface HTMLAtomicIpxEmbeddedElement extends Components.AtomicIpxEmbedded, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicIpxEmbeddedElementEventMap>(type: K, listener: (this: HTMLAtomicIpxEmbeddedElement, ev: AtomicIpxEmbeddedCustomEvent<HTMLAtomicIpxEmbeddedElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicIpxEmbeddedElementEventMap>(type: K, listener: (this: HTMLAtomicIpxEmbeddedElement, ev: AtomicIpxEmbeddedCustomEvent<HTMLAtomicIpxEmbeddedElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicIpxEmbeddedElement: {
-        prototype: HTMLAtomicIpxEmbeddedElement;
-        new (): HTMLAtomicIpxEmbeddedElement;
-    };
     interface HTMLAtomicIpxModalElementEventMap {
         "animationEnded": never;
     }
@@ -1107,7 +1080,6 @@ declare global {
         "atomic-insight-user-actions-timeline": HTMLAtomicInsightUserActionsTimelineElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-button": HTMLAtomicIpxButtonElement;
-        "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
         "atomic-ipx-modal": HTMLAtomicIpxModalElement;
         "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
@@ -1563,13 +1535,6 @@ declare namespace LocalJSX {
          */
         "openIcon"?: string;
     }
-    interface AtomicIpxEmbedded {
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
-         */
-        "container"?: HTMLElement;
-        "onAnimationEnded"?: (event: AtomicIpxEmbeddedCustomEvent<never>) => void;
-    }
     interface AtomicIpxModal {
         /**
           * The container to hide from the tabindex and accessibility DOM when the modal is closed.
@@ -1797,7 +1762,6 @@ declare namespace LocalJSX {
         "atomic-insight-user-actions-timeline": AtomicInsightUserActionsTimeline;
         "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-button": AtomicIpxButton;
-        "atomic-ipx-embedded": AtomicIpxEmbedded;
         "atomic-ipx-modal": AtomicIpxModal;
         "atomic-ipx-recs-list": AtomicIpxRecsList;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
@@ -1852,7 +1816,6 @@ declare module "@stencil/core" {
             "atomic-insight-user-actions-timeline": LocalJSX.AtomicInsightUserActionsTimeline & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsTimelineElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
-            "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
             "atomic-ipx-modal": LocalJSX.AtomicIpxModal & JSXBase.HTMLAttributes<HTMLAtomicIpxModalElement>;
             /**
              * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.

@@ -14,7 +14,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-ipx-embedded',
-  title: 'Atomic/IPX/IPXEmbedded',
+  title: 'IPX/Embedded',
   id: 'atomic-ipx-embedded',
 
   render: (args) =>
@@ -43,10 +43,7 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {
-  name: 'Default',
-  args: {},
-};
+export const Default: Story = {};
 
 export const WithoutFooter: Story = {
   name: 'Without Footer',

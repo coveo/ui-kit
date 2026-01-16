@@ -1,8 +1,12 @@
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import type {AtomicIPXEmbedded} from './atomic-ipx-embedded';
+import type {AtomicIpxEmbedded} from './atomic-ipx-embedded';
 import './atomic-ipx-embedded';
+
+vi.mock('@/src/utils/replace-breakpoint-utils.js', () => ({
+  updateBreakpoints: vi.fn(),
+}));
 
 describe('atomic-ipx-embedded', () => {
   const renderEmbedded = async ({
@@ -12,7 +16,7 @@ describe('atomic-ipx-embedded', () => {
     container?: HTMLElement;
     slottedContent?: string;
   } = {}) => {
-    const element = await fixture<AtomicIPXEmbedded>(html`
+    const element = await fixture<AtomicIpxEmbedded>(html`
       <atomic-ipx-embedded .container=${container}>
         ${
           slottedContent
@@ -26,7 +30,7 @@ describe('atomic-ipx-embedded', () => {
 
     return {
       element,
-      parts: (el: AtomicIPXEmbedded) => ({
+      parts: (el: AtomicIpxEmbedded) => ({
         backdrop: el.shadowRoot?.querySelector('[part="backdrop"]'),
         body: el.shadowRoot?.querySelector('atomic-ipx-body'),
       }),
@@ -64,7 +68,7 @@ describe('atomic-ipx-embedded', () => {
     });
 
     it('should preserve existing ID if provided', async () => {
-      const element = await fixture<AtomicIPXEmbedded>(html`
+      const element = await fixture<AtomicIpxEmbedded>(html`
         <atomic-ipx-embedded id="custom-id"></atomic-ipx-embedded>
       `);
       expect(element.id).toBe('custom-id');
@@ -85,21 +89,22 @@ describe('atomic-ipx-embedded', () => {
   });
 
   describe('when checking footer slot', () => {
-    it('should detect when footer slot has content', async () => {
-      const element = await fixture<AtomicIPXEmbedded>(html`
+    it('should pass displayFooterSlot as true when footer slot has content', async () => {
+      const element = await fixture<AtomicIpxEmbedded>(html`
         <atomic-ipx-embedded>
           <div slot="footer">Footer content</div>
         </atomic-ipx-embedded>
       `);
-      // Component checks slots in connectedCallback, so this should be set
-      expect(element.hasFooterSlotElements).toBe(true);
+      const body = element.shadowRoot?.querySelector('atomic-ipx-body');
+      expect(body?.displayFooterSlot).toBe(true);
     });
 
-    it('should detect when footer slot is empty', async () => {
-      const element = await fixture<AtomicIPXEmbedded>(html`
+    it('should pass displayFooterSlot as false when footer slot is empty', async () => {
+      const element = await fixture<AtomicIpxEmbedded>(html`
         <atomic-ipx-embedded></atomic-ipx-embedded>
       `);
-      expect(element.hasFooterSlotElements).toBe(false);
+      const body = element.shadowRoot?.querySelector('atomic-ipx-body');
+      expect(body?.displayFooterSlot).toBe(false);
     });
   });
 
@@ -108,7 +113,8 @@ describe('atomic-ipx-embedded', () => {
 
     beforeEach(async () => {
       const module = await import('@/src/utils/replace-breakpoint-utils.js');
-      updateBreakpointsSpy = vi.spyOn(module, 'updateBreakpoints');
+      updateBreakpointsSpy = vi.mocked(module.updateBreakpoints);
+      updateBreakpointsSpy.mockClear();
     });
 
     it('should call updateBreakpoints on render', async () => {
@@ -131,7 +137,7 @@ describe('atomic-ipx-embedded', () => {
 
   describe('when using slots', () => {
     it('should support header slot', async () => {
-      const element = await fixture<AtomicIPXEmbedded>(html`
+      const element = await fixture<AtomicIpxEmbedded>(html`
         <atomic-ipx-embedded>
           <div slot="header" id="test-header">Header</div>
         </atomic-ipx-embedded>
@@ -141,7 +147,7 @@ describe('atomic-ipx-embedded', () => {
     });
 
     it('should support body slot', async () => {
-      const element = await fixture<AtomicIPXEmbedded>(html`
+      const element = await fixture<AtomicIpxEmbedded>(html`
         <atomic-ipx-embedded>
           <div slot="body" id="test-body">Body</div>
         </atomic-ipx-embedded>
@@ -151,7 +157,7 @@ describe('atomic-ipx-embedded', () => {
     });
 
     it('should support footer slot', async () => {
-      const element = await fixture<AtomicIPXEmbedded>(html`
+      const element = await fixture<AtomicIpxEmbedded>(html`
         <atomic-ipx-embedded>
           <div slot="footer" id="test-footer">Footer</div>
         </atomic-ipx-embedded>
