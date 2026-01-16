@@ -1,11 +1,12 @@
 import type {GeneratedAnswerBase} from '../generated-answer/generated-answer-state.js';
 
-export interface FollowUpAnswer extends GeneratedAnswerBase {
+interface FollowUpAnswer extends GeneratedAnswerBase {
   /** The question prompted to generate this follow-up answer. */
   question: string;
 }
 
 /**
+ * @internal
  * The follow-up answers state.
  */
 export interface FollowUpAnswersState {
@@ -33,17 +34,3 @@ export function getFollowUpAnswersInitialState(): FollowUpAnswersState {
     canAskMore: false,
   };
 }
-
-export const createInitialFollowUpAnswer = (
-  followUpQuestion: string
-): FollowUpAnswer => ({
-  question: followUpQuestion,
-  isLoading: false,
-  isStreaming: false,
-  citations: [],
-  liked: false,
-  disliked: false,
-  feedbackSubmitted: false,
-  isAnswerGenerated: false,
-  cannotAnswer: false,
-});
