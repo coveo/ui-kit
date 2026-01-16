@@ -108,6 +108,9 @@ export class AtomicIpxButton
   private renderIPXButton() {
     const ariaLabel = this.isModalOpen ? 'Close' : 'Open';
     const modalId = this.ipxModal?.id;
+    const ariaControlsProps =
+      this.isModalOpen && modalId ? {ariaControls: modalId} : {};
+
     return renderButton({
       props: {
         style: 'primary',
@@ -116,7 +119,7 @@ export class AtomicIpxButton
         onClick: () => this.onClick(),
         ariaLabel: this.label ?? ariaLabel,
         ariaExpanded: this.isModalOpen ? 'true' : 'false',
-        ...(modalId && {ariaControls: modalId}),
+        ...ariaControlsProps,
       },
     })(html`
       <span part="button-icon">
