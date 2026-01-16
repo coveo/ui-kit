@@ -7,7 +7,7 @@ import type {
   GeneratedAnswerServerState,
 } from '../../answer-generation-api-state.js';
 import * as endpointUrlBuilder from '../../url-builders/endpoint-url-builder.js';
-import * as eventHandlers from '../event-handlers.js';
+import * as eventHandlers from '../event-handlers/event-handlers.js';
 import {headAnswerStrategy} from './head-answer-strategy.js';
 import type {Message} from './types.js';
 

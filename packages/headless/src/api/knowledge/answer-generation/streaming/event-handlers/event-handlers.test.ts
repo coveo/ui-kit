@@ -1,5 +1,6 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import type {GeneratedAnswerServerState} from '../answer-generation-api-state.js';
+import type {GeneratedAnswerServerState} from '../../answer-generation-api-state.js';
+import type {Message} from '../strategies/types.js';
 import {
   handleAnswerId,
   handleCitations,
@@ -9,7 +10,6 @@ import {
   handleMessage,
   type StreamPayload,
 } from './event-handlers.js';
-import type {Message} from './strategies/types.js';
 
 describe('event-handlers', () => {
   let draft: GeneratedAnswerServerState;

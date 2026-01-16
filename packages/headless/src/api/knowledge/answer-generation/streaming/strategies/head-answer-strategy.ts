@@ -25,7 +25,7 @@ import {
   handleHeaderMessage,
   handleMessage,
   type StreamPayload,
-} from '../event-handlers.js';
+} from '../event-handlers/event-handlers.js';
 import type {StreamingStrategy} from './types.js';
 
 export const headAnswerStrategy: StreamingStrategy<
