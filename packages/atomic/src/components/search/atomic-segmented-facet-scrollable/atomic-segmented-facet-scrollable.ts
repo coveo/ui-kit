@@ -102,7 +102,7 @@ export class AtomicSegmentedFacetScrollable
   @bindingGuard()
   render() {
     if (this.searchStatusState.hasError) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     return html`

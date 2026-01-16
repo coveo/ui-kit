@@ -1,6 +1,6 @@
 import {isUndefined} from '@coveo/bueno';
 import type {InteractiveResult, Result} from '@coveo/headless';
-import {type CSSResultGroup, css, html, LitElement} from 'lit';
+import {type CSSResultGroup, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {getAttributesFromLinkSlotContent} from '@/src/components/common/item-link/attributes-slot';
@@ -20,6 +20,7 @@ import {
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import {buildStringTemplateFromResult} from '@/src/utils/result-utils';
 import '@/src/components/search/atomic-result-text/atomic-result-text';
+import styles from './atomic-result-link.tw.css';
 
 /**
  * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
@@ -32,14 +33,7 @@ export class AtomicResultLink
   extends LightDomMixin(SlotsForNoShadowDOMMixin(LitElement))
   implements InitializableComponent<Bindings>
 {
-  static styles: CSSResultGroup =
-    css`@reference '../../../../utils/tailwind.global.tw.css';
-
-atomic-result-link {
-  a {
-    @apply link-style;
-  }
-}`;
+  static styles: CSSResultGroup = styles;
 
   /**
    * Specifies a template literal from which to generate the `href` attribute value (see
@@ -135,7 +129,6 @@ atomic-result-link {
           onCancelPendingSelect: () => interactiveResult.cancelPendingSelect(),
           attributes: this.linkAttributes,
           stopPropagation: this.stopPropagation,
-          className: 'link-style',
           onInitializeLink: (cleanupCallback) => {
             if (this.removeLinkEventHandlers) {
               this.removeLinkEventHandlers();
@@ -144,13 +137,13 @@ atomic-result-link {
           },
         },
       })(html`
-          ${this.renderDefaultSlotContent(
-            html`<atomic-result-text
+        ${this.renderDefaultSlotContent(
+          html`<atomic-result-text
             field="title"
             default="no-title"
           ></atomic-result-text>`
-          )}
-        `);
+        )}
+      `);
     })}`;
   }
 }

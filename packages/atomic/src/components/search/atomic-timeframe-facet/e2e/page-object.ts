@@ -10,6 +10,18 @@ export class AtomicTimeframeFacetPageObject extends BasePageObject<'atomic-timef
     return this.page.locator('atomic-timeframe-facet');
   }
 
+  get labelButton() {
+    return this.facet.locator('[part~="label-button"]');
+  }
+
+  get valuesContainer() {
+    return this.facet.locator('[part~="values"]');
+  }
+
+  get clearButton() {
+    return this.facet.locator('[part~="clear-button"]');
+  }
+
   get facetInputStart() {
     return this.facet.getByLabel('Enter a start date');
   }
