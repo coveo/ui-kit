@@ -12,7 +12,10 @@ export const generativeQuestionAnsweringIdSelector = (
   state: Partial<SearchAppState>
 ): string | undefined => {
   // If using the AnswerApi, we return the answerId first.
-  if (isGeneratedAnswerFeatureEnabledWithAnswerAPI(state)) {
+  if (
+    isGeneratedAnswerFeatureEnabledWithAnswerAPI(state) ||
+    isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI(state)
+  ) {
     return state.generatedAnswer?.answerId;
   }
 

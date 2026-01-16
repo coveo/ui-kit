@@ -35,18 +35,19 @@ export const followUpAnswerEndpoint = answerGenerationApi.injectEndpoints({
         return `${endpointName}_${JSON.stringify(q)}`;
       },
       async onQueryStarted(args, {getState, updateCachedData, dispatch}) {
-        /**
-         * createApi has to be called prior to creating the redux store and is used as part of the store setup sequence.
-         * It cannot use the inferred state used by Redux, thus the casting.
-         * https://redux-toolkit.js.org/rtk-query/usage-with-typescript#typing-dispatch-and-getstate
-         */
-        const state = getState() as AnswerGenerationApiState;
-
         await streamAnswerWithStrategy<
           FollowUpAnswerParams,
           AnswerGenerationApiState,
           GeneratedAnswerServerState
-        >(args, {state, updateCachedData, dispatch}, followUpAnswerStrategy);
+        >(
+          args,
+          {
+            getState: getState as () => AnswerGenerationApiState,
+            updateCachedData,
+            dispatch,
+          },
+          followUpAnswerStrategy
+        );
       },
     }),
   }),

@@ -15,17 +15,17 @@ export const streamAnswerWithStrategy = <
 >(
   args: TArgs,
   api: {
-    state: TState;
+    getState: () => TState;
     dispatch: ThunkDispatch<TState, unknown, UnknownAction>;
     updateCachedData: (updater: (draft: TDraft) => void) => void;
   },
   strategy: StreamingStrategy<TDraft, TState>
 ) => {
-  const {state, dispatch, updateCachedData} = api;
-  const endpointUrl = strategy.buildEndpointUrl(state);
+  const {dispatch, updateCachedData, getState} = api;
+  const endpointUrl = strategy.buildEndpointUrl(getState());
   const {
     configuration: {accessToken},
-  } = state;
+  } = getState();
 
   return fetchEventSource(endpointUrl, {
     method: 'POST',
