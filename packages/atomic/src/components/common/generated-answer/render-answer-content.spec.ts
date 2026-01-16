@@ -92,6 +92,18 @@ describe('#renderAnswerContent', () => {
     );
   });
 
+  it('should render the sparkles header icon', async () => {
+    const {element} = await renderComponent();
+
+    const icon = element.querySelector(
+      'atomic-icon[part="header-icon"]'
+    ) as HTMLElement & {icon?: string};
+
+    expect(icon).not.toBeNull();
+    expect(icon?.icon).toBe('assets://sparkles.svg');
+    expect(icon?.classList.contains('text-primary')).toBe(true);
+  });
+
   it('should call renderSwitch with correct arguments', async () => {
     const onToggle = vi.fn();
 
@@ -166,6 +178,23 @@ describe('#renderAnswerContent', () => {
   });
 
   describe('when answer is visible and no retryable error', () => {
+    it('should display the latest query from state', async () => {
+      const {element} = await renderComponent({
+        // @ts-expect-error Test fixture with partial mock
+        generatedAnswerState: {
+          answer: 'Test answer',
+          answerContentFormat: 'text/plain',
+          isStreaming: false,
+          expanded: true,
+          answerApiQueryParams: {q: '  user query  '},
+        },
+      });
+
+      const queryText = element.querySelector('.query-text');
+
+      expect(queryText?.textContent?.trim()).toBe('user query');
+    });
+
     it('should call renderGeneratedContentContainer with correct arguments', async () => {
       await renderComponent({
         isAnswerVisible: true,
@@ -195,6 +224,24 @@ describe('#renderAnswerContent', () => {
       });
 
       expect(renderFeedbackAndCopyButtonsSlot).toHaveBeenCalled();
+    });
+
+    it('should not render feedback and copy buttons when collapsed', async () => {
+      const renderFeedbackAndCopyButtonsSlot = vi.fn(() => html``);
+
+      await renderComponent({
+        collapsible: true,
+        renderFeedbackAndCopyButtonsSlot,
+        // @ts-expect-error Test fixture with partial mock
+        generatedAnswerState: {
+          answer: 'Test answer',
+          answerContentFormat: 'text/plain',
+          isStreaming: false,
+          expanded: false,
+        },
+      });
+
+      expect(renderFeedbackAndCopyButtonsSlot).not.toHaveBeenCalled();
     });
 
     it('should call renderCitationsSlot', async () => {
@@ -430,5 +477,16 @@ describe('#renderAnswerContent', () => {
 
       expect(renderDisclaimer).not.toHaveBeenCalled();
     });
+  });
+
+  it('should not render feedback and copy buttons when there is a retryable error', async () => {
+    const renderFeedbackAndCopyButtonsSlot = vi.fn(() => html``);
+
+    await renderComponent({
+      hasRetryableError: true,
+      renderFeedbackAndCopyButtonsSlot,
+    });
+
+    expect(renderFeedbackAndCopyButtonsSlot).not.toHaveBeenCalled();
   });
 });
