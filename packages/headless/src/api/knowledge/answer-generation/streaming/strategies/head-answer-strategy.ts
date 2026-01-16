@@ -107,7 +107,7 @@ export const headAnswerStrategy: StreamingStrategy<
         dispatch(logGeneratedAnswerResponseLinked());
       },
       error: (message, updateCachedData) => {
-        if (message.finishReason === 'ERROR' && message.errorMessage) {
+        if (message.finishReason === 'ERROR') {
           updateCachedData((draft) => {
             handleError(draft, message);
           });
