@@ -20,7 +20,9 @@ import type {InitializableComponent} from '@/src/decorators/types';
 import {randomID} from '@/src/utils/utils';
 import '@/src/components/common/atomic-smart-snippet-collapse-wrapper/atomic-smart-snippet-collapse-wrapper';
 import '@/src/components/common/atomic-smart-snippet-expandable-answer/atomic-smart-snippet-expandable-answer';
+import '@/src/components/common/atomic-smart-snippet-source/atomic-smart-snippet-source';
 import {when} from 'lit/directives/when.js';
+import type {AtomicInsightSmartSnippetFeedbackModal} from '@/src/components/insight/atomic-insight-smart-snippet-feedback-modal/atomic-insight-smart-snippet-feedback-modal';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import styles from './atomic-insight-smart-snippet.tw.css.js';
 
@@ -62,7 +64,7 @@ export class AtomicInsightSmartSnippet
   @state() private feedbackSent = false;
 
   private smartSnippetId!: string;
-  private modalRef?: HTMLAtomicInsightSmartSnippetFeedbackModalElement;
+  private modalRef?: AtomicInsightSmartSnippetFeedbackModal;
   private feedbackSentHandler = () => {
     this.feedbackSent = true;
   };
