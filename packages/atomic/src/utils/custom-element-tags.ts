@@ -12,6 +12,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-automatic-facet-generator',
   'atomic-breadbox',
   'atomic-category-facet',
+  'atomic-citation',
   'atomic-color-facet',
   'atomic-commerce-breadbox',
   'atomic-commerce-category-facet',
@@ -67,7 +68,10 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-insight-pager',
   'atomic-insight-query-error',
   'atomic-insight-query-summary',
+  'atomic-insight-refine-toggle',
   'atomic-insight-result-template',
+  'atomic-insight-search-box',
+  'atomic-insight-smart-snippet-feedback-modal',
   'atomic-insight-tab',
   'atomic-insight-tabs',
   'atomic-insight-user-actions-toggle',
@@ -171,6 +175,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-table-element',
   'atomic-text',
   'atomic-timeframe',
+  'atomic-timeframe-facet',
 ]);
 
 /**
