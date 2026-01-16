@@ -12,21 +12,17 @@ test.describe('atomic-recs-interface', () => {
       const beforeInitError =
         'You have to call "initialize" on the atomic-recs-interface component before modifying the props or calling other public methods.';
 
-      let errorMessage = '';
-
+      const consoleErrors: string[] = [];
       page.on('console', (msg) => {
         if (msg.type() === 'error') {
-          errorMessage = msg.text();
+          consoleErrors.push(msg.text());
         }
       });
+      page.on('pageerror', (err) => consoleErrors.push(err.message));
 
-      await page.waitForEvent('console', {
-        predicate: (msg) =>
-          msg.type() === 'error' && msg.text().includes(beforeInitError),
-        timeout: 5000,
-      });
-
-      expect(errorMessage).toContain(beforeInitError);
+      await expect
+        .poll(() => consoleErrors.join('\n'))
+        .toContain(beforeInitError);
     });
   });
 

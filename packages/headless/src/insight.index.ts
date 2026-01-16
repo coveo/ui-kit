@@ -386,3 +386,4 @@ export {
 } from './features/sort-criteria/criteria.js';
 
 export type {PlatformEnvironment} from './utils/url-utils.js';
+export {VERSION} from './utils/version.js';
