@@ -120,7 +120,7 @@ const meta: Meta = {
                   display: inline-block;
                   padding: 4px 12px;
                   background-color: #e3f2fd;
-                  color: #1976d2;
+                  color: #145EA9;
                   border-radius: 12px;
                   font-size: 0.75rem;
                   font-weight: 500;
