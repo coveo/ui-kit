@@ -10,7 +10,7 @@ import {
   SafeStorage,
   StorageItems,
 } from '@/src/utils/local-storage-utils';
-import type {AtomicGeneratedAnswerFeedbackModal} from './atomic-generated-answer-feedback/atomic-generated-answer-feedback-modal';
+import type {AtomicGeneratedAnswerFeedbackModal} from '../atomic-generated-answer-feedback-modal/atomic-generated-answer-feedback-modal';
 
 export interface GeneratedAnswerControllerOptions {
   withToggle?: boolean;

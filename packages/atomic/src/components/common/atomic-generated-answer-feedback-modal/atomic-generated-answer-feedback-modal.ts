@@ -22,8 +22,8 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {multiClassMap} from '@/src/directives/multi-class-map';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {once, randomID} from '@/src/utils/utils';
-import CloseIcon from '../../../../images/close.svg';
-import Success from '../../../../images/success.svg';
+import CloseIcon from '../../../images/close.svg';
+import Success from '../../../images/success.svg';
 
 /**
  * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
@@ -119,7 +119,10 @@ export class AtomicGeneratedAnswerFeedbackModal
   ];
 
   @watch('isOpen')
-  watchToggleOpen(_oldValue: boolean | undefined, newValue: boolean | undefined) {
+  watchToggleOpen(
+    _oldValue: boolean | undefined,
+    newValue: boolean | undefined
+  ) {
     if (newValue) {
       this.generatedAnswer.openFeedbackModal();
     }
@@ -279,7 +282,7 @@ export class AtomicGeneratedAnswerFeedbackModal
               <div
                 class=${multiClassMap({
                   'answer-evaluation mt-3 flex items-center': true,
-                  [String(correspondingAnswer)]: true
+                  [String(correspondingAnswer)]: true,
                 })}
                 key=${String(correspondingAnswer)}
               >
@@ -312,7 +315,7 @@ export class AtomicGeneratedAnswerFeedbackModal
           ${ref(this.linkInputRef)}
           placeholder="https://URL"
           class=${multiClassMap({
-            'input-primary placeholder-neutral-dark mt-4 h-9 w-full rounded-md px-4': true
+            'input-primary placeholder-neutral-dark mt-4 h-9 w-full rounded-md px-4': true,
           })}
           @change=${(e: Event) =>
             this.setCurrentAnswer(
@@ -334,7 +337,7 @@ export class AtomicGeneratedAnswerFeedbackModal
           name="answer-details"
           ${ref(this.detailsInputRef)}
           class=${multiClassMap({
-            'placeholder-neutral-dark border-neutral hover:border-primary-light focus-visible:border-primary mt-4 w-full resize-none rounded-md border px-4 py-2 leading-5 focus:outline-hidden focus-visible:ring-2': true
+            'placeholder-neutral-dark border-neutral hover:border-primary-light focus-visible:border-primary mt-4 w-full resize-none rounded-md border px-4 py-2 leading-5 focus:outline-hidden focus-visible:ring-2': true,
           })}
           rows="4"
           placeholder=${this.bindings.i18n.t('add-notes')}
