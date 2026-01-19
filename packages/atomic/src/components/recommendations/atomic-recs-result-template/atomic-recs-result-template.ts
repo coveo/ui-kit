@@ -3,7 +3,7 @@ import {
   type ResultTemplateCondition as RecsResultTemplateCondition,
   ResultTemplatesHelpers,
 } from '@coveo/headless/recommendation';
-import {html, LitElement, nothing} from 'lit';
+import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {RecsResultTemplateController} from '@/src/components/common/result-templates/recs-result-template-controller';
 import {makeMatchConditions} from '@/src/components/common/template-controller/template-utils';
@@ -13,6 +13,7 @@ import '@/src/components/common/atomic-component-error/atomic-component-error';
 import {arrayConverter} from '@/src/converters/array-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
+import '../atomic-recs-result/atomic-recs-result';
 
 /**
  * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
@@ -86,7 +87,7 @@ export class AtomicRecsResultTemplate
 
   @errorGuard()
   render() {
-    return html`${nothing}`;
+    return nothing;
   }
 
   /**

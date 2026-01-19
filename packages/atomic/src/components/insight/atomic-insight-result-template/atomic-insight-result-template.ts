@@ -3,7 +3,7 @@ import type {
   ResultTemplateCondition as InsightResultTemplateCondition,
 } from '@coveo/headless/insight';
 import {ResultTemplatesHelpers as InsightResultTemplatesHelpers} from '@coveo/headless/insight';
-import {html, LitElement, nothing} from 'lit';
+import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ResultTemplateController} from '@/src/components/common/result-templates/result-template-controller';
 import {makeMatchConditions} from '@/src/components/common/template-controller/template-utils';
@@ -84,7 +84,7 @@ export class AtomicInsightResultTemplate
 
   @errorGuard()
   render() {
-    return html`${nothing}`;
+    return nothing;
   }
 
   /**

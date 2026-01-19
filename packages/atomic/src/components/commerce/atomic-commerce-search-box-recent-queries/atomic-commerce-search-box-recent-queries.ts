@@ -3,7 +3,7 @@ import {
   type RecentQueriesList,
   type SearchBox,
 } from '@coveo/headless/commerce';
-import {html, LitElement, nothing} from 'lit';
+import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
@@ -187,7 +187,7 @@ export class AtomicCommerceSearchBoxRecentQueries
 
   @errorGuard()
   render() {
-    return html`${nothing}`;
+    return nothing;
   }
 }
 
