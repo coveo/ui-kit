@@ -42,7 +42,6 @@ For a detailed breakdown of how to configure a Search engine, please refer to th
           getSampleSearchEngineConfiguration
         } = await import('https://static.cloud.coveo.com/headless/v3/headless.esm.js');
 
-
         await customElements.whenDefined('atomic-search-interface');
         const searchInterface = document.querySelector('atomic-search-interface');
         await searchInterface.initialize(getSampleSearchEngineConfiguration());
@@ -108,3 +107,4 @@ If you are looking to implement Coveo in a framework, you can find reference cod
 * [NextJS - Search (using Pages router)](https://github.com/coveo/ui-kit/tree/main/samples/atomic/search-nextjs-pages-router)
 * [Stencil - Search](https://github.com/coveo/ui-kit/tree/main/samples/atomic/search-stencil)
 * [Vue - Search](https://github.com/coveo/ui-kit/tree/main/samples/atomic/search-vuejs)
+
