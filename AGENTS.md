@@ -67,13 +67,32 @@ Coding standards are in `.github/instructions/*.instructions.md`. Each file has 
 ## Agent Skills
 
 Agent-discoverable capabilities are in `.claude/skills/`. Skills follow the [agentskills.io](https://agentskills.io) open standard and contain domain-specific knowledge that agents can discover and load on demand.
+### Available Skills
 
-**Use these skills when:**
+- `querying-knowledge-graph` - Analyzing component architecture, dependencies, or relationships using the knowledge graph MCP server
 - `applying-wcag-guidelines` - Creating or modifying UI components or reviewing accessibility
 - `creating-agents` - Building role-based workflows (planner, reviewer, architect) or guided multi-agent sequences
 - `creating-instructions` - Defining coding standards, conventions, or context that should automatically apply to specific file patterns
 - `creating-prompts` - Building repeatable tasks users trigger manually
 - `creating-skills` - Building agent-discoverable capabilities with scripts, references, or assets
+- `creating-stories` - Creating or modifying Storybook stories for Atomic components
+
+### Skill Trigger Patterns
+
+Match user questions against these patterns to identify the right skill:
+
+| User Question Pattern | Skill to Use |
+|----------------------|--------------|
+| "what actions does X dispatch/call" | `querying-knowledge-graph` |
+| "trace dispatched actions (incl. analytics/states)" | `querying-knowledge-graph` |
+| "what uses/depends on X" | `querying-knowledge-graph` |
+| "trace dependencies/relationships" | `querying-knowledge-graph` |
+| "find all components that use X" | `querying-knowledge-graph` |
+| "create/modify story" | `creating-stories` |
+| "accessibility/WCAG/a11y/screen readers" | `applying-wcag-guidelines` |
+| "create prompt/workflow" | `creating-prompts` |
+| "create agent/persona" | `creating-agents` |
+| "create instruction/standard" | `creating-instructions` |
 
 ## Common Workflows
 
