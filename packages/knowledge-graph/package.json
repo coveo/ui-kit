@@ -1,0 +1,24 @@
+{
+  "name": "@coveo/knowledge-graph",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "generate": "node dist/bin/generate-graph.js",
+    "import:graph": "node dist/bin/import-to-memgraph.js",
+    "server": "node dist/bin/mcp-server.js",
+    "test": "vitest run",
+    "analyze": "node dist/bin/analyze-queries.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "glob": "^11.0.0",
+    "neo4j-driver": "^5.27.0",
+    "ts-morph": "^24.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^2.0.0"
+  }
+}

@@ -25,7 +25,12 @@
     "release:phase2": "pnpm --filter @coveo/ci bump:root",
     "release:phase3": "turbo release:phase3 --concurrency=1",
     "release:phase4": "pnpm --filter @coveo/ci git-publish-all",
-    "knip": "knip"
+    "knip": "knip",
+    "kg:generate": "pnpm --filter @coveo/knowledge-graph run generate",
+    "kg:import": "pnpm --filter @coveo/knowledge-graph run import:graph",
+    "kg:server": "pnpm --filter @coveo/knowledge-graph run server",
+    "kg:update": "pnpm --filter @coveo/knowledge-graph run generate && pnpm --filter @coveo/knowledge-graph run import:graph",
+    "kg:lab": "open http://localhost:3000"
   },
   "devDependencies": {
     "@actions/core": "1.11.1",

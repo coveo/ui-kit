@@ -21,12 +21,14 @@ packages:
   - 'packages/create-atomic-rollup-plugin'
   - 'packages/create-atomic-result-component'
   - 'packages/create-atomic-result-component/template/src/components/sample-result-component'
+  - 'packages/knowledge-graph'
   - 'samples/atomic/*'
   - 'samples/headless/*'
   - 'samples/headless-ssr/*'
   - 'samples/headless-ssr/search-nextjs/*'
   - 'utils/cdn'
   - 'utils/ci'
+  - 'scripts/knowledge-graph'
 
 catalog:
   '@coveo/create-atomic-rollup-plugin': 1.2.1
