@@ -45,17 +45,89 @@ export class AtomicGeneratedAnswerFeedbackModal
   extends LitElement
   implements InitializableComponent<AnyBindings>
 {
+  private static options: {
+    localeKey: string;
+    correspondingAnswer: keyof GeneratedAnswerFeedback;
+  }[] = [
+    {
+      localeKey: 'feedback-correct-topic',
+      correspondingAnswer: 'correctTopic',
+    },
+    {
+      localeKey: 'feedback-hallucination-free',
+      correspondingAnswer: 'hallucinationFree',
+    },
+    {
+      localeKey: 'feedback-documented',
+      correspondingAnswer: 'documented',
+    },
+    {
+      localeKey: 'feedback-readable',
+      correspondingAnswer: 'readable',
+    },
+  ];
+
   static styles = css`
-    @reference '../../../../utils/tailwind.global.tw.css';
+    @utility mobile-feedback-modal {
+      &::part(container) {
+        @apply w-auto min-w-full;
+      }
+
+      &::part(header),
+      &::part(body),
+      &::part(footer) {
+        @apply max-w-full;
+      }
+      [part='buttons'] {
+        .required-label {
+          @apply text-sm;
+        }
+      }
+      [part='form'] {
+        .answer-evaluation {
+          @apply block;
+        }
+
+        .options {
+          @apply mt-2;
+        }
+      }
+      [part='modal-header'] {
+        .hide {
+          @apply hidden;
+        }
+      }
+    }
+
+    [part='generated-answer-feedback-modal'] {
+      &::part(container) {
+        @apply min-w-170;
+      }
+
+      &::part(header),
+      &::part(body),
+      &::part(footer) {
+        @apply max-w-170;
+      }
+
+      @media not all and (width >= theme(--breakpoint-desktop)) {
+        @apply mobile-feedback-modal;
+      }
+    }
+
+    [part='form'] {
+      .active {
+        @apply border-primary-light text-primary-light bg-primary-background;
+      }
+      .text-error-red {
+        @apply text-inline-code;
+      }
+      .required {
+        @apply flex;
+      }
+    }
   `;
 
-  @state()
-  bindings!: AnyBindings;
-
-  @state()
-  error!: Error;
-
-  initialize() {}
   /**
    * Indicates whether the modal is open.
    */
@@ -80,6 +152,12 @@ export class AtomicGeneratedAnswerFeedbackModal
   helpful = false;
 
   @state()
+  bindings!: AnyBindings;
+
+  @state()
+  error!: Error;
+
+  @state()
   private currentAnswer: Partial<GeneratedAnswerFeedback> =
     this.getInitialAnswerState();
 
@@ -96,27 +174,7 @@ export class AtomicGeneratedAnswerFeedbackModal
   private linkInputRef: Ref<HTMLInputElement> = createRef();
   private updateBreakpoints = once(() => updateBreakpoints(this));
 
-  private static options: {
-    localeKey: string;
-    correspondingAnswer: keyof GeneratedAnswerFeedback;
-  }[] = [
-    {
-      localeKey: 'feedback-correct-topic',
-      correspondingAnswer: 'correctTopic',
-    },
-    {
-      localeKey: 'feedback-hallucination-free',
-      correspondingAnswer: 'hallucinationFree',
-    },
-    {
-      localeKey: 'feedback-documented',
-      correspondingAnswer: 'documented',
-    },
-    {
-      localeKey: 'feedback-readable',
-      correspondingAnswer: 'readable',
-    },
-  ];
+  initialize() {}
 
   @watch('isOpen')
   watchToggleOpen(
@@ -392,7 +450,7 @@ export class AtomicGeneratedAnswerFeedbackModal
       <div slot="footer" part="modal-footer">
         <div class=${multiClassMap({'flex items-center justify-between': true})}>
           <div class=${multiClassMap({'required-label text-base': true})}>
-            <span class=${multiClassMap({'text-error-red mr-0.5': true})}>*</span>
+            <span class=${multiClassMap({'text-error mr-0.5': true})}>*</span>
             ${this.bindings.i18n.t('required-fields')}
           </div>
           <div class=${multiClassMap({'flex gap-2': true})}>
