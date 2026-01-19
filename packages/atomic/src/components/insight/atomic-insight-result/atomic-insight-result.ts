@@ -41,7 +41,7 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
   private itemLayoutController!: ItemLayoutController;
 
   static styles: CSSResultGroup = css`
-    @import '../../common/template-system/template-system.pcss';
+    @import '../../common/template-system/legacy-template-system.css';
 
     :host {
       @apply atomic-template-system;
