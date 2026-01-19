@@ -18,14 +18,20 @@ const defaultTemplateContent = `
   </template>
 `;
 
-const templateContentWithSections = `<atomic-result-section-name>
-  <atomic-result-link class="font-bold"></atomic-result-link>
-</atomic-result-section-name>
-<atomic-result-section-visual>
-  <atomic-result-field-condition if-defined="ec_thumbnails">
-    <atomic-result-image field="ec_thumbnails"></atomic-result-image>
-  </atomic-result-field-condition>
-</atomic-result-section-visual>`;
+const templateContentWithSections = `
+<atomic-result-section-badges>
+  <atomic-result-badge
+    class="badge-documenttype"
+    field="documenttype"
+  >
+  </atomic-result-badge>
+</atomic-result-section-badges>
+<atomic-result-section-title>
+  <atomic-result-link>
+    <a slot="attributes" target="_self"></a>
+  </atomic-result-link>
+</atomic-result-section-title>
+`;
 
 const renderTemplateContent = (templateHtml: string) => {
   const template = document.createElement('template');
