@@ -14,22 +14,13 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
-import fs from 'fs';
 import type {Driver, Record as Neo4jRecord, Session} from 'neo4j-driver';
 import neo4j from 'neo4j-driver';
-import path from 'path';
-import {fileURLToPath} from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Memgraph connection (uses Bolt protocol, same as Neo4j)
 const MEMGRAPH_URI = process.env.MEMGRAPH_URI || 'bolt://localhost:7687';
 const MEMGRAPH_USER = process.env.MEMGRAPH_USER || '';
 const MEMGRAPH_PASSWORD = process.env.MEMGRAPH_PASSWORD || '';
-
-// Query logging
-const QUERY_LOG_PATH = path.join(__dirname, '../../../../query-log.jsonl');
 
 let driver: Driver;
 let isConnected = false;
@@ -103,7 +94,7 @@ async function executeQuery(
     const duration = Date.now() - startTime;
     await session.close();
 
-    // Log query execution
+    // Log query execution (async, don't await to avoid blocking)
     logQuery({
       timestamp: new Date().toISOString(),
       query,
@@ -112,19 +103,49 @@ async function executeQuery(
       error,
       resultCount: results.length,
       duration,
+    }).catch(() => {
+      // Ignore logging errors
     });
   }
 }
 
 /**
- * Log query to JSONL file
+ * Log query to Memgraph
  */
-function logQuery(logEntry: QueryLogEntry): void {
+async function logQuery(logEntry: QueryLogEntry): Promise<void> {
+  if (!isConnected) {
+    return;
+  }
+
+  const session = driver.session();
   try {
-    const logLine = `${JSON.stringify(logEntry)}\n`;
-    fs.appendFileSync(QUERY_LOG_PATH, logLine);
+    await session.run(
+      `
+      CREATE (log:QueryLog {
+        timestamp: $timestamp,
+        query: $query,
+        params: $params,
+        success: $success,
+        error: $error,
+        resultCount: $resultCount,
+        duration: $duration
+      })
+      `,
+      {
+        timestamp: logEntry.timestamp,
+        query: logEntry.query,
+        params: JSON.stringify(logEntry.params),
+        success: logEntry.success,
+        error: logEntry.error,
+        resultCount: logEntry.resultCount,
+        duration: logEntry.duration,
+      }
+    );
   } catch (err) {
-    console.error('Failed to log query:', (err as Error).message);
+    // Silently fail - don't disrupt query execution due to logging issues
+    console.error('Failed to log query to Memgraph:', (err as Error).message);
+  } finally {
+    await session.close();
   }
 }
 
@@ -638,26 +659,44 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case 'get_query_stats': {
         try {
-          const logs: QueryLogEntry[] = fs
-            .readFileSync(QUERY_LOG_PATH, 'utf-8')
-            .trim()
-            .split('\n')
-            .filter((line) => line.length > 0)
-            .map((line) => JSON.parse(line))
-            .slice(-((args as {limit?: number}).limit || 100));
+          const limit = (args as {limit?: number}).limit || 100;
+
+          // Get recent query logs from Memgraph
+          const logsQuery = `
+            MATCH (log:QueryLog)
+            RETURN log
+            ORDER BY log.timestamp DESC
+            LIMIT ${limit}
+          `;
+          const logResults = await executeQuery(logsQuery, {});
+
+          const logs = logResults.map((r: Record<string, unknown>) => {
+            const log = r.log as Record<string, unknown>;
+            return {
+              params: JSON.parse((log.params as string) || '{}'),
+              success: log.success as boolean,
+              error: log.error as string | null,
+              resultCount: log.resultCount as number,
+              duration: log.duration as number,
+            };
+          });
 
           const stats = {
             totalQueries: logs.length,
             successfulQueries: logs.filter((l) => l.success).length,
             failedQueries: logs.filter((l) => !l.success).length,
             avgDuration:
-              logs.reduce((sum, l) => sum + l.duration, 0) / logs.length,
+              logs.length > 0
+                ? logs.reduce((sum, l) => sum + l.duration, 0) / logs.length
+                : 0,
             avgResultCount:
-              logs.reduce((sum, l) => sum + (l.resultCount || 0), 0) /
-              logs.length,
+              logs.length > 0
+                ? logs.reduce((sum, l) => sum + (l.resultCount || 0), 0) /
+                  logs.length
+                : 0,
             recentFailures: logs
               .filter((l) => !l.success)
-              .slice(-5)
+              .slice(0, 5)
               .map((l) => ({
                 timestamp: l.timestamp,
                 query: l.query.substring(0, 100),
@@ -686,7 +725,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             content: [
               {
                 type: 'text',
-                text: `No query log found or error reading log: ${(err as Error).message}`,
+                text: `Error reading query logs: ${(err as Error).message}`,
               },
             ],
           };
@@ -695,24 +734,38 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case 'export_query_log': {
         try {
-          const logs: QueryLogEntry[] = fs
-            .readFileSync(QUERY_LOG_PATH, 'utf-8')
-            .trim()
-            .split('\n')
-            .filter((line) => line.length > 0)
-            .map((line) => JSON.parse(line));
+          const since = (args as {since?: string}).since;
 
-          let filtered = logs;
-          if ((args as {since?: string}).since) {
-            const sinceDate = new Date((args as {since: string}).since);
-            filtered = logs.filter((l) => new Date(l.timestamp) >= sinceDate);
-          }
+          const logsQuery = `
+            MATCH (log:QueryLog)
+            ${since ? 'WHERE log.timestamp >= $since' : ''}
+            RETURN log
+            ORDER BY log.timestamp DESC
+          `;
+
+          const logResults = await executeQuery(
+            logsQuery,
+            since ? {since} : {}
+          );
+
+          const logs = logResults.map((r: Record<string, unknown>) => {
+            const log = r.log as Record<string, unknown>;
+            return {
+              timestamp: log.timestamp as string,
+              query: log.query as string,
+              params: JSON.parse((log.params as string) || '{}'),
+              success: log.success as boolean,
+              error: log.error as string | null,
+              resultCount: log.resultCount as number,
+              duration: log.duration as number,
+            };
+          });
 
           return {
             content: [
               {
                 type: 'text',
-                text: JSON.stringify(filtered, null, 2),
+                text: JSON.stringify(logs, null, 2),
               },
             ],
           };
@@ -721,7 +774,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             content: [
               {
                 type: 'text',
-                text: `No query log found or error reading log: ${(err as Error).message}`,
+                text: `Error exporting query logs: ${(err as Error).message}`,
               },
             ],
           };
