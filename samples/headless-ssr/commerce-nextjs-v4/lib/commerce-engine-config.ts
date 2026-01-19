@@ -6,6 +6,7 @@ import {
   defineInstantProducts,
   defineNotifyTrigger,
   definePagination,
+  defineProductEnrichment,
   defineProductList,
   defineProductView,
   defineQueryTrigger,
@@ -58,5 +59,6 @@ export default {
     didYouMean: defineDidYouMean(),
     facetGenerator: defineFacetGenerator(),
     breadcrumbManager: defineBreadcrumbManager(),
+    productEnrichment: defineProductEnrichment(),
   },
 } satisfies CommerceEngineDefinitionOptions;
