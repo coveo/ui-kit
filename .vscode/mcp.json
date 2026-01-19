@@ -16,6 +16,14 @@
     "storybook": {
       "type": "http",
       "url": "http://localhost:4400/mcp"
+    },
+    "ui-kit-knowledge-graph": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["packages/knowledge-graph/dist/bin/mcp-server.js"],
+      "env": {
+        "MEMGRAPH_URI": "bolt://localhost:7687"
+      }
     }
   }
 }
