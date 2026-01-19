@@ -562,7 +562,6 @@ export class AtomicGeneratedAnswer
       props: {
         i18n: this.bindings.i18n,
         generatedAnswerState: this.generatedAnswerState,
-        withToggle: this.withToggle,
         copied: this.copied,
         copyError: this.copyError,
         getCopyToClipboardTooltip: () => this.copyToClipboardTooltip,
@@ -583,6 +582,7 @@ export class AtomicGeneratedAnswer
         toggleTooltip: this.toggleTooltip,
         withToggle: this.withToggle,
         collapsible: this.collapsible,
+        query: this.bindings.engine.state.query?.q ?? '',
         renderFeedbackAndCopyButtonsSlot: () =>
           this.renderFeedbackAndCopyButtonsWrapper(),
         renderCitationsSlot: () => html`${this.renderCitationsList()}`,

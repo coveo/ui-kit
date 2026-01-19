@@ -58,6 +58,7 @@ describe('#renderAnswerContent', () => {
       toggleTooltip: 'Toggle answer',
       withToggle: false,
       collapsible: false,
+      query: '',
       renderFeedbackAndCopyButtonsSlot: () => html``,
       renderCitationsSlot: () => html``,
       onToggle: vi.fn(),
@@ -178,15 +179,15 @@ describe('#renderAnswerContent', () => {
   });
 
   describe('when answer is visible and no retryable error', () => {
-    it('should display the latest query from state', async () => {
+    it('should display the latest query from props', async () => {
       const {element} = await renderComponent({
+        query: '  user query  ',
         // @ts-expect-error Test fixture with partial mock
         generatedAnswerState: {
           answer: 'Test answer',
           answerContentFormat: 'text/plain',
           isStreaming: false,
           expanded: true,
-          answerApiQueryParams: {q: '  user query  '},
         },
       });
 

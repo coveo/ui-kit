@@ -13,10 +13,8 @@ const styles = css`
     color: var(--atomic-error);
   }
 
-  [part='copy-button'] .icon-container atomic-icon {
+  [part='copy-button'] .icon-container {
     line-height: 0;
-    width: 1.25rem;
-    height: 1.25rem;
   }
 `;
 

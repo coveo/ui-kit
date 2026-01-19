@@ -11,7 +11,6 @@ import {hasClipboardSupport} from './generated-answer-utils';
 export interface RenderFeedbackAndCopyButtonsProps {
   i18n: i18n;
   generatedAnswerState: GeneratedAnswerState | undefined;
-  withToggle?: boolean;
   copied: boolean;
   copyError: boolean;
   getCopyToClipboardTooltip: () => string;
