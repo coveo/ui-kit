@@ -6,7 +6,7 @@ import type {
 } from '@coveo/headless';
 import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {createRef, type Ref} from 'lit/directives/ref.js';
+import {createRef, type Ref, ref} from 'lit/directives/ref.js';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '@/src/components/common/atomic-modal/export-parts';
 import {renderButton} from '@/src/components/common/button';
 import {renderFieldsetGroup} from '@/src/components/common/fieldset-group';
@@ -19,7 +19,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {tw} from '@/src/directives/multi-class-map';
+import {multiClassMap} from '@/src/directives/multi-class-map';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {once, randomID} from '@/src/utils/utils';
 import CloseIcon from '../../../../images/close.svg';
@@ -55,6 +55,7 @@ export class AtomicGeneratedAnswerFeedbackModal
   @state()
   error!: Error;
 
+  initialize() {}
   /**
    * Indicates whether the modal is open.
    */
@@ -118,8 +119,8 @@ export class AtomicGeneratedAnswerFeedbackModal
   ];
 
   @watch('isOpen')
-  watchToggleOpen(isOpen: boolean) {
-    if (isOpen) {
+  watchToggleOpen(_oldValue: boolean | undefined, newValue: boolean | undefined) {
+    if (newValue) {
       this.generatedAnswer.openFeedbackModal();
     }
   }
@@ -196,11 +197,11 @@ export class AtomicGeneratedAnswerFeedbackModal
       <div
         slot="header"
         part="modal-header"
-        class=${tw('flex w-full items-center justify-between')}
+        class=${multiClassMap({'flex w-full items-center justify-between': true})}
       >
         <h1>
           <span>${this.bindings.i18n.t('feedback-modal-title')}</span>
-          <span class=${tw('hide ml-0.5')}>
+          <span class=${multiClassMap({'hide ml-0.5': true})}>
             ${this.bindings.i18n.t('additional-feedback')}
           </span>
         </h1>
@@ -230,14 +231,10 @@ export class AtomicGeneratedAnswerFeedbackModal
         groupName: this.bindings.i18n.t(correspondingAnswer),
         style: 'outline-neutral',
         checked: isSelected,
-        'aria-checked': isSelected,
         onChecked: () => {
           this.setCurrentAnswer(correspondingAnswer, option);
         },
-        class: tw(
-          'min-w-20 flex items-center justify-center px-3 py-1.5 mr-1 text-neutral-dark',
-          {active: isSelected}
-        ),
+        class: `min-w-20 flex items-center justify-center px-3 py-1.5 mr-1 text-neutral-dark ${isSelected ? 'active' : ''}`,
         text: this.bindings.i18n.t(option),
       },
     });
@@ -252,15 +249,15 @@ export class AtomicGeneratedAnswerFeedbackModal
       this.currentAnswer[correspondingAnswer] === undefined;
 
     return html`
-      <div class=${tw('block')}>
-        <div class=${tw('flex')}>
-          <label class=${tw('text-base')}>
+      <div class=${multiClassMap({block: true})}>
+        <div class=${multiClassMap({flex: true})}>
+          <label class=${multiClassMap({'text-base': true})}>
             ${this.bindings.i18n.t(label)}
-            <span class=${tw('text-error-red ml-0.5')}>*</span>
+            <span class=${multiClassMap({'text-error-red ml-0.5': true})}>*</span>
           </label>
         </div>
         <span
-          class=${tw('text-error-red text-sm hidden', {required: isRequired})}
+          class=${multiClassMap({'text-error-red text-sm hidden': true, required: isRequired})}
         >
           ${this.bindings.i18n.t('required-fields-error')}
         </span>
@@ -268,10 +265,10 @@ export class AtomicGeneratedAnswerFeedbackModal
     `;
   }
 
-  private renderOptions() {
+  private renderFeedbackOptions() {
     return html`
       <fieldset>
-        <legend class=${tw('font-bold')}>
+        <legend class=${multiClassMap({'font-bold': true})}>
           ${this.bindings.i18n.t('answer-evaluation')}
         </legend>
         ${AtomicGeneratedAnswerFeedbackModal.options.map(
@@ -280,17 +277,17 @@ export class AtomicGeneratedAnswerFeedbackModal
               props: {label: this.bindings.i18n.t(localeKey)},
             })(html`
               <div
-                class=${tw(
-                  'answer-evaluation mt-3 flex items-center',
-                  String(correspondingAnswer)
-                )}
+                class=${multiClassMap({
+                  'answer-evaluation mt-3 flex items-center': true,
+                  [String(correspondingAnswer)]: true
+                })}
                 key=${String(correspondingAnswer)}
               >
-                <div class=${tw('flex-1 pr-4')}>
+                <div class=${multiClassMap({'flex-1 pr-4': true})}>
                   ${this.renderAnswerEvaluation(localeKey, correspondingAnswer)}
                 </div>
                 <div
-                  class=${tw('options flex flex-shrink-0 text-base')}
+                  class=${multiClassMap({'options flex flex-shrink-0 text-base': true})}
                   aria-label=${this.bindings.i18n.t(localeKey)}
                 >
                   ${this.renderFeedbackOption('yes', correspondingAnswer)}
@@ -307,16 +304,16 @@ export class AtomicGeneratedAnswerFeedbackModal
   private renderLinkToCorrectAnswerField() {
     return html`
       <fieldset>
-        <legend class=${tw('font-bold')}>
+        <legend class=${multiClassMap({'font-bold': true})}>
           ${this.bindings.i18n.t('generated-answer-feedback-link')}
         </legend>
         <input
           type="text"
           ${ref(this.linkInputRef)}
           placeholder="https://URL"
-          class=${tw(
-            'input-primary placeholder-neutral-dark mt-4 h-9 w-full rounded-md px-4'
-          )}
+          class=${multiClassMap({
+            'input-primary placeholder-neutral-dark mt-4 h-9 w-full rounded-md px-4': true
+          })}
           @change=${(e: Event) =>
             this.setCurrentAnswer(
               'documentUrl',
@@ -330,15 +327,15 @@ export class AtomicGeneratedAnswerFeedbackModal
   private renderAddNotesField() {
     return html`
       <fieldset>
-        <legend class=${tw('mt-8 font-bold')}>
+        <legend class=${multiClassMap({'mt-8 font-bold': true})}>
           ${this.bindings.i18n.t('generated-answer-additional-notes')}
         </legend>
         <textarea
           name="answer-details"
           ${ref(this.detailsInputRef)}
-          class=${tw(
-            'placeholder-neutral-dark border-neutral hover:border-primary-light focus-visible:border-primary mt-4 w-full resize-none rounded-md border px-4 py-2 leading-5 focus:outline-hidden focus-visible:ring-2'
-          )}
+          class=${multiClassMap({
+            'placeholder-neutral-dark border-neutral hover:border-primary-light focus-visible:border-primary mt-4 w-full resize-none rounded-md border px-4 py-2 leading-5 focus:outline-hidden focus-visible:ring-2': true
+          })}
           rows="4"
           placeholder=${this.bindings.i18n.t('add-notes')}
           @change=${(e: Event) =>
@@ -358,9 +355,9 @@ export class AtomicGeneratedAnswerFeedbackModal
         id=${this.formId}
         slot="body"
         @submit=${(e: Event) => this.handleSubmit(e)}
-        class=${tw('flex flex-col gap-8 leading-4')}
+        class=${multiClassMap({'flex flex-col gap-8 leading-4': true})}
       >
-        ${this.renderOptions()} ${this.renderLinkToCorrectAnswerField()}
+        ${this.renderFeedbackOptions()} ${this.renderLinkToCorrectAnswerField()}
         ${this.renderAddNotesField()}
       </form>
     `;
@@ -368,9 +365,9 @@ export class AtomicGeneratedAnswerFeedbackModal
 
   private renderSuccessMessage() {
     return html`
-      <div slot="body" class=${tw('my-4 flex flex-col items-center gap-4')}>
-        <atomic-icon icon=${Success} class=${tw('w-48')}></atomic-icon>
-        <p class=${tw('text-base')}>
+      <div slot="body" class=${multiClassMap({'my-4 flex flex-col items-center gap-4': true})}>
+        <atomic-icon icon=${Success} class=${multiClassMap({'w-48': true})}></atomic-icon>
+        <p class=${multiClassMap({'text-base': true})}>
           ${this.bindings.i18n.t('generated-answer-feedback-success')}
         </p>
       </div>
@@ -390,12 +387,12 @@ export class AtomicGeneratedAnswerFeedbackModal
 
     return html`
       <div slot="footer" part="modal-footer">
-        <div class=${tw('flex items-center justify-between')}>
-          <div class=${tw('required-label text-base')}>
-            <span class=${tw('text-error mr-0.5')}>*</span>
+        <div class=${multiClassMap({'flex items-center justify-between': true})}>
+          <div class=${multiClassMap({'required-label text-base': true})}>
+            <span class=${multiClassMap({'text-error-red mr-0.5': true})}>*</span>
             ${this.bindings.i18n.t('required-fields')}
           </div>
-          <div class=${tw('flex gap-2')}>
+          <div class=${multiClassMap({'flex gap-2': true})}>
             ${renderButton({
               props: {
                 part: 'cancel-button',
@@ -426,7 +423,7 @@ export class AtomicGeneratedAnswerFeedbackModal
   private renderSuccessFormFooter() {
     return html`
       <div slot="footer">
-        <div class=${tw('flex justify-end gap-2 p-2')}>
+        <div class=${multiClassMap({'flex justify-end gap-2 p-2': true})}>
           ${renderButton({
             props: {
               part: 'cancel-button',
