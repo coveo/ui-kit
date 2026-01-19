@@ -53,7 +53,11 @@ export class ControllerBuilder<
 
   private buildWithoutProps(): TController {
     const buildFn = this._definition.build!;
-    return buildFn(this._engine, ...this._additionalArgs);
+    const controller = buildFn(this._engine, ...this._additionalArgs);
+
+    controller.subscribe = controller.subscribe.bind(controller);
+
+    return controller;
   }
 
   private buildWithProps(): TController {
@@ -64,6 +68,23 @@ export class ControllerBuilder<
       ...this._additionalArgs
     );
 
-    return {...controller, initialState: controller.state} as TController;
+    const controllerWithInitialState = Object.create(
+      Object.getPrototypeOf(controller),
+      {
+        ...Object.getOwnPropertyDescriptors(controller),
+        initialState: {
+          value: controller.state,
+          writable: false,
+          enumerable: true,
+          configurable: false,
+        },
+      }
+    );
+
+    controllerWithInitialState.subscribe = controller.subscribe.bind(
+      controllerWithInitialState
+    );
+
+    return controllerWithInitialState as TController;
   }
 }
