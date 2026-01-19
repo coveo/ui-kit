@@ -1,4 +1,4 @@
-import {html} from 'lit';
+import {html, nothing} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {type RefOrCallback, ref} from 'lit/directives/ref.js';
 import type {ItemTarget} from '@/src/components/common/layout/item-layout-utils';
@@ -82,7 +82,7 @@ export const renderLinkWithItemAnalytics: FunctionalComponentWithChildren<
             });
           }
         })}
-        ${ref(refCallback)}
+        ${refCallback ? ref(refCallback) : nothing}
         tabindex=${ifDefined(tabIndex)}
         @mouseover=${onMouseOver}
         @mouseleave=${onMouseLeave}
