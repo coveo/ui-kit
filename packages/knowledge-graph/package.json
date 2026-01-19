@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "generate": "node dist/bin/generate-graph.js",
-    "import:graph": "node dist/bin/import-to-memgraph.js",
-    "server": "node dist/bin/mcp-server.js",
+    "generate": "node dist/commands/generate-graph.js",
+    "import:graph": "node dist/commands/import-to-memgraph.js",
+    "server": "node dist/commands/mcp-server.js",
     "test": "vitest run",
-    "analyze": "node dist/bin/analyze-queries.js"
+    "analyze": "node dist/commands/analyze-queries.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
