@@ -6,6 +6,45 @@ settings:
 
 catalogs:
   default:
+    '@angular-devkit/build-angular':
+      specifier: 20.3.13
+      version: 20.3.13
+    '@angular/animations':
+      specifier: 20.3.16
+      version: 20.3.16
+    '@angular/build':
+      specifier: 20.3.13
+      version: 20.3.13
+    '@angular/cli':
+      specifier: 20.3.13
+      version: 20.3.13
+    '@angular/common':
+      specifier: 20.3.16
+      version: 20.3.16
+    '@angular/compiler':
+      specifier: 20.3.16
+      version: 20.3.16
+    '@angular/compiler-cli':
+      specifier: 20.3.16
+      version: 20.3.16
+    '@angular/core':
+      specifier: 20.3.16
+      version: 20.3.16
+    '@angular/forms':
+      specifier: 20.3.16
+      version: 20.3.16
+    '@angular/platform-browser':
+      specifier: 20.3.16
+      version: 20.3.16
+    '@angular/platform-browser-dynamic':
+      specifier: 20.3.16
+      version: 20.3.16
+    '@angular/platform-server':
+      specifier: 20.3.16
+      version: 20.3.16
+    '@angular/router':
+      specifier: 20.3.16
+      version: 20.3.16
     '@coveo/relay-event-types':
       specifier: 15.1.0
       version: 15.1.0
@@ -422,13 +461,13 @@ importers:
         version: 7.8.2
     devDependencies:
       '@angular-devkit/build-angular':
-        specifier: 20.3.13
+        specifier: 'catalog:'
         version: 20.3.13(83f9c113681574e2168e692c810e8a4f)
       '@angular/cli':
-        specifier: 20.3.13
+        specifier: 'catalog:'
         version: 20.3.13(@types/node@22.16.5)(chokidar@4.0.3)
       '@angular/compiler-cli':
-        specifier: 20.3.16
+        specifier: 'catalog:'
         version: 20.3.16(@angular/compiler@20.3.16)(typescript@5.9.3)
       '@coveo/headless':
         specifier: workspace:*
@@ -991,25 +1030,25 @@ importers:
   samples/atomic/search-commerce-angular:
     dependencies:
       '@angular/animations':
-        specifier: 20.3.16
+        specifier: 'catalog:'
         version: 20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))
       '@angular/common':
-        specifier: 20.3.16
+        specifier: 'catalog:'
         version: 20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
       '@angular/compiler':
-        specifier: 20.3.16
+        specifier: 'catalog:'
         version: 20.3.16
       '@angular/core':
-        specifier: 20.3.16
+        specifier: 'catalog:'
         version: 20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)
       '@angular/platform-browser':
-        specifier: 20.3.16
+        specifier: 'catalog:'
         version: 20.3.16(@angular/animations@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))
       '@angular/platform-browser-dynamic':
-        specifier: 20.3.16
+        specifier: 'catalog:'
         version: 20.3.16(@angular/common@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/compiler@20.3.16)(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.16(@angular/animations@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)))
       '@angular/router':
-        specifier: 20.3.16
+        specifier: 'catalog:'
         version: 20.3.16(@angular/common@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.16(@angular/animations@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
       '@coveo/atomic-angular':
         specifier: workspace:*
@@ -1349,22 +1388,22 @@ importers:
   samples/headless/rga-angular:
     dependencies:
       '@angular/common':
-        specifier: 20.3.16
+        specifier: 'catalog:'
         version: 20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
       '@angular/compiler':
-        specifier: 20.3.16
+        specifier: 'catalog:'
         version: 20.3.16
       '@angular/core':
-        specifier: 20.3.16
+        specifier: 'catalog:'
         version: 20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)
       '@angular/forms':
-        specifier: 20.3.16
+        specifier: 'catalog:'
         version: 20.3.16(@angular/common@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.16(@angular/animations@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
       '@angular/platform-browser':
-        specifier: 20.3.16
+        specifier: 'catalog:'
         version: 20.3.16(@angular/animations@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))
       '@angular/platform-server':
-        specifier: 20.3.16
+        specifier: 'catalog:'
         version: 20.3.16(@angular/common@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/compiler@20.3.16)(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.16(@angular/animations@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@20.3.16(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.16(@angular/compiler@20.3.16)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
       '@coveo/headless':
         specifier: workspace:*
@@ -1383,13 +1422,13 @@ importers:
         version: 0.15.1
     devDependencies:
       '@angular/build':
-        specifier: 20.3.13
+        specifier: 'catalog:'
         version: 20.3.13(a600540ada6c82f506f9cd19ec22bc0f)
       '@angular/cli':
-        specifier: 20.3.13
+        specifier: 'catalog:'
         version: 20.3.13(@types/node@25.0.10)(chokidar@4.0.3)
       '@angular/compiler-cli':
-        specifier: 20.3.16
+        specifier: 'catalog:'
         version: 20.3.16(@angular/compiler@20.3.16)(typescript@5.9.3)
       typescript:
         specifier: 5.9.3
