@@ -464,24 +464,6 @@ export namespace Components {
         "displayFooterSlot": boolean;
         "isOpen"?: boolean;
     }
-    interface AtomicIpxButton {
-        /**
-          * The close icon of the button.
-         */
-        "closeIcon": string;
-        /**
-          * Whether the IPX modal is open.
-         */
-        "isModalOpen": boolean;
-        /**
-          * The label that will be shown to the user.
-         */
-        "label"?: string;
-        /**
-          * The open icon of the button.
-         */
-        "openIcon": string;
-    }
     interface AtomicIpxEmbedded {
         /**
           * The container to hide from the tabindex and accessibility DOM when the modal is closed.
@@ -940,12 +922,6 @@ declare global {
         prototype: HTMLAtomicIpxBodyElement;
         new (): HTMLAtomicIpxBodyElement;
     };
-    interface HTMLAtomicIpxButtonElement extends Components.AtomicIpxButton, HTMLStencilElement {
-    }
-    var HTMLAtomicIpxButtonElement: {
-        prototype: HTMLAtomicIpxButtonElement;
-        new (): HTMLAtomicIpxButtonElement;
-    };
     interface HTMLAtomicIpxEmbeddedElementEventMap {
         "animationEnded": never;
     }
@@ -1106,7 +1082,6 @@ declare global {
         "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
         "atomic-insight-user-actions-timeline": HTMLAtomicInsightUserActionsTimelineElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
-        "atomic-ipx-button": HTMLAtomicIpxButtonElement;
         "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
         "atomic-ipx-modal": HTMLAtomicIpxModalElement;
         "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
@@ -1545,24 +1520,6 @@ declare namespace LocalJSX {
         "isOpen"?: boolean;
         "onAnimationEnded"?: (event: AtomicIpxBodyCustomEvent<never>) => void;
     }
-    interface AtomicIpxButton {
-        /**
-          * The close icon of the button.
-         */
-        "closeIcon"?: string;
-        /**
-          * Whether the IPX modal is open.
-         */
-        "isModalOpen"?: boolean;
-        /**
-          * The label that will be shown to the user.
-         */
-        "label"?: string;
-        /**
-          * The open icon of the button.
-         */
-        "openIcon"?: string;
-    }
     interface AtomicIpxEmbedded {
         /**
           * The container to hide from the tabindex and accessibility DOM when the modal is closed.
@@ -1796,7 +1753,6 @@ declare namespace LocalJSX {
         "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
         "atomic-insight-user-actions-timeline": AtomicInsightUserActionsTimeline;
         "atomic-ipx-body": AtomicIpxBody;
-        "atomic-ipx-button": AtomicIpxButton;
         "atomic-ipx-embedded": AtomicIpxEmbedded;
         "atomic-ipx-modal": AtomicIpxModal;
         "atomic-ipx-recs-list": AtomicIpxRecsList;
@@ -1851,7 +1807,6 @@ declare module "@stencil/core" {
              */
             "atomic-insight-user-actions-timeline": LocalJSX.AtomicInsightUserActionsTimeline & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsTimelineElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
-            "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
             "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
             "atomic-ipx-modal": LocalJSX.AtomicIpxModal & JSXBase.HTMLAttributes<HTMLAtomicIpxModalElement>;
             /**
