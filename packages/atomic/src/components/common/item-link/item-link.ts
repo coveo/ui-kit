@@ -61,10 +61,6 @@ export const renderLinkWithItemAnalytics: FunctionalComponentWithChildren<
         title=${ifDefined(title)}
         rel=${ifDefined(rel)}
         ${ref((el) => {
-          if (typeof refCallback === 'function') {
-            refCallback(el as HTMLAnchorElement);
-          }
-
           if (!el) {
             return;
           }
@@ -86,6 +82,7 @@ export const renderLinkWithItemAnalytics: FunctionalComponentWithChildren<
             });
           }
         })}
+        ${ref(refCallback)}
         tabindex=${ifDefined(tabIndex)}
         @mouseover=${onMouseOver}
         @mouseleave=${onMouseLeave}
