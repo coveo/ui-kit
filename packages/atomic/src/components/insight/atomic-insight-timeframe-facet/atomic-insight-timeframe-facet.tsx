@@ -78,7 +78,7 @@ export class AtomicInsightTimeframeFacet
    */
   @Prop({reflect: true}) public field = 'date';
   /**
-   * Whether this facet should contain an datepicker allowing users to set custom ranges.
+   * Whether this facet should contain a date picker allowing users to set custom ranges.
    */
   @Prop({reflect: true}) public withDatePicker = false;
   /**
