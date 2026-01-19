@@ -8,6 +8,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
+import {buildCustomEvent} from '@/src/utils/event-utils';
 import type {NumberInputType} from '../facets/facet-number-input/number-input-type';
 import type {AnyBindings} from '../interface/bindings';
 
@@ -175,13 +176,7 @@ export class AtomicFacetNumberInput
     ) {
       return;
     }
-    this.dispatchEvent(
-      new CustomEvent('atomic/numberInputApply', {
-        bubbles: true,
-        composed: true,
-        cancelable: true,
-      })
-    );
+    this.dispatchEvent(buildCustomEvent('atomic/numberInputApply', undefined));
     this.filter.setRange({
       start: this.start!,
       end: this.end!,

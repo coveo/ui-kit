@@ -4,6 +4,7 @@ import {LayoutStylesController} from '@/src/components/common/layout/layout-styl
 import {watch} from '@/src/decorators/watch';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {LightDomMixin} from '@/src/mixins/light-dom';
+import {buildCustomEvent} from '@/src/utils/event-utils';
 import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint-utils';
 import styles from './atomic-search-layout.tw.css';
 import {buildSearchLayout} from './search-layout';
@@ -43,11 +44,8 @@ export class AtomicSearchLayout extends LightDomMixin(
 
   private emitBreakpointChangeEvent() {
     this.dispatchEvent(
-      new CustomEvent('atomic-layout-breakpoint-change', {
-        detail: {breakpoint: this.mobileBreakpoint},
-        bubbles: true,
-        composed: true,
-        cancelable: true,
+      buildCustomEvent('atomic-layout-breakpoint-change', {
+        breakpoint: this.mobileBreakpoint,
       })
     );
   }

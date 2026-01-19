@@ -10,7 +10,7 @@ import {watch} from '@/src/decorators/watch.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map.js';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
-import {listenOnce} from '@/src/utils/event-utils.js';
+import {buildCustomEvent, listenOnce} from '@/src/utils/event-utils.js';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {once, randomID} from '@/src/utils/utils.js';
 import type {AtomicFocusTrap} from '../atomic-focus-trap/atomic-focus-trap.js';
@@ -206,13 +206,7 @@ export class AtomicModal
   private handleCloseOnEscape = (e: KeyboardEvent) => {
     if (e.key?.toLowerCase() === 'escape') {
       if (this.isOpen) {
-        this.dispatchEvent(
-          new CustomEvent('close', {
-            bubbles: true,
-            composed: true,
-            cancelable: true,
-          })
-        );
+        this.dispatchEvent(buildCustomEvent('close', undefined));
       }
       if (this.close) {
         this.close();

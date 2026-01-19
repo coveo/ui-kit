@@ -8,6 +8,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {LightDomMixin} from '@/src/mixins/light-dom';
+import {buildCustomEvent} from '../../../utils/event-utils';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 export type Range = {start: number; end: number};
@@ -86,14 +87,9 @@ export class AtomicCommerceFacetNumberInput
       return;
     }
     this.dispatchEvent(
-      new CustomEvent('atomic-number-input-apply', {
-        detail: {
-          start: this.start,
-          end: this.end,
-        },
-        bubbles: true,
-        composed: true,
-        cancelable: true,
+      buildCustomEvent('atomic-number-input-apply', {
+        start: this.start,
+        end: this.end,
       })
     );
   }
