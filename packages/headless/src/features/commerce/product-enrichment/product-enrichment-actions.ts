@@ -1,4 +1,4 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import type {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client.js';
 import type {ProductEnrichmentBadgesRequest} from '../../../api/commerce/product-enrichment/product-enrichment-request.js';
 import type {ProductEnrichmentSuccessBadgesResponse} from '../../../api/commerce/product-enrichment/product-enrichment-response.js';
@@ -13,6 +13,22 @@ import {productEnrichmentDefinition} from './product-enrichment.js';
 
 export type StateNeededByFetchBadges = StateNeededForBaseCommerceAPIRequest &
   ProductEnrichmentSection;
+
+export interface RegisterProductEnrichmentOptionsPayload {
+  /**
+   * An array of placement IDs to fetch badges for.
+   */
+  placementIds?: string[];
+  /**
+   * The product ID to fetch badges for.
+   */
+  productId?: string;
+}
+
+export const registerProductEnrichmentOptions =
+  createAction<RegisterProductEnrichmentOptionsPayload>(
+    'commerce/productEnrichment/registerOptions'
+  );
 
 export interface FetchBadgesPayload {
   /**
