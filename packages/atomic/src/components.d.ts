@@ -338,24 +338,6 @@ export namespace Components {
          */
         "sandbox": string;
     }
-    interface AtomicInsightSmartSnippet {
-        /**
-          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
-         */
-        "collapsedHeight": number;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
-         */
-        "headingLevel": number;
-        /**
-          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
-         */
-        "maximumHeight": number;
-        /**
-          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
-    }
     interface AtomicInsightSmartSnippetSuggestions {
         /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
@@ -857,12 +839,6 @@ declare global {
         prototype: HTMLAtomicInsightResultQuickviewActionElement;
         new (): HTMLAtomicInsightResultQuickviewActionElement;
     };
-    interface HTMLAtomicInsightSmartSnippetElement extends Components.AtomicInsightSmartSnippet, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightSmartSnippetElement: {
-        prototype: HTMLAtomicInsightSmartSnippetElement;
-        new (): HTMLAtomicInsightSmartSnippetElement;
-    };
     interface HTMLAtomicInsightSmartSnippetSuggestionsElement extends Components.AtomicInsightSmartSnippetSuggestions, HTMLStencilElement {
     }
     var HTMLAtomicInsightSmartSnippetSuggestionsElement: {
@@ -1075,7 +1051,6 @@ declare global {
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
         "atomic-insight-result-quickview-action": HTMLAtomicInsightResultQuickviewActionElement;
-        "atomic-insight-smart-snippet": HTMLAtomicInsightSmartSnippetElement;
         "atomic-insight-smart-snippet-suggestions": HTMLAtomicInsightSmartSnippetSuggestionsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
         "atomic-insight-user-actions-modal": HTMLAtomicInsightUserActionsModalElement;
@@ -1392,24 +1367,6 @@ declare namespace LocalJSX {
           * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
          */
         "sandbox"?: string;
-    }
-    interface AtomicInsightSmartSnippet {
-        /**
-          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
-         */
-        "collapsedHeight"?: number;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
-         */
-        "headingLevel"?: number;
-        /**
-          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
-         */
-        "maximumHeight"?: number;
-        /**
-          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
     }
     interface AtomicInsightSmartSnippetSuggestions {
         /**
@@ -1746,7 +1703,6 @@ declare namespace LocalJSX {
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
         "atomic-insight-result-list": AtomicInsightResultList;
         "atomic-insight-result-quickview-action": AtomicInsightResultQuickviewAction;
-        "atomic-insight-smart-snippet": AtomicInsightSmartSnippet;
         "atomic-insight-smart-snippet-suggestions": AtomicInsightSmartSnippetSuggestions;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
         "atomic-insight-user-actions-modal": AtomicInsightUserActionsModal;
@@ -1788,7 +1744,6 @@ declare module "@stencil/core" {
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
             "atomic-insight-result-quickview-action": LocalJSX.AtomicInsightResultQuickviewAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultQuickviewActionElement>;
-            "atomic-insight-smart-snippet": LocalJSX.AtomicInsightSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetElement>;
             "atomic-insight-smart-snippet-suggestions": LocalJSX.AtomicInsightSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetSuggestionsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
             "atomic-insight-user-actions-modal": LocalJSX.AtomicInsightUserActionsModal & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsModalElement>;

@@ -38,6 +38,10 @@ export default {
     ),
   'atomic-insight-search-box': async () =>
     await import('./atomic-insight-search-box/atomic-insight-search-box.js'),
+  'atomic-insight-smart-snippet': async () =>
+    await import(
+      './atomic-insight-smart-snippet/atomic-insight-smart-snippet.js'
+    ),
   'atomic-insight-smart-snippet-feedback-modal': async () =>
     await import(
       './atomic-insight-smart-snippet-feedback-modal/atomic-insight-smart-snippet-feedback-modal.js'
