@@ -7,7 +7,7 @@ import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicInsightInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-interface-fixture.js';
 import {buildFakeInsightEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/engine.js';
-import {buildFakeSmartSnippet} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/smart-snippet-controller.js';
+import {buildFakeInsightSmartSnippet} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/smart-snippet-controller.js';
 import type {AtomicInsightSmartSnippet} from './atomic-insight-smart-snippet.js';
 import './atomic-insight-smart-snippet.js';
 
@@ -29,7 +29,7 @@ describe('atomic-insight-smart-snippet', () => {
     }>;
     controllerState?: Partial<InsightSmartSnippetState>;
   } = {}) => {
-    mockSmartSnippet = buildFakeSmartSnippet({state: controllerState});
+    mockSmartSnippet = buildFakeInsightSmartSnippet({state: controllerState});
     vi.mocked(buildInsightSmartSnippet).mockReturnValue(mockSmartSnippet);
 
     const {element, atomicInterface} =

@@ -193,7 +193,7 @@ export class AtomicInsightSmartSnippet
   @errorGuard()
   @bindingGuard()
   render() {
-    const shouldDisplay = this.smartSnippetState.answerFound;
+    const shouldDisplay = this.smartSnippetState?.answerFound ?? false;
     this.classList.toggle('atomic-hidden', !shouldDisplay);
 
     return html`

@@ -12,6 +12,7 @@ export {AtomicInsightQuerySummary} from './atomic-insight-query-summary/atomic-i
 export {AtomicInsightRefineToggle} from './atomic-insight-refine-toggle/atomic-insight-refine-toggle.js';
 export {AtomicInsightResultTemplate} from './atomic-insight-result-template/atomic-insight-result-template.js';
 export {AtomicInsightSearchBox} from './atomic-insight-search-box/atomic-insight-search-box.js';
+export {AtomicInsightSmartSnippet} from './atomic-insight-smart-snippet/atomic-insight-smart-snippet.js';
 export {AtomicInsightSmartSnippetFeedbackModal} from './atomic-insight-smart-snippet-feedback-modal/atomic-insight-smart-snippet-feedback-modal.js';
 export {AtomicInsightTab} from './atomic-insight-tab/atomic-insight-tab.js';
 export {AtomicInsightTabs} from './atomic-insight-tabs/atomic-insight-tabs.js';
