@@ -96,12 +96,14 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
 
   /**
    * The InteractiveResult item.
+   * @internal
    */
   @property({type: Object, attribute: 'interactive-result'})
   interactiveResult!: InsightInteractiveResult;
 
   /**
    * Global Atomic state.
+   * @internal
    */
   @property({type: Object}) store?: InsightStore;
 
