@@ -6,6 +6,7 @@ import {createProductContextController} from '@/src/components/commerce/product-
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
+import {buildCustomEvent} from '../../../utils/event-utils';
 import {filterProtocol} from '../../../utils/xss-utils';
 import {renderButton} from '../../common/button';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
@@ -77,12 +78,9 @@ export class AtomicProductChildren
   private onSelectChild(child: ChildProduct) {
     this.activeChildId = child.permanentid;
     this.dispatchEvent(
-      new CustomEvent('atomic/selectChildProduct', {
-        detail: {child} as SelectChildProductEventArgs,
-        bubbles: true,
-        composed: true,
-        cancelable: true,
-      })
+      buildCustomEvent('atomic/selectChildProduct', {
+        child,
+      } as SelectChildProductEventArgs)
     );
   }
 

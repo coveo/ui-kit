@@ -10,7 +10,7 @@ import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import ArrowDown from '@/src/images/arrow-down.svg';
-import {listenOnce} from '@/src/utils/event-utils.js';
+import {buildCustomEvent, listenOnce} from '@/src/utils/event-utils.js';
 import styles from './atomic-smart-snippet-expandable-answer.tw.css.js';
 import '@/src/components/common/atomic-icon/atomic-icon.js';
 import '@/src/components/common/atomic-smart-snippet-answer/atomic-smart-snippet-answer.js';
@@ -134,55 +134,26 @@ export class AtomicSmartSnippetExpandableAnswer
   }
 
   private handleExpand() {
-    this.dispatchEvent(
-      new CustomEvent('expand', {
-        bubbles: true,
-        composed: true,
-        cancelable: true,
-      })
-    );
+    this.dispatchEvent(buildCustomEvent('expand', undefined));
   }
 
   private handleCollapse() {
-    this.dispatchEvent(
-      new CustomEvent('collapse', {
-        bubbles: true,
-        composed: true,
-        cancelable: true,
-      })
-    );
+    this.dispatchEvent(buildCustomEvent('collapse', undefined));
   }
 
   private handleSelectInlineLink(e: CustomEvent<InlineLink>) {
-    this.dispatchEvent(
-      new CustomEvent('selectInlineLink', {
-        detail: e.detail,
-        bubbles: true,
-        composed: true,
-        cancelable: true,
-      })
-    );
+    this.dispatchEvent(buildCustomEvent('selectInlineLink', e.detail));
   }
 
   private handleBeginDelayedSelectInlineLink(e: CustomEvent<InlineLink>) {
     this.dispatchEvent(
-      new CustomEvent('beginDelayedSelectInlineLink', {
-        detail: e.detail,
-        bubbles: true,
-        composed: true,
-        cancelable: true,
-      })
+      buildCustomEvent('beginDelayedSelectInlineLink', e.detail)
     );
   }
 
   private handleCancelPendingSelectInlineLink(e: CustomEvent<InlineLink>) {
     this.dispatchEvent(
-      new CustomEvent('cancelPendingSelectInlineLink', {
-        detail: e.detail,
-        bubbles: true,
-        composed: true,
-        cancelable: true,
-      })
+      buildCustomEvent('cancelPendingSelectInlineLink', e.detail)
     );
   }
 
