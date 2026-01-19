@@ -36,7 +36,7 @@ Name after the technology:
 ### Cross-Cutting Concerns
 
 Use descriptive names:
-- `a11y.instructions.md` → Accessibility
+- `atomic.instructions.md` → Atomic package conventions
 - `general.instructions.md` → Universal principles
 
 ## applyTo Patterns
