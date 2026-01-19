@@ -1,0 +1,30 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicIpxButtonStories from './atomic-ipx-button.new.stories';
+import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicIpxButtonStories} name="Docs" />
+
+<AtomicDocTemplate
+  stories={AtomicIpxButtonStories}
+  githubPath="ipx/atomic-ipx-button/atomic-ipx-button.ts"
+  tagName="atomic-ipx-button"
+  className="AtomicIpxButton"
+>
+
+The `atomic-ipx-button` component displays a floating button that toggles the visibility of the IPX modal. This button is typically positioned at the bottom-right corner of the screen and provides users with quick access to the IPX search experience.
+
+## Usage
+
+This component must be used alongside `atomic-ipx-modal` within an `atomic-search-interface`:
+
+```html
+<atomic-search-interface>
+  <atomic-ipx-modal>
+    <!-- Modal content -->
+  </atomic-ipx-modal>
+  <atomic-ipx-button label="Help"></atomic-ipx-button>
+</atomic-search-interface>
+```
+
+
+</AtomicDocTemplate>
