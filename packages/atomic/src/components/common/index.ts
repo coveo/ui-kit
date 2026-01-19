@@ -1,5 +1,6 @@
 // Auto-generated file
 export {AtomicAriaLive} from './atomic-aria-live/atomic-aria-live.js';
+export {AtomicCitation} from './atomic-citation/atomic-citation.js';
 export {AtomicComponentError} from './atomic-component-error/atomic-component-error.js';
 export {AtomicFacetDateInput} from './atomic-facet-date-input/atomic-facet-date-input.js';
 export {AtomicFacetNumberInput} from './atomic-facet-number-input/atomic-facet-number-input.js';
@@ -9,8 +10,11 @@ export {AtomicIcon} from './atomic-icon/atomic-icon.js';
 export {AtomicLayoutSection} from './atomic-layout-section/atomic-layout-section.js';
 export {AtomicModal} from './atomic-modal/atomic-modal.js';
 export {AtomicNumericRange} from './atomic-numeric-range/atomic-numeric-range.js';
+export {AtomicResultPlaceholder} from './atomic-result-placeholder/atomic-result-placeholder.js';
+export {AtomicSmartSnippetAnswer} from './atomic-smart-snippet-answer/atomic-smart-snippet-answer.js';
 export {AtomicSmartSnippetCollapseWrapper} from './atomic-smart-snippet-collapse-wrapper/atomic-smart-snippet-collapse-wrapper.js';
 export {AtomicSmartSnippetExpandableAnswer} from './atomic-smart-snippet-expandable-answer/atomic-smart-snippet-expandable-answer.js';
+export {AtomicSmartSnippetSource} from './atomic-smart-snippet-source/atomic-smart-snippet-source.js';
 export {AtomicTabBar} from './atomic-tab-bar/atomic-tab-bar.js';
 export {AtomicTabButton} from './atomic-tab-button/atomic-tab-button.js';
 export {AtomicTabPopover} from './atomic-tab-popover/atomic-tab-popover.js';

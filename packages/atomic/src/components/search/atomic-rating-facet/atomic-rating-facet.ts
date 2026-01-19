@@ -241,6 +241,7 @@ export class AtomicRatingFacet
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    *
    * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
+   * The target folding field must be a facet field with the **Use cache for nested queries** options enabled (see [Manage fields](https://docs.coveo.com/en/1833/)).
    */
   @property({
     reflect: true,
@@ -371,7 +372,7 @@ export class AtomicRatingFacet
     this.bindings.store.registerFacet('numericFacets', {
       ...facetInfo,
       format: (value) => this.formatFacetValue(value),
-      // @ts-ignore -- Because of Stencil VNode dependencies.
+      // @ts-expect-error -- Because of Stencil VNode dependencies.
       content: (value) => this.ratingContent(value),
     });
     initializePopover(this, {
@@ -533,7 +534,7 @@ export class AtomicRatingFacet
   @errorGuard()
   render() {
     if (this.searchStatusState.hasError || !this.facet.state.enabled) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     if (!this.searchStatusState.firstSearchExecuted) {
@@ -546,7 +547,7 @@ export class AtomicRatingFacet
     }
 
     if (!this.valuesToRender.length) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     return renderFacetContainer()(html`

@@ -1,7 +1,7 @@
-import {VERSION as HEADLESS_VERSION} from '@coveo/headless'; // TODO - KIT-4886 import from @coveo/headless/insight
 import {
   buildInsightEngine,
   buildResultsPerPage as buildInsightResultsPerPage,
+  VERSION as HEADLESS_VERSION,
   type InsightEngine,
   type InsightEngineConfiguration,
   type LogLevel as InsightLogLevel,
@@ -12,10 +12,7 @@ import i18next, {type i18n} from 'i18next';
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {bindingsContext} from '@/src/components/common/context/bindings-context';
-import type {
-  CommonBindings,
-  NonceBindings,
-} from '@/src/components/common/interface/bindings';
+import type {CommonBindings} from '@/src/components/common/interface/bindings';
 import {
   type BaseAtomicInterface,
   InterfaceController,
@@ -37,8 +34,7 @@ export type InsightBindings = CommonBindings<
   InsightEngine,
   InsightStore,
   AtomicInsightInterface
-> &
-  NonceBindings; // TODO - KIT-4839: Remove once atomic-insight-layout migration is complete.
+>;
 
 /**
  * The `atomic-insight-interface` component is the parent to all other atomic insight components in an insight page.
@@ -244,16 +240,6 @@ export class AtomicInsightInterface
       i18n: this.i18n,
       store: this.store,
       interfaceElement: this as AtomicInsightInterface,
-      // TODO - KIT-4839: Remove once atomic-insight-layout migration is complete.
-      createStyleElement: () => {
-        const styleTag = document.createElement('style');
-        return styleTag;
-      },
-      // TODO - KIT-4839: Remove once atomic-insight-layout migration is complete.
-      createScriptElement: () => {
-        const scriptTag = document.createElement('script');
-        return scriptTag;
-      },
     };
   }
 

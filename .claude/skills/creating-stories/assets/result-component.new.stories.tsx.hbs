@@ -1,0 +1,77 @@
+import type {Decorator, Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit';
+import {Mock{{apiClass}}} from '@/storybook-utils/api/{{apiPath}}/mock';
+import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {wrapInResultTemplate} from '@/storybook-utils/search/result-template-wrapper';
+import {{wrapperImport}} from '{{wrapperPath}}';
+
+const {{apiPath}}ApiHarness = new Mock{{apiClass}}();
+
+{{apiPath}}ApiHarness.searchEndpoint.mock((response) => ({
+  ...response,
+  results: response.results.slice(0, 1),
+  totalCount: 1,
+  totalCountFiltered: 1,
+}));
+
+const {decorator: searchInterfaceDecorator, play} = {{wrapperFunction}}({
+  skipFirstSearch: false,
+  includeCodeRoot: false,
+});
+
+const customResultListDecorator: Decorator = (story) => html`
+  <atomic-result-list
+    display="list"
+    number-of-placeholders="1"
+    density="compact"
+    image-size="small"
+  >
+    ${story()}
+  </atomic-result-list>
+`;
+
+const {decorator: resultTemplateDecorator} = wrapInResultTemplate(false);
+const {events, args, argTypes, template} = getStorybookHelpers(
+  '{{componentName}}',
+  {excludeCategories: ['methods']}
+);
+
+const meta: Meta = {
+  component: '{{componentName}}',
+  title: '{{category}}/{{titleName}}',
+  id: '{{componentName}}',
+  render: (args) => template(args),
+  decorators: [
+    resultTemplateDecorator,
+    customResultListDecorator,
+    searchInterfaceDecorator,
+  ],
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+    msw: {
+      handlers: [...{{apiPath}}ApiHarness.handlers],
+    },
+  },
+  args,
+  argTypes,
+  play,
+};
+
+export default meta;
+
+export const Default: Story = {};
+
+export const CustomVariant: Story = {
+  name: 'Custom Variant',
+  decorators: [
+    () => html`
+      <{{componentName}}>
+        <!-- Add custom content here -->
+      </{{componentName}}>
+    `,
+  ],
+};

@@ -5,15 +5,17 @@ import {
 import {Decorator, StoryContext} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import type * as _ from '../../src/components.js';
-import { spreadProps } from '@open-wc/lit-helpers';
+import {spreadProps} from '@open-wc/lit-helpers';
 
 export const wrapInRecommendationInterface = ({
   config,
   skipFirstQuery = false,
-  includeCodeRoot = true
+  skipInitialization = false,
+  includeCodeRoot = true,
 }: {
   config?: Partial<RecommendationEngineConfiguration>;
   skipFirstQuery?: boolean;
+  skipInitialization?: boolean;
   includeCodeRoot?: boolean;
 } = {}): {
   decorator: Decorator;
@@ -27,16 +29,21 @@ export const wrapInRecommendationInterface = ({
   play: async ({canvasElement, step}) => {
     await customElements.whenDefined('atomic-recs-interface');
     const recsInterface =
-      canvasElement.querySelector<HTMLAtomicRecsInterfaceElement>('atomic-recs-interface')!;
-    await step('Render the Recs Interface', async () => {
-      await recsInterface!.initialize({
-        ...getSampleRecommendationEngineConfiguration(),
-        ...config,
+      canvasElement.querySelector('atomic-recs-interface')!;
+
+    if (!skipInitialization) {
+      await step('Render the Recs Interface', async () => {
+        await recsInterface!.initialize({
+          ...getSampleRecommendationEngineConfiguration(),
+          ...config,
+        });
       });
-    });
-    if (skipFirstQuery) {
+    }
+
+    if (skipFirstQuery || skipInitialization) {
       return;
     }
+
     await step('Execute the first search', async () => {
       await recsInterface.getRecommendations();
     });
