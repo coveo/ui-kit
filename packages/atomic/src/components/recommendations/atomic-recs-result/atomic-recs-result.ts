@@ -36,7 +36,7 @@ export class AtomicRecsResult extends ChildrenUpdateCompleteMixin(LitElement) {
   private itemLayoutController!: ItemLayoutController;
 
   static styles: CSSResultGroup = css`
-@import "../../common/template-system/template-system.pcss";
+@import "../../common/template-system/legacy-template-system.css";
 
 :host {
   @apply atomic-template-system;
