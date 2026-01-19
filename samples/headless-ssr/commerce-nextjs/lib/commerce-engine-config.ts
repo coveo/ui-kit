@@ -9,6 +9,7 @@ import {
   defineNotifyTrigger,
   definePagination,
   defineParameterManager,
+  defineProductEnrichment,
   defineProductList,
   defineProductView,
   defineQueryTrigger,
@@ -64,5 +65,6 @@ export default {
     parameterManager: defineParameterManager(),
     facetGenerator: defineFacetGenerator(),
     breadcrumbManager: defineBreadcrumbManager(),
+    productEnrichment: defineProductEnrichment(),
   },
 } satisfies CommerceEngineDefinitionOptions;

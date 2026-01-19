@@ -4,7 +4,10 @@ import {
   buildMockBadgePlacement,
   buildMockBadgesProduct,
 } from '../../../test/mock-product-enrichment.js';
-import {fetchBadges} from './product-enrichment-actions.js';
+import {
+  fetchBadges,
+  registerProductEnrichmentOptions,
+} from './product-enrichment-actions.js';
 import {productEnrichmentReducer} from './product-enrichment-slice.js';
 import {
   getProductEnrichmentInitialState,
@@ -22,6 +25,51 @@ describe('product-enrichment-slice', () => {
     expect(productEnrichmentReducer(undefined, {type: ''})).toEqual(
       getProductEnrichmentInitialState()
     );
+  });
+
+  describe('on #registerProductEnrichmentOptions', () => {
+    it('sets #productId from payload', () => {
+      const action = registerProductEnrichmentOptions({
+        productId: 'product-123',
+        placementIds: ['placement-1'],
+      });
+      const finalState = productEnrichmentReducer(state, action);
+
+      expect(finalState.productId).toBe('product-123');
+    });
+
+    it('sets #placementIds from payload', () => {
+      const action = registerProductEnrichmentOptions({
+        productId: 'product-123',
+        placementIds: ['placement-1', 'placement-2'],
+      });
+      const finalState = productEnrichmentReducer(state, action);
+
+      expect(finalState.placementIds).toEqual(['placement-1', 'placement-2']);
+    });
+
+    it('sets #placementIds to empty array when undefined in payload', () => {
+      const action = registerProductEnrichmentOptions({
+        productId: 'product-123',
+      });
+      const finalState = productEnrichmentReducer(state, action);
+
+      expect(finalState.placementIds).toEqual([]);
+    });
+
+    it('overwrites existing values', () => {
+      state.productId = 'old-product';
+      state.placementIds = ['old-placement'];
+
+      const action = registerProductEnrichmentOptions({
+        productId: 'new-product',
+        placementIds: ['new-placement'],
+      });
+      const finalState = productEnrichmentReducer(state, action);
+
+      expect(finalState.productId).toBe('new-product');
+      expect(finalState.placementIds).toEqual(['new-placement']);
+    });
   });
 
   describe('on #fetchBadges.pending', () => {
