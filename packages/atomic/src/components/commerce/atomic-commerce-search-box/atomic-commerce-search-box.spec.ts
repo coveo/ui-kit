@@ -98,7 +98,7 @@ describe('atomic-commerce-search-box', () => {
     vi.mocked(buildStandaloneSearchBox).mockReturnValue(
       buildFakeStandaloneSearchBox(
         {
-          redirectTo,
+          ...(redirectTo !== undefined && {redirectTo}),
           value: searchBoxValue,
         },
         {
