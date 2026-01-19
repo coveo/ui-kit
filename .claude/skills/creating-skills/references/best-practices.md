@@ -73,6 +73,74 @@ description: Helps with documents
 
 ## Progressive Disclosure Patterns
 
+### SKILL.md should contain only always-useful information
+
+**Core principle:** If removing a section wouldn't hurt daily usage, move it to references.
+
+**Keep in SKILL.md:**
+- Critical constraints and gotchas (⚠️ warnings)
+- High-level pattern overviews
+- Essential best practices
+- Links to references
+
+**Move to references:**
+- Full code examples → `references/examples.md` or `references/queries.md`
+- Detailed step-by-step workflows → `references/workflows.md`
+- Statistics, schemas, API docs → `references/schema.md` or `references/api.md`
+- Real-world walkthroughs → `references/walkthrough-*.md`
+
+**Example transformation:**
+
+Before (bloated SKILL.md):
+```markdown
+## Pattern 1: Component Dependencies
+[Full 20-line Cypher query example]
+
+## Pattern 2: Action Flow
+[Another full query example]
+
+## Workflows
+1. Find components
+2. Query controllers
+3. Aggregate results
+[10 more detailed steps...]
+
+## Statistics
+- 7,799 nodes across 8 types
+- 335 components...
+```
+
+After (lean SKILL.md):
+```markdown
+## Critical Constraints
+⚠️ Always use PascalCase class names
+⚠️ Break 3+ hop chains into sequential queries
+
+## Query Patterns
+- Component dependencies
+- Action flow
+- Test coverage
+
+**Full examples:** See [queries.md](./references/queries.md)
+**Workflows:** See [workflows.md](./references/workflows.md)
+**Schema:** See [schema.md](./references/schema.md)
+```
+
+**Result:** SKILL.md reduced from ~200 lines to ~60 lines while maintaining effectiveness.
+
+### Frontmatter vs Body separation
+
+**Description frontmatter** = "what" and "when to use" (comprehensive triggers)
+**SKILL.md body** = "how" and critical constraints
+**No duplication** between them
+
+```yaml
+# Good
+description: Query knowledge graph for component dependencies. Use when analyzing components, controllers, or when user asks "what uses X".
+```
+
+Body starts with HOW, not repeating WHAT/WHEN.
+
 ### Pattern 1: High-level guide with references
 
 ```markdown
