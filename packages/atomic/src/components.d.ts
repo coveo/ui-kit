@@ -356,10 +356,6 @@ export namespace Components {
          */
         "snippetStyle"?: string;
     }
-    interface AtomicInsightSmartSnippetFeedbackModal {
-        "isOpen": boolean;
-        "source"?: HTMLElement;
-    }
     interface AtomicInsightSmartSnippetSuggestions {
         /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
@@ -467,24 +463,6 @@ export namespace Components {
     interface AtomicIpxBody {
         "displayFooterSlot": boolean;
         "isOpen"?: boolean;
-    }
-    interface AtomicIpxButton {
-        /**
-          * The close icon of the button.
-         */
-        "closeIcon": string;
-        /**
-          * Whether the IPX modal is open.
-         */
-        "isModalOpen": boolean;
-        /**
-          * The label that will be shown to the user.
-         */
-        "label"?: string;
-        /**
-          * The open icon of the button.
-         */
-        "openIcon": string;
     }
     interface AtomicIpxEmbedded {
         /**
@@ -731,10 +709,6 @@ export interface AtomicInsightResultAttachToCaseActionCustomEvent<T> extends Cus
     detail: T;
     target: HTMLAtomicInsightResultAttachToCaseActionElement;
 }
-export interface AtomicInsightSmartSnippetFeedbackModalCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicInsightSmartSnippetFeedbackModalElement;
-}
 export interface AtomicIpxBodyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicIpxBodyElement;
@@ -889,23 +863,6 @@ declare global {
         prototype: HTMLAtomicInsightSmartSnippetElement;
         new (): HTMLAtomicInsightSmartSnippetElement;
     };
-    interface HTMLAtomicInsightSmartSnippetFeedbackModalElementEventMap {
-        "feedbackSent": any;
-    }
-    interface HTMLAtomicInsightSmartSnippetFeedbackModalElement extends Components.AtomicInsightSmartSnippetFeedbackModal, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicInsightSmartSnippetFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicInsightSmartSnippetFeedbackModalElement, ev: AtomicInsightSmartSnippetFeedbackModalCustomEvent<HTMLAtomicInsightSmartSnippetFeedbackModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicInsightSmartSnippetFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicInsightSmartSnippetFeedbackModalElement, ev: AtomicInsightSmartSnippetFeedbackModalCustomEvent<HTMLAtomicInsightSmartSnippetFeedbackModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicInsightSmartSnippetFeedbackModalElement: {
-        prototype: HTMLAtomicInsightSmartSnippetFeedbackModalElement;
-        new (): HTMLAtomicInsightSmartSnippetFeedbackModalElement;
-    };
     interface HTMLAtomicInsightSmartSnippetSuggestionsElement extends Components.AtomicInsightSmartSnippetSuggestions, HTMLStencilElement {
     }
     var HTMLAtomicInsightSmartSnippetSuggestionsElement: {
@@ -964,12 +921,6 @@ declare global {
     var HTMLAtomicIpxBodyElement: {
         prototype: HTMLAtomicIpxBodyElement;
         new (): HTMLAtomicIpxBodyElement;
-    };
-    interface HTMLAtomicIpxButtonElement extends Components.AtomicIpxButton, HTMLStencilElement {
-    }
-    var HTMLAtomicIpxButtonElement: {
-        prototype: HTMLAtomicIpxButtonElement;
-        new (): HTMLAtomicIpxButtonElement;
     };
     interface HTMLAtomicIpxEmbeddedElementEventMap {
         "animationEnded": never;
@@ -1125,14 +1076,12 @@ declare global {
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
         "atomic-insight-result-quickview-action": HTMLAtomicInsightResultQuickviewActionElement;
         "atomic-insight-smart-snippet": HTMLAtomicInsightSmartSnippetElement;
-        "atomic-insight-smart-snippet-feedback-modal": HTMLAtomicInsightSmartSnippetFeedbackModalElement;
         "atomic-insight-smart-snippet-suggestions": HTMLAtomicInsightSmartSnippetSuggestionsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
         "atomic-insight-user-actions-modal": HTMLAtomicInsightUserActionsModalElement;
         "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
         "atomic-insight-user-actions-timeline": HTMLAtomicInsightUserActionsTimelineElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
-        "atomic-ipx-button": HTMLAtomicIpxButtonElement;
         "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
         "atomic-ipx-modal": HTMLAtomicIpxModalElement;
         "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
@@ -1462,11 +1411,6 @@ declare namespace LocalJSX {
          */
         "snippetStyle"?: string;
     }
-    interface AtomicInsightSmartSnippetFeedbackModal {
-        "isOpen"?: boolean;
-        "onFeedbackSent"?: (event: AtomicInsightSmartSnippetFeedbackModalCustomEvent<any>) => void;
-        "source"?: HTMLElement;
-    }
     interface AtomicInsightSmartSnippetSuggestions {
         /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
@@ -1575,24 +1519,6 @@ declare namespace LocalJSX {
         "displayFooterSlot"?: boolean;
         "isOpen"?: boolean;
         "onAnimationEnded"?: (event: AtomicIpxBodyCustomEvent<never>) => void;
-    }
-    interface AtomicIpxButton {
-        /**
-          * The close icon of the button.
-         */
-        "closeIcon"?: string;
-        /**
-          * Whether the IPX modal is open.
-         */
-        "isModalOpen"?: boolean;
-        /**
-          * The label that will be shown to the user.
-         */
-        "label"?: string;
-        /**
-          * The open icon of the button.
-         */
-        "openIcon"?: string;
     }
     interface AtomicIpxEmbedded {
         /**
@@ -1821,14 +1747,12 @@ declare namespace LocalJSX {
         "atomic-insight-result-list": AtomicInsightResultList;
         "atomic-insight-result-quickview-action": AtomicInsightResultQuickviewAction;
         "atomic-insight-smart-snippet": AtomicInsightSmartSnippet;
-        "atomic-insight-smart-snippet-feedback-modal": AtomicInsightSmartSnippetFeedbackModal;
         "atomic-insight-smart-snippet-suggestions": AtomicInsightSmartSnippetSuggestions;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
         "atomic-insight-user-actions-modal": AtomicInsightUserActionsModal;
         "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
         "atomic-insight-user-actions-timeline": AtomicInsightUserActionsTimeline;
         "atomic-ipx-body": AtomicIpxBody;
-        "atomic-ipx-button": AtomicIpxButton;
         "atomic-ipx-embedded": AtomicIpxEmbedded;
         "atomic-ipx-modal": AtomicIpxModal;
         "atomic-ipx-recs-list": AtomicIpxRecsList;
@@ -1865,7 +1789,6 @@ declare module "@stencil/core" {
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
             "atomic-insight-result-quickview-action": LocalJSX.AtomicInsightResultQuickviewAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultQuickviewActionElement>;
             "atomic-insight-smart-snippet": LocalJSX.AtomicInsightSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetElement>;
-            "atomic-insight-smart-snippet-feedback-modal": LocalJSX.AtomicInsightSmartSnippetFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetFeedbackModalElement>;
             "atomic-insight-smart-snippet-suggestions": LocalJSX.AtomicInsightSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetSuggestionsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
             "atomic-insight-user-actions-modal": LocalJSX.AtomicInsightUserActionsModal & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsModalElement>;
@@ -1884,7 +1807,6 @@ declare module "@stencil/core" {
              */
             "atomic-insight-user-actions-timeline": LocalJSX.AtomicInsightUserActionsTimeline & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsTimelineElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
-            "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
             "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
             "atomic-ipx-modal": LocalJSX.AtomicIpxModal & JSXBase.HTMLAttributes<HTMLAtomicIpxModalElement>;
             /**
