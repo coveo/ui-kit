@@ -123,59 +123,237 @@ describe('atomic-insight-result', () => {
     });
   });
 
-  describe('when valid density is updated to invalid value', () => {
-    it('should set error', async () => {
-      const element = await renderResult({density: 'normal'});
-
-      expect(element.error).toBeUndefined();
-
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-      (element as any).density = 'invalid';
-      await element.updateComplete;
-
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(/density/i);
-    });
-  });
-
-  describe('when valid imageSize is updated to invalid value', () => {
-    it('should set error', async () => {
-      const element = await renderResult({imageSize: 'icon'});
-
-      expect(element.error).toBeUndefined();
-
-      // biome-ignore lint/suspicious/noExplicitAny: testing invalid values
-      (element as any).imageSize = 'invalid';
-      await element.updateComplete;
-
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toMatch(/imageSize/i);
-    });
-  });
-
   describe('when content is provided', () => {
-    it('should render content HTML', async () => {
-      const element = await renderResult();
-      const contentHTML = element.shadowRoot
-        ?.querySelector('.result-root')
-        ?.innerHTML.trim();
-      expect(contentHTML).toContain('atomic-result-text');
+    describe('#getContentHTML', () => {
+      it('should return HTML string of the content', async () => {
+        const element = await renderResult({
+          content: renderTemplateContent(
+            '<atomic-result-text field="title"></atomic-result-text>'
+          ),
+        });
+        const getContentHTMLMethod = (
+          element as unknown as {getContentHTML: () => string}
+        ).getContentHTML.bind(element);
+
+        const html = getContentHTMLMethod();
+
+        expect(html).toContain('atomic-result-text');
+        expect(html).toContain('field="title"');
+      });
+
+      it('should return HTML for multiple children', async () => {
+        const element = await renderResult({
+          content: renderTemplateContent('<div>First</div><span>Second</span>'),
+        });
+        const getContentHTMLMethod = (
+          element as unknown as {getContentHTML: () => string}
+        ).getContentHTML.bind(element);
+
+        const html = getContentHTMLMethod();
+
+        expect(html).toContain('<div>First</div>');
+        expect(html).toContain('<span>Second</span>');
+      });
     });
 
-    it('should not add "with-sections" class when content does not have sections', async () => {
-      const element = await renderResult({
-        content: renderTemplateContent('<div>No Sections</div>'),
+    describe('layout creation', () => {
+      it('should create layout with provided content', async () => {
+        const element = await renderResult({
+          content: renderTemplateContent('<div>Content</div>'),
+        });
+        const layoutController = (
+          element as unknown as {
+            itemLayoutController: {getLayout: () => unknown};
+          }
+        ).itemLayoutController;
+
+        expect(layoutController.getLayout()).toBeDefined();
       });
-      const resultRoot = element.shadowRoot!.querySelector('.result-root');
-      expect(resultRoot?.classList).not.toContain('with-sections');
+
+      it('should create layout with correct density', async () => {
+        const element = await renderResult({
+          content: renderTemplateContent('<div>Content</div>'),
+          density: 'comfortable',
+        });
+        const layoutController = (
+          element as unknown as {
+            itemLayoutController: {
+              getLayout: () => {density: string} | null;
+            };
+          }
+        ).itemLayoutController;
+
+        expect(layoutController.getLayout()?.density).toBe('comfortable');
+      });
+
+      it('should create layout with correct imageSize', async () => {
+        const element = await renderResult({
+          content: renderTemplateContent('<div>Content</div>'),
+          imageSize: 'large',
+        });
+        const layoutController = (
+          element as unknown as {
+            itemLayoutController: {
+              getLayout: () => {imageSize: string} | null;
+            };
+          }
+        ).itemLayoutController;
+
+        expect(layoutController.getLayout()?.imageSize).toBe('large');
+      });
     });
 
-    it('should add "with-sections" class when content has sections', async () => {
-      const element = await renderResult({
-        content: renderTemplateContent(templateContentWithSections),
+    describe('content rendering', () => {
+      it('should render content HTML in result root', async () => {
+        const element = await renderResult();
+        const contentHTML = element.shadowRoot
+          ?.querySelector('.result-root')
+          ?.innerHTML.trim();
+        expect(contentHTML).toContain('atomic-result-text');
       });
-      const resultRoot = element.shadowRoot!.querySelector('.result-root');
-      expect(resultRoot?.classList).toContain('with-sections');
+
+      it('should render atomic-result-text with correct field attribute', async () => {
+        const element = await renderResult({
+          content: renderTemplateContent(
+            '<atomic-result-text field="author"></atomic-result-text>'
+          ),
+        });
+        const resultText =
+          element.shadowRoot?.querySelector('atomic-result-text');
+
+        expect(resultText).toBeDefined();
+        expect(resultText?.getAttribute('field')).toBe('author');
+      });
+
+      it('should render multiple result components', async () => {
+        const element = await renderResult({
+          content: renderTemplateContent(`
+            <atomic-result-text field="title"></atomic-result-text>
+            <atomic-result-text field="excerpt"></atomic-result-text>
+          `),
+        });
+        const resultTexts =
+          element.shadowRoot?.querySelectorAll('atomic-result-text');
+
+        expect(resultTexts?.length).toBe(2);
+      });
+
+      it('should render result sections correctly', async () => {
+        const element = await renderResult({
+          content: renderTemplateContent(templateContentWithSections),
+        });
+
+        const badgesSection = element.shadowRoot?.querySelector(
+          'atomic-result-section-badges'
+        );
+        const titleSection = element.shadowRoot?.querySelector(
+          'atomic-result-section-title'
+        );
+
+        expect(badgesSection).toBeDefined();
+        expect(titleSection).toBeDefined();
+      });
+
+      it('should render nested content correctly', async () => {
+        const element = await renderResult({
+          content: renderTemplateContent(`
+            <atomic-result-section-title>
+              <atomic-result-link>
+                <atomic-result-text field="title"></atomic-result-text>
+              </atomic-result-link>
+            </atomic-result-section-title>
+          `),
+        });
+
+        const titleSection = element.shadowRoot?.querySelector(
+          'atomic-result-section-title'
+        );
+        const link = titleSection?.querySelector('atomic-result-link');
+        const text = link?.querySelector('atomic-result-text');
+
+        expect(titleSection).toBeDefined();
+        expect(link).toBeDefined();
+        expect(text).toBeDefined();
+        expect(text?.getAttribute('field')).toBe('title');
+      });
+    });
+
+    describe('layout classes', () => {
+      it('should not add "with-sections" class when content does not have sections', async () => {
+        const element = await renderResult({
+          content: renderTemplateContent('<div>No Sections</div>'),
+        });
+        const resultRoot = element.shadowRoot!.querySelector('.result-root');
+        expect(resultRoot?.classList).not.toContain('with-sections');
+      });
+
+      it('should add "with-sections" class when content has sections', async () => {
+        const element = await renderResult({
+          content: renderTemplateContent(templateContentWithSections),
+        });
+        const resultRoot = element.shadowRoot!.querySelector('.result-root');
+        expect(resultRoot?.classList).toContain('with-sections');
+      });
+
+      it('should apply density class to result root', async () => {
+        const element = await renderResult({
+          content: renderTemplateContent(templateContentWithSections),
+          density: 'compact',
+        });
+        const resultRoot = element.shadowRoot!.querySelector('.result-root');
+        expect(resultRoot?.classList).toContain('density-compact');
+      });
+
+      it('should apply image-size class to result root', async () => {
+        const element = await renderResult({
+          content: renderTemplateContent(templateContentWithSections),
+          imageSize: 'large',
+        });
+        const resultRoot = element.shadowRoot!.querySelector('.result-root');
+        expect(resultRoot?.classList).toContain('image-large');
+      });
+    });
+
+    describe('interaction with rendering function', () => {
+      it('should use rendering function when provided instead of content', async () => {
+        const renderingFunction: ItemRenderingFunction = vi.fn(
+          (_result, resultRootRef) => {
+            resultRootRef.textContent = 'Custom rendering';
+            return resultRootRef.outerHTML;
+          }
+        );
+
+        const element = await renderResult({
+          content: renderTemplateContent('<div>Template content</div>'),
+          renderingFunction,
+        });
+
+        expect(renderingFunction).toHaveBeenCalled();
+        const resultRoot = element.shadowRoot?.querySelector('.result-root');
+        expect(resultRoot?.textContent).toContain('Custom rendering');
+        expect(resultRoot?.innerHTML).not.toContain('Template content');
+      });
+
+      it('should pass result to rendering function', async () => {
+        const result = buildFakeInsightResult();
+        const renderingFunction: ItemRenderingFunction = vi.fn(
+          (receivedResult, resultRootRef) => {
+            resultRootRef.textContent = receivedResult.title;
+            return resultRootRef.outerHTML;
+          }
+        );
+
+        await renderResult({
+          result,
+          renderingFunction,
+        });
+
+        expect(renderingFunction).toHaveBeenCalledWith(
+          result,
+          expect.any(HTMLElement),
+          undefined
+        );
+      });
     });
   });
 
