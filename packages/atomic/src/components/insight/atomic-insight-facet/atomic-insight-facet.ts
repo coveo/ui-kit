@@ -235,13 +235,13 @@ export class AtomicInsightFacet
     header: FocusTargetController;
   } {
     if (!this.showLessFocus) {
-      this.showLessFocus = new FocusTargetController(this, 'show-less');
+      this.showLessFocus = new FocusTargetController(this, this.bindings);
     }
     if (!this.showMoreFocus) {
-      this.showMoreFocus = new FocusTargetController(this, 'show-more');
+      this.showMoreFocus = new FocusTargetController(this, this.bindings);
     }
     if (!this.headerFocus) {
-      this.headerFocus = new FocusTargetController(this, 'header');
+      this.headerFocus = new FocusTargetController(this, this.bindings);
     }
     return {
       showLess: this.showLessFocus,
@@ -277,7 +277,7 @@ export class AtomicInsightFacet
   }
 
   private renderFacetHeader() {
-    return html`${renderFacetHeader({
+    return renderFacetHeader({
       props: {
         i18n: this.bindings.i18n,
         label: this.label,
@@ -293,7 +293,7 @@ export class AtomicInsightFacet
         },
         headerRef: (el) => this.focusTargets.header.setTarget(el),
       },
-    })}`;
+    });
   }
 
   private renderBody() {
@@ -304,7 +304,7 @@ export class AtomicInsightFacet
   }
 
   private renderValuesContainer(children: unknown) {
-    return html`${renderFacetValuesGroup({
+    return renderFacetValuesGroup({
       props: {
         i18n: this.bindings.i18n,
         label: this.label,
@@ -314,7 +314,7 @@ export class AtomicInsightFacet
       part="values"
     >
       ${children}
-    </ul>`)}`;
+    </ul>`);
   }
 
   private renderValues() {
@@ -326,7 +326,7 @@ export class AtomicInsightFacet
           ? 0
           : this.facetState.values.length - 1);
 
-      return html`${renderFacetValue({
+      return renderFacetValue({
         props: {
           ...this.facetValueProps,
           facetCount: value.numberOfResults,
@@ -339,21 +339,21 @@ export class AtomicInsightFacet
           facetState: value.state,
           setRef: (btn) => {
             if (shouldFocusOnShowLessAfterInteraction) {
-              this.showLessFocus?.setTarget(btn);
+              this.showLessFocus?.setTarget(btn as HTMLElement);
             }
             if (shouldFocusOnShowMoreAfterInteraction) {
-              this.showMoreFocus?.setTarget(btn);
+              this.showMoreFocus?.setTarget(btn as HTMLElement);
             }
           },
         },
-      })()}`;
+      });
     });
 
     return this.renderValuesContainer(values);
   }
 
   private renderShowMoreLess() {
-    return html`${renderFacetShowMoreLess({
+    return renderFacetShowMoreLess({
       props: {
         label: this.label,
         i18n: this.bindings.i18n,
@@ -368,7 +368,7 @@ export class AtomicInsightFacet
         canShowMoreValues: this.facet.state.canShowMoreValues,
         canShowLessValues: this.facet.state.canShowLessValues,
       },
-    })()}`;
+    });
   }
 
   private get activeValues() {
