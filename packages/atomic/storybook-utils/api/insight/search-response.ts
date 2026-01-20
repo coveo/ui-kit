@@ -125,6 +125,34 @@ export const baseResponse: InsightResponse = {
   groupByResults: [],
   facets: [
     {
+      facetId: 'objecttype',
+      field: 'objecttype',
+      moreValuesAvailable: false,
+      values: [
+        {
+          value: 'Case',
+          state: 'idle',
+          numberOfResults: 12,
+        },
+        {
+          value: 'Article',
+          state: 'idle',
+          numberOfResults: 8,
+        },
+        {
+          value: 'Ticket',
+          state: 'idle',
+          numberOfResults: 3,
+        },
+        {
+          value: 'FAQ',
+          state: 'idle',
+          numberOfResults: 2,
+        },
+      ],
+      indexScore: 0.1,
+    },
+    {
       facetId: 'source',
       field: 'source',
       moreValuesAvailable: true,
