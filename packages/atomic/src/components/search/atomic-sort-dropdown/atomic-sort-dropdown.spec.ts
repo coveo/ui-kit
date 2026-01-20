@@ -248,7 +248,7 @@ describe('atomic-sort-dropdown', () => {
     });
   });
 
-  describe('willUpdate lifecycle', () => {
+  describe('willUpdate lifecycle and tab state change handling', () => {
     it('should update sort criteria when no matching option is found', async () => {
       const updateSortCriterionMock = vi.fn();
       vi.mocked(loadSortCriteriaActions).mockReturnValue({
