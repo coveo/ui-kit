@@ -1,7 +1,6 @@
 .tab-bar_list-container {
   /* Prevents horizontal scrollbar from appearing when tabs overflow */
   overflow-x: clip;
-  display: inline;
 }
 
 .tab-bar_dropdown {
@@ -10,4 +9,8 @@
 
 .tab-bar__more-button:focus {
   text-decoration: none;
+}
+
+.tab-bar__dropdown-tab {
+  display: inline;
 }
