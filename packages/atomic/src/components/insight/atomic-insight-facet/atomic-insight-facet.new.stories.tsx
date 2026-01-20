@@ -16,6 +16,10 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const mockInsightApi = new MockInsightApi();
 
+const mockDefaultFacetResponse = () => {
+  mockInsightApi.searchEndpoint.mockOnce((response) => response);
+};
+
 const sortCriteriaOptions: FacetSortCriterion[] = [
   'alphanumeric',
   'alphanumericDescending',
@@ -69,6 +73,9 @@ export const Default: Story = {
     field: 'objecttype',
   },
   decorators: [facetDecorator],
+  beforeEach: () => {
+    mockDefaultFacetResponse();
+  },
 };
 
 export const AsLink: Story = {
@@ -78,6 +85,9 @@ export const AsLink: Story = {
     'display-values-as': 'link',
   },
   decorators: [facetDecorator],
+  beforeEach: () => {
+    mockDefaultFacetResponse();
+  },
 };
 
 export const AsBox: Story = {
@@ -87,6 +97,9 @@ export const AsBox: Story = {
     'display-values-as': 'box',
   },
   decorators: [facetDecorator],
+  beforeEach: () => {
+    mockDefaultFacetResponse();
+  },
 };
 
 export const WithExclusion: Story = {
@@ -96,6 +109,9 @@ export const WithExclusion: Story = {
     'enable-exclusion': true,
   },
   decorators: [facetDecorator],
+  beforeEach: () => {
+    mockDefaultFacetResponse();
+  },
 };
 
 export const WithSelectedValue: Story = {
@@ -135,4 +151,7 @@ export const Collapsed: Story = {
     'is-collapsed': true,
   },
   decorators: [facetDecorator],
+  beforeEach: () => {
+    mockDefaultFacetResponse();
+  },
 };
