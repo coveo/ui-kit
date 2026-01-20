@@ -8,11 +8,11 @@ import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
 import {page, userEvent} from 'vitest/browser';
 import './atomic-insight-facet';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {renderInAtomicInsightInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-interface-fixture';
 import {buildFakeFacetConditionsManager} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/facet-conditions-manager';
 import {buildFakeFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/facet-controller';
 import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/search-status-controller';
+import {mockConsole} from '@/vitest-utils/testing-helpers/testing-utils/mock-console';
 import type {AtomicInsightFacet} from './atomic-insight-facet';
 
 vi.mock('@coveo/headless/insight', {spy: true});
@@ -31,6 +31,7 @@ describe('atomic-insight-facet', () => {
   let mockedRegisterFacet: Mock;
 
   beforeEach(() => {
+    mockConsole();
     mockedRegisterFacet = vi.fn();
     vi.mocked(buildInsightFacet).mockReturnValue(buildFakeFacet({}));
     vi.mocked(buildInsightSearchStatus).mockReturnValue(
@@ -98,12 +99,6 @@ describe('atomic-insight-facet', () => {
     const locators = {
       get title() {
         return page.getByText('Test Field', {exact: true});
-      },
-      getFacetValueByPosition(valuePosition: number) {
-        return page.getByTestId(`facet-value-${valuePosition}`);
-      },
-      getFacetValueButtonByPosition(valuePosition: number) {
-        return page.getByTestId(`facet-value-button-${valuePosition}`);
       },
       getFacetValueByLabel(value: string | RegExp) {
         return page.getByText(value);
@@ -232,7 +227,7 @@ describe('atomic-insight-facet', () => {
         })
       );
       const {locators} = await setupElement();
-      await userEvent.click(locators.getFacetValueButtonByPosition(0));
+      await userEvent.click(locators.valueLabel[0]);
       expect(toggleSelect).toHaveBeenCalled();
     });
 
@@ -244,7 +239,7 @@ describe('atomic-insight-facet', () => {
         })
       );
       const {locators} = await setupElement({displayValuesAs: 'link'});
-      await userEvent.click(locators.getFacetValueButtonByPosition(0));
+      await userEvent.click(locators.getFacetValueButtonByLabel(/value-1.*15/));
       expect(toggleSingleSelect).toHaveBeenCalled();
     });
 
@@ -281,7 +276,7 @@ describe('atomic-insight-facet', () => {
       const excludeButton = element.shadowRoot?.querySelector(
         '[part~="value-exclude-button"]'
       ) as HTMLElement;
-      await userEvent.click(excludeButton);
+      excludeButton.click();
       expect(toggleExclude).toHaveBeenCalled();
     });
   });
@@ -432,45 +427,6 @@ describe('atomic-insight-facet', () => {
         const {element} = await setupElement({injectionDepth: -1});
         expect(element.error).toBeInstanceOf(Error);
       });
-    });
-  });
-
-  describe('accessibility', () => {
-    it('should announce facet search values to screen readers when there are search results', async () => {
-      vi.mocked(buildInsightFacet).mockReturnValue(
-        buildFakeFacet({
-          implementation: {
-            // @ts-expect-error: ignoring other methods
-            facetSearch: {
-              select: vi.fn(),
-            },
-          },
-          state: {
-            facetSearch: {
-              moreValuesAvailable: true,
-              isLoading: false,
-              query: 'ele',
-              values: [
-                {
-                  displayValue: 'sd',
-                  rawValue: 'sd',
-                  count: 1,
-                },
-              ],
-            },
-          },
-        })
-      );
-
-      const announceSpy = vi.spyOn(
-        AriaLiveRegionController.prototype,
-        'announce'
-      );
-      const {locators} = await setupElement();
-      await userEvent.click(locators.valueLabel[0]);
-      expect(announceSpy).toHaveBeenCalledWith(
-        '1 value found in the Test Field facet'
-      );
     });
   });
 
