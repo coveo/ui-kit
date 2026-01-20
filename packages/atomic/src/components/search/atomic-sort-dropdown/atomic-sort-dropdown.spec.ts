@@ -248,7 +248,7 @@ describe('atomic-sort-dropdown', () => {
     });
   });
 
-  describe('updated lifecycle', () => {
+  describe('willUpdate lifecycle', () => {
     it('should update sort criteria when no matching option is found', async () => {
       const updateSortCriterionMock = vi.fn();
       vi.mocked(loadSortCriteriaActions).mockReturnValue({
@@ -261,6 +261,36 @@ describe('atomic-sort-dropdown', () => {
 
       element.requestUpdate();
       await element.updateComplete;
+
+      expect(loadSortCriteriaActions).toHaveBeenCalledWith(
+        element.bindings.engine
+      );
+      expect(updateSortCriterionMock).toHaveBeenCalled();
+      expect(element.bindings.engine.dispatch).toHaveBeenCalled();
+    });
+
+    it('should reset sort via onTabManagerStateChange callback when tab state changes', async () => {
+      const updateSortCriterionMock = vi.fn(() => ({
+        type: 'updateSortCriterion',
+      }));
+      vi.mocked(loadSortCriteriaActions).mockReturnValue({
+        updateSortCriterion: updateSortCriterionMock,
+      } as never);
+
+      const {element} = await renderSortDropdown({
+        slotContent: `
+          <atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression>
+          <atomic-sort-expression label="date" expression="date descending" tabs-included='["test"]'></atomic-sort-expression>
+        `,
+        sortState: {sortCriteria: '@date descending'},
+        tabManagerState: {activeTab: 'test'},
+      });
+
+      element.tabManagerState = {activeTab: 'all'};
+
+      (
+        element as unknown as {onTabManagerStateChange: () => void}
+      ).onTabManagerStateChange();
 
       expect(loadSortCriteriaActions).toHaveBeenCalledWith(
         element.bindings.engine
