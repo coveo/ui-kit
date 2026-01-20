@@ -1,6 +1,6 @@
 ---
 name: creating-stories
-description: Creates and modifies Storybook stories for Atomic components and sample pages. Uses MSW for API mocking, follows ui-kit conventions. Use when creating stories, adding component examples, building sample pages, or when user mentions Storybook, stories, or visual testing.
+description: Creates and modifies Storybook stories for Atomic components and sample pages. Uses MSW for API mocking, follows ui-kit conventions. Use when creating stories, adding component examples, building sample pages, debugging MSW mock pollution, or when user mentions Storybook, stories, visual testing, or e2e tests that reference stories.
 license: Apache-2.0
 metadata:
   author: coveo
@@ -151,6 +151,17 @@ export const NoResults: Story = {
 | `wrapInCommerceInterface` | `@/storybook-utils/commerce/commerce-interface-wrapper` | `skipFirstSearch`, `includeCodeRoot` |
 | `wrapInInsightInterface` | `@/storybook-utils/insight/insight-interface-wrapper` | `skipFirstSearch` |
 | `wrapInResultTemplate` | `@/storybook-utils/search/result-template-wrapper` | `autoLoad` |
+
+## Troubleshooting
+
+| Symptom | Cause | Fix |
+|---------|-------|-----|
+| State persists when navigating between stories | Missing endpoint clear in meta `beforeEach` | Add `harness.endpoint.clear()` to meta-level `beforeEach` |
+| Story shows wrong/unexpected data | Using `mock()` instead of `mockOnce()` | Use `mockOnce()` for story-specific responses |
+| Tests pass individually but fail together | Response queue not cleared between stories | Ensure `beforeEach` clears endpoints (not `afterEach`) |
+| TypeScript errors on response modification | Not spreading base response object | Always use `{...response, field: value}` |
+| API calls return default responses | Handlers not included or wrong endpoint path | Verify `msw: {handlers: [...harness.handlers]}` and endpoint paths |
+| Stories interfere with each other | Shared state or missing clears | Clear all endpoints in meta `beforeEach` |
 
 ## Reference Documentation
 
