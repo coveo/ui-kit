@@ -13,6 +13,18 @@ import './atomic-insight-smart-snippet.js';
 
 vi.mock('@coveo/headless/insight', {spy: true});
 
+// Mock atomic-result-text to avoid result context dependencies
+vi.mock(
+  '@/src/components/search/atomic-result-text/atomic-result-text',
+  () => ({
+    AtomicResultText: class extends HTMLElement {
+      connectedCallback() {
+        this.textContent = 'Mocked Result Text';
+      }
+    },
+  })
+);
+
 describe('atomic-insight-smart-snippet', () => {
   let mockEngine: ReturnType<typeof buildFakeInsightEngine>;
   let mockSmartSnippet: InsightSmartSnippet;
