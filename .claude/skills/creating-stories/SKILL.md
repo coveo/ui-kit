@@ -157,6 +157,7 @@ export const NoResults: Story = {
 | Symptom | Cause | Fix |
 |---------|-------|-----|
 | State persists when navigating between stories | Missing endpoint clear in meta `beforeEach` | Add `harness.endpoint.clear()` to meta-level `beforeEach` |
+| Stories work individually but show wrong data in docs mode | Missing story-level `beforeEach` queuing `mockOnce()` | Every story needs `beforeEach` with `mockOnce()`. Pattern: Create helper `const mockDefault = () => harness.endpoint.mockOnce(r => r);` and call in ALL stories |
 | Story shows wrong/unexpected data | Using `mock()` instead of `mockOnce()` | Use `mockOnce()` for story-specific responses |
 | Tests pass individually but fail together | Response queue not cleared between stories | Ensure `beforeEach` clears endpoints (not `afterEach`) |
 | TypeScript errors on response modification | Not spreading base response object | Always use `{...response, field: value}` |
