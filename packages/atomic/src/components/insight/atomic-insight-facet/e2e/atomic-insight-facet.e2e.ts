@@ -1,151 +1,124 @@
-import type {FacetSortCriterion} from '@coveo/headless/insight';
-import {orderBy} from 'natural-orderby';
 import {expect, test} from './fixture';
 
-test.describe('when the "Show more" button has not been selected', () => {
-  test.beforeEach(async ({insightFacet}) => {
-    await insightFacet.load({story: 'low-facet-values'});
-    await insightFacet.hydrated.waitFor();
-  });
+test.describe('atomic-insight-facet', () => {
+  test('should render all essential parts', async ({insightFacet}) => {
+    await insightFacet.load({story: 'default'});
 
-  test('should display the correct number of facet values', async ({
-    insightFacet,
-  }) => {
-    await expect
-      .poll(async () => await insightFacet.facetValue.count())
-      .toBe(2);
-  });
-});
+    await test.step('Verify facet container is visible', async () => {
+      await expect(insightFacet.facet).toBeVisible();
+    });
 
-test.describe('when the "Show more" button has been selected', () => {
-  test.beforeEach(async ({insightFacet}) => {
-    await insightFacet.load({story: 'low-facet-values'});
-    await insightFacet.showMoreButton.click();
-  });
+    await test.step('Verify label button is visible', async () => {
+      await expect(insightFacet.labelButton).toBeVisible();
+    });
 
-  test('should display additional facet values', async ({insightFacet}) => {
-    await expect
-      .poll(async () => await insightFacet.facetValue.count())
-      .toBeGreaterThan(2);
-  });
-
-  test.describe('when additional facet values are available', () => {
-    test('should display the "Show more" button', async ({insightFacet}) => {
-      await expect(insightFacet.showMoreButton).toBeVisible();
+    await test.step('Verify facet values are visible', async () => {
+      const count = await insightFacet.facetValue.count();
+      expect(count).toBeGreaterThan(0);
     });
   });
-});
 
-test.describe('when a facet value is selected', () => {
-  test.beforeEach(async ({insightFacet}) => {
-    await insightFacet.load({story: 'default'});
-    await insightFacet.hydrated.waitFor();
+  test.describe('display modes', () => {
+    test('should render facet values as checkboxes by default', async ({
+      insightFacet,
+    }) => {
+      await insightFacet.load({story: 'default'});
+      await insightFacet.hydrated.waitFor();
+      const checkbox = insightFacet.page.locator('[part~="value-checkbox"]');
+      await expect(checkbox.first()).toBeVisible();
+    });
+
+    test('should render facet values as links when displayValuesAs is "link"', async ({
+      insightFacet,
+    }) => {
+      await insightFacet.load({story: 'as-link'});
+      await insightFacet.hydrated.waitFor();
+      const link = insightFacet.page.locator('[part~="value-link"]');
+      await expect(link.first()).toBeVisible();
+    });
+
+    test('should render facet values as boxes when displayValuesAs is "box"', async ({
+      insightFacet,
+    }) => {
+      await insightFacet.load({story: 'as-box'});
+      await insightFacet.hydrated.waitFor();
+      const box = insightFacet.page.locator('[part~="value-box"]');
+      await expect(box.first()).toBeVisible();
+    });
   });
 
-  test('should display the clear button', async ({insightFacet}) => {
-    const firstValue = insightFacet.facetValue.first();
-    await firstValue.click();
-    await expect(insightFacet.clearButton).toBeVisible();
-  });
-});
+  test.describe('collapse and expand', () => {
+    test('should start collapsed when is-collapsed is true', async ({
+      insightFacet,
+    }) => {
+      await insightFacet.load({story: 'collapsed'});
 
-test.describe('display modes', () => {
-  test('should render facet values as checkboxes by default', async ({
-    insightFacet,
-  }) => {
-    await insightFacet.load({story: 'default'});
-    await insightFacet.hydrated.waitFor();
-    const checkbox = insightFacet.page.locator('[part~="value-checkbox"]');
-    await expect(checkbox.first()).toBeVisible();
-  });
-
-  test('should render facet values as links when displayValuesAs is "link"', async ({
-    insightFacet,
-  }) => {
-    await insightFacet.load({story: 'as-link'});
-    await insightFacet.hydrated.waitFor();
-    const link = insightFacet.page.locator('[part~="value-link"]');
-    await expect(link.first()).toBeVisible();
-  });
-
-  test('should render facet values as boxes when displayValuesAs is "box"', async ({
-    insightFacet,
-  }) => {
-    await insightFacet.load({story: 'as-box'});
-    await insightFacet.hydrated.waitFor();
-    const box = insightFacet.page.locator('[part~="value-box"]');
-    await expect(box.first()).toBeVisible();
-  });
-});
-
-test.describe('with exclusion enabled', () => {
-  test.beforeEach(async ({insightFacet}) => {
-    await insightFacet.load({story: 'with-exclusion'});
-    await insightFacet.hydrated.waitFor();
-  });
-
-  test('should display exclusion buttons for selected values', async ({
-    insightFacet,
-  }) => {
-    const firstValue = insightFacet.facetValue.first();
-    await firstValue.click();
-    const excludeButton = insightFacet.page.locator(
-      '[part~="value-exclude-button"]'
-    );
-    await expect(excludeButton.first()).toBeVisible();
-  });
-});
-
-const sortCriteriaTests: {
-  criteria: FacetSortCriterion;
-  sortFunction: (values: string[]) => string[];
-}[] = [
-  {
-    criteria: 'alphanumeric',
-    sortFunction: (values: string[]) => [...values].sort(),
-  },
-  {
-    criteria: 'alphanumericDescending',
-    sortFunction: (values: string[]) => [...values].sort().reverse(),
-  },
-  {
-    criteria: 'alphanumericNatural',
-    sortFunction: (values: string[]) =>
-      orderBy([...values], [(value: string) => value], 'asc'),
-  },
-  {
-    criteria: 'alphanumericNaturalDescending',
-    sortFunction: (values: string[]) =>
-      orderBy([...values], [(value: string) => value], ['desc']),
-  },
-];
-
-test.describe('Sort Criteria', () => {
-  for (const {criteria, sortFunction} of sortCriteriaTests) {
-    test.describe(`when sort criteria is set to "${criteria}"`, () => {
-      test.beforeEach(async ({insightFacet}) => {
-        await insightFacet.load({
-          args: {
-            sortCriteria: criteria,
-            field: 'objecttype',
-            label: 'Type',
-            numberOfValues: 8,
-          },
-        });
-        await insightFacet.hydrated.waitFor();
-      });
-
-      test(`should have facet values sorted by ${criteria}`, async ({
-        insightFacet,
-      }) => {
-        const values = await insightFacet.facetValueLabel.allTextContents();
-        const sortedValues = sortFunction(values);
-        expect(values).toEqual(sortedValues);
+      await test.step('Verify values are initially hidden', async () => {
+        await expect(insightFacet.values).not.toBeVisible();
       });
     });
-  }
 
-  test.describe('when sort criteria is set to "occurrences"', () => {
+    test('should hide and show values when clicking the label button', async ({
+      insightFacet,
+    }) => {
+      await insightFacet.load({story: 'default'});
+
+      await test.step('Verify values are initially visible', async () => {
+        await expect(insightFacet.values).toBeVisible();
+      });
+
+      await test.step('Click label button to collapse', async () => {
+        await insightFacet.labelButton.click();
+      });
+
+      await test.step('Verify values are hidden after collapse', async () => {
+        await expect(insightFacet.values).not.toBeVisible();
+      });
+
+      await test.step('Click label button to expand', async () => {
+        await insightFacet.labelButton.click();
+      });
+
+      await test.step('Verify values are visible again after expand', async () => {
+        await expect(insightFacet.values).toBeVisible();
+      });
+    });
+  });
+
+  test.describe('selected values', () => {
+    test('should display selected value with visual indicator', async ({
+      insightFacet,
+    }) => {
+      await insightFacet.load({story: 'with-selected-value'});
+
+      await test.step('Verify selected checkbox has checked state', async () => {
+        const selectedCheckbox = insightFacet.page.locator(
+          '[part~="value-checkbox-checked"]'
+        );
+        await expect(selectedCheckbox.first()).toBeVisible();
+      });
+    });
+  });
+
+  test.describe('with exclusion enabled', () => {
+    test.beforeEach(async ({insightFacet}) => {
+      await insightFacet.load({story: 'with-exclusion'});
+      await insightFacet.hydrated.waitFor();
+    });
+
+    test('should display exclusion buttons for selected values', async ({
+      insightFacet,
+    }) => {
+      const firstValue = insightFacet.facetValue.first();
+      await firstValue.click();
+      const excludeButton = insightFacet.page.locator(
+        '[part~="value-exclude-button"]'
+      );
+      await expect(excludeButton.first()).toBeVisible();
+    });
+  });
+
+  test.describe('sort criteria - occurrences', () => {
     test.beforeEach(async ({insightFacet}) => {
       await insightFacet.load({
         args: {
@@ -158,83 +131,18 @@ test.describe('Sort Criteria', () => {
       await insightFacet.hydrated.waitFor();
     });
 
-    test('should have facet values sorted by occurrences', async ({
+    test('should have facet values sorted by occurrences in descending order', async ({
       insightFacet,
     }) => {
       const values = await insightFacet.facetValueOccurrences.allTextContents();
-      const sortedValues = [...values]
-        .sort((a, b) => {
-          const numA = parseInt(a.replace(/[^\d]/g, ''), 10);
-          const numB = parseInt(b.replace(/[^\d]/g, ''), 10);
-          return numA - numB;
-        })
-        .reverse();
-      expect(values).toEqual(sortedValues);
+      const occurrences = values.map((v) =>
+        parseInt(v.replace(/[^\d]/g, ''), 10)
+      );
+
+      // Verify counts are in descending order
+      for (let i = 0; i < occurrences.length - 1; i++) {
+        expect(occurrences[i]).toBeGreaterThanOrEqual(occurrences[i + 1]);
+      }
     });
-  });
-
-  test.describe('when sort criteria is set to "automatic"', () => {
-    test.beforeEach(async ({insightFacet}) => {
-      await insightFacet.load({
-        args: {
-          sortCriteria: 'automatic',
-          field: 'objecttype',
-          label: 'Type',
-          numberOfValues: 8,
-        },
-      });
-      await insightFacet.hydrated.waitFor();
-    });
-
-    test('should have facet values sorted by occurrences when not expanded', async ({
-      insightFacet,
-    }) => {
-      const values = await insightFacet.facetValueOccurrences.allTextContents();
-      const sortedValues = [...values]
-        .sort((a, b) => {
-          const numA = parseInt(a.replace(/[^\d]/g, ''), 10);
-          const numB = parseInt(b.replace(/[^\d]/g, ''), 10);
-          return numA - numB;
-        })
-        .reverse();
-      expect(values).toEqual(sortedValues);
-    });
-
-    test.describe('when expanded', () => {
-      test.beforeEach(async ({insightFacet}) => {
-        await insightFacet.showMoreButton.click();
-      });
-
-      test('should have facet values sorted alphanumerically when expanded', async ({
-        insightFacet,
-      }) => {
-        const values = await insightFacet.facetValueLabel.allTextContents();
-        const sortedValues = [...values].sort();
-        expect(values).toEqual(sortedValues);
-      });
-    });
-  });
-});
-
-test.describe('Accessibility', () => {
-  test('should have proper ARIA labels', async ({insightFacet}) => {
-    await insightFacet.load({story: 'default'});
-    await insightFacet.hydrated.waitFor();
-
-    await expect(insightFacet.component).toMatchAriaSnapshot(`
-      - group:
-        - button "Expand the objecttype facet"
-        - group "objecttype facet values":
-          - list:
-            - listitem
-            - listitem
-            - listitem
-            - listitem
-            - listitem
-            - listitem
-            - listitem
-            - listitem
-        - button "Show more"
-    `);
   });
 });

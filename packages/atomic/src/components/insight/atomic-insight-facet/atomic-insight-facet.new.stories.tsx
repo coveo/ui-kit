@@ -51,6 +51,10 @@ const meta: Meta = {
     },
   },
 
+  beforeEach: () => {
+    mockInsightApi.searchEndpoint.clear();
+  },
+
   play,
   args: {
     ...args,
@@ -61,18 +65,8 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-insight-facet',
   args: {
     field: 'objecttype',
-  },
-  decorators: [facetDecorator],
-};
-
-export const LowFacetValues: Story = {
-  tags: ['test'],
-  args: {
-    field: 'objecttype',
-    'number-of-values': 2,
   },
   decorators: [facetDecorator],
 };
@@ -100,6 +94,45 @@ export const WithExclusion: Story = {
   args: {
     field: 'objecttype',
     'enable-exclusion': true,
+  },
+  decorators: [facetDecorator],
+};
+
+export const WithSelectedValue: Story = {
+  tags: ['test'],
+  args: {
+    field: 'objecttype',
+  },
+  decorators: [facetDecorator],
+  beforeEach: () => {
+    mockInsightApi.searchEndpoint.mockOnce((response) => {
+      if ('facets' in response) {
+        const selectedFacets = response.facets?.map((facet) => {
+          if (facet.field === 'objecttype') {
+            return {
+              ...facet,
+              values: facet.values.map((value, index) =>
+                index === 0 ? {...value, state: 'selected'} : value
+              ),
+            };
+          }
+          return facet;
+        });
+        return {
+          ...response,
+          facets: selectedFacets,
+        };
+      }
+      return response;
+    });
+  },
+};
+
+export const Collapsed: Story = {
+  tags: ['test'],
+  args: {
+    field: 'objecttype',
+    'is-collapsed': true,
   },
   decorators: [facetDecorator],
 };

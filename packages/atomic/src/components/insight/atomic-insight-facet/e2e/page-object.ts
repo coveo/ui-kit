@@ -6,6 +6,18 @@ export class AtomicInsightFacetPageObject extends BasePageObject {
     super(page, 'atomic-insight-facet');
   }
 
+  get facet() {
+    return this.page.locator('[part="facet"]');
+  }
+
+  get labelButton() {
+    return this.page.locator('[part="label-button"]').first();
+  }
+
+  get values() {
+    return this.page.locator('[part="values"]');
+  }
+
   get expandButtons() {
     return this.page.getByRole('button', {name: /Expand the \w* facet/});
   }
