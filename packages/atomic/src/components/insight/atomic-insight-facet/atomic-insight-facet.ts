@@ -51,7 +51,6 @@ import {ValidatePropsController} from '@/src/components/common/validate-props-co
  * The `atomic-insight-facet` component displays a facet of the results for the current query in an Insight interface.
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
  *
- * @internal
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
  * @part label-button - The button that displays the label and allows to expand/collapse the facet.
