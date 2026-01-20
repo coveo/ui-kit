@@ -1,4 +1,4 @@
-import {html, LitElement, nothing} from 'lit';
+import {LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {
   dispatchNumberFormatEvent,
@@ -56,7 +56,7 @@ export class AtomicFormatUnit
 
   @errorGuard()
   render() {
-    return html`${nothing}`;
+    return nothing;
   }
 }
 

@@ -274,7 +274,7 @@ export class AtomicSearchBoxInstantResults
 
   @errorGuard()
   render() {
-    return html`${nothing}`;
+    return nothing;
   }
 }
 
