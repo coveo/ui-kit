@@ -26,7 +26,7 @@ const viewportTests = [
     viewportWidth: smallViewportWidth,
     testLabel:
       'should display only the selected tab and the more button with a label, the other tabs are in the dropdown',
-    expectedNumberOfTabsDisplayed: 3,
+    expectedNumberOfTabsDisplayed: 1,
     expectedMoreButtonLabel: 'More',
   },
   {
@@ -34,7 +34,7 @@ const viewportTests = [
     viewportWidth: mediumViewportWidth,
     testLabel:
       'should display only the first two tabs and the more button with a label, the other tabs are in the dropdown',
-    expectedNumberOfTabsDisplayed: 3,
+    expectedNumberOfTabsDisplayed: 2,
     expectedMoreButtonLabel: 'More',
   },
 ];
@@ -77,9 +77,9 @@ useCaseTestCases.forEach((useCase) => {
 
             const displayedTabs = tabBar.allVisibleTabs;
             expect(displayedTabs).not.toBeNull();
-            const visibleCount = await displayedTabs.count();
-            expect(visibleCount).toBeGreaterThanOrEqual(1);
-            expect(visibleCount).toBeLessThanOrEqual(expectedNumberOfTabsDisplayed);
+            expect(await displayedTabs.count()).toEqual(
+              expectedNumberOfTabsDisplayed
+            );
 
             expect(await dropdownContainer.isVisible()).toBe(true);
 
@@ -87,8 +87,9 @@ useCaseTestCases.forEach((useCase) => {
 
             const tabsInDropdown = tabBar.allDropdownOptions;
             expect(tabsInDropdown).not.toBeNull();
-            const dropdownCount = await tabsInDropdown.count();
-            expect(dropdownCount).toBe(expectedNumberOfTabs - visibleCount);
+            expect(await tabsInDropdown.count()).toEqual(
+              expectedNumberOfTabs - expectedNumberOfTabsDisplayed
+            );
 
             expect(await tabBar.moreButton.textContent()).toEqual(
               expectedMoreButtonLabel
@@ -110,7 +111,7 @@ useCaseTestCases.forEach((useCase) => {
           search,
         }) => {
           const expectedSelectedTabLabel = 'Tab 4';
-          const expectedNumberOfDropdownOptions = 1;
+          const expectedNumberOfDropdownOptions = 2;
           const expectedActionCause = 'interfaceChange';
           const expectedTabValue = 'Tab 4';
 
@@ -119,10 +120,8 @@ useCaseTestCases.forEach((useCase) => {
           await tabBar.clickMoreButton();
           const dropdownOptionsCount = await tabBar.allDropdownOptions.count();
           expect(dropdownOptionsCount).not.toBeNull();
-          expect(dropdownOptionsCount).toBeGreaterThanOrEqual(
-            expectedNumberOfDropdownOptions
-          );
-          await tabBar.clickDropdownOption(0);
+          expect(dropdownOptionsCount).toEqual(expectedNumberOfDropdownOptions);
+          await tabBar.clickDropdownOption(1);
 
           const activeTab = await tabBar.activeTab.textContent();
 

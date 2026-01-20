@@ -1,3 +1,8 @@
+.tab-bar_list-container {
+  /* Prevents horizontal scrollbar from appearing when tabs overflow */
+  overflow-x: clip;
+}
+
 .tab-bar_dropdown {
   max-width: 150px;
 }
