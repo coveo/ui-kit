@@ -153,7 +153,7 @@ export class AtomicIPXButton implements InitializableComponent {
     if (!iconElement) {
       return initialDiv.innerHTML;
     }
-    // here, we grab the icon width and height to set a viewbox (which keeps the svg looking normal), then remove styles from the icon to let the icon stretch into the space it is given.
+    // here, we grab the icon width and height to set a `viewbox` (which keeps the svg looking normal), then remove styles from the icon to let the icon stretch into the space it is given.
     const iconWidth = this.getIconWidth(iconElement);
     const iconHeight = this.getIconHeight(iconElement);
     this.cleanupSVGStyles(iconElement);
