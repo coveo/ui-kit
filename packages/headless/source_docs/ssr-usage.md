@@ -93,10 +93,9 @@ Engine definitions contain different kinds of hooks for React and Next.js.
 
 The following is an example of how you would build [facet](https://docs.coveo.com/en/198/) components for the same engine definition used in the previous examples.
 
-<dl><dt><strong>❗ IMPORTANT</strong></dt><dd>
-
-If you’re using Next.js with the [App Router](https://nextjs.org/docs/app), any file which uses these hooks must begin with the [’use client'`](https://nextjs.org/docs/app/building-your-application/rendering/client-components#using-client-components-in-nextjs) directive.
-</dd></dl>
+> [!IMPORTANT]
+> 
+> If you’re using Next.js with the [App Router](https://nextjs.org/docs/app), any file which uses these hooks must begin with the [’use client'`](https://nextjs.org/docs/app/building-your-application/rendering/client-components#using-client-components-in-nextjs) directive.
 
 ```tsx
 'use client';
@@ -148,10 +147,9 @@ Using these new providers, we have the necessary components to complete the full
 
 The following example demonstrates how to replace the `StaticStateProvider` with the `HydratedStateProvider` once you have the hydrated state, by making a custom component that takes on the responsibility of hydration and choosing the provider.
 
-<dl><dt><strong>❗ IMPORTANT</strong></dt><dd>
-
-If you’re using Next.js with the [App Router](https://nextjs.org/docs/app), any file which uses these hooks must begin with the [’use client'`](https://nextjs.org/docs/app/building-your-application/rendering/client-components#using-client-components-in-nextjs) directive.
-</dd></dl>
+> [!IMPORTANT]
+> 
+> If you’re using Next.js with the [App Router](https://nextjs.org/docs/app), any file which uses these hooks must begin with the [’use client'`](https://nextjs.org/docs/app/building-your-application/rendering/client-components#using-client-components-in-nextjs) directive.
 
 ```tsx
 'use client';

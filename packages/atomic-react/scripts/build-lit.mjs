@@ -18,6 +18,7 @@ const entries = [
     excludedComponentDirectories: [
       'src/components/commerce',
       'src/components/insight',
+      'src/components/ipx',
     ],
     computedComponentImports: [],
   },
@@ -34,6 +35,7 @@ const entries = [
       'src/components/search',
       'src/components/recommendations',
       'src/components/insight',
+      'src/components/ipx',
     ],
     computedComponentImports: [],
   },
