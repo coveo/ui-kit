@@ -277,6 +277,18 @@ describe('atomic-sort-dropdown', () => {
         updateSortCriterion: updateSortCriterionMock,
       } as never);
 
+      // Create a mock tabManager that captures the subscribe callback
+      let subscribedCallback: (() => void) | undefined;
+      const mockTabManager = buildFakeTabManager({
+        activeTab: 'test',
+      });
+      mockTabManager.subscribe = vi.fn((callback) => {
+        subscribedCallback = callback;
+        callback(); // Call immediately like genericSubscribe does
+        return vi.fn();
+      });
+      vi.mocked(buildTabManager).mockReturnValue(mockTabManager);
+
       const {element} = await renderSortDropdown({
         slotContent: `
           <atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression>
@@ -286,11 +298,9 @@ describe('atomic-sort-dropdown', () => {
         tabManagerState: {activeTab: 'test'},
       });
 
-      element.tabManagerState = {activeTab: 'all'};
-
-      (
-        element as unknown as {onTabManagerStateChange: () => void}
-      ).onTabManagerStateChange();
+      // Update the controller's state and trigger the callback through subscription
+      mockTabManager.state = {activeTab: 'all'};
+      subscribedCallback?.();
 
       expect(loadSortCriteriaActions).toHaveBeenCalledWith(
         element.bindings.engine
