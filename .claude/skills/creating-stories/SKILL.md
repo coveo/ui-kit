@@ -134,52 +134,40 @@ export const NoResults: Story = {
 
 ## Available API Mocks
 
-| Mock | Import | Use Case |
-|------|--------|----------|
-| `MockSearchApi` | `@/storybook-utils/api/search/mock` | Search interface |
-| `MockCommerceApi` | `@/storybook-utils/api/commerce/mock` | Commerce interface |
-| `MockInsightApi` | `@/storybook-utils/api/insight/mock` | Insight interface |
-| `MockAnswerApi` | `@/storybook-utils/api/answer/mock` | Answer/RGA |
-| `MockRecommendationApi` | `@/storybook-utils/api/recommendation/mock` | Recommendations |
-| `MockMachineLearningApi` | `@/storybook-utils/api/machinelearning/mock` | ML/User Actions |
+| Mock                     | Import                                       | Use Case           |
+| ------------------------ | -------------------------------------------- | ------------------ |
+| `MockSearchApi`          | `@/storybook-utils/api/search/mock`          | Search interface   |
+| `MockCommerceApi`        | `@/storybook-utils/api/commerce/mock`        | Commerce interface |
+| `MockInsightApi`         | `@/storybook-utils/api/insight/mock`         | Insight interface  |
+| `MockAnswerApi`          | `@/storybook-utils/api/answer/mock`          | Answer/RGA         |
+| `MockRecommendationApi`  | `@/storybook-utils/api/recommendation/mock`  | Recommendations    |
+| `MockMachineLearningApi` | `@/storybook-utils/api/machinelearning/mock` | ML/User Actions    |
 
 ## Interface Wrappers
 
-| Wrapper | Import | Options |
-|---------|--------|---------|
-| `wrapInSearchInterface` | `@/storybook-utils/search/search-interface-wrapper` | `skipFirstSearch`, `includeCodeRoot` |
+| Wrapper                   | Import                                                  | Options                              |
+| ------------------------- | ------------------------------------------------------- | ------------------------------------ |
+| `wrapInSearchInterface`   | `@/storybook-utils/search/search-interface-wrapper`     | `skipFirstSearch`, `includeCodeRoot` |
 | `wrapInCommerceInterface` | `@/storybook-utils/commerce/commerce-interface-wrapper` | `skipFirstSearch`, `includeCodeRoot` |
-| `wrapInInsightInterface` | `@/storybook-utils/insight/insight-interface-wrapper` | `skipFirstSearch` |
-| `wrapInResultTemplate` | `@/storybook-utils/search/result-template-wrapper` | `autoLoad` |
-
-## Troubleshooting
-
-| Symptom | Cause | Fix |
-|---------|-------|-----|
-| State persists when navigating between stories | Missing endpoint clear in meta `beforeEach` | Add `harness.endpoint.clear()` to meta-level `beforeEach` |
-| Stories work individually but show wrong data in docs mode | Missing story-level `beforeEach` queuing `mockOnce()` | Every story needs `beforeEach` with `mockOnce()`. Pattern: Create helper `const mockDefault = () => harness.endpoint.mockOnce(r => r);` and call in ALL stories |
-| Story shows wrong/unexpected data | Using `mock()` instead of `mockOnce()` | Use `mockOnce()` for story-specific responses |
-| Tests pass individually but fail together | Response queue not cleared between stories | Ensure `beforeEach` clears endpoints (not `afterEach`) |
-| TypeScript errors on response modification | Not spreading base response object | Always use `{...response, field: value}` |
-| API calls return default responses | Handlers not included or wrong endpoint path | Verify `msw: {handlers: [...harness.handlers]}` and endpoint paths |
-| Stories interfere with each other | Shared state or missing clears | Clear all endpoints in meta `beforeEach` |
+| `wrapInInsightInterface`  | `@/storybook-utils/insight/insight-interface-wrapper`   | `skipFirstSearch`                    |
+| `wrapInResultTemplate`    | `@/storybook-utils/search/result-template-wrapper`      | `autoLoad`                           |
 
 ## Reference Documentation
 
-| Reference | When to Load |
-|-----------|--------------|
+| Reference                                                                 | When to Load                                     |
+| ------------------------------------------------------------------------- | ------------------------------------------------ |
 | [endpoint-harness-reference.md](references/endpoint-harness-reference.md) | `EndpointHarness` overview, methods, type safety |
-| [msw-patterns.md](references/msw-patterns.md) | Advanced MSW techniques, pagination, errors |
-| [creating-new-api-mock.md](references/creating-new-api-mock.md) | Add a new mock domain when needed |
-| [component-examples.md](references/component-examples.md) | Facets, search box, pager, result components |
-| [sample-page-examples.md](references/sample-page-examples.md) | Full page patterns for all interfaces |
+| [msw-patterns.md](references/msw-patterns.md)                             | Advanced MSW techniques, pagination, errors      |
+| [creating-new-api-mock.md](references/creating-new-api-mock.md)           | Add a new mock domain when needed                |
+| [component-examples.md](references/component-examples.md)                 | Facets, search box, pager, result components     |
+| [sample-page-examples.md](references/sample-page-examples.md)             | Full page patterns for all interfaces            |
 
 ## Scripts
 
-| Script | Purpose |
-|--------|---------|
-| `generate-story-template.mjs` | Generate story boilerplate from templates |
-| `validate_story.mjs` | Validate created story files for correctness |
+| Script                        | Purpose                                      |
+| ----------------------------- | -------------------------------------------- |
+| `generate-story-template.mjs` | Generate story boilerplate from templates    |
+| `validate_story.mjs`          | Validate created story files for correctness |
 
 ## Templates
 
@@ -199,44 +187,33 @@ Before completing:
 - [ ] For pages: initialization function and `play` handler included
 - [ ] Story follows patterns from similar components
 
-## Common Pitfalls
-
-1. **Forgetting to clear** - Always `harness.endpoint.clear()` in `beforeEach`
-2. **Not spreading base response** - Always `{...response, field: value}`
-3. **Wrong import paths** - Use `@/storybook-utils/...` not relative paths
-4. **Missing handlers** - Include all harness handlers in `msw.handlers`
-5. **Wrong decorator order** - Result templates need specific order
-
 ## Common Edge Cases
 
-### MSW Responses Not Being Consumed
+### Forgetting to clear endpoints
 
-**Symptom:** API calls return default responses instead of mocked ones.
-
-**Check:**
-- Endpoint path in harness matches actual API call
-- HTTP method (GET/POST) is correct
-- Handlers are included in MSW parameters: `msw: { handlers: [...harness.handlers] }`
-
-### Responses Returned in Wrong Order
-
-**Symptom:** Wrong response is returned for a queued sequence.
-
-**Solution:** Ensure you're clearing in `beforeEach`, not `afterEach`:
-
+Always clear in meta-level `beforeEach`, not `afterEach`:
 ```typescript
 beforeEach: () => {
   harness.searchEndpoint.clear();
-  // Then enqueue in correct order
 }
 ```
 
-### TypeScript Errors on Response Modification
+### Stories show wrong data in docs mode
 
-**Symptom:** Type errors when modifying response objects.
+Every story needs story-level `beforeEach` queuing `mockOnce()`. Create helper:
+```typescript
+const mockDefault = () => harness.endpoint.mockOnce(r => r);
+```
+Call in ALL stories' `beforeEach`, even for default responses.
 
-**Solution:** Spread base response to maintain all required fields:
+### State persists between stories
 
+**Cause:** Missing endpoint clear in meta `beforeEach`  
+**Fix:** Add `harness.endpoint.clear()` to meta-level `beforeEach`
+
+### Not spreading base response
+
+Always spread to maintain all required fields:
 ```typescript
 mockOnce((response) => ({
   ...response,
@@ -244,17 +221,30 @@ mockOnce((response) => ({
 }))
 ```
 
-### Multiple Stories Interfere With Each Other
+### Wrong import paths
 
-**Symptom:** Stories fail when run together but pass individually.
+Use `@/storybook-utils/...` path aliases, not relative paths
 
-**Solution:** Always clear queued responses in `beforeEach`:
+### Missing MSW handlers
 
+Include all harness handlers in parameters:
 ```typescript
-const meta: Meta = {
-  beforeEach: () => {
-    searchApiHarness.searchEndpoint.clear();
-    // Then queue responses specific to each story
-  },
-};
+parameters: {
+  msw: {handlers: [...harness.handlers]},
+}
 ```
+
+### Wrong decorator order
+
+Result templates require specific decorator order—check similar components for the pattern
+
+### API calls return default responses
+
+**Check:**
+- Endpoint path in harness matches actual API call
+- HTTP method (GET/POST) is correct  
+- Handlers included: `msw: {handlers: [...harness.handlers]}`
+
+### Using mock() instead of mockOnce()
+
+Use `mockOnce()` for story-specific responses to prevent pollution
