@@ -4,6 +4,27 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import colors from '../../../utils/ci/colors.mjs';
 
+/**
+ * Generates index.ts and lazy-index.ts exports for Lit components.
+ *
+ * IMPORTANT: This script only scans FIRST-LEVEL directories under each use-case folder.
+ *
+ * When migrating a Stencil component to Lit, you MUST place the component directory
+ * directly under the use-case folder (e.g., `insight/`, `search/`, `commerce/`).
+ *
+ * CORRECT structure:
+ *   src/components/insight/atomic-insight-smart-snippet-suggestions/
+ *                          └── atomic-insight-smart-snippet-suggestions.ts
+ *
+ * INCORRECT structure (component will NOT be exported):
+ *   src/components/insight/smart-snippets/atomic-insight-smart-snippet-suggestions/
+ *                                         └── atomic-insight-smart-snippet-suggestions.ts
+ *
+ * Nested directories are NOT scanned. If your component is in a subdirectory,
+ * it will not be registered as a custom element, causing the interface initialization
+ * to hang indefinitely while waiting for the component to be defined.
+ */
+
 const directories = [
   'commerce',
   'common',
