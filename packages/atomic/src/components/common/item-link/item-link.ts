@@ -1,4 +1,4 @@
-import {html} from 'lit';
+import {html, nothing} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {type RefOrCallback, ref} from 'lit/directives/ref.js';
 import type {ItemTarget} from '@/src/components/common/layout/item-layout-utils';
@@ -61,10 +61,6 @@ export const renderLinkWithItemAnalytics: FunctionalComponentWithChildren<
         title=${ifDefined(title)}
         rel=${ifDefined(rel)}
         ${ref((el) => {
-          if (typeof refCallback === 'function') {
-            refCallback(el as HTMLAnchorElement);
-          }
-
           if (!el) {
             return;
           }
@@ -86,6 +82,7 @@ export const renderLinkWithItemAnalytics: FunctionalComponentWithChildren<
             });
           }
         })}
+        ${refCallback ? ref(refCallback) : nothing}
         tabindex=${ifDefined(tabIndex)}
         @mouseover=${onMouseOver}
         @mouseleave=${onMouseLeave}

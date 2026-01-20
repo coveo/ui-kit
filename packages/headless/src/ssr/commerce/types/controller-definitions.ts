@@ -25,6 +25,7 @@ import type {
   RecommendationOnlyController,
   SearchAndListingController,
   SearchOnlyController,
+  StandaloneController,
   UniversalController,
 } from './controller-scopes.js';
 import type {Kind} from './kind.js';
@@ -349,6 +350,11 @@ export type ListingAndStandaloneControllerWithoutProps<
   TController extends Controller,
 > = ControllerDefinitionWithoutProps<TController> &
   ListingAndStandaloneController;
+
+export type StandaloneControllerWithProps<
+  TController extends Controller,
+  TProps,
+> = ControllerDefinitionWithProps<TController, TProps> & StandaloneController;
 
 type ListingOnlyControllerDefinitionWithoutProps<
   TController extends Controller,

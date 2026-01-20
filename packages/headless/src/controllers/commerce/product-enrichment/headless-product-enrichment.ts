@@ -7,6 +7,7 @@ import {productEnrichmentOptionsSchema} from '../../../features/commerce/product
 import {
   type FetchBadgesPayload,
   fetchBadges,
+  registerProductEnrichmentOptions,
 } from '../../../features/commerce/product-enrichment/product-enrichment-actions.js';
 import {productEnrichmentReducer as productEnrichment} from '../../../features/commerce/product-enrichment/product-enrichment-slice.js';
 import type {ProductEnrichmentSection} from '../../../state/state-sections.js';
@@ -61,6 +62,14 @@ export interface ProductEnrichmentState {
    * The error returned when executing a badge fetch request, if any. This is `null` otherwise.
    */
   error: CommerceAPIErrorResponse | SerializedError | null;
+  /**
+   * The product ID used for fetching badges.
+   */
+  productId?: string;
+  /**
+   * The placement IDs used for fetching badges.
+   */
+  placementIds: string[];
 }
 
 function validateProductEnrichmentProps(
@@ -107,12 +116,19 @@ export function buildProductEnrichment(
     options: props?.options,
   });
 
+  // Register the options in state so they can be recovered during SSR hydration
+  dispatch(
+    registerProductEnrichmentOptions({
+      productId: registrationOptions.productId,
+      placementIds: registrationOptions.placementIds,
+    })
+  );
+
   return {
     ...controller,
 
     get state() {
-      const state = getState();
-      return state.productEnrichment;
+      return getState().productEnrichment;
     },
 
     getBadges() {
