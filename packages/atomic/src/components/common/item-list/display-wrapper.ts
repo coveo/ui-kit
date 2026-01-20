@@ -1,6 +1,6 @@
 import {html} from 'lit';
-import type {ItemDisplayLayout} from '@/src/components';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
+import type {ItemDisplayLayout} from '../layout/item-layout-utils';
 
 export interface DisplayWrapperProps {
   display: ItemDisplayLayout;
