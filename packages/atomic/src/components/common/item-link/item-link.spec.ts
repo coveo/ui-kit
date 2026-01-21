@@ -233,7 +233,7 @@ describe('#renderLinkWithItemAnalytics', () => {
     expect(handleBlur).toHaveBeenCalledOnce();
   });
 
-  it('should call ref callback with link element', async () => {
+  it('should call ref callback function with link element', async () => {
     const refCallback = vi.fn();
     await renderComponent({
       ref: refCallback,
@@ -243,7 +243,17 @@ describe('#renderLinkWithItemAnalytics', () => {
     expect(refCallback).toHaveBeenCalledWith(expect.any(HTMLAnchorElement));
   });
 
-  it('should handle undefined ref callback', async () => {
+  it('should set ref object value property when ref is an object', async () => {
+    const refObject = {value: undefined as HTMLAnchorElement | undefined};
+    await renderComponent({
+      ref: refObject,
+    });
+
+    expect(refObject.value).toBeInstanceOf(HTMLAnchorElement);
+    expect(refObject.value?.tagName).toBe('A');
+  });
+
+  it('should handle undefined ref', async () => {
     // Should not throw when ref is undefined
     await expect(
       renderComponent({
@@ -252,15 +262,17 @@ describe('#renderLinkWithItemAnalytics', () => {
     ).resolves.toBeDefined();
   });
 
-  it('should handle ref lifecycle correctly', async () => {
+  it('should pass correct link element to ref callback', async () => {
     const refCallback = vi.fn();
     await renderComponent({
       ref: refCallback,
+      href: 'https://validation-link.com',
     });
 
-    expect(refCallback).toHaveBeenCalledWith(expect.any(HTMLAnchorElement));
-
-    expect(() => refCallback(undefined)).not.toThrow();
+    expect(refCallback).toHaveBeenCalledOnce();
+    const receivedElement = refCallback.mock.calls[0][0];
+    expect(receivedElement).toBeInstanceOf(HTMLAnchorElement);
+    expect(receivedElement?.href).toBe('https://validation-link.com/');
   });
 
   it('should filter href through filterProtocol', async () => {
