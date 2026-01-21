@@ -22,7 +22,7 @@ export const contextReducer = createReducer(
         state.location = payload;
       })
       .addCase(setCustom, (state, {payload}) => {
-        state.custom = payload;
+        state.custom = payload.custom;
       });
   }
 );

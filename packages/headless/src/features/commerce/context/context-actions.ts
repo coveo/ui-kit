@@ -5,6 +5,7 @@ import {validatePayload} from '../../../utils/validate-payload.js';
 import type {CustomContextState, LocationState} from './context-state.js';
 import {
   contextDefinition,
+  customDefinition,
   locationDefinition,
   viewDefinition,
 } from './context-validation.js';
@@ -37,9 +38,10 @@ export const setLocation = createAction(
   (payload: SetLocationPayload) => validatePayload(payload, locationDefinition)
 );
 
-export type SetCustomPayload = CustomContextState;
+export type SetCustomPayload = CustomContextState | undefined;
 
 export const setCustom = createAction(
   'commerce/context/setCustom',
-  (payload: SetCustomPayload) => ({payload})
+  (payload: SetCustomPayload) =>
+    validatePayload({custom: payload}, customDefinition)
 );

@@ -71,4 +71,24 @@ describe('context-slice', () => {
     };
     expect(contextReducer(state, setCustom(custom)).custom).toEqual(custom);
   });
+
+  it('should return an error when setCustom is called with null', () => {
+    // biome-ignore lint/suspicious/noExplicitAny: Testing invalid input
+    const action = setCustom(null as any);
+    expect('error' in action && action.error).toBeDefined();
+  });
+
+  it('should allow clearing custom context with undefined', () => {
+    state.custom = {existingKey: 'value'};
+    const action = setCustom(undefined);
+    expect('error' in action ? action.error : undefined).toBeUndefined();
+    expect(contextReducer(state, action).custom).toBeUndefined();
+  });
+
+  it('should allow to set an empty object as custom context', () => {
+    const custom = {};
+    const action = setCustom(custom);
+    expect('error' in action ? action.error : undefined).toBeUndefined();
+    expect(contextReducer(state, action).custom).toEqual(custom);
+  });
 });

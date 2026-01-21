@@ -41,7 +41,7 @@ export default function ContextDropdown({
     methods?.setCustom(customContext);
 
     fetcher.submit(
-      {language, country, currency, custom: customContext},
+      {language, country, currency, custom: JSON.stringify(customContext)},
       {method: 'post', action: '/context/update'}
     );
 

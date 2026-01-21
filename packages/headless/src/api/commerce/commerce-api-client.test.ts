@@ -83,7 +83,7 @@ describe('commerce api client', () => {
         source: [`@coveo/headless@${VERSION}`],
         custom: {
           stringKey: 'value',
-          number: 123,
+          numberKey: 123,
         },
       },
     };
