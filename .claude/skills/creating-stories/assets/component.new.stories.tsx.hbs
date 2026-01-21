@@ -1,0 +1,48 @@
+import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {Mock{{apiClass}}} from '@/storybook-utils/api/{{apiPath}}/mock';
+import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {{wrapperImport}} from '{{wrapperPath}}';
+
+const {{apiPath}}ApiHarness = new Mock{{apiClass}}();
+
+const {decorator, play} = {{wrapperFunction}}();
+
+const {events, args, argTypes, template} = getStorybookHelpers(
+  '{{componentName}}',
+  {excludeCategories: ['methods']}
+);
+
+const meta: Meta = {
+  component: '{{componentName}}',
+  title: '{{category}}/{{titleName}}',
+  id: '{{componentName}}',
+  render: (args) => template(args),
+  decorators: [decorator],
+  parameters: {
+    ...parameters,
+    actions: {
+      handles: events,
+    },
+    msw: {
+      handlers: [...{{apiPath}}ApiHarness.handlers],
+    },
+  },
+  args,
+  argTypes,
+  beforeEach: () => {
+    {{apiPath}}ApiHarness.searchEndpoint.clear();
+  },
+  play,
+};
+
+export default meta;
+
+export const Default: Story = {};
+
+export const CustomVariant: Story = {
+  name: 'Custom Variant',
+  args: {
+    // Add custom args here
+  },
+};

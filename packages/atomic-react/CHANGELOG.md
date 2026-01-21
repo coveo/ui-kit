@@ -1,3 +1,28 @@
+## <small>3.10.1 (2026-01-21)</small>
+
+* chore(atomic): migrate atomic-ipx-button to Lit (#6894) ([fe95e69](https://github.com/coveo/ui-kit/commits/fe95e69)), closes [#6894](https://github.com/coveo/ui-kit/issues/6894)
+* chore(atomic): migrate atomic-recs-result to Lit (#6929) ([f8d774e](https://github.com/coveo/ui-kit/commits/f8d774e)), closes [#6929](https://github.com/coveo/ui-kit/issues/6929)
+* refactor(atomic): migrate atomic-timeframe-facet from Stencil to Lit (#6757) ([122ccc2](https://github.com/coveo/ui-kit/commits/122ccc2)), closes [#6757](https://github.com/coveo/ui-kit/issues/6757)
+
+
+
+## 3.10.0 (2026-01-14)
+
+* fix(atomic-react): exclude insight components from search and commerce builds (#6851) ([c916ab9](https://github.com/coveo/ui-kit/commits/c916ab9)), closes [#6851](https://github.com/coveo/ui-kit/issues/6851)
+* feat(atomic): migrate atomic-smart-snippet to Lit with Tailwind styles (#6858) ([a66a4d1](https://github.com/coveo/ui-kit/commits/a66a4d1)), closes [#6858](https://github.com/coveo/ui-kit/issues/6858)
+* feat(atomic): migrate atomic-smart-snippet-feedback-modal to Lit (#6820) ([3bdac6f](https://github.com/coveo/ui-kit/commits/3bdac6f)), closes [#6820](https://github.com/coveo/ui-kit/issues/6820)
+* refactor(atomic): migrate atomic-insight-no-results to Lit (#6864) ([5e7f2a9](https://github.com/coveo/ui-kit/commits/5e7f2a9)), closes [#6864](https://github.com/coveo/ui-kit/issues/6864)
+* refactor(atomic): migrate atomic-insight-pager to Lit (#6863) ([bbdb87b](https://github.com/coveo/ui-kit/commits/bbdb87b)), closes [#6863](https://github.com/coveo/ui-kit/issues/6863)
+* refactor(atomic): migrate atomic-insight-query-error to Lit (#6867) ([8598f21](https://github.com/coveo/ui-kit/commits/8598f21)), closes [#6867](https://github.com/coveo/ui-kit/issues/6867)
+* refactor(atomic): migrate atomic-insight-query-summary to Lit (#6868) ([2f273ec](https://github.com/coveo/ui-kit/commits/2f273ec)), closes [#6868](https://github.com/coveo/ui-kit/issues/6868)
+* refactor(atomic): migrate atomic-insight-result-template to Lit (#6871) ([3f2db89](https://github.com/coveo/ui-kit/commits/3f2db89)), closes [#6871](https://github.com/coveo/ui-kit/issues/6871)
+* refactor(atomic): migrate atomic-recs-error to Lit (#6887) ([8de3fa1](https://github.com/coveo/ui-kit/commits/8de3fa1)), closes [#6887](https://github.com/coveo/ui-kit/issues/6887)
+* chore(atomic): migrate atomic-insight-edit-toggle to Lit (#6848) ([827d868](https://github.com/coveo/ui-kit/commits/827d868)), closes [#6848](https://github.com/coveo/ui-kit/issues/6848)
+* chore(atomic): migrate atomic-insight-full-search-button to Lit (#6841) ([61fe98f](https://github.com/coveo/ui-kit/commits/61fe98f)), closes [#6841](https://github.com/coveo/ui-kit/issues/6841)
+* chore(atomic): migrate atomic-insight-layout to Lit (#6831) ([a3fe211](https://github.com/coveo/ui-kit/commits/a3fe211)), closes [#6831](https://github.com/coveo/ui-kit/issues/6831)
+
+
+
 ## 3.9.0 (2026-01-07)
 
 * [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
