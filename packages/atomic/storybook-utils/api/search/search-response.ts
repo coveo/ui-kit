@@ -10,7 +10,7 @@ const getNthResult = (n: number) => ({
   },
 });
 
-interface Response {
+export interface SearchResponse {
   totalCount: number;
   totalCountFiltered: number;
   duration: number;
@@ -47,7 +47,7 @@ interface Response {
   extendedResults?: Record<string, unknown>;
 }
 
-export const baseResponse: Response = {
+export const baseResponse: SearchResponse = {
   totalCount: 120,
   totalCountFiltered: 120,
   duration: 175,
@@ -285,7 +285,7 @@ export const baseResponse: Response = {
 };
 
 // Ultra-minimal folded response inspired by getNthResult
-export const baseFoldedResponse: Response = {
+export const baseFoldedResponse: SearchResponse = {
   totalCount: 2,
   totalCountFiltered: 2,
   duration: 15,

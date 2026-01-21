@@ -1,9 +1,4 @@
 import type {AtomicResultList} from '@coveo/atomic/components';
-import type {
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-  ItemDisplayLayout,
-} from '@coveo/atomic/loader';
 import type {Result} from '@coveo/headless';
 import React, {type JSX, useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
@@ -22,15 +17,15 @@ interface AtomicResultListProps {
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
-  density?: ItemDisplayDensity;
+  density?: AtomicResultList['density'];
   /**
    * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
    */
-  display?: ItemDisplayLayout;
+  display?: AtomicResultList['display'];
   /**
    * The expected size of the image displayed for results.
    */
-  imageSize?: ItemDisplayImageSize;
+  imageSize?: AtomicResultList['imageSize'];
   /**
    * The desired number of placeholders to display while the result list is loading.
    */
