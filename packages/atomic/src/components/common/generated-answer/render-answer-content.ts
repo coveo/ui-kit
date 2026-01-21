@@ -60,7 +60,7 @@ export const renderAnswerContent: FunctionalComponent<
 
   return html`
     <div part="generated-content">
-      <div part="header" class="flex items-center border-b-1 border-gray-200 px-6 py-3">
+      <div part="header" class="flex items-center ${isAnswerVisible ? 'border-b-1 border-gray-200' : ''} px-6 py-3">
         <atomic-icon
           part="header-icon"
           class="text-primary h-4 w-4 fill-current"
