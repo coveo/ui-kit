@@ -1,4 +1,25 @@
-export const baseResponse = {
+export interface CommerceSearchResponse {
+  responseId: string;
+  products: unknown[];
+  facets: unknown[];
+  pagination: {
+    page: number;
+    perPage: number;
+    totalEntries: number;
+    totalPages: number;
+  };
+  sort: {
+    appliedSort: {
+      sortCriteria: string;
+    };
+    availableSorts: Array<{
+      sortCriteria: string;
+    }>;
+  };
+  triggers: unknown[];
+}
+
+export const baseResponse: CommerceSearchResponse = {
   responseId: '123e4567-e89b-12d3-a456-426614174000',
   products: [
     {

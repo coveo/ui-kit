@@ -6,7 +6,12 @@
     "packages/quantic",
     "packages/create-atomic-component-project/template"
   ],
-  "ignore": ["packages/quantic/**"],
+  "ignore": [
+    "packages/quantic/**",
+    "samples/headless/rga-react/src/components/Quickstart.tsx",
+    "samples/headless/rga-react/src/components/Citation.tsx",
+    "samples/headless/rga-react/src/components/CitationsList.tsx"
+  ],
 
   // Enable back the plugin once https://github.com/webpro-nl/knip/issues/1154 is resolved.
   "biome": false,

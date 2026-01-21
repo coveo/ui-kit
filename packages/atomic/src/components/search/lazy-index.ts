@@ -190,6 +190,8 @@ export default {
   'atomic-table-element': async () =>
     await import('./atomic-table-element/atomic-table-element.js'),
   'atomic-text': async () => await import('./atomic-text/atomic-text.js'),
+  'atomic-timeframe-facet': async () =>
+    await import('./atomic-timeframe-facet/atomic-timeframe-facet.js'),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';

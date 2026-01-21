@@ -10,7 +10,7 @@ function findHighlightedElements(iframe?: HTMLIFrameElement): HTMLElement[] {
 
   // Collect tagged word elements as well as elements whose id starts with
   // the highlight prefix. Tagged words (`<coveotaggedword>`) must be
-  // considered so that invalid identifiers (e.g. id="invalid") are
+  // considered so that invalid identifiers (for example id="invalid") are
   // discovered and cause the appropriate error in the parser.
   const selector = `[id^="${HIGHLIGHT_PREFIX}"]`;
   const query = root.querySelectorAll<HTMLElement>(selector);
