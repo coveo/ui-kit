@@ -322,7 +322,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       'slds-p-right_x-small',
       {
         'citation__link--active': this.isActive,
-      }
+      },
     ];
   }
 
@@ -332,7 +332,7 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       'slds-m-left_x-small',
       {
         'citation__icon--active': this.isActive,
-      }
+      },
     ];
   }
 }
