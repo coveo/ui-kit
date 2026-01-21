@@ -107,20 +107,20 @@ Produces a `.skill` archive (tar.gz) for distribution.
 
 ## Reference Documentation
 
-| Reference                                           | When to Load                                        |
-| --------------------------------------------------- | --------------------------------------------------- |
-| [SPECIFICATION.md](references/SPECIFICATION.md)     | Format details, field constraints, validation rules |
-| [best-practices.md](references/best-practices.md)   | Writing guidance, naming, descriptions, patterns    |
-| [workflows.md](references/workflows.md)             | Multi-step process patterns                         |
-| [output-patterns.md](references/output-patterns.md) | Templates for consistent output                     |
+| Reference | When to Load |
+|-----------|--------------|
+| [SPECIFICATION.md](references/SPECIFICATION.md) | Format details, field constraints, validation rules |
+| [best-practices.md](references/best-practices.md) | Writing guidance, naming, descriptions, patterns |
+| [workflows.md](references/workflows.md) | Multi-step process patterns |
+| [output-patterns.md](references/output-patterns.md) | Templates for consistent output |
 
 ## Scripts
 
-| Script               | Purpose                            |
-| -------------------- | ---------------------------------- |
-| `init_skill.mjs`     | Initialize new skill with template |
-| `quick_validate.mjs` | Validate skill structure per spec  |
-| `package_skill.mjs`  | Package for distribution (.skill)  |
+| Script | Purpose |
+|--------|---------|
+| `init_skill.mjs` | Initialize new skill with template |
+| `quick_validate.mjs` | Validate skill structure per spec |
+| `package_skill.mjs` | Package for distribution (.skill) |
 
 ## ui-kit Notes
 
