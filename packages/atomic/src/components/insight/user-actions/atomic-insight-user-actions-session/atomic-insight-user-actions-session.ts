@@ -4,6 +4,7 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {renderButton} from '@/src/components/common/button';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
@@ -187,6 +188,7 @@ export class AtomicInsightUserActionsSession
     `;
   }
 
+  @bindingGuard()
   public render() {
     const isShowMoreActionsButtonVisible =
       !this.areActionsAfterCaseCreationVisible &&
