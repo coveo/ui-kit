@@ -305,8 +305,10 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       'slds-m-left_x-small',
       'slds-truncate',
       'slds-has-flexi-truncate',
-      this.isActive && 'citation__title--active'
-    ].filter(Boolean).join(' ');
+      {
+        'citation__title--active': this.isActive,
+      },
+    ];
   }
 
   get citationLinkClasses() {
@@ -318,15 +320,19 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
       'slds-text-link_reset',
       'slds-p-left_xx-small',
       'slds-p-right_x-small',
-      this.isActive && 'citation__link--active'
-    ].filter(Boolean).join(' ');
+      {
+        'citation__link--active': this.isActive,
+      }
+    ];
   }
 
   get citationIconClasses() {
     return [
       'citation__icon',
       'slds-m-left_x-small',
-      this.isActive && 'citation__icon--active'
-    ].filter(Boolean).join(' ');
+      {
+        'citation__icon--active': this.isActive,
+      }
+    ];
   }
 }
