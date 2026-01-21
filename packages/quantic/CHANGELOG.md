@@ -1,3 +1,9 @@
+## <small>3.35.1 (2026-01-21)</small>
+
+* fix(quantic): HIP overflows to the right issue (#6940) ([1625316](https://github.com/coveo/ui-kit/commits/1625316)), closes [#6940](https://github.com/coveo/ui-kit/issues/6940)
+
+
+
 ## 3.35.0 (2026-01-14)
 
 * feat(quantic): Re-add the delay behaviour of tooltip on citation hover (#6775) ([52ccf0e](https://github.com/coveo/ui-kit/commits/52ccf0e)), closes [#6775](https://github.com/coveo/ui-kit/issues/6775)

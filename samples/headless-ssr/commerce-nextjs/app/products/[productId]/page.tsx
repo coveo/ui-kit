@@ -14,6 +14,7 @@ import {
 } from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
+import ProductBadges from '../../../components/product-badges';
 
 export default async function ProductDescriptionPage({
   params,
@@ -41,6 +42,12 @@ export default async function ProductDescriptionPage({
         currency: defaultContext.currency,
         view: {
           url: `https://sports.barca.group/products/${productId}`,
+        },
+      },
+      productEnrichment: {
+        options: {
+          productId,
+          placementIds: ['70b493b2-a1f1-4049-ad70-16695cef39cd'],
         },
       },
     },
@@ -81,6 +88,7 @@ export default async function ProductDescriptionPage({
       <p>
         {name} ({productId}) - ${price}
       </p>
+      <ProductBadges />
       <br />
 
       <RecommendationProvider

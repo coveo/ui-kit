@@ -6,7 +6,10 @@ import {
   type FacetSearchResponse,
 } from './facetSearch-response.js';
 import {baseResponse as baseQuerySuggestResponse} from './querySuggest-response.js';
-import {baseResponse as baseSearchResponse} from './search-response.js';
+import {
+  baseResponse as baseSearchResponse,
+  type SearchResponse,
+} from './search-response.js';
 
 export class MockSearchApi implements MockApi {
   readonly searchEndpoint;
@@ -14,9 +17,8 @@ export class MockSearchApi implements MockApi {
   readonly facetSearchEndpoint;
 
   constructor(basePath: string = 'https://:orgId.org.coveo.com') {
-    //TODO: Fix type after encoding Search API response typing properly #6481
     this.searchEndpoint = new EndpointHarness<
-      typeof baseSearchResponse | APIErrorWithStatusCode
+      SearchResponse | APIErrorWithStatusCode
     >('POST', `${basePath}/rest/search/v2`, baseSearchResponse);
     this.querySuggestEndpoint = new EndpointHarness(
       'POST',
