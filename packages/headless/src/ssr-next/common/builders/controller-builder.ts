@@ -55,8 +55,6 @@ export class ControllerBuilder<
     const buildFn = this._definition.build!;
     const controller = buildFn(this._engine, ...this._additionalArgs);
 
-    controller.subscribe = controller.subscribe.bind(controller);
-
     return controller;
   }
 
