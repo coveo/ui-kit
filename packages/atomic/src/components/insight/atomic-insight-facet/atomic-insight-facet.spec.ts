@@ -389,43 +389,105 @@ describe('atomic-insight-facet', () => {
 
   describe('prop validation', () => {
     describe('#field', () => {
-      it('should not set error when field is valid', async () => {
-        const {element} = await setupElement({field: 'validField'});
-        expect(element.error).toBeUndefined();
+      it('should not log warning when field is valid', async () => {
+        const consoleWarnSpy = vi
+          .spyOn(console, 'warn')
+          .mockImplementation(() => {});
+
+        await setupElement({field: 'validField'});
+
+        expect(consoleWarnSpy).not.toHaveBeenCalled();
       });
 
-      it('should set error when field is empty', async () => {
+      it('should log warning when field is empty', async () => {
+        const consoleWarnSpy = vi
+          .spyOn(console, 'warn')
+          .mockImplementation(() => {});
+
         const {element} = await setupElement({field: ''});
-        expect(element.error).toBeInstanceOf(Error);
+
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          expect.stringContaining(
+            'Prop validation failed for component atomic-insight-facet'
+          ),
+          element
+        );
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          expect.stringContaining('field'),
+          element
+        );
       });
     });
 
     describe('#numberOfValues', () => {
-      it('should not set error when numberOfValues is valid', async () => {
-        const {element} = await setupElement({numberOfValues: 10});
-        expect(element.error).toBeUndefined();
+      it('should not log warning when numberOfValues is valid', async () => {
+        const consoleWarnSpy = vi
+          .spyOn(console, 'warn')
+          .mockImplementation(() => {});
+
+        await setupElement({numberOfValues: 10});
+
+        expect(consoleWarnSpy).not.toHaveBeenCalled();
       });
 
-      it('should set error when numberOfValues is less than 1', async () => {
+      it('should log warning when numberOfValues is less than 1', async () => {
+        const consoleWarnSpy = vi
+          .spyOn(console, 'warn')
+          .mockImplementation(() => {});
+
         const {element} = await setupElement({numberOfValues: 0});
-        expect(element.error).toBeInstanceOf(Error);
+
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          expect.stringContaining(
+            'Prop validation failed for component atomic-insight-facet'
+          ),
+          element
+        );
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          expect.stringContaining('numberOfValues'),
+          element
+        );
       });
     });
 
     describe('#injectionDepth', () => {
-      it('should not set error when injectionDepth is valid', async () => {
-        const {element} = await setupElement({injectionDepth: 1000});
-        expect(element.error).toBeUndefined();
+      it('should not log warning when injectionDepth is valid', async () => {
+        const consoleWarnSpy = vi
+          .spyOn(console, 'warn')
+          .mockImplementation(() => {});
+
+        await setupElement({injectionDepth: 1000});
+
+        expect(consoleWarnSpy).not.toHaveBeenCalled();
       });
 
-      it('should not set error when injectionDepth is 0', async () => {
-        const {element} = await setupElement({injectionDepth: 0});
-        expect(element.error).toBeUndefined();
+      it('should not log warning when injectionDepth is 0', async () => {
+        const consoleWarnSpy = vi
+          .spyOn(console, 'warn')
+          .mockImplementation(() => {});
+
+        await setupElement({injectionDepth: 0});
+
+        expect(consoleWarnSpy).not.toHaveBeenCalled();
       });
 
-      it('should set error when injectionDepth is negative', async () => {
+      it('should log warning when injectionDepth is negative', async () => {
+        const consoleWarnSpy = vi
+          .spyOn(console, 'warn')
+          .mockImplementation(() => {});
+
         const {element} = await setupElement({injectionDepth: -1});
-        expect(element.error).toBeInstanceOf(Error);
+
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          expect.stringContaining(
+            'Prop validation failed for component atomic-insight-facet'
+          ),
+          element
+        );
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          expect.stringContaining('injectionDepth'),
+          element
+        );
       });
     });
   });

@@ -77,6 +77,12 @@ export class AtomicInsightFacet
   extends LitElement
   implements InitializableComponent<InsightBindings>
 {
+  private static readonly propsSchema = new Schema({
+    field: new StringValue({required: true, emptyAllowed: false}),
+    numberOfValues: new NumberValue({min: 1}),
+    injectionDepth: new NumberValue({min: 0}),
+  });
+
   static styles = [
     facetCommonStyles,
     facetValueBoxStyles,
@@ -195,11 +201,8 @@ export class AtomicInsightFacet
         numberOfValues: this.numberOfValues,
         injectionDepth: this.injectionDepth,
       }),
-      new Schema({
-        field: new StringValue({required: true, emptyAllowed: false}),
-        numberOfValues: new NumberValue({min: 1}),
-        injectionDepth: new NumberValue({min: 0}),
-      })
+      AtomicInsightFacet.propsSchema,
+      false
     );
   }
 
