@@ -68,6 +68,8 @@ export class AtomicGeneratedAnswerFeedbackModal
   ];
 
   static styles = css`
+    @reference '../../../utils/tailwind.global.tw.css';
+
     @utility mobile-feedback-modal {
       &::part(container) {
         @apply w-auto min-w-full;
@@ -121,9 +123,6 @@ export class AtomicGeneratedAnswerFeedbackModal
       }
       .text-error-red {
         @apply text-inline-code;
-      }
-      .required {
-        @apply flex;
       }
     }
   `;
@@ -318,7 +317,7 @@ export class AtomicGeneratedAnswerFeedbackModal
           </label>
         </div>
         <span
-          class=${multiClassMap({'text-error-red text-sm hidden': true, required: isRequired})}
+          class=${multiClassMap({'text-error-red text-sm': true, hidden: !isRequired})}
         >
           ${this.bindings.i18n.t('required-fields-error')}
         </span>
