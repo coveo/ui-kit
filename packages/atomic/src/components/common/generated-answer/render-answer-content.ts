@@ -55,7 +55,6 @@ export const renderAnswerContent: FunctionalComponent<
   const {isStreaming, answer, citations, answerContentFormat, expanded} =
     generatedAnswerState ?? {};
   const isExpanded = collapsible ? expanded : true;
-  const isCollapsed = collapsible && !isExpanded;
   const latestQuery = query.trim();
   const showInlineActions = !hasRetryableError && isExpanded;
 
@@ -124,7 +123,6 @@ export const renderAnswerContent: FunctionalComponent<
                       answer,
                       answerContentFormat,
                       isStreaming: !!isStreaming,
-                      isCollapsed,
                     },
                   })(html`
                   ${renderSourceCitations({

@@ -1,5 +1,4 @@
 import {html} from 'lit';
-import {classMap} from 'lit/directives/class-map.js';
 import type {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {
   type GeneratedMarkdownContentProps,
@@ -14,7 +13,6 @@ export interface GeneratedContentContainerProps {
   answer?: string;
   answerContentFormat?: string;
   isStreaming: boolean;
-  isCollapsed?: boolean;
 }
 
 export const renderGeneratedContentContainer: FunctionalComponentWithChildren<
@@ -22,12 +20,7 @@ export const renderGeneratedContentContainer: FunctionalComponentWithChildren<
 > = ({props}) => {
   return (children) =>
     html`
-      <div
-        part="generated-container"
-        class=${classMap({
-          'answer-collapsed': props.isCollapsed ?? false,
-        })}
-      >
+      <div part="generated-container">
         ${
           props.answerContentFormat === 'text/markdown'
             ? renderGeneratedMarkdownContent({
