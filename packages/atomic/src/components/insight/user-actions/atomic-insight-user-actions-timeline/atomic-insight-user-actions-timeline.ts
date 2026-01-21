@@ -132,11 +132,13 @@ export class AtomicInsightUserActionsTimeline
     return html`
       <div class="flex justify-center p-2">
         ${renderButton({
-          style: 'text-primary',
-          part: 'toggle-following-sessions',
-          class: btnClasses,
-          ariaLabel: label,
-          onClick: this.toggleFollowingSessions.bind(this),
+          props: {
+            style: 'text-primary',
+            part: 'toggle-following-sessions',
+            class: btnClasses,
+            ariaLabel: label,
+            onClick: this.toggleFollowingSessions.bind(this),
+          },
         })(html`
           <atomic-icon
             part="toggle-following-sessions-icon"
@@ -160,11 +162,13 @@ export class AtomicInsightUserActionsTimeline
     return html`
       <div class="flex justify-center p-2">
         ${renderButton({
-          style: 'text-primary',
-          part: 'toggle-preceding-sessions',
-          class: btnClasses,
-          ariaLabel: label,
-          onClick: this.togglePrecedingSessions.bind(this),
+          props: {
+            style: 'text-primary',
+            part: 'toggle-preceding-sessions',
+            class: btnClasses,
+            ariaLabel: label,
+            onClick: this.togglePrecedingSessions.bind(this),
+          },
         })(html`
           <atomic-icon
             part="toggle-preceding-sessions-icon"
