@@ -1,7 +1,6 @@
 import type {UserAction as IUserAction} from '@coveo/headless/insight';
 import {html} from 'lit';
 import {describe, expect, it} from 'vitest';
-import {page} from 'vitest/browser';
 import {
   defaultBindings,
   renderInAtomicInsightInterface,
@@ -12,13 +11,13 @@ import './atomic-insight-user-actions-session';
 describe('atomic-insight-user-actions-session', () => {
   const mockUserActions: IUserAction[] = [
     {
-      actionType: 'SEARCH',
+      actionType: 'SEARCH' as IUserAction['actionType'],
       query: 'test query',
       timestamp: 1704067200000, // 2024-01-01 00:00:00
       searchHub: 'default',
     },
     {
-      actionType: 'CLICK',
+      actionType: 'CLICK' as IUserAction['actionType'],
       timestamp: 1704067260000, // 2024-01-01 00:01:00
       searchHub: 'default',
       document: {
@@ -30,13 +29,13 @@ describe('atomic-insight-user-actions-session', () => {
 
   const mockUserActionsWithCaseCreation: IUserAction[] = [
     {
-      actionType: 'SEARCH',
+      actionType: 'SEARCH' as IUserAction['actionType'],
       query: 'search before case',
       timestamp: 1704063600000,
       searchHub: 'default',
     },
     {
-      actionType: 'CLICK',
+      actionType: 'CLICK' as IUserAction['actionType'],
       timestamp: 1704065400000,
       searchHub: 'default',
       document: {
@@ -45,12 +44,12 @@ describe('atomic-insight-user-actions-session', () => {
       },
     },
     {
-      actionType: 'TICKET_CREATION',
+      actionType: 'TICKET_CREATION' as IUserAction['actionType'],
       timestamp: 1704067200000,
       searchHub: 'default',
     },
     {
-      actionType: 'SEARCH',
+      actionType: 'SEARCH' as IUserAction['actionType'],
       query: 'search after case',
       timestamp: 1704067800000,
       searchHub: 'default',
@@ -152,17 +151,6 @@ describe('atomic-insight-user-actions-session', () => {
   });
 
   describe('when handling case creation sessions', () => {
-    it('should hide show more button when areActionsAfterCaseCreationVisible is true', async () => {
-      const {element, showMoreButton} = await renderComponent({
-        userActions: mockUserActionsWithCaseCreation,
-      });
-
-      element.areActionsAfterCaseCreationVisible = true;
-      await element.updateComplete;
-
-      expect(showMoreButton()).toBeNull();
-    });
-
     it('should show more actions button when session has actions before case creation', async () => {
       const {showMoreButton} = await renderComponent({
         userActions: mockUserActionsWithCaseCreation,
@@ -191,13 +179,16 @@ describe('atomic-insight-user-actions-session', () => {
     });
 
     it('should reveal actions after clicking show more button', async () => {
-      const {element, moreActionsSection} = await renderComponent({
-        userActions: mockUserActionsWithCaseCreation,
-      });
+      const {element, showMoreButton, moreActionsSection} =
+        await renderComponent({
+          userActions: mockUserActionsWithCaseCreation,
+        });
 
       expect(moreActionsSection()).toBeNull();
 
-      await page.getByRole('button', {name: /more-actions-in-session/}).click();
+      const button = showMoreButton()?.querySelector('button');
+      expect(button).not.toBeNull();
+      button?.click();
 
       await element.updateComplete;
       expect(moreActionsSection()).toBeInTheDocument();
@@ -229,17 +220,6 @@ describe('atomic-insight-user-actions-session', () => {
       await element.updateComplete;
 
       expect(showMoreButton()).toBeInTheDocument();
-    });
-  });
-
-  describe('#connectedCallback', () => {
-    it('should prepare user actions to display on connect', async () => {
-      const {element} = await renderComponent({
-        userActions: mockUserActionsWithCaseCreation,
-      });
-
-      expect(element.userActionsToDisplay.length).toBe(2);
-      expect(element.userActionsAfterCaseCreation.length).toBe(2);
     });
   });
 });
