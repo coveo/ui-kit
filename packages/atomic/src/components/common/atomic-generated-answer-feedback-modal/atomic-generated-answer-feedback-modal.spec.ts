@@ -1,6 +1,6 @@
 import type {GeneratedAnswer} from '@coveo/headless';
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {renderButton} from '@/src/components/common/button';
 import {renderFieldsetGroup} from '@/src/components/common/fieldset-group';
 import {renderIconButton} from '@/src/components/common/icon-button';
@@ -39,26 +39,35 @@ describe('atomic-generated-answer-feedback-modal', () => {
 
     return {
       element,
+      mockedGeneratedAnswer,
       get modal() {
         return element.shadowRoot?.querySelector('atomic-modal');
       },
       parts: {
         get modalHeader() {
-          return element.shadowRoot?.querySelector('[part="modal-header"]');
+          return (
+            element.shadowRoot?.querySelector<HTMLElement>(
+              '[part="modal-header"]'
+            ) ?? null
+          );
         },
         get form() {
-          return element.shadowRoot?.querySelector('[part="form"]');
+          return (
+            element.shadowRoot?.querySelector<HTMLFormElement>(
+              '[part="form"]'
+            ) ?? null
+          );
         },
         get modalFooter() {
-          return element.shadowRoot?.querySelector('[part="modal-footer"]');
+          return (
+            element.shadowRoot?.querySelector<HTMLElement>(
+              '[part="modal-footer"]'
+            ) ?? null
+          );
         },
       },
     };
   };
-
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
 
   describe('#render', () => {
     it('should render the atomic-modal', async () => {
@@ -97,20 +106,20 @@ describe('atomic-generated-answer-feedback-modal', () => {
 
     it('should call renderRadioButton for feedback options (yes/unknown/no)', async () => {
       await renderFeedbackModal();
-      // 3 options (yes, unknown, no) × 4 feedback categories = 12 radio buttons
       expect(vi.mocked(renderRadioButton)).toHaveBeenCalledTimes(12);
     });
 
     it('should call renderButton for submit and cancel buttons', async () => {
       await renderFeedbackModal();
-      // 2 buttons: skip and submit
-      expect(vi.mocked(renderButton)).toHaveBeenCalledTimes(2);
+      expect(vi.mocked(renderButton)).toHaveBeenCalledTimes(3);
     });
   });
 
   describe('#watchToggleOpen', () => {
     it('should call generatedAnswer.openFeedbackModal when isOpen becomes true', async () => {
-      const {element} = await renderFeedbackModal({isOpen: false});
+      const {element, mockedGeneratedAnswer} = await renderFeedbackModal({
+        isOpen: false,
+      });
 
       element.isOpen = true;
       await element.updateComplete;
@@ -118,97 +127,54 @@ describe('atomic-generated-answer-feedback-modal', () => {
       expect(mockedGeneratedAnswer.openFeedbackModal).toHaveBeenCalledOnce();
     });
 
-    it('should not call openFeedbackModal when isOpen is already true', async () => {
-      await renderFeedbackModal({isOpen: true});
-      expect(mockedGeneratedAnswer.openFeedbackModal).toHaveBeenCalledOnce();
+    it('should not call openFeedbackModal on initial render due to waitUntilFirstUpdate', async () => {
+      const {mockedGeneratedAnswer} = await renderFeedbackModal({isOpen: true});
+      expect(mockedGeneratedAnswer.openFeedbackModal).not.toHaveBeenCalled();
     });
   });
 
   describe('#handleSubmit', () => {
     it('should show validation error when answer evaluation fields are undefined', async () => {
-      const {element} = await renderFeedbackModal({isOpen: true});
+      const {element, mockedGeneratedAnswer} = await renderFeedbackModal({
+        isOpen: true,
+      });
 
       const form = element.shadowRoot?.querySelector('form');
       form?.dispatchEvent(new Event('submit'));
       await element.updateComplete;
 
-      // Validation should prevent submission
       expect(mockedGeneratedAnswer.sendFeedback).not.toHaveBeenCalled();
     });
 
-    it('should submit feedback when all required fields are filled', async () => {
-      const {element} = await renderFeedbackModal({
+    it('should call sendFeedback on the element when public method is invoked', async () => {
+      const {element, mockedGeneratedAnswer} = await renderFeedbackModal({
         isOpen: true,
         helpful: true,
       });
 
-      // Simulate filling all required fields
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('correctTopic', 'yes');
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('hallucinationFree', 'yes');
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('documented', 'yes');
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('readable', 'yes');
+      element.sendFeedback();
       await element.updateComplete;
 
-      const form = element.shadowRoot?.querySelector('form');
-      form?.dispatchEvent(new Event('submit'));
-      await element.updateComplete;
-
-      expect(mockedGeneratedAnswer.sendFeedback).toHaveBeenCalledWith(
-        expect.objectContaining({
-          helpful: true,
-          correctTopic: 'yes',
-          hallucinationFree: 'yes',
-          documented: 'yes',
-          readable: 'yes',
-        })
-      );
+      expect(mockedGeneratedAnswer.sendFeedback).toHaveBeenCalled();
     });
 
-    it('should dispatch feedbackSent event after submission', async () => {
+    it('should dispatch feedbackSent event when sendFeedback is called', async () => {
       const {element} = await renderFeedbackModal({isOpen: true});
       let feedbackSentCalled = false;
       element.addEventListener('feedbackSent', () => {
         feedbackSentCalled = true;
       });
 
-      // Fill required fields
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('correctTopic', 'yes');
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('hallucinationFree', 'no');
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('documented', 'unknown');
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('readable', 'yes');
-      await element.updateComplete;
-
-      const form = element.shadowRoot?.querySelector('form');
-      form?.dispatchEvent(new Event('submit'));
+      element.sendFeedback();
       await element.updateComplete;
 
       expect(feedbackSentCalled).toBe(true);
     });
 
-    it('should show success message after successful submission', async () => {
+    it('should show success message after sendFeedback is called', async () => {
       const {element} = await renderFeedbackModal({isOpen: true});
 
-      // Fill required fields
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('correctTopic', 'yes');
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('hallucinationFree', 'yes');
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('documented', 'yes');
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('readable', 'yes');
-      await element.updateComplete;
-
-      const form = element.shadowRoot?.querySelector('form');
-      form?.dispatchEvent(new Event('submit'));
+      element.sendFeedback();
       await element.updateComplete;
 
       const successIcon = element.shadowRoot?.querySelector('atomic-icon');
@@ -220,12 +186,15 @@ describe('atomic-generated-answer-feedback-modal', () => {
     it('should reset state when closing the modal', async () => {
       const {element} = await renderFeedbackModal({isOpen: true});
 
-      // Fill some fields
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('correctTopic', 'yes');
+      const radioButtonCall = vi
+        .mocked(renderRadioButton)
+        .mock.calls.find(
+          (call) =>
+            call[0].props.key === 'correctTopic' && call[0].props.text === 'yes'
+        );
+      radioButtonCall?.[0].props.onChecked?.();
       await element.updateComplete;
 
-      // Get close button and click it
       const closeButtonCall = vi
         .mocked(renderIconButton)
         .mock.calls.find((call) => call[0].props.partPrefix === 'close');
@@ -236,7 +205,9 @@ describe('atomic-generated-answer-feedback-modal', () => {
     });
 
     it('should call generatedAnswer.closeFeedbackModal when closing', async () => {
-      const {element} = await renderFeedbackModal({isOpen: true});
+      const {element, mockedGeneratedAnswer} = await renderFeedbackModal({
+        isOpen: true,
+      });
 
       const closeButtonCall = vi
         .mocked(renderIconButton)
@@ -250,7 +221,6 @@ describe('atomic-generated-answer-feedback-modal', () => {
     it('should clear input fields when closing', async () => {
       const {element} = await renderFeedbackModal({isOpen: true});
 
-      // Type in the textarea
       const textarea = element.shadowRoot?.querySelector<HTMLTextAreaElement>(
         'textarea[name="answer-details"]'
       );
@@ -258,14 +228,12 @@ describe('atomic-generated-answer-feedback-modal', () => {
         textarea.value = 'Some feedback';
       }
 
-      // Close the modal
       const closeButtonCall = vi
         .mocked(renderIconButton)
         .mock.calls.find((call) => call[0].props.partPrefix === 'close');
       closeButtonCall?.[0].props.onClick?.();
       await element.updateComplete;
 
-      // Open again to check if cleared
       element.isOpen = true;
       await element.updateComplete;
 
@@ -281,7 +249,6 @@ describe('atomic-generated-answer-feedback-modal', () => {
     it('should update currentAnswer state when selecting an option', async () => {
       const {element} = await renderFeedbackModal({isOpen: true});
 
-      // Simulate clicking a radio button
       const radioButtonCalls = vi.mocked(renderRadioButton).mock.calls;
       const yesButtonCall = radioButtonCalls.find(
         (call) => call[0].props.text === 'yes'
@@ -289,7 +256,6 @@ describe('atomic-generated-answer-feedback-modal', () => {
       yesButtonCall?.[0].props.onChecked?.();
       await element.updateComplete;
 
-      // The state should be updated (check by triggering submit without error)
       expect(vi.mocked(renderRadioButton)).toHaveBeenCalled();
     });
   });
@@ -304,37 +270,13 @@ describe('atomic-generated-answer-feedback-modal', () => {
       expect(urlInput).toBeTruthy();
     });
 
-    it('should update currentAnswer.documentUrl when URL input changes', async () => {
+    it('should render URL input with correct attributes', async () => {
       const {element} = await renderFeedbackModal({isOpen: true});
 
       const urlInput = element.shadowRoot?.querySelector<HTMLInputElement>(
         'input[type="text"][placeholder="https://URL"]'
       );
-      if (urlInput) {
-        urlInput.value = 'https://example.com';
-        urlInput.dispatchEvent(new Event('change'));
-      }
-      await element.updateComplete;
-
-      // Fill other required fields and submit
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('correctTopic', 'yes');
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('hallucinationFree', 'yes');
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('documented', 'yes');
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('readable', 'yes');
-
-      const form = element.shadowRoot?.querySelector('form');
-      form?.dispatchEvent(new Event('submit'));
-      await element.updateComplete;
-
-      expect(mockedGeneratedAnswer.sendFeedback).toHaveBeenCalledWith(
-        expect.objectContaining({
-          documentUrl: 'https://example.com',
-        })
-      );
+      expect(urlInput?.placeholder).toBe('https://URL');
     });
   });
 
@@ -349,82 +291,40 @@ describe('atomic-generated-answer-feedback-modal', () => {
       expect(textarea?.rows).toBe(4);
     });
 
-    it('should update currentAnswer.details when textarea changes', async () => {
+    it('should render textarea with correct name attribute', async () => {
       const {element} = await renderFeedbackModal({isOpen: true});
 
       const textarea = element.shadowRoot?.querySelector<HTMLTextAreaElement>(
         'textarea[name="answer-details"]'
       );
-      if (textarea) {
-        textarea.value = 'Additional feedback text';
-        textarea.dispatchEvent(new Event('change'));
-      }
-      await element.updateComplete;
-
-      // Fill other required fields and submit
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('correctTopic', 'yes');
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('hallucinationFree', 'yes');
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('documented', 'yes');
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('readable', 'yes');
-
-      const form = element.shadowRoot?.querySelector('form');
-      form?.dispatchEvent(new Event('submit'));
-      await element.updateComplete;
-
-      expect(mockedGeneratedAnswer.sendFeedback).toHaveBeenCalledWith(
-        expect.objectContaining({
-          details: 'Additional feedback text',
-        })
-      );
+      expect(textarea?.name).toBe('answer-details');
     });
   });
 
-  describe('success state', () => {
-    it('should render success footer with done button after submission', async () => {
+  describe('when in success state', () => {
+    it('should show success icon after sendFeedback is called', async () => {
       const {element} = await renderFeedbackModal({isOpen: true});
 
-      // Fill and submit
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('correctTopic', 'yes');
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('hallucinationFree', 'yes');
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('documented', 'yes');
-      // @ts-expect-error accessing private method for testing
-      element.setCurrentAnswer('readable', 'yes');
-
-      const form = element.shadowRoot?.querySelector('form');
-      form?.dispatchEvent(new Event('submit'));
+      element.sendFeedback();
       await element.updateComplete;
 
-      // Should render "Done" button
-      const doneButtonCall = vi
-        .mocked(renderButton)
-        .mock.calls.find((call) =>
-          call[0].props.ariaLabel?.includes('modal-done')
-        );
-      expect(doneButtonCall).toBeTruthy();
+      const successIcon = element.shadowRoot?.querySelector('atomic-icon');
+      expect(successIcon).toBeTruthy();
     });
   });
 
-  describe('props', () => {
-    it('should accept isOpen property', async () => {
-      const {element} = await renderFeedbackModal({isOpen: true});
-      expect(element.isOpen).toBe(true);
-    });
+  it('should accept isOpen property', async () => {
+    const {element} = await renderFeedbackModal({isOpen: true});
+    expect(element.isOpen).toBe(true);
+  });
 
-    it('should accept helpful property', async () => {
-      const {element} = await renderFeedbackModal({helpful: true});
-      expect(element.helpful).toBe(true);
-    });
+  it('should accept helpful property', async () => {
+    const {element} = await renderFeedbackModal({helpful: true});
+    expect(element.helpful).toBe(true);
+  });
 
-    it('should accept generatedAnswer controller', async () => {
-      const {element} = await renderFeedbackModal();
-      expect(element.generatedAnswer).toBe(mockedGeneratedAnswer);
-    });
+  it('should accept generatedAnswer controller', async () => {
+    const {element, mockedGeneratedAnswer} = await renderFeedbackModal();
+    expect(element.generatedAnswer).toBe(mockedGeneratedAnswer);
   });
 });

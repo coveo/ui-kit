@@ -14,6 +14,7 @@ import {renderIconButton} from '@/src/components/common/icon-button';
 import type {AnyBindings} from '@/src/components/common/interface/bindings';
 import {renderRadioButton} from '@/src/components/common/radio-button';
 import {booleanConverter} from '@/src/converters/boolean-converter';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
@@ -506,6 +507,7 @@ export class AtomicGeneratedAnswerFeedbackModal
   }
 
   @errorGuard()
+  @bindingGuard()
   render() {
     this.updateBreakpoints();
 
