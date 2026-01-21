@@ -28,7 +28,7 @@ interface GeneratedAnswerWithFollowUpsState extends GeneratedAnswerState {
   followUpAnswers: FollowUpAnswersState;
 }
 
-interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
+export interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
   /**
    * The state of the GeneratedAnswer controller.
    */
@@ -110,6 +110,7 @@ export function buildGeneratedAnswerWithFollowUps(
       engine.dispatch(generateHeadAnswer());
     },
     askFollowUp(question: string) {
+      console.log('Asking follow-up question:', question);
       engine.dispatch(generateFollowUpAnswer(question));
     },
   };

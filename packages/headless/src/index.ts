@@ -251,6 +251,7 @@ export type {
   InstantResultsState,
 } from './controllers/instant-results/instant-results.js';
 export {buildInstantResults} from './controllers/instant-results/instant-results.js';
+export type {GeneratedAnswerWithFollowUps} from './controllers/knowledge/generated-answer/headless-generated-answer-with-follow-ups.js';
 export type {
   Pager,
   PagerInitialState,
