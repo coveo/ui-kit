@@ -1,0 +1,87 @@
+@import "./with-sections.pcss";
+@import "./row-desktop.pcss";
+@import "./row-mobile.pcss";
+@import "./cell-desktop.pcss";
+@import "./cell-mobile.pcss";
+@reference '../../../utils/tailwind-utilities/aspect-square.css';
+@reference '../../../utils/tailwind-utilities/set-font-size.css';
+@reference '../../../global/global.pcss';
+
+@utility atomic-template-system {
+  @layer components {
+    /* == Common styles == */
+    :host {
+      @apply font-sans font-normal;
+    }
+
+    atomic-result-section-badges {
+      text-align: left;
+    }
+
+    atomic-result-section-actions {
+      text-align: left;
+    }
+
+    atomic-result-section-title-metadata {
+      @apply set-font-size-sm;
+    }
+
+    atomic-result-section-emphasized {
+      font-weight: 500;
+      @apply set-font-size-2xl;
+      margin-top: 0.5rem;
+    }
+    /* == End of common styles == */
+
+    .result-root {
+      &.with-sections {
+        @apply result-with-sections;
+
+        &.display-list {
+          @media (width >= theme(--breakpoint-desktop)) {
+            @apply row-result-desktop;
+          }
+          @media not all and (width >= theme(--breakpoint-desktop)) {
+            @apply row-result-mobile;
+          }
+        }
+        &.display-grid {
+          a,
+          button {
+            position: relative;
+          }
+
+          &.image-large {
+            @media (width >= theme(--breakpoint-desktop)) {
+              @apply cell-result-desktop;
+            }
+            @media not all and (width >= theme(--breakpoint-desktop)) {
+              @apply row-result-mobile;
+            }
+          }
+          &.image-small,
+          &.image-icon,
+          &.image-none {
+            @media (width >= theme(--breakpoint-desktop)) {
+              @apply cell-result-desktop;
+            }
+            @media not all and (width >= theme(--breakpoint-desktop)) {
+              @apply cell-result-mobile;
+            }
+          }
+        }
+        &.display-table {
+          @apply row-result-desktop;
+        }
+      }
+
+      atomic-table-element {
+        display: none;
+      }
+    }
+
+    .link-container {
+      display: none;
+    }
+  }
+}
