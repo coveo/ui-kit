@@ -15,4 +15,5 @@ export {AtomicInsightSearchBox} from './atomic-insight-search-box/atomic-insight
 export {AtomicInsightSmartSnippetFeedbackModal} from './atomic-insight-smart-snippet-feedback-modal/atomic-insight-smart-snippet-feedback-modal.js';
 export {AtomicInsightTab} from './atomic-insight-tab/atomic-insight-tab.js';
 export {AtomicInsightTabs} from './atomic-insight-tabs/atomic-insight-tabs.js';
+export {AtomicInsightUserActionsSession} from './atomic-insight-user-actions-session/atomic-insight-user-actions-session.js';
 export {AtomicInsightUserActionsToggle} from './atomic-insight-user-actions-toggle/atomic-insight-user-actions-toggle.js';
