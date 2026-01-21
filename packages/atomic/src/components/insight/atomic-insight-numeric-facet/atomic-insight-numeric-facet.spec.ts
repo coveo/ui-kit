@@ -21,6 +21,7 @@ import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/hea
 import {buildFakeFacetConditionsManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/facet-conditions-manager';
 import {buildFakeNumericFacet} from '@/vitest-utils/testing-helpers/fixtures/headless/search/numeric-facet-controller';
 import {buildFakeNumericFilter} from '@/vitest-utils/testing-helpers/fixtures/headless/search/numeric-filter-controller';
+import {mockConsole} from '@/vitest-utils/testing-helpers/testing-utils/mock-console';
 import type {AtomicInsightNumericFacet} from './atomic-insight-numeric-facet';
 import './atomic-insight-numeric-facet';
 
@@ -30,8 +31,10 @@ describe('atomic-insight-numeric-facet', () => {
   let mockedNumericFilter: NumericFilter;
   let mockedSearchStatus: SearchStatus;
   let mockedFacetConditionsManager: FacetConditionsManager;
+  let mockedConsole: ReturnType<typeof mockConsole>;
 
   beforeEach(() => {
+    mockedConsole = mockConsole();
     mockedRegisterFacet = vi.fn();
     mockedNumericFacet = buildFakeNumericFacet({});
     mockedNumericFilter = buildFakeNumericFilter({});
@@ -681,14 +684,6 @@ describe('atomic-insight-numeric-facet', () => {
 
   describe('when validating props', () => {
     describe('when displayValuesAs has invalid value', () => {
-      let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
-
-      beforeEach(() => {
-        consoleErrorSpy = vi
-          .spyOn(console, 'error')
-          .mockImplementation(() => {});
-      });
-
       it('should set error when displayValuesAs is invalid', async () => {
         const {element} =
           await renderInAtomicInsightInterface<AtomicInsightNumericFacet>({
@@ -719,19 +714,11 @@ describe('atomic-insight-numeric-facet', () => {
           });
 
         expect(element.error).toBeDefined();
-        expect(consoleErrorSpy).toHaveBeenCalled();
+        expect(mockedConsole.error).toHaveBeenCalled();
       });
     });
 
     describe('when withInput has invalid value', () => {
-      let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
-
-      beforeEach(() => {
-        consoleErrorSpy = vi
-          .spyOn(console, 'error')
-          .mockImplementation(() => {});
-      });
-
       it('should set error when withInput is invalid', async () => {
         const {element} =
           await renderInAtomicInsightInterface<AtomicInsightNumericFacet>({
@@ -762,7 +749,7 @@ describe('atomic-insight-numeric-facet', () => {
           });
 
         expect(element.error).toBeDefined();
-        expect(consoleErrorSpy).toHaveBeenCalled();
+        expect(mockedConsole.error).toHaveBeenCalled();
       });
     });
   });
