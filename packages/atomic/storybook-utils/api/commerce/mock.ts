@@ -5,7 +5,10 @@ import {baseResponse as baseListingResponse} from './listing-response.js';
 import {baseResponse as baseProductSuggestResponse} from './productSuggest-response.js';
 import {baseResponse as baseQuerySuggestResponse} from './querySuggest-response.js';
 import {baseResponse as baseRecommendationResponse} from './recommendation-response.js';
-import {baseResponse as baseSearchResponse} from './search-response.js';
+import {
+  baseResponse as baseSearchResponse,
+  type CommerceSearchResponse,
+} from './search-response.js';
 
 export class MockCommerceApi implements MockApi {
   readonly searchEndpoint;
@@ -16,7 +19,7 @@ export class MockCommerceApi implements MockApi {
 
   constructor(basePath: string = 'https://:orgId.org.coveo.com') {
     this.searchEndpoint = new EndpointHarness<
-      typeof baseSearchResponse | APIErrorWithStatusCode
+      CommerceSearchResponse | APIErrorWithStatusCode
     >(
       'POST',
       `${basePath}/rest/organizations/:orgId/commerce/v2/search`,

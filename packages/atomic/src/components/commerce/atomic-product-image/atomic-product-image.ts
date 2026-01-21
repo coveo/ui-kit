@@ -226,10 +226,10 @@ export class AtomicProductImage
   @errorGuard()
   render() {
     if (this.product === null || this.product === undefined) {
-      return html`${nothing}`;
+      return nothing;
     }
     if (this.isFallbackMissing) {
-      return html`${nothing}`;
+      return nothing;
     }
     const alt = this.imageAlt
       ? this.imageAlt

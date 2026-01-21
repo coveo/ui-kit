@@ -534,7 +534,7 @@ export class AtomicRatingFacet
   @errorGuard()
   render() {
     if (this.searchStatusState.hasError || !this.facet.state.enabled) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     if (!this.searchStatusState.firstSearchExecuted) {
@@ -547,7 +547,7 @@ export class AtomicRatingFacet
     }
 
     if (!this.valuesToRender.length) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     return renderFacetContainer()(html`
