@@ -283,7 +283,7 @@ export class AtomicQuickviewModal
             text: this.bindings.i18n.t('quickview-previous'),
           },
         })(nothing)}
-        <p class="text-center">
+        <p class="text-center text-on-background">
           ${this.bindings.i18n.t('showing-results-of', {
             first: this.current,
             total: this.total,
