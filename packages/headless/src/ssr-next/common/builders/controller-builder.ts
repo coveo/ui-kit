@@ -80,7 +80,7 @@ export class ControllerBuilder<
     );
 
     controllerWithInitialState.subscribe = controller.subscribe.bind(
-      controllerWithInitialState
+      controller
     );
 
     return controllerWithInitialState as TController;
