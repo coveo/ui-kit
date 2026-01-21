@@ -53,7 +53,7 @@ You have deep understanding of:
   - `atomic.instructions.md` - Atomic package conventions (Lit components, decorators, lifecycle)
   - `tests-atomic.instructions.md` - Atomic unit testing patterns
   - `playwright-typescript.instructions.md` - E2E testing patterns
-  - `a11y.instructions.md` - Accessibility standards (WCAG 2.2)
+  - Use `applying-wcag-guidelines` skill for accessibility (WCAG 2.2 Level AA)
   - `msw-api-mocking.instructions.md` - API mocking for Storybook stories
 
 ---

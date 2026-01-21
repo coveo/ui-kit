@@ -225,6 +225,19 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - run: pnpm --filter @coveo/atomic run validate:light-dom-styles
+  validate-no-new-light-dom:
+    name: "Validate no new Light DOM components"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - run: pnpm --filter @coveo/atomic run validate:no-new-light-dom
   unit-test:
     name: "Run unit tests"
     needs: build
@@ -558,20 +571,6 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-atomic-search-commerce-react
-  cypress-atomic-search-nextjs-pages-router-test:
-    name: "Run e2e tests on Atomic Search NextJS Pages Router"
-    needs: affected
-    if: contains(needs.affected.outputs.projects, '@samples/atomic-search-nextjs-pages-router')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/cypress-atomic-search-nextjs-pages-router
   playwright-atomic-search-commerce-angular-test:
     name: "Run e2e tests on Atomic Search Commerce Angular"
     needs: affected
@@ -589,20 +588,6 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/playwright-atomic-search-commerce-angular
-  cypress-atomic-search-stencil-test:
-    name: "Run e2e tests on Atomic Search Stencil.js"
-    needs: affected
-    if: contains(needs.affected.outputs.projects, '@samples/atomic-search-stencil')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/cypress-atomic-search-stencil
   playwright-atomic-hosted-page-test:
     name: "Run e2e tests for Atomic Hosted Page"
     needs: affected
@@ -651,10 +636,10 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/cypress-atomic-insight-panel
-  cypress-headless-ssr-search-nextjs-app-router-test:
-    name: "Run e2e tests on Headless SSR Search NextJS App Router"
+  cypress-headless-ssr-search-nextjs-test:
+    name: "Run e2e tests on Headless SSR Search NextJS"
     needs: affected
-    if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-search-nextjs-app-router')
+    if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-search-nextjs')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -664,21 +649,7 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/cypress-headless-ssr-search-nextjs-app-router
-  cypress-headless-ssr-search-nextjs-pages-router-test:
-    name: "Run e2e tests on Headless SSR Search NextJS Pages Router"
-    needs: affected
-    if: contains(needs.affected.outputs.projects, '@samples/headless-ssr-search-nextjs-pages-router')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/cypress-headless-ssr-search-nextjs-pages-router
+      - uses: ./.github/actions/cypress-headless-ssr-search-nextjs
   e2e-quantic:
     name: "Run Quantic E2E tests"
     needs: affected
@@ -779,12 +750,9 @@ jobs:
       - "e2e-quantic"
       - "cypress-atomic-screenshots"
       - "playwright-atomic-search-commerce-react-test"
-      - "cypress-atomic-search-nextjs-pages-router-test"
       - "playwright-atomic-search-commerce-angular-test"
-      - "cypress-atomic-search-stencil-test"
       - "cypress-atomic-insight-panel-test"
-      - "cypress-headless-ssr-search-nextjs-app-router-test"
-      - "cypress-headless-ssr-search-nextjs-pages-router-test"
+      - "cypress-headless-ssr-search-nextjs-test"
       # - "prerelease-npm-pr"
       - "prerelease-cdn-pr"
     runs-on: ubuntu-latest
@@ -820,12 +788,9 @@ jobs:
       - "e2e-quantic"
       - "cypress-atomic-screenshots"
       - "playwright-atomic-search-commerce-react-test"
-      - "cypress-atomic-search-nextjs-pages-router-test"
       - "playwright-atomic-search-commerce-angular-test"
-      - "cypress-atomic-search-stencil-test"
       - "cypress-atomic-insight-panel-test"
-      - "cypress-headless-ssr-search-nextjs-app-router-test"
-      - "cypress-headless-ssr-search-nextjs-pages-router-test"
+      - "cypress-headless-ssr-search-nextjs-test"
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner

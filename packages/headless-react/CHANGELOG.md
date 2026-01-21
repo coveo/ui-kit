@@ -1,3 +1,15 @@
+## 2.9.0 (2026-01-21)
+
+* feat: add ProductEnrichment Controller in Commerce SSR (#6819) ([850047e](https://github.com/coveo/ui-kit/commits/850047e)), closes [#6819](https://github.com/coveo/ui-kit/issues/6819)
+
+
+
+## <small>2.8.3 (2026-01-14)</small>
+
+* docs(headless-react): typedoc site name (#6925) ([3aebbd9](https://github.com/coveo/ui-kit/commits/3aebbd9)), closes [#6925](https://github.com/coveo/ui-kit/issues/6925)
+
+
+
 ## <small>2.8.2 (2026-01-07)</small>
 
 * [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))

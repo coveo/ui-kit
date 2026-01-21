@@ -190,6 +190,13 @@ export type {
 } from './ssr/commerce/controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 export {defineParameterManager} from './ssr/commerce/controllers/parameter-manager/headless-core-parameter-manager.ssr.js';
 export type {
+  ProductEnrichment,
+  ProductEnrichmentDefinition,
+  ProductEnrichmentProps,
+  ProductEnrichmentState,
+} from './ssr/commerce/controllers/product-enrichment/headless-product-enrichment.ssr.js';
+export {defineProductEnrichment} from './ssr/commerce/controllers/product-enrichment/headless-product-enrichment.ssr.js';
+export type {
   ProductList,
   ProductListing,
   ProductListState,
@@ -329,6 +336,7 @@ export * from './features/commerce/facets/regular-facet/regular-facet-actions-lo
 export * from './features/commerce/instant-products/instant-products-actions-loader.js';
 export * from './features/commerce/pagination/pagination-actions-loader.js';
 export * from './features/commerce/product/product-actions-loaders.js';
+export * from './features/commerce/product-enrichment/product-enrichment-actions-loader.js';
 export * from './features/commerce/product-listing/product-listing-actions-loader.js';
 export * from './features/commerce/product-listing-parameters/product-listing-parameters-actions-loader.js';
 export * from './features/commerce/query/query-actions-loader.js';
