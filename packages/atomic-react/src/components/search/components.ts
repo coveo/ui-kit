@@ -34,6 +34,7 @@ import {
   AtomicRatingRangeFacet as LitAtomicRatingRangeFacet,
   AtomicRecsError as LitAtomicRecsError,
   AtomicRecsInterface as LitAtomicRecsInterface,
+  AtomicRecsResult as LitAtomicRecsResult,
   AtomicRefineModal as LitAtomicRefineModal,
   AtomicRefineToggle as LitAtomicRefineToggle,
   AtomicResult as LitAtomicResult,
@@ -295,6 +296,12 @@ export const AtomicRecsInterface = createComponent({
   tagName: 'atomic-recs-interface',
   react: React,
   elementClass: LitAtomicRecsInterface,
+});
+
+export const AtomicRecsResult = createComponent({
+  tagName: 'atomic-recs-result',
+  react: React,
+  elementClass: LitAtomicRecsResult,
 });
 
 export const AtomicRefineModal = createComponent({
