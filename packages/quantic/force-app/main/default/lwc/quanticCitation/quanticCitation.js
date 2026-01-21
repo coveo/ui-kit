@@ -300,14 +300,33 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
   }
 
   get citationTitleClasses() {
-    return `citation__title slds-m-left_x-small slds-truncate slds-has-flexi-truncate ${this.isActive ? 'citation__title--active' : ''}`;
+    return [
+      'citation__title',
+      'slds-m-left_x-small',
+      'slds-truncate',
+      'slds-has-flexi-truncate',
+      this.isActive && 'citation__title--active'
+    ].filter(Boolean).join(' ');
   }
 
   get citationLinkClasses() {
-    return `citation__link slds-badge slds-badge_lightest slds-align_absolute-center slds-text-link_reset slds-p-left_xx-small slds-p-right_x-small ${this.isActive ? 'citation__link--active' : ''}`;
+    return [
+      'citation__link',
+      'slds-badge',
+      'slds-badge_lightest',
+      'slds-align_absolute-center',
+      'slds-text-link_reset',
+      'slds-p-left_xx-small',
+      'slds-p-right_x-small',
+      this.isActive && 'citation__link--active'
+    ].filter(Boolean).join(' ');
   }
 
   get citationIconClasses() {
-    return `citation__icon slds-m-left_x-small ${this.isActive ? 'citation__icon--active' : ''}`;
+    return [
+      'citation__icon',
+      'slds-m-left_x-small',
+      this.isActive && 'citation__icon--active'
+    ].filter(Boolean).join(' ');
   }
 }
