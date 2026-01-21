@@ -31,6 +31,14 @@ export const contextDefinition = {
     options: {required: false},
     values: locationDefinition,
   }),
+  /**
+   * Custom context for passing additional JSON-serializable data.
+   * Values should be primitives (string, number, boolean, null) or nested objects/arrays.
+   * Detailed validation is performed by the backend.
+   */
+  custom: new RecordValue({
+    options: {required: false},
+  }),
 };
 
 export const contextSchema = new Schema(contextDefinition);

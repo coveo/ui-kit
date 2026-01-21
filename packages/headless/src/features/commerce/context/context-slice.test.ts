@@ -1,4 +1,9 @@
-import {setContext, setLocation, setView} from './context-actions.js';
+import {
+  setContext,
+  setCustom,
+  setLocation,
+  setView,
+} from './context-actions.js';
 import {contextReducer} from './context-slice.js';
 import {
   type CommerceContextState,
@@ -55,5 +60,15 @@ describe('context-slice', () => {
     expect(contextReducer(state, setLocation(location)).location).toEqual(
       location
     );
+  });
+
+  it('should allow to set custom context', () => {
+    const custom = {
+      userId: 'user-123',
+      sessionId: 12345,
+      isLoggedIn: true,
+      metadata: {tier: 'premium'},
+    };
+    expect(contextReducer(state, setCustom(custom)).custom).toEqual(custom);
   });
 });

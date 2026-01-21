@@ -77,8 +77,8 @@ export type {Relay} from '@coveo/relay';
 export type {Middleware, Unsubscribe} from '@reduxjs/toolkit';
 export type {CommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
 export {getSampleCommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
-// export type
 export type {CoreEngineNext, ExternalEngineOptions} from './app/engine.js';
+// export type
 export type {
   AnalyticsConfiguration,
   AnalyticsRuntimeEnvironment,
@@ -122,6 +122,7 @@ export type {
   ContextOptions,
   ContextProps,
   ContextState,
+  CustomContext,
   UserLocation,
   View,
 } from './ssr-next/commerce/controllers/context/headless-context.ssr.js';

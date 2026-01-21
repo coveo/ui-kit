@@ -32,14 +32,16 @@ export default function ContextDropdown({
 
   const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const [language, country, currency] = e.target.value.split('-');
-    const newContext = {language, country, currency};
+    const customContext = {storefrontAssociation: e.target.value};
+    const newContext = {language, country, currency, custom: customContext};
     setContext(newContext);
     methods?.setLanguage(language);
     methods?.setCountry(country);
     methods?.setCurrency(currency as ContextOptions['currency']);
+    methods?.setCustom(customContext);
 
     fetcher.submit(
-      {language, country, currency},
+      {language, country, currency, custom: customContext},
       {method: 'post', action: '/context/update'}
     );
 
