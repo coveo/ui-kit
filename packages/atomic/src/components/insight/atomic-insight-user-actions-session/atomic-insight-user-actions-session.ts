@@ -9,8 +9,8 @@ import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {parseTimestampToDateDetails} from '@/src/utils/date-utils';
-import Flag from '../../../../images/flag.svg';
-import ThreeDotsIcon from '../../../../images/three-dots.svg';
+import Flag from '../../../images/flag.svg';
+import ThreeDotsIcon from '../../../images/three-dots.svg';
 import {renderUserAction} from './user-action';
 
 export type UserActionType =
