@@ -7,27 +7,23 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, UserAction as IUserAction } from "@coveo/headless/insight";
-import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
+import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-import { InteractiveResult as RecsInteractiveResult, Result as RecsResult } from "@coveo/headless/recommendation";
-import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
 export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, UserAction as IUserAction } from "@coveo/headless/insight";
-export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
+export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
-export { InteractiveResult as RecsInteractiveResult, Result as RecsResult } from "@coveo/headless/recommendation";
-export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { i18n } from "i18next";
 export { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
@@ -404,7 +400,7 @@ export namespace Components {
          */
         "sortCriteria": InsightRangeFacetSortCriterion;
         /**
-          * Whether this facet should contain an datepicker allowing users to set custom ranges.
+          * Whether this facet should contain a date picker allowing users to set custom ranges.
          */
         "withDatePicker": boolean;
     }
@@ -463,24 +459,6 @@ export namespace Components {
     interface AtomicIpxBody {
         "displayFooterSlot": boolean;
         "isOpen"?: boolean;
-    }
-    interface AtomicIpxButton {
-        /**
-          * The close icon of the button.
-         */
-        "closeIcon": string;
-        /**
-          * Whether the IPX modal is open.
-         */
-        "isModalOpen": boolean;
-        /**
-          * The label that will be shown to the user.
-         */
-        "label"?: string;
-        /**
-          * The open icon of the button.
-         */
-        "openIcon": string;
     }
     interface AtomicIpxEmbedded {
         /**
@@ -631,57 +609,6 @@ export namespace Components {
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
-    }
-    /**
-     * The `atomic-recs-result` component is used internally by the `atomic-recs-list` component.
-     */
-    interface AtomicRecsResult {
-        /**
-          * The classes to add to the result element.
-         */
-        "classes": string;
-        /**
-          * The result content to display.
-         */
-        "content"?: ParentNode;
-        /**
-          * The size of the results.
-         */
-        "density": ItemDisplayDensity;
-        /**
-          * The layout to apply to display results.
-         */
-        "display": ItemDisplayLayout;
-        /**
-          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * The InteractiveResult item.
-         */
-        "interactiveResult": RecsInteractiveResult;
-        /**
-          * The result link to use when the result is clicked in a grid layout.
-          * @default - An `atomic-result-link` without any customization.
-         */
-        "linkContent": ParentNode;
-        "loadingFlag"?: string;
-        /**
-          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
-         */
-        "renderingFunction": ItemRenderingFunction;
-        /**
-          * The result item.
-         */
-        "result": RecsResult;
-        /**
-          * Whether an atomic-result-link inside atomic-recs-result should stop click event propagation.
-         */
-        "stopPropagation"?: boolean;
-        /**
-          * Global Atomic state.
-         */
-        "store"?: RecsStore;
     }
     /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
@@ -940,12 +867,6 @@ declare global {
         prototype: HTMLAtomicIpxBodyElement;
         new (): HTMLAtomicIpxBodyElement;
     };
-    interface HTMLAtomicIpxButtonElement extends Components.AtomicIpxButton, HTMLStencilElement {
-    }
-    var HTMLAtomicIpxButtonElement: {
-        prototype: HTMLAtomicIpxButtonElement;
-        new (): HTMLAtomicIpxButtonElement;
-    };
     interface HTMLAtomicIpxEmbeddedElementEventMap {
         "animationEnded": never;
     }
@@ -1041,15 +962,6 @@ declare global {
         prototype: HTMLAtomicRecsListElement;
         new (): HTMLAtomicRecsListElement;
     };
-    /**
-     * The `atomic-recs-result` component is used internally by the `atomic-recs-list` component.
-     */
-    interface HTMLAtomicRecsResultElement extends Components.AtomicRecsResult, HTMLStencilElement {
-    }
-    var HTMLAtomicRecsResultElement: {
-        prototype: HTMLAtomicRecsResultElement;
-        new (): HTMLAtomicRecsResultElement;
-    };
     interface HTMLAtomicStencilFacetDateInputElementEventMap {
         "atomic/dateInputApply": any;
     }
@@ -1106,7 +1018,6 @@ declare global {
         "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
         "atomic-insight-user-actions-timeline": HTMLAtomicInsightUserActionsTimelineElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
-        "atomic-ipx-button": HTMLAtomicIpxButtonElement;
         "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
         "atomic-ipx-modal": HTMLAtomicIpxModalElement;
         "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
@@ -1115,7 +1026,6 @@ declare global {
         "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
         "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
-        "atomic-recs-result": HTMLAtomicRecsResultElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
     }
@@ -1484,7 +1394,7 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: InsightRangeFacetSortCriterion;
         /**
-          * Whether this facet should contain an datepicker allowing users to set custom ranges.
+          * Whether this facet should contain a date picker allowing users to set custom ranges.
          */
         "withDatePicker"?: boolean;
     }
@@ -1544,24 +1454,6 @@ declare namespace LocalJSX {
         "displayFooterSlot"?: boolean;
         "isOpen"?: boolean;
         "onAnimationEnded"?: (event: AtomicIpxBodyCustomEvent<never>) => void;
-    }
-    interface AtomicIpxButton {
-        /**
-          * The close icon of the button.
-         */
-        "closeIcon"?: string;
-        /**
-          * Whether the IPX modal is open.
-         */
-        "isModalOpen"?: boolean;
-        /**
-          * The label that will be shown to the user.
-         */
-        "label"?: string;
-        /**
-          * The open icon of the button.
-         */
-        "openIcon"?: string;
     }
     interface AtomicIpxEmbedded {
         /**
@@ -1691,57 +1583,6 @@ declare namespace LocalJSX {
         "recommendation"?: string;
     }
     /**
-     * The `atomic-recs-result` component is used internally by the `atomic-recs-list` component.
-     */
-    interface AtomicRecsResult {
-        /**
-          * The classes to add to the result element.
-         */
-        "classes"?: string;
-        /**
-          * The result content to display.
-         */
-        "content"?: ParentNode;
-        /**
-          * The size of the results.
-         */
-        "density"?: ItemDisplayDensity;
-        /**
-          * The layout to apply to display results.
-         */
-        "display"?: ItemDisplayLayout;
-        /**
-          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * The InteractiveResult item.
-         */
-        "interactiveResult": RecsInteractiveResult;
-        /**
-          * The result link to use when the result is clicked in a grid layout.
-          * @default - An `atomic-result-link` without any customization.
-         */
-        "linkContent"?: ParentNode;
-        "loadingFlag"?: string;
-        /**
-          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
-         */
-        "renderingFunction"?: ItemRenderingFunction;
-        /**
-          * The result item.
-         */
-        "result": RecsResult;
-        /**
-          * Whether an atomic-result-link inside atomic-recs-result should stop click event propagation.
-         */
-        "stopPropagation"?: boolean;
-        /**
-          * Global Atomic state.
-         */
-        "store"?: RecsStore;
-    }
-    /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
      * Internal component made to be integrated in a TimeframeFacet.
      */
@@ -1796,7 +1637,6 @@ declare namespace LocalJSX {
         "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
         "atomic-insight-user-actions-timeline": AtomicInsightUserActionsTimeline;
         "atomic-ipx-body": AtomicIpxBody;
-        "atomic-ipx-button": AtomicIpxButton;
         "atomic-ipx-embedded": AtomicIpxEmbedded;
         "atomic-ipx-modal": AtomicIpxModal;
         "atomic-ipx-recs-list": AtomicIpxRecsList;
@@ -1805,7 +1645,6 @@ declare namespace LocalJSX {
         "atomic-ipx-result-link": AtomicIpxResultLink;
         "atomic-quickview-modal": AtomicQuickviewModal;
         "atomic-recs-list": AtomicRecsList;
-        "atomic-recs-result": AtomicRecsResult;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
     }
@@ -1851,7 +1690,6 @@ declare module "@stencil/core" {
              */
             "atomic-insight-user-actions-timeline": LocalJSX.AtomicInsightUserActionsTimeline & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsTimelineElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
-            "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
             "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
             "atomic-ipx-modal": LocalJSX.AtomicIpxModal & JSXBase.HTMLAttributes<HTMLAtomicIpxModalElement>;
             /**
@@ -1873,10 +1711,6 @@ declare module "@stencil/core" {
              * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
              */
             "atomic-recs-list": LocalJSX.AtomicRecsList & JSXBase.HTMLAttributes<HTMLAtomicRecsListElement>;
-            /**
-             * The `atomic-recs-result` component is used internally by the `atomic-recs-list` component.
-             */
-            "atomic-recs-result": LocalJSX.AtomicRecsResult & JSXBase.HTMLAttributes<HTMLAtomicRecsResultElement>;
             /**
              * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
              * Internal component made to be integrated in a TimeframeFacet.

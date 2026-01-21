@@ -42,7 +42,7 @@ interface TabInfo {
  * @part overflow-tabs - The list of tabs shown when the "More" button is clicked.
  * @part popover-tab - The individual tab buttons shown when the "More" button is clicked.
  * @part backdrop - The backdrop shown when the "More" button is clicked.
- * @slot (default) - The `atomic-tab` elements that represent the tabs.
+ * @slot default - The `atomic-tab` elements that represent the tabs.
  */
 @customElement('atomic-tab-manager')
 @bindings()
@@ -117,7 +117,9 @@ export class AtomicTabManager
   @errorGuard()
   render() {
     return html`
-      <atomic-tab-bar>
+      <atomic-tab-bar
+        exportparts="popover-button, value-label, arrow-icon, backdrop, overflow-tabs, popover-tab"
+      >
         <div
           role="list"
           aria-label="tab-area"
