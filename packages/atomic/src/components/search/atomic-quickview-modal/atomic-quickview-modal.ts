@@ -113,6 +113,7 @@ export class AtomicQuickviewModal
   private words: Record<string, QuickviewWordHighlight> = {};
 
   private iframeRef?: HTMLIFrameElement;
+  private highlightStyleSheets = new Map<string, CSSStyleSheet>();
 
   /**
    * The HTML content to display in the quickview modal.
@@ -169,6 +170,7 @@ export class AtomicQuickviewModal
     this.content = undefined;
     this.result = undefined;
     this.interactiveResult = undefined;
+    this.highlightStyleSheets.clear();
   }
 
   willUpdate(changedProperties: Map<string, unknown>) {
@@ -316,10 +318,6 @@ export class AtomicQuickviewModal
     return !!this.content && !!this.result;
   }
 
-  private get highlightScriptId() {
-    return 'CoveoDisableHighlightStyle';
-  }
-
   private get logger() {
     return this.bindings.engine.logger;
   }
@@ -329,55 +327,58 @@ export class AtomicQuickviewModal
   }
 
   private enableHighlights() {
-    this.removeDisableHighlightScript();
+    this.removeDisableHighlightStyleSheet();
   }
 
   private enableHighlightsSpecificKeyword(identifier: string) {
-    this.removeDisableHighlightScript(identifier);
+    this.removeDisableHighlightStyleSheet(identifier);
   }
 
   private disableHighlights() {
-    this.createDisableHighlightScript();
+    this.createDisableHighlightStyleSheet();
   }
 
   private disableHighlightsSpecificKeyword(identifier: string) {
-    this.createDisableHighlightScript(identifier);
+    this.createDisableHighlightStyleSheet(identifier);
   }
 
-  private removeDisableHighlightScript(identifier?: string) {
-    const doc = this.iframeRef?.contentWindow?.document;
-    if (!doc) {
-      return;
-    }
-    doc
-      .getElementById(
-        `${this.highlightScriptId}${identifier ? `:${identifier}` : ''}`
-      )
-      ?.remove();
-  }
-
-  private createDisableHighlightScript(identifier?: string) {
+  private removeDisableHighlightStyleSheet(identifier?: string) {
     const doc = this.iframeRef?.contentWindow?.document;
     if (!doc) {
       return;
     }
 
-    const head = doc.head;
-    const scriptId = `${this.highlightScriptId}${
-      identifier ? `:${identifier}` : ''
-    }`;
-    const style =
-      doc.getElementById(scriptId) || this.bindings.createStyleElement();
-    style.setAttribute('id', scriptId);
-    head.appendChild(style);
-    style.appendChild(
-      doc.createTextNode(`[id^="${HIGHLIGHT_PREFIX}${
-        identifier ? `:${identifier}` : ''
-      }"] {
-      background-color: inherit !important;
-      color: inherit !important;
-    }`)
+    const key = identifier ?? '';
+    const sheet = this.highlightStyleSheets.get(key);
+    if (!sheet) {
+      return;
+    }
+
+    doc.adoptedStyleSheets = doc.adoptedStyleSheets.filter((s) => s !== sheet);
+    this.highlightStyleSheets.delete(key);
+  }
+
+  private createDisableHighlightStyleSheet(identifier?: string) {
+    const doc = this.iframeRef?.contentWindow?.document;
+    if (!doc) {
+      return;
+    }
+
+    const key = identifier ?? '';
+    if (this.highlightStyleSheets.has(key)) {
+      return;
+    }
+
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync(
+      `[id^="${HIGHLIGHT_PREFIX}${identifier ? `:${identifier}` : ''}"] {
+        background-color: inherit !important;
+        color: inherit !important;
+      }`
     );
+
+    this.highlightStyleSheets.set(key, sheet);
+    doc.adoptedStyleSheets = [...doc.adoptedStyleSheets, sheet];
   }
 
   private get termsToHighlight() {
