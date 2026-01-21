@@ -15,8 +15,8 @@ import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import ArrowDownIcon from '../../../../images/big-arrow-down.svg';
-import ArrowUpIcon from '../../../../images/big-arrow-up.svg';
+import ArrowDownIcon from '../../../images/big-arrow-down.svg';
+import ArrowUpIcon from '../../../images/big-arrow-up.svg';
 
 /**
  * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.

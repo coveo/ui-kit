@@ -1,11 +1,11 @@
 import {UserAction as IUserAction} from '@coveo/headless/insight';
 import {Component, h, Prop, Watch, State} from '@stencil/core';
-import Flag from '../../../../images/flag.svg';
-import ThreeDotsIcon from '../../../../images/three-dots.svg';
-import {parseTimestampToDateDetails} from '../../../../utils/date-utils';
-import {InitializeBindings} from '../../../../utils/initialization-utils';
-import {Button} from '../../../common/stencil-button';
-import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
+import Flag from '../../../images/flag.svg';
+import ThreeDotsIcon from '../../../images/three-dots.svg';
+import {parseTimestampToDateDetails} from '../../../utils/date-utils';
+import {InitializeBindings} from '../../../utils/initialization-utils';
+import {Button} from '../../common/stencil-button';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 import {UserAction} from './stencil-user-action';
 
 export type UserActionType =

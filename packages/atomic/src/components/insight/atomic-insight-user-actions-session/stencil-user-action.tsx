@@ -1,12 +1,12 @@
 import {UserAction as IUserAction} from '@coveo/headless/insight';
 import {FunctionalComponent, h} from '@stencil/core';
-import BookmarkIcon from '../../../../images/bookmark.svg';
-import DocumentIcon from '../../../../images/document.svg';
-import PointIcon from '../../../../images/point.svg';
-import QuickviewIcon from '../../../../images/quickview.svg';
-import SearchIcon from '../../../../images/search.svg';
-import {parseTimestampToDateDetails} from '../../../../utils/date-utils';
-import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
+import BookmarkIcon from '../../../images/bookmark.svg';
+import DocumentIcon from '../../../images/document.svg';
+import PointIcon from '../../../images/point.svg';
+import QuickviewIcon from '../../../images/quickview.svg';
+import SearchIcon from '../../../images/search.svg';
+import {parseTimestampToDateDetails} from '../../../utils/date-utils';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 const icons = {
   SEARCH: SearchIcon,
