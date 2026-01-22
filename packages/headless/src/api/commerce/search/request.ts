@@ -3,4 +3,4 @@ import type {FilterableCommerceAPIRequest} from '../common/request.js';
 
 export type CommerceSearchRequest = FilterableCommerceAPIRequest &
   QueryParam &
-  Partial<EnableResultsParam>;
+  EnableResultsParam;

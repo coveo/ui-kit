@@ -55,7 +55,6 @@ const prepareRequestParams = (req: FilterableCommerceAPIRequest) => {
     perPage,
     facets,
     sort,
-    ...rest
   } = req;
   return {
     trackingId,
@@ -68,7 +67,6 @@ const prepareRequestParams = (req: FilterableCommerceAPIRequest) => {
     perPage,
     facets,
     sort,
-    ...rest,
   };
 };
 
