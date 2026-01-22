@@ -79,9 +79,8 @@ export class ControllerBuilder<
       }
     );
 
-    controllerWithInitialState.subscribe = controller.subscribe.bind(
-      controller
-    );
+    controllerWithInitialState.subscribe =
+      controller.subscribe.bind(controller);
 
     return controllerWithInitialState as TController;
   }
