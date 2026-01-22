@@ -57,7 +57,7 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
 
   private validateProps() {
     try {
-      this.schema.validate(this.currentProps as TProps);
+      this.schema.validate(this.currentProps);
     } catch (error) {
       if (this.throwOnError) {
         this.host.error = error as Error;
