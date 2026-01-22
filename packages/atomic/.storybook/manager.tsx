@@ -61,7 +61,7 @@ addons.register('custom/onetrust-button', () => {
 });
 
 const observeAndExpandButtons = () => {
-  const observer = new MutationObserver(() => {
+  const expandButtons = () => {
     const buttonsToExpand = document.querySelectorAll(
       'button[data-action="expand-all"][data-expanded="false"]'
     );
@@ -69,6 +69,19 @@ const observeAndExpandButtons = () => {
       buttonsToExpand.forEach((button) =>
         (button as HTMLButtonElement).click()
       );
+      return true;
+    }
+    return false;
+  };
+
+  // Check immediately in case buttons are already in the DOM
+  if (expandButtons()) {
+    return;
+  }
+
+  // Otherwise, observe for future DOM mutations
+  const observer = new MutationObserver(() => {
+    if (expandButtons()) {
       observer.disconnect();
     }
   });
