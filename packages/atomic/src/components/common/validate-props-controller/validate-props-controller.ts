@@ -37,12 +37,10 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
   }
 
   hostConnected() {
-    this.currentProps = this.getProps();
     if (this.host.error === null) {
       // @ts-expect-error: we need to set the error to undefined if it was null.
       this.host.error = undefined;
     }
-    this.validateProps();
   }
 
   hostUpdate() {
@@ -59,7 +57,7 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
 
   private validateProps() {
     try {
-      this.schema.validate(this.currentProps);
+      this.schema.validate(this.currentProps as TProps);
     } catch (error) {
       if (this.throwOnError) {
         this.host.error = error as Error;
