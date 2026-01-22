@@ -381,13 +381,13 @@ export class AtomicGeneratedAnswer
           aria-label=${this.bindings.i18n.t('generated-answer-title')}
         >
           <article>${this.renderContent()}</article>
-          <button class="btn-outline-primary p-2" aria-live="polite" @click=${() => {
+          <!-- <button class="btn-outline-primary p-2" aria-live="polite" @click=${() => {
             if (this.canAskFollowUp()) {
               this.generatedAnswer.askFollowUp('What is Coveo?');
             }
           }}>
             Ask Follow Up
-          </button>
+          </button> -->
         </aside>
       </div>
     `;
@@ -607,6 +607,7 @@ export class AtomicGeneratedAnswer
         withToggle: this.withToggle,
         collapsible: this.collapsible,
         query: this.bindings.engine.state.query?.q ?? '',
+        agentId: this.agentId,
         renderFeedbackAndCopyButtonsSlot: () =>
           this.renderFeedbackAndCopyButtonsWrapper(),
         renderCitationsSlot: () => html`${this.renderCitationsList()}`,

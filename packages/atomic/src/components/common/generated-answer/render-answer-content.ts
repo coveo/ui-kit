@@ -11,6 +11,7 @@ import {renderHeading} from '@/src/components/common/heading';
 import {renderSwitch} from '@/src/components/common/switch';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderDisclaimer} from './render-disclaimer';
+import {renderFollowUpInput} from './render-follow-up-input';
 import {renderGeneratingAnswerLabel} from './render-generating-answer-label';
 import '@/src/components/common/atomic-icon/atomic-icon';
 
@@ -23,6 +24,10 @@ export interface RenderAnswerContentProps {
   toggleTooltip: string;
   withToggle: boolean;
   collapsible: boolean;
+  agentId?: string;
+  followUpInputValue?: string;
+  onFollowUpInputChange?: (value: string) => void;
+  onFollowUpSubmit?: () => void;
   renderFeedbackAndCopyButtonsSlot: () => TemplateResult | typeof nothing;
   renderCitationsSlot: () => TemplateResult | typeof nothing;
   onToggle: (checked: boolean) => void;
@@ -45,6 +50,10 @@ export const renderAnswerContent: FunctionalComponent<
     withToggle,
     collapsible,
     query,
+    agentId,
+    followUpInputValue = '',
+    onFollowUpInputChange = () => {},
+    onFollowUpSubmit = () => {},
     renderFeedbackAndCopyButtonsSlot,
     renderCitationsSlot,
     onToggle,
@@ -150,11 +159,34 @@ export const renderAnswerContent: FunctionalComponent<
                           })
                         : nothing
                     }
-                    <div class="flex justify-end">
-                      ${renderDisclaimer({props: {i18n, isStreaming: !!isStreaming}})}
-                    </div>
                   </div>
                 `
+                : nothing
+            }
+            ${
+              agentId
+                ? html`
+              <div class="mt-4">
+                ${renderFollowUpInput({
+                  props: {
+                    i18n,
+                    inputValue: followUpInputValue,
+                    onInput: onFollowUpInputChange,
+                    onSubmit: onFollowUpSubmit,
+                    buttonDisabled: !!isStreaming,
+                  },
+                })}
+              </div>
+            `
+                : nothing
+            }
+            ${
+              !hasRetryableError
+                ? html`
+              <div class="flex justify-end px-6">
+                ${renderDisclaimer({props: {i18n, isStreaming: !!isStreaming}})}
+              </div>
+            `
                 : nothing
             }
           </div>

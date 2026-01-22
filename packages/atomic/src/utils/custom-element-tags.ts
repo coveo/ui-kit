@@ -87,6 +87,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-numeric-range',
   'atomic-pager',
   'atomic-popover',
+  'atomic-previous-answers-list',
   'atomic-product',
   'atomic-product-children',
   'atomic-product-description',
