@@ -28,8 +28,10 @@ export class AtomicProductPrice
   implements InitializableComponent<CommerceBindings>
 {
   static styles = css`
-    atomic-product-price.display-grid div {
-      flex-direction: column;
+    @layer components {
+      atomic-product-price.display-grid div {
+        flex-direction: column;
+      }
     }
   `;
 

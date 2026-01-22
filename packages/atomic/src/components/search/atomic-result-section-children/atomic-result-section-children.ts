@@ -11,10 +11,13 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 export class AtomicResultSectionChildren extends ItemSectionMixin(
   LitElement,
   css`
-@reference '../../common/template-system/sections/sections.css';
-atomic-result-section-children {
-  @apply section-children;
-}`
+    @reference '../../common/template-system/sections/sections.css';
+    @layer components {
+      atomic-result-section-children {
+        @apply section-children;
+      }
+    }
+  `
 ) {}
 
 declare global {

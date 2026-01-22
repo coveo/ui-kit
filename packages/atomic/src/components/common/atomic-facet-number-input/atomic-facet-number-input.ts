@@ -50,30 +50,32 @@ export class AtomicFacetNumberInput
   private endRef: Ref<HTMLInputElement> = createRef();
 
   static styles = css`
-    [part='input-form'] {
-      display: grid;
-      grid-template-areas:
-        'label-start label-end .'
-        'input-start input-end apply-button';
-      grid-template-columns: 1fr 1fr auto;
-    }
+  @layer components {
+      [part='input-form'] {
+        display: grid;
+        grid-template-areas:
+          'label-start label-end .'
+          'input-start input-end apply-button';
+        grid-template-columns: 1fr 1fr auto;
+      }
 
-    [part='label-start'] {
-      grid-area: label-start;
-    }
-    [part='label-end'] {
-      grid-area: label-end;
-    }
-    [part='input-start'] {
-      grid-area: input-start;
-    }
-    [part='input-end'] {
-      grid-area: input-end;
-    }
+      [part='label-start'] {
+        grid-area: label-start;
+      }
+      [part='label-end'] {
+        grid-area: label-end;
+      }
+      [part='input-start'] {
+        grid-area: input-start;
+      }
+      [part='input-end'] {
+        grid-area: input-end;
+      }
 
-    [part='input-apply-button'] {
-      grid-area: apply-button;
-    }
+      [part='input-apply-button'] {
+        grid-area: apply-button;
+      }
+  }
   `;
 
   public initialize() {

@@ -14,11 +14,13 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 export class AtomicProductSectionEmphasized extends ItemSectionMixin(
   LitElement,
   css`
-      @reference '../../common/template-system/sections/sections.css';
+    @reference '../../common/template-system/sections/sections.css';
+    @layer components {
       atomic-product-section-emphasized {
         @apply section-emphasized;
       }
-      `
+    }
+  `
 ) {}
 
 declare global {

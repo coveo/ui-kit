@@ -17,8 +17,10 @@ export class AtomicResultSectionActions extends ItemSectionMixin(
   LitElement,
   css`
 @reference '../../common/template-system/sections/sections.css';
-atomic-result-section-actions {
-  @apply section-actions;
+@layer components {
+  atomic-result-section-actions {
+    @apply section-actions;
+  }
 }`
 ) {}
 

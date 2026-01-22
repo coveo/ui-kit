@@ -13,17 +13,19 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 export class AtomicProductSectionName extends ItemSectionMixin(
   LitElement,
   css`
-@reference '../../common/template-system/sections/sections.css';
-atomic-product-section-name {
-  @apply section-title;
+    @reference '../../common/template-system/sections/sections.css';
+    @layer components {
+      atomic-product-section-name {
+        @apply section-title;
 
-  .with-sections {
-    &.display-grid {
-        min-height: calc(var(--line-height) * 2);
-        @apply line-clamp-2;
-    }
-  }
-}`
+        .with-sections {
+          &.display-grid {
+              min-height: calc(var(--line-height) * 2);
+              @apply line-clamp-2;
+          }
+        }
+      }
+    }`
 ) {}
 
 declare global {

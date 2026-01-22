@@ -16,10 +16,13 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 export class AtomicResultSectionBottomMetadata extends ItemSectionMixin(
   LitElement,
   css`
-@reference '../../common/template-system/sections/sections.css';
-atomic-result-section-bottom-metadata {
-  @apply section-bottom-metadata;
-}`
+    @reference '../../common/template-system/sections/sections.css';
+    @layer components {
+      atomic-result-section-bottom-metadata {
+        @apply section-bottom-metadata;
+      }
+    }
+  `
 ) {}
 
 declare global {

@@ -16,11 +16,13 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 export class AtomicProductSectionBadges extends ItemSectionMixin(
   LitElement,
   css`
-      @reference '../../common/template-system/sections/sections.css';
+    @reference '../../common/template-system/sections/sections.css';
+    @layer components {
       atomic-product-section-badges {
         @apply section-badges;
       }
-      `
+    }
+  `
 ) {}
 
 declare global {

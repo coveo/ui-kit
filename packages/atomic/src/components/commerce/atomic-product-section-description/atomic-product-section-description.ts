@@ -15,24 +15,27 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 export class AtomicProductSectionDescription extends ItemSectionMixin(
   LitElement,
   css`
-@reference '../../common/template-system/sections/sections.css';
-atomic-product-section-description {
-  @apply section-excerpt;
+    @reference '../../common/template-system/sections/sections.css';
+    @layer components {
+      atomic-product-section-description {
+        @apply section-excerpt;
 
-  &.with-sections {
-    &.display-grid {
-      &.density-comfortable {
-        margin-top: 1.25rem;
-      }
-      &.density-normal {
-        margin-top: 0.75rem;
-      }
-      &.density-compact {
-        margin-top: 0.25rem;
+        &.with-sections {
+          &.display-grid {
+            &.density-comfortable {
+              margin-top: 1.25rem;
+            }
+            &.density-normal {
+              margin-top: 0.75rem;
+            }
+            &.density-compact {
+              margin-top: 0.25rem;
+            }
+          }
+        }
       }
     }
-  }
-}`
+  `
 ) {}
 
 declare global {

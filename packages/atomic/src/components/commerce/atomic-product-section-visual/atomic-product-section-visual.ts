@@ -17,19 +17,22 @@ export class AtomicProductSectionVisual extends ItemSectionMixin(
   LitElement,
   css`
     @reference '../../common/template-system/sections/sections.css';
-    atomic-product-section-visual {
-      @apply section-visual;
+    @layer components {
+      atomic-product-section-visual {
+        @apply section-visual;
 
-      .with-sections {
-        &.image-icon {
-      atomic-product-image::part(previous-button),
-      atomic-product-image::part(next-button),
-      atomic-product-image::part(indicator) {
-        display: none;
+        .with-sections {
+          &.image-icon {
+            atomic-product-image::part(previous-button),
+            atomic-product-image::part(next-button),
+            atomic-product-image::part(indicator) {
+              display: none;
+            }
+          }
+        }
       }
-    }}
     }
-    `
+  `
 ) {
   /**
    * How large or small the visual section of product using this template should be.

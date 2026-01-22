@@ -17,10 +17,13 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 export class AtomicResultSectionVisual extends ItemSectionMixin(
   LitElement,
   css`
-@reference '../../common/template-system/sections/sections.css';
-atomic-result-section-visual {
-  @apply section-visual;
-}`
+    @reference '../../common/template-system/sections/sections.css';
+    @layer components {
+      atomic-result-section-visual {
+        @apply section-visual;
+      }
+    }
+  `
 ) {
   /**
    * How large or small the visual section of result using this template should be.

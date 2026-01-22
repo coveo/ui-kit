@@ -15,10 +15,13 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 export class AtomicResultSectionBadges extends ItemSectionMixin(
   LitElement,
   css`
-@reference '../../common/template-system/sections/sections.css';
-atomic-result-section-badges {
-  @apply section-badges;
-}`
+    @reference '../../common/template-system/sections/sections.css';
+    @layer components {
+      atomic-result-section-badges {
+        @apply section-badges;
+      }
+    }
+  `
 ) {}
 
 declare global {

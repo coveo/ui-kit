@@ -15,10 +15,12 @@ import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 export class AtomicProductSectionMetadata extends ItemSectionMixin(
   LitElement,
   css`
-  @reference '../../common/template-system/sections/sections.css';
-  atomic-product-section-metadata {
-    @apply section-metadata;
-  }
+    @reference '../../common/template-system/sections/sections.css';
+    @layer components {
+      atomic-product-section-metadata {
+        @apply section-metadata;
+      }
+    }
   `
 ) {}
 

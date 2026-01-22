@@ -22,25 +22,27 @@ export class AtomicResultFieldsList
   implements InitializableComponent<Bindings>
 {
   static styles = css`
-    atomic-result-fields-list {
-      display: flex;
-      flex-wrap: wrap;
-      width: 100%;
-      height: 100%;
-    }
+    @layer components {
+      atomic-result-fields-list {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        height: 100%;
+      }
 
-    atomic-result-fields-list > *::after {
-      display: block;
-      content: ' ';
-      width: 1px;
-      height: 1rem;
-      margin: 0 1rem;
-      background-color: var(--atomic-neutral);
-      vertical-align: middle;
-    }
+      atomic-result-fields-list > *::after {
+        display: block;
+        content: ' ';
+        width: 1px;
+        height: 1rem;
+        margin: 0 1rem;
+        background-color: var(--atomic-neutral);
+        vertical-align: middle;
+      }
 
-    atomic-result-fields-list > *.hide-divider::after {
-      visibility: hidden;
+      atomic-result-fields-list > *.hide-divider::after {
+        visibility: hidden;
+      }
     }
   `;
 
