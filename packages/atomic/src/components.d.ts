@@ -400,7 +400,7 @@ export namespace Components {
          */
         "sortCriteria": InsightRangeFacetSortCriterion;
         /**
-          * Whether this facet should contain an datepicker allowing users to set custom ranges.
+          * Whether this facet should contain a date picker allowing users to set custom ranges.
          */
         "withDatePicker": boolean;
     }
@@ -1394,7 +1394,7 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: InsightRangeFacetSortCriterion;
         /**
-          * Whether this facet should contain an datepicker allowing users to set custom ranges.
+          * Whether this facet should contain a date picker allowing users to set custom ranges.
          */
         "withDatePicker"?: boolean;
     }
