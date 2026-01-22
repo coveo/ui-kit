@@ -97,8 +97,11 @@ export function buildCommonLayout(
       }
     }`;
   };
-
-  return [display, search, facets(), refine(), horizontalFacets()]
+  const stylesheet = [display, search, facets(), refine(), horizontalFacets()]
     .filter((declaration) => declaration !== '')
     .join('\n\n');
+
+  return `@layer components {
+    ${stylesheet}
+  }`;
 }
