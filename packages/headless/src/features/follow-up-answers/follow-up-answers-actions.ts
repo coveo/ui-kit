@@ -11,7 +11,10 @@ import type {
   GeneratedAnswerMessagePayload,
 } from '../../api/generated-answer/generated-answer-event-payload.js';
 import type {AnswerGenerationApiState} from '../../api/knowledge/answer-generation/answer-generation-api-state.js';
-import {initiateFollowUpAnswerGeneration} from '../../api/knowledge/answer-generation/endpoints/follow-up-answer-endpoint.js';
+import {
+  type FollowUpAnswerEndpointArgs,
+  initiateFollowUpAnswerEndpoint,
+} from '../../api/knowledge/answer-generation/endpoints/follow-up/follow-up-answer-endpoint.js';
 import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
 import type {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments.js';
 import {
@@ -24,7 +27,8 @@ import {
   type GeneratedAnswerErrorPayload,
 } from '../generated-answer/generated-answer-actions.js';
 import type {GeneratedContentFormat} from '../generated-answer/generated-response-format.js';
-import {constructGenerateFollowUpAnswerParams} from './follow-up-answer-request.js';
+import {constructFollowUpAnswerParams} from './follow-up-answer-request.js';
+import {followUpAnswerStrategy} from './follow-up-answer-strategy.js';
 
 const stringValue = new StringValue({required: true});
 
@@ -120,15 +124,11 @@ export const generateFollowUpAnswer = createAsyncThunk<
     }
 
     dispatch(addFollowUpAnswer(question));
-    const generateFollowUpAnswerParams = constructGenerateFollowUpAnswerParams(
-      question,
-      state
-    );
-    await dispatch(
-      initiateFollowUpAnswerGeneration({
-        ...generateFollowUpAnswerParams,
-        q: question,
-      })
-    );
+    const FollowUpAnswerParams = constructFollowUpAnswerParams(question, state);
+    const followUpEndpointArgs: FollowUpAnswerEndpointArgs = {
+      strategy: followUpAnswerStrategy,
+      params: FollowUpAnswerParams,
+    };
+    await dispatch(initiateFollowUpAnswerEndpoint(followUpEndpointArgs));
   }
 );

@@ -1,7 +1,7 @@
-import {getOrganizationEndpoint} from '../../../platform-client.js';
-import type {AnswerGenerationApiState} from '../answer-generation-api-state.js';
+import {getOrganizationEndpoint} from '../../../../../platform-client.js';
+import type {AnswerGenerationApiState} from '../../../answer-generation-api-state.js';
 
-export const buildHeadAnswerEndpointUrl = (
+export const buildAnswerEndpointUrl = (
   state: AnswerGenerationApiState
 ): string => {
   const {configuration, generatedAnswer} = state;

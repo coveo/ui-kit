@@ -18,9 +18,9 @@ import type {
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
 import type {AnswerGenerationApiState} from '../../api/knowledge/answer-generation/answer-generation-api-state.js';
 import {
-  type HeadAnswerEndpointArgs,
-  initiateHeadAnswerGeneration,
-} from '../../api/knowledge/answer-generation/endpoints/head-answer-endpoint.js';
+  type AnswerEndpointArgs,
+  initiateAnswerEndpoint,
+} from '../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
 import {fetchAnswer} from '../../api/knowledge/stream-answer-api.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
@@ -51,6 +51,7 @@ import {
   type GeneratedResponseFormat,
   generatedContentFormat,
 } from './generated-response-format.js';
+import {headAnswerStrategy} from './head-answer-strategy.js';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   SearchSection &
@@ -218,15 +219,14 @@ export const setCannotAnswer = createAction(
 
 export const setAnswerApiQueryParams = createAction(
   'generatedAnswer/setAnswerApiQueryParams',
-  (payload: AnswerApiQueryParams) =>
+  (payload: Partial<AnswerApiQueryParams>) =>
     validatePayload(payload, new RecordValue({}))
 );
 
-export const setHeadAnswerApiQueryParams = createAction(
-  'generatedAnswer/setHeadAnswerApiQueryParams',
-  (payload: HeadAnswerEndpointArgs) =>
-    validatePayload(payload, new RecordValue({}))
-);
+// export const setHeadAnswerApiQueryParams = createAction(
+//   'generatedAnswer/setHeadAnswerApiQueryParams',
+//   (payload: AnswerEndpointArgs) => validatePayload(payload, new RecordValue({}))
+// );
 
 interface StreamAnswerArgs {
   setAbortControllerRef: (ref: AbortController) => void;
@@ -396,7 +396,11 @@ export const generateHeadAnswer = createAsyncThunk<
       state,
       navigatorContext
     );
-    dispatch(setHeadAnswerApiQueryParams(generateHeadAnswerParams));
-    await dispatch(initiateHeadAnswerGeneration(generateHeadAnswerParams));
+    const headAnswerEndpointArgs: AnswerEndpointArgs = {
+      strategy: headAnswerStrategy,
+      params: generateHeadAnswerParams,
+    };
+    dispatch(setAnswerApiQueryParams(headAnswerEndpointArgs.params));
+    await dispatch(initiateAnswerEndpoint(headAnswerEndpointArgs));
   }
 );

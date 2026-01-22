@@ -1,16 +1,13 @@
 import type {AnswerGenerationApiState} from '../../api/knowledge/answer-generation/answer-generation-api-state.js';
+import type {FollowUpAnswerParams} from '../../api/knowledge/answer-generation/endpoints/follow-up/follow-up-answer-endpoint.js';
 import {selectFieldsToIncludeInCitation} from '../generated-answer/generated-answer-selectors.js';
 import {selectPipeline} from '../pipeline/select-pipeline.js';
 import {selectSearchHub} from '../search-hub/search-hub-selectors.js';
 
-export type FollowUpAnswerParams = ReturnType<
-  typeof constructGenerateFollowUpAnswerParams
->;
-
-export const constructGenerateFollowUpAnswerParams = (
+export const constructFollowUpAnswerParams = (
   followUpQuestion: string,
   state: AnswerGenerationApiState
-) => {
+): FollowUpAnswerParams => {
   const conversationId = state.followUpAnswers.id;
 
   const searchHub = selectSearchHub(state);

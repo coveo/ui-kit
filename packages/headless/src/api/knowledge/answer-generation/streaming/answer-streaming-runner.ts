@@ -1,6 +1,7 @@
 import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {fetchEventSource} from '../../../../utils/fetch-event-source/fetch.js';
-import type {Message} from '../shared-types.js';
+import type {GeneratedAnswerServerState, Message} from '../shared-types.js';
+import {serverStateEventHandler} from './server-state-event-handlers.js';
 import type {StreamingStrategy} from './strategies/strategy-types.js';
 
 type StateWithConfiguration = {
@@ -11,18 +12,19 @@ type StateWithConfiguration = {
 export const streamAnswerWithStrategy = <
   TArgs,
   TState extends StateWithConfiguration,
-  TDraft,
 >(
+  endpointUrl: string,
   args: TArgs,
   api: {
     getState: () => TState;
     dispatch: ThunkDispatch<TState, unknown, UnknownAction>;
-    updateCachedData: (updater: (draft: TDraft) => void) => void;
+    updateCachedData: (
+      updater: (draft: GeneratedAnswerServerState) => void
+    ) => void;
   },
-  strategy: StreamingStrategy<TDraft, TState>
+  strategy: StreamingStrategy<TState>
 ) => {
   const {dispatch, updateCachedData, getState} = api;
-  const endpointUrl = strategy.buildEndpointUrl(getState());
   const {
     configuration: {accessToken},
   } = getState();
@@ -38,28 +40,27 @@ export const streamAnswerWithStrategy = <
     },
     fetch,
     onopen: async (response) => {
-      strategy.events.handleOpen(response, updateCachedData, dispatch);
+      serverStateEventHandler.handleOpen(response, updateCachedData);
+      strategy.handleOpen(response, dispatch);
     },
     onclose: () => {
-      strategy.events.handleClose(updateCachedData, dispatch);
+      strategy.handleClose?.(dispatch);
     },
     onerror: (error) => {
-      strategy.events.handleError(error);
+      serverStateEventHandler.handleError(error);
+      strategy.handleError(error);
     },
     onmessage: (event) => {
       const message: Required<Message> = JSON.parse(event.data);
-      strategy.events.handleMessage.error?.(
-        message,
-        updateCachedData,
-        dispatch
-      );
+      serverStateEventHandler.handleMessage.error?.(message, updateCachedData);
+      strategy.handleMessage.error?.(message, dispatch);
 
       const messageType = message.payloadType;
-      strategy.events.handleMessage[messageType]?.(
+      serverStateEventHandler.handleMessage[messageType]?.(
         message,
-        updateCachedData,
-        dispatch
+        updateCachedData
       );
+      strategy.handleMessage[messageType]?.(message, dispatch);
     },
   });
 };

@@ -6,7 +6,6 @@ import type {
   QueryDefinition,
   RetryOptions,
 } from '@reduxjs/toolkit/query';
-import type {FollowUpAnswerParams} from '../../../features/follow-up-answers/follow-up-answer-request.js';
 import type {SearchAppState} from '../../../state/search-app-state.js';
 import type {
   ConfigurationSection,
@@ -14,7 +13,8 @@ import type {
   GeneratedAnswerSection,
   TabSection,
 } from '../../../state/state-sections.js';
-import type {HeadAnswerEndpointArgs} from './endpoints/head-answer-endpoint.js';
+import type {AnswerEndpointArgs} from './endpoints/answer/answer-endpoint.js';
+import type {FollowUpAnswerEndpointArgs} from './endpoints/follow-up/follow-up-answer-endpoint.js';
 import type {GeneratedAnswerServerState} from './shared-types.js';
 
 export interface AnswerGenerationApiSection {
@@ -23,8 +23,8 @@ export interface AnswerGenerationApiSection {
   // type this object over using an `unknown` type.
   answerGenerationApi: CombinedState<
     {
-      generateHeadAnswer: QueryDefinition<
-        HeadAnswerEndpointArgs,
+      generateAnswer: QueryDefinition<
+        AnswerEndpointArgs,
         BaseQueryFn<
           string | FetchArgs,
           unknown,
@@ -37,7 +37,7 @@ export interface AnswerGenerationApiSection {
         'answerGenerationApi'
       >;
       generateFollowUpAnswer: QueryDefinition<
-        FollowUpAnswerParams,
+        FollowUpAnswerEndpointArgs,
         BaseQueryFn<
           string | FetchArgs,
           unknown,

@@ -2,7 +2,7 @@ import type {HistoryElement} from '../../api/analytics/coveo.analytics/history-s
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
 import type {AnswerGenerationApiState} from '../../api/knowledge/answer-generation/answer-generation-api-state.js';
-import type {HeadAnswerEndpointArgs} from '../../api/knowledge/answer-generation/endpoints/head-answer-endpoint.js';
+import type {AnswerParams} from '../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
 import type {BaseParam} from '../../api/platform-service-params.js';
@@ -164,14 +164,10 @@ export const constructAnswerAPIQueryParams = (
   };
 };
 
-// export type HeadAnswerParams = ReturnType<
-//   typeof constructGenerateHeadAnswerParams
-// >;
-
 export const constructGenerateHeadAnswerParams = (
   state: AnswerGenerationApiState,
   navigatorContext: NavigatorContext
-): HeadAnswerEndpointArgs => {
+): AnswerParams => {
   const q = selectQuery(state)?.q;
   const facetParams = getGeneratedFacetParams(state);
   const analyticsParams = fromAnalyticsStateToAnalyticsParams(

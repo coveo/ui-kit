@@ -1,10 +1,11 @@
 import {answerGenerationApi} from '../../../api/knowledge/answer-generation/answer-generation-api.js';
-import {selectHeadAnswer} from '../../../api/knowledge/answer-generation/endpoints/head-answer-endpoint.js';
+import {selectAnswer} from '../../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {generateFollowUpAnswer} from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
+import {selectHeadAnswerArgs} from '../../../features/generated-answer/answer-api-selectors.js';
 import {
   generateHeadAnswer,
   updateAnswerConfigurationId,
@@ -71,7 +72,8 @@ export function buildGeneratedAnswerWithFollowUps(
     ...controller,
     get state() {
       const clientState = getState().generatedAnswer;
-      const serverState = selectHeadAnswer(engine.state)?.data;
+      const headAnswerArgs = selectHeadAnswerArgs(engine.state);
+      const serverState = selectAnswer(headAnswerArgs, engine.state)?.data;
       const followUpAnswersState = getState().followUpAnswers;
 
       return {
