@@ -1,4 +1,4 @@
-import type {InsightSearchAPIErrorStatusResponse} from '@coveo/headless/insight';
+import type {Result} from '@coveo/headless';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
@@ -34,10 +34,8 @@ const meta: Meta = {
   beforeEach: async () => {
     mockInsightApi.searchEndpoint.clear();
     mockInsightApi.searchEndpoint.mockOnce((response) => {
-      if ('statusCode' in response) {
-        return response as InsightSearchAPIErrorStatusResponse;
-      }
-      const [result] = response.results;
+      if (!('results' in response)) return response;
+      const [result] = response.results as Result[];
       return {
         ...response,
         results: [
@@ -78,4 +76,6 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {};
+export const Default: Story = {
+  tags: ['!dev'],
+};
