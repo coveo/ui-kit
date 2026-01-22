@@ -51,10 +51,6 @@ export const InsightPanelsSelectors = {
     InsightPanelsSelectors.smartSnippet()
       .shadow()
       .find('atomic-smart-snippet-expandable-answer'),
-  smartSnippetSuggestions: () =>
-    InsightPanelsSelectors.interface().find(
-      'atomic-insight-smart-snippet-suggestions'
-    ),
   smartSnippetFeedbackNoButton: () =>
     InsightPanelsSelectors.smartSnippet()
       .shadow()

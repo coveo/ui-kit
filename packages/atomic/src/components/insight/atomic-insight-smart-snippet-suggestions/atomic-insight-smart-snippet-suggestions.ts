@@ -28,6 +28,8 @@ import ArrowDown from '@/src/images/arrow-down.svg';
 import ArrowRight from '@/src/images/arrow-right.svg';
 import {randomID} from '@/src/utils/utils';
 import '@/src/components/common/atomic-icon/atomic-icon';
+import '@/src/components/common/atomic-smart-snippet-source/atomic-smart-snippet-source';
+import '@/src/components/common/atomic-smart-snippet-answer/atomic-smart-snippet-answer';
 import styles from './atomic-insight-smart-snippet-suggestions.tw.css';
 
 /**
@@ -131,8 +133,11 @@ export class AtomicInsightSmartSnippetSuggestions
   @errorGuard()
   @bindingGuard()
   public render() {
+    const shouldDisplay =
+      this.smartSnippetQuestionsListState.questions.length > 0;
+
     return html`${when(
-      this.smartSnippetQuestionsListState.questions.length > 0,
+      shouldDisplay,
       () =>
         renderSuggestionsWrapper({
           props: {
