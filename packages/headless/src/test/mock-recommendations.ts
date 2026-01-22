@@ -14,6 +14,7 @@ export function buildMockRecommendationsResponse(
         totalPages: 0,
       },
       products: response.products ?? [],
+      results: response.results ?? [],
       responseId: response.responseId ?? '',
     },
   };
