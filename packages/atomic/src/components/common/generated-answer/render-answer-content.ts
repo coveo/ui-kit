@@ -2,6 +2,7 @@ import type {GeneratedAnswerState} from '@coveo/headless';
 import type {i18n} from 'i18next';
 import type {TemplateResult} from 'lit';
 import {html, nothing} from 'lit';
+import {when} from 'lit/directives/when.js';
 import {renderGeneratedContentContainer} from '@/src/components/common/generated-answer/generated-content-container';
 import {renderRetryPrompt} from '@/src/components/common/generated-answer/retry-prompt';
 import {renderShowButton} from '@/src/components/common/generated-answer/show-button';
@@ -11,10 +12,12 @@ import {renderSwitch} from '@/src/components/common/switch';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderDisclaimer} from './render-disclaimer';
 import {renderGeneratingAnswerLabel} from './render-generating-answer-label';
+import '@/src/components/common/atomic-icon/atomic-icon';
 
 export interface RenderAnswerContentProps {
   i18n: i18n;
   generatedAnswerState: GeneratedAnswerState | undefined;
+  query: string;
   isAnswerVisible: boolean;
   hasRetryableError: boolean;
   toggleTooltip: string;
@@ -41,6 +44,7 @@ export const renderAnswerContent: FunctionalComponent<
     toggleTooltip,
     withToggle,
     collapsible,
+    query,
     renderFeedbackAndCopyButtonsSlot,
     renderCitationsSlot,
     onToggle,
@@ -50,16 +54,24 @@ export const renderAnswerContent: FunctionalComponent<
 
   const {isStreaming, answer, citations, answerContentFormat, expanded} =
     generatedAnswerState ?? {};
+  const isExpanded = collapsible ? expanded : true;
+  const latestQuery = query.trim();
+  const showInlineActions = !hasRetryableError && isExpanded;
 
   return html`
     <div part="generated-content">
-      <div class="flex items-center">
+      <div part="header" class="flex items-center ${isAnswerVisible ? 'border-b-1 border-gray-200' : ''} px-6 py-3">
+        <atomic-icon
+          part="header-icon"
+          class="text-primary h-4 w-4 fill-current"
+          .icon=${'assets://sparkles.svg'}>
+        </atomic-icon>
         ${renderHeading({
           props: {
             level: 0,
             part: 'header-label',
             class:
-              'text-primary bg-primary-background inline-block rounded-md px-2.5 py-2 font-medium',
+              'text-primary inline-block rounded-md px-2.5 py-2 font-medium',
           },
         })(html`${i18n.t('generated-answer-title')}`)}
         <div class="ml-auto flex h-9 items-center">
@@ -76,57 +88,79 @@ export const renderAnswerContent: FunctionalComponent<
           })}
         </div>
       </div>
-      ${
-        hasRetryableError && isAnswerVisible
-          ? renderRetryPrompt({
-              props: {
-                onClick: onRetry,
-                buttonLabel: i18n.t('retry'),
-                message: i18n.t('retry-stream-message'),
-              },
-            })
-          : nothing
-      }
-      ${
-        !hasRetryableError && isAnswerVisible
-          ? renderGeneratedContentContainer({
-              props: {
-                answer,
-                answerContentFormat,
-                isStreaming: !!isStreaming,
-              },
-            })(html`
-            ${renderFeedbackAndCopyButtonsSlot()}
-            ${renderSourceCitations({
-              props: {
-                label: i18n.t('citations'),
-                isVisible: !!citations?.length,
-              },
-            })(renderCitationsSlot())}
-          `)
-          : nothing
-      }
-      ${
-        !hasRetryableError && isAnswerVisible
-          ? html`
-            <div part="generated-answer-footer" class="mt-6 flex justify-end">
-              ${renderGeneratingAnswerLabel({props: {i18n, isStreaming: !!isStreaming, collapsible}})}
-              ${
-                collapsible && !isStreaming
-                  ? renderShowButton({
-                      props: {
-                        i18n,
-                        onClick: onClickShowButton,
-                        isCollapsed: !expanded,
-                      },
-                    })
-                  : nothing
-              }
-              ${renderDisclaimer({props: {i18n, isStreaming: !!isStreaming}})}
+      ${when(
+        isAnswerVisible,
+        () => html`
+          <div part="generated-content-container" class="px-6 pb-6">
+            <div class="flex justify-between gap-3 mt-6">
+              <p class="query-text text-base font-semibold leading-6">
+                ${latestQuery}
+              </p>
+              ${when(
+                showInlineActions,
+                () => html`
+                <div class="flex items-center gap-2 h-9">
+                  ${renderFeedbackAndCopyButtonsSlot()}
+                </div>
+              `
+              )}
             </div>
-          `
-          : nothing
-      }
+            ${
+              hasRetryableError
+                ? renderRetryPrompt({
+                    props: {
+                      onClick: onRetry,
+                      buttonLabel: i18n.t('retry'),
+                      message: i18n.t('retry-stream-message'),
+                    },
+                  })
+                : nothing
+            }
+            ${
+              !hasRetryableError
+                ? renderGeneratedContentContainer({
+                    props: {
+                      answer,
+                      answerContentFormat,
+                      isStreaming: !!isStreaming,
+                    },
+                  })(html`
+                  ${renderSourceCitations({
+                    props: {
+                      label: i18n.t('citations'),
+                      isVisible: !!citations?.length,
+                    },
+                  })(renderCitationsSlot())}
+                `)
+                : nothing
+            }
+            ${
+              !hasRetryableError
+                ? html`
+                  <div part="generated-answer-footer" class="mt-6">
+                    ${renderGeneratingAnswerLabel({props: {i18n, isStreaming: !!isStreaming, collapsible}})}
+                    ${
+                      collapsible && !isStreaming
+                        ? renderShowButton({
+                            props: {
+                              i18n,
+                              onClick: onClickShowButton,
+                              isCollapsed: !expanded,
+                            },
+                          })
+                        : nothing
+                    }
+                    <div class="flex justify-end">
+                      ${renderDisclaimer({props: {i18n, isStreaming: !!isStreaming}})}
+                    </div>
+                  </div>
+                `
+                : nothing
+            }
+          </div>
+        `,
+        () => nothing
+      )}
     </div>
   `;
 };

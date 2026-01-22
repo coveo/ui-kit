@@ -351,7 +351,7 @@ export class AtomicGeneratedAnswer
     }
 
     const contentClasses =
-      'mx-auto mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
+      'mx-auto mt-0 mb-4 border border-neutral shadow-lg bg-background rounded-lg text-on-background';
 
     if (this.hasNoAnswerGenerated) {
       if (
@@ -586,7 +586,6 @@ export class AtomicGeneratedAnswer
       props: {
         i18n: this.bindings.i18n,
         generatedAnswerState: this.generatedAnswerState,
-        withToggle: this.withToggle,
         copied: this.copied,
         copyError: this.copyError,
         getCopyToClipboardTooltip: () => this.copyToClipboardTooltip,
@@ -607,6 +606,7 @@ export class AtomicGeneratedAnswer
         toggleTooltip: this.toggleTooltip,
         withToggle: this.withToggle,
         collapsible: this.collapsible,
+        query: this.bindings.engine.state.query?.q ?? '',
         renderFeedbackAndCopyButtonsSlot: () =>
           this.renderFeedbackAndCopyButtonsWrapper(),
         renderCitationsSlot: () => html`${this.renderCitationsList()}`,
