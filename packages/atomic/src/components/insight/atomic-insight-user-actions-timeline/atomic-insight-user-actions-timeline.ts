@@ -1,3 +1,4 @@
+import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
 import {
   buildUserActions as buildInsightUserActions,
   type UserActions as InsightUserActions,
@@ -10,8 +11,10 @@ import {when} from 'lit/directives/when.js';
 import {renderButton} from '@/src/components/common/button';
 import {renderNoItemsContainer} from '@/src/components/common/no-items/container';
 import {renderMagnifyingGlass} from '@/src/components/common/no-items/magnifying-glass';
+import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
 import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
@@ -46,6 +49,18 @@ export class AtomicInsightUserActionsTimeline
     }
   `;
 
+  private static readonly propsSchema = new Schema({
+    userId: new StringValue({required: true, emptyAllowed: false}),
+    ticketCreationDateTime: new StringValue({
+      required: true,
+      emptyAllowed: false,
+    }),
+    excludedCustomActions: new ArrayValue({
+      each: new StringValue({}),
+      required: false,
+    }),
+  });
+
   @state() public bindings!: InsightBindings;
   @state() public error!: Error;
 
@@ -74,6 +89,20 @@ export class AtomicInsightUserActionsTimeline
 
   @state() private followingSessionsAreVisible = false;
   @state() private precedingSessionsAreVisible = false;
+
+  constructor() {
+    super();
+    new ValidatePropsController(
+      this,
+      () => ({
+        userId: this.userId,
+        ticketCreationDateTime: this.ticketCreationDateTime,
+        excludedCustomActions: this.excludedCustomActions,
+      }),
+      AtomicInsightUserActionsTimeline.propsSchema,
+      false
+    );
+  }
 
   public initialize() {
     this.userActions = buildInsightUserActions(this.bindings.engine, {
@@ -242,7 +271,7 @@ export class AtomicInsightUserActionsTimeline
         ${renderNoItemsContainer()(html`
           ${renderMagnifyingGlass()}
           <div class="my-2 max-w-full text-center text-2xl font-light">
-            ${this.bindings.i18n.t('no-user-actions-available')}
+            ${this.bindings.i18n.t('no-user-actions-available') ?? ''}
           </div>
           <div class="text-neutral-dark my-2 text-center text-lg">
             ${this.bindings.i18n.t('no-user-actions-associated-with-params')}
@@ -252,9 +281,10 @@ export class AtomicInsightUserActionsTimeline
     `;
   }
 
+  @bindingGuard()
   render() {
-    const areUserActionsAvailable = this.userActionsState.timeline?.session;
-    const hasError = this.userActionsState.error;
+    const areUserActionsAvailable = this.userActionsState?.timeline?.session;
+    const hasError = this.userActionsState?.error;
 
     if (areUserActionsAvailable && !hasError) {
       return this.renderTimeline();
