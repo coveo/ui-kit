@@ -1,15 +1,5 @@
-import type {GeneratedContentFormat} from '../../../../../features/generated-answer/generated-response-format.js';
-import type {GeneratedAnswerCitation} from '../../../../generated-answer/generated-answer-event-payload.js';
 import type {GeneratedAnswerServerState} from '../../answer-generation-api-state.js';
-import type {Message} from '../strategies/types.js';
-
-export interface StreamPayload {
-  textDelta?: string;
-  padding?: string;
-  answerGenerated?: boolean;
-  contentFormat: GeneratedContentFormat;
-  citations: GeneratedAnswerCitation[];
-}
+import type {Message, StreamPayload} from '../types.js';
 
 export const handleAnswerId = (
   draft: GeneratedAnswerServerState,

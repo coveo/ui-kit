@@ -16,7 +16,7 @@ import type {
   GeneratedAnswerSection,
   TabSection,
 } from '../../../state/state-sections.js';
-import type {HeadAnswerEndpointArgs} from './endpoints/head-answer-endpoint.js';
+import type {AnswerEndpointArgs} from './endpoints/answer/answer-endpoint.js';
 
 export interface GeneratedAnswerServerState {
   answerId?: string;
@@ -35,8 +35,8 @@ interface AnswerGenerationApiSection {
   // type this object over using an `unknown` type.
   answerGenerationApi: CombinedState<
     {
-      generateHeadAnswer: QueryDefinition<
-        HeadAnswerEndpointArgs,
+      generateAnswer: QueryDefinition<
+        AnswerEndpointArgs,
         BaseQueryFn<
           string | FetchArgs,
           unknown,

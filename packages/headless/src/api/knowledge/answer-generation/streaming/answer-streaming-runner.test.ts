@@ -2,7 +2,7 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import * as fetchEventSource from '../../../../utils/fetch-event-source/fetch.js';
 import {streamAnswerWithStrategy} from './answer-streaming-runner.js';
-import type {Message, StreamingStrategy} from './strategies/types.js';
+import type {Message, StreamingStrategy} from './types.js';
 
 vi.mock('../../../../utils/fetch-event-source/fetch.js');
 

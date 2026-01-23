@@ -1,14 +1,14 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {
-  type HeadAnswerEndpointArgs,
-  headAnswerEndpoint,
-  initiateHeadAnswerGeneration,
-} from './head-answer-endpoint.js';
+  type AnswerEndpointArgs,
+  answerEndpoint,
+  initiateAnswerEndpoint,
+} from './answer-endpoint.js';
 
 vi.mock('../streaming/answer-streaming-runner.js');
 
-describe('head-answer-endpoint', () => {
-  let mockArgs: HeadAnswerEndpointArgs;
+describe('answer-endpoint', () => {
+  let mockArgs: AnswerEndpointArgs;
 
   beforeEach(() => {
     vi.clearAllMocks();

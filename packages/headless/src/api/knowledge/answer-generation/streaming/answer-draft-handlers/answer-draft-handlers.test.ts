@@ -1,6 +1,6 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import type {GeneratedAnswerServerState} from '../../answer-generation-api-state.js';
-import type {Message} from '../strategies/types.js';
+import type {Message} from '../types.js';
 import {
   handleAnswerId,
   handleCitations,
