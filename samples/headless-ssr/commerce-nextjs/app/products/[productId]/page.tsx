@@ -43,6 +43,7 @@ export default async function ProductDescriptionPage({
         view: {
           url: `https://sports.barca.group/products/${productId}`,
         },
+        custom: defaultContext.custom,
       },
       productEnrichment: {
         options: {

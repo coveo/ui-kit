@@ -36,6 +36,7 @@ export default async function Search() {
         view: {
           url: 'https://sports.barca.group/cart',
         },
+        custom: defaultContext.custom,
       },
       productEnrichment: {
         options: {
