@@ -58,7 +58,7 @@ export const renderFollowUpInput: FunctionalComponent<
           @keydown=${handleKeyDown}
           ?disabled=${inputDisabled}
           placeholder=${placeholder}
-          class="w-full rounded-md border border-gray-300 px-4 py-2 pr-12 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
+          class="w-full rounded-md border border-gray-300 px-4 py-2 pr-8 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
           aria-label="Ask a follow-up question"
           part="input-field"
         />
@@ -66,7 +66,7 @@ export const renderFollowUpInput: FunctionalComponent<
           type="button"
           @click=${handleSubmit}
           ?disabled=${isSubmitDisabled}
-          class="absolute right-2 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-md bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+          class="absolute right-1 top-1 bottom-1 flex w-8 items-center justify-center rounded-md bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
           aria-label="Send follow-up question"
           part="submit-button"
         >

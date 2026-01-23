@@ -183,7 +183,7 @@ export const renderAnswerContent: FunctionalComponent<
             ${
               !hasRetryableError
                 ? html`
-              <div class="flex justify-end px-6">
+              <div class="flex justify-end">
                 ${renderDisclaimer({props: {i18n, isStreaming: !!isStreaming}})}
               </div>
             `
