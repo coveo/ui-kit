@@ -1,5 +1,4 @@
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
-import type {FacetResultsMustMatch} from '@coveo/headless';
 import {
   buildFacet as buildInsightFacet,
   buildFacetConditionsManager as buildInsightFacetConditionsManager,
@@ -113,15 +112,6 @@ export class AtomicInsightFacet
    */
   @property({type: String, reflect: true, attribute: 'sort-criteria'})
   sortCriteria: InsightFacetSortCriterion = 'automatic';
-
-  /**
-   * Specifies how a result must match the selected facet values.
-   * Allowed values:
-   * - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected.
-   * - `allValues`: A result will match if all corresponding facet values are selected.
-   */
-  @property({type: String, reflect: true, attribute: 'results-must-match'})
-  resultsMustMatch: FacetResultsMustMatch = 'atLeastOneValue';
 
   /**
    * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection).
