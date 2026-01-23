@@ -100,9 +100,6 @@
       "ignore": ["**/*"],
       "ignoreDependencies": ["cypress-repeat"]
     },
-    "samples/atomic/search-nextjs-pages-router": {
-      "ignoreDependencies": ["cypress-repeat"]
-    },
     "samples/headless-ssr/search-nextjs": {
       "ignore": ["**/*"],
       "ignoreDependencies": ["cypress-repeat"]

@@ -132,10 +132,9 @@ export function buildProductEnrichment(
     },
 
     getBadges() {
-      if (
-        !registrationOptions.placementIds ||
-        registrationOptions.placementIds.length === 0
-      ) {
+      const {placementIds, productId} = getState().productEnrichment;
+
+      if (!placementIds || placementIds.length === 0) {
         throw new Error(
           'placementIds must be provided and non-empty to fetch badges'
         );
@@ -143,8 +142,8 @@ export function buildProductEnrichment(
 
       dispatch(
         fetchBadges({
-          placementIds: registrationOptions.placementIds,
-          productId: registrationOptions.productId,
+          placementIds,
+          productId,
         })
       );
     },
