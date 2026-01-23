@@ -1,6 +1,7 @@
 import {headers} from 'next/headers';
 import * as externalCartAPI from '@/actions/external-cart-api';
 import ContextDropdown from '@/components/context-dropdown';
+import ProductBadges from '@/components/product-badges';
 import ProductViewer from '@/components/product-viewer';
 import {
   RecommendationProvider,
@@ -45,6 +46,14 @@ export default async function ProductDescriptionPage({
     cart: {items},
     context,
     navigatorContext: navigatorContext.marshal,
+    controllers: {
+      productEnrichment: {
+        options: {
+          productId,
+          placementIds: ['70b493b2-a1f1-4049-ad70-16695cef39cd'],
+        },
+      },
+    },
   });
 
   const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
@@ -71,6 +80,7 @@ export default async function ProductDescriptionPage({
       <p>
         {name} ({productId}) - ${price}
       </p>
+      <ProductBadges />
       <br />
 
       <RecommendationProvider staticState={recsStaticState}>

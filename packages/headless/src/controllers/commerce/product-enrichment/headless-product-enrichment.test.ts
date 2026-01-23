@@ -196,15 +196,20 @@ describe('ProductEnrichment', () => {
   });
 
   describe('#getBadges', () => {
-    it('dispatches fetchBadges with configured placementIds', () => {
+    it('dispatches fetchBadges with placementIds from state', () => {
       const mockedFetchBadges = vi.mocked(fetchBadges);
-      const props: ProductEnrichmentProps = {
-        options: {
+      const state = buildMockCommerceState({
+        productEnrichment: {
+          products: [],
+          isLoading: false,
+          error: null,
           placementIds: ['placement1', 'placement2'],
+          productId: undefined,
         },
-      };
+      });
+      engine = buildMockCommerceEngine(state);
 
-      controller = buildProductEnrichment(engine, props);
+      controller = buildProductEnrichment(engine);
       controller.getBadges();
 
       expect(mockedFetchBadges).toHaveBeenCalledWith({
@@ -213,16 +218,20 @@ describe('ProductEnrichment', () => {
       });
     });
 
-    it('dispatches fetchBadges with configured placementIds and productId', () => {
+    it('dispatches fetchBadges with placementIds and productId from state', () => {
       const mockedFetchBadges = vi.mocked(fetchBadges);
-      const props: ProductEnrichmentProps = {
-        options: {
+      const state = buildMockCommerceState({
+        productEnrichment: {
+          products: [],
+          isLoading: false,
+          error: null,
           placementIds: ['placement1'],
           productId: 'product123',
         },
-      };
+      });
+      engine = buildMockCommerceEngine(state);
 
-      controller = buildProductEnrichment(engine, props);
+      controller = buildProductEnrichment(engine);
       controller.getBadges();
 
       expect(mockedFetchBadges).toHaveBeenCalledWith({
@@ -231,7 +240,18 @@ describe('ProductEnrichment', () => {
       });
     });
 
-    it('throws error when called without placementIds', () => {
+    it('throws error when state has no placementIds', () => {
+      const state = buildMockCommerceState({
+        productEnrichment: {
+          products: [],
+          isLoading: false,
+          error: null,
+          placementIds: [],
+          productId: undefined,
+        },
+      });
+      engine = buildMockCommerceEngine(state);
+
       controller = buildProductEnrichment(engine);
 
       expect(() => controller.getBadges()).toThrow(
