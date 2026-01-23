@@ -13,13 +13,6 @@ import Flag from '../../../images/flag.svg';
 import ThreeDotsIcon from '../../../images/three-dots.svg';
 import {renderUserAction} from './user-action';
 
-export type UserActionType =
-  | 'SEARCH'
-  | 'CLICK'
-  | 'TICKET_CREATION'
-  | 'VIEW'
-  | 'CUSTOM';
-
 /**
  * The `atomic-insight-user-actions-session` component displays all the user actions that took place during a specific user session.
  *
