@@ -24,18 +24,18 @@ export interface FollowUpAnswersState {
   /**
    * The follow-up answers.
    */
-  answers: FollowUpAnswer[];
+  followUpAnswers: FollowUpAnswer[];
   /**
    * Determines if more follow-up answers can be asked.
    */
-  canAskMore: boolean;
+  canAskMoreFollowUps: boolean;
 }
 
 export function getFollowUpAnswersInitialState(): FollowUpAnswersState {
   return {
     id: '',
     isEnabled: false,
-    answers: [],
-    canAskMore: false,
+    followUpAnswers: [],
+    canAskMoreFollowUps: false,
   };
 }
