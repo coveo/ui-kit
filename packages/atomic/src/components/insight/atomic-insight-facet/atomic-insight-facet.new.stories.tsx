@@ -121,25 +121,25 @@ export const WithSelectedValue: Story = {
   },
   decorators: [facetDecorator],
   beforeEach: () => {
-    mockInsightApi.searchEndpoint.mockOnce((response) => {
-      if ('facets' in response) {
-        const selectedFacets = response.facets?.map((facet) => {
+    // biome-ignore lint/suspicious/noExplicitAny: MSW mock response structure is dynamic and known at runtime
+    mockInsightApi.searchEndpoint.mockOnce((response: any) => {
+      const selectedFacets = response.facets?.map(
+        (facet: Object & {field: string; values: Object[]}) => {
           if (facet.field === 'objecttype') {
             return {
               ...facet,
-              values: facet.values.map((value, index) =>
+              values: facet.values.map((value, index: number) =>
                 index === 0 ? {...value, state: 'selected'} : value
               ),
             };
           }
           return facet;
-        });
-        return {
-          ...response,
-          facets: selectedFacets,
-        };
-      }
-      return response;
+        }
+      );
+      return {
+        ...response,
+        facets: selectedFacets,
+      };
     });
   },
 };
