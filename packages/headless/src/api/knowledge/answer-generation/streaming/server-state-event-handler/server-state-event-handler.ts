@@ -94,7 +94,7 @@ export const serverStateEventHandler: ServerStateEventHandler = {
     },
 
     error: (message, updateCachedData) => {
-      if (message.finishReason === 'ERROR' && message.errorMessage) {
+      if (message.finishReason === 'ERROR') {
         updateCachedData((draft) => {
           setAnswerError(draft, message);
         });

@@ -57,19 +57,6 @@ describe('serverStateEventHandler', () => {
       expect(mockUpdateCachedData).not.toHaveBeenCalled();
       expect(answerDraftReducer.setAnswerId).not.toHaveBeenCalled();
     });
-
-    it('should not call setAnswerId when x-answer-id header is empty string', () => {
-      const mockResponse = {
-        headers: {
-          get: vi.fn(() => ''),
-        },
-      } as unknown as Response;
-
-      serverStateEventHandler.handleOpen(mockResponse, mockUpdateCachedData);
-
-      expect(mockUpdateCachedData).not.toHaveBeenCalled();
-      expect(answerDraftReducer.setAnswerId).not.toHaveBeenCalled();
-    });
   });
 
   describe('#handleMessage', () => {
@@ -265,22 +252,6 @@ describe('serverStateEventHandler', () => {
           payload: '',
           finishReason: 'SUCCESS',
           errorMessage: 'Some message',
-        };
-
-        serverStateEventHandler.handleMessage.error!(
-          message,
-          mockUpdateCachedData
-        );
-
-        expect(mockUpdateCachedData).not.toHaveBeenCalled();
-        expect(answerDraftReducer.setAnswerError).not.toHaveBeenCalled();
-      });
-
-      it('should not call setAnswerError when errorMessage is missing', () => {
-        const message: Message = {
-          payloadType: 'genqa.messageType',
-          payload: '',
-          finishReason: 'ERROR',
         };
 
         serverStateEventHandler.handleMessage.error!(

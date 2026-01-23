@@ -54,7 +54,7 @@ export interface StreamingStrategy<TState> {
     Record<
       EventType,
       (
-        message: Required<Message>,
+        message: Message,
         dispatch: ThunkDispatch<TState, unknown, UnknownAction>
       ) => void
     >

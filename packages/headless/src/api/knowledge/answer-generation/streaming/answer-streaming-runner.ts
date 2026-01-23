@@ -63,7 +63,7 @@ export const streamAnswerWithStrategy = <
       strategy.handleError(error);
     },
     onmessage: (event) => {
-      const message: Required<Message> = JSON.parse(event.data);
+      const message: Message = JSON.parse(event.data);
       serverStateEventHandler.handleMessage.error?.(message, updateCachedData);
       strategy.handleMessage.error?.(message, dispatch);
 
