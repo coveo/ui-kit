@@ -1,3 +1,12 @@
+## 3.40.0 (2026-01-21)
+
+* feat: add ProductEnrichment Controller in Commerce SSR (#6819) ([850047e](https://github.com/coveo/ui-kit/commits/850047e)), closes [#6819](https://github.com/coveo/ui-kit/issues/6819)
+* feat(headless): migrate headless rga document from docs site to typedoc (#6838) ([3a6ec1c](https://github.com/coveo/ui-kit/commits/3a6ec1c)), closes [#6838](https://github.com/coveo/ui-kit/issues/6838)
+* fix(atomic): export VERSION from @coveo/headless/insight for atomic-insight-interface (#6901) ([7ee0c8a](https://github.com/coveo/ui-kit/commits/7ee0c8a)), closes [#6901](https://github.com/coveo/ui-kit/issues/6901)
+* fix(pagination): add fetchPage.fulfilled case to update totalCountFiltered (#6935) ([f67cf63](https://github.com/coveo/ui-kit/commits/f67cf63)), closes [#6935](https://github.com/coveo/ui-kit/issues/6935)
+
+
+
 ## 3.39.0 (2026-01-07)
 
 * [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
