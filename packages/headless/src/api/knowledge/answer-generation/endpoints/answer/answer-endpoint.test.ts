@@ -14,30 +14,38 @@ describe('answer-endpoint', () => {
     vi.clearAllMocks();
 
     mockArgs = {
-      q: 'test query',
-      facets: [],
-      searchHub: 'test-hub',
-      pipeline: 'test-pipeline',
-      pipelineRuleParameters: {},
-      locale: 'en',
-      analytics: {
-        clientId: 'test-client-id',
-        clientTimestamp: '2026-01-16T00:00:00Z',
-        documentReferrer: 'https://example.com',
-        originContext: 'test-origin',
+      strategy: {
+        handleOpen: vi.fn(),
+        handleClose: vi.fn(),
+        handleError: vi.fn(),
+        handleMessage: {},
+      },
+      params: {
+        q: 'test query',
+        facets: [],
+        searchHub: 'test-hub',
+        pipeline: 'test-pipeline',
+        pipelineRuleParameters: {},
+        locale: 'en',
+        analytics: {
+          clientId: 'test-client-id',
+          clientTimestamp: '2026-01-16T00:00:00Z',
+          documentReferrer: 'https://example.com',
+          originContext: 'test-origin',
+        },
       },
     };
   });
 
-  describe('#initiateHeadAnswerGeneration', () => {
-    it('should call endpoint initiate with provided params', () => {
+  describe('#initiateAnswerEndpoint', () => {
+    it('should call endpoint initiate with provided args', () => {
       const mockInitiate = vi.fn();
       vi.spyOn(
-        headAnswerEndpoint.endpoints.generateHeadAnswer,
+        answerEndpoint.endpoints.generateAnswer,
         'initiate'
       ).mockImplementation(mockInitiate);
 
-      initiateHeadAnswerGeneration(mockArgs);
+      initiateAnswerEndpoint(mockArgs);
 
       expect(mockInitiate).toHaveBeenCalledWith(mockArgs);
     });

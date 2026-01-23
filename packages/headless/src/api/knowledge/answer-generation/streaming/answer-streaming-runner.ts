@@ -1,14 +1,27 @@
 import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {fetchEventSource} from '../../../../utils/fetch-event-source/fetch.js';
-import type {Message, StreamingStrategy} from './types.js';
 import type {GeneratedAnswerServerState} from '../answer-generation-api-state.js';
 import {serverStateEventHandler} from './server-state-event-handler/server-state-event-handler.js';
+import type {Message, StreamingStrategy} from './types.js';
 
 type StateWithConfiguration = {
   configuration: {
     accessToken: string;
   };
 };
+
+/**
+ * Streams answer generation from an endpoint using a specified strategy.
+ *
+ * Establishes a server-sent events connection to stream answer generation responses.
+ * Coordinates between server state updates (via serverStateEventHandler) and
+ * application-specific logic (via strategy handlers).
+ *
+ * @param endpointUrl - The streaming endpoint URL
+ * @param args - Request arguments to send in the POST body
+ * @param api - Redux toolkit query API with state getter, dispatch, and cache updater
+ * @param strategy - Strategy defining application-specific event handlers
+ */
 export const streamAnswerWithStrategy = <
   TArgs,
   TState extends StateWithConfiguration,
@@ -47,7 +60,6 @@ export const streamAnswerWithStrategy = <
       strategy.handleClose?.(dispatch);
     },
     onerror: (error) => {
-      serverStateEventHandler.handleError(error);
       strategy.handleError(error);
     },
     onmessage: (event) => {

@@ -1,7 +1,10 @@
 import type {GeneratedAnswerServerState} from '../../answer-generation-api-state.js';
 import type {Message, StreamPayload} from '../types.js';
 
-export const handleAnswerId = (
+/**
+ * Sets the answer ID in the draft state if provided.
+ */
+export const setAnswerId = (
   draft: GeneratedAnswerServerState,
   answerId: string
 ) => {
@@ -10,7 +13,10 @@ export const handleAnswerId = (
   }
 };
 
-export const handleHeaderMessage = (
+/**
+ * Initializes streaming by setting content format and updating streaming flags.
+ */
+export const initializeStreamingAnswer = (
   draft: GeneratedAnswerServerState,
   payload: Pick<GeneratedAnswerServerState, 'contentFormat'>
 ) => {
@@ -20,7 +26,10 @@ export const handleHeaderMessage = (
   draft.isLoading = false;
 };
 
-export const handleMessage = (
+/**
+ * Appends or sets answer text from streaming deltas.
+ */
+export const setAnswer = (
   draft: GeneratedAnswerServerState,
   payload: Pick<StreamPayload, 'textDelta'>
 ) => {
@@ -31,14 +40,20 @@ export const handleMessage = (
   }
 };
 
-export const handleCitations = (
+/**
+ * Updates the citations list in the draft state.
+ */
+export const setCitations = (
   draft: GeneratedAnswerServerState,
   payload: Pick<StreamPayload, 'citations'>
 ) => {
   draft.citations = payload.citations;
 };
 
-export const handleEndOfStream = (
+/**
+ * Finalizes streaming by marking it complete and stopping the stream.
+ */
+export const endStreaming = (
   draft: GeneratedAnswerServerState,
   payload: Pick<StreamPayload, 'answerGenerated'>
 ) => {
@@ -46,7 +61,10 @@ export const handleEndOfStream = (
   draft.isStreaming = false;
 };
 
-export const handleError = (
+/**
+ * Sets error state and stops streaming when an error occurs.
+ */
+export const setAnswerError = (
   draft: GeneratedAnswerServerState,
   message: Message
 ) => {

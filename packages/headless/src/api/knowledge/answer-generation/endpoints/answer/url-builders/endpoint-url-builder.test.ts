@@ -1,14 +1,14 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {getOrganizationEndpoint} from '../../../platform-client.js';
-import type {AnswerGenerationApiState} from '../answer-generation-api-state.js';
-import {buildHeadAnswerEndpointUrl} from './endpoint-url-builder.js';
+import {getOrganizationEndpoint} from '../../../../../platform-client.js';
+import type {AnswerGenerationApiState} from '../../../answer-generation-api-state.js';
+import {buildAnswerEndpointUrl} from './endpoint-url-builder.js';
 
-vi.mock('../../../platform-client.js', () => ({
+vi.mock('../../../../../platform-client.js', () => ({
   getOrganizationEndpoint: vi.fn(),
 }));
 
 describe('endpoint-url-builder', () => {
-  describe('#buildHeadAnswerEndpointUrl', () => {
+  describe('#buildAnswerEndpointUrl', () => {
     let state: AnswerGenerationApiState;
     const mockOrganizationId = 'test-org-id';
     const mockAnswerConfigurationId = 'test-config-id';
@@ -31,7 +31,7 @@ describe('endpoint-url-builder', () => {
     });
 
     it('should build the correct endpoint URL with valid state', () => {
-      const result = buildHeadAnswerEndpointUrl(state);
+      const result = buildAnswerEndpointUrl(state);
 
       expect(getOrganizationEndpoint).toHaveBeenCalledWith(
         mockOrganizationId,
@@ -47,7 +47,7 @@ describe('endpoint-url-builder', () => {
       const devEndpoint = 'https://test-org-id.orgdev.coveo.com';
       vi.mocked(getOrganizationEndpoint).mockReturnValue(devEndpoint);
 
-      const result = buildHeadAnswerEndpointUrl(state);
+      const result = buildAnswerEndpointUrl(state);
 
       expect(getOrganizationEndpoint).toHaveBeenCalledWith(
         mockOrganizationId,
@@ -62,7 +62,7 @@ describe('endpoint-url-builder', () => {
       it('should throw an error when platformEndpoint is missing', () => {
         vi.mocked(getOrganizationEndpoint).mockReturnValue('');
 
-        expect(() => buildHeadAnswerEndpointUrl(state)).toThrow(
+        expect(() => buildAnswerEndpointUrl(state)).toThrow(
           'Missing required parameters for answer endpoint'
         );
       });
@@ -70,7 +70,7 @@ describe('endpoint-url-builder', () => {
       it('should throw an error when organizationId is missing', () => {
         state.configuration.organizationId = '';
 
-        expect(() => buildHeadAnswerEndpointUrl(state)).toThrow(
+        expect(() => buildAnswerEndpointUrl(state)).toThrow(
           'Missing required parameters for answer endpoint'
         );
       });
@@ -78,7 +78,7 @@ describe('endpoint-url-builder', () => {
       it('should throw an error when answerConfigurationId is missing', () => {
         state.generatedAnswer.answerConfigurationId = '';
 
-        expect(() => buildHeadAnswerEndpointUrl(state)).toThrow(
+        expect(() => buildAnswerEndpointUrl(state)).toThrow(
           'Missing required parameters for answer endpoint'
         );
       });

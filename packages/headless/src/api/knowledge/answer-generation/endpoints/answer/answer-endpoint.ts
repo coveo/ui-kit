@@ -9,10 +9,13 @@ import type {
   GeneratedAnswerServerState,
 } from '../../answer-generation-api-state.js';
 import {streamAnswerWithStrategy} from '../../streaming/answer-streaming-runner.js';
-import {buildAnswerEndpointUrl} from './url-builders/endpoint-url-builder.js';
 import type {StreamingStrategy} from '../../streaming/types.js';
+import {buildAnswerEndpointUrl} from './url-builders/endpoint-url-builder.js';
 
-export type AnswerParams = {
+/**
+ * Parameters for answer generation requests.
+ */
+type AnswerParams = {
   q: string;
   facets?: AnyFacetRequest[];
   searchHub?: string;
@@ -21,11 +24,17 @@ export type AnswerParams = {
   locale: string;
 } & AnalyticsParam;
 
+/**
+ * Arguments for the answer endpoint including streaming strategy and request parameters.
+ */
 export type AnswerEndpointArgs = {
   strategy: StreamingStrategy<AnswerGenerationApiState>;
   params: AnswerParams;
 };
 
+/**
+ * RTK Query endpoint for streaming answer generation.
+ */
 export const answerEndpoint = answerGenerationApi.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
@@ -66,6 +75,9 @@ export const answerEndpoint = answerGenerationApi.injectEndpoints({
   }),
 });
 
+/**
+ * Initiates an answer generation query with the specified strategy and parameters.
+ */
 export const initiateAnswerEndpoint = (args: AnswerEndpointArgs) => {
   return answerEndpoint.endpoints.generateAnswer.initiate(args);
 };

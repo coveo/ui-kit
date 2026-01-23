@@ -1,22 +1,29 @@
 import type {GeneratedAnswerServerState} from '../../answer-generation-api-state.js';
 import {
-  handleAnswerId,
-  handleCitations,
-  handleEndOfStream,
-  handleError,
-  handleHeaderMessage,
-  handleMessage,
-} from '../answer-draft-handlers/answer-draft-handlers.js';
+  endStreaming,
+  initializeStreamingAnswer,
+  setAnswer,
+  setAnswerError,
+  setAnswerId,
+  setCitations,
+} from '../answer-draft-reducer/answer-draft-reducer.js';
 import type {EventType, Message, StreamPayload} from '../types.js';
 
+/**
+ * Event handler interface for managing answer server state updates during answer streaming.
+ */
 interface ServerStateEventHandler<TDraft = GeneratedAnswerServerState> {
+  /**
+   * Extracts and stores the answer ID from response headers.
+   */
   handleOpen: (
     response: Response,
     updateCachedData: (updater: (draft: TDraft) => void) => void
   ) => void;
 
-  handleError: (error: unknown) => void;
-
+  /**
+   * Handlers for different streaming message types that update cached server state.
+   */
   handleMessage: Partial<
     Record<
       EventType,
@@ -26,20 +33,21 @@ interface ServerStateEventHandler<TDraft = GeneratedAnswerServerState> {
       ) => void
     >
   >;
+
+  handleError?: (error: unknown) => void;
 }
 
+/**
+ * Manages answer server state updates during answer generation streaming.
+ */
 export const serverStateEventHandler: ServerStateEventHandler = {
   handleOpen: (response, updateCachedData) => {
     const answerId = response.headers.get('x-answer-id');
     if (answerId) {
       updateCachedData((draft) => {
-        handleAnswerId(draft, answerId);
+        setAnswerId(draft, answerId);
       });
     }
-  },
-
-  handleError: (error) => {
-    throw error;
   },
 
   handleMessage: {
@@ -49,7 +57,7 @@ export const serverStateEventHandler: ServerStateEventHandler = {
         : {};
       if (payload.contentFormat) {
         updateCachedData((draft) => {
-          handleHeaderMessage(draft, payload);
+          initializeStreamingAnswer(draft, payload);
         });
       }
     },
@@ -60,7 +68,7 @@ export const serverStateEventHandler: ServerStateEventHandler = {
         : {};
       if (payload.textDelta) {
         updateCachedData((draft) => {
-          handleMessage(draft, payload);
+          setAnswer(draft, payload);
         });
       }
     },
@@ -71,7 +79,7 @@ export const serverStateEventHandler: ServerStateEventHandler = {
         : {};
       if (payload.citations) {
         updateCachedData((draft) => {
-          handleCitations(draft, payload);
+          setCitations(draft, payload);
         });
       }
     },
@@ -81,13 +89,14 @@ export const serverStateEventHandler: ServerStateEventHandler = {
         ? JSON.parse(message.payload)
         : {};
       updateCachedData((draft) => {
-        handleEndOfStream(draft, payload);
+        endStreaming(draft, payload);
       });
     },
+
     error: (message, updateCachedData) => {
       if (message.finishReason === 'ERROR' && message.errorMessage) {
         updateCachedData((draft) => {
-          handleError(draft, message);
+          setAnswerError(draft, message);
         });
       }
     },

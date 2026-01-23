@@ -1,18 +1,25 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: unit test */
+import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import * as fetchEventSource from '../../../../utils/fetch-event-source/fetch.js';
+import type {GeneratedAnswerServerState} from '../answer-generation-api-state.js';
 import {streamAnswerWithStrategy} from './answer-streaming-runner.js';
+import {serverStateEventHandler} from './server-state-event-handler/server-state-event-handler.js';
 import type {Message, StreamingStrategy} from './types.js';
 
 vi.mock('../../../../utils/fetch-event-source/fetch.js');
+vi.mock('./server-state-event-handler/server-state-event-handler.js');
 
 describe('answer-streaming-runner', () => {
-  let mockStrategy: StreamingStrategy<any, any>;
-  let mockGetState: ReturnType<typeof vi.fn>;
-  let mockDispatch: ReturnType<typeof vi.fn>;
-  let mockUpdateCachedData: ReturnType<typeof vi.fn>;
+  let mockStrategy: StreamingStrategy<any>;
+  let mockGetState: () => any;
+  let mockDispatch: ThunkDispatch<any, unknown, UnknownAction>;
+  let mockUpdateCachedData: (
+    updater: (draft: GeneratedAnswerServerState) => void
+  ) => void;
   let mockState: any;
   let mockArgs: any;
+  let endpointUrl: string;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -28,55 +35,49 @@ describe('answer-streaming-runner', () => {
     };
 
     mockGetState = vi.fn(() => mockState);
-    mockDispatch = vi.fn();
+    mockDispatch = vi.fn() as any;
     mockUpdateCachedData = vi.fn();
 
     mockStrategy = {
-      buildEndpointUrl: vi.fn(
-        () => 'https://test.coveo.com/answer/v1/generate'
-      ),
-      events: {
-        handleOpen: vi.fn(),
-        handleClose: vi.fn(),
-        handleError: vi.fn(),
-        handleMessage: {
-          'genqa.headerMessageType': vi.fn(),
-          'genqa.messageType': vi.fn(),
-          'genqa.citationsType': vi.fn(),
-          'genqa.endOfStreamType': vi.fn(),
-          error: vi.fn(),
-        },
+      handleOpen: vi.fn(),
+      handleClose: vi.fn(),
+      handleError: vi.fn(),
+      handleMessage: {
+        'genqa.headerMessageType': vi.fn(),
+        'genqa.messageType': vi.fn(),
+        'genqa.citationsType': vi.fn(),
+        'genqa.endOfStreamType': vi.fn(),
+        error: vi.fn(),
       },
     };
 
     mockArgs = {
       query: 'test query',
-      answerConfigurationId: 'test-config',
     };
 
+    endpointUrl = 'https://test.coveo.com/answer/v1/generate';
+
     vi.spyOn(fetchEventSource, 'fetchEventSource').mockResolvedValue(undefined);
+
+    vi.mocked(serverStateEventHandler).handleOpen = vi.fn();
+    vi.mocked(serverStateEventHandler).handleError = vi.fn((error: unknown) => {
+      throw error;
+    });
+    vi.mocked(serverStateEventHandler).handleMessage = {
+      'genqa.headerMessageType': vi.fn(),
+      'genqa.messageType': vi.fn(),
+      'genqa.citationsType': vi.fn(),
+      'genqa.endOfStreamType': vi.fn(),
+      error: vi.fn(),
+    };
   });
 
   describe('#streamAnswerWithStrategy', () => {
-    it('should call buildEndpointUrl with state', async () => {
-      await streamAnswerWithStrategy(
-        mockArgs,
-        {
-          getState: mockGetState,
-          dispatch: mockDispatch,
-          updateCachedData: mockUpdateCachedData,
-        },
-        mockStrategy
-      );
-
-      expect(mockGetState).toHaveBeenCalled();
-      expect(mockStrategy.buildEndpointUrl).toHaveBeenCalledWith(mockState);
-    });
-
     it('should use access token from state configuration', async () => {
       mockState.configuration.accessToken = 'custom-token-123';
 
       await streamAnswerWithStrategy(
+        endpointUrl,
         mockArgs,
         {
           getState: mockGetState,
@@ -87,7 +88,7 @@ describe('answer-streaming-runner', () => {
       );
 
       expect(fetchEventSource.fetchEventSource).toHaveBeenCalledWith(
-        expect.any(String),
+        endpointUrl,
         expect.objectContaining({
           headers: expect.objectContaining({
             Authorization: 'Bearer custom-token-123',
@@ -98,6 +99,7 @@ describe('answer-streaming-runner', () => {
 
     it('should call fetchEventSource with correct parameters', async () => {
       await streamAnswerWithStrategy(
+        endpointUrl,
         mockArgs,
         {
           getState: mockGetState,
@@ -108,7 +110,7 @@ describe('answer-streaming-runner', () => {
       );
 
       expect(fetchEventSource.fetchEventSource).toHaveBeenCalledWith(
-        'https://test.coveo.com/answer/v1/generate',
+        endpointUrl,
         expect.objectContaining({
           method: 'POST',
           body: JSON.stringify(mockArgs),
@@ -123,7 +125,7 @@ describe('answer-streaming-runner', () => {
       );
     });
 
-    it('should pass onopen handler that calls strategy.handleOpen', async () => {
+    it('should pass onopen handler that calls serverStateEventHandler and strategy handleOpen', async () => {
       let capturedOnOpen: ((response: Response) => Promise<void>) | undefined;
 
       vi.spyOn(fetchEventSource, 'fetchEventSource').mockImplementation(
@@ -133,6 +135,7 @@ describe('answer-streaming-runner', () => {
       );
 
       await streamAnswerWithStrategy(
+        endpointUrl,
         mockArgs,
         {
           getState: mockGetState,
@@ -149,9 +152,12 @@ describe('answer-streaming-runner', () => {
       });
       await capturedOnOpen!(mockResponse);
 
-      expect(mockStrategy.events.handleOpen).toHaveBeenCalledWith(
+      expect(serverStateEventHandler.handleOpen).toHaveBeenCalledWith(
         mockResponse,
-        mockUpdateCachedData,
+        mockUpdateCachedData
+      );
+      expect(mockStrategy.handleOpen).toHaveBeenCalledWith(
+        mockResponse,
         mockDispatch
       );
     });
@@ -166,6 +172,7 @@ describe('answer-streaming-runner', () => {
       );
 
       await streamAnswerWithStrategy(
+        endpointUrl,
         mockArgs,
         {
           getState: mockGetState,
@@ -179,40 +186,10 @@ describe('answer-streaming-runner', () => {
 
       capturedOnClose!();
 
-      expect(mockStrategy.events.handleClose).toHaveBeenCalledWith(
-        mockUpdateCachedData,
-        mockDispatch
-      );
+      expect(mockStrategy.handleClose).toHaveBeenCalledWith(mockDispatch);
     });
 
-    it('should pass onerror handler that calls strategy.handleError', async () => {
-      let capturedOnError: ((error: unknown) => void) | undefined;
-
-      vi.spyOn(fetchEventSource, 'fetchEventSource').mockImplementation(
-        async (_url, options: any) => {
-          capturedOnError = options.onerror;
-        }
-      );
-
-      await streamAnswerWithStrategy(
-        mockArgs,
-        {
-          getState: mockGetState,
-          dispatch: mockDispatch,
-          updateCachedData: mockUpdateCachedData,
-        },
-        mockStrategy
-      );
-
-      expect(capturedOnError).toBeDefined();
-
-      const testError = new Error('Test error');
-      capturedOnError!(testError);
-
-      expect(mockStrategy.events.handleError).toHaveBeenCalledWith(testError);
-    });
-
-    it('should pass onmessage handler that calls error handler first', async () => {
+    it('should pass onmessage handler that calls error handlers', async () => {
       let capturedOnMessage: ((event: {data: string}) => void) | undefined;
 
       vi.spyOn(fetchEventSource, 'fetchEventSource').mockImplementation(
@@ -222,6 +199,7 @@ describe('answer-streaming-runner', () => {
       );
 
       await streamAnswerWithStrategy(
+        endpointUrl,
         mockArgs,
         {
           getState: mockGetState,
@@ -243,14 +221,17 @@ describe('answer-streaming-runner', () => {
 
       capturedOnMessage!({data: JSON.stringify(message)});
 
-      expect(mockStrategy.events.handleMessage.error).toHaveBeenCalledWith(
+      expect(serverStateEventHandler.handleMessage.error).toHaveBeenCalledWith(
         message,
-        mockUpdateCachedData,
+        mockUpdateCachedData
+      );
+      expect(mockStrategy.handleMessage.error).toHaveBeenCalledWith(
+        message,
         mockDispatch
       );
     });
 
-    it('should pass onmessage handler that calls specific message type handler', async () => {
+    it('should pass onmessage handler that calls specific message type handlers', async () => {
       let capturedOnMessage: ((event: {data: string}) => void) | undefined;
 
       vi.spyOn(fetchEventSource, 'fetchEventSource').mockImplementation(
@@ -260,6 +241,7 @@ describe('answer-streaming-runner', () => {
       );
 
       await streamAnswerWithStrategy(
+        endpointUrl,
         mockArgs,
         {
           getState: mockGetState,
@@ -280,8 +262,11 @@ describe('answer-streaming-runner', () => {
       capturedOnMessage!({data: JSON.stringify(message)});
 
       expect(
-        mockStrategy.events.handleMessage['genqa.messageType']
-      ).toHaveBeenCalledWith(message, mockUpdateCachedData, mockDispatch);
+        serverStateEventHandler.handleMessage['genqa.messageType']
+      ).toHaveBeenCalledWith(message, mockUpdateCachedData);
+      expect(
+        mockStrategy.handleMessage['genqa.messageType']
+      ).toHaveBeenCalledWith(message, mockDispatch);
     });
 
     it('should handle header message type', async () => {
@@ -294,6 +279,7 @@ describe('answer-streaming-runner', () => {
       );
 
       await streamAnswerWithStrategy(
+        endpointUrl,
         mockArgs,
         {
           getState: mockGetState,
@@ -314,8 +300,11 @@ describe('answer-streaming-runner', () => {
       capturedOnMessage!({data: JSON.stringify(message)});
 
       expect(
-        mockStrategy.events.handleMessage['genqa.headerMessageType']
-      ).toHaveBeenCalledWith(message, mockUpdateCachedData, mockDispatch);
+        serverStateEventHandler.handleMessage['genqa.headerMessageType']
+      ).toHaveBeenCalledWith(message, mockUpdateCachedData);
+      expect(
+        mockStrategy.handleMessage['genqa.headerMessageType']
+      ).toHaveBeenCalledWith(message, mockDispatch);
     });
 
     it('should handle citations message type', async () => {
@@ -328,6 +317,7 @@ describe('answer-streaming-runner', () => {
       );
 
       await streamAnswerWithStrategy(
+        endpointUrl,
         mockArgs,
         {
           getState: mockGetState,
@@ -348,8 +338,11 @@ describe('answer-streaming-runner', () => {
       capturedOnMessage!({data: JSON.stringify(message)});
 
       expect(
-        mockStrategy.events.handleMessage['genqa.citationsType']
-      ).toHaveBeenCalledWith(message, mockUpdateCachedData, mockDispatch);
+        serverStateEventHandler.handleMessage['genqa.citationsType']
+      ).toHaveBeenCalledWith(message, mockUpdateCachedData);
+      expect(
+        mockStrategy.handleMessage['genqa.citationsType']
+      ).toHaveBeenCalledWith(message, mockDispatch);
     });
 
     it('should handle end of stream message type', async () => {
@@ -362,6 +355,7 @@ describe('answer-streaming-runner', () => {
       );
 
       await streamAnswerWithStrategy(
+        endpointUrl,
         mockArgs,
         {
           getState: mockGetState,
@@ -382,8 +376,11 @@ describe('answer-streaming-runner', () => {
       capturedOnMessage!({data: JSON.stringify(message)});
 
       expect(
-        mockStrategy.events.handleMessage['genqa.endOfStreamType']
-      ).toHaveBeenCalledWith(message, mockUpdateCachedData, mockDispatch);
+        serverStateEventHandler.handleMessage['genqa.endOfStreamType']
+      ).toHaveBeenCalledWith(message, mockUpdateCachedData);
+      expect(
+        mockStrategy.handleMessage['genqa.endOfStreamType']
+      ).toHaveBeenCalledWith(message, mockDispatch);
     });
   });
 });

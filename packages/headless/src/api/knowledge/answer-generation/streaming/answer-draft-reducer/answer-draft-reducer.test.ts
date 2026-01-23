@@ -1,15 +1,14 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import type {GeneratedAnswerServerState} from '../../answer-generation-api-state.js';
-import type {Message} from '../types.js';
+import type {Message, StreamPayload} from '../types.js';
 import {
-  handleAnswerId,
-  handleCitations,
-  handleEndOfStream,
-  handleError,
-  handleHeaderMessage,
-  handleMessage,
-  type StreamPayload,
-} from './answer-draft-handlers.js';
+  endStreaming,
+  initializeStreamingAnswer,
+  setAnswer,
+  setAnswerError,
+  setAnswerId,
+  setCitations,
+} from './answer-draft-reducer.js';
 
 describe('answer draft handlers', () => {
   let draft: GeneratedAnswerServerState;
@@ -28,29 +27,29 @@ describe('answer draft handlers', () => {
     consoleErrorSpy.mockRestore();
   });
 
-  describe('#handleAnswerId', () => {
+  describe('#setAnswerId', () => {
     it('should set answerId when provided', () => {
       const answerId = 'test-answer-id-123';
 
-      handleAnswerId(draft, answerId);
+      setAnswerId(draft, answerId);
 
       expect(draft.answerId).toBe(answerId);
     });
 
     it('should not set answerId when empty string is provided', () => {
-      handleAnswerId(draft, '');
+      setAnswerId(draft, '');
 
       expect(draft.answerId).toBeUndefined();
     });
   });
 
-  describe('#handleHeaderMessage', () => {
+  describe('#initializeStreamingAnswer', () => {
     it('should set contentFormat and update streaming and loading flags', () => {
       const payload = {
         contentFormat: 'text/markdown' as const,
       };
 
-      handleHeaderMessage(draft, payload);
+      initializeStreamingAnswer(draft, payload);
 
       expect(draft.contentFormat).toBe('text/markdown');
       expect(draft.isStreaming).toBe(true);
@@ -58,13 +57,13 @@ describe('answer draft handlers', () => {
     });
   });
 
-  describe('#handleMessage', () => {
+  describe('#setAnswer', () => {
     it('should set answer when draft.answer is undefined', () => {
       const payload: Pick<StreamPayload, 'textDelta'> = {
         textDelta: 'First chunk',
       };
 
-      handleMessage(draft, payload);
+      setAnswer(draft, payload);
 
       expect(draft.answer).toBe('First chunk');
     });
@@ -75,15 +74,15 @@ describe('answer draft handlers', () => {
         textDelta: ' additional text',
       };
 
-      handleMessage(draft, payload);
+      setAnswer(draft, payload);
 
       expect(draft.answer).toBe('Initial text additional text');
     });
 
     it('should handle multiple consecutive messages', () => {
-      handleMessage(draft, {textDelta: 'First '});
-      handleMessage(draft, {textDelta: 'second '});
-      handleMessage(draft, {textDelta: 'third'});
+      setAnswer(draft, {textDelta: 'First '});
+      setAnswer(draft, {textDelta: 'second '});
+      setAnswer(draft, {textDelta: 'third'});
 
       expect(draft.answer).toBe('First second third');
     });
@@ -94,7 +93,7 @@ describe('answer draft handlers', () => {
         textDelta: undefined,
       };
 
-      handleMessage(draft, payload);
+      setAnswer(draft, payload);
 
       expect(draft.answer).toBe('Existing answer');
     });
@@ -105,13 +104,13 @@ describe('answer draft handlers', () => {
         textDelta: '',
       };
 
-      handleMessage(draft, payload);
+      setAnswer(draft, payload);
 
       expect(draft.answer).toBe('Test');
     });
   });
 
-  describe('#handleCitations', () => {
+  describe('#setCitations', () => {
     it('should set citations', () => {
       const citations = [
         {
@@ -133,7 +132,7 @@ describe('answer draft handlers', () => {
       ];
       const payload: Pick<StreamPayload, 'citations'> = {citations};
 
-      handleCitations(draft, payload);
+      setCitations(draft, payload);
 
       expect(draft.citations).toEqual(citations);
     });
@@ -141,7 +140,7 @@ describe('answer draft handlers', () => {
     it('should handle empty citations array', () => {
       const payload: Pick<StreamPayload, 'citations'> = {citations: []};
 
-      handleCitations(draft, payload);
+      setCitations(draft, payload);
 
       expect(draft.citations).toEqual([]);
     });
@@ -171,20 +170,20 @@ describe('answer draft handlers', () => {
         citations: newCitations,
       };
 
-      handleCitations(draft, payload);
+      setCitations(draft, payload);
 
       expect(draft.citations).toEqual(newCitations);
     });
   });
 
-  describe('#handleEndOfStream', () => {
+  describe('#endStreaming', () => {
     it('should set generated to true and stop streaming', () => {
       draft.isStreaming = true;
       const payload: Pick<StreamPayload, 'answerGenerated'> = {
         answerGenerated: true,
       };
 
-      handleEndOfStream(draft, payload);
+      endStreaming(draft, payload);
 
       expect(draft.generated).toBe(true);
       expect(draft.isStreaming).toBe(false);
@@ -196,7 +195,7 @@ describe('answer draft handlers', () => {
         answerGenerated: false,
       };
 
-      handleEndOfStream(draft, payload);
+      endStreaming(draft, payload);
 
       expect(draft.generated).toBe(false);
       expect(draft.isStreaming).toBe(false);
@@ -208,14 +207,14 @@ describe('answer draft handlers', () => {
         answerGenerated: undefined,
       };
 
-      handleEndOfStream(draft, payload);
+      endStreaming(draft, payload);
 
       expect(draft.generated).toBeUndefined();
       expect(draft.isStreaming).toBe(false);
     });
   });
 
-  describe('#handleError', () => {
+  describe('#setAnswerError', () => {
     it('should set error with message and code', () => {
       const message: Message = {
         payloadType: 'genqa.messageType',
@@ -225,7 +224,7 @@ describe('answer draft handlers', () => {
         code: 500,
       };
 
-      handleError(draft, message);
+      setAnswerError(draft, message);
 
       expect(draft.error).toEqual({
         message: 'Test error message',
@@ -246,7 +245,7 @@ describe('answer draft handlers', () => {
         code: 400,
       };
 
-      handleError(draft, message);
+      setAnswerError(draft, message);
 
       expect(draft.error).toEqual({
         message: 'Unknown error occurred',
@@ -268,7 +267,7 @@ describe('answer draft handlers', () => {
         code: 500,
       };
 
-      handleError(draft, message);
+      setAnswerError(draft, message);
 
       expect(draft.isStreaming).toBe(false);
       expect(draft.isLoading).toBe(false);

@@ -1,6 +1,9 @@
 import {getOrganizationEndpoint} from '../../../../../platform-client.js';
 import type {AnswerGenerationApiState} from '../../../answer-generation-api-state.js';
 
+/**
+ * Builds the complete URL for the answer generation endpoint.
+ */
 export const buildAnswerEndpointUrl = (
   state: AnswerGenerationApiState
 ): string => {
