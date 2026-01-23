@@ -1,5 +1,10 @@
 import type {GeneratedAnswerBase} from '../generated-answer/generated-answer-state.js';
 
+/**
+ * @internal
+ * Represents a follow-up answer generated in response to a user's question.
+ * Extends the base generated answer structure with the originating question.
+ */
 interface FollowUpAnswer extends GeneratedAnswerBase {
   /** The question prompted to generate this follow-up answer. */
   question: string;

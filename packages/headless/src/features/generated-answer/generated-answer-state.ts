@@ -5,6 +5,10 @@ import type {
   GeneratedResponseFormat,
 } from './generated-response-format.js';
 
+/**
+ * Base interface for generated answer structures.
+ * Contains core properties shared across different generated answer implementations.
+ */
 export interface GeneratedAnswerBase {
   /** The unique identifier of the answer returned by the backend. */
   answerId?: string;
