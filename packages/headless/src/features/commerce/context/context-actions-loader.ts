@@ -2,15 +2,22 @@ import type {PayloadAction} from '@reduxjs/toolkit';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {
   type SetContextPayload,
+  type SetCustomPayload,
   type SetLocationPayload,
   type SetViewPayload,
   setContext,
+  setCustom,
   setLocation,
   setView,
 } from './context-actions.js';
 import {contextReducer as commerceContext} from './context-slice.js';
 
-export type {SetContextPayload, SetViewPayload, SetLocationPayload};
+export type {
+  SetContextPayload,
+  SetCustomPayload,
+  SetLocationPayload,
+  SetViewPayload,
+};
 
 /**
  * The context action creators.
@@ -42,6 +49,14 @@ export interface ContextActionCreators {
    * @returns A dispatchable action.
    */
   setLocation(payload: SetLocationPayload): PayloadAction<SetLocationPayload>;
+
+  /**
+   * Sets the custom context property without modifying any other context properties.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  setCustom(payload: SetCustomPayload): PayloadAction<SetCustomPayload>;
 }
 
 /**
@@ -61,5 +76,6 @@ export function loadContextActions(
     setContext,
     setView,
     setLocation,
+    setCustom,
   };
 }
