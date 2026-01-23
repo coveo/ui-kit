@@ -59,6 +59,7 @@ describe('#renderAnswerContent', () => {
       withToggle: false,
       collapsible: false,
       query: '',
+      initialQuery: '',
       renderFeedbackAndCopyButtonsSlot: () => html``,
       renderCitationsSlot: () => html``,
       onToggle: vi.fn(),

@@ -1,4 +1,7 @@
-import type {GeneratedAnswerState} from '@coveo/headless';
+import type {
+  GeneratedAnswerCitation,
+  GeneratedAnswerState,
+} from '@coveo/headless';
 import type {i18n} from 'i18next';
 import type {TemplateResult} from 'lit';
 import {html, nothing} from 'lit';
@@ -10,24 +13,35 @@ import {renderSourceCitations} from '@/src/components/common/generated-answer/so
 import {renderHeading} from '@/src/components/common/heading';
 import {renderSwitch} from '@/src/components/common/switch';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import {renderDisclaimer} from './render-disclaimer';
-import {renderFollowUpInput} from './render-follow-up-input';
 import {renderGeneratingAnswerLabel} from './render-generating-answer-label';
 import '@/src/components/common/atomic-icon/atomic-icon';
+import '@/src/components/search/atomic-previous-answers-list/atomic-previous-answers-list';
+
+interface FollowUpAnswerForRendering {
+  question: string;
+  answer?: string;
+  answerContentFormat?: string;
+  citations?: GeneratedAnswerCitation[];
+  isStreaming?: boolean;
+}
 
 export interface RenderAnswerContentProps {
   i18n: i18n;
   generatedAnswerState: GeneratedAnswerState | undefined;
   query: string;
+  initialQuery: string;
   isAnswerVisible: boolean;
   hasRetryableError: boolean;
   toggleTooltip: string;
   withToggle: boolean;
   collapsible: boolean;
   agentId?: string;
-  followUpInputValue?: string;
-  onFollowUpInputChange?: (value: string) => void;
-  onFollowUpSubmit?: () => void;
+  followUpAnswers?: {
+    id: string;
+    isEnabled: boolean;
+    canAskMore: boolean;
+    answers: FollowUpAnswerForRendering[];
+  };
   renderFeedbackAndCopyButtonsSlot: () => TemplateResult | typeof nothing;
   renderCitationsSlot: () => TemplateResult | typeof nothing;
   onToggle: (checked: boolean) => void;
@@ -50,10 +64,9 @@ export const renderAnswerContent: FunctionalComponent<
     withToggle,
     collapsible,
     query,
+    initialQuery,
     agentId,
-    followUpInputValue = '',
-    onFollowUpInputChange = () => {},
-    onFollowUpSubmit = () => {},
+    followUpAnswers,
     renderFeedbackAndCopyButtonsSlot,
     renderCitationsSlot,
     onToggle,
@@ -61,15 +74,43 @@ export const renderAnswerContent: FunctionalComponent<
     onClickShowButton,
   } = props;
 
-  const {isStreaming, answer, citations, answerContentFormat, expanded} =
-    generatedAnswerState ?? {};
-  const isExpanded = collapsible ? expanded : true;
-  const latestQuery = query.trim();
+  // Determine which answer to display
+  const hasFollowUps = !!agentId && !!followUpAnswers?.answers?.length;
+  const latestAnswer = hasFollowUps
+    ? followUpAnswers!.answers[followUpAnswers!.answers.length - 1]
+    : null;
+
+  // If there are follow-ups, display the latest follow-up answer
+  // Otherwise display the initial answer
+  const displayState = latestAnswer || generatedAnswerState;
+  const displayQuery = latestAnswer?.question || query.trim();
+
+  // For the accordion, show all previous answers (initial + older follow-ups)
+  // excluding the latest one
+  const initialQuestion = (initialQuery || query).trim();
+  const previousAnswers = hasFollowUps
+    ? [
+        ...(generatedAnswerState
+          ? [{...generatedAnswerState, question: initialQuestion}]
+          : []),
+        ...followUpAnswers!.answers.slice(0, -1),
+      ]
+    : [];
+
+  const queryRowSpacingClass = previousAnswers.length > 0 ? 'py-3' : 'mt-3';
+
+  const {isStreaming, answer, citations, answerContentFormat} =
+    displayState ?? {};
+
+  // The "expanded" state is a UI concern owned by the main generated answer state.
+  // Follow-up answers don't carry this flag.
+  const expanded = generatedAnswerState?.expanded;
+  const isExpanded = collapsible ? (expanded ?? true) : true;
   const showInlineActions = !hasRetryableError && isExpanded;
 
   return html`
     <div part="generated-content">
-      <div part="header" class="flex items-center ${isAnswerVisible ? 'border-b-1 border-gray-200' : ''} px-6 py-3">
+      <div part="header" class="flex items-center ${isAnswerVisible ? 'border-b-1 border-gray-200' : ''} px-6 py-2">
         <atomic-icon
           part="header-icon"
           class="text-primary h-4 w-4 fill-current"
@@ -100,10 +141,20 @@ export const renderAnswerContent: FunctionalComponent<
       ${when(
         isAnswerVisible,
         () => html`
+          ${
+            previousAnswers.length > 0
+              ? html`
+            <atomic-previous-answers-list
+              .previousAnswers=${previousAnswers}
+              .i18n=${i18n}
+            ></atomic-previous-answers-list>
+          `
+              : nothing
+          }
           <div part="generated-content-container" class="px-6 pb-6">
-            <div class="flex justify-between gap-3 mt-6">
+            <div class=${`flex justify-between gap-3 ${queryRowSpacingClass}`}>
               <p class="query-text text-base font-semibold leading-6">
-                ${latestQuery}
+                ${displayQuery}
               </p>
               ${when(
                 showInlineActions,
@@ -154,39 +205,13 @@ export const renderAnswerContent: FunctionalComponent<
                             props: {
                               i18n,
                               onClick: onClickShowButton,
-                              isCollapsed: !expanded,
+                              isCollapsed: !(expanded ?? true),
                             },
                           })
                         : nothing
                     }
                   </div>
                 `
-                : nothing
-            }
-            ${
-              agentId
-                ? html`
-              <div class="mt-4">
-                ${renderFollowUpInput({
-                  props: {
-                    i18n,
-                    inputValue: followUpInputValue,
-                    onInput: onFollowUpInputChange,
-                    onSubmit: onFollowUpSubmit,
-                    buttonDisabled: !!isStreaming,
-                  },
-                })}
-              </div>
-            `
-                : nothing
-            }
-            ${
-              !hasRetryableError
-                ? html`
-              <div class="flex justify-end">
-                ${renderDisclaimer({props: {i18n, isStreaming: !!isStreaming}})}
-              </div>
-            `
                 : nothing
             }
           </div>

@@ -9,7 +9,9 @@ export interface RenderFollowUpInputProps {
   inputDisabled?: boolean;
   inputValue: string;
   onInput: (value: string) => void;
-  onSubmit: () => void;
+  canAskFollowUp: () => boolean;
+  askFollowUp: (query: string) => Promise<void>;
+  onClearInput: () => void;
 }
 
 /**
@@ -24,19 +26,30 @@ export const renderFollowUpInput: FunctionalComponent<
     inputDisabled = false,
     inputValue,
     onInput,
-    onSubmit,
+    canAskFollowUp,
+    askFollowUp,
+    onClearInput,
   } = props;
 
   const handleInput = (e: Event) => {
     onInput((e.target as HTMLInputElement).value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const trimmedValue = inputValue.trim();
     if (!trimmedValue || buttonDisabled) {
       return;
     }
-    onSubmit();
+
+    if (canAskFollowUp()) {
+      try {
+        const result = await askFollowUp(trimmedValue);
+        console.log('Follow-up answer generated:', result);
+        onClearInput();
+      } catch (error) {
+        console.error('Error generating follow-up answer:', error);
+      }
+    }
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
