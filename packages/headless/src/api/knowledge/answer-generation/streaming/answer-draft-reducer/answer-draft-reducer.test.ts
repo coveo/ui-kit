@@ -10,7 +10,7 @@ import {
   setCitations,
 } from './answer-draft-reducer.js';
 
-describe('answer draft handlers', () => {
+describe('answer draft reducer', () => {
   let draft: GeneratedAnswerServerState;
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
 

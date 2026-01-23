@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: unit test */
 import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import * as fetchEventSource from '../../../../utils/fetch-event-source/fetch.js';
+import {fetchEventSource} from '../../../../utils/fetch-event-source/fetch.js';
 import type {GeneratedAnswerServerState} from '../answer-generation-api-state.js';
 import {streamAnswerWithStrategy} from './answer-streaming-runner.js';
 import {serverStateEventHandler} from './server-state-event-handler/server-state-event-handler.js';
@@ -57,7 +57,7 @@ describe('answer-streaming-runner', () => {
 
     endpointUrl = 'https://test.coveo.com/answer/v1/generate';
 
-    vi.spyOn(fetchEventSource, 'fetchEventSource').mockResolvedValue(undefined);
+    vi.mocked(fetchEventSource).mockResolvedValue(undefined);
 
     vi.mocked(serverStateEventHandler).handleOpen = vi.fn();
     vi.mocked(serverStateEventHandler).handleError = vi.fn((error: unknown) => {
@@ -87,7 +87,7 @@ describe('answer-streaming-runner', () => {
         mockStrategy
       );
 
-      expect(fetchEventSource.fetchEventSource).toHaveBeenCalledWith(
+      expect(fetchEventSource).toHaveBeenCalledWith(
         endpointUrl,
         expect.objectContaining({
           headers: expect.objectContaining({
@@ -109,7 +109,7 @@ describe('answer-streaming-runner', () => {
         mockStrategy
       );
 
-      expect(fetchEventSource.fetchEventSource).toHaveBeenCalledWith(
+      expect(fetchEventSource).toHaveBeenCalledWith(
         endpointUrl,
         expect.objectContaining({
           method: 'POST',
@@ -128,7 +128,7 @@ describe('answer-streaming-runner', () => {
     it('should pass onopen handler that calls serverStateEventHandler and strategy handleOpen', async () => {
       let capturedOnOpen: ((response: Response) => Promise<void>) | undefined;
 
-      vi.spyOn(fetchEventSource, 'fetchEventSource').mockImplementation(
+      vi.mocked(fetchEventSource).mockImplementation(
         async (_url, options: any) => {
           capturedOnOpen = options.onopen;
         }
@@ -165,7 +165,7 @@ describe('answer-streaming-runner', () => {
     it('should pass onclose handler that calls strategy.handleClose', async () => {
       let capturedOnClose: (() => void) | undefined;
 
-      vi.spyOn(fetchEventSource, 'fetchEventSource').mockImplementation(
+      vi.mocked(fetchEventSource).mockImplementation(
         async (_url, options: any) => {
           capturedOnClose = options.onclose;
         }
@@ -192,7 +192,7 @@ describe('answer-streaming-runner', () => {
     it('should pass onmessage handler that calls error handlers', async () => {
       let capturedOnMessage: ((event: {data: string}) => void) | undefined;
 
-      vi.spyOn(fetchEventSource, 'fetchEventSource').mockImplementation(
+      vi.mocked(fetchEventSource).mockImplementation(
         async (_url, options: any) => {
           capturedOnMessage = options.onmessage;
         }
@@ -234,7 +234,7 @@ describe('answer-streaming-runner', () => {
     it('should pass onmessage handler that calls specific message type handlers', async () => {
       let capturedOnMessage: ((event: {data: string}) => void) | undefined;
 
-      vi.spyOn(fetchEventSource, 'fetchEventSource').mockImplementation(
+      vi.mocked(fetchEventSource).mockImplementation(
         async (_url, options: any) => {
           capturedOnMessage = options.onmessage;
         }
@@ -272,7 +272,7 @@ describe('answer-streaming-runner', () => {
     it('should handle header message type', async () => {
       let capturedOnMessage: ((event: {data: string}) => void) | undefined;
 
-      vi.spyOn(fetchEventSource, 'fetchEventSource').mockImplementation(
+      vi.mocked(fetchEventSource).mockImplementation(
         async (_url, options: any) => {
           capturedOnMessage = options.onmessage;
         }
@@ -310,7 +310,7 @@ describe('answer-streaming-runner', () => {
     it('should handle citations message type', async () => {
       let capturedOnMessage: ((event: {data: string}) => void) | undefined;
 
-      vi.spyOn(fetchEventSource, 'fetchEventSource').mockImplementation(
+      vi.mocked(fetchEventSource).mockImplementation(
         async (_url, options: any) => {
           capturedOnMessage = options.onmessage;
         }
@@ -348,7 +348,7 @@ describe('answer-streaming-runner', () => {
     it('should handle end of stream message type', async () => {
       let capturedOnMessage: ((event: {data: string}) => void) | undefined;
 
-      vi.spyOn(fetchEventSource, 'fetchEventSource').mockImplementation(
+      vi.mocked(fetchEventSource).mockImplementation(
         async (_url, options: any) => {
           capturedOnMessage = options.onmessage;
         }
