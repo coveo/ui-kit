@@ -62,16 +62,14 @@ addons.register('custom/onetrust-button', () => {
 
 const observeAndExpandButtons = () => {
   const expandButtons = () => {
-    const buttonsToExpand = document.querySelectorAll(
+    const buttonsToExpand: NodeListOf<HTMLButtonElement> = document.querySelectorAll(
       'button[data-action="expand-all"][data-expanded="false"]'
     );
-    if (buttonsToExpand.length > 0) {
-      buttonsToExpand.forEach((button) =>
-        (button as HTMLButtonElement).click()
-      );
-      return true;
-    }
-    return false;
+    if (!buttonsToExpand.length) return false;
+    buttonsToExpand.forEach((button) => {
+      button.click()
+    });
+    return true;
   };
 
   // Check immediately in case buttons are already in the DOM
