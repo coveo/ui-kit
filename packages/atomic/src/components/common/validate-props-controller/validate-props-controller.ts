@@ -18,7 +18,7 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
 {
   private currentProps?: TProps;
   private previousProps?: TProps;
-
+  private lastValidationError?: Error;
   /**
    * Creates a `ValidatePropsController`.
    *
@@ -44,6 +44,9 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
   }
 
   hostUpdate() {
+    if (this.host.error && this.host.error !== this.lastValidationError) {
+      return;
+    }
     this.currentProps = this.getProps();
 
     if (deepEqual(this.currentProps, this.previousProps)) {
@@ -61,6 +64,7 @@ export class ValidatePropsController<TProps extends Record<string, unknown>>
     } catch (error) {
       if (this.throwOnError) {
         this.host.error = error as Error;
+        this.lastValidationError = error as Error;
       } else {
         const message = `Prop validation failed for component ${this.host.tagName?.toLowerCase()}: ${(error as Error).message}`;
         console.warn(message, this.host);
