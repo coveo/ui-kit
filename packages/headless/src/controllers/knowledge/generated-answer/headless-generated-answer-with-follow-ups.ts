@@ -1,12 +1,15 @@
 import {answerGenerationApi} from '../../../api/knowledge/answer-generation/answer-generation-api.js';
-import {selectAnswer} from '../../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
+import {
+  type AnswerEndpointArgs,
+  selectAnswer,
+} from '../../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {setAgentId} from '../../../features/configuration/configuration-actions.js';
 import {generateFollowUpAnswer} from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
-import {selectHeadAnswerArgs} from '../../../features/generated-answer/answer-api-selectors.js';
+import {selectAnswerApiQueryParams} from '../../../features/generated-answer/answer-api-selectors.js';
 import {generateHeadAnswer} from '../../../features/generated-answer/generated-answer-actions.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
 import type {GeneratedAnswerState} from '../../../index.js';
@@ -70,7 +73,10 @@ export function buildGeneratedAnswerWithFollowUps(
     ...controller,
     get state() {
       const clientState = getState().generatedAnswer;
-      const headAnswerArgs = selectHeadAnswerArgs(engine.state);
+      const headAnswerArgs: AnswerEndpointArgs = {
+        ...selectAnswerApiQueryParams(engine.state),
+        strategyKey: 'head-answer',
+      };
       const serverState = selectAnswer(headAnswerArgs, engine.state)?.data;
       const followUpAnswersState = getState().followUpAnswers;
 

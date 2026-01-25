@@ -7,7 +7,7 @@ import {answerGenerationApi} from '../../answer-generation-api.js';
 import type {AnswerGenerationApiState} from '../../answer-generation-api-state.js';
 import type {GeneratedAnswerServerState} from '../../shared-types.js';
 import {streamAnswerWithStrategy} from '../../streaming/answer-streaming-runner.js';
-import type {StreamingStrategy} from '../../streaming/strategies/strategy-types.js';
+import {streamingStrategies} from '../../streaming/strategies/streaming-strategies.js';
 import {buildAnswerEndpointUrl} from './url-builders/endpoint-url-builder.js';
 
 export type AnswerParams = {
@@ -20,9 +20,8 @@ export type AnswerParams = {
 } & AnalyticsParam;
 
 export type AnswerEndpointArgs = {
-  strategy: StreamingStrategy<AnswerGenerationApiState>;
-  params: AnswerParams;
-};
+  strategyKey: keyof typeof streamingStrategies;
+} & AnswerParams;
 
 export const answerEndpoint = answerGenerationApi.injectEndpoints({
   overrideExisting: true,
@@ -45,7 +44,7 @@ export const answerEndpoint = answerGenerationApi.injectEndpoints({
         };
       },
       async onQueryStarted(args, {getState, updateCachedData, dispatch}) {
-        const {params, strategy} = args;
+        const {strategyKey, ...params} = args;
         const endpointUrl = buildAnswerEndpointUrl(
           getState() as AnswerGenerationApiState
         );
@@ -57,7 +56,7 @@ export const answerEndpoint = answerGenerationApi.injectEndpoints({
             updateCachedData,
             dispatch,
           },
-          strategy
+          streamingStrategies[strategyKey]
         );
       },
     }),

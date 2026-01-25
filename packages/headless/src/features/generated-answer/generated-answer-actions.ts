@@ -51,7 +51,6 @@ import {
   type GeneratedResponseFormat,
   generatedContentFormat,
 } from './generated-response-format.js';
-import {headAnswerStrategy} from './head-answer-strategy.js';
 
 type StateNeededByGeneratedAnswerStream = ConfigurationSection &
   SearchSection &
@@ -397,10 +396,10 @@ export const generateHeadAnswer = createAsyncThunk<
       navigatorContext
     );
     const headAnswerEndpointArgs: AnswerEndpointArgs = {
-      strategy: headAnswerStrategy,
-      params: generateHeadAnswerParams,
+      ...generateHeadAnswerParams,
+      strategyKey: 'head-answer',
     };
-    dispatch(setAnswerApiQueryParams(headAnswerEndpointArgs.params));
+    dispatch(setAnswerApiQueryParams(generateHeadAnswerParams));
     await dispatch(initiateAnswerEndpoint(headAnswerEndpointArgs));
   }
 );
