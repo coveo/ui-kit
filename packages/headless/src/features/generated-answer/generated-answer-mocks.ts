@@ -32,6 +32,7 @@ export const streamAnswerAPIStateMock: StreamAnswerAPIState = {
     },
     knowledge: {
       answerConfigurationId: '',
+      agentId: '',
     },
   },
   insightConfiguration: {

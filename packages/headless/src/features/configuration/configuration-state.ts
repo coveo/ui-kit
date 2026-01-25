@@ -180,6 +180,7 @@ export interface CoreAnalyticsState {
 
 interface KnowledgeState {
   answerConfigurationId: string;
+  agentId: string;
 }
 
 export const getConfigurationInitialState: () => ConfigurationState = () => ({
@@ -204,6 +205,7 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
   },
   knowledge: {
     answerConfigurationId: '',
+    agentId: '',
   },
   environment: 'prod',
 });

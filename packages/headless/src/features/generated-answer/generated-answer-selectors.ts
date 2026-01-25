@@ -40,7 +40,7 @@ export const isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI = (
 ): state is StreamAnswerAPIState =>
   'answerGenerationApi' in state &&
   'generatedAnswer' in state &&
-  !isNullOrUndefined(state.generatedAnswer?.answerConfigurationId);
+  !isNullOrUndefined(state.configuration?.knowledge?.agentId);
 
 const isSearchSection = (
   state: Partial<SearchAppState> | StreamAnswerAPIState

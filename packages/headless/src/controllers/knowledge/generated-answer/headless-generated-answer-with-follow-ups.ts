@@ -2,14 +2,12 @@ import {answerGenerationApi} from '../../../api/knowledge/answer-generation/answ
 import {selectAnswer} from '../../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import {setAgentId} from '../../../features/configuration/configuration-actions.js';
 import {generateFollowUpAnswer} from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
 import {selectHeadAnswerArgs} from '../../../features/generated-answer/answer-api-selectors.js';
-import {
-  generateHeadAnswer,
-  updateAnswerConfigurationId,
-} from '../../../features/generated-answer/generated-answer-actions.js';
+import {generateHeadAnswer} from '../../../features/generated-answer/generated-answer-actions.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
 import type {GeneratedAnswerState} from '../../../index.js';
 import type {
@@ -66,7 +64,7 @@ export function buildGeneratedAnswerWithFollowUps(
     props
   );
   const getState = () => engine.state;
-  engine.dispatch(updateAnswerConfigurationId(props.agentId!));
+  engine.dispatch(setAgentId({agentId: props.agentId!}));
 
   return {
     ...controller,

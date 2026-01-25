@@ -383,7 +383,7 @@ export const generateHeadAnswer = createAsyncThunk<
   'generatedAnswerConversation/generateHeadAnswer',
   async (_, {getState, dispatch, extra: {navigatorContext, logger}}) => {
     const state = getState() as AnswerGenerationApiState;
-    if (!state.generatedAnswer.answerConfigurationId) {
+    if (!state.configuration.knowledge.agentId) {
       logger.warn(
         'Missing answerConfigurationId in engine configuration. ' +
           'The generateAnswer action requires an answer configuration ID.'
