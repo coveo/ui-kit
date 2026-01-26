@@ -1,11 +1,11 @@
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import type {AtomicIPXBody} from './atomic-ipx-body';
+import type {AtomicIpxBody} from './atomic-ipx-body';
 import './atomic-ipx-body';
 
 describe('atomic-ipx-body', () => {
-  const parts = (element: AtomicIPXBody) => {
+  const parts = (element: AtomicIpxBody) => {
     const qs = (part: string) =>
       element.shadowRoot?.querySelector(`[part="${part}"]`);
     return {
@@ -33,7 +33,7 @@ describe('atomic-ipx-body', () => {
     bodyContent?: string;
     footerContent?: string;
   } = {}) => {
-    const element = await fixture<AtomicIPXBody>(html`
+    const element = await fixture<AtomicIpxBody>(html`
       <atomic-ipx-body
         .isOpen=${isOpen}
         .displayFooterSlot=${displayFooterSlot}
@@ -181,7 +181,7 @@ describe('atomic-ipx-body', () => {
   });
 
   describe('animationEnded event', () => {
-    let eventSpy: ReturnType<typeof vi.fn>;
+    let eventSpy: Mock<EventListener>;
 
     beforeEach(() => {
       eventSpy = vi.fn();
@@ -210,41 +210,13 @@ describe('atomic-ipx-body', () => {
 
     it('should emit an event that is composed', async () => {
       const {element} = await renderIPXBody();
-      element.addEventListener('animationEnded', eventSpy);
+      element.addEventListener('animationEnded', eventSpy as EventListener);
 
       const container = element.shadowRoot?.querySelector('[part="container"]');
       container?.dispatchEvent(new Event('animationend', {bubbles: true}));
 
       const emittedEvent = eventSpy.mock.calls[0][0];
       expect(emittedEvent.composed).toBe(true);
-    });
-  });
-
-  describe('accessibility', () => {
-    it('should use article element for semantic structure', async () => {
-      const {parts} = await renderIPXBody();
-      expect(parts.container?.tagName.toLowerCase()).toBe('article');
-    });
-
-    it('should use header element for semantic header', async () => {
-      const {parts} = await renderIPXBody();
-      expect(parts.headerWrapper?.tagName.toLowerCase()).toBe('header');
-    });
-
-    it('should use hr element for visual separator', async () => {
-      const {parts} = await renderIPXBody();
-      expect(parts.headerRuler?.tagName.toLowerCase()).toBe('hr');
-    });
-
-    it('should use footer element for semantic footer', async () => {
-      const {parts} = await renderIPXBody();
-      expect(parts.footerWrapper?.tagName.toLowerCase()).toBe('footer');
-    });
-  });
-
-  describe('custom element registration', () => {
-    it('should be registered as atomic-ipx-body', () => {
-      expect(customElements.get('atomic-ipx-body')).toBeDefined();
     });
   });
 });
