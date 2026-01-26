@@ -77,3 +77,4 @@ export {AtomicTab} from './atomic-tab/atomic-tab.js';
 export {AtomicTabManager} from './atomic-tab-manager/atomic-tab-manager.js';
 export {AtomicTableElement} from './atomic-table-element/atomic-table-element.js';
 export {AtomicText} from './atomic-text/atomic-text.js';
+export {AtomicTimeframeFacet} from './atomic-timeframe-facet/atomic-timeframe-facet.js';

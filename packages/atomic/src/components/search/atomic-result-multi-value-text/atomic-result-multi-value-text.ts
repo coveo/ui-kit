@@ -51,7 +51,7 @@ export class AtomicResultMultiValueText
 
   /**
    * The maximum number of field values to display.
-   * If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
+   * If there are `n` more values than the specified maximum, the last displayed value will be "`n` more...".
    */
   @property({type: Number, reflect: true, attribute: 'max-values-to-display'})
   public maxValuesToDisplay = 3;

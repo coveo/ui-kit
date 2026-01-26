@@ -83,7 +83,8 @@ export const config: Config = {
           'atomic-field-condition',
         ].concat(
           filterComponentsByUseCaseForReactOutput('src/components/commerce'),
-          filterComponentsByUseCaseForReactOutput('src/components/insight')
+          filterComponentsByUseCaseForReactOutput('src/components/insight'),
+          filterComponentsByUseCaseForReactOutput('src/components/ipx')
         ),
       }),
     !isDevWatch &&
@@ -101,7 +102,8 @@ export const config: Config = {
           filterComponentsByUseCaseForReactOutput(
             'src/components/recommendations'
           ),
-          filterComponentsByUseCaseForReactOutput('src/components/insight')
+          filterComponentsByUseCaseForReactOutput('src/components/insight'),
+          filterComponentsByUseCaseForReactOutput('src/components/ipx')
         ),
       }),
     !isDevWatch &&
