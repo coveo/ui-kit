@@ -206,7 +206,7 @@ export class AtomicModal
   private handleCloseOnEscape = (e: KeyboardEvent) => {
     if (e.key?.toLowerCase() === 'escape') {
       if (this.isOpen) {
-        this.dispatchEvent(buildCustomEvent('close', undefined));
+        this.dispatchEvent(buildCustomEvent('close'));
       }
       if (this.close) {
         this.close();

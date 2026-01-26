@@ -176,7 +176,7 @@ export class AtomicFacetNumberInput
     ) {
       return;
     }
-    this.dispatchEvent(buildCustomEvent('atomic/numberInputApply', undefined));
+    this.dispatchEvent(buildCustomEvent('atomic/numberInputApply'));
     this.filter.setRange({
       start: this.start!,
       end: this.end!,

@@ -95,7 +95,7 @@ export class AtomicCommerceProductsPerPage
   }
 
   private scrollToTopEvent() {
-    this.dispatchEvent(buildCustomEvent('atomic/scrollToTop', undefined));
+    this.dispatchEvent(buildCustomEvent('atomic/scrollToTop'));
   }
 
   private get label() {

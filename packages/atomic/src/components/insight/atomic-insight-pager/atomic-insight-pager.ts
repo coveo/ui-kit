@@ -228,7 +228,7 @@ export class AtomicInsightPager
 
   private async focusOnFirstResultAndScrollToTop() {
     await this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
-    this.dispatchEvent(buildCustomEvent('atomic/scrollToTop', undefined));
+    this.dispatchEvent(buildCustomEvent('atomic/scrollToTop'));
     this.announcePageLoaded();
   }
 

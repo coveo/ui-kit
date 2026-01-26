@@ -134,11 +134,11 @@ export class AtomicSmartSnippetExpandableAnswer
   }
 
   private handleExpand() {
-    this.dispatchEvent(buildCustomEvent('expand', undefined));
+    this.dispatchEvent(buildCustomEvent('expand'));
   }
 
   private handleCollapse() {
-    this.dispatchEvent(buildCustomEvent('collapse', undefined));
+    this.dispatchEvent(buildCustomEvent('collapse'));
   }
 
   private handleSelectInlineLink(e: CustomEvent<InlineLink>) {
