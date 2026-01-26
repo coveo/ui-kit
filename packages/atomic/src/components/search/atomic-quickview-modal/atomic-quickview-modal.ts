@@ -32,6 +32,10 @@ import type {HighlightKeywords} from './highlight-keywords';
  * The `atomic-quickview-modal` component is the modal opened when clicking a quickview button.
  * Do not use this component directly; use `atomic-quickview` instead.
  *
+ * @slot header - The header slot containing the result title and close button.
+ * @slot body - The body slot containing the quickview sidebar and iframe content.
+ * @slot footer - The footer slot containing the navigation buttons.
+ *
  * @part backdrop - The transparent backdrop hiding the content behind the modal.
  * @part container - The modal's outermost container with the outline and background.
  * @part header-wrapper - The wrapper around the header.
@@ -181,7 +185,7 @@ export class AtomicQuickviewModal
 
   private renderHeader() {
     if (!this.result) {
-      return nothing;
+      return html`<div slot="header"></div>`;
     }
 
     this.interactiveResult = buildInteractiveResult(this.bindings.engine, {

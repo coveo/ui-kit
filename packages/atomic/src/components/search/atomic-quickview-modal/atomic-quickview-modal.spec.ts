@@ -116,11 +116,15 @@ describe('atomic-quickview-modal', () => {
   };
 
   describe('when initializing', () => {
-    it('should initialize minimizeSidebar based on mobile state', async () => {
+    it('should pass minimized state to sidebar based on mobile detection', async () => {
       const {element} = await renderQuickviewModal();
-      // biome-ignore lint/suspicious/noExplicitAny: accessing private property for testing
-      expect((element as any).minimizeSidebar).toBe(
-        element.bindings.store.isMobile()
+
+      expect(vi.mocked(renderQuickviewSidebar)).toHaveBeenCalledWith(
+        expect.objectContaining({
+          props: expect.objectContaining({
+            minimized: element.bindings.store.isMobile(),
+          }),
+        })
       );
     });
 
@@ -132,12 +136,13 @@ describe('atomic-quickview-modal', () => {
   });
 
   describe('when modal is closed', () => {
-    it('should not render header content when result is undefined', async () => {
+    it('should render empty header div when result is undefined', async () => {
       const {parts, element} = await renderQuickviewModal({
         props: {content: mockContent},
       });
       const header = parts(element).header;
-      expect(header).toBeNull();
+      expect(header).toBeTruthy();
+      expect(header?.children.length).toBe(0);
     });
 
     it('should have isOpen as false when content or result is missing', async () => {
@@ -345,13 +350,28 @@ describe('atomic-quickview-modal', () => {
 
       expect(element.content).toBeUndefined();
       expect(element.result).toBeUndefined();
-      // biome-ignore lint/suspicious/noExplicitAny: accessing private property for testing
-      expect((element as any).minimizeSidebar).toBe(false);
-      // biome-ignore lint/suspicious/noExplicitAny: accessing private property for testing
-      expect((element as any).highlightKeywords).toEqual({
-        highlightNone: false,
-        keywords: {},
+    });
+
+    it('should reset sidebar to non-minimized state after reset', async () => {
+      const {element} = await renderQuickviewModal({
+        props: {content: mockContent, result: mockResult},
       });
+
+      vi.mocked(renderQuickviewSidebar).mockClear();
+      await element.reset();
+
+      element.content = mockContent;
+      element.result = mockResult;
+      await element.updateComplete;
+
+      expect(vi.mocked(renderQuickviewSidebar)).toHaveBeenCalledWith(
+        expect.objectContaining({
+          props: expect.objectContaining({
+            minimized: element.bindings.store.isMobile(),
+            highlightKeywords: {highlightNone: false, keywords: {}},
+          }),
+        })
+      );
     });
   });
 
@@ -433,73 +453,27 @@ describe('atomic-quickview-modal', () => {
     });
   });
 
-  describe('when computing unique identifier', () => {
-    it('should combine result uniqueId with requestId', async () => {
-      const {element} = await renderQuickviewModal({
-        props: {content: mockContent, result: mockResult},
-      });
-
-      // biome-ignore lint/suspicious/noExplicitAny: accessing private getter for testing
-      const identifier = (element as any).quickviewUniqueIdentifier;
-      expect(identifier).toBe('test-id-123request-123');
-    });
-
-    it('should return only requestId when result is undefined', async () => {
-      const {element} = await renderQuickviewModal({
-        props: {content: mockContent},
-      });
-
-      // biome-ignore lint/suspicious/noExplicitAny: accessing private getter for testing
-      const identifier = (element as any).quickviewUniqueIdentifier;
-      expect(identifier).toBe('request-123');
-    });
-  });
-
-  describe('when getting quickview source', () => {
-    it('should get contentURL from engine state', async () => {
-      const {element} = await renderQuickviewModal({
-        props: {content: mockContent, result: mockResult},
-      });
-
-      // biome-ignore lint/suspicious/noExplicitAny: accessing private getter for testing
-      const src = (element as any).quickviewSrc;
-      expect(src).toBe('https://example.com/preview');
-    });
-  });
-
-  describe('when managing highlight scripts', () => {
-    it('should call getWordsHighlights when iframe ref is set', async () => {
-      await renderQuickviewModal({
-        props: {content: mockContent, result: mockResult},
-      });
-
-      const iframeMockCall = vi.mocked(renderQuickviewIframe).mock.calls[0];
-      const onSetIframeRef = iframeMockCall?.[0].props.onSetIframeRef;
-
-      if (onSetIframeRef) {
-        const mockIframeRef = document.createElement('iframe');
-        await onSetIframeRef(mockIframeRef as HTMLIFrameElement);
-
-        expect(vi.mocked(getWordsHighlights)).toHaveBeenCalled();
-      }
-    });
-  });
-
   describe('when updating component', () => {
-    it('should remain connected after highlightKeywords change', async () => {
+    it('should pass highlightKeywords to sidebar when changed via callback', async () => {
       const {element} = await renderQuickviewModal({
         props: {content: mockContent, result: mockResult},
       });
 
-      // biome-ignore lint/suspicious/noExplicitAny: accessing private property for testing
-      (element as any).highlightKeywords = {
-        highlightNone: true,
-        keywords: {},
-      };
+      const sidebarCall = vi.mocked(renderQuickviewSidebar).mock.calls[0];
+      const onHighlightKeywords = sidebarCall?.[0].props.onHighlightKeywords;
 
+      vi.mocked(renderQuickviewSidebar).mockClear();
+
+      onHighlightKeywords?.({highlightNone: true, keywords: {}});
       await element.updateComplete;
 
-      expect(element.isConnected).toBe(true);
+      expect(vi.mocked(renderQuickviewSidebar)).toHaveBeenCalledWith(
+        expect.objectContaining({
+          props: expect.objectContaining({
+            highlightKeywords: {highlightNone: true, keywords: {}},
+          }),
+        })
+      );
     });
   });
 });

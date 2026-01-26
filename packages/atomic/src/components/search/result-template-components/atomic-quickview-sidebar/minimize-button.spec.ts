@@ -3,7 +3,7 @@ import {html} from 'lit';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import type {HighlightKeywords} from '../../atomic-quickview-modal/highlight-keywords';
+import type {HighlightKeywords} from '@/src/components/search/atomic-quickview-modal/highlight-keywords';
 import {identifierKeywordsSection} from './keywords';
 import {renderMinimizeButton} from './minimize-button';
 
