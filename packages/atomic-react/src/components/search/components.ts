@@ -18,7 +18,6 @@ import {
   AtomicGeneratedAnswer as LitAtomicGeneratedAnswer,
   AtomicHtml as LitAtomicHtml,
   AtomicIcon as LitAtomicIcon,
-  AtomicIpxModal as LitAtomicIpxModal,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicLoadMoreResults as LitAtomicLoadMoreResults,
   AtomicNoResults as LitAtomicNoResults,
@@ -200,12 +199,6 @@ export const AtomicIcon = createComponent({
   tagName: 'atomic-icon',
   react: React,
   elementClass: LitAtomicIcon,
-});
-
-export const AtomicIpxModal = createComponent({
-  tagName: 'atomic-ipx-modal',
-  react: React,
-  elementClass: LitAtomicIpxModal,
 });
 
 export const AtomicLayoutSection = createComponent({
