@@ -19,7 +19,7 @@ const placeholderClasses = 'block bg-neutral w-full h-full rounded';
 @withTailwindStyles
 export class AtomicResultPlaceholder extends LitElement {
   static styles = css`
-    @reference '../../common/template-system/template-system.pcss';
+    @reference '../../common/template-system/legacy-template-system.css';
 
     :host {
       @apply atomic-template-system;

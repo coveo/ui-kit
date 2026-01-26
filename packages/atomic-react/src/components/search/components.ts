@@ -34,6 +34,7 @@ import {
   AtomicRatingRangeFacet as LitAtomicRatingRangeFacet,
   AtomicRecsError as LitAtomicRecsError,
   AtomicRecsInterface as LitAtomicRecsInterface,
+  AtomicRecsResult as LitAtomicRecsResult,
   AtomicRefineModal as LitAtomicRefineModal,
   AtomicRefineToggle as LitAtomicRefineToggle,
   AtomicResult as LitAtomicResult,
@@ -82,6 +83,7 @@ import {
   AtomicTabManager as LitAtomicTabManager,
   AtomicText as LitAtomicText,
   AtomicTimeframe as LitAtomicTimeframe,
+  AtomicTimeframeFacet as LitAtomicTimeframeFacet,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
@@ -294,6 +296,12 @@ export const AtomicRecsInterface = createComponent({
   tagName: 'atomic-recs-interface',
   react: React,
   elementClass: LitAtomicRecsInterface,
+});
+
+export const AtomicRecsResult = createComponent({
+  tagName: 'atomic-recs-result',
+  react: React,
+  elementClass: LitAtomicRecsResult,
 });
 
 export const AtomicRefineModal = createComponent({
@@ -582,4 +590,10 @@ export const AtomicTimeframe = createComponent({
   tagName: 'atomic-timeframe',
   react: React,
   elementClass: LitAtomicTimeframe,
+});
+
+export const AtomicTimeframeFacet = createComponent({
+  tagName: 'atomic-timeframe-facet',
+  react: React,
+  elementClass: LitAtomicTimeframeFacet,
 });
