@@ -4,10 +4,9 @@ import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-ipx-body',
-  {excludeCategories: ['methods']}
-);
+const {events, args, argTypes} = getStorybookHelpers('atomic-ipx-body', {
+  excludeCategories: ['methods'],
+});
 
 async function initializeInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-search-interface');
@@ -21,18 +20,26 @@ const meta: Meta = {
   component: 'atomic-ipx-body',
   title: 'IPX/IpxBody',
   id: 'atomic-ipx-body',
-  render: (args) => html`
-    <style>
-      atomic-ipx-body {
-        display: block;
-        width: 600px;
-        height: 400px;
-      }
-    </style>
-    <atomic-search-interface>
-      ${template(args)}
-    </atomic-search-interface>
-  `,
+  render: (args) => {
+    const {children, isOpen, displayFooterSlot} = args;
+    return html`
+      <style>
+        atomic-ipx-body {
+          display: block;
+          width: 600px;
+          height: 400px;
+        }
+      </style>
+      <atomic-search-interface>
+        <atomic-ipx-body
+          .isOpen=${isOpen}
+          .displayFooterSlot=${displayFooterSlot ?? true}
+        >
+          ${children}
+        </atomic-ipx-body>
+      </atomic-search-interface>
+    `;
+  },
   parameters: {
     ...parameters,
     actions: {
