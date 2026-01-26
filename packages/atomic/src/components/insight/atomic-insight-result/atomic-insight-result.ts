@@ -6,7 +6,7 @@ import type {
 } from '@coveo/headless/insight';
 import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {ref} from 'lit/directives/ref.js';
+import {createRef, type Ref, ref} from 'lit/directives/ref.js';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import type {DisplayConfig} from '@/src/components/common/item-list/context/item-display-config-context-controller';
 import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
@@ -37,7 +37,7 @@ export type InsightInteractiveResultContextEvent<
 export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
   LitElement
 ) {
-  private resultRootRef?: HTMLElement;
+  private resultRootRef: Ref<HTMLElement> = createRef();
   private itemLayoutController!: ItemLayoutController;
 
   static styles: CSSResultGroup = css`
@@ -207,7 +207,7 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
     new CustomRenderController(this, {
       renderingFunction: () => this.renderingFunction,
       itemData: () => this.result,
-      rootElementRef: () => this.resultRootRef,
+      rootElementRef: () => this.resultRootRef.value,
       onRenderComplete: (element, output) => {
         this.itemLayoutController.applyLayoutClassesToElement(element, output);
       },
@@ -285,9 +285,7 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
       return html`
           <div
             class="result-root"
-            ${ref((el) => {
-              this.resultRootRef = el as HTMLElement;
-            })}
+            ${ref(this.resultRootRef)}
           ></div>
       `;
     }
