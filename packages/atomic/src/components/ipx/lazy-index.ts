@@ -2,6 +2,8 @@
 export default {
   'atomic-ipx-button': async () =>
     await import('./atomic-ipx-button/atomic-ipx-button.js'),
+  'atomic-ipx-result-link': async () =>
+    await import('./atomic-ipx-result-link/atomic-ipx-result-link.js'),
   'atomic-ipx-tab': async () =>
     await import('./atomic-ipx-tab/atomic-ipx-tab.js'),
   'atomic-ipx-tabs': async () =>
