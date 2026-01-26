@@ -50,6 +50,12 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
   inset: auto 3rem 4.25rem auto;
   position: fixed;
   z-index: 1000;
+  display: none;
+
+  [part='backdrop'] {
+    @apply pointer-events-none;
+    height: inherit;
+  }
 }
 
 :host(.open) {
@@ -59,15 +65,6 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
     @apply pointer-events-auto;
     height: inherit;
     max-height: calc(100vh - 4.25rem);
-  }
-}
-
-:host {
-  display: none;
-
-  [part='backdrop'] {
-    @apply pointer-events-none;
-    height: inherit;
   }
 }
   `;
@@ -94,6 +91,7 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
 
   /**
    * Whether the modal is open.
+   * Reflected to allow external consumers to observe the state via CSS attribute selectors.
    */
   @property({
     type: Boolean,
@@ -153,6 +151,12 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
     this.classList.toggle('open', this.isOpen);
   }
 
+  private handleAnimationEnded = () => {
+    this.dispatchEvent(
+      new CustomEvent('animationEnded', {bubbles: true, composed: true})
+    );
+  };
+
   @errorGuard()
   render() {
     this.updateBreakpoints();
@@ -164,6 +168,7 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
           .isOpen=${this.isOpen}
           .displayFooterSlot=${this.hasFooterSlotElements}
           exportparts="container"
+          @animationEnded=${this.handleAnimationEnded}
         >
           <slot name="header" slot="header"></slot>
           <slot name="body" slot="body"></slot>
