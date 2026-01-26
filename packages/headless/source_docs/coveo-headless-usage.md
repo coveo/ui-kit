@@ -7,11 +7,10 @@ slug: usage/index
 
 A project built on top of Headless will typically involve two main building-blocks: the _engine,_ which manages the state of the search interface and communicates with the Coveo Platform, and the _controllers,_ which dispatch actions to the engine based on user interactions.
 
-<dl><dt><strong>📌 Note</strong></dt><dd>
-
-To create a starter Angular, React, or Vue.js project with a Coveo Headless-powered search page, check out the [Coveo CLI](https://github.com/coveo/cli#readme).
-The CLI can handle several steps for you.
-</dd></dl>
+> [!NOTE]
+> 
+> To create a starter Angular, React, or Vue.js project with a Coveo Headless-powered search page, check out the [Coveo CLI](https://github.com/coveo/cli#readme).
+> The CLI can handle several steps for you.
 
 This article provides an overview of the core Headless concepts.
 
@@ -25,11 +24,10 @@ npm install @coveo/headless
 
 Headless requires Node.js version 20.
 
-<dl><dt><strong>📌 Note</strong></dt><dd>
-
-If you use TypeScript, note that Headless doesn’t support the `classic` or `node10`/`node` `moduleResolution` options.
-See [TypeScript module resolution](https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution) and [Announcing TypeScript 5.0 `--moduleResolution bundler`](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#--moduleresolution-bundler).
-</dd></dl>
+> [!NOTE]
+> 
+> If you use TypeScript, note that Headless doesn’t support the `classic` or `node10`/`node` `moduleResolution` options.
+> See [TypeScript module resolution](https://www.typescriptlang.org/docs/handbook/modules/theory.html#module-resolution) and [Announcing TypeScript 5.0 `--moduleResolution bundler`](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#--moduleresolution-bundler).
 
 ## Configure a Headless Engine
 
@@ -87,11 +85,10 @@ export const headlessEngine = buildSearchEngine({
 3. `<CALLBACK>` (function) returns a new access token, usually by fetching it from a backend service that can generate [search tokens](https://docs.coveo.com/en/56/).
 The engine will automatically run this function when the current access token expires (that is, when the engine detects a `419 Authentication Timeout` HTTP code).
 
-   <dl><dt><strong>📌 Note</strong></dt><dd>
-
-   You don’t need to specify a `renewAccessToken` callback if your application is using [API key authentication](https://docs.coveo.com/en/105/).
-   This is typically not recommended, but can be legitimate in some scenarios.
-   </dd></dl>
+> [!NOTE]
+> 
+> You don’t need to specify a `renewAccessToken` callback if your application is using [API key authentication](https://docs.coveo.com/en/105/).
+> This is typically not recommended, but can be legitimate in some scenarios.
 
 ## Use Headless Controllers
 
@@ -295,10 +292,9 @@ engine.dispatch(action); ③
 2. To create a dispatchable action, use the action creators that were loaded in the previous line. In this case, the `registerFieldsToInclude` method takes field names as parameters and returns an action that, when dispatched, will cause those fields to be returned as part of each search result.
 3. Dispatch the action using the engine’s `dispatch` method.
 
-<dl><dt><strong>📌 Note</strong></dt><dd>
-
-Every action dispatch triggers the corresponding listener function.
-Consequently, you should only perform costly operations, such as rendering a UI component, when the state they depend on has changed.
-</dd></dl>
+> [!NOTE]
+> 
+> Every action dispatch triggers the corresponding listener function.
+> Consequently, you should only perform costly operations, such as rendering a UI component, when the state they depend on has changed.
 
 For more information on the various actions you can dispatch, see the [reference documentation](https://docs.coveo.com/en/headless/latest/reference/index.html).
