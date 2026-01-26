@@ -8,3 +8,4 @@ file_patterns:
   - "packages/**/*.stories.tsx"
 reviewers:
   dev-writers: ~
+  dxui: ~

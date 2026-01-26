@@ -11,5 +11,6 @@ file_patterns:
   - packages/create-atomic-rollup-plugin/**
   - packages/create-atomic-template/**
 
+  - samples/atomic/**
 reviewers:
   dxui: ~

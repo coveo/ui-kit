@@ -1,7 +1,6 @@
 description: Insight Panel features
 file_patterns:
   # Atomic IPX components
-  - packages/atomic/src/components/ipx/**
   - packages/atomic/src/components/insight/**
 
   # Headless Insight

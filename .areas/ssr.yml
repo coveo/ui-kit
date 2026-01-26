@@ -3,6 +3,7 @@ file_patterns:
   - packages/headless/src/ssr/**
   - packages/headless/src/ssr-next/**
 
+  - samples/headless-ssr/**
 reviewers:
   dxui:
     minimum_approvals: 1

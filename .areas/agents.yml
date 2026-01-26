@@ -3,10 +3,9 @@ file_patterns:
   - .github/agents/**
   - .github/instructions/**
   - .github/prompts/**
-  - .github/ISSUE_TEMPLATE/**
-  - .github/PULL_REQUEST_TEMPLATE/**
   - .claude/**
   - AGENTS.md
+  - opencode.json
 
 reviewers:
   dxui: ~
