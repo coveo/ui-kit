@@ -38,6 +38,13 @@ export default async function Search() {
     cart: {items},
     context,
     navigatorContext: navigatorContext.marshal,
+    controllers: {
+      productEnrichment: {
+        options: {
+          placementIds: ['70b493b2-a1f1-4049-ad70-16695cef39cd'],
+        },
+      },
+    },
   });
 
   const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
