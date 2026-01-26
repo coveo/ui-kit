@@ -118,6 +118,7 @@ export class AtomicIpxBody
   @property({type: Boolean, attribute: 'is-open'})
   isOpen?: boolean;
 
+  // TODO KIT-5430: replace with hideFooterSlot & fix logic + tests
   /**
    * Whether to display the footer slot.
    */
