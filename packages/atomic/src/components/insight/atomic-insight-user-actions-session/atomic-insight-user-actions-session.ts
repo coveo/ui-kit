@@ -61,7 +61,7 @@ export class AtomicInsightUserActionsSession
    * The list of user actions performed during the session.
    */
   @property({type: Array, attribute: 'user-actions'})
-  public userActions!: Array<IUserAction>;
+  public userActions: Array<IUserAction> = [];
 
   @state()
   private userActionsToDisplay: Array<IUserAction> = [];
