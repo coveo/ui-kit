@@ -14,9 +14,12 @@ import ThreeDotsIcon from '../../../images/three-dots.svg';
 import {renderUserAction} from './user-action';
 
 /**
+ * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.
+ *
  * The `atomic-insight-user-actions-session` component displays all the user actions that took place during a specific user session.
  *
  * @internal
+ *
  * @part session-start-icon__container - The container for the session start icon.
  * @part show-more-actions-button - The button to show more actions in the session.
  */
