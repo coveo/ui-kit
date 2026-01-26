@@ -1,5 +1,7 @@
 // Auto-generated file
 export default {
+  'atomic-ipx-body': async () =>
+    await import('./atomic-ipx-body/atomic-ipx-body.js'),
   'atomic-ipx-button': async () =>
     await import('./atomic-ipx-button/atomic-ipx-button.js'),
   'atomic-ipx-tab': async () =>
