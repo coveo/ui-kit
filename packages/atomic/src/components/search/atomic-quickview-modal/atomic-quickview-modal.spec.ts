@@ -398,16 +398,16 @@ describe('atomic-quickview-modal', () => {
         },
       });
 
-      let eventFired = false;
-      element.addEventListener('atomic/quickview/next', () => {
-        eventFired = true;
+      const eventPromise = new Promise<void>((resolve) => {
+        element.addEventListener('atomic/quickview/next', () => resolve());
       });
 
-      element.dispatchEvent(
-        new CustomEvent('atomic/quickview/next', {bubbles: true})
-      );
+      const nextButton = page.getByRole('button', {
+        name: element.bindings.i18n.t('quickview-next'),
+      });
+      await nextButton.click();
 
-      expect(eventFired).toBe(true);
+      await expect(eventPromise).resolves.toBeUndefined();
     });
 
     it('should dispatch atomic/quickview/previous event when previous button is clicked', async () => {
@@ -420,16 +420,16 @@ describe('atomic-quickview-modal', () => {
         },
       });
 
-      let eventFired = false;
-      element.addEventListener('atomic/quickview/previous', () => {
-        eventFired = true;
+      const eventPromise = new Promise<void>((resolve) => {
+        element.addEventListener('atomic/quickview/previous', () => resolve());
       });
 
-      element.dispatchEvent(
-        new CustomEvent('atomic/quickview/previous', {bubbles: true})
-      );
+      const prevButton = page.getByRole('button', {
+        name: element.bindings.i18n.t('quickview-previous'),
+      });
+      await prevButton.click();
 
-      expect(eventFired).toBe(true);
+      await expect(eventPromise).resolves.toBeUndefined();
     });
   });
 
@@ -442,6 +442,16 @@ describe('atomic-quickview-modal', () => {
       // biome-ignore lint/suspicious/noExplicitAny: accessing private getter for testing
       const identifier = (element as any).quickviewUniqueIdentifier;
       expect(identifier).toBe('test-id-123request-123');
+    });
+
+    it('should return only requestId when result is undefined', async () => {
+      const {element} = await renderQuickviewModal({
+        props: {content: mockContent},
+      });
+
+      // biome-ignore lint/suspicious/noExplicitAny: accessing private getter for testing
+      const identifier = (element as any).quickviewUniqueIdentifier;
+      expect(identifier).toBe('request-123');
     });
   });
 

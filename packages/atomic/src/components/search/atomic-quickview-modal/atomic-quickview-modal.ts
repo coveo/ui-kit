@@ -406,7 +406,10 @@ export class AtomicQuickviewModal
   }
 
   private get quickviewUniqueIdentifier() {
-    return this.result?.uniqueId + this.requestId;
+    if (!this.result?.uniqueId) {
+      return this.requestId;
+    }
+    return this.result.uniqueId + this.requestId;
   }
 
   private handleHighlightsScripts() {
