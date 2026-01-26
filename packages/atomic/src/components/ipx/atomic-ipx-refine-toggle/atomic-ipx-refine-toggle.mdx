@@ -1,0 +1,52 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicIpxRefineToggleStories from './atomic-ipx-refine-toggle.new.stories';
+import { AtomicDocTemplate } from '../../../storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicIpxRefineToggleStories} name="Docs" />
+
+<AtomicDocTemplate
+  stories={AtomicIpxRefineToggleStories}
+  githubPath="ipx/atomic-ipx-refine-toggle/atomic-ipx-refine-toggle.ts"
+  tagName="atomic-ipx-refine-toggle"
+  className="AtomicIpxRefineToggle"
+>
+
+The `atomic-ipx-refine-toggle` component is a button that opens the refine modal, allowing users to filter search results using facets. The button displays a filter icon and optionally shows a badge indicating the number of active filters.
+
+## Usage
+
+This component must be used alongside `atomic-ipx-refine-modal` within an `atomic-search-interface`:
+
+```html
+<atomic-search-interface>
+  <atomic-ipx-refine-toggle></atomic-ipx-refine-toggle>
+  <atomic-ipx-refine-modal>
+    <atomic-facet field="author" label="Author"></atomic-facet>
+    <atomic-facet field="source" label="Source"></atomic-facet>
+  </atomic-ipx-refine-modal>
+</atomic-search-interface>
+```
+
+## Configuration
+
+### Collapsed Facets
+
+Use the `collapse-facets-after` property to control how many facets are initially expanded in the modal:
+
+```html
+<!-- All facets collapsed by default -->
+<atomic-ipx-refine-toggle collapse-facets-after="0"></atomic-ipx-refine-toggle>
+
+<!-- First 3 facets expanded, rest collapsed -->
+<atomic-ipx-refine-toggle collapse-facets-after="3"></atomic-ipx-refine-toggle>
+```
+
+## Behavior
+
+- The button is **disabled** when there are no search results and no active filters
+- The button is **enabled** when there are search results or active filters
+- A **badge** appears on the button showing the number of active filters when filters are applied
+- Clicking the button opens the `atomic-ipx-refine-modal`
+
+
+</AtomicDocTemplate>
