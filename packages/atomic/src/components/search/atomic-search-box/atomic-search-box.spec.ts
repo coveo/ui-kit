@@ -435,10 +435,17 @@ describe('atomic-search-box', () => {
       });
 
       it('should call afterRedirection when redirectTo is set', async () => {
-        await renderSearchBox({
+        const {element} = await renderSearchBox({
           searchBoxProps: {redirectionUrl: '/search'},
           redirectTo: '/search?q=test',
         });
+
+        element.addEventListener('redirect', (event) => {
+          event.preventDefault();
+        });
+
+        element.requestUpdate();
+        await element.updateComplete;
 
         expect(afterRedirectionMock).toHaveBeenCalled();
       });
