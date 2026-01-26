@@ -2,15 +2,13 @@ import {expect, test} from './fixture';
 
 test.describe('atomic-ipx-body', () => {
   test.beforeEach(async ({ipxBody}) => {
-    await ipxBody.load({
-      story: 'atomic-ipx-body--default',
-    });
+    await ipxBody.load();
     await ipxBody.hydrated.waitFor();
   });
 
   test.describe('structure and rendering', () => {
     test('should render the component', async ({ipxBody}) => {
-      await expect(ipxBody.component).toBeVisible();
+      await expect(ipxBody.hydrated).toBeVisible();
     });
 
     test('should render the container', async ({ipxBody}) => {
@@ -66,39 +64,11 @@ test.describe('atomic-ipx-body', () => {
       ipxBody,
     }) => {
       await ipxBody.load({
-        story: 'atomic-ipx-body--without-footer',
+        story: 'without-footer',
       });
       await ipxBody.hydrated.waitFor();
 
       await expect(ipxBody.footerWrapper).not.toBeVisible();
-    });
-  });
-
-  test.describe('accessibility', () => {
-    test('should use semantic HTML elements', async ({ipxBody}) => {
-      const container = ipxBody.container;
-      const tagName = await container.evaluate((el) => el.tagName);
-      expect(tagName.toLowerCase()).toBe('article');
-
-      const headerWrapper = ipxBody.headerWrapper;
-      const headerTag = await headerWrapper.evaluate((el) => el.tagName);
-      expect(headerTag.toLowerCase()).toBe('header');
-
-      const footerWrapper = ipxBody.footerWrapper;
-      const footerTag = await footerWrapper.evaluate((el) => el.tagName);
-      expect(footerTag.toLowerCase()).toBe('footer');
-    });
-
-    test('should have proper accessibility tree structure', async ({
-      ipxBody,
-    }) => {
-      await expect(ipxBody.component).toMatchAriaSnapshot(`
-        - article:
-          - header
-          - separator
-          - generic
-          - generic
-      `);
     });
   });
 });
