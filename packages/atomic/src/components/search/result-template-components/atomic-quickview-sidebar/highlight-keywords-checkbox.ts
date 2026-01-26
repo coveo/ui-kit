@@ -2,8 +2,8 @@ import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {when} from 'lit/directives/when.js';
 import {renderCheckbox} from '@/src/components/common/checkbox';
-import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import type {HighlightKeywords} from '@/src/components/search/atomic-quickview-modal/highlight-keywords';
+import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
 const highlightKeywordsCheckboxId =
   'atomic-quickview-sidebar-highlight-keywords';
