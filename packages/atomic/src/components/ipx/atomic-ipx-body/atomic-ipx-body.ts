@@ -12,8 +12,6 @@ import {randomID} from '@/src/utils/utils';
  * The `atomic-ipx-body` component provides a structured layout for IPX (In-Product Experience) interfaces.
  * It includes slots for header, body, and footer content.
  *
- * @internal
- *
  * @part container - The main container element
  * @part header-wrapper - The wrapper around the header section
  * @part header - The header content container
@@ -32,7 +30,7 @@ import {randomID} from '@/src/utils/utils';
 @customElement('atomic-ipx-body')
 @bindings()
 @withTailwindStyles
-export class AtomicIPXBody
+export class AtomicIpxBody
   extends LitElement
   implements InitializableComponent<AnyBindings>
 {
@@ -130,6 +128,10 @@ export class AtomicIPXBody
     attribute: 'display-footer-slot',
   })
   displayFooterSlot = true;
+
+  initialize() {
+    // Noop
+  }
 
   connectedCallback() {
     super.connectedCallback();
