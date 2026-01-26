@@ -40,35 +40,5 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-insight-user-actions-timeline',
-  play,
-};
-
-export const WithNoUserActions: Story = {
-  name: 'With no user actions',
-  beforeEach: async () => {
-    mockMachineLearningApi.userActionsEndpoint.mockOnce(() => ({
-      value: [],
-    }));
-  },
-  play,
-};
-
-export const WithUserActionsError: Story = {
-  name: 'With user actions error',
-  beforeEach: async () => {
-    mockMachineLearningApi.userActionsEndpoint.mockOnce(
-      () => ({
-        ok: false,
-        status: 403,
-        statusCode: 403,
-        message: 'Access is denied.',
-        errorCode: 'ACCESS_DENIED',
-        requestID: '1486603b-db83-4dc2-9580-5f8e81c8e00c',
-        type: 'ACCESS_DENIED',
-      }),
-      {status: 403}
-    );
-  },
   play,
 };
