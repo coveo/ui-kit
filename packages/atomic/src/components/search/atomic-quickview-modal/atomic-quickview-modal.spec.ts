@@ -5,7 +5,6 @@ import {page} from 'vitest/browser';
 import {renderQuickviewSidebar} from '@/src/components/search/result-template-components/atomic-quickview-sidebar/atomic-quickview-sidebar';
 import {renderQuickviewIframe} from '@/src/components/search/result-template-components/quickview-iframe/quickview-iframe';
 import {buildQuickviewPreviewBar} from '@/src/components/search/result-template-components/quickview-preview-bar/quickview-preview-bar';
-import {getWordsHighlights} from '@/src/components/search/result-template-components/quickview-word-highlight/quickview-word-highlight';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import type {AtomicQuickviewModal} from './atomic-quickview-modal';
