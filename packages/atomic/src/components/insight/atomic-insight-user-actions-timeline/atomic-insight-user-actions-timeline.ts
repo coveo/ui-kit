@@ -271,7 +271,7 @@ export class AtomicInsightUserActionsTimeline
         ${renderNoItemsContainer()(html`
           ${renderMagnifyingGlass()}
           <div class="my-2 max-w-full text-center text-2xl font-light">
-            ${this.bindings.i18n.t('no-user-actions-available') ?? ''}
+            ${this.bindings.i18n.t('no-user-actions-available')}
           </div>
           <div class="text-neutral-dark my-2 text-center text-lg">
             ${this.bindings.i18n.t('no-user-actions-associated-with-params')}
