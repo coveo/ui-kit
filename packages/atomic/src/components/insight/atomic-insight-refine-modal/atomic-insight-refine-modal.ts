@@ -6,7 +6,7 @@ import {
   type QuerySummary as InsightQuerySummary,
   type QuerySummaryState as InsightQuerySummaryState,
 } from '@coveo/headless/insight';
-import {html, LitElement, nothing} from 'lit';
+import {html, LitElement, nothing, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {renderButton} from '@/src/components/common/button';
 import {getClonedFacetElements} from '@/src/components/common/refine-modal/cloned-facet-elements';
@@ -89,6 +89,8 @@ export class AtomicInsightRefineModal
   public querySummary!: InsightQuerySummary;
   public breadcrumbManager!: InsightBreadcrumbManager;
 
+  private backdropStyleSheet = new CSSStyleSheet();
+
   public initialize() {
     this.querySummary = buildInsightQuerySummary(this.bindings.engine);
     this.breadcrumbManager = buildInsightBreadcrumbManager(
@@ -99,6 +101,13 @@ export class AtomicInsightRefineModal
   connectedCallback() {
     super.connectedCallback();
     this.style.display = '';
+    this.shadowRoot?.adoptedStyleSheets.push(this.backdropStyleSheet);
+  }
+
+  protected willUpdate(changedProperties: PropertyValues<this>) {
+    if (changedProperties.has('interfaceDimensions')) {
+      this.updateBackdropStyles();
+    }
   }
 
   @watch('isOpen')
@@ -141,6 +150,22 @@ export class AtomicInsightRefineModal
   public updateDimensions() {
     this.interfaceDimensions =
       this.bindings.interfaceElement.getBoundingClientRect();
+    this.updateBackdropStyles();
+  }
+
+  private updateBackdropStyles() {
+    if (this.interfaceDimensions) {
+      this.backdropStyleSheet.replaceSync(`
+        atomic-modal::part(backdrop) {
+          top: ${this.interfaceDimensions.top}px;
+          left: ${this.interfaceDimensions.left}px;
+          width: ${this.interfaceDimensions.width}px;
+          height: ${this.interfaceDimensions.height}px;
+        }
+      `);
+    } else {
+      this.backdropStyleSheet.replaceSync('');
+    }
   }
 
   private renderHeader() {
@@ -182,21 +207,7 @@ export class AtomicInsightRefineModal
   @bindingGuard()
   @errorGuard()
   render() {
-    const scopeStyles = this.interfaceDimensions
-      ? html`
-          <style>
-            atomic-modal::part(backdrop) {
-              top: ${this.interfaceDimensions.top}px;
-              left: ${this.interfaceDimensions.left}px;
-              width: ${this.interfaceDimensions.width}px;
-              height: ${this.interfaceDimensions.height}px;
-            }
-          </style>
-        `
-      : nothing;
-
     return html`
-      ${scopeStyles}
       ${renderRefineModal({
         props: {
           i18n: this.bindings.i18n,
