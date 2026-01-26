@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import type {AtomicIpxBody} from './atomic-ipx-body';
 import './atomic-ipx-body';
@@ -58,165 +58,172 @@ describe('atomic-ipx-body', () => {
     };
   };
 
-  describe('when rendering with default props', () => {
+  describe('when rendering', () => {
     it('should render successfully', async () => {
       const {element} = await renderIPXBody();
       await expect.element(element).toBeInTheDocument();
     });
 
-    it('should render the container part', async () => {
+    it('should display all structural parts', async () => {
       const {parts} = await renderIPXBody();
       expect(parts.container).toBeTruthy();
-    });
-
-    it('should render the header wrapper part', async () => {
-      const {parts} = await renderIPXBody();
       expect(parts.headerWrapper).toBeTruthy();
-    });
-
-    it('should render the header part', async () => {
-      const {parts} = await renderIPXBody();
       expect(parts.header).toBeTruthy();
-    });
-
-    it('should render the header ruler part', async () => {
-      const {parts} = await renderIPXBody();
       expect(parts.headerRuler).toBeTruthy();
-    });
-
-    it('should render the body wrapper part', async () => {
-      const {parts} = await renderIPXBody();
       expect(parts.bodyWrapper).toBeTruthy();
-    });
-
-    it('should render the body part', async () => {
-      const {parts} = await renderIPXBody();
       expect(parts.body).toBeTruthy();
-    });
-
-    it('should render the footer wrapper part by default', async () => {
-      const {parts} = await renderIPXBody();
       expect(parts.footerWrapper).toBeTruthy();
-    });
-
-    it('should render the footer part by default', async () => {
-      const {parts} = await renderIPXBody();
       expect(parts.footer).toBeTruthy();
-    });
-
-    it('should have displayFooterSlot true by default', async () => {
-      const {element} = await renderIPXBody();
-      expect(element.displayFooterSlot).toBe(true);
-    });
-
-    it('should remove displayFooterSlot attribute when false', async () => {
-      const {element} = await renderIPXBody({displayFooterSlot: false});
-      expect(element.hasAttribute('display-footer-slot')).toBe(false);
-    });
-
-    it('should generate a random ID when not provided', async () => {
-      const {element} = await renderIPXBody();
-      expect(element.id).toMatch(/^atomic-ipx-body-/);
     });
   });
 
-  describe('when isOpen is undefined (embedded mode)', () => {
-    it('should not apply visibility class to container', async () => {
-      const {parts} = await renderIPXBody();
+  it('should have displayFooterSlot true by default', async () => {
+    const {element} = await renderIPXBody();
+    expect(element.displayFooterSlot).toBe(true);
+  });
+
+  it('should not apply visibility class to container when isOpen is undefined (embedded mode)', async () => {
+    const {parts} = await renderIPXBody();
+    const container = parts.container as HTMLElement;
+    expect(container.className).not.toContain('visible');
+    expect(container.className).not.toContain('invisible');
+  });
+
+  it('should apply visible class to container when isOpen is true', async () => {
+    const {parts} = await renderIPXBody({isOpen: true});
+    const container = parts.container as HTMLElement;
+    expect(container.className).toContain('visible');
+  });
+
+  it('should apply invisible class to container when isOpen is false', async () => {
+    const {parts} = await renderIPXBody({isOpen: false});
+    const container = parts.container as HTMLElement;
+    expect(container.className).toContain('invisible');
+  });
+
+  it('should not render footer parts when displayFooterSlot is false', async () => {
+    const {parts} = await renderIPXBody({displayFooterSlot: false});
+    expect(parts.footerWrapper).toBeFalsy();
+    expect(parts.footer).toBeFalsy();
+  });
+
+  describe('when properties change', () => {
+    it('should update visibility class when isOpen changes from false to true', async () => {
+      const {element, parts} = await renderIPXBody({isOpen: false});
       const container = parts.container as HTMLElement;
+      expect(container.className).toBe('invisible');
+
+      element.isOpen = true;
+      await element.updateComplete;
+
+      expect(container.className).toBe('visible');
+    });
+
+    it('should update visibility class when isOpen changes from true to false', async () => {
+      const {element, parts} = await renderIPXBody({isOpen: true});
+      const container = parts.container as HTMLElement;
+      expect(container.className).toBe('visible');
+
+      element.isOpen = false;
+      await element.updateComplete;
+
+      expect(container.className).toBe('invisible');
+    });
+
+    it('should update visibility class when isOpen changes to undefined (embedded mode)', async () => {
+      const {element, parts} = await renderIPXBody({isOpen: true});
+      const container = parts.container as HTMLElement;
+      expect(container.className).toContain('visible');
+
+      element.isOpen = undefined;
+      await element.updateComplete;
+
       expect(container.className).not.toContain('visible');
       expect(container.className).not.toContain('invisible');
     });
-  });
 
-  describe('when isOpen is true', () => {
-    it('should apply visible class to container', async () => {
-      const {parts} = await renderIPXBody({isOpen: true});
-      const container = parts.container as HTMLElement;
-      expect(container.className).toContain('visible');
+    it('should hide footer when displayFooterSlot changes to false', async () => {
+      const {element, parts} = await renderIPXBody({displayFooterSlot: true});
+      expect(parts.footerWrapper).toBeTruthy();
+      expect(parts.footer).toBeTruthy();
+
+      element.displayFooterSlot = false;
+      await element.updateComplete;
+
+      // Re-query the parts after update
+      const updatedFooterWrapper = element.shadowRoot?.querySelector(
+        '[part="footer-wrapper"]'
+      );
+      const updatedFooter =
+        element.shadowRoot?.querySelector('[part="footer"]');
+      expect(updatedFooterWrapper).toBeFalsy();
+      expect(updatedFooter).toBeFalsy();
     });
-  });
 
-  describe('when isOpen is false', () => {
-    it('should apply invisible class to container', async () => {
-      const {parts} = await renderIPXBody({isOpen: false});
-      const container = parts.container as HTMLElement;
-      expect(container.className).toContain('invisible');
-    });
-  });
-
-  describe('when displayFooterSlot is false', () => {
-    it('should not render the footer wrapper', async () => {
-      const {parts} = await renderIPXBody({displayFooterSlot: false});
+    it('should show footer when displayFooterSlot changes to true', async () => {
+      const {element, parts} = await renderIPXBody({displayFooterSlot: false});
       expect(parts.footerWrapper).toBeFalsy();
-    });
 
-    it('should not render the footer', async () => {
-      const {parts} = await renderIPXBody({displayFooterSlot: false});
-      expect(parts.footer).toBeFalsy();
-    });
-  });
+      element.displayFooterSlot = true;
+      await element.updateComplete;
 
-  describe('slot content', () => {
-    it('should render slotted header content', async () => {
-      const headerText = 'Header Title';
-      const {element} = await renderIPXBody({headerContent: headerText});
-      const headerSlot = element.querySelector('[slot="header"]');
-      expect(headerSlot?.textContent).toBe(headerText);
-    });
-
-    it('should render slotted body content', async () => {
-      const bodyText = 'Body Content';
-      const {element} = await renderIPXBody({bodyContent: bodyText});
-      const bodySlot = element.querySelector('[slot="body"]');
-      expect(bodySlot?.textContent).toBe(bodyText);
-    });
-
-    it('should render slotted footer content', async () => {
-      const footerText = 'Footer Content';
-      const {element} = await renderIPXBody({footerContent: footerText});
-      const footerSlot = element.querySelector('[slot="footer"]');
-      expect(footerSlot?.textContent).toBe(footerText);
+      // Re-query the parts after update
+      const updatedFooterWrapper = element.shadowRoot?.querySelector(
+        '[part="footer-wrapper"]'
+      );
+      const updatedFooter =
+        element.shadowRoot?.querySelector('[part="footer"]');
+      expect(updatedFooterWrapper).toBeTruthy();
+      expect(updatedFooter).toBeTruthy();
     });
   });
 
-  describe('animationEnded event', () => {
-    let eventSpy: Mock<EventListener>;
+  it('should generate a random ID when not provided', async () => {
+    const {element} = await renderIPXBody();
+    expect(element.id).toMatch(/^atomic-ipx-body-/);
+  });
 
-    beforeEach(() => {
-      eventSpy = vi.fn();
-    });
+  it('should not overwrite user-provided ID', async () => {
+    const customId = 'my-custom-ipx-body';
+    const element = await fixture<AtomicIpxBody>(html`
+        <atomic-ipx-body id="${customId}"></atomic-ipx-body>
+      `);
+    expect(element.id).toBe(customId);
+  });
 
-    it('should emit animationEnded event when animation ends', async () => {
-      const {element} = await renderIPXBody();
-      element.addEventListener('animationEnded', eventSpy);
+  it('should render slotted header content', async () => {
+    const headerText = 'Header Title';
+    const {element} = await renderIPXBody({headerContent: headerText});
+    const headerSlot = element.querySelector('[slot="header"]');
+    expect(headerSlot?.textContent).toBe(headerText);
+  });
 
-      const container = element.shadowRoot?.querySelector('[part="container"]');
-      container?.dispatchEvent(new Event('animationend', {bubbles: true}));
+  it('should render slotted body content', async () => {
+    const bodyText = 'Body Content';
+    const {element} = await renderIPXBody({bodyContent: bodyText});
+    const bodySlot = element.querySelector('[slot="body"]');
+    expect(bodySlot?.textContent).toBe(bodyText);
+  });
 
-      expect(eventSpy).toHaveBeenCalledOnce();
-    });
+  it('should render slotted footer content', async () => {
+    const footerText = 'Footer Content';
+    const {element} = await renderIPXBody({footerContent: footerText});
+    const footerSlot = element.querySelector('[slot="footer"]');
+    expect(footerSlot?.textContent).toBe(footerText);
+  });
 
-    it('should emit an event that bubbles', async () => {
-      const {element} = await renderIPXBody();
-      element.addEventListener('animationEnded', eventSpy);
+  it('should emit an animationEnded custom event with bubbles and composed set to true when animationend is dispatched', async () => {
+    const eventSpy = vi.fn();
+    const {element} = await renderIPXBody();
+    element.addEventListener('animationEnded', eventSpy);
 
-      const container = element.shadowRoot?.querySelector('[part="container"]');
-      container?.dispatchEvent(new Event('animationend', {bubbles: true}));
+    const container = element.shadowRoot?.querySelector('[part="container"]');
+    container?.dispatchEvent(new Event('animationend', {bubbles: true}));
 
-      const emittedEvent = eventSpy.mock.calls[0][0];
-      expect(emittedEvent.bubbles).toBe(true);
-    });
+    expect(eventSpy).toHaveBeenCalledOnce();
 
-    it('should emit an event that is composed', async () => {
-      const {element} = await renderIPXBody();
-      element.addEventListener('animationEnded', eventSpy as EventListener);
-
-      const container = element.shadowRoot?.querySelector('[part="container"]');
-      container?.dispatchEvent(new Event('animationend', {bubbles: true}));
-
-      const emittedEvent = eventSpy.mock.calls[0][0];
-      expect(emittedEvent.composed).toBe(true);
-    });
+    const emittedEvent = eventSpy.mock.calls[0][0];
+    expect(emittedEvent.bubbles).toBe(true);
+    expect(emittedEvent.composed).toBe(true);
   });
 });
