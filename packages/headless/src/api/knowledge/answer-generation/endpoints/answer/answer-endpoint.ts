@@ -4,12 +4,13 @@ import type {
   PipelineRuleParameters,
 } from '../../../../search/search-api-params.js';
 import {answerGenerationApi} from '../../answer-generation-api.js';
-import type {
-  AnswerGenerationApiState,
-  GeneratedAnswerServerState,
+import {
+  type AnswerGenerationApiState,
+  type GeneratedAnswerServerState,
+  initialAnswerGenerationServerState,
 } from '../../answer-generation-api-state.js';
 import {streamAnswerWithStrategy} from '../../streaming/answer-streaming-runner.js';
-import type {StreamingStrategy} from '../../streaming/types.js';
+import {streamingStrategies} from '../../streaming/strategies/streaming-strategies.js';
 import {buildAnswerEndpointUrl} from './url-builders/endpoint-url-builder.js';
 
 /**
@@ -28,9 +29,8 @@ type AnswerParams = {
  * Arguments for the answer endpoint including streaming strategy and request parameters.
  */
 export type AnswerEndpointArgs = {
-  strategy: StreamingStrategy<AnswerGenerationApiState>;
-  params: AnswerParams;
-};
+  strategyKey: 'head-answer';
+} & AnswerParams;
 
 /**
  * RTK Query endpoint for streaming answer generation.
@@ -44,19 +44,11 @@ export const answerEndpoint = answerGenerationApi.injectEndpoints({
     >({
       queryFn: () => {
         return {
-          data: {
-            contentFormat: undefined,
-            answer: undefined,
-            citations: undefined,
-            error: undefined,
-            generated: false,
-            isStreaming: false,
-            isLoading: true,
-          },
+          data: initialAnswerGenerationServerState(),
         };
       },
       async onQueryStarted(args, {getState, updateCachedData, dispatch}) {
-        const {params, strategy} = args;
+        const {strategyKey, ...params} = args;
         const endpointUrl = buildAnswerEndpointUrl(
           getState() as AnswerGenerationApiState
         );
@@ -68,7 +60,7 @@ export const answerEndpoint = answerGenerationApi.injectEndpoints({
             updateCachedData,
             dispatch,
           },
-          strategy
+          streamingStrategies[strategyKey]
         );
       },
     }),
