@@ -14,9 +14,7 @@ Samples using `@coveo/atomic` or `@coveo/atomic-react` components for pre-built,
 |--------|-------------|-----------|----------|
 | [search-commerce-angular](./atomic/search-commerce-angular/) | Search and commerce interfaces with Atomic components in Angular | Angular | Search & Commerce |
 | [search-commerce-react](./atomic/search-commerce-react/) | Multiple search and commerce interface examples with Atomic React components | React + Vite | Search & Commerce |
-| [search-nextjs-app-router](./atomic/search-nextjs-app-router/) | Atomic React with Next.js App Router | Next.js (App Router) | Search |
-| [search-nextjs-pages-router](./atomic/search-nextjs-pages-router/) | Atomic components with Next.js Pages Router | Next.js (Pages Router) | Search |
-| [search-stencil](./atomic/search-stencil/) | Search interface built with Stencil and Atomic components | Stencil | Search |
+| [search-nextjs](./atomic/search-nextjs/) | Atomic React with Next.js App Router | Next.js (App Router) | Search |
 | [search-vuejs](./atomic/search-vuejs/) | Atomic components integrated with Vue.js | Vue.js + Vite | Search |
 
 ### [Headless Samples](./headless/)
@@ -38,7 +36,7 @@ Samples demonstrating server-side rendering (SSR) with Headless controllers for 
 | [commerce-nextjs](./headless-ssr/commerce-nextjs/) | Commerce SSR with Next.js App Router (current version) | Next.js (App Router) | Commerce |
 | [commerce-nextjs-v4](./headless-ssr/commerce-nextjs-v4/) | Commerce SSR with Next.js App Router (preview - Headless V4) | Next.js (App Router) | Commerce |
 | [commerce-react-router](./headless-ssr/commerce-react-router/) | Commerce SSR with React Router | React Router | Commerce |
-| [search-nextjs](./headless-ssr/search-nextjs/) | Search SSR examples with both App Router and Pages Router | Next.js (both routers) | Search |
+| [search-nextjs](./headless-ssr/search-nextjs/) | Search SSR example with Next.js App Router | Next.js (App Router) | Search |
 
 ## 🚀 Quick Start
 

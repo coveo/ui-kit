@@ -4,6 +4,7 @@ import {
   type ContextOptions,
   type ContextProps,
   type ContextState,
+  type CustomContext,
   type UserLocation,
   type View,
 } from '../../../../controllers/commerce/context/headless-context.js';
@@ -13,11 +14,12 @@ import {createControllerWithKind, Kind} from '../../types/kind.js';
 
 export type {
   Context,
+  ContextOptions,
   ContextProps,
   ContextState,
-  View,
+  CustomContext,
   UserLocation,
-  ContextOptions,
+  View,
 };
 
 export interface ContextDefinition
