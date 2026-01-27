@@ -25,6 +25,7 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {buildCustomEvent} from '@/src/utils/event-utils';
 import CloseIcon from '../../../images/close.svg';
 import type {HighlightKeywords} from './highlight-keywords';
 
@@ -282,7 +283,7 @@ export class AtomicQuickviewModal
             style: 'square-neutral',
             onClick: () => {
               this.dispatchEvent(
-                new CustomEvent('atomic/quickview/previous', {bubbles: true})
+                buildCustomEvent('atomic/quickview/previous')
               );
             },
             disabled: this.current === 1,
@@ -301,7 +302,7 @@ export class AtomicQuickviewModal
             style: 'square-neutral',
             onClick: () => {
               this.dispatchEvent(
-                new CustomEvent('atomic/quickview/next', {bubbles: true})
+                buildCustomEvent('atomic/quickview/next')
               );
             },
             disabled: this.current === this.total,
