@@ -93,7 +93,7 @@ export class AtomicQuickviewModal
   }
 
   a {
-    @apply link-style font-bold;
+    @apply link-style text-on-background;
   }
 } 
   `;
