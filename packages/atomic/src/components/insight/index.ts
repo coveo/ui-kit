@@ -1,5 +1,6 @@
 // Auto-generated file
 export {AtomicInsightEditToggle} from './atomic-insight-edit-toggle/atomic-insight-edit-toggle.js';
+export {AtomicInsightFacet} from './atomic-insight-facet/atomic-insight-facet.js';
 export {AtomicInsightFullSearchButton} from './atomic-insight-full-search-button/atomic-insight-full-search-button.js';
 export {AtomicInsightGenerateAnswerButton} from './atomic-insight-generate-answer-button/atomic-insight-generate-answer-button.js';
 export {AtomicInsightHistoryToggle} from './atomic-insight-history-toggle/atomic-insight-history-toggle.js';
@@ -11,6 +12,7 @@ export {AtomicInsightQueryError} from './atomic-insight-query-error/atomic-insig
 export {AtomicInsightQuerySummary} from './atomic-insight-query-summary/atomic-insight-query-summary.js';
 export {AtomicInsightRefineModal} from './atomic-insight-refine-modal/atomic-insight-refine-modal.js';
 export {AtomicInsightRefineToggle} from './atomic-insight-refine-toggle/atomic-insight-refine-toggle.js';
+export {AtomicInsightResult} from './atomic-insight-result/atomic-insight-result.js';
 export {AtomicInsightResultTemplate} from './atomic-insight-result-template/atomic-insight-result-template.js';
 export {AtomicInsightSearchBox} from './atomic-insight-search-box/atomic-insight-search-box.js';
 export {AtomicInsightSmartSnippetFeedbackModal} from './atomic-insight-smart-snippet-feedback-modal/atomic-insight-smart-snippet-feedback-modal.js';

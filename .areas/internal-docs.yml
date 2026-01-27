@@ -1,0 +1,6 @@
+description: Internal Documentation
+file_patterns:
+  - "internal-docs/**"
+reviewers:
+  dev-writers: ~
+  dxui: ~
