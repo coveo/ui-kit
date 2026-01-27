@@ -1,7 +1,6 @@
 import '@/src/components/common/atomic-modal/atomic-modal';
-import {html, LitElement, type PropertyValues} from 'lit';
+import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {when} from 'lit/directives/when.js';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '@/src/components/common/atomic-modal/export-parts';
 import {renderButton} from '@/src/components/common/button';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
@@ -9,8 +8,8 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {rectEquals} from '@/src/utils/dom-utils';
-import CloseIcon from '../../../../images/close.svg';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import CloseIcon from '../../../images/close.svg';
 
 /**
  * The `atomic-insight-user-actions-modal` is automatically created as a child of the `atomic-insight-interface` when the `atomic-insight-user-actions-toggle` is initialized.
@@ -21,18 +20,25 @@ import CloseIcon from '../../../../images/close.svg';
  */
 @customElement('atomic-insight-user-actions-modal')
 @bindings()
+@withTailwindStyles
 export class AtomicInsightUserActionsModal
   extends LitElement
   implements InitializableComponent<InsightBindings>
 {
+  static styles = css`
+    @reference '../../../utils/tailwind.global.tw.css';
+
+    atomic-modal::part(body-wrapper),
+    atomic-modal::part(footer-wrapper) {
+      padding: 2px;
+    }
+  `;
+
   @state()
   public bindings!: InsightBindings;
 
   @state()
   public error!: Error;
-
-  @state()
-  private interfaceDimensions?: DOMRect;
 
   /**
    * The element that triggers the modal.
@@ -64,8 +70,6 @@ export class AtomicInsightUserActionsModal
   @property({type: Array, attribute: 'excluded-custom-actions'})
   public excludedCustomActions: string[] = [];
 
-  private animationFrameId?: number;
-
   public initialize() {
     // No controller needed for this component
   }
@@ -73,47 +77,6 @@ export class AtomicInsightUserActionsModal
   connectedCallback() {
     super.connectedCallback();
     this.style.display = '';
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    if (this.animationFrameId !== undefined) {
-      window.cancelAnimationFrame(this.animationFrameId);
-    }
-  }
-
-  updated(changedProperties: PropertyValues) {
-    if (changedProperties.has('isOpen') && this.isOpen) {
-      this.onAnimationFrame();
-    }
-  }
-
-  private onAnimationFrame() {
-    if (!this.isOpen) {
-      return;
-    }
-    if (this.dimensionChanged()) {
-      this.updateDimensions();
-    }
-    this.animationFrameId = window.requestAnimationFrame(() =>
-      this.onAnimationFrame()
-    );
-  }
-
-  private dimensionChanged() {
-    if (!this.interfaceDimensions) {
-      return true;
-    }
-
-    return !rectEquals(
-      this.interfaceDimensions,
-      this.bindings.interfaceElement.getBoundingClientRect()
-    );
-  }
-
-  private updateDimensions() {
-    this.interfaceDimensions =
-      this.bindings.interfaceElement.getBoundingClientRect();
   }
 
   private renderHeader() {
@@ -165,38 +128,19 @@ export class AtomicInsightUserActionsModal
   @bindingGuard()
   render() {
     return html`
-      <style>
-        atomic-modal::part(body-wrapper),
-        atomic-modal::part(footer-wrapper) {
-          padding: 2px;
-        }
-        ${when(
-          this.interfaceDimensions,
-          () => `
-            atomic-modal::part(backdrop) {
-              top: ${this.interfaceDimensions!.top}px;
-              left: ${this.interfaceDimensions!.left}px;
-              width: ${this.interfaceDimensions!.width}px;
-              height: ${this.interfaceDimensions!.height}px;
-            }
-          `
-        )}
-      </style>
-      <div class="absolute">
-        <atomic-modal
-          fullscreen
-          .isOpen=${this.isOpen}
-          .source=${this.openButton}
-          .container=${this as HTMLElement}
-          .close=${() => {
-            this.isOpen = false;
-          }}
-          exportparts=${ATOMIC_MODAL_EXPORT_PARTS}
-          .scope=${this.bindings.interfaceElement}
-        >
-          ${this.renderHeader()} ${this.renderBody()}
-        </atomic-modal>
-      </div>
+      <atomic-modal
+        .fullscreen=${true}
+        .isOpen=${this.isOpen}
+        .source=${this.openButton}
+        .container=${this as HTMLElement}
+        .close=${() => {
+          this.isOpen = false;
+        }}
+        exportparts=${ATOMIC_MODAL_EXPORT_PARTS}
+        .scope=${this.bindings.interfaceElement}
+      >
+        ${this.renderHeader()} ${this.renderBody()}
+      </atomic-modal>
     `;
   }
 }

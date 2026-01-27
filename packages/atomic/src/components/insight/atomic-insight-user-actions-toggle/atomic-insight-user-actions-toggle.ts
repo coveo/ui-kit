@@ -1,4 +1,4 @@
-import '@/src/components/insight/user-actions/atomic-insight-user-actions-modal/atomic-insight-user-actions-modal';
+import '@/src/components/insight/atomic-insight-user-actions-modal/atomic-insight-user-actions-modal';
 import {Schema, StringValue} from '@coveo/bueno';
 import {
   buildUserActions as buildInsightUserActions,
@@ -10,6 +10,7 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {renderIconButton} from '@/src/components/common/icon-button';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
+import type {AtomicInsightUserActionsModal} from '@/src/components/insight/atomic-insight-user-actions-modal/atomic-insight-user-actions-modal';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -60,7 +61,7 @@ export class AtomicInsightUserActionsToggle
   public excludedCustomActions: string[] = [];
 
   private buttonRef?: HTMLButtonElement;
-  private modalRef?: HTMLAtomicInsightUserActionsModalElement;
+  private modalRef?: AtomicInsightUserActionsModal;
 
   constructor() {
     super();
