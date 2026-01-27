@@ -54,6 +54,10 @@ describe('commerce api client', () => {
       },
       capture: true,
       source: [`@coveo/headless@${VERSION}`],
+      custom: {
+        stringKey: 'value',
+        numberKey: 123,
+      },
     },
   });
 
@@ -77,6 +81,10 @@ describe('commerce api client', () => {
         },
         capture: true,
         source: [`@coveo/headless@${VERSION}`],
+        custom: {
+          stringKey: 'value',
+          numberKey: 123,
+        },
       },
     };
   };

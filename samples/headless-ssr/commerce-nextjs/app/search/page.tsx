@@ -43,6 +43,7 @@ export default async function Search({
         view: {
           url: 'https://sports.barca.group/search',
         },
+        custom: defaultContext.custom,
       },
       parameterManager: {initialState: {parameters}},
     },

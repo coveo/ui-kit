@@ -1,5 +1,6 @@
 import {
   setContext,
+  setCustom,
   setLocation,
   setView,
 } from '../../../features/commerce/context/context-actions.js';
@@ -90,5 +91,17 @@ describe('headless commerce context', () => {
       longitude: 109.3497,
     });
     expect(setLocation).toHaveBeenCalled();
+  });
+
+  it('setCustom dispatches #setCustom', () => {
+    const customContext = {
+      userId: 'user-123',
+      sessionId: 12345,
+      isLoggedIn: true,
+      metadata: {tier: 'premium'},
+      items: ['item1', 'item2'],
+    };
+    context.setCustom(customContext);
+    expect(setCustom).toHaveBeenCalledWith(customContext);
   });
 });

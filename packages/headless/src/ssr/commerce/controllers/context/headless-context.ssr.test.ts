@@ -20,6 +20,14 @@ describe('define commerce context', () => {
     view: {
       url: 'https://example.org',
     },
+    custom: {
+      key1: 'value',
+      key2: 42,
+      key3: {
+        nestedKey: true,
+      },
+      key4: [1, 2, 3],
+    },
   };
   let contextDefinition: ContextDefinition;
 
