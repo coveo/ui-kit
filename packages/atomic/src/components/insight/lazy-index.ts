@@ -2,6 +2,8 @@
 export default {
   'atomic-insight-edit-toggle': async () =>
     await import('./atomic-insight-edit-toggle/atomic-insight-edit-toggle.js'),
+  'atomic-insight-facet': async () =>
+    await import('./atomic-insight-facet/atomic-insight-facet.js'),
   'atomic-insight-full-search-button': async () =>
     await import(
       './atomic-insight-full-search-button/atomic-insight-full-search-button.js'
@@ -20,6 +22,10 @@ export default {
     await import('./atomic-insight-layout/atomic-insight-layout.js'),
   'atomic-insight-no-results': async () =>
     await import('./atomic-insight-no-results/atomic-insight-no-results.js'),
+  'atomic-insight-numeric-facet': async () =>
+    await import(
+      './atomic-insight-numeric-facet/atomic-insight-numeric-facet.js'
+    ),
   'atomic-insight-pager': async () =>
     await import('./atomic-insight-pager/atomic-insight-pager.js'),
   'atomic-insight-query-error': async () =>
