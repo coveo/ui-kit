@@ -10,6 +10,10 @@ import {once, randomID} from '@/src/utils/utils.js';
 /**
  * The `atomic-ipx-embedded` component is used for IPX embedded interfaces.
  *
+ * @slot header - Content to display in the header section.
+ * @slot body - Content to display in the body section.
+ * @slot footer - Content to display in the footer section.
+ *
  * @part backdrop - The backdrop container element.
  */
 @customElement('atomic-ipx-embedded')

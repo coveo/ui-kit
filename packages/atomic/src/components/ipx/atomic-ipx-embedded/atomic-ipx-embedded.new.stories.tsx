@@ -1,6 +1,5 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {html} from 'lit';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
@@ -20,17 +19,7 @@ const meta: Meta = {
   title: 'IPX/Embedded',
   id: 'atomic-ipx-embedded',
 
-  render: (args) =>
-    html`${template(args)}
-      <div slot="header">
-        <h2>Header Content</h2>
-      </div>
-      <div slot="body">
-        <p>This is the body content of the embedded IPX interface.</p>
-      </div>
-      <div slot="footer">
-        <button>Action Button</button>
-      </div>`,
+  render: (args) => template(args),
   decorators: [decorator],
   parameters: {
     ...parameters,
@@ -39,8 +28,13 @@ const meta: Meta = {
     },
     msw: {handlers: [...mockSearchApi.handlers]},
   },
-  args,
   argTypes,
+  args: {
+    ...args,
+    'header-slot': `<h2>Header Content</h2>`,
+    'body-slot': `<p>This is the body content of the embedded IPX interface.</p>`,
+    'footer-slot': `<button>Action Button</button>`,
+  },
   beforeEach: async () => {
     mockSearchApi.searchEndpoint.clear();
   },
