@@ -404,22 +404,6 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
-    interface AtomicInsightUserActionsModal {
-        /**
-          * The names of custom events to exclude.
-         */
-        "excludedCustomActions": string[];
-        "isOpen": boolean;
-        "openButton"?: HTMLElement;
-        /**
-          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
-         */
-        "ticketCreationDateTime": string;
-        /**
-          * The ID of the user whose actions are being displayed.
-         */
-        "userId": string;
-    }
     /**
      * @category Insight Panel
      * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
@@ -820,12 +804,6 @@ declare global {
         prototype: HTMLAtomicInsightTimeframeFacetElement;
         new (): HTMLAtomicInsightTimeframeFacetElement;
     };
-    interface HTMLAtomicInsightUserActionsModalElement extends Components.AtomicInsightUserActionsModal, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightUserActionsModalElement: {
-        prototype: HTMLAtomicInsightUserActionsModalElement;
-        new (): HTMLAtomicInsightUserActionsModalElement;
-    };
     /**
      * @category Insight Panel
      * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
@@ -1014,7 +992,6 @@ declare global {
         "atomic-insight-smart-snippet": HTMLAtomicInsightSmartSnippetElement;
         "atomic-insight-smart-snippet-suggestions": HTMLAtomicInsightSmartSnippetSuggestionsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
-        "atomic-insight-user-actions-modal": HTMLAtomicInsightUserActionsModalElement;
         "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
         "atomic-insight-user-actions-timeline": HTMLAtomicInsightUserActionsTimelineElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
@@ -1398,22 +1375,6 @@ declare namespace LocalJSX {
          */
         "withDatePicker"?: boolean;
     }
-    interface AtomicInsightUserActionsModal {
-        /**
-          * The names of custom events to exclude.
-         */
-        "excludedCustomActions"?: string[];
-        "isOpen"?: boolean;
-        "openButton"?: HTMLElement;
-        /**
-          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
-         */
-        "ticketCreationDateTime": string;
-        /**
-          * The ID of the user whose actions are being displayed.
-         */
-        "userId": string;
-    }
     /**
      * @category Insight Panel
      * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
@@ -1633,7 +1594,6 @@ declare namespace LocalJSX {
         "atomic-insight-smart-snippet": AtomicInsightSmartSnippet;
         "atomic-insight-smart-snippet-suggestions": AtomicInsightSmartSnippetSuggestions;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
-        "atomic-insight-user-actions-modal": AtomicInsightUserActionsModal;
         "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
         "atomic-insight-user-actions-timeline": AtomicInsightUserActionsTimeline;
         "atomic-ipx-body": AtomicIpxBody;
@@ -1674,7 +1634,6 @@ declare module "@stencil/core" {
             "atomic-insight-smart-snippet": LocalJSX.AtomicInsightSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetElement>;
             "atomic-insight-smart-snippet-suggestions": LocalJSX.AtomicInsightSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetSuggestionsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
-            "atomic-insight-user-actions-modal": LocalJSX.AtomicInsightUserActionsModal & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsModalElement>;
             /**
              * @category Insight Panel
              * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
