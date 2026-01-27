@@ -1,0 +1,33 @@
+description: Root configuration files and CI/CD infrastructure
+file_patterns:
+  # Root configuration files
+  - biome.jsonc
+  - CODEOWNERS
+  - knip.jsonc
+  - lint-staged.config.js
+  - package.json
+  - renovate.json5
+  - tsconfig.json
+  - turbo.json
+  - vitest.config.js
+
+  - .editorconfig
+  - .vscode/**
+
+  # CI/CD infrastructure
+  - patches/**
+  - scripts/**
+  - utils/**
+
+  # New packages
+  - .areas/*
+  - packages/*
+
+  - .husky/**
+
+  - .dockerignore
+  - .devcontainer/**
+
+reviewers:
+  dxui:
+    minimum_approvals: 1
