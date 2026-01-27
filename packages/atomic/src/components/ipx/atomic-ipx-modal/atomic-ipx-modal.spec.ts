@@ -155,8 +155,6 @@ describe('atomic-ipx-modal', () => {
     });
   });
 
-
-
   describe('when initializing', () => {
     it('should generate an ID when not provided', async () => {
       const {element} = await renderIPXModal();
