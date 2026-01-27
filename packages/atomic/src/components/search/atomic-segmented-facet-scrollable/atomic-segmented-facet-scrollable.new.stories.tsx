@@ -9,7 +9,7 @@ import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 
-const {events, args, argTypes} = getStorybookHelpers(
+const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-segmented-facet-scrollable',
   {excludeCategories: ['methods']}
 );
@@ -26,14 +26,7 @@ const meta: Meta = {
   component: 'atomic-segmented-facet-scrollable',
   title: 'Search/Segmented Facet Scrollable',
   id: 'atomic-segmented-facet-scrollable',
-  render: () => html`
-    <atomic-segmented-facet-scrollable>
-      <atomic-segmented-facet
-        field="objecttype"
-        label="Object Type"
-      ></atomic-segmented-facet>
-    </atomic-segmented-facet-scrollable>
-  `,
+  render: (args) => template(args),
   decorators: [decorator, withNarrowContainer],
   parameters: {
     ...parameters,
@@ -44,7 +37,14 @@ const meta: Meta = {
       handlers: [...searchApiHarness.handlers],
     },
   },
-  args,
+  args: {
+    ...args,
+    'default-slot': `
+      <atomic-segmented-facet
+        field="objecttype"
+        label="Object Type"
+      ></atomic-segmented-facet>`,
+  },
   argTypes,
   play,
 };
