@@ -1,0 +1,11 @@
+description: GitHub configuration and CI/CD infrastructure
+file_patterns:
+  - .github/*
+  - .github/actions/**
+  - .github/workflows/**
+  - .github/ISSUE_TEMPLATE/**
+  - .github/PULL_REQUEST_TEMPLATE/**
+
+reviewers:
+  dxui:
+    minimum_approvals: 1
