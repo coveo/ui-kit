@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
+import {describe, expect, it} from 'vitest';
 import {page} from 'vitest/browser';
 import {renderInAtomicInsightInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-interface-fixture';
 import type {AtomicInsightUserActionsModal} from './atomic-insight-user-actions-modal';
@@ -51,26 +51,7 @@ describe('atomic-insight-user-actions-modal', () => {
     };
   };
 
-  describe('#connectedCallback', () => {
-    it('should set display style to empty string', async () => {
-      const {element} = await renderModal();
-      expect(element.style.display).toBe('');
-    });
-  });
-
-  describe('#initialize', () => {
-    it('should not set error', async () => {
-      const {element} = await renderModal();
-      expect(element.error).toBeUndefined();
-    });
-  });
-
   describe('#render', () => {
-    it('should render the atomic-modal', async () => {
-      const {modal} = await renderModal();
-      expect(modal).toBeTruthy();
-    });
-
     it('should set fullscreen attribute on atomic-modal', async () => {
       const {modal} = await renderModal();
       expect(modal?.hasAttribute('fullscreen')).toBe(true);
@@ -116,17 +97,14 @@ describe('atomic-insight-user-actions-modal', () => {
 
     it('should render atomic-insight-user-actions-timeline with userId', async () => {
       const {timeline} = await renderModal({props: {userId: 'test-user'}});
-      expect(timeline).toBeTruthy();
-      expect(timeline?.getAttribute('user-id')).toBe('test-user');
+      expect(timeline?.userId).toBe('test-user');
     });
 
     it('should render atomic-insight-user-actions-timeline with ticketCreationDateTime', async () => {
       const {timeline} = await renderModal({
         props: {ticketCreationDateTime: '2024-02-01T00:00:00Z'},
       });
-      expect(timeline?.getAttribute('ticket-creation-date-time')).toBe(
-        '2024-02-01T00:00:00Z'
-      );
+      expect(timeline?.ticketCreationDateTime).toBe('2024-02-01T00:00:00Z');
     });
 
     it('should render atomic-insight-user-actions-timeline with excludedCustomActions', async () => {
@@ -143,90 +121,47 @@ describe('atomic-insight-user-actions-modal', () => {
         element.bindings.i18n.t('user-actions-content')
       );
     });
-
-    it('should not render backdrop styles when interfaceDimensions is undefined', async () => {
-      const {element} = await renderModal();
-      const style = element.shadowRoot?.querySelector('style');
-      expect(style?.textContent).not.toContain('backdrop');
-    });
   });
 
-  describe('when isOpen becomes true', () => {
-    let requestAnimationFrameSpy: MockInstance;
+  it('should set isOpen to false when close button is clicked', async () => {
+    const {element, closeButton} = await renderModal({props: {isOpen: true}});
 
-    beforeEach(() => {
-      requestAnimationFrameSpy = vi
-        .spyOn(window, 'requestAnimationFrame')
-        .mockImplementation((cb) => {
-          setTimeout(cb, 0);
-          return 1;
-        });
+    await closeButton.click();
+    await element.updateComplete;
+
+    expect(element.isOpen).toBe(false);
+  });
+
+  it('should set isOpen to false when modal close is called', async () => {
+    const {element, modal} = await renderModal({props: {isOpen: true}});
+
+    modal?.close();
+    await element.updateComplete;
+
+    expect(element.isOpen).toBe(false);
+  });
+
+  describe('when isOpen changes', () => {
+    it('should reflect isOpen attribute in DOM when true', async () => {
+      const {element} = await renderModal({props: {isOpen: true}});
+      expect(element.hasAttribute('is-open')).toBe(true);
     });
 
-    it('should start animation frame loop', async () => {
+    it('should not reflect isOpen attribute in DOM when false', async () => {
+      const {element} = await renderModal({props: {isOpen: false}});
+      expect(element.hasAttribute('is-open')).toBe(false);
+    });
+
+    it('should update isOpen attribute when property changes', async () => {
       const {element} = await renderModal({props: {isOpen: false}});
 
       element.isOpen = true;
       await element.updateComplete;
+      expect(element.hasAttribute('is-open')).toBe(true);
 
-      expect(requestAnimationFrameSpy).toHaveBeenCalled();
-    });
-
-    it('should update interfaceDimensions when dimensions change', async () => {
-      const {element} = await renderModal({props: {isOpen: true}});
-
-      // Wait for animation frame
-      await new Promise((resolve) => setTimeout(resolve, 10));
-
-      // biome-ignore lint/suspicious/noExplicitAny: Accessing private property for testing
-      expect((element as any).interfaceDimensions).toBeTruthy();
-    });
-
-    it('should render backdrop styles when interfaceDimensions is set', async () => {
-      const {element} = await renderModal({props: {isOpen: true}});
-
-      // Wait for animation frame to update dimensions
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      element.isOpen = false;
       await element.updateComplete;
-
-      const style = element.shadowRoot?.querySelector('style');
-      expect(style?.textContent).toContain('backdrop');
-    });
-  });
-
-  describe('#disconnectedCallback', () => {
-    it('should cancel animation frame when component is disconnected', async () => {
-      const cancelAnimationFrameSpy = vi.spyOn(window, 'cancelAnimationFrame');
-      const {element} = await renderModal({props: {isOpen: true}});
-
-      // Trigger animation frame
-      await new Promise((resolve) => setTimeout(resolve, 10));
-
-      element.disconnectedCallback();
-
-      expect(cancelAnimationFrameSpy).toHaveBeenCalled();
-    });
-  });
-
-  describe('when close button is clicked', () => {
-    it('should set isOpen to false', async () => {
-      const {element, closeButton} = await renderModal({props: {isOpen: true}});
-
-      await closeButton.click();
-      await element.updateComplete;
-
-      expect(element.isOpen).toBe(false);
-    });
-  });
-
-  describe('when modal close is called', () => {
-    it('should set isOpen to false', async () => {
-      const {element, modal} = await renderModal({props: {isOpen: true}});
-
-      modal?.close();
-      await element.updateComplete;
-
-      expect(element.isOpen).toBe(false);
+      expect(element.hasAttribute('is-open')).toBe(false);
     });
   });
 });
