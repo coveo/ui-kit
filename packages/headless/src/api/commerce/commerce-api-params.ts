@@ -41,6 +41,7 @@ type ContextParams = {
   purchased?: CartItemParam[];
   capture: boolean;
   source: string[];
+  custom?: Record<string, unknown>;
 };
 
 export interface ViewParams {
