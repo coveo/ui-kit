@@ -5,21 +5,21 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
-import { FacetSortCriterion as InsightFacetSortCriterion, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion } from "@coveo/headless/insight";
+import { DateFilterRange, DateRangeRequest, GeneratedAnswer, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
+import { RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, UserAction as IUserAction } from "@coveo/headless/insight";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
-export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
-export { FacetSortCriterion as InsightFacetSortCriterion, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion } from "@coveo/headless/insight";
+export { DateFilterRange, DateRangeRequest, GeneratedAnswer, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
+export { RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, UserAction as IUserAction } from "@coveo/headless/insight";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { AnyBindings } from "./components/common/interface/bindings";
@@ -42,56 +42,6 @@ export namespace Components {
           * Indicates whether the modal is open.
          */
         "isOpen": boolean;
-    }
-    interface AtomicInsightFacet {
-        /**
-          * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
-         */
-        "displayValuesAs": 'checkbox' | 'link' | 'box';
-        /**
-          * Whether to allow excluding values from the facet.
-         */
-        "enableExclusion": boolean;
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount": boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel": number;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth": number;
-        /**
-          * Specifies if the facet is collapsed.
-         */
-        "isCollapsed": boolean;
-        /**
-          * The non-localized label for the facet.
-         */
-        "label": string;
-        /**
-          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
-         */
-        "numberOfValues": number;
-        /**
-          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
-         */
-        "resultsMustMatch": FacetResultsMustMatch;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
-         */
-        "sortCriteria": InsightFacetSortCriterion;
     }
     interface AtomicInsightFoldedResultList {
         /**
@@ -627,12 +577,6 @@ declare global {
         prototype: HTMLAtomicGeneratedAnswerFeedbackModalElement;
         new (): HTMLAtomicGeneratedAnswerFeedbackModalElement;
     };
-    interface HTMLAtomicInsightFacetElement extends Components.AtomicInsightFacet, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightFacetElement: {
-        prototype: HTMLAtomicInsightFacetElement;
-        new (): HTMLAtomicInsightFacetElement;
-    };
     interface HTMLAtomicInsightFoldedResultListElement extends Components.AtomicInsightFoldedResultList, HTMLStencilElement {
     }
     var HTMLAtomicInsightFoldedResultListElement: {
@@ -891,7 +835,6 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
-        "atomic-insight-facet": HTMLAtomicInsightFacetElement;
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
         "atomic-insight-numeric-facet": HTMLAtomicInsightNumericFacetElement;
@@ -939,56 +882,6 @@ declare namespace LocalJSX {
          */
         "isOpen"?: boolean;
         "onFeedbackSent"?: (event: AtomicGeneratedAnswerFeedbackModalCustomEvent<any>) => void;
-    }
-    interface AtomicInsightFacet {
-        /**
-          * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
-         */
-        "displayValuesAs"?: 'checkbox' | 'link' | 'box';
-        /**
-          * Whether to allow excluding values from the facet.
-         */
-        "enableExclusion"?: boolean;
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount"?: boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel"?: number;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth"?: number;
-        /**
-          * Specifies if the facet is collapsed.
-         */
-        "isCollapsed"?: boolean;
-        /**
-          * The non-localized label for the facet.
-         */
-        "label"?: string;
-        /**
-          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
-         */
-        "numberOfValues"?: number;
-        /**
-          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
-         */
-        "resultsMustMatch"?: FacetResultsMustMatch;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
-         */
-        "sortCriteria"?: InsightFacetSortCriterion;
     }
     interface AtomicInsightFoldedResultList {
         /**
@@ -1444,7 +1337,6 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
-        "atomic-insight-facet": AtomicInsightFacet;
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
         "atomic-insight-numeric-facet": AtomicInsightNumericFacet;
@@ -1482,7 +1374,6 @@ declare module "@stencil/core" {
              * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
              */
             "atomic-generated-answer-feedback-modal": LocalJSX.AtomicGeneratedAnswerFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerFeedbackModalElement>;
-            "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
             "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
             "atomic-insight-numeric-facet": LocalJSX.AtomicInsightNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightNumericFacetElement>;
