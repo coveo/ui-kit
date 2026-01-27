@@ -25,10 +25,6 @@ export interface FollowUpAnswersState {
    * The follow-up answers.
    */
   followUpAnswers: FollowUpAnswer[];
-  /**
-   * Determines if more follow-up answers can be asked.
-   */
-  canAskMoreFollowUps: boolean;
 }
 
 export function getFollowUpAnswersInitialState(): FollowUpAnswersState {
@@ -36,6 +32,5 @@ export function getFollowUpAnswersInitialState(): FollowUpAnswersState {
     id: '',
     isEnabled: false,
     followUpAnswers: [],
-    canAskMoreFollowUps: false,
   };
 }
