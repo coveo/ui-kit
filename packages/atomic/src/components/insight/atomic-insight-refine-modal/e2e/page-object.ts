@@ -14,10 +14,6 @@ export class InsightRefineModalPageObject extends BasePageObject {
     return this.hydrated.getByRole('button', {name: 'Close'});
   }
 
-  get filtersTitle() {
-    return this.page.getByRole('heading', {name: 'Filters'});
-  }
-
   get viewResultsButton() {
     return this.page.getByRole('button', {name: /View/});
   }

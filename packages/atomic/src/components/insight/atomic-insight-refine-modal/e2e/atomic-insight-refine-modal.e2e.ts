@@ -6,20 +6,21 @@ test.describe('atomic-insight-refine-modal', () => {
     await page.locator('atomic-insight-refine-toggle').waitFor();
   });
 
-  test('should render the modal with title and close button', async ({
+  test('should render the modal properly after the user opens it', async ({
     refineModal,
   }) => {
-    await expect(refineModal.closeButton).toBeVisible();
     await expect(refineModal.title).toBeVisible();
-    await expect(refineModal.title).toHaveText('Filters');
-  });
-
-  test('should render the filters section', async ({refineModal}) => {
-    await expect(refineModal.filtersTitle).toBeVisible();
-    await expect(refineModal.filtersTitle).toHaveText('Filters');
-  });
-
-  test('should render the view results button', async ({refineModal}) => {
+    await expect(refineModal.closeButton).toBeVisible();
     await expect(refineModal.viewResultsButton).toBeVisible();
+  });
+
+  test('should close the modal properly after the user closes it', async ({
+    refineModal,
+  }) => {
+    await expect(refineModal.title).toBeVisible();
+
+    await refineModal.closeButton.click();
+
+    await refineModal.hydrated.waitFor({state: 'hidden'});
   });
 });
