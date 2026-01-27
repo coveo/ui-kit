@@ -16,7 +16,7 @@ import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interfac
 
 const insightApiHarness = new MockInsightApi();
 const {decorator, play} = wrapInInsightInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
+const {events, args, argTypes, styleTemplate} = getStorybookHelpers(
   'atomic-insight-refine-modal',
   {excludeCategories: ['methods']}
 );
@@ -27,7 +27,7 @@ const meta: Meta = {
   component: 'atomic-insight-refine-modal',
   title: 'Insight/Refine Modal',
   id: 'atomic-insight-refine-modal',
-  render: (args) => template(args),
+  render: (args) => html`${styleTemplate(args)}`,
   parameters: {
     ...commonParameters,
     actions: {
