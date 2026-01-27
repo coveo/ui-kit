@@ -155,84 +155,9 @@ describe('atomic-ipx-modal', () => {
     });
   });
 
-  describe('when the isOpen property is set', () => {
-    it('should have isOpen=false by default', async () => {
-      const {element} = await renderIPXModal();
 
-      expect(element.isOpen).toBe(false);
-    });
 
-    it('should set isOpen=true when provided', async () => {
-      const {element} = await renderIPXModal({
-        props: {isOpen: true},
-      });
-
-      expect(element.isOpen).toBe(true);
-    });
-
-    it('should add "open" class to host when isOpen=true', async () => {
-      const {element} = await renderIPXModal({
-        props: {isOpen: true},
-      });
-
-      await element.updateComplete;
-
-      expect(element).toHaveClass('open');
-    });
-
-    it('should not have "open" class on host when isOpen=false', async () => {
-      const {element} = await renderIPXModal({
-        props: {isOpen: false},
-      });
-
-      expect(element).not.toHaveClass('open');
-    });
-
-    it('should toggle "open" class when isOpen changes', async () => {
-      const {element} = await renderIPXModal({
-        props: {isOpen: false},
-      });
-
-      expect(element).not.toHaveClass('open');
-
-      element.isOpen = true;
-      await element.updateComplete;
-
-      expect(element).toHaveClass('open');
-
-      element.isOpen = false;
-      await element.updateComplete;
-
-      expect(element).not.toHaveClass('open');
-    });
-  });
-
-  describe('when managing modal opened classes', () => {
-    it('should add atomic-ipx-modal-opened class to document.body when isOpen=true', async () => {
-      await renderIPXModal({props: {isOpen: true}});
-
-      expect(document.body.classList.contains('atomic-ipx-modal-opened')).toBe(
-        true
-      );
-    });
-
-    it('should remove atomic-ipx-modal-opened class from document.body when isOpen=false', async () => {
-      const {element} = await renderIPXModal({props: {isOpen: true}});
-
-      expect(document.body.classList.contains('atomic-ipx-modal-opened')).toBe(
-        true
-      );
-
-      element.isOpen = false;
-      await element.updateComplete;
-
-      expect(document.body.classList.contains('atomic-ipx-modal-opened')).toBe(
-        false
-      );
-    });
-  });
-
-  describe('when going through the lifecycle', () => {
+  describe('when initializing', () => {
     it('should generate an ID when not provided', async () => {
       const {element} = await renderIPXModal();
 
@@ -305,7 +230,48 @@ describe('atomic-ipx-modal', () => {
   });
 
   describe('when setting properties', () => {
-    it('should accept source property', async () => {
+    it('should have isOpen=false by default', async () => {
+      const {element} = await renderIPXModal();
+
+      expect(element.isOpen).toBe(false);
+    });
+
+    it('should set isOpen=true when provided', async () => {
+      const {element} = await renderIPXModal({
+        props: {isOpen: true},
+      });
+
+      expect(element.isOpen).toBe(true);
+    });
+
+    it('should toggle open class and document.body class when isOpen changes', async () => {
+      const {element} = await renderIPXModal({
+        props: {isOpen: false},
+      });
+
+      expect(element).not.toHaveClass('open');
+      expect(document.body.classList.contains('atomic-ipx-modal-opened')).toBe(
+        false
+      );
+
+      element.isOpen = true;
+      await element.updateComplete;
+
+      expect(element).toHaveClass('open');
+      expect(document.body.classList.contains('atomic-ipx-modal-opened')).toBe(
+        true
+      );
+
+      element.isOpen = false;
+      await element.updateComplete;
+
+      expect(element).not.toHaveClass('open');
+      expect(document.body.classList.contains('atomic-ipx-modal-opened')).toBe(
+        false
+      );
+    });
+
+    it('should accept the #source property', async () => {
       const sourceElement = document.createElement('button');
       const {element} = await renderIPXModal({
         props: {source: sourceElement},
@@ -314,7 +280,7 @@ describe('atomic-ipx-modal', () => {
       expect(element.source).toBe(sourceElement);
     });
 
-    it('should accept container property', async () => {
+    it('should accept the #container property', async () => {
       const containerElement = document.createElement('div');
       const {element} = await renderIPXModal({
         props: {container: containerElement},
