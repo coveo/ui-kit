@@ -5,7 +5,7 @@ import type {GeneratedAnswerBase} from '../generated-answer/generated-answer-sta
  * Represents a follow-up answer generated in response to a user's question.
  * Extends the base generated answer structure with the originating question.
  */
-interface FollowUpAnswer extends GeneratedAnswerBase {
+export interface FollowUpAnswer extends GeneratedAnswerBase {
   /** The question prompted to generate this follow-up answer. */
   question: string;
 }
@@ -34,3 +34,16 @@ export function getFollowUpAnswersInitialState(): FollowUpAnswersState {
     followUpAnswers: [],
   };
 }
+
+export const createInitialFollowUpAnswer = (
+  question: string
+): FollowUpAnswer => ({
+  question: question,
+  isLoading: false,
+  isStreaming: false,
+  citations: [],
+  liked: false,
+  disliked: false,
+  feedbackSubmitted: false,
+  cannotAnswer: false,
+});
