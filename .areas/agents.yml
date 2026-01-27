@@ -1,0 +1,11 @@
+description: Agents configuration
+file_patterns:
+  - .github/agents/**
+  - .github/instructions/**
+  - .github/prompts/**
+  - .claude/**
+  - AGENTS.md
+  - opencode.json
+
+reviewers:
+  dxui: ~
