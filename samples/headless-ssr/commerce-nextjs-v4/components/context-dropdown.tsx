@@ -37,6 +37,7 @@ export default function ContextDropdown({
           methods?.setLanguage(language);
           methods?.setCountry(country);
           methods?.setCurrency(currency as ContextOptions['currency']);
+          methods?.setCustom({storefrontAssociation: e.target.value});
 
           useCase === 'search'
             ? engine?.dispatch(
