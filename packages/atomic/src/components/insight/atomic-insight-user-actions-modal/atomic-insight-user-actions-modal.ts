@@ -71,7 +71,7 @@ export class AtomicInsightUserActionsModal
   public excludedCustomActions: string[] = [];
 
   public initialize() {
-    // No controller needed for this component
+    // Noop
   }
 
   connectedCallback() {
@@ -115,8 +115,8 @@ export class AtomicInsightUserActionsModal
         aria-label=${this.bindings.i18n.t('user-actions-content')}
       >
         <atomic-insight-user-actions-timeline
-          user-id=${this.userId}
-          ticket-creation-date-time=${this.ticketCreationDateTime}
+          .userId=${this.userId}
+          .ticketCreationDateTime=${this.ticketCreationDateTime}
           .excludedCustomActions=${this.excludedCustomActions}
           class="flex-1"
         ></atomic-insight-user-actions-timeline>
