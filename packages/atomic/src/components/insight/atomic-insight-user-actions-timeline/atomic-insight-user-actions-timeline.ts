@@ -26,7 +26,7 @@ import ArrowUpIcon from '../../../images/big-arrow-up.svg';
  * The actions are grouped into multiple sessions, including the session during which the case was created,
  * the sessions preceding the case creation, and the sessions following the case creation.
  *
- * *Note:** This is an internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.
+ * **Note:** This is an internal component used through the `atomic-insight-user-actions-toggle`. Do not use directly.
  *
  * @part toggle-following-sessions - The button to toggle the visibility of following sessions.
  * @part toggle-following-sessions-icon - The icon displayed on the toggle following sessions button.
