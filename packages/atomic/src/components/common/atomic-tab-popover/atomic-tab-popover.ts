@@ -26,7 +26,7 @@ import ArrowBottomIcon from '@/src/images/arrow-bottom-rounded.svg';
  * @part backdrop - The backdrop behind the popover.
  * @part overflow-tabs - The container for overflow tab items.
  *
- * @slot (default) - The overflow tab items.
+ * @slot default - The overflow tab items.
  */
 @customElement('atomic-tab-popover')
 @bindings()
