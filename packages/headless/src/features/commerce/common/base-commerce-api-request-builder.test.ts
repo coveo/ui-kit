@@ -433,4 +433,34 @@ describe('#buildBaseCommerceAPIRequest', () => {
     );
     expect(request.context.source).toEqual(getAnalyticsSourceReturnValue);
   });
+
+  it('when #state.commerceContext.custom is defined, sets #context.custom to its specified value', () => {
+    const custom = {
+      stringKey: 'sampleValue',
+      numberKey: 42,
+      arrayKey: [1, 2, 3],
+      objectKey: {nested: 'value'},
+    };
+    setState({
+      commerceContext: {
+        ...state.commerceContext,
+        custom,
+      },
+    });
+    request = buildBaseCommerceAPIRequest(state, navigatorContext);
+
+    expect(request.context.custom).toEqual(custom);
+  });
+
+  it('when #state.commerceContext.custom is undefined, does not set #context.custom', () => {
+    setState({
+      commerceContext: {
+        ...state.commerceContext,
+        custom: undefined,
+      },
+    });
+    request = buildBaseCommerceAPIRequest(state, navigatorContext);
+
+    expect(request.context.custom).not.toBeDefined();
+  });
 });

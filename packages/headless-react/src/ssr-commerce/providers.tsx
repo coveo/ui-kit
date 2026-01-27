@@ -15,6 +15,7 @@ import {
   type NavigatorContext,
   type ParameterManager,
   type Parameters,
+  type ProductEnrichment,
   type Recommendations,
   type SolutionType,
 } from '@coveo/headless/ssr-commerce';
@@ -112,6 +113,19 @@ export function buildProviderWithDefinition<
 
             hydrateArguments[key] = {
               productId: recommendations.state.productId,
+            };
+            break;
+          }
+          case Kind.ProductEnrichment: {
+            const productEnrichment = getController<ProductEnrichment>(
+              controllers,
+              key
+            );
+            hydrateArguments[key] = {
+              options: {
+                productId: productEnrichment.state.productId,
+                placementIds: productEnrichment.state.placementIds,
+              },
             };
             break;
           }

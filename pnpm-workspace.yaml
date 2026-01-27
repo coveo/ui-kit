@@ -24,7 +24,6 @@ packages:
   - 'samples/atomic/*'
   - 'samples/headless/*'
   - 'samples/headless-ssr/*'
-  - 'samples/headless-ssr/search-nextjs/*'
   - 'utils/cdn'
   - 'utils/ci'
 
