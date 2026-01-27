@@ -18,7 +18,7 @@ async function initializeInterface(canvasElement: HTMLElement) {
 
 const meta: Meta = {
   component: 'atomic-ipx-body',
-  title: 'IPX/IpxBody',
+  title: 'IPX/Body',
   id: 'atomic-ipx-body',
   render: (args) => {
     const {children, isOpen, displayFooterSlot} = args;

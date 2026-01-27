@@ -165,6 +165,9 @@ export class AtomicIpxBody
         <div
           part="body-wrapper"
           class="scrollbar flex w-full grow flex-col overflow-auto"
+          tabindex="0"
+          role="region"
+          aria-label="Content area"
         >
           <div part="body" class="w-full">
             <slot name="body"></slot>
