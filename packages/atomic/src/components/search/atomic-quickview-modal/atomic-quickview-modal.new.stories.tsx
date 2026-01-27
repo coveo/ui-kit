@@ -95,8 +95,8 @@ const meta: Meta = {
     await step('Open quickview modal', async () => {
       await userEvent.click(quickviewButton);
     });
-    // Wait for the modal animation
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    // Wait for the modal animation to complete (animation duration is 500ms)
+    await new Promise((resolve) => setTimeout(resolve, 600));
   },
 };
 
