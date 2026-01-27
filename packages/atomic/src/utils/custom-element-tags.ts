@@ -113,6 +113,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-query-error',
   'atomic-query-summary',
   'atomic-quickview',
+  'atomic-quickview-modal',
   'atomic-rating-facet',
   'atomic-rating-range-facet',
   'atomic-recs-error',
