@@ -41,6 +41,7 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
   private itemLayoutController!: ItemLayoutController;
 
   static styles: CSSResultGroup = css`
+    @reference '../../../utils/tailwind.global.tw.css';
     @import '../../common/template-system/legacy-template-system.css';
 
     :host {
@@ -54,8 +55,6 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
       padding-left: var(--atomic-layout-spacing-x);
       }
     }
-
-
 
     :host(:hover) .with-sections {
       @apply bg-neutral-lighter;
@@ -119,8 +118,7 @@ export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
     'normal';
 
   /**
-   * The size of the visual section in result list items.
-   *
+   * The size of the image section in result list items.
    * This is overwritten by the image size defined in the result content, if it exists.
    */
   @property({reflect: true, type: String, attribute: 'image-size'})

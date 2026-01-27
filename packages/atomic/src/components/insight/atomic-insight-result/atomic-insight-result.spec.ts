@@ -93,6 +93,60 @@ describe('atomic-insight-result', () => {
     expect(element).toBeInstanceOf(AtomicInsightResult);
   });
 
+  describe('#connectedCallback', () => {
+    it('should add hydrated class', async () => {
+      const element = await renderResult();
+      await element.updateComplete;
+      expect(element.classList.contains('hydrated')).toBe(true);
+    });
+  });
+
+  describe('#firstUpdated', () => {
+    it('should unset loading flag when store is available', async () => {
+      const mockUnsetLoadingFlag = vi.fn();
+      const loadingFlag = 'test-flag';
+
+      const element = await renderResult({
+        loadingFlag,
+      });
+
+      element.store = {
+        ...element.store!,
+        unsetLoadingFlag: mockUnsetLoadingFlag,
+      };
+
+      element.firstUpdated(new Map());
+
+      expect(mockUnsetLoadingFlag).toHaveBeenCalledWith(loadingFlag);
+    });
+  });
+
+  describe('#disconnectedCallback', () => {
+    it('should remove event listeners', async () => {
+      const element = await renderResult();
+      const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
+
+      element.disconnectedCallback();
+
+      expect(removeEventListenerSpy).toHaveBeenCalledWith(
+        'atomic/resolveResult',
+        expect.any(Function)
+      );
+      expect(removeEventListenerSpy).toHaveBeenCalledWith(
+        'atomic/resolveInteractiveResult',
+        expect.any(Function)
+      );
+      expect(removeEventListenerSpy).toHaveBeenCalledWith(
+        'atomic/resolveStopPropagation',
+        expect.any(Function)
+      );
+      expect(removeEventListenerSpy).toHaveBeenCalledWith(
+        'atomic/resolveResultDisplayConfig',
+        expect.any(Function)
+      );
+    });
+  });
+
   describe('when density prop is invalid', () => {
     it('should set error', async () => {
       const element = await renderResult();
@@ -120,6 +174,33 @@ describe('atomic-insight-result', () => {
 
       expect(element.error).toBeDefined();
       expect(element.error.message).toMatch(/imageSize/i);
+    });
+  });
+
+  describe('when density prop is set', () => {
+    it.each<{density: ItemDisplayDensity}>([
+      {density: 'normal'},
+      {density: 'comfortable'},
+      {density: 'compact'},
+    ])('should render with density: $density', async ({density}) => {
+      const element = await renderResult({density});
+      expect(element.density).toBe(density);
+      await element.updateComplete;
+      expect(element.shadowRoot).toBeDefined();
+    });
+  });
+
+  describe('when imageSize prop is set', () => {
+    it.each<{imageSize: ItemDisplayImageSize}>([
+      {imageSize: 'icon'},
+      {imageSize: 'small'},
+      {imageSize: 'large'},
+      {imageSize: 'none'},
+    ])('should render with imageSize: $imageSize', async ({imageSize}) => {
+      const element = await renderResult({imageSize});
+      expect(element.imageSize).toBe(imageSize);
+      await element.updateComplete;
+      expect(element.shadowRoot).toBeDefined();
     });
   });
 
@@ -636,87 +717,6 @@ describe('atomic-insight-result', () => {
         imageSize: 'large',
       });
       expect(event.defaultPrevented).toBe(true);
-    });
-  });
-
-  describe('#connectedCallback', () => {
-    it('should add hydrated class', async () => {
-      const element = await renderResult();
-      await element.updateComplete;
-      expect(element.classList.contains('hydrated')).toBe(true);
-    });
-  });
-
-  describe('#firstUpdated', () => {
-    it('should unset loading flag when store is available', async () => {
-      const mockUnsetLoadingFlag = vi.fn();
-      const loadingFlag = 'test-flag';
-
-      const element = await renderResult({
-        loadingFlag,
-      });
-
-      element.store = {
-        ...element.store!,
-        unsetLoadingFlag: mockUnsetLoadingFlag,
-      };
-
-      element.firstUpdated(new Map());
-
-      expect(mockUnsetLoadingFlag).toHaveBeenCalledWith(loadingFlag);
-    });
-  });
-
-  describe('#disconnectedCallback', () => {
-    it('should remove event listeners', async () => {
-      const element = await renderResult();
-      const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
-
-      element.disconnectedCallback();
-
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'atomic/resolveResult',
-        expect.any(Function)
-      );
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'atomic/resolveInteractiveResult',
-        expect.any(Function)
-      );
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'atomic/resolveStopPropagation',
-        expect.any(Function)
-      );
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'atomic/resolveResultDisplayConfig',
-        expect.any(Function)
-      );
-    });
-  });
-
-  describe('when density prop is set', () => {
-    it.each<{density: ItemDisplayDensity}>([
-      {density: 'normal'},
-      {density: 'comfortable'},
-      {density: 'compact'},
-    ])('should render with density: $density', async ({density}) => {
-      const element = await renderResult({density});
-      expect(element.density).toBe(density);
-      await element.updateComplete;
-      expect(element.shadowRoot).toBeDefined();
-    });
-  });
-
-  describe('when imageSize prop is set', () => {
-    it.each<{imageSize: ItemDisplayImageSize}>([
-      {imageSize: 'icon'},
-      {imageSize: 'small'},
-      {imageSize: 'large'},
-      {imageSize: 'none'},
-    ])('should render with imageSize: $imageSize', async ({imageSize}) => {
-      const element = await renderResult({imageSize});
-      expect(element.imageSize).toBe(imageSize);
-      await element.updateComplete;
-      expect(element.shadowRoot).toBeDefined();
     });
   });
 });
