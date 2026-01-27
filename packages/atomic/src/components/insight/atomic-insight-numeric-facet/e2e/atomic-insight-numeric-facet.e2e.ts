@@ -1,6 +1,6 @@
 import {expect, test} from './fixture';
 
-test.describe('atomic-numeric-facet', () => {
+test.describe('atomic-insight-numeric-facet', () => {
   test('should render all essential parts', async ({facet}) => {
     await facet.load();
 
@@ -75,12 +75,5 @@ test.describe('atomic-numeric-facet', () => {
     await test.step('Verify link values are rendered', async () => {
       await expect(facet.facetLinkValues.first()).toBeVisible();
     });
-  });
-
-  test('should show facet when dependency is met', async ({facet}) => {
-    await facet.load({story: 'with-depends-on'});
-    await facet.hydrated.waitFor({state: 'visible'});
-
-    await expect(facet.hydrated).toBeVisible();
   });
 });

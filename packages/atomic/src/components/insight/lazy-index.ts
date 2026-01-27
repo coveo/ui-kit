@@ -22,6 +22,10 @@ export default {
     await import('./atomic-insight-layout/atomic-insight-layout.js'),
   'atomic-insight-no-results': async () =>
     await import('./atomic-insight-no-results/atomic-insight-no-results.js'),
+  'atomic-insight-numeric-facet': async () =>
+    await import(
+      './atomic-insight-numeric-facet/atomic-insight-numeric-facet.js'
+    ),
   'atomic-insight-pager': async () =>
     await import('./atomic-insight-pager/atomic-insight-pager.js'),
   'atomic-insight-query-error': async () =>
