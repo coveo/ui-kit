@@ -5,17 +5,17 @@ import {
   UserSession as InsightUserSession,
 } from '@coveo/headless/insight';
 import {Component, h, State, Prop} from '@stencil/core';
-import ArrowDownIcon from '../../../images/big-arrow-down.svg';
-import ArrowUpIcon from '../../../images/big-arrow-up.svg';
+import ArrowDownIcon from '../../../../images/big-arrow-down.svg';
+import ArrowUpIcon from '../../../../images/big-arrow-up.svg';
 import {
   InitializableComponent,
   InitializeBindings,
   BindStateToController,
-} from '../../../utils/initialization-utils';
-import {NoItemsContainer} from '../../common/no-items/stencil-container';
-import {MagnifyingGlass} from '../../common/no-items/stencil-magnifying-glass';
-import {Button} from '../../common/stencil-button';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+} from '../../../../utils/initialization-utils';
+import {NoItemsContainer} from '../../../common/no-items/stencil-container';
+import {MagnifyingGlass} from '../../../common/no-items/stencil-magnifying-glass';
+import {Button} from '../../../common/stencil-button';
+import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.

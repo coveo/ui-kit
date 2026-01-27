@@ -1,13 +1,13 @@
 import {ATOMIC_MODAL_EXPORT_PARTS} from '@/src/components/common/atomic-modal/export-parts';
 import {Component, h, State, Prop, Element, Watch, Host} from '@stencil/core';
-import CloseIcon from '../../../images/close.svg';
-import {rectEquals} from '../../../utils/dom-utils';
+import CloseIcon from '../../../../images/close.svg';
+import {rectEquals} from '../../../../utils/dom-utils';
 import {
   InitializableComponent,
   InitializeBindings,
-} from '../../../utils/initialization-utils';
-import {Button} from '../../common/stencil-button';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+} from '../../../../utils/initialization-utils';
+import {Button} from '../../../common/stencil-button';
+import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal
