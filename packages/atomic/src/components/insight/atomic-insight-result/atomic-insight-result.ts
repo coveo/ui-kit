@@ -1,65 +1,83 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import type {FoldedResult, InteractiveResult, Result} from '@coveo/headless';
-import {type CSSResultGroup, css, html, LitElement} from 'lit';
+import type {
+  FoldedResult as InsightFoldedResult,
+  InteractiveResult as InsightInteractiveResult,
+  Result as InsightResult,
+} from '@coveo/headless/insight';
+import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {ref} from 'lit/directives/ref.js';
+import {createRef, type Ref, ref} from 'lit/directives/ref.js';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import type {DisplayConfig} from '@/src/components/common/item-list/context/item-display-config-context-controller';
-import {
-  type ItemRenderingFunction,
-  resultComponentClass,
-} from '@/src/components/common/item-list/item-list-common';
+import type {ItemRenderingFunction} from '@/src/components/common/item-list/item-list-common';
 import {CustomRenderController} from '@/src/components/common/layout/custom-render-controller';
 import {ItemLayoutController} from '@/src/components/common/layout/item-layout-controller';
 import type {
   ItemDisplayDensity,
   ItemDisplayImageSize,
-  ItemDisplayLayout,
 } from '@/src/components/common/layout/item-layout-utils';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
-import type {SearchStore} from '@/src/components/search/atomic-search-interface/store';
-import type {
-  InteractiveResultContextEvent,
-  ResultContextEvent,
-} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {parentNodeToString} from '@/src/utils/dom-utils';
-import '../atomic-result-text/atomic-result-text';
+import type {InsightStore} from '../atomic-insight-interface/store';
+
+export type InsightResultContextEvent<T = InsightResult | InsightFoldedResult> =
+  CustomEvent<(result: T) => void>;
+export type InsightInteractiveResultContextEvent<
+  T extends InsightInteractiveResult = InsightInteractiveResult,
+> = CustomEvent<(result: T) => void>;
+
 /**
- * The `atomic-result` component is used internally by the `atomic-result-list` and `atomic-folded-result-list` components.
+ * The `atomic-insight-result` component is used internally by the `atomic-insight-result-list` component.
  */
-@customElement('atomic-result')
+@customElement('atomic-insight-result')
 @withTailwindStyles
-export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
-  private resultRootRef?: HTMLElement;
-  private linkContainerRef?: HTMLElement;
+export class AtomicInsightResult extends ChildrenUpdateCompleteMixin(
+  LitElement
+) {
+  private resultRootRef: Ref<HTMLElement> = createRef();
   private itemLayoutController!: ItemLayoutController;
 
   static styles: CSSResultGroup = css`
-@import "../../common/template-system/template-system.css";
+    @reference '../../../utils/tailwind.global.tw.css';
+    @import '../../common/template-system/legacy-template-system.css';
 
-:host {
-  @apply atomic-template-system;
-}
-`;
+    :host {
+      @apply atomic-template-system;
+      @apply relative;
 
-  private static readonly propsSchema = new Schema({
-    display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
-    density: new StringValue({
-      constrainTo: ['normal', 'comfortable', 'compact'],
-    }),
-    imageSize: new StringValue({
-      constrainTo: ['small', 'large', 'icon', 'none'],
-    }),
-  });
+      .with-sections:not(.child-result) {
+      padding-top: var(--atomic-layout-spacing-y);
+      padding-bottom: var(--atomic-layout-spacing-y);
+      padding-right: var(--atomic-layout-spacing-x);
+      padding-left: var(--atomic-layout-spacing-x);
+      }
+    }
+
+    :host(:hover) .with-sections {
+      @apply bg-neutral-lighter;
+    }
+
+    :host(:hover) atomic-insight-result-action-bar {
+      @apply visible;
+    }
+
+    :host(:first-of-type) .with-sections:not(.child-result) {
+      @apply pt-8;
+    }
+
+    :host(:first-of-type) atomic-insight-result-action-bar {
+      @apply top-0;
+    }
+  `;
 
   @state()
   error!: Error;
 
   /**
-   * Whether `atomic-result-link` components nested in the `atomic-result` should stop click event propagation.
+   * Whether `atomic-result-link` components nested in the `atomic-insight-result` should stop click event propagation.
    */
   @property({
     attribute: 'stop-propagation',
@@ -72,36 +90,26 @@ export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
   /**
    * The result item.
    */
-  @property({type: Object}) result!: Result | FoldedResult;
+  @property({type: Object})
+  result!: InsightResult | InsightFoldedResult;
 
   /**
    * The InteractiveResult item.
+   * @internal
    */
   @property({type: Object, attribute: 'interactive-result'})
-  interactiveResult!: InteractiveResult;
+  interactiveResult!: InsightInteractiveResult;
 
   /**
    * Global Atomic state.
+   * @internal
    */
-  @property({type: Object}) store?: SearchStore;
+  @property({type: Object}) store?: InsightStore;
 
   /**
    * The result content to display.
    */
   @property({type: Object}) content?: ParentNode;
-
-  /**
-   * The result link to use when the result is clicked in a grid layout.
-   *
-   * @default - An `atomic-result-link` without any customization.
-   */
-  @property({type: Object, attribute: 'link-content'}) linkContent: ParentNode =
-    new DocumentFragment();
-
-  /**
-   * How results should be displayed.
-   */
-  @property({reflect: true, type: String}) display: ItemDisplayLayout = 'list';
 
   /**
    * How large or small results should be.
@@ -110,8 +118,7 @@ export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
     'normal';
 
   /**
-   * The size of the visual section in result list items.
-   *
+   * The size of the image section in result list items.
    * This is overwritten by the image size defined in the result content, if it exists.
    */
   @property({reflect: true, type: String, attribute: 'image-size'})
@@ -147,21 +154,29 @@ export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
     new ValidatePropsController(
       this,
       () => ({
-        display: this.display,
         density: this.density,
         imageSize: this.imageSize,
       }),
-      AtomicResult.propsSchema
+      new Schema({
+        density: new StringValue({
+          constrainTo: ['normal', 'comfortable', 'compact'],
+        }),
+        imageSize: new StringValue({
+          constrainTo: ['small', 'large', 'icon', 'none'],
+        }),
+      })
     );
   }
 
-  public resolveResult = (event: ResultContextEvent) => {
+  public resolveResult = (event: InsightResultContextEvent) => {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);
   };
 
-  public resolveInteractiveResult = (event: InteractiveResultContextEvent) => {
+  public resolveInteractiveResult = (
+    event: InsightInteractiveResultContextEvent
+  ) => {
     event.preventDefault();
     event.stopPropagation();
     if (this.interactiveResult) {
@@ -174,7 +189,7 @@ export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
   };
 
   public resolveResultDisplayConfig = (
-    event: ResultContextEvent<DisplayConfig>
+    event: InsightResultContextEvent<DisplayConfig>
   ) => {
     event.preventDefault();
     event.stopPropagation();
@@ -184,46 +199,29 @@ export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
     });
   };
 
-  public handleClick = (event: MouseEvent) => {
-    if (this.stopPropagation) {
-      event.stopPropagation();
-    }
-    if (this.display === 'grid') {
-      this.clickLinkContainer();
-    }
-  };
-
-  public clickLinkContainer = () => {
-    this.shadowRoot
-      ?.querySelector<HTMLAnchorElement>(
-        '.link-container > atomic-result-link a:not([slot])'
-      )
-      ?.click();
-  };
-
   public async connectedCallback() {
     super.connectedCallback();
 
     new CustomRenderController(this, {
       renderingFunction: () => this.renderingFunction,
       itemData: () => this.result,
-      rootElementRef: () => this.resultRootRef,
-      linkContainerRef: () => this.linkContainerRef,
+      rootElementRef: () => this.resultRootRef.value,
       onRenderComplete: (element, output) => {
         this.itemLayoutController.applyLayoutClassesToElement(element, output);
       },
     });
 
     this.itemLayoutController = new ItemLayoutController(this, {
-      elementPrefix: 'atomic-result',
+      elementPrefix: 'atomic-insight-result',
       renderingFunction: () => this.renderingFunction,
       content: () => this.content,
       layoutConfig: () => ({
-        display: this.display,
+        display: 'list',
         density: this.density,
         imageSize: this.imageSize,
       }),
       itemClasses: () => this.classes,
+      classesOnly: true,
     });
 
     this.addEventListener(
@@ -242,10 +240,10 @@ export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
       'atomic/resolveResultDisplayConfig',
       this.resolveResultDisplayConfig as EventListener
     );
-    this.addEventListener('click', this.handleClick);
 
     await this.getUpdateComplete();
     this.classList.add('hydrated');
+    this.classList.add('result-component');
   }
 
   public disconnectedCallback() {
@@ -267,13 +265,12 @@ export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
       'atomic/resolveResultDisplayConfig',
       this.resolveResultDisplayConfig as EventListener
     );
-    this.removeEventListener('click', this.handleClick);
   }
 
   private getContentHTML() {
     if (!this.content) {
       console.warn(
-        'atomic-result: content property is undefined. Cannot get content HTML.',
+        'atomic-insight-result: content property is undefined. Cannot get content HTML.',
         this
       );
       return '';
@@ -281,43 +278,28 @@ export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
     return parentNodeToString(this.content);
   }
 
-  private getLinkHTML() {
-    return parentNodeToString(this.linkContent ?? new HTMLElement());
-  }
-
   public render() {
     if (this.renderingFunction !== undefined) {
       return html`
-        <div class=${resultComponentClass}>
           <div
             class="result-root"
-            ${ref((el) => {
-              this.resultRootRef = el as HTMLElement;
-            })}
+            ${ref(this.resultRootRef)}
           ></div>
-          <div
-            class="link-container"
-            ${ref((el) => {
-              this.linkContainerRef = el as HTMLElement;
-            })}
-          ></div>
-        </div>
       `;
     }
     // Handle case where content is undefined and layout was not created
     if (!this.itemLayoutController.getLayout()) {
-      return html`<div class=${resultComponentClass}></div>`;
+      return nothing;
     }
 
     return html`
-      <div class=${resultComponentClass}>
         <div
-          class="result-root ${this.itemLayoutController.getCombinedClasses().join(' ')}"
+          class="result-root ${this.itemLayoutController
+            .getCombinedClasses()
+            .join(' ')}"
         >
           ${unsafeHTML(this.getContentHTML())}
         </div>
-        <div class="link-container">${unsafeHTML(this.getLinkHTML())}</div>
-      </div>
     `;
   }
 
@@ -330,6 +312,6 @@ export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'atomic-result': AtomicResult;
+    'atomic-insight-result': AtomicInsightResult;
   }
 }

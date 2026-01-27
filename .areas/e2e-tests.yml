@@ -1,0 +1,8 @@
+description: End-to-end test infrastructure (Cypress)
+file_patterns:
+  - packages/atomic/cypress/**
+  - packages/atomic/src/components/**/e2e/**
+
+reviewers:
+  search-qa: ~
+  dxui: ~
