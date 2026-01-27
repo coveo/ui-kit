@@ -6,6 +6,7 @@ import {
   buildTabManager,
   type GeneratedAnswer,
   type GeneratedAnswerState,
+  type GeneratedAnswerWithFollowUps,
   type SearchStatus,
   type SearchStatusState,
   type TabManager,
@@ -135,6 +136,12 @@ export class AtomicGeneratedAnswer
   answerConfigurationId?: string;
 
   /**
+   * The unique identifier of the agent configuration to use to generate the answer.
+   */
+  @property({type: String, attribute: 'agent-id'})
+  agentId?: string;
+
+  /**
    * A list of fields to include with the citations used to generate the answer.
    *
    * Set this property as a stringified JSON array, for example:
@@ -202,7 +209,7 @@ export class AtomicGeneratedAnswer
   })
   @state()
   private generatedAnswerState!: GeneratedAnswerState;
-  public generatedAnswer!: GeneratedAnswer;
+  public generatedAnswer!: GeneratedAnswer | GeneratedAnswerWithFollowUps;
 
   @bindStateToController('searchStatus')
   @state()
@@ -258,6 +265,9 @@ export class AtomicGeneratedAnswer
       },
       ...(this.answerConfigurationId && {
         answerConfigurationId: this.answerConfigurationId,
+      }),
+      ...(this.agentId && {
+        agentId: this.agentId,
       }),
       fieldsToIncludeInCitations: this.getCitationFields(),
     });
@@ -321,6 +331,12 @@ export class AtomicGeneratedAnswer
     }
   }
 
+  private canAskFollowUp(): this is {
+    generatedAnswer: GeneratedAnswerWithFollowUps;
+  } {
+    return 'askFollowUp' in this.generatedAnswer;
+  }
+
   @bindingGuard()
   @errorGuard()
   render() {
@@ -365,6 +381,13 @@ export class AtomicGeneratedAnswer
           aria-label=${this.bindings.i18n.t('generated-answer-title')}
         >
           <article>${this.renderContent()}</article>
+          <button class="btn-outline-primary p-2" aria-live="polite" @click=${() => {
+            if (this.canAskFollowUp()) {
+              this.generatedAnswer.askFollowUp('What is Coveo?');
+            }
+          }}>
+            Ask Follow Up
+          </button>
         </aside>
       </div>
     `;
@@ -372,6 +395,7 @@ export class AtomicGeneratedAnswer
 
   // Used by bindStateToController decorator via onUpdateCallbackMethod option
   public onGeneratedAnswerStateUpdate = () => {
+    console.log(this.generatedAnswerState);
     if (
       this.generatedAnswerState.isVisible !== this.controller.data.isVisible
     ) {

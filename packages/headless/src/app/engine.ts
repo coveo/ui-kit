@@ -12,6 +12,7 @@ import type {
 } from '@reduxjs/toolkit';
 import type {Logger} from 'pino';
 import {getRelayInstanceFromState} from '../api/analytics/analytics-relay-client.js';
+import {answerGenerationApi} from '../api/knowledge/answer-generation/answer-generation-api.js';
 import {answerApi} from '../api/knowledge/stream-answer-api.js';
 import {
   disableAnalytics,
@@ -33,6 +34,7 @@ import type {EngineConfiguration} from './engine-configuration.js';
 import {instantlyCallableThunkActionMiddleware} from './instantly-callable-middleware.js';
 import type {LoggerOptions} from './logger.js';
 import {logActionErrorMiddleware} from './logger-middlewares.js';
+import {generateAnswerListener} from './middleware/generate-answer-listener-middleware.js';
 import {
   getNavigatorContext,
   type NavigatorContext,
@@ -372,7 +374,10 @@ function createMiddleware<Reducers extends ReducersMapObject>(
     renewTokenMiddleware,
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
-  ].concat(answerApi.middleware, options.middlewares || []);
+  ]
+    .concat(answerApi.middleware, options.middlewares || [])
+    .concat(answerGenerationApi.middleware, options.middlewares || [])
+    .concat(generateAnswerListener.middleware);
 }
 
 export const nextAnalyticsUsageWithServiceFeatureWarning =

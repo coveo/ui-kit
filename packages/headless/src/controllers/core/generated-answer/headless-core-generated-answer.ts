@@ -154,6 +154,10 @@ export interface GeneratedAnswerProps extends GeneratedAnswerPropsInitialState {
    */
   answerConfigurationId?: string;
   /**
+   * The agent identifier to use to generate the answer.
+   */
+  agentId?: string;
+  /**
    * A list of indexed fields to include in the citations returned with the generated answer.
    */
   fieldsToIncludeInCitations?: string[];
