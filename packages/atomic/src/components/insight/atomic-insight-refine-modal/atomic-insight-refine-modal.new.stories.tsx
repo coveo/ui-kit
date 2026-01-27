@@ -65,7 +65,9 @@ const meta: Meta = {
         name: 'Filters',
       }
     );
-    // Small await to make sure everything is loaded in and the facets are registered for the modal to render them.
+    // Facets call `bindings.store.registerFacet()` during initialization to register themselves with the interface store.
+    // The refine modal uses `bindings.store.getAllFacets()` to retrieve and render these registered facets.
+    // This delay ensures facets have completed initialization and registration before the modal attempts to render them.
     await new Promise((resolve) => setTimeout(resolve, 300));
     await step('Open refine modal', async () => {
       await userEvent.click(refineToggleButton);
