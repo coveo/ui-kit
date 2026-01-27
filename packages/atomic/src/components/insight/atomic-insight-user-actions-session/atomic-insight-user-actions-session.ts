@@ -124,7 +124,7 @@ export class AtomicInsightUserActionsSession
 
     const formatedStartDate = `${dayOfWeek}. ${month} ${day}, ${year}`;
     return html`
-      <div class="flex items-center px-2 pb-3">
+      <div data-testid="session-start-date-container" class="flex items-center px-2 pb-3">
         ${when(
           isCaseCreationSession,
           () => html`
