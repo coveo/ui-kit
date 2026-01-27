@@ -6,17 +6,18 @@ The @coveo/atomic package is built on [Lit](https://lit.dev/), a modern web comp
 
 ## Table of Contents
 
-- [Creating a Component](#creating-a-component)
-- [Component Files Overview](#component-files-overview)
-  - [Main Component File (.ts)](#main-component-file-ts)
-  - [Storybook Stories (.new.stories.tsx)](#storybook-stories-newstoriestsx)
-  - [Documentation (.mdx)](#documentation-mdx)
-  - [Unit Tests (.spec.ts)](#unit-tests-spects)
-  - [End-to-End Tests (e2e/)](#end-to-end-tests-e2e)
-- [Running Tests](#running-tests)
-  - [Unit Tests](#unit-tests)
-  - [Playwright E2E Tests](#playwright-e2e-tests)
-- [Project Structure](#project-structure)
+- [Atomic](#atomic)
+  - [Table of Contents](#table-of-contents)
+  - [Creating a Component](#creating-a-component)
+  - [Component Files Overview](#component-files-overview)
+    - [Main Component File (.ts)](#main-component-file-ts)
+    - [Storybook Stories (.new.stories.tsx)](#storybook-stories-newstoriestsx)
+    - [Documentation (.mdx)](#documentation-mdx)
+    - [Playwright E2E Tests](#playwright-e2e-tests)
+      - [Using the Playwright VSCode Extension (Recommended)](#using-the-playwright-vscode-extension-recommended)
+      - [Running Playwright Tests via CLI](#running-playwright-tests-via-cli)
+  - [Project Structure](#project-structure)
+    - [Component Directory Structure for Lit Components](#component-directory-structure-for-lit-components)
 
 ## Creating a Component
 
@@ -294,5 +295,29 @@ pnpm --filter=@coveo/atomic exec playwright test src/components/commerce/atomic-
 - **`storybook-pages/`** - Utilities and helpers for Storybook stories
 - **`playwright-utils/`** - Utilities and helpers for Playwright end-to-end tests
 - **`vitest-utils/`** - Utilities and helpers for Vitest unit tests
+
+### Component Directory Structure for Lit Components
+
+When creating or migrating Lit components, **you MUST place the component directory directly under the use-case folder** (e.g., `insight/`, `search/`, `commerce/`). 
+
+The `scripts/generate-lit-exports.mjs` script only scans **first-level directories** to auto-generate the `index.ts` and `lazy-index.ts` exports. Components in nested subdirectories will **NOT be registered** as custom elements.
+
+**✅ CORRECT structure:**
+```
+src/components/insight/atomic-insight-smart-snippet-suggestions/
+                        └── atomic-insight-smart-snippet-suggestions.ts
+```
+
+**❌ INCORRECT structure (component will NOT be exported):**
+```
+src/components/insight/smart-snippets/atomic-insight-smart-snippet-suggestions/
+                                       └── atomic-insight-smart-snippet-suggestions.ts
+```
+
+**What happens if you use the wrong structure:**
+1. The component will not be exported in `index.ts` or `lazy-index.ts`
+2. The custom element will never be registered with the browser
+3. The parent interface (e.g., `atomic-insight-interface`) will hang indefinitely during initialization, waiting for the component to be defined
+4. Search results will not load and no console errors will appear (making this very hard to debug)
 
 

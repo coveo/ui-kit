@@ -35,6 +35,9 @@ app.get('/', async (req, res) => {
         country: 'US',
         currency: 'USD',
         view: {url: req.url},
+        custom: {
+          sampleKey: 'sampleValue',
+        },
       },
     });
 
