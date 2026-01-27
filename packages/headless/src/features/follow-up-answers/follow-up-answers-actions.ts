@@ -91,3 +91,12 @@ export const setActiveFollowUpCannotAnswer = createAction(
   (payload: boolean) =>
     validatePayload(payload, new BooleanValue({required: true}))
 );
+
+export const resetFollowUpAnswers = createAction(
+  'followUpAnswers/resetFollowUpAnswers'
+);
+
+export const setFollowUpAnswersSessionId = createAction(
+  'followUpAnswers/setFollowUpAnswersSessionId',
+  (payload: string) => validatePayload(payload, requiredNonEmptyString)
+);

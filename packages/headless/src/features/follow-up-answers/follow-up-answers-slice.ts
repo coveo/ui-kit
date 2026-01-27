@@ -2,6 +2,7 @@ import {createReducer} from '@reduxjs/toolkit';
 import {filterOutDuplicatedCitations} from '../generated-answer/utils/generated-answer-citation-utils.js';
 import {
   addFollowUpAnswer,
+  resetFollowUpAnswers,
   setActiveFollowUpAnswerCitations,
   setActiveFollowUpAnswerContentFormat,
   setActiveFollowUpAnswerId,
@@ -9,6 +10,7 @@ import {
   setActiveFollowUpError,
   setActiveFollowUpIsLoading,
   setActiveFollowUpIsStreaming,
+  setFollowUpAnswersSessionId,
   setIsEnabled,
   updateActiveFollowUpAnswerMessage,
 } from './follow-up-answers-actions.js';
@@ -31,6 +33,9 @@ export const followUpAnswersReducer = createReducer(
     builder
       .addCase(setIsEnabled, (state, {payload}) => {
         state.isEnabled = payload;
+      })
+      .addCase(setFollowUpAnswersSessionId, (state, {payload}) => {
+        state.id = payload;
       })
       .addCase(addFollowUpAnswer, (state, {payload}) => {
         state.followUpAnswers.push(createInitialFollowUpAnswer(payload));
@@ -110,5 +115,9 @@ export const followUpAnswersReducer = createReducer(
           return;
         }
         followUpAnswer.cannotAnswer = payload;
+      })
+      .addCase(resetFollowUpAnswers, (state) => {
+        state.followUpAnswers = [];
+        state.id = '';
       })
 );
