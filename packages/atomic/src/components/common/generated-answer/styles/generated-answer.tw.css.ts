@@ -76,6 +76,11 @@ const baseStyle = css`
     color: var(--atomic-primary);
   }
 
+  /* Reserve space so the query text doesn't reflow when action buttons appear */
+  [part='feedback-and-copy-buttons'] {
+    min-width: var(--atomic-generated-answer-actions-reserved-width, 8rem);
+  }
+
   [part='header-icon'] svg,
   [part='header-icon'] svg * {
     fill: currentColor;

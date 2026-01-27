@@ -17,7 +17,7 @@ import '@/src/components/common/atomic-icon/atomic-icon';
 export interface RenderAnswerContentProps {
   i18n: i18n;
   generatedAnswerState: GeneratedAnswerState | undefined;
-  query: string;
+  question: string;
   isAnswerVisible: boolean;
   hasRetryableError: boolean;
   toggleTooltip: string;
@@ -44,7 +44,7 @@ export const renderAnswerContent: FunctionalComponent<
     toggleTooltip,
     withToggle,
     collapsible,
-    query,
+    question,
     renderFeedbackAndCopyButtonsSlot,
     renderCitationsSlot,
     onToggle,
@@ -55,8 +55,7 @@ export const renderAnswerContent: FunctionalComponent<
   const {isStreaming, answer, citations, answerContentFormat, expanded} =
     generatedAnswerState ?? {};
   const isExpanded = collapsible ? expanded : true;
-  const latestQuery = query.trim();
-  const showInlineActions = !hasRetryableError && isExpanded;
+  const currentQuestion = question.trim();
 
   return html`
     <div part="generated-content">
@@ -92,17 +91,21 @@ export const renderAnswerContent: FunctionalComponent<
         isAnswerVisible,
         () => html`
           <div part="generated-content-container" class="px-6 pb-6">
-            <div class="flex justify-between gap-3 mt-6">
-              <p class="query-text text-base font-semibold leading-6">
-                ${latestQuery}
+            <div class="mt-6 flex gap-3">
+              <p
+                class="question-text min-w-0 flex-1 text-base font-semibold leading-6">
+                ${currentQuestion}
               </p>
               ${when(
-                showInlineActions,
+                !hasRetryableError && isExpanded,
                 () => html`
-                <div class="flex items-center gap-2 h-9">
-                  ${renderFeedbackAndCopyButtonsSlot()}
-                </div>
-              `
+                  <div
+                    part="feedback-and-copy-buttons"
+                    class="flex h-9 shrink-0 items-center justify-end gap-2"
+                  >
+                    ${renderFeedbackAndCopyButtonsSlot()}
+                  </div>
+                `
               )}
             </div>
             ${

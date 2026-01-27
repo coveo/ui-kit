@@ -58,7 +58,7 @@ describe('#renderAnswerContent', () => {
       toggleTooltip: 'Toggle answer',
       withToggle: false,
       collapsible: false,
-      query: '',
+      question: '',
       renderFeedbackAndCopyButtonsSlot: () => html``,
       renderCitationsSlot: () => html``,
       onToggle: vi.fn(),
@@ -181,7 +181,7 @@ describe('#renderAnswerContent', () => {
   describe('when answer is visible and no retryable error', () => {
     it('should display the latest query from props', async () => {
       const {element} = await renderComponent({
-        query: '  user query  ',
+        question: '  user query  ',
         // @ts-expect-error Test fixture with partial mock
         generatedAnswerState: {
           answer: 'Test answer',
@@ -191,9 +191,9 @@ describe('#renderAnswerContent', () => {
         },
       });
 
-      const queryText = element.querySelector('.query-text');
+      const questionText = element.querySelector('.question-text');
 
-      expect(queryText?.textContent?.trim()).toBe('user query');
+      expect(questionText?.textContent?.trim()).toBe('user query');
     });
 
     it('should call renderGeneratedContentContainer with correct arguments', async () => {
