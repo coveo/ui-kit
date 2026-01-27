@@ -197,6 +197,28 @@ describe('serverStateEventHandler', () => {
         expect(mockUpdateCachedData).not.toHaveBeenCalled();
         expect(answerDraftReducer.setCitations).not.toHaveBeenCalled();
       });
+
+      it('should not call setCitations when citations is an empty array', () => {
+        const payload: Partial<StreamPayload> = {
+          citations: [],
+          contentFormat: 'text/markdown',
+        };
+        const message: Message = {
+          payloadType: 'genqa.citationsType',
+          payload: JSON.stringify(payload),
+        };
+
+        serverStateEventHandler.handleMessage['genqa.citationsType']!(
+          message,
+          mockUpdateCachedData
+        );
+
+        expect(mockUpdateCachedData).toHaveBeenCalled();
+        expect(answerDraftReducer.setCitations).toHaveBeenCalledWith(
+          mockDraft,
+          payload
+        );
+      });
     });
 
     describe('genqa.endOfStreamType', () => {
