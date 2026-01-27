@@ -158,7 +158,7 @@ describe('atomic-insight-refine-modal', () => {
       expect(footerContent).toBeInTheDocument();
       expect(footerButton).toBeInTheDocument();
       expect(footerButtonText).toBeInTheDocument();
-      expect(footerButtonText).toHaveTextContent('View');
+      expect(footerButtonText).toHaveTextContent('View results');
       expect(body).toBeInTheDocument();
       expect(body).toHaveAttribute('slot', 'body');
       expect(facetSlot).toBeInTheDocument();
@@ -170,7 +170,7 @@ describe('atomic-insight-refine-modal', () => {
       });
 
       expect(footerButtonCount).toBeInTheDocument();
-      expect(footerButtonCount).toHaveTextContent('123');
+      expect(footerButtonCount).toHaveTextContent('(123)');
     });
 
     it('should render clear all button when hasBreadcrumbs is true', async () => {
