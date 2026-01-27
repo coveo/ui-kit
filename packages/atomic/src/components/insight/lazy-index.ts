@@ -2,6 +2,8 @@
 export default {
   'atomic-insight-edit-toggle': async () =>
     await import('./atomic-insight-edit-toggle/atomic-insight-edit-toggle.js'),
+  'atomic-insight-facet': async () =>
+    await import('./atomic-insight-facet/atomic-insight-facet.js'),
   'atomic-insight-full-search-button': async () =>
     await import(
       './atomic-insight-full-search-button/atomic-insight-full-search-button.js'
@@ -32,6 +34,8 @@ export default {
     await import(
       './atomic-insight-refine-toggle/atomic-insight-refine-toggle.js'
     ),
+  'atomic-insight-result': async () =>
+    await import('./atomic-insight-result/atomic-insight-result.js'),
   'atomic-insight-result-template': async () =>
     await import(
       './atomic-insight-result-template/atomic-insight-result-template.js'

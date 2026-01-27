@@ -1,0 +1,11 @@
+description: Documentation and Storybook stories
+file_patterns:
+  - "packages/documentation/**"
+  - "packages/**/*.mdx"
+  - "packages/**/*.md"
+  - "packages/**/typedoc.json"
+  - "packages/**/*.typedoc.json"
+  - "packages/**/*.stories.tsx"
+reviewers:
+  dev-writers: ~
+  dxui: ~
