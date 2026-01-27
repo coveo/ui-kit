@@ -33,9 +33,7 @@ export const headAnswerStrategy: StreamingStrategy<AnswerGenerationApiState> = {
 
   handleMessage: {
     'genqa.headerMessageType': (message, dispatch) => {
-      const payload: StreamPayload = message.payload.length
-        ? JSON.parse(message.payload)
-        : {};
+      const payload = parsePayload(message.payload);
       if (payload.contentFormat) {
         dispatch(setAnswerContentFormat(payload.contentFormat));
         dispatch(setIsStreaming(true));
@@ -44,29 +42,21 @@ export const headAnswerStrategy: StreamingStrategy<AnswerGenerationApiState> = {
     },
 
     'genqa.messageType': (message, dispatch) => {
-      const payload: StreamPayload = message.payload.length
-        ? JSON.parse(message.payload)
-        : {};
+      const payload = parsePayload(message.payload);
       if (payload.textDelta) {
         dispatch(updateMessage({textDelta: payload.textDelta}));
       }
     },
 
     'genqa.citationsType': (message, dispatch) => {
-      const payload: StreamPayload = message.payload.length
-        ? JSON.parse(message.payload)
-        : {};
-      if (payload.citations) {
+      const payload = parsePayload(message.payload);
+      if (payload.citations !== undefined) {
         dispatch(updateCitations({citations: payload.citations}));
       }
     },
 
     'genqa.endOfStreamType': (message, dispatch) => {
-      const payload: StreamPayload = message.payload.length
-        ? JSON.parse(message.payload)
-        : {};
-
-      dispatch(setIsAnswerGenerated(!!payload.answerGenerated));
+      const payload = parsePayload(message.payload);
       dispatch(setIsAnswerGenerated(!!payload.answerGenerated));
       dispatch(setCannotAnswer(!payload.answerGenerated));
       dispatch(setIsStreaming(false));
@@ -81,3 +71,19 @@ export const headAnswerStrategy: StreamingStrategy<AnswerGenerationApiState> = {
     },
   },
 };
+
+function parsePayload(payload?: string): StreamPayload {
+  if (!payload?.length) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(payload) as StreamPayload;
+  } catch (err) {
+    console.warn('Failed to parse stream payload', {
+      payload,
+      error: err,
+    });
+    return {};
+  }
+}

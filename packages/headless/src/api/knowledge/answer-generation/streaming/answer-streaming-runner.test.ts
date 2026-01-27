@@ -116,7 +116,7 @@ describe('answer-streaming-runner', () => {
           body: JSON.stringify(mockArgs),
           headers: {
             Authorization: 'Bearer test-access-token',
-            Accept: 'application/json',
+            Accept: 'text/event-stream',
             'Content-Type': 'application/json',
             'Accept-Encoding': '*',
           },
