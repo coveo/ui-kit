@@ -34,6 +34,8 @@ interface ServerStateEventHandler<TDraft = GeneratedAnswerServerState> {
     >
   >;
 
+  // Fired when the SSE connection errors out (network failure, server disconnect,
+  //  or an exception thrown in handleOpen/handleMessage)
   handleError?: (error: unknown) => void;
 }
 
@@ -52,10 +54,8 @@ export const serverStateEventHandler: ServerStateEventHandler = {
 
   handleMessage: {
     'genqa.headerMessageType': (message, updateCachedData) => {
-      const payload: StreamPayload = message.payload.length
-        ? JSON.parse(message.payload)
-        : {};
-      if (payload.contentFormat) {
+      const payload = parsePayload(message.payload);
+      if (payload?.contentFormat) {
         updateCachedData((draft) => {
           initializeStreamingAnswer(draft, payload);
         });
@@ -63,9 +63,7 @@ export const serverStateEventHandler: ServerStateEventHandler = {
     },
 
     'genqa.messageType': (message, updateCachedData) => {
-      const payload: StreamPayload = message.payload.length
-        ? JSON.parse(message.payload)
-        : {};
+      const payload = parsePayload(message.payload);
       if (payload.textDelta) {
         updateCachedData((draft) => {
           setAnswer(draft, payload);
@@ -74,10 +72,8 @@ export const serverStateEventHandler: ServerStateEventHandler = {
     },
 
     'genqa.citationsType': (message, updateCachedData) => {
-      const payload: StreamPayload = message.payload.length
-        ? JSON.parse(message.payload)
-        : {};
-      if (payload.citations) {
+      const payload = parsePayload(message.payload);
+      if (payload.citations !== undefined) {
         updateCachedData((draft) => {
           setCitations(draft, payload);
         });
@@ -85,9 +81,7 @@ export const serverStateEventHandler: ServerStateEventHandler = {
     },
 
     'genqa.endOfStreamType': (message, updateCachedData) => {
-      const payload: StreamPayload = message.payload.length
-        ? JSON.parse(message.payload)
-        : {};
+      const payload = parsePayload(message.payload);
       updateCachedData((draft) => {
         endStreaming(draft, payload);
       });
@@ -102,3 +96,19 @@ export const serverStateEventHandler: ServerStateEventHandler = {
     },
   },
 };
+
+function parsePayload(payload?: string): StreamPayload {
+  if (!payload?.length) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(payload) as StreamPayload;
+  } catch (err) {
+    console.warn('Failed to parse stream payload', {
+      payload,
+      error: err,
+    });
+    return {};
+  }
+}

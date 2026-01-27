@@ -26,7 +26,7 @@ export interface GeneratedAnswerServerState {
   generated?: boolean;
   isStreaming: boolean;
   isLoading: boolean;
-  error?: {message: string; code: number};
+  error?: {message?: string; code?: number};
 }
 
 export const initialAnswerGenerationServerState =

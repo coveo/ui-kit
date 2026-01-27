@@ -34,8 +34,8 @@ export interface StreamPayload {
   textDelta?: string;
   padding?: string;
   answerGenerated?: boolean;
-  contentFormat: GeneratedContentFormat;
-  citations: GeneratedAnswerCitation[];
+  contentFormat?: GeneratedContentFormat;
+  citations?: GeneratedAnswerCitation[];
 }
 
 /**
@@ -48,6 +48,8 @@ export interface StreamingStrategy<TState> {
     dispatch: ThunkDispatch<TState, unknown, UnknownAction>
   ) => void;
 
+  // Fired when the SSE connection errors out (network failure, server disconnect,
+  //  or an exception thrown in handleOpen/handleMessage)
   handleError: (error: unknown) => void;
 
   handleMessage: Partial<

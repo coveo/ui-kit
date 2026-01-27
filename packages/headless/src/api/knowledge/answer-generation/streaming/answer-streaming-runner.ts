@@ -47,7 +47,7 @@ export const streamAnswerWithStrategy = <
     body: JSON.stringify(args),
     headers: {
       Authorization: `Bearer ${accessToken}`,
-      Accept: 'application/json',
+      Accept: 'text/event-stream',
       'Content-Type': 'application/json',
       'Accept-Encoding': '*',
     },

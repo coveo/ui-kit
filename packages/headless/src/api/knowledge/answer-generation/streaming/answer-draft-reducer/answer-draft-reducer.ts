@@ -72,7 +72,7 @@ export const setAnswerError = (
 
   draft.error = {
     message: errorMessage,
-    code: message.code!,
+    code: message.code ?? 500,
   };
   draft.isStreaming = false;
   draft.isLoading = false;

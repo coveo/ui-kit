@@ -11,6 +11,7 @@ import {
   setIsLoading,
   setIsStreaming,
   updateCitations,
+  updateError,
   updateMessage,
 } from './generated-answer-actions.js';
 import {
@@ -73,12 +74,9 @@ export const headAnswerStrategy: StreamingStrategy<AnswerGenerationApiState> = {
       dispatch(logGeneratedAnswerStreamEnd(payload.answerGenerated ?? false));
       dispatch(logGeneratedAnswerResponseLinked());
     },
-    error: (message) => {
+    error: (message, dispatch) => {
       if (message.finishReason === 'ERROR' && message.errorMessage) {
-        // should set error state
-        // updateCachedData((draft) => {
-        //   handleError(draft, message);
-        // });
+        dispatch(updateError(message));
       }
     },
   },
