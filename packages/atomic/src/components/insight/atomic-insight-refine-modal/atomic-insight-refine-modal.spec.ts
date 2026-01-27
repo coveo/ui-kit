@@ -91,6 +91,14 @@ describe('atomic-insight-refine-modal', () => {
     };
   };
 
+  describe('when connected to the DOM', () => {
+    it('should set display style to empty string', async () => {
+      const {element} = await renderRefineModal();
+
+      expect(element.style.display).toBe('');
+    });
+  });
+
   describe('when initializing', () => {
     it('should build breadcrumb manager with engine', async () => {
       const {element} = await renderRefineModal();
@@ -126,72 +134,43 @@ describe('atomic-insight-refine-modal', () => {
   });
 
   describe('when rendering', () => {
-    it('should render modal when isOpen is true', async () => {
-      const {atomicModal} = await renderRefineModal({isOpen: true});
+    it('should render modal with all expected elements when isOpen is true', async () => {
+      const {
+        atomicModal,
+        title,
+        closeButton,
+        closeIcon,
+        footerContent,
+        footerButton,
+        footerButtonText,
+        body,
+        facetSlot,
+      } = await renderRefineModal({
+        isOpen: true,
+        querySummaryState: {total: 123},
+      });
 
       expect(atomicModal).toBeInTheDocument();
-    });
-
-    it('should render the title', async () => {
-      const {title} = await renderRefineModal();
-
       expect(title).toBeInTheDocument();
       expect(title).toHaveTextContent('Filters');
-    });
-
-    it('should render the close button', async () => {
-      const {closeButton} = await renderRefineModal();
-
       expect(closeButton).toBeInTheDocument();
-    });
-
-    it('should render the close icon', async () => {
-      const {closeIcon} = await renderRefineModal();
-
       expect(closeIcon).toBeInTheDocument();
-    });
-
-    it('should render the footer content', async () => {
-      const {footerContent} = await renderRefineModal();
-
       expect(footerContent).toBeInTheDocument();
-    });
-
-    it('should render the footer button', async () => {
-      const {footerButton} = await renderRefineModal();
-
       expect(footerButton).toBeInTheDocument();
-    });
-
-    it('should render the footer button text', async () => {
-      const {footerButtonText} = await renderRefineModal();
-
       expect(footerButtonText).toBeInTheDocument();
       expect(footerButtonText).toHaveTextContent('View');
+      expect(body).toBeInTheDocument();
+      expect(body).toHaveAttribute('slot', 'body');
+      expect(facetSlot).toBeInTheDocument();
     });
 
-    it('should render the footer button count', async () => {
+    it('should render footer button count with total results', async () => {
       const {footerButtonCount} = await renderRefineModal({
         querySummaryState: {total: 123},
       });
 
       expect(footerButtonCount).toBeInTheDocument();
       expect(footerButtonCount).toHaveTextContent('123');
-    });
-  });
-
-  describe('when rendering the body section', () => {
-    it('should render the body section', async () => {
-      const {body} = await renderRefineModal();
-
-      expect(body).toBeInTheDocument();
-      expect(body).toHaveAttribute('slot', 'body');
-    });
-
-    it('should render the facet slot', async () => {
-      const {facetSlot} = await renderRefineModal();
-
-      expect(facetSlot).toBeInTheDocument();
     });
 
     it('should render clear all button when hasBreadcrumbs is true', async () => {
@@ -212,16 +191,6 @@ describe('atomic-insight-refine-modal', () => {
       expect(getClearAllButton()).not.toBeInTheDocument();
     });
 
-    it('should call breadcrumbManager.deselectAll when clear button is clicked', async () => {
-      const {getClearAllButton} = await renderRefineModal({
-        breadcrumbManagerState: {hasBreadcrumbs: true},
-      });
-
-      await userEvent.click(getClearAllButton()!);
-
-      expect(mockedBreadcrumbManager.deselectAll).toHaveBeenCalled();
-    });
-
     it('should not render body section when no facets', async () => {
       const {element, body} = await renderRefineModal();
       element.bindings.store.getFacetElements = () => [];
@@ -232,21 +201,15 @@ describe('atomic-insight-refine-modal', () => {
     });
   });
 
-  describe('when setting properties', () => {
-    it('should accept isOpen property', async () => {
-      const {element} = await renderRefineModal({
-        isOpen: false,
+  describe('when clicking clear all button', () => {
+    it('should call breadcrumbManager.deselectAll', async () => {
+      const {getClearAllButton} = await renderRefineModal({
+        breadcrumbManagerState: {hasBreadcrumbs: true},
       });
 
-      expect(element.isOpen).toBe(false);
-    });
+      await userEvent.click(getClearAllButton()!);
 
-    it('should default isOpen to false', async () => {
-      const {element} = await renderRefineModal({
-        isOpen: false,
-      });
-
-      expect(element.isOpen).toBe(false);
+      expect(mockedBreadcrumbManager.deselectAll).toHaveBeenCalled();
     });
   });
 
@@ -269,14 +232,6 @@ describe('atomic-insight-refine-modal', () => {
       await userEvent.click(footerButton!);
 
       expect(element.isOpen).toBe(false);
-    });
-  });
-
-  describe('when connected to the DOM', () => {
-    it('should set display style to empty string', async () => {
-      const {element} = await renderRefineModal();
-
-      expect(element.style.display).toBe('');
     });
   });
 
