@@ -1,3 +1,4 @@
+import '@/src/components/insight/user-actions/atomic-insight-user-actions-modal/atomic-insight-user-actions-modal';
 import {Schema, StringValue} from '@coveo/bueno';
 import {
   buildUserActions as buildInsightUserActions,
