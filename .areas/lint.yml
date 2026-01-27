@@ -1,0 +1,8 @@
+description: Linting configuration files
+file_patterns:
+  - biome.jsonc
+  - lint-staged.config.js
+
+reviewers:
+  dxui:
+    minimum_approvals: 1
