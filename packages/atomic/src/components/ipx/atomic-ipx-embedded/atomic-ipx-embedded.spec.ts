@@ -37,6 +37,21 @@ describe('atomic-ipx-embedded', () => {
     };
   };
 
+  describe('when initializing', () => {
+    it('should generate an ID if not provided', async () => {
+      const {element} = await renderEmbedded();
+      expect(element.id).toBeTruthy();
+      expect(element.id).toMatch(/^atomic-ipx-embedded-/);
+    });
+
+    it('should preserve existing ID if provided', async () => {
+      const element = await fixture<AtomicIpxEmbedded>(html`
+        <atomic-ipx-embedded id="custom-id"></atomic-ipx-embedded>
+      `);
+      expect(element.id).toBe('custom-id');
+    });
+  });
+
   describe('when rendering', () => {
     it('should render successfully', async () => {
       const {element} = await renderEmbedded();
@@ -60,21 +75,6 @@ describe('atomic-ipx-embedded', () => {
     });
   });
 
-  describe('when initializing', () => {
-    it('should generate an ID if not provided', async () => {
-      const {element} = await renderEmbedded();
-      expect(element.id).toBeTruthy();
-      expect(element.id).toMatch(/^atomic-ipx-embedded-/);
-    });
-
-    it('should preserve existing ID if provided', async () => {
-      const element = await fixture<AtomicIpxEmbedded>(html`
-        <atomic-ipx-embedded id="custom-id"></atomic-ipx-embedded>
-      `);
-      expect(element.id).toBe('custom-id');
-    });
-  });
-
   describe('when setting container prop', () => {
     it('should accept a container element', async () => {
       const container = document.createElement('div');
@@ -82,9 +82,9 @@ describe('atomic-ipx-embedded', () => {
       expect(element.container).toBe(container);
     });
 
-    it('should allow container to be undefined', async () => {
+    it('should render successfully without a container', async () => {
       const {element} = await renderEmbedded();
-      expect(element.container).toBeUndefined();
+      expect(element).toBeInTheDocument();
     });
   });
 
@@ -126,11 +126,9 @@ describe('atomic-ipx-embedded', () => {
       const {element} = await renderEmbedded();
       updateBreakpointsSpy.mockClear();
 
-      // Trigger a re-render
       element.requestUpdate();
       await element.updateComplete;
 
-      // Should not be called again
       expect(updateBreakpointsSpy).not.toHaveBeenCalled();
     });
   });

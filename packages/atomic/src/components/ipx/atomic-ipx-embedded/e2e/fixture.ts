@@ -1,11 +1,11 @@
 import {test as base} from '@playwright/test';
 import {IpxEmbeddedPageObject} from './page-object';
 
-type MyFixtures = {
+type IpxEmbeddedFixtures = {
   ipxEmbedded: IpxEmbeddedPageObject;
 };
 
-export const test = base.extend<MyFixtures>({
+export const test = base.extend<IpxEmbeddedFixtures>({
   ipxEmbedded: async ({page}, use) => {
     await use(new IpxEmbeddedPageObject(page));
   },
