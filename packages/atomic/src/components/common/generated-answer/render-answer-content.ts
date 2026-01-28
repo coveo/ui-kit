@@ -147,12 +147,14 @@ export const renderAnswerContent: FunctionalComponent<
             <atomic-previous-answers-list
               .previousAnswers=${previousAnswers}
               .i18n=${i18n}
+              .renderFeedbackAndCopyButtonsSlot=${renderFeedbackAndCopyButtonsSlot}
+              .renderCitationsSlot=${renderCitationsSlot}
             ></atomic-previous-answers-list>
           `
               : nothing
           }
           <div part="generated-content-container" class="px-6 pb-6">
-            <div class=${`flex justify-between gap-3 ${queryRowSpacingClass}`}>
+            <div class=${`flex items-center justify-between gap-3 ${queryRowSpacingClass}`}>
               <p class="query-text text-base font-semibold leading-6">
                 ${displayQuery}
               </p>

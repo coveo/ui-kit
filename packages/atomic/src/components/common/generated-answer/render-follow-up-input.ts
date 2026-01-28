@@ -42,13 +42,8 @@ export const renderFollowUpInput: FunctionalComponent<
     }
 
     if (canAskFollowUp()) {
-      try {
-        const result = await askFollowUp(trimmedValue);
-        console.log('Follow-up answer generated:', result);
-        onClearInput();
-      } catch (error) {
-        console.error('Error generating follow-up answer:', error);
-      }
+      await askFollowUp(trimmedValue);
+      onClearInput();
     }
   };
 
@@ -58,8 +53,6 @@ export const renderFollowUpInput: FunctionalComponent<
       handleSubmit();
     }
   };
-
-  const isSubmitDisabled = buttonDisabled || inputDisabled;
 
   return html`
     <div class="pb-3" part="input-container">
@@ -78,12 +71,17 @@ export const renderFollowUpInput: FunctionalComponent<
         <button
           type="button"
           @click=${handleSubmit}
-          ?disabled=${isSubmitDisabled}
+          ?disabled=${buttonDisabled}
           class="absolute right-1 top-1 bottom-1 flex w-8 items-center justify-center rounded-md bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
           aria-label="Send follow-up question"
           part="submit-button"
         >
-          <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" part="submit-icon">
+          <svg
+            class="h-4 w-4"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            part="submit-icon"
+          >
             <path
               fill-rule="evenodd"
               d="M10 17a.75.75 0 01-.75-.75V5.612L5.29 9.77a.75.75 0 01-1.08-1.04l5.25-5.5a.75.75 0 011.08 0l5.25 5.5a.75.75 0 11-1.08 1.04L10.75 5.612V16.25A.75.75 0 0110 17z"

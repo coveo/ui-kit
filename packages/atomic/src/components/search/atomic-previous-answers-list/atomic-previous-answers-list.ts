@@ -5,6 +5,9 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {renderGeneratedContentContainer} from '@/src/components/common/generated-answer/generated-content-container';
 import {renderSourceCitations} from '@/src/components/common/generated-answer/source-citations';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import '@/src/components/common/generated-answer/generated-content/generated-markdown-content';
+import '@/src/components/common/generated-answer/generated-content/generated-text-content';
+import markdownStyles from '@/src/components/common/generated-answer/generated-content/generated-markdown-content.tw.css';
 
 interface PreviousAnswer {
   question: string;
@@ -29,6 +32,8 @@ interface PreviousAnswer {
 @customElement('atomic-previous-answers-list')
 @withTailwindStyles
 export class AtomicPreviousAnswersList extends LitElement {
+  static styles = markdownStyles;
+
   /**
    * The array of previous answers to display.
    */
@@ -40,6 +45,18 @@ export class AtomicPreviousAnswersList extends LitElement {
    */
   @property({type: Object})
   i18n!: i18n;
+
+  /**
+   * Function to render feedback and copy buttons for each previous answer.
+   */
+  @property({type: Object})
+  renderFeedbackAndCopyButtonsSlot?: () => TemplateResult | typeof nothing;
+
+  /**
+   * Function to render citations slot.
+   */
+  @property({type: Object})
+  renderCitationsSlot?: () => TemplateResult | typeof nothing;
 
   /**
    * Set of indices for expanded answer content.
@@ -75,35 +92,23 @@ export class AtomicPreviousAnswersList extends LitElement {
       isStreaming,
     } = answer;
 
+    console.log('ANSWER CONTENT FORMAT: ', answerContentFormat);
+
     return html`
-      <div class="px-6 py-4">
+      <div part="generated-content-container" class="px-6 pb-6">
         ${renderGeneratedContentContainer({
           props: {
             answer: answerText,
-            answerContentFormat,
+            answerContentFormat: 'text/markdown',
             isStreaming: !!isStreaming,
           },
         })(html`
-          ${
-            citations?.length
-              ? renderSourceCitations({
-                  props: {
-                    label: this.i18n.t('citations'),
-                    isVisible: true,
-                  },
-                })(html`
-            <div class="mt-4">
-              ${citations.map(
-                (citation, index) => html`
-                <div class="text-sm text-gray-600 mb-1">
-                  [${index + 1}] ${citation.title || citation.uri}
-                </div>
-              `
-              )}
-            </div>
-          `)
-              : nothing
-          }
+          ${renderSourceCitations({
+            props: {
+              label: this.i18n.t('citations'),
+              isVisible: !!citations?.length,
+            },
+          })(this.renderCitationsSlot?.() || nothing)}
         `)}
       </div>
     `;
@@ -117,13 +122,22 @@ export class AtomicPreviousAnswersList extends LitElement {
         <button
           type="button"
           @click=${() => this.toggleAnswerExpansion(index)}
-          class="group w-full px-6 py-2 text-left bg-white transition-colors"
+          class="group w-full px-6 py-3 text-left bg-white transition-colors flex align-center items-center justify-between gap-3"
           aria-expanded=${isExpanded}
           part="previous-answer-question"
         >
-          <span class="inline-block rounded text-base text-gray-600 leading-6 group-hover:bg-gray-100">
+          <p class="query-text text-base font-semibold leading-6 group-hover:bg-gray-100 rounded transition-colors self-center">
             ${answer.question}
-          </span>
+          </p>
+          ${
+            isExpanded
+              ? html`
+            <div class="flex items-center gap-2 h-9">
+              ${this.renderFeedbackAndCopyButtonsSlot?.() || nothing}
+            </div>
+          `
+              : nothing
+          }
         </button>
 
         ${

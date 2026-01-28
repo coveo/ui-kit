@@ -233,6 +233,9 @@ export class AtomicGeneratedAnswer
   private followUpInputValue = '';
 
   @state()
+  private followUpPending = false;
+
+  @state()
   private initialQuery = '';
 
   private ariaMessage = new AriaLiveRegionController(this, 'generated-answer');
@@ -351,14 +354,29 @@ export class AtomicGeneratedAnswer
 
   private handleAskFollowUp = async (query: string) => {
     if (this.canAskFollowUp()) {
-      const result = await this.generatedAnswer.askFollowUp(query);
-      return result;
+      this.followUpPending = true;
+      try {
+        const result = await this.generatedAnswer.askFollowUp(query);
+        return result;
+      } finally {
+        this.followUpPending = false;
+      }
     }
   };
 
   private handleClearFollowUpInput = () => {
     this.followUpInputValue = '';
   };
+
+  private isAnyFollowUpAnswerStreaming(): boolean {
+    if (!this.canAskFollowUp()) {
+      return false;
+    }
+    const followUpAnswers = this.generatedAnswer.state.followUpAnswers;
+    return (
+      followUpAnswers?.answers?.some((answer) => answer.isStreaming) ?? false
+    );
+  }
 
   @bindingGuard()
   @errorGuard()
@@ -666,7 +684,10 @@ export class AtomicGeneratedAnswer
             canAskFollowUp: () => this.canAskFollowUp(),
             askFollowUp: this.handleAskFollowUp,
             onClearInput: this.handleClearFollowUpInput,
-            buttonDisabled: !!this.generatedAnswerState.isStreaming,
+            buttonDisabled:
+              !!this.generatedAnswerState.isStreaming ||
+              this.isAnyFollowUpAnswerStreaming() ||
+              this.followUpPending,
           },
         })}
       </div>
