@@ -135,7 +135,7 @@ export class AtomicInsightUserActionsModal
         .fullscreen=${true}
         .isOpen=${this.isOpen}
         .source=${this.openButton}
-        .container=${this as HTMLElement}
+        .container=${this}
         .close=${() => {
           this.isOpen = false;
         }}
