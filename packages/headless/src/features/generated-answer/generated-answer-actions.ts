@@ -16,11 +16,19 @@ import type {
   GeneratedAnswerStreamEventData,
 } from '../../api/generated-answer/generated-answer-event-payload.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
+import type {AnswerGenerationApiState} from '../../api/knowledge/answer-generation/answer-generation-api-state.js';
+import {
+  type AnswerEndpointArgs,
+  initiateAnswerEndpoint,
+} from '../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
 import {fetchAnswer} from '../../api/knowledge/stream-answer-api.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import type {AsyncThunkOptions} from '../../app/async-thunk-options.js';
 import type {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments.js';
-import type {AnswerApiQueryParams} from '../../features/generated-answer/generated-answer-request.js';
+import type {
+  AnswerApiQueryParams,
+  StateNeededForHeadAnswerParams,
+} from '../../features/generated-answer/generated-answer-request.js';
 import type {
   ConfigurationSection,
   DebugSection,
@@ -39,6 +47,7 @@ import {
 import {
   buildStreamingRequest,
   constructAnswerAPIQueryParams,
+  constructGenerateHeadAnswerParams,
 } from './generated-answer-request.js';
 import {
   type GeneratedContentFormat,
@@ -211,7 +220,7 @@ export const setCannotAnswer = createAction(
 
 export const setAnswerApiQueryParams = createAction(
   'generatedAnswer/setAnswerApiQueryParams',
-  (payload: AnswerApiQueryParams) =>
+  (payload: Partial<AnswerApiQueryParams>) =>
     validatePayload(payload, new RecordValue({}))
 );
 
@@ -359,5 +368,35 @@ export const generateAnswer = createAsyncThunk<
           'The generateAnswer action requires an answer configuration ID to use CRGA with the Answer API.'
       );
     }
+  }
+);
+
+export const generateHeadAnswer = createAsyncThunk<
+  void,
+  void,
+  AsyncThunkOptions<StateNeededForHeadAnswerParams, SearchThunkExtraArguments>
+>(
+  'generatedAnswerWithFollowUps/generateHeadAnswer',
+  async (_, {getState, dispatch, extra: {navigatorContext, logger}}) => {
+    const state = getState() as AnswerGenerationApiState;
+    if (!state.configuration.knowledge.agentId) {
+      logger.warn(
+        'Missing agentId in engine configuration. ' +
+          'The generateHeadAnswer action requires an agent ID.'
+      );
+      return;
+    }
+
+    dispatch(resetAnswer());
+    const generateHeadAnswerParams = constructGenerateHeadAnswerParams(
+      state,
+      navigatorContext
+    );
+    const headAnswerEndpointArgs: AnswerEndpointArgs = {
+      ...generateHeadAnswerParams,
+      strategyKey: 'head-answer',
+    };
+    dispatch(setAnswerApiQueryParams(generateHeadAnswerParams));
+    await dispatch(initiateAnswerEndpoint(headAnswerEndpointArgs));
   }
 );

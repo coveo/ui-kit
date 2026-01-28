@@ -1,5 +1,7 @@
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
+import {buildMockAnalyticsState} from '../../test/mock-analytics-state.js';
 import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider.js';
+import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {
   expectedStreamAnswerAPIParam,
   streamAnswerAPIStateMock,
@@ -30,7 +32,12 @@ import {
   streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ,
   streamAnswerAPIStateMockWithStaticFiltersSelected,
 } from './generated-answer-mocks.js';
-import {constructAnswerAPIQueryParams} from './generated-answer-request.js';
+import {
+  constructAnswerAPIQueryParams,
+  constructGenerateHeadAnswerParams,
+  type StateNeededForHeadAnswerParams,
+} from './generated-answer-request.js';
+import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
 
 describe('constructAnswerAPIQueryParams', () => {
   beforeEach(() => {
@@ -485,5 +492,119 @@ describe('constructAnswerAPIQueryParams', () => {
 
       expect(queryParams.facets).toBeUndefined();
     });
+  });
+});
+
+describe('constructGenerateHeadAnswerParams', () => {
+  const buildState = (overrides = {}): StateNeededForHeadAnswerParams => ({
+    configuration: {
+      ...getConfigurationInitialState(),
+      search: {
+        locale: 'en',
+        timezone: 'America/New_York',
+        authenticationProviders: [],
+      },
+      analytics: buildMockAnalyticsState({
+        enabled: true,
+        originLevel2: 'default',
+        originLevel3: 'default',
+        documentLocation: 'http://test.com',
+      }),
+    },
+    query: {q: 'test query', enableQuerySyntax: false},
+    generatedAnswer: {
+      ...getGeneratedAnswerInitialState(),
+      responseFormat: {contentFormat: ['text/plain']},
+      fieldsToIncludeInCitations: ['field1', 'field2'],
+    },
+    searchHub: 'test-hub',
+    pipeline: 'test-pipeline',
+    facetSet: {},
+    ...overrides,
+  });
+
+  it('constructs head answer params from state', () => {
+    const params = constructGenerateHeadAnswerParams(
+      buildState(),
+      buildMockNavigatorContextProvider()()
+    );
+
+    expect(params).toMatchObject({
+      q: 'test query',
+      pipelineRuleParameters: {
+        mlGenerativeQuestionAnswering: {
+          responseFormat: {contentFormat: ['text/plain']},
+          citationsFieldToInclude: ['field1', 'field2'],
+        },
+      },
+      searchHub: 'test-hub',
+      pipeline: 'test-pipeline',
+      locale: 'en',
+      analytics: expect.any(Object),
+    });
+  });
+
+  it('uses empty string when query is undefined', () => {
+    const params = constructGenerateHeadAnswerParams(
+      buildState({query: undefined}),
+      buildMockNavigatorContextProvider()()
+    );
+    expect(params.q).toBe('');
+  });
+
+  it('does not include search hub when empty', () => {
+    const params = constructGenerateHeadAnswerParams(
+      buildState({searchHub: ''}),
+      buildMockNavigatorContextProvider()()
+    );
+    expect(params.searchHub).toBeUndefined();
+  });
+
+  it('does not include pipeline when empty', () => {
+    const params = constructGenerateHeadAnswerParams(
+      buildState({pipeline: ''}),
+      buildMockNavigatorContextProvider()()
+    );
+    expect(params.pipeline).toBeUndefined();
+  });
+
+  it('includes facets when present and sorts them alphabetically', () => {
+    const params = constructGenerateHeadAnswerParams(
+      buildState({
+        facetSet: {
+          'zebra-facet': {
+            request: {
+              facetId: 'zebra-facet',
+              field: 'field3',
+              type: 'specific',
+              currentValues: [],
+            },
+          },
+          'alpha-facet': {
+            request: {
+              facetId: 'alpha-facet',
+              field: 'field1',
+              type: 'specific',
+              currentValues: [],
+            },
+          },
+        },
+      }),
+      buildMockNavigatorContextProvider()()
+    );
+
+    console.log(params.facets);
+    expect(params.facets?.map((f) => f.facetId)).toEqual([
+      'alpha-facet',
+      'zebra-facet',
+    ]);
+  });
+
+  it('does not include facets when facetSet is empty', () => {
+    const params = constructGenerateHeadAnswerParams(
+      buildState({facetSet: {}}),
+      buildMockNavigatorContextProvider()()
+    );
+    expect(params.facets).toBeUndefined();
   });
 });
