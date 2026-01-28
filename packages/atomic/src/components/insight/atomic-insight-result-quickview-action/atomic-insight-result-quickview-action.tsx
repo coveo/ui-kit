@@ -19,6 +19,7 @@ import {
 import {IconButton} from '../../common/stencil-iconButton';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '@/src/components/search/result-template-component-utils/context/stencil-result-template-decorators';
+import type {AtomicQuickviewModal} from '@/src/components/search/atomic-quickview-modal/atomic-quickview-modal';
 
 /**
  * @internal
@@ -73,7 +74,7 @@ export class AtomicInsightResultQuickviewAction
     this.quickview.previous();
   }
 
-  private quickviewModalRef?: HTMLAtomicQuickviewModalElement;
+  private quickviewModalRef?: AtomicQuickviewModal;
 
   public get focusTarget() {
     if (!this.buttonFocusTarget) {
