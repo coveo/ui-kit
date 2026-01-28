@@ -299,6 +299,7 @@ export type {
 } from './controllers/commerce/search/did-you-mean/headless-did-you-mean.js';
 export type {
   Search,
+  SearchOptions,
   SearchState,
 } from './controllers/commerce/search/headless-search.js';
 export {buildSearch} from './controllers/commerce/search/headless-search.js';
