@@ -76,7 +76,7 @@ describe('atomic-generated-answer', () => {
           .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
           .answerConfigurationId=${props.answerConfigurationId}
           fields-to-include-in-citations=${props.fieldsToIncludeInCitations}
-          .maxCollapsedHeight=${props.maxCollapsedHeight}
+          .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
         ></atomic-generated-answer>`,
         selector: 'atomic-generated-answer',
         bindings: (bindings) => {
@@ -741,5 +741,116 @@ describe('atomic-generated-answer', () => {
 
     expect(element.error).toBeDefined();
     expect(element.error.message).toMatch(/maxCollapsedHeight/i);
+  });
+
+  describe('disableCitationAnchoring property', () => {
+    it('should have disableCitationAnchoring as false by default', async () => {
+      const {element} = await renderGeneratedAnswer({
+        generatedAnswerState: {isVisible: true, answer: 'Test'},
+      });
+
+      expect(element.disableCitationAnchoring).toBe(false);
+    });
+
+    it('should pass disableCitationAnchoring=false to citation elements', async () => {
+      const {citationElements} = await renderGeneratedAnswer({
+        props: {disableCitationAnchoring: false},
+        generatedAnswerState: {
+          isVisible: true,
+          answer: 'Test answer',
+          citations: [
+            {
+              source: 'Source 1',
+              id: 'citation-1',
+              title: 'Citation 1',
+              uri: 'https://example.com',
+              permanentid: 'perm-1',
+              clickUri: 'https://example.com/click',
+              text: 'Citation text',
+            },
+          ],
+        },
+      });
+
+      expect(citationElements.length).toBeGreaterThan(0);
+      const citation = citationElements[0] as HTMLElement & {
+        disableCitationAnchoring: boolean;
+      };
+      expect(citation.disableCitationAnchoring).toBe(false);
+    });
+
+    it('should pass disableCitationAnchoring=true to citation elements when enabled', async () => {
+      const {citationElements} = await renderGeneratedAnswer({
+        props: {disableCitationAnchoring: true},
+        generatedAnswerState: {
+          isVisible: true,
+          answer: 'Test answer',
+          citations: [
+            {
+              source: 'Source 1',
+              id: 'citation-1',
+              title: 'Citation 1',
+              uri: 'https://example.com',
+              permanentid: 'perm-1',
+              clickUri: 'https://example.com/click',
+              text: 'Citation text',
+            },
+          ],
+        },
+      });
+
+      expect(citationElements.length).toBeGreaterThan(0);
+      const citation = citationElements[0] as HTMLElement & {
+        disableCitationAnchoring: boolean;
+      };
+      expect(citation.disableCitationAnchoring).toBe(true);
+    });
+
+    it('should pass disableCitationAnchoring to all citations when multiple exist', async () => {
+      const {citationElements} = await renderGeneratedAnswer({
+        props: {disableCitationAnchoring: true},
+        generatedAnswerState: {
+          isVisible: true,
+          answer: 'Test answer',
+          citations: [
+            {
+              source: 'Source 1',
+              id: 'citation-1',
+              title: 'Citation 1',
+              uri: 'https://example.com/1',
+              permanentid: 'perm-1',
+              clickUri: 'https://example.com/click/1',
+              text: 'Citation text 1',
+            },
+            {
+              source: 'Source 2',
+              id: 'citation-2',
+              title: 'Citation 2',
+              uri: 'https://example.com/2',
+              permanentid: 'perm-2',
+              clickUri: 'https://example.com/click/2',
+              text: 'Citation text 2',
+            },
+            {
+              source: 'Source 3',
+              id: 'citation-3',
+              title: 'Citation 3',
+              uri: 'https://example.com/3',
+              permanentid: 'perm-3',
+              clickUri: 'https://example.com/click/3',
+              text: 'Citation text 3',
+            },
+          ],
+        },
+      });
+
+      expect(citationElements.length).toBe(3);
+      citationElements.forEach((citationEl) => {
+        const citation = citationEl as HTMLElement & {
+          disableCitationAnchoring: boolean;
+        };
+        expect(citation.disableCitationAnchoring).toBe(true);
+      });
+    });
   });
 });
