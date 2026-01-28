@@ -25,7 +25,7 @@ testCases.forEach(({mode, story, facetBrand}) => {
       await commerceInterface.searchBox().waitFor({state: 'visible'});
       await expect(
         commerceInterface.searchBox().getByPlaceholder('Recherche')
-      ).toBeVisible({timeout: 10000});
+      ).toBeVisible();
     });
 
     test('should reflect state in URL when facet selected', async ({
