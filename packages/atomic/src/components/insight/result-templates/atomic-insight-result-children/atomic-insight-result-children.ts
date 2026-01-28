@@ -57,15 +57,15 @@ export class AtomicInsightResultChildren
   implements InitializableComponent<InsightBindings>
 {
   static styles = css`
-    @reference '../../../../utils/tailwind-utilities/set-font-size.css';
+@reference '../../../../utils/tailwind-utilities/set-font-size.css';
 
-    .show-hide-button {
-      @apply set-font-size-sm;
-    }
+.show-hide-button {
+  @apply set-font-size-sm;
+}
 
-    .no-result-root {
-      @apply text-neutral-dark;
-    }
+.no-result-root {
+  @apply text-neutral-dark;
+}
   `;
 
   /**
