@@ -41,6 +41,10 @@ import {
   validatePayload,
 } from '../../utils/validate-payload.js';
 import {
+  selectAgentId,
+  selectAnswerConfigurationId,
+} from '../configuration/configuration-selectors.js';
+import {
   logGeneratedAnswerResponseLinked,
   logGeneratedAnswerStreamEnd,
 } from './generated-answer-analytics-actions.js';
@@ -354,7 +358,9 @@ export const generateAnswer = createAsyncThunk<
     dispatch(resetAnswer());
 
     const state = getState() as StreamAnswerAPIState;
-    if (state.generatedAnswer.answerConfigurationId) {
+    const answerConfigurationId = selectAnswerConfigurationId(state);
+
+    if (answerConfigurationId) {
       const answerApiQueryParams = constructAnswerAPIQueryParams(
         state,
         navigatorContext
@@ -379,7 +385,9 @@ export const generateHeadAnswer = createAsyncThunk<
   'generatedAnswerWithFollowUps/generateHeadAnswer',
   async (_, {getState, dispatch, extra: {navigatorContext, logger}}) => {
     const state = getState() as AnswerGenerationApiState;
-    if (!state.configuration.knowledge.agentId) {
+    const agentId = selectAgentId(state);
+
+    if (!agentId) {
       logger.warn(
         'Missing agentId in engine configuration. ' +
           'The generateHeadAnswer action requires an agent ID.'

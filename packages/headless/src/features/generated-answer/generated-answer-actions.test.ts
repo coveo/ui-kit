@@ -167,9 +167,13 @@ describe('generated answer', () => {
     const mockGetState = vi.fn(
       () =>
         ({
-          generatedAnswer: {
-            answerConfigurationId: 'test-config-id',
+          configuration: {
+            knowledge: {
+              answerConfigurationId: 'test-config-id',
+              agentId: undefined,
+            },
           },
+          generatedAnswer: {},
           searchHub: 'default',
           pipeline: 'default',
         }) as any
@@ -207,9 +211,13 @@ describe('generated answer', () => {
       const mockGetState = vi.fn(
         () =>
           ({
-            generatedAnswer: {
-              answerConfigurationId: undefined,
+            configuration: {
+              knowledge: {
+                answerConfigurationId: undefined,
+                agentId: undefined,
+              },
             },
+            generatedAnswer: {},
             searchHub: 'default',
             pipeline: 'default',
           }) as any

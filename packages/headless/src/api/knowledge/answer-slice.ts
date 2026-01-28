@@ -6,6 +6,7 @@ import {
   fetchBaseQuery,
   retry,
 } from '@reduxjs/toolkit/query';
+import {selectAnswerConfigurationId} from '../../features/configuration/configuration-selectors.js';
 import type {
   ConfigurationSection,
   GeneratedAnswerSection,
@@ -25,7 +26,7 @@ export const dynamicBaseQuery: BaseQueryFn<
 > = async (args, api, extraOptions) => {
   const state = api.getState() as StateNeededByAnswerSlice;
   const {accessToken, environment, organizationId} = state.configuration;
-  const answerConfigurationId = state.generatedAnswer.answerConfigurationId;
+  const answerConfigurationId = selectAnswerConfigurationId(state);
   const updatedArgs = {
     ...(args as FetchArgs),
     headers: {

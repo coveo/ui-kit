@@ -7,6 +7,7 @@ import type {
   GeneratedAnswerSection,
   SearchSection,
 } from '../../state/state-sections.js';
+import {selectAnswerConfigurationId} from '../configuration/configuration-selectors.js';
 
 export const generativeQuestionAnsweringIdSelector = (
   state: Partial<SearchAppState>
@@ -30,7 +31,11 @@ const isGeneratedAnswerSection = (
 ): state is StreamAnswerAPIState =>
   'answer' in state &&
   'generatedAnswer' in state &&
-  !isNullOrUndefined(state.generatedAnswer?.answerConfigurationId);
+  'configuration' in state &&
+  state.configuration !== undefined &&
+  !isNullOrUndefined(
+    selectAnswerConfigurationId(state as StreamAnswerAPIState)
+  );
 
 const isSearchSection = (
   state: Partial<SearchAppState> | StreamAnswerAPIState
