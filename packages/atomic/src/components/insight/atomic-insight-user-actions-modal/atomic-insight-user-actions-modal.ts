@@ -4,6 +4,7 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '@/src/components/common/atomic-modal/export-parts';
 import {renderButton} from '@/src/components/common/button';
 import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
+import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -49,7 +50,12 @@ export class AtomicInsightUserActionsModal
   /**
    * Whether the modal is open.
    */
-  @property({type: Boolean, reflect: true, attribute: 'is-open'})
+  @property({
+    type: Boolean,
+    reflect: true,
+    converter: booleanConverter,
+    attribute: 'is-open',
+  })
   public isOpen = false;
 
   /**
@@ -72,11 +78,6 @@ export class AtomicInsightUserActionsModal
 
   public initialize() {
     // Noop
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.style.display = '';
   }
 
   private renderHeader() {
