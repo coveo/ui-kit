@@ -17,11 +17,18 @@ import '@/src/components/common/atomic-smart-snippet-answer/atomic-smart-snippet
 
 /**
  * The `atomic-smart-snippet-expandable-answer` component displays an expandable smart snippet answer.
- * @internal
  *
  * @part truncated-answer - The container for the truncated answer content.
  * @part show-more-button - The button to expand the answer when collapsed.
  * @part show-less-button - The button to collapse the answer when expanded.
+ *
+ * @event expand - Emitted when the answer is expanded.
+ * @event collapse - Emitted when the answer is collapsed.
+ * @event selectInlineLink - Emitted when an inline link is selected.
+ * @event beginDelayedSelectInlineLink - Emitted when a delayed selection begins for an inline link.
+ * @event cancelPendingSelectInlineLink - Emitted when a pending selection is canceled for an inline link.
+ *
+ * @internal
  */
 @customElement('atomic-smart-snippet-expandable-answer')
 @bindings()

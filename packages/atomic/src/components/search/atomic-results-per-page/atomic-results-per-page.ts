@@ -39,6 +39,8 @@ import {randomID} from '@/src/utils/utils.js';
  * @part buttons - The list of buttons.
  * @part button - The result per page button.
  * @part active-button - The active result per page button.
+ *
+ * @event atomic/scrollToTop - Emitted when the page should scroll to top after changing results per page.
  */
 @customElement('atomic-results-per-page')
 @bindings()

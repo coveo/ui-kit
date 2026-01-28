@@ -15,6 +15,8 @@ import {buildSearchLayout} from './search-layout';
  * @cssprop --atomic-layout-max-search-box-input-width: The maximum width that the search box input will take.
  * @cssprop --atomic-layout-max-search-box-double-suggestions-width: The maximum width that the search box suggestions will take when displaying a double list.
  * @cssprop --atomic-layout-search-box-left-suggestions-width: The width of the left list when displaying a double list.
+ *
+ * @event atomic-layout-breakpoint-change - Emitted when the mobile breakpoint changes. The event detail contains `{ breakpoint: string }`.
  */
 @customElement('atomic-search-layout')
 export class AtomicSearchLayout extends LightDomMixin(

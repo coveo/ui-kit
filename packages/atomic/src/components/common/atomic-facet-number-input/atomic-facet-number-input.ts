@@ -14,6 +14,9 @@ import type {AnyBindings} from '../interface/bindings';
 
 /**
  * Internal component made to be integrated in a NumericFacet.
+ *
+ * @event atomic/numberInputApply - Emitted when the user applies a numeric range selection.
+ *
  * @internal
  */
 @customElement('atomic-facet-number-input')

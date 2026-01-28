@@ -29,6 +29,8 @@ import type {AnyBindings} from '../interface/bindings.js';
  * @part footer-wrapper - The wrapper with a shadow or background color around the footer.
  * @part footer - The footer at the bottom of the modal.
  *
+ * @event close - Emitted when the modal is closed (e.g., by pressing Escape).
+ *
  * @internal
  */
 @customElement('atomic-modal')
