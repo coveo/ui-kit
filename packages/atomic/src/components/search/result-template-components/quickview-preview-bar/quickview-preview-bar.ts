@@ -1,5 +1,5 @@
-import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
-import type {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
+import type {HighlightKeywords} from '@/src/components/search/atomic-quickview-modal/highlight-keywords';
+import type {QuickviewWordHighlight} from '@/src/components/search/result-template-components/quickview-word-highlight/quickview-word-highlight';
 
 export const buildQuickviewPreviewBar = (
   words: Record<string, QuickviewWordHighlight>,

@@ -3,6 +3,7 @@ import type {FoldedResult, InteractiveResult, Result} from '@coveo/headless';
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import type {DisplayConfig} from '@/src/components/common/item-list/context/item-display-config-context-controller';
 import {
   type ItemRenderingFunction,
@@ -312,9 +313,10 @@ export class AtomicResult extends ChildrenUpdateCompleteMixin(LitElement) {
       <div class=${resultComponentClass}>
         <div
           class="result-root ${this.itemLayoutController.getCombinedClasses().join(' ')}"
-          .innerHTML=${this.getContentHTML()}
-        ></div>
-        <div class="link-container" .innerHTML=${this.getLinkHTML()}></div>
+        >
+          ${unsafeHTML(this.getContentHTML())}
+        </div>
+        <div class="link-container">${unsafeHTML(this.getLinkHTML())}</div>
       </div>
     `;
   }
