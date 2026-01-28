@@ -93,7 +93,7 @@ describe('commerce api client', () => {
   it('#getProductListing should call the platform endpoint with the correct arguments', async () => {
     const request: CommerceListingRequest = {
       ...(await buildCommerceAPIRequest()),
-      enableResults: false,
+      enableResults: true,
     };
 
     mockPlatformCall({
@@ -117,6 +117,7 @@ describe('commerce api client', () => {
         context: request.context,
         language: request.language,
         currency: request.currency,
+        enableResults: request.enableResults,
       },
       requestMetadata: {method: 'listing'},
     });
@@ -126,6 +127,7 @@ describe('commerce api client', () => {
     const request = {
       ...(await buildCommerceAPIRequest()),
       query: 'some query',
+      enableResults: true,
     };
 
     mockPlatformCall({
@@ -145,6 +147,7 @@ describe('commerce api client', () => {
       origin: 'commerceApiFetch',
       requestParams: {
         query: 'some query',
+        enableResults: request.enableResults,
         trackingId: request.trackingId,
         clientId: request.clientId,
         context: request.context,
