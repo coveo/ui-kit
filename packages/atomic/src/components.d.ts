@@ -389,12 +389,6 @@ export namespace Components {
         "isOpen": boolean;
         "openButton"?: HTMLElement;
     }
-    interface AtomicIpxRefineToggle {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter": number;
-    }
     /**
      * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
      */
@@ -738,12 +732,6 @@ declare global {
         prototype: HTMLAtomicIpxRefineModalElement;
         new (): HTMLAtomicIpxRefineModalElement;
     };
-    interface HTMLAtomicIpxRefineToggleElement extends Components.AtomicIpxRefineToggle, HTMLStencilElement {
-    }
-    var HTMLAtomicIpxRefineToggleElement: {
-        prototype: HTMLAtomicIpxRefineToggleElement;
-        new (): HTMLAtomicIpxRefineToggleElement;
-    };
     /**
      * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
      */
@@ -819,7 +807,6 @@ declare global {
         "atomic-ipx-modal": HTMLAtomicIpxModalElement;
         "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
-        "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
         "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
@@ -1173,12 +1160,6 @@ declare namespace LocalJSX {
         "isOpen"?: boolean;
         "openButton"?: HTMLElement;
     }
-    interface AtomicIpxRefineToggle {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter"?: number;
-    }
     /**
      * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
      */
@@ -1281,7 +1262,6 @@ declare namespace LocalJSX {
         "atomic-ipx-modal": AtomicIpxModal;
         "atomic-ipx-recs-list": AtomicIpxRecsList;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
-        "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
         "atomic-ipx-result-link": AtomicIpxResultLink;
         "atomic-recs-list": AtomicRecsList;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
@@ -1333,7 +1313,6 @@ declare module "@stencil/core" {
              */
             "atomic-ipx-recs-list": LocalJSX.AtomicIpxRecsList & JSXBase.HTMLAttributes<HTMLAtomicIpxRecsListElement>;
             "atomic-ipx-refine-modal": LocalJSX.AtomicIpxRefineModal & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineModalElement>;
-            "atomic-ipx-refine-toggle": LocalJSX.AtomicIpxRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineToggleElement>;
             /**
              * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
              */
