@@ -1,6 +1,6 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import type {Quickview, QuickviewState, Result} from '@coveo/headless';
-import {buildQuickview} from '@coveo/headless';
+import type {Quickview, QuickviewState, Result} from '@coveo/headless/insight';
+import {buildQuickview} from '@coveo/headless/insight';
 import {LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {createRef, type Ref} from 'lit/directives/ref.js';
@@ -11,13 +11,10 @@ import {createResultContextController} from '@/src/components/search/result-temp
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {
-  AriaLiveRegionController,
-  FocusTargetController,
-} from '@/src/utils/accessibility-utils';
+import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import QuickviewIcon from '../../../images/preview.svg';
 import '@/src/components/common/atomic-icon/atomic-icon';
-import type {Bindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
+import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
 import type {AtomicQuickviewModal} from '@/src/components/search/atomic-quickview-modal/atomic-quickview-modal';
 
 /**
@@ -27,7 +24,7 @@ import type {AtomicQuickviewModal} from '@/src/components/search/atomic-quickvie
 @bindings()
 export class AtomicInsightResultQuickviewAction
   extends LitElement
-  implements InitializableComponent<Bindings>
+  implements InitializableComponent<InsightBindings>
 {
   private static readonly propsSchema = new Schema({
     sandbox: new StringValue({
@@ -50,7 +47,7 @@ export class AtomicInsightResultQuickviewAction
   @property({type: String})
   public sandbox = 'allow-popups allow-top-navigation allow-same-origin';
 
-  @state() public bindings!: Bindings;
+  @state() public bindings!: InsightBindings;
   @state() public error!: Error;
   @state() private result!: Result;
 
@@ -61,19 +58,8 @@ export class AtomicInsightResultQuickviewAction
 
   private resultContext = createResultContextController(this);
   private buttonFocusTarget!: FocusTargetController;
-  private ariaLiveRegion = new AriaLiveRegionController(this, 'quickview');
   private quickviewModalRef?: AtomicQuickviewModal;
   private buttonRef: Ref<HTMLButtonElement> = createRef();
-
-  private nextQuickviewHandler = (evt: Event) => {
-    evt.stopImmediatePropagation();
-    this.quickview.next();
-  };
-
-  private previousQuickviewHandler = (evt: Event) => {
-    evt.stopImmediatePropagation();
-    this.quickview.previous();
-  };
 
   constructor() {
     super();
@@ -100,30 +86,6 @@ export class AtomicInsightResultQuickviewAction
     });
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    document.body.addEventListener(
-      'atomic/quickview/next',
-      this.nextQuickviewHandler
-    );
-    document.body.addEventListener(
-      'atomic/quickview/previous',
-      this.previousQuickviewHandler
-    );
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    document.body.removeEventListener(
-      'atomic/quickview/next',
-      this.nextQuickviewHandler
-    );
-    document.body.removeEventListener(
-      'atomic/quickview/previous',
-      this.previousQuickviewHandler
-    );
-  }
-
   private addQuickviewModalIfNeeded() {
     if (this.quickviewModalRef || !this.bindings?.interfaceElement) {
       return;
@@ -142,21 +104,12 @@ export class AtomicInsightResultQuickviewAction
   }
 
   private updateModalContent() {
-    if (this.quickviewModalRef && this.quickview.state.content) {
-      this.quickviewModalRef.content = this.quickview.state.content;
+    if (this.quickviewModalRef && this.quickview.state.contentURL) {
+      // For insight quickview, we only have contentURL, not content
+      // The modal will use contentURL from engine state
       this.quickviewModalRef.result = this.result;
-      this.quickviewModalRef.total = this.quickviewState.totalResults;
-      this.quickviewModalRef.current = this.quickviewState.currentResult;
       this.quickviewModalRef.modalCloseCallback = () =>
         this.buttonFocusTarget.focus();
-
-      this.ariaLiveRegion.message = this.quickviewState.isLoading
-        ? this.bindings.i18n.t('quickview-loading')
-        : this.bindings.i18n.t('quickview-loaded', {
-            first: this.quickviewState.currentResult,
-            last: this.quickviewState.totalResults,
-            title: this.result.title,
-          });
     }
   }
 

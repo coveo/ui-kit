@@ -13,6 +13,7 @@ export {AtomicInsightQueryError} from './atomic-insight-query-error/atomic-insig
 export {AtomicInsightQuerySummary} from './atomic-insight-query-summary/atomic-insight-query-summary.js';
 export {AtomicInsightRefineToggle} from './atomic-insight-refine-toggle/atomic-insight-refine-toggle.js';
 export {AtomicInsightResult} from './atomic-insight-result/atomic-insight-result.js';
+export {AtomicInsightResultQuickviewAction} from './atomic-insight-result-quickview-action/atomic-insight-result-quickview-action.js';
 export {AtomicInsightResultTemplate} from './atomic-insight-result-template/atomic-insight-result-template.js';
 export {AtomicInsightSearchBox} from './atomic-insight-search-box/atomic-insight-search-box.js';
 export {AtomicInsightSmartSnippetFeedbackModal} from './atomic-insight-smart-snippet-feedback-modal/atomic-insight-smart-snippet-feedback-modal.js';
