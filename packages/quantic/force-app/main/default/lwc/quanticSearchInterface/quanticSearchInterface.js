@@ -24,7 +24,7 @@ import {LightningElement, api} from 'lwc';
  * It is used to correctly interpret dates in the query expression, facets, and result items.
  *
  *
- * The `locale` used in the search engine options is taken from the [Language Settings](https://help.salesforce.com/s/articleView?id=sf.setting_your_language.htm&type=5).
+ * The `locale` used in the search engine options is taken from the [Language Settings](https://help.salesforce.com/s/articleView?id=sf.admin_supported_locales.htm&type=5).
  * Coveo Machine Learning models use this information to provide contextually relevant output.
  * Moreover, this information can be referred to in query expressions and QPL statements by using the `$locale` object.
  * @category Search
