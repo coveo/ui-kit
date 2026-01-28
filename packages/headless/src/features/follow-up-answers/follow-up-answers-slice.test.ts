@@ -47,7 +47,7 @@ describe('follow-up answers slice', () => {
   });
 
   describe('#addFollowUpAnswer', () => {
-    it('should add a new follow-up answer with with default values', () => {
+    it('should add a new follow-up answer with default values', () => {
       const question = 'Test question?';
       const finalState = followUpAnswersReducer(
         baseState,
