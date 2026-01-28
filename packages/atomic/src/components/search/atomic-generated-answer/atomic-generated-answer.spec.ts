@@ -77,6 +77,8 @@ describe('atomic-generated-answer', () => {
           .answerConfigurationId=${props.answerConfigurationId}
           fields-to-include-in-citations=${props.fieldsToIncludeInCitations}
           .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
+          .tabsIncluded=${props.tabsIncluded ?? []}
+          .tabsExcluded=${props.tabsExcluded ?? []}
         ></atomic-generated-answer>`,
         selector: 'atomic-generated-answer',
         bindings: (bindings) => {
@@ -851,6 +853,269 @@ describe('atomic-generated-answer', () => {
         };
         expect(citation.disableCitationAnchoring).toBe(true);
       });
+    });
+  });
+
+  describe('tabsExcluded property', () => {
+    it('should render when tabsExcluded is empty', async () => {
+      const {container} = await renderGeneratedAnswer({
+        props: {tabsExcluded: []},
+        tabManagerState: {activeTab: 'AnyTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(container).toBeInTheDocument();
+    });
+
+    it('should render when active tab is not in tabsExcluded', async () => {
+      const {container} = await renderGeneratedAnswer({
+        props: {tabsExcluded: ['ExcludedTab1', 'ExcludedTab2']},
+        tabManagerState: {activeTab: 'AllowedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(container).toBeInTheDocument();
+    });
+
+    it('should not render when active tab is in tabsExcluded', async () => {
+      const {container} = await renderGeneratedAnswer({
+        props: {tabsExcluded: ['ExcludedTab1', 'ExcludedTab2']},
+        tabManagerState: {activeTab: 'ExcludedTab1'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(container).not.toBeInTheDocument();
+    });
+
+    it('should handle single excluded tab', async () => {
+      const {container} = await renderGeneratedAnswer({
+        props: {tabsExcluded: ['OnlyExcludedTab']},
+        tabManagerState: {activeTab: 'OnlyExcludedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(container).not.toBeInTheDocument();
+    });
+
+    it('should hide when switching to an excluded tab', async () => {
+      const {element, container} = await renderGeneratedAnswer({
+        props: {tabsExcluded: ['ExcludedTab']},
+        tabManagerState: {activeTab: 'AllowedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(container).toBeInTheDocument();
+
+      // Simulate tab change
+      element.tabManagerState = {activeTab: 'ExcludedTab'};
+      await element.updateComplete;
+
+      expect(container).not.toBeInTheDocument();
+    });
+
+    it('should show when switching from excluded to allowed tab', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {tabsExcluded: ['ExcludedTab']},
+        tabManagerState: {activeTab: 'ExcludedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      const containerBefore =
+        element.shadowRoot?.querySelector('[part="container"]');
+      expect(containerBefore).not.toBeInTheDocument();
+
+      // Simulate tab change to allowed tab
+      element.tabManagerState = {activeTab: 'AllowedTab'};
+      await element.updateComplete;
+
+      const containerAfter =
+        element.shadowRoot?.querySelector('[part="container"]');
+      expect(containerAfter).toBeInTheDocument();
+    });
+
+    it('should call disable() when switching to excluded tab', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {tabsExcluded: ['ExcludedTab']},
+        tabManagerState: {activeTab: 'AllowedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      const disableSpy = vi.spyOn(element.generatedAnswer, 'disable');
+
+      // Simulate tab change to excluded tab
+      element.tabManagerState = {activeTab: 'ExcludedTab'};
+      await element.updateComplete;
+
+      expect(disableSpy).toHaveBeenCalled();
+    });
+
+    it('should call enable() when switching to allowed tab', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {tabsExcluded: ['ExcludedTab']},
+        tabManagerState: {activeTab: 'ExcludedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      const enableSpy = vi.spyOn(element.generatedAnswer, 'enable');
+
+      // Simulate tab change to allowed tab
+      element.tabManagerState = {activeTab: 'AllowedTab'};
+      await element.updateComplete;
+
+      expect(enableSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('tabsIncluded property', () => {
+    it('should render when tabsIncluded is empty (all tabs allowed)', async () => {
+      const {container} = await renderGeneratedAnswer({
+        props: {tabsIncluded: []},
+        tabManagerState: {activeTab: 'AnyTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(container).toBeInTheDocument();
+    });
+
+    it('should render when active tab is in tabsIncluded', async () => {
+      const {container} = await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab1', 'IncludedTab2']},
+        tabManagerState: {activeTab: 'IncludedTab1'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(container).toBeInTheDocument();
+    });
+
+    it('should not render when active tab is not in tabsIncluded', async () => {
+      const {container} = await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab1', 'IncludedTab2']},
+        tabManagerState: {activeTab: 'OtherTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(container).not.toBeInTheDocument();
+    });
+
+    it('should handle single included tab', async () => {
+      const {container} = await renderGeneratedAnswer({
+        props: {tabsIncluded: ['OnlyIncludedTab']},
+        tabManagerState: {activeTab: 'OnlyIncludedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(container).toBeInTheDocument();
+    });
+
+    it('should hide when switching to a non-included tab', async () => {
+      const {element, container} = await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab']},
+        tabManagerState: {activeTab: 'IncludedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(container).toBeInTheDocument();
+
+      // Simulate tab change to non-included tab
+      element.tabManagerState = {activeTab: 'OtherTab'};
+      await element.updateComplete;
+
+      expect(container).not.toBeInTheDocument();
+    });
+
+    it('should show when switching to an included tab', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab1', 'IncludedTab2']},
+        tabManagerState: {activeTab: 'OtherTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      const containerBefore =
+        element.shadowRoot?.querySelector('[part="container"]');
+      expect(containerBefore).not.toBeInTheDocument();
+
+      // Simulate tab change to included tab
+      element.tabManagerState = {activeTab: 'IncludedTab2'};
+      await element.updateComplete;
+
+      const containerAfter =
+        element.shadowRoot?.querySelector('[part="container"]');
+      expect(containerAfter).toBeInTheDocument();
+    });
+
+    it('should call disable() when switching to non-included tab', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab']},
+        tabManagerState: {activeTab: 'IncludedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      const disableSpy = vi.spyOn(element.generatedAnswer, 'disable');
+
+      // Simulate tab change to non-included tab
+      element.tabManagerState = {activeTab: 'OtherTab'};
+      await element.updateComplete;
+
+      expect(disableSpy).toHaveBeenCalled();
+    });
+
+    it('should call enable() when switching to included tab', async () => {
+      const {element} = await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab']},
+        tabManagerState: {activeTab: 'OtherTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      const enableSpy = vi.spyOn(element.generatedAnswer, 'enable');
+
+      // Simulate tab change to included tab
+      element.tabManagerState = {activeTab: 'IncludedTab'};
+      await element.updateComplete;
+
+      expect(enableSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('tabs properties conflict', () => {
+    it('should log warning when both tabsIncluded and tabsExcluded are set', async () => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+
+      await renderGeneratedAnswer({
+        props: {
+          tabsIncluded: ['IncludedTab'],
+          tabsExcluded: ['ExcludedTab'],
+        },
+        tabManagerState: {activeTab: 'AnyTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'Values for both "tabs-included" and "tabs-excluded" have been provided. This could lead to unexpected behaviors.'
+      );
+
+      consoleWarnSpy.mockRestore();
+    });
+
+    it('should prioritize tabsExcluded when both properties are set', async () => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+
+      const {container} = await renderGeneratedAnswer({
+        props: {
+          tabsIncluded: ['IncludedTab'],
+          tabsExcluded: ['IncludedTab'], // Same tab in both - excluded should win
+        },
+        tabManagerState: {activeTab: 'IncludedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      // According to shouldDisplayOnCurrentTab, excludes take precedence
+      expect(container).not.toBeInTheDocument();
+
+      consoleWarnSpy.mockRestore();
     });
   });
 });
