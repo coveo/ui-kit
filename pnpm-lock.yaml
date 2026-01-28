@@ -94,8 +94,8 @@ catalogs:
       specifier: 3.0.0
       version: 3.0.0
     typedoc:
-      specifier: 0.28.13
-      version: 0.28.13
+      specifier: 0.28.16
+      version: 0.28.16
     vite:
       specifier: 7.2.2
       version: 7.2.2
@@ -786,7 +786,7 @@ importers:
     devDependencies:
       typedoc:
         specifier: 'catalog:'
-        version: 0.28.13(typescript@5.8.3)
+        version: 0.28.16(typescript@5.8.3)
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -856,7 +856,7 @@ importers:
         version: 3.3.2
       typedoc:
         specifier: 'catalog:'
-        version: 0.28.13(typescript@5.8.3)
+        version: 0.28.16(typescript@5.8.3)
       vitest:
         specifier: 'catalog:'
         version: 4.0.10(@types/debug@4.1.12)(@types/node@25.0.3)(@vitest/browser-playwright@4.0.10)(jiti@2.6.1)(jsdom@20.0.3)(less@4.5.1)(lightningcss@1.30.1)(msw@2.11.4(@types/node@25.0.3)(typescript@5.8.3))(sass@1.97.1)(terser@5.44.1)(yaml@2.8.2)
@@ -890,7 +890,7 @@ importers:
         version: 1.2.2
       typedoc:
         specifier: 'catalog:'
-        version: 0.28.13(typescript@5.8.3)
+        version: 0.28.16(typescript@5.8.3)
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -14063,8 +14063,8 @@ packages:
   typedarray-to-buffer@3.1.5:
     resolution: {integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==}
 
-  typedoc@0.28.13:
-    resolution: {integrity: sha512-dNWY8msnYB2a+7Audha+aTF1Pu3euiE7ySp53w8kEsXoYw7dMouV5A1UsTUY345aB152RHnmRMDiovuBi7BD+w==}
+  typedoc@0.28.16:
+    resolution: {integrity: sha512-x4xW77QC3i5DUFMBp0qjukOTnr/sSg+oEs86nB3LjDslvAmwe/PUGDWbe3GrIqt59oTqoXK5GRK9tAa0sYMiog==}
     engines: {node: '>= 18', pnpm: '>= 10'}
     hasBin: true
     peerDependencies:
@@ -30513,7 +30513,7 @@ snapshots:
     dependencies:
       is-typedarray: 1.0.0
 
-  typedoc@0.28.13(typescript@5.8.3):
+  typedoc@0.28.16(typescript@5.8.3):
     dependencies:
       '@gerrit0/mini-shiki': 3.20.0
       lunr: 2.3.9
