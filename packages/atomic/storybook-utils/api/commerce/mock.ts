@@ -6,7 +6,7 @@ import {baseResponse as baseProductSuggestResponse} from './productSuggest-respo
 import {baseResponse as baseQuerySuggestResponse} from './querySuggest-response.js';
 import {baseResponse as baseRecommendationResponse} from './recommendation-response.js';
 import {
-  baseResponse as baseSearchResponse,
+  richResponse as baseSearchResponse,
   type CommerceSearchResponse,
 } from './search-response.js';
 
