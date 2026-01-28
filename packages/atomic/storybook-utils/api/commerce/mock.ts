@@ -56,4 +56,12 @@ export class MockCommerceApi implements MockApi {
       this.productListingEndpoint.generateHandler(),
     ];
   }
+
+  clearAll(): void {
+    this.searchEndpoint.clear();
+    this.recommendationEndpoint.clear();
+    this.querySuggestEndpoint.clear();
+    this.productSuggestEndpoint.clear();
+    this.productListingEndpoint.clear();
+  }
 }

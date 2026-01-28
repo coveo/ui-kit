@@ -36,11 +36,7 @@ const meta: Meta = {
   },
   decorators: [(story) => html`<div id="code-root">${story()}</div>`],
   beforeEach: () => {
-    commerceApiHarness.searchEndpoint.clear();
-    commerceApiHarness.recommendationEndpoint.clear();
-    commerceApiHarness.querySuggestEndpoint.clear();
-    commerceApiHarness.productSuggestEndpoint.clear();
-    commerceApiHarness.productListingEndpoint.clear();
+    commerceApiHarness.clearAll();
   },
 
   play: async (context) => {
