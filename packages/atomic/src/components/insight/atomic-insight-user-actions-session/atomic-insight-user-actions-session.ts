@@ -75,6 +75,16 @@ export class AtomicInsightUserActionsSession
   @state()
   private areActionsAfterCaseCreationVisible = false;
 
+  private get caseCreationIndex(): number {
+    return this.userActions.findIndex(
+      ({actionType}) => actionType === 'TICKET_CREATION'
+    );
+  }
+
+  private get isCaseCreationSession(): boolean {
+    return this.caseCreationIndex !== -1;
+  }
+
   public initialize() {
     // Component is internal and doesn't need controller initialization
   }
@@ -91,19 +101,16 @@ export class AtomicInsightUserActionsSession
   }
 
   private prepareUserActionsToDisplay() {
-    const caseCreationIndex = this.userActions.findIndex(
-      ({actionType}) => actionType === 'TICKET_CREATION'
-    );
-    const isCaseCreationSession = caseCreationIndex !== -1;
-
-    if (!isCaseCreationSession) {
+    if (!this.isCaseCreationSession) {
       this.userActionsToDisplay = this.userActions;
       this.userActionsAfterCaseCreation = [];
     } else {
-      this.userActionsToDisplay = this.userActions.slice(caseCreationIndex);
+      this.userActionsToDisplay = this.userActions.slice(
+        this.caseCreationIndex
+      );
       this.userActionsAfterCaseCreation = this.userActions.slice(
         0,
-        caseCreationIndex
+        this.caseCreationIndex
       );
     }
   }
@@ -113,11 +120,6 @@ export class AtomicInsightUserActionsSession
   }
 
   private renderSessionStartDate() {
-    const caseCreationIndex = this.userActions.findIndex(
-      ({actionType}) => actionType === 'TICKET_CREATION'
-    );
-    const isCaseCreationSession = caseCreationIndex !== -1;
-
     const {year, month, dayOfWeek, day} = parseTimestampToDateDetails(
       this.startTimestamp
     );
@@ -126,7 +128,7 @@ export class AtomicInsightUserActionsSession
     return html`
       <div data-testid="session-start-date-container" class="flex items-center px-2 pb-3">
         ${when(
-          isCaseCreationSession,
+          this.isCaseCreationSession,
           () => html`
             <div
               part="session-start-icon__container"
