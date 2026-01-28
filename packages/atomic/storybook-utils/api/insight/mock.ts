@@ -32,6 +32,11 @@ export class MockInsightApi implements MockApi {
       this.querySuggestEndpoint.generateHandler(),
     ];
   }
+
+  clearAll(): void {
+    this.searchEndpoint.clear();
+    this.querySuggestEndpoint.clear();
+  }
 }
 
 export {baseSearchResponse};
