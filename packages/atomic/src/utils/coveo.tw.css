@@ -80,6 +80,8 @@
 
   --color-rating-icon-outline: var(--atomic-rating-icon-outline-color, none);
 
+  --color-session-indicator: var(--atomic-user-session-indicator, #fbb439);
+
   --color-more-results-progress-bar-color-from: var(
     --atomic-more-results-progress-bar-color-from,
     var(--atomic-primary-dark)
