@@ -40,14 +40,16 @@ const componentTag = 'atomic-insight-result-children';
 
 /**
  * The `atomic-insight-result-children` component is responsible for displaying child results by applying one or more child result templates.
- * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,
+ * It includes two slots, `before-children` and `after-children`, which allow for rendering content before and after the list of children,
  * only when children exist.
- * @internal
- * @part children-root - The wrapper for the message when there are child results
- * @part no-result-root - The wrapper for the message when there are no results.
- * @part show-hide-button - The button that allows to collapse or show all child results.
+ *
+ * @slot default - The default slot where `atomic-insight-result-children-template` components should be placed.
  * @slot before-children - Slot that allows rendering content before the list of children, only when children exist.
  * @slot after-children - Slot that allows rendering content after the list of children, only when children exist.
+ *
+ * @part children-root - The wrapper for the message when there are child results.
+ * @part no-result-root - The wrapper for the message when there are no results.
+ * @part show-hide-button - The button that allows to collapse or show all child results.
  */
 @customElement('atomic-insight-result-children')
 @withTailwindStyles
@@ -57,15 +59,15 @@ export class AtomicInsightResultChildren
   implements InitializableComponent<InsightBindings>
 {
   static styles = css`
-@reference '../../../../utils/tailwind-utilities/set-font-size.css';
+  @reference '../../../utils/tailwind.global.tw.css';
+@import '../../../components/common/result-children/result-children.pcss';
 
-.show-hide-button {
-  @apply set-font-size-sm;
+[part='children-root'] {
+  @apply border-neutral border-l;
+  padding-left: 1rem;
+  margin-top: 1rem;
 }
 
-.no-result-root {
-  @apply text-neutral-dark;
-}
   `;
 
   /**
