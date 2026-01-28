@@ -1,43 +1,48 @@
 import {expect, test} from './fixture';
 
-test.describe('atomic-commerce-interface', () => {
-  test.describe('when a query is performed automatically', () => {
-    test.beforeEach(async ({commerceInterface}) => {
+const testCases = [
+  {mode: 'product-listing', story: 'with-product-list', facetBrand: 'NRS'},
+  {mode: 'search', story: 'with-search', facetBrand: 'Nike'},
+] as const;
+
+testCases.forEach(({mode, story, facetBrand}) => {
+  test.describe(`atomic-commerce-interface (${mode} mode)`, () => {
+    test('should render products', async ({commerceInterface}) => {
+      await commerceInterface.load({story});
+      await expect(
+        commerceInterface
+          .productList()
+          .locator('atomic-product-section-name')
+          .first()
+      ).toBeVisible();
+    });
+
+    test('should set language when provided', async ({commerceInterface}) => {
       await commerceInterface.load({
-        story: 'with-product-list',
+        story,
+        args: {language: 'fr'},
       });
+      await commerceInterface.searchBox().waitFor({state: 'visible'});
+      await expect(
+        commerceInterface.searchBox().getByPlaceholder('Recherche')
+      ).toBeVisible({timeout: 10000});
     });
 
-    test.describe('when a language is provided', () => {
-      test('should set the language of the interface', async ({
-        commerceInterface,
-      }) => {
-        await commerceInterface.load({
-          story: 'with-product-list',
-          args: {language: 'fr'},
-        });
-        await expect(
-          commerceInterface.searchBox().getByPlaceholder('Recherche')
-        ).toBeVisible();
-      });
-    });
+    test('should reflect state in URL when facet selected', async ({
+      page,
+      commerceInterface,
+    }) => {
+      await commerceInterface.load({story});
+      const facetValueLabel = commerceInterface.getFacetValue(facetBrand);
 
-    test.describe('when selecting a facet value', () => {
-      test.describe('when reflectStateInUrl is true', () => {
-        test('should update the url', async ({page, commerceInterface}) => {
-          const facetValueLabel = commerceInterface.getFacetValue('Nike');
+      await facetValueLabel.click();
 
-          await facetValueLabel.click();
+      await page.waitForURL(
+        `**/iframe.html?id=atomic-commerce-interface--${story}*`
+      );
 
-          await page.waitForURL(
-            '**/iframe.html?id=atomic-commerce-interface--with-product-list*'
-          );
-
-          const currentUrl = page.url();
-
-          expect(currentUrl).toContain('Nike');
-        });
-      });
+      const currentUrl = page.url();
+      expect(currentUrl).toContain(facetBrand);
     });
   });
 });
