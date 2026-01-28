@@ -3,6 +3,7 @@ import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.
 import {stateKey} from '../../../app/state-key.js';
 import {
   setContext,
+  setCustom,
   setLocation,
   setView,
 } from '../../../features/commerce/context/context-actions.js';
@@ -21,6 +22,7 @@ export interface ContextOptions {
   currency: CurrencyCodeISO4217;
   view: View;
   location?: UserLocation;
+  custom?: CustomContext;
 }
 
 export interface View {
@@ -30,6 +32,15 @@ export interface View {
 export interface UserLocation {
   latitude: number;
   longitude: number;
+}
+
+/**
+ * Custom context that accepts JSON-serializable values.
+ * Values should be primitives (string, number, boolean, null) or nested objects/arrays of primitives.
+ * Detailed validation is performed by the backend.
+ */
+export interface CustomContext {
+  [key: string]: unknown;
 }
 
 export interface ContextProps {
@@ -77,6 +88,12 @@ export interface Context extends Controller {
   setLocation(location: UserLocation): void;
 
   /**
+   * Sets custom context values.
+   * @param custom - An object containing custom key-value pairs.
+   */
+  setCustom(custom: CustomContext): void;
+
+  /**
    * A scoped and simplified part of the headless state that is relevant to the `Context` controller.
    */
   state: ContextState;
@@ -94,6 +111,7 @@ export interface ContextState {
   currency: CurrencyCodeISO4217;
   view: View;
   location?: UserLocation;
+  custom?: CustomContext;
 }
 
 /**
@@ -157,6 +175,8 @@ export function buildContext(
     setView: (view: View) => dispatch(setView(view)),
 
     setLocation: (location: UserLocation) => dispatch(setLocation(location)),
+
+    setCustom: (custom: CustomContext) => dispatch(setCustom(custom)),
   };
 }
 

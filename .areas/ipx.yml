@@ -1,0 +1,7 @@
+description: IPX library package
+file_patterns:
+  - packages/atomic/src/components/ipx/**
+
+reviewers:
+  knowledge-ui-kit-reviewers: ~
+  dxui: ~

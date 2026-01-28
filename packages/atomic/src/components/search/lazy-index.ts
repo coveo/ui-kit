@@ -49,6 +49,8 @@ export default {
     await import('./atomic-query-summary/atomic-query-summary.js'),
   'atomic-quickview': async () =>
     await import('./atomic-quickview/atomic-quickview.js'),
+  'atomic-quickview-modal': async () =>
+    await import('./atomic-quickview-modal/atomic-quickview-modal.js'),
   'atomic-rating-facet': async () =>
     await import('./atomic-rating-facet/atomic-rating-facet.js'),
   'atomic-rating-range-facet': async () =>
@@ -190,6 +192,8 @@ export default {
   'atomic-table-element': async () =>
     await import('./atomic-table-element/atomic-table-element.js'),
   'atomic-text': async () => await import('./atomic-text/atomic-text.js'),
+  'atomic-timeframe-facet': async () =>
+    await import('./atomic-timeframe-facet/atomic-timeframe-facet.js'),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';

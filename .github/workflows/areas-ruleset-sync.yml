@@ -1,0 +1,36 @@
+name: Sync Area Rulesets
+
+on:
+  push:
+    branches: [main]
+    paths: ['.areas/**']
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    environment: push-to-main-workflows
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        with:
+          sparse-checkout: .areas
+
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2
+        with:
+          app-id: ${{ vars.CODE_AREAS_APP_ID }}
+          private-key: ${{ secrets.CODE_AREAS_PEM }}
+
+      - uses: coveooss/areas@b263fcec7d5a7df32b7aa58c553a056b639d1e1b # v0
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          command: ruleset-sync

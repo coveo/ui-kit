@@ -88,5 +88,5 @@ export const renderFacetSearchMatches: FunctionalComponent<
       </div>
     `;
   }
-  return html`${nothing}`;
+  return nothing;
 };

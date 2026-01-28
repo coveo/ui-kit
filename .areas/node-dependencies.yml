@@ -1,0 +1,14 @@
+description: Node dependencies
+file_patterns:
+  # Root configuration files
+  - .npmrc
+  - .nvmrc
+
+  # Manifests everywhere
+  - "**/pnpm-workspace.yaml"
+  - "**/pnpm-lock.yaml"
+  - "**/package.json"
+
+reviewers:
+  dxui:
+    minimum_approvals: 1
