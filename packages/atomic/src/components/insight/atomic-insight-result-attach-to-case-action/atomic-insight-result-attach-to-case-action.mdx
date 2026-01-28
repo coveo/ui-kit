@@ -11,9 +11,51 @@ import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-te
   className="AtomicInsightResultAttachToCaseAction"
 >
 
-// TODO: Add usage instructions here.
+## Overview
 
-// * See atomic-product-link.mdx for typical template component.
-// * See atomic-commerce-pager.mdx for typical non-template component.
+**Internal Component** - The `atomic-insight-result-attach-to-case-action` component renders an interactive button within a result template that allows attaching or detaching results to/from a case in Salesforce Insight interfaces.
+
+## Usage
+
+This component should be nested inside an `atomic-insight-result-actions` component within a result template. It automatically detects whether the current result is attached to the case and displays the appropriate icon and tooltip.
+
+```html
+<atomic-insight-result-template>
+  <template>
+    <atomic-insight-result-actions>
+      <atomic-insight-result-attach-to-case-action></atomic-insight-result-attach-to-case-action>
+    </atomic-insight-result-actions>
+  </template>
+</atomic-insight-result-template>
+```
+
+## Behavior
+
+- Displays an **attach icon** and "Attach to case" tooltip when the result is not attached
+- Displays a **detach icon** and "Detach from case" tooltip when the result is attached
+- Emits a `atomic/insight/attachToCase/attach` event when clicked in the unattached state
+- Emits a `atomic/insight/attachToCase/detach` event when clicked in the attached state
+
+## Events
+
+The component emits custom events that bubble up the DOM tree:
+
+- **atomic/insight/attachToCase/attach** - Fired when the user clicks to attach a result
+  - `detail.callback` - Function to execute the attach action
+  - `detail.result` - The result object being attached
+
+- **atomic/insight/attachToCase/detach** - Fired when the user clicks to detach a result
+  - `detail.callback` - Function to execute the detach action
+  - `detail.result` - The result object being detached
+
+Listen for these events on a parent element to implement custom attachment logic or track user actions.
+
+## Shadow Parts
+
+The component exposes the following CSS shadow parts for styling:
+
+- `result-action-container` - The container wrapping the button
+- `result-action-button` - The button element itself
+- `result-action-icon` - The icon within the button
 
 </AtomicDocTemplate>
