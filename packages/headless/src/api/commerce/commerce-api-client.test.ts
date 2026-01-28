@@ -7,9 +7,10 @@ import {
   type CommerceAPIClient,
   getCommerceApiBaseUrl,
 } from './commerce-api-client.js';
+import type {CommerceAPIErrorStatusResponse} from './commerce-api-error-response.js';
 import type {FilterableCommerceAPIRequest} from './common/request.js';
-import type {CommerceResponse} from './common/response.js';
 import type {CommerceListingRequest} from './listing/request.js';
+import type {ListingCommerceSuccessResponse} from './listing/response.js';
 import type {CommerceRecommendationsRequest} from './recommendations/recommendations-request.js';
 
 describe('commerce api client', () => {
@@ -328,7 +329,7 @@ describe('commerce api client', () => {
       enableResults: false,
     };
 
-    const expectedError = {
+    const expectedError: CommerceAPIErrorStatusResponse = {
       statusCode: 401,
       message: 'Unauthorized',
       type: 'authorization',
@@ -352,10 +353,18 @@ describe('commerce api client', () => {
       enableResults: false,
     };
 
-    const expectedBody: CommerceResponse = {
+    const expectedBody: ListingCommerceSuccessResponse = {
       products: [],
+      results: [],
       facets: [],
-      pagination: {page: 0, perPage: 0, totalEntries: 0, totalPages: 0},
+      pagination: {
+        page: 0,
+        perPage: 0,
+        totalEntries: 0,
+        totalPages: 0,
+        totalProducts: 0,
+        totalSpotlights: 0,
+      },
       responseId: '',
       sort: {
         appliedSort: {sortCriteria: SortBy.Relevance},
