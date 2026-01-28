@@ -137,6 +137,7 @@
     "cypress-axe": "1.6.0",
     "cypress-repeat": "catalog:",
     "cypress-split": "1.5.0",
+    "fs-extra": "11.3.3",
     "handlebars": "4.7.8",
     "html-loader-jest": "0.2.1",
     "jest": "catalog:",
