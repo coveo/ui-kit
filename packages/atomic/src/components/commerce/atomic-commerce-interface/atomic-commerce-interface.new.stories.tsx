@@ -2,7 +2,10 @@ import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
+import {MockCommerceApi} from '@/storybook-utils/api/commerce/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+
+const commerceApiHarness = new MockCommerceApi();
 
 async function initializeCommerceInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-commerce-interface');
@@ -24,11 +27,21 @@ const meta: Meta = {
   render: (args) => template(args),
   parameters: {
     ...parameters,
+    msw: {
+      handlers: [...commerceApiHarness.handlers],
+    },
     actions: {
       handles: events,
     },
   },
   decorators: [(story) => html`<div id="code-root">${story()}</div>`],
+  beforeEach: () => {
+    commerceApiHarness.searchEndpoint.clear();
+    commerceApiHarness.recommendationEndpoint.clear();
+    commerceApiHarness.querySuggestEndpoint.clear();
+    commerceApiHarness.productSuggestEndpoint.clear();
+    commerceApiHarness.productListingEndpoint.clear();
+  },
 
   play: async (context) => {
     await initializeCommerceInterface(context.canvasElement);
@@ -80,17 +93,6 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {};
-
-export const SearchBeforeInit: Story = {
-  tags: ['!dev'],
-  play: async (context) => {
-    const commerceInterface = context.canvasElement.querySelector(
-      'atomic-commerce-interface'
-    );
-    await customElements.whenDefined('atomic-commerce-interface');
-    await commerceInterface!.executeFirstRequest();
-  },
-};
 
 export const WithProductList: Story = {
   args: {
