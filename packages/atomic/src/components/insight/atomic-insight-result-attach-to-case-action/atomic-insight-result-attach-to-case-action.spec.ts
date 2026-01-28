@@ -1,339 +1,204 @@
-import {buildQuerySummary, type QuerySummaryState} from '@coveo/headless';
-import {html, type TemplateResult} from 'lit';
-import {ifDefined} from 'lit/directives/if-defined.js';
-import {within} from 'shadow-dom-testing-library';
-import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
-import {page} from 'vitest/browser';
-import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
-import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
-import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/search/summary-controller';
+import type {AttachToCase, Result} from '@coveo/headless/insight';
+import {buildAttachToCase} from '@coveo/headless/insight';
+import {html} from 'lit';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {renderInAtomicInsightResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-result-fixture';
+import {buildFakeInsightResult} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/result';
 import type {AtomicInsightResultAttachToCaseAction} from './atomic-insight-result-attach-to-case-action';
 import './atomic-insight-result-attach-to-case-action';
 
-vi.mock('@coveo/headless', {spy: true});
+vi.mock('@coveo/headless/insight', {spy: true});
 
 describe('atomic-insight-result-attach-to-case-action', () => {
-  const mockedEngine = buildFakeSearchEngine();
-  let mockedQuerySummary: ReturnType<typeof buildQuerySummary>;
+  let mockResult: Result;
+  let mockAttachToCase: AttachToCase;
 
-  const renderAtomicInsightResultAttachToCaseAction = async ({
-    props = {},
-    slottedContent,
-    querySummaryState = {hasQuery: true, query: 'test query'},
-  }: {
-    props?: Partial<{entityToGreet: string; isVulcan: boolean}>;
-    slottedContent?: TemplateResult;
-    querySummaryState?: Partial<QuerySummaryState>;
-  } = {}) => {
-    mockedQuerySummary = buildFakeSummary({state: querySummaryState});
+  const renderComponent = async (
+    options: {result?: Result; isAttached?: boolean} = {}
+  ) => {
+    const resultToUse = options.result ?? mockResult;
 
-    vi.mocked(buildQuerySummary).mockImplementation(() => mockedQuerySummary);
+    mockAttachToCase = {
+      isAttached: vi.fn().mockReturnValue(options.isAttached ?? false),
+      attach: vi.fn(),
+      detach: vi.fn(),
+      subscribe: vi.fn().mockReturnValue(() => {}),
+    };
 
-    const {element} =
-      await renderInAtomicSearchInterface<AtomicInsightResultAttachToCaseAction>(
-        {
-          template: html`<atomic-insight-result-attach-to-case-action
-        entity-to-greet=${ifDefined(props.entityToGreet)}
-        ?is-vulcan=${props.isVulcan}
-      >${ifDefined(slottedContent)}
-      </atomic-insight-result-attach-to-case-action>`,
-          selector: 'atomic-insight-result-attach-to-case-action',
-          bindings: (bindings) => {
-            bindings.engine = mockedEngine;
-            return bindings;
-          },
-        }
-      );
+    vi.mocked(buildAttachToCase).mockReturnValue(mockAttachToCase);
+
+    const {element, atomicResult} =
+      await renderInAtomicInsightResult<AtomicInsightResultAttachToCaseAction>({
+        template: html`<atomic-insight-result-attach-to-case-action></atomic-insight-result-attach-to-case-action>`,
+        selector: 'atomic-insight-result-attach-to-case-action',
+        result: resultToUse,
+        bindings: (bindings) => {
+          bindings.engine.state.insightCaseContext = {
+            caseId: 'test-case-id',
+            caseNumber: 'CASE-123',
+          };
+          return bindings;
+        },
+      });
+
+    await atomicResult.updateComplete;
+    await element?.updateComplete;
 
     return {
       element,
-      toggleRevealQueryButton: () => page.getByRole('button'),
-      parts: (element: AtomicInsightResultAttachToCaseAction) => {
-        const qs = (part: string) =>
-          element.shadowRoot?.querySelector(`[part="${part}"]`);
-        return {
-          container: qs('container'),
-          message: qs('message'),
-          queryContainer: qs('query-container'),
-          toggleRevealQueryButton: qs('toggle-reveal-query-button'),
-          query: qs('query'),
-        };
-      },
+      getButton: () =>
+        element?.shadowRoot?.querySelector<HTMLButtonElement>(
+          '[part="result-action-button"]'
+        ),
+      getIcon: () =>
+        element?.shadowRoot?.querySelector('[part="result-action-icon"]'),
+      getContainer: () =>
+        element?.shadowRoot?.querySelector('[part="result-action-container"]'),
     };
   };
 
-  describe('#initialize', () => {
-    it('should not set the error when using the default props', async () => {
-      const {element} = await renderAtomicInsightResultAttachToCaseAction();
-
-      expect(element.error).toBeUndefined();
+  beforeEach(() => {
+    mockResult = buildFakeInsightResult({
+      raw: {
+        permanentid: 'test-permanent-id',
+        urihash: 'test-uri-hash',
+      },
     });
+  });
 
-    it('should not set the error when receiving valid props', async () => {
-      const {element} = await renderAtomicInsightResultAttachToCaseAction({
-        props: {
-          entityToGreet: 'Mr Spock',
-          isVulcan: true,
+  describe('when initialized', () => {
+    it('should build the attachToCase controller with the correct options', async () => {
+      const {element} = await renderComponent();
+
+      expect(buildAttachToCase).toHaveBeenCalledWith(element!.bindings.engine, {
+        options: {
+          result: mockResult,
+          caseId: 'test-case-id',
         },
       });
-
-      expect(element.error).toBeUndefined();
     });
 
-    it('should set the error when received entityToGreet is an empty string', async () => {
-      const {element} = await renderAtomicInsightResultAttachToCaseAction({
-        props: {
-          entityToGreet: '',
-        },
-      });
+    it('should create the attachToCase controller', async () => {
+      const {element} = await renderComponent();
 
-      expect(element.error).toBeInstanceOf(Error);
-      expect(element.error.message).toContain(
-        'entityToGreet: value is an empty string.'
-      );
-    });
-
-    it('should set the querySummary with buildQuerySummary', async () => {
-      const {element} = await renderAtomicInsightResultAttachToCaseAction();
-
-      expect(buildQuerySummary).toHaveBeenCalledWith(mockedEngine);
-      expect(element.querySummary).toBe(mockedQuerySummary);
-    });
-
-    it('should bind the querySummaryState to the state of query summary controller', async () => {
-      const {element} = await renderAtomicInsightResultAttachToCaseAction({
-        querySummaryState: {hasQuery: true, query: 'test new query'},
-      });
-
-      expect(element.querySummaryState.hasQuery).toBe(true);
-      expect(element.querySummaryState.query).toBe('test new query');
-    });
-
-    it('should add an "atomic/redden" event listener to the element', async () => {
-      const {element} = await renderAtomicInsightResultAttachToCaseAction();
-      const addEventListenerSpy = vi.spyOn(element, 'addEventListener');
-
-      element.initialize();
-
-      expect(addEventListenerSpy).toHaveBeenCalledExactlyOnceWith(
-        'atomic/redden',
-        expect.any(Function)
-      );
+      expect(element!.attachToCase).toBe(mockAttachToCase);
     });
   });
 
-  describe('when the "atomic/redden" event is dispatched', () => {
-    let consoleLogSpy: MockInstance;
+  describe('when rendering', () => {
+    it('should render the button container', async () => {
+      const {getContainer} = await renderComponent();
 
-    beforeEach(() => {
-      // Mock the console to avoid polluting the test logs.
-      consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+      expect(getContainer()).toBeDefined();
     });
 
-    it('should add the "text-red-600" class to the message paragraph', async () => {
-      const {element, parts} =
-        await renderAtomicInsightResultAttachToCaseAction();
-      expect(parts(element).message?.classList.contains('text-red-600')).toBe(
-        false
-      );
+    it('should render the button', async () => {
+      const {getButton} = await renderComponent();
+      const button = getButton();
 
-      element?.dispatchEvent(new CustomEvent('atomic/redden'));
-
-      expect(parts(element).message?.classList.contains('text-red-600')).toBe(
-        true
-      );
+      expect(button).toBeDefined();
+      expect(button?.getAttribute('part')).toBe('result-action-button');
     });
 
-    it('should log to the console', async () => {
-      const {element} = await renderAtomicInsightResultAttachToCaseAction();
+    it('should render the icon', async () => {
+      const {getIcon} = await renderComponent();
+      const icon = getIcon();
 
-      element?.dispatchEvent(new CustomEvent('atomic/redden'));
-
-      expect(consoleLogSpy).toHaveBeenCalledWith(
-        'The greeting has been reddened!'
-      );
+      expect(icon).toBeDefined();
+      expect(icon?.getAttribute('part')).toBe('result-action-icon');
     });
   });
 
-  describe('before updating (#willUpdate)', () => {
-    it('should not set the error when entityToGreet has not been updated', async () => {
-      const {element} = await renderAtomicInsightResultAttachToCaseAction();
+  describe('when the result is not attached', () => {
+    it('should display the attach icon', async () => {
+      const {getIcon} = await renderComponent({isAttached: false});
+      const icon = getIcon();
 
-      element.isVulcan = true;
-      await element.updateComplete;
-
-      expect(element.error).toBeUndefined();
+      expect(icon?.getAttribute('icon')).toContain('attach.svg');
     });
 
-    it('should not set the error when entityToGreet has been updated to a valid value', async () => {
-      const {element} = await renderAtomicInsightResultAttachToCaseAction();
+    it('should display the attach tooltip', async () => {
+      const {getButton} = await renderComponent({isAttached: false});
+      const button = getButton();
 
-      element.entityToGreet = 'Mr LaForge';
-      await element.updateComplete;
-
-      expect(element.error).toBeUndefined();
+      expect(button?.getAttribute('title')).toBe('attach-to-case');
     });
 
-    it('should set the error when entityToGreet has been updated to an invalid value', async () => {
-      const {element} = await renderAtomicInsightResultAttachToCaseAction();
+    it('should dispatch "atomic/insight/attachToCase/attach" event when clicked', async () => {
+      const {element, getButton} = await renderComponent({isAttached: false});
+      const eventSpy = vi.fn();
+      element?.addEventListener('atomic/insight/attachToCase/attach', eventSpy);
 
-      element.entityToGreet = '';
-      await element.updateComplete;
+      getButton()?.click();
 
-      expect(element.error).toBeInstanceOf(Error);
-      expect(element.error.message).toContain(
-        'entityToGreet: value is an empty string.'
-      );
+      expect(eventSpy).toHaveBeenCalledOnce();
+      const event = eventSpy.mock.calls[0][0] as CustomEvent;
+      expect(event.detail.callback).toBe(mockAttachToCase.attach);
+      expect(event.detail.result).toBe(mockResult);
     });
   });
 
-  describe('when rendering (#render)', () => {
-    it('should render every part except the query initially', async () => {
-      const {element, parts} =
-        await renderAtomicInsightResultAttachToCaseAction();
-      const partsElements = parts(element);
+  describe('when the result is attached', () => {
+    it('should display the detach icon', async () => {
+      const {getIcon} = await renderComponent({isAttached: true});
+      const icon = getIcon();
 
-      await expect.element(partsElements.container!).toBeInTheDocument();
-      await expect.element(partsElements.message!).toBeInTheDocument();
-      await expect.element(partsElements.query!).not.toBeInTheDocument();
-      await expect.element(partsElements.queryContainer!).toBeInTheDocument();
-      await expect
-        .element(partsElements.toggleRevealQueryButton!)
-        .toBeInTheDocument();
+      expect(icon?.getAttribute('icon')).toContain('detach.svg');
     });
 
-    it('should render content in the "before" slot before the message part', async () => {
-      const {element, parts} =
-        await renderAtomicInsightResultAttachToCaseAction({
-          slottedContent: html`<div slot="before" class='test-class'>Before</div>`,
-        });
-      const slot = parts(element).container?.querySelector(
-        'slot[name="before"]'
-      ) as HTMLSlotElement;
+    it('should display the detach tooltip', async () => {
+      const {getButton} = await renderComponent({isAttached: true});
+      const button = getButton();
 
-      expect(within(slot).getByShadowText('Before')?.tagName).toBe('DIV');
-      expect(within(slot).getByShadowText('Before').classList).toContain(
-        'test-class'
-      );
+      expect(button?.getAttribute('title')).toBe('detach-from-case');
     });
 
-    it('should render content in the default slot between the message part and the query container part', async () => {
-      const {element, parts} =
-        await renderAtomicInsightResultAttachToCaseAction({
-          slottedContent: html`<div class='test-class'>Default</div>`,
-        });
-      const slot = parts(element).container?.querySelector(
-        'slot:not([name])'
-      ) as HTMLSlotElement;
+    it('should dispatch "atomic/insight/attachToCase/detach" event when clicked', async () => {
+      const {element, getButton} = await renderComponent({isAttached: true});
+      const eventSpy = vi.fn();
+      element?.addEventListener('atomic/insight/attachToCase/detach', eventSpy);
 
-      expect(within(slot).getByShadowText('Default')?.tagName).toBe('DIV');
-      expect(within(slot).getByShadowText('Default').classList).toContain(
-        'test-class'
-      );
-    });
+      getButton()?.click();
 
-    it('should render content in the "after" slot after the query container part', async () => {
-      const {element, parts} =
-        await renderAtomicInsightResultAttachToCaseAction({
-          slottedContent: html`<div slot="after" class='test-class'>After</div>`,
-        });
-      const slot = parts(element).container?.querySelector(
-        'slot[name="after"]'
-      ) as HTMLSlotElement;
-
-      expect(within(slot).getByShadowText('After')?.tagName).toBe('DIV');
-      expect(within(slot).getByShadowText('After').classList).toContain(
-        'test-class'
-      );
-    });
-
-    it('should render the Vulcan greeting when isVulcan is true', async () => {
-      const {element, parts} =
-        await renderAtomicInsightResultAttachToCaseAction({
-          props: {isVulcan: true},
-        });
-
-      expect(parts(element).message).toHaveTextContent('🖖 Mr LaForge!');
-    });
-
-    it('should render the non-Vulcan greeting when isVulcan is false', async () => {
-      const {element, parts} =
-        await renderAtomicInsightResultAttachToCaseAction({
-          props: {isVulcan: false},
-        });
-      const partsElements = parts(element);
-
-      expect(partsElements.message).toHaveTextContent('👋 Mr LaForge!');
-    });
-
-    it('should render the button with the correct style', async () => {
-      const {element, parts} =
-        await renderAtomicInsightResultAttachToCaseAction();
-
-      expect(parts(element).toggleRevealQueryButton).toHaveClass('btn-primary');
-    });
-
-    it('should render the button with the correct text when the query is not revealed', async () => {
-      const {element, parts} =
-        await renderAtomicInsightResultAttachToCaseAction();
-
-      expect(parts(element).toggleRevealQueryButton).toHaveTextContent(
-        'Show more'
-      );
-    });
-
-    it('should render the button with the correct text when the query is revealed', async () => {
-      const {element, parts, toggleRevealQueryButton} =
-        await renderAtomicInsightResultAttachToCaseAction();
-
-      await toggleRevealQueryButton().click();
-
-      expect(parts(element).toggleRevealQueryButton).toHaveTextContent(
-        'Show less'
-      );
-    });
-
-    it('should enable the button when there is a query', async () => {
-      const {element, parts} =
-        await renderAtomicInsightResultAttachToCaseAction({
-          querySummaryState: {hasQuery: true, query: 'test query'},
-        });
-
-      expect(parts(element).toggleRevealQueryButton).toBeEnabled();
-    });
-
-    it('should disable the button when there is no query', async () => {
-      const {element, parts} =
-        await renderAtomicInsightResultAttachToCaseAction({
-          querySummaryState: {hasQuery: false, query: ''},
-        });
-
-      expect(parts(element).toggleRevealQueryButton).toBeDisabled();
-    });
-
-    it('should render the query part with the correct content when the button is clicked', async () => {
-      const {element, parts, toggleRevealQueryButton} =
-        await renderAtomicInsightResultAttachToCaseAction();
-      expect(parts(element).query).not.toBeInTheDocument();
-
-      await toggleRevealQueryButton().click();
-
-      expect(parts(element).query).toBeInTheDocument();
-      expect(parts(element).query).toHaveTextContent('test query');
+      expect(eventSpy).toHaveBeenCalledOnce();
+      const event = eventSpy.mock.calls[0][0] as CustomEvent;
+      expect(event.detail.callback).toBe(mockAttachToCase.detach);
+      expect(event.detail.result).toBe(mockResult);
     });
   });
 
-  describe('when removed from the DOM (#disconnectedCallback)', () => {
-    it('should remove the "atomic/redden" event listener from the element', async () => {
-      const {element} = await renderAtomicInsightResultAttachToCaseAction();
-      const removeEventListenerSpy = vi.spyOn(element!, 'removeEventListener');
+  describe('event properties', () => {
+    it('should dispatch bubbling events', async () => {
+      const {element, getButton} = await renderComponent({isAttached: false});
+      const eventSpy = vi.fn();
+      element?.addEventListener('atomic/insight/attachToCase/attach', eventSpy);
 
-      element.remove();
+      getButton()?.click();
 
-      expect(removeEventListenerSpy).toHaveBeenCalledExactlyOnceWith(
-        'atomic/redden',
-        expect.any(Function)
-      );
+      const event = eventSpy.mock.calls[0][0] as CustomEvent;
+      expect(event.bubbles).toBe(true);
+    });
+
+    it('should dispatch cancelable events', async () => {
+      const {element, getButton} = await renderComponent({isAttached: false});
+      const eventSpy = vi.fn();
+      element?.addEventListener('atomic/insight/attachToCase/attach', eventSpy);
+
+      getButton()?.click();
+
+      const event = eventSpy.mock.calls[0][0] as CustomEvent;
+      expect(event.cancelable).toBe(true);
+    });
+
+    it('should dispatch composed events', async () => {
+      const {element, getButton} = await renderComponent({isAttached: false});
+      const eventSpy = vi.fn();
+      element?.addEventListener('atomic/insight/attachToCase/attach', eventSpy);
+
+      getButton()?.click();
+
+      const event = eventSpy.mock.calls[0][0] as CustomEvent;
+      expect(event.composed).toBe(true);
     });
   });
 });
