@@ -135,7 +135,7 @@ export class AtomicInsightUserActionsModal
         .fullscreen=${true}
         .isOpen=${this.isOpen}
         .source=${this.openButton}
-        .container=${this as HTMLElement}
+        .container=${this}
         .close=${() => {
           this.isOpen = false;
         }}
@@ -193,6 +193,7 @@ export class AtomicInsightUserActionsModal
   }
 
   private onAnimationFrame() {
+    this.animationFrameId = undefined;
     if (!this.isOpen) {
       return;
     }
