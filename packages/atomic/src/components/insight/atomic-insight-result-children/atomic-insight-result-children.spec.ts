@@ -1,13 +1,43 @@
+import type {FoldedResult as InsightFoldedResult} from '@coveo/headless/insight';
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {renderInAtomicInsightInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-interface-fixture';
+import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
+import type {DisplayConfig} from '@/src/components/common/item-list/context/item-display-config-context-controller';
+import {
+  buildMockDisplayConfig,
+  buildMockInsightFoldedResult,
+  buildMockInsightFoldedResultList,
+  renderInAtomicInsightResult,
+} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-result-fixture';
 import {buildFakeInsightEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/engine';
 import {mockConsole} from '@/vitest-utils/testing-helpers/testing-utils/mock-console';
 import type {AtomicInsightResultChildren} from './atomic-insight-result-children';
 import './atomic-insight-result-children';
-import '@/src/components/insight/result-templates/atomic-insight-result-children-template/atomic-insight-result-children-template';
 
 vi.mock('@coveo/headless/insight', {spy: true});
+
+class MockInsightResultChildrenTemplate extends HTMLElement {
+  conditions: unknown[] = [];
+
+  async getTemplate() {
+    const templateEl = this.querySelector('template');
+    if (!templateEl) {
+      return null;
+    }
+    return {
+      content: templateEl.content.cloneNode(true) as DocumentFragment,
+      conditions: this.conditions,
+    };
+  }
+}
+
+beforeAll(() => {
+  if (!customElements.get('atomic-insight-result-children-template')) {
+    customElements.define(
+      'atomic-insight-result-children-template',
+      MockInsightResultChildrenTemplate
+    );
+  }
+});
 
 describe('atomic-insight-result-children', () => {
   const mockedEngine = buildFakeInsightEngine();
@@ -21,6 +51,11 @@ describe('atomic-insight-result-children', () => {
     imageSize?: string;
     noResultText?: string;
     includeTemplate?: boolean;
+    result?: InsightFoldedResult;
+    children?: InsightFoldedResult[];
+    displayConfig?: DisplayConfig;
+    moreResultsAvailable?: boolean;
+    isLoadingMoreResults?: boolean;
   }
 
   const renderInsightResultChildren = async ({
@@ -28,6 +63,11 @@ describe('atomic-insight-result-children', () => {
     imageSize,
     noResultText = 'no-documents-related',
     includeTemplate = true,
+    result,
+    children,
+    displayConfig,
+    moreResultsAvailable,
+    isLoadingMoreResults,
   }: RenderInsightResultChildrenOptions = {}) => {
     const templateSlot = includeTemplate
       ? html`<atomic-insight-result-children-template>
@@ -35,8 +75,29 @@ describe('atomic-insight-result-children', () => {
         </atomic-insight-result-children-template>`
       : html``;
 
+    const defaultChildren = children ?? [
+      buildMockInsightFoldedResult({uniqueId: 'child-1', title: 'Child 1'}),
+    ];
+
+    const mockResult =
+      result ??
+      buildMockInsightFoldedResult({
+        uniqueId: 'parent-result',
+        title: 'Parent Result',
+        children: defaultChildren,
+      });
+
+    const resultWithCollectionProps =
+      moreResultsAvailable !== undefined || isLoadingMoreResults !== undefined
+        ? {
+            ...mockResult,
+            moreResultsAvailable: moreResultsAvailable ?? false,
+            isLoadingMoreResults: isLoadingMoreResults ?? false,
+          }
+        : mockResult;
+
     const {element} =
-      await renderInAtomicInsightInterface<AtomicInsightResultChildren>({
+      await renderInAtomicInsightResult<AtomicInsightResultChildren>({
         template: html`<atomic-insight-result-children
           ?inherit-templates=${inheritTemplates}
           image-size=${imageSize ?? ''}
@@ -45,6 +106,11 @@ describe('atomic-insight-result-children', () => {
           ${templateSlot}
         </atomic-insight-result-children>`,
         selector: 'atomic-insight-result-children',
+        result: resultWithCollectionProps,
+        foldedResultList: buildMockInsightFoldedResultList([
+          resultWithCollectionProps,
+        ]),
+        displayConfig: displayConfig ?? buildMockDisplayConfig(),
         bindings: (bindings) => {
           bindings.engine = mockedEngine;
           return bindings;
@@ -56,7 +122,7 @@ describe('atomic-insight-result-children', () => {
     };
   };
 
-  describe('properties', () => {
+  describe('when checking properties', () => {
     it('should have default inheritTemplates as false', async () => {
       const {element} = await renderInsightResultChildren();
       expect(element.inheritTemplates).toBe(false);
@@ -92,14 +158,13 @@ describe('atomic-insight-result-children', () => {
       includeTemplate: false,
     });
 
-    await element.updateComplete;
     expect(element.error).toBeDefined();
     expect(element.error.message).toContain(
       'requires at least one "atomic-insight-result-children-template" component'
     );
   });
 
-  describe('#resolveChildTemplates event', () => {
+  describe('when resolveChildTemplates event is dispatched', () => {
     it('should handle atomic/resolveChildTemplates event and prevent default', async () => {
       const {element} = await renderInsightResultChildren();
 
@@ -136,10 +201,6 @@ describe('atomic-insight-result-children', () => {
         includeTemplate: false,
       });
 
-      await element.updateComplete;
-      // When inheritTemplates is true, no error for missing templates
-      // But since there's no parent atomic-insight-result, there may be a context error
-      // The key thing is there's no error about missing templates
       if (element.error) {
         expect(element.error.message).not.toContain(
           'requires at least one "atomic-insight-result-children-template"'
@@ -162,7 +223,6 @@ describe('atomic-insight-result-children', () => {
 
       element.dispatchEvent(event);
       expect(detailFn).toHaveBeenCalled();
-      // When inheritTemplates is true and no local template, it should resolve from parent context
       expect(event.defaultPrevented).toBe(true);
     });
   });
@@ -188,21 +248,17 @@ describe('atomic-insight-result-children', () => {
     it('should remove resolveChildTemplates listener', async () => {
       const {element} = await renderInsightResultChildren();
 
-      // Add a spy to track the event listener
       const addListenerSpy = vi.spyOn(element, 'addEventListener');
       const removeListenerSpy = vi.spyOn(element, 'removeEventListener');
 
-      // Re-connect to verify listener is added
       element.connectedCallback();
       expect(addListenerSpy).toHaveBeenCalledWith(
         'atomic/resolveChildTemplates',
         expect.any(Function)
       );
 
-      // Disconnect from DOM
       element.disconnectedCallback();
 
-      // Verify listener is removed
       expect(removeListenerSpy).toHaveBeenCalledWith(
         'atomic/resolveChildTemplates',
         expect.any(Function)
@@ -210,6 +266,164 @@ describe('atomic-insight-result-children', () => {
 
       addListenerSpy.mockRestore();
       removeListenerSpy.mockRestore();
+    });
+
+    it('should unsubscribe from foldedResultList on disconnect', async () => {
+      const {element} = await renderInsightResultChildren();
+
+      const unsubscribeSpy = vi.fn();
+      (
+        element as unknown as {foldedResultListUnsubscriber: () => void}
+      ).foldedResultListUnsubscriber = unsubscribeSpy;
+
+      element.disconnectedCallback();
+
+      expect(unsubscribeSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('when templates are nested', () => {
+    it('should only use direct child templates, not nested ones', async () => {
+      const {element} = await renderInsightResultChildren();
+
+      const directTemplates = element.querySelectorAll(
+        ':scope > atomic-insight-result-children-template'
+      );
+      expect(directTemplates.length).toBe(1);
+    });
+  });
+
+  describe('when image-size is configured', () => {
+    it('should accept small image size', async () => {
+      const {element} = await renderInsightResultChildren({imageSize: 'small'});
+      expect(element.imageSize).toBe('small');
+    });
+
+    it('should accept icon image size', async () => {
+      const {element} = await renderInsightResultChildren({imageSize: 'icon'});
+      expect(element.imageSize).toBe('icon');
+    });
+
+    it('should accept none image size', async () => {
+      const {element} = await renderInsightResultChildren({imageSize: 'none'});
+      expect(element.imageSize).toBe('none');
+    });
+  });
+
+  describe('when rendering children', () => {
+    it('should render child results when children exist', async () => {
+      const {element} = await renderInsightResultChildren({
+        children: [
+          buildMockInsightFoldedResult({
+            uniqueId: 'child-1',
+            title: 'Child Result 1',
+          }),
+        ],
+      });
+
+      expect(element.error).toBeFalsy();
+      const childrenRoot = element.shadowRoot?.querySelector(
+        '[part="children-root"]'
+      );
+      expect(childrenRoot).toBeDefined();
+    });
+
+    it('should render nothing when result has no children', async () => {
+      const {element} = await renderInsightResultChildren({
+        children: [],
+      });
+
+      expect(element.error).toBeFalsy();
+      const childrenRoot = element.shadowRoot?.querySelector(
+        '[part="children-root"]'
+      );
+      expect(childrenRoot).toBeNull();
+    });
+
+    it('should render multiple children when multiple exist', async () => {
+      const {element} = await renderInsightResultChildren({
+        children: [
+          buildMockInsightFoldedResult({uniqueId: 'child-1', title: 'Child 1'}),
+          buildMockInsightFoldedResult({uniqueId: 'child-2', title: 'Child 2'}),
+          buildMockInsightFoldedResult({uniqueId: 'child-3', title: 'Child 3'}),
+        ],
+      });
+
+      expect(element.error).toBeFalsy();
+      const atomicResults = element.shadowRoot?.querySelectorAll(
+        'atomic-insight-result'
+      );
+      expect(atomicResults?.length).toBe(3);
+    });
+
+    it('should apply display density from displayConfig', async () => {
+      const {element} = await renderInsightResultChildren({
+        displayConfig: buildMockDisplayConfig({density: 'compact'}),
+      });
+
+      expect(element.error).toBeFalsy();
+      const atomicResult = element.shadowRoot?.querySelector(
+        'atomic-insight-result'
+      );
+      expect(atomicResult?.getAttribute('density')).toBe('compact');
+    });
+
+    it('should use component imageSize over displayConfig imageSize', async () => {
+      const {element} = await renderInsightResultChildren({
+        imageSize: 'large',
+        displayConfig: buildMockDisplayConfig({imageSize: 'small'}),
+      });
+
+      expect(element.error).toBeFalsy();
+      const atomicResult = element.shadowRoot?.querySelector(
+        'atomic-insight-result'
+      );
+      expect(atomicResult?.getAttribute('image-size')).toBe('large');
+    });
+
+    it('should fall back to displayConfig imageSize when component imageSize is not set', async () => {
+      const {element} = await renderInsightResultChildren({
+        displayConfig: buildMockDisplayConfig({imageSize: 'large'}),
+      });
+
+      expect(element.error).toBeFalsy();
+      const atomicResult = element.shadowRoot?.querySelector(
+        'atomic-insight-result'
+      );
+      expect(atomicResult?.getAttribute('image-size')).toBe('large');
+    });
+  });
+
+  describe('when rendering collection', () => {
+    it('should render show/hide button when moreResultsAvailable is true', async () => {
+      const {element} = await renderInsightResultChildren({
+        children: [
+          buildMockInsightFoldedResult({uniqueId: 'child-1', title: 'Child 1'}),
+          buildMockInsightFoldedResult({uniqueId: 'child-2', title: 'Child 2'}),
+        ],
+        moreResultsAvailable: true,
+        isLoadingMoreResults: false,
+      });
+
+      expect(element.error).toBeFalsy();
+      const showHideButton = element.shadowRoot?.querySelector(
+        '[part="show-hide-button"]'
+      );
+      expect(showHideButton).toBeDefined();
+    });
+
+    it('should render no-result message when collection has no children', async () => {
+      const {element} = await renderInsightResultChildren({
+        children: [],
+        moreResultsAvailable: false,
+        isLoadingMoreResults: false,
+      });
+
+      expect(element.error).toBeFalsy();
+      const noResultRoot = element.shadowRoot?.querySelector(
+        '[part="no-result-root"]'
+      );
+      expect(noResultRoot).toBeDefined();
     });
   });
 });
