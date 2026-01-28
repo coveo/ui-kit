@@ -37,22 +37,6 @@ This component includes two slots, `before-children` and `after-children`, which
 </atomic-insight-result-template>
 ```
 
-For nested children (grandchildren), you can use the `inherit-templates` property to inherit templates from the parent `atomic-insight-result-children`:
-
-```html
-<atomic-insight-result-children>
-  <atomic-insight-result-children-template>
-    <template>
-      <!-- Child template content -->
-      <atomic-result-section-children>
-        <atomic-insight-result-children inherit-templates>
-        </atomic-insight-result-children>
-      </atomic-result-section-children>
-    </template>
-  </atomic-insight-result-children-template>
-</atomic-insight-result-children>
-```
-
 ## Using slots
 
 The component provides slots for adding custom content before or after the children:
