@@ -193,8 +193,8 @@ export class AtomicInsightUserActionsModal
   }
 
   private onAnimationFrame() {
-    this.animationFrameId = undefined;
     if (!this.isOpen) {
+      this.animationFrameId = undefined;
       return;
     }
     if (this.dimensionChanged()) {
