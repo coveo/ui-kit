@@ -1,7 +1,7 @@
 import type {HttpHandler} from 'msw';
 import {EndpointHarness, type MockApi} from '../_base.js';
 import type {APIErrorWithStatusCode} from '../_common/error.js';
-import {baseResponse as baseListingResponse} from './listing-response.js';
+import {richResponse as baseListingResponse} from './listing-response.js';
 import {baseResponse as baseProductSuggestResponse} from './productSuggest-response.js';
 import {baseResponse as baseQuerySuggestResponse} from './querySuggest-response.js';
 import {baseResponse as baseRecommendationResponse} from './recommendation-response.js';
