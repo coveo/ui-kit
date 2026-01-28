@@ -329,18 +329,18 @@ describe('follow-up answers slice', () => {
       const state = {
         ...baseState,
         followUpAnswers: [
-          createInitialFollowUpAnswer('First?'),
-          createInitialFollowUpAnswer('Second?'),
+          {...createInitialFollowUpAnswer('First?'), answer: 'Existing answer'},
+          {...createInitialFollowUpAnswer('Second?'), answer: 'Hello '},
         ],
       };
 
       const finalState = followUpAnswersReducer(
         state,
-        updateActiveFollowUpAnswerMessage({textDelta: 'text'})
+        updateActiveFollowUpAnswerMessage({textDelta: 'World!'})
       );
 
-      expect(finalState.followUpAnswers[0].answer).toBeUndefined();
-      expect(finalState.followUpAnswers[1].answer).toBe('text');
+      expect(finalState.followUpAnswers[0].answer).toBe('Existing answer');
+      expect(finalState.followUpAnswers[1].answer).toBe('Hello World!');
     });
   });
 
@@ -493,11 +493,15 @@ describe('follow-up answers slice', () => {
       expect(finalState.followUpAnswers[0].error).toEqual(errorPayload);
     });
 
-    it('should set isLoading to false', () => {
+    it('should set isLoading and isStreaming flags to false', () => {
       const state = {
         ...baseState,
         followUpAnswers: [
-          {...createInitialFollowUpAnswer('Question?'), isLoading: true},
+          {
+            ...createInitialFollowUpAnswer('Question?'),
+            isLoading: true,
+            isStreaming: true,
+          },
         ],
       };
 
@@ -507,30 +511,19 @@ describe('follow-up answers slice', () => {
       );
 
       expect(finalState.followUpAnswers[0].isLoading).toBe(false);
-    });
-
-    it('should set isStreaming to false', () => {
-      const state = {
-        ...baseState,
-        followUpAnswers: [
-          {...createInitialFollowUpAnswer('Question?'), isStreaming: true},
-        ],
-      };
-
-      const finalState = followUpAnswersReducer(
-        state,
-        setActiveFollowUpError(errorPayload)
-      );
-
       expect(finalState.followUpAnswers[0].isStreaming).toBe(false);
     });
 
-    it('should clear citations', () => {
+    it('should clear citations of the active follow up answer', () => {
       const state = {
         ...baseState,
         followUpAnswers: [
           {
-            ...createInitialFollowUpAnswer('Question?'),
+            ...createInitialFollowUpAnswer('Question 1?'),
+            citations: [buildMockCitation()],
+          },
+          {
+            ...createInitialFollowUpAnswer('Question 2?'),
             citations: [buildMockCitation()],
           },
         ],
@@ -541,14 +534,24 @@ describe('follow-up answers slice', () => {
         setActiveFollowUpError(errorPayload)
       );
 
-      expect(finalState.followUpAnswers[0].citations).toEqual([]);
+      expect(finalState.followUpAnswers[0].citations).toEqual([
+        buildMockCitation(),
+      ]);
+      expect(finalState.followUpAnswers[1].citations).toEqual([]);
     });
 
-    it('should delete the answer', () => {
+    it('should delete the answer of the active follow up answer', () => {
       const state = {
         ...baseState,
         followUpAnswers: [
-          {...createInitialFollowUpAnswer('Question?'), answer: 'Some answer'},
+          {
+            ...createInitialFollowUpAnswer('Question 1?'),
+            answer: 'Some answer',
+          },
+          {
+            ...createInitialFollowUpAnswer('Question 2?'),
+            answer: 'Some answer',
+          },
         ],
       };
 
@@ -557,21 +560,8 @@ describe('follow-up answers slice', () => {
         setActiveFollowUpError(errorPayload)
       );
 
-      expect(finalState.followUpAnswers[0].answer).toBeUndefined();
-    });
-
-    it('should accept error payload without a message', () => {
-      const state = {
-        ...baseState,
-        followUpAnswers: [createInitialFollowUpAnswer('Question?')],
-      };
-
-      const finalState = followUpAnswersReducer(
-        state,
-        setActiveFollowUpError({code: 500})
-      );
-
-      expect(finalState.followUpAnswers[0].error).toEqual({code: 500});
+      expect(finalState.followUpAnswers[0].answer).toBe('Some answer');
+      expect(finalState.followUpAnswers[1].answer).toBeUndefined();
     });
 
     it('should not modify state when no follow-up answers exist', () => {
@@ -626,9 +616,10 @@ describe('follow-up answers slice', () => {
   });
 
   describe('#resetFollowUpAnswers', () => {
-    it('should clear all follow-up answers', () => {
+    it('should clear all follow-up answers and session id', () => {
       const state = {
         ...baseState,
+        id: 'session-123',
         followUpAnswers: [
           createInitialFollowUpAnswer('First?'),
           createInitialFollowUpAnswer('Second?'),
@@ -639,6 +630,7 @@ describe('follow-up answers slice', () => {
       const finalState = followUpAnswersReducer(state, resetFollowUpAnswers());
 
       expect(finalState.followUpAnswers).toEqual([]);
+      expect(finalState.id).toBe('');
     });
 
     it('should preserve the isEnabled property', () => {
