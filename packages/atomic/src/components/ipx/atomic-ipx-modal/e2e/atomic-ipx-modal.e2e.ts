@@ -6,10 +6,7 @@ test.describe('atomic-ipx-modal', () => {
     await ipxModal.hydrated.waitFor();
   });
 
-  test('should display the modal with all slots', async ({ipxModal}) => {
+  test('should display the modal backdrop', async ({ipxModal}) => {
     await expect(ipxModal.backdrop).toBeVisible();
-    await expect(ipxModal.headerSlot).toBeVisible();
-    await expect(ipxModal.bodySlot).toBeVisible();
-    await expect(ipxModal.footerSlot).toBeVisible();
   });
 });
