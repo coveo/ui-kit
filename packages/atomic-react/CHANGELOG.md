@@ -1,3 +1,9 @@
+## <small>3.10.2 (2026-01-28)</small>
+
+* chore(atomic): migrate atomic-quickview-modal to Lit (#6949) ([222ce5f](https://github.com/coveo/ui-kit/commits/222ce5f)), closes [#6949](https://github.com/coveo/ui-kit/issues/6949)
+
+
+
 ## <small>3.10.1 (2026-01-21)</small>
 
 * chore(atomic): migrate atomic-ipx-button to Lit (#6894) ([fe95e69](https://github.com/coveo/ui-kit/commits/fe95e69)), closes [#6894](https://github.com/coveo/ui-kit/issues/6894)

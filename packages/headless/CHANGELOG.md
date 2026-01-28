@@ -1,3 +1,13 @@
+## 3.41.0 (2026-01-28)
+
+* feat(headless): follow up answers state created (#6970) ([2bcd422](https://github.com/coveo/ui-kit/commits/2bcd422)), closes [#6970](https://github.com/coveo/ui-kit/issues/6970)
+* feat(headless): new answer generation api client created (#6984) ([e63ede3](https://github.com/coveo/ui-kit/commits/e63ede3)), closes [#6984](https://github.com/coveo/ui-kit/issues/6984)
+* feat(headless-commerce) Update Context controller to allow users to set custom context (CSR & SSR) ( ([891ace5](https://github.com/coveo/ui-kit/commits/891ace5)), closes [#7000](https://github.com/coveo/ui-kit/issues/7000)
+* chore: fix user defined controllers in SSR Hydration Fix (commerce-nextjs-v4) (#6993) ([e8a9423](https://github.com/coveo/ui-kit/commits/e8a9423)), closes [#6993](https://github.com/coveo/ui-kit/issues/6993)
+* chore: remove outdated samples (Pages Router and Stencil) (#6958) ([76529fe](https://github.com/coveo/ui-kit/commits/76529fe)), closes [#6958](https://github.com/coveo/ui-kit/issues/6958)
+
+
+
 ## 3.40.0 (2026-01-21)
 
 * feat: add ProductEnrichment Controller in Commerce SSR (#6819) ([850047e](https://github.com/coveo/ui-kit/commits/850047e)), closes [#6819](https://github.com/coveo/ui-kit/issues/6819)
