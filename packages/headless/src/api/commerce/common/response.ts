@@ -2,13 +2,11 @@ import type {AnyFacetResponse} from '../../../features/commerce/facets/facet-set
 import type {Trigger} from '../../common/trigger.js';
 import type {Pagination} from './pagination.js';
 import type {BaseProduct} from './product.js';
-import type {BaseResult} from './result.js';
 import type {Sort} from './sort.js';
 
 export interface BaseCommerceSuccessResponse {
   responseId: string;
   products: BaseProduct[];
-  results: BaseResult[];
   pagination: Pagination;
   triggers: Trigger[];
 }
