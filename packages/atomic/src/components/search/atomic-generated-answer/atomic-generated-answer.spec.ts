@@ -10,7 +10,7 @@ import {
   type TabManager,
 } from '@coveo/headless';
 import {html} from 'lit';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
 import {buildFakeGeneratedAnswer} from '@/vitest-utils/testing-helpers/fixtures/headless/search/generated-answer-controller';
@@ -1077,11 +1077,17 @@ describe('atomic-generated-answer', () => {
   });
 
   describe('tabs properties conflict', () => {
-    it('should log warning when both tabsIncluded and tabsExcluded are set', async () => {
-      const consoleWarnSpy = vi
-        .spyOn(console, 'warn')
-        .mockImplementation(() => {});
+    let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
 
+    beforeEach(() => {
+      consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      consoleWarnSpy.mockRestore();
+    });
+
+    it('should log warning when both tabsIncluded and tabsExcluded are set', async () => {
       await renderGeneratedAnswer({
         props: {
           tabsIncluded: ['IncludedTab'],
@@ -1094,15 +1100,9 @@ describe('atomic-generated-answer', () => {
       expect(consoleWarnSpy).toHaveBeenCalledWith(
         'Values for both "tabs-included" and "tabs-excluded" have been provided. This could lead to unexpected behaviors.'
       );
-
-      consoleWarnSpy.mockRestore();
     });
 
     it('should prioritize tabsExcluded when both properties are set', async () => {
-      const consoleWarnSpy = vi
-        .spyOn(console, 'warn')
-        .mockImplementation(() => {});
-
       const {container} = await renderGeneratedAnswer({
         props: {
           tabsIncluded: ['IncludedTab'],
@@ -1114,8 +1114,36 @@ describe('atomic-generated-answer', () => {
 
       // According to shouldDisplayOnCurrentTab, excludes take precedence
       expect(container).not.toBeInTheDocument();
+    });
 
-      consoleWarnSpy.mockRestore();
+    it('should not log warning when only tabsIncluded is set', async () => {
+      await renderGeneratedAnswer({
+        props: {tabsIncluded: ['IncludedTab']},
+        tabManagerState: {activeTab: 'IncludedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(consoleWarnSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not log warning when only tabsExcluded is set', async () => {
+      await renderGeneratedAnswer({
+        props: {tabsExcluded: ['ExcludedTab']},
+        tabManagerState: {activeTab: 'AllowedTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(consoleWarnSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not log warning when both properties are empty', async () => {
+      await renderGeneratedAnswer({
+        props: {tabsIncluded: [], tabsExcluded: []},
+        tabManagerState: {activeTab: 'AnyTab'},
+        generatedAnswerState: {isVisible: true, answer: 'Test answer'},
+      });
+
+      expect(consoleWarnSpy).not.toHaveBeenCalled();
     });
   });
 });
