@@ -34,7 +34,7 @@ export default class QuanticResultLink extends NavigationMixin(
    */
   @api engineId;
   /**
-  * The [result item](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.Result.html).
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/interfaces/Search.Result.html).
    * @api
    * @type {Result}
    */
