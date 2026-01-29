@@ -19,6 +19,7 @@ reviewers:
 
 review_bypass:
   trusted-team: pull_request  # Can bypass these rules
+  integration/139346: exempt # Developer eXperience Bot. Important for releases
 ```
 
 For full documentation on how this works and available options, see [`coveo/areas`](https://github.com/coveo/areas).
