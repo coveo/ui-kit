@@ -53,7 +53,7 @@ export const setFollowUpAnswerContentFormat = createAction(
 );
 
 export const setFollowUpIsLoading = createAction(
-  'followUpAnswers/setActiveFollowUpIsLoading',
+  'followUpAnswers/setFollowUpIsLoading',
   (payload: {answerId: string; isLoading: boolean}) =>
     validatePayload(payload, {
       isLoading: new BooleanValue({required: true}),
