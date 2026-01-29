@@ -376,15 +376,6 @@ export namespace Components {
         "collapseFacetsAfter": number;
     }
     /**
-     * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
-     */
-    interface AtomicIpxResultLink {
-        /**
-          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-ipx-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-ipx-result-link> ```
-         */
-        "hrefTemplate"?: string;
-    }
-    /**
      * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
      */
     interface AtomicRecsList {
@@ -698,15 +689,6 @@ declare global {
         new (): HTMLAtomicIpxRefineToggleElement;
     };
     /**
-     * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
-     */
-    interface HTMLAtomicIpxResultLinkElement extends Components.AtomicIpxResultLink, HTMLStencilElement {
-    }
-    var HTMLAtomicIpxResultLinkElement: {
-        prototype: HTMLAtomicIpxResultLinkElement;
-        new (): HTMLAtomicIpxResultLinkElement;
-    };
-    /**
      * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
      */
     interface HTMLAtomicRecsListElement extends Components.AtomicRecsList, HTMLStencilElement {
@@ -771,7 +753,6 @@ declare global {
         "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
-        "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
         "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
@@ -1110,15 +1091,6 @@ declare namespace LocalJSX {
         "collapseFacetsAfter"?: number;
     }
     /**
-     * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
-     */
-    interface AtomicIpxResultLink {
-        /**
-          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-ipx-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-ipx-result-link> ```
-         */
-        "hrefTemplate"?: string;
-    }
-    /**
      * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
      */
     interface AtomicRecsList {
@@ -1210,7 +1182,6 @@ declare namespace LocalJSX {
         "atomic-ipx-recs-list": AtomicIpxRecsList;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
-        "atomic-ipx-result-link": AtomicIpxResultLink;
         "atomic-recs-list": AtomicRecsList;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
         "atomic-suggestion-renderer": AtomicSuggestionRenderer;
@@ -1260,10 +1231,6 @@ declare module "@stencil/core" {
             "atomic-ipx-recs-list": LocalJSX.AtomicIpxRecsList & JSXBase.HTMLAttributes<HTMLAtomicIpxRecsListElement>;
             "atomic-ipx-refine-modal": LocalJSX.AtomicIpxRefineModal & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineModalElement>;
             "atomic-ipx-refine-toggle": LocalJSX.AtomicIpxRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineToggleElement>;
-            /**
-             * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
-             */
-            "atomic-ipx-result-link": LocalJSX.AtomicIpxResultLink & JSXBase.HTMLAttributes<HTMLAtomicIpxResultLinkElement>;
             /**
              * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
              */
