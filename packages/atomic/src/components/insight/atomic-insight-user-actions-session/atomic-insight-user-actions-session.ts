@@ -22,8 +22,6 @@ import {renderUserAction} from './user-action';
  *
  * @part session-start-icon__container - The container for the session start icon.
  * @part show-more-actions-button - The button to show more actions in the session.
- *
- * @cssprop --atomic-user-session-indicator - Background color of the session start indicator icon.
  */
 @customElement('atomic-insight-user-actions-session')
 @bindings()
