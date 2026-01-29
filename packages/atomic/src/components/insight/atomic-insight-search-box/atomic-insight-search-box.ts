@@ -36,6 +36,7 @@ import SearchSlimIcon from '../../../images/search-slim.svg';
 import '@/src/components/common/atomic-icon/atomic-icon';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import styles from './atomic-insight-search-box.tw.css';
+import '@coveo/atomic-legacy/atomic-suggestion-renderer';
 
 /**
  * The `atomic-insight-search-box` component allows users to enter and submit search queries within the Insight interface.
