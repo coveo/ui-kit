@@ -6,12 +6,14 @@ import {PlatformClient} from '../platform-client.js';
 import {
   type CommerceAPIClient,
   getCommerceApiBaseUrl,
+  getCommerceRedirectApiBaseUrl,
 } from './commerce-api-client.js';
 import type {CommerceAPIErrorStatusResponse} from './commerce-api-error-response.js';
 import type {FilterableCommerceAPIRequest} from './common/request.js';
 import type {CommerceListingRequest} from './listing/request.js';
 import type {ListingCommerceSuccessResponse} from './listing/response.js';
 import type {CommerceRecommendationsRequest} from './recommendations/recommendations-request.js';
+import type {CommerceSearchRedirectRequest} from './search/redirect-request.js';
 
 describe('commerce api client', () => {
   const organizationId = 'organization';
@@ -60,6 +62,30 @@ describe('commerce api client', () => {
         numberKey: 123,
       },
     },
+  });
+
+  const buildCommerceRedirectAPIRequest = async (
+    req: Partial<CommerceSearchRedirectRequest> = {}
+  ): Promise<CommerceSearchRedirectRequest> => ({
+    accessToken: accessToken,
+    organizationId: organizationId,
+    url: apiBaseUrl,
+    trackingId: trackingId,
+    language: req.language ?? '',
+    country: req.country ?? '',
+    currency: req.currency ?? '',
+    clientId: req.clientId ?? '',
+    context: req.context ?? {
+      view: {
+        url: '',
+        referrer: 'https://example.org/referrer',
+      },
+      capture: true,
+      source: [`@coveo/headless@${VERSION}`],
+    },
+    query: req.query,
+    debug: req.debug ?? false,
+    refreshCache: req.refreshCache ?? false,
   });
 
   const buildRecommendationsCommerceAPIRequest = async (
@@ -155,6 +181,42 @@ describe('commerce api client', () => {
         currency: request.currency,
       },
       requestMetadata: {method: 'search'},
+    });
+  });
+
+  it('#searchRedirect should call the platform endpoint with the correct unstable redirect URL', async () => {
+    const request = {
+      ...(await buildCommerceRedirectAPIRequest()),
+      query: 'some query',
+    };
+
+    mockPlatformCall({
+      ok: true,
+      json: () => Promise.resolve('some content'),
+    });
+
+    await client.searchRedirect(request);
+
+    expect(platformCallMock).toHaveBeenCalled();
+    const mockRequest = platformCallMock.mock.calls[0][0];
+    expect(mockRequest).toMatchObject({
+      method: 'POST',
+      contentType: 'application/json',
+      url: `https://${organizationId}.org.coveo.com/rest/organizations/${organizationId}/commerce/unstable/search/redirect`,
+      accessToken: request.accessToken,
+      origin: 'commerceApiFetch',
+      requestParams: {
+        query: 'some query',
+        debug: false,
+        refreshCache: false,
+        trackingId: request.trackingId,
+        clientId: request.clientId,
+        context: request.context,
+        language: request.language,
+        currency: request.currency,
+        country: request.country,
+      },
+      requestMetadata: {method: 'search/redirect'},
     });
   });
 
@@ -386,5 +448,23 @@ describe('commerce api client', () => {
     expect(response).toMatchObject({
       success: expectedBody,
     });
+  });
+});
+
+describe('getCommerceRedirectApiBaseUrl', () => {
+  it('should return the correct unstable redirect API URL for prod environment', () => {
+    const organizationId = 'testorg';
+    const result = getCommerceRedirectApiBaseUrl(organizationId);
+    expect(result).toBe(
+      'https://testorg.org.coveo.com/rest/organizations/testorg/commerce/unstable/search/redirect'
+    );
+  });
+
+  it('should return the correct unstable redirect API URL for dev environment', () => {
+    const organizationId = 'testorg';
+    const result = getCommerceRedirectApiBaseUrl(organizationId, 'dev');
+    expect(result).toBe(
+      'https://testorg.orgdev.coveo.com/rest/organizations/testorg/commerce/unstable/search/redirect'
+    );
   });
 });

@@ -105,6 +105,26 @@ const buildUrlWithTrackingIdInPath = (
   trackingId: string,
   path: CommerceApiMethod
 ): string => {
+  if (path === 'search/redirect') {
+    const urlParts = baseUrl.match(
+      /\/rest\/organizations\/([^/]+)\/commerce\/v2$/
+    );
+    if (urlParts) {
+      const organizationId = urlParts[1];
+      const platformEndpoint = baseUrl.replace(
+        /\/rest\/organizations\/[^/]+\/commerce\/v2$/,
+        ''
+      );
+      const redirectUrl = `${platformEndpoint}/rest/organizations/${organizationId}/commerce/unstable/search/redirect`;
+
+      // not sure this is supported but want to be consistent with other URLs
+      if (trackingId && TRACKING_ID_IN_PATH_METHODS.includes(path)) {
+        return `${redirectUrl}/tracking-ids/${trackingId}/${path}`;
+      }
+      return redirectUrl;
+    }
+  }
+
   if (trackingId && TRACKING_ID_IN_PATH_METHODS.includes(path)) {
     return `${baseUrl}/tracking-ids/${trackingId}/${path}`;
   }

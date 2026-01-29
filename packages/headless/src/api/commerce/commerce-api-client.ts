@@ -37,6 +37,7 @@ import {
   type QuerySuggestRequest,
 } from './search/query-suggest/query-suggest-request.js';
 import type {QuerySuggestSuccessResponse} from './search/query-suggest/query-suggest-response.js';
+import type {CommerceSearchRedirectRequest} from './search/redirect-request.js';
 import type {CommerceSearchRequest} from './search/request.js';
 import type {SearchCommerceSuccessResponse} from './search/response.js';
 
@@ -101,6 +102,22 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
         ...requestOptions.requestParams,
         query: req?.query,
         enableResults: Boolean(req?.enableResults),
+      },
+      ...this.options,
+    });
+  }
+
+  async searchRedirect(
+    req: CommerceSearchRedirectRequest
+  ): Promise<CommerceAPIResponse<SearchCommerceSuccessResponse>> {
+    const requestOptions = getRequestOptions(req, 'search/redirect');
+    return this.query({
+      ...requestOptions,
+      requestParams: {
+        ...requestOptions.requestParams,
+        query: req?.query,
+        debug: req?.debug,
+        refreshCache: req?.refreshCache,
       },
       ...this.options,
     });
@@ -210,4 +227,13 @@ export function getCommerceApiBaseUrl(
   const platformEndpoint = getOrganizationEndpoint(organizationId, environment);
 
   return `${platformEndpoint}/rest/organizations/${organizationId}/commerce/v2`;
+}
+
+export function getCommerceRedirectApiBaseUrl(
+  organizationId: string,
+  environment: PlatformEnvironment = 'prod'
+) {
+  const platformEndpoint = getOrganizationEndpoint(organizationId, environment);
+
+  return `${platformEndpoint}/rest/organizations/${organizationId}/commerce/unstable/search/redirect`;
 }
