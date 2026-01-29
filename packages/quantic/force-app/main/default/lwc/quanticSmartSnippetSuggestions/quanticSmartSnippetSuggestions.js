@@ -18,7 +18,7 @@ import {LightningElement, api} from 'lwc';
  */
 
 /**
- * The `QuanticSmartSnippetSuggestions` component displays additional queries for which a Coveo Smart Snippets model can provide relevant excerpts.
+ * The `QuanticSmartSnippetSuggestions` component displays additional queries for which a Coveo Smart Snippet model can provide relevant excerpts.
  * @category Search
  * @example
  *  <c-quantic-smart-snippet-suggestions engine-id={engineId}></c-quantic-smart-snippet-suggestions>

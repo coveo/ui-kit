@@ -794,6 +794,10 @@ declare namespace LocalJSX {
           * Indicates whether the modal is open.
          */
         "isOpen"?: boolean;
+        /**
+          * @migration Stencil's
+          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('feedbackSent', { bubbles: true, composed: true, cancelable: true })`
+         */
         "onFeedbackSent"?: (event: AtomicGeneratedAnswerFeedbackModalCustomEvent<any>) => void;
     }
     interface AtomicInsightFoldedResultList {
@@ -860,6 +864,10 @@ declare namespace LocalJSX {
           * Specify the result action icon to display.
          */
         "icon"?: string;
+        /**
+          * @migration Stencil's
+          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('atomicInsightResultActionClicked', { bubbles: true, composed: true, cancelable: true, detail: ... })`
+         */
         "onAtomicInsightResultActionClicked"?: (event: AtomicInsightResultActionCustomEvent<InsightResultActionClickedEvent>) => void;
         /**
           * The text tooltip to show on the result action icon.
@@ -873,6 +881,10 @@ declare namespace LocalJSX {
     interface AtomicInsightResultActionBar {
     }
     interface AtomicInsightResultAttachToCaseAction {
+        /**
+          * @migration Stencil's
+          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('atomic/insight/attachToCase/attach', { bubbles: true, composed: true, cancelable: true, detail: ... })` `new CustomEvent('atomic/insight/attachToCase/detach', { bubbles: true, composed: true, cancelable: true, detail: ... })`
+         */
         "onAtomic/insight/attachToCase/attach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
         "onAtomic/insight/attachToCase/detach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
     }
@@ -1047,6 +1059,10 @@ declare namespace LocalJSX {
     interface AtomicIpxBody {
         "displayFooterSlot"?: boolean;
         "isOpen"?: boolean;
+        /**
+          * @migration Stencil's
+          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('animationEnded', { bubbles: true, composed: true, cancelable: true })`
+         */
         "onAnimationEnded"?: (event: AtomicIpxBodyCustomEvent<never>) => void;
     }
     interface AtomicIpxModal {
@@ -1055,6 +1071,10 @@ declare namespace LocalJSX {
          */
         "container"?: HTMLElement;
         "isOpen"?: boolean;
+        /**
+          * @migration Stencil's
+          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('animationEnded', { bubbles: true, composed: true, cancelable: true })`
+         */
         "onAnimationEnded"?: (event: AtomicIpxModalCustomEvent<never>) => void;
         "source"?: HTMLElement;
     }
@@ -1165,6 +1185,10 @@ declare namespace LocalJSX {
         "label": string;
         "max"?: string;
         "min"?: string;
+        /**
+          * @migration Stencil's
+          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('atomic/dateInputApply', { bubbles: true, composed: true, cancelable: true, detail: ... })`
+         */
         "onAtomic/dateInputApply"?: (event: AtomicStencilFacetDateInputCustomEvent<any>) => void;
         "rangeGetter": () => DateFilterRange | undefined;
         "rangeSetter": (range: DateRangeRequest) => void;
