@@ -7,23 +7,23 @@ import {createRef, type Ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
 import {renderIconButton} from '@/src/components/common/icon-button';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
+import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
+import type {AtomicQuickviewModal} from '@/src/components/search/atomic-quickview-modal/atomic-quickview-modal';
 import {createResultContextController} from '@/src/components/search/result-template-component-utils/context/result-context-controller';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
+import {LightDomMixin} from '@/src/mixins/light-dom';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import QuickviewIcon from '../../../images/preview.svg';
-import '@/src/components/common/atomic-icon/atomic-icon';
-import type {InsightBindings} from '@/src/components/insight/atomic-insight-interface/atomic-insight-interface';
-import type {AtomicQuickviewModal} from '@/src/components/search/atomic-quickview-modal/atomic-quickview-modal';
 
 /**
- * TODO:
+ * TODO: Add description
  */
 @customElement('atomic-insight-result-quickview-action')
 @bindings()
 export class AtomicInsightResultQuickviewAction
-  extends LitElement
+  extends LightDomMixin(LitElement)
   implements InitializableComponent<InsightBindings>
 {
   private static readonly propsSchema = new Schema({

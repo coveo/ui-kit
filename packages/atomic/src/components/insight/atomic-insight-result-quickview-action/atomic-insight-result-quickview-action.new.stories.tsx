@@ -1,8 +1,12 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
+import {wrapInInsightLayout} from '@/storybook-utils/insight/insight-layout-wrapper';
+import {wrapInInsightResultList} from '@/storybook-utils/insight/insight-result-list-wrapper';
+import {wrapInInsightResultTemplate} from '@/storybook-utils/insight/insight-result-template-wrapper';
 
 const mockInsightApi = new MockInsightApi();
 
@@ -21,54 +25,63 @@ mockInsightApi.searchEndpoint.mock((response: any) => ({
 const {decorator: insightInterfaceDecorator, play} = wrapInInsightInterface(
   {},
   false,
-  true
+  false
+);
+const {decorator: insightLayoutDecorator} = wrapInInsightLayout(false);
+const {decorator: insightResultListDecorator} = wrapInInsightResultList(
+  'list',
+  false
+);
+const {decorator: insightResultTemplateDecorator} =
+  wrapInInsightResultTemplate(false);
+
+const {events, args, argTypes, template, styleTemplate} = getStorybookHelpers(
+  'atomic-insight-result-quickview-action',
+  {excludeCategories: ['methods']}
 );
 
 const meta: Meta = {
   component: 'atomic-insight-result-quickview-action',
-  title: 'Insight/Result Components/Result Quickview Action',
+  title: 'Insight/Result Quickview Action',
   id: 'atomic-insight-result-quickview-action',
-
-  render: () => html`
-    <atomic-insight-layout>
-      <atomic-insight-refine-modal></atomic-insight-refine-modal>
-      <atomic-layout-section section="main">
-        <atomic-layout-section section="horizontal">
-          <atomic-layout-section section="results">
-            <atomic-insight-result-list>
-              <atomic-insight-result-template>
-                <template>
-                  <atomic-result-section-visual>
-                    <atomic-result-image
-                      field="ytthumbnailurl"
-                      fallback="https://picsum.photos/seed/picsum/350"
-                    ></atomic-result-image>
-                  </atomic-result-section-visual>
-                  <atomic-result-section-title>
-                    <atomic-result-link></atomic-result-link>
-                  </atomic-result-section-title>
-                  <atomic-result-section-excerpt>
-                    <atomic-result-text field="excerpt"></atomic-result-text>
-                  </atomic-result-section-excerpt>
-                  <atomic-result-section-actions>
-                    <atomic-insight-result-quickview-action></atomic-insight-result-quickview-action>
-                  </atomic-result-section-actions>
-                </template>
-              </atomic-insight-result-template>
-            </atomic-insight-result-list>
-          </atomic-layout-section>
-        </atomic-layout-section>
-      </atomic-layout-section>
-    </atomic-insight-layout>
-    <atomic-quickview-modal></atomic-quickview-modal>
+  render: (args) => html`
+    ${styleTemplate(args)}
+    <atomic-result-section-actions id="code-root">
+      ${template(args)}
+    </atomic-result-section-actions>
   `,
-  decorators: [insightInterfaceDecorator],
+  decorators: [
+    (story) => html`
+      <atomic-result-section-visual>
+        <atomic-result-image
+          field="ytthumbnailurl"
+          fallback="https://picsum.photos/seed/picsum/350"
+        ></atomic-result-image>
+      </atomic-result-section-visual>
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+      ${story()}
+    `,
+    insightResultTemplateDecorator,
+    insightResultListDecorator,
+    insightLayoutDecorator,
+    insightInterfaceDecorator,
+  ],
   parameters: {
     ...parameters,
+    actions: {
+      handles: events,
+    },
     msw: {
       handlers: [...mockInsightApi.handlers],
     },
   },
+  args,
+  argTypes,
 
   play,
 };
@@ -79,39 +92,8 @@ export const Default: Story = {};
 
 export const CustomSandbox: Story = {
   name: 'With custom sandbox attributes',
-  render: () => html`
-    <atomic-insight-layout>
-      <atomic-insight-refine-modal></atomic-insight-refine-modal>
-      <atomic-layout-section section="main">
-        <atomic-layout-section section="horizontal">
-          <atomic-layout-section section="results">
-            <atomic-insight-result-list>
-              <atomic-insight-result-template>
-                <template>
-                  <atomic-result-section-visual>
-                    <atomic-result-image
-                      field="ytthumbnailurl"
-                      fallback="https://picsum.photos/seed/picsum/350"
-                    ></atomic-result-image>
-                  </atomic-result-section-visual>
-                  <atomic-result-section-title>
-                    <atomic-result-link></atomic-result-link>
-                  </atomic-result-section-title>
-                  <atomic-result-section-excerpt>
-                    <atomic-result-text field="excerpt"></atomic-result-text>
-                  </atomic-result-section-excerpt>
-                  <atomic-result-section-actions>
-                    <atomic-insight-result-quickview-action
-                      sandbox="allow-scripts allow-popups allow-top-navigation allow-same-origin"
-                    ></atomic-insight-result-quickview-action>
-                  </atomic-result-section-actions>
-                </template>
-              </atomic-insight-result-template>
-            </atomic-insight-result-list>
-          </atomic-layout-section>
-        </atomic-layout-section>
-      </atomic-layout-section>
-    </atomic-insight-layout>
-    <atomic-quickview-modal></atomic-quickview-modal>
-  `,
+  args: {
+    sandbox:
+      'allow-scripts allow-popups allow-top-navigation allow-same-origin',
+  },
 };

@@ -1,14 +1,15 @@
 import {
   buildQuickview,
+  type FoldedResult as InsightFoldedResult,
   type Quickview,
   type QuickviewState,
   type Result,
 } from '@coveo/headless/insight';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {renderInAtomicResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-result-fixture';
-import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
-import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
+import {renderInAtomicInsightResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-result-fixture';
+import {buildFakeInsightEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/engine';
+import {buildFakeInsightResult} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/result';
 import type {AtomicInsightResultQuickviewAction} from './atomic-insight-result-quickview-action';
 import './atomic-insight-result-quickview-action';
 
@@ -16,8 +17,9 @@ vi.mock('@coveo/headless/insight', {spy: true});
 
 describe('atomic-insight-result-quickview-action', () => {
   let mockResult: Result;
+  let mockFoldedResult: InsightFoldedResult;
   let mockQuickview: Quickview;
-  const mockedEngine = buildFakeSearchEngine();
+  const mockedEngine = buildFakeInsightEngine();
 
   const parts = (element: AtomicInsightResultQuickviewAction) => ({
     container: element?.shadowRoot?.querySelector(
@@ -49,12 +51,17 @@ describe('atomic-insight-result-quickview-action', () => {
   };
 
   beforeEach(() => {
-    mockResult = buildFakeResult({
+    mockResult = buildFakeInsightResult({
       title: 'Test Result Title',
       clickUri: 'https://example.com/test',
       uri: 'https://example.com/test',
       uniqueId: 'test-unique-id',
     });
+
+    mockFoldedResult = {
+      result: mockResult,
+      children: [],
+    };
 
     mockQuickview = buildFakeInsightQuickview({
       state: {
@@ -67,11 +74,11 @@ describe('atomic-insight-result-quickview-action', () => {
 
   const renderComponent = async ({
     props = {},
-    result = mockResult,
+    result = mockFoldedResult,
     quickviewState,
   }: {
     props?: Partial<{sandbox: string}>;
-    result?: Result;
+    result?: InsightFoldedResult;
     quickviewState?: Partial<QuickviewState>;
   } = {}) => {
     const finalQuickview = buildFakeInsightQuickview({
@@ -84,7 +91,7 @@ describe('atomic-insight-result-quickview-action', () => {
     vi.mocked(buildQuickview).mockReturnValue(finalQuickview);
 
     const {element, atomicResult, atomicInterface} =
-      await renderInAtomicResult<AtomicInsightResultQuickviewAction>({
+      await renderInAtomicInsightResult<AtomicInsightResultQuickviewAction>({
         template: html`<atomic-insight-result-quickview-action
           sandbox=${
             props.sandbox ||
@@ -109,11 +116,6 @@ describe('atomic-insight-result-quickview-action', () => {
       parts: parts(element),
     };
   };
-
-  it('should be defined', () => {
-    const el = document.createElement('atomic-insight-result-quickview-action');
-    expect(el).toBeInstanceOf(AtomicInsightResultQuickviewAction);
-  });
 
   it('should initialize successfully', async () => {
     const {element} = await renderComponent();
@@ -204,7 +206,6 @@ describe('atomic-insight-result-quickview-action', () => {
       });
       const stopPropagationSpy = vi.fn();
 
-      // @ts-expect-error accessing private method for testing
       element.onClick({stopPropagation: stopPropagationSpy});
 
       expect(stopPropagationSpy).toHaveBeenCalled();
@@ -216,7 +217,6 @@ describe('atomic-insight-result-quickview-action', () => {
       });
       const fetchSpy = vi.spyOn(element.quickview, 'fetchResultContent');
 
-      // @ts-expect-error accessing private method for testing
       element.onClick();
 
       expect(fetchSpy).toHaveBeenCalledOnce();
