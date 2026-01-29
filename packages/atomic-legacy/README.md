@@ -25,10 +25,9 @@ An internal component used to render individual search box suggestions. It handl
 
 ## Entry Points
 
-The package exposes the following entry points:
+The package exposes a single entry point:
 
-- `@coveo/atomic-legacy`: Main entry point with types and utilities
-- `@coveo/atomic-legacy/atomic-suggestion-renderer`: Direct access to the suggestion renderer component
+- `@coveo/atomic-legacy/atomic-suggestion-renderer`: Direct access to the suggestion renderer component with types and implementation
 
 ## Usage
 
