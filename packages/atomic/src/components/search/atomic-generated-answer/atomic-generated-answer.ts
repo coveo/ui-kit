@@ -169,6 +169,28 @@ export class AtomicGeneratedAnswer
   disableCitationAnchoring = false;
 
   /**
+   * Whether to make the generated answer content scrollable.
+   * When enabled, the content area will have a maximum height and allow scrolling through previous answers.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'scrollable',
+    converter: booleanConverter,
+  })
+  scrollable = false;
+
+  /**
+   * Whether to make the follow-up input sticky.
+   * When enabled, the input will stick to the bottom of the viewport when scrolling up.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'sticky-input',
+    converter: booleanConverter,
+  })
+  stickyInput = false;
+
+  /**
    * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.
    *
    * Set this property as a stringified JSON array, for example:
@@ -234,6 +256,9 @@ export class AtomicGeneratedAnswer
 
   @state()
   private followUpPending = false;
+
+  @state()
+  private previousAnswersCollapsed = true;
 
   @state()
   private initialQuery = '';
@@ -355,6 +380,7 @@ export class AtomicGeneratedAnswer
   private handleAskFollowUp = async (query: string) => {
     if (this.canAskFollowUp()) {
       this.followUpPending = true;
+      this.previousAnswersCollapsed = true;
       try {
         const result = await this.generatedAnswer.askFollowUp(query);
         return result;
@@ -366,6 +392,10 @@ export class AtomicGeneratedAnswer
 
   private handleClearFollowUpInput = () => {
     this.followUpInputValue = '';
+  };
+
+  private handleTogglePreviousAnswers = () => {
+    this.previousAnswersCollapsed = false;
   };
 
   private isAnyFollowUpAnswerStreaming(): boolean {
@@ -422,8 +452,8 @@ export class AtomicGeneratedAnswer
           aria-label=${this.bindings.i18n.t('generated-answer-title')}
         >
           <article>${this.renderContent()}</article>
-          ${this.renderFollowUpInput()}
-          ${this.renderDisclaimer()}
+          ${this.isAnswerVisible ? this.renderFollowUpInput() : nothing}
+          ${this.isAnswerVisible ? this.renderDisclaimer() : nothing}
         </aside>
       </div>
     `;
@@ -665,6 +695,9 @@ export class AtomicGeneratedAnswer
         },
         onRetry: () => this.generatedAnswer?.retry(),
         onClickShowButton: () => this.clickOnShowButton(),
+        scrollable: this.scrollable,
+        previousAnswersCollapsed: this.previousAnswersCollapsed,
+        onTogglePreviousAnswers: this.handleTogglePreviousAnswers,
       },
     });
   }
@@ -674,8 +707,12 @@ export class AtomicGeneratedAnswer
       return nothing;
     }
 
+    const stickyClasses = this.stickyInput
+      ? 'sticky bottom-0 bg-white z-10'
+      : '';
+
     return html`
-      <div class="px-6">
+      <div class="px-6 ${stickyClasses}">
         ${renderFollowUpInput({
           props: {
             i18n: this.bindings.i18n,

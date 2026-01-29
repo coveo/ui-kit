@@ -17,6 +17,17 @@ import {renderGeneratingAnswerLabel} from './render-generating-answer-label';
 import '@/src/components/common/atomic-icon/atomic-icon';
 import '@/src/components/search/atomic-previous-answers-list/atomic-previous-answers-list';
 
+const getShowPreviousQuestionsLabel = (translator: i18n, count: number) => {
+  if (!count) {
+    return '';
+  }
+  const fallback = `Show ${count} previous question${count === 1 ? '' : 's'}`;
+  return translator.t('show-previous-questions', {
+    count,
+    defaultValue: fallback,
+  });
+};
+
 interface FollowUpAnswerForRendering {
   question: string;
   answer?: string;
@@ -35,6 +46,8 @@ export interface RenderAnswerContentProps {
   toggleTooltip: string;
   withToggle: boolean;
   collapsible: boolean;
+  scrollable?: boolean;
+  previousAnswersCollapsed?: boolean;
   agentId?: string;
   followUpAnswers?: {
     id: string;
@@ -47,6 +60,7 @@ export interface RenderAnswerContentProps {
   onToggle: (checked: boolean) => void;
   onRetry: () => void;
   onClickShowButton: () => void;
+  onTogglePreviousAnswers?: () => void;
 }
 
 /**
@@ -63,6 +77,8 @@ export const renderAnswerContent: FunctionalComponent<
     toggleTooltip,
     withToggle,
     collapsible,
+    scrollable = false,
+    previousAnswersCollapsed = false,
     query,
     initialQuery,
     agentId,
@@ -72,6 +88,7 @@ export const renderAnswerContent: FunctionalComponent<
     onToggle,
     onRetry,
     onClickShowButton,
+    onTogglePreviousAnswers,
   } = props;
 
   // Determine which answer to display
@@ -96,6 +113,11 @@ export const renderAnswerContent: FunctionalComponent<
         ...followUpAnswers!.answers.slice(0, -1),
       ]
     : [];
+
+  const showPreviousQuestionsLabel = getShowPreviousQuestionsLabel(
+    i18n,
+    previousAnswers.length
+  );
 
   const queryRowSpacingClass = previousAnswers.length > 0 ? 'py-3' : 'mt-3';
 
@@ -140,10 +162,30 @@ export const renderAnswerContent: FunctionalComponent<
       </div>
       ${when(
         isAnswerVisible,
-        () => html`
-          ${
-            previousAnswers.length > 0
-              ? html`
+        () => {
+          const contentClasses = scrollable
+            ? 'overflow-y-auto max-h-[500px]'
+            : '';
+          return html`
+            <div class="${contentClasses}">
+              ${
+                previousAnswersCollapsed && showPreviousQuestionsLabel
+                  ? html`
+                      <div class="px-6 pt-6 pb-3">
+                        <button
+                          @click=${onTogglePreviousAnswers}
+                          class="px-1 py-1 text-base text-neutral-dark bg-neutral-light rounded-md hover:bg-neutral-light/80 transition-colors"
+                          type="button"
+                        >
+                          ${showPreviousQuestionsLabel}
+                        </button>
+                      </div>
+                    `
+                  : nothing
+              }
+              ${
+                previousAnswers.length > 0 && !previousAnswersCollapsed
+                  ? html`
             <atomic-previous-answers-list
               .previousAnswers=${previousAnswers}
               .i18n=${i18n}
@@ -151,10 +193,10 @@ export const renderAnswerContent: FunctionalComponent<
               .renderCitationsSlot=${renderCitationsSlot}
             ></atomic-previous-answers-list>
           `
-              : nothing
-          }
+                  : nothing
+              }
           <div part="generated-content-container" class="px-6 pb-6">
-            <div class=${`flex items-center justify-between gap-3 ${queryRowSpacingClass}`}>
+            <div class=${`flex items-center justify-between gap-3 px-1 ${queryRowSpacingClass}`}>
               <p class="query-text text-base font-semibold leading-6">
                 ${displayQuery}
               </p>
@@ -217,7 +259,9 @@ export const renderAnswerContent: FunctionalComponent<
                 : nothing
             }
           </div>
-        `,
+            </div>
+          `;
+        },
         () => nothing
       )}
     </div>
