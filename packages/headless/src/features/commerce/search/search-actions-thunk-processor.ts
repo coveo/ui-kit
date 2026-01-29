@@ -88,8 +88,9 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       duration,
       queryExecuted,
       requestExecuted: request,
-      enableResults:
-        'enableResults' in request ? request.enableResults : undefined,
+      enableResults: Boolean(
+        'enableResults' in request && request.enableResults
+      ),
     };
   }
 
@@ -204,7 +205,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
         this.navigatorContext
       ),
       query: modified,
-      enableResults,
+      enableResults: Boolean(enableResults),
     });
 
     return fetched;
