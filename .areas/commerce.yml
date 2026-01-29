@@ -1,0 +1,12 @@
+description: Commerce features in Headless
+file_patterns:
+  - packages/headless/commerce/**
+  - packages/headless/src/**/commerce/**
+  - packages/headless/src/app/commerce-engine/**
+  - packages/headless/src/state/commerce-app-state.ts
+  - packages/headless/src/commerce.index.ts
+  - packages/headless/src/test/**commerce**
+
+reviewers:
+  commerce-routemasters: ~
+  dxui: ~
