@@ -1,4 +1,5 @@
 import type {UserAction as IUserAction} from '@coveo/headless/insight';
+import dayjs from 'dayjs';
 import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
@@ -8,7 +9,6 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {parseTimestampToDateDetails} from '@/src/utils/date-utils';
 import Flag from '../../../images/flag.svg';
 import ThreeDotsIcon from '../../../images/three-dots.svg';
 import {renderUserAction} from './user-action';
@@ -23,7 +23,7 @@ import {renderUserAction} from './user-action';
  * @part session-start-icon__container - The container for the session start icon.
  * @part show-more-actions-button - The button to show more actions in the session.
  *
- * @cssprop --atomic-session-indicator - Background color of the session start indicator icon.
+ * @cssprop --atomic-user-session-indicator - Background color of the session start indicator icon.
  */
 @customElement('atomic-insight-user-actions-session')
 @bindings()
@@ -122,11 +122,9 @@ export class AtomicInsightUserActionsSession
   }
 
   private renderSessionStartDate() {
-    const {year, month, dayOfWeek, day} = parseTimestampToDateDetails(
-      this.startTimestamp
-    );
+    const date = dayjs(this.startTimestamp);
+    const formatedStartDate = date.format('ddd. MMMM D, YYYY');
 
-    const formatedStartDate = `${dayOfWeek}. ${month} ${day}, ${year}`;
     return html`
       <div data-testid="session-start-date-container" class="flex items-center px-2 pb-3">
         ${when(

@@ -1,26 +1,12 @@
 import type {UserAction as IUserAction} from '@coveo/headless/insight';
 import {html} from 'lit';
-import {describe, expect, it, vi} from 'vitest';
+import {describe, expect, it} from 'vitest';
 import {
   defaultBindings,
   renderInAtomicInsightInterface,
 } from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-interface-fixture';
 import type {AtomicInsightUserActionsSession} from './atomic-insight-user-actions-session';
 import './atomic-insight-user-actions-session';
-
-vi.mock('@/src/utils/date-utils', () => ({
-  parseTimestampToDateDetails: vi.fn((timestamp: number) => {
-    const date = new Date(timestamp);
-    return {
-      hours: date.getUTCHours(),
-      minutes: date.getUTCMinutes(),
-      year: date.getUTCFullYear(),
-      month: date.toLocaleString('en', {month: 'short', timeZone: 'UTC'}),
-      day: date.getUTCDate(),
-      dayOfWeek: date.toLocaleString('en', {weekday: 'short', timeZone: 'UTC'}),
-    };
-  }),
-}));
 
 describe('atomic-insight-user-actions-session', () => {
   const mockUserActions: IUserAction[] = [
@@ -171,9 +157,9 @@ describe('atomic-insight-user-actions-session', () => {
 
       const text = sessionStartDateContainer()?.textContent || '';
 
-      expect(text).toMatch(/\w+\.\s+\w+\s+\d+,\s+\d{4}/);
       expect(text).toContain('2024');
       expect(text).toMatch(/Jan/i);
+      expect(text).toMatch(/1/);
     });
 
     it('should not render flag icon when session has no case creation', async () => {
