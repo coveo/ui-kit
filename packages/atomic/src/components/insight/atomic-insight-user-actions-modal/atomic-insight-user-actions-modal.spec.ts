@@ -1,6 +1,5 @@
 import {html} from 'lit';
 import {describe, expect, it} from 'vitest';
-import {page} from 'vitest/browser';
 import {renderInAtomicInsightInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-interface-fixture';
 import type {AtomicInsightUserActionsModal} from './atomic-insight-user-actions-modal';
 import './atomic-insight-user-actions-modal';
@@ -42,7 +41,6 @@ describe('atomic-insight-user-actions-modal', () => {
           'atomic-insight-user-actions-timeline'
         );
       },
-      closeButton: page.getByRole('button', {name: 'close'}),
       parts: (el: AtomicInsightUserActionsModal) => ({
         title: el.shadowRoot?.querySelector('[part="title"]'),
         closeButton: el.shadowRoot?.querySelector('[part="close-button"]'),
@@ -124,9 +122,10 @@ describe('atomic-insight-user-actions-modal', () => {
   });
 
   it('should set isOpen to false when close button is clicked', async () => {
-    const {element, closeButton} = await renderModal({props: {isOpen: true}});
+    const {element, parts} = await renderModal({props: {isOpen: true}});
+    const closeButton = parts(element).closeButton as HTMLButtonElement;
 
-    await closeButton.click();
+    closeButton?.click();
     await element.updateComplete;
 
     expect(element.isOpen).toBe(false);
