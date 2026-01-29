@@ -34,7 +34,7 @@ export class AtomicInsightUserActionsSession
 {
   static styles = css`
     .session-start-icon__container {
-      background-color: var(--atomic-user-session-indicator);
+      background-color: #fbb439;
     }
 
     .user-action__separator {
