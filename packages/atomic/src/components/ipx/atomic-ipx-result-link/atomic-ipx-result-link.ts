@@ -28,7 +28,9 @@ import '@/src/components/search/atomic-result-text/atomic-result-text';
 import styles from './atomic-ipx-result-link.tw.css';
 
 /**
- * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
+ * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
+ *
+ * **Note:** This is an experimental internal component not intended for general use.
  *
  * @slot default - Lets you display alternative content inside the link
  * @slot attributes - Lets you pass [attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attributes) down to the link element, overriding other attributes, to be used exclusively with an "a" tag such as `<a slot="attributes" target="_blank" download></a>`.
