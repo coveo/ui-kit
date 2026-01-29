@@ -103,7 +103,6 @@ describe('follow-up answers slice', () => {
         state,
         createFollowUpAnswer({question: 'Second?'})
       );
-      ``;
 
       expect(finalState.followUpAnswers).toHaveLength(2);
       expect(finalState.followUpAnswers[1].question).toBe('Second?');
