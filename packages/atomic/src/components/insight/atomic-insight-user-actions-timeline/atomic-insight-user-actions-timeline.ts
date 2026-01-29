@@ -32,6 +32,8 @@ import ArrowUpIcon from '../../../images/big-arrow-up.svg';
  * @part toggle-following-sessions-icon - The icon displayed on the toggle following sessions button.
  * @part toggle-preceding-sessions - The button to toggle the visibility of preceding sessions.
  * @part toggle-preceding-sessions-icon - The icon displayed on the toggle preceding sessions button.
+ *
+ * @cssprop --atomic-user-actions-timeline-separator-background - Background color of the separator lines between sessions.
  */
 @customElement('atomic-insight-user-actions-timeline')
 @bindings()
@@ -45,7 +47,7 @@ export class AtomicInsightUserActionsTimeline
 
     .separator {
       height: 1px;
-      background-color: #e0e1dd;
+      background-color: var(--atomic-insight-user-actions-timeline-separator-background);
     }
   `;
 

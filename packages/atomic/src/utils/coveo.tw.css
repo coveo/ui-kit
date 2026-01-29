@@ -80,6 +80,11 @@
 
   --color-rating-icon-outline: var(--atomic-rating-icon-outline-color, none);
 
+  --color-user-actions-timeline-separator-background: var(
+    --atomic-user-actions-timeline-separator-background,
+    #e0e1dd
+  );
+
   --color-more-results-progress-bar-color-from: var(
     --atomic-more-results-progress-bar-color-from,
     var(--atomic-primary-dark)
