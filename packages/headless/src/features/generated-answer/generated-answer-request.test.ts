@@ -593,7 +593,6 @@ describe('constructGenerateHeadAnswerParams', () => {
       buildMockNavigatorContextProvider()()
     );
 
-    console.log(params.facets);
     expect(params.facets?.map((f) => f.facetId)).toEqual([
       'alpha-facet',
       'zebra-facet',
