@@ -119,7 +119,7 @@ export const renderAnswerContent: FunctionalComponent<
     previousAnswers.length
   );
 
-  const queryRowSpacingClass = previousAnswers.length > 0 ? 'py-3' : 'mt-3';
+  const queryRowSpacingClass = previousAnswers.length > 0 ? 'py-2' : 'mt-3';
 
   const {isStreaming, answer, citations, answerContentFormat} =
     displayState ?? {};
@@ -132,11 +132,17 @@ export const renderAnswerContent: FunctionalComponent<
 
   return html`
     <div part="generated-content">
-      <div part="header" class="flex items-center ${isAnswerVisible ? 'border-b-1 border-gray-200' : ''} px-6 py-2">
+      <div
+        part="header"
+        class="flex items-center ${
+          isAnswerVisible ? 'border-b-1 border-gray-200' : ''
+        } px-6 py-2"
+      >
         <atomic-icon
           part="header-icon"
           class="text-primary h-4 w-4 fill-current"
-          .icon=${'assets://sparkles.svg'}>
+          .icon=${'assets://sparkles.svg'}
+        >
         </atomic-icon>
         ${renderHeading({
           props: {
@@ -171,94 +177,128 @@ export const renderAnswerContent: FunctionalComponent<
               ${
                 previousAnswersCollapsed && showPreviousQuestionsLabel
                   ? html`
-                      <div class="px-6 pt-6 pb-3">
-                        <button
-                          @click=${onTogglePreviousAnswers}
-                          class="px-1 py-1 text-base text-neutral-dark bg-neutral-light rounded-md hover:bg-neutral-light/80 transition-colors"
-                          type="button"
-                        >
-                          ${showPreviousQuestionsLabel}
-                        </button>
+                    <div class="px-6 pt-6 pb-3">
+                      <div class="flex gap-4">
+                        <div class="flex items-center">
+                          <span
+                            class="w-2.5 h-2.5 rounded-full bg-neutral-dark/30"
+                          ></span>
+                        </div>
+                        <div>
+                          <button
+                            @click=${onTogglePreviousAnswers}
+                            class="px-2 py-1 text-sm font-medium text-neutral-dark bg-gray-100 rounded-md border border-gray-100 shadow-inner transition-colors hover:bg-gray-100/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                            type="button"
+                          >
+                            ${showPreviousQuestionsLabel}
+                          </button>
+                        </div>
                       </div>
-                    `
+                    </div>
+                  `
                   : nothing
               }
               ${
                 previousAnswers.length > 0 && !previousAnswersCollapsed
                   ? html`
-            <atomic-previous-answers-list
-              .previousAnswers=${previousAnswers}
-              .i18n=${i18n}
-              .renderFeedbackAndCopyButtonsSlot=${renderFeedbackAndCopyButtonsSlot}
-              .renderCitationsSlot=${renderCitationsSlot}
-            ></atomic-previous-answers-list>
-          `
+                    <atomic-previous-answers-list
+                      .previousAnswers=${previousAnswers}
+                      .i18n=${i18n}
+                      .renderFeedbackAndCopyButtonsSlot=${renderFeedbackAndCopyButtonsSlot}
+                      .renderCitationsSlot=${renderCitationsSlot}
+                    ></atomic-previous-answers-list>
+                  `
                   : nothing
               }
-          <div part="generated-content-container" class="px-6 pb-6">
-            <div class=${`flex items-center justify-between gap-3 px-1 ${queryRowSpacingClass}`}>
-              <p class="query-text text-base font-semibold leading-6">
-                ${displayQuery}
-              </p>
-              ${when(
-                showInlineActions,
-                () => html`
-                <div class="flex items-center gap-2 h-9">
-                  ${renderFeedbackAndCopyButtonsSlot()}
-                </div>
-              `
-              )}
-            </div>
-            ${
-              hasRetryableError
-                ? renderRetryPrompt({
-                    props: {
-                      onClick: onRetry,
-                      buttonLabel: i18n.t('retry'),
-                      message: i18n.t('retry-stream-message'),
-                    },
-                  })
-                : nothing
-            }
-            ${
-              !hasRetryableError
-                ? renderGeneratedContentContainer({
-                    props: {
-                      answer,
-                      answerContentFormat,
-                      isStreaming: !!isStreaming,
-                    },
-                  })(html`
-                  ${renderSourceCitations({
-                    props: {
-                      label: i18n.t('citations'),
-                      isVisible: !!citations?.length,
-                    },
-                  })(renderCitationsSlot())}
-                `)
-                : nothing
-            }
-            ${
-              !hasRetryableError
-                ? html`
-                  <div part="generated-answer-footer" class="mt-6">
-                    ${renderGeneratingAnswerLabel({props: {i18n, isStreaming: !!isStreaming, collapsible}})}
+              <div part="generated-content-container" class="px-6 pb-6">
+                <div
+                  class=${`flex items-center justify-between gap-3 ${queryRowSpacingClass}`}
+                >
+                  <div
+                    class=${`flex ${previousAnswers.length > 0 ? 'gap-4' : ''}`}
+                  >
                     ${
-                      collapsible && !isStreaming
-                        ? renderShowButton({
-                            props: {
-                              i18n,
-                              onClick: onClickShowButton,
-                              isCollapsed: !(expanded ?? true),
-                            },
-                          })
+                      previousAnswers.length > 0
+                        ? html`
+                          <div class="flex items-center">
+                            <span
+                              class="w-2.5 h-2.5 rounded-full bg-neutral-dark/30"
+                            ></span>
+                          </div>
+                        `
                         : nothing
                     }
+                    <p class="query-text text-base font-semibold leading-6">
+                      ${displayQuery}
+                    </p>
                   </div>
-                `
-                : nothing
-            }
-          </div>
+                  ${when(
+                    showInlineActions,
+                    () => html`
+                      <div class="flex items-center gap-2 h-9">
+                        ${renderFeedbackAndCopyButtonsSlot()}
+                      </div>
+                    `
+                  )}
+                </div>
+                ${
+                  hasRetryableError
+                    ? renderRetryPrompt({
+                        props: {
+                          onClick: onRetry,
+                          buttonLabel: i18n.t('retry'),
+                          message: i18n.t('retry-stream-message'),
+                        },
+                      })
+                    : nothing
+                }
+                ${
+                  !hasRetryableError
+                    ? renderGeneratedContentContainer({
+                        props: {
+                          answer,
+                          answerContentFormat,
+                          isStreaming: !!isStreaming,
+                          containerClass:
+                            previousAnswers.length > 0 ? 'px-6' : undefined,
+                        },
+                      })(html`
+                      ${renderSourceCitations({
+                        props: {
+                          label: i18n.t('citations'),
+                          isVisible: !!citations?.length,
+                        },
+                      })(renderCitationsSlot())}
+                    `)
+                    : nothing
+                }
+                ${
+                  !hasRetryableError
+                    ? html`
+                      <div part="generated-answer-footer" class="mt-6">
+                        ${renderGeneratingAnswerLabel({
+                          props: {
+                            i18n,
+                            isStreaming: !!isStreaming,
+                            collapsible,
+                          },
+                        })}
+                        ${
+                          collapsible && !isStreaming
+                            ? renderShowButton({
+                                props: {
+                                  i18n,
+                                  onClick: onClickShowButton,
+                                  isCollapsed: !(expanded ?? true),
+                                },
+                              })
+                            : nothing
+                        }
+                      </div>
+                    `
+                    : nothing
+                }
+              </div>
             </div>
           `;
         },

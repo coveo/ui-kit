@@ -94,7 +94,7 @@ export class AtomicPreviousAnswersList extends LitElement {
     } = answer;
 
     return html`
-      <div part="generated-content-container" class="pb-6">
+      <div part="generated-content-container" class="pb-6 px-6">
         ${renderGeneratedContentContainer({
           props: {
             answer: answerText,
@@ -116,22 +116,27 @@ export class AtomicPreviousAnswersList extends LitElement {
   private renderAnswer(answer: PreviousAnswer, index: number) {
     const isExpanded = this.expandedQuestions.has(index);
     const contentId = `previous-answer-content-${index}`;
+
     return html`
-      <div class="px-6" part="previous-answer-item">
-        <div class="flex items-start justify-between gap-3">
-          <button
-            class="flex align-center items-center gap-3 rounded-md text-left transition-colors ${
-              isExpanded ? 'bg-neutral-light' : 'hover:bg-neutral-light'
-            } focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            @click=${() => this.toggleQuestion(index)}
-            aria-controls=${contentId}
-            part="previous-answer-toggle"
-            type="button"
-          >
-            <p class="query-text px-1 py-1 text-base font-semibold leading-6" part="previous-answer-question">
-              ${answer.question}
-            </p>
-          </button>
+      <div class="px-6 py-2" part="previous-answer-item">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <span class="w-2.5 h-2.5 rounded-full bg-neutral-dark/30"></span>
+            <button
+              class="flex items-center gap-4 rounded-md text-left transition-colors hover:bg-neutral-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              @click=${() => this.toggleQuestion(index)}
+              aria-controls=${contentId}
+              part="previous-answer-toggle"
+              type="button"
+            >
+              <p
+                class="query-text text-base font-semibold leading-6"
+                part="previous-answer-question"
+              >
+                ${answer.question}
+              </p>
+            </button>
+          </div>
           ${when(
             isExpanded,
             () => html`
@@ -142,16 +147,15 @@ export class AtomicPreviousAnswersList extends LitElement {
             () => nothing
           )}
         </div>
-          ${
-            isExpanded
-              ? html`
-                  <div id=${contentId} class="mt-3" part="previous-answer-content">
-                    ${this.renderAnswerContent(answer)}
-                  </div>
-                `
-              : nothing
-          }
-        </div>
+        ${
+          isExpanded
+            ? html`
+              <div id=${contentId} class="mt-4" part="previous-answer-content">
+                ${this.renderAnswerContent(answer)}
+              </div>
+            `
+            : nothing
+        }
       </div>
     `;
   }
@@ -162,7 +166,10 @@ export class AtomicPreviousAnswersList extends LitElement {
     }
 
     return html`
-      <div class="bg-white flex flex-col gap-2 mt-6" part="previous-answers-container">
+      <div
+        class="bg-white flex flex-col mt-6"
+        part="previous-answers-container"
+      >
         ${this.previousAnswers.map((answer, index) =>
           this.renderAnswer(answer, index)
         )}

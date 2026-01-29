@@ -13,6 +13,7 @@ export interface GeneratedContentContainerProps {
   answer?: string;
   answerContentFormat?: string;
   isStreaming: boolean;
+  containerClass?: string;
 }
 
 export const renderGeneratedContentContainer: FunctionalComponentWithChildren<
@@ -20,7 +21,7 @@ export const renderGeneratedContentContainer: FunctionalComponentWithChildren<
 > = ({props}) => {
   return (children) =>
     html`
-      <div part="generated-container">
+      <div part="generated-container" class=${props.containerClass ?? ''}>
         ${
           props.answerContentFormat === 'text/markdown'
             ? renderGeneratedMarkdownContent({
