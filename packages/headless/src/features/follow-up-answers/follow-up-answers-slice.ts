@@ -124,7 +124,7 @@ export const followUpAnswersReducer = createReducer(
 
         followUpAnswer.isLoading = false;
         followUpAnswer.isStreaming = false;
-        followUpAnswer.error = payload;
+        followUpAnswer.error = {message: payload.message, code: payload.code};
         followUpAnswer.citations = [];
         delete followUpAnswer.answer;
       })

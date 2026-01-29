@@ -566,7 +566,6 @@ describe('follow-up answers slice', () => {
       );
 
       expect(finalState.followUpAnswers[0].error).toEqual({
-        answerId: 'answer-123',
         message: 'Error occurred',
         code: 500,
       });
