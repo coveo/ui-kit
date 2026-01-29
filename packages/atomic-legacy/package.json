@@ -9,10 +9,6 @@
     "directory": "packages/atomic-legacy"
   },
   "exports": {
-    ".": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/index.js"
-    },
     "./atomic-suggestion-renderer": {
       "types": "./dist/components/atomic-suggestion-renderer.d.ts",
       "import": "./dist/components/atomic-suggestion-renderer.js"
