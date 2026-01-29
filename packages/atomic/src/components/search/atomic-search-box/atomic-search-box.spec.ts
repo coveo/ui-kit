@@ -59,7 +59,6 @@ describe('atomic-search-box', () => {
     searchBoxProps = {},
     suggestionCount = 3,
     noSuggestions = false,
-    redirectTo = undefined,
     searchBoxValue = '',
     additionalChildren = html``,
   }: {
@@ -73,7 +72,6 @@ describe('atomic-search-box', () => {
     };
     suggestionCount?: number;
     noSuggestions?: boolean;
-    redirectTo?: string;
     searchBoxValue?: string;
     additionalChildren?: TemplateResult;
   } = {}) => {
@@ -94,7 +92,6 @@ describe('atomic-search-box', () => {
     vi.mocked(buildStandaloneSearchBox).mockReturnValue(
       buildFakeStandaloneSearchBox(
         {
-          redirectTo,
           value: searchBoxValue,
         },
         {
@@ -423,12 +420,8 @@ describe('atomic-search-box', () => {
           capturedEvent = event as CustomEvent;
         });
 
-        vi.mocked(buildStandaloneSearchBox).mockReturnValue(
-          buildFakeStandaloneSearchBox(
-            {redirectTo: '/search?q=test', value: 'test'},
-            {afterRedirection: afterRedirectionMock}
-          )
-        );
+        (element.searchBox.state as {redirectTo: string}).redirectTo =
+          '/search?q=test';
 
         element.requestUpdate();
         await element.updateComplete;
@@ -450,12 +443,8 @@ describe('atomic-search-box', () => {
           event.preventDefault();
         });
 
-        vi.mocked(buildStandaloneSearchBox).mockReturnValue(
-          buildFakeStandaloneSearchBox(
-            {redirectTo: '/search?q=test'},
-            {afterRedirection: afterRedirectionMock}
-          )
-        );
+        (element.searchBox.state as {redirectTo: string}).redirectTo =
+          '/search?q=test';
 
         element.requestUpdate();
         await element.updateComplete;
@@ -474,12 +463,8 @@ describe('atomic-search-box', () => {
           event.preventDefault();
         });
 
-        vi.mocked(buildStandaloneSearchBox).mockReturnValue(
-          buildFakeStandaloneSearchBox(
-            {redirectTo: '/search?q=test'},
-            {afterRedirection: afterRedirectionMock}
-          )
-        );
+        (element.searchBox.state as {redirectTo: string}).redirectTo =
+          '/search?q=test';
 
         element.requestUpdate();
         await element.updateComplete;
