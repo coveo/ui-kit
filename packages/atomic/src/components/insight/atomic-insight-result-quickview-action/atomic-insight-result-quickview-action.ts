@@ -18,7 +18,7 @@ import type {InsightBindings} from '@/src/components/insight/atomic-insight-inte
 import type {AtomicQuickviewModal} from '@/src/components/search/atomic-quickview-modal/atomic-quickview-modal';
 
 /**
- * @internal
+ * TODO:
  */
 @customElement('atomic-insight-result-quickview-action')
 @bindings()
