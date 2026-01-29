@@ -52,6 +52,13 @@ export class MockSearchApi implements MockApi {
       this.htmlEndpoint.generateHandler(),
     ];
   }
+
+  clearAll(): void {
+    this.searchEndpoint.clear();
+    this.querySuggestEndpoint.clear();
+    this.facetSearchEndpoint.clear();
+    this.htmlEndpoint.clear();
+  }
 }
 
 // TODO: Remove exports once the concept is fully internalized.
