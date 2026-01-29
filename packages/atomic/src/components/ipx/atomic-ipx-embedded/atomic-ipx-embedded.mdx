@@ -1,0 +1,71 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicIpxEmbeddedStories from './atomic-ipx-embedded.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicIpxEmbeddedStories} />
+
+<AtomicDocTemplate
+  stories={AtomicIpxEmbeddedStories}
+  githubPath="ipx/atomic-ipx-embedded/atomic-ipx-embedded.ts"
+  tagName="atomic-ipx-embedded"
+  className="AtomicIpxEmbedded"
+>
+
+## Overview
+
+The `atomic-ipx-embedded` component renders an In-Product Experience (IPX) search interface directly embedded within a page, as opposed to displaying it in a modal (`atomic-ipx-modal`). This is useful when you want the search experience to be a permanent, visible part of your application layout rather than a popup triggered by user action.
+
+## Usage
+
+The component must be placed inside an `atomic-search-interface` and provides three named slots for organizing content:
+
+```html
+<atomic-search-interface>
+  <atomic-ipx-embedded>
+    <div slot="header">
+      <!-- Search box, tabs, and refine toggle -->
+      <atomic-layout-section section="search">
+        <atomic-search-box></atomic-search-box>
+        <atomic-ipx-refine-toggle></atomic-ipx-refine-toggle>
+        <atomic-ipx-tabs>
+          <atomic-ipx-tab label="All" expression="" active></atomic-ipx-tab>
+          <atomic-ipx-tab label="Articles" expression="@source==Knowledge"></atomic-ipx-tab>
+        </atomic-ipx-tabs>
+      </atomic-layout-section>
+    </div>
+    <div slot="body">
+      <!-- Query summary, results, and pagination -->
+      <atomic-layout-section section="status">
+        <atomic-query-summary></atomic-query-summary>
+        <atomic-did-you-mean></atomic-did-you-mean>
+      </atomic-layout-section>
+      <atomic-layout-section section="results">
+        <atomic-result-list></atomic-result-list>
+      </atomic-layout-section>
+      <atomic-layout-section section="pagination">
+        <atomic-load-more-results></atomic-load-more-results>
+      </atomic-layout-section>
+    </div>
+    <div slot="footer">
+      <!-- Footer links and branding -->
+      <a href="https://example.com">View full search</a>
+    </div>
+  </atomic-ipx-embedded>
+</atomic-search-interface>
+```
+
+## Embedded vs Modal
+
+Use `atomic-ipx-embedded` when:
+- The search interface should be persistently visible on the page
+- You want to embed search within a specific section or container
+- The search experience is a primary feature of the page
+
+Use `atomic-ipx-modal` when:
+- Search should appear on demand via a button click
+- You want an overlay experience that doesn't take permanent page space
+- The search is a secondary feature accessed occasionally
+
+
+
+</AtomicDocTemplate>
