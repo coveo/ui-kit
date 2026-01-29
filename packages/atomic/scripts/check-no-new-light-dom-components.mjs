@@ -74,6 +74,7 @@ const ALLOWED_LIGHT_DOM_COMPONENTS = new Set([
 
   // IPX components
   'src/components/ipx/atomic-ipx-tabs/atomic-ipx-tabs.ts',
+  'src/components/ipx/atomic-ipx-result-link.ts',
 
   // Search result section components
   'src/components/search/atomic-result-section-actions/atomic-result-section-actions.ts',
