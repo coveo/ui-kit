@@ -11,8 +11,11 @@ import type {
 export const generativeQuestionAnsweringIdSelector = (
   state: Partial<SearchAppState>
 ): string | undefined => {
-  // If using the AnswerApi, we return the answerId first.
-  if (isGeneratedAnswerSection(state)) {
+  // If using the AnswerApi or the AgentApi, we return the answerId first.
+  if (
+    isGeneratedAnswerFeatureEnabledWithAnswerAPI(state) ||
+    isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI(state)
+  ) {
     return state.generatedAnswer?.answerId;
   }
 
@@ -25,12 +28,19 @@ export const generativeQuestionAnsweringIdSelector = (
   return undefined;
 };
 
-const isGeneratedAnswerSection = (
+const isGeneratedAnswerFeatureEnabledWithAnswerAPI = (
   state: Partial<SearchAppState>
 ): state is StreamAnswerAPIState =>
   'answer' in state &&
   'generatedAnswer' in state &&
   !isNullOrUndefined(state.generatedAnswer?.answerConfigurationId);
+
+export const isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI = (
+  state: Partial<SearchAppState>
+): state is StreamAnswerAPIState =>
+  'answerGenerationApi' in state &&
+  'generatedAnswer' in state &&
+  !isNullOrUndefined(state.configuration?.knowledge?.agentId);
 
 const isSearchSection = (
   state: Partial<SearchAppState> | StreamAnswerAPIState
