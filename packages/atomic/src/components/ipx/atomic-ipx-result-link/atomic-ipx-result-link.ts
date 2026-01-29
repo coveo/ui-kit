@@ -71,7 +71,12 @@ export class AtomicIpxResultLink
 
   public initialize() {
     if (!this.result && this.resultContext.item) {
-      this.result = this.resultContext.item as AnyUnfoldedItem;
+      const item = this.resultContext.item;
+      if ('result' in item) {
+        this.result = item.result;
+      } else {
+        this.result = item;
+      }
     }
 
     if (
