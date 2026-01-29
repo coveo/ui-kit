@@ -30,7 +30,6 @@ import styles from './atomic-insight-smart-snippet.tw.css.js';
  * The `atomic-insight-smart-snippet` component displays a smart snippet for an Insight Panel query.
  * Smart snippets are generated answers extracted from relevant documents.
  *
- * @internal
  * @part smart-snippet - The container for the smart snippet.
  * @part body - The expandable answer body.
  * @part feedback-banner - The feedback banner container.
