@@ -415,13 +415,20 @@ describe('atomic-search-box', () => {
 
         const {element} = await renderSearchBox({
           searchBoxProps: {redirectionUrl: '/search'},
-          redirectTo: '/search?q=test',
           searchBoxValue: 'test',
         });
 
         element.addEventListener('redirect', (event) => {
+          event.preventDefault();
           capturedEvent = event as CustomEvent;
         });
+
+        vi.mocked(buildStandaloneSearchBox).mockReturnValue(
+          buildFakeStandaloneSearchBox(
+            {redirectTo: '/search?q=test', value: 'test'},
+            {afterRedirection: afterRedirectionMock}
+          )
+        );
 
         element.requestUpdate();
         await element.updateComplete;
@@ -437,12 +444,18 @@ describe('atomic-search-box', () => {
       it('should call afterRedirection when redirectTo is set', async () => {
         const {element} = await renderSearchBox({
           searchBoxProps: {redirectionUrl: '/search'},
-          redirectTo: '/search?q=test',
         });
 
         element.addEventListener('redirect', (event) => {
           event.preventDefault();
         });
+
+        vi.mocked(buildStandaloneSearchBox).mockReturnValue(
+          buildFakeStandaloneSearchBox(
+            {redirectTo: '/search?q=test'},
+            {afterRedirection: afterRedirectionMock}
+          )
+        );
 
         element.requestUpdate();
         await element.updateComplete;
@@ -455,12 +468,18 @@ describe('atomic-search-box', () => {
 
         const {element} = await renderSearchBox({
           searchBoxProps: {redirectionUrl: '/search'},
-          redirectTo: '/search?q=test',
         });
 
         element.addEventListener('redirect', (event) => {
           event.preventDefault();
         });
+
+        vi.mocked(buildStandaloneSearchBox).mockReturnValue(
+          buildFakeStandaloneSearchBox(
+            {redirectTo: '/search?q=test'},
+            {afterRedirection: afterRedirectionMock}
+          )
+        );
 
         element.requestUpdate();
         await element.updateComplete;
