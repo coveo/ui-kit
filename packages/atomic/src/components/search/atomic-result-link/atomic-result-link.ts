@@ -89,10 +89,6 @@ export class AtomicResultLink
     );
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-  }
-
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this.removeLinkEventHandlers) {
