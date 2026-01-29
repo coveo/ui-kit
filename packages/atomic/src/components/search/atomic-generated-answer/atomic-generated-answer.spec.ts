@@ -774,7 +774,7 @@ describe('atomic-generated-answer', () => {
         },
       });
 
-      expect(citationElements.length).toBeGreaterThan(0);
+      expect(citationElements.length).toBe(1);
       const citation = citationElements[0] as HTMLElement & {
         disableCitationAnchoring: boolean;
       };
@@ -801,7 +801,7 @@ describe('atomic-generated-answer', () => {
         },
       });
 
-      expect(citationElements.length).toBeGreaterThan(0);
+      expect(citationElements.length).toBe(1);
       const citation = citationElements[0] as HTMLElement & {
         disableCitationAnchoring: boolean;
       };
