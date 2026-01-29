@@ -1,18 +1,19 @@
-import {beforeEach, describe, expect, it} from 'vitest';
 import {buildMockCitation} from '../../test/mock-citation.js';
 import {
-  addFollowUpAnswer,
+  createFollowUpAnswer,
+  dislikeFollowUp,
+  followUpCitationsReceived,
+  followUpCompleted,
+  followUpFailed,
+  followUpMessageChunkReceived,
+  likeFollowUp,
   resetFollowUpAnswers,
-  setActiveFollowUpAnswerCitations,
-  setActiveFollowUpAnswerContentFormat,
   setActiveFollowUpAnswerId,
-  setActiveFollowUpCannotAnswer,
-  setActiveFollowUpError,
-  setActiveFollowUpIsLoading,
-  setActiveFollowUpIsStreaming,
-  setFollowUpAnswersSessionId,
+  setFollowUpAnswerContentFormat,
+  setFollowUpAnswersConversationId,
+  setFollowUpIsLoading,
   setIsEnabled,
-  updateActiveFollowUpAnswerMessage,
+  submitFollowUpFeedback,
 } from './follow-up-answers-actions.js';
 import {followUpAnswersReducer} from './follow-up-answers-slice.js';
 import {
@@ -22,118 +23,96 @@ import {
 } from './follow-up-answers-state.js';
 
 describe('follow-up answers slice', () => {
-  let baseState: FollowUpAnswersState;
+  let state: FollowUpAnswersState;
 
   beforeEach(() => {
-    baseState = getFollowUpAnswersInitialState();
+    state = getFollowUpAnswersInitialState();
   });
 
   describe('#setIsEnabled', () => {
-    it('should set isEnabled to true', () => {
-      const finalState = followUpAnswersReducer(baseState, setIsEnabled(true));
-
+    it('sets isEnabled to true', () => {
+      const finalState = followUpAnswersReducer(state, setIsEnabled(true));
       expect(finalState.isEnabled).toBe(true);
     });
 
-    it('should set isEnabled to false', () => {
-      const initialState = {...baseState, isEnabled: true};
-      const finalState = followUpAnswersReducer(
-        initialState,
-        setIsEnabled(false)
-      );
-
+    it('sets isEnabled to false', () => {
+      state.isEnabled = true;
+      const finalState = followUpAnswersReducer(state, setIsEnabled(false));
       expect(finalState.isEnabled).toBe(false);
     });
   });
 
-  describe('#addFollowUpAnswer', () => {
-    it('should add a new follow-up answer with with default values', () => {
-      const question = 'Test question?';
+  describe('#setFollowUpAnswersConversationId', () => {
+    it('sets the conversationId', () => {
       const finalState = followUpAnswersReducer(
-        baseState,
-        addFollowUpAnswer(question)
+        state,
+        setFollowUpAnswersConversationId('conv-123')
       );
-
-      expect(finalState.followUpAnswers).toHaveLength(1);
-      const followUp = finalState.followUpAnswers[0];
-      expect(followUp.isLoading).toBe(false);
-      expect(followUp.isStreaming).toBe(false);
-      expect(followUp.citations).toEqual([]);
-      expect(followUp.liked).toBe(false);
-      expect(followUp.disliked).toBe(false);
-      expect(followUp.feedbackSubmitted).toBe(false);
-      expect(followUp.cannotAnswer).toBe(false);
+      expect(finalState.conversationId).toBe('conv-123');
     });
 
-    it('should append to existing follow-up answers', () => {
-      const firstQuestion = 'First question?';
-      const secondQuestion = 'Second question?';
-
-      let state = followUpAnswersReducer(
-        baseState,
-        addFollowUpAnswer(firstQuestion)
+    it('updates existing conversationId', () => {
+      state.conversationId = 'old-conv';
+      const finalState = followUpAnswersReducer(
+        state,
+        setFollowUpAnswersConversationId('new-conv')
       );
-      state = followUpAnswersReducer(state, addFollowUpAnswer(secondQuestion));
-
-      expect(state.followUpAnswers).toHaveLength(2);
-      expect(state.followUpAnswers[0].question).toBe(firstQuestion);
-      expect(state.followUpAnswers[1].question).toBe(secondQuestion);
+      expect(finalState.conversationId).toBe('new-conv');
     });
   });
 
-  describe('#setActiveFollowUpAnswerContentFormat', () => {
-    it('should set content format for the active follow-up answer', () => {
-      const state = {
-        ...baseState,
-        followUpAnswers: [createInitialFollowUpAnswer('Question?')],
-      };
+  describe('#createFollowUpAnswer', () => {
+    it('adds a new follow-up answer with default values', () => {
+      const finalState = followUpAnswersReducer(
+        state,
+        createFollowUpAnswer({question: 'What is ABC?'})
+      );
+
+      expect(finalState.followUpAnswers).toHaveLength(1);
+      expect(finalState.followUpAnswers[0]).toEqual({
+        question: 'What is ABC?',
+        isActive: true,
+        isLoading: false,
+        isStreaming: false,
+        citations: [],
+        liked: false,
+        disliked: false,
+        feedbackSubmitted: false,
+        cannotAnswer: false,
+      });
+    });
+
+    it('marks previous active follow-up as inactive', () => {
+      state.followUpAnswers = [
+        {...createInitialFollowUpAnswer('First?'), isActive: true},
+      ];
 
       const finalState = followUpAnswersReducer(
         state,
-        setActiveFollowUpAnswerContentFormat('text/markdown')
+        createFollowUpAnswer({question: 'Second?'})
       );
 
-      expect(finalState.followUpAnswers[0].answerContentFormat).toBe(
-        'text/markdown'
-      );
+      expect(finalState.followUpAnswers[0].isActive).toBe(false);
+      expect(finalState.followUpAnswers[1].isActive).toBe(true);
     });
 
-    it('should not modify state when no follow-up answers exist', () => {
-      const finalState = followUpAnswersReducer(
-        baseState,
-        setActiveFollowUpAnswerContentFormat('text/markdown')
-      );
-
-      expect(finalState).toEqual(baseState);
-    });
-
-    it('should only update the last follow-up answer', () => {
-      const state = {
-        ...baseState,
-        followUpAnswers: [
-          createInitialFollowUpAnswer('First?'),
-          createInitialFollowUpAnswer('Second?'),
-        ],
-      };
+    it('appends to existing follow-up answers', () => {
+      state.followUpAnswers = [createInitialFollowUpAnswer('First?')];
 
       const finalState = followUpAnswersReducer(
         state,
-        setActiveFollowUpAnswerContentFormat('text/markdown')
+        createFollowUpAnswer({question: 'Second?'})
       );
+      ``;
 
-      expect(finalState.followUpAnswers[0].answerContentFormat).toBeUndefined();
-      expect(finalState.followUpAnswers[1].answerContentFormat).toBe(
-        'text/markdown'
-      );
+      expect(finalState.followUpAnswers).toHaveLength(2);
+      expect(finalState.followUpAnswers[1].question).toBe('Second?');
     });
   });
 
   describe('#setActiveFollowUpAnswerId', () => {
-    it('should set answer ID for the active follow-up answer', () => {
-      const state = {
-        ...baseState,
-        followUpAnswers: [createInitialFollowUpAnswer('Question?')],
-      };
+    it('sets answerId on the active follow-up', () => {
+      state.followUpAnswers = [createInitialFollowUpAnswer('Question?')];
 
       const finalState = followUpAnswersReducer(
         state,
@@ -143,542 +122,723 @@ describe('follow-up answers slice', () => {
       expect(finalState.followUpAnswers[0].answerId).toBe('answer-123');
     });
 
-    it('should not modify state when no follow-up answers exist', () => {
+    it('does nothing when no follow-ups exist', () => {
       const finalState = followUpAnswersReducer(
-        baseState,
+        state,
         setActiveFollowUpAnswerId('answer-123')
       );
 
-      expect(finalState).toEqual(baseState);
+      expect(finalState).toEqual(state);
     });
 
-    it('should only update the last follow-up answer', () => {
-      const state = {
-        ...baseState,
-        followUpAnswers: [
-          createInitialFollowUpAnswer('First?'),
-          createInitialFollowUpAnswer('Second?'),
-        ],
-      };
+    it('does nothing when active follow-up already has an answerId', () => {
+      state.followUpAnswers = [
+        {...createInitialFollowUpAnswer('Question?'), answerId: 'existing-id'},
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        setActiveFollowUpAnswerId('new-id')
+      );
+
+      expect(finalState.followUpAnswers[0].answerId).toBe('existing-id');
+    });
+
+    it('only updates the active follow-up', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('First?'),
+          isActive: false,
+          answerId: 'id-1',
+        },
+        {...createInitialFollowUpAnswer('Second?'), isActive: true},
+      ];
 
       const finalState = followUpAnswersReducer(
         state,
         setActiveFollowUpAnswerId('answer-123')
       );
 
-      expect(finalState.followUpAnswers[0].answerId).toBeUndefined();
+      expect(finalState.followUpAnswers[0].answerId).toBe('id-1');
       expect(finalState.followUpAnswers[1].answerId).toBe('answer-123');
     });
   });
 
-  describe('#setActiveFollowUpIsLoading', () => {
-    it('should set isLoading to true for the active follow-up answer', () => {
-      const state = {
-        ...baseState,
-        followUpAnswers: [createInitialFollowUpAnswer('Question?')],
-      };
+  describe('#setFollowUpAnswerContentFormat', () => {
+    it('sets content format for matching answerId', () => {
+      state.followUpAnswers = [
+        {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
+      ];
 
       const finalState = followUpAnswersReducer(
         state,
-        setActiveFollowUpIsLoading(true)
+        setFollowUpAnswerContentFormat({
+          answerId: 'answer-123',
+          contentFormat: 'text/markdown',
+        })
+      );
+
+      expect(finalState.followUpAnswers[0].answerContentFormat).toBe(
+        'text/markdown'
+      );
+    });
+
+    it('does nothing when answerId does not match', () => {
+      state.followUpAnswers = [
+        {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        setFollowUpAnswerContentFormat({
+          answerId: 'different-id',
+          contentFormat: 'text/markdown',
+        })
+      );
+
+      expect(finalState.followUpAnswers[0].answerContentFormat).toBeUndefined();
+    });
+
+    it('does nothing when no follow-ups exist', () => {
+      const finalState = followUpAnswersReducer(
+        state,
+        setFollowUpAnswerContentFormat({
+          answerId: 'answer-123',
+          contentFormat: 'text/markdown',
+        })
+      );
+
+      expect(finalState).toEqual(state);
+    });
+  });
+
+  describe('#setFollowUpIsLoading', () => {
+    it('sets isLoading for matching answerId', () => {
+      state.followUpAnswers = [
+        {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        setFollowUpIsLoading({answerId: 'answer-123', isLoading: true})
       );
 
       expect(finalState.followUpAnswers[0].isLoading).toBe(true);
     });
 
-    it('should not modify state when no follow-up answers exist', () => {
-      const finalState = followUpAnswersReducer(
-        baseState,
-        setActiveFollowUpIsLoading(true)
-      );
-
-      expect(finalState).toEqual(baseState);
-    });
-
-    it('should only update the last follow-up answer', () => {
-      const state = {
-        ...baseState,
-        followUpAnswers: [
-          createInitialFollowUpAnswer('First?'),
-          createInitialFollowUpAnswer('Second?'),
-        ],
-      };
+    it('does nothing when answerId does not match', () => {
+      state.followUpAnswers = [
+        {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
+      ];
 
       const finalState = followUpAnswersReducer(
         state,
-        setActiveFollowUpIsLoading(true)
+        setFollowUpIsLoading({answerId: 'different-id', isLoading: true})
       );
 
       expect(finalState.followUpAnswers[0].isLoading).toBe(false);
-      expect(finalState.followUpAnswers[1].isLoading).toBe(true);
+    });
+
+    it('does nothing when no follow-ups exist', () => {
+      const finalState = followUpAnswersReducer(
+        state,
+        setFollowUpIsLoading({answerId: 'answer-123', isLoading: true})
+      );
+
+      expect(finalState).toEqual(state);
     });
   });
 
-  describe('#setActiveFollowUpIsStreaming', () => {
-    it('should set isStreaming to true for the active follow-up answer', () => {
-      const state = {
-        ...baseState,
-        followUpAnswers: [createInitialFollowUpAnswer('Question?')],
-      };
+  describe('#followUpMessageChunkReceived', () => {
+    it('initializes answer with textDelta when undefined', () => {
+      state.followUpAnswers = [
+        {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
+      ];
 
       const finalState = followUpAnswersReducer(
         state,
-        setActiveFollowUpIsStreaming(true)
+        followUpMessageChunkReceived({
+          answerId: 'answer-123',
+          textDelta: 'Hello',
+        })
       );
 
-      expect(finalState.followUpAnswers[0].isStreaming).toBe(true);
+      expect(finalState.followUpAnswers[0].answer).toBe('Hello');
     });
 
-    it('should not modify state when no follow-up answers exist', () => {
-      const finalState = followUpAnswersReducer(
-        baseState,
-        setActiveFollowUpIsStreaming(true)
-      );
-
-      expect(finalState).toEqual(baseState);
-    });
-
-    it('should only update the last follow-up answer', () => {
-      const state = {
-        ...baseState,
-        followUpAnswers: [
-          createInitialFollowUpAnswer('First?'),
-          createInitialFollowUpAnswer('Second?'),
-        ],
-      };
+    it('appends textDelta to existing answer', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          answer: 'Hello',
+        },
+      ];
 
       const finalState = followUpAnswersReducer(
         state,
-        setActiveFollowUpIsStreaming(true)
-      );
-
-      expect(finalState.followUpAnswers[0].isStreaming).toBe(false);
-      expect(finalState.followUpAnswers[1].isStreaming).toBe(true);
-    });
-  });
-
-  describe('#updateActiveFollowUpAnswerMessage', () => {
-    it('should concatenate textDelta with existing answer', () => {
-      const existingAnswer = 'Hello';
-      const state = {
-        ...baseState,
-        followUpAnswers: [
-          {...createInitialFollowUpAnswer('Question?'), answer: existingAnswer},
-        ],
-      };
-
-      const finalState = followUpAnswersReducer(
-        state,
-        updateActiveFollowUpAnswerMessage({textDelta: ' world'})
+        followUpMessageChunkReceived({
+          answerId: 'answer-123',
+          textDelta: ' world',
+        })
       );
 
       expect(finalState.followUpAnswers[0].answer).toBe('Hello world');
     });
 
-    it('should initialize answer with textDelta when answer is undefined', () => {
-      const state = {
-        ...baseState,
-        followUpAnswers: [
-          {
-            ...createInitialFollowUpAnswer('Question?'),
-            isLoading: true,
-            isStreaming: false,
-          },
-        ],
-      };
+    it('sets isLoading to false and isStreaming to true', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          isLoading: true,
+        },
+      ];
 
       const finalState = followUpAnswersReducer(
         state,
-        updateActiveFollowUpAnswerMessage({textDelta: 'First text'})
+        followUpMessageChunkReceived({
+          answerId: 'answer-123',
+          textDelta: 'text',
+        })
       );
 
-      expect(finalState.followUpAnswers[0].answer).toBe('First text');
       expect(finalState.followUpAnswers[0].isLoading).toBe(false);
       expect(finalState.followUpAnswers[0].isStreaming).toBe(true);
     });
 
-    it('should delete any existing error', () => {
-      const state = {
-        ...baseState,
-        followUpAnswers: [
-          {
-            ...createInitialFollowUpAnswer('Question?'),
-            error: {message: 'Error occurred', code: 500},
-          },
-        ],
-      };
+    it('deletes error when message is received', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          error: {message: 'error', code: 500},
+        },
+      ];
 
       const finalState = followUpAnswersReducer(
         state,
-        updateActiveFollowUpAnswerMessage({textDelta: 'text'})
+        followUpMessageChunkReceived({
+          answerId: 'answer-123',
+          textDelta: 'text',
+        })
       );
 
       expect(finalState.followUpAnswers[0].error).toBeUndefined();
     });
 
-    it('should not modify state when no follow-up answers exist', () => {
-      const finalState = followUpAnswersReducer(
-        baseState,
-        updateActiveFollowUpAnswerMessage({textDelta: 'text'})
-      );
-
-      expect(finalState).toEqual(baseState);
-    });
-
-    it('should only update the last follow-up answer', () => {
-      const state = {
-        ...baseState,
-        followUpAnswers: [
-          {...createInitialFollowUpAnswer('First?'), answer: 'Existing answer'},
-          {...createInitialFollowUpAnswer('Second?'), answer: 'Hello '},
-        ],
-      };
+    it('does nothing when answerId does not match', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          answer: 'example',
+        },
+      ];
 
       const finalState = followUpAnswersReducer(
         state,
-        updateActiveFollowUpAnswerMessage({textDelta: 'World!'})
+        followUpMessageChunkReceived({
+          answerId: 'different-id',
+          textDelta: 'text',
+        })
       );
 
-      expect(finalState.followUpAnswers[0].answer).toBe('Existing answer');
-      expect(finalState.followUpAnswers[1].answer).toBe('Hello World!');
+      expect(finalState.followUpAnswers[0].answer).toBe('example');
+    });
+
+    it('does nothing when no follow-ups exist', () => {
+      const finalState = followUpAnswersReducer(
+        state,
+        followUpMessageChunkReceived({
+          answerId: 'answer-123',
+          textDelta: 'text',
+        })
+      );
+
+      expect(finalState).toEqual(state);
     });
   });
 
-  describe('#setActiveFollowUpAnswerCitations', () => {
-    it('should add citations to the active follow-up answer', () => {
+  describe('#followUpCitationsReceived', () => {
+    it('sets citations for matching answerId', () => {
       const citations = [
-        buildMockCitation({uri: '1'}),
-        buildMockCitation({uri: '2'}),
+        buildMockCitation({id: 'c1', uri: 'uri1'}),
+        buildMockCitation({id: 'c2', uri: 'uri2'}),
       ];
-      const state = {
-        ...baseState,
-        followUpAnswers: [
-          {
-            ...createInitialFollowUpAnswer('Question?'),
-            isLoading: true,
-            isStreaming: false,
-          },
-        ],
-      };
+      state.followUpAnswers = [
+        {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
+      ];
 
       const finalState = followUpAnswersReducer(
         state,
-        setActiveFollowUpAnswerCitations({citations})
+        followUpCitationsReceived({answerId: 'answer-123', citations})
       );
 
       expect(finalState.followUpAnswers[0].citations).toEqual(citations);
-      expect(finalState.followUpAnswers[0].isLoading).toBe(false);
-      expect(finalState.followUpAnswers[0].isStreaming).toBe(true);
     });
 
-    it('should append citations to existing citations', () => {
-      const existingCitations = [buildMockCitation()];
-      const newCitations = [buildMockCitation({id: 'new-id', uri: 'new-uri'})];
-      const state = {
-        ...baseState,
-        followUpAnswers: [
-          {
-            ...createInitialFollowUpAnswer('Question?'),
-            citations: existingCitations,
-          },
-        ],
-      };
+    it('appends citations to existing ones', () => {
+      const existing = [buildMockCitation({id: 'c1', uri: 'uri1'})];
+      const newCitations = [buildMockCitation({id: 'c2', uri: 'uri2'})];
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          citations: existing,
+        },
+      ];
 
       const finalState = followUpAnswersReducer(
         state,
-        setActiveFollowUpAnswerCitations({citations: newCitations})
+        followUpCitationsReceived({
+          answerId: 'answer-123',
+          citations: newCitations,
+        })
       );
 
+      expect(finalState.followUpAnswers[0].citations).toHaveLength(2);
       expect(finalState.followUpAnswers[0].citations).toEqual([
-        ...existingCitations,
+        ...existing,
         ...newCitations,
       ]);
     });
 
-    it('should filter out duplicate citations with same URI', () => {
-      const existingCitations = [
-        buildMockCitation({id: 'id-1', uri: 'duplicate-uri'}),
+    it('filters out duplicate citations by URI', () => {
+      const existing = [buildMockCitation({id: 'c1', uri: 'same-uri'})];
+      const duplicate = [buildMockCitation({id: 'c2', uri: 'same-uri'})];
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          citations: existing,
+        },
       ];
-      const newCitations = [
-        buildMockCitation({id: 'id-2', uri: 'duplicate-uri'}),
-      ];
-      const state = {
-        ...baseState,
-        followUpAnswers: [
-          {
-            ...createInitialFollowUpAnswer('Question?'),
-            citations: existingCitations,
-          },
-        ],
-      };
 
       const finalState = followUpAnswersReducer(
         state,
-        setActiveFollowUpAnswerCitations({citations: newCitations})
+        followUpCitationsReceived({
+          answerId: 'answer-123',
+          citations: duplicate,
+        })
       );
 
-      expect(finalState.followUpAnswers[0].citations).toEqual(
-        existingCitations
-      );
+      expect(finalState.followUpAnswers[0].citations).toHaveLength(1);
+      expect(finalState.followUpAnswers[0].citations[0].id).toBe('c1');
     });
 
-    it('should delete any existing error', () => {
-      const state = {
-        ...baseState,
-        followUpAnswers: [
-          {
-            ...createInitialFollowUpAnswer('Question?'),
-            error: {message: 'Error occurred', code: 500},
-          },
-        ],
-      };
+    it('sets isLoading to false and isStreaming to true', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          isLoading: true,
+        },
+      ];
 
       const finalState = followUpAnswersReducer(
         state,
-        setActiveFollowUpAnswerCitations({citations: []})
+        followUpCitationsReceived({answerId: 'answer-123', citations: []})
+      );
+
+      expect(finalState.followUpAnswers[0].isLoading).toBe(false);
+      expect(finalState.followUpAnswers[0].isStreaming).toBe(true);
+    });
+
+    it('deletes error when citations are received', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          error: {message: 'error', code: 500},
+        },
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        followUpCitationsReceived({answerId: 'answer-123', citations: []})
       );
 
       expect(finalState.followUpAnswers[0].error).toBeUndefined();
     });
 
-    it('should not modify state when no follow-up answers exist', () => {
-      const finalState = followUpAnswersReducer(
-        baseState,
-        setActiveFollowUpAnswerCitations({citations: []})
-      );
-
-      expect(finalState).toEqual(baseState);
-    });
-
-    it('should only update the last follow-up answer', () => {
-      const citations = [
-        buildMockCitation({uri: '1'}),
-        buildMockCitation({uri: '2'}),
+    it('does nothing when answerId does not match', () => {
+      state.followUpAnswers = [
+        {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
       ];
-      const state = {
-        ...baseState,
-        followUpAnswers: [
-          createInitialFollowUpAnswer('First?'),
-          createInitialFollowUpAnswer('Question?'),
-        ],
-      };
 
       const finalState = followUpAnswersReducer(
         state,
-        setActiveFollowUpAnswerCitations({citations})
+        followUpCitationsReceived({
+          answerId: 'different-id',
+          citations: [buildMockCitation()],
+        })
       );
 
       expect(finalState.followUpAnswers[0].citations).toEqual([]);
-      expect(finalState.followUpAnswers[1].citations).toEqual(citations);
+    });
+
+    it('does nothing when no follow-ups exist', () => {
+      const finalState = followUpAnswersReducer(
+        state,
+        followUpCitationsReceived({answerId: 'answer-123', citations: []})
+      );
+
+      expect(finalState).toEqual(state);
     });
   });
 
-  describe('#setActiveFollowUpError', () => {
-    const errorPayload = {
-      message: 'An error occurred',
-      code: 500,
-    };
-
-    it('should set error for the active follow-up answer', () => {
-      const state = {
-        ...baseState,
-        followUpAnswers: [createInitialFollowUpAnswer('Question?')],
-      };
+  describe('#followUpCompleted', () => {
+    it('sets completion flags for matching answerId', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          isLoading: true,
+          isStreaming: true,
+          isActive: true,
+        },
+      ];
 
       const finalState = followUpAnswersReducer(
         state,
-        setActiveFollowUpError(errorPayload)
+        followUpCompleted({answerId: 'answer-123'})
       );
 
-      expect(finalState.followUpAnswers[0].error).toEqual(errorPayload);
+      expect(finalState.followUpAnswers[0].isLoading).toBe(false);
+      expect(finalState.followUpAnswers[0].isStreaming).toBe(false);
+      expect(finalState.followUpAnswers[0].isActive).toBe(false);
+      expect(finalState.followUpAnswers[0].cannotAnswer).toBe(false);
     });
 
-    it('should set isLoading and isStreaming flags to false', () => {
-      const state = {
-        ...baseState,
-        followUpAnswers: [
-          {
-            ...createInitialFollowUpAnswer('Question?'),
-            isLoading: true,
-            isStreaming: true,
-          },
-        ],
-      };
+    it('sets cannotAnswer when provided', () => {
+      state.followUpAnswers = [
+        {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
+      ];
 
       const finalState = followUpAnswersReducer(
         state,
-        setActiveFollowUpError(errorPayload)
+        followUpCompleted({answerId: 'answer-123', cannotAnswer: true})
+      );
+
+      expect(finalState.followUpAnswers[0].cannotAnswer).toBe(true);
+    });
+
+    it('does nothing when answerId does not match', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          isActive: true,
+        },
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        followUpCompleted({answerId: 'different-id'})
+      );
+
+      expect(finalState.followUpAnswers[0].isActive).toBe(true);
+    });
+
+    it('does nothing when no follow-ups exist', () => {
+      const finalState = followUpAnswersReducer(
+        state,
+        followUpCompleted({answerId: 'answer-123'})
+      );
+
+      expect(finalState).toEqual(state);
+    });
+  });
+
+  describe('#followUpFailed', () => {
+    it('sets error for matching answerId', () => {
+      state.followUpAnswers = [
+        {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        followUpFailed({
+          answerId: 'answer-123',
+          message: 'Error occurred',
+          code: 500,
+        })
+      );
+
+      expect(finalState.followUpAnswers[0].error).toEqual({
+        answerId: 'answer-123',
+        message: 'Error occurred',
+        code: 500,
+      });
+    });
+
+    it('sets isLoading and isStreaming to false', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          isLoading: true,
+          isStreaming: true,
+        },
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        followUpFailed({answerId: 'answer-123', message: 'error'})
       );
 
       expect(finalState.followUpAnswers[0].isLoading).toBe(false);
       expect(finalState.followUpAnswers[0].isStreaming).toBe(false);
     });
 
-    it('should clear citations of the active follow up answer', () => {
-      const state = {
-        ...baseState,
-        followUpAnswers: [
-          {
-            ...createInitialFollowUpAnswer('Question 1?'),
-            citations: [buildMockCitation()],
-          },
-          {
-            ...createInitialFollowUpAnswer('Question 2?'),
-            citations: [buildMockCitation()],
-          },
-        ],
-      };
+    it('clears citations', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          citations: [buildMockCitation()],
+        },
+      ];
 
       const finalState = followUpAnswersReducer(
         state,
-        setActiveFollowUpError(errorPayload)
+        followUpFailed({answerId: 'answer-123', message: 'error'})
       );
 
-      expect(finalState.followUpAnswers[0].citations).toEqual([
-        buildMockCitation(),
-      ]);
-      expect(finalState.followUpAnswers[1].citations).toEqual([]);
+      expect(finalState.followUpAnswers[0].citations).toEqual([]);
     });
 
-    it('should delete the answer of the active follow up answer', () => {
-      const state = {
-        ...baseState,
-        followUpAnswers: [
-          {
-            ...createInitialFollowUpAnswer('Question 1?'),
-            answer: 'Some answer',
-          },
-          {
-            ...createInitialFollowUpAnswer('Question 2?'),
-            answer: 'Some answer',
-          },
-        ],
-      };
+    it('deletes answer', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          answer: 'Some answer',
+        },
+      ];
 
       const finalState = followUpAnswersReducer(
         state,
-        setActiveFollowUpError(errorPayload)
+        followUpFailed({answerId: 'answer-123', message: 'error'})
+      );
+
+      expect(finalState.followUpAnswers[0].answer).toBeUndefined();
+    });
+
+    it('does nothing when answerId does not match', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          answer: 'Some answer',
+        },
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        followUpFailed({answerId: 'different-id', message: 'error'})
       );
 
       expect(finalState.followUpAnswers[0].answer).toBe('Some answer');
-      expect(finalState.followUpAnswers[1].answer).toBeUndefined();
+      expect(finalState.followUpAnswers[0].error).toBeUndefined();
     });
 
-    it('should not modify state when no follow-up answers exist', () => {
+    it('does nothing when no follow-ups exist', () => {
       const finalState = followUpAnswersReducer(
-        baseState,
-        setActiveFollowUpError(errorPayload)
+        state,
+        followUpFailed({answerId: 'answer-123', message: 'error'})
       );
 
-      expect(finalState).toEqual(baseState);
+      expect(finalState).toEqual(state);
     });
   });
 
-  describe('#setActiveFollowUpCannotAnswer', () => {
-    it('should set cannotAnswer to true for the active follow-up answer', () => {
-      const state = {
-        ...baseState,
-        followUpAnswers: [createInitialFollowUpAnswer('Question?')],
-      };
+  describe('#likeFollowUp', () => {
+    it('sets liked to true and disliked to false', () => {
+      state.followUpAnswers = [
+        {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
+      ];
 
       const finalState = followUpAnswersReducer(
         state,
-        setActiveFollowUpCannotAnswer(true)
+        likeFollowUp({answerId: 'answer-123'})
       );
 
-      expect(finalState.followUpAnswers[0].cannotAnswer).toBe(true);
+      expect(finalState.followUpAnswers[0].liked).toBe(true);
+      expect(finalState.followUpAnswers[0].disliked).toBe(false);
     });
 
-    it('should set cannotAnswer to false for the active follow-up answer', () => {
-      const state = {
-        ...baseState,
-        followUpAnswers: [
-          {...createInitialFollowUpAnswer('Question?'), cannotAnswer: true},
-        ],
-      };
+    it('overrides previous dislike', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          disliked: true,
+        },
+      ];
 
       const finalState = followUpAnswersReducer(
         state,
-        setActiveFollowUpCannotAnswer(false)
+        likeFollowUp({answerId: 'answer-123'})
       );
 
-      expect(finalState.followUpAnswers[0].cannotAnswer).toBe(false);
+      expect(finalState.followUpAnswers[0].liked).toBe(true);
+      expect(finalState.followUpAnswers[0].disliked).toBe(false);
     });
 
-    it('should not modify state when no follow-up answers exist', () => {
+    it('does nothing when answerId does not match', () => {
+      state.followUpAnswers = [
+        {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
+      ];
+
       const finalState = followUpAnswersReducer(
-        baseState,
-        setActiveFollowUpCannotAnswer(true)
+        state,
+        likeFollowUp({answerId: 'different-id'})
       );
 
-      expect(finalState).toEqual(baseState);
+      expect(finalState.followUpAnswers[0].liked).toBe(false);
+    });
+
+    it('does nothing when no follow-ups exist', () => {
+      const finalState = followUpAnswersReducer(
+        state,
+        likeFollowUp({answerId: 'answer-123'})
+      );
+
+      expect(finalState).toEqual(state);
+    });
+  });
+
+  describe('#dislikeFollowUp', () => {
+    it('sets disliked to true and liked to false', () => {
+      state.followUpAnswers = [
+        {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        dislikeFollowUp({answerId: 'answer-123'})
+      );
+
+      expect(finalState.followUpAnswers[0].disliked).toBe(true);
+      expect(finalState.followUpAnswers[0].liked).toBe(false);
+    });
+
+    it('overrides previous like', () => {
+      state.followUpAnswers = [
+        {
+          ...createInitialFollowUpAnswer('Question?'),
+          answerId: 'answer-123',
+          liked: true,
+        },
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        dislikeFollowUp({answerId: 'answer-123'})
+      );
+
+      expect(finalState.followUpAnswers[0].disliked).toBe(true);
+      expect(finalState.followUpAnswers[0].liked).toBe(false);
+    });
+
+    it('does nothing when answerId does not match', () => {
+      state.followUpAnswers = [
+        {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        dislikeFollowUp({answerId: 'different-id'})
+      );
+
+      expect(finalState.followUpAnswers[0].disliked).toBe(false);
+    });
+
+    it('does nothing when no follow-ups exist', () => {
+      const finalState = followUpAnswersReducer(
+        state,
+        dislikeFollowUp({answerId: 'answer-123'})
+      );
+
+      expect(finalState).toEqual(state);
+    });
+  });
+
+  describe('#submitFollowUpFeedback', () => {
+    it('sets feedbackSubmitted to true', () => {
+      state.followUpAnswers = [
+        {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        submitFollowUpFeedback({answerId: 'answer-123'})
+      );
+
+      expect(finalState.followUpAnswers[0].feedbackSubmitted).toBe(true);
+    });
+
+    it('does nothing when answerId does not match', () => {
+      state.followUpAnswers = [
+        {...createInitialFollowUpAnswer('Question?'), answerId: 'answer-123'},
+      ];
+
+      const finalState = followUpAnswersReducer(
+        state,
+        submitFollowUpFeedback({answerId: 'different-id'})
+      );
+
+      expect(finalState.followUpAnswers[0].feedbackSubmitted).toBe(false);
+    });
+
+    it('does nothing when no follow-ups exist', () => {
+      const finalState = followUpAnswersReducer(
+        state,
+        submitFollowUpFeedback({answerId: 'answer-123'})
+      );
+
+      expect(finalState).toEqual(state);
     });
   });
 
   describe('#resetFollowUpAnswers', () => {
-    it('should clear all follow-up answers and session id', () => {
-      const state = {
-        ...baseState,
-        id: 'session-123',
-        followUpAnswers: [
-          createInitialFollowUpAnswer('First?'),
-          createInitialFollowUpAnswer('Second?'),
-          createInitialFollowUpAnswer('Third?'),
-        ],
-      };
+    it('clears all follow-up answers', () => {
+      state.followUpAnswers = [
+        createInitialFollowUpAnswer('First?'),
+        createInitialFollowUpAnswer('Second?'),
+      ];
 
       const finalState = followUpAnswersReducer(state, resetFollowUpAnswers());
 
       expect(finalState.followUpAnswers).toEqual([]);
-      expect(finalState.id).toBe('');
     });
 
-    it('should preserve the isEnabled property', () => {
-      const state = {
-        ...baseState,
-        id: 'session-123',
-        isEnabled: true,
-        followUpAnswers: [createInitialFollowUpAnswer('Question?')],
-      };
+    it('clears conversationId', () => {
+      state.conversationId = 'conv-123';
+      state.followUpAnswers = [createInitialFollowUpAnswer('Question?')];
 
       const finalState = followUpAnswersReducer(state, resetFollowUpAnswers());
 
-      expect(finalState.id).toBe('');
+      expect(finalState.conversationId).toBe('');
+    });
+
+    it('preserves isEnabled', () => {
+      state.isEnabled = true;
+      state.followUpAnswers = [createInitialFollowUpAnswer('Question?')];
+
+      const finalState = followUpAnswersReducer(state, resetFollowUpAnswers());
+
       expect(finalState.isEnabled).toBe(true);
       expect(finalState.followUpAnswers).toEqual([]);
     });
 
-    it('should work when follow-up answers are already empty', () => {
-      const finalState = followUpAnswersReducer(
-        baseState,
-        resetFollowUpAnswers()
-      );
+    it('works when already empty', () => {
+      const finalState = followUpAnswersReducer(state, resetFollowUpAnswers());
 
       expect(finalState.followUpAnswers).toEqual([]);
-    });
-  });
-
-  describe('#setFollowUpAnswersSessionId', () => {
-    it('should set the session id', () => {
-      const sessionId = 'session-abc-123';
-      const finalState = followUpAnswersReducer(
-        baseState,
-        setFollowUpAnswersSessionId(sessionId)
-      );
-
-      expect(finalState.id).toBe(sessionId);
-    });
-
-    it('should update existing session id', () => {
-      const state = {...baseState, id: 'old-session-id'};
-      const newSessionId = 'new-session-id';
-
-      const finalState = followUpAnswersReducer(
-        state,
-        setFollowUpAnswersSessionId(newSessionId)
-      );
-
-      expect(finalState.id).toBe(newSessionId);
+      expect(finalState.conversationId).toBe('');
     });
   });
 });

@@ -6,10 +6,7 @@ import {
   StringValue,
 } from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import type {
-  GeneratedAnswerCitationsPayload,
-  GeneratedAnswerMessagePayload,
-} from '../../api/generated-answer/generated-answer-event-payload.js';
+import type {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
 import {
   requiredNonEmptyString,
   validatePayload,
@@ -17,7 +14,6 @@ import {
 import {
   answerContentFormatSchema,
   citationSchema,
-  type GeneratedAnswerErrorPayload,
 } from '../generated-answer/generated-answer-actions.js';
 import type {GeneratedContentFormat} from '../generated-answer/generated-response-format.js';
 
@@ -29,56 +25,17 @@ export const setIsEnabled = createAction(
     validatePayload(payload, new BooleanValue({required: true}))
 );
 
-export const addFollowUpAnswer = createAction<string>(
-  'followUpAnswers/addFollowUpAnswer'
+export const setFollowUpAnswersConversationId = createAction(
+  'followUpAnswers/setFollowUpAnswersConversationId',
+  (payload: string) => validatePayload(payload, requiredNonEmptyString)
 );
 
-export const updateActiveFollowUpAnswerMessage = createAction(
-  'followUpAnswers/updateActiveFollowUpMessage',
-  (payload: GeneratedAnswerMessagePayload) =>
+export const createFollowUpAnswer = createAction(
+  'followUpAnswers/createFollowUpAnswer',
+  (payload: {question: string}) =>
     validatePayload(payload, {
-      textDelta: stringValue,
+      question: requiredNonEmptyString,
     })
-);
-
-export const setActiveFollowUpAnswerCitations = createAction(
-  'followUpAnswers/setActiveFollowUpCitations',
-  (payload: GeneratedAnswerCitationsPayload) =>
-    validatePayload(payload, {
-      citations: new ArrayValue({
-        required: true,
-        each: new RecordValue({
-          values: citationSchema,
-        }),
-      }),
-    })
-);
-
-export const setActiveFollowUpError = createAction(
-  'followUpAnswers/setActiveFollowUpError',
-  (payload: GeneratedAnswerErrorPayload) =>
-    validatePayload(payload, {
-      message: new StringValue(),
-      code: new NumberValue({min: 0}),
-    })
-);
-
-export const setActiveFollowUpIsLoading = createAction(
-  'followUpAnswers/setActiveFollowUpIsLoading',
-  (payload: boolean) =>
-    validatePayload(payload, new BooleanValue({required: true}))
-);
-
-export const setActiveFollowUpIsStreaming = createAction(
-  'followUpAnswers/setActiveFollowUpIsStreaming',
-  (payload: boolean) =>
-    validatePayload(payload, new BooleanValue({required: true}))
-);
-
-export const setActiveFollowUpAnswerContentFormat = createAction(
-  'followUpAnswers/setActiveFollowUpAnswerContentFormat',
-  (payload: GeneratedContentFormat) =>
-    validatePayload(payload, answerContentFormatSchema)
 );
 
 export const setActiveFollowUpAnswerId = createAction(
@@ -86,17 +43,90 @@ export const setActiveFollowUpAnswerId = createAction(
   (payload: string) => validatePayload(payload, requiredNonEmptyString)
 );
 
-export const setActiveFollowUpCannotAnswer = createAction(
-  'followUpAnswers/setActiveFollowUpCannotAnswer',
-  (payload: boolean) =>
-    validatePayload(payload, new BooleanValue({required: true}))
+export const setFollowUpAnswerContentFormat = createAction(
+  'followUpAnswers/setFollowUpAnswerContentFormat',
+  (payload: {answerId: string; contentFormat: GeneratedContentFormat}) =>
+    validatePayload(payload, {
+      contentFormat: answerContentFormatSchema,
+      answerId: requiredNonEmptyString,
+    })
+);
+
+export const setFollowUpIsLoading = createAction(
+  'followUpAnswers/setActiveFollowUpIsLoading',
+  (payload: {answerId: string; isLoading: boolean}) =>
+    validatePayload(payload, {
+      isLoading: new BooleanValue({required: true}),
+      answerId: requiredNonEmptyString,
+    })
+);
+
+export const followUpMessageChunkReceived = createAction(
+  'followUpAnswers/followUpMessageChunkReceived',
+  (payload: {answerId: string; textDelta: string}) =>
+    validatePayload(payload, {
+      textDelta: stringValue,
+      answerId: requiredNonEmptyString,
+    })
+);
+
+export const followUpCitationsReceived = createAction(
+  'followUpAnswers/followUpCitationsReceived',
+  (payload: {answerId: string; citations: GeneratedAnswerCitation[]}) =>
+    validatePayload(payload, {
+      citations: new ArrayValue({
+        required: true,
+        each: new RecordValue({
+          values: citationSchema,
+        }),
+      }),
+      answerId: requiredNonEmptyString,
+    })
+);
+
+export const followUpCompleted = createAction(
+  'followUpAnswers/followUpCompleted',
+  (payload: {answerId: string; cannotAnswer?: boolean}) =>
+    validatePayload(payload, {
+      answerId: requiredNonEmptyString,
+      cannotAnswer: new BooleanValue({required: false}),
+    })
+);
+
+export const followUpFailed = createAction(
+  'followUpAnswers/followUpFailed',
+  (payload: {answerId: string; message?: string; code?: number}) =>
+    validatePayload(payload, {
+      message: new StringValue(),
+      code: new NumberValue({min: 0}),
+      answerId: requiredNonEmptyString,
+    })
+);
+
+export const likeFollowUp = createAction(
+  'followUpAnswers/likeFollowUp',
+  (payload: {answerId: string}) =>
+    validatePayload(payload, {
+      answerId: requiredNonEmptyString,
+    })
+);
+
+export const dislikeFollowUp = createAction(
+  'followUpAnswers/dislikeFollowUp',
+  (payload: {answerId: string}) =>
+    validatePayload(payload, {
+      answerId: requiredNonEmptyString,
+    })
+);
+
+export const submitFollowUpFeedback = createAction(
+  'followUpAnswers/submitFollowUpFeedback',
+  (payload: {answerId: string}) =>
+    validatePayload(payload, {
+      answerId: requiredNonEmptyString,
+    })
 );
 
 export const resetFollowUpAnswers = createAction(
   'followUpAnswers/resetFollowUpAnswers'
-);
-
-export const setFollowUpAnswersSessionId = createAction(
-  'followUpAnswers/setFollowUpAnswersSessionId',
-  (payload: string) => validatePayload(payload, requiredNonEmptyString)
 );

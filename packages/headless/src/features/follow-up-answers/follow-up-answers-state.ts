@@ -8,6 +8,8 @@ import type {GeneratedAnswerBase} from '../generated-answer/generated-answer-sta
 export interface FollowUpAnswer extends GeneratedAnswerBase {
   /** The question prompted to generate this follow-up answer. */
   question: string;
+  /** Indicates if this follow-up answer is currently active. */
+  isActive: boolean;
 }
 
 /**
@@ -15,8 +17,8 @@ export interface FollowUpAnswer extends GeneratedAnswerBase {
  * The follow-up answers state.
  */
 export interface FollowUpAnswersState {
-  /** The unique identifier of the follow-up answer session. */
-  id: string;
+  /** The unique identifier of the follow-up answers conversation. */
+  conversationId: string;
   /**
    * Determines if the follow-up answer feature is enabled.
    */
@@ -29,7 +31,7 @@ export interface FollowUpAnswersState {
 
 export function getFollowUpAnswersInitialState(): FollowUpAnswersState {
   return {
-    id: '',
+    conversationId: '',
     isEnabled: false,
     followUpAnswers: [],
   };
@@ -46,4 +48,5 @@ export const createInitialFollowUpAnswer = (
   disliked: false,
   feedbackSubmitted: false,
   cannotAnswer: false,
+  isActive: true,
 });

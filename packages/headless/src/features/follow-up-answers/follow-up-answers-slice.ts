@@ -1,18 +1,20 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {filterOutDuplicatedCitations} from '../generated-answer/utils/generated-answer-citation-utils.js';
 import {
-  addFollowUpAnswer,
+  createFollowUpAnswer,
+  dislikeFollowUp,
+  followUpCitationsReceived,
+  followUpCompleted,
+  followUpFailed,
+  followUpMessageChunkReceived,
+  likeFollowUp,
   resetFollowUpAnswers,
-  setActiveFollowUpAnswerCitations,
-  setActiveFollowUpAnswerContentFormat,
   setActiveFollowUpAnswerId,
-  setActiveFollowUpCannotAnswer,
-  setActiveFollowUpError,
-  setActiveFollowUpIsLoading,
-  setActiveFollowUpIsStreaming,
-  setFollowUpAnswersSessionId,
+  setFollowUpAnswerContentFormat,
+  setFollowUpAnswersConversationId,
+  setFollowUpIsLoading,
   setIsEnabled,
-  updateActiveFollowUpAnswerMessage,
+  submitFollowUpFeedback,
 } from './follow-up-answers-actions.js';
 import {
   createInitialFollowUpAnswer,
@@ -24,7 +26,14 @@ import {
 function getActiveFollowUp(
   state: FollowUpAnswersState
 ): FollowUpAnswer | undefined {
-  return state.followUpAnswers[state.followUpAnswers.length - 1];
+  return state.followUpAnswers.find((a) => a.isActive);
+}
+
+function getFollowUpByAnswerId(
+  state: FollowUpAnswersState,
+  answerId: string
+): FollowUpAnswer | undefined {
+  return state.followUpAnswers.find((a) => a.answerId === answerId);
 }
 
 export const followUpAnswersReducer = createReducer(
@@ -34,42 +43,41 @@ export const followUpAnswersReducer = createReducer(
       .addCase(setIsEnabled, (state, {payload}) => {
         state.isEnabled = payload;
       })
-      .addCase(setFollowUpAnswersSessionId, (state, {payload}) => {
-        state.id = payload;
+      .addCase(setFollowUpAnswersConversationId, (state, {payload}) => {
+        state.conversationId = payload;
       })
-      .addCase(addFollowUpAnswer, (state, {payload}) => {
-        state.followUpAnswers.push(createInitialFollowUpAnswer(payload));
-      })
-      .addCase(setActiveFollowUpAnswerContentFormat, (state, {payload}) => {
-        const followUpAnswer = getActiveFollowUp(state);
-        if (!followUpAnswer) {
-          return;
+      .addCase(createFollowUpAnswer, (state, {payload}) => {
+        const active = getActiveFollowUp(state);
+        if (active) {
+          active.isActive = false;
         }
-        followUpAnswer.answerContentFormat = payload;
+        state.followUpAnswers.push(
+          createInitialFollowUpAnswer(payload.question)
+        );
       })
       .addCase(setActiveFollowUpAnswerId, (state, {payload}) => {
-        const followUpAnswer = getActiveFollowUp(state);
+        const activeFollowUp = getActiveFollowUp(state);
+        if (!activeFollowUp || activeFollowUp.answerId) {
+          return;
+        }
+        activeFollowUp.answerId = payload;
+      })
+      .addCase(setFollowUpAnswerContentFormat, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
         if (!followUpAnswer) {
           return;
         }
-        followUpAnswer.answerId = payload;
+        followUpAnswer.answerContentFormat = payload.contentFormat;
       })
-      .addCase(setActiveFollowUpIsLoading, (state, {payload}) => {
-        const followUpAnswer = getActiveFollowUp(state);
+      .addCase(setFollowUpIsLoading, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
         if (!followUpAnswer) {
           return;
         }
-        followUpAnswer.isLoading = payload;
+        followUpAnswer.isLoading = payload.isLoading;
       })
-      .addCase(setActiveFollowUpIsStreaming, (state, {payload}) => {
-        const followUpAnswer = getActiveFollowUp(state);
-        if (!followUpAnswer) {
-          return;
-        }
-        followUpAnswer.isStreaming = payload;
-      })
-      .addCase(updateActiveFollowUpAnswerMessage, (state, {payload}) => {
-        const followUpAnswer = getActiveFollowUp(state);
+      .addCase(followUpMessageChunkReceived, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
         if (!followUpAnswer) {
           return;
         }
@@ -79,12 +87,12 @@ export const followUpAnswersReducer = createReducer(
         if (!followUpAnswer.answer) {
           followUpAnswer.answer = '';
         }
-
         followUpAnswer.answer += payload.textDelta;
         delete followUpAnswer.error;
       })
-      .addCase(setActiveFollowUpAnswerCitations, (state, {payload}) => {
-        const followUpAnswer = getActiveFollowUp(state);
+
+      .addCase(followUpCitationsReceived, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
         if (!followUpAnswer) {
           return;
         }
@@ -97,8 +105,19 @@ export const followUpAnswersReducer = createReducer(
         ]);
         delete followUpAnswer.error;
       })
-      .addCase(setActiveFollowUpError, (state, {payload}) => {
-        const followUpAnswer = getActiveFollowUp(state);
+      .addCase(followUpCompleted, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
+        if (!followUpAnswer) {
+          return;
+        }
+
+        followUpAnswer.isLoading = false;
+        followUpAnswer.isStreaming = false;
+        followUpAnswer.isActive = false;
+        followUpAnswer.cannotAnswer = !!payload.cannotAnswer;
+      })
+      .addCase(followUpFailed, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
         if (!followUpAnswer) {
           return;
         }
@@ -109,15 +128,34 @@ export const followUpAnswersReducer = createReducer(
         followUpAnswer.citations = [];
         delete followUpAnswer.answer;
       })
-      .addCase(setActiveFollowUpCannotAnswer, (state, {payload}) => {
-        const followUpAnswer = getActiveFollowUp(state);
+      .addCase(likeFollowUp, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
         if (!followUpAnswer) {
           return;
         }
-        followUpAnswer.cannotAnswer = payload;
+
+        followUpAnswer.liked = true;
+        followUpAnswer.disliked = false;
+      })
+      .addCase(dislikeFollowUp, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
+        if (!followUpAnswer) {
+          return;
+        }
+
+        followUpAnswer.liked = false;
+        followUpAnswer.disliked = true;
+      })
+      .addCase(submitFollowUpFeedback, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
+        if (!followUpAnswer) {
+          return;
+        }
+
+        followUpAnswer.feedbackSubmitted = true;
       })
       .addCase(resetFollowUpAnswers, (state) => {
         state.followUpAnswers = [];
-        state.id = '';
+        state.conversationId = '';
       })
 );
