@@ -11,7 +11,7 @@ import type {AnyUnfoldedItem} from '@/src/components/common/item-list/unfolded-i
 import {renderInAtomicResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-result-fixture';
 import {buildFakeRecommendationEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/recommendation/engine';
 import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
-import type {AtomicIpxResultLink} from './atomic-ipx-result-link';
+import {AtomicIpxResultLink} from './atomic-ipx-result-link';
 import './atomic-ipx-result-link';
 
 vi.mock('@coveo/headless', {spy: true});
