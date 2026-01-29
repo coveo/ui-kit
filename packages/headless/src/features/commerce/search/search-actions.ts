@@ -35,6 +35,15 @@ export interface QuerySearchCommerceAPIThunkReturn {
   originalQuery: string;
 }
 
+export interface FetchSearchPayload {
+  /**
+   * When set to true, fills the `results` field rather than the `products` field
+   * in the response. It may also include Spotlight Content in the results.
+   * @default false
+   */
+  enableResults?: boolean;
+}
+
 export interface PrepareForSearchWithQueryOptions {
   /**
    * Whether to clear all active query filters when the end user submits a new query from the search box.
@@ -65,9 +74,9 @@ interface FetchInstantProductsThunkReturn {
 
 export const executeSearch = createAsyncThunk<
   QuerySearchCommerceAPIThunkReturn,
-  void,
+  FetchSearchPayload | undefined,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
->('commerce/search/executeSearch', async (_action, config) => {
+>('commerce/search/executeSearch', async (payload = {}, config) => {
   const {getState} = config;
   const state = getState();
   const {navigatorContext} = config.extra;
@@ -78,16 +87,20 @@ export const executeSearch = createAsyncThunk<
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>
   >(config);
-  const fetchedResponse = await processor.fetchFromAPI({...request, query});
+  const fetchedResponse = await processor.fetchFromAPI({
+    ...request,
+    query,
+    enableResults: Boolean(payload?.enableResults),
+  });
 
   return processor.process(fetchedResponse);
 });
 
 export const fetchMoreProducts = createAsyncThunk<
   QuerySearchCommerceAPIThunkReturn | null,
-  void,
+  FetchSearchPayload | undefined,
   AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
->('commerce/search/fetchMoreProducts', async (_action, config) => {
+>('commerce/search/fetchMoreProducts', async (payload = {}, config) => {
   const {getState} = config;
   const state = getState();
   const {navigatorContext} = config.extra;
@@ -111,6 +124,7 @@ export const fetchMoreProducts = createAsyncThunk<
     ...request,
     query,
     page: nextPageToRequest,
+    enableResults: Boolean(payload?.enableResults),
   });
 
   return processor.process(fetchedResponse);

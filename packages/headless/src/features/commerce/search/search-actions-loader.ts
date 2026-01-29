@@ -3,6 +3,7 @@ import type {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {
   executeSearch,
+  type FetchSearchPayload,
   fetchMoreProducts,
   type PrepareForSearchWithQueryPayload,
   type PromoteChildToParentPayload,
@@ -13,7 +14,7 @@ import {
 import type {StateNeededByExecuteSearch} from './search-actions-thunk-processor.js';
 import {commerceSearchReducer as commerceSearch} from './search-slice.js';
 
-export type {PrepareForSearchWithQueryPayload};
+export type {PrepareForSearchWithQueryPayload, FetchSearchPayload};
 
 /**
  * The search action creators.
@@ -25,22 +26,28 @@ export interface SearchActionCreators {
   /**
    * Executes a search query.
    *
+   * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  executeSearch(): AsyncThunkAction<
+  executeSearch(
+    payload?: FetchSearchPayload
+  ): AsyncThunkAction<
     QuerySearchCommerceAPIThunkReturn,
-    void,
+    FetchSearchPayload | undefined,
     AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
   >;
 
   /**
    * Fetches and additional page of products and appends it to the current list.
    *
+   * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  fetchMoreProducts(): AsyncThunkAction<
+  fetchMoreProducts(
+    payload?: FetchSearchPayload
+  ): AsyncThunkAction<
     QuerySearchCommerceAPIThunkReturn | null,
-    void,
+    FetchSearchPayload | undefined,
     AsyncThunkCommerceOptions<StateNeededByExecuteSearch>
   >;
 

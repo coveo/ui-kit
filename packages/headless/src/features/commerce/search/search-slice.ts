@@ -6,7 +6,13 @@ import type {
   Product,
 } from '../../../api/commerce/common/product.js';
 import type {CommerceSuccessResponse} from '../../../api/commerce/common/response.js';
-import {ResultType} from '../../../api/commerce/common/result.js';
+import type {
+  BaseResult,
+  BaseSpotlightContent,
+  Result,
+  SpotlightContent,
+} from '../../../api/commerce/common/result.js';
+import {ResultType as ResultTypeEnum} from '../../../api/commerce/common/result.js';
 import {setError} from '../../error/error-actions.js';
 import {setContext, setView} from '../context/context-actions.js';
 import {
@@ -46,6 +52,11 @@ export const commerceSearchReducer = createReducer(
               action.payload.response.responseId
             )
         );
+        state.results = mapPreprocessedResults(
+          action.payload.response.results,
+          paginationOffset,
+          action.payload.response.responseId
+        );
       })
       .addCase(fetchMoreProducts.fulfilled, (state, action) => {
         if (!action.payload) {
@@ -66,6 +77,13 @@ export const commerceSearchReducer = createReducer(
             )
           )
         );
+        state.results = state.results.concat(
+          mapPreprocessedResults(
+            action.payload.response.results,
+            paginationOffset,
+            action.payload.response.responseId
+          )
+        );
       })
       .addCase(executeSearch.pending, (state, action) => {
         handlePending(state, action.meta.requestId);
@@ -74,33 +92,42 @@ export const commerceSearchReducer = createReducer(
         handlePending(state, action.meta.requestId);
       })
       .addCase(promoteChildToParent, (state, action) => {
-        const {products} = state;
+        const productsOrResults =
+          state.results.length > 0 ? state.results : state.products;
         let childToPromote: ChildProduct | undefined;
-        const currentParentIndex = products.findIndex((product) => {
-          childToPromote = product.children.find(
+        const currentParentIndex = productsOrResults.findIndex((result) => {
+          if (result.resultType === ResultTypeEnum.SPOTLIGHT) {
+            return false;
+          }
+          childToPromote = result.children.find(
             (child) => child.permanentid === action.payload.child.permanentid
           );
           return !!childToPromote;
         });
 
-        if (currentParentIndex === -1 || childToPromote === undefined) {
+        const currentParent = productsOrResults[currentParentIndex];
+        if (
+          currentParentIndex === -1 ||
+          childToPromote === undefined ||
+          currentParent.resultType === ResultTypeEnum.SPOTLIGHT
+        ) {
           return;
         }
 
-        const responseId = products[currentParentIndex].responseId;
-        const position = products[currentParentIndex].position;
-        const {children, totalNumberOfChildren} = products[currentParentIndex];
+        const responseId = currentParent.responseId;
+        const position = currentParent.position;
+        const {children, totalNumberOfChildren} = currentParent;
 
         const newParent: Product = {
           ...(childToPromote as ChildProduct),
-          resultType: ResultType.PRODUCT,
+          resultType: ResultTypeEnum.PRODUCT,
           children,
           totalNumberOfChildren,
           position,
           responseId,
         };
 
-        products.splice(currentParentIndex, 1, newParent);
+        productsOrResults.splice(currentParentIndex, 1, newParent);
       })
       .addCase(setView, () => getCommerceSearchInitialState())
       .addCase(setContext, () => getCommerceSearchInitialState())
@@ -164,6 +191,39 @@ function preprocessProduct(
   return {
     ...product,
     children: [restOfProduct, ...children],
+    position,
+    responseId,
+  };
+}
+
+function mapPreprocessedResults(
+  results: BaseResult[],
+  paginationOffset: number,
+  responseId?: string
+): Result[] {
+  return results.map((result, index) =>
+    preprocessResult(result, paginationOffset + index + 1, responseId)
+  );
+}
+
+function preprocessResult(
+  result: BaseResult,
+  position: number,
+  responseId?: string
+): Result {
+  if (result.resultType === ResultTypeEnum.SPOTLIGHT) {
+    return preprocessSpotlightContent(result, position, responseId);
+  }
+  return preprocessProduct(result, position, responseId);
+}
+
+function preprocessSpotlightContent(
+  spotlight: BaseSpotlightContent,
+  position: number,
+  responseId?: string
+): SpotlightContent {
+  return {
+    ...spotlight,
     position,
     responseId,
   };
