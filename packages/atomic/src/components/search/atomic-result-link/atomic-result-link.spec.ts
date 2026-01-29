@@ -1,6 +1,7 @@
 import type {InteractiveResult, Result} from '@coveo/headless';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import {renderInAtomicResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-result-fixture';
@@ -58,7 +59,7 @@ describe('atomic-result-link', () => {
       await renderInAtomicResult<AtomicResultLink>({
         template: html`<atomic-result-link
           href-template=${ifDefined(props.hrefTemplate)}
-        >${slottedContent ? html`${slottedContent}` : ''}</atomic-result-link>`,
+        >${slottedContent ? unsafeHTML(slottedContent) : ''}</atomic-result-link>`,
         selector: 'atomic-result-link',
         result,
         interactiveResult,
@@ -242,18 +243,18 @@ describe('atomic-result-link', () => {
       expect(mockInteractiveResult.cancelPendingSelect).toBeDefined();
     });
 
-    it('should handle custom attributes properly', async () => {
-      const {element, atomicResult} = await renderComponent();
-
+    it('should apply custom attributes from attributes slot to rendered link', async () => {
       const attributesSlot = document.createElement('a');
       attributesSlot.slot = 'attributes';
       attributesSlot.setAttribute('target', '_blank');
       attributesSlot.setAttribute('rel', 'noopener');
-      atomicResult.appendChild(attributesSlot);
 
-      await element.updateComplete;
+      const {link} = await renderComponent({
+        slottedContent: attributesSlot.outerHTML,
+      });
 
-      expect(element).toBeDefined();
+      await expect.element(link).toHaveAttribute('target', '_blank');
+      await expect.element(link).toHaveAttribute('rel', 'noopener');
     });
 
     it('should render as a link with proper role', async () => {
@@ -312,12 +313,6 @@ describe('atomic-result-link', () => {
         slottedContent: 'Custom Link Text',
       });
       expect(element.textContent).toContain('Custom Link Text');
-    });
-
-    it('should handle attributes slot content when component has attributes slot content', async () => {
-      const {element} = await renderComponent();
-
-      expect(element).toBeDefined();
     });
   });
 });
