@@ -191,7 +191,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
  * Waits for all Atomic custom element children to be defined.
  * This ensures that all vanilla (non-framework) Atomic components have been
  * registered with the custom elements registry before proceeding.
- * 
+ *
  * @param host - The host element to scan for Atomic children
  */
 export async function waitForAtomicChildrenToBeDefined(
