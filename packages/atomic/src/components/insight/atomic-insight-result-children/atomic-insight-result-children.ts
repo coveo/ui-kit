@@ -32,6 +32,7 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import {elementHasAncestorTag} from '@/src/utils/utils';
 import '@/src/components/insight/atomic-insight-result/atomic-insight-result';
+import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
 
@@ -73,7 +74,11 @@ export class AtomicInsightResultChildren
   /**
    * Whether to inherit templates defined in a parent atomic-insight-result-children. Only works for the second level of child nesting.
    */
-  @property({type: Boolean, attribute: 'inherit-templates'})
+  @property({
+    type: Boolean,
+    attribute: 'inherit-templates',
+    converter: booleanConverter,
+  })
   inheritTemplates = false;
 
   /**

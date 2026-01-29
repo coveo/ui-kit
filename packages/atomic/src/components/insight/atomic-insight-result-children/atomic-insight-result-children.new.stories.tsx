@@ -70,3 +70,102 @@ export const Default: Story = {
     </atomic-insight-folded-result-list>
   `,
 };
+
+export const WithBeforeChildrenSlot: Story = {
+  name: 'With before-children slot',
+  render: () => html`
+    <atomic-insight-folded-result-list>
+      <atomic-insight-result-template>
+        <template>
+          <atomic-result-section-title>
+            <atomic-result-link></atomic-result-link>
+          </atomic-result-section-title>
+          <atomic-result-section-children>
+            <atomic-insight-result-children image-size="icon">
+              <div slot="before-children" class="text-sm text-neutral-dark">
+                Related documents:
+              </div>
+              <atomic-insight-result-children-template>
+                <template>
+                  <atomic-result-section-title>
+                    <atomic-result-link></atomic-result-link>
+                  </atomic-result-section-title>
+                  <atomic-result-section-excerpt>
+                    <atomic-result-text field="excerpt"></atomic-result-text>
+                  </atomic-result-section-excerpt>
+                </template>
+              </atomic-insight-result-children-template>
+            </atomic-insight-result-children>
+          </atomic-result-section-children>
+        </template>
+      </atomic-insight-result-template>
+    </atomic-insight-folded-result-list>
+  `,
+};
+
+export const WithAfterChildrenSlot: Story = {
+  name: 'With after-children slot',
+  render: () => html`
+    <atomic-insight-folded-result-list>
+      <atomic-insight-result-template>
+        <template>
+          <atomic-result-section-title>
+            <atomic-result-link></atomic-result-link>
+          </atomic-result-section-title>
+          <atomic-result-section-children>
+            <atomic-insight-result-children image-size="icon">
+              <atomic-insight-result-children-template>
+                <template>
+                  <atomic-result-section-title>
+                    <atomic-result-link></atomic-result-link>
+                  </atomic-result-section-title>
+                  <atomic-result-section-excerpt>
+                    <atomic-result-text field="excerpt"></atomic-result-text>
+                  </atomic-result-section-excerpt>
+                </template>
+              </atomic-insight-result-children-template>
+              <div slot="after-children" class="text-sm text-neutral-dark mt-2">
+                End of related documents
+              </div>
+            </atomic-insight-result-children>
+          </atomic-result-section-children>
+        </template>
+      </atomic-insight-result-template>
+    </atomic-insight-folded-result-list>
+  `,
+};
+
+export const WithBothSlots: Story = {
+  name: 'With both slots',
+  render: () => html`
+    <atomic-insight-folded-result-list>
+      <atomic-insight-result-template>
+        <template>
+          <atomic-result-section-title>
+            <atomic-result-link></atomic-result-link>
+          </atomic-result-section-title>
+          <atomic-result-section-children>
+            <atomic-insight-result-children image-size="icon">
+              <div slot="before-children" class="text-sm text-neutral-dark">
+                Related documents:
+              </div>
+              <atomic-insight-result-children-template>
+                <template>
+                  <atomic-result-section-title>
+                    <atomic-result-link></atomic-result-link>
+                  </atomic-result-section-title>
+                  <atomic-result-section-excerpt>
+                    <atomic-result-text field="excerpt"></atomic-result-text>
+                  </atomic-result-section-excerpt>
+                </template>
+              </atomic-insight-result-children-template>
+              <div slot="after-children" class="text-sm text-neutral-dark mt-2">
+                End of related documents
+              </div>
+            </atomic-insight-result-children>
+          </atomic-result-section-children>
+        </template>
+      </atomic-insight-result-template>
+    </atomic-insight-folded-result-list>
+  `,
+};
