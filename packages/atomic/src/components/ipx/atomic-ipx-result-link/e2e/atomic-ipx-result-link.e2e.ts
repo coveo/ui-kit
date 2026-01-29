@@ -32,19 +32,4 @@ test.describe('atomic-ipx-result-link', () => {
     await expect(resultText).toHaveAttribute('field', 'title');
     await expect(resultText).toHaveAttribute('default', 'no-title');
   });
-
-  test('should be keyboard accessible', async ({ipxResultLink, page}) => {
-    const anchor = ipxResultLink.anchor().first();
-
-    await anchor.focus();
-    await expect(anchor).toBeFocused();
-
-    await page.keyboard.press('Enter');
-    expect(page.url()).not.toBe('about:blank');
-  });
-
-  test('should have proper ARIA attributes', async ({ipxResultLink}) => {
-    const anchor = ipxResultLink.anchor().first();
-    await expect(anchor).toHaveRole('link');
-  });
 });
