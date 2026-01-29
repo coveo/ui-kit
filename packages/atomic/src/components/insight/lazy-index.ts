@@ -40,9 +40,9 @@ export default {
     ),
   'atomic-insight-result': async () =>
     await import('./atomic-insight-result/atomic-insight-result.js'),
-  'atomic-insight-result-quickview-action': async () =>
+  'atomic-insight-result-children': async () =>
     await import(
-      './atomic-insight-result-quickview-action/atomic-insight-result-quickview-action.js'
+      './atomic-insight-result-children/atomic-insight-result-children.js'
     ),
   'atomic-insight-result-template': async () =>
     await import(

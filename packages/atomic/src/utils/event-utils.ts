@@ -1,6 +1,6 @@
 import {promiseTimeout} from './promise-utils';
 
-export function buildCustomEvent<T>(name: string, detail: T) {
+export function buildCustomEvent<T = undefined>(name: string, detail?: T) {
   return new CustomEvent(name, {
     detail,
     // Event will bubble up the DOM until it is caught
