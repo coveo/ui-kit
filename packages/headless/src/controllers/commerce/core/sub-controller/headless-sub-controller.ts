@@ -126,6 +126,15 @@ export interface SearchAndListingSubControllers<
    * @returns A `ParameterManager` sub-controller.
    */
   parameterManager(props?: ParameterManagerProps<P>): ParameterManager<P>;
+
+  /**
+   * Creates an `InteractiveSpotlightContent` sub-controller, for use when `enableResults` is set on the controller.
+   * @param props - The properties for the `InteractiveSpotlightContent` sub-controller.
+   * @returns An `InteractiveSpotlightContent` sub-controller.
+   */
+  interactiveSpotlightContent(
+    props: InteractiveSpotlightContentProps
+  ): InteractiveSpotlightContent;
 }
 
 export interface SearchSubControllers
@@ -144,16 +153,7 @@ export interface ProductListingSubControllers
   extends SearchAndListingSubControllers<
     ProductListingParameters,
     ProductListingSummaryState
-  > {
-  /**
-   * Creates an `InteractiveSpotlightContent` sub-controller, for use when `enableResults` is set on the controller.
-   * @param props - The properties for the `InteractiveSpotlightContent` sub-controller.
-   * @returns An `InteractiveSpotlightContent` sub-controller.
-   */
-  interactiveSpotlightContent(
-    props: InteractiveSpotlightContentProps
-  ): InteractiveSpotlightContent;
-}
+  > {}
 
 interface BaseSubControllerProps<S extends SummaryState> {
   responseIdSelector: (state: CommerceEngineState) => string;
@@ -235,18 +235,11 @@ export function buildProductListingSubControllers(
     'facetSearchType'
   >
 ): ProductListingSubControllers {
-  const {responseIdSelector} = subControllerProps;
   return {
     ...buildSearchAndListingsSubControllers(engine, {
       ...subControllerProps,
       facetSearchType: 'LISTING',
     }),
-    interactiveSpotlightContent(props: InteractiveSpotlightContentProps) {
-      return buildCoreInteractiveSpotlightContent(engine, {
-        ...props,
-        responseIdSelector,
-      });
-    },
   };
 }
 
@@ -274,6 +267,7 @@ export function buildSearchAndListingsSubControllers<
     activeParametersSelector,
     restoreActionCreator,
     facetSearchType,
+    responseIdSelector,
   } = subControllerProps;
   return {
     ...buildBaseSubControllers(engine, subControllerProps),
@@ -326,6 +320,12 @@ export function buildSearchAndListingsSubControllers<
         activeParametersSelector,
         restoreActionCreator,
         fetchProductsActionCreator,
+      });
+    },
+    interactiveSpotlightContent(props: InteractiveSpotlightContentProps) {
+      return buildCoreInteractiveSpotlightContent(engine, {
+        ...props,
+        responseIdSelector,
       });
     },
   };
