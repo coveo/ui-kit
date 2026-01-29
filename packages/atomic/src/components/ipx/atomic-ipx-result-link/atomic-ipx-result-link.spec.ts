@@ -168,26 +168,6 @@ describe('atomic-ipx-result-link', () => {
     });
   });
 
-  describe('#connectedCallback', () => {
-    it('should render with default behavior when component has no slotted content', async () => {
-      const {element} = await renderComponent();
-      expect(element).toBeDefined();
-    });
-
-    it('should render with custom content when component has default slotted content', async () => {
-      const {element} = await renderComponent({
-        slottedContent: 'Custom Link Text',
-      });
-      expect(element.textContent).toContain('Custom Link Text');
-    });
-
-    it('should handle attributes slot content when component has attributes slot content', async () => {
-      const {element} = await renderComponent();
-
-      expect(element).toBeDefined();
-    });
-  });
-
   describe('#disconnectedCallback', () => {
     it('should call cleanup function when component is disconnected', async () => {
       const cleanupSpy = vi.fn();
@@ -398,6 +378,24 @@ describe('atomic-ipx-result-link', () => {
       await expect
         .element(link)
         .toHaveAttribute('href', `${mockResult.uri}?new=param`);
+    });
+
+    it('should render with default behavior when component has no slotted content', async () => {
+      const {element} = await renderComponent();
+      expect(element).toBeDefined();
+    });
+
+    it('should render with custom content when component has default slotted content', async () => {
+      const {element} = await renderComponent({
+        slottedContent: 'Custom Link Text',
+      });
+      expect(element.textContent).toContain('Custom Link Text');
+    });
+
+    it('should handle attributes slot content when component has attributes slot content', async () => {
+      const {element} = await renderComponent();
+
+      expect(element).toBeDefined();
     });
   });
 });
