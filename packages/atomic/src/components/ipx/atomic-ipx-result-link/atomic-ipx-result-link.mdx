@@ -11,13 +11,19 @@ import { AtomicDocTemplate } from '../../../../storybook-utils/documentation/ato
   className="AtomicIpxResultLink"
 >
 
-The `atomic-ipx-result-link` component automatically transforms a search result **title** into a clickable link that points to the original item. This component is used within result templates in the IPX (In-Product Experience) context.
+This component is typically used within an `atomic-result-template` or`atomic-recs-result-template` in an IPX context:
 
-**Note:** This is an internal component designed specifically for IPX use cases.
-
-## Usage
-
-This component is typically used within `atomic-recs-result-template` in an IPX context:
+```html
+<atomic-result-list>
+  <atomic-result-template>
+    <template>
+      <atomic-result-section-title>
+        <atomic-ipx-result-link></atomic-ipx-result-link>
+      </atomic-result-section-title>
+    </template>
+  </atomic-result-template>
+</atomic-result-list>
+```
 
 ```html
 <atomic-recs-interface>
