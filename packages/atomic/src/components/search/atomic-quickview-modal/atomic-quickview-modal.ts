@@ -282,9 +282,7 @@ export class AtomicQuickviewModal
             class: 'p-2',
             style: 'square-neutral',
             onClick: () => {
-              this.dispatchEvent(
-                buildCustomEvent('atomic/quickview/previous')
-              );
+              this.dispatchEvent(buildCustomEvent('atomic/quickview/previous'));
             },
             disabled: this.current === 1,
             text: this.bindings.i18n.t('quickview-previous'),
@@ -301,9 +299,7 @@ export class AtomicQuickviewModal
             class: 'p-2',
             style: 'square-neutral',
             onClick: () => {
-              this.dispatchEvent(
-                buildCustomEvent('atomic/quickview/next')
-              );
+              this.dispatchEvent(buildCustomEvent('atomic/quickview/next'));
             },
             disabled: this.current === this.total,
             text: this.bindings.i18n.t('quickview-next'),
