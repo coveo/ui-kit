@@ -128,9 +128,7 @@ describe('#renderCitations', () => {
 
   describe('disableCitationAnchoring property', () => {
     it('should pass disableCitationAnchoring=false to atomic-citation by default', async () => {
-      const {element} = await renderComponent({
-        disableCitationAnchoring: false,
-      });
+      const {element} = await renderComponent();
 
       const citations = Array.from(element.querySelectorAll('atomic-citation'));
       expect(citations).toHaveLength(2);
