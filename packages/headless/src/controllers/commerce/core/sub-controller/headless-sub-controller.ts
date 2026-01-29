@@ -149,12 +149,6 @@ export interface SearchSubControllers
   didYouMean(): DidYouMean;
 }
 
-export interface ProductListingSubControllers
-  extends SearchAndListingSubControllers<
-    ProductListingParameters,
-    ProductListingSummaryState
-  > {}
-
 interface BaseSubControllerProps<S extends SummaryState> {
   responseIdSelector: (state: CommerceEngineState) => string;
   isLoadingSelector: (state: CommerceEngineState) => boolean;
@@ -234,7 +228,7 @@ export function buildProductListingSubControllers(
     >,
     'facetSearchType'
   >
-): ProductListingSubControllers {
+): SearchAndListingSubControllers<Parameters, ProductListingSummaryState> {
   return {
     ...buildSearchAndListingsSubControllers(engine, {
       ...subControllerProps,
