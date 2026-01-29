@@ -1,9 +1,11 @@
-description: Internal Documentation
+description: Linting configuration files
 file_patterns:
-  - "internal-docs/**"
+  - biome.jsonc
+  - lint-staged.config.js
+
 reviewers:
-  dev-writers: ~
-  dxui: ~
+  dxui:
+    minimum_approvals: 1
 
 review_bypass:
   integration/139346: exempt # Developer eXperience Bot. Important for releases
