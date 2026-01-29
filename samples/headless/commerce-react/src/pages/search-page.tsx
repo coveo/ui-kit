@@ -35,7 +35,7 @@ export default function Search(props: ISearchProps) {
 
   const searchBoxId = 'search-box';
   const searchBoxController = buildSearchBox(engine, {
-    options: {id: searchBoxId, highlightOptions},
+    options: {id: searchBoxId, highlightOptions, enableResults: true},
   });
 
   const bindUrlManager = useCallback(() => {
@@ -111,7 +111,9 @@ export default function Search(props: ISearchProps) {
       />
       <h2 className="PageTitle">Search</h2>
       <NotifyTrigger controller={buildNotifyTrigger(engine)}></NotifyTrigger>
-      <QueryTrigger controller={buildQueryTrigger(engine)} />
+      <QueryTrigger
+        controller={buildQueryTrigger(engine, {enableResults: true})}
+      />
       <DidYouMean controller={searchController.didYouMean()} />
       <SearchAndListingInterface
         searchOrListingController={searchController}
