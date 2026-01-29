@@ -210,6 +210,10 @@ export class AtomicInsightUserActionsModal
       return true;
     }
 
+    if (!this.bindings?.interfaceElement) {
+      return false;
+    }
+
     return !rectEquals(
       this.interfaceDimensions,
       this.bindings.interfaceElement.getBoundingClientRect()
@@ -217,6 +221,9 @@ export class AtomicInsightUserActionsModal
   }
 
   private updateDimensions() {
+    if (!this.bindings?.interfaceElement) {
+      return;
+    }
     this.interfaceDimensions =
       this.bindings.interfaceElement.getBoundingClientRect();
   }
