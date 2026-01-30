@@ -16,7 +16,7 @@ import {buildAnswerEndpointUrl} from './url-builders/endpoint-url-builder.js';
 /**
  * Parameters for answer generation requests.
  */
-type AnswerParams = {
+export type AnswerParams = {
   q: string;
   facets?: AnyFacetRequest[];
   searchHub?: string;

@@ -3,6 +3,7 @@ import type {
   ChildProduct,
   Product,
 } from '../../../api/commerce/common/product.js';
+import type {Result} from '../../../api/commerce/common/result.js';
 import type {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {configuration} from '../../../app/common-reducers.js';
 import {stateKey} from '../../../app/state-key.js';
@@ -88,20 +89,39 @@ export interface Search extends Controller, SearchSubControllers {
  */
 export interface SearchState {
   products: Product[];
+  results: Result[];
   error: CommerceAPIErrorStatusResponse | null;
   isLoading: boolean;
   responseId: string;
 }
 
 /**
+ * Options for configuring the `Search` controller.
+ * @group Buildable controllers
+ * @category Search
+ */
+export interface SearchOptions {
+  /**
+   * When set to true, fills the `results` field rather than the `products` field
+   * in the response. It may also include Spotlight Content in the results.
+   * @default false
+   */
+  enableResults?: boolean;
+}
+
+/**
  * Builds a `Search` controller for the given commerce engine.
  * @param engine - The commerce engine.
+ * @param options - The configurable `Search` controller options.
  * @returns A `Search` controller.
  *
  * @group Buildable controllers
  * @category Search
  */
-export function buildSearch(engine: CommerceEngine): Search {
+export function buildSearch(
+  engine: CommerceEngine,
+  {enableResults = false}: SearchOptions = {enableResults: false}
+): Search {
   if (!loadBaseSearchReducers(engine)) {
     throw loadReducerError;
   }
@@ -111,8 +131,8 @@ export function buildSearch(engine: CommerceEngine): Search {
   const getState = () => engine[stateKey];
   const subControllers = buildSearchSubControllers(engine, {
     responseIdSelector,
-    fetchProductsActionCreator: executeSearch,
-    fetchMoreProductsActionCreator: fetchMoreProducts,
+    fetchProductsActionCreator: () => executeSearch({enableResults}),
+    fetchMoreProductsActionCreator: () => fetchMoreProducts({enableResults}),
     facetResponseSelector,
     isFacetLoadingResponseSelector,
     requestIdSelector,
@@ -134,7 +154,15 @@ export function buildSearch(engine: CommerceEngine): Search {
     ...subControllers,
 
     get state() {
-      return getState().commerceSearch;
+      const {products, results, error, isLoading, responseId} =
+        getState().commerceSearch;
+      return {
+        products,
+        results,
+        error,
+        isLoading,
+        responseId,
+      };
     },
 
     promoteChildToParent(child: ChildProduct) {
@@ -148,7 +176,7 @@ export function buildSearch(engine: CommerceEngine): Search {
         return;
       }
 
-      dispatch(executeSearch());
+      dispatch(executeSearch({enableResults}));
     },
   };
 }
