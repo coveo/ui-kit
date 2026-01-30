@@ -6,78 +6,186 @@ import {
   logGeneratedAnswerStreamEnd,
 } from '../generated-answer/generated-answer-analytics-actions.js';
 import {
-  setActiveFollowUpAnswerContentFormat,
+  followUpCitationsReceived,
+  followUpCompleted,
+  followUpFailed,
+  followUpMessageChunkReceived,
   setActiveFollowUpAnswerId,
-  setActiveFollowUpCannotAnswer,
-  setActiveFollowUpIsAnswerGenerated,
-  setActiveFollowUpIsLoading,
-  setActiveFollowUpIsStreaming,
-  updateActiveFollowUpAnswerCitations,
-  updateActiveFollowUpAnswerMessage,
+  setFollowUpAnswerContentFormat,
+  setFollowUpIsLoading,
 } from './follow-up-answers-actions.js';
 
-export const followUpAnswerStrategy: StreamingStrategy<AnswerGenerationApiState> =
-  {
-    handleOpen: (response, dispatch) => {
-      const answerId = response.headers.get('x-answer-id');
-      if (answerId) {
-        dispatch(setActiveFollowUpAnswerId(answerId));
-      }
-    },
+export const createFollowUpAnswerStrategy =
+  (): StreamingStrategy<AnswerGenerationApiState> => {
+    let answerId: string | null = null;
 
-    handleError: (error) => {
-      throw error;
-    },
-
-    handleMessage: {
-      'genqa.headerMessageType': (message, dispatch) => {
-        const payload: StreamPayload = message.payload.length
-          ? JSON.parse(message.payload)
-          : {};
-        if (payload.contentFormat) {
-          dispatch(setActiveFollowUpAnswerContentFormat(payload.contentFormat));
-          dispatch(setActiveFollowUpIsStreaming(true));
-          dispatch(setActiveFollowUpIsLoading(false));
+    return {
+      handleOpen: (response, dispatch) => {
+        answerId = response.headers.get('x-answer-id');
+        if (answerId) {
+          dispatch(setActiveFollowUpAnswerId(answerId));
+          dispatch(setFollowUpIsLoading({answerId, isLoading: true}));
         }
       },
 
-      'genqa.messageType': (message, dispatch) => {
-        const payload: StreamPayload = message.payload.length
-          ? JSON.parse(message.payload)
-          : {};
-        if (payload.textDelta) {
+      handleError: (error) => {
+        throw error;
+      },
+
+      handleMessage: {
+        'genqa.headerMessageType': (message, dispatch) => {
+          const payload: StreamPayload = message.payload.length
+            ? JSON.parse(message.payload)
+            : {};
+          if (payload.contentFormat) {
+            dispatch(
+              setFollowUpAnswerContentFormat({
+                contentFormat: payload.contentFormat,
+                answerId: answerId!,
+              })
+            );
+          }
+        },
+
+        'genqa.messageType': (message, dispatch) => {
+          const payload: StreamPayload = message.payload.length
+            ? JSON.parse(message.payload)
+            : {};
+          if (payload.textDelta) {
+            dispatch(
+              followUpMessageChunkReceived({
+                textDelta: payload.textDelta,
+                answerId: answerId!,
+              })
+            );
+          }
+        },
+
+        'genqa.citationsType': (message, dispatch) => {
+          const payload: StreamPayload = message.payload.length
+            ? JSON.parse(message.payload)
+            : {};
+          if (payload.citations) {
+            dispatch(
+              followUpCitationsReceived({
+                citations: payload.citations,
+                answerId: answerId!,
+              })
+            );
+          }
+        },
+
+        'genqa.endOfStreamType': (message, dispatch) => {
+          const payload: StreamPayload = message.payload.length
+            ? JSON.parse(message.payload)
+            : {};
           dispatch(
-            updateActiveFollowUpAnswerMessage({textDelta: payload.textDelta})
+            followUpCompleted({
+              cannotAnswer: !payload.answerGenerated,
+              answerId: answerId!,
+            })
           );
-        }
-      },
-
-      'genqa.citationsType': (message, dispatch) => {
-        const payload: StreamPayload = message.payload.length
-          ? JSON.parse(message.payload)
-          : {};
-        if (payload.citations) {
           dispatch(
-            updateActiveFollowUpAnswerCitations({citations: payload.citations})
+            logGeneratedAnswerStreamEnd(payload.answerGenerated ?? false)
           );
-        }
+          dispatch(logGeneratedAnswerResponseLinked());
+        },
+        error: (message, dispatch) => {
+          if (message.finishReason === 'ERROR') {
+            dispatch(
+              followUpFailed({
+                answerId: answerId!,
+                message: message.errorMessage,
+                code: message.code,
+              })
+            );
+          }
+        },
       },
-
-      'genqa.endOfStreamType': (message, dispatch) => {
-        const payload: StreamPayload = message.payload.length
-          ? JSON.parse(message.payload)
-          : {};
-        dispatch(setActiveFollowUpIsAnswerGenerated(!!payload.answerGenerated));
-        dispatch(setActiveFollowUpCannotAnswer(!payload.answerGenerated));
-        dispatch(setActiveFollowUpIsStreaming(false));
-        dispatch(setActiveFollowUpIsLoading(false));
-        dispatch(logGeneratedAnswerStreamEnd(payload.answerGenerated ?? false));
-        dispatch(logGeneratedAnswerResponseLinked());
-      },
-      error: (message) => {
-        if (message.finishReason === 'ERROR' && message.errorMessage) {
-          // should set error state
-        }
-      },
-    },
+    };
   };
+
+// export const followUpAnswerStrategy: StreamingStrategy<AnswerGenerationApiState> =
+//   {
+//     handleOpen: (_response, dispatch) => {
+//       const answerId = 'test';
+//       // const answerId = response.headers.get('x-answer-id');
+//       if (answerId) {
+//         dispatch(setActiveFollowUpAnswerId(answerId));
+//         dispatch(setFollowUpIsLoading({answerId, isLoading: true}));
+//       }
+//     },
+
+//     handleError: (error) => {
+//       throw error;
+//     },
+
+//     handleMessage: {
+//       'genqa.headerMessageType': (message, dispatch) => {
+//         const payload: StreamPayload = message.payload.length
+//           ? JSON.parse(message.payload)
+//           : {};
+//         if (payload.contentFormat) {
+//           dispatch(
+//             setFollowUpAnswerContentFormat({
+//               contentFormat: payload.contentFormat,
+//               answerId: 'test',
+//             })
+//           );
+//         }
+//       },
+
+//       'genqa.messageType': (message, dispatch) => {
+//         const payload: StreamPayload = message.payload.length
+//           ? JSON.parse(message.payload)
+//           : {};
+//         if (payload.textDelta) {
+//           dispatch(
+//             followUpMessageChunkReceived({
+//               textDelta: payload.textDelta,
+//               answerId: 'test',
+//             })
+//           );
+//         }
+//       },
+
+//       'genqa.citationsType': (message, dispatch) => {
+//         const payload: StreamPayload = message.payload.length
+//           ? JSON.parse(message.payload)
+//           : {};
+//         if (payload.citations) {
+//           dispatch(
+//             followUpCitationsReceived({
+//               citations: payload.citations,
+//               answerId: 'test',
+//             })
+//           );
+//         }
+//       },
+
+//       'genqa.endOfStreamType': (message, dispatch) => {
+//         const payload: StreamPayload = message.payload.length
+//           ? JSON.parse(message.payload)
+//           : {};
+//         dispatch(
+//           followUpCompleted({
+//             answerId: 'test',
+//             cannotAnswer: !payload.answerGenerated,
+//           })
+//         );
+//         dispatch(logGeneratedAnswerStreamEnd(payload.answerGenerated ?? false));
+//         dispatch(logGeneratedAnswerResponseLinked());
+//       },
+//       error: (message, dispatch) => {
+//         if (message.finishReason === 'ERROR') {
+//           dispatch(
+//             followUpFailed({
+//               answerId: 'test',
+//               message: message.errorMessage,
+//               code: message.code,
+//             })
+//           );
+//         }
+//       },
+//     },
+//   };

@@ -7,7 +7,7 @@ import {answerGenerationApi} from '../../answer-generation-api.js';
 import type {AnswerGenerationApiState} from '../../answer-generation-api-state.js';
 import type {GeneratedAnswerServerState} from '../../shared-types.js';
 import {streamAnswerWithStrategy} from '../../streaming/answer-streaming-runner.js';
-import {streamingStrategies} from '../../streaming/strategies/streaming-strategies.js';
+import {streamingStrategiesCreator} from '../../streaming/strategies/streaming-strategies.js';
 import {buildAnswerEndpointUrl} from './url-builders/endpoint-url-builder.js';
 
 export type AnswerParams = {
@@ -20,7 +20,7 @@ export type AnswerParams = {
 } & AnalyticsParam;
 
 export type AnswerEndpointArgs = {
-  strategyKey: keyof typeof streamingStrategies;
+  strategyKey: keyof typeof streamingStrategiesCreator;
 } & AnswerParams;
 
 export const answerEndpoint = answerGenerationApi.injectEndpoints({
@@ -56,7 +56,7 @@ export const answerEndpoint = answerGenerationApi.injectEndpoints({
             updateCachedData,
             dispatch,
           },
-          streamingStrategies[strategyKey]
+          streamingStrategiesCreator[strategyKey]?.()
         );
       },
     }),

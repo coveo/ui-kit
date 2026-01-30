@@ -8,7 +8,7 @@ export const constructFollowUpAnswerParams = (
   followUpQuestion: string,
   state: AnswerGenerationApiState
 ): FollowUpAnswerParams => {
-  const conversationId = state.followUpAnswers.id;
+  const conversationId = state.followUpAnswers.conversationId;
 
   const searchHub = selectSearchHub(state);
   const pipeline = selectPipeline(state);

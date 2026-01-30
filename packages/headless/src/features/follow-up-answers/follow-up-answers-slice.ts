@@ -1,18 +1,20 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client.js';
 import {filterOutDuplicatedCitations} from '../generated-answer/utils/generated-answer-citation-utils.js';
 import {
-  addFollowUpAnswer,
-  setActiveFollowUpAnswerContentFormat,
+  createFollowUpAnswer,
+  dislikeFollowUp,
+  followUpCitationsReceived,
+  followUpCompleted,
+  followUpFailed,
+  followUpMessageChunkReceived,
+  likeFollowUp,
+  resetFollowUpAnswers,
   setActiveFollowUpAnswerId,
-  setActiveFollowUpCannotAnswer,
-  setActiveFollowUpIsAnswerGenerated,
-  setActiveFollowUpIsLoading,
-  setActiveFollowUpIsStreaming,
+  setFollowUpAnswerContentFormat,
+  setFollowUpAnswersConversationId,
+  setFollowUpIsLoading,
   setIsEnabled,
-  updateActiveFollowUpAnswerCitations,
-  updateActiveFollowUpAnswerMessage,
-  updateActiveFollowUpError,
+  submitFollowUpFeedback,
 } from './follow-up-answers-actions.js';
 import {
   createInitialFollowUpAnswer,
@@ -24,7 +26,14 @@ import {
 function getActiveFollowUp(
   state: FollowUpAnswersState
 ): FollowUpAnswer | undefined {
-  return state.answers[state.answers.length - 1];
+  return state.followUpAnswers.find((a) => a.isActive);
+}
+
+function getFollowUpByAnswerId(
+  state: FollowUpAnswersState,
+  answerId: string
+): FollowUpAnswer | undefined {
+  return state.followUpAnswers.find((a) => a.answerId === answerId);
 }
 
 export const followUpAnswersReducer = createReducer(
@@ -34,11 +43,41 @@ export const followUpAnswersReducer = createReducer(
       .addCase(setIsEnabled, (state, {payload}) => {
         state.isEnabled = payload;
       })
-      .addCase(addFollowUpAnswer, (state, {payload}) => {
-        state.answers.push(createInitialFollowUpAnswer(payload));
+      .addCase(setFollowUpAnswersConversationId, (state, {payload}) => {
+        state.conversationId = payload;
       })
-      .addCase(updateActiveFollowUpAnswerMessage, (state, {payload}) => {
-        const followUpAnswer = getActiveFollowUp(state);
+      .addCase(createFollowUpAnswer, (state, {payload}) => {
+        const active = getActiveFollowUp(state);
+        if (active) {
+          active.isActive = false;
+        }
+        state.followUpAnswers.push(
+          createInitialFollowUpAnswer(payload.question)
+        );
+      })
+      .addCase(setActiveFollowUpAnswerId, (state, {payload}) => {
+        const activeFollowUp = getActiveFollowUp(state);
+        if (!activeFollowUp || activeFollowUp.answerId) {
+          return;
+        }
+        activeFollowUp.answerId = payload;
+      })
+      .addCase(setFollowUpAnswerContentFormat, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
+        if (!followUpAnswer) {
+          return;
+        }
+        followUpAnswer.answerContentFormat = payload.contentFormat;
+      })
+      .addCase(setFollowUpIsLoading, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
+        if (!followUpAnswer) {
+          return;
+        }
+        followUpAnswer.isLoading = payload.isLoading;
+      })
+      .addCase(followUpMessageChunkReceived, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
         if (!followUpAnswer) {
           return;
         }
@@ -48,12 +87,12 @@ export const followUpAnswersReducer = createReducer(
         if (!followUpAnswer.answer) {
           followUpAnswer.answer = '';
         }
-
         followUpAnswer.answer += payload.textDelta;
         delete followUpAnswer.error;
       })
-      .addCase(updateActiveFollowUpAnswerCitations, (state, {payload}) => {
-        const followUpAnswer = getActiveFollowUp(state);
+
+      .addCase(followUpCitationsReceived, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
         if (!followUpAnswer) {
           return;
         }
@@ -66,61 +105,57 @@ export const followUpAnswersReducer = createReducer(
         ]);
         delete followUpAnswer.error;
       })
-      .addCase(updateActiveFollowUpError, (state, {payload}) => {
-        const followUpAnswer = getActiveFollowUp(state);
+      .addCase(followUpCompleted, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
         if (!followUpAnswer) {
           return;
         }
 
         followUpAnswer.isLoading = false;
         followUpAnswer.isStreaming = false;
-        followUpAnswer.error = {
-          ...payload,
-          isRetryable: payload.code === RETRYABLE_STREAM_ERROR_CODE,
-        };
+        followUpAnswer.isActive = false;
+        followUpAnswer.cannotAnswer = !!payload.cannotAnswer;
+      })
+      .addCase(followUpFailed, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
+        if (!followUpAnswer) {
+          return;
+        }
+
+        followUpAnswer.isLoading = false;
+        followUpAnswer.isStreaming = false;
+        followUpAnswer.error = {message: payload.message, code: payload.code};
         followUpAnswer.citations = [];
         delete followUpAnswer.answer;
       })
-      .addCase(setActiveFollowUpIsLoading, (state, {payload}) => {
-        const followUpAnswer = getActiveFollowUp(state);
+      .addCase(likeFollowUp, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
         if (!followUpAnswer) {
           return;
         }
-        followUpAnswer.isLoading = payload;
+
+        followUpAnswer.liked = true;
+        followUpAnswer.disliked = false;
       })
-      .addCase(setActiveFollowUpIsStreaming, (state, {payload}) => {
-        const followUpAnswer = getActiveFollowUp(state);
+      .addCase(dislikeFollowUp, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
         if (!followUpAnswer) {
           return;
         }
-        followUpAnswer.isStreaming = payload;
+
+        followUpAnswer.liked = false;
+        followUpAnswer.disliked = true;
       })
-      .addCase(setActiveFollowUpAnswerContentFormat, (state, {payload}) => {
-        const followUpAnswer = getActiveFollowUp(state);
+      .addCase(submitFollowUpFeedback, (state, {payload}) => {
+        const followUpAnswer = getFollowUpByAnswerId(state, payload.answerId);
         if (!followUpAnswer) {
           return;
         }
-        followUpAnswer.answerContentFormat = payload;
+
+        followUpAnswer.feedbackSubmitted = true;
       })
-      .addCase(setActiveFollowUpAnswerId, (state, {payload}) => {
-        const followUpAnswer = getActiveFollowUp(state);
-        if (!followUpAnswer) {
-          return;
-        }
-        followUpAnswer.answerId = payload;
-      })
-      .addCase(setActiveFollowUpIsAnswerGenerated, (state, {payload}) => {
-        const followUpAnswer = getActiveFollowUp(state);
-        if (!followUpAnswer) {
-          return;
-        }
-        followUpAnswer.isAnswerGenerated = payload;
-      })
-      .addCase(setActiveFollowUpCannotAnswer, (state, {payload}) => {
-        const followUpAnswer = getActiveFollowUp(state);
-        if (!followUpAnswer) {
-          return;
-        }
-        followUpAnswer.cannotAnswer = payload;
+      .addCase(resetFollowUpAnswers, (state) => {
+        state.followUpAnswers = [];
+        state.conversationId = '';
       })
 );

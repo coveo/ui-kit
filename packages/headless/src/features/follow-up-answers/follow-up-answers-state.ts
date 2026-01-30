@@ -1,16 +1,24 @@
 import type {GeneratedAnswerBase} from '../generated-answer/generated-answer-state.js';
 
+/**
+ * @internal
+ * Represents a follow-up answer generated in response to a user's question.
+ * Extends the base generated answer structure with the originating question.
+ */
 export interface FollowUpAnswer extends GeneratedAnswerBase {
-  /** The question asked for this follow-up answer. */
+  /** The question prompted to generate this follow-up answer. */
   question: string;
+  /** Indicates if this follow-up answer is currently active. */
+  isActive: boolean;
 }
 
 /**
+ * @internal
  * The follow-up answers state.
  */
 export interface FollowUpAnswersState {
-  /** The unique identifier of the follow-up answer session. */
-  id: string;
+  /** The unique identifier of the follow-up answers conversation. */
+  conversationId: string;
   /**
    * Determines if the follow-up answer feature is enabled.
    */
@@ -18,19 +26,14 @@ export interface FollowUpAnswersState {
   /**
    * The follow-up answers.
    */
-  answers: FollowUpAnswer[];
-  /**
-   * Can ask more follow-up answers.
-   */
-  canAskMore: boolean;
+  followUpAnswers: FollowUpAnswer[];
 }
 
 export function getFollowUpAnswersInitialState(): FollowUpAnswersState {
   return {
-    id: '',
+    conversationId: '',
     isEnabled: false,
-    answers: [],
-    canAskMore: false,
+    followUpAnswers: [],
   };
 }
 
@@ -44,6 +47,6 @@ export const createInitialFollowUpAnswer = (
   liked: false,
   disliked: false,
   feedbackSubmitted: false,
-  isAnswerGenerated: false,
   cannotAnswer: false,
+  isActive: true,
 });

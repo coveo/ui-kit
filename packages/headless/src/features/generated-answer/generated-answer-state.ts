@@ -50,10 +50,6 @@ export interface GeneratedAnswerBase {
    */
   feedbackSubmitted: boolean;
   /**
-   * Determines if the answer is generated.
-   */
-  isAnswerGenerated: boolean;
-  /**
    * Whether an answer cannot be generated after a query is executed.
    */
   cannotAnswer: boolean;
@@ -107,6 +103,10 @@ export interface GeneratedAnswerState extends GeneratedAnswerBase {
   headAnswerApiQueryParams?: AnswerEndpointArgs;
   /** The current mode of answer generation. */
   answerGenerationMode: 'automatic' | 'manual';
+  /**
+   * Determines if the answer is generated.
+   */
+  isAnswerGenerated: boolean;
 }
 
 export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
