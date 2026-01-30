@@ -40,6 +40,10 @@ export default {
     ),
   'atomic-insight-result': async () =>
     await import('./atomic-insight-result/atomic-insight-result.js'),
+  'atomic-insight-result-attach-to-case-action': async () =>
+    await import(
+      './atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action.js'
+    ),
   'atomic-insight-result-template': async () =>
     await import(
       './atomic-insight-result-template/atomic-insight-result-template.js'

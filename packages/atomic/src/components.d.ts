@@ -9,7 +9,6 @@ import { DateFilterRange, DateRangeRequest, GeneratedAnswer, ResultTemplate, Res
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
-import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { RangeFacetSortCriterion as InsightRangeFacetSortCriterion, UserAction as IUserAction } from "@coveo/headless/insight";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { i18n } from "i18next";
@@ -18,7 +17,6 @@ export { DateFilterRange, DateRangeRequest, GeneratedAnswer, ResultTemplate, Res
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
-export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { RangeFacetSortCriterion as InsightRangeFacetSortCriterion, UserAction as IUserAction } from "@coveo/headless/insight";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { i18n } from "i18next";
@@ -119,8 +117,6 @@ export namespace Components {
         "tooltipOnClick": string;
     }
     interface AtomicInsightResultActionBar {
-    }
-    interface AtomicInsightResultAttachToCaseAction {
     }
     interface AtomicInsightResultAttachToCaseIndicator {
     }
@@ -494,10 +490,6 @@ export interface AtomicInsightResultActionCustomEvent<T> extends CustomEvent<T> 
     detail: T;
     target: HTMLAtomicInsightResultActionElement;
 }
-export interface AtomicInsightResultAttachToCaseActionCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicInsightResultAttachToCaseActionElement;
-}
 export interface AtomicIpxBodyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicIpxBodyElement;
@@ -575,24 +567,6 @@ declare global {
     var HTMLAtomicInsightResultActionBarElement: {
         prototype: HTMLAtomicInsightResultActionBarElement;
         new (): HTMLAtomicInsightResultActionBarElement;
-    };
-    interface HTMLAtomicInsightResultAttachToCaseActionElementEventMap {
-        "atomic/insight/attachToCase/attach": InsightResultAttachToCaseEvent;
-        "atomic/insight/attachToCase/detach": InsightResultAttachToCaseEvent;
-    }
-    interface HTMLAtomicInsightResultAttachToCaseActionElement extends Components.AtomicInsightResultAttachToCaseAction, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicInsightResultAttachToCaseActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultAttachToCaseActionElement, ev: AtomicInsightResultAttachToCaseActionCustomEvent<HTMLAtomicInsightResultAttachToCaseActionElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicInsightResultAttachToCaseActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultAttachToCaseActionElement, ev: AtomicInsightResultAttachToCaseActionCustomEvent<HTMLAtomicInsightResultAttachToCaseActionElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicInsightResultAttachToCaseActionElement: {
-        prototype: HTMLAtomicInsightResultAttachToCaseActionElement;
-        new (): HTMLAtomicInsightResultAttachToCaseActionElement;
     };
     interface HTMLAtomicInsightResultAttachToCaseIndicatorElement extends Components.AtomicInsightResultAttachToCaseIndicator, HTMLStencilElement {
     }
@@ -802,7 +776,6 @@ declare global {
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
         "atomic-insight-result-action-bar": HTMLAtomicInsightResultActionBarElement;
-        "atomic-insight-result-attach-to-case-action": HTMLAtomicInsightResultAttachToCaseActionElement;
         "atomic-insight-result-attach-to-case-indicator": HTMLAtomicInsightResultAttachToCaseIndicatorElement;
         "atomic-insight-result-children": HTMLAtomicInsightResultChildrenElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
@@ -920,10 +893,6 @@ declare namespace LocalJSX {
         "tooltipOnClick"?: string;
     }
     interface AtomicInsightResultActionBar {
-    }
-    interface AtomicInsightResultAttachToCaseAction {
-        "onAtomic/insight/attachToCase/attach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
-        "onAtomic/insight/attachToCase/detach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
     }
     interface AtomicInsightResultAttachToCaseIndicator {
     }
@@ -1264,7 +1233,6 @@ declare namespace LocalJSX {
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
         "atomic-insight-result-action": AtomicInsightResultAction;
         "atomic-insight-result-action-bar": AtomicInsightResultActionBar;
-        "atomic-insight-result-attach-to-case-action": AtomicInsightResultAttachToCaseAction;
         "atomic-insight-result-attach-to-case-indicator": AtomicInsightResultAttachToCaseIndicator;
         "atomic-insight-result-children": AtomicInsightResultChildren;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
@@ -1301,7 +1269,6 @@ declare module "@stencil/core" {
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
             "atomic-insight-result-action-bar": LocalJSX.AtomicInsightResultActionBar & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionBarElement>;
-            "atomic-insight-result-attach-to-case-action": LocalJSX.AtomicInsightResultAttachToCaseAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseActionElement>;
             "atomic-insight-result-attach-to-case-indicator": LocalJSX.AtomicInsightResultAttachToCaseIndicator & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseIndicatorElement>;
             "atomic-insight-result-children": LocalJSX.AtomicInsightResultChildren & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
