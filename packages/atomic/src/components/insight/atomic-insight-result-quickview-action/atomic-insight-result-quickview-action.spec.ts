@@ -4,7 +4,7 @@ import {
   type Quickview,
   type QuickviewState,
   type Result,
-} from '@coveo/headless/insight';
+} from '@coveo/headless';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicInsightResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-result-fixture';
@@ -13,7 +13,7 @@ import {buildFakeInsightResult} from '@/vitest-utils/testing-helpers/fixtures/he
 import type {AtomicInsightResultQuickviewAction} from './atomic-insight-result-quickview-action';
 import './atomic-insight-result-quickview-action';
 
-vi.mock('@coveo/headless/insight', {spy: true});
+vi.mock('@coveo/headless', {spy: true});
 
 describe('atomic-insight-result-quickview-action', () => {
   let mockResult: Result;
@@ -34,10 +34,14 @@ describe('atomic-insight-result-quickview-action', () => {
   } = {}) => {
     return {
       fetchResultContent: vi.fn(),
+      next: vi.fn(),
+      previous: vi.fn(),
       state: {
         isLoading: false,
-        contentURL: undefined,
+        content: '',
         resultHasPreview: true,
+        totalResults: 1,
+        currentResult: 1,
         ...state,
       },
       subscribe: vi.fn((callback) => {
@@ -63,8 +67,10 @@ describe('atomic-insight-result-quickview-action', () => {
     mockQuickview = buildFakeInsightQuickview({
       state: {
         isLoading: false,
-        contentURL: 'https://example.com/preview',
+        content: '<html><body>Preview content</body></html>',
         resultHasPreview: true,
+        totalResults: 3,
+        currentResult: 1,
       },
     });
   });
@@ -228,7 +234,7 @@ describe('atomic-insight-result-quickview-action', () => {
 
       element.quickviewState = {
         ...element.quickviewState,
-        contentURL: 'https://example.com/preview',
+        content: '<html><body>Preview</body></html>',
       };
       await element.updateComplete;
 
@@ -243,7 +249,7 @@ describe('atomic-insight-result-quickview-action', () => {
 
       element.quickviewState = {
         ...element.quickviewState,
-        contentURL: 'https://example.com/preview1',
+        content: '<html><body>Preview 1</body></html>',
       };
       await element.updateComplete;
 
@@ -253,7 +259,7 @@ describe('atomic-insight-result-quickview-action', () => {
 
       element.quickviewState = {
         ...element.quickviewState,
-        contentURL: 'https://example.com/preview2',
+        content: '<html><body>Preview 2</body></html>',
       };
       await element.updateComplete;
 
@@ -273,7 +279,7 @@ describe('atomic-insight-result-quickview-action', () => {
 
       element.quickviewState = {
         ...element.quickviewState,
-        contentURL: 'https://example.com/preview',
+        content: '<html><body>Preview</body></html>',
       };
       await element.updateComplete;
 
@@ -281,12 +287,12 @@ describe('atomic-insight-result-quickview-action', () => {
       expect(modal?.getAttribute('sandbox')).toBe(customSandbox);
     });
 
-    it('should update modal content when quickview state has contentURL', async () => {
-      const testContentURL = 'https://example.com/preview-content';
+    it('should update modal content when quickview state has content', async () => {
+      const testContent = '<html><body>Preview content</body></html>';
       const {element, atomicInterface} = await renderComponent({
         quickviewState: {
           resultHasPreview: true,
-          contentURL: testContentURL,
+          content: testContent,
         },
       });
 
