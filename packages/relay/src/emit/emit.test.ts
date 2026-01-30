@@ -21,12 +21,12 @@ describe("emit", () => {
     params = createEmitParams();
   });
 
-  it("returns undefined", () => {
-    expect(emit(params)).toBe(undefined);
+  it("returns undefined", async () => {
+    expect(await emit(params)).toBe(undefined);
   });
 
-  it("sets expected url, token and body for the send function", () => {
-    emit(params);
+  it("sets expected url, token and body for the send function", async () => {
+    await emit(params);
 
     expect(params.environment.send).toHaveBeenCalledWith(
       params.config.url,
@@ -35,24 +35,24 @@ describe("emit", () => {
     );
   });
 
-  it("calls listeners", () => {
+  it("calls listeners", async () => {
     const { listenerManager, event } = params;
-    emit(params);
+    await emit(params);
     expect(listenerManager.call).toHaveBeenCalledWith(event);
   });
 
-  it("does not call listeners when in disabled mode", () => {
+  it("does not call listeners when in disabled mode", async () => {
     params.config.mode = "disabled";
-    emit(params);
+    await emit(params);
     expect(params.listenerManager.call).not.toHaveBeenCalled();
   });
 
-  it("does not call the environment send function when in disabled mode", () => {
+  it("does not call the environment send function when in disabled mode", async () => {
     const sendSpy = vi.fn();
     const environment = createMockEnvironment({ send: sendSpy });
     params.config.mode = "disabled";
     params.environment = environment;
-    emit(params);
+    await emit(params);
 
     expect(sendSpy).toHaveBeenCalledTimes(0);
   });

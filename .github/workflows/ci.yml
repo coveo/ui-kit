@@ -31,6 +31,11 @@ jobs:
         uses: ./.github/actions/clean-tree-check
       - name: Tests
         uses: ./.github/actions/test
+      - name: Functional tests
+        uses: ./.github/actions/test-functional
+        with:
+          analytics_key: ${{ secrets.ANALYTICS_KEY }}
+
   my-tag:
     name: "My tag"
     needs: [ci]

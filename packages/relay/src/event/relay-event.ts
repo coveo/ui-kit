@@ -1,4 +1,3 @@
-import type { ClientIdManager } from "../client-id/client-id.js";
 import type { Environment } from "../environment/environment.js";
 import type { RelayPayload } from "../relay-payload.js";
 import type { RelayConfig } from "../relay.js";
@@ -19,10 +18,9 @@ export function createRelayEvent(
   payload: RelayPayload,
   config: RelayConfig,
   environment: Environment,
-  clientIdManager: ClientIdManager,
 ): Readonly<RelayEvent> {
   return {
     ...payload,
-    meta: createMeta(type, config, environment, clientIdManager),
+    meta: createMeta(type, config, environment),
   };
 }

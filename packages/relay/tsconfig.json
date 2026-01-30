@@ -2,9 +2,10 @@
   "extends": "tsconfig/base.json",
   "compilerOptions": {
     "lib": ["ES2022", "DOM"],
+    "module": "es2022",
     "target": "ES2022",
     "rootDir": "src",
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals", "node"]
   },
   "include": ["src/**/*.ts"],
   "typedocOptions": {

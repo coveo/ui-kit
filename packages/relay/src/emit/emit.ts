@@ -10,17 +10,17 @@ export interface EmitParams {
   listenerManager: ListenerManager;
 }
 
-export function emit({
+export async function emit({
   config,
   environment,
   event,
   listenerManager,
-}: EmitParams) {
+}: EmitParams): Promise<void> {
   const { url, token, mode } = config;
   const isEnabled = mode !== "disabled";
 
   if (isEnabled) {
     listenerManager.call(event);
-    environment.send(url, token, event);
+    return environment.send(url, token, event);
   }
 }

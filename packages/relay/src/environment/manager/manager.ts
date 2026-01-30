@@ -16,7 +16,6 @@ function buildEnvironment(configManager: ConfigManager): Environment {
 
   if (active && environmentFromConfig) {
     return {
-      storage: nullEnvironment.storage,
       ...environmentFromConfig,
       runtime: "custom",
     };

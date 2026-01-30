@@ -7,6 +7,7 @@
     "lint:fix": "pnpm -r lint:fix && npm run prettier -- --write",
     "prettier": "prettier \"**/*.{js,mjs,ts,tsx,json,md,yml}\"",
     "test": "turbo run test",
+    "functional-test": "turbo run functional-test",
     "version-bump": "node ./scripts/version-bump.mjs",
     "npm:publish:alpha": "pnpm -r publish --tag alpha",
     "npm:tag:beta": "pnpm -r run npm:tag beta",
@@ -14,18 +15,20 @@
     "docs:notify": "node ./packages/relay/scripts/notify-docs.mjs"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=24.10.0"
   },
   "devDependencies": {
     "@actions/github": "^6.0.0",
     "@coveo/semantic-monorepo-tools": "^2.1.9",
+    "@types/node": "^24.10.4",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "conventional-changelog-angular": "^8.0.0",
     "eslint": "^8.56.0",
     "prettier": "^3.0.0",
     "ts-dedent": "^2.2.0",
-    "turbo": "latest"
+    "turbo": "latest",
+    "typescript": "^5.9.3"
   },
   "name": "relay",
   "packageManager": "pnpm@10.27.0"

@@ -1,4 +1,3 @@
-import type { ClientIdManager } from "../../client-id/client-id.js";
 import type { Environment } from "../../environment/environment.js";
 import type { RelayConfig } from "../../config/config.js";
 import { version } from "../../version.js";
@@ -73,11 +72,10 @@ export function createMeta(
   type: string,
   config: RelayConfig,
   environment: Environment,
-  clientIdManager: ClientIdManager,
 ): Readonly<Meta> {
   const { getReferrer, getLocation, getUserAgent } = environment;
   const eventConfig = getEventConfig(config);
-  const clientId = clientIdManager.getClientId();
+  const clientId = environment.getClientId();
 
   return Object.freeze<Meta>({
     type,

@@ -1,5 +1,4 @@
 import type { Environment } from "../environment.js";
-import type { Storage } from "../storage.js";
 
 /**
  * Partial override of the `Environment` interface, used to customize Relay’s behavior
@@ -10,12 +9,5 @@ import type { Storage } from "../storage.js";
  */
 export type CustomEnvironment = Pick<
   Environment,
-  "generateUUID" | "getLocation" | "getReferrer" | "getUserAgent" | "send"
-> & {
-  /**
-   * Optional custom implementation of a storage mechanism (e.g., in-memory, cookie-based).
-   * If not provided, a null storage implementation will be used.
-   * @type {Storage}
-   */
-  storage?: Storage;
-};
+  "getClientId" | "getLocation" | "getReferrer" | "getUserAgent" | "send"
+>;

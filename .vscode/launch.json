@@ -3,7 +3,7 @@
   "configurations": [
     {
       "type": "node",
-      "runtimeVersion": "20",
+      "runtimeVersion": "24",
       "request": "launch",
       "name": "Vitest All",
       "program": "${workspaceFolder}/packages/relay/node_modules/vitest/vitest.mjs",
@@ -17,7 +17,7 @@
     },
     {
       "type": "node",
-      "runtimeVersion": "20",
+      "runtimeVersion": "24",
       "request": "launch",
       "name": "Vitest Current File",
       "program": "${workspaceFolder}/packages/relay/node_modules/vitest/vitest.mjs",

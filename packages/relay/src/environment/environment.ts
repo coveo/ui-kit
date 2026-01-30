@@ -1,5 +1,4 @@
 import type { RelayEvent } from "../event/relay-event.js";
-import type { Storage } from "./storage.js";
 
 /**
  * Platform abstraction interface used by Relay to operate in different execution environments,
@@ -20,9 +19,9 @@ export interface Environment {
    * @param {string} url - API endpoint where the event should be sent.
    * @param {string} token - API token used for authorization.
    * @param {RelayEvent} event - Event payload to send.
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  send: (url: string, token: string, event: RelayEvent) => void;
+  send: (url: string, token: string, event: RelayEvent) => Promise<void>;
 
   /**
    * Returns the first 1024 characters of the referring URL, or `null` if it is not available.
@@ -43,15 +42,12 @@ export interface Environment {
   getUserAgent: () => string | null;
 
   /**
-   * Generates a UUID string.
+   * Returns the client identifier synchronously as a UUID string.
+   *
+   * The returned clientId must be unique per browser instance and stable across sessions
+   * with the same top-level domain. The implementation is responsible for generating
+   * a valid UUID and persisting it to ensure stability across sessions.
    * @returns {string}
    */
-  generateUUID: () => string;
-
-  /**
-   * Storage implementation used to persist data.
-   * Should implement the standard `Storage` interface.
-   * @type {Storage}
-   */
-  storage: Storage;
+  getClientId: () => string;
 }

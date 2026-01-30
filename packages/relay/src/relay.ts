@@ -1,5 +1,4 @@
 import { emit } from "./emit/emit.js";
-import { createClientIdManager } from "./client-id/client-id.js";
 import { createRelayEvent, type RelayEvent } from "./event/relay-event.js";
 import { version } from "./version.js";
 import { createMeta, type Meta, type EventConfig } from "./event/meta/meta.js";
@@ -10,7 +9,6 @@ import {
 import { createConfigManager, type RelayConfig } from "./config/config.js";
 import type { Environment } from "./environment/environment.js";
 import type { CustomEnvironment } from "./environment/custom/custom.js";
-import type { Storage } from "./environment/storage.js";
 import { createEnvironmentManager } from "./environment/manager/manager.js";
 import type { RelayPayload } from "./relay-payload.js";
 export { buildBrowserEnvironment } from "./environment/browser/browser.js";
@@ -34,7 +32,7 @@ interface Relay {
    * @param {Record<string,any>} payload - payload to include within the event.
    * @returns {void}
    */
-  emit: (type: string, payload: Record<string, any>) => void;
+  emit: (type: string, payload: Record<string, any>) => Promise<void>;
 
   /**
    * Gets the client-side generated meta object.
@@ -86,20 +84,12 @@ export function createRelay(initialConfig: RelayConfig): Relay {
   const configManager = createConfigManager(initialConfig);
   const listenerManager = createListenerManager();
   const environmentManager = createEnvironmentManager(configManager);
-  const clientIdManager = createClientIdManager(environmentManager);
 
   return {
-    emit: (type: string, payload: Record<string, any>) => {
+    emit: async (type: string, payload: Record<string, any>) => {
       const config = configManager.get();
       const environment = environmentManager.get();
-
-      const event = createRelayEvent(
-        type,
-        payload,
-        config,
-        environment,
-        clientIdManager,
-      );
+      const event = createRelayEvent(type, payload, config, environment);
 
       return emit({
         config,
@@ -109,12 +99,7 @@ export function createRelay(initialConfig: RelayConfig): Relay {
       });
     },
     getMeta: (type: string) =>
-      createMeta(
-        type,
-        configManager.get(),
-        environmentManager.get(),
-        clientIdManager,
-      ),
+      createMeta(type, configManager.get(), environmentManager.get()),
     on: (type: string, callback: EventCallback) =>
       listenerManager.add({ type, callback }),
     off: (type: string, callback?: EventCallback) =>
@@ -135,5 +120,4 @@ export type {
   RelayEvent,
   CustomEnvironment,
   Environment,
-  Storage,
 };

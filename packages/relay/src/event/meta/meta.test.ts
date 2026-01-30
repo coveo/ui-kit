@@ -1,5 +1,4 @@
 import { vi } from "vitest";
-import { createMockClientIdManager } from "../../__mocks__/client-id.js";
 import { createMockEnvironment } from "../../__mocks__/environment.js";
 import { createMockConfig } from "../../__mocks__/config.js";
 import { createMeta } from "./meta.js";
@@ -8,7 +7,6 @@ import type { Environment } from "../../relay.js";
 describe("createMeta", () => {
   let mockEnv: Environment;
   const defaultConfig = createMockConfig();
-  const defaultClientIdManager = createMockClientIdManager();
 
   beforeEach(() => {
     mockEnv = createMockEnvironment({
@@ -16,16 +14,12 @@ describe("createMeta", () => {
       getReferrer: () => "https://www.perdu.com",
       getLocation: () => "https://www.perdu.com/whoops",
       getUserAgent: () => "I am userAgent",
+      getClientId: () => "2136b353-74be-42d7-904f-ea33a8f4a43c",
     });
   });
 
   function getItemViewMeta() {
-    return createMeta(
-      "itemView",
-      defaultConfig,
-      mockEnv,
-      defaultClientIdManager,
-    );
+    return createMeta("itemView", defaultConfig, mockEnv);
   }
 
   it("returns meta with the clientId field", () => {
@@ -72,12 +66,7 @@ describe("createMeta", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2023-08-15T00:00:00.000Z"));
 
-    const specfiedtimeMeta = createMeta(
-      "itemView",
-      defaultConfig,
-      mockEnv,
-      defaultClientIdManager,
-    );
+    const specfiedtimeMeta = createMeta("itemView", defaultConfig, mockEnv);
     expect(specfiedtimeMeta.ts).toBe(1692057600000);
   });
 
@@ -86,7 +75,6 @@ describe("createMeta", () => {
       "itemView",
       createMockConfig({ source: ["atomic@1.2", "headless@3.4"] }),
       mockEnv,
-      defaultClientIdManager,
     );
     expect(sourcedMeta.source).toEqual([
       "atomic@1.2",

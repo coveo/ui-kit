@@ -18,13 +18,13 @@ describe("null environment", () => {
     expect(buildNullEnvironment().getUserAgent()).toBeNull();
   });
 
-  it("returns empty UUID", () => {
-    expect(buildNullEnvironment().generateUUID()).toBe("");
+  it("returns empty client id", () => {
+    expect(buildNullEnvironment().getClientId()).toBe("");
   });
 
-  it("returns undefined send", () => {
+  it("returns undefined on send", async () => {
     expect(
-      buildNullEnvironment().send("bap", "", createMockEvent()),
+      await buildNullEnvironment().send("bap", "", createMockEvent()),
     ).toBeUndefined();
   });
 });

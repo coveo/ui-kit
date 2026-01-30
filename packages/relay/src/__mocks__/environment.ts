@@ -1,7 +1,6 @@
 import { vi } from "vitest";
 import type { Environment } from "../environment/environment.js";
 import type { EnvironmentManager } from "../environment/manager/manager.js";
-import { createMockStorage } from "./storage.js";
 
 const mockEnvironment: Environment = {
   runtime: "null",
@@ -9,8 +8,7 @@ const mockEnvironment: Environment = {
   getReferrer: vi.fn(),
   getLocation: vi.fn(),
   getUserAgent: vi.fn(),
-  generateUUID: vi.fn(),
-  storage: createMockStorage(),
+  getClientId: vi.fn(),
 };
 
 export function createMockEnvironment(

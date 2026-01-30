@@ -1,33 +1,29 @@
-/**
- * @vitest-environment-options {"url": "https://www.patate.com/recettes"}
- */
-
 import { vi } from "vitest";
+import { validate } from "uuid";
 import { buildBrowserEnvironment } from "./browser.js";
 import { createMockEvent } from "../../__mocks__/event.js";
+import { clientIdKey } from "../../constants.js";
+import { createBrowserStorage } from "./storage/storage.js";
 
-vi.mock("uuid", () => ({
-  v4: () => "2136b353-74be-42d7-904f-ea33a8f4a43c",
-}));
 const sendMessageSpy = vi.fn();
 vi.mock("@coveo/explorer-messenger", () => ({
   createExplorerMessenger: () => ({ sendMessage: sendMessageSpy }),
 }));
 
-describe("buildBrowserEnvironment", () => {
-  Object.defineProperty(window.document, "referrer", {
-    writable: true,
-  });
+beforeEach(() => {
+  sendMessageSpy.mockReset();
+});
 
-  Object.defineProperty(navigator, "sendBeacon", {
-    writable: true,
+describe("buildBrowserEnvironment", () => {
+  beforeAll(() => {
+    Object.defineProperty(window.document, "referrer", {
+      writable: true,
+    });
   });
 
   beforeEach(() => {
-    Object.defineProperty(navigator, "sendBeacon", {
-      value: vi.fn(() => true),
-    });
     sendMessageSpy.mockReset();
+    window.location.hostname = "";
   });
 
   it("environment is browser", () => {
@@ -64,6 +60,10 @@ describe("buildBrowserEnvironment", () => {
   });
 
   it("retrieves the location", () => {
+    Object.defineProperty(window, "location", {
+      value: { href: "https://www.patate.com/recettes" },
+    });
+
     expect(buildBrowserEnvironment().getLocation()).toBe(
       "https://www.patate.com/recettes",
     );
@@ -90,52 +90,73 @@ describe("buildBrowserEnvironment", () => {
     expect(buildBrowserEnvironment().getUserAgent()).toBe("bap");
   });
 
-  it("generates a UUID when calling generateUUID", () => {
-    expect(buildBrowserEnvironment().generateUUID()).toBe(
-      "2136b353-74be-42d7-904f-ea33a8f4a43c",
-    );
-  });
+  describe("getClientId", () => {
+    it("given no existing UUID, it generates a UUID when calling getClientId", () => {
+      const storage = createBrowserStorage();
 
-  it("calls the Beacon API when using send", () => {
-    const beaconSpy = vi.fn(() => true);
-    Object.defineProperty(navigator, "sendBeacon", {
-      value: beaconSpy,
+      expect(storage.getItem(clientIdKey)).toBe(null);
+      expect(validate(buildBrowserEnvironment().getClientId())).toBe(true);
     });
 
-    buildBrowserEnvironment().send("anything", "token", createMockEvent());
+    it("returns an existing UUID when one is available in storage", () => {
+      const storage = createBrowserStorage();
+      storage.setItem(clientIdKey, "e4b8c63a-0000-4dfe-9b13-000000000001");
+      expect(buildBrowserEnvironment().getClientId()).toBe(
+        "e4b8c63a-0000-4dfe-9b13-000000000001",
+      );
+    });
 
-    expect(beaconSpy).toHaveBeenCalledTimes(1);
-    expect(beaconSpy).toHaveBeenCalledWith(
-      `anything?access_token=token`,
-      new Blob(['{"bloup": "something"}'], { type: "application/json" }),
+    it("generates a new UUID when the id in storage is not a valid UUID", () => {
+      const storage = createBrowserStorage();
+      storage.setItem(clientIdKey, "invalid-id");
+      expect(validate(buildBrowserEnvironment().getClientId())).toBe(true);
+    });
+  });
+
+  it("calls the Fetch API with keepAlive when using send", async () => {
+    const fetchSpy = vi.spyOn(window, "fetch");
+    const event = createMockEvent();
+    await buildBrowserEnvironment().send(
+      "https://www.coveo.com/",
+      "token",
+      event,
+    );
+
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(fetchSpy).toHaveBeenCalledWith(
+      "https://www.coveo.com/",
+      expect.objectContaining({
+        keepalive: true,
+        body: JSON.stringify([event]),
+        headers: expect.objectContaining({
+          Authorization: "Bearer token",
+        }),
+      }),
     );
   });
 
-  it("returns undefined when calling send", () => {
+  it("returns undefined when calling send", async () => {
     expect(
-      buildBrowserEnvironment().send("", "", createMockEvent()),
+      await buildBrowserEnvironment().send(
+        "https://www.coveo.com/",
+        "",
+        createMockEvent(),
+      ),
     ).toBeUndefined();
   });
 
-  it("throws an error if the sendBeacon's response is false", () => {
-    Object.defineProperty(navigator, "sendBeacon", {
-      value: vi.fn(() => false),
-    });
-    expect(() =>
-      buildBrowserEnvironment().send("", "", createMockEvent()),
-    ).toThrow(
-      "Failed to send the event(s) because the payload size exceeded the maximum allowed size (32 KB). Please contact support if the problem persists.",
-    );
-  });
-
-  it("calls sendMessage when calling send", () => {
+  it("calls sendMessage when calling send", async () => {
     const event = createMockEvent();
 
-    buildBrowserEnvironment().send("url", "token", event);
+    await buildBrowserEnvironment().send(
+      "https://www.coveo.com/",
+      "token",
+      event,
+    );
     expect(sendMessageSpy).toHaveBeenCalledTimes(1);
     expect(sendMessageSpy).toHaveBeenCalledWith({
       kind: "EVENT_PROTOCOL",
-      url: "url",
+      url: "https://www.coveo.com/",
       token: "token",
       event,
     });
