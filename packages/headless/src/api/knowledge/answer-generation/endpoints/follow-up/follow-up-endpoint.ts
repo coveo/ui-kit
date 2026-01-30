@@ -1,8 +1,4 @@
-import type {AnyFacetRequest} from '../../../../../features/facets/generic/interfaces/generic-facet-request.js';
-import type {
-  AnalyticsParam,
-  PipelineRuleParameters,
-} from '../../../../search/search-api-params.js';
+import type {PipelineRuleParameters} from '../../../../search/search-api-params.js';
 import {answerGenerationApi} from '../../answer-generation-api.js';
 import {
   type AnswerGenerationApiState,
@@ -11,36 +7,35 @@ import {
 } from '../../answer-generation-api-state.js';
 import {streamAnswerWithStrategy} from '../../streaming/answer-streaming-runner.js';
 import {streamingStrategyCreators} from '../../streaming/strategies/streaming-strategy-creators.js';
-import {buildAnswerEndpointUrl} from './url-builders/endpoint-url-builder.js';
+import {buildFollowUpEndpointUrl} from './url-builders/endpoint-url-builder.js';
 
 /**
- * Parameters for answer generation requests.
+ * Parameters for follow-up answer generation requests.
  */
-type AnswerParams = {
+type FollowUpAnswerParams = {
   q: string;
-  facets?: AnyFacetRequest[];
+  conversationId: string;
   searchHub?: string;
   pipeline?: string;
   pipelineRuleParameters: PipelineRuleParameters;
-  locale: string;
-} & AnalyticsParam;
+};
 
 /**
- * Arguments for the answer endpoint including streaming strategy and request parameters.
+ * Arguments for the follow-up answer endpoint including streaming strategy and request parameters.
  */
-export type AnswerEndpointArgs = {
-  strategyKey: 'head-answer';
-} & AnswerParams;
+export type FollowUpEndpointArgs = {
+  strategyKey: 'follow-up-answer';
+} & FollowUpAnswerParams;
 
 /**
- * RTK Query endpoint for streaming answer generation.
+ * RTK Query endpoint for streaming follow-up answer generation.
  */
-export const answerEndpoint = answerGenerationApi.injectEndpoints({
+export const followUpEndpoint = answerGenerationApi.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
     generateAnswer: builder.query<
       GeneratedAnswerServerState,
-      AnswerEndpointArgs
+      FollowUpEndpointArgs
     >({
       queryFn: () => {
         return {
@@ -49,10 +44,13 @@ export const answerEndpoint = answerGenerationApi.injectEndpoints({
       },
       async onQueryStarted(args, {getState, updateCachedData, dispatch}) {
         const {strategyKey, ...params} = args;
-        const endpointUrl = buildAnswerEndpointUrl(
+        const endpointUrl = buildFollowUpEndpointUrl(
           getState() as AnswerGenerationApiState
         );
-        await streamAnswerWithStrategy<AnswerParams, AnswerGenerationApiState>(
+        await streamAnswerWithStrategy<
+          FollowUpAnswerParams,
+          AnswerGenerationApiState
+        >(
           endpointUrl,
           params,
           {
@@ -68,8 +66,8 @@ export const answerEndpoint = answerGenerationApi.injectEndpoints({
 });
 
 /**
- * Initiates an answer generation query with the specified strategy and parameters.
+ * Initiates a follow up answer generation query with the specified strategy and parameters.
  */
-export const initiateAnswerEndpoint = (args: AnswerEndpointArgs) => {
-  return answerEndpoint.endpoints.generateAnswer.initiate(args);
+export const initiateAnswerEndpoint = (args: FollowUpEndpointArgs) => {
+  return followUpEndpoint.endpoints.generateAnswer.initiate(args);
 };
