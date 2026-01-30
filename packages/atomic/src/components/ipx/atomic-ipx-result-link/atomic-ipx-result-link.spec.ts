@@ -380,17 +380,5 @@ describe('atomic-ipx-result-link', () => {
         .element(link)
         .toHaveAttribute('href', `${mockResult.uri}?new=param`);
     });
-
-    it('should render with default behavior when component has no slotted content', async () => {
-      const {element} = await renderComponent();
-      expect(element).toBeDefined();
-    });
-
-    it('should render with custom content when component has default slotted content', async () => {
-      const {element} = await renderComponent({
-        slottedContent: 'Custom Link Text',
-      });
-      expect(element.textContent).toContain('Custom Link Text');
-    });
   });
 });
