@@ -5,8 +5,6 @@ import {
   initiateFollowUpEndpoint,
 } from './follow-up-endpoint.js';
 
-vi.mock('../streaming/answer-streaming-runner.js');
-
 describe('follow-up-endpoint', () => {
   let mockArgs: FollowUpEndpointArgs;
 
