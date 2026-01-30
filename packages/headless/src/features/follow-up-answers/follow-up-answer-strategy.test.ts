@@ -233,6 +233,28 @@ describe('followUpAnswerStrategy', () => {
         expect(mockDispatch).toHaveBeenCalledTimes(1);
       });
 
+      it('should dispatch followUpCitationsReceived when citations is an empty array', () => {
+        const strategy = createFollowUpAnswerStrategy();
+        const mockResponse = new Response(null, {
+          headers: {'x-answer-id': 'answer-123'},
+        });
+        strategy.handleOpen(mockResponse, mockDispatch);
+        vi.clearAllMocks();
+
+        const message: Message = {
+          payloadType: 'genqa.citationsType',
+          payload: JSON.stringify({citations: []}),
+        };
+
+        strategy.handleMessage['genqa.citationsType']?.(message, mockDispatch);
+
+        expect(followUpCitationsReceived).toHaveBeenCalledWith({
+          citations: [],
+          answerId: 'answer-123',
+        });
+        expect(mockDispatch).toHaveBeenCalledTimes(1);
+      });
+
       it('should handle empty payload gracefully', () => {
         const strategy = createFollowUpAnswerStrategy();
         const mockResponse = new Response(null, {

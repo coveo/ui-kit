@@ -57,7 +57,7 @@ export const createFollowUpAnswerStrategy =
 
         'genqa.citationsType': (message, dispatch) => {
           const payload = parsePayload(message.payload);
-          if (payload.citations) {
+          if (payload.citations !== undefined) {
             dispatch(
               followUpCitationsReceived({
                 citations: payload.citations,
