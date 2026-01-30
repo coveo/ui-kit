@@ -17,9 +17,6 @@ describe('follow-up-endpoint', () => {
       strategyKey: 'follow-up-answer',
       conversationId: 'test-conversation-id',
       q: 'test query',
-      searchHub: 'test-hub',
-      pipeline: 'test-pipeline',
-      pipelineRuleParameters: {},
     };
   });
 

@@ -1,4 +1,3 @@
-import type {PipelineRuleParameters} from '../../../../search/search-api-params.js';
 import {answerGenerationApi} from '../../answer-generation-api.js';
 import {
   type AnswerGenerationApiState,
@@ -15,9 +14,6 @@ import {buildFollowUpEndpointUrl} from './url-builders/endpoint-url-builder.js';
 type FollowUpAnswerParams = {
   q: string;
   conversationId: string;
-  searchHub?: string;
-  pipeline?: string;
-  pipelineRuleParameters: PipelineRuleParameters;
 };
 
 /**
