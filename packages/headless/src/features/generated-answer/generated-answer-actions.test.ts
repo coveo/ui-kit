@@ -327,7 +327,7 @@ describe('generated answer', () => {
             configuration: {
               knowledge: {
                 answerConfigurationId: '',
-                agentId: undefined,
+                agentId: '',
               },
             },
           }) as any
