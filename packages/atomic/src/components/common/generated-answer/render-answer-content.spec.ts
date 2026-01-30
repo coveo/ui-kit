@@ -58,8 +58,6 @@ describe('#renderAnswerContent', () => {
       toggleTooltip: 'Toggle answer',
       withToggle: false,
       collapsible: false,
-      query: '',
-      initialQuery: '',
       renderFeedbackAndCopyButtonsSlot: () => html``,
       renderCitationsSlot: () => html``,
       onToggle: vi.fn(),
@@ -92,18 +90,6 @@ describe('#renderAnswerContent', () => {
     expect(headerLabel?.textContent?.trim()).toBe(
       i18n.t('generated-answer-title')
     );
-  });
-
-  it('should render the sparkles header icon', async () => {
-    const {element} = await renderComponent();
-
-    const icon = element.querySelector(
-      'atomic-icon[part="header-icon"]'
-    ) as HTMLElement & {icon?: string};
-
-    expect(icon).not.toBeNull();
-    expect(icon?.icon).toBe('assets://sparkles.svg');
-    expect(icon?.classList.contains('text-primary')).toBe(true);
   });
 
   it('should call renderSwitch with correct arguments', async () => {

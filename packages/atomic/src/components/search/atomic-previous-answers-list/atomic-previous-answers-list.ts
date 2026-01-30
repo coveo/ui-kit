@@ -139,6 +139,9 @@ export class AtomicPreviousAnswersList extends LitElement {
   private renderAnswer(answer: PreviousAnswer, index: number) {
     const isExpanded = this.expandedQuestions.has(index);
     const contentId = `previous-answer-content-${index}`;
+    const questionClasses = `query-text text-base leading-6 ${
+      isExpanded ? 'font-semibold' : 'font-medium'
+    }`;
 
     return html`
       <div class="px-6 py-2" part="previous-answer-item">
@@ -153,10 +156,7 @@ export class AtomicPreviousAnswersList extends LitElement {
                 part="previous-answer-toggle"
                 type="button"
               >
-                <p
-                  class="query-text text-base font-semibold leading-6"
-                  part="previous-answer-question"
-                >
+                <p class="${questionClasses}" part="previous-answer-question">
                   ${answer.question}
                 </p>
               </button>
