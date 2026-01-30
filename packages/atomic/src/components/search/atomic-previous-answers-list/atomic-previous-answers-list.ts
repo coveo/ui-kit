@@ -66,6 +66,12 @@ export class AtomicPreviousAnswersList extends LitElement {
   @property({type: Object})
   renderCitationsSlot?: () => TemplateResult | typeof nothing;
 
+  /**
+   * Whether to extend the timeline past the last answer to connect with following content.
+   */
+  @property({type: Boolean})
+  connectToNext = false;
+
   @state()
   private expandedQuestions = new Set<number>();
 
@@ -113,49 +119,68 @@ export class AtomicPreviousAnswersList extends LitElement {
     `;
   }
 
+  private renderTimelineColumn(index: number) {
+    const hasPrevious = index > 0;
+    const hasNext =
+      index < this.previousAnswers.length - 1 || this.connectToNext;
+    const lineClass = (isVisible: boolean) =>
+      `w-px bg-neutral-dark ${isVisible ? 'flex-1' : 'h-0'}`;
+    return html`
+      <div class="flex w-5 items-start justify-center self-stretch pt-1">
+        <div class="flex h-full flex-col items-center">
+          <span class=${lineClass(hasPrevious)}></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-neutral-dark"></span>
+          <span class=${lineClass(hasNext)}></span>
+        </div>
+      </div>
+    `;
+  }
+
   private renderAnswer(answer: PreviousAnswer, index: number) {
     const isExpanded = this.expandedQuestions.has(index);
     const contentId = `previous-answer-content-${index}`;
 
     return html`
       <div class="px-6 py-2" part="previous-answer-item">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-4">
-            <span class="w-2.5 h-2.5 rounded-full bg-neutral-dark/30"></span>
-            <button
-              class="flex items-center gap-4 rounded-md text-left transition-colors hover:bg-neutral-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-              @click=${() => this.toggleQuestion(index)}
-              aria-controls=${contentId}
-              part="previous-answer-toggle"
-              type="button"
-            >
-              <p
-                class="query-text text-base font-semibold leading-6"
-                part="previous-answer-question"
+        <div class="flex gap-4">
+          ${this.renderTimelineColumn(index)}
+          <div class="flex-1">
+            <div class="flex items-start justify-between">
+              <button
+                class="flex items-center gap-3 rounded-md text-left transition-colors hover:bg-neutral-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                @click=${() => this.toggleQuestion(index)}
+                aria-controls=${contentId}
+                part="previous-answer-toggle"
+                type="button"
               >
-                ${answer.question}
-              </p>
-            </button>
+                <p
+                  class="query-text text-base font-semibold leading-6"
+                  part="previous-answer-question"
+                >
+                  ${answer.question}
+                </p>
+              </button>
+              ${when(
+                isExpanded,
+                () => html`
+                  <div class="flex items-center gap-2 h-9">
+                    ${this.renderFeedbackAndCopyButtonsSlot?.() || nothing}
+                  </div>
+                `,
+                () => nothing
+              )}
+            </div>
+            ${
+              isExpanded
+                ? html`
+                    <div id=${contentId} class="mt-4" part="previous-answer-content">
+                      ${this.renderAnswerContent(answer)}
+                    </div>
+                  `
+                : nothing
+            }
           </div>
-          ${when(
-            isExpanded,
-            () => html`
-              <div class="flex items-center gap-2 h-9">
-                ${this.renderFeedbackAndCopyButtonsSlot?.() || nothing}
-              </div>
-            `,
-            () => nothing
-          )}
         </div>
-        ${
-          isExpanded
-            ? html`
-              <div id=${contentId} class="mt-4" part="previous-answer-content">
-                ${this.renderAnswerContent(answer)}
-              </div>
-            `
-            : nothing
-        }
       </div>
     `;
   }

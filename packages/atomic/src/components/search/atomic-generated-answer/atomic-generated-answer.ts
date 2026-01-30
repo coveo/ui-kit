@@ -381,6 +381,7 @@ export class AtomicGeneratedAnswer
     if (this.canAskFollowUp()) {
       this.followUpPending = true;
       this.previousAnswersCollapsed = true;
+      this.requestUpdate('previousAnswersCollapsed');
       try {
         const result = await this.generatedAnswer.askFollowUp(query);
         return result;
@@ -396,6 +397,7 @@ export class AtomicGeneratedAnswer
 
   private handleTogglePreviousAnswers = () => {
     this.previousAnswersCollapsed = false;
+    this.requestUpdate('previousAnswersCollapsed');
   };
 
   private isAnyFollowUpAnswerStreaming(): boolean {

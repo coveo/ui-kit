@@ -72,7 +72,7 @@ export const renderFollowUpInput: FunctionalComponent<
           type="button"
           @click=${handleSubmit}
           ?disabled=${buttonDisabled}
-          class="absolute right-1 top-1 bottom-1 flex w-8 items-center justify-center rounded-md bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+          class="absolute right-1 top-1 bottom-1 flex w-8 items-center justify-center rounded-md bg-blue-500 text-white hover:bg-blue-600 disabled:bg-blue-500/60 disabled:cursor-not-allowed transition-colors"
           aria-label="Send follow-up question"
           part="submit-button"
         >

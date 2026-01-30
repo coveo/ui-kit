@@ -63,6 +63,30 @@ export interface RenderAnswerContentProps {
   onTogglePreviousAnswers?: () => void;
 }
 
+const renderTimelineColumn = ({
+  align = 'center',
+  hasPrevious = false,
+  hasNext = false,
+}: {
+  align?: 'start' | 'center';
+  hasPrevious?: boolean;
+  hasNext?: boolean;
+}): TemplateResult => {
+  const alignmentClass =
+    align === 'start' ? 'items-start pt-1' : 'items-center';
+  const lineClass = (isVisible: boolean) =>
+    `w-px bg-neutral-dark ${isVisible ? 'flex-1' : 'h-0'}`;
+  return html`
+    <div class="flex w-5 justify-center self-stretch ${alignmentClass}">
+      <div class="flex h-full flex-col items-center">
+        <span class=${lineClass(hasPrevious)}></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-neutral-dark"></span>
+        <span class=${lineClass(hasNext)}></span>
+      </div>
+    </div>
+  `;
+};
+
 /**
  * Renders the main content of the generated answer including header, toggle, answer text, and citations.
  */
@@ -91,19 +115,14 @@ export const renderAnswerContent: FunctionalComponent<
     onTogglePreviousAnswers,
   } = props;
 
-  // Determine which answer to display
   const hasFollowUps = !!agentId && !!followUpAnswers?.answers?.length;
   const latestAnswer = hasFollowUps
     ? followUpAnswers!.answers[followUpAnswers!.answers.length - 1]
     : null;
 
-  // If there are follow-ups, display the latest follow-up answer
-  // Otherwise display the initial answer
   const displayState = latestAnswer || generatedAnswerState;
   const displayQuery = latestAnswer?.question || query.trim();
 
-  // For the accordion, show all previous answers (initial + older follow-ups)
-  // excluding the latest one
   const initialQuestion = (initialQuery || query).trim();
   const previousAnswers = hasFollowUps
     ? [
@@ -119,13 +138,13 @@ export const renderAnswerContent: FunctionalComponent<
     previousAnswers.length
   );
 
-  const queryRowSpacingClass = previousAnswers.length > 0 ? 'py-2' : 'mt-3';
+  const queryRowSpacingClass = previousAnswers.length > 0 ? 'pt-2' : 'mt-3';
+  const contentContainerClasses =
+    previousAnswers.length > 0 ? 'px-6 pt-6 pb-6' : 'px-6 pb-6';
 
   const {isStreaming, answer, citations, answerContentFormat} =
     displayState ?? {};
 
-  // The "expanded" state is a UI concern owned by the main generated answer state.
-  // Follow-up answers don't carry this flag.
   const expanded = generatedAnswerState?.expanded;
   const isExpanded = collapsible ? (expanded ?? true) : true;
   const showInlineActions = !hasRetryableError && isExpanded;
@@ -175,16 +194,27 @@ export const renderAnswerContent: FunctionalComponent<
           return html`
             <div class="${contentClasses}">
               ${
-                previousAnswersCollapsed && showPreviousQuestionsLabel
+                previousAnswers.length > 0 && !previousAnswersCollapsed
                   ? html`
-                    <div class="px-6 pt-6 pb-3">
-                      <div class="flex gap-4">
-                        <div class="flex items-center">
-                          <span
-                            class="w-2.5 h-2.5 rounded-full bg-neutral-dark/30"
-                          ></span>
-                        </div>
-                        <div>
+                      <atomic-previous-answers-list
+                        .previousAnswers=${previousAnswers}
+                        .i18n=${i18n}
+                        .renderFeedbackAndCopyButtonsSlot=${renderFeedbackAndCopyButtonsSlot}
+                        .renderCitationsSlot=${renderCitationsSlot}
+                        .connectToNext=${true}
+                      ></atomic-previous-answers-list>
+                    `
+                  : nothing
+              }
+              <div part="generated-content-container" class="${contentContainerClasses}">
+                ${
+                  previousAnswersCollapsed && showPreviousQuestionsLabel
+                    ? html`
+                        <div class="flex items-center gap-4 pb-3">
+                          ${renderTimelineColumn({
+                            hasPrevious: false,
+                            hasNext: true,
+                          })}
                           <button
                             @click=${onTogglePreviousAnswers}
                             class="px-2 py-1 text-sm font-medium text-neutral-dark bg-gray-100 rounded-md border border-gray-100 shadow-inner transition-colors hover:bg-gray-100/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
@@ -193,39 +223,20 @@ export const renderAnswerContent: FunctionalComponent<
                             ${showPreviousQuestionsLabel}
                           </button>
                         </div>
-                      </div>
-                    </div>
-                  `
-                  : nothing
-              }
-              ${
-                previousAnswers.length > 0 && !previousAnswersCollapsed
-                  ? html`
-                    <atomic-previous-answers-list
-                      .previousAnswers=${previousAnswers}
-                      .i18n=${i18n}
-                      .renderFeedbackAndCopyButtonsSlot=${renderFeedbackAndCopyButtonsSlot}
-                      .renderCitationsSlot=${renderCitationsSlot}
-                    ></atomic-previous-answers-list>
-                  `
-                  : nothing
-              }
-              <div part="generated-content-container" class="px-6 pb-6">
+                      `
+                    : nothing
+                }
                 <div
-                  class=${`flex items-center justify-between gap-3 ${queryRowSpacingClass}`}
+                  class=${`flex items-start justify-between gap-3 ${queryRowSpacingClass}`}
                 >
-                  <div
-                    class=${`flex ${previousAnswers.length > 0 ? 'gap-4' : ''}`}
-                  >
+                  <div class=${`flex flex-1 items-center ${previousAnswers.length > 0 ? 'gap-4' : ''}`}>
                     ${
                       previousAnswers.length > 0
-                        ? html`
-                          <div class="flex items-center">
-                            <span
-                              class="w-2.5 h-2.5 rounded-full bg-neutral-dark/30"
-                            ></span>
-                          </div>
-                        `
+                        ? renderTimelineColumn({
+                            align: 'start',
+                            hasPrevious: true,
+                            hasNext: false,
+                          })
                         : nothing
                     }
                     <p class="query-text text-base font-semibold leading-6">
@@ -263,39 +274,39 @@ export const renderAnswerContent: FunctionalComponent<
                             previousAnswers.length > 0 ? 'px-6' : undefined,
                         },
                       })(html`
-                      ${renderSourceCitations({
-                        props: {
-                          label: i18n.t('citations'),
-                          isVisible: !!citations?.length,
-                        },
-                      })(renderCitationsSlot())}
-                    `)
+                        ${renderSourceCitations({
+                          props: {
+                            label: i18n.t('citations'),
+                            isVisible: !!citations?.length,
+                          },
+                        })(renderCitationsSlot())}
+                      `)
                     : nothing
                 }
                 ${
                   !hasRetryableError
                     ? html`
-                      <div part="generated-answer-footer" class="mt-6">
-                        ${renderGeneratingAnswerLabel({
-                          props: {
-                            i18n,
-                            isStreaming: !!isStreaming,
-                            collapsible,
-                          },
-                        })}
-                        ${
-                          collapsible && !isStreaming
-                            ? renderShowButton({
-                                props: {
-                                  i18n,
-                                  onClick: onClickShowButton,
-                                  isCollapsed: !(expanded ?? true),
-                                },
-                              })
-                            : nothing
-                        }
-                      </div>
-                    `
+                        <div part="generated-answer-footer" class="mt-6">
+                          ${renderGeneratingAnswerLabel({
+                            props: {
+                              i18n,
+                              isStreaming: !!isStreaming,
+                              collapsible,
+                            },
+                          })}
+                          ${
+                            collapsible && !isStreaming
+                              ? renderShowButton({
+                                  props: {
+                                    i18n,
+                                    onClick: onClickShowButton,
+                                    isCollapsed: !(expanded ?? true),
+                                  },
+                                })
+                              : nothing
+                          }
+                        </div>
+                      `
                     : nothing
                 }
               </div>
