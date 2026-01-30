@@ -87,7 +87,7 @@ export class AtomicSmartSnippetSource
   };
 
   private dispatchSourceEvent(eventName: string) {
-    this.dispatchEvent(buildCustomEvent(eventName, undefined));
+    this.dispatchEvent(buildCustomEvent(eventName));
   }
 
   private handleSourceEvent(

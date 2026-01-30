@@ -1,6 +1,7 @@
 import type {HistoryElement} from '../../api/analytics/coveo.analytics/history-store.js';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
+import type {AnswerParams} from '../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
 import type {StreamAnswerAPIState} from '../../api/knowledge/stream-answer-api-state.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
 import type {BaseParam} from '../../api/platform-service-params.js';
@@ -31,10 +32,12 @@ import {
 import {selectSearchActionCause} from '../../features/search/search-selectors.js';
 import {selectSearchHub} from '../../features/search-hub/search-hub-selectors.js';
 import {selectActiveTab} from '../../features/tab-set/tab-set-selectors.js';
+import type {SearchAppState} from '../../state/search-app-state.js';
 import type {
   ConfigurationSection,
   GeneratedAnswerSection,
   SearchSection,
+  TabSection,
 } from '../../state/state-sections.js';
 import {getFacets} from '../../utils/facet-utils.js';
 import {
@@ -161,8 +164,46 @@ export const constructAnswerAPIQueryParams = (
   };
 };
 
+export type StateNeededForHeadAnswerParams = ConfigurationSection &
+  Partial<SearchAppState> &
+  GeneratedAnswerSection &
+  Partial<TabSection>;
+
+export const constructGenerateHeadAnswerParams = (
+  state: StateNeededForHeadAnswerParams,
+  navigatorContext: NavigatorContext
+): AnswerParams => {
+  const q = selectQuery(state)?.q;
+  const facetParams = getGeneratedFacetParams(state);
+  const analyticsParams = fromAnalyticsStateToAnalyticsParams(
+    state.configuration.analytics,
+    navigatorContext,
+    {actionCause: selectSearchActionCause(state)}
+  );
+  const locale = selectLocale(state);
+
+  const searchHub = selectSearchHub(state);
+  const pipeline = selectPipeline(state);
+  const citationsFieldToInclude = selectFieldsToIncludeInCitation(state) ?? [];
+
+  return {
+    q: q || '',
+    ...(facetParams.length && {facets: facetParams}),
+    pipelineRuleParameters: {
+      mlGenerativeQuestionAnswering: {
+        responseFormat: state.generatedAnswer.responseFormat,
+        citationsFieldToInclude,
+      },
+    },
+    ...(searchHub?.length && {searchHub}),
+    ...(pipeline?.length && {pipeline}),
+    ...analyticsParams,
+    locale,
+  };
+};
+
 const getGeneratedFacetParams = (
-  state: StreamAnswerAPIState
+  state: Partial<SearchAppState>
 ): AnyFacetRequest[] =>
   getFacets(state)
     ?.map((facetRequest) =>
