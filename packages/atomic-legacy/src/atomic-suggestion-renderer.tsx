@@ -2,7 +2,7 @@ import {Component, Fragment, Host, Prop, VNode, h} from '@stencil/core';
 import type {i18n} from 'i18next';
 const isMacOS = () => navigator.platform.startsWith('Mac');
 
-interface SearchBoxSuggestionElement {
+export interface SearchBoxSuggestionElement {
   /**
    * Stable identity which enables Stencil to reuse DOM elements for better performance.
    * The best way to pick a key is to use a string that uniquely identifies that list item among its siblings (often your data will already have IDs).
