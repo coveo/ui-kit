@@ -372,6 +372,14 @@ export const generateAnswer = createAsyncThunk<
   }
 );
 
+/**
+ * Thunk to generate the head answer as part of the generated answer with follow-ups feature.
+ *
+ * This action initiates the generation of the main answer when using the Answer Generation API
+ * with an agent configuration. It requires an **agent ID** to be present in the engine configuration.
+ *
+ * @internal
+ */
 export const generateHeadAnswer = createAsyncThunk<
   void,
   void,
