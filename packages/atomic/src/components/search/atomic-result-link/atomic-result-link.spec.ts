@@ -279,12 +279,13 @@ describe('atomic-result-link', () => {
     });
 
     it('should fallback gracefully with invalid template', async () => {
-      await renderComponent({
+      const {link} = await renderComponent({
         props: {hrefTemplate: '$' + '{invalid.syntax}'},
         result: buildFakeResult({clickUri: 'https://fallback.com'}),
       });
 
-      expect(true).toBe(true);
+      // Should not throw and should still render a link
+      await expect.element(link).toBeInTheDocument();
     });
 
     it('should update href when hrefTemplate property changes', async () => {

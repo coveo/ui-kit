@@ -36,7 +36,7 @@ export class AtomicResultLink
   static styles: CSSResultGroup = styles;
 
   /**
-   * Specifies a template literal from which to generate the `href` attribute value (see
+   * A template literal from which to generate the `href` attribute value (see
    * [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).
    *
    * The template literal can reference any number of result properties from the parent result. It can also reference the window object.
@@ -49,6 +49,8 @@ export class AtomicResultLink
   @property({reflect: true, attribute: 'href-template'})
   public hrefTemplate?: string;
 
+  @state() public bindings!: Bindings;
+  @state() public error!: Error;
   @state() private linkAttributes?: Attr[];
   @state() private stopPropagation?: boolean;
   @state() private result!: Result;
@@ -58,9 +60,6 @@ export class AtomicResultLink
   private resultContext = createResultContextController(this);
   private interactiveResultContext =
     createInteractiveResultContextController(this);
-
-  @state() public bindings!: Bindings;
-  @state() public error!: Error;
 
   public initialize() {
     if (!this.result && this.resultContext.item) {
@@ -97,6 +96,10 @@ export class AtomicResultLink
     }
   }
 
+  willUpdate() {
+    this.linkAttributes = getAttributesFromLinkSlotContent(this, 'attributes');
+  }
+
   @bindingGuard()
   @errorGuard()
   render() {
@@ -111,11 +114,6 @@ export class AtomicResultLink
             result,
             this.bindings
           );
-
-      this.linkAttributes = getAttributesFromLinkSlotContent(
-        this,
-        'attributes'
-      );
 
       return renderLinkWithItemAnalytics({
         props: {
