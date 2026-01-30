@@ -47,6 +47,7 @@ export interface RenderAnswerContentProps {
   withToggle: boolean;
   collapsible: boolean;
   scrollable?: boolean;
+  hidePreviousAnswers?: boolean;
   previousAnswersCollapsed?: boolean;
   agentId?: string;
   followUpAnswers?: {
@@ -61,6 +62,7 @@ export interface RenderAnswerContentProps {
   onRetry: () => void;
   onClickShowButton: () => void;
   onTogglePreviousAnswers?: () => void;
+  onHidePreviousAnswers?: () => void;
 }
 
 const renderTimelineColumn = ({
@@ -102,6 +104,7 @@ export const renderAnswerContent: FunctionalComponent<
     withToggle,
     collapsible,
     scrollable = false,
+    hidePreviousAnswers = false,
     previousAnswersCollapsed = false,
     query,
     initialQuery,
@@ -113,6 +116,7 @@ export const renderAnswerContent: FunctionalComponent<
     onRetry,
     onClickShowButton,
     onTogglePreviousAnswers,
+    onHidePreviousAnswers,
   } = props;
 
   const hasFollowUps = !!agentId && !!followUpAnswers?.answers?.length;
@@ -138,9 +142,26 @@ export const renderAnswerContent: FunctionalComponent<
     previousAnswers.length
   );
 
-  const queryRowSpacingClass = previousAnswers.length > 0 ? 'pt-2' : 'mt-3';
+  const hidePreviousQuestionsLabel = i18n.t('hide-previous-questions', {
+    defaultValue: 'Hide previous questions',
+  });
+
+  const showHidePreviousQuestionsButton =
+    previousAnswers.length > 0 &&
+    !previousAnswersCollapsed &&
+    hidePreviousAnswers;
+
+  const showPreviousQuestionsButtonVisible =
+    previousAnswersCollapsed && showPreviousQuestionsLabel;
+
+  const queryRowSpacingClass =
+    previousAnswers.length > 0
+      ? showPreviousQuestionsButtonVisible
+        ? 'pt-0'
+        : 'pt-0'
+      : 'mt-3';
   const contentContainerClasses =
-    previousAnswers.length > 0 ? 'px-6 pt-6 pb-6' : 'px-6 pb-6';
+    previousAnswers.length > 0 ? 'px-6 pt-2 pb-6' : 'px-6 pb-6';
 
   const {isStreaming, answer, citations, answerContentFormat} =
     displayState ?? {};
@@ -194,6 +215,25 @@ export const renderAnswerContent: FunctionalComponent<
           return html`
             <div class="${contentClasses}">
               ${
+                showHidePreviousQuestionsButton
+                  ? html`
+                      <div class="flex items-center gap-4 px-6 py-2 ${previousAnswers.length > 0 ? 'pt-4' : ''} ">
+                        ${renderTimelineColumn({
+                          hasPrevious: false,
+                          hasNext: true,
+                        })}
+                        <button
+                          @click=${() => onHidePreviousAnswers?.()}
+                          class="px-2 py-1 text-sm font-medium text-neutral-dark bg-gray-100 rounded-md border border-gray-100 shadow-inner transition-colors hover:bg-gray-100/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                          type="button"
+                        >
+                          ${hidePreviousQuestionsLabel}
+                        </button>
+                      </div>
+                    `
+                  : nothing
+              }
+              ${
                 previousAnswers.length > 0 && !previousAnswersCollapsed
                   ? html`
                       <atomic-previous-answers-list
@@ -208,15 +248,15 @@ export const renderAnswerContent: FunctionalComponent<
               }
               <div part="generated-content-container" class="${contentContainerClasses}">
                 ${
-                  previousAnswersCollapsed && showPreviousQuestionsLabel
+                  showPreviousQuestionsButtonVisible
                     ? html`
-                        <div class="flex items-center gap-4 pb-3">
+                        <div class="flex items-center gap-4 py-2">
                           ${renderTimelineColumn({
                             hasPrevious: false,
                             hasNext: true,
                           })}
                           <button
-                            @click=${onTogglePreviousAnswers}
+                            @click=${() => onTogglePreviousAnswers?.()}
                             class="px-2 py-1 text-sm font-medium text-neutral-dark bg-gray-100 rounded-md border border-gray-100 shadow-inner transition-colors hover:bg-gray-100/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                             type="button"
                           >

@@ -192,7 +192,7 @@ export class AtomicPreviousAnswersList extends LitElement {
 
     return html`
       <div
-        class="bg-white flex flex-col mt-6"
+        class="bg-white flex flex-col mt-2"
         part="previous-answers-container"
       >
         ${this.previousAnswers.map((answer, index) =>

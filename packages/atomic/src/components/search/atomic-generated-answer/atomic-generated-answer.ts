@@ -180,6 +180,16 @@ export class AtomicGeneratedAnswer
   scrollable = false;
 
   /**
+   * Whether to display a button that lets users hide the previous follow-up questions after expanding them.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'hide-previous-answers',
+    converter: booleanConverter,
+  })
+  hidePreviousAnswers = false;
+
+  /**
    * Whether to make the follow-up input sticky.
    * When enabled, the input will stick to the bottom of the viewport when scrolling up.
    */
@@ -397,6 +407,11 @@ export class AtomicGeneratedAnswer
 
   private handleTogglePreviousAnswers = () => {
     this.previousAnswersCollapsed = false;
+    this.requestUpdate('previousAnswersCollapsed');
+  };
+
+  private handleHidePreviousAnswers = () => {
+    this.previousAnswersCollapsed = true;
     this.requestUpdate('previousAnswersCollapsed');
   };
 
@@ -698,8 +713,10 @@ export class AtomicGeneratedAnswer
         onRetry: () => this.generatedAnswer?.retry(),
         onClickShowButton: () => this.clickOnShowButton(),
         scrollable: this.scrollable,
+        hidePreviousAnswers: this.hidePreviousAnswers,
         previousAnswersCollapsed: this.previousAnswersCollapsed,
         onTogglePreviousAnswers: this.handleTogglePreviousAnswers,
+        onHidePreviousAnswers: this.handleHidePreviousAnswers,
       },
     });
   }
