@@ -12,11 +12,3 @@ export const selectTimezone = (state: {configuration: ConfigurationState}) =>
  */
 export const selectAgentId = (state: {configuration: ConfigurationState}) =>
   state.configuration.knowledge.agentId;
-
-/**
- * Selects the answer configuration ID from the knowledge configuration.
- * Used for configuration-based answer generation via the Answer API.
- */
-export const selectAnswerConfigurationId = (state: {
-  configuration: ConfigurationState;
-}) => state.configuration.knowledge.answerConfigurationId;

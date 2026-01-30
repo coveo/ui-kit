@@ -11,13 +11,6 @@ describe('generated-answer-selectors', () => {
     it('returns the answerId if an answer configuration id is in state', () => {
       const mockWithExplicitAnswerId = {
         ...streamAnswerAPIStateMock,
-        configuration: {
-          ...streamAnswerAPIStateMock.configuration,
-          knowledge: {
-            answerConfigurationId: 'config123', // Has a config ID
-            agentId: undefined,
-          },
-        },
         answer: {
           data: {},
         },
@@ -26,6 +19,7 @@ describe('generated-answer-selectors', () => {
       const state = {
         ...(mockWithExplicitAnswerId as Partial<SearchAppState>),
         generatedAnswer: {
+          answerConfigurationId: 'config123',
           answerId: 'my-answer-id',
         },
       } as Partial<SearchAppState>;
@@ -37,14 +31,9 @@ describe('generated-answer-selectors', () => {
     it('returns the generativeQuestionAnsweringId if an answer configuration id is not in state', () => {
       const state = {
         ...(streamAnswerAPIStateMock as Partial<SearchAppState>),
-        configuration: {
-          ...streamAnswerAPIStateMock.configuration,
-          knowledge: {
-            answerConfigurationId: '', // Empty string means no config ID
-            agentId: undefined,
-          },
+        generatedAnswer: {
+          answerConfigurationId: undefined,
         },
-        generatedAnswer: {},
         search: {
           response: {
             extendedResults: {
@@ -75,13 +64,6 @@ describe('generated-answer-selectors', () => {
     it('should handle states with missing generatedAnswer section', () => {
       const stateWithoutGeneratedAnswer = {
         ...(streamAnswerAPIStateMock as Partial<SearchAppState>),
-        configuration: {
-          ...streamAnswerAPIStateMock.configuration,
-          knowledge: {
-            answerConfigurationId: '', // Empty means no config ID
-            agentId: undefined,
-          },
-        },
         generatedAnswer: undefined,
         search: {
           response: {

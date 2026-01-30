@@ -1,6 +1,5 @@
 import {
   selectAgentId,
-  selectAnswerConfigurationId,
   selectLocale,
   selectTimezone,
 } from './configuration-selectors.js';
@@ -76,44 +75,6 @@ describe('configuration selectors', () => {
       };
 
       expect(selectAgentId(state)).toBeUndefined();
-    });
-  });
-
-  describe('selectAnswerConfigurationId', () => {
-    it('returns answerConfigurationId when present', () => {
-      const state = {
-        configuration: {
-          ...getConfigurationInitialState(),
-          knowledge: {
-            answerConfigurationId: 'config-456',
-            agentId: undefined,
-          },
-        },
-      };
-
-      expect(selectAnswerConfigurationId(state)).toBe('config-456');
-    });
-
-    it('returns empty string when not set', () => {
-      const state = {
-        configuration: getConfigurationInitialState(),
-      };
-
-      expect(selectAnswerConfigurationId(state)).toBe('');
-    });
-
-    it('returns answerConfigurationId even when agentId is also present', () => {
-      const state = {
-        configuration: {
-          ...getConfigurationInitialState(),
-          knowledge: {
-            answerConfigurationId: 'config-789',
-            agentId: 'agent-123',
-          },
-        },
-      };
-
-      expect(selectAnswerConfigurationId(state)).toBe('config-789');
     });
   });
 });

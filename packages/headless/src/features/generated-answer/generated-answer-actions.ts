@@ -40,10 +40,7 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload.js';
-import {
-  selectAgentId,
-  selectAnswerConfigurationId,
-} from '../configuration/configuration-selectors.js';
+import {selectAgentId} from '../configuration/configuration-selectors.js';
 import {
   logGeneratedAnswerResponseLinked,
   logGeneratedAnswerStreamEnd,
@@ -358,9 +355,7 @@ export const generateAnswer = createAsyncThunk<
     dispatch(resetAnswer());
 
     const state = getState() as StreamAnswerAPIState;
-    const answerConfigurationId = selectAnswerConfigurationId(state);
-
-    if (answerConfigurationId) {
+    if (state.generatedAnswer.answerConfigurationId) {
       const answerApiQueryParams = constructAnswerAPIQueryParams(
         state,
         navigatorContext
