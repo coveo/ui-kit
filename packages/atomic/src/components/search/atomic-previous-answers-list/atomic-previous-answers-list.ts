@@ -124,12 +124,12 @@ export class AtomicPreviousAnswersList extends LitElement {
     const hasNext =
       index < this.previousAnswers.length - 1 || this.connectToNext;
     const lineClass = (isVisible: boolean) =>
-      `w-px bg-neutral-dark ${isVisible ? 'flex-1' : 'h-0'}`;
+      `w-px bg-neutral ${isVisible ? 'flex-1' : 'h-0'}`;
     return html`
-      <div class="flex w-5 items-start justify-center self-stretch pt-1">
+      <div class="flex w-5 items-center justify-center self-stretch">
         <div class="flex h-full flex-col items-center">
           <span class=${lineClass(hasPrevious)}></span>
-          <span class="w-2.5 h-2.5 rounded-full bg-neutral-dark"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-neutral"></span>
           <span class=${lineClass(hasNext)}></span>
         </div>
       </div>

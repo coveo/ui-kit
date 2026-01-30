@@ -74,15 +74,14 @@ const renderTimelineColumn = ({
   hasPrevious?: boolean;
   hasNext?: boolean;
 }): TemplateResult => {
-  const alignmentClass =
-    align === 'start' ? 'items-start pt-1' : 'items-center';
+  const alignmentClass = align === 'start' ? 'items-start' : 'items-center';
   const lineClass = (isVisible: boolean) =>
-    `w-px bg-neutral-dark ${isVisible ? 'flex-1' : 'h-0'}`;
+    `w-px bg-neutral ${isVisible ? 'flex-1' : 'h-0'}`;
   return html`
     <div class="flex w-5 justify-center self-stretch ${alignmentClass}">
       <div class="flex h-full flex-col items-center">
         <span class=${lineClass(hasPrevious)}></span>
-        <span class="w-2.5 h-2.5 rounded-full bg-neutral-dark"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-neutral"></span>
         <span class=${lineClass(hasNext)}></span>
       </div>
     </div>
