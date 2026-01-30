@@ -37,10 +37,4 @@ This component must be used inside an `atomic-insight-result-template` component
 * Allow agents to efficiently scan through multiple documents to find relevant information for case resolution.
 * Display PDF or HTML content in a modal for immediate review within the Insight Panel context.
 
-### Security Considerations
-The quickview is loaded inside an iframe with a `sandbox` attribute for security reasons. The default value includes `allow-popups`, `allow-top-navigation`, and `allow-same-origin`. The `allow-same-origin` directive is required for the component to function properly.
-
-You can customize the sandbox attributes using the `sandbox` property, but always ensure `allow-same-origin` is included.
-
-
 </AtomicDocTemplate>

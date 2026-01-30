@@ -18,7 +18,11 @@ import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import QuickviewIcon from '../../../images/preview.svg';
 
 /**
- * TODO: Add description
+ * The `atomic-insight-result-quickview-action` component renders a button that, when clicked,
+ * opens a modal containing a preview of the result document. This allows users to quickly
+ * view the content of a document without navigating away from the insight panel.
+ *
+ * This component must be used inside an `atomic-insight-result-template` component.
  */
 @customElement('atomic-insight-result-quickview-action')
 @bindings()
