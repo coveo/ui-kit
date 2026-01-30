@@ -2,6 +2,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
+import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import {wrapInInsightLayout} from '@/storybook-utils/insight/insight-layout-wrapper';
@@ -9,6 +10,7 @@ import {wrapInInsightResultList} from '@/storybook-utils/insight/insight-result-
 import {wrapInInsightResultTemplate} from '@/storybook-utils/insight/insight-result-template-wrapper';
 
 const mockInsightApi = new MockInsightApi();
+const mockSearchApi = new MockSearchApi();
 
 // biome-ignore lint/suspicious/noExplicitAny: Mock API response types are loosely defined
 mockInsightApi.searchEndpoint.mock((response: any) => ({
@@ -77,7 +79,10 @@ const meta: Meta = {
       handles: events,
     },
     msw: {
-      handlers: [...mockInsightApi.handlers],
+      handlers: [
+        ...mockInsightApi.handlers,
+        mockSearchApi.htmlEndpoint.generateHandler(),
+      ],
     },
   },
   args,
