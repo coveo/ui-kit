@@ -353,7 +353,9 @@ describe('atomic-ipx-result-link', () => {
       expect(element).toBeDefined();
     });
 
-    it('should fallback gracefully with invalid template', async () => {
+    it('should handle invalid template by replacing with empty string', async () => {
+      const warnSpy = vi.spyOn(mockedEngine.logger, 'warn');
+
       const {link} = await renderComponent({
         props: {hrefTemplate: '$' + '{invalid.syntax}'},
         result: {
@@ -362,8 +364,11 @@ describe('atomic-ipx-result-link', () => {
         } as AnyUnfoldedItem,
       });
 
-      // Should not throw and should still render a link
       await expect.element(link).toBeInTheDocument();
+      await expect.element(link).toHaveAttribute('href', '');
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('invalid.syntax')
+      );
     });
 
     it('should update href when hrefTemplate property changes', async () => {
