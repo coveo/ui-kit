@@ -7,7 +7,7 @@ import {
 } from '@coveo/headless/commerce';
 import {useCallback, useEffect} from 'react';
 import NotifyTrigger from '../components/triggers/notify-trigger.js';
-import ListingInterface from '../components/use-cases/listing-interface/listing-interface.js';
+import SearchAndListingInterface from '../components/use-cases/search-and-listing-interface/search-and-listing-interface.js';
 
 interface IProductListingPageProps {
   engine: CommerceEngine;
@@ -86,8 +86,8 @@ export default function ProductListingPage(props: IProductListingPageProps) {
     <div className="ProductListingPage">
       <h2 className="PageTitle">{pageName}</h2>
       <NotifyTrigger controller={buildNotifyTrigger(engine)} />
-      <ListingInterface
-        listingController={productListingController}
+      <SearchAndListingInterface
+        searchOrListingController={productListingController}
         cartController={cartController}
         navigate={navigate}
       />
