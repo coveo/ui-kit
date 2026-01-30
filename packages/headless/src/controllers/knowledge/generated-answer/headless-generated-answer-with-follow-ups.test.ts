@@ -1,6 +1,7 @@
 import {answerGenerationApi} from '../../../api/knowledge/answer-generation/answer-generation-api.js';
 import type {AnswerGenerationApiState} from '../../../api/knowledge/answer-generation/answer-generation-api-state.js';
 import {selectAnswer} from '../../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
+import {followUpAnswersReducer} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import {getFollowUpAnswersInitialState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
 import {selectAnswerApiQueryParams} from '../../../features/generated-answer/answer-api-selectors.js';
 import {generateHeadAnswer} from '../../../features/generated-answer/generated-answer-actions.js';
@@ -91,10 +92,11 @@ describe('GeneratedAnswerWithFollowUps', () => {
     expect(controller).toBeTruthy();
   });
 
-  it('adds the answerGenerationApi reducer to engine', () => {
+  it('adds the answerGenerationApi and followUpAnswers reducers to engine', () => {
     createGeneratedAnswerWithFollowUps();
     expect(engine.addReducers).toHaveBeenCalledWith({
       [answerGenerationApi.reducerPath]: answerGenerationApi.reducer,
+      followUpAnswers: followUpAnswersReducer,
     });
   });
 

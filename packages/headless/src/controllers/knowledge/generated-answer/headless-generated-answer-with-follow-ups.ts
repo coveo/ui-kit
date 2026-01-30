@@ -5,6 +5,7 @@ import {
 } from '../../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
 import {selectAnswerApiQueryParams} from '../../../features/generated-answer/answer-api-selectors.js';
 import {generateHeadAnswer} from '../../../features/generated-answer/generated-answer-actions.js';
@@ -115,6 +116,7 @@ function loadReducers(
 > {
   engine.addReducers({
     [answerGenerationApi.reducerPath]: answerGenerationApi.reducer,
+    followUpAnswers,
   });
   return true;
 }
