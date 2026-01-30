@@ -1,4 +1,4 @@
-import {existsSync, mkdirSync, readFileSync, writeFileSync} from 'node:fs';
+import {mkdirSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
 
@@ -114,8 +114,7 @@ import {
 } from '@coveo/atomic/components';\n`;
 }
 
-const shimTemplatesCode = `
-const shimTemplates = ()=> {
+const shimTemplatesCode = `const shimTemplates = ()=> {
   // Angular's renderer will add children to a <template> instead of to its
   // content. This shim will force any children added to a <template> to be
   // added to its content instead.
@@ -143,13 +142,7 @@ const SHIM_TEMPLATES_PROVIDER: Provider = {
 }`;
 
 if (litDeclarations.length > 0) {
-  let moduleContent = existsSync(atomicAngularModuleFilePath)
-    ? readFileSync(atomicAngularModuleFilePath, 'utf-8')
-    : '';
-
-  // Failsafe: if shimTemplates is not present, add it
-  if (!moduleContent.includes('shimTemplates')) {
-    moduleContent = `
+  const atomicAngularModuleFileContent = `
 import {CommonModule} from '@angular/common';
 import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular/core';
 
@@ -178,20 +171,7 @@ export class AtomicAngularModule {
     };
   }
 }`;
-  } else {
-    // Update existing module content
-    moduleContent = moduleContent
-      .replace(
-        /const DECLARATIONS = \[\n/m,
-        `const DECLARATIONS = [\n${[...litDeclarations].sort().join(',\n')},\n`
-      )
-      .replace(
-        /^import \{$/m,
-        `import {\n${[...litDeclarations].sort().join(',\n')},`
-      );
-  }
-
-  writeFileSync(atomicAngularModuleFilePath, moduleContent);
+  writeFileSync(atomicAngularModuleFilePath, atomicAngularModuleFileContent);
 }
 
 writeFileSync(
