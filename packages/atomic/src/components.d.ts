@@ -9,6 +9,7 @@ import { DateFilterRange, DateRangeRequest, GeneratedAnswer, ResultTemplate, Res
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
+import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { RangeFacetSortCriterion as InsightRangeFacetSortCriterion, UserAction as IUserAction } from "@coveo/headless/insight";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { i18n } from "i18next";
@@ -17,6 +18,7 @@ export { DateFilterRange, DateRangeRequest, GeneratedAnswer, ResultTemplate, Res
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
+export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { RangeFacetSortCriterion as InsightRangeFacetSortCriterion, UserAction as IUserAction } from "@coveo/headless/insight";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { i18n } from "i18next";
@@ -118,21 +120,9 @@ export namespace Components {
     }
     interface AtomicInsightResultActionBar {
     }
-    interface AtomicInsightResultAttachToCaseIndicator {
+    interface AtomicInsightResultAttachToCaseAction {
     }
-    interface AtomicInsightResultChildren {
-        /**
-          * The expected size of the image displayed in the children results.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
-         */
-        "inheritTemplates": boolean;
-        /**
-          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
-         */
-        "noResultText": string;
+    interface AtomicInsightResultAttachToCaseIndicator {
     }
     interface AtomicInsightResultChildrenTemplate {
         /**
@@ -313,12 +303,6 @@ export namespace Components {
         "displayFooterSlot": boolean;
         "isOpen"?: boolean;
     }
-    interface AtomicIpxEmbedded {
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
-         */
-        "container"?: HTMLElement;
-    }
     interface AtomicIpxModal {
         /**
           * The container to hide from the tabindex and accessibility DOM when the modal is closed.
@@ -490,13 +474,13 @@ export interface AtomicInsightResultActionCustomEvent<T> extends CustomEvent<T> 
     detail: T;
     target: HTMLAtomicInsightResultActionElement;
 }
+export interface AtomicInsightResultAttachToCaseActionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicInsightResultAttachToCaseActionElement;
+}
 export interface AtomicIpxBodyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicIpxBodyElement;
-}
-export interface AtomicIpxEmbeddedCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicIpxEmbeddedElement;
 }
 export interface AtomicIpxModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -568,17 +552,29 @@ declare global {
         prototype: HTMLAtomicInsightResultActionBarElement;
         new (): HTMLAtomicInsightResultActionBarElement;
     };
+    interface HTMLAtomicInsightResultAttachToCaseActionElementEventMap {
+        "atomic/insight/attachToCase/attach": InsightResultAttachToCaseEvent;
+        "atomic/insight/attachToCase/detach": InsightResultAttachToCaseEvent;
+    }
+    interface HTMLAtomicInsightResultAttachToCaseActionElement extends Components.AtomicInsightResultAttachToCaseAction, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicInsightResultAttachToCaseActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultAttachToCaseActionElement, ev: AtomicInsightResultAttachToCaseActionCustomEvent<HTMLAtomicInsightResultAttachToCaseActionElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicInsightResultAttachToCaseActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultAttachToCaseActionElement, ev: AtomicInsightResultAttachToCaseActionCustomEvent<HTMLAtomicInsightResultAttachToCaseActionElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicInsightResultAttachToCaseActionElement: {
+        prototype: HTMLAtomicInsightResultAttachToCaseActionElement;
+        new (): HTMLAtomicInsightResultAttachToCaseActionElement;
+    };
     interface HTMLAtomicInsightResultAttachToCaseIndicatorElement extends Components.AtomicInsightResultAttachToCaseIndicator, HTMLStencilElement {
     }
     var HTMLAtomicInsightResultAttachToCaseIndicatorElement: {
         prototype: HTMLAtomicInsightResultAttachToCaseIndicatorElement;
         new (): HTMLAtomicInsightResultAttachToCaseIndicatorElement;
-    };
-    interface HTMLAtomicInsightResultChildrenElement extends Components.AtomicInsightResultChildren, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightResultChildrenElement: {
-        prototype: HTMLAtomicInsightResultChildrenElement;
-        new (): HTMLAtomicInsightResultChildrenElement;
     };
     interface HTMLAtomicInsightResultChildrenTemplateElement extends Components.AtomicInsightResultChildrenTemplate, HTMLStencilElement {
     }
@@ -662,23 +658,6 @@ declare global {
     var HTMLAtomicIpxBodyElement: {
         prototype: HTMLAtomicIpxBodyElement;
         new (): HTMLAtomicIpxBodyElement;
-    };
-    interface HTMLAtomicIpxEmbeddedElementEventMap {
-        "animationEnded": never;
-    }
-    interface HTMLAtomicIpxEmbeddedElement extends Components.AtomicIpxEmbedded, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicIpxEmbeddedElementEventMap>(type: K, listener: (this: HTMLAtomicIpxEmbeddedElement, ev: AtomicIpxEmbeddedCustomEvent<HTMLAtomicIpxEmbeddedElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicIpxEmbeddedElementEventMap>(type: K, listener: (this: HTMLAtomicIpxEmbeddedElement, ev: AtomicIpxEmbeddedCustomEvent<HTMLAtomicIpxEmbeddedElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicIpxEmbeddedElement: {
-        prototype: HTMLAtomicIpxEmbeddedElement;
-        new (): HTMLAtomicIpxEmbeddedElement;
     };
     interface HTMLAtomicIpxModalElementEventMap {
         "animationEnded": never;
@@ -776,8 +755,8 @@ declare global {
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
         "atomic-insight-result-action-bar": HTMLAtomicInsightResultActionBarElement;
+        "atomic-insight-result-attach-to-case-action": HTMLAtomicInsightResultAttachToCaseActionElement;
         "atomic-insight-result-attach-to-case-indicator": HTMLAtomicInsightResultAttachToCaseIndicatorElement;
-        "atomic-insight-result-children": HTMLAtomicInsightResultChildrenElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
         "atomic-insight-result-quickview-action": HTMLAtomicInsightResultQuickviewActionElement;
@@ -788,7 +767,6 @@ declare global {
         "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
         "atomic-insight-user-actions-timeline": HTMLAtomicInsightUserActionsTimelineElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
-        "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
         "atomic-ipx-modal": HTMLAtomicIpxModalElement;
         "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
@@ -816,6 +794,10 @@ declare namespace LocalJSX {
           * Indicates whether the modal is open.
          */
         "isOpen"?: boolean;
+        /**
+          * @migration Stencil's
+          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('feedbackSent', { bubbles: true, composed: true, cancelable: true })`
+         */
         "onFeedbackSent"?: (event: AtomicGeneratedAnswerFeedbackModalCustomEvent<any>) => void;
     }
     interface AtomicInsightFoldedResultList {
@@ -882,6 +864,10 @@ declare namespace LocalJSX {
           * Specify the result action icon to display.
          */
         "icon"?: string;
+        /**
+          * @migration Stencil's
+          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('atomicInsightResultActionClicked', { bubbles: true, composed: true, cancelable: true, detail: ... })`
+         */
         "onAtomicInsightResultActionClicked"?: (event: AtomicInsightResultActionCustomEvent<InsightResultActionClickedEvent>) => void;
         /**
           * The text tooltip to show on the result action icon.
@@ -894,21 +880,15 @@ declare namespace LocalJSX {
     }
     interface AtomicInsightResultActionBar {
     }
-    interface AtomicInsightResultAttachToCaseIndicator {
+    interface AtomicInsightResultAttachToCaseAction {
+        /**
+          * @migration Stencil's
+          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('atomic/insight/attachToCase/attach', { bubbles: true, composed: true, cancelable: true, detail: ... })` `new CustomEvent('atomic/insight/attachToCase/detach', { bubbles: true, composed: true, cancelable: true, detail: ... })`
+         */
+        "onAtomic/insight/attachToCase/attach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
+        "onAtomic/insight/attachToCase/detach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
     }
-    interface AtomicInsightResultChildren {
-        /**
-          * The expected size of the image displayed in the children results.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
-         */
-        "inheritTemplates"?: boolean;
-        /**
-          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
-         */
-        "noResultText"?: string;
+    interface AtomicInsightResultAttachToCaseIndicator {
     }
     interface AtomicInsightResultChildrenTemplate {
         /**
@@ -1079,14 +1059,11 @@ declare namespace LocalJSX {
     interface AtomicIpxBody {
         "displayFooterSlot"?: boolean;
         "isOpen"?: boolean;
-        "onAnimationEnded"?: (event: AtomicIpxBodyCustomEvent<never>) => void;
-    }
-    interface AtomicIpxEmbedded {
         /**
-          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
+          * @migration Stencil's
+          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('animationEnded', { bubbles: true, composed: true, cancelable: true })`
          */
-        "container"?: HTMLElement;
-        "onAnimationEnded"?: (event: AtomicIpxEmbeddedCustomEvent<never>) => void;
+        "onAnimationEnded"?: (event: AtomicIpxBodyCustomEvent<never>) => void;
     }
     interface AtomicIpxModal {
         /**
@@ -1094,6 +1071,10 @@ declare namespace LocalJSX {
          */
         "container"?: HTMLElement;
         "isOpen"?: boolean;
+        /**
+          * @migration Stencil's
+          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('animationEnded', { bubbles: true, composed: true, cancelable: true })`
+         */
         "onAnimationEnded"?: (event: AtomicIpxModalCustomEvent<never>) => void;
         "source"?: HTMLElement;
     }
@@ -1204,6 +1185,10 @@ declare namespace LocalJSX {
         "label": string;
         "max"?: string;
         "min"?: string;
+        /**
+          * @migration Stencil's
+          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('atomic/dateInputApply', { bubbles: true, composed: true, cancelable: true, detail: ... })`
+         */
         "onAtomic/dateInputApply"?: (event: AtomicStencilFacetDateInputCustomEvent<any>) => void;
         "rangeGetter": () => DateFilterRange | undefined;
         "rangeSetter": (range: DateRangeRequest) => void;
@@ -1233,8 +1218,8 @@ declare namespace LocalJSX {
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
         "atomic-insight-result-action": AtomicInsightResultAction;
         "atomic-insight-result-action-bar": AtomicInsightResultActionBar;
+        "atomic-insight-result-attach-to-case-action": AtomicInsightResultAttachToCaseAction;
         "atomic-insight-result-attach-to-case-indicator": AtomicInsightResultAttachToCaseIndicator;
-        "atomic-insight-result-children": AtomicInsightResultChildren;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
         "atomic-insight-result-list": AtomicInsightResultList;
         "atomic-insight-result-quickview-action": AtomicInsightResultQuickviewAction;
@@ -1245,7 +1230,6 @@ declare namespace LocalJSX {
         "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
         "atomic-insight-user-actions-timeline": AtomicInsightUserActionsTimeline;
         "atomic-ipx-body": AtomicIpxBody;
-        "atomic-ipx-embedded": AtomicIpxEmbedded;
         "atomic-ipx-modal": AtomicIpxModal;
         "atomic-ipx-recs-list": AtomicIpxRecsList;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
@@ -1269,8 +1253,8 @@ declare module "@stencil/core" {
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
             "atomic-insight-result-action-bar": LocalJSX.AtomicInsightResultActionBar & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionBarElement>;
+            "atomic-insight-result-attach-to-case-action": LocalJSX.AtomicInsightResultAttachToCaseAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseActionElement>;
             "atomic-insight-result-attach-to-case-indicator": LocalJSX.AtomicInsightResultAttachToCaseIndicator & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseIndicatorElement>;
-            "atomic-insight-result-children": LocalJSX.AtomicInsightResultChildren & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
             "atomic-insight-result-quickview-action": LocalJSX.AtomicInsightResultQuickviewAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultQuickviewActionElement>;
@@ -1293,7 +1277,6 @@ declare module "@stencil/core" {
              */
             "atomic-insight-user-actions-timeline": LocalJSX.AtomicInsightUserActionsTimeline & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsTimelineElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
-            "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
             "atomic-ipx-modal": LocalJSX.AtomicIpxModal & JSXBase.HTMLAttributes<HTMLAtomicIpxModalElement>;
             /**
              * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.

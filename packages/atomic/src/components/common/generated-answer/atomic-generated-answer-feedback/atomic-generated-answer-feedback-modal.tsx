@@ -68,6 +68,12 @@ export class AtomicGeneratedAnswerFeedbackModal
 
   private linkInputRef?: HTMLInputElement;
 
+  /**
+   * @migration Stencil's @Event() decorator defaults to: bubbles=true, composed=true, cancelable=true.
+   * Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false.
+   * When migrating to Lit, explicitly set all three options to preserve behavior:
+   * `new CustomEvent('feedbackSent', { bubbles: true, composed: true, cancelable: true })`
+   */
   @Event() feedbackSent!: EventEmitter;
 
   @Watch('isOpen')

@@ -19,4 +19,8 @@ export class MockAnswerApi implements MockApi {
   get handlers(): HttpHandler[] {
     return [this.generateEndPoint.generateHandler()];
   }
+
+  clearAll(): void {
+    this.generateEndPoint.clear();
+  }
 }
