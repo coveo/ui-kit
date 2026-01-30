@@ -64,7 +64,7 @@ type StateNeededByGeneratedAnswerStream = ConfigurationSection &
 const stringValue = new StringValue({required: true});
 const optionalStringValue = new StringValue();
 const booleanValue = new BooleanValue({required: true});
-const citationSchema = {
+export const citationSchema = {
   id: stringValue,
   title: stringValue,
   uri: stringValue,
@@ -72,10 +72,11 @@ const citationSchema = {
   clickUri: optionalStringValue,
 };
 
-const answerContentFormatSchema = new StringValue<GeneratedContentFormat>({
-  required: true,
-  constrainTo: generatedContentFormat,
-});
+export const answerContentFormatSchema =
+  new StringValue<GeneratedContentFormat>({
+    required: true,
+    constrainTo: generatedContentFormat,
+  });
 
 export interface GeneratedAnswerErrorPayload {
   message?: string;

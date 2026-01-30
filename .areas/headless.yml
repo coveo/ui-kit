@@ -8,3 +8,6 @@ file_patterns:
   - samples/headless/**
 reviewers:
   dxui: ~
+
+review_bypass:
+  integration/139346: exempt # Developer eXperience Bot. Important for releases

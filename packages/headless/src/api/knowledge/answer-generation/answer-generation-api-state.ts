@@ -30,18 +30,15 @@ export interface GeneratedAnswerServerState {
 }
 
 export const initialAnswerGenerationServerState =
-  (): GeneratedAnswerServerState => {
-    console.log('initialAnswerGenerationServerState called+-+-+-+ -+-+ -+');
-    return {
-      contentFormat: undefined,
-      answer: undefined,
-      citations: undefined,
-      error: undefined,
-      generated: false,
-      isStreaming: false,
-      isLoading: true,
-    };
-  };
+  (): GeneratedAnswerServerState => ({
+    contentFormat: undefined,
+    answer: undefined,
+    citations: undefined,
+    error: undefined,
+    generated: false,
+    isStreaming: false,
+    isLoading: true,
+  });
 
 interface AnswerGenerationApiSection {
   // CombinedState is an internal type from RTK Query that is used directly to break dependency on actual
