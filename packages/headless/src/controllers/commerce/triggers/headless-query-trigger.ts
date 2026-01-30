@@ -11,15 +11,33 @@ import {buildController} from '../../controller/headless-controller.js';
 import type {QueryTrigger} from '../../core/triggers/headless-core-query-trigger.js';
 
 /**
+ * Options for configuring the `QueryTrigger` controller.
+ * @group Buildable controllers
+ * @category QueryTrigger
+ */
+export interface QueryTriggerOptions {
+  /**
+   * When set to true, fills the `results` field rather than the `products` field
+   * in the response. It may also include Spotlight Content in the results.
+   * @default false
+   */
+  enableResults?: boolean;
+}
+
+/**
  * Creates a `QueryTrigger` controller instance.
  *
  * @param engine - The headless commerce engine.
+ * @param options - The configurable `QueryTrigger` controller options.
  * @returns A `QueryTrigger` controller instance.
  *
  * @group Buildable controllers
  * @category QueryTrigger
  * */
-export function buildQueryTrigger(engine: CommerceEngine): QueryTrigger {
+export function buildQueryTrigger(
+  engine: CommerceEngine,
+  {enableResults = false}: QueryTriggerOptions = {enableResults: false}
+): QueryTrigger {
   if (!loadQueryTriggerReducers(engine)) {
     throw loadReducerError;
   }
@@ -47,7 +65,7 @@ export function buildQueryTrigger(engine: CommerceEngine): QueryTrigger {
     undo() {
       dispatch(updateIgnoreQueryTrigger({q: modification()}));
       dispatch(updateQuery({query: originalQuery()}));
-      dispatch(executeSearch());
+      dispatch(executeSearch({enableResults}));
     },
   };
 }

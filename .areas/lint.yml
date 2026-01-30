@@ -1,0 +1,11 @@
+description: Linting configuration files
+file_patterns:
+  - biome.jsonc
+  - lint-staged.config.js
+
+reviewers:
+  dxui:
+    minimum_approvals: 1
+
+review_bypass:
+  integration/139346: exempt # Developer eXperience Bot. Important for releases
