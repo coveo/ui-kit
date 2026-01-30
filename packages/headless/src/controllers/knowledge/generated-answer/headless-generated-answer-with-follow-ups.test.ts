@@ -304,11 +304,12 @@ describe('GeneratedAnswerWithFollowUps', () => {
           feedbackSubmitted: false,
           isAnswerGenerated: true,
           cannotAnswer: false,
+          isActive: false,
         };
 
         engine = buildEngineWithGeneratedAnswer({
           followUpAnswers: {
-            id: 'session-123',
+            conversationId: 'session-123',
             isEnabled: true,
             followUpAnswers: [exampleFollowUpAnswers],
           },
@@ -317,7 +318,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
         const controller = createGeneratedAnswerWithFollowUps();
 
         expect(controller.state.followUpAnswers).toEqual({
-          id: 'session-123',
+          conversationId: 'session-123',
           isEnabled: true,
           followUpAnswers: [exampleFollowUpAnswers],
         });
@@ -331,7 +332,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
         const controller = createGeneratedAnswerWithFollowUps();
 
         expect(controller.state.followUpAnswers).toEqual({
-          id: '',
+          conversationId: '',
           isEnabled: false,
           followUpAnswers: [],
         });

@@ -40,6 +40,7 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload.js';
+import {selectAgentId} from '../configuration/configuration-selectors.js';
 import {
   logGeneratedAnswerResponseLinked,
   logGeneratedAnswerStreamEnd,
@@ -63,7 +64,7 @@ type StateNeededByGeneratedAnswerStream = ConfigurationSection &
 const stringValue = new StringValue({required: true});
 const optionalStringValue = new StringValue();
 const booleanValue = new BooleanValue({required: true});
-const citationSchema = {
+export const citationSchema = {
   id: stringValue,
   title: stringValue,
   uri: stringValue,
@@ -71,10 +72,11 @@ const citationSchema = {
   clickUri: optionalStringValue,
 };
 
-const answerContentFormatSchema = new StringValue<GeneratedContentFormat>({
-  required: true,
-  constrainTo: generatedContentFormat,
-});
+export const answerContentFormatSchema =
+  new StringValue<GeneratedContentFormat>({
+    required: true,
+    constrainTo: generatedContentFormat,
+  });
 
 export interface GeneratedAnswerErrorPayload {
   message?: string;
@@ -371,6 +373,14 @@ export const generateAnswer = createAsyncThunk<
   }
 );
 
+/**
+ * Thunk to generate the head answer as part of the generated answer with follow-ups feature.
+ *
+ * This action initiates the generation of the main answer when using the Answer Generation API
+ * with an agent configuration. It requires an **agent ID** to be present in the engine configuration.
+ *
+ * @internal
+ */
 export const generateHeadAnswer = createAsyncThunk<
   void,
   void,
@@ -379,7 +389,9 @@ export const generateHeadAnswer = createAsyncThunk<
   'generatedAnswerWithFollowUps/generateHeadAnswer',
   async (_, {getState, dispatch, extra: {navigatorContext, logger}}) => {
     const state = getState() as AnswerGenerationApiState;
-    if (!state.configuration.knowledge.agentId) {
+    const agentId = selectAgentId(state);
+
+    if (!agentId) {
       logger.warn(
         'Missing agentId in engine configuration. ' +
           'The generateHeadAnswer action requires an agent ID.'
