@@ -3,6 +3,7 @@ import {buildAttachToCase} from '@coveo/headless/insight';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {renderInAtomicInsightResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-result-fixture';
+import {buildFakeInsightEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/engine';
 import {buildFakeInsightResult} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/result';
 import type {AtomicInsightResultAttachToCaseAction} from './atomic-insight-result-attach-to-case-action';
 import './atomic-insight-result-attach-to-case-action';
@@ -12,6 +13,15 @@ vi.mock('@coveo/headless/insight', {spy: true});
 describe('atomic-insight-result-attach-to-case-action', () => {
   let mockResult: Result;
   let mockAttachToCase: AttachToCase;
+
+  const mockedEngine = buildFakeInsightEngine({
+    state: {
+      insightCaseContext: {
+        caseId: 'test-case-id',
+        caseNumber: 'CASE-123',
+      },
+    },
+  });
 
   const renderComponent = async (
     options: {result?: Result; isAttached?: boolean} = {}
@@ -33,10 +43,7 @@ describe('atomic-insight-result-attach-to-case-action', () => {
         selector: 'atomic-insight-result-attach-to-case-action',
         result: resultToUse,
         bindings: (bindings) => {
-          bindings.engine.state.insightCaseContext = {
-            caseId: 'test-case-id',
-            caseNumber: 'CASE-123',
-          };
+          bindings.engine = mockedEngine;
           return bindings;
         },
       });
@@ -83,6 +90,45 @@ describe('atomic-insight-result-attach-to-case-action', () => {
 
       expect(element!.attachToCase).toBe(mockAttachToCase);
     });
+
+    it('should use empty string for caseId when insightCaseContext is missing', async () => {
+      const engineWithoutCaseContext = buildFakeInsightEngine({
+        state: {},
+      });
+
+      mockAttachToCase = {
+        isAttached: vi.fn().mockReturnValue(false),
+        attach: vi.fn(),
+        detach: vi.fn(),
+        subscribe: vi.fn().mockReturnValue(() => {}),
+      };
+
+      vi.mocked(buildAttachToCase).mockReturnValue(mockAttachToCase);
+
+      const {element} =
+        await renderInAtomicInsightResult<AtomicInsightResultAttachToCaseAction>(
+          {
+            template: html`<atomic-insight-result-attach-to-case-action></atomic-insight-result-attach-to-case-action>`,
+            selector: 'atomic-insight-result-attach-to-case-action',
+            result: mockResult,
+            bindings: (bindings) => {
+              bindings.engine = engineWithoutCaseContext;
+              return bindings;
+            },
+          }
+        );
+
+      await element?.updateComplete;
+
+      expect(buildAttachToCase).toHaveBeenCalledWith(
+        element!.bindings.engine,
+        expect.objectContaining({
+          options: expect.objectContaining({
+            caseId: '',
+          }),
+        })
+      );
+    });
   });
 
   describe('when rendering', () => {
@@ -114,14 +160,15 @@ describe('atomic-insight-result-attach-to-case-action', () => {
       const {getIcon} = await renderComponent({isAttached: false});
       const icon = getIcon();
 
-      expect(icon?.getAttribute('icon')).toContain('attach.svg');
+      expect(icon?.getAttribute('icon')).toContain('<svg');
+      expect(icon?.getAttribute('icon')).toContain('<path');
     });
 
     it('should display the attach tooltip', async () => {
       const {getButton} = await renderComponent({isAttached: false});
       const button = getButton();
 
-      expect(button?.getAttribute('title')).toBe('attach-to-case');
+      expect(button?.getAttribute('title')).toBe('Attach to case');
     });
 
     it('should dispatch "atomic/insight/attachToCase/attach" event when clicked', async () => {
@@ -143,14 +190,15 @@ describe('atomic-insight-result-attach-to-case-action', () => {
       const {getIcon} = await renderComponent({isAttached: true});
       const icon = getIcon();
 
-      expect(icon?.getAttribute('icon')).toContain('detach.svg');
+      expect(icon?.getAttribute('icon')).toContain('<svg');
+      expect(icon?.getAttribute('icon')).toContain('<path');
     });
 
     it('should display the detach tooltip', async () => {
       const {getButton} = await renderComponent({isAttached: true});
       const button = getButton();
 
-      expect(button?.getAttribute('title')).toBe('detach-from-case');
+      expect(button?.getAttribute('title')).toBe('Detach from case');
     });
 
     it('should dispatch "atomic/insight/attachToCase/detach" event when clicked', async () => {
