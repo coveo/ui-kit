@@ -22,14 +22,11 @@ describe('atomic-insight-result-quickview-action', () => {
   const mockedEngine = buildFakeInsightEngine();
 
   const parts = (element: AtomicInsightResultQuickviewAction) => ({
-    container: element?.shadowRoot?.querySelector(
-      '[part="result-action-container"]'
-    ),
-    button: element?.shadowRoot?.querySelector('[part="result-action-button"]'),
-    icon: element?.shadowRoot?.querySelector('[part="result-action-icon"]'),
+    container: element?.querySelector('[part="result-action-container"]'),
+    button: element?.querySelector('[part="result-action-button"]'),
+    icon: element?.querySelector('[part="result-action-icon"]'),
   });
 
-  // Build a fake insight quickview controller (simplified API)
   const buildFakeInsightQuickview = ({
     state,
   }: {
@@ -176,7 +173,7 @@ describe('atomic-insight-result-quickview-action', () => {
         quickviewState: {resultHasPreview: true},
       });
 
-      expect(parts.button).toBeDefined();
+      expect(parts.button).toBeInTheDocument();
     });
 
     it('should render button with icon', async () => {
@@ -184,8 +181,8 @@ describe('atomic-insight-result-quickview-action', () => {
         quickviewState: {resultHasPreview: true},
       });
 
-      const icon = element.shadowRoot?.querySelector('atomic-icon');
-      expect(icon).toBeDefined();
+      const icon = element.querySelector('atomic-icon');
+      expect(icon).toBeInTheDocument();
     });
   });
 
@@ -195,7 +192,7 @@ describe('atomic-insight-result-quickview-action', () => {
         quickviewState: {resultHasPreview: false},
       });
 
-      expect(parts.button).toBeNull();
+      expect(parts.button).not.toBeInTheDocument();
     });
   });
 
@@ -236,7 +233,7 @@ describe('atomic-insight-result-quickview-action', () => {
       await element.updateComplete;
 
       const modal = atomicInterface.querySelector('atomic-quickview-modal');
-      expect(modal).toBeDefined();
+      expect(modal).toBeInTheDocument();
     });
 
     it('should reuse existing quickview modal element', async () => {
@@ -296,7 +293,7 @@ describe('atomic-insight-result-quickview-action', () => {
       await element.updateComplete;
 
       const modal = atomicInterface.querySelector('atomic-quickview-modal');
-      expect(modal).toBeDefined();
+      expect(modal).toBeInTheDocument();
     });
   });
 });
