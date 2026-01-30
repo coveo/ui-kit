@@ -2,7 +2,7 @@ import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   type FollowUpEndpointArgs,
   followUpEndpoint,
-  initiateAnswerEndpoint,
+  initiateFollowUpEndpoint,
 } from './follow-up-endpoint.js';
 
 vi.mock('../streaming/answer-streaming-runner.js');
@@ -27,12 +27,11 @@ describe('follow-up-endpoint', () => {
     it('should call endpoint initiate with provided args', () => {
       const mockInitiate = vi.fn();
       vi.spyOn(
-        followUpEndpoint.endpoints.generateAnswer,
+        followUpEndpoint.endpoints.generateFollowUpAnswer,
         'initiate'
       ).mockImplementation(mockInitiate);
 
-      initiateAnswerEndpoint(mockArgs);
-
+      initiateFollowUpEndpoint(mockArgs);
       expect(mockInitiate).toHaveBeenCalledWith(mockArgs);
     });
   });

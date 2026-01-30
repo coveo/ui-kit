@@ -33,7 +33,7 @@ export type FollowUpEndpointArgs = {
 export const followUpEndpoint = answerGenerationApi.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
-    generateAnswer: builder.query<
+    generateFollowUpAnswer: builder.query<
       GeneratedAnswerServerState,
       FollowUpEndpointArgs
     >({
@@ -68,6 +68,6 @@ export const followUpEndpoint = answerGenerationApi.injectEndpoints({
 /**
  * Initiates a follow up answer generation query with the specified strategy and parameters.
  */
-export const initiateAnswerEndpoint = (args: FollowUpEndpointArgs) => {
-  return followUpEndpoint.endpoints.generateAnswer.initiate(args);
+export const initiateFollowUpEndpoint = (args: FollowUpEndpointArgs) => {
+  return followUpEndpoint.endpoints.generateFollowUpAnswer.initiate(args);
 };
