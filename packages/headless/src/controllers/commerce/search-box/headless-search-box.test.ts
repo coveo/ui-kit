@@ -245,5 +245,56 @@ describe('headless search box', () => {
       searchBox.submit();
       expect(clearQuerySuggest).toHaveBeenCalledWith({id});
     });
+
+    it('when enableResults is true, dispatches #executeSearch with enableResults: true', () => {
+      searchBox = buildSearchBox(engine, {
+        ...props,
+        options: {...props.options, enableResults: true},
+      });
+
+      searchBox.submit();
+      expect(executeSearch).toHaveBeenCalledWith({enableResults: true});
+    });
+
+    it('when enableResults is false, dispatches #executeSearch with enableResults: false', () => {
+      searchBox = buildSearchBox(engine, {
+        ...props,
+        options: {...props.options, enableResults: false},
+      });
+
+      searchBox.submit();
+      expect(executeSearch).toHaveBeenCalledWith({enableResults: false});
+    });
+
+    it('when enableResults is not specified, dispatches #executeSearch with enableResults: false (default)', () => {
+      searchBox = buildSearchBox(engine, props);
+
+      searchBox.submit();
+      expect(executeSearch).toHaveBeenCalledWith({enableResults: false});
+    });
+  });
+
+  describe('#selectSuggestion with enableResults', () => {
+    it('when enableResults is true, dispatches #executeSearch with enableResults: true', () => {
+      searchBox = buildSearchBox(engine, {
+        ...props,
+        options: {...props.options, enableResults: true},
+      });
+
+      const suggestion = 'a';
+      searchBox.selectSuggestion(suggestion);
+      expect(executeSearch).toHaveBeenCalledWith({enableResults: true});
+    });
+
+    it('when enableResults is false, dispatches #executeSearch with enableResults: false', () => {
+      searchBox = buildSearchBox(engine, {
+        ...props,
+        options: {...props.options, enableResults: false},
+      });
+
+      const suggestion = 'a';
+      searchBox.selectSuggestion(suggestion);
+      expect(executeSearch).toHaveBeenCalledWith({enableResults: false});
+    });
   });
 });

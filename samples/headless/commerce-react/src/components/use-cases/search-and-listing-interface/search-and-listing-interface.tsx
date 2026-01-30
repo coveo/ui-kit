@@ -1,6 +1,7 @@
 import type {
   Cart,
   ChildProduct,
+  Search as HeadlessSearch,
   ProductListing,
 } from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
@@ -11,47 +12,60 @@ import ProductsPerPage from '../../products-per-page/products-per-page.js';
 import ResultList from '../../result-list/result-list.js';
 import Sort from '../../sort/sort.js';
 import Summary from '../../summary/summary.js';
-import './listing-interface.css';
+import './search-and-listing-interface.css';
 import ShowMore from '../../show-more/show-more.js';
 
-interface IListingInterface {
-  listingController: ProductListing;
+interface ISearchAndListingInterface {
+  searchOrListingController: HeadlessSearch | ProductListing;
   cartController: Cart;
   navigate: (pathName: string) => void;
 }
 
-export default function ListingInterface(props: IListingInterface) {
-  const {listingController, cartController, navigate} = props;
+export default function SearchAndListingInterface(
+  props: ISearchAndListingInterface
+) {
+  const {searchOrListingController, cartController, navigate} = props;
 
-  const [listingState, setListingState] = useState(listingController.state);
+  const [searchOrListingState, setSearchOrListingState] = useState(
+    searchOrListingController.state
+  );
 
   useEffect(() => {
-    listingController.subscribe(() => setListingState(listingController.state));
-  }, [listingController]);
+    searchOrListingController.subscribe(() =>
+      setSearchOrListingState(searchOrListingController.state)
+    );
+  }, [searchOrListingController]);
 
-  const summaryController = listingController.summary();
-  const paginationController = listingController.pagination();
+  const summaryController = searchOrListingController.summary();
+  const paginationController = searchOrListingController.pagination();
 
   return (
-    <div className="ListingInterface row">
+    <div className="SearchAndListingInterface row">
       <div className="row">
-        <Sort controller={listingController.sort()} />
+        <Sort controller={searchOrListingController.sort()} />
         <Summary controller={summaryController} />
       </div>
       <div className="column small">
-        <FacetGenerator controller={listingController.facetGenerator()} />
+        <FacetGenerator
+          controller={searchOrListingController.facetGenerator()}
+        />
       </div>
       <div className="column medium">
-        <BreadcrumbManager controller={listingController.breadcrumbManager()} />
+        <BreadcrumbManager
+          controller={searchOrListingController.breadcrumbManager()}
+        />
+
         <ResultList
-          results={listingState.results}
-          productControllerBuilder={listingController.interactiveProduct}
+          results={searchOrListingState.results}
+          productControllerBuilder={
+            searchOrListingController.interactiveProduct
+          }
           spotlightContentControllerBuilder={
-            listingController.interactiveSpotlightContent
+            searchOrListingController.interactiveSpotlightContent
           }
           cartController={cartController}
           promoteChildToParent={(child: ChildProduct) =>
-            listingController.promoteChildToParent(child)
+            searchOrListingController.promoteChildToParent(child)
           }
           navigate={navigate}
         />
