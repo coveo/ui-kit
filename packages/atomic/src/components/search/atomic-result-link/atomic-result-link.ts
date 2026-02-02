@@ -96,7 +96,8 @@ export class AtomicResultLink
     }
   }
 
-  willUpdate() {
+  willUpdate(changedProperties: Map<string, unknown>) {
+    super.willUpdate(changedProperties);
     this.linkAttributes = getAttributesFromLinkSlotContent(this, 'attributes');
   }
 
