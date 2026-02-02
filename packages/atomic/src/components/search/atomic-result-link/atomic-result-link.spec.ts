@@ -235,6 +235,19 @@ describe('atomic-result-link', () => {
       expect(element).toBeDefined();
     });
 
+    it('should not render fallback atomic-result-text when custom slotted content is provided', async () => {
+      const {element} = await renderComponent({
+        slottedContent: 'Custom Link Text',
+      });
+
+      await element.updateComplete;
+
+      const atomicResultText = element.querySelector('atomic-result-text');
+      expect(atomicResultText).toBeNull();
+
+      expect(element.textContent?.trim()).toBe('Custom Link Text');
+    });
+
     it('should configure interactive result methods', async () => {
       await renderComponent();
 
