@@ -10,23 +10,11 @@ import {renderGeneratedContentContainer} from '@/src/components/common/generated
 import {renderRetryPrompt} from '@/src/components/common/generated-answer/retry-prompt';
 import {renderShowButton} from '@/src/components/common/generated-answer/show-button';
 import {renderSourceCitations} from '@/src/components/common/generated-answer/source-citations';
-import {renderHeading} from '@/src/components/common/heading';
-import {renderSwitch} from '@/src/components/common/switch';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {renderGeneratingAnswerLabel} from './render-generating-answer-label';
 import '@/src/components/common/atomic-icon/atomic-icon';
 import '@/src/components/search/atomic-previous-answers-list/atomic-previous-answers-list';
-
-const getShowPreviousQuestionsLabel = (translator: i18n, count: number) => {
-  if (!count) {
-    return '';
-  }
-  const fallback = `Show ${count} previous question${count === 1 ? '' : 's'}`;
-  return translator.t('show-previous-questions', {
-    count,
-    defaultValue: fallback,
-  });
-};
+import '@/src/components/common/accordion-item/accordion-item';
 
 interface FollowUpAnswerForRendering {
   question: string;
@@ -65,29 +53,6 @@ export interface RenderAnswerContentProps {
   onHidePreviousAnswers?: () => void;
 }
 
-const renderTimelineColumn = ({
-  align = 'center',
-  hasPrevious = false,
-  hasNext = false,
-}: {
-  align?: 'start' | 'center';
-  hasPrevious?: boolean;
-  hasNext?: boolean;
-}): TemplateResult => {
-  const alignmentClass = align === 'start' ? 'items-start' : 'items-center';
-  const lineClass = (isVisible: boolean) =>
-    `w-px bg-neutral ${isVisible ? 'flex-1' : 'h-0'}`;
-  return html`
-    <div class="flex w-5 justify-center self-stretch ${alignmentClass}">
-      <div class="flex h-full flex-col items-center">
-        <span class=${lineClass(hasPrevious)}></span>
-        <span class="w-2.5 h-2.5 rounded-full bg-neutral"></span>
-        <span class=${lineClass(hasNext)}></span>
-      </div>
-    </div>
-  `;
-};
-
 /**
  * Renders the main content of the generated answer including header, toggle, answer text, and citations.
  */
@@ -99,261 +64,99 @@ export const renderAnswerContent: FunctionalComponent<
     generatedAnswerState,
     isAnswerVisible,
     hasRetryableError,
-    toggleTooltip,
-    withToggle,
     collapsible,
-    scrollable = false,
-    hidePreviousAnswers = false,
-    previousAnswersCollapsed = false,
     query,
-    initialQuery,
-    agentId,
-    followUpAnswers,
     renderFeedbackAndCopyButtonsSlot,
     renderCitationsSlot,
-    onToggle,
     onRetry,
     onClickShowButton,
-    onTogglePreviousAnswers,
-    onHidePreviousAnswers,
   } = props;
 
-  const hasFollowUps = !!agentId && !!followUpAnswers?.answers?.length;
-  const latestAnswer = hasFollowUps
-    ? followUpAnswers!.answers[followUpAnswers!.answers.length - 1]
-    : null;
-
-  const displayState = latestAnswer || generatedAnswerState;
-  const displayQuery = latestAnswer?.question || query.trim();
-
-  const initialQuestion = (initialQuery || query).trim();
-  const previousAnswers = hasFollowUps
-    ? [
-        ...(generatedAnswerState
-          ? [{...generatedAnswerState, question: initialQuestion}]
-          : []),
-        ...followUpAnswers!.answers.slice(0, -1),
-      ]
-    : [];
-
-  const showPreviousQuestionsLabel = getShowPreviousQuestionsLabel(
-    i18n,
-    previousAnswers.length
-  );
-
-  const hidePreviousQuestionsLabel = i18n.t('hide-previous-questions', {
-    defaultValue: 'Hide previous questions',
-  });
-
-  const showHidePreviousQuestionsButton =
-    previousAnswers.length > 0 &&
-    !previousAnswersCollapsed &&
-    hidePreviousAnswers;
-
-  const showPreviousQuestionsButtonVisible =
-    previousAnswersCollapsed && showPreviousQuestionsLabel;
-
-  const queryRowSpacingClass =
-    previousAnswers.length > 0
-      ? showPreviousQuestionsButtonVisible
-        ? 'pt-0'
-        : 'pt-0'
-      : 'mt-3';
-  const contentContainerClasses =
-    previousAnswers.length > 0 ? 'px-6 pt-2 pb-6' : 'px-6 pb-6';
-
-  const {isStreaming, answer, citations, answerContentFormat} =
-    displayState ?? {};
-
-  const expanded = generatedAnswerState?.expanded;
+  const {isStreaming, answer, citations, answerContentFormat, expanded} =
+    generatedAnswerState ?? {};
   const isExpanded = collapsible ? (expanded ?? true) : true;
-  const showInlineActions = !hasRetryableError && isExpanded;
 
   return html`
-    <div part="generated-content">
-      <div
-        part="header"
-        class="flex items-center ${
-          isAnswerVisible ? 'border-b-1 border-gray-200' : ''
-        } px-6 py-2"
-      >
-        <atomic-icon
-          part="header-icon"
-          class="text-primary h-4 w-4 fill-current"
-          .icon=${'assets://sparkles.svg'}
-        >
-        </atomic-icon>
-        ${renderHeading({
-          props: {
-            level: 0,
-            part: 'header-label',
-            class:
-              'text-primary inline-block rounded-md px-2.5 py-2 font-medium',
-          },
-        })(html`${i18n.t('generated-answer-title')}`)}
-        <div class="ml-auto flex h-9 items-center">
-          ${renderSwitch({
-            props: {
-              part: 'toggle',
-              checked: isAnswerVisible,
-              onToggle,
-              ariaLabel: i18n.t('generated-answer-title'),
-              title: toggleTooltip,
-              withToggle,
-              tabIndex: 0,
-            },
-          })}
-        </div>
-      </div>
-      ${when(
-        isAnswerVisible,
-        () => {
-          const contentClasses = scrollable
-            ? 'overflow-y-auto max-h-[500px]'
-            : '';
-          return html`
-            <div class="${contentClasses}">
-              ${
-                showHidePreviousQuestionsButton
-                  ? html`
-                      <div class="flex items-center gap-4 px-6 py-2 ${previousAnswers.length > 0 ? 'pt-4' : ''} ">
-                        ${renderTimelineColumn({
-                          hasPrevious: false,
-                          hasNext: true,
-                        })}
-                        <button
-                          @click=${() => onHidePreviousAnswers?.()}
-                          class="px-2 py-1 text-sm font-medium text-neutral-dark bg-gray-100 rounded-md border border-gray-100 shadow-inner transition-colors hover:bg-gray-100/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                          type="button"
-                        >
-                          ${hidePreviousQuestionsLabel}
-                        </button>
-                      </div>
-                    `
-                  : nothing
-              }
-              ${
-                previousAnswers.length > 0 && !previousAnswersCollapsed
-                  ? html`
-                      <atomic-previous-answers-list
-                        .previousAnswers=${previousAnswers}
-                        .i18n=${i18n}
-                        .renderFeedbackAndCopyButtonsSlot=${renderFeedbackAndCopyButtonsSlot}
-                        .renderCitationsSlot=${renderCitationsSlot}
-                        .connectToNext=${true}
-                      ></atomic-previous-answers-list>
-                    `
-                  : nothing
-              }
-              <div part="generated-content-container" class="${contentContainerClasses}">
-                ${
-                  showPreviousQuestionsButtonVisible
-                    ? html`
-                        <div class="flex items-center gap-4 py-2">
-                          ${renderTimelineColumn({
-                            hasPrevious: false,
-                            hasNext: true,
-                          })}
-                          <button
-                            @click=${() => onTogglePreviousAnswers?.()}
-                            class="px-2 py-1 text-sm font-medium text-neutral-dark bg-gray-100 rounded-md border border-gray-100 shadow-inner transition-colors hover:bg-gray-100/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                            type="button"
-                          >
-                            ${showPreviousQuestionsLabel}
-                          </button>
-                        </div>
-                      `
-                    : nothing
-                }
+    ${when(
+      isAnswerVisible,
+      () =>
+        html`<div part="generated-content-container" class="px-6 pb-6">
+          <div class="mt-6 flex gap-3">
+            <p
+              class="question-text min-w-0 flex-1 text-base font-semibold leading-6"
+            >
+              ${query}
+            </p>
+            ${when(
+              !hasRetryableError && isExpanded,
+              () => html`
                 <div
-                  class=${`flex items-start justify-between gap-3 ${queryRowSpacingClass}`}
+                  part="feedback-and-copy-buttons"
+                  class="flex h-9 shrink-0 items-center justify-end gap-2"
                 >
-                  <div class=${`flex flex-1 items-center ${previousAnswers.length > 0 ? 'gap-4' : ''}`}>
-                    ${
-                      previousAnswers.length > 0
-                        ? renderTimelineColumn({
-                            align: 'start',
-                            hasPrevious: true,
-                            hasNext: false,
-                          })
-                        : nothing
-                    }
-                    <p class="query-text text-base font-semibold leading-6">
-                      ${displayQuery}
-                    </p>
-                  </div>
-                  ${when(
-                    showInlineActions,
-                    () => html`
-                      <div class="flex items-center gap-2 h-9">
-                        ${renderFeedbackAndCopyButtonsSlot()}
-                      </div>
-                    `
-                  )}
+                  ${renderFeedbackAndCopyButtonsSlot()}
                 </div>
-                ${
-                  hasRetryableError
-                    ? renderRetryPrompt({
-                        props: {
-                          onClick: onRetry,
-                          buttonLabel: i18n.t('retry'),
-                          message: i18n.t('retry-stream-message'),
-                        },
-                      })
-                    : nothing
-                }
-                ${
-                  !hasRetryableError
-                    ? renderGeneratedContentContainer({
-                        props: {
-                          answer,
-                          answerContentFormat,
-                          isStreaming: !!isStreaming,
-                          containerClass:
-                            previousAnswers.length > 0 ? 'px-6' : undefined,
-                        },
-                      })(html`
-                        ${renderSourceCitations({
+              `
+            )}
+          </div>
+
+          ${
+            hasRetryableError
+              ? renderRetryPrompt({
+                  props: {
+                    onClick: onRetry,
+                    buttonLabel: i18n.t('retry'),
+                    message: i18n.t('retry-stream-message'),
+                  },
+                })
+              : nothing
+          }
+          ${
+            !hasRetryableError
+              ? renderGeneratedContentContainer({
+                  props: {
+                    answer,
+                    answerContentFormat,
+                    isStreaming: !!isStreaming,
+                  },
+                })(html`
+                ${renderSourceCitations({
+                  props: {
+                    label: i18n.t('citations'),
+                    isVisible: !!citations?.length,
+                  },
+                })(renderCitationsSlot())}
+              `)
+              : nothing
+          }
+          ${
+            !hasRetryableError
+              ? html`
+                <div part="generated-answer-footer" class="mt-6">
+                  ${renderGeneratingAnswerLabel({
+                    props: {
+                      i18n,
+                      isStreaming: !!isStreaming,
+                      collapsible,
+                    },
+                  })}
+                  ${
+                    collapsible && !isStreaming
+                      ? renderShowButton({
                           props: {
-                            label: i18n.t('citations'),
-                            isVisible: !!citations?.length,
+                            i18n,
+                            onClick: onClickShowButton,
+                            isCollapsed: !expanded,
                           },
-                        })(renderCitationsSlot())}
-                      `)
-                    : nothing
-                }
-                ${
-                  !hasRetryableError
-                    ? html`
-                        <div part="generated-answer-footer" class="mt-6">
-                          ${renderGeneratingAnswerLabel({
-                            props: {
-                              i18n,
-                              isStreaming: !!isStreaming,
-                              collapsible,
-                            },
-                          })}
-                          ${
-                            collapsible && !isStreaming
-                              ? renderShowButton({
-                                  props: {
-                                    i18n,
-                                    onClick: onClickShowButton,
-                                    isCollapsed: !(expanded ?? true),
-                                  },
-                                })
-                              : nothing
-                          }
-                        </div>
-                      `
-                    : nothing
-                }
-              </div>
-            </div>
-          `;
-        },
-        () => nothing
-      )}
-    </div>
+                        })
+                      : nothing
+                  }
+                </div>
+              `
+              : nothing
+          }
+        </div>`,
+      () => nothing
+    )}
   `;
 };

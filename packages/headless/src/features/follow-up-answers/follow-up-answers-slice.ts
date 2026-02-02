@@ -3,6 +3,7 @@ import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-
 import {filterOutDuplicatedCitations} from '../generated-answer/utils/generated-answer-citation-utils.js';
 import {
   addFollowUpAnswer,
+  resetFollowUpAnswers,
   setActiveFollowUpAnswerContentFormat,
   setActiveFollowUpAnswerId,
   setActiveFollowUpCannotAnswer,
@@ -122,5 +123,9 @@ export const followUpAnswersReducer = createReducer(
           return;
         }
         followUpAnswer.cannotAnswer = payload;
+      })
+      .addCase(resetFollowUpAnswers, (state) => {
+        state.answers = [];
+        state.id = '';
       })
 );

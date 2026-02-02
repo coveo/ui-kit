@@ -1,5 +1,7 @@
 // Auto-generated file
 export default {
+  'accordion-item': async () =>
+    await import('./accordion-item/accordion-item.js'),
   'atomic-aria-live': async () =>
     await import('./atomic-aria-live/atomic-aria-live.js'),
   'atomic-citation': async () =>

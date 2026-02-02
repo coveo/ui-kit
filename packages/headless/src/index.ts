@@ -437,6 +437,7 @@ export type {
   UrlManagerState,
 } from './controllers/url-manager/headless-url-manager.js';
 export {buildUrlManager} from './controllers/url-manager/headless-url-manager.js';
+export type {FollowUpAnswer} from './features/follow-up-answers/follow-up-answers-state.js';
 // State
 export type {
   SearchAppState,

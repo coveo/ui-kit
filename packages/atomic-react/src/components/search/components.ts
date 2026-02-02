@@ -1,4 +1,5 @@
 import {
+  AccordionItem as LitAccordionItem,
   AtomicAriaLive as LitAtomicAriaLive,
   AtomicAutomaticFacet as LitAtomicAutomaticFacet,
   AtomicAutomaticFacetGenerator as LitAtomicAutomaticFacetGenerator,
@@ -86,6 +87,12 @@ import {
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
+
+export const AccordionItem = createComponent({
+  tagName: 'accordion-item',
+  react: React,
+  elementClass: LitAccordionItem,
+});
 
 export const AtomicAriaLive = createComponent({
   tagName: 'atomic-aria-live',

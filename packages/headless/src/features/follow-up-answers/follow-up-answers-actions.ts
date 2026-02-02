@@ -103,6 +103,10 @@ export const setActiveFollowUpCannotAnswer = createAction(
     validatePayload(payload, new BooleanValue({required: true}))
 );
 
+export const resetFollowUpAnswers = createAction(
+  'followUpAnswers/resetFollowUpAnswers'
+);
+
 export const generateFollowUpAnswer = createAsyncThunk<
   void,
   string,

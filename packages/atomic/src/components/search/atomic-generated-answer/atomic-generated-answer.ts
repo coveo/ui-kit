@@ -36,6 +36,10 @@ import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {debounce} from '@/src/utils/debounce-utils';
 import {getNamedSlotContent} from '@/src/utils/slot-utils';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
+import {renderGeneratedContentContainer} from '../../common/generated-answer/generated-content-container.js';
+import {renderSourceCitations} from '../../common/generated-answer/source-citations.js';
+import {renderHeading} from '../../common/heading.js';
+import {renderSwitch} from '../../common/switch.js';
 import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
 
 /**
@@ -180,16 +184,6 @@ export class AtomicGeneratedAnswer
   scrollable = false;
 
   /**
-   * Whether to display a button that lets users hide the previous follow-up questions after expanding them.
-   */
-  @property({
-    type: Boolean,
-    attribute: 'hide-previous-answers',
-    converter: booleanConverter,
-  })
-  hidePreviousAnswers = false;
-
-  /**
    * Whether to make the follow-up input sticky.
    * When enabled, the input will stick to the bottom of the viewport when scrolling up.
    */
@@ -268,7 +262,7 @@ export class AtomicGeneratedAnswer
   private followUpPending = false;
 
   @state()
-  private previousAnswersCollapsed = true;
+  private showAllPreviousAnswers = false;
 
   @state()
   private initialQuery = '';
@@ -387,11 +381,13 @@ export class AtomicGeneratedAnswer
     this.followUpInputValue = value;
   };
 
+  private handleShowAllPreviousAnswers = () => {
+    this.showAllPreviousAnswers = true;
+  };
+
   private handleAskFollowUp = async (query: string) => {
     if (this.canAskFollowUp()) {
       this.followUpPending = true;
-      this.previousAnswersCollapsed = true;
-      this.requestUpdate('previousAnswersCollapsed');
       try {
         const result = await this.generatedAnswer.askFollowUp(query);
         return result;
@@ -403,16 +399,6 @@ export class AtomicGeneratedAnswer
 
   private handleClearFollowUpInput = () => {
     this.followUpInputValue = '';
-  };
-
-  private handleTogglePreviousAnswers = () => {
-    this.previousAnswersCollapsed = false;
-    this.requestUpdate('previousAnswersCollapsed');
-  };
-
-  private handleHidePreviousAnswers = () => {
-    this.previousAnswersCollapsed = true;
-    this.requestUpdate('previousAnswersCollapsed');
   };
 
   private isAnyFollowUpAnswerStreaming(): boolean {
@@ -468,7 +454,13 @@ export class AtomicGeneratedAnswer
           part="container"
           aria-label=${this.bindings.i18n.t('generated-answer-title')}
         >
-          <article>${this.renderContent()}</article>
+          <article>
+            <div part="generated-content">
+              ${this.renderCardHeader()}
+              ${this.isAnswerVisible ? this.renderContent() : nothing}
+              <!-- ${this.renderContent()} -->
+            </div>
+          </article>
           ${this.isAnswerVisible ? this.renderFollowUpInput() : nothing}
           ${this.isAnswerVisible ? this.renderDisclaimer() : nothing}
         </aside>
@@ -688,37 +680,199 @@ export class AtomicGeneratedAnswer
     });
   }
 
-  private renderContent() {
-    return renderAnswerContent({
-      props: {
-        i18n: this.bindings.i18n,
-        generatedAnswerState: this.generatedAnswerState,
-        isAnswerVisible: this.isAnswerVisible,
-        hasRetryableError: this.hasRetryableError,
-        toggleTooltip: this.toggleTooltip,
-        withToggle: this.withToggle,
-        collapsible: this.collapsible,
-        query: this.bindings.engine.state.query?.q ?? '',
-        initialQuery: this.initialQuery,
-        agentId: this.agentId,
-        followUpAnswers: this.canAskFollowUp()
-          ? this.generatedAnswer.state.followUpAnswers
-          : undefined,
-        renderFeedbackAndCopyButtonsSlot: () =>
-          this.renderFeedbackAndCopyButtonsWrapper(),
-        renderCitationsSlot: () => html`${this.renderCitationsList()}`,
-        onToggle: (checked: boolean) => {
-          checked ? this.generatedAnswer?.show() : this.generatedAnswer?.hide();
+  private renderCardHeader() {
+    return html` <div
+      part="header"
+      class="flex items-center ${
+        this.isAnswerVisible ? 'border-b-1 border-gray-200' : ''
+      } px-6 py-2"
+    >
+      <atomic-icon
+        part="header-icon"
+        class="text-primary h-4 w-4 fill-current"
+        .icon=${'assets://sparkles.svg'}
+      >
+      </atomic-icon>
+      ${renderHeading({
+        props: {
+          level: 0,
+          part: 'header-label',
+          class: 'text-primary inline-block rounded-md px-2.5 py-2 font-medium',
         },
-        onRetry: () => this.generatedAnswer?.retry(),
-        onClickShowButton: () => this.clickOnShowButton(),
-        scrollable: this.scrollable,
-        hidePreviousAnswers: this.hidePreviousAnswers,
-        previousAnswersCollapsed: this.previousAnswersCollapsed,
-        onTogglePreviousAnswers: this.handleTogglePreviousAnswers,
-        onHidePreviousAnswers: this.handleHidePreviousAnswers,
-      },
-    });
+      })(html`${this.bindings.i18n.t('generated-answer-title')}`)}
+      <div class="ml-auto flex h-9 items-center">
+        ${renderSwitch({
+          props: {
+            part: 'toggle',
+            checked: this.isAnswerVisible,
+            onToggle: (checked: boolean) => {
+              checked
+                ? this.generatedAnswer?.show()
+                : this.generatedAnswer?.hide();
+            },
+            ariaLabel: this.bindings.i18n.t('generated-answer-title'),
+            title: this.toggleTooltip,
+            withToggle: this.withToggle,
+            tabIndex: 0,
+          },
+        })}
+      </div>
+    </div>`;
+  }
+
+  /**
+   * Renders answer content based on follow-up state.
+   *
+   * Cases:
+   * - No follow-ups:
+   *   Renders the default single answer view.
+   *
+   * - Follow-ups shown (all or only one):
+   *   Renders the original question and all follow-up Q&A as accordion items.
+   *   The latest follow-up is expanded and non-collapsible.
+   *
+   * - Follow-ups hidden (latest only):
+   *   Renders a "Show previous questions" control and only the latest follow-up,
+   *   expanded and non-collapsible.
+   */
+  private renderContent() {
+    const followUpAnswers = this.canAskFollowUp()
+      ? this.generatedAnswer.state.followUpAnswers
+      : undefined;
+    const hasFollowUps = !!this.agentId && !!followUpAnswers?.answers?.length;
+
+    const renderCitationsSlot = () => html`${this.renderCitationsList()}`;
+
+    if (!hasFollowUps) {
+      return renderAnswerContent({
+        props: {
+          i18n: this.bindings.i18n,
+          generatedAnswerState: this.generatedAnswerState,
+          isAnswerVisible: this.isAnswerVisible,
+          hasRetryableError: this.hasRetryableError,
+          toggleTooltip: this.toggleTooltip,
+          withToggle: this.withToggle,
+          collapsible: this.collapsible,
+          query: this.bindings.engine.state.query?.q ?? '',
+          initialQuery: this.initialQuery,
+          renderFeedbackAndCopyButtonsSlot: () =>
+            this.renderFeedbackAndCopyButtonsWrapper(),
+          renderCitationsSlot: () => html`${this.renderCitationsList()}`,
+          onToggle: (checked: boolean) => {
+            checked
+              ? this.generatedAnswer?.show()
+              : this.generatedAnswer?.hide();
+          },
+          onRetry: () => this.generatedAnswer?.retry(),
+          onClickShowButton: () => this.clickOnShowButton(),
+        },
+      });
+    } else {
+      if (
+        this.showAllPreviousAnswers ||
+        followUpAnswers!.answers.length === 1
+      ) {
+        const {answer, citations, answerContentFormat, isStreaming} =
+          this.generatedAnswerState;
+        return html`<div class="p-6">
+          <accordion-item title=${this.bindings.engine.state.query?.q ?? ''}>
+            ${
+              !this.hasRetryableError
+                ? renderGeneratedContentContainer({
+                    props: {
+                      answer,
+                      answerContentFormat,
+                      isStreaming: !!isStreaming,
+                    },
+                  })(html`
+                  ${renderSourceCitations({
+                    props: {
+                      label: this.bindings.i18n.t('citations'),
+                      isVisible: !!citations?.length,
+                    },
+                  })(renderCitationsSlot())}
+                `)
+                : nothing
+            }
+          </accordion-item>
+          ${followUpAnswers?.answers.map(
+            (
+              {answer, question, isStreaming, answerContentFormat, citations},
+              index
+            ) => {
+              const isLastAnswer = index === followUpAnswers.answers.length - 1;
+              return html` <accordion-item
+                ?expanded=${isLastAnswer}
+                ?hidetimeline=${isLastAnswer}
+                ?nonCollapsible=${isLastAnswer}
+                title=${question}
+              >
+                ${renderGeneratedContentContainer({
+                  props: {
+                    answer,
+                    answerContentFormat,
+                    isStreaming: !!isStreaming,
+                  },
+                })(html`
+                  ${renderSourceCitations({
+                    props: {
+                      label: this.bindings.i18n.t('citations'),
+                      isVisible: !!citations?.length,
+                    },
+                  })(renderCitationsSlot())}
+                `)}
+              </accordion-item>`;
+            }
+          )}
+        </div>`;
+      }
+      const latestFollowUpAnswer = followUpAnswers!.answers.at(-1)!;
+      const {answer, question, isStreaming, answerContentFormat, citations} =
+        latestFollowUpAnswer;
+      return html`<div class="p-6">
+        <div>
+          <div class="item-header">
+            <div class="dot-container">
+              <div class="dot"></div>
+            </div>
+            <div
+              @click=${this.handleShowAllPreviousAnswers}
+              class="item-title bg-transparent"
+            >
+              Show previous questions
+            </div>
+          </div>
+          <div class="item-body">
+            <div class="line-container">
+              <div class="line"></div>
+            </div>
+            <div class="item-content">
+            </div>
+          </div>
+        </div>
+        <accordion-item
+          ?expanded=${true}
+          ?hidetimeline=${true}
+          ?nonCollapsible=${true}
+          title=${question}
+        >
+          ${renderGeneratedContentContainer({
+            props: {
+              answer,
+              answerContentFormat,
+              isStreaming: !!isStreaming,
+            },
+          })(html`
+            ${renderSourceCitations({
+              props: {
+                label: this.bindings.i18n.t('citations'),
+                isVisible: !!citations?.length,
+              },
+            })(renderCitationsSlot())}
+          `)}
+        </accordion-item>
+      </div>`;
+    }
   }
 
   private renderFollowUpInput() {
