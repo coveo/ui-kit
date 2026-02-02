@@ -389,6 +389,14 @@ describe('atomic-search-box', () => {
   });
 
   describe('when the search box is a standalone search box', () => {
+    it('should not throw when redirectionUrl changes before the search box initializes', async () => {
+      const element = document.createElement(
+        'atomic-search-box'
+      ) as AtomicSearchBox;
+
+      expect(() => element.watchRedirectionUrl()).not.toThrow();
+    });
+
     it('should initialize the standalone search box controller with the correct options', async () => {
       await renderSearchBox({
         searchBoxProps: {redirectionUrl: '/search'},
