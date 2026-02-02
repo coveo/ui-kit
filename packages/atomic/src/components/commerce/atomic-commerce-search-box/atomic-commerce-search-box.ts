@@ -694,7 +694,7 @@ export class AtomicCommerceSearchBox
 
           this.isExpanded = false;
         }}
-        .onMouseOver=${async () => {
+        .onMouseEnter=${async () => {
           await this.suggestionManager.onSuggestionMouseOver(item, side, id);
         }}
       ></atomic-suggestion-renderer>
