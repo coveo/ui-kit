@@ -121,7 +121,8 @@ export class AtomicIpxResultLink
     this.interactiveResult.select();
   }
 
-  willUpdate() {
+  willUpdate(changedProperties: Map<string, unknown>) {
+    super.willUpdate(changedProperties);
     this.linkAttributes = getAttributesFromLinkSlotContent(this, 'attributes');
   }
 
