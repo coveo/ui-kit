@@ -16,7 +16,6 @@ import type {
   GeneratedAnswerStreamEventData,
 } from '../../api/generated-answer/generated-answer-event-payload.js';
 import type {GeneratedAnswerStreamRequest} from '../../api/generated-answer/generated-answer-request.js';
-import type {AnswerGenerationApiState} from '../../api/knowledge/answer-generation/answer-generation-api-state.js';
 import {
   type AnswerEndpointArgs,
   initiateAnswerEndpoint,
@@ -388,7 +387,7 @@ export const generateHeadAnswer = createAsyncThunk<
 >(
   'generatedAnswerWithFollowUps/generateHeadAnswer',
   async (_, {getState, dispatch, extra: {navigatorContext, logger}}) => {
-    const state = getState() as AnswerGenerationApiState;
+    const state = getState();
     const agentId = selectAgentId(state);
 
     if (!agentId) {
