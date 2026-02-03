@@ -69,7 +69,7 @@ describe('commerce api client', () => {
   ): Promise<CommerceSearchRedirectRequest> => ({
     accessToken: accessToken,
     organizationId: organizationId,
-    url: apiBaseUrl,
+    url: getCommerceRedirectApiBaseUrl(organizationId),
     trackingId: trackingId,
     language: req.language ?? '',
     country: req.country ?? '',

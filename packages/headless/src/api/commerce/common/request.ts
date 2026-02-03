@@ -84,7 +84,12 @@ export const baseRequest = (
 > => {
   const {url, trackingId, accessToken} = req;
 
-  const baseUrl = buildUrlWithTrackingIdInPath(url, trackingId, path);
+  // For redirect requests, use the URL as-is since it's already the complete endpoint
+  // For other requests, build the URL with path and potential tracking ID
+  const baseUrl =
+    path === 'search/redirect'
+      ? url
+      : buildUrlWithTrackingIdInPath(url, trackingId, path);
 
   return {
     accessToken,
@@ -105,26 +110,6 @@ const buildUrlWithTrackingIdInPath = (
   trackingId: string,
   path: CommerceApiMethod
 ): string => {
-  if (path === 'search/redirect') {
-    const urlParts = baseUrl.match(
-      /\/rest\/organizations\/([^/]+)\/commerce\/v2$/
-    );
-    if (urlParts) {
-      const organizationId = urlParts[1];
-      const platformEndpoint = baseUrl.replace(
-        /\/rest\/organizations\/[^/]+\/commerce\/v2$/,
-        ''
-      );
-      const redirectUrl = `${platformEndpoint}/api/v2/organizations/${organizationId}/commerce/search/redirect`;
-
-      // not sure this is supported but want to be consistent with other URLs
-      if (trackingId && TRACKING_ID_IN_PATH_METHODS.includes(path)) {
-        return `${redirectUrl}/tracking-ids/${trackingId}/${path}`;
-      }
-      return redirectUrl;
-    }
-  }
-
   if (trackingId && TRACKING_ID_IN_PATH_METHODS.includes(path)) {
     return `${baseUrl}/tracking-ids/${trackingId}/${path}`;
   }
