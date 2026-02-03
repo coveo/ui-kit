@@ -461,7 +461,7 @@ export namespace Components {
         "isSelected": boolean;
         "lastIndex": number;
         "onClick"?: (e: Event) => void;
-        "onMouseOver"?: (e: Event) => void;
+        "onMouseEnter"?: (e: Event) => void;
         "side": 'left' | 'right';
         "suggestion": SearchBoxSuggestionElement;
     }
@@ -1207,7 +1207,7 @@ declare namespace LocalJSX {
         "isSelected": boolean;
         "lastIndex": number;
         "onClick"?: (e: Event) => void;
-        "onMouseOver"?: (e: Event) => void;
+        "onMouseEnter"?: (e: Event) => void;
         "side": 'left' | 'right';
         "suggestion": SearchBoxSuggestionElement;
     }
