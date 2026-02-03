@@ -6,6 +6,7 @@ import {
   buildTabManager,
   type GeneratedAnswer,
   type GeneratedAnswerState,
+  type GeneratedAnswerWithFollowUps,
   type SearchStatus,
   type SearchStatusState,
   type TabManager,
@@ -33,7 +34,6 @@ import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {debounce} from '@/src/utils/debounce-utils';
 import {getNamedSlotContent} from '@/src/utils/slot-utils';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
-import type {GeneratedAnswerWithFollowUps} from '../../../../../headless/src/controllers/knowledge/generated-answer/headless-generated-answer-with-follow-ups.js';
 import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
 
 /**
@@ -257,6 +257,8 @@ export class AtomicGeneratedAnswer
       getBindings: () => this.bindings,
     });
 
+    console.log('Initialized GeneratedAnswerController from atomic');
+    console.log(this.agentId);
     this.generatedAnswer = buildGeneratedAnswer(this.bindings.engine, {
       initialState: {
         isVisible: this.controller.data.isVisible,
