@@ -5,6 +5,10 @@ import type {
 } from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
+import {
+  buildAnsweringStreamingResponse,
+  MessageFactories,
+} from '@/storybook-utils/api/answer/generate-response';
 import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -78,6 +82,9 @@ const meta: Meta = {
       'how to resolve netflix connection with tivo{enter}'
     );
   },
+  beforeEach: async () => {
+    mockedAnswerApi.generateEndPoint.clear();
+  },
 };
 
 export default meta;
@@ -88,5 +95,25 @@ export const DisableCitationAnchoring: Story = {
   name: 'Citation anchoring disabled',
   args: {
     'disable-citation-anchoring': true,
+  },
+};
+
+export const NoAnswerMessage: Story = {
+  name: 'No answer message',
+  args: {
+    'no-answer-message-slot': `<div slot="no-answer-message">
+      We could not find a reliable answer, Sorry!
+    </div>`,
+  },
+  beforeEach: async () => {
+    mockedAnswerApi.generateEndPoint.mock(
+      () => () =>
+        buildAnsweringStreamingResponse({
+          messages: [
+            MessageFactories.Header(),
+            MessageFactories.EndOfStream({answerGenerated: false}),
+          ],
+        })
+    );
   },
 };

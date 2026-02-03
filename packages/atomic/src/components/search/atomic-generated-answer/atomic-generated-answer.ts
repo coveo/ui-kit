@@ -336,7 +336,7 @@ export class AtomicGeneratedAnswer
     }
 
     const contentClasses =
-      'mx-auto mt-0 mb-4 border border-neutral shadow-lg bg-background rounded-lg text-on-background';
+      'mx-auto mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg text-on-background';
 
     if (this.hasNoAnswerGenerated) {
       if (
