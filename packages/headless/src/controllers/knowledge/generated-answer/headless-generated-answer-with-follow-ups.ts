@@ -58,14 +58,16 @@ export function buildGeneratedAnswerWithFollowUps(
     props
   );
   const getState = () => engine.state;
-  // TODO: dispatch action to set agentId when that prop is defined
+  // TODO SFINT-6583: dispatch action to set agentId when that prop is defined
 
   return {
     ...controller,
     get state() {
       const clientState = getState().generatedAnswer;
+      const answerApiQueryParams =
+        selectAnswerApiQueryParams(engine.state) ?? {};
       const headAnswerArgs: AnswerEndpointArgs = {
-        ...selectAnswerApiQueryParams(engine.state),
+        ...answerApiQueryParams,
         strategyKey: 'head-answer',
       };
       const serverState = selectAnswer(headAnswerArgs, engine.state)?.data;
@@ -81,7 +83,7 @@ export function buildGeneratedAnswerWithFollowUps(
         error: serverState?.error,
         answerId: serverState?.answerId,
         isAnswerGenerated: Boolean(serverState?.generated),
-        cannotAnswer: !serverState?.generated,
+        cannotAnswer: serverState?.generated === false,
 
         /** Client-owned (Redux) */
         isVisible: clientState.isVisible,

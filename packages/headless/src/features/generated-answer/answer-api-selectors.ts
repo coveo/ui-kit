@@ -1,5 +1,4 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {skipToken} from '@reduxjs/toolkit/query';
 import {selectQuery} from '../../features/query/query-selectors.js';
 
 export const selectAnswerTriggerParams = createSelector(
@@ -18,12 +17,9 @@ export const selectAnswerTriggerParams = createSelector(
 );
 
 /**
- * If answer params are not available, returns `skipToken`, a special value from RTK Query
- * that tells RTK Query to "skip" running a query or selector until the params are ready.
- *
- * @see https://redux-toolkit.js.org/rtk-query/usage-with-typescript#skipping-queries-with-typescript-using-skiptoken
+ * Selects the parameters to be used in the Answer API request.
  */
 export const selectAnswerApiQueryParams = createSelector(
   (state) => state.generatedAnswer?.answerApiQueryParams,
-  (answerApiQueryParams) => answerApiQueryParams ?? skipToken
+  (answerApiQueryParams) => answerApiQueryParams
 );
