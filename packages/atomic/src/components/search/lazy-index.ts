@@ -43,6 +43,10 @@ export default {
   'atomic-pager': async () => await import('./atomic-pager/atomic-pager.js'),
   'atomic-popover': async () =>
     await import('./atomic-popover/atomic-popover.js'),
+  'atomic-previous-answers-item': async () =>
+    await import(
+      './atomic-previous-answers-item/atomic-previous-answers-item.js'
+    ),
   'atomic-previous-answers-list': async () =>
     await import(
       './atomic-previous-answers-list/atomic-previous-answers-list.js'

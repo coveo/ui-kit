@@ -21,6 +21,7 @@ export {AtomicNotifications} from './atomic-notifications/atomic-notifications.j
 export {AtomicNumericFacet} from './atomic-numeric-facet/atomic-numeric-facet.js';
 export {AtomicPager} from './atomic-pager/atomic-pager.js';
 export {AtomicPopover} from './atomic-popover/atomic-popover.js';
+export {AtomicPreviousAnswersItem} from './atomic-previous-answers-item/atomic-previous-answers-item.js';
 export {AtomicPreviousAnswersList} from './atomic-previous-answers-list/atomic-previous-answers-list.js';
 export {AtomicQueryError} from './atomic-query-error/atomic-query-error.js';
 export {AtomicQuerySummary} from './atomic-query-summary/atomic-query-summary.js';
