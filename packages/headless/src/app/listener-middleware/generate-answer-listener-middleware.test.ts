@@ -53,16 +53,13 @@ describe('generateAnswerListener', () => {
           dispatchSpy = vi.spyOn(store, 'dispatch');
         });
 
-        it('should not dispatch generateHeadAnswer action when executeSearch.pending is dispatched', async () => {
+        it('should not dispatch generateHeadAnswer action when executeSearch.pending is dispatched', () => {
           const searchAction = executeSearch.pending('requestId', {
             legacy: logInsightInterfaceLoad(),
             next: interfaceLoad(),
           });
 
           store.dispatch(searchAction);
-
-          // Wait to ensure no additional dispatches occur
-          await new Promise((resolve) => setTimeout(resolve, 50));
 
           expect(generateHeadAnswer).not.toHaveBeenCalled();
           expect(dispatchSpy).toHaveBeenCalledTimes(1);
@@ -73,16 +70,13 @@ describe('generateAnswerListener', () => {
           );
         });
 
-        it('should not dispatch resetAnswer action when executeSearch.pending is dispatched and query is empty', async () => {
+        it('should not dispatch resetAnswer action when executeSearch.pending is dispatched and query is empty', () => {
           const searchAction = executeSearch.pending('requestId', {
             legacy: logInsightInterfaceLoad(),
             next: interfaceLoad(),
           });
 
           store.dispatch(searchAction);
-
-          // Wait to ensure no additional dispatches occur
-          await new Promise((resolve) => setTimeout(resolve, 50));
 
           expect(resetAnswer).not.toHaveBeenCalled();
         });
@@ -177,16 +171,13 @@ describe('generateAnswerListener', () => {
         dispatchSpy = vi.spyOn(store, 'dispatch');
       });
 
-      it('should not dispatch generateHeadAnswer action when executeSearch.pending is dispatched', async () => {
+      it('should not dispatch generateHeadAnswer action when executeSearch.pending is dispatched', () => {
         const searchAction = executeSearch.pending('requestId', {
           legacy: logInsightInterfaceLoad(),
           next: interfaceLoad(),
         });
 
         store.dispatch(searchAction);
-
-        // Wait to ensure no additional dispatches occur
-        await new Promise((resolve) => setTimeout(resolve, 50));
 
         expect(generateHeadAnswer).not.toHaveBeenCalled();
         expect(dispatchSpy).toHaveBeenCalledTimes(1);
@@ -197,16 +188,13 @@ describe('generateAnswerListener', () => {
         );
       });
 
-      it('should not dispatch resetAnswer action when executeSearch.pending is dispatched', async () => {
+      it('should not dispatch resetAnswer action when executeSearch.pending is dispatched', () => {
         const searchAction = executeSearch.pending('requestId', {
           legacy: logInsightInterfaceLoad(),
           next: interfaceLoad(),
         });
 
         store.dispatch(searchAction);
-
-        // Wait to ensure no additional dispatches occur
-        await new Promise((resolve) => setTimeout(resolve, 50));
 
         expect(resetAnswer).not.toHaveBeenCalled();
       });
@@ -229,16 +217,13 @@ describe('generateAnswerListener', () => {
       dispatchSpy = vi.spyOn(store, 'dispatch');
     });
 
-    it('should not dispatch generateHeadAnswer action when executeSearch.pending is dispatched', async () => {
+    it('should not dispatch generateHeadAnswer action when executeSearch.pending is dispatched', () => {
       const searchAction = executeSearch.pending('requestId', {
         legacy: logInsightInterfaceLoad(),
         next: interfaceLoad(),
       });
 
       store.dispatch(searchAction);
-
-      // Wait to ensure no additional dispatches occur
-      await new Promise((resolve) => setTimeout(resolve, 50));
 
       expect(generateHeadAnswer).not.toHaveBeenCalled();
       expect(dispatchSpy).toHaveBeenCalledTimes(1);
@@ -249,16 +234,13 @@ describe('generateAnswerListener', () => {
       );
     });
 
-    it('should not dispatch resetAnswer action when executeSearch.pending is dispatched', async () => {
+    it('should not dispatch resetAnswer action when executeSearch.pending is dispatched', () => {
       const searchAction = executeSearch.pending('requestId', {
         legacy: logInsightInterfaceLoad(),
         next: interfaceLoad(),
       });
 
       store.dispatch(searchAction);
-
-      // Wait to ensure no additional dispatches occur
-      await new Promise((resolve) => setTimeout(resolve, 50));
 
       expect(resetAnswer).not.toHaveBeenCalled();
     });

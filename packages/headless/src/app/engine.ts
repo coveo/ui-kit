@@ -373,9 +373,11 @@ function createMiddleware<Reducers extends ReducersMapObject>(
     renewTokenMiddleware,
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
-  ]
-    .concat(answerApi.middleware, options.middlewares || [])
-    .concat(generateAnswerListener.middleware);
+  ].concat(
+    answerApi.middleware,
+    generateAnswerListener.middleware,
+    options.middlewares || []
+  );
 }
 
 export const nextAnalyticsUsageWithServiceFeatureWarning =

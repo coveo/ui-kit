@@ -7,6 +7,8 @@ import type {
   GeneratedAnswerSection,
   SearchSection,
 } from '../../state/state-sections.js';
+import {selectAgentId} from '../configuration/configuration-selectors.js';
+import type {ConfigurationState} from '../configuration/configuration-state.js';
 
 export const generativeQuestionAnsweringIdSelector = (
   state: Partial<SearchAppState>
@@ -37,10 +39,15 @@ const isGeneratedAnswerFeatureEnabledWithAnswerAPI = (
 
 export const isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI = (
   state: Partial<SearchAppState>
-): state is StreamAnswerAPIState =>
-  'answerGenerationApi' in state &&
-  'generatedAnswer' in state &&
-  !isNullOrUndefined(state.configuration?.knowledge?.agentId);
+): state is StreamAnswerAPIState => {
+  const agentId = selectAgentId(state as {configuration: ConfigurationState});
+  return (
+    'answerGenerationApi' in state &&
+    'generatedAnswer' in state &&
+    typeof agentId === 'string' &&
+    agentId.trim().length > 0
+  );
+};
 
 const isSearchSection = (
   state: Partial<SearchAppState> | StreamAnswerAPIState
