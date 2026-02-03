@@ -40,6 +40,10 @@ export default {
     ),
   'atomic-insight-result': async () =>
     await import('./atomic-insight-result/atomic-insight-result.js'),
+  'atomic-insight-result-action-bar': async () =>
+    await import(
+      './atomic-insight-result-action-bar/atomic-insight-result-action-bar.js'
+    ),
   'atomic-insight-result-children': async () =>
     await import(
       './atomic-insight-result-children/atomic-insight-result-children.js'

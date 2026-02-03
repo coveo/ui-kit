@@ -1,0 +1,48 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicInsightResultActionBarStories from './atomic-insight-result-action-bar.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicInsightResultActionBarStories} />
+
+<AtomicDocTemplate
+  stories={AtomicInsightResultActionBarStories}
+  defaultStory="Default"
+  githubPath="insight/atomic-insight-result-action-bar/atomic-insight-result-action-bar.ts"
+  tagName="atomic-insight-result-action-bar"
+  className="AtomicInsightResultActionBar"
+>
+
+This component is used to display action buttons within an Insight result template. Action buttons placed in this component appear when the user hovers over a result.
+
+The action bar is positioned absolutely within the result and becomes visible on hover. When the action bar is empty (no slotted content), it automatically hides itself.
+
+## Usage
+
+Place the `atomic-insight-result-action-bar` inside an `atomic-insight-result-template`:
+
+```html
+<atomic-insight-result-template>
+  <template>
+    <atomic-result-section-title>
+      <atomic-result-link></atomic-result-link>
+    </atomic-result-section-title>
+    <atomic-result-section-excerpt>
+      <atomic-result-text field="excerpt"></atomic-result-text>
+    </atomic-result-section-excerpt>
+    <atomic-insight-result-action-bar>
+      <button>Copy Link</button>
+      <button>Share</button>
+    </atomic-insight-result-action-bar>
+  </template>
+</atomic-insight-result-template>
+```
+
+## Styling
+
+The action bar applies special styling to consecutive buttons:
+- Buttons that are not the last child have their right border and border-radius removed
+- Buttons that are not the first child have their left border-radius removed
+
+This creates a visually connected button group effect.
+
+</AtomicDocTemplate>

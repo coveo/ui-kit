@@ -118,8 +118,6 @@ export namespace Components {
          */
         "tooltipOnClick": string;
     }
-    interface AtomicInsightResultActionBar {
-    }
     interface AtomicInsightResultAttachToCaseAction {
     }
     interface AtomicInsightResultAttachToCaseIndicator {
@@ -546,12 +544,6 @@ declare global {
         prototype: HTMLAtomicInsightResultActionElement;
         new (): HTMLAtomicInsightResultActionElement;
     };
-    interface HTMLAtomicInsightResultActionBarElement extends Components.AtomicInsightResultActionBar, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightResultActionBarElement: {
-        prototype: HTMLAtomicInsightResultActionBarElement;
-        new (): HTMLAtomicInsightResultActionBarElement;
-    };
     interface HTMLAtomicInsightResultAttachToCaseActionElementEventMap {
         "atomic/insight/attachToCase/attach": InsightResultAttachToCaseEvent;
         "atomic/insight/attachToCase/detach": InsightResultAttachToCaseEvent;
@@ -754,7 +746,6 @@ declare global {
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
-        "atomic-insight-result-action-bar": HTMLAtomicInsightResultActionBarElement;
         "atomic-insight-result-attach-to-case-action": HTMLAtomicInsightResultAttachToCaseActionElement;
         "atomic-insight-result-attach-to-case-indicator": HTMLAtomicInsightResultAttachToCaseIndicatorElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
@@ -877,8 +868,6 @@ declare namespace LocalJSX {
           * The text tooltip to show on the result action icon for some time after clicking the button.
          */
         "tooltipOnClick"?: string;
-    }
-    interface AtomicInsightResultActionBar {
     }
     interface AtomicInsightResultAttachToCaseAction {
         /**
@@ -1217,7 +1206,6 @@ declare namespace LocalJSX {
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
         "atomic-insight-result-action": AtomicInsightResultAction;
-        "atomic-insight-result-action-bar": AtomicInsightResultActionBar;
         "atomic-insight-result-attach-to-case-action": AtomicInsightResultAttachToCaseAction;
         "atomic-insight-result-attach-to-case-indicator": AtomicInsightResultAttachToCaseIndicator;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
@@ -1252,7 +1240,6 @@ declare module "@stencil/core" {
             "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
-            "atomic-insight-result-action-bar": LocalJSX.AtomicInsightResultActionBar & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionBarElement>;
             "atomic-insight-result-attach-to-case-action": LocalJSX.AtomicInsightResultAttachToCaseAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseActionElement>;
             "atomic-insight-result-attach-to-case-indicator": LocalJSX.AtomicInsightResultAttachToCaseIndicator & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseIndicatorElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
