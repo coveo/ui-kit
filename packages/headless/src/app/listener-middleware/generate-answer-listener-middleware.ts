@@ -12,10 +12,9 @@ import {isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI} from '../../feat
 import {selectQuery} from '../../features/query/query-selectors.js';
 import {executeSearch} from '../../features/search/search-actions.js';
 import type {SearchThunkExtraArguments} from '../search-thunk-extra-arguments.js';
-import type {RootState} from '../store.js';
 
 export const generateAnswerListener = createListenerMiddleware<
-  RootState,
+  AnswerGenerationApiState,
   ThunkDispatch<
     AnswerGenerationApiState,
     SearchThunkExtraArguments,

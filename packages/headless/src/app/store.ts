@@ -53,6 +53,3 @@ export function configureStore<Reducers extends ReducersMapObject>({
 }
 
 export type Store = ReturnType<typeof configureStore>;
-export type RootState = ReturnType<
-  ReturnType<typeof configureStore>['getState']
->;
