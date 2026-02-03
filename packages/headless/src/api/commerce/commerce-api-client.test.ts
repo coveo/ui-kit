@@ -184,7 +184,7 @@ describe('commerce api client', () => {
     });
   });
 
-  it('#searchRedirect should call the platform endpoint with the correct unstable redirect URL', async () => {
+  it('#searchRedirect should call the platform endpoint with the correct redirect URL', async () => {
     const request = {
       ...(await buildCommerceRedirectAPIRequest()),
       query: 'some query',
@@ -202,7 +202,7 @@ describe('commerce api client', () => {
     expect(mockRequest).toMatchObject({
       method: 'POST',
       contentType: 'application/json',
-      url: `https://${organizationId}.org.coveo.com/rest/organizations/${organizationId}/commerce/unstable/search/redirect`,
+      url: `https://${organizationId}.org.coveo.com/api/v2/organizations/${organizationId}/commerce/search/redirect`,
       accessToken: request.accessToken,
       origin: 'commerceApiFetch',
       requestParams: {
@@ -452,19 +452,19 @@ describe('commerce api client', () => {
 });
 
 describe('getCommerceRedirectApiBaseUrl', () => {
-  it('should return the correct unstable redirect API URL for prod environment', () => {
+  it('should return the correct redirect API URL for prod environment', () => {
     const organizationId = 'testorg';
     const result = getCommerceRedirectApiBaseUrl(organizationId);
     expect(result).toBe(
-      'https://testorg.org.coveo.com/rest/organizations/testorg/commerce/unstable/search/redirect'
+      'https://testorg.org.coveo.com/api/v2/organizations/testorg/commerce/search/redirect'
     );
   });
 
-  it('should return the correct unstable redirect API URL for dev environment', () => {
+  it('should return the correct redirect API URL for dev environment', () => {
     const organizationId = 'testorg';
     const result = getCommerceRedirectApiBaseUrl(organizationId, 'dev');
     expect(result).toBe(
-      'https://testorg.orgdev.coveo.com/rest/organizations/testorg/commerce/unstable/search/redirect'
+      'https://testorg.orgdev.coveo.com/api/v2/organizations/testorg/commerce/search/redirect'
     );
   });
 });

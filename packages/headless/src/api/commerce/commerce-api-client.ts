@@ -235,5 +235,5 @@ export function getCommerceRedirectApiBaseUrl(
 ) {
   const platformEndpoint = getOrganizationEndpoint(organizationId, environment);
 
-  return `${platformEndpoint}/rest/organizations/${organizationId}/commerce/unstable/search/redirect`;
+  return `${platformEndpoint}/api/v2/organizations/${organizationId}/commerce/search/redirect`;
 }

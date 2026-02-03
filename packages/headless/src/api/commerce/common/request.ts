@@ -115,7 +115,7 @@ const buildUrlWithTrackingIdInPath = (
         /\/rest\/organizations\/[^/]+\/commerce\/v2$/,
         ''
       );
-      const redirectUrl = `${platformEndpoint}/rest/organizations/${organizationId}/commerce/unstable/search/redirect`;
+      const redirectUrl = `${platformEndpoint}/api/v2/organizations/${organizationId}/commerce/search/redirect`;
 
       // not sure this is supported but want to be consistent with other URLs
       if (trackingId && TRACKING_ID_IN_PATH_METHODS.includes(path)) {
