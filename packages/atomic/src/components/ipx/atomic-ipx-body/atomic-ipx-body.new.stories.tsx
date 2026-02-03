@@ -3,6 +3,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit/static-html.js';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import type {AtomicIpxBody} from './atomic-ipx-body';
 
 const {events, args, argTypes} = getStorybookHelpers('atomic-ipx-body', {
   excludeCategories: ['methods'],
@@ -21,7 +22,7 @@ const meta: Meta = {
   title: 'IPX/Body',
   id: 'atomic-ipx-body',
   render: (args) => {
-    const {children, isOpen, displayFooterSlot} = args;
+    const {children, visibility, displayFooterSlot} = args;
     return html`
       <style>
         atomic-ipx-body {
@@ -32,7 +33,7 @@ const meta: Meta = {
       </style>
       <atomic-search-interface>
         <atomic-ipx-body
-          .isOpen=${isOpen}
+          .visibility=${visibility ?? 'embedded'}
           .displayFooterSlot=${displayFooterSlot ?? true}
         >
           ${children}
@@ -80,8 +81,9 @@ export const Default: Story = {
 };
 
 export const EmbeddedMode: Story = {
-  name: 'Embedded Mode (isOpen undefined)',
+  name: 'Embedded Mode',
   args: {
+    visibility: 'embedded',
     children: html`
       <div slot="header">
         <h2>Embedded View</h2>
@@ -91,47 +93,97 @@ export const EmbeddedMode: Story = {
         <p>This is useful for permanently visible IPX interfaces.</p>
       </div>
       <div slot="footer">
-        <button type="button">Close</button>
+        <button type="button">Apply</button>
       </div>
     `,
   },
 };
 
-export const ModalOpenMode: Story = {
-  name: 'Modal Mode (isOpen true)',
-  args: {
-    isOpen: true,
-    children: html`
-      <div slot="header">
-        <h2>Modal Open</h2>
-      </div>
-      <div slot="body">
-        <p>When isOpen is true, the container has the 'visible' class.</p>
-        <p>This allows for animation effects when showing the modal.</p>
-      </div>
-      <div slot="footer">
-        <button type="button">Close Modal</button>
-      </div>
-    `,
-  },
-};
+export const InteractiveModal: Story = {
+  name: 'Interactive Modal',
+  render: () => {
+    // Define a stateful wrapper component inline
+    class InteractiveModalWrapper extends HTMLElement {
+      private ipxBody: HTMLElement | null = null;
+      private visibility: 'open' | 'closed' = 'open';
 
-export const ModalClosedMode: Story = {
-  name: 'Modal Mode (isOpen false)',
-  args: {
-    isOpen: false,
-    children: html`
-      <div slot="header">
-        <h2>Modal Closed</h2>
-      </div>
-      <div slot="body">
-        <p>When isOpen is false, the container has the 'invisible' class.</p>
-        <p>This allows for animation effects when hiding the modal.</p>
-      </div>
-      <div slot="footer">
-        <button type="button">Open Modal</button>
-      </div>
-    `,
+      connectedCallback() {
+        this.innerHTML = `
+          <style>
+            atomic-ipx-body {
+              display: block;
+              width: 600px;
+              height: 400px;
+            }
+            #open-modal-btn {
+              margin-bottom: 16px;
+              padding: 8px 16px;
+              font-size: 14px;
+              cursor: pointer;
+            }
+          </style>
+          <atomic-search-interface>
+            <button type="button" id="open-modal-btn" style="display: none;">Open Modal</button>
+            <atomic-ipx-body>
+              <div slot="header">
+                <h2>Interactive Modal</h2>
+              </div>
+              <div slot="body">
+                <p>Click the button to toggle the modal visibility.</p>
+                <p>The component uses CSS classes to control visibility.</p>
+              </div>
+              <div slot="footer">
+                <button type="button" id="close-modal-btn">Close Modal</button>
+              </div>
+            </atomic-ipx-body>
+          </atomic-search-interface>
+        `;
+
+        this.ipxBody = this.querySelector('atomic-ipx-body');
+        const openButton = this.querySelector(
+          '#open-modal-btn'
+        ) as HTMLButtonElement;
+        const closeButton = this.querySelector(
+          '#close-modal-btn'
+        ) as HTMLButtonElement;
+
+        const updateState = () => {
+          (this.ipxBody as AtomicIpxBody).visibility = this.visibility;
+          openButton.style.display =
+            this.visibility === 'open' ? 'none' : 'inline-block';
+        };
+
+        if (this.ipxBody && openButton && closeButton) {
+          // Set initial state
+          updateState();
+
+          openButton.addEventListener('click', () => {
+            this.visibility = 'open';
+            updateState();
+          });
+
+          closeButton.addEventListener('click', () => {
+            this.visibility = 'closed';
+            updateState();
+          });
+        }
+
+        // Initialize the search interface
+        customElements.whenDefined('atomic-search-interface').then(() => {
+          const searchInterface = this.querySelector('atomic-search-interface');
+          searchInterface?.initialize(getSampleSearchEngineConfiguration());
+        });
+      }
+    }
+
+    if (!customElements.get('interactive-modal-wrapper')) {
+      customElements.define(
+        'interactive-modal-wrapper',
+        InteractiveModalWrapper
+      );
+    }
+
+    return html`<interactive-modal-wrapper></interactive-modal-wrapper>`;
   },
 };
 
@@ -194,23 +246,6 @@ export const LongScrollableContent: Story = {
       </div>
       <div slot="footer">
         <button type="button">Continue</button>
-      </div>
-    `,
-  },
-};
-
-export const MinimalContent: Story = {
-  name: 'Minimal Content',
-  args: {
-    children: html`
-      <div slot="header">
-        <h2>Title</h2>
-      </div>
-      <div slot="body">
-        <p>Short content.</p>
-      </div>
-      <div slot="footer">
-        <button type="button">OK</button>
       </div>
     `,
   },

@@ -12,6 +12,8 @@ import {randomID} from '@/src/utils/utils';
  * The `atomic-ipx-body` component provides a structured layout for IPX (In-Product Experience) interfaces.
  * It includes slots for header, body, and footer content.
  *
+ * **Note:** This is an internal component used by the `atomic-ipx-modal` and `atomic-ipx-embedded` components. Do not use directly.
+ *
  * @part container - The main container element
  * @part header-wrapper - The wrapper around the header section
  * @part header - The header content container
@@ -113,10 +115,13 @@ export class AtomicIpxBody
   error!: Error;
 
   /**
-   * Whether the modal is open. When undefined, the component is in embedded mode.
+   * The visibility mode of the component.
+   * - 'open': Modal is visible
+   * - 'closed': Modal is hidden
+   * - 'embedded': Always visible, no modal behavior
    */
-  @property({type: Boolean, attribute: 'is-open'})
-  isOpen?: boolean;
+  @property({type: String, attribute: 'visibility'})
+  visibility: 'open' | 'closed' | 'embedded' = 'embedded';
 
   // TODO KIT-5430: replace with hideFooterSlot & fix logic + tests
   /**
@@ -143,12 +148,12 @@ export class AtomicIpxBody
 
   @errorGuard()
   render() {
-    const isEmbedded = this.isOpen === undefined;
-    const visibilityClass = isEmbedded
-      ? ''
-      : this.isOpen
-        ? 'visible'
-        : 'invisible';
+    const visibilityClass =
+      this.visibility === 'embedded'
+        ? ''
+        : this.visibility === 'open'
+          ? 'visible'
+          : 'invisible';
 
     return html`
       <article

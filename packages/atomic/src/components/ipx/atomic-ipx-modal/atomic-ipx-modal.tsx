@@ -96,7 +96,7 @@ export class AtomicIPXModal implements InitializableComponent<AnyBindings> {
 
     const Body = () => (
       <atomic-ipx-body
-        isOpen={this.isOpen}
+        visibility={this.isOpen ? 'open' : 'closed'}
         displayFooterSlot={this.hasFooterSlotElements}
         exportparts="container"
       >

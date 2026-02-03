@@ -21,13 +21,13 @@ describe('atomic-ipx-body', () => {
   };
 
   const renderIPXBody = async ({
-    isOpen,
+    visibility = 'embedded',
     displayFooterSlot = true,
     headerContent,
     bodyContent,
     footerContent,
   }: {
-    isOpen?: boolean;
+    visibility?: 'open' | 'closed' | 'embedded';
     displayFooterSlot?: boolean;
     headerContent?: string;
     bodyContent?: string;
@@ -35,7 +35,7 @@ describe('atomic-ipx-body', () => {
   } = {}) => {
     const element = await fixture<AtomicIpxBody>(html`
       <atomic-ipx-body
-        .isOpen=${isOpen}
+        .visibility=${visibility}
         .displayFooterSlot=${displayFooterSlot}
       >
         ${
@@ -82,21 +82,21 @@ describe('atomic-ipx-body', () => {
     expect(element.displayFooterSlot).toBe(true);
   });
 
-  it('should not apply visibility class to container when isOpen is undefined (embedded mode)', async () => {
-    const {parts} = await renderIPXBody();
+  it('should not apply visibility class to container when visibility is embedded', async () => {
+    const {parts} = await renderIPXBody({visibility: 'embedded'});
     const container = parts.container as HTMLElement;
     expect(container.className).not.toContain('visible');
     expect(container.className).not.toContain('invisible');
   });
 
-  it('should apply visible class to container when isOpen is true', async () => {
-    const {parts} = await renderIPXBody({isOpen: true});
+  it('should apply visible class to container when visibility is open', async () => {
+    const {parts} = await renderIPXBody({visibility: 'open'});
     const container = parts.container as HTMLElement;
     expect(container.className).toContain('visible');
   });
 
-  it('should apply invisible class to container when isOpen is false', async () => {
-    const {parts} = await renderIPXBody({isOpen: false});
+  it('should apply invisible class to container when visibility is closed', async () => {
+    const {parts} = await renderIPXBody({visibility: 'closed'});
     const container = parts.container as HTMLElement;
     expect(container.className).toContain('invisible');
   });
@@ -108,34 +108,34 @@ describe('atomic-ipx-body', () => {
   });
 
   describe('when properties change', () => {
-    it('should update visibility class when isOpen changes from false to true', async () => {
-      const {element, parts} = await renderIPXBody({isOpen: false});
+    it('should update visibility class when visibility changes from closed to open', async () => {
+      const {element, parts} = await renderIPXBody({visibility: 'closed'});
       const container = parts.container as HTMLElement;
       expect(container.className).toBe('invisible');
 
-      element.isOpen = true;
+      element.visibility = 'open';
       await element.updateComplete;
 
       expect(container.className).toBe('visible');
     });
 
-    it('should update visibility class when isOpen changes from true to false', async () => {
-      const {element, parts} = await renderIPXBody({isOpen: true});
+    it('should update visibility class when visibility changes from open to closed', async () => {
+      const {element, parts} = await renderIPXBody({visibility: 'open'});
       const container = parts.container as HTMLElement;
       expect(container.className).toBe('visible');
 
-      element.isOpen = false;
+      element.visibility = 'closed';
       await element.updateComplete;
 
       expect(container.className).toBe('invisible');
     });
 
-    it('should update visibility class when isOpen changes to undefined (embedded mode)', async () => {
-      const {element, parts} = await renderIPXBody({isOpen: true});
+    it('should update visibility class when visibility changes to embedded', async () => {
+      const {element, parts} = await renderIPXBody({visibility: 'open'});
       const container = parts.container as HTMLElement;
       expect(container.className).toContain('visible');
 
-      element.isOpen = undefined;
+      element.visibility = 'embedded';
       await element.updateComplete;
 
       expect(container.className).not.toContain('visible');
