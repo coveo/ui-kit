@@ -80,17 +80,6 @@ export default meta;
 
 export const Default: Story = {};
 
-export const SearchBeforeInit: Story = {
-  tags: ['!dev'],
-  play: async (context) => {
-    const searchInterface = context.canvasElement.querySelector(
-      'atomic-search-interface'
-    );
-    await customElements.whenDefined('atomic-search-interface');
-    await searchInterface!.executeFirstSearch();
-  },
-};
-
 export const WithAResultList: Story = {
   name: 'With a Result List',
   args: {

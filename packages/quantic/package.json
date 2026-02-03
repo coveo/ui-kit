@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "3.34.2",
+  "version": "3.36.1",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -65,7 +65,7 @@
     "@octokit/graphql-schema": "15.26.0",
     "@playwright/test": "catalog:",
     "@salesforce/eslint-config-lwc": "3.7.2",
-    "@salesforce/sfdx-lwc-jest": "5.1.0",
+    "@salesforce/sfdx-lwc-jest": "6.0.0",
     "@types/wait-on": "5.3.4",
     "@typescript-eslint/parser": "8.44.0",
     "dotenv": "17.2.1",

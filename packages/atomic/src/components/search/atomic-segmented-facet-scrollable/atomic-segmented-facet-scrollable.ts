@@ -23,7 +23,7 @@ type ArrowDirection = 'right' | 'left';
 /**
  * The `atomic-segmented-facet-scrollable` component wraps around one or several `atomic-segmented-facet` to provide horizontal scrolling capabilities.
  *
- * @slot (default) - One or multiple atomic-segmented-facet components
+ * @slot default - One or multiple atomic-segmented-facet components
  *
  * @part scrollable-container - The wrapper for the entire component including the horizontal-scroll container and the arrow buttons.
  * @part horizontal-scroll - The scrollable container for the segmented facets.
@@ -102,7 +102,7 @@ export class AtomicSegmentedFacetScrollable
   @bindingGuard()
   render() {
     if (this.searchStatusState.hasError) {
-      return html`${nothing}`;
+      return nothing;
     }
 
     return html`

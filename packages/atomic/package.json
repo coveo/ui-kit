@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.44.0",
+  "version": "3.46.1",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -82,7 +82,8 @@
     "promote:npm:latest": "pnpm --filter @coveo/ci promote-npm-prod",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
     "chromatic": "chromatic -d=dist-storybook",
-    "validate:light-dom-styles": "node ./scripts/check-light-dom-host-selectors.mjs"
+    "validate:light-dom-styles": "node ./scripts/check-light-dom-host-selectors.mjs",
+    "validate:no-new-light-dom": "node ./scripts/check-no-new-light-dom-components.mjs"
   },
   "dependencies": {
     "@coveo/bueno": "workspace:*",

@@ -46,6 +46,11 @@ const exampleSalesforceLink = 'https://www.example-salesforce.com';
 const urlFragment = '#:~:text=text%2001';
 const exampleCitationUrl = 'https://example.com/';
 
+const activeCitationLinkClass = 'citation__link--active';
+const activeCitationTitleClass = 'citation__title--active';
+const activeCitationIconClass = 'citation__icon--active';
+const testIconName = 'utility:attach';
+
 const defaultOptions = {
   citation: exampleCitation,
   interactiveCitation: {
@@ -62,9 +67,23 @@ const selectors = {
   citationTitle: '.citation__title',
   citationTooltip: 'c-quantic-tooltip',
   citationTooltipUrl: '[data-testid="citation__tooltip-uri"]',
+  citationIcon: '.citation__icon',
+  actionsSlot: 'slot[name="actions"]',
 };
 
-function createTestComponent(options = defaultOptions) {
+/**
+ * Mocks the return value of the assignedNodes method.
+ * @param {Array<Element>} assignedElements
+ */
+function mockSlotAssignedNodes(assignedElements) {
+  HTMLSlotElement.prototype.assignedNodes = function () {
+    return assignedElements;
+  };
+}
+
+function createTestComponent(options = defaultOptions, assignedElements = []) {
+  mockSlotAssignedNodes(assignedElements);
+
   const element = createElement('c-quantic-citation', {
     is: QuanticCitation,
   });
@@ -445,6 +464,118 @@ describe('c-quantic-citation', () => {
           expect(link.href).toBe(`${exampleSalesforceLink}/`);
         });
       });
+    });
+  });
+
+  describe('when the citation is active', () => {
+    it('should apply the active styles to the citation link, title and icon', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        citation: exampleCitation,
+        isActive: true,
+        iconName: testIconName,
+      });
+      await flushPromises();
+
+      const citationLink = element.shadowRoot.querySelector(
+        selectors.citationLink
+      );
+      const citationTitle = element.shadowRoot.querySelector(
+        selectors.citationTitle
+      );
+      const citationIcon = element.shadowRoot.querySelector(
+        selectors.citationIcon
+      );
+
+      expect(citationLink.classList).toContain(activeCitationLinkClass);
+      expect(citationTitle.classList).toContain(activeCitationTitleClass);
+      expect(citationIcon.classList).toContain(activeCitationIconClass);
+    });
+  });
+
+  describe('when the citation is not active', () => {
+    it('should not apply the active styles to the citation link, title and icon', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        citation: exampleCitation,
+        isActive: false,
+        iconName: testIconName,
+      });
+      await flushPromises();
+
+      const citationLink = element.shadowRoot.querySelector(
+        selectors.citationLink
+      );
+      const citationTitle = element.shadowRoot.querySelector(
+        selectors.citationTitle
+      );
+      const citationIcon = element.shadowRoot.querySelector(
+        selectors.citationIcon
+      );
+
+      expect(citationLink.classList).not.toContain(activeCitationLinkClass);
+      expect(citationTitle.classList).not.toContain(activeCitationTitleClass);
+      expect(citationIcon.classList).not.toContain(activeCitationIconClass);
+    });
+  });
+
+  describe('when an icon name is provided', () => {
+    it('should set the icon name on the citation icon', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        citation: exampleCitation,
+        iconName: testIconName,
+      });
+      await flushPromises();
+
+      const citationIcon = element.shadowRoot.querySelector('lightning-icon');
+      expect(citationIcon.iconName).toBe(testIconName);
+    });
+  });
+
+  describe('when no icon name is provided', () => {
+    it('should not display any icon in the citation', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        citation: exampleCitation,
+        iconName: undefined,
+      });
+      await flushPromises();
+
+      const citationIcon = element.shadowRoot.querySelector('lightning-icon');
+      expect(citationIcon).toBeNull();
+    });
+  });
+
+  describe('citation actions slot', () => {
+    it('should render provided actions in the slot', async () => {
+      const exampleAction = document.createElement('span');
+      exampleAction.textContent = 'Test Action';
+      const exampleAssignedElements = [exampleAction];
+
+      const element = createTestComponent(
+        defaultOptions,
+        exampleAssignedElements
+      );
+      await flushPromises();
+
+      const slot = element.shadowRoot.querySelector(selectors.actionsSlot);
+      expect(slot).not.toBeNull();
+
+      const assignedActions = slot.assignedNodes();
+      expect(assignedActions).toHaveLength(1);
+      expect(assignedActions[0].textContent).toBe('Test Action');
+    });
+
+    it('should have no assigned actions when none are provided', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const slot = element.shadowRoot.querySelector(selectors.actionsSlot);
+      expect(slot).not.toBeNull();
+
+      const assignedActions = element.querySelectorAll('[slot="actions"]');
+      expect(assignedActions).toHaveLength(0);
     });
   });
 });

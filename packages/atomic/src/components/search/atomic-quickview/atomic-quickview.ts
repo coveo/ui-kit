@@ -19,6 +19,7 @@ import {
 } from '@/src/utils/accessibility-utils';
 import QuickviewIcon from '../../../images/quickview.svg';
 import '@/src/components/common/atomic-icon/atomic-icon';
+import type {AtomicQuickviewModal} from '../atomic-quickview-modal/atomic-quickview-modal';
 
 /**
  * The `atomic-quickview` component renders a button which the end user can click to open a modal box containing a preview
@@ -66,7 +67,7 @@ export class AtomicQuickview
   private resultContext = createResultContextController(this);
   private buttonFocusTarget!: FocusTargetController;
   private ariaLiveRegion = new AriaLiveRegionController(this, 'quickview');
-  private quickviewModalRef?: HTMLAtomicQuickviewModalElement;
+  private quickviewModalRef?: AtomicQuickviewModal;
   private buttonRef: Ref<HTMLButtonElement> = createRef();
 
   private nextQuickviewHandler = (evt: Event) => {

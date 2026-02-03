@@ -37,7 +37,6 @@ export {
   getAnalyticsNextApiBaseUrl,
   getOrganizationEndpoint,
 } from './api/platform-client.js';
-
 export type {
   CommerceEngine,
   CommerceEngineConfiguration,
@@ -45,7 +44,6 @@ export type {
 } from './app/commerce-engine/commerce-engine.js';
 export {buildCommerceEngine} from './app/commerce-engine/commerce-engine.js';
 export {getSampleCommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
-
 export type {
   CoreEngine,
   CoreEngineNext,
@@ -98,6 +96,11 @@ export type {
   BadgePlacement,
   BadgesProduct,
 } from './api/commerce/product-enrichment/product-enrichment-response.js';
+// Types & Helpers
+export {
+  deserializeRelativeDate,
+  validateRelativeDate,
+} from './api/search/date/relative-date.js';
 export type {CategoryFacetSearchResult} from './api/search/facet-search/category-facet-search/category-facet-search-response.js';
 export type {SpecificFacetSearchResult as RegularFacetSearchResult} from './api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
 export type {
@@ -113,6 +116,7 @@ export type {
   ContextOptions,
   ContextProps,
   ContextState,
+  CustomContext,
   UserLocation,
   View,
 } from './controllers/commerce/context/headless-context.js';
@@ -295,10 +299,10 @@ export type {
 } from './controllers/commerce/search/did-you-mean/headless-did-you-mean.js';
 export type {
   Search,
+  SearchOptions,
   SearchState,
 } from './controllers/commerce/search/headless-search.js';
 export {buildSearch} from './controllers/commerce/search/headless-search.js';
-
 export type {SearchSummaryState} from './controllers/commerce/search/summary/headless-search-summary.js';
 export type {
   SearchBox,
@@ -314,13 +318,14 @@ export type {
 } from './controllers/commerce/standalone-search-box/headless-standalone-search-box.js';
 export {buildStandaloneSearchBox} from './controllers/commerce/standalone-search-box/headless-standalone-search-box.js';
 export {buildNotifyTrigger} from './controllers/commerce/triggers/headless-notify-trigger.js';
+export type {QueryTriggerOptions} from './controllers/commerce/triggers/headless-query-trigger.js';
 export {buildQueryTrigger} from './controllers/commerce/triggers/headless-query-trigger.js';
 export {buildRedirectionTrigger} from './controllers/commerce/triggers/headless-redirection-trigger.js';
-// Controllers
 export type {
   Controller,
   Subscribable,
 } from './controllers/controller/headless-controller.js';
+// Controllers
 export {buildController} from './controllers/controller/headless-controller.js';
 export type {DateFilterRange} from './controllers/core/facets/range-facet/date-facet/headless-core-date-filter.js';
 export type {InteractiveResultCore} from './controllers/core/interactive-result/headless-core-interactive-result.js';
@@ -354,13 +359,7 @@ export {buildProductTemplatesManager} from './features/commerce/product-template
 export type {CommerceSearchParameters} from './features/commerce/search-parameters/search-parameters-actions.js';
 export type {SearchParameters} from './features/search-parameters/search-parameter-actions.js';
 export type {Template} from './features/templates/templates-manager.ts';
-
-// Types & Helpers
 export {HighlightUtils};
-export {
-  deserializeRelativeDate,
-  validateRelativeDate,
-} from './api/search/date/relative-date.js';
 
 export {
   productListingSerializer,

@@ -1,6 +1,6 @@
 {
   "name": "@coveo/create-atomic-component",
-  "version": "1.5.12",
+  "version": "1.5.13",
   "description": "Initialize a Coveo Atomic Component",
   "type": "module",
   "main": "index.js",
