@@ -5,6 +5,7 @@ import {
 } from '../../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import {generateFollowUpAnswer} from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
 import {selectAnswerApiQueryParams} from '../../../features/generated-answer/answer-api-selectors.js';
@@ -31,6 +32,11 @@ interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
    * The state of the GeneratedAnswer controller.
    */
   state: GeneratedAnswerWithFollowUpsState;
+  /**
+   * Asks a follow-up question.
+   * @param question - The follow-up question to ask.
+   */
+  askFollowUp(question: string): void;
 }
 
 /**
@@ -104,6 +110,9 @@ export function buildGeneratedAnswerWithFollowUps(
     },
     retry() {
       engine.dispatch(generateHeadAnswer());
+    },
+    askFollowUp(question: string) {
+      engine.dispatch(generateFollowUpAnswer(question));
     },
   };
 }
