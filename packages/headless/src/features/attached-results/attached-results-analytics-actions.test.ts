@@ -87,7 +87,10 @@ const expectedDocumentIdentifier = {
 const expectedCitationPayload = {
   generativeQuestionAnsweringId: 'example-answer-id',
   citationId: 'citation-123',
-  documentId: expectedDocumentIdentifier,
+  documentId: {
+    contentIdKey: 'permanentid',
+    contentIdValue: 'example contentIDValue',
+  },
 };
 
 const resultParams = {
