@@ -1,0 +1,48 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicInsightResultAttachToCaseActionStories from './atomic-insight-result-attach-to-case-action.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicInsightResultAttachToCaseActionStories} />
+
+<AtomicDocTemplate
+  stories={AtomicInsightResultAttachToCaseActionStories}
+  defaultStory="Default"
+  githubPath="insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action.ts"
+  tagName="atomic-insight-result-attach-to-case-action"
+  className="AtomicInsightResultAttachToCaseAction"
+>
+
+This component renders an interactive button that emits an `atomic/insight/attachToCase/attach` or `atomic/insight/attachToCase/detach` JavaScript event when clicked, based on the current attachment state.
+
+```html
+<atomic-insight-result-template>
+  <template>
+    <atomic-result-section-title>
+      <atomic-result-link></atomic-result-link>
+    </atomic-result-section-title>
+    <atomic-result-section-actions>
+      <atomic-insight-result-attach-to-case-action></atomic-insight-result-attach-to-case-action>
+    </atomic-result-section-actions>
+  </template>
+</atomic-insight-result-template>
+```
+
+## Handling events
+
+Listen for the custom events to implement your attach/detach logic:
+
+```javascript
+document.addEventListener('atomic/insight/attachToCase/attach', (event) => {
+  const { callback, result } = event.detail;
+  // Perform your attach logic here
+  callback(); // Call to update the component state
+});
+
+document.addEventListener('atomic/insight/attachToCase/detach', (event) => {
+  const { callback, result } = event.detail;
+  // Perform your detach logic here
+  callback(); // Call to update the component state
+});
+```
+
+</AtomicDocTemplate>
