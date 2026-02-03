@@ -40,6 +40,7 @@ import {
   validatePayload,
 } from '../../utils/validate-payload.js';
 import {selectAgentId} from '../configuration/configuration-selectors.js';
+import {resetFollowUpAnswers} from '../follow-up-answers/follow-up-answers-actions.js';
 import {
   logGeneratedAnswerResponseLinked,
   logGeneratedAnswerStreamEnd,
@@ -398,6 +399,7 @@ export const generateHeadAnswer = createAsyncThunk<
       return;
     }
 
+    dispatch(resetFollowUpAnswers());
     dispatch(resetAnswer());
     const generateHeadAnswerParams = constructGenerateHeadAnswerParams(
       state,
