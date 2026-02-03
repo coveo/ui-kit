@@ -71,6 +71,17 @@ const baseStyle = css`
     @apply flex;
   }
 
+  /* Ensure header icon inherits and applies the primary text color */
+  [part='header-icon'] {
+    color: var(--atomic-primary);
+  }
+
+  [part='header-icon'] svg,
+  [part='header-icon'] svg * {
+    fill: currentColor;
+    stroke: currentColor;
+  }
+
   /* Generating label visibility */
   .generating-label-visible [part='is-generating'] {
     @apply flex;
@@ -93,6 +104,15 @@ const baseStyle = css`
 
   [part='generated-container'].answer-collapsed .feedback-buttons {
     @apply hidden;
+  }
+
+  /* Allow query label up to 3 lines before truncating */
+  .query-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 `;
 

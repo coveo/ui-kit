@@ -18,7 +18,9 @@ import {GeneratedAnswerController} from '@/src/components/common/generated-answe
 import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
 import {renderCitations} from '@/src/components/common/generated-answer/render-citations';
 import {renderCustomNoAnswerMessage} from '@/src/components/common/generated-answer/render-custom-no-answer-message';
+import {renderDisclaimer} from '@/src/components/common/generated-answer/render-disclaimer';
 import {renderFeedbackAndCopyButtons} from '@/src/components/common/generated-answer/render-feedback-and-copy-buttons';
+import {renderFollowUpInput} from '@/src/components/common/generated-answer/render-follow-up-input';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {arrayConverter} from '@/src/converters/array-converter';
@@ -167,6 +169,38 @@ export class AtomicGeneratedAnswer
   disableCitationAnchoring = false;
 
   /**
+   * Whether to make the generated answer content scrollable.
+   * When enabled, the content area will have a maximum height and allow scrolling through previous answers.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'scrollable',
+    converter: booleanConverter,
+  })
+  scrollable = false;
+
+  /**
+   * Whether to display a button that lets users hide the previous follow-up questions after expanding them.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'hide-previous-answers',
+    converter: booleanConverter,
+  })
+  hidePreviousAnswers = false;
+
+  /**
+   * Whether to make the follow-up input sticky.
+   * When enabled, the input will stick to the bottom of the viewport when scrolling up.
+   */
+  @property({
+    type: Boolean,
+    attribute: 'sticky-input',
+    converter: booleanConverter,
+  })
+  stickyInput = false;
+
+  /**
    * The tabs on which the generated answer can be displayed. This property should not be used at the same time as `tabs-excluded`.
    *
    * Set this property as a stringified JSON array, for example:
@@ -226,6 +260,18 @@ export class AtomicGeneratedAnswer
 
   @state()
   private copyError = false;
+
+  @state()
+  private followUpInputValue = '';
+
+  @state()
+  private followUpPending = false;
+
+  @state()
+  private previousAnswersCollapsed = true;
+
+  @state()
+  private initialQuery = '';
 
   private ariaMessage = new AriaLiveRegionController(this, 'generated-answer');
 
@@ -337,6 +383,48 @@ export class AtomicGeneratedAnswer
     return 'askFollowUp' in this.generatedAnswer;
   }
 
+  private handleFollowUpInputChange = (value: string) => {
+    this.followUpInputValue = value;
+  };
+
+  private handleAskFollowUp = async (query: string) => {
+    if (this.canAskFollowUp()) {
+      this.followUpPending = true;
+      this.previousAnswersCollapsed = true;
+      this.requestUpdate('previousAnswersCollapsed');
+      try {
+        const result = await this.generatedAnswer.askFollowUp(query);
+        return result;
+      } finally {
+        this.followUpPending = false;
+      }
+    }
+  };
+
+  private handleClearFollowUpInput = () => {
+    this.followUpInputValue = '';
+  };
+
+  private handleTogglePreviousAnswers = () => {
+    this.previousAnswersCollapsed = false;
+    this.requestUpdate('previousAnswersCollapsed');
+  };
+
+  private handleHidePreviousAnswers = () => {
+    this.previousAnswersCollapsed = true;
+    this.requestUpdate('previousAnswersCollapsed');
+  };
+
+  private isAnyFollowUpAnswerStreaming(): boolean {
+    if (!this.canAskFollowUp()) {
+      return false;
+    }
+    const followUpAnswers = this.generatedAnswer.state.followUpAnswers;
+    return (
+      followUpAnswers?.answers?.some((answer) => answer.isStreaming) ?? false
+    );
+  }
+
   @bindingGuard()
   @errorGuard()
   render() {
@@ -351,7 +439,7 @@ export class AtomicGeneratedAnswer
     }
 
     const contentClasses =
-      'mx-auto mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
+      'mx-auto mt-0 mb-4 border border-neutral shadow-lg bg-background rounded-lg text-on-background';
 
     if (this.hasNoAnswerGenerated) {
       if (
@@ -381,13 +469,8 @@ export class AtomicGeneratedAnswer
           aria-label=${this.bindings.i18n.t('generated-answer-title')}
         >
           <article>${this.renderContent()}</article>
-          <button class="btn-outline-primary p-2" aria-live="polite" @click=${() => {
-            if (this.canAskFollowUp()) {
-              this.generatedAnswer.askFollowUp('What is Coveo?');
-            }
-          }}>
-            Ask Follow Up
-          </button>
+          ${this.isAnswerVisible ? this.renderFollowUpInput() : nothing}
+          ${this.isAnswerVisible ? this.renderDisclaimer() : nothing}
         </aside>
       </div>
     `;
@@ -395,7 +478,16 @@ export class AtomicGeneratedAnswer
 
   // Used by bindStateToController decorator via onUpdateCallbackMethod option
   public onGeneratedAnswerStateUpdate = () => {
-    console.log(this.generatedAnswerState);
+    // Capture the initial query when the first answer is generated
+    if (
+      !this.initialQuery &&
+      (this.generatedAnswerState.isLoading ||
+        this.generatedAnswerState.isStreaming ||
+        this.generatedAnswerState.isAnswerGenerated)
+    ) {
+      this.initialQuery = this.bindings.engine.state.query?.q ?? '';
+    }
+
     if (
       this.generatedAnswerState.isVisible !== this.controller.data.isVisible
     ) {
@@ -586,7 +678,6 @@ export class AtomicGeneratedAnswer
       props: {
         i18n: this.bindings.i18n,
         generatedAnswerState: this.generatedAnswerState,
-        withToggle: this.withToggle,
         copied: this.copied,
         copyError: this.copyError,
         getCopyToClipboardTooltip: () => this.copyToClipboardTooltip,
@@ -607,6 +698,12 @@ export class AtomicGeneratedAnswer
         toggleTooltip: this.toggleTooltip,
         withToggle: this.withToggle,
         collapsible: this.collapsible,
+        query: this.bindings.engine.state.query?.q ?? '',
+        initialQuery: this.initialQuery,
+        agentId: this.agentId,
+        followUpAnswers: this.canAskFollowUp()
+          ? this.generatedAnswer.state.followUpAnswers
+          : undefined,
         renderFeedbackAndCopyButtonsSlot: () =>
           this.renderFeedbackAndCopyButtonsWrapper(),
         renderCitationsSlot: () => html`${this.renderCitationsList()}`,
@@ -615,8 +712,59 @@ export class AtomicGeneratedAnswer
         },
         onRetry: () => this.generatedAnswer?.retry(),
         onClickShowButton: () => this.clickOnShowButton(),
+        scrollable: this.scrollable,
+        hidePreviousAnswers: this.hidePreviousAnswers,
+        previousAnswersCollapsed: this.previousAnswersCollapsed,
+        onTogglePreviousAnswers: this.handleTogglePreviousAnswers,
+        onHidePreviousAnswers: this.handleHidePreviousAnswers,
       },
     });
+  }
+
+  private renderFollowUpInput() {
+    if (!this.agentId) {
+      return nothing;
+    }
+
+    const stickyClasses = this.stickyInput
+      ? 'sticky bottom-0 bg-white z-10'
+      : '';
+
+    return html`
+      <div class="px-6 ${stickyClasses}">
+        ${renderFollowUpInput({
+          props: {
+            i18n: this.bindings.i18n,
+            inputValue: this.followUpInputValue,
+            onInput: this.handleFollowUpInputChange,
+            canAskFollowUp: () => this.canAskFollowUp(),
+            askFollowUp: this.handleAskFollowUp,
+            onClearInput: this.handleClearFollowUpInput,
+            buttonDisabled:
+              !!this.generatedAnswerState.isStreaming ||
+              this.isAnyFollowUpAnswerStreaming() ||
+              this.followUpPending,
+          },
+        })}
+      </div>
+    `;
+  }
+
+  private renderDisclaimer() {
+    if (this.hasRetryableError) {
+      return nothing;
+    }
+
+    return html`
+      <div class="flex justify-end px-6 pb-6">
+        ${renderDisclaimer({
+          props: {
+            i18n: this.bindings.i18n,
+            isStreaming: !!this.generatedAnswerState.isStreaming,
+          },
+        })}
+      </div>
+    `;
   }
 
   private renderCustomNoAnswerMessageWrapper() {

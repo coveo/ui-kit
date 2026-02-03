@@ -166,6 +166,23 @@ describe('#renderAnswerContent', () => {
   });
 
   describe('when answer is visible and no retryable error', () => {
+    it('should display the latest query from props', async () => {
+      const {element} = await renderComponent({
+        query: '  user query  ',
+        // @ts-expect-error Test fixture with partial mock
+        generatedAnswerState: {
+          answer: 'Test answer',
+          answerContentFormat: 'text/plain',
+          isStreaming: false,
+          expanded: true,
+        },
+      });
+
+      const queryText = element.querySelector('.query-text');
+
+      expect(queryText?.textContent?.trim()).toBe('user query');
+    });
+
     it('should call renderGeneratedContentContainer with correct arguments', async () => {
       await renderComponent({
         isAnswerVisible: true,
@@ -195,6 +212,24 @@ describe('#renderAnswerContent', () => {
       });
 
       expect(renderFeedbackAndCopyButtonsSlot).toHaveBeenCalled();
+    });
+
+    it('should not render feedback and copy buttons when collapsed', async () => {
+      const renderFeedbackAndCopyButtonsSlot = vi.fn(() => html``);
+
+      await renderComponent({
+        collapsible: true,
+        renderFeedbackAndCopyButtonsSlot,
+        // @ts-expect-error Test fixture with partial mock
+        generatedAnswerState: {
+          answer: 'Test answer',
+          answerContentFormat: 'text/plain',
+          isStreaming: false,
+          expanded: false,
+        },
+      });
+
+      expect(renderFeedbackAndCopyButtonsSlot).not.toHaveBeenCalled();
     });
 
     it('should call renderCitationsSlot', async () => {
@@ -430,5 +465,16 @@ describe('#renderAnswerContent', () => {
 
       expect(renderDisclaimer).not.toHaveBeenCalled();
     });
+  });
+
+  it('should not render feedback and copy buttons when there is a retryable error', async () => {
+    const renderFeedbackAndCopyButtonsSlot = vi.fn(() => html``);
+
+    await renderComponent({
+      hasRetryableError: true,
+      renderFeedbackAndCopyButtonsSlot,
+    });
+
+    expect(renderFeedbackAndCopyButtonsSlot).not.toHaveBeenCalled();
   });
 });

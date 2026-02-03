@@ -59,7 +59,7 @@ const getNthResult = (n: number) => ({
   FirstSentences: null,
 });
 
-interface InsightResponse {
+export interface InsightResponse {
   totalCount: number;
   totalCountFiltered: number;
   duration: number;
