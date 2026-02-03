@@ -66,7 +66,7 @@ export default class QuanticRefineModalContent extends LightningElement {
    */
   @api hideSort;
   /**
-   * Indicates whether to disable the dynamic navigation feature according to [the dynamic navigation experience](https://docs.coveo.com/en/3383/leverage-machine-learning/about-dynamic-navigation-experience-dne).
+   * Indicates whether to disable the dynamic navigation feature according to [the Dynamic Navigation Experience](https://docs.coveo.com/en/3383/leverage-machine-learning/about-dynamic-navigation-experience-dne).
    * @api
    * @type {boolean}
    * @defaultValue `false`

@@ -34,6 +34,7 @@ interface FetchedResponse {
   duration: number;
   queryExecuted: string;
   requestExecuted: FilterableCommerceAPIRequest;
+  enableResults?: boolean;
 }
 
 export type StateNeededByExecuteSearch =
@@ -82,7 +83,15 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     const response = await this.extra.apiClient.search(request);
     const duration = Date.now() - startedAt;
     const queryExecuted = this.getState().commerceQuery.query || '';
-    return {response, duration, queryExecuted, requestExecuted: request};
+    return {
+      response,
+      duration,
+      queryExecuted,
+      requestExecuted: request,
+      enableResults: Boolean(
+        'enableResults' in request && request.enableResults
+      ),
+    };
   }
 
   private processSuccessResponse(
@@ -161,8 +170,10 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     }
 
     const originalQuery = this.getCurrentQuery();
-    const retried =
-      await this.automaticallyRetryQueryWithTriggerModification(correctedQuery);
+    const retried = await this.automaticallyRetryQueryWithTriggerModification(
+      correctedQuery,
+      fetched.enableResults
+    );
 
     if (isErrorResponse(retried.response)) {
       return this.rejectWithValue(retried.response.error) as RejectionType;
@@ -178,7 +189,8 @@ export class AsyncSearchThunkProcessor<RejectionType> {
   }
 
   private async automaticallyRetryQueryWithTriggerModification(
-    modified: string
+    modified: string,
+    enableResults?: boolean
   ) {
     this.dispatch(
       applyQueryTriggerModification({
@@ -193,6 +205,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
         this.navigatorContext
       ),
       query: modified,
+      enableResults: Boolean(enableResults),
     });
 
     return fetched;

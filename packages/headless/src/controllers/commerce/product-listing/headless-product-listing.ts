@@ -13,6 +13,7 @@ import {
   perPagePrincipalSelector,
   totalEntriesPrincipalSelector,
 } from '../../../features/commerce/pagination/pagination-selectors.js';
+import type {Parameters} from '../../../features/commerce/parameters/parameters-actions.js';
 import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema.js';
 import {activeParametersSelector} from '../../../features/commerce/parameters/parameters-selectors.js';
 import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
@@ -36,14 +37,13 @@ import {
   buildController,
   type Controller,
 } from '../../controller/headless-controller.js';
-import {
-  buildProductListingSubControllers,
-  type ProductListingSubControllers,
-} from '../core/sub-controller/headless-sub-controller.js';
+import type {SearchAndListingSubControllers} from '../core/sub-controller/headless-sub-controller.js';
+import {buildProductListingSubControllers} from '../core/sub-controller/headless-sub-controller.js';
 import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 } from './facets/headless-product-listing-facet-options.js';
+import type {ProductListingSummaryState} from './summary/headless-product-listing-summary.js';
 
 /**
  * The `ProductListing` controller exposes a method for retrieving product listing content in a commerce interface.
@@ -55,7 +55,7 @@ import {
  */
 export interface ProductListing
   extends Controller,
-    ProductListingSubControllers {
+    SearchAndListingSubControllers<Parameters, ProductListingSummaryState> {
   /**
    * Fetches the product listing.
    */

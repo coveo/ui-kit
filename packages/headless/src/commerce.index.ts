@@ -322,6 +322,7 @@ export type {
 } from './controllers/commerce/standalone-search-box/headless-standalone-search-box.js';
 export {buildStandaloneSearchBox} from './controllers/commerce/standalone-search-box/headless-standalone-search-box.js';
 export {buildNotifyTrigger} from './controllers/commerce/triggers/headless-notify-trigger.js';
+export type {QueryTriggerOptions} from './controllers/commerce/triggers/headless-query-trigger.js';
 export {buildQueryTrigger} from './controllers/commerce/triggers/headless-query-trigger.js';
 export {buildRedirectionTrigger} from './controllers/commerce/triggers/headless-redirection-trigger.js';
 export type {
