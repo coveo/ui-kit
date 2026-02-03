@@ -35,11 +35,12 @@ const buildMessage = ({
   statusCode,
 });
 
-const Messages = {
-  Header: buildMessage({
-    payloadType: 'genqa.headerMessageType',
-    payload: {answerStyle: 'default', contentFormat: 'text/markdown'},
-  }),
+export const MessageFactories = {
+  Header: () =>
+    buildMessage({
+      payloadType: 'genqa.headerMessageType',
+      payload: {answerStyle: 'default', contentFormat: 'text/markdown'},
+    }),
   AnswerPart: ({textDelta, padding}: {textDelta: string; padding: string}) =>
     buildMessage({
       payloadType: 'genqa.messageType',
@@ -52,52 +53,53 @@ const Messages = {
         citations,
       },
     }),
-  EndOfStream: buildMessage({
-    payloadType: 'genqa.endOfStreamType',
-    payload: {answerGenerated: true},
-    finishReason: 'COMPLETED',
-  }),
+  EndOfStream: ({answerGenerated = true} = {}) =>
+    buildMessage({
+      payloadType: 'genqa.endOfStreamType',
+      payload: {answerGenerated},
+      finishReason: 'COMPLETED',
+    }),
 };
 
 const rgaMessages: MessagePayloadStringified[] = [
-  Messages.Header,
-  Messages.AnswerPart({textDelta: '', padding: '12345678901234567'}),
-  Messages.AnswerPart({
+  MessageFactories.Header(),
+  MessageFactories.AnswerPart({textDelta: '', padding: '12345678901234567'}),
+  MessageFactories.AnswerPart({
     textDelta:
       '# Resolving Netflix Connection Issues with TiVo\n\nTo resolve Netflix connection issues with your TiVo, follow these steps:\n\n## Test Internet Connection\n',
     padding: '1234567890123',
   }),
-  Messages.AnswerPart({
+  MessageFactories.AnswerPart({
     textDelta:
       '1. **For Series4 and newer DVRs:**\n   - From TiVo Central, select **Settings & Messages**.\n   - Choose **Settings**.\n   - Select **Network**.\n   - Choose **View network diagnostics**.\n   - Select **Test Internet connection**.\n\n2. **For Series3 and older DVRs:**\n   - From TiVo Central, select **Messages &',
     padding: '1234567890123456789',
   }),
-  Messages.AnswerPart({
+  MessageFactories.AnswerPart({
     textDelta:
       ' Settings**.\\n   - Choose **Settings**.\\n   - Select **Phone & Network**.\\n   - Choose **View network diagnostics**.\\n   - Select **TiVo service connection**.\\n\\n## Restart Your Device\\n1. Unplug your TiVo device from power for at least **10 seconds**.\\n2. Plug it back in',
     padding: '12345678901234',
   }),
-  Messages.AnswerPart({
+  MessageFactories.AnswerPart({
     textDelta:
       '.\\n3. Turn on the device using the power button. (Note: Restarting may take up to **15 minutes**.)\\n\\n## Deactivate and Reactivate TiVo\\n1. **For Series4 and newer DVRs:**\\n   - From the TiVo home screen',
     padding: '123456',
   }),
-  Messages.AnswerPart({
+  MessageFactories.AnswerPart({
     textDelta:
       ', go to **TiVo Central**.\\n   - Select **Settings & Messages**.\\n   - Choose **Account & System info**.\\n   - Select **Netflix Account information**.\\n   - Choose **Deactivate this device**.\\n\\n2. **For Series3 and older DVRs:**\\n   - From TiVo Central, select **Video On Demand**.\\n   - Choose **Netflix**',
     padding: '1234567890',
   }),
-  Messages.AnswerPart({
+  MessageFactories.AnswerPart({
     textDelta:
       '.\\n   - Select **Netflix Account Information**.\\n   - Choose **Deactivate this device**.\\n\\nAfter deactivation, launch Netflix again and enter your Netflix email and password to reactivate.\\n\\n## Additional Troubleshooting\\nIf you still cannot connect to Netflix:\\n- Check for any reported service outages.\\n- Ensure your',
     padding: '1234567890123456',
   }),
-  Messages.AnswerPart({
+  MessageFactories.AnswerPart({
     textDelta:
       ' modem and Internet service are functioning properly.\\n- If necessary, bypass your router by connecting your TiVo directly to the modem using an Ethernet cable to identify if the router is the issue.\\n\\nFollowing these steps should help resolve your Netflix connection issues with TiVo.',
     padding: '12345678901234567890',
   }),
-  Messages.Citations([
+  MessageFactories.Citations([
     {
       id: '42.21238$https://coveodemo.atlassian.net/wiki/Space:TV/Page:2359302-29:0',
       title:
@@ -146,7 +148,7 @@ const rgaMessages: MessagePayloadStringified[] = [
       },
     },
   ]),
-  Messages.EndOfStream,
+  MessageFactories.EndOfStream(),
 ];
 
 const buildAnsweringStreamingResponse = (
