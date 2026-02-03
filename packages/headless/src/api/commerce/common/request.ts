@@ -84,12 +84,7 @@ export const baseRequest = (
 > => {
   const {url, trackingId, accessToken} = req;
 
-  // For redirect requests, use the URL as-is since it's already the complete endpoint
-  // For other requests, build the URL with path and potential tracking ID
-  const baseUrl =
-    path === 'search/redirect'
-      ? url
-      : buildUrlWithTrackingIdInPath(url, trackingId, path);
+  const baseUrl = buildUrlWithTrackingIdInPath(url, trackingId, path);
 
   return {
     accessToken,
