@@ -84,6 +84,12 @@ const expectedDocumentIdentifier = {
   contentIDValue: 'example contentIDValue',
 };
 
+const expectedCitationPayload = {
+  generativeQuestionAnsweringId: 'example-answer-id',
+  citationId: 'citation-123',
+  documentId: expectedDocumentIdentifier,
+};
+
 const resultParams = {
   title: 'example documentTitle',
   uri: 'example documentUri',
@@ -206,7 +212,7 @@ describe('attached results analytics actions', () => {
     });
 
     describe('#logCitationDocumentAttach', () => {
-      it('should call coveo.analytics.logGeneratedAnswerCitationDocumentAttach properly', async () => {
+      it('should call coveo.analytics.logGeneratedAnswerCitationDocumentAttach with the expected payload', async () => {
         await logCitationDocumentAttach(testCitation)()(
           engine.dispatch,
           () => engine.state,
@@ -221,14 +227,7 @@ describe('attached results analytics actions', () => {
         ).toStrictEqual(expectedCitationDocumentInfo);
         expect(
           mockLogGeneratedAnswerCitationDocumentAttach.mock.calls[0][1]
-        ).toStrictEqual({
-          generativeQuestionAnsweringId: 'example-answer-id',
-          citationId: testCitation.id,
-          documentId: {
-            contentIdKey: 'permanentid',
-            contentIdValue: testCitation.permanentid,
-          },
-        });
+        ).toStrictEqual(expectedCitationPayload);
         expect(
           mockLogGeneratedAnswerCitationDocumentAttach.mock.calls[0][2]
         ).toStrictEqual(expectedMetadata);
