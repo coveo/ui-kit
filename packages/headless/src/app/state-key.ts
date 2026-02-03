@@ -1,9 +1,10 @@
-import type {CoreEngineNext} from './engine.js';
+import {createSelector} from '@reduxjs/toolkit';
+import type {CoreEngine, CoreEngineNext} from './engine.js';
 
 const stateKeyDescription = 'coveo-headless-internal-state';
 export const stateKey = Symbol.for(stateKeyDescription);
 
-export const redactEngine = <TEngine extends CoreEngineNext>(
+export const redactEngine = <TEngine extends CoreEngineNext | CoreEngine>(
   engine: TEngine
 ): TEngine =>
   new Proxy(engine, {
@@ -23,3 +24,22 @@ export const redactEngine = <TEngine extends CoreEngineNext>(
       return Reflect.get(target, prop, receiver);
     },
   });
+
+export const sliceRedactorsMap: Record<
+  string,
+  (stateSlice: unknown) => undefined | object
+> = {};
+
+export const selectPublicState = createSelector(
+  [(state: unknown) => state],
+  (internalState) => {
+    for (const redactor in sliceRedactorsMap) {
+      if (internalState[redactor]) {
+        internalState[redactor] = sliceRedactorsMap[redactor](
+          internalState[redactor]
+        );
+      }
+    }
+    return internalState;
+  }
+);
