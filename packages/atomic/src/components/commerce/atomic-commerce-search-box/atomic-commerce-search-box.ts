@@ -300,6 +300,9 @@ export class AtomicCommerceSearchBox
 
   @watch('redirectionUrl')
   watchRedirectionUrl() {
+    if (!this.searchBox) {
+      return;
+    }
     if (this.isStandaloneSearchBox(this.searchBox) && this.redirectionUrl) {
       this.searchBox.updateRedirectUrl(this.redirectionUrl);
     } else {
