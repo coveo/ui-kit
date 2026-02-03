@@ -48,6 +48,10 @@ export default {
     await import(
       './atomic-insight-result-action-bar/atomic-insight-result-action-bar.js'
     ),
+  'atomic-insight-result-attach-to-case-indicator': async () =>
+    await import(
+      './atomic-insight-result-attach-to-case-indicator/atomic-insight-result-attach-to-case-indicator.js'
+    ),
   'atomic-insight-result-children': async () =>
     await import(
       './atomic-insight-result-children/atomic-insight-result-children.js'

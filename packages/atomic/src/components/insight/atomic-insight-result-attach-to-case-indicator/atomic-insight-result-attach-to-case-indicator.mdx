@@ -1,0 +1,36 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicInsightResultAttachToCaseIndicatorStories from './atomic-insight-result-attach-to-case-indicator.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicInsightResultAttachToCaseIndicatorStories} />
+
+<AtomicDocTemplate
+  stories={AtomicInsightResultAttachToCaseIndicatorStories}
+  defaultStory="Default"
+  githubPath="insight/atomic-insight-result-attach-to-case-indicator/atomic-insight-result-attach-to-case-indicator.ts"
+  tagName="atomic-insight-result-attach-to-case-indicator"
+  className="AtomicInsightResultAttachToCaseIndicator"
+>
+
+The `atomic-insight-result-attach-to-case-indicator` component displays an icon when a result is attached to the current case. This component is typically used within an `atomic-insight-result-template` to provide visual feedback about which results are attached.
+
+```html
+<atomic-insight-result-template>
+  <template>
+    <atomic-result-section-badges>
+      <atomic-insight-result-attach-to-case-indicator></atomic-insight-result-attach-to-case-indicator>
+    </atomic-result-section-badges>
+    <atomic-result-section-title>
+      <atomic-result-link></atomic-result-link>
+    </atomic-result-section-title>
+  </template>
+</atomic-insight-result-template>
+```
+
+## Styling
+
+The component uses the following part attribute for styling:
+
+- `icon`: The attach icon element
+
+</AtomicDocTemplate>

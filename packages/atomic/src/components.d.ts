@@ -95,8 +95,6 @@ export namespace Components {
     }
     interface AtomicInsightResultAttachToCaseAction {
     }
-    interface AtomicInsightResultAttachToCaseIndicator {
-    }
     interface AtomicInsightResultChildrenTemplate {
         /**
           * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
@@ -422,12 +420,6 @@ declare global {
         prototype: HTMLAtomicInsightResultAttachToCaseActionElement;
         new (): HTMLAtomicInsightResultAttachToCaseActionElement;
     };
-    interface HTMLAtomicInsightResultAttachToCaseIndicatorElement extends Components.AtomicInsightResultAttachToCaseIndicator, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightResultAttachToCaseIndicatorElement: {
-        prototype: HTMLAtomicInsightResultAttachToCaseIndicatorElement;
-        new (): HTMLAtomicInsightResultAttachToCaseIndicatorElement;
-    };
     interface HTMLAtomicInsightResultChildrenTemplateElement extends Components.AtomicInsightResultChildrenTemplate, HTMLStencilElement {
     }
     var HTMLAtomicInsightResultChildrenTemplateElement: {
@@ -552,7 +544,6 @@ declare global {
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
         "atomic-insight-result-attach-to-case-action": HTMLAtomicInsightResultAttachToCaseActionElement;
-        "atomic-insight-result-attach-to-case-indicator": HTMLAtomicInsightResultAttachToCaseIndicatorElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
         "atomic-insight-smart-snippet-suggestions": HTMLAtomicInsightSmartSnippetSuggestionsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
@@ -649,8 +640,6 @@ declare namespace LocalJSX {
          */
         "onAtomic/insight/attachToCase/attach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
         "onAtomic/insight/attachToCase/detach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
-    }
-    interface AtomicInsightResultAttachToCaseIndicator {
     }
     interface AtomicInsightResultChildrenTemplate {
         /**
@@ -897,7 +886,6 @@ declare namespace LocalJSX {
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
         "atomic-insight-result-action": AtomicInsightResultAction;
         "atomic-insight-result-attach-to-case-action": AtomicInsightResultAttachToCaseAction;
-        "atomic-insight-result-attach-to-case-indicator": AtomicInsightResultAttachToCaseIndicator;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
         "atomic-insight-smart-snippet-suggestions": AtomicInsightSmartSnippetSuggestions;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
@@ -920,7 +908,6 @@ declare module "@stencil/core" {
             "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
             "atomic-insight-result-attach-to-case-action": LocalJSX.AtomicInsightResultAttachToCaseAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseActionElement>;
-            "atomic-insight-result-attach-to-case-indicator": LocalJSX.AtomicInsightResultAttachToCaseIndicator & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseIndicatorElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
             "atomic-insight-smart-snippet-suggestions": LocalJSX.AtomicInsightSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetSuggestionsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
