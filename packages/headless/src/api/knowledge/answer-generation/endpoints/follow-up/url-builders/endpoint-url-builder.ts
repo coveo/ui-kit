@@ -18,6 +18,6 @@ export const buildFollowUpEndpointUrl = (
   ) {
     throw new Error('Missing required parameters for follow up endpoint');
   }
-  const basePath = `/rest/organizations/${organizationId}/answer/v1/configs`;
-  return `${platformEndpoint}${basePath}/${generatedAnswer.answerConfigurationId}/generate`;
+  const basePath = `/rest/organizations/${organizationId}/agents`;
+  return `${platformEndpoint}${basePath}/${generatedAnswer.answerConfigurationId}/follow-up`;
 };

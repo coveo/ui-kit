@@ -18,6 +18,6 @@ export const buildAnswerEndpointUrl = (
   if (!platformEndpoint || !organizationId || !agentId) {
     throw new Error('Missing required parameters for answer endpoint');
   }
-  const basePath = `/rest/organizations/${organizationId}/answer/v1/configs`;
-  return `${platformEndpoint}${basePath}/${agentId}/generate`;
+  const basePath = `/rest/organizations/${organizationId}/agents`;
+  return `${platformEndpoint}${basePath}/${agentId}/answer`;
 };
