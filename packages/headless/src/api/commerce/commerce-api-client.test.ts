@@ -220,6 +220,43 @@ describe('commerce api client', () => {
     });
   });
 
+  it('#plan should call the redirect endpoint', async () => {
+    const request = {
+      ...(await buildCommerceAPIRequest()),
+      query: 'some query',
+      enableResults: true,
+    };
+
+    mockPlatformCall({
+      ok: true,
+      json: () => Promise.resolve('some content'),
+    });
+
+    await client.plan(request);
+
+    expect(platformCallMock).toHaveBeenCalled();
+    const mockRequest = platformCallMock.mock.calls[0][0];
+    expect(mockRequest).toMatchObject({
+      method: 'POST',
+      contentType: 'application/json',
+      url: `https://${organizationId}.org.coveo.com/api/v2/organizations/${organizationId}/commerce/search/redirect`,
+      accessToken: request.accessToken,
+      origin: 'commerceApiFetch',
+      requestParams: {
+        query: 'some query',
+        debug: false,
+        refreshCache: false,
+        trackingId: request.trackingId,
+        clientId: request.clientId,
+        context: request.context,
+        language: request.language,
+        currency: request.currency,
+        country: request.country,
+      },
+      requestMetadata: {method: 'search/redirect'},
+    });
+  });
+
   it('#getRecommendations should call the platform endpoint with the correct arguments', async () => {
     const request = await buildRecommendationsCommerceAPIRequest();
 

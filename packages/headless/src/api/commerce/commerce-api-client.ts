@@ -188,20 +188,20 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
     });
   }
 
-  // eslint-disable-next-line @cspell/spellchecker
-  // TODO: CAPI-867 - Use Commerce API's equivalent of the /plan endpoint when it becomes available.
   async plan(
     req: CommerceSearchRequest
   ): Promise<CommerceAPIResponse<CommerceSuccessResponse>> {
-    const requestOptions = getRequestOptions(req, 'search');
-    return this.query({
-      ...requestOptions,
-      requestParams: {
-        ...requestOptions.requestParams,
-        query: req?.query,
-      },
-      ...this.options,
-    });
+    const environment = extractEnvironmentFromUrl(req.url);
+
+    // Convert the regular search request to a redirect request with the correct URL
+    const redirectReq: CommerceSearchRedirectRequest = {
+      ...req,
+      // Replace the regular commerce API URL with the redirect API URL
+      url: getCommerceRedirectApiBaseUrl(req.organizationId, environment),
+      debug: false,
+      refreshCache: false,
+    };
+    return this.searchRedirect(redirectReq);
   }
 
   private async query<T = CommerceSuccessResponse>(
@@ -236,4 +236,12 @@ export function getCommerceRedirectApiBaseUrl(
   const platformEndpoint = getOrganizationEndpoint(organizationId, environment);
 
   return `${platformEndpoint}/api/v2/organizations/${organizationId}/commerce/search/redirect`;
+}
+
+/**
+ * Helper function to extract the platform environment from a URL.
+ * Looks for 'dev' in the URL to determine if it's a dev environment.
+ */
+function extractEnvironmentFromUrl(url: string): PlatformEnvironment {
+  return url.includes('dev') ? 'dev' : 'prod';
 }
