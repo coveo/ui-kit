@@ -1,0 +1,10 @@
+description: Shopify integration package
+file_patterns:
+  - packages/shopify/**
+
+reviewers:
+  shopify: ~
+  dxui: ~
+
+review_bypass:
+  integration/139346: exempt # Developer eXperience Bot. Important for releases

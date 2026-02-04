@@ -1,0 +1,64 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicInsightFacetStories from './atomic-insight-facet.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicInsightFacetStories} />
+
+<AtomicDocTemplate
+  stories={AtomicInsightFacetStories}
+  githubPath="insight/atomic-insight-facet/atomic-insight-facet.ts"
+  tagName="atomic-insight-facet"
+  className="AtomicInsightFacet"
+>
+
+This component displays a facet of the results for the current query in an Insight interface.
+A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (for example, number of occurrences).
+
+This component is typically placed within the "facets" section of the layout.
+
+```html
+<atomic-insight-interface>
+  <atomic-insight-layout>
+    <atomic-layout-section section="facets">
+      <atomic-insight-facet field="objecttype" label="Type"></atomic-insight-facet>
+    </atomic-layout-section>
+  </atomic-insight-layout>
+</atomic-insight-interface>
+```
+
+### Display Options
+
+The facet component supports three different display modes by setting the `display-values-as` attribute:
+
+- `checkbox` (default): Display facets as checkboxes.
+This is the most commonly used display and allows multiple selections.
+- `link`: Display facets as links.
+Single selection only, behaves like navigational links.
+- `box`: Display facets as boxes.
+Multi-select with a more visual appearance, presents more values in compact space.
+
+### Exclusion
+
+You can enable facet value exclusion by setting the `enable-exclusion` attribute to `true`.
+This allows users to exclude specific facet values from the results.
+
+### Common Use Cases
+
+Facets are useful for large indexes because they provide multiple filters, one for every specific aspect of the content. 
+Faceted navigation helps the user get an overview of the content available, helping them understand how to search for it.
+
+In an Insight interface, facets help users filter case data, documents, or other content types to find specific information quickly.
+
+## UX Best Practices
+
+- If your facet values are long, consider setting `display-values-as` to `link`.
+Otherwise you risk truncating values when they are displayed to users.
+- It's recommended to use `<atomic-layout-section section="facets">` to control the display of your facets, which will place facets on the left side
+  of the page.
+- Use meaningful labels that clearly describe the type of filter being applied.
+
+## Reference
+
+[Don't Lose Face with Facets](https://source.coveo.com/2018/04/18/facets/).
+
+</AtomicDocTemplate>
