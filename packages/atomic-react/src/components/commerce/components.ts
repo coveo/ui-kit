@@ -28,6 +28,7 @@ import {
   AtomicCommerceTimeframeFacet as LitAtomicCommerceTimeframeFacet,
   AtomicComponentError as LitAtomicComponentError,
   AtomicFocusTrap as LitAtomicFocusTrap,
+  AtomicGeneratedAnswerFeedbackModal as LitAtomicGeneratedAnswerFeedbackModal,
   AtomicIcon as LitAtomicIcon,
   AtomicLayoutSection as LitAtomicLayoutSection,
   AtomicNumericRange as LitAtomicNumericRange,
@@ -229,6 +230,12 @@ export const AtomicFocusTrap = createComponent({
   tagName: 'atomic-focus-trap',
   react: React,
   elementClass: LitAtomicFocusTrap,
+});
+
+export const AtomicGeneratedAnswerFeedbackModal = createComponent({
+  tagName: 'atomic-generated-answer-feedback-modal',
+  react: React,
+  elementClass: LitAtomicGeneratedAnswerFeedbackModal,
 });
 
 export const AtomicIcon = createComponent({

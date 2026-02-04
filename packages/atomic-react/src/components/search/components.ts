@@ -16,6 +16,7 @@ import {
   AtomicFormatNumber as LitAtomicFormatNumber,
   AtomicFormatUnit as LitAtomicFormatUnit,
   AtomicGeneratedAnswer as LitAtomicGeneratedAnswer,
+  AtomicGeneratedAnswerFeedbackModal as LitAtomicGeneratedAnswerFeedbackModal,
   AtomicHtml as LitAtomicHtml,
   AtomicIcon as LitAtomicIcon,
   AtomicLayoutSection as LitAtomicLayoutSection,
@@ -29,10 +30,12 @@ import {
   AtomicQueryError as LitAtomicQueryError,
   AtomicQuerySummary as LitAtomicQuerySummary,
   AtomicQuickview as LitAtomicQuickview,
+  AtomicQuickviewModal as LitAtomicQuickviewModal,
   AtomicRatingFacet as LitAtomicRatingFacet,
   AtomicRatingRangeFacet as LitAtomicRatingRangeFacet,
   AtomicRecsError as LitAtomicRecsError,
   AtomicRecsInterface as LitAtomicRecsInterface,
+  AtomicRecsResult as LitAtomicRecsResult,
   AtomicRefineModal as LitAtomicRefineModal,
   AtomicRefineToggle as LitAtomicRefineToggle,
   AtomicResult as LitAtomicResult,
@@ -81,6 +84,7 @@ import {
   AtomicTabManager as LitAtomicTabManager,
   AtomicText as LitAtomicText,
   AtomicTimeframe as LitAtomicTimeframe,
+  AtomicTimeframeFacet as LitAtomicTimeframeFacet,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
@@ -187,6 +191,12 @@ export const AtomicGeneratedAnswer = createComponent({
   elementClass: LitAtomicGeneratedAnswer,
 });
 
+export const AtomicGeneratedAnswerFeedbackModal = createComponent({
+  tagName: 'atomic-generated-answer-feedback-modal',
+  react: React,
+  elementClass: LitAtomicGeneratedAnswerFeedbackModal,
+});
+
 export const AtomicHtml = createComponent({
   tagName: 'atomic-html',
   react: React,
@@ -265,6 +275,12 @@ export const AtomicQuickview = createComponent({
   elementClass: LitAtomicQuickview,
 });
 
+export const AtomicQuickviewModal = createComponent({
+  tagName: 'atomic-quickview-modal',
+  react: React,
+  elementClass: LitAtomicQuickviewModal,
+});
+
 export const AtomicRatingFacet = createComponent({
   tagName: 'atomic-rating-facet',
   react: React,
@@ -287,6 +303,12 @@ export const AtomicRecsInterface = createComponent({
   tagName: 'atomic-recs-interface',
   react: React,
   elementClass: LitAtomicRecsInterface,
+});
+
+export const AtomicRecsResult = createComponent({
+  tagName: 'atomic-recs-result',
+  react: React,
+  elementClass: LitAtomicRecsResult,
 });
 
 export const AtomicRefineModal = createComponent({
@@ -575,4 +597,10 @@ export const AtomicTimeframe = createComponent({
   tagName: 'atomic-timeframe',
   react: React,
   elementClass: LitAtomicTimeframe,
+});
+
+export const AtomicTimeframeFacet = createComponent({
+  tagName: 'atomic-timeframe-facet',
+  react: React,
+  elementClass: LitAtomicTimeframeFacet,
 });

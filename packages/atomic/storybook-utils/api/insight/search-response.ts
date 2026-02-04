@@ -59,7 +59,7 @@ const getNthResult = (n: number) => ({
   FirstSentences: null,
 });
 
-interface InsightResponse {
+export interface InsightResponse {
   totalCount: number;
   totalCountFiltered: number;
   duration: number;
@@ -124,6 +124,34 @@ export const baseResponse: InsightResponse = {
   phrasesToHighlight: {},
   groupByResults: [],
   facets: [
+    {
+      facetId: 'objecttype',
+      field: 'objecttype',
+      moreValuesAvailable: false,
+      values: [
+        {
+          value: 'Case',
+          state: 'idle',
+          numberOfResults: 12,
+        },
+        {
+          value: 'Article',
+          state: 'idle',
+          numberOfResults: 8,
+        },
+        {
+          value: 'Ticket',
+          state: 'idle',
+          numberOfResults: 3,
+        },
+        {
+          value: 'FAQ',
+          state: 'idle',
+          numberOfResults: 2,
+        },
+      ],
+      indexScore: 0.1,
+    },
     {
       facetId: 'source',
       field: 'source',
@@ -281,4 +309,115 @@ export const richResponse: InsightResponse = {
       snrating: n < 5 ? 4.5 - n * 0.5 : undefined,
     },
   })),
+};
+
+export const baseFoldedResponse: InsightResponse = {
+  ...baseResponse,
+  totalCount: 2,
+  totalCountFiltered: 2,
+  results: [
+    {
+      title: 'Parent Case: Connection Issues',
+      excerpt: 'Main case about connection troubleshooting',
+      clickUri: 'https://support.example.com/case/parent',
+      printableUri: 'https://support.example.com/case/parent',
+      uri: 'support://case/parent',
+      uniqueId: 'insight-parent-1',
+      flags: 'HasHtmlVersion',
+      hasHtmlVersion: true,
+      hasMobileHtmlVersion: false,
+      score: 100,
+      percentScore: 95,
+      rankingInfo: null,
+      rating: 0.0,
+      isTopResult: true,
+      isRecommendation: false,
+      titleHighlights: [],
+      firstSentencesHighlights: [],
+      excerptHighlights: [],
+      printableUriHighlights: [],
+      summaryHighlights: [],
+      parentResult: null,
+      childResults: [
+        {
+          title: 'Related Article: Network Setup',
+          excerpt: 'Guide for network configuration',
+          clickUri: 'https://support.example.com/article/network',
+          uniqueId: 'insight-child-1',
+          raw: {
+            foldingcollection: 'ConnectionIssues',
+            foldingchild: ['network-setup'],
+            foldingparent: 'connection-parent',
+          },
+        },
+        {
+          title: 'Related Article: Firewall Settings',
+          excerpt: 'Guide for firewall configuration',
+          clickUri: 'https://support.example.com/article/firewall',
+          uniqueId: 'insight-child-2',
+          raw: {
+            foldingcollection: 'ConnectionIssues',
+            foldingchild: ['firewall-settings'],
+            foldingparent: 'connection-parent',
+          },
+        },
+      ],
+      totalNumberOfChildResults: 2,
+      absentTerms: [],
+      raw: {
+        systitle: 'Parent Case: Connection Issues',
+        sysdescription: 'Main case about connection troubleshooting',
+        sysuri: 'https://support.example.com/case/parent',
+        foldingcollection: 'ConnectionIssues',
+        foldingchild: ['connection-parent'],
+      },
+      Title: 'Parent Case: Connection Issues',
+      Uri: 'support://case/parent',
+      PrintableUri: 'https://support.example.com/case/parent',
+      ClickUri: 'https://support.example.com/case/parent',
+      UniqueId: 'insight-parent-1',
+      Excerpt: 'Main case about connection troubleshooting',
+      FirstSentences: null,
+    },
+    {
+      title: 'Standalone Article: Quick Tips',
+      excerpt: 'Collection of quick troubleshooting tips',
+      clickUri: 'https://support.example.com/article/tips',
+      printableUri: 'https://support.example.com/article/tips',
+      uri: 'support://article/tips',
+      uniqueId: 'insight-standalone-1',
+      flags: 'HasHtmlVersion',
+      hasHtmlVersion: true,
+      hasMobileHtmlVersion: false,
+      score: 80,
+      percentScore: 75,
+      rankingInfo: null,
+      rating: 0.0,
+      isTopResult: false,
+      isRecommendation: false,
+      titleHighlights: [],
+      firstSentencesHighlights: [],
+      excerptHighlights: [],
+      printableUriHighlights: [],
+      summaryHighlights: [],
+      parentResult: null,
+      childResults: [],
+      totalNumberOfChildResults: 0,
+      absentTerms: [],
+      raw: {
+        systitle: 'Standalone Article: Quick Tips',
+        sysdescription: 'Collection of quick troubleshooting tips',
+        sysuri: 'https://support.example.com/article/tips',
+        foldingcollection: 'QuickTips',
+        foldingchild: ['quick-tips'],
+      },
+      Title: 'Standalone Article: Quick Tips',
+      Uri: 'support://article/tips',
+      PrintableUri: 'https://support.example.com/article/tips',
+      ClickUri: 'https://support.example.com/article/tips',
+      UniqueId: 'insight-standalone-1',
+      Excerpt: 'Collection of quick troubleshooting tips',
+      FirstSentences: null,
+    },
+  ],
 };

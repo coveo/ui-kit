@@ -6,6 +6,7 @@ import {updateActiveTab} from '../tab-set/tab-set-actions.js';
 import {
   disableAnalytics,
   enableAnalytics,
+  setAgentId,
   setOriginLevel2,
   setOriginLevel3,
   updateAnalyticsConfiguration,
@@ -304,6 +305,27 @@ describe('configuration slice', () => {
         restoreSearchParameters({tab: 'restoredTabId'})
       );
       expect(finalState.analytics.originLevel2).toBe('restoredTabId');
+    });
+  });
+
+  describe('#setAgentId', () => {
+    it('should set the agentId in knowledge state', () => {
+      const state = getConfigurationInitialState();
+      const agentId = 'agent-123';
+
+      const finalState = configurationReducer(state, setAgentId(agentId));
+
+      expect(finalState.knowledge.agentId).toBe(agentId);
+    });
+
+    it('should update existing agentId', () => {
+      const state = getConfigurationInitialState();
+      state.knowledge.agentId = 'old-agent-id';
+      const newAgentId = 'new-agent-456';
+
+      const finalState = configurationReducer(state, setAgentId(newAgentId));
+
+      expect(finalState.knowledge.agentId).toBe(newAgentId);
     });
   });
 });

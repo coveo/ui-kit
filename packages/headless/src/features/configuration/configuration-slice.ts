@@ -8,6 +8,7 @@ import {updateActiveTab} from '../tab-set/tab-set-actions.js';
 import {
   disableAnalytics,
   enableAnalytics,
+  setAgentId,
   setOriginLevel2,
   setOriginLevel3,
   type UpdateAnalyticsConfigurationActionCreatorPayload,
@@ -58,6 +59,9 @@ export const configurationReducer = createReducer(
         if (!isNullOrUndefined(action.payload.tab)) {
           state.analytics.originLevel2 = action.payload.tab;
         }
+      })
+      .addCase(setAgentId, (state, {payload}) => {
+        state.knowledge.agentId = payload;
       })
 );
 

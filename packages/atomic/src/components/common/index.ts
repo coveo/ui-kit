@@ -1,10 +1,12 @@
 // Auto-generated file
 export {AtomicAriaLive} from './atomic-aria-live/atomic-aria-live.js';
+export {AtomicCitation} from './atomic-citation/atomic-citation.js';
 export {AtomicComponentError} from './atomic-component-error/atomic-component-error.js';
 export {AtomicFacetDateInput} from './atomic-facet-date-input/atomic-facet-date-input.js';
 export {AtomicFacetNumberInput} from './atomic-facet-number-input/atomic-facet-number-input.js';
 export {AtomicFacetPlaceholder} from './atomic-facet-placeholder/atomic-facet-placeholder.js';
 export {AtomicFocusTrap} from './atomic-focus-trap/atomic-focus-trap.js';
+export {AtomicGeneratedAnswerFeedbackModal} from './atomic-generated-answer-feedback-modal/atomic-generated-answer-feedback-modal.js';
 export {AtomicIcon} from './atomic-icon/atomic-icon.js';
 export {AtomicLayoutSection} from './atomic-layout-section/atomic-layout-section.js';
 export {AtomicModal} from './atomic-modal/atomic-modal.js';

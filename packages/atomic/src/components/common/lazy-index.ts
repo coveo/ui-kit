@@ -2,6 +2,8 @@
 export default {
   'atomic-aria-live': async () =>
     await import('./atomic-aria-live/atomic-aria-live.js'),
+  'atomic-citation': async () =>
+    await import('./atomic-citation/atomic-citation.js'),
   'atomic-component-error': async () =>
     await import('./atomic-component-error/atomic-component-error.js'),
   'atomic-facet-date-input': async () =>
@@ -12,6 +14,10 @@ export default {
     await import('./atomic-facet-placeholder/atomic-facet-placeholder.js'),
   'atomic-focus-trap': async () =>
     await import('./atomic-focus-trap/atomic-focus-trap.js'),
+  'atomic-generated-answer-feedback-modal': async () =>
+    await import(
+      './atomic-generated-answer-feedback-modal/atomic-generated-answer-feedback-modal.js'
+    ),
   'atomic-icon': async () => await import('./atomic-icon/atomic-icon.js'),
   'atomic-layout-section': async () =>
     await import('./atomic-layout-section/atomic-layout-section.js'),
