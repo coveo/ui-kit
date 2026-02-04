@@ -3,6 +3,8 @@ import {customElement} from 'lit/decorators.js';
 import {ItemSectionMixin} from '@/src/mixins/item-section-mixin';
 
 /**
+ * The `atomic-insight-result-action-bar` component displays an action bar for an Insight result and hosts action buttons such as share, open, or more options related to the result.
+ *
  * @slot (default) - Action buttons to display in the action bar.
  */
 @customElement('atomic-insight-result-action-bar')
