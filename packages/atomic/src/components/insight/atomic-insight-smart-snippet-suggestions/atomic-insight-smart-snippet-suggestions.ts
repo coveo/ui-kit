@@ -33,7 +33,6 @@ import '@/src/components/common/atomic-smart-snippet-answer/atomic-smart-snippet
 import styles from './atomic-insight-smart-snippet-suggestions.tw.css';
 
 /**
- * @internal
  * The `atomic-insight-smart-snippet-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
  *
  * You can style the snippets by inserting a template element like this:
@@ -124,7 +123,7 @@ export class AtomicInsightSmartSnippetSuggestions
   }
 
   public initialize() {
-    this.accordionId = randomID('atomic-insight-smart-snippet-suggestions-');
+    this.accordionId = randomID('atomic-smart-snippet-suggestions-');
     this.smartSnippetQuestionsList = buildSmartSnippetQuestionsList(
       this.bindings.engine
     );
