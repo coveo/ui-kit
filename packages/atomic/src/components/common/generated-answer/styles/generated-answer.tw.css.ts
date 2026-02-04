@@ -119,6 +119,63 @@ const baseStyle = css`
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+      .item-header {
+      display: flex;
+    }
+
+    .dot-container {
+      width: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .dot {
+      border-radius: 50%;
+      height: 8px;
+      width: 8px;
+      background: #adb5bd;
+    }
+
+    .item-title {
+      margin-left: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      padding-right: 4px;
+      padding-left: 4px;
+      padding-top: 2px;
+      padding-bottom: 2px;
+    }
+
+    .hoverable:hover {
+      background-color: #f3f3f3;
+      border-radius: 8px;
+    }
+
+    .item-body {
+      display: flex;
+    }
+
+    .line-container {
+      width: 10px;
+      display: flex;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .line {
+      width: 1px;
+      background: #e5e5e5;
+    }
+
+    .item-content {
+      margin-left: 12px;
+      padding-bottom: 12px;
+      padding-top: 8px;
+    }
 `;
 
 export default [

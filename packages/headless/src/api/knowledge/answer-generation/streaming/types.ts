@@ -9,7 +9,13 @@ type PayloadType =
   | 'genqa.headerMessageType'
   | 'genqa.messageType'
   | 'genqa.citationsType'
-  | 'genqa.endOfStreamType';
+  | 'genqa.endOfStreamType'
+  | 'agentInteraction.answerHeader'
+  | 'agentInteraction.answerHeader'
+  | 'generativeengines.messageType'
+  | 'agentInteraction.citations'
+  | 'generativeengines.headerMessageType'
+  | 'generativeengines.endOfStreamType';
 
 /**
  * Represents a streaming message from the answer generation endpoint.
@@ -17,6 +23,14 @@ type PayloadType =
 export interface Message {
   payloadType: PayloadType;
   payload: string;
+  finishReason?: string;
+  errorMessage?: string;
+  code?: number;
+}
+
+export interface MessageAlpha {
+  payloadType: PayloadType;
+  payload: StreamPayload;
   finishReason?: string;
   errorMessage?: string;
   code?: number;
@@ -36,6 +50,8 @@ export interface StreamPayload {
   answerGenerated?: boolean;
   contentFormat?: GeneratedContentFormat;
   citations?: GeneratedAnswerCitation[];
+  conversationId?: string;
+  followUpEnabled?: boolean;
 }
 
 /**
@@ -57,6 +73,31 @@ export interface StreamingStrategy<TState> {
       EventType,
       (
         message: Message,
+        dispatch: ThunkDispatch<TState, unknown, UnknownAction>
+      ) => void
+    >
+  >;
+
+  handleClose?: (
+    dispatch: ThunkDispatch<TState, unknown, UnknownAction>
+  ) => void;
+}
+
+export interface StreamingStrategyAlpha<TState> {
+  handleOpen: (
+    response: Response,
+    dispatch: ThunkDispatch<TState, unknown, UnknownAction>
+  ) => void;
+
+  // Fired when the SSE connection errors out (network failure, server disconnect,
+  //  or an exception thrown in handleOpen/handleMessage)
+  handleError: (error: unknown) => void;
+
+  handleMessage: Partial<
+    Record<
+      EventType,
+      (
+        message: MessageAlpha,
         dispatch: ThunkDispatch<TState, unknown, UnknownAction>
       ) => void
     >

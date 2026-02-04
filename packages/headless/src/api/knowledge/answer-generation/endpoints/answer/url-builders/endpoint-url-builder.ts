@@ -18,6 +18,6 @@ export const buildAnswerEndpointUrl = (
   if (!platformEndpoint || !organizationId || !agentId) {
     throw new Error('Missing required parameters for answer endpoint');
   }
-  const basePath = `/rest/organizations/${organizationId}/agents`;
-  return `${platformEndpoint}${basePath}/${agentId}/answer`;
+  const basePath = `api/preview/organizations/${organizationId}/agents`;
+  return `https://platformdev.cloud.coveo.com/${basePath}/${agentId}/answer`;
 };

@@ -27,6 +27,7 @@ generateAnswerListener.startListening({
 
   effect: async (_action, listenerApi) => {
     const state = listenerApi.getState();
+    listenerApi.dispatch(resetAnswer());
 
     const q = selectQuery(state)?.q;
     const queryIsEmpty = !q || q.trim() === '';
@@ -37,7 +38,6 @@ generateAnswerListener.startListening({
     ) {
       return;
     }
-    listenerApi.dispatch(resetAnswer());
     listenerApi.dispatch(generateHeadAnswer());
   },
 });
