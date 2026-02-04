@@ -11,7 +11,7 @@ import {
   type TabManager,
   type TabManagerState,
 } from '@coveo/headless';
-import {html, LitElement, type PropertyValueMap} from 'lit';
+import {html, LitElement, nothing, type PropertyValueMap} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {GeneratedAnswerController} from '@/src/components/common/generated-answer/generated-answer-controller';
 import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
@@ -332,7 +332,7 @@ export class AtomicGeneratedAnswer
         this.tabManagerState?.activeTab
       )
     ) {
-      return html``;
+      return html`${nothing}`;
     }
 
     const contentClasses =
@@ -355,7 +355,7 @@ export class AtomicGeneratedAnswer
           </div>
         `;
       }
-      return html``;
+      return html`${nothing}`;
     }
 
     return html`
