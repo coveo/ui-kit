@@ -95,27 +95,6 @@ describe('#renderFeedbackAndCopyButtons', () => {
   });
 
   describe('when not streaming', () => {
-    it('should apply right-6 class when withToggle is false', async () => {
-      const {container} = await renderComponent({withToggle: false});
-
-      expect(container).toHaveClass('right-6');
-      expect(container).not.toHaveClass('right-20');
-    });
-
-    it('should apply right-6 class when withToggle is false', async () => {
-      const {container} = await renderComponent({withToggle: undefined});
-
-      expect(container).toHaveClass('right-6');
-      expect(container).not.toHaveClass('right-20');
-    });
-
-    it('should apply right-20 class when withToggle is true', async () => {
-      const {container} = await renderComponent({withToggle: true});
-
-      expect(container).toHaveClass('right-20');
-      expect(container).not.toHaveClass('right-6');
-    });
-
     it('should call renderFeedbackButton for dislike button with correct props', async () => {
       const onClickDislike = vi.fn();
       await renderComponent({

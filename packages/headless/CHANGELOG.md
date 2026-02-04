@@ -1,3 +1,32 @@
+## <small>3.42.1 (2026-02-04)</small>
+
+* feat(headless commerce): implement events for Spotlight Content for Search COMHUB2-1374 (#7039) ([bcc6137](https://github.com/coveo/ui-kit/commits/bcc6137)), closes [#7039](https://github.com/coveo/ui-kit/issues/7039)
+* feat(headless): follow up endpoint created in the api client (#7043) ([0219414](https://github.com/coveo/ui-kit/commits/0219414)), closes [#7043](https://github.com/coveo/ui-kit/issues/7043)
+* feat(headless): follow up reducer created (#7020) ([1ffce62](https://github.com/coveo/ui-kit/commits/1ffce62)), closes [#7020](https://github.com/coveo/ui-kit/issues/7020)
+* feat(headless): generateHeadAnswer action introduced (#7022) ([7d139e4](https://github.com/coveo/ui-kit/commits/7d139e4)), closes [#7022](https://github.com/coveo/ui-kit/issues/7022)
+* feat(headless): support spotlight content for commerce's Search feature COMHUB2-1373 (#7003) ([ea325a7](https://github.com/coveo/ui-kit/commits/ea325a7)), closes [#7003](https://github.com/coveo/ui-kit/issues/7003)
+
+
+
+## <small>3.41.1 (2026-01-28)</small>
+
+* feat(headless): follow up answers state created (#6970) ([2bcd422](https://github.com/coveo/ui-kit/commits/2bcd422)), closes [#6970](https://github.com/coveo/ui-kit/issues/6970)
+* feat(headless): new answer generation api client created (#6984) ([e63ede3](https://github.com/coveo/ui-kit/commits/e63ede3)), closes [#6984](https://github.com/coveo/ui-kit/issues/6984)
+* feat(headless-commerce) Update Context controller to allow users to set custom context (CSR & SSR) ( ([891ace5](https://github.com/coveo/ui-kit/commits/891ace5)), closes [#7000](https://github.com/coveo/ui-kit/issues/7000)
+* chore: fix user defined controllers in SSR Hydration Fix (commerce-nextjs-v4) (#6993) ([e8a9423](https://github.com/coveo/ui-kit/commits/e8a9423)), closes [#6993](https://github.com/coveo/ui-kit/issues/6993)
+* chore: remove outdated samples (Pages Router and Stencil) (#6958) ([76529fe](https://github.com/coveo/ui-kit/commits/76529fe)), closes [#6958](https://github.com/coveo/ui-kit/issues/6958)
+
+
+
+## 3.40.0 (2026-01-21)
+
+* feat: add ProductEnrichment Controller in Commerce SSR (#6819) ([850047e](https://github.com/coveo/ui-kit/commits/850047e)), closes [#6819](https://github.com/coveo/ui-kit/issues/6819)
+* feat(headless): migrate headless rga document from docs site to typedoc (#6838) ([3a6ec1c](https://github.com/coveo/ui-kit/commits/3a6ec1c)), closes [#6838](https://github.com/coveo/ui-kit/issues/6838)
+* fix(atomic): export VERSION from @coveo/headless/insight for atomic-insight-interface (#6901) ([7ee0c8a](https://github.com/coveo/ui-kit/commits/7ee0c8a)), closes [#6901](https://github.com/coveo/ui-kit/issues/6901)
+* fix(pagination): add fetchPage.fulfilled case to update totalCountFiltered (#6935) ([f67cf63](https://github.com/coveo/ui-kit/commits/f67cf63)), closes [#6935](https://github.com/coveo/ui-kit/issues/6935)
+
+
+
 ## 3.39.0 (2026-01-07)
 
 * [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))

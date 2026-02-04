@@ -1,5 +1,28 @@
-export const baseResponse = {
+export interface CommerceSearchResponse {
+  responseId: string;
+  products: unknown[];
+  results: unknown[];
+  facets: unknown[];
+  pagination: {
+    page: number;
+    perPage: number;
+    totalEntries: number;
+    totalPages: number;
+  };
+  sort: {
+    appliedSort: {
+      sortCriteria: string;
+    };
+    availableSorts: Array<{
+      sortCriteria: string;
+    }>;
+  };
+  triggers: unknown[];
+}
+
+export const baseResponse: CommerceSearchResponse = {
   responseId: '123e4567-e89b-12d3-a456-426614174000',
+  results: [],
   products: [
     {
       permanentid: 'product-1',
@@ -42,6 +65,7 @@ export const baseResponse = {
 
 export const richResponse = {
   responseId: '2e86c8ae-05eb-4072-8c00-e8a061d502aa',
+  results: [],
   products: [
     {
       resultType: 'product',

@@ -44,6 +44,7 @@ import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
  * @part container - The container displaying the generated answer.
  * @part header-label - The header of the generated answer container.
  * @part feedback-button - The "like" and "dislike" buttons.
+ * @part feedback-and-copy-buttons - The container for the feedback and copy buttons.
  * @part toggle - The switch to toggle the visibility of the generated answer.
  * @part copy-button - The "Copy answer" button.
  * @part retry-container - The container for the "retry" section.
@@ -335,7 +336,7 @@ export class AtomicGeneratedAnswer
     }
 
     const contentClasses =
-      'mx-auto mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
+      'mx-auto mt-0 mb-4 border border-neutral shadow-lg bg-background rounded-lg text-on-background';
 
     if (this.hasNoAnswerGenerated) {
       if (
@@ -562,7 +563,6 @@ export class AtomicGeneratedAnswer
       props: {
         i18n: this.bindings.i18n,
         generatedAnswerState: this.generatedAnswerState,
-        withToggle: this.withToggle,
         copied: this.copied,
         copyError: this.copyError,
         getCopyToClipboardTooltip: () => this.copyToClipboardTooltip,
@@ -583,6 +583,7 @@ export class AtomicGeneratedAnswer
         toggleTooltip: this.toggleTooltip,
         withToggle: this.withToggle,
         collapsible: this.collapsible,
+        question: this.bindings.engine.state.query?.q ?? '',
         renderFeedbackAndCopyButtonsSlot: () =>
           this.renderFeedbackAndCopyButtonsWrapper(),
         renderCitationsSlot: () => html`${this.renderCitationsList()}`,

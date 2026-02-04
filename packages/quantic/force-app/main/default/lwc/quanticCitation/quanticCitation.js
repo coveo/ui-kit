@@ -13,6 +13,7 @@ const supportedFileTypesForTextFragment = ['html', 'SalesforceItem'];
  * The `QuanticCitation` component renders an individual citation.
  * @fires CustomEvent#quantic__citationhover
  * @category Internal
+ * @slot actions Slot for action controls (e.g., lightning-button-icon) rendered inside the citation tooltip.
  * @example
  * <c-quantic-citation citation={citation} interactive-citation={interactiveCitation} onclick={handleClick} onquantic__citationhover={handleHover}></c-quantic-citation>
  */
@@ -36,6 +37,22 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
    * @default false
    */
   @api disableCitationAnchoring = false;
+  /**
+   * Whether the citation is in an active state.
+   * A citation in an active state is displayed with a different title and border color based on the theme set on the community.
+   * @api
+   * @type {boolean}
+   * @default false
+   */
+  @api isActive = false;
+  /**
+   * The name of the Salesforce icon to display before the citation title.
+   * See https://www.lightningdesignsystem.com/2e1ef8501/p/83309d-icons for a list of valid icon names.
+   * @api
+   * @example 'utility:attach'
+   * @type {string}
+   */
+  @api iconName;
 
   /** @type {Object} */
   timeout;
@@ -280,5 +297,42 @@ export default class QuanticCitation extends NavigationMixin(LightningElement) {
     return this.isSalesforceLink
       ? this.salesforceRecordUrl
       : (this.clickUri ?? this.citation?.uri);
+  }
+
+  get citationTitleClasses() {
+    return [
+      'citation__title',
+      'slds-m-left_x-small',
+      'slds-truncate',
+      'slds-has-flexi-truncate',
+      {
+        'citation__title--active': this.isActive,
+      },
+    ];
+  }
+
+  get citationLinkClasses() {
+    return [
+      'citation__link',
+      'slds-badge',
+      'slds-badge_lightest',
+      'slds-align_absolute-center',
+      'slds-text-link_reset',
+      'slds-p-left_xx-small',
+      'slds-p-right_x-small',
+      {
+        'citation__link--active': this.isActive,
+      },
+    ];
+  }
+
+  get citationIconClasses() {
+    return [
+      'citation__icon',
+      'slds-m-left_x-small',
+      {
+        'citation__icon--active': this.isActive,
+      },
+    ];
   }
 }

@@ -10,14 +10,14 @@ import {watch} from '@/src/decorators/watch.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {multiClassMap, tw} from '@/src/directives/multi-class-map.js';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
-import {listenOnce} from '@/src/utils/event-utils.js';
+import {buildCustomEvent, listenOnce} from '@/src/utils/event-utils.js';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {once, randomID} from '@/src/utils/utils.js';
 import type {AtomicFocusTrap} from '../atomic-focus-trap/atomic-focus-trap.js';
 import type {AnyBindings} from '../interface/bindings.js';
 
 /**
- * When the modal is opened, the class `atomic-modal-opened` is added to the interfaceElement and the body, allowing further customization.
+ * When the modal is opened, the class `atomic-modal-opened` is added to the `interfaceElement` and the body, allowing further customization.
  *
  * @part backdrop - The transparent backdrop hiding the content behind the modal.
  * @part container - The modal's outermost container with the outline and background.
@@ -28,6 +28,8 @@ import type {AnyBindings} from '../interface/bindings.js';
  * @part body - The body of the modal, between the header and the footer.
  * @part footer-wrapper - The wrapper with a shadow or background color around the footer.
  * @part footer - The footer at the bottom of the modal.
+ *
+ * @event close - Emitted when the modal is closed (e.g., by pressing Escape).
  *
  * @internal
  */
@@ -206,9 +208,7 @@ export class AtomicModal
   private handleCloseOnEscape = (e: KeyboardEvent) => {
     if (e.key?.toLowerCase() === 'escape') {
       if (this.isOpen) {
-        this.dispatchEvent(
-          new CustomEvent('close', {bubbles: true, composed: true})
-        );
+        this.dispatchEvent(buildCustomEvent('close'));
       }
       if (this.close) {
         this.close();
