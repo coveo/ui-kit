@@ -18,7 +18,7 @@ import {
   logGeneratedAnswerResponseLinked,
   logGeneratedAnswerStreamEnd,
 } from './generated-answer-analytics-actions.js';
-import {headAnswerStrategy} from './head-answer-strategy.js';
+import {createHeadAnswerStrategy} from './head-answer-strategy.js';
 
 vi.mock('./generated-answer-actions.js');
 vi.mock('./generated-answer-analytics-actions.js');
@@ -41,7 +41,7 @@ describe('headAnswerStrategy', () => {
         headers: {'x-answer-id': 'test-answer-id-123'},
       });
 
-      headAnswerStrategy.handleOpen(mockResponse, mockDispatch);
+      createHeadAnswerStrategy().handleOpen(mockResponse, mockDispatch);
 
       expect(setAnswerId).toHaveBeenCalledWith('test-answer-id-123');
       expect(mockDispatch).toHaveBeenCalledTimes(1);
@@ -52,7 +52,7 @@ describe('headAnswerStrategy', () => {
         headers: {},
       });
 
-      headAnswerStrategy.handleOpen(mockResponse, mockDispatch);
+      createHeadAnswerStrategy().handleOpen(mockResponse, mockDispatch);
 
       expect(setAnswerId).not.toHaveBeenCalled();
       expect(mockDispatch).not.toHaveBeenCalled();
@@ -63,13 +63,15 @@ describe('headAnswerStrategy', () => {
     it('should throw the error', () => {
       const error = new Error('Test error');
 
-      expect(() => headAnswerStrategy.handleError(error)).toThrow('Test error');
+      expect(() => createHeadAnswerStrategy().handleError(error)).toThrow(
+        'Test error'
+      );
     });
 
     it('should throw generic errors', () => {
       const error = {message: 'Custom error object'};
 
-      expect(() => headAnswerStrategy.handleError(error)).toThrow();
+      expect(() => createHeadAnswerStrategy().handleError(error)).toThrow();
     });
   });
 
@@ -81,7 +83,7 @@ describe('headAnswerStrategy', () => {
           payload: JSON.stringify({contentFormat: 'text/markdown'}),
         };
 
-        headAnswerStrategy.handleMessage['genqa.headerMessageType']?.(
+        createHeadAnswerStrategy().handleMessage['genqa.headerMessageType']?.(
           message,
           mockDispatch
         );
@@ -98,7 +100,7 @@ describe('headAnswerStrategy', () => {
           payload: '',
         };
 
-        headAnswerStrategy.handleMessage['genqa.headerMessageType']?.(
+        createHeadAnswerStrategy().handleMessage['genqa.headerMessageType']?.(
           message,
           mockDispatch
         );
@@ -113,7 +115,7 @@ describe('headAnswerStrategy', () => {
           payload: JSON.stringify({someOtherField: 'value'}),
         };
 
-        headAnswerStrategy.handleMessage['genqa.headerMessageType']?.(
+        createHeadAnswerStrategy().handleMessage['genqa.headerMessageType']?.(
           message,
           mockDispatch
         );
@@ -130,7 +132,7 @@ describe('headAnswerStrategy', () => {
           payload: JSON.stringify({textDelta: 'Hello world'}),
         };
 
-        headAnswerStrategy.handleMessage['genqa.messageType']?.(
+        createHeadAnswerStrategy().handleMessage['genqa.messageType']?.(
           message,
           mockDispatch
         );
@@ -145,7 +147,7 @@ describe('headAnswerStrategy', () => {
           payload: '',
         };
 
-        headAnswerStrategy.handleMessage['genqa.messageType']?.(
+        createHeadAnswerStrategy().handleMessage['genqa.messageType']?.(
           message,
           mockDispatch
         );
@@ -160,7 +162,7 @@ describe('headAnswerStrategy', () => {
           payload: JSON.stringify({someOtherField: 'value'}),
         };
 
-        headAnswerStrategy.handleMessage['genqa.messageType']?.(
+        createHeadAnswerStrategy().handleMessage['genqa.messageType']?.(
           message,
           mockDispatch
         );
@@ -178,7 +180,7 @@ describe('headAnswerStrategy', () => {
           payload: JSON.stringify({citations: mockCitations}),
         };
 
-        headAnswerStrategy.handleMessage['genqa.citationsType']?.(
+        createHeadAnswerStrategy().handleMessage['genqa.citationsType']?.(
           message,
           mockDispatch
         );
@@ -195,7 +197,7 @@ describe('headAnswerStrategy', () => {
           payload: '',
         };
 
-        headAnswerStrategy.handleMessage['genqa.citationsType']?.(
+        createHeadAnswerStrategy().handleMessage['genqa.citationsType']?.(
           message,
           mockDispatch
         );
@@ -210,7 +212,7 @@ describe('headAnswerStrategy', () => {
           payload: JSON.stringify({someOtherField: 'value'}),
         };
 
-        headAnswerStrategy.handleMessage['genqa.citationsType']?.(
+        createHeadAnswerStrategy().handleMessage['genqa.citationsType']?.(
           message,
           mockDispatch
         );
@@ -227,7 +229,7 @@ describe('headAnswerStrategy', () => {
           payload: JSON.stringify({answerGenerated: true}),
         };
 
-        headAnswerStrategy.handleMessage['genqa.endOfStreamType']?.(
+        createHeadAnswerStrategy().handleMessage['genqa.endOfStreamType']?.(
           message,
           mockDispatch
         );
@@ -247,7 +249,7 @@ describe('headAnswerStrategy', () => {
           payload: JSON.stringify({answerGenerated: false}),
         };
 
-        headAnswerStrategy.handleMessage['genqa.endOfStreamType']?.(
+        createHeadAnswerStrategy().handleMessage['genqa.endOfStreamType']?.(
           message,
           mockDispatch
         );
@@ -267,7 +269,7 @@ describe('headAnswerStrategy', () => {
           payload: JSON.stringify({}),
         };
 
-        headAnswerStrategy.handleMessage['genqa.endOfStreamType']?.(
+        createHeadAnswerStrategy().handleMessage['genqa.endOfStreamType']?.(
           message,
           mockDispatch
         );
@@ -287,7 +289,7 @@ describe('headAnswerStrategy', () => {
           payload: '',
         };
 
-        headAnswerStrategy.handleMessage['genqa.endOfStreamType']?.(
+        createHeadAnswerStrategy().handleMessage['genqa.endOfStreamType']?.(
           message,
           mockDispatch
         );
@@ -312,7 +314,7 @@ describe('headAnswerStrategy', () => {
           code: 500,
         };
 
-        headAnswerStrategy.handleMessage.error?.(message, mockDispatch);
+        createHeadAnswerStrategy().handleMessage.error?.(message, mockDispatch);
 
         expect(updateError).toHaveBeenCalledWith(message);
         expect(mockDispatch).toHaveBeenCalledTimes(1);
@@ -326,7 +328,7 @@ describe('headAnswerStrategy', () => {
           errorMessage: 'Something went wrong',
         };
 
-        headAnswerStrategy.handleMessage.error?.(message, mockDispatch);
+        createHeadAnswerStrategy().handleMessage.error?.(message, mockDispatch);
 
         expect(updateError).not.toHaveBeenCalled();
         expect(mockDispatch).not.toHaveBeenCalled();
@@ -339,7 +341,7 @@ describe('headAnswerStrategy', () => {
           finishReason: 'ERROR',
         };
 
-        headAnswerStrategy.handleMessage.error?.(message, mockDispatch);
+        createHeadAnswerStrategy().handleMessage.error?.(message, mockDispatch);
 
         expect(updateError).not.toHaveBeenCalled();
         expect(mockDispatch).not.toHaveBeenCalled();
@@ -351,7 +353,7 @@ describe('headAnswerStrategy', () => {
           payload: '',
         };
 
-        headAnswerStrategy.handleMessage.error?.(message, mockDispatch);
+        createHeadAnswerStrategy().handleMessage.error?.(message, mockDispatch);
 
         expect(updateError).not.toHaveBeenCalled();
         expect(mockDispatch).not.toHaveBeenCalled();
