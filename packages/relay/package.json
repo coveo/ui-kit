@@ -1,6 +1,6 @@
 {
   "name": "@coveo/relay",
-  "version": "2.0.0",
+  "version": "1.2.15",
   "description": "A library for sending analytics events using Coveo's Event protocol.",
   "type": "module",
   "files": [
@@ -40,7 +40,8 @@
     "test:watch": "vitest",
     "npm:tag": "node ./scripts/update-npm-tag.mjs",
     "typedoc": "typedoc",
-    "postinstall": "pnpm exec playwright install --with-deps"
+    "playwright:install": "pnpm exec playwright install --with-deps",
+    "postinstall": "pnpm playwright:install"
   },
   "devDependencies": {
     "@octokit/rest": "^22.0.0",

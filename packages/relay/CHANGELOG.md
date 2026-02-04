@@ -1,23 +1,3 @@
-# 2.0.0 (2026-01-30)
-
-### Features
-
-- **relay:** emit events using fetch API, simplify Environment interface ([#228](https://github.com/coveo/relay/issues/228)) ([f171e25](https://github.com/coveo/relay/commits/))
-
-### BREAKING CHANGES
-
-- **relay:** Relay now uses fetch with keepalive instead of navigator.sendBeacon to transmit analytics events, since keepalive is now supported by all major browsers (including Firefox 133+).
-
-The change ensures event payloads are visible in browser developer tools, and enhances security by making it possible to pass authentication tokens via request headers instead of the request URL. The keepalive option preserves the same delivery guarantees as sendBeacon, ensuring events are sent even when the page is being unloaded.
-
-As part of the change, the emit method is now asynchronous and returns a Promise. Relay will also throw an error if an event does not conform to the base Event Protocol payload structure.
-
-- **relay:** Relay previously required custom environment implementations to define low-level properties such as generateUUID and storage, even though Relay ultimately only needs a clientId.
-
-The Environment interface has been simplified, replacing generateUUID and storage with a single getClientId method. With storage fully encapsulated, the Storage interface is no longer exported.
-
-This breaking change only affects consumers configuring Relay with a custom environment, which is expected to be a small subset of implementations.
-
 ## 1.2.15 (2025-12-04)
 
 ### Bug Fixes
