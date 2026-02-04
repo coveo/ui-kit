@@ -2,7 +2,7 @@ import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {fetchEventSource} from '../../../../utils/fetch-event-source/fetch.js';
 import type {GeneratedAnswerServerState} from '../answer-generation-api-state.js';
 import {serverStateEventHandler} from './server-state-event-handler/server-state-event-handler.js';
-import type {Message, StreamingStrategy} from './types.js';
+import type {MessageAlpha, StreamingStrategyAlpha} from './types.js';
 
 type StateWithConfiguration = {
   configuration: {
@@ -35,7 +35,8 @@ export const streamAnswerWithStrategy = <
       updater: (draft: GeneratedAnswerServerState) => void
     ) => void;
   },
-  strategy: StreamingStrategy<TState>
+  // strategy: StreamingStrategy<TState> | StreamingStrategyAlpha<TState>
+  strategy: StreamingStrategyAlpha<TState>
 ) => {
   const {dispatch, updateCachedData, getState} = api;
   const {
@@ -63,7 +64,7 @@ export const streamAnswerWithStrategy = <
       strategy.handleError(error);
     },
     onmessage: (event) => {
-      const message: Message = JSON.parse(event.data);
+      const message: MessageAlpha = JSON.parse(event.data);
       serverStateEventHandler.handleMessage.error?.(message, updateCachedData);
       strategy.handleMessage.error?.(message, dispatch);
 

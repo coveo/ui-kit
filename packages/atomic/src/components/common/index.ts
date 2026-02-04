@@ -1,4 +1,5 @@
 // Auto-generated file
+export {AccordionItem} from './accordion-item/accordion-item.js';
 export {AtomicAriaLive} from './atomic-aria-live/atomic-aria-live.js';
 export {AtomicCitation} from './atomic-citation/atomic-citation.js';
 export {AtomicComponentError} from './atomic-component-error/atomic-component-error.js';
