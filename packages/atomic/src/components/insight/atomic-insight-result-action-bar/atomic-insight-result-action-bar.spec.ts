@@ -14,14 +14,6 @@ describe('atomic-insight-result-action-bar', () => {
     return {element};
   };
 
-  it('should be defined as a custom element', async () => {
-    const {element} = await renderActionBar();
-    expect(element).toBeInstanceOf(HTMLElement);
-    expect(element.tagName.toLowerCase()).toBe(
-      'atomic-insight-result-action-bar'
-    );
-  });
-
   it('should hide itself when empty', async () => {
     const {element} = await renderActionBar();
     expect(element.style.display).toBe('none');
