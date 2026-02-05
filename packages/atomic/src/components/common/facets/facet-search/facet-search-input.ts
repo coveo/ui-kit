@@ -8,7 +8,6 @@ import SearchIcon from '../../../../images/search.svg';
 import '../../atomic-icon/atomic-icon';
 import {renderButton} from '../../button';
 
-const FACET_SEARCH_INPUT_MAX_LENGTH = 256;
 const inputRef = createRef<HTMLInputElement>();
 
 export interface FacetSearchInputProps {
@@ -26,6 +25,7 @@ export const renderFacetSearchInput: FunctionalComponent<
   const search = props.i18n.t('facet-search-input');
   const facetSearch = props.i18n.t('facet-search', {label});
   const clear = props.i18n.t('clear');
+  const searchInputMaxLength = 256;
 
   return html`
     <div class="mt-3 px-2" part="search-wrapper">
@@ -37,7 +37,7 @@ export const renderFacetSearchInput: FunctionalComponent<
           type="text"
           placeholder=${search}
           aria-label=${facetSearch}
-          maxlength=${FACET_SEARCH_INPUT_MAX_LENGTH}
+          maxlength=${searchInputMaxLength}
           .value=${props.query}
           @input=${(e: Event) =>
             props.onChange((e.target as HTMLInputElement).value)}
