@@ -79,10 +79,6 @@ export namespace Components {
          */
         "withToggle"?: boolean;
     }
-    interface AtomicInsightRefineModal {
-        "isOpen": boolean;
-        "openButton"?: HTMLElement;
-    }
     interface AtomicInsightResultAction {
         /**
           * The type of action to perform when the result action is clicked. This will be sent along the event fired when the button is clicked.
@@ -482,12 +478,6 @@ declare global {
         prototype: HTMLAtomicInsightGeneratedAnswerElement;
         new (): HTMLAtomicInsightGeneratedAnswerElement;
     };
-    interface HTMLAtomicInsightRefineModalElement extends Components.AtomicInsightRefineModal, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightRefineModalElement: {
-        prototype: HTMLAtomicInsightRefineModalElement;
-        new (): HTMLAtomicInsightRefineModalElement;
-    };
     interface HTMLAtomicInsightResultActionElementEventMap {
         "atomicInsightResultActionClicked": InsightResultActionClickedEvent;
     }
@@ -710,7 +700,6 @@ declare global {
     interface HTMLElementTagNameMap {
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
-        "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
         "atomic-insight-result-action-bar": HTMLAtomicInsightResultActionBarElement;
         "atomic-insight-result-attach-to-case-action": HTMLAtomicInsightResultAttachToCaseActionElement;
@@ -786,10 +775,6 @@ declare namespace LocalJSX {
           * @default false
          */
         "withToggle"?: boolean;
-    }
-    interface AtomicInsightRefineModal {
-        "isOpen"?: boolean;
-        "openButton"?: HTMLElement;
     }
     interface AtomicInsightResultAction {
         /**
@@ -1150,7 +1135,6 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
-        "atomic-insight-refine-modal": AtomicInsightRefineModal;
         "atomic-insight-result-action": AtomicInsightResultAction;
         "atomic-insight-result-action-bar": AtomicInsightResultActionBar;
         "atomic-insight-result-attach-to-case-action": AtomicInsightResultAttachToCaseAction;
@@ -1181,7 +1165,6 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
             "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
-            "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
             "atomic-insight-result-action-bar": LocalJSX.AtomicInsightResultActionBar & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionBarElement>;
             "atomic-insight-result-attach-to-case-action": LocalJSX.AtomicInsightResultAttachToCaseAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseActionElement>;
