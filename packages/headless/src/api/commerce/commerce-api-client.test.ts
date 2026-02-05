@@ -12,6 +12,8 @@ import type {FilterableCommerceAPIRequest} from './common/request.js';
 import type {CommerceListingRequest} from './listing/request.js';
 import type {ListingCommerceSuccessResponse} from './listing/response.js';
 import type {CommerceRecommendationsRequest} from './recommendations/recommendations-request.js';
+import type {CommercePlanRequest} from './search/plan/plan-request.js';
+import type {CommercePlanSuccessResponse} from './search/plan/plan-response.js';
 
 describe('commerce api client', () => {
   const organizationId = 'organization';
@@ -390,7 +392,7 @@ describe('commerce api client', () => {
 
   describe('#plan', () => {
     it('should call the platform endpoint with the correct arguments', async () => {
-      const request = {
+      const request: CommercePlanRequest = {
         ...(await buildCommerceAPIRequest()),
         query: 'test query',
       };
@@ -423,12 +425,12 @@ describe('commerce api client', () => {
     });
 
     it('should return success response with redirect URL', async () => {
-      const request = {
+      const request: CommercePlanRequest = {
         ...(await buildCommerceAPIRequest()),
         query: 'test query',
       };
 
-      const expectedBody = {
+      const expectedBody: CommercePlanSuccessResponse = {
         redirect: 'https://example.com/redirect-url',
       };
 
@@ -445,12 +447,12 @@ describe('commerce api client', () => {
     });
 
     it('should return success response with null redirect', async () => {
-      const request = {
+      const request: CommercePlanRequest = {
         ...(await buildCommerceAPIRequest()),
         query: 'test query',
       };
 
-      const expectedBody = {
+      const expectedBody: CommercePlanSuccessResponse = {
         redirect: null,
       };
 
@@ -467,7 +469,7 @@ describe('commerce api client', () => {
     });
 
     it('should return error response on failure', async () => {
-      const request = {
+      const request: CommercePlanRequest = {
         ...(await buildCommerceAPIRequest()),
         query: 'test query',
       };
@@ -491,7 +493,7 @@ describe('commerce api client', () => {
     });
 
     it('should include query parameter in request', async () => {
-      const request = {
+      const request: CommercePlanRequest = {
         ...(await buildCommerceAPIRequest()),
         query: 'specific search query',
       };

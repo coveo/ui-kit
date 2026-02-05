@@ -35,8 +35,8 @@ import type {RecommendationsCommerceSuccessResponse} from './recommendations/rec
 import {
   type CommercePlanRequest,
   getPlanRequestOptions,
-  type PlanSuccessResponse,
-} from './search/plan-request.js';
+} from './search/plan/plan-request.js';
+import type {CommercePlanSuccessResponse} from './search/plan/plan-response.js';
 import {
   getQuerySuggestRequestOptions,
   type QuerySuggestRequest,
@@ -178,9 +178,9 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
 
   async plan(
     req: CommercePlanRequest
-  ): Promise<CommerceAPIResponse<PlanSuccessResponse>> {
+  ): Promise<CommerceAPIResponse<CommercePlanSuccessResponse>> {
     const requestOptions = getPlanRequestOptions(req);
-    return this.query<PlanSuccessResponse>({
+    return this.query<CommercePlanSuccessResponse>({
       ...requestOptions,
       requestParams: {
         ...requestOptions.requestParams,

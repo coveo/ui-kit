@@ -1,4 +1,4 @@
-import type {BaseParam} from '../../platform-service-params.js';
+import type {BaseParam} from '../../../platform-service-params.js';
 import type {
   ClientIdParam,
   ContextParam,
@@ -7,8 +7,8 @@ import type {
   LanguageParam,
   QueryParam,
   TrackingIdParam,
-} from '../commerce-api-params.js';
-import {baseRequest} from '../common/request.js';
+} from '../../commerce-api-params.js';
+import {baseRequest} from '../../common/request.js';
 
 export type CommercePlanRequest = BaseParam &
   TrackingIdParam &
@@ -18,10 +18,6 @@ export type CommercePlanRequest = BaseParam &
   ClientIdParam &
   ContextParam &
   QueryParam;
-
-export interface PlanSuccessResponse {
-  redirect: string | null;
-}
 
 export const getPlanRequestOptions = (req: CommercePlanRequest) => {
   return {

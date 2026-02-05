@@ -1,4 +1,4 @@
-import type {CommercePlanRequest} from '../../../api/commerce/search/plan-request.js';
+import type {CommercePlanRequest} from '../../../api/commerce/search/plan/plan-request.js';
 import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {CommerceQuerySection} from '../../../state/state-sections.js';
 import {

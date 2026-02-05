@@ -1,4 +1,4 @@
-import type {CommercePlanRequest} from '../../../api/commerce/search/plan-request.js';
+import type {CommercePlanRequest} from '../../../api/commerce/search/plan/plan-request.js';
 import {
   defaultNodeJSNavigatorContextProvider,
   type NavigatorContext,
