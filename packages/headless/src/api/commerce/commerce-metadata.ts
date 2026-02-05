@@ -1,10 +1,10 @@
 export type CommerceApiMethod =
   | 'listing'
   | 'search'
-  | 'search/redirect'
   | 'recommendations'
   | 'search/productSuggest'
   | 'search/querySuggest'
+  | 'search/redirect'
   | 'querySuggest'
   | 'facet'
   | 'badges';
