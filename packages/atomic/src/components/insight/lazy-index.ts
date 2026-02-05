@@ -48,6 +48,10 @@ export default {
     await import(
       './atomic-insight-result-children/atomic-insight-result-children.js'
     ),
+  'atomic-insight-result-quickview-action': async () =>
+    await import(
+      './atomic-insight-result-quickview-action/atomic-insight-result-quickview-action.js'
+    ),
   'atomic-insight-result-template': async () =>
     await import(
       './atomic-insight-result-template/atomic-insight-result-template.js'
