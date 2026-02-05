@@ -10,14 +10,14 @@ import { ItemRenderingFunction } from "./components/common/item-list/stencil-ite
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { DateFilterRange, DateRangeRequest, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
-import { RangeFacetSortCriterion as InsightRangeFacetSortCriterion } from "@coveo/headless/insight";
+import { RangeFacetSortCriterion as InsightRangeFacetSortCriterion, UserAction as IUserAction } from "@coveo/headless/insight";
 import { AnyBindings } from "./components/common/interface/bindings";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { DateFilterRange, DateRangeRequest, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
-export { RangeFacetSortCriterion as InsightRangeFacetSortCriterion } from "@coveo/headless/insight";
+export { RangeFacetSortCriterion as InsightRangeFacetSortCriterion, UserAction as IUserAction } from "@coveo/headless/insight";
 export { AnyBindings } from "./components/common/interface/bindings";
 export namespace Components {
     interface AtomicInsightFoldedResultList {
@@ -180,6 +180,24 @@ export namespace Components {
         "withDatePicker": boolean;
     }
     /**
+     * @category Insight Panel
+     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
+     */
+    interface AtomicInsightUserActionsSession {
+        /**
+          * The start time of the session as a Unix timestamp.
+         */
+        "startTimestamp": number;
+        /**
+          * The list of user actions performed during the session.
+         */
+        "userActions": Array<IUserAction>;
+    }
+    interface AtomicIpxBody {
+        "displayFooterSlot": boolean;
+        "isOpen"?: boolean;
+    }
+    /**
      * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
      */
     interface AtomicIpxRecsList {
@@ -244,54 +262,13 @@ export namespace Components {
         "collapseFacetsAfter": number;
     }
     /**
-     * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
+     * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
      */
-    interface AtomicRecsList {
+    interface AtomicIpxResultLink {
         /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-ipx-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-ipx-result-link> ```
          */
-        "density": ItemDisplayDensity;
-        /**
-          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
-         */
-        "display": ItemDisplayBasicLayout;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
-         */
-        "headingLevel": number;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * The non-localized label for the list of recommendations.
-         */
-        "label"?: string;
-        /**
-          * Moves to the next page, when the carousel is activated.
-         */
-        "nextPage": () => Promise<void>;
-        /**
-          * The total number of recommendations to display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
-         */
-        "numberOfRecommendations": number;
-        /**
-          * The number of recommendations to display, per page. Setting a value greater than and lower than the numberOfRecommendations value activates the carousel. This does not affect the display of the list itself, only the number of recommendation pages.
-         */
-        "numberOfRecommendationsPerPage"?: number;
-        /**
-          * Moves to the previous page, when the carousel is activated.
-         */
-        "previousPage": () => Promise<void>;
-        /**
-          * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-recs-list in your page.
-         */
-        "recommendation": string;
-        /**
-          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax such as React, Angular, or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-          * @param resultRenderingFunction
-         */
-        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
+        "hrefTemplate"?: string;
     }
     /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
@@ -314,6 +291,10 @@ export interface AtomicInsightResultActionCustomEvent<T> extends CustomEvent<T> 
 export interface AtomicInsightResultAttachToCaseActionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicInsightResultAttachToCaseActionElement;
+}
+export interface AtomicIpxBodyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicIpxBodyElement;
 }
 export interface AtomicStencilFacetDateInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -386,6 +367,33 @@ declare global {
         new (): HTMLAtomicInsightTimeframeFacetElement;
     };
     /**
+     * @category Insight Panel
+     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
+     */
+    interface HTMLAtomicInsightUserActionsSessionElement extends Components.AtomicInsightUserActionsSession, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightUserActionsSessionElement: {
+        prototype: HTMLAtomicInsightUserActionsSessionElement;
+        new (): HTMLAtomicInsightUserActionsSessionElement;
+    };
+    interface HTMLAtomicIpxBodyElementEventMap {
+        "animationEnded": never;
+    }
+    interface HTMLAtomicIpxBodyElement extends Components.AtomicIpxBody, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicIpxBodyElementEventMap>(type: K, listener: (this: HTMLAtomicIpxBodyElement, ev: AtomicIpxBodyCustomEvent<HTMLAtomicIpxBodyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicIpxBodyElementEventMap>(type: K, listener: (this: HTMLAtomicIpxBodyElement, ev: AtomicIpxBodyCustomEvent<HTMLAtomicIpxBodyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicIpxBodyElement: {
+        prototype: HTMLAtomicIpxBodyElement;
+        new (): HTMLAtomicIpxBodyElement;
+    };
+    /**
      * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
      */
     interface HTMLAtomicIpxRecsListElement extends Components.AtomicIpxRecsList, HTMLStencilElement {
@@ -407,13 +415,13 @@ declare global {
         new (): HTMLAtomicIpxRefineToggleElement;
     };
     /**
-     * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
+     * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
      */
-    interface HTMLAtomicRecsListElement extends Components.AtomicRecsList, HTMLStencilElement {
+    interface HTMLAtomicIpxResultLinkElement extends Components.AtomicIpxResultLink, HTMLStencilElement {
     }
-    var HTMLAtomicRecsListElement: {
-        prototype: HTMLAtomicRecsListElement;
-        new (): HTMLAtomicRecsListElement;
+    var HTMLAtomicIpxResultLinkElement: {
+        prototype: HTMLAtomicIpxResultLinkElement;
+        new (): HTMLAtomicIpxResultLinkElement;
     };
     interface HTMLAtomicStencilFacetDateInputElementEventMap {
         "atomic/dateInputApply": any;
@@ -444,10 +452,12 @@ declare global {
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
         "atomic-insight-smart-snippet-suggestions": HTMLAtomicInsightSmartSnippetSuggestionsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
+        "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
+        "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
-        "atomic-recs-list": HTMLAtomicRecsListElement;
+        "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
     }
 }
@@ -615,6 +625,29 @@ declare namespace LocalJSX {
         "withDatePicker"?: boolean;
     }
     /**
+     * @category Insight Panel
+     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
+     */
+    interface AtomicInsightUserActionsSession {
+        /**
+          * The start time of the session as a Unix timestamp.
+         */
+        "startTimestamp": number;
+        /**
+          * The list of user actions performed during the session.
+         */
+        "userActions": Array<IUserAction>;
+    }
+    interface AtomicIpxBody {
+        "displayFooterSlot"?: boolean;
+        "isOpen"?: boolean;
+        /**
+          * @migration Stencil's
+          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('animationEnded', { bubbles: true, composed: true, cancelable: true })`
+         */
+        "onAnimationEnded"?: (event: AtomicIpxBodyCustomEvent<never>) => void;
+    }
+    /**
      * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
      */
     interface AtomicIpxRecsList {
@@ -666,41 +699,13 @@ declare namespace LocalJSX {
         "collapseFacetsAfter"?: number;
     }
     /**
-     * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
+     * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
      */
-    interface AtomicRecsList {
+    interface AtomicIpxResultLink {
         /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the result's `clickUri` and `itemtitle` fields. ```html <atomic-ipx-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-ipx-result-link> ```
          */
-        "density"?: ItemDisplayDensity;
-        /**
-          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
-         */
-        "display"?: ItemDisplayBasicLayout;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
-         */
-        "headingLevel"?: number;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * The non-localized label for the list of recommendations.
-         */
-        "label"?: string;
-        /**
-          * The total number of recommendations to display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
-         */
-        "numberOfRecommendations"?: number;
-        /**
-          * The number of recommendations to display, per page. Setting a value greater than and lower than the numberOfRecommendations value activates the carousel. This does not affect the display of the list itself, only the number of recommendation pages.
-         */
-        "numberOfRecommendationsPerPage"?: number;
-        /**
-          * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-recs-list in your page.
-         */
-        "recommendation"?: string;
+        "hrefTemplate"?: string;
     }
     /**
      * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
@@ -728,10 +733,12 @@ declare namespace LocalJSX {
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
         "atomic-insight-smart-snippet-suggestions": AtomicInsightSmartSnippetSuggestions;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
+        "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
+        "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-recs-list": AtomicIpxRecsList;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
-        "atomic-recs-list": AtomicRecsList;
+        "atomic-ipx-result-link": AtomicIpxResultLink;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
     }
 }
@@ -747,15 +754,21 @@ declare module "@stencil/core" {
             "atomic-insight-smart-snippet-suggestions": LocalJSX.AtomicInsightSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetSuggestionsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
             /**
+             * @category Insight Panel
+             * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
+             */
+            "atomic-insight-user-actions-session": LocalJSX.AtomicInsightUserActionsSession & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsSessionElement>;
+            "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
+            /**
              * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
              */
             "atomic-ipx-recs-list": LocalJSX.AtomicIpxRecsList & JSXBase.HTMLAttributes<HTMLAtomicIpxRecsListElement>;
             "atomic-ipx-refine-modal": LocalJSX.AtomicIpxRefineModal & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineModalElement>;
             "atomic-ipx-refine-toggle": LocalJSX.AtomicIpxRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineToggleElement>;
             /**
-             * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
+             * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
              */
-            "atomic-recs-list": LocalJSX.AtomicRecsList & JSXBase.HTMLAttributes<HTMLAtomicRecsListElement>;
+            "atomic-ipx-result-link": LocalJSX.AtomicIpxResultLink & JSXBase.HTMLAttributes<HTMLAtomicIpxResultLinkElement>;
             /**
              * @deprecated Use `atomic-facet-date-input` instead. This component is meant to be used with Stencil components only.
              * Internal component made to be integrated in a TimeframeFacet.
