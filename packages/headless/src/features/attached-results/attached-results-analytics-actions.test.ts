@@ -10,13 +10,17 @@ import {buildMockSearchResponse} from '../../test/mock-search-response.js';
 import {buildMockSearchState} from '../../test/mock-search-state.js';
 import {clearMicrotaskQueue} from '../../test/unit-test-utils.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
+import {getGeneratedAnswerInitialState} from '../generated-answer/generated-answer-state.js';
 import {
   logCaseAttach,
   logCaseDetach,
+  logCitationDocumentAttach,
+  logCitationDocumentDetach,
 } from './attached-results-analytics-actions.js';
 
 const mockLogCaseAttach = vi.fn();
 const mockLogCaseDetach = vi.fn();
+const mockLogGeneratedAnswerCitationDocumentAttach = vi.fn();
 const emit = vi.fn();
 
 vi.mock('@coveo/relay');
@@ -26,6 +30,8 @@ vi.mocked(CoveoInsightClient).mockImplementation(function () {
   this.disable = () => {};
   this.logCaseAttach = mockLogCaseAttach;
   this.logCaseDetach = mockLogCaseDetach;
+  this.logGeneratedAnswerCitationDocumentAttach =
+    mockLogGeneratedAnswerCitationDocumentAttach;
 });
 
 vi.mocked(createRelay).mockReturnValue({
@@ -64,9 +70,27 @@ const expectedDocumentInfo = {
   documentAuthor: 'example author',
 };
 
+const expectedCitationDocumentInfo = {
+  queryPipeline: '',
+  documentUri: 'example documentUri',
+  sourceName: 'example sourceName',
+  documentPosition: 1,
+  documentTitle: 'example documentTitle',
+  documentUrl: 'example documentUrl',
+};
+
 const expectedDocumentIdentifier = {
   contentIDKey: 'permanentid',
   contentIDValue: 'example contentIDValue',
+};
+
+const expectedCitationPayload = {
+  generativeQuestionAnsweringId: 'example-answer-id',
+  citationId: 'citation-123',
+  documentId: {
+    contentIdKey: 'permanentid',
+    contentIdValue: 'example contentIDValue',
+  },
 };
 
 const resultParams = {
@@ -90,14 +114,36 @@ const resultParams = {
 
 const testResult = buildMockResult(resultParams);
 
+const testCitation = {
+  id: 'citation-123',
+  permanentid: 'example contentIDValue',
+  title: 'example documentTitle',
+  uri: 'example documentUri',
+  clickUri: 'example documentUrl',
+  text: 'example citation text',
+  fields: {
+    urihash: 'example documentUriHash',
+    source: 'example sourceName',
+    permanentid: 'example contentIDValue',
+    author: 'example author',
+  },
+  source: 'example sourceName',
+};
+
 describe('attached results analytics actions', () => {
   let engine: InsightEngine;
   const searchState = buildMockSearchState({
     results: [testResult],
     response: buildMockSearchResponse({
       searchUid: 'example searchUid',
+      extendedResults: {
+        generativeQuestionAnsweringId: 'example-answer-id',
+      },
     }),
   });
+  const generatedAnswerState = {
+    ...getGeneratedAnswerInitialState(),
+  };
   const caseContextState = {
     caseContext: {
       Case_Subject: exampleSubject,
@@ -123,12 +169,13 @@ describe('attached results analytics actions', () => {
               analyticsMode: 'legacy',
             },
           },
+          generatedAnswer: generatedAnswerState,
           insightCaseContext: caseContextState,
         })
       );
     });
 
-    describe('logCaseAttach', () => {
+    describe('#logCaseAttach', () => {
       it('should call coveo.analytics.logCaseAttach properly', async () => {
         await logCaseAttach(testResult)()(
           engine.dispatch,
@@ -149,7 +196,7 @@ describe('attached results analytics actions', () => {
       });
     });
 
-    describe('logCaseDetach', () => {
+    describe('#logCaseDetach', () => {
       it('should call coveo.analytics.logCaseDetach properly', async () => {
         await logCaseDetach(testResult)()(
           engine.dispatch,
@@ -163,6 +210,50 @@ describe('attached results analytics actions', () => {
         );
         expect(mockLogCaseDetach.mock.calls[0][1]).toStrictEqual(
           expectedMetadata
+        );
+      });
+    });
+
+    describe('#logCitationDocumentAttach', () => {
+      it('should call coveo.analytics.logGeneratedAnswerCitationDocumentAttach with the expected payload', async () => {
+        await logCitationDocumentAttach(testCitation)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
+
+        expect(
+          mockLogGeneratedAnswerCitationDocumentAttach
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          mockLogGeneratedAnswerCitationDocumentAttach.mock.calls[0][0]
+        ).toStrictEqual(expectedCitationDocumentInfo);
+        expect(
+          mockLogGeneratedAnswerCitationDocumentAttach.mock.calls[0][1]
+        ).toStrictEqual(expectedCitationPayload);
+        expect(
+          mockLogGeneratedAnswerCitationDocumentAttach.mock.calls[0][2]
+        ).toStrictEqual(expectedMetadata);
+      });
+    });
+
+    describe('#logCitationDocumentDetach', () => {
+      it('should call coveo.analytics.logCaseDetach properly', async () => {
+        await logCitationDocumentDetach(testCitation)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
+
+        expect(mockLogCaseDetach).toHaveBeenCalledTimes(1);
+        expect(mockLogCaseDetach.mock.calls[0][0]).toStrictEqual(
+          testCitation.fields.urihash
+        );
+        expect(mockLogCaseDetach.mock.calls[0][1]).toStrictEqual(
+          expectedMetadata
+        );
+        expect(mockLogCaseDetach.mock.calls[0][2]).toStrictEqual(
+          testCitation.permanentid
         );
       });
     });
@@ -180,12 +271,13 @@ describe('attached results analytics actions', () => {
               analyticsMode: 'next',
             },
           },
+          generatedAnswer: generatedAnswerState,
           insightCaseContext: caseContextState,
         })
       );
     });
 
-    describe('logCaseAttach', () => {
+    describe('#logCaseAttach', () => {
       it('should call relay.emit properly', async () => {
         await logCaseAttach(testResult)()(
           engine.dispatch,
@@ -199,7 +291,7 @@ describe('attached results analytics actions', () => {
       });
     });
 
-    describe('logCaseDetach', () => {
+    describe('#logCaseDetach', () => {
       it('should call relay.emit properly', async () => {
         await logCaseDetach(testResult)()(
           engine.dispatch,
@@ -207,6 +299,20 @@ describe('attached results analytics actions', () => {
           {} as ThunkExtraArguments
         );
 
+        await clearMicrotaskQueue();
+
+        expect(emit).toHaveBeenCalledTimes(1);
+        expect(emit.mock.calls[0]).toMatchSnapshot();
+      });
+    });
+
+    describe('#logCitationDocumentDetach', () => {
+      it('should call relay.emit properly', async () => {
+        await logCitationDocumentDetach(testCitation)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
         await clearMicrotaskQueue();
 
         expect(emit).toHaveBeenCalledTimes(1);
