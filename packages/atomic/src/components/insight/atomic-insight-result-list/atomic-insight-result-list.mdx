@@ -1,0 +1,91 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicInsightResultListStories from './atomic-insight-result-list.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicInsightResultListStories} />
+
+<AtomicDocTemplate
+  stories={AtomicInsightResultListStories}
+  githubPath="insight/atomic-insight-result-list/atomic-insight-result-list.ts"
+  tagName="atomic-insight-result-list"
+  className="AtomicInsightResultList"
+>
+
+The `atomic-insight-result-list` component is responsible for displaying insight query results by applying one or more result templates.
+
+This component should be placed within an `atomic-insight-interface` component, typically inside an `atomic-insight-layout` with a results section.
+
+```html
+<atomic-insight-interface>
+  <atomic-insight-layout>
+    <atomic-layout-section section="results">
+      <atomic-insight-result-list>
+        <atomic-insight-result-template>
+          <template>
+            <atomic-result-section-title>
+              <atomic-result-link></atomic-result-link>
+            </atomic-result-section-title>
+            <atomic-result-section-excerpt>
+              <atomic-result-text field="excerpt"></atomic-result-text>
+            </atomic-result-section-excerpt>
+          </template>
+        </atomic-insight-result-template>
+      </atomic-insight-result-list>
+    </atomic-layout-section>
+  </atomic-insight-layout>
+</atomic-insight-interface>
+```
+
+## Properties
+
+### density
+
+Controls the spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts.
+
+```html
+<atomic-insight-result-list density="comfortable"></atomic-insight-result-list>
+```
+
+Available values: `normal` (default), `comfortable`, `compact`
+
+### image-size
+
+Controls the expected size of the image displayed in the results.
+
+```html
+<atomic-insight-result-list image-size="large"></atomic-insight-result-list>
+```
+
+Available values: `icon` (default), `small`, `large`, `none`
+
+## Result Templates
+
+The component requires at least one `atomic-insight-result-template` child to define how results should be rendered. You can define multiple templates with conditions to display different layouts based on result properties.
+
+```html
+<atomic-insight-result-list>
+  <!-- Template for YouTube results -->
+  <atomic-insight-result-template must-match-sourcetype="YouTube">
+    <template>
+      <atomic-result-badge label="YouTube Video"></atomic-result-badge>
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+    </template>
+  </atomic-insight-result-template>
+  
+  <!-- Default template -->
+  <atomic-insight-result-template>
+    <template>
+      <atomic-result-section-title>
+        <atomic-result-link></atomic-result-link>
+      </atomic-result-section-title>
+      <atomic-result-section-excerpt>
+        <atomic-result-text field="excerpt"></atomic-result-text>
+      </atomic-result-section-excerpt>
+    </template>
+  </atomic-insight-result-template>
+</atomic-insight-result-list>
+```
+
+</AtomicDocTemplate>
