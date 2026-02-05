@@ -18,6 +18,7 @@ import {renderAnswerContent} from '@/src/components/common/generated-answer/rend
 import {renderCitations} from '@/src/components/common/generated-answer/render-citations';
 import {renderCustomNoAnswerMessage} from '@/src/components/common/generated-answer/render-custom-no-answer-message';
 import {renderFeedbackAndCopyButtons} from '@/src/components/common/generated-answer/render-feedback-and-copy-buttons';
+import {renderFollowUpInput} from '@/src/components/common/generated-answer/render-follow-up-input';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {arrayConverter} from '@/src/converters/array-converter';
@@ -136,6 +137,12 @@ export class AtomicGeneratedAnswer
   answerConfigurationId?: string;
 
   /**
+   * The unique identifier of the agent configuration to use to generate the answer.
+   */
+  @property({type: String, attribute: 'agent-id'})
+  agentId?: string;
+
+  /**
    * A list of fields to include with the citations used to generate the answer.
    *
    * Set this property as a stringified JSON array, for example:
@@ -221,6 +228,9 @@ export class AtomicGeneratedAnswer
   @state()
   private copyError = false;
 
+  @state()
+  private followUpPending = false;
+
   private ariaMessage = new AriaLiveRegionController(this, 'generated-answer');
 
   constructor() {
@@ -260,6 +270,7 @@ export class AtomicGeneratedAnswer
       ...(this.answerConfigurationId && {
         answerConfigurationId: this.answerConfigurationId,
       }),
+      ...(this.agentId && {agentId: this.agentId}),
       fieldsToIncludeInCitations: this.getCitationFields(),
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -322,6 +333,22 @@ export class AtomicGeneratedAnswer
     }
   }
 
+  // TODO: to fix after follow-up implementation is finalized
+  private canAskFollowUp() {
+    return true;
+  }
+
+  private handleAskFollowUp = async (query: string) => {
+    if (this.canAskFollowUp()) {
+      this.followUpPending = true;
+      try {
+        console.log('Querying follow-up:', query);
+      } finally {
+        this.followUpPending = false;
+      }
+    }
+  };
+
   @bindingGuard()
   @errorGuard()
   render() {
@@ -365,7 +392,12 @@ export class AtomicGeneratedAnswer
           part="container"
           aria-label=${this.bindings.i18n.t('generated-answer-title')}
         >
-          <article>${this.renderContent()}</article>
+          <article>
+            <div part="generated-content">
+              ${this.isAnswerVisible ? this.renderContent() : nothing}
+            </div>
+          </article>
+          ${this.isAnswerVisible ? this.renderFollowUpInput() : nothing}
         </aside>
       </div>
     `;
@@ -594,6 +626,24 @@ export class AtomicGeneratedAnswer
         onClickShowButton: () => this.clickOnShowButton(),
       },
     });
+  }
+
+  private renderFollowUpInput() {
+    if (!this.agentId) {
+      return nothing;
+    }
+
+    return html`
+      <div class="px-6 py-3">
+        ${renderFollowUpInput({
+          props: {
+            i18n: this.bindings.i18n,
+            askFollowUp: this.handleAskFollowUp,
+            submitButtonDisabled: this.followUpPending,
+          },
+        })}
+      </div>
+    `;
   }
 
   private renderCustomNoAnswerMessageWrapper() {
