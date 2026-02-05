@@ -1,8 +1,8 @@
 import type {AtomicFoldedResultList} from '@coveo/atomic/components';
 import type {FoldedResult} from '@coveo/headless';
 import React, {type JSX, useEffect, useRef} from 'react';
+import {flushSync} from 'react-dom';
 import {createRoot} from 'react-dom/client';
-import {renderToString} from 'react-dom/server';
 import {AtomicFoldedResultList as LitAtomicFoldedResultList} from './components.js';
 
 /**
@@ -27,8 +27,10 @@ export const FoldedResultListWrapper: React.FC<WrapperProps> = (props) => {
   const foldedResultListRef = useRef<AtomicFoldedResultList>(null);
   useEffect(() => {
     foldedResultListRef.current?.setRenderFunction((foldedResult, root) => {
-      createRoot(root).render(template(foldedResult as FoldedResult));
-      return renderToString(template(foldedResult as FoldedResult));
+      flushSync(() => {
+        createRoot(root).render(template(foldedResult as FoldedResult));
+      });
+      return root.innerHTML;
     });
   }, [template]);
   return (

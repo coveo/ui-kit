@@ -1,8 +1,8 @@
 import type {AtomicResultList} from '@coveo/atomic/components';
 import type {Result} from '@coveo/headless';
 import React, {type JSX, useEffect, useRef} from 'react';
+import {flushSync} from 'react-dom';
 import {createRoot} from 'react-dom/client';
-import {renderToString} from 'react-dom/server';
 import {
   AtomicResultLink,
   AtomicResultList as LitAtomicResultList,
@@ -63,28 +63,56 @@ export const ResultListWrapper: React.FC<WrapperProps> = (props) => {
   useEffect(() => {
     resultListRef.current?.setRenderFunction((result, root, linkContainer) => {
       const templateResult = template(result as Result);
-      if (hasLinkTemplate(templateResult)) {
-        createRoot(linkContainer!).render(templateResult.linkTemplate);
-        createRoot(root).render(templateResult.contentTemplate);
-        return renderToString(templateResult.contentTemplate);
+      if (isTemplate(templateResult)) {
+        return renderTemplate(linkContainer, templateResult, root);
+      } else {
+        return renderJSXTemplate(
+          linkContainer,
+          root,
+          templateResult,
+          otherProps.display
+        );
       }
-      if (linkContainer !== undefined) {
-        createRoot(root).render(templateResult);
-        otherProps.display === 'grid'
-          ? createRoot(linkContainer).render(
-              <AtomicResultLink></AtomicResultLink>
-            )
-          : // biome-ignore lint/complexity/noUselessFragments: <>
-            createRoot(linkContainer).render(<></>);
-      }
-      return renderToString(templateResult);
     });
   }, [otherProps.display, template]);
   return <LitAtomicResultList ref={resultListRef} {...otherProps} />;
 };
 
-const hasLinkTemplate = (
-  template: JSX.Element | Template
-): template is Template => {
+const isTemplate = (template: JSX.Element | Template): template is Template => {
   return (template as Template).linkTemplate !== undefined;
 };
+
+function renderJSXTemplate(
+  linkContainer: HTMLElement | undefined,
+  root: HTMLElement,
+  templateResult: JSX.Element,
+  display: WrapperProps['display']
+) {
+  const contentRoot = createRoot(root);
+  const linkRoot = linkContainer ? createRoot(linkContainer!) : null;
+  flushSync(() => {
+    contentRoot.render(templateResult);
+    if (!linkRoot) {
+      return;
+    }
+    display === 'grid'
+      ? linkRoot.render(<AtomicResultLink></AtomicResultLink>)
+      : // biome-ignore lint/complexity/noUselessFragments: <>
+        linkRoot.render(<></>);
+  });
+  return root.innerHTML;
+}
+
+function renderTemplate(
+  linkContainer: HTMLElement | undefined,
+  templateResult: Template,
+  root: HTMLElement
+) {
+  const linkRoot = createRoot(linkContainer!);
+  const contentRoot = createRoot(root);
+  flushSync(() => {
+    linkRoot.render(templateResult.linkTemplate);
+    contentRoot.render(templateResult.contentTemplate);
+  });
+  return root.innerHTML;
+}

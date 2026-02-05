@@ -1,8 +1,8 @@
 import type {JSX as AtomicJSX} from '@coveo/atomic';
 import type {Result} from '@coveo/headless/recommendation';
 import React, {type JSX, useEffect, useRef} from 'react';
+import {flushSync} from 'react-dom';
 import {createRoot} from 'react-dom/client';
-import {renderToString} from 'react-dom/server';
 import {AtomicResultLink} from '../search/components.js';
 import {AtomicRecsList} from '../stencil-generated/search/index.js';
 
@@ -35,18 +35,24 @@ export const RecsListWrapper: React.FC<WrapperProps> = (props) => {
     recsListRef.current?.setRenderFunction((result, root, linkContainer) => {
       const templateResult = template(result as Result);
       if (hasLinkTemplate(templateResult)) {
-        createRoot(linkContainer!).render(templateResult.linkTemplate);
-        createRoot(root).render(templateResult.contentTemplate);
-        return renderToString(templateResult.contentTemplate);
+        const linkRoot = createRoot(linkContainer!);
+        linkRoot.render(templateResult.linkTemplate);
+        const contentRoot = createRoot(root);
+        flushSync(() => {
+          contentRoot.render(templateResult.contentTemplate);
+        });
+        return root.innerHTML;
       } else {
-        createRoot(root).render(templateResult);
-        otherProps.display === 'grid'
-          ? createRoot(linkContainer!).render(
-              <AtomicResultLink></AtomicResultLink>
-            )
-          : // biome-ignore lint/complexity/noUselessFragments: <>
-            createRoot(linkContainer!).render(<></>);
-        return renderToString(templateResult);
+        const contentRoot = createRoot(root);
+        const linkRoot = createRoot(linkContainer!);
+        flushSync(() => {
+          contentRoot.render(templateResult);
+          otherProps.display === 'grid'
+            ? linkRoot.render(<AtomicResultLink></AtomicResultLink>)
+            : // biome-ignore lint/complexity/noUselessFragments: <>
+              linkRoot.render(<></>);
+        });
+        return root.innerHTML;
       }
     });
   }, [otherProps.display, template]);
