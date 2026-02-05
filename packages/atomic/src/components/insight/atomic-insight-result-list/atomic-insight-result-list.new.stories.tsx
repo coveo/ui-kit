@@ -109,41 +109,4 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {
-  name: 'Default',
-};
-
-export const Comfortable: Story = {
-  name: 'Comfortable density',
-  args: {
-    density: 'comfortable',
-  },
-};
-
-export const Compact: Story = {
-  name: 'Compact density',
-  args: {
-    density: 'compact',
-  },
-};
-
-export const LargeImages: Story = {
-  name: 'Large images',
-  args: {
-    'image-size': 'large',
-  },
-};
-
-export const SmallImages: Story = {
-  name: 'Small images',
-  args: {
-    'image-size': 'small',
-  },
-};
-
-export const NoImages: Story = {
-  name: 'No images',
-  args: {
-    'image-size': 'none',
-  },
-};
+export const Default: Story = {};
