@@ -20,8 +20,9 @@ const meta: Meta = {
     (story) => html`
       <style>
         atomic-ipx-modal {
-          position: relative !important;
-          inset: auto !important;
+          position: relative;
+          inset: auto;
+          margin: 1rem;
         }
       </style>
       ${story()}
@@ -29,7 +30,7 @@ const meta: Meta = {
   ],
   parameters: {
     ...commonParameters,
-    layout: 'fullscreen',
+    layout: 'centered',
     docs: {
       ...commonParameters.docs,
       story: {
