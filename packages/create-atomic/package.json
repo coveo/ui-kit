@@ -62,7 +62,8 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "@coveo/create-atomic-template": "workspace:*"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
