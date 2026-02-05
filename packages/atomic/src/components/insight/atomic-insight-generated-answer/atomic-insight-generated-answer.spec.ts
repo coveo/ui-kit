@@ -408,7 +408,7 @@ describe('atomic-insight-generated-answer', () => {
     expect(showMoreButton).toBeInTheDocument();
   });
 
-  it('should show button even when content is short', async () => {
+  it('should render show more button when collapsible is enabled and content is short', async () => {
     const {showMoreButton} = await renderGeneratedAnswer({
       props: {collapsible: true},
       generatedAnswerState: {
