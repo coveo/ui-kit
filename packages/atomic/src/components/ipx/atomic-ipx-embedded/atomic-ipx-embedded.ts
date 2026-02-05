@@ -17,6 +17,14 @@ import {once, randomID} from '@/src/utils/utils.js';
  * @slot footer - Content to display in the footer section.
  *
  * @part backdrop - The backdrop container element.
+ * @part container - The content container element.
+ * @part header-wrapper - The wrapper around the header section.
+ * @part header - The header content container.
+ * @part header-ruler - The horizontal rule separating header and body.
+ * @part body-wrapper - The wrapper around the body section (scrollable).
+ * @part body - The body content container.
+ * @part footer-wrapper - The wrapper around the footer section.
+ * @part footer - The footer content container.
  */
 @customElement('atomic-ipx-embedded')
 @bindings()

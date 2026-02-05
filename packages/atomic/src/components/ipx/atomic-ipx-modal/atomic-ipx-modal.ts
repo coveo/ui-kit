@@ -21,7 +21,14 @@ import {once, randomID} from '@/src/utils/utils';
  *
  * @part atomic-ipx-modal - The main modal container.
  * @part backdrop - The backdrop behind the modal.
- * @part container - The modal's content container from atomic-ipx-body (via exportparts).
+ * @part container - The content container element.
+ * @part header-wrapper - The wrapper around the header section.
+ * @part header - The header content container.
+ * @part header-ruler - The horizontal rule separating header and body.
+ * @part body-wrapper - The wrapper around the body section (scrollable).
+ * @part body - The body content container.
+ * @part footer-wrapper - The wrapper around the footer section.
+ * @part footer - The footer content container.
  *
  * @slot header - The header content of the modal.
  * @slot body - The main body content of the modal.
