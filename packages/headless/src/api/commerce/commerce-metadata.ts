@@ -6,7 +6,8 @@ export type CommerceApiMethod =
   | 'search/querySuggest'
   | 'querySuggest'
   | 'facet'
-  | 'badges';
+  | 'badges'
+  | 'search/redirect';
 
 /**
  * API methods that require the tracking ID to be included in the URL path.
