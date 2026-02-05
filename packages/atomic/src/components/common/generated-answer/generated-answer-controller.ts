@@ -10,6 +10,7 @@ import {
   SafeStorage,
   StorageItems,
 } from '@/src/utils/local-storage-utils';
+import type {AtomicGeneratedAnswerFeedbackModal} from '../atomic-generated-answer-feedback-modal/atomic-generated-answer-feedback-modal';
 
 export interface GeneratedAnswerControllerOptions {
   withToggle?: boolean;
@@ -27,7 +28,7 @@ export class GeneratedAnswerController implements ReactiveController {
   private host: ReactiveControllerHost & HTMLElement;
   private storage: SafeStorage = new SafeStorage();
   private _data: GeneratedAnswerData;
-  private modalRef?: HTMLAtomicGeneratedAnswerFeedbackModalElement;
+  private modalRef?: AtomicGeneratedAnswerFeedbackModal;
   private options: GeneratedAnswerControllerOptions;
 
   constructor(

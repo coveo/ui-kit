@@ -5,38 +5,21 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DateFilterRange, DateRangeRequest, GeneratedAnswer, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
+import { DateFilterRange, DateRangeRequest, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { RangeFacetSortCriterion as InsightRangeFacetSortCriterion, UserAction as IUserAction } from "@coveo/headless/insight";
 import { AnyBindings } from "./components/common/interface/bindings";
-export { DateFilterRange, DateRangeRequest, GeneratedAnswer, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
+export { DateFilterRange, DateRangeRequest, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { RangeFacetSortCriterion as InsightRangeFacetSortCriterion, UserAction as IUserAction } from "@coveo/headless/insight";
 export { AnyBindings } from "./components/common/interface/bindings";
 export namespace Components {
-    /**
-     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
-     */
-    interface AtomicGeneratedAnswerFeedbackModal {
-        /**
-          * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
-         */
-        "generatedAnswer": GeneratedAnswer;
-        /**
-          * Indicates whether the answer was helpful or not.
-         */
-        "helpful": boolean;
-        /**
-          * Indicates whether the modal is open.
-         */
-        "isOpen": boolean;
-    }
     interface AtomicInsightFoldedResultList {
         /**
           * The name of the field that uniquely identifies a result within a collection.
@@ -444,10 +427,6 @@ export namespace Components {
         "rangeSetter": (range: DateRangeRequest) => void;
     }
 }
-export interface AtomicGeneratedAnswerFeedbackModalCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicGeneratedAnswerFeedbackModalElement;
-}
 export interface AtomicInsightResultActionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicInsightResultActionElement;
@@ -469,26 +448,6 @@ export interface AtomicStencilFacetDateInputCustomEvent<T> extends CustomEvent<T
     target: HTMLAtomicStencilFacetDateInputElement;
 }
 declare global {
-    interface HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap {
-        "feedbackSent": any;
-    }
-    /**
-     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
-     */
-    interface HTMLAtomicGeneratedAnswerFeedbackModalElement extends Components.AtomicGeneratedAnswerFeedbackModal, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicGeneratedAnswerFeedbackModalElement, ev: AtomicGeneratedAnswerFeedbackModalCustomEvent<HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicGeneratedAnswerFeedbackModalElement, ev: AtomicGeneratedAnswerFeedbackModalCustomEvent<HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicGeneratedAnswerFeedbackModalElement: {
-        prototype: HTMLAtomicGeneratedAnswerFeedbackModalElement;
-        new (): HTMLAtomicGeneratedAnswerFeedbackModalElement;
-    };
     interface HTMLAtomicInsightFoldedResultListElement extends Components.AtomicInsightFoldedResultList, HTMLStencilElement {
     }
     var HTMLAtomicInsightFoldedResultListElement: {
@@ -715,7 +674,6 @@ declare global {
         new (): HTMLAtomicStencilFacetDateInputElement;
     };
     interface HTMLElementTagNameMap {
-        "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
@@ -743,28 +701,6 @@ declare global {
     }
 }
 declare namespace LocalJSX {
-    /**
-     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
-     */
-    interface AtomicGeneratedAnswerFeedbackModal {
-        /**
-          * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
-         */
-        "generatedAnswer": GeneratedAnswer;
-        /**
-          * Indicates whether the answer was helpful or not.
-         */
-        "helpful"?: boolean;
-        /**
-          * Indicates whether the modal is open.
-         */
-        "isOpen"?: boolean;
-        /**
-          * @migration Stencil's
-          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('feedbackSent', { bubbles: true, composed: true, cancelable: true })`
-         */
-        "onFeedbackSent"?: (event: AtomicGeneratedAnswerFeedbackModalCustomEvent<any>) => void;
-    }
     interface AtomicInsightFoldedResultList {
         /**
           * The name of the field that uniquely identifies a result within a collection.
@@ -1159,7 +1095,6 @@ declare namespace LocalJSX {
         "rangeSetter": (range: DateRangeRequest) => void;
     }
     interface IntrinsicElements {
-        "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
@@ -1190,10 +1125,6 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            /**
-             * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
-             */
-            "atomic-generated-answer-feedback-modal": LocalJSX.AtomicGeneratedAnswerFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerFeedbackModalElement>;
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
             "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;

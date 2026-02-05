@@ -230,7 +230,7 @@ export class AtomicInsightSearchBox
       @click=${(e: Event) => {
         this.suggestionManager.onSuggestionClick(item, e);
       }}
-      @mouseover=${() => {
+      @mouseenter=${() => {
         this.suggestionManager.onSuggestionMouseOver(item, 'left', id);
       }}
     ></atomic-suggestion-renderer>`;

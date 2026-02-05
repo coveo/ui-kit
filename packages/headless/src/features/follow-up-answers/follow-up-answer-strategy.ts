@@ -4,28 +4,25 @@ import type {
   StreamPayload,
 } from '../../api/knowledge/answer-generation/streaming/types.js';
 import {
-  setAnswerContentFormat,
-  setAnswerId,
-  setCannotAnswer,
-  setIsAnswerGenerated,
-  setIsLoading,
-  setIsStreaming,
-  updateCitations,
-  updateError,
-  updateMessage,
-} from './generated-answer-actions.js';
-import {
-  logGeneratedAnswerResponseLinked,
-  logGeneratedAnswerStreamEnd,
-} from './generated-answer-analytics-actions.js';
+  followUpCitationsReceived,
+  followUpCompleted,
+  followUpFailed,
+  followUpMessageChunkReceived,
+  setActiveFollowUpAnswerId,
+  setFollowUpAnswerContentFormat,
+  setFollowUpIsLoading,
+} from './follow-up-answers-actions.js';
 
-export const createHeadAnswerStrategy =
+export const createFollowUpAnswerStrategy =
   (): StreamingStrategy<AnswerGenerationApiState> => {
+    let answerId: string | null = null;
+
     return {
       handleOpen: (response, dispatch) => {
-        const answerId = response.headers.get('x-answer-id');
+        answerId = response.headers.get('x-answer-id');
         if (answerId) {
-          dispatch(setAnswerId(answerId));
+          dispatch(setActiveFollowUpAnswerId(answerId));
+          dispatch(setFollowUpIsLoading({answerId, isLoading: true}));
         }
       },
 
@@ -37,40 +34,57 @@ export const createHeadAnswerStrategy =
         'genqa.headerMessageType': (message, dispatch) => {
           const payload = parsePayload(message.payload);
           if (payload.contentFormat) {
-            dispatch(setAnswerContentFormat(payload.contentFormat));
-            dispatch(setIsStreaming(true));
-            dispatch(setIsLoading(false));
+            dispatch(
+              setFollowUpAnswerContentFormat({
+                contentFormat: payload.contentFormat,
+                answerId: answerId!,
+              })
+            );
           }
         },
 
         'genqa.messageType': (message, dispatch) => {
           const payload = parsePayload(message.payload);
           if (payload.textDelta) {
-            dispatch(updateMessage({textDelta: payload.textDelta}));
+            dispatch(
+              followUpMessageChunkReceived({
+                textDelta: payload.textDelta,
+                answerId: answerId!,
+              })
+            );
           }
         },
 
         'genqa.citationsType': (message, dispatch) => {
           const payload = parsePayload(message.payload);
           if (payload.citations !== undefined) {
-            dispatch(updateCitations({citations: payload.citations}));
+            dispatch(
+              followUpCitationsReceived({
+                citations: payload.citations,
+                answerId: answerId!,
+              })
+            );
           }
         },
 
         'genqa.endOfStreamType': (message, dispatch) => {
           const payload = parsePayload(message.payload);
-          dispatch(setIsAnswerGenerated(!!payload.answerGenerated));
-          dispatch(setCannotAnswer(!payload.answerGenerated));
-          dispatch(setIsStreaming(false));
-          dispatch(setIsLoading(false));
           dispatch(
-            logGeneratedAnswerStreamEnd(payload.answerGenerated ?? false)
+            followUpCompleted({
+              cannotAnswer: !payload.answerGenerated,
+              answerId: answerId!,
+            })
           );
-          dispatch(logGeneratedAnswerResponseLinked());
         },
         error: (message, dispatch) => {
-          if (message.finishReason === 'ERROR' && message.errorMessage) {
-            dispatch(updateError(message));
+          if (message.finishReason === 'ERROR') {
+            dispatch(
+              followUpFailed({
+                answerId: answerId!,
+                message: message.errorMessage,
+                code: message.code,
+              })
+            );
           }
         },
       },
