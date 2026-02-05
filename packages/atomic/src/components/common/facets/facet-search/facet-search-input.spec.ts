@@ -69,6 +69,11 @@ describe('renderFacetSearchInput', () => {
     expect(locators.input).toHaveAttribute('part', 'search-input');
   });
 
+  it('should have maxlength attribute set to 256', async () => {
+    await renderComponent();
+    expect(locators.input).toHaveAttribute('maxlength', '256');
+  });
+
   it('should call onChange when input value changes', async () => {
     await renderComponent();
     await locators.input.fill('bar');

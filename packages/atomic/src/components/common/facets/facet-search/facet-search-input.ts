@@ -8,6 +8,7 @@ import SearchIcon from '../../../../images/search.svg';
 import '../../atomic-icon/atomic-icon';
 import {renderButton} from '../../button';
 
+const FACET_SEARCH_INPUT_MAX_LENGTH = 256;
 const inputRef = createRef<HTMLInputElement>();
 
 export interface FacetSearchInputProps {
@@ -36,6 +37,7 @@ export const renderFacetSearchInput: FunctionalComponent<
           type="text"
           placeholder=${search}
           aria-label=${facetSearch}
+          maxlength=${FACET_SEARCH_INPUT_MAX_LENGTH}
           .value=${props.query}
           @input=${(e: Event) =>
             props.onChange((e.target as HTMLInputElement).value)}
