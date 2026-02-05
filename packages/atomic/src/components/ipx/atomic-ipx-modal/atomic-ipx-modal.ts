@@ -6,6 +6,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
+import {buildCustomEvent} from '@/src/utils/event-utils';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {once, randomID} from '@/src/utils/utils';
 import type {AnyBindings} from '../../common/interface/bindings';
@@ -152,9 +153,7 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
   }
 
   private handleAnimationEnded = () => {
-    this.dispatchEvent(
-      new CustomEvent('animationEnded', {bubbles: true, composed: true})
-    );
+    this.dispatchEvent(buildCustomEvent('animationEnded'));
   };
 
   @errorGuard()
