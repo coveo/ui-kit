@@ -41,6 +41,11 @@
     },
     "./custom-elements-manifest": "./custom-elements.json"
   },
+  "sideEffects": [
+    "./dist/atomic/components/components/*/*/*.js",
+    "./dist/index.js",
+    "./dist/atomic/loader/index.js"
+  ],
   "files": [
     "dist/",
     "docs/",
