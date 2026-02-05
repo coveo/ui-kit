@@ -1,5 +1,4 @@
 // Auto-generated file
-export {AtomicIpxBody} from './atomic-ipx-body/atomic-ipx-body.js';
 export {AtomicIpxButton} from './atomic-ipx-button/atomic-ipx-button.js';
 export {AtomicIpxEmbedded} from './atomic-ipx-embedded/atomic-ipx-embedded.js';
 export {AtomicIpxModal} from './atomic-ipx-modal/atomic-ipx-modal.js';
