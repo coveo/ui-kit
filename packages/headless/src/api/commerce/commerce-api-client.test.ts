@@ -387,4 +387,124 @@ describe('commerce api client', () => {
       success: expectedBody,
     });
   });
+
+  describe('#plan', () => {
+    it('should call the platform endpoint with the correct arguments', async () => {
+      const request = {
+        ...(await buildCommerceAPIRequest()),
+        query: 'test query',
+      };
+
+      mockPlatformCall({
+        ok: true,
+        json: () => Promise.resolve({redirect: 'https://example.com/redirect'}),
+      });
+
+      await client.plan(request);
+
+      expect(platformCallMock).toHaveBeenCalled();
+      const mockRequest = platformCallMock.mock.calls[0][0];
+      expect(mockRequest).toMatchObject({
+        method: 'POST',
+        contentType: 'application/json',
+        url: `${getCommerceApiBaseUrl(organizationId)}/search/redirect`,
+        accessToken: request.accessToken,
+        origin: 'commerceApiFetch',
+        requestParams: {
+          query: 'test query',
+          trackingId: request.trackingId,
+          clientId: request.clientId,
+          context: request.context,
+          language: request.language,
+          currency: request.currency,
+        },
+        requestMetadata: {method: 'search/redirect'},
+      });
+    });
+
+    it('should return success response with redirect URL', async () => {
+      const request = {
+        ...(await buildCommerceAPIRequest()),
+        query: 'test query',
+      };
+
+      const expectedBody = {
+        redirect: 'https://example.com/redirect-url',
+      };
+
+      mockPlatformCall({
+        ok: true,
+        json: () => Promise.resolve(expectedBody),
+      });
+
+      const response = await client.plan(request);
+
+      expect(response).toMatchObject({
+        success: expectedBody,
+      });
+    });
+
+    it('should return success response with null redirect', async () => {
+      const request = {
+        ...(await buildCommerceAPIRequest()),
+        query: 'test query',
+      };
+
+      const expectedBody = {
+        redirect: null,
+      };
+
+      mockPlatformCall({
+        ok: true,
+        json: () => Promise.resolve(expectedBody),
+      });
+
+      const response = await client.plan(request);
+
+      expect(response).toMatchObject({
+        success: {redirect: null},
+      });
+    });
+
+    it('should return error response on failure', async () => {
+      const request = {
+        ...(await buildCommerceAPIRequest()),
+        query: 'test query',
+      };
+
+      const expectedError: CommerceAPIErrorStatusResponse = {
+        statusCode: 500,
+        message: 'Internal Server Error',
+        type: 'error',
+      };
+
+      mockPlatformCall({
+        ok: false,
+        json: () => Promise.resolve(expectedError),
+      });
+
+      const response = await client.plan(request);
+
+      expect(response).toMatchObject({
+        error: expectedError,
+      });
+    });
+
+    it('should include query parameter in request', async () => {
+      const request = {
+        ...(await buildCommerceAPIRequest()),
+        query: 'specific search query',
+      };
+
+      mockPlatformCall({
+        ok: true,
+        json: () => Promise.resolve({redirect: null}),
+      });
+
+      await client.plan(request);
+
+      const mockRequest = platformCallMock.mock.calls[0][0];
+      expect(mockRequest.requestParams.query).toBe('specific search query');
+    });
+  });
 });

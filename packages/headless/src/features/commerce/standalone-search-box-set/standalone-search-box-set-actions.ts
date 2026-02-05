@@ -4,7 +4,6 @@ import {
   type AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client.js';
-import {isRedirectTrigger} from '../../../api/common/trigger.js';
 import {
   requiredNonEmptyString,
   validatePayload,
@@ -21,8 +20,6 @@ export interface FetchRedirectUrlPayload {
   id: string;
 }
 
-// eslint-disable-next-line @cspell/spellchecker
-// TODO: CAPI-867 - Use Commerce API's equivalent of the /plan endpoint when it becomes available.
 export const fetchRedirectUrl = createAsyncThunk<
   string,
   FetchRedirectUrlPayload,
@@ -41,10 +38,7 @@ export const fetchRedirectUrl = createAsyncThunk<
       return rejectWithValue(response.error);
     }
 
-    const redirectTriggers =
-      response.success.triggers.filter(isRedirectTrigger);
-
-    return redirectTriggers.length ? redirectTriggers[0].content : '';
+    return response.success.redirect || '';
   }
 );
 export interface RegisterStandaloneSearchBoxPayload {

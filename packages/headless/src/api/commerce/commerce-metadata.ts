@@ -1,6 +1,7 @@
 export type CommerceApiMethod =
   | 'listing'
   | 'search'
+  | 'search/redirect'
   | 'recommendations'
   | 'search/productSuggest'
   | 'search/querySuggest'

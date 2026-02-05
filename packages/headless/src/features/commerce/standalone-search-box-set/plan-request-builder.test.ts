@@ -1,4 +1,4 @@
-import type {QuerySuggestRequest} from '../../../api/commerce/search/query-suggest/query-suggest-request.js';
+import type {CommercePlanRequest} from '../../../api/commerce/search/plan-request.js';
 import {
   defaultNodeJSNavigatorContextProvider,
   type NavigatorContext,
@@ -19,7 +19,7 @@ vi.mock('../common/base-commerce-api-request-builder.js');
 describe('#buildPlanRequest', () => {
   let state: StateNeededForPlanCommerceAPIRequest;
   let navigatorContext: NavigatorContext;
-  let request: QuerySuggestRequest;
+  let request: CommercePlanRequest;
 
   const baseRequest = buildMockBaseCommerceAPIRequest();
 
@@ -49,12 +49,10 @@ describe('#buildPlanRequest', () => {
   });
 
   it('sets base properties, except #context.capture, to the value returned by #buildBaseCommerceAPIRequest(#state, #navigatorContext)', () => {
-    const {
-      query: _query,
-      page: _page,
-      perPage: _perPage,
-      ...restOfPlanRequest
-    } = buildPlanRequest(state, navigatorContext);
+    const {query: _query, ...restOfPlanRequest} = buildPlanRequest(
+      state,
+      navigatorContext
+    );
 
     const {capture: _planRequestCapture, ...restOfPlanRequestContext} =
       restOfPlanRequest.context;
@@ -83,16 +81,16 @@ describe('#buildPlanRequest', () => {
     expect(context.capture).toBe(false);
   });
 
-  it('sets #page to 0', () => {
-    const {page} = buildPlanRequest(state, navigatorContext);
+  it('does not include #page property', () => {
+    const planRequest = buildPlanRequest(state, navigatorContext);
 
-    expect(page).toBe(0);
+    expect('page' in planRequest).toBe(false);
   });
 
-  it('sets #perPage to 1', () => {
-    const {perPage} = buildPlanRequest(state, navigatorContext);
+  it('does not include #perPage property', () => {
+    const planRequest = buildPlanRequest(state, navigatorContext);
 
-    expect(perPage).toBe(1);
+    expect('perPage' in planRequest).toBe(false);
   });
 
   it('sets #query to #state.commerceQuery.query', () => {

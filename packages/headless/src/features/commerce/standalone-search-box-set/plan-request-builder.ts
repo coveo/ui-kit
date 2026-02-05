@@ -1,9 +1,4 @@
-import type {
-  PageParam,
-  PerPageParam,
-  QueryParam,
-} from '../../../api/commerce/commerce-api-params.js';
-import type {BaseCommerceAPIRequest} from '../../../api/commerce/common/request.js';
+import type {CommercePlanRequest} from '../../../api/commerce/search/plan-request.js';
 import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import type {CommerceQuerySection} from '../../../state/state-sections.js';
 import {
@@ -13,11 +8,6 @@ import {
 
 export type StateNeededForPlanCommerceAPIRequest =
   StateNeededForBaseCommerceAPIRequest & CommerceQuerySection;
-
-type CommercePlanRequest = BaseCommerceAPIRequest &
-  QueryParam &
-  PageParam &
-  PerPageParam;
 
 export const buildPlanRequest = (
   state: StateNeededForPlanCommerceAPIRequest,
@@ -30,8 +20,6 @@ export const buildPlanRequest = (
       ...baseRequest.context,
       capture: false,
     },
-    page: 0,
-    perPage: 1,
     query: state.commerceQuery.query,
   };
 };
