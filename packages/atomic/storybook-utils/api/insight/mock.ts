@@ -3,6 +3,7 @@ import {EndpointHarness, type MockApi} from '../_base.js';
 import type {APIErrorWithStatusCode} from '../_common/error.js';
 import {baseResponse as baseQuerySuggestResponse} from './querySuggest-response.js';
 import {
+  baseFoldedResponse,
   baseResponse as baseSearchResponse,
   type InsightResponse,
 } from './search-response.js';
@@ -32,6 +33,11 @@ export class MockInsightApi implements MockApi {
       this.querySuggestEndpoint.generateHandler(),
     ];
   }
+
+  clearAll(): void {
+    this.searchEndpoint.clear();
+    this.querySuggestEndpoint.clear();
+  }
 }
 
-export {baseSearchResponse};
+export {baseSearchResponse, baseFoldedResponse};
