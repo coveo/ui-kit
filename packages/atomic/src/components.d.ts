@@ -272,10 +272,6 @@ export namespace Components {
          */
         "userId": string;
     }
-    interface AtomicIpxBody {
-        "displayFooterSlot": boolean;
-        "isOpen"?: boolean;
-    }
     /**
      * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
      */
@@ -439,10 +435,6 @@ export interface AtomicInsightResultAttachToCaseActionCustomEvent<T> extends Cus
     detail: T;
     target: HTMLAtomicInsightResultAttachToCaseActionElement;
 }
-export interface AtomicIpxBodyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicIpxBodyElement;
-}
 export interface AtomicStencilFacetDateInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicStencilFacetDateInputElement;
@@ -567,23 +559,6 @@ declare global {
         prototype: HTMLAtomicInsightUserActionsTimelineElement;
         new (): HTMLAtomicInsightUserActionsTimelineElement;
     };
-    interface HTMLAtomicIpxBodyElementEventMap {
-        "animationEnded": never;
-    }
-    interface HTMLAtomicIpxBodyElement extends Components.AtomicIpxBody, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicIpxBodyElementEventMap>(type: K, listener: (this: HTMLAtomicIpxBodyElement, ev: AtomicIpxBodyCustomEvent<HTMLAtomicIpxBodyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicIpxBodyElementEventMap>(type: K, listener: (this: HTMLAtomicIpxBodyElement, ev: AtomicIpxBodyCustomEvent<HTMLAtomicIpxBodyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicIpxBodyElement: {
-        prototype: HTMLAtomicIpxBodyElement;
-        new (): HTMLAtomicIpxBodyElement;
-    };
     /**
      * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
      */
@@ -671,7 +646,6 @@ declare global {
         "atomic-insight-user-actions-modal": HTMLAtomicInsightUserActionsModalElement;
         "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
         "atomic-insight-user-actions-timeline": HTMLAtomicInsightUserActionsTimelineElement;
-        "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
@@ -928,15 +902,6 @@ declare namespace LocalJSX {
          */
         "userId": string;
     }
-    interface AtomicIpxBody {
-        "displayFooterSlot"?: boolean;
-        "isOpen"?: boolean;
-        /**
-          * @migration Stencil's
-          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('animationEnded', { bubbles: true, composed: true, cancelable: true })`
-         */
-        "onAnimationEnded"?: (event: AtomicIpxBodyCustomEvent<never>) => void;
-    }
     /**
      * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
      */
@@ -1085,7 +1050,6 @@ declare namespace LocalJSX {
         "atomic-insight-user-actions-modal": AtomicInsightUserActionsModal;
         "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
         "atomic-insight-user-actions-timeline": AtomicInsightUserActionsTimeline;
-        "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-recs-list": AtomicIpxRecsList;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
@@ -1125,7 +1089,6 @@ declare module "@stencil/core" {
              * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
              */
             "atomic-insight-user-actions-timeline": LocalJSX.AtomicInsightUserActionsTimeline & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsTimelineElement>;
-            "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
             /**
              * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
              */
