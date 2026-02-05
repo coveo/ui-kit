@@ -26,6 +26,10 @@ import QuickviewIcon from '../../../images/preview.svg';
  * view the content of a document without navigating away from the insight panel.
  *
  * This component must be used inside an `atomic-insight-result-template` component.
+ *
+ * @part result-action-container - The container wrapping the button.
+ * @part result-action-button - The button that opens the quickview modal.
+ * @part result-action-icon - The icon displayed in the button.
  */
 @customElement('atomic-insight-result-quickview-action')
 @bindings()
