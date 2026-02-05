@@ -62,7 +62,7 @@
   },
   "dependencies": {
     "@coveo/headless": "workspace:*",
-    "@coveo/relay": "1.2.7",
+    "@coveo/relay": "1.2.15",
     "uuid": "^11.0.0"
   },
   "engines": {

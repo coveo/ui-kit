@@ -797,8 +797,8 @@ importers:
         specifier: workspace:*
         version: link:../bueno
       '@coveo/relay':
-        specifier: 1.2.7
-        version: 1.2.7
+        specifier: 1.2.15
+        version: 1.2.15
       '@coveo/relay-event-types':
         specifier: 'catalog:'
         version: 15.1.0
@@ -992,8 +992,8 @@ importers:
         specifier: workspace:*
         version: link:../headless
       '@coveo/relay':
-        specifier: 1.2.7
-        version: 1.2.7
+        specifier: 1.2.15
+        version: 1.2.15
       uuid:
         specifier: ^11.0.0
         version: 11.1.0
@@ -2631,8 +2631,8 @@ packages:
     resolution: {integrity: sha512-sX/vjP/7jtXF8XF8jrWUDoe8TiObA5fq/5ZGCWTKpgk/AHeTv3KkfGvd8yliCMALr6EMPKLzRqRER0tkrQRZVw==}
     hasBin: true
 
-  '@coveo/explorer-messenger@0.4.1':
-    resolution: {integrity: sha512-MX+alPTsRQLAC99b7cUwMGtaGcDw44ftEJOFwoS8alTgFlY7oaUP4jyZSJ/BCOMXlYpkhU2VYDERr/HD5P1Dtw==}
+  '@coveo/explorer-messenger@0.5.0':
+    resolution: {integrity: sha512-cO5/KbFWJql2vU5bfZv6VIWkkoAuPzNnnMEedAClwN9vZ8LqaZB6HchAxSIEnVic5Bf2poUYaxbP7+UtYTgS3w==}
 
   '@coveo/platform-client@60.4.0':
     resolution: {integrity: sha512-Mh3681cqiLqEZWxleo93f1jKL1DCIxn/GiAvQ4Mw8HbLZ1AVMGD0pJ9kngSzirOsNtxME6Y7Qlx11/oWhLiiDQ==}
@@ -2640,8 +2640,8 @@ packages:
   '@coveo/relay-event-types@15.1.0':
     resolution: {integrity: sha512-4wNzfXzCZAmfupm4Ra4vCxCBuDrv7A/Act9fDPdz/EuQd3ZOpDW/3hwq+k26T9xusGt7yOA5Xjm0fk35H9EgSA==}
 
-  '@coveo/relay@1.2.7':
-    resolution: {integrity: sha512-lwE9O0eAaCVx9P0VGelOdKpu5xoY/c7aThkilq1B7dK2KqseBcGLtzgvkVloGrcYoaUf6upM6qhl5/3k0Jf8tw==}
+  '@coveo/relay@1.2.15':
+    resolution: {integrity: sha512-pnJn8ZWjnJGz6B4/Lexx4EkYbwf3erT/4k/0oHjZE8FNvimmOfEgvGf+jqWVwTVZ1w65q5SbmfuJ0h9n4b3mKA==}
 
   '@coveo/semantic-monorepo-tools@2.7.0':
     resolution: {integrity: sha512-aaYDl5MeKZJyBn6fttEeNl7ZWUO4xyBdi2hq5WRaf1kg6PB8SfqzA3KdsCT7zYuifF5zSDfvJBsSlMrIba39vg==}
@@ -4195,6 +4195,7 @@ packages:
 
   '@lwc/engine-server@7.1.2':
     resolution: {integrity: sha512-R/Cgo1TwioOeR1F+1nQxR9oE+Au9479iOkk6jtn2GvPrcQm1X+YidLXQssus/YHdz2BuYa2/t5OJmpguJIwhJw==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   '@lwc/errors@7.1.2':
     resolution: {integrity: sha512-1b933ONUijzJl72VVY5shiTDVN38ilB0RcljBH+ztJzxxr8umy2YEJYA9oGFacXP+zfox+kpOfWjrXlfqZ5ueA==}
@@ -9117,11 +9118,12 @@ packages:
 
   glob@10.5.0:
     resolution: {integrity: sha512-DfXN8DfhJ7NH3Oe7cFmu3NCu1wKbkReJ8TorzSAFbSKrlNaQSKfIzqYqVY8zlbs2NLBbWpRiU52GX2PbaBVNkg==}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   global-directory@4.0.1:
     resolution: {integrity: sha512-wHTUcDUoZ1H5/0iVqEudYW4/kAlN5cZ3j/bXn0Dpbizl9iaUVeWSHqiOjsgk6OW2bkLclbBjzewBz6weQ1zA2Q==}
@@ -10222,7 +10224,6 @@ packages:
   keygrip@1.1.0:
     resolution: {integrity: sha512-iYSchDJ+liQ8iwbSI2QqsQOvqv58eJCEanyJPJi+Khyu8smkcKSFUCbPwzFcL7YVtZ6eONjqRX/38caJ7QjRAQ==}
     engines: {node: '>= 0.6'}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
@@ -13258,12 +13259,12 @@ packages:
   tar@6.2.1:
     resolution: {integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==}
     engines: {node: '>=10'}
-    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exhorbitant rates) by contacting i@izs.me
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   tar@7.5.6:
     resolution: {integrity: sha512-xqUeu2JAIJpXyvskvU3uvQW8PAmHrtXp2KDuMJwQqW8Sqq0CaZBAQ+dKS3RBXVhU4wC5NjAdKrmh84241gO9cA==}
     engines: {node: '>=18'}
-    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exhorbitant rates) by contacting i@izs.me
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   temp-dir@3.0.0:
     resolution: {integrity: sha512-nHc6S/bwIilKHNRgK/3jlhDoIHcp45YgyiwcAk46Tr0LfEqGBVpmiAyuiuxeVE44m3mXnEeVhaipLOEWmH+Njw==}
@@ -13854,6 +13855,10 @@ packages:
 
   uuid@11.1.0:
     resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
+    hasBin: true
+
+  uuid@13.0.0:
+    resolution: {integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==}
     hasBin: true
 
   uuid@3.4.0:
@@ -16194,7 +16199,7 @@ snapshots:
 
   '@coveo/create-atomic-component-project@1.5.8': {}
 
-  '@coveo/explorer-messenger@0.4.1': {}
+  '@coveo/explorer-messenger@0.5.0': {}
 
   '@coveo/platform-client@60.4.0':
     dependencies:
@@ -16205,10 +16210,10 @@ snapshots:
 
   '@coveo/relay-event-types@15.1.0': {}
 
-  '@coveo/relay@1.2.7':
+  '@coveo/relay@1.2.15':
     dependencies:
-      '@coveo/explorer-messenger': 0.4.1
-      uuid: 11.1.0
+      '@coveo/explorer-messenger': 0.5.0
+      uuid: 13.0.0
 
   '@coveo/semantic-monorepo-tools@2.7.0':
     dependencies:
@@ -29436,6 +29441,8 @@ snapshots:
   utils-merge@1.0.1: {}
 
   uuid@11.1.0: {}
+
+  uuid@13.0.0: {}
 
   uuid@3.4.0: {}
 
