@@ -84,12 +84,12 @@ export const renderIpxBody: FunctionalComponent<IpxBodyProps> = ({props}) => {
   return html`
     <article
       part="container"
-      class="ipx-body-container bg-background relative flex flex-col justify-between overflow-hidden rounded-md ${visibilityClass}"
+      class="ipx-body-container bg-background box-border flex flex-col justify-between overflow-hidden rounded ${visibilityClass}"
       @animationend=${() => props.onAnimationEnd?.()}
     >
       <header
         part="header-wrapper"
-        class="bg-neutral-light grid w-full flex-col items-center px-6 pt-6"
+        class="bg-neutral-light grid w-full items-center px-6 pt-6"
       >
         <div part="header" class="min-w-0 font-bold">
           ${props.header ?? nothing}
@@ -118,7 +118,7 @@ function renderFooter(footerContent: TemplateResult | typeof nothing) {
       part="footer-wrapper"
       class="border-neutral bg-neutral-light z-10 flex w-full flex-col items-stretch border-t px-7 py-4"
     >
-      <div part="footer" class="flex w-full flex-col items-center">
+      <div part="footer">
         ${footerContent}
       </div>
     </footer>
