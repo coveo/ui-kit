@@ -1,78 +1,15 @@
 import {html, nothing, type TemplateResult} from 'lit';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
-/**
- * Props for the IPX body component.
- */
 export interface IpxBodyProps {
-  /**
-   * The visibility mode of the component.
-   * - 'open': Modal is visible
-   * - 'closed': Modal is hidden
-   * - 'embedded': Always visible, no modal behavior
-   */
   visibility?: 'open' | 'closed' | 'embedded';
-
-  /**
-   * Whether to display the footer slot.
-   */
   displayFooterSlot?: boolean;
-
-  /**
-   * Callback fired when the container animation ends.
-   */
   onAnimationEnd?: () => void;
-
-  /**
-   * Header content to render.
-   */
   header?: TemplateResult | typeof nothing;
-
-  /**
-   * Body content to render.
-   */
   body?: TemplateResult | typeof nothing;
-
-  /**
-   * Footer content to render.
-   */
   footer?: TemplateResult | typeof nothing;
 }
 
-/**
- * Renders the IPX body component with header, body, and footer sections.
- *
- * The component provides a structured layout for IPX (In-Product Experience) interfaces.
- * It includes slots for header, body, and footer content.
- *
- * **Note:** This is an internal component used by the `atomic-ipx-modal` and
- * `atomic-ipx-embedded` components. Do not use directly. Parent components must
- * include the `ipxBodyStyles` in their static styles for scrollbar styling.
- *
- * @part container - The main container element
- * @part header-wrapper - The wrapper around the header section
- * @part header - The header content container
- * @part header-ruler - The horizontal rule separating header and body
- * @part body-wrapper - The wrapper around the body section (scrollable)
- * @part body - The body content container
- * @part footer-wrapper - The wrapper around the footer section
- * @part footer - The footer content container
- *
- * @example
- * ```typescript
- * const headerContent = html`<h1>Title</h1>`;
- * const bodyContent = html`<p>Content</p>`;
- * const footerContent = html`<button>Close</button>`;
- *
- * renderIpxBody({props: {
- *   visibility: 'open',
- *   displayFooterSlot: true,
- *   header: headerContent,
- *   body: bodyContent,
- *   footer: footerContent
- * }});
- * ```
- */
 export const renderIpxBody: FunctionalComponent<IpxBodyProps> = ({props}) => {
   const visibilityClass =
     props.visibility === 'embedded'
