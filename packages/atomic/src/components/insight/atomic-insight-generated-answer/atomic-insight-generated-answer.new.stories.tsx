@@ -1,5 +1,10 @@
-import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
+import type {
+  Decorator,
+  Meta,
+  StoryObj as Story,
+} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
+import {html} from 'lit/static-html.js';
 import {MockAnswerApi} from '@/storybook-utils/api/answer/mock';
 import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -19,6 +24,17 @@ const {args, argTypes, template} = getStorybookHelpers(
   {excludeCategories: ['methods']}
 );
 
+const layoutDecorator: Decorator = (story) => html`
+  <atomic-insight-layout>
+    <atomic-layout-section section="search">
+      <atomic-insight-search-box></atomic-insight-search-box>
+    </atomic-layout-section>
+    <atomic-layout-section section="results">
+      ${story()}
+    </atomic-layout-section>
+  </atomic-insight-layout>
+`;
+
 const {decorator, play} = wrapInInsightInterface();
 
 const meta: Meta = {
@@ -26,7 +42,7 @@ const meta: Meta = {
   title: 'Insight/Generated Answer',
   id: 'atomic-insight-generated-answer',
   render: (args) => template(args),
-  decorators: [decorator],
+  decorators: [layoutDecorator, decorator],
   parameters: {
     ...parameters,
     msw: {
@@ -38,8 +54,32 @@ const meta: Meta = {
     'answer-configuration-id': 'fc581be0-6e61-4039-ab26-a3f2f52f308f',
   },
   argTypes,
-  play,
-  tags: ['!dev'],
+  play: async (storyContext) => {
+    await play(storyContext);
+    const searchBox =
+      await storyContext.canvas.findAllByShadowPlaceholderText('Search');
+    const query = 'how to resolve netflix connection with tivo';
+    const input = searchBox[0] as HTMLTextAreaElement;
+    input.scrollIntoView({block: 'center'});
+    input.focus();
+    input.value = query;
+    input.dispatchEvent(
+      new InputEvent('input', {
+        bubbles: true,
+        composed: true,
+        data: query,
+        inputType: 'insertText',
+      })
+    );
+    input.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        bubbles: true,
+        composed: true,
+        key: 'Enter',
+        code: 'Enter',
+      })
+    );
+  },
 };
 
 export default meta;
