@@ -1,6 +1,7 @@
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import type {AnyBindings} from '@/src/components/common/interface/bindings.js';
+import {renderIpxBody} from '@/src/components/ipx/atomic-ipx-body/ipx-body.js';
 import {bindings} from '@/src/decorators/bindings.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
@@ -78,11 +79,15 @@ export class AtomicIpxEmbedded
 
     return html`
       <div part="backdrop">
-        <atomic-ipx-body .displayFooterSlot=${this.hasFooterSlotElements}>
-          <slot name="header" slot="header"></slot>
-          <slot name="body" slot="body"></slot>
-          <slot name="footer" slot="footer"></slot>
-        </atomic-ipx-body>
+        ${renderIpxBody({
+          props: {
+            visibility: 'embedded',
+            displayFooterSlot: this.hasFooterSlotElements,
+            header: html`<slot name="header"></slot>`,
+            body: html`<slot name="body"></slot>`,
+            footer: html`<slot name="footer"></slot>`,
+          },
+        })}
       </div>
     `;
   }

@@ -32,7 +32,7 @@ describe('atomic-ipx-embedded', () => {
       element,
       parts: (el: AtomicIpxEmbedded) => ({
         backdrop: el.shadowRoot?.querySelector('[part="backdrop"]'),
-        body: el.shadowRoot?.querySelector('atomic-ipx-body'),
+        container: el.shadowRoot?.querySelector('[part="container"]'),
       }),
     };
   };
@@ -63,15 +63,17 @@ describe('atomic-ipx-embedded', () => {
       expect(parts(element).backdrop).toBeTruthy();
     });
 
-    it('should render atomic-ipx-body element', async () => {
+    it('should render ipx-body container', async () => {
       const {element, parts} = await renderEmbedded();
-      expect(parts(element).body).toBeTruthy();
+      expect(parts(element).container).toBeTruthy();
     });
 
-    it('should pass displayFooterSlot prop to atomic-ipx-body when footer slot has content', async () => {
-      const {element, parts} = await renderEmbedded({slottedContent: 'yes'});
-      const body = parts(element).body;
-      expect(body?.displayFooterSlot).toBe(true);
+    it('should render footer wrapper when footer slot has content', async () => {
+      const {element} = await renderEmbedded({slottedContent: 'yes'});
+      const footerWrapper = element.shadowRoot?.querySelector(
+        '[part="footer-wrapper"]'
+      );
+      expect(footerWrapper).toBeTruthy();
     });
   });
 
@@ -89,22 +91,26 @@ describe('atomic-ipx-embedded', () => {
   });
 
   describe('when checking footer slot', () => {
-    it('should pass displayFooterSlot as true when footer slot has content', async () => {
+    it('should render footer wrapper when footer slot has content', async () => {
       const element = await fixture<AtomicIpxEmbedded>(html`
         <atomic-ipx-embedded>
           <div slot="footer">Footer content</div>
         </atomic-ipx-embedded>
       `);
-      const body = element.shadowRoot?.querySelector('atomic-ipx-body');
-      expect(body?.displayFooterSlot).toBe(true);
+      const footerWrapper = element.shadowRoot?.querySelector(
+        '[part="footer-wrapper"]'
+      );
+      expect(footerWrapper).toBeTruthy();
     });
 
-    it('should pass displayFooterSlot as false when footer slot is empty', async () => {
+    it('should not render footer wrapper when footer slot is empty', async () => {
       const element = await fixture<AtomicIpxEmbedded>(html`
         <atomic-ipx-embedded></atomic-ipx-embedded>
       `);
-      const body = element.shadowRoot?.querySelector('atomic-ipx-body');
-      expect(body?.displayFooterSlot).toBe(false);
+      const footerWrapper = element.shadowRoot?.querySelector(
+        '[part="footer-wrapper"]'
+      );
+      expect(footerWrapper).toBeFalsy();
     });
   });
 

@@ -10,8 +10,8 @@ export class IpxEmbeddedPageObject extends BasePageObject {
     return this.hydrated.locator('[part="backdrop"]');
   }
 
-  get ipxBody() {
-    return this.hydrated.locator('atomic-ipx-body');
+  get container() {
+    return this.hydrated.locator('[part="container"]');
   }
 
   get headerSlot() {
