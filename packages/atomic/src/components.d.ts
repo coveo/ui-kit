@@ -79,10 +79,6 @@ export namespace Components {
          */
         "withToggle"?: boolean;
     }
-    interface AtomicInsightRefineModal {
-        "isOpen": boolean;
-        "openButton"?: HTMLElement;
-    }
     interface AtomicInsightResultAction {
         /**
           * The type of action to perform when the result action is clicked. This will be sent along the event fired when the button is clicked.
@@ -286,14 +282,6 @@ export namespace Components {
         "displayFooterSlot": boolean;
         "isOpen"?: boolean;
     }
-    interface AtomicIpxModal {
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
-         */
-        "container"?: HTMLElement;
-        "isOpen": boolean;
-        "source"?: HTMLElement;
-    }
     /**
      * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
      */
@@ -461,10 +449,6 @@ export interface AtomicIpxBodyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicIpxBodyElement;
 }
-export interface AtomicIpxModalCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicIpxModalElement;
-}
 export interface AtomicStencilFacetDateInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicStencilFacetDateInputElement;
@@ -481,12 +465,6 @@ declare global {
     var HTMLAtomicInsightGeneratedAnswerElement: {
         prototype: HTMLAtomicInsightGeneratedAnswerElement;
         new (): HTMLAtomicInsightGeneratedAnswerElement;
-    };
-    interface HTMLAtomicInsightRefineModalElement extends Components.AtomicInsightRefineModal, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightRefineModalElement: {
-        prototype: HTMLAtomicInsightRefineModalElement;
-        new (): HTMLAtomicInsightRefineModalElement;
     };
     interface HTMLAtomicInsightResultActionElementEventMap {
         "atomicInsightResultActionClicked": InsightResultActionClickedEvent;
@@ -618,23 +596,6 @@ declare global {
         prototype: HTMLAtomicIpxBodyElement;
         new (): HTMLAtomicIpxBodyElement;
     };
-    interface HTMLAtomicIpxModalElementEventMap {
-        "animationEnded": never;
-    }
-    interface HTMLAtomicIpxModalElement extends Components.AtomicIpxModal, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicIpxModalElementEventMap>(type: K, listener: (this: HTMLAtomicIpxModalElement, ev: AtomicIpxModalCustomEvent<HTMLAtomicIpxModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicIpxModalElementEventMap>(type: K, listener: (this: HTMLAtomicIpxModalElement, ev: AtomicIpxModalCustomEvent<HTMLAtomicIpxModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicIpxModalElement: {
-        prototype: HTMLAtomicIpxModalElement;
-        new (): HTMLAtomicIpxModalElement;
-    };
     /**
      * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
      */
@@ -710,7 +671,6 @@ declare global {
     interface HTMLElementTagNameMap {
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
-        "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
         "atomic-insight-result-action-bar": HTMLAtomicInsightResultActionBarElement;
         "atomic-insight-result-attach-to-case-action": HTMLAtomicInsightResultAttachToCaseActionElement;
@@ -725,7 +685,6 @@ declare global {
         "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
         "atomic-insight-user-actions-timeline": HTMLAtomicInsightUserActionsTimelineElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
-        "atomic-ipx-modal": HTMLAtomicIpxModalElement;
         "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
@@ -786,10 +745,6 @@ declare namespace LocalJSX {
           * @default false
          */
         "withToggle"?: boolean;
-    }
-    interface AtomicInsightRefineModal {
-        "isOpen"?: boolean;
-        "openButton"?: HTMLElement;
     }
     interface AtomicInsightResultAction {
         /**
@@ -1001,19 +956,6 @@ declare namespace LocalJSX {
          */
         "onAnimationEnded"?: (event: AtomicIpxBodyCustomEvent<never>) => void;
     }
-    interface AtomicIpxModal {
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
-         */
-        "container"?: HTMLElement;
-        "isOpen"?: boolean;
-        /**
-          * @migration Stencil's
-          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('animationEnded', { bubbles: true, composed: true, cancelable: true })`
-         */
-        "onAnimationEnded"?: (event: AtomicIpxModalCustomEvent<never>) => void;
-        "source"?: HTMLElement;
-    }
     /**
      * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
      */
@@ -1150,7 +1092,6 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
-        "atomic-insight-refine-modal": AtomicInsightRefineModal;
         "atomic-insight-result-action": AtomicInsightResultAction;
         "atomic-insight-result-action-bar": AtomicInsightResultActionBar;
         "atomic-insight-result-attach-to-case-action": AtomicInsightResultAttachToCaseAction;
@@ -1165,7 +1106,6 @@ declare namespace LocalJSX {
         "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
         "atomic-insight-user-actions-timeline": AtomicInsightUserActionsTimeline;
         "atomic-ipx-body": AtomicIpxBody;
-        "atomic-ipx-modal": AtomicIpxModal;
         "atomic-ipx-recs-list": AtomicIpxRecsList;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
@@ -1181,7 +1121,6 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
             "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
-            "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
             "atomic-insight-result-action-bar": LocalJSX.AtomicInsightResultActionBar & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionBarElement>;
             "atomic-insight-result-attach-to-case-action": LocalJSX.AtomicInsightResultAttachToCaseAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseActionElement>;
@@ -1208,7 +1147,6 @@ declare module "@stencil/core" {
              */
             "atomic-insight-user-actions-timeline": LocalJSX.AtomicInsightUserActionsTimeline & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsTimelineElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
-            "atomic-ipx-modal": LocalJSX.AtomicIpxModal & JSXBase.HTMLAttributes<HTMLAtomicIpxModalElement>;
             /**
              * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
              */

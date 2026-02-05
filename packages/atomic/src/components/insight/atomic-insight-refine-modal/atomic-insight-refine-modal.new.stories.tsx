@@ -6,24 +6,28 @@ import type {
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
 import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
-import {MockSearchApi} from '@/storybook-utils/api/search/mock';
+import {MockInsightApi} from '@/storybook-utils/api/insight/mock';
+import {
+  type baseResponse,
+  richResponse,
+} from '@/storybook-utils/api/insight/search-response';
 import {parameters as commonParameters} from '@/storybook-utils/common/common-meta-parameters';
-import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
+import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 
-const searchApiHarness = new MockSearchApi();
-const {decorator, play} = wrapInSearchInterface();
-const {events, args, argTypes, template} = getStorybookHelpers(
-  'atomic-refine-modal',
+const insightApiHarness = new MockInsightApi();
+const {decorator, play} = wrapInInsightInterface();
+const {events, args, argTypes, styleTemplate} = getStorybookHelpers(
+  'atomic-insight-refine-modal',
   {excludeCategories: ['methods']}
 );
-const commerceFacetWidthDecorator: Decorator = (story) =>
+const facetWidthDecorator: Decorator = (story) =>
   html`<div style="min-width: 470px;">${story()}</div> `;
 
 const meta: Meta = {
-  component: 'atomic-refine-modal',
-  title: 'Search/Refine Modal',
-  id: 'atomic-refine-modal',
-  render: (args) => template(args),
+  component: 'atomic-insight-refine-modal',
+  title: 'Insight/Refine Modal',
+  id: 'atomic-insight-refine-modal',
+  render: (args) => html`${styleTemplate(args)}`,
   parameters: {
     ...commonParameters,
     actions: {
@@ -37,24 +41,28 @@ const meta: Meta = {
       },
     },
     msw: {
-      handlers: [...searchApiHarness.handlers],
+      handlers: [...insightApiHarness.handlers],
     },
   },
   args: {
     ...args,
-    'collapse-facets-after': '0',
   },
   argTypes,
+  beforeEach: async () => {
+    insightApiHarness.searchEndpoint.mock(
+      () => richResponse as unknown as typeof baseResponse
+    );
+  },
   play: async (context) => {
     await play(context);
     const {canvasElement, step, userEvent} = context;
     const refineToggleElement = within(
-      canvasElement.querySelector('atomic-refine-toggle')!
+      canvasElement.querySelector('atomic-insight-refine-toggle')!
     );
     const refineToggleButton = await refineToggleElement.findByShadowRole(
       'button',
       {
-        name: 'Sort & Filter',
+        name: 'Filters',
       }
     );
     // Facets call `bindings.store.registerFacet()` during initialization to register themselves with the interface store.
@@ -74,24 +82,13 @@ export default meta;
 export const Default: Story = {
   decorators: [
     () => html`
-     <atomic-refine-toggle></atomic-refine-toggle>
+     <atomic-insight-refine-toggle></atomic-insight-refine-toggle>
       <div style="display:none;">
-        <atomic-sort-dropdown><atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression></atomic-sort-dropdown>
-        <atomic-facet field="author" label="Authors"></atomic-facet>
-        <atomic-facet field="language" label="Language"></atomic-facet>
-        <atomic-facet
-          field="objecttype"
-          label="Type"
-          display-values-as="link"
-        ></atomic-facet>
-        <atomic-facet
-          field="year"
-          label="Year"
-          display-values-as="box"
-        ></atomic-facet>
+        <atomic-insight-facet field="source" label="Source"></atomic-insight-facet>
+        <atomic-insight-facet field="filetype" label="File Type"></atomic-insight-facet>
       </div>
     `,
     decorator,
-    commerceFacetWidthDecorator,
+    facetWidthDecorator,
   ],
 };
