@@ -4,20 +4,14 @@ import {
   type AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client.js';
-import type {CommercePlanRequest} from '../../../api/commerce/search/plan/plan-request.js';
-import type {NavigatorContext} from '../../../app/navigator-context-provider.js';
-import type {CommerceQuerySection} from '../../../state/state-sections.js';
 import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../../utils/validate-payload.js';
 import {
-  buildBaseCommerceAPIRequest,
-  type StateNeededForBaseCommerceAPIRequest,
-} from '../common/base-commerce-api-request-builder.js';
-
-export type StateNeededForPlanCommerceAPIRequest =
-  StateNeededForBaseCommerceAPIRequest & CommerceQuerySection;
+  buildPlanRequest,
+  type StateNeededForPlanCommerceAPIRequest,
+} from './plan-request-builder.js';
 
 export interface FetchRedirectUrlPayload {
   /**
@@ -109,18 +103,3 @@ export const resetStandaloneSearchBox = createAction(
       id: requiredNonEmptyString,
     })
 );
-
-export const buildPlanRequest = (
-  state: StateNeededForPlanCommerceAPIRequest,
-  navigatorContext: NavigatorContext
-): CommercePlanRequest => {
-  const baseRequest = buildBaseCommerceAPIRequest(state, navigatorContext);
-  return {
-    ...baseRequest,
-    context: {
-      ...baseRequest.context,
-      capture: false,
-    },
-    query: state.commerceQuery.query,
-  };
-};

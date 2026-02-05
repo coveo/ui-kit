@@ -1,6 +1,6 @@
 export interface CommercePlanSuccessResponse {
   /**
-   * The URL to which to redirect the user.
+   * The URL to redirect the user to.
    * (Null if there isn't one.)
    * @example https://www.example.com/
    */
