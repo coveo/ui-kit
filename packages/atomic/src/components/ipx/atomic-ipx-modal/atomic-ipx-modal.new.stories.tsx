@@ -15,9 +15,28 @@ const meta: Meta = {
   title: 'IPX/Modal',
   id: 'atomic-ipx-modal',
   render: (args) => template(args),
-  decorators: [decorator],
+  decorators: [
+    decorator,
+    (story) => html`
+      <style>
+        atomic-ipx-modal {
+          position: relative !important;
+          inset: auto !important;
+        }
+      </style>
+      ${story()}
+    `,
+  ],
   parameters: {
     ...commonParameters,
+    layout: 'fullscreen',
+    docs: {
+      ...commonParameters.docs,
+      story: {
+        ...commonParameters.docs?.story,
+        height: '800px',
+      },
+    },
     actions: {
       handles: events,
     },
@@ -26,7 +45,7 @@ const meta: Meta = {
     ...args,
     'is-open': true,
     'header-slot': `<h2>Modal Header</h2>
-      <button onclick="this.closest('atomic-ipx-modal').isOpen = false">Close</button>`,
+      <button style="margin-bottom: 0.5rem;" onclick="this.closest('atomic-ipx-modal').isOpen = false">Close</button>`,
     'body-slot': `<p>This is the modal body content.</p>
       <p>The modal provides a way to display In-Product Experience content in a focused overlay.</p>`,
     'footer-slot': `<button>Action Button</button>`,
@@ -52,16 +71,6 @@ const meta: Meta = {
       },
     },
   },
-  globals: {
-    layout: 'fullscreen',
-    docs: {
-      ...commonParameters.docs,
-      story: {
-        ...commonParameters.docs?.story,
-        height: '800px',
-      },
-    },
-  },
   play: async (context) => {
     await play(context);
   },
@@ -77,7 +86,7 @@ export const WithoutFooter: Story = {
   name: 'Without Footer',
   args: {
     'header-slot': `<h2>Modal Without Footer</h2>
-      <button onclick="this.closest('atomic-ipx-modal').isOpen = false">Close</button>`,
+      <button style="margin-bottom: 0.5rem;" onclick="this.closest('atomic-ipx-modal').isOpen = false">Close</button>`,
     'body-slot': `<p>This modal does not have a footer slot.</p>
       <p>The footer will be automatically hidden.</p>`,
     'footer-slot': '',
@@ -88,8 +97,9 @@ export const Closed: Story = {
   name: 'Closed (not visible)',
   args: {
     'is-open': false,
-    'header-slot': `<h2>This modal is closed</h2>`,
-    'body-slot': `<p>You won't see this because the modal is closed.</p>`,
+    'header-slot': `<h2>The modal is now open</h2>
+      <button style="margin-bottom: 0.5rem;" onclick="this.closest('atomic-ipx-modal').isOpen = false">Close</button>`,
+    'body-slot': `<p>You are now seeing this because the modal is no longer closed.</p>`,
     'footer-slot': '',
   },
   render: (args) =>
@@ -100,7 +110,7 @@ export const Closed: Story = {
           <code>is-open="true"</code> to display it.
         </p>
         <button
-          onclick="document.querySelector('atomic-ipx-modal').isOpen = true"
+          onclick="this.closest('atomic-search-interface').querySelector('atomic-ipx-modal').isOpen = true"
         >
           Open Modal
         </button>
