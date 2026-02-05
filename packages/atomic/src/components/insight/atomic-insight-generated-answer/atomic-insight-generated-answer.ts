@@ -31,7 +31,6 @@ import {getNamedSlotContent} from '@/src/utils/slot-utils';
 import atomicInsightGeneratedAnswerStyles from './atomic-insight-generated-answer.tw.css.js';
 
 /**
- * @internal
  * The `atomic-insight-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
  * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
  *
