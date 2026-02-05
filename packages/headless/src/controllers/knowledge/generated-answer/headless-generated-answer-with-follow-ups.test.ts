@@ -173,6 +173,16 @@ describe('GeneratedAnswerWithFollowUps', () => {
         });
       });
 
+      it('should not include error when it is undefined', () => {
+        mockSelectAnswer.mockReturnValue({
+          data: {},
+        } as ReturnType<typeof selectAnswer>);
+
+        const controller = createGeneratedAnswerWithFollowUps();
+
+        expect(controller.state.error).toBeUndefined();
+      });
+
       it('should map answerId from RTK Query data', () => {
         mockSelectAnswer.mockReturnValue({
           data: {answerId: 'answer-123'},
@@ -191,6 +201,16 @@ describe('GeneratedAnswerWithFollowUps', () => {
         const controller = createGeneratedAnswerWithFollowUps();
 
         expect(controller.state.answerContentFormat).toBe('text/markdown');
+      });
+
+      it('should default to text/plain when contentFormat is undefined', () => {
+        mockSelectAnswer.mockReturnValue({
+          data: {},
+        } as ReturnType<typeof selectAnswer>);
+
+        const controller = createGeneratedAnswerWithFollowUps();
+
+        expect(controller.state.answerContentFormat).toBe('text/plain');
       });
 
       it('should set isAnswerGenerated to true when generated is true', () => {

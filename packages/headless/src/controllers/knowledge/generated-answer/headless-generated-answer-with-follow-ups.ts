@@ -76,11 +76,11 @@ export function buildGeneratedAnswerWithFollowUps(
       return {
         /** Server-owned (RTK Query) */
         answer: serverState?.answer,
-        answerContentFormat: serverState?.contentFormat,
+        answerContentFormat: serverState?.contentFormat ?? 'text/plain',
         citations: serverState?.citations ?? [],
         isLoading: serverState?.isLoading ?? false,
         isStreaming: serverState?.isStreaming ?? false,
-        error: serverState?.error,
+        ...(serverState?.error && {error: serverState.error}),
         answerId: serverState?.answerId,
         isAnswerGenerated: Boolean(serverState?.generated),
         cannotAnswer: serverState?.generated === false,
