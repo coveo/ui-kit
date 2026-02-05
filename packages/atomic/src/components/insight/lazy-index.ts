@@ -34,6 +34,10 @@ export default {
     await import(
       './atomic-insight-query-summary/atomic-insight-query-summary.js'
     ),
+  'atomic-insight-refine-modal': async () =>
+    await import(
+      './atomic-insight-refine-modal/atomic-insight-refine-modal.js'
+    ),
   'atomic-insight-refine-toggle': async () =>
     await import(
       './atomic-insight-refine-toggle/atomic-insight-refine-toggle.js'

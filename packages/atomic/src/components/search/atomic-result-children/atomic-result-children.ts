@@ -56,6 +56,7 @@ export class AtomicResultChildren
   implements InitializableComponent<Bindings>
 {
   static styles = css`
+@reference '../../../utils/tailwind.global.tw.css';
 @reference '../../../utils/tailwind-utilities/set-font-size.css';
 
 .show-hide-button {
