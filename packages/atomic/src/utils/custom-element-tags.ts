@@ -74,6 +74,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-insight-refine-toggle',
   'atomic-insight-result',
   'atomic-insight-result-children',
+  'atomic-insight-result-list',
   'atomic-insight-result-template',
   'atomic-insight-search-box',
   'atomic-insight-smart-snippet-feedback-modal',

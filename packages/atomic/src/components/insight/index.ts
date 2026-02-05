@@ -20,3 +20,4 @@ export {AtomicInsightSmartSnippetFeedbackModal} from './atomic-insight-smart-sni
 export {AtomicInsightTab} from './atomic-insight-tab/atomic-insight-tab.js';
 export {AtomicInsightTabs} from './atomic-insight-tabs/atomic-insight-tabs.js';
 export {AtomicInsightUserActionsToggle} from './atomic-insight-user-actions-toggle/atomic-insight-user-actions-toggle.js';
+export {AtomicInsightResultList} from './result-lists/atomic-insight-result-list/atomic-insight-result-list.js';
