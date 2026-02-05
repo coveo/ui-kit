@@ -71,6 +71,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-insight-pager',
   'atomic-insight-query-error',
   'atomic-insight-query-summary',
+  'atomic-insight-refine-modal',
   'atomic-insight-refine-toggle',
   'atomic-insight-result',
   'atomic-insight-result-children',
