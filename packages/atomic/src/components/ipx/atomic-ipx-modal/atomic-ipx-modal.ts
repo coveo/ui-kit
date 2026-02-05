@@ -1,5 +1,7 @@
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import type {AnyBindings} from '@/src/components/common/interface/bindings';
+import {renderIpxBody} from '@/src/components/ipx/atomic-ipx-body/ipx-body';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -9,7 +11,6 @@ import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {once, randomID} from '@/src/utils/utils';
-import type {AnyBindings} from '../../common/interface/bindings';
 
 /**
  * The `atomic-ipx-modal` component is a modal component used for the In-Product Experience use case.
@@ -163,16 +164,16 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
 
     return html`
       <div part="backdrop">
-        <atomic-ipx-body
-          .isOpen=${this.isOpen}
-          .displayFooterSlot=${this.hasFooterSlotElements}
-          exportparts="container"
-          @animationEnded=${this.handleAnimationEnded}
-        >
-          <slot name="header" slot="header"></slot>
-          <slot name="body" slot="body"></slot>
-          <slot name="footer" slot="footer"></slot>
-        </atomic-ipx-body>
+        ${renderIpxBody({
+          props: {
+            visibility: this.isOpen ? 'open' : 'closed',
+            displayFooterSlot: this.hasFooterSlotElements,
+            onAnimationEnd: this.handleAnimationEnded,
+            header: html`<slot name="header"></slot>`,
+            body: html`<slot name="body"></slot>`,
+            footer: html`<slot name="footer"></slot>`,
+          },
+        })}
       </div>
     `;
   }
