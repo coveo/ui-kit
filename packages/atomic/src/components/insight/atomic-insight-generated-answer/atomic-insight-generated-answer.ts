@@ -486,7 +486,6 @@ export class AtomicInsightGeneratedAnswer
       props: {
         i18n: this.bindings.i18n,
         generatedAnswerState: this.generatedAnswerState,
-        withToggle: this.withToggle,
         copied: this.copied,
         copyError: this.copyError,
         getCopyToClipboardTooltip: () => this.copyToClipboardTooltip,
@@ -507,6 +506,7 @@ export class AtomicInsightGeneratedAnswer
         toggleTooltip: this.toggleTooltip,
         withToggle: this.withToggle,
         collapsible: this.collapsible,
+        question: this.bindings.engine.state.query?.q ?? '',
         renderFeedbackAndCopyButtonsSlot: () =>
           this.renderFeedbackAndCopyButtonsWrapper(),
         renderCitationsSlot: () => html`${this.renderCitationsList()}`,

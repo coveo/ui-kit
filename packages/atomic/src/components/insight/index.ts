@@ -3,6 +3,7 @@ export {AtomicInsightEditToggle} from './atomic-insight-edit-toggle/atomic-insig
 export {AtomicInsightFacet} from './atomic-insight-facet/atomic-insight-facet.js';
 export {AtomicInsightFullSearchButton} from './atomic-insight-full-search-button/atomic-insight-full-search-button.js';
 export {AtomicInsightGenerateAnswerButton} from './atomic-insight-generate-answer-button/atomic-insight-generate-answer-button.js';
+export {AtomicInsightGeneratedAnswer} from './atomic-insight-generated-answer/atomic-insight-generated-answer.js';
 export {AtomicInsightHistoryToggle} from './atomic-insight-history-toggle/atomic-insight-history-toggle.js';
 export {AtomicInsightInterface} from './atomic-insight-interface/atomic-insight-interface.js';
 export {AtomicInsightLayout} from './atomic-insight-layout/atomic-insight-layout.js';
