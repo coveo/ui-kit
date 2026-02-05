@@ -8,7 +8,6 @@ export const ipxBodyStyles = css`
   .ipx-body-container {
     height: inherit;
     max-height: calc(100vh - 4.25rem);
-    box-shadow: rgb(0 0 0 / 50%) 0 0 0.5rem;
   }
 
   /* Scrollbar - Chrome, Edge & Safari */
