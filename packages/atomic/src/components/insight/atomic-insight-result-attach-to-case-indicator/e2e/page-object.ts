@@ -9,4 +9,12 @@ export class AtomicInsightResultAttachToCaseIndicatorPageObject extends BasePage
   get icon() {
     return this.page.locator('[part="icon"]');
   }
+
+  get resultList() {
+    return this.page.locator('atomic-insight-result-list');
+  }
+
+  get results() {
+    return this.page.locator('atomic-insight-result');
+  }
 }

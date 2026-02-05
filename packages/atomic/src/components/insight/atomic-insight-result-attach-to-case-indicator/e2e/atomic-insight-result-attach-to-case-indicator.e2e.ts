@@ -5,9 +5,11 @@ test.describe('atomic-insight-result-attach-to-case-indicator', () => {
     await attachToCaseIndicator.load({story: 'default'});
   });
 
-  test('should be accessible in the page', async ({attachToCaseIndicator}) => {
-    await expect(
-      attachToCaseIndicator.page.locator('atomic-insight-interface')
-    ).toBeVisible();
+  test('should display the attach icon when result is attached to case', async ({
+    attachToCaseIndicator,
+  }) => {
+    await expect(attachToCaseIndicator.resultList).toBeVisible();
+    await expect(attachToCaseIndicator.results.first()).toBeVisible();
+    await expect(attachToCaseIndicator.icon.first()).toBeVisible();
   });
 });
