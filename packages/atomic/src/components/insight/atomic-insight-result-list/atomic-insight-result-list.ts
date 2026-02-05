@@ -24,7 +24,6 @@ import {
   type ItemRenderingFunction,
 } from '@/src/components/common/item-list/item-list-common';
 import {ResultTemplateProvider} from '@/src/components/common/item-list/result-template-provider';
-import listDisplayStyles from '@/src/components/common/item-list/styles/list-display.tw.css';
 import placeholderStyles from '@/src/components/common/item-list/styles/placeholders.tw.css';
 import {
   getItemListDisplayClasses,
@@ -43,6 +42,7 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
+import listDisplayStyles from './insight-list-display.tw.css';
 import '@/src/components/insight/atomic-insight-result/atomic-insight-result';
 import '@/src/components/insight/atomic-insight-result-template/atomic-insight-result-template';
 
