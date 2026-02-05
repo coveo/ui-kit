@@ -332,14 +332,6 @@ export namespace Components {
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
-    interface AtomicIpxRefineModal {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter": number;
-        "isOpen": boolean;
-        "openButton"?: HTMLElement;
-    }
     interface AtomicIpxRefineToggle {
         /**
           * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
@@ -605,12 +597,6 @@ declare global {
         prototype: HTMLAtomicIpxRecsListElement;
         new (): HTMLAtomicIpxRecsListElement;
     };
-    interface HTMLAtomicIpxRefineModalElement extends Components.AtomicIpxRefineModal, HTMLStencilElement {
-    }
-    var HTMLAtomicIpxRefineModalElement: {
-        prototype: HTMLAtomicIpxRefineModalElement;
-        new (): HTMLAtomicIpxRefineModalElement;
-    };
     interface HTMLAtomicIpxRefineToggleElement extends Components.AtomicIpxRefineToggle, HTMLStencilElement {
     }
     var HTMLAtomicIpxRefineToggleElement: {
@@ -686,7 +672,6 @@ declare global {
         "atomic-insight-user-actions-timeline": HTMLAtomicInsightUserActionsTimelineElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
-        "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
         "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
@@ -993,14 +978,6 @@ declare namespace LocalJSX {
          */
         "recommendation"?: string;
     }
-    interface AtomicIpxRefineModal {
-        /**
-          * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
-         */
-        "collapseFacetsAfter"?: number;
-        "isOpen"?: boolean;
-        "openButton"?: HTMLElement;
-    }
     interface AtomicIpxRefineToggle {
         /**
           * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
@@ -1107,7 +1084,6 @@ declare namespace LocalJSX {
         "atomic-insight-user-actions-timeline": AtomicInsightUserActionsTimeline;
         "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-recs-list": AtomicIpxRecsList;
-        "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
         "atomic-ipx-result-link": AtomicIpxResultLink;
         "atomic-recs-list": AtomicRecsList;
@@ -1151,7 +1127,6 @@ declare module "@stencil/core" {
              * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
              */
             "atomic-ipx-recs-list": LocalJSX.AtomicIpxRecsList & JSXBase.HTMLAttributes<HTMLAtomicIpxRecsListElement>;
-            "atomic-ipx-refine-modal": LocalJSX.AtomicIpxRefineModal & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineModalElement>;
             "atomic-ipx-refine-toggle": LocalJSX.AtomicIpxRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineToggleElement>;
             /**
              * The `atomic-ipx-result-link` component automatically transforms a search result title into a clickable link that points to the original item. It is an experimental internal component not intended for general use.
