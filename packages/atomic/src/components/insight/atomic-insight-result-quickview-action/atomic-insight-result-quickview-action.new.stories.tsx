@@ -37,7 +37,7 @@ const {decorator: insightResultListDecorator} = wrapInInsightResultList(
 const {decorator: insightResultTemplateDecorator} =
   wrapInInsightResultTemplate(false);
 
-const {events, args, argTypes, template, styleTemplate} = getStorybookHelpers(
+const {events, args, argTypes, template} = getStorybookHelpers(
   'atomic-insight-result-quickview-action',
   {excludeCategories: ['methods']}
 );
@@ -47,7 +47,6 @@ const meta: Meta = {
   title: 'Insight/Result Quickview Action',
   id: 'atomic-insight-result-quickview-action',
   render: (args) => html`
-    ${styleTemplate(args)}
     <atomic-result-section-actions id="code-root">
       ${template(args)}
     </atomic-result-section-actions>
