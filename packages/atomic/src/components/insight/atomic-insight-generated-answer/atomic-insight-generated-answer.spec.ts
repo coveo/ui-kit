@@ -420,7 +420,7 @@ describe('atomic-insight-generated-answer', () => {
     await expect.element(showMoreButton).toBeInTheDocument();
   });
 
-  it('should toggle visibility when toggle is clicked when toggle is activated and deactivated', async () => {
+  it('should call hide when toggle is clicked', async () => {
     const {toggle} = await renderGeneratedAnswer({
       props: {withToggle: true},
       generatedAnswerState: {
