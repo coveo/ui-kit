@@ -79,10 +79,6 @@ export namespace Components {
          */
         "withToggle"?: boolean;
     }
-    interface AtomicInsightRefineModal {
-        "isOpen": boolean;
-        "openButton"?: HTMLElement;
-    }
     interface AtomicInsightResultAction {
         /**
           * The type of action to perform when the result action is clicked. This will be sent along the event fired when the button is clicked.
@@ -153,12 +149,6 @@ export namespace Components {
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
-    }
-    interface AtomicInsightResultQuickviewAction {
-        /**
-          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
-         */
-        "sandbox": string;
     }
     interface AtomicInsightSmartSnippet {
         /**
@@ -470,12 +460,6 @@ declare global {
         prototype: HTMLAtomicInsightGeneratedAnswerElement;
         new (): HTMLAtomicInsightGeneratedAnswerElement;
     };
-    interface HTMLAtomicInsightRefineModalElement extends Components.AtomicInsightRefineModal, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightRefineModalElement: {
-        prototype: HTMLAtomicInsightRefineModalElement;
-        new (): HTMLAtomicInsightRefineModalElement;
-    };
     interface HTMLAtomicInsightResultActionElementEventMap {
         "atomicInsightResultActionClicked": InsightResultActionClickedEvent;
     }
@@ -534,12 +518,6 @@ declare global {
     var HTMLAtomicInsightResultListElement: {
         prototype: HTMLAtomicInsightResultListElement;
         new (): HTMLAtomicInsightResultListElement;
-    };
-    interface HTMLAtomicInsightResultQuickviewActionElement extends Components.AtomicInsightResultQuickviewAction, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightResultQuickviewActionElement: {
-        prototype: HTMLAtomicInsightResultQuickviewActionElement;
-        new (): HTMLAtomicInsightResultQuickviewActionElement;
     };
     interface HTMLAtomicInsightSmartSnippetElement extends Components.AtomicInsightSmartSnippet, HTMLStencilElement {
     }
@@ -681,14 +659,12 @@ declare global {
     interface HTMLElementTagNameMap {
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
-        "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
         "atomic-insight-result-action-bar": HTMLAtomicInsightResultActionBarElement;
         "atomic-insight-result-attach-to-case-action": HTMLAtomicInsightResultAttachToCaseActionElement;
         "atomic-insight-result-attach-to-case-indicator": HTMLAtomicInsightResultAttachToCaseIndicatorElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
-        "atomic-insight-result-quickview-action": HTMLAtomicInsightResultQuickviewActionElement;
         "atomic-insight-smart-snippet": HTMLAtomicInsightSmartSnippetElement;
         "atomic-insight-smart-snippet-suggestions": HTMLAtomicInsightSmartSnippetSuggestionsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
@@ -756,10 +732,6 @@ declare namespace LocalJSX {
           * @default false
          */
         "withToggle"?: boolean;
-    }
-    interface AtomicInsightRefineModal {
-        "isOpen"?: boolean;
-        "openButton"?: HTMLElement;
     }
     interface AtomicInsightResultAction {
         /**
@@ -833,12 +805,6 @@ declare namespace LocalJSX {
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ItemDisplayImageSize;
-    }
-    interface AtomicInsightResultQuickviewAction {
-        /**
-          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
-         */
-        "sandbox"?: string;
     }
     interface AtomicInsightSmartSnippet {
         /**
@@ -1107,14 +1073,12 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
-        "atomic-insight-refine-modal": AtomicInsightRefineModal;
         "atomic-insight-result-action": AtomicInsightResultAction;
         "atomic-insight-result-action-bar": AtomicInsightResultActionBar;
         "atomic-insight-result-attach-to-case-action": AtomicInsightResultAttachToCaseAction;
         "atomic-insight-result-attach-to-case-indicator": AtomicInsightResultAttachToCaseIndicator;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
         "atomic-insight-result-list": AtomicInsightResultList;
-        "atomic-insight-result-quickview-action": AtomicInsightResultQuickviewAction;
         "atomic-insight-smart-snippet": AtomicInsightSmartSnippet;
         "atomic-insight-smart-snippet-suggestions": AtomicInsightSmartSnippetSuggestions;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
@@ -1137,14 +1101,12 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
             "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
-            "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
             "atomic-insight-result-action-bar": LocalJSX.AtomicInsightResultActionBar & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionBarElement>;
             "atomic-insight-result-attach-to-case-action": LocalJSX.AtomicInsightResultAttachToCaseAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseActionElement>;
             "atomic-insight-result-attach-to-case-indicator": LocalJSX.AtomicInsightResultAttachToCaseIndicator & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseIndicatorElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
-            "atomic-insight-result-quickview-action": LocalJSX.AtomicInsightResultQuickviewAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultQuickviewActionElement>;
             "atomic-insight-smart-snippet": LocalJSX.AtomicInsightSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetElement>;
             "atomic-insight-smart-snippet-suggestions": LocalJSX.AtomicInsightSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetSuggestionsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
