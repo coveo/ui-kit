@@ -85,9 +85,9 @@ describe('atomic-insight-refine-modal', () => {
       body: element.shadowRoot?.querySelector('aside[slot="body"]'),
       facetSlot: element.shadowRoot?.querySelector('slot[name="facets"]'),
       getClearAllButton: () =>
-        element.shadowRoot?.querySelector(
-          'aside[slot="body"] button[style="text-primary"]'
-        ) ?? element.shadowRoot?.querySelector('aside[slot="body"] button'),
+        Array.from(element.shadowRoot?.querySelectorAll('button') ?? []).find(
+          (btn) => btn.textContent?.includes('Clear All Filters')
+        ),
     };
   };
 

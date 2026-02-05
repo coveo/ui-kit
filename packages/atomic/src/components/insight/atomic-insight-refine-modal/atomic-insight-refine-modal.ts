@@ -90,6 +90,7 @@ export class AtomicInsightRefineModal
   public breadcrumbManager!: InsightBreadcrumbManager;
 
   private backdropStyleSheet = new CSSStyleSheet();
+  private animationFrameId?: number;
 
   public initialize() {
     this.querySummary = buildInsightQuerySummary(this.bindings.engine);
@@ -102,6 +103,13 @@ export class AtomicInsightRefineModal
     super.connectedCallback();
     this.style.display = '';
     this.shadowRoot?.adoptedStyleSheets.push(this.backdropStyleSheet);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this.animationFrameId) {
+      window.cancelAnimationFrame(this.animationFrameId);
+    }
   }
 
   protected willUpdate(changedProperties: PropertyValues<this>) {
@@ -133,7 +141,9 @@ export class AtomicInsightRefineModal
     if (this.dimensionChanged()) {
       this.updateDimensions();
     }
-    window.requestAnimationFrame(() => this.onAnimationFrame());
+    this.animationFrameId = window.requestAnimationFrame(() =>
+      this.onAnimationFrame()
+    );
   }
 
   private dimensionChanged() {
