@@ -38,6 +38,7 @@ const attachedResultPayloadDefinition = {
   source: nonEmptyString,
   title: requiredNonEmptyString,
   uriHash: nonEmptyString,
+  isAttachedFromCitation: new BooleanValue({required: false, default: false}),
 };
 
 const RequiredAttachedResultRecord = new RecordValue({
@@ -47,6 +48,7 @@ const RequiredAttachedResultRecord = new RecordValue({
   values: attachedResultPayloadDefinition,
 });
 
+//TODO: SFINT-6621 - Change type from insight/attachToCase... to insight/attachedResults...
 export const setAttachedResults = createAction(
   'insight/attachToCase/setAttachedResults',
   (payload: SetAttachedResultsActionCreatorPayload) =>
@@ -61,11 +63,13 @@ export const setAttachedResults = createAction(
     })
 );
 
+//TODO: SFINT-6621 - Change type from insight/attachToCase/ to insight/attachedResults/
 export const attachResult = createAction(
   'insight/attachToCase/attach',
   (payload: AttachedResult) => validatePayloadAndPermanentIdOrUriHash(payload)
 );
 
+//TODO: SFINT-6621 - Change type from insight/attachToCase/ to insight/attachedResults/
 export const detachResult = createAction(
   'insight/attachToCase/detach',
   (payload: AttachedResult) => validatePayloadAndPermanentIdOrUriHash(payload)

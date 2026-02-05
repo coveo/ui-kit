@@ -181,6 +181,10 @@ export enum SearchPageEvents {
    */
   caseDetach = 'caseDetach',
   /**
+   * Identifies the click event that gets logged when a user attaches a generated answer citation to a case.
+   */
+  generatedAnswerCitationDocumentAttach = 'generatedAnswerCitationDocumentAttach',
+  /**
    * Identifies the cause of a search request being retried in order to regenerate an answer stream that failed.
    */
   retryGeneratedAnswer = 'retryGeneratedAnswer',
