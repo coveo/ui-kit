@@ -6,3 +6,6 @@ reviewers:
   knowledge-ui-kit-reviewers: ~
   salesforce-integration: ~
   dxui: ~
+
+review_bypass:
+  integration/139346: exempt # Developer eXperience Bot. Important for releases

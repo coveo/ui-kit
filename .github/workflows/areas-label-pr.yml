@@ -29,7 +29,7 @@ jobs:
           app-id: ${{ vars.CODE_AREAS_APP_ID }}
           private-key: ${{ secrets.CODE_AREAS_PEM }}
 
-      - uses: coveooss/areas@b263fcec7d5a7df32b7aa58c553a056b639d1e1b # v0
+      - uses: coveooss/areas@b3ca247fb24809a01a25dc009f6754dd5c06f314 # v0
         with:
           token: ${{ steps.generate-token.outputs.token }}
           command: label-pr

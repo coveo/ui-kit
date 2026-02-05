@@ -125,4 +125,39 @@ describe('#renderCitations', () => {
       );
     });
   });
+
+  describe('disableCitationAnchoring property', () => {
+    it('should pass disableCitationAnchoring=false to atomic-citation by default', async () => {
+      const {element} = await renderComponent();
+
+      const citations = Array.from(element.querySelectorAll('atomic-citation'));
+      expect(citations).toHaveLength(2);
+      citations.forEach((citation) => {
+        expect(citation.disableCitationAnchoring).toBe(false);
+      });
+    });
+
+    it('should pass disableCitationAnchoring=true to atomic-citation when enabled', async () => {
+      const {element} = await renderComponent({
+        disableCitationAnchoring: true,
+      });
+
+      const citations = Array.from(element.querySelectorAll('atomic-citation'));
+      expect(citations).toHaveLength(2);
+      citations.forEach((citation) => {
+        expect(citation.disableCitationAnchoring).toBe(true);
+      });
+    });
+
+    it('should handle undefined disableCitationAnchoring as false', async () => {
+      const {element} = await renderComponent({
+        disableCitationAnchoring: undefined,
+      });
+
+      const citations = Array.from(element.querySelectorAll('atomic-citation'));
+      citations.forEach((citation) => {
+        expect(citation.disableCitationAnchoring).toBe(false);
+      });
+    });
+  });
 });
