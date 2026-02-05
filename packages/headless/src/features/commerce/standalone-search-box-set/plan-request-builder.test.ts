@@ -81,15 +81,10 @@ describe('#buildPlanRequest', () => {
     expect(context.capture).toBe(false);
   });
 
-  it('does not include #page property', () => {
+  it('does not include #page or #perPage properties', () => {
     const planRequest = buildPlanRequest(state, navigatorContext);
 
     expect('page' in planRequest).toBe(false);
-  });
-
-  it('does not include #perPage property', () => {
-    const planRequest = buildPlanRequest(state, navigatorContext);
-
     expect('perPage' in planRequest).toBe(false);
   });
 
