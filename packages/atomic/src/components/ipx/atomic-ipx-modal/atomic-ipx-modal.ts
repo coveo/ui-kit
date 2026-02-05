@@ -2,6 +2,7 @@ import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import type {AnyBindings} from '@/src/components/common/interface/bindings';
 import {renderIpxBody} from '@/src/components/ipx/atomic-ipx-body/ipx-body';
+import {ipxBodyStyles} from '@/src/components/ipx/atomic-ipx-body/ipx-body-styles';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -35,7 +36,9 @@ import {once, randomID} from '@/src/utils/utils';
 @bindings()
 @withTailwindStyles
 export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
-  static styles: CSSResultGroup = css`
+  static styles: CSSResultGroup = [
+    ipxBodyStyles,
+    css`
   @reference '../../../utils/tailwind.global.tw.css';
 
   atomic-focus-trap {
@@ -69,7 +72,8 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
     max-height: calc(100vh - 4.25rem);
   }
 }
-  `;
+  `,
+  ];
 
   @state()
   bindings!: AnyBindings;

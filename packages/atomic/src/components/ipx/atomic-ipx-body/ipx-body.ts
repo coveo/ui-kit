@@ -1,10 +1,4 @@
-import {
-  type CSSResultGroup,
-  css,
-  html,
-  nothing,
-  type TemplateResult,
-} from 'lit';
+import {html, nothing, type TemplateResult} from 'lit';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
 /**
@@ -46,102 +40,14 @@ export interface IpxBodyProps {
 }
 
 /**
- * Children for the IPX body component.
- */
-export interface IpxBodyChildren {
-  /**
-   * Header content to render.
-   */
-  header: TemplateResult | typeof nothing;
-
-  /**
-   * Body content to render.
-   */
-  body: TemplateResult | typeof nothing;
-
-  /**
-   * Footer content to render.
-   */
-  footer?: TemplateResult | typeof nothing;
-}
-
-const styles: CSSResultGroup = css`
-  [part='container'] {
-    position: relative;
-    overflow: hidden;
-    height: inherit;
-    max-height: calc(100vh - 4.25rem);
-    border-radius: 0.375rem;
-    background-color: var(--atomic-background);
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    grid-area: modal;
-    box-shadow: rgb(0 0 0 / 50%) 0 0 0.5rem;
-  }
-
-  [part='header-wrapper'] {
-    background-color: var(--atomic-neutral-light);
-    display: grid;
-    width: 100%;
-    padding: 1.5rem 1.5rem 0 1.5rem;
-  }
-
-  [part='header'] {
-    font-weight: bold;
-    min-width: 0;
-  }
-
-  [part='header-ruler'] {
-    border: none;
-    border-top: 1px solid var(--atomic-neutral);
-  }
-
-  [part='body-wrapper'] {
-    padding: 1rem 1.5rem 1rem 1.5rem;
-  }
-
-  [part='footer-wrapper'] {
-    background-color: var(--atomic-neutral-light);
-    align-items: stretch;
-    padding: 1rem 1.75rem;
-  }
-
-  /* Chrome, Edge & Safari */
-  .scrollbar::-webkit-scrollbar {
-    width: 0.8rem;
-  }
-
-  .scrollbar::-webkit-scrollbar-track {
-    background: var(--atomic-background);
-  }
-
-  .scrollbar::-webkit-scrollbar-thumb {
-    background: var(--atomic-primary);
-    border: 0.15rem solid var(--atomic-background);
-    border-radius: 100vh;
-  }
-
-  .scrollbar::-webkit-scrollbar-thumb:hover {
-    background: var(--atomic-primary-light);
-  }
-
-  /* Firefox */
-  .scrollbar {
-    scrollbar-color: var(--atomic-primary) var(--atomic-background);
-    scrollbar-width: auto;
-  }
-`;
-
-/**
  * Renders the IPX body component with header, body, and footer sections.
  *
  * The component provides a structured layout for IPX (In-Product Experience) interfaces.
  * It includes slots for header, body, and footer content.
  *
  * **Note:** This is an internal component used by the `atomic-ipx-modal` and
- * `atomic-ipx-embedded` components. Do not use directly.
+ * `atomic-ipx-embedded` components. Do not use directly. Parent components must
+ * include the `ipxBodyStyles` in their static styles for scrollbar styling.
  *
  * @part container - The main container element
  * @part header-wrapper - The wrapper around the header section
@@ -176,43 +82,43 @@ export const renderIpxBody: FunctionalComponent<IpxBodyProps> = ({props}) => {
         : 'invisible';
 
   return html`
-      <style>
-        ${styles}
-      </style>
-      <article
-        part="container"
-        class=${visibilityClass}
-        @animationend=${() => props.onAnimationEnd?.()}
+    <article
+      part="container"
+      class="ipx-body-container bg-background relative flex flex-col justify-between overflow-hidden rounded-md ${visibilityClass}"
+      @animationend=${() => props.onAnimationEnd?.()}
+    >
+      <header
+        part="header-wrapper"
+        class="bg-neutral-light grid w-full flex-col items-center px-6 pt-6"
       >
-        <header part="header-wrapper" class="flex flex-col items-center">
-          <div part="header">
-            ${props.header ?? nothing}
-          </div>
-        </header>
-        <hr part="header-ruler" class="border-neutral" />
-        <div
-          part="body-wrapper"
-          class="scrollbar flex w-full grow flex-col overflow-auto"
-          tabindex="0"
-          role="region"
-          aria-label="Content area"
-        >
-          <div part="body" class="w-full">
-            ${props.body ?? nothing}
-          </div>
+        <div part="header" class="min-w-0 font-bold">
+          ${props.header ?? nothing}
         </div>
-        ${props.displayFooterSlot !== false ? renderFooter(props.footer ?? nothing) : nothing}
-      </article>
-    `;
+      </header>
+      <hr part="header-ruler" class="border-neutral border-0 border-t" />
+      <div
+        part="body-wrapper"
+        class="ipx-body-scrollbar flex w-full grow flex-col overflow-auto px-6 py-4"
+        tabindex="0"
+        role="region"
+        aria-label="Content area"
+      >
+        <div part="body" class="w-full">
+          ${props.body ?? nothing}
+        </div>
+      </div>
+      ${props.displayFooterSlot !== false ? renderFooter(props.footer ?? nothing) : nothing}
+    </article>
+  `;
 };
 
 function renderFooter(footerContent: TemplateResult | typeof nothing) {
   return html`
     <footer
       part="footer-wrapper"
-      class="border-neutral bg-background z-10 flex w-full flex-col items-center border-t"
+      class="border-neutral bg-neutral-light z-10 flex w-full flex-col items-stretch border-t px-7 py-4"
     >
-      <div part="footer">
+      <div part="footer" class="flex w-full flex-col items-center">
         ${footerContent}
       </div>
     </footer>

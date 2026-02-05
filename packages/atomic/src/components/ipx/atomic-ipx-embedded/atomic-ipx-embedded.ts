@@ -2,6 +2,7 @@ import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import type {AnyBindings} from '@/src/components/common/interface/bindings.js';
 import {renderIpxBody} from '@/src/components/ipx/atomic-ipx-body/ipx-body.js';
+import {ipxBodyStyles} from '@/src/components/ipx/atomic-ipx-body/ipx-body-styles.js';
 import {bindings} from '@/src/decorators/bindings.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
@@ -25,6 +26,7 @@ export class AtomicIpxEmbedded
   implements InitializableComponent<AnyBindings>
 {
   static styles: CSSResultGroup = [
+    ipxBodyStyles,
     css`
       :host {
         box-shadow: rgb(0 0 0 / 50%) 0 0 0.5rem;
