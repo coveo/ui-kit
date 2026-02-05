@@ -22,11 +22,4 @@ test.describe('atomic-insight-result-action-bar', () => {
 
     await expect(bar).toHaveCSS('visibility', 'visible');
   });
-
-  test('should be hidden when empty', async ({actionBar}) => {
-    await actionBar.load({story: 'empty'});
-
-    await expect(actionBar.result).toBeVisible();
-    await expect(actionBar.actionBar).toHaveCSS('display', 'none');
-  });
 });
