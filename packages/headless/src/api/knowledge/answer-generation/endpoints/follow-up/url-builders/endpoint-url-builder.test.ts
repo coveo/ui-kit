@@ -11,7 +11,7 @@ describe('endpoint-url-builder', () => {
   describe('#buildFollowUpEndpointUrl', () => {
     let state: AnswerGenerationApiState;
     const mockOrganizationId = 'test-org-id';
-    const mockAnswerConfigurationId = 'test-config-id';
+    const mockAgentId = 'test-agent-id';
     const mockPlatformEndpoint = 'https://test-org-id.org.coveo.com';
 
     beforeEach(() => {
@@ -21,9 +21,10 @@ describe('endpoint-url-builder', () => {
         configuration: {
           organizationId: mockOrganizationId,
           environment: 'prod',
-        },
-        generatedAnswer: {
-          answerConfigurationId: mockAnswerConfigurationId,
+          knowledge: {
+            answerConfigurationId: '',
+            agentId: mockAgentId,
+          },
         },
       } as AnswerGenerationApiState;
 
@@ -38,7 +39,7 @@ describe('endpoint-url-builder', () => {
         'prod'
       );
       expect(result).toBe(
-        `${mockPlatformEndpoint}/rest/organizations/${mockOrganizationId}/answer/v1/configs/${mockAnswerConfigurationId}/generate`
+        `${mockPlatformEndpoint}/api/preview/organizations/${mockOrganizationId}/agents/${mockAgentId}/followup`
       );
     });
 
@@ -54,7 +55,7 @@ describe('endpoint-url-builder', () => {
         'dev'
       );
       expect(result).toBe(
-        `${devEndpoint}/rest/organizations/${mockOrganizationId}/answer/v1/configs/${mockAnswerConfigurationId}/generate`
+        `${devEndpoint}/api/preview/organizations/${mockOrganizationId}/agents/${mockAgentId}/followup`
       );
     });
 
@@ -75,8 +76,16 @@ describe('endpoint-url-builder', () => {
         );
       });
 
-      it('should throw an error when answerConfigurationId is missing', () => {
-        state.generatedAnswer.answerConfigurationId = '';
+      it('should throw an error when agentId is missing', () => {
+        state.configuration.knowledge.agentId = undefined;
+
+        expect(() => buildFollowUpEndpointUrl(state)).toThrow(
+          'Missing required parameters for follow up endpoint'
+        );
+      });
+
+      it('should throw an error when agentId is empty string', () => {
+        state.configuration.knowledge.agentId = '';
 
         expect(() => buildFollowUpEndpointUrl(state)).toThrow(
           'Missing required parameters for follow up endpoint'
