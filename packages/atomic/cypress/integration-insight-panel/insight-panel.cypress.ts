@@ -160,28 +160,10 @@ describe('Insight Panel test suites', () => {
       });
 
       it('should hide the smart snippets components', () => {
-        InsightPanelsSelectors.smartSnippet().should(
-          'have.class',
-          'atomic-hidden'
-        );
-        InsightPanelsSelectors.smartSnippetExpandableAnswer().should(
-          'not.exist'
-        );
         InsightPanelsSelectors.smartSnippetSuggestions().should(
           'have.class',
           'atomic-hidden'
         );
-      });
-    });
-
-    describe('when a smart snippet answer is returned', () => {
-      beforeEach(() => {
-        mockSearchWithSmartSnippet();
-        visitPage();
-      });
-
-      it('should show the smart snippet component', () => {
-        InsightPanelsSelectors.smartSnippetExpandableAnswer().should('exist');
       });
     });
   });

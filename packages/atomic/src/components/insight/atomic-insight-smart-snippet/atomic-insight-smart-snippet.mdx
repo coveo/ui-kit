@@ -1,0 +1,120 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicInsightSmartSnippetStories from './atomic-insight-smart-snippet.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicInsightSmartSnippetStories} />
+
+<AtomicDocTemplate
+  stories={AtomicInsightSmartSnippetStories}
+  githubPath="insight/atomic-insight-smart-snippet/atomic-insight-smart-snippet.ts"
+  tagName="atomic-insight-smart-snippet"
+  className="AtomicInsightSmartSnippet"
+>
+
+The `atomic-insight-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query in an Insight Panel interface. It provides users with quick answers directly in the search results.
+
+This component is used within the `atomic-insight-interface`:
+
+```html
+<atomic-insight-interface>
+  <atomic-insight-layout>
+    <atomic-layout-section section="main">
+      <atomic-insight-smart-snippet></atomic-insight-smart-snippet>
+      <atomic-insight-result-list></atomic-insight-result-list>
+    </atomic-layout-section>
+  </atomic-insight-layout>
+</atomic-insight-interface>
+```
+
+## Features
+
+- **Question Display**: Shows the question that the snippet answers
+- **Answer Excerpt**: Displays the relevant portion of the document with highlighted terms
+- **Source Information**: Links to the source document (URL and title)
+- **User Feedback**: Allows users to like or dislike the answer
+- **Expandable Content**: Shows/hides full answer based on configured heights
+
+## Basic Usage
+
+To add a smart snippet to your interface:
+
+```html
+<atomic-insight-smart-snippet></atomic-insight-smart-snippet>
+```
+
+## Customization
+
+### Heading Level
+
+Set the heading level for the question (from 1 to 5):
+
+```html
+<atomic-insight-smart-snippet heading-level="2"></atomic-insight-smart-snippet>
+```
+
+### Height Configuration
+
+Control when the "show more/less" buttons appear:
+
+```html
+<atomic-insight-smart-snippet
+  maximum-height="250"
+  collapsed-height="180"
+></atomic-insight-smart-snippet>
+```
+
+- `maximum-height`: Maximum height (in pixels) before the component truncates and shows "show more"
+- `collapsed-height`: How much of the answer's height (in pixels) is visible when collapsed
+
+### Custom Styling
+
+You can style the snippet content using the `snippet-style` attribute:
+
+```html
+<atomic-insight-smart-snippet snippet-style="b { color: blue; }"></atomic-insight-smart-snippet>
+```
+
+Or apply more complex styles:
+
+```html
+<atomic-insight-smart-snippet
+  snippet-style="
+    b {
+      color: blue;
+    }
+    a {
+      color: darkblue;
+      text-decoration: underline;
+    }
+  "
+></atomic-insight-smart-snippet>
+```
+
+### Source Link Attributes
+
+Pass custom attributes to the source links using slots:
+
+```html
+<atomic-insight-smart-snippet>
+  <a slot="source-anchor-attributes" target="_blank" rel="noopener"></a>
+</atomic-insight-smart-snippet>
+```
+
+## User Feedback
+
+The component includes a feedback mechanism that allows users to:
+- Like the answer (helpful)
+- Dislike the answer (not helpful)
+- Provide detailed feedback when disliking (opens a modal)
+
+The feedback is automatically tracked via analytics.
+
+## Behavior
+
+- The component only appears when a smart snippet answer is found for the query
+- Inline links in the answer are tracked when clicked
+- The answer can be expanded/collapsed if it exceeds the configured height
+- User feedback state is preserved within the same search session
+
+</AtomicDocTemplate>
