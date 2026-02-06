@@ -1,5 +1,7 @@
 import { TestFixture } from '../fixtures/test-fixture';
-import { ComponentErrorSelectors } from './component-error-selectors';
+const ComponentErrorSelectors = {
+  component: 'atomic-component-error',
+};
 
 export interface ComponentSelector {
   // Setting JQuery<HTMLElement> is incompatible with Stencil's HTML elements
