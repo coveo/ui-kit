@@ -70,8 +70,8 @@ export const renderFollowUpInput: FunctionalComponent<
         ${ref(inputRef)}
         type="text"
         @keydown=${handleKeyDown}
-        placeholder=${props.i18n.t('Ask follow-up')}
-        aria-label=${props.i18n.t('Ask follow-up')}
+        placeholder=${props.i18n.t('ask-follow-up')}
+        aria-label=${props.i18n.t('ask-follow-up')}
       />
       ${renderButton({
         props: {
@@ -81,7 +81,7 @@ export const renderFollowUpInput: FunctionalComponent<
             'absolute right-1 top-1 bottom-1 flex w-8 items-center justify-center rounded-md disabled:!bg-primary/60 disabled:!opacity-100',
           type: 'button',
           disabled: submitButtonDisabled,
-          ariaLabel: props.i18n.t('Submit follow-up'),
+          ariaLabel: props.i18n.t('submit-follow-up'),
           ref: buttonRef,
           onClick: handleSubmit,
         },
