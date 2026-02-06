@@ -103,7 +103,7 @@ export const parameters: Parameters = {
       },
     },
   },
-  chromatic: {disableSnapshot: true},
+  chromatic: {disableSnapshot: false},
 };
 
 export const decorators = [
