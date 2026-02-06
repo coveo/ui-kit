@@ -174,13 +174,17 @@ export class AtomicInsightResultList
     await this.updateResultReadyState();
   }
 
-  private async updateResultReadyState() {
-    if (
+  private get shouldMarkResultsAsReady() {
+    return (
       this.isAppLoaded &&
       !this.isEveryResultReady &&
       this.resultListState?.firstSearchExecuted &&
       this.resultListState?.results?.length > 0
-    ) {
+    );
+  }
+
+  private async updateResultReadyState() {
+    if (this.shouldMarkResultsAsReady) {
       await this.getUpdateComplete();
       this.isEveryResultReady = true;
     }
