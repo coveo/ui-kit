@@ -10,7 +10,7 @@ import { ItemRenderingFunction } from "./components/common/item-list/stencil-ite
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { DateFilterRange, DateRangeRequest, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
-import { RangeFacetSortCriterion as InsightRangeFacetSortCriterion, UserAction as IUserAction } from "@coveo/headless/insight";
+import { RangeFacetSortCriterion as InsightRangeFacetSortCriterion } from "@coveo/headless/insight";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { i18n } from "i18next";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
@@ -19,7 +19,7 @@ export { ItemRenderingFunction } from "./components/common/item-list/stencil-ite
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { DateFilterRange, DateRangeRequest, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
-export { RangeFacetSortCriterion as InsightRangeFacetSortCriterion, UserAction as IUserAction } from "@coveo/headless/insight";
+export { RangeFacetSortCriterion as InsightRangeFacetSortCriterion } from "@coveo/headless/insight";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { i18n } from "i18next";
 export { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
@@ -235,20 +235,6 @@ export namespace Components {
           * The ID of the user whose actions are being displayed.
          */
         "userId": string;
-    }
-    /**
-     * @category Insight Panel
-     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
-     */
-    interface AtomicInsightUserActionsSession {
-        /**
-          * The start time of the session as a Unix timestamp.
-         */
-        "startTimestamp": number;
-        /**
-          * The list of user actions performed during the session.
-         */
-        "userActions": Array<IUserAction>;
     }
     /**
      * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.
@@ -544,16 +530,6 @@ declare global {
         new (): HTMLAtomicInsightUserActionsModalElement;
     };
     /**
-     * @category Insight Panel
-     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
-     */
-    interface HTMLAtomicInsightUserActionsSessionElement extends Components.AtomicInsightUserActionsSession, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightUserActionsSessionElement: {
-        prototype: HTMLAtomicInsightUserActionsSessionElement;
-        new (): HTMLAtomicInsightUserActionsSessionElement;
-    };
-    /**
      * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.
      * This component displays all the actions performed by a user around the time they created a case.
      * The actions are grouped into multiple sessions, including the session during which the case was created,
@@ -669,7 +645,6 @@ declare global {
         "atomic-insight-smart-snippet-suggestions": HTMLAtomicInsightSmartSnippetSuggestionsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
         "atomic-insight-user-actions-modal": HTMLAtomicInsightUserActionsModalElement;
-        "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
         "atomic-insight-user-actions-timeline": HTMLAtomicInsightUserActionsTimelineElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
         "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
@@ -893,20 +868,6 @@ declare namespace LocalJSX {
         "userId": string;
     }
     /**
-     * @category Insight Panel
-     * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
-     */
-    interface AtomicInsightUserActionsSession {
-        /**
-          * The start time of the session as a Unix timestamp.
-         */
-        "startTimestamp": number;
-        /**
-          * The list of user actions performed during the session.
-         */
-        "userActions": Array<IUserAction>;
-    }
-    /**
      * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.
      * This component displays all the actions performed by a user around the time they created a case.
      * The actions are grouped into multiple sessions, including the session during which the case was created,
@@ -1083,7 +1044,6 @@ declare namespace LocalJSX {
         "atomic-insight-smart-snippet-suggestions": AtomicInsightSmartSnippetSuggestions;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
         "atomic-insight-user-actions-modal": AtomicInsightUserActionsModal;
-        "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
         "atomic-insight-user-actions-timeline": AtomicInsightUserActionsTimeline;
         "atomic-ipx-body": AtomicIpxBody;
         "atomic-ipx-recs-list": AtomicIpxRecsList;
@@ -1111,11 +1071,6 @@ declare module "@stencil/core" {
             "atomic-insight-smart-snippet-suggestions": LocalJSX.AtomicInsightSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetSuggestionsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
             "atomic-insight-user-actions-modal": LocalJSX.AtomicInsightUserActionsModal & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsModalElement>;
-            /**
-             * @category Insight Panel
-             * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
-             */
-            "atomic-insight-user-actions-session": LocalJSX.AtomicInsightUserActionsSession & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsSessionElement>;
             /**
              * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.
              * This component displays all the actions performed by a user around the time they created a case.
