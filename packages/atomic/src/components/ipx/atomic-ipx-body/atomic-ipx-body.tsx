@@ -29,6 +29,12 @@ export class AtomicIPXBody implements InitializableComponent<AnyBindings> {
 
   @State() public error!: Error;
 
+  /**
+   * @migration Stencil's @Event() decorator defaults to: bubbles=true, composed=true, cancelable=true.
+   * Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false.
+   * When migrating to Lit, explicitly set all three options to preserve behavior:
+   * `new CustomEvent('animationEnded', { bubbles: true, composed: true, cancelable: true })`
+   */
   @Event() animationEnded!: EventEmitter<never>;
 
   @Prop({mutable: true}) isOpen?: boolean;

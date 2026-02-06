@@ -18,7 +18,7 @@ const documentTypesRequiringParentRecord = ['CaseComment'];
 
 /**
  * The `QuanticResultLink` component creates a clickable link from a result that points to the original item.
- * If the result is a Salesforce record or a Salesforce Knowledge article it will open the link in a new salesforce console subtab.
+ * If the result is a Salesforce record or a Salesforce Knowledge article it will open the link in a new Salesforce console subtab.
  * Otherwise, it will open the link in the browser tab.
  * @category Result Template
  * @example

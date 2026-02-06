@@ -139,6 +139,7 @@ export const renderRadioButton: FunctionalComponent<RadioButtonProps> = ({
       aria-label=${ifDefined(props.ariaLabel ?? props.text)}
       aria-current=${ifDefined(props.ariaCurrent)}
       aria-roledescription=${ifDefined(props.ariaRoleDescription)}
+      .checked=${Boolean(props.checked)}
       ?checked=${Boolean(props.checked)}
       .key=${props.key}
       @focus=${props.onFocus}

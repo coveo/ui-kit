@@ -6,7 +6,7 @@ import {LightningElement, api} from 'lwc';
  * @example
  * <c-quantic-placeholder variant="card"></c-quantic-placeholder>
  */
-export default class quanticPlaceholder extends LightningElement {
+export default class QuanticPlaceholder extends LightningElement {
   /**
    * The type of placeholder to display.
    * @api
