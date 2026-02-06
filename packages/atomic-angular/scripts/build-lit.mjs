@@ -20,6 +20,7 @@ const endTag = '//#endregion Lit Declarations';
 const litDeclarations = [];
 const litImports = new Set();
 const defineCustomElementImports = new Set();
+let hasLitComponentsWithEvents = false;
 
 const isLitDeclaration = (declaration) =>
   declaration?.superclass?.name === 'LitElement';
@@ -73,6 +74,9 @@ function processLitDeclaration(declaration) {
   );
   litImports.add(declarationToLitImport(declaration));
   litDeclarations.push(`${declaration.name}`);
+  if (declaration.events?.length) {
+    hasLitComponentsWithEvents = true;
+  }
 }
 
 function processNonLitDeclaration(declaration) {
@@ -130,6 +134,36 @@ if (litImports.size > 0) {
 if (defineCustomElementImports.size > 0) {
   atomicAngularComponentFileContent += `\nimport {${[...defineCustomElementImports].sort().join(', ')}} from '@coveo/atomic/components';\n`;
 }
+
+// If any Lit components have events, ensure proxyOutputs and EventEmitter imports are present
+if (hasLitComponentsWithEvents) {
+  // Add proxyOutputs to the utils import if not already present in the import statement
+  if (
+    !/import\s*\{[^}]*proxyOutputs[^}]*\}\s*from\s*['"]\.\/angular-component-lib\/utils['"]/.test(
+      atomicAngularComponentFileContent
+    )
+  ) {
+    atomicAngularComponentFileContent =
+      atomicAngularComponentFileContent.replace(
+        /import \{ ProxyCmp \} from '\.\/angular-component-lib\/utils';/,
+        "import { ProxyCmp, proxyOutputs } from './angular-component-lib/utils';"
+      );
+  }
+
+  // Add EventEmitter type import from @angular/core if not already present
+  if (
+    !/import\s+type\s*\{[^}]*EventEmitter[^}]*\}\s*from\s*['"]@angular\/core['"]/.test(
+      atomicAngularComponentFileContent
+    )
+  ) {
+    atomicAngularComponentFileContent =
+      atomicAngularComponentFileContent.replace(
+        /import \{ Components \} from '@coveo\/atomic';/,
+        "import { Components } from '@coveo/atomic';\nimport type { EventEmitter } from '@angular/core';"
+      );
+  }
+}
+
 atomicAngularComponentFileContent += `${endTag}`;
 
 if (litDeclarations.length > 0) {

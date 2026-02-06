@@ -15,3 +15,6 @@ file_patterns:
 reviewers:
   knowledge-ui-kit-reviewers: ~
   dxui: ~
+
+review_bypass:
+  integration/139346: exempt # Developer eXperience Bot. Important for releases

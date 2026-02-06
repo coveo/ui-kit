@@ -42,6 +42,7 @@
     "./custom-elements-manifest": "./custom-elements.json"
   },
   "files": [
+    "custom-elements.json",
     "dist/",
     "docs/",
     "licenses/"
