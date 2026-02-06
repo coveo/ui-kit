@@ -42,6 +42,13 @@ export class AtomicInsightResultAttachToCaseAction
   @State()
   public attachToCaseState!: {};
 
+  /**
+   * @migration Stencil's @Event() decorator defaults to: bubbles=true, composed=true, cancelable=true.
+   * Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false.
+   * When migrating to Lit, explicitly set all three options to preserve behavior:
+   * `new CustomEvent('atomic/insight/attachToCase/attach', { bubbles: true, composed: true, cancelable: true, detail: ... })`
+   * `new CustomEvent('atomic/insight/attachToCase/detach', { bubbles: true, composed: true, cancelable: true, detail: ... })`
+   */
   @Event({
     eventName: 'atomic/insight/attachToCase/attach',
     composed: true,

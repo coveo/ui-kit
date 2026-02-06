@@ -33,6 +33,7 @@ import {
   AriaLiveRegionController,
   FocusTargetController,
 } from '@/src/utils/accessibility-utils';
+import {buildCustomEvent} from '@/src/utils/event-utils';
 import {randomID} from '@/src/utils/utils';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
@@ -241,7 +242,7 @@ export class AtomicPager
 
   private async focusOnFirstResultAndScrollToTop() {
     await this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
-    this.dispatchEvent(new CustomEvent('atomic/scrollToTop'));
+    this.dispatchEvent(buildCustomEvent('atomic/scrollToTop'));
     this.announcePageLoaded();
   }
 

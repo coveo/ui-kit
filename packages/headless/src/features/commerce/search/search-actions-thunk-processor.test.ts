@@ -38,6 +38,58 @@ describe('commerce AsyncSearchThunkProcessor', () => {
     };
   });
 
+  describe('fetchFromAPI', () => {
+    it('captures enableResults: true from request', async () => {
+      const processor =
+        new AsyncSearchThunkProcessor<QuerySearchCommerceAPIThunkReturn>(
+          config
+        );
+      const mockResponse = buildSearchResponse({
+        products: [buildMockProduct()],
+      });
+      (config.extra.apiClient.search as Mock).mockReturnValue(
+        Promise.resolve({success: mockResponse.response})
+      );
+
+      const request = {
+        ...buildFilterableCommerceAPIRequest(
+          state,
+          config.extra.navigatorContext
+        ),
+        enableResults: true,
+      };
+
+      const fetched = await processor.fetchFromAPI(request);
+
+      expect(fetched.enableResults).toBe(true);
+    });
+
+    it('captures enableResults: false from request', async () => {
+      const processor =
+        new AsyncSearchThunkProcessor<QuerySearchCommerceAPIThunkReturn>(
+          config
+        );
+      const mockResponse = buildSearchResponse({
+        products: [buildMockProduct()],
+      });
+      (config.extra.apiClient.search as Mock).mockReturnValue(
+        Promise.resolve({success: mockResponse.response})
+      );
+
+      const request = {
+        ...buildFilterableCommerceAPIRequest(
+          state,
+          config.extra.navigatorContext
+        ),
+        enableResults: false,
+      };
+
+      const fetched = await processor.fetchFromAPI(request);
+
+      expect(fetched.enableResults).toBe(false);
+    });
+  });
+
   async function simulateProcessing(
     response:
       | {error: CommerceAPIErrorStatusResponse}
@@ -120,5 +172,80 @@ describe('commerce AsyncSearchThunkProcessor', () => {
 
     expect(config.extra.apiClient.search).toHaveBeenCalled();
     expect(processed.response).toMatchObject(responseAfterModification);
+  });
+
+  it('preserves enableResults when query trigger causes automatic retry with enableResults: true', async () => {
+    const originalResponseWithQueryTrigger = buildSearchResponse({
+      products: [],
+      triggers: [{content: 'surfboards', type: 'query'}],
+    });
+
+    const responseAfterModification = buildSearchResponse({
+      products: [],
+      results: [buildMockProduct()],
+    });
+
+    (config.extra.apiClient.search as Mock).mockReturnValue(
+      Promise.resolve({success: responseAfterModification})
+    );
+
+    const processor =
+      new AsyncSearchThunkProcessor<QuerySearchCommerceAPIThunkReturn>(config);
+    const fetched = {
+      response: {success: originalResponseWithQueryTrigger.response},
+      duration: 123,
+      queryExecuted: 'query me',
+      requestExecuted: buildFilterableCommerceAPIRequest(
+        state,
+        config.extra.navigatorContext
+      ),
+      enableResults: true,
+    };
+
+    await processor.process(fetched);
+
+    expect(config.extra.apiClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        enableResults: true,
+        query: 'surfboards',
+      })
+    );
+  });
+
+  it('preserves enableResults when query trigger causes automatic retry with enableResults: false', async () => {
+    const originalResponseWithQueryTrigger = buildSearchResponse({
+      products: [buildMockProduct()],
+      triggers: [{content: 'surfboards', type: 'query'}],
+    });
+
+    const responseAfterModification = buildSearchResponse({
+      products: [buildMockProduct()],
+    });
+
+    (config.extra.apiClient.search as Mock).mockReturnValue(
+      Promise.resolve({success: responseAfterModification})
+    );
+
+    const processor =
+      new AsyncSearchThunkProcessor<QuerySearchCommerceAPIThunkReturn>(config);
+    const fetched = {
+      response: {success: originalResponseWithQueryTrigger.response},
+      duration: 123,
+      queryExecuted: 'query me',
+      requestExecuted: buildFilterableCommerceAPIRequest(
+        state,
+        config.extra.navigatorContext
+      ),
+      enableResults: false,
+    };
+
+    await processor.process(fetched);
+
+    expect(config.extra.apiClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        enableResults: false,
+        query: 'surfboards',
+      })
+    );
   });
 });

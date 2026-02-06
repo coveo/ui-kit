@@ -22,6 +22,7 @@ import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {hasKeyboard, isMacOS} from '@/src/utils/device-utils';
+import {buildCustomEvent} from '@/src/utils/event-utils';
 import {
   SafeStorage,
   type StandaloneSearchBoxData,
@@ -249,7 +250,10 @@ export class AtomicCommerceSearchBox
 
     this.searchBox.afterRedirection();
 
-    const event = new CustomEvent<RedirectionPayload>('redirect');
+    const event = buildCustomEvent<RedirectionPayload>('redirect', {
+      redirectTo,
+      value,
+    });
     this.dispatchEvent(event);
     if (!event.defaultPrevented) {
       window.location.href = redirectTo;
@@ -296,6 +300,9 @@ export class AtomicCommerceSearchBox
 
   @watch('redirectionUrl')
   watchRedirectionUrl() {
+    if (!this.searchBox) {
+      return;
+    }
     if (this.isStandaloneSearchBox(this.searchBox) && this.redirectionUrl) {
       this.searchBox.updateRedirectUrl(this.redirectionUrl);
     } else {
@@ -690,7 +697,7 @@ export class AtomicCommerceSearchBox
 
           this.isExpanded = false;
         }}
-        .onMouseOver=${async () => {
+        .onMouseEnter=${async () => {
           await this.suggestionManager.onSuggestionMouseOver(item, side, id);
         }}
       ></atomic-suggestion-renderer>

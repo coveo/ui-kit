@@ -48,7 +48,7 @@ export const renderCitations: FunctionalComponent<RenderCitationsProps> = ({
               logCitationHover(citation.id, citationHoverTimeMs);
             }}
             .interactiveCitation=${interactiveCitation}
-            .disableCitationAnchoring=${disableCitationAnchoring}
+            .disableCitationAnchoring=${disableCitationAnchoring ?? false}
             exportparts="citation,citation-popover"
           ></atomic-citation>
         </li>

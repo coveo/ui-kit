@@ -25,6 +25,7 @@ import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {buildCustomEvent} from '@/src/utils/event-utils.js';
 import {randomID} from '@/src/utils/utils.js';
 
 /**
@@ -94,12 +95,7 @@ export class AtomicCommerceProductsPerPage
   }
 
   private scrollToTopEvent() {
-    this.dispatchEvent(
-      new CustomEvent('atomic/scrollToTop', {
-        bubbles: true,
-        composed: true,
-      })
-    );
+    this.dispatchEvent(buildCustomEvent('atomic/scrollToTop'));
   }
 
   private get label() {

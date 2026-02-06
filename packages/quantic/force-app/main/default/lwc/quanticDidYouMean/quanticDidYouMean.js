@@ -50,7 +50,7 @@ export default class QuanticDidYouMean extends LightningElement {
   /**
    * Defines which query correction system to use.
    * `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms.
-   * `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.
+   * `next`: Query correction is powered by a machine learning system, requiring a valid Query Suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.
    * The `legacy` system will send two requests to the API to get the suggestions, while the `next` system will send one request.
    * @api
    * @type {string}

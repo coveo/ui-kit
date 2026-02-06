@@ -97,6 +97,7 @@ describe('sub-controllers', () => {
       expect(subControllers).toHaveProperty('breadcrumbManager');
       expect(subControllers).toHaveProperty('urlManager');
       expect(subControllers).toHaveProperty('parameterManager');
+      expect(subControllers).toHaveProperty('interactiveSpotlightContent');
     });
 
     it('#didYouMean builds did you mean controller', () => {
@@ -106,6 +107,34 @@ describe('sub-controllers', () => {
 
       expect(didYouMean).toEqual(buildDidYouMean.mock.results[0].value);
       expect(buildDidYouMean).toHaveBeenCalledWith(engine);
+    });
+
+    it('#interactiveSpotlightContent builds interactive spotlight content controller', () => {
+      const buildCoreInteractiveSpotlightContentMock = vi.spyOn(
+        CoreInteractiveSpotlightContent,
+        'buildCoreInteractiveSpotlightContent'
+      );
+
+      const props = {
+        options: {
+          spotlightContent: buildMockSpotlightContent({
+            id: 'spotlight-1',
+            desktopImage: 'https://example.com/desktop.jpg',
+            position: 1,
+          }),
+        },
+      };
+
+      const interactiveSpotlightContent =
+        subControllers.interactiveSpotlightContent(props);
+
+      expect(interactiveSpotlightContent).toEqual(
+        buildCoreInteractiveSpotlightContentMock.mock.results[0].value
+      );
+      expect(buildCoreInteractiveSpotlightContentMock).toHaveBeenCalledWith(
+        engine,
+        {...props, responseIdSelector: mockResponseIdSelector}
+      );
     });
   });
 
