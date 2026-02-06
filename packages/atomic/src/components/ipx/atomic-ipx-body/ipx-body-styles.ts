@@ -1,9 +1,5 @@
 import {css} from 'lit';
 
-/**
- * Shared styles for IPX body component that cannot be expressed in Tailwind.
- * Must be included in the static styles of parent components using renderIpxBody.
- */
 export const ipxBodyStyles = css`
   .ipx-body-container {
     height: inherit;
