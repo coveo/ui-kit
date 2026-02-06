@@ -96,6 +96,12 @@ export const parameters: Parameters = {
     // 'error' - fail CI on a11y violations
     // 'off' - skip a11y checks entirely
     test: 'error',
+    options: {
+      runOnly: {
+        type: 'tag',
+        values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'],
+      },
+    },
   },
   chromatic: {disableSnapshot: true},
 };
@@ -139,9 +145,6 @@ function disableAnalytics(container, selectors) {
 const preview: Preview = {
   beforeEach({canvasElement, canvas}) {
     Object.assign(canvas, {...within(canvasElement)});
-  },
-  globals: {
-    a11y: {manual: true},
   },
 };
 

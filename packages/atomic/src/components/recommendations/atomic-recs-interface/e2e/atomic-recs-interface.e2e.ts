@@ -1,6 +1,30 @@
+import {scanPageAccessibility} from '../../../../../playwright-utils/axe-helper';
 import {expect, test} from './fixture';
 
 test.describe('atomic-recs-interface', () => {
+  test.describe('accessibility', () => {
+    test.beforeEach(async ({recsInterface}) => {
+      await recsInterface.load({story: 'with-recs-list'});
+      await recsInterface.hydrated.waitFor();
+    });
+
+    test('should have no accessibility violations at desktop viewport', async ({
+      page,
+    }) => {
+      const results = await scanPageAccessibility(page, {
+        viewport: 'desktop',
+      });
+      expect(results.violations).toEqual([]);
+    });
+
+    test('should have no accessibility violations at mobile viewport', async ({
+      page,
+    }) => {
+      const results = await scanPageAccessibility(page, {viewport: 'mobile'});
+      expect(results.violations).toEqual([]);
+    });
+  });
+
   test.describe('when interface has not been initialized', () => {
     test.beforeEach(async ({recsInterface}) => {
       await recsInterface.load({

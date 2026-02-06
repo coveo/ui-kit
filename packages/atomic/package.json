@@ -106,6 +106,7 @@
     "stencil-inline-svg": "1.1.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.11.0",
     "@custom-elements-manifest/analyzer": "0.10.4",
     "@mswjs/source": "0.5.0",
     "@playwright/test": "catalog:",
