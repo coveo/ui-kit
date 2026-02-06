@@ -43,7 +43,7 @@ describe('#renderAnswerContent', () => {
     question: 'Test question',
     liked: false,
     disliked: false,
-    responseId: 'test-response-id',
+    answerId: 'test-answer-id',
     isLoading: false,
     cannotAnswer: false,
     feedbackSubmitted: false,
@@ -73,7 +73,6 @@ describe('#renderAnswerContent', () => {
     return {
       element,
       props: defaultProps,
-      article: element.querySelector('article'),
       questionText: element.querySelector('.question-text'),
       feedbackAndCopyButtons: element.querySelector(
         '[part="feedback-and-copy-buttons"]'
@@ -81,12 +80,6 @@ describe('#renderAnswerContent', () => {
       footer: element.querySelector('[part="generated-answer-footer"]'),
     };
   };
-
-  it('should render the article element', async () => {
-    const {article} = await renderComponent();
-
-    expect(article).toBeInTheDocument();
-  });
 
   it('should display the question text', async () => {
     const {questionText} = await renderComponent({
