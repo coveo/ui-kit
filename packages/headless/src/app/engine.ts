@@ -30,6 +30,7 @@ import {doNotTrack} from '../utils/utils.js';
 import {analyticsMiddleware} from './analytics-middleware.js';
 import {configuration} from './common-reducers.js';
 import type {EngineConfiguration} from './engine-configuration.js';
+import {generateAnswerListener} from './generate-answer-listener-middleware.js';
 import {instantlyCallableThunkActionMiddleware} from './instantly-callable-middleware.js';
 import type {LoggerOptions} from './logger.js';
 import {logActionErrorMiddleware} from './logger-middlewares.js';
@@ -372,7 +373,9 @@ function createMiddleware<Reducers extends ReducersMapObject>(
     renewTokenMiddleware,
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
-  ].concat(answerApi.middleware, options.middlewares || []);
+  ]
+    .concat(answerApi.middleware, options.middlewares || [])
+    .concat(generateAnswerListener.middleware);
 }
 
 export const nextAnalyticsUsageWithServiceFeatureWarning =
