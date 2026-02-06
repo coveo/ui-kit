@@ -297,7 +297,6 @@ describe('atomic-result-link', () => {
         result: buildFakeResult({clickUri: 'https://fallback.com'}),
       });
 
-      // Should not throw and should still render a link
       await expect.element(link).toBeInTheDocument();
     });
 
