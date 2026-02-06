@@ -19,8 +19,8 @@ describe('commerce query trigger', () => {
   let engine: MockedCommerceEngine;
   let queryTrigger: QueryTrigger;
 
-  function initQueryTrigger() {
-    queryTrigger = buildQueryTrigger(engine);
+  function initQueryTrigger(enableResults = false) {
+    queryTrigger = buildQueryTrigger(engine, {enableResults});
   }
 
   function registeredListeners() {
@@ -47,9 +47,46 @@ describe('commerce query trigger', () => {
     expect(queryTrigger.subscribe).toBeTruthy();
   });
 
+  describe('when enableResults is not provided', () => {
+    beforeEach(() => {
+      engine = buildMockCommerceEngine(buildMockCommerceState());
+      initQueryTrigger();
+      engine[stateKey].triggers = {
+        queryModification: {
+          originalQuery: 'original',
+          newQuery: 'modified',
+        },
+      };
+      queryTrigger.undo();
+    });
+
+    it('dispatches executeSearch with enableResults: false', () => {
+      expect(executeSearch).toHaveBeenCalledWith({enableResults: false});
+    });
+  });
+
+  describe('when enableResults is true', () => {
+    beforeEach(() => {
+      engine = buildMockCommerceEngine(buildMockCommerceState());
+      initQueryTrigger(true);
+      engine[stateKey].triggers = {
+        queryModification: {
+          originalQuery: 'original',
+          newQuery: 'modified',
+        },
+      };
+      queryTrigger.undo();
+    });
+
+    it('dispatches executeSearch with enableResults: true', () => {
+      expect(executeSearch).toHaveBeenCalledWith({enableResults: true});
+    });
+  });
+
   describe('when a search without a trigger is performed', () => {
     const listener = vi.fn();
     beforeEach(() => {
+      vi.clearAllMocks();
       engine = buildMockCommerceEngine(buildMockCommerceState());
       initQueryTrigger();
       queryTrigger.subscribe(listener);

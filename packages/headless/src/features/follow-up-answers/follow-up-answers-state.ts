@@ -5,9 +5,11 @@ import type {GeneratedAnswerBase} from '../generated-answer/generated-answer-sta
  * Represents a follow-up answer generated in response to a user's question.
  * Extends the base generated answer structure with the originating question.
  */
-interface FollowUpAnswer extends GeneratedAnswerBase {
+export interface FollowUpAnswer extends GeneratedAnswerBase {
   /** The question prompted to generate this follow-up answer. */
   question: string;
+  /** Indicates if this follow-up answer is currently active. */
+  isActive: boolean;
 }
 
 /**
@@ -15,8 +17,8 @@ interface FollowUpAnswer extends GeneratedAnswerBase {
  * The follow-up answers state.
  */
 export interface FollowUpAnswersState {
-  /** The unique identifier of the follow-up answer session. */
-  id: string;
+  /** The unique identifier of the follow-up answers conversation. */
+  conversationId: string;
   /**
    * Determines if the follow-up answer feature is enabled.
    */
@@ -29,8 +31,22 @@ export interface FollowUpAnswersState {
 
 export function getFollowUpAnswersInitialState(): FollowUpAnswersState {
   return {
-    id: '',
+    conversationId: '',
     isEnabled: false,
     followUpAnswers: [],
   };
 }
+
+export const createInitialFollowUpAnswer = (
+  question: string
+): FollowUpAnswer => ({
+  question: question,
+  isLoading: false,
+  isStreaming: false,
+  citations: [],
+  liked: false,
+  disliked: false,
+  feedbackSubmitted: false,
+  cannotAnswer: false,
+  isActive: true,
+});

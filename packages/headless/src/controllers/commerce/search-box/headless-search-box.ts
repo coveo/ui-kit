@@ -113,7 +113,7 @@ export function buildSearchBox(
       };
 
     dispatch(prepareForSearchWithQuery(queryOptions));
-    dispatch(executeSearch());
+    dispatch(executeSearch({enableResults: options.enableResults}));
   };
 
   return {

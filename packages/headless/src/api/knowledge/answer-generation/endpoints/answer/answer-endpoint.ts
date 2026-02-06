@@ -10,13 +10,13 @@ import {
   initialAnswerGenerationServerState,
 } from '../../answer-generation-api-state.js';
 import {streamAnswerWithStrategy} from '../../streaming/answer-streaming-runner.js';
-import {streamingStrategies} from '../../streaming/strategies/streaming-strategies.js';
+import {streamingStrategyCreators} from '../../streaming/strategies/streaming-strategy-creators.js';
 import {buildAnswerEndpointUrl} from './url-builders/endpoint-url-builder.js';
 
 /**
  * Parameters for answer generation requests.
  */
-type AnswerParams = {
+export type AnswerParams = {
   q: string;
   facets?: AnyFacetRequest[];
   searchHub?: string;
@@ -60,7 +60,7 @@ export const answerEndpoint = answerGenerationApi.injectEndpoints({
             updateCachedData,
             dispatch,
           },
-          streamingStrategies[strategyKey]
+          streamingStrategyCreators[strategyKey]?.()
         );
       },
     }),

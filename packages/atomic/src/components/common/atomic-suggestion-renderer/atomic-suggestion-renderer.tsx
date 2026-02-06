@@ -25,7 +25,7 @@ export class AtomicSuggestionRenderer {
   @Prop() public lastIndex!: number;
   @Prop() public isDoubleList!: boolean;
   @Prop() public onClick?: (e: Event) => void;
-  @Prop() public onMouseOver?: (e: Event) => void;
+  @Prop() public onMouseEnter?: (e: Event) => void;
 
   private get parts() {
     let part = 'suggestion';
@@ -113,7 +113,7 @@ export class AtomicSuggestionRenderer {
             class={this.classes}
             onMouseDown={(e) => e.preventDefault()}
             onClick={(e: Event) => this.onClick?.(e)}
-            onMouseOver={(e: Event) => this.onMouseOver?.(e)}
+            onMouseEnter={(e: Event) => this.onMouseEnter?.(e)}
             data-query={this.suggestion.query}
             aria-label={this.ariaLabel(isButton)}
             ref={(el) => {

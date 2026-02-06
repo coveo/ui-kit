@@ -300,6 +300,9 @@ export class AtomicCommerceSearchBox
 
   @watch('redirectionUrl')
   watchRedirectionUrl() {
+    if (!this.searchBox) {
+      return;
+    }
     if (this.isStandaloneSearchBox(this.searchBox) && this.redirectionUrl) {
       this.searchBox.updateRedirectUrl(this.redirectionUrl);
     } else {
@@ -694,7 +697,7 @@ export class AtomicCommerceSearchBox
 
           this.isExpanded = false;
         }}
-        .onMouseOver=${async () => {
+        .onMouseEnter=${async () => {
           await this.suggestionManager.onSuggestionMouseOver(item, side, id);
         }}
       ></atomic-suggestion-renderer>
