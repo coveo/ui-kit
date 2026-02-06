@@ -25,6 +25,9 @@ test.describe('user actions toggle', () => {
     }) => {
       await userActionsToggle.atomicInsightHistoryToggle.click();
       await expect(
+        userActionsToggle.atomicInsightUserActionsModal
+      ).toBeVisible();
+      await expect(
         userActionsToggle.atomicInsightUserActionsTimeline
       ).toBeVisible();
     });

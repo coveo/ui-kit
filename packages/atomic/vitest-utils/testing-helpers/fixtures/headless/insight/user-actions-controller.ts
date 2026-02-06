@@ -15,5 +15,6 @@ export const buildFakeUserActions = (
     state: defaultState,
     subscribe: genericSubscribe,
     logOpenUserActions: () => {},
+    fetchUserActions: () => {},
   } as UserActions;
 };
