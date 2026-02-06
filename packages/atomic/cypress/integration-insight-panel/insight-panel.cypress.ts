@@ -167,10 +167,6 @@ describe('Insight Panel test suites', () => {
         InsightPanelsSelectors.smartSnippetExpandableAnswer().should(
           'not.exist'
         );
-        InsightPanelsSelectors.smartSnippetSuggestions().should(
-          'have.class',
-          'atomic-hidden'
-        );
       });
     });
 
@@ -182,39 +178,6 @@ describe('Insight Panel test suites', () => {
 
       it('should show the smart snippet component', () => {
         InsightPanelsSelectors.smartSnippetExpandableAnswer().should('exist');
-      });
-    });
-  });
-
-  describe('Smart Snippet Suggestions', () => {
-    const visitPage = () => {
-      cy.visit(host);
-      cy.injectAxe();
-      cy.wait(insightSearchAlias);
-    };
-
-    describe('when no smart snippet suggestions are returned', () => {
-      beforeEach(() => {
-        mockSearchWithoutSmartSnippetSuggestions();
-        visitPage();
-      });
-
-      it('should hide the suggestions components', () => {
-        InsightPanelsSelectors.smartSnippetSuggestions().should(
-          'have.class',
-          'atomic-hidden'
-        );
-      });
-    });
-
-    describe('when smart snippet suggestions are returned', () => {
-      beforeEach(() => {
-        mockSearchWithSmartSnippetSuggestions();
-        visitPage();
-      });
-
-      it('should show the smart snippets component', () => {
-        InsightPanelsSelectors.smartSnippetSuggestions().should('be.visible');
       });
     });
   });

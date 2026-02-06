@@ -18,8 +18,8 @@ import {
   InitializableComponent,
   InitializeBindings,
   BindStateToController,
-} from '../../../../utils/initialization-utils';
-import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
+} from '@/src/utils/initialization-utils';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal
