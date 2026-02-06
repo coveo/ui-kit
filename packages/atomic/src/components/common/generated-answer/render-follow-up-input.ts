@@ -1,6 +1,7 @@
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {createRef, ref} from 'lit/directives/ref.js';
+import {renderButton} from '@/src/components/common/button';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
 export interface RenderFollowUpInputProps {
@@ -72,16 +73,20 @@ export const renderFollowUpInput: FunctionalComponent<
         placeholder=${props.i18n.t('Ask follow-up')}
         aria-label=${props.i18n.t('Ask follow-up')}
       />
-      <button
-        part="submit-button"
-        ${ref(buttonRef)}
-        type="button"
-        class="absolute right-1 top-1 bottom-1 flex w-8 items-center justify-center rounded-md bg-blue-500 text-white hover:bg-blue-600 disabled:bg-blue-500/60 disabled:cursor-not-allowed transition-colors"
-        @click=${handleSubmit}
-        ?disabled=${submitButtonDisabled}
-        aria-label=${props.i18n.t('Submit follow-up')}
-      >
-        <svg
+      ${renderButton({
+        props: {
+          style: 'primary',
+          part: 'submit-button',
+          class:
+            'absolute right-1 top-1 bottom-1 flex w-8 items-center justify-center rounded-md disabled:!bg-primary/60 disabled:!opacity-100',
+          type: 'button',
+          disabled: submitButtonDisabled,
+          ariaLabel: props.i18n.t('Submit follow-up'),
+          ref: buttonRef,
+          onClick: handleSubmit,
+        },
+      })(
+        html`<svg
           class="h-4 w-4"
           viewBox="0 0 20 20"
           fill="currentColor"
@@ -92,8 +97,8 @@ export const renderFollowUpInput: FunctionalComponent<
             d="M10 17a.75.75 0 01-.75-.75V5.612L5.29 9.77a.75.75 0 01-1.08-1.04l5.25-5.5a.75.75 0 011.08 0l5.25 5.5a.75.75 0 11-1.08 1.04L10.75 5.612V16.25A.75.75 0 0110 17z"
             clip-rule="evenodd"
           />
-        </svg>
-      </button>
+        </svg>`
+      )}
     </div>
   `;
 };

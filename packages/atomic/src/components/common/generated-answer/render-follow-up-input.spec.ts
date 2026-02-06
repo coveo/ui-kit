@@ -1,8 +1,7 @@
 import type {i18n} from 'i18next';
 import {html} from 'lit';
-import {userEvent} from 'storybook/test';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
-import {page} from 'vitest/browser';
+import {page, userEvent} from 'vitest/browser';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {
@@ -190,17 +189,19 @@ describe('#renderFollowUpInput', () => {
     });
 
     it('should disable button during submission', async () => {
-      const askFollowUp = vi
-        .fn()
-        .mockImplementation(
-          () => new Promise((resolve) => setTimeout(resolve, 100))
-        );
+      let resolveSubmission: () => void;
+      const submissionPromise = new Promise<void>((resolve) => {
+        resolveSubmission = resolve;
+      });
+      const askFollowUp = vi.fn().mockReturnValue(submissionPromise);
       const {input, submitButton} = await renderComponent({askFollowUp});
 
       await input.fill('test question');
       await submitButton.click();
 
       await expect.element(submitButton).toBeDisabled();
+
+      resolveSubmission!();
     });
 
     it('should re-enable button after submission completes', async () => {
@@ -246,8 +247,7 @@ describe('#renderFollowUpInput', () => {
       });
 
       await input.fill('test question');
-      // Note: Can't actually click a disabled button in the browser
-      // The test verifies the button is disabled, which prevents submission
+      await userEvent.keyboard('{Enter}');
 
       expect(askFollowUp).not.toHaveBeenCalled();
     });
