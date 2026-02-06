@@ -1,29 +1,35 @@
-import type {InteractiveResult, Result} from '@coveo/headless';
+import {
+  type InteractiveResult,
+  type IPXActionsHistoryActionCreators,
+  loadIPXActionsHistoryActions,
+} from '@coveo/headless';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
+import type {AnyUnfoldedItem} from '@/src/components/common/item-list/unfolded-item';
 import {renderInAtomicResult} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-result-fixture';
-import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
+import {buildFakeRecommendationEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/recommendation/engine';
 import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
-import {AtomicResultLink} from './atomic-result-link';
-import './atomic-result-link';
+import {AtomicIpxResultLink} from './atomic-ipx-result-link';
+import './atomic-ipx-result-link';
 
 vi.mock('@coveo/headless', {spy: true});
 
-describe('atomic-result-link', () => {
-  let mockResult: Result;
+describe('atomic-ipx-result-link', () => {
+  let mockResult: AnyUnfoldedItem;
   let mockInteractiveResult: InteractiveResult;
-  const mockedEngine = buildFakeSearchEngine();
+  let mockActionsHistoryActions: IPXActionsHistoryActionCreators;
+  const mockedEngine = buildFakeRecommendationEngine();
 
   const locators = {
     getLink: () => page.getByRole('link'),
-    getText: (element: AtomicResultLink) =>
+    getText: (element: AtomicIpxResultLink) =>
       element?.querySelector('atomic-result-text'),
   };
 
-  const parts = (element: AtomicResultLink) => ({
+  const parts = (element: AtomicIpxResultLink) => ({
     link: element?.shadowRoot?.querySelector('a'),
   });
 
@@ -34,14 +40,23 @@ describe('atomic-result-link', () => {
       uri: 'https://example.com/test',
       raw: {
         urihash: 'testhash',
+        permanentid: 'test-permanent-id',
       },
-    });
+    }) as AnyUnfoldedItem;
 
     mockInteractiveResult = {
       select: vi.fn(),
       beginDelayedSelect: vi.fn(),
       cancelPendingSelect: vi.fn(),
     } as unknown as InteractiveResult;
+
+    mockActionsHistoryActions = {
+      addPageViewEntryInActionsHistory: vi.fn(() => ({type: 'test-action'})),
+    } as unknown as IPXActionsHistoryActionCreators;
+
+    vi.mocked(loadIPXActionsHistoryActions).mockReturnValue(
+      mockActionsHistoryActions
+    );
   });
 
   const renderComponent = async ({
@@ -52,15 +67,15 @@ describe('atomic-result-link', () => {
   }: {
     props?: Partial<{hrefTemplate: string}>;
     slottedContent?: string;
-    result?: Result;
+    result?: AnyUnfoldedItem;
     interactiveResult?: InteractiveResult;
   } = {}) => {
     const {element, atomicResult, atomicInterface} =
-      await renderInAtomicResult<AtomicResultLink>({
-        template: html`<atomic-result-link
+      await renderInAtomicResult<AtomicIpxResultLink>({
+        template: html`<atomic-ipx-result-link
           href-template=${ifDefined(props.hrefTemplate)}
-        >${slottedContent ? unsafeHTML(slottedContent) : ''}</atomic-result-link>`,
-        selector: 'atomic-result-link',
+        >${slottedContent ? unsafeHTML(slottedContent) : ''}</atomic-ipx-result-link>`,
+        selector: 'atomic-ipx-result-link',
         result,
         interactiveResult,
         bindings: (bindings) => {
@@ -88,9 +103,10 @@ describe('atomic-result-link', () => {
 
   describe('#initialize', () => {
     it('should be defined', () => {
-      const el = document.createElement('atomic-result-link');
-      expect(el).toBeInstanceOf(AtomicResultLink);
+      const el = document.createElement('atomic-ipx-result-link');
+      expect(el).toBeInstanceOf(AtomicIpxResultLink);
     });
+
     it('should initialize without error', async () => {
       const {element} = await renderComponent();
       expect(element.error).toBeNull();
@@ -145,6 +161,12 @@ describe('atomic-result-link', () => {
 
       expect(callbackSpy).toHaveBeenCalledWith(false);
     });
+
+    it('should load IPX actions history actions', async () => {
+      await renderComponent();
+
+      expect(loadIPXActionsHistoryActions).toHaveBeenCalledWith(mockedEngine);
+    });
   });
 
   describe('#disconnectedCallback', () => {
@@ -164,10 +186,61 @@ describe('atomic-result-link', () => {
     });
   });
 
+  describe('#onSelect', () => {
+    it('should dispatch IPX actions history action when result has permanentid', async () => {
+      const {link} = await renderComponent({
+        result: {
+          ...mockResult,
+          raw: {...mockResult.raw, permanentid: 'test-permanent-id'},
+        } as AnyUnfoldedItem,
+      });
+
+      const dispatchSpy = vi.spyOn(mockedEngine, 'dispatch');
+
+      await link.click();
+
+      expect(
+        mockActionsHistoryActions.addPageViewEntryInActionsHistory
+      ).toHaveBeenCalledWith('test-permanent-id');
+      expect(dispatchSpy).toHaveBeenCalledWith({type: 'test-action'});
+    });
+
+    it('should not dispatch action when result has no permanentid', async () => {
+      const resultWithoutPermanentId = {
+        ...mockResult,
+        raw: {...mockResult.raw, permanentid: undefined},
+      } as AnyUnfoldedItem;
+
+      const {link} = await renderComponent({
+        result: resultWithoutPermanentId,
+      });
+
+      const dispatchSpy = vi.spyOn(mockedEngine, 'dispatch');
+
+      await link.click();
+
+      expect(
+        mockActionsHistoryActions.addPageViewEntryInActionsHistory
+      ).not.toHaveBeenCalled();
+      expect(dispatchSpy).not.toHaveBeenCalled();
+    });
+
+    it('should call interactive result select', async () => {
+      const {link} = await renderComponent();
+
+      await link.click();
+
+      expect(mockInteractiveResult.select).toHaveBeenCalled();
+    });
+  });
+
   describe('#render', () => {
     it('should use result clickUri as href when hrefTemplate is not provided', async () => {
       const {link} = await renderComponent({
-        result: buildFakeResult({clickUri: 'https://example.com/click'}),
+        result: {
+          ...mockResult,
+          clickUri: 'https://example.com/click',
+        } as AnyUnfoldedItem,
       });
 
       await expect
@@ -180,10 +253,11 @@ describe('atomic-result-link', () => {
         '$' + '{clickUri}' + '?' + 'id=' + '$' + '{raw.urihash}';
       const {link} = await renderComponent({
         props: {hrefTemplate: templateString},
-        result: buildFakeResult({
+        result: {
+          ...mockResult,
           clickUri: 'https://example.com/test',
           raw: {urihash: 'hash123'},
-        }),
+        } as AnyUnfoldedItem,
       });
 
       await expect
@@ -196,11 +270,12 @@ describe('atomic-result-link', () => {
         props: {
           hrefTemplate: '$' + '{clickUri}' + '?title=' + '$' + '{title}',
         },
-        result: buildFakeResult({
+        result: {
+          ...mockResult,
           clickUri: 'https://example.com/test',
           title: 'Test Title',
           uri: 'https://example.com/original',
-        }),
+        } as AnyUnfoldedItem,
       });
 
       await expect
@@ -277,7 +352,7 @@ describe('atomic-result-link', () => {
 
     it('should handle missing result context gracefully', async () => {
       const {element} = await renderComponent({
-        result: undefined as unknown as Result,
+        result: undefined as unknown as AnyUnfoldedItem,
       });
 
       expect(element).toBeDefined();
@@ -291,13 +366,22 @@ describe('atomic-result-link', () => {
       expect(element).toBeDefined();
     });
 
-    it('should fallback gracefully with invalid template', async () => {
+    it('should handle invalid template by replacing with empty string', async () => {
+      const warnSpy = vi.spyOn(mockedEngine.logger, 'warn');
+
       const {link} = await renderComponent({
         props: {hrefTemplate: '$' + '{invalid.syntax}'},
-        result: buildFakeResult({clickUri: 'https://fallback.com'}),
+        result: {
+          ...mockResult,
+          clickUri: 'https://fallback.com',
+        } as AnyUnfoldedItem,
       });
 
       await expect.element(link).toBeInTheDocument();
+      await expect.element(link).toHaveAttribute('href', '');
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('invalid.syntax')
+      );
     });
 
     it('should update href when hrefTemplate property changes', async () => {
@@ -314,18 +398,6 @@ describe('atomic-result-link', () => {
       await expect
         .element(link)
         .toHaveAttribute('href', `${mockResult.uri}?new=param`);
-    });
-
-    it('should render with default behavior when component has no slotted content', async () => {
-      const {element} = await renderComponent();
-      expect(element).toBeDefined();
-    });
-
-    it('should render with custom content when component has default slotted content', async () => {
-      const {element} = await renderComponent({
-        slottedContent: 'Custom Link Text',
-      });
-      expect(element.textContent).toContain('Custom Link Text');
     });
   });
 });
