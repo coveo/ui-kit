@@ -47,6 +47,8 @@ export const renderFollowUpInput: FunctionalComponent<
       button.disabled = true;
       await askFollowUp(inputValue);
       input.value = '';
+    } catch (error) {
+      console.error('Error submitting follow-up question: ', error);
     } finally {
       button.disabled = submitButtonDisabled;
     }
