@@ -111,7 +111,7 @@
     "@custom-elements-manifest/analyzer": "0.10.4",
     "@mswjs/source": "0.5.0",
     "@playwright/test": "catalog:",
-    "@rollup/plugin-commonjs": "28.0.6",
+    "@rollup/plugin-commonjs": "29.0.0",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "16.0.1",
     "@rollup/plugin-replace": "catalog:",
@@ -128,7 +128,7 @@
     "@tailwindcss/vite": "4.1.13",
     "@types/escape-html": "1.0.4",
     "@types/jest": "catalog:",
-    "@types/minimatch": "5.1.2",
+    "@types/minimatch": "6.0.0",
     "@types/node": "catalog:",
     "@vitest/browser-playwright": "catalog:",
     "@vitest/coverage-v8": "catalog:",
@@ -168,7 +168,7 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:",
-    "wait-on": "8.0.4"
+    "wait-on": "9.0.3"
   },
   "peerDependencies": {
     "@coveo/bueno": "workspace:*",

@@ -6,8 +6,8 @@
   "type": "module",
   "dependencies": {
     "@coveo/semantic-monorepo-tools": "2.7.0",
-    "conventional-changelog-conventionalcommits": "8.0.0",
-    "octokit": "4.1.4",
+    "conventional-changelog-conventionalcommits": "9.1.0",
+    "octokit": "5.0.5",
     "semver": "7.7.2",
     "ts-dedent": "2.2.0"
   },
