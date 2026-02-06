@@ -22,4 +22,5 @@ export {AtomicInsightSmartSnippetFeedbackModal} from './atomic-insight-smart-sni
 export {AtomicInsightTab} from './atomic-insight-tab/atomic-insight-tab.js';
 export {AtomicInsightTabs} from './atomic-insight-tabs/atomic-insight-tabs.js';
 export {AtomicInsightUserActionsModal} from './atomic-insight-user-actions-modal/atomic-insight-user-actions-modal.js';
+export {AtomicInsightUserActionsTimeline} from './atomic-insight-user-actions-timeline/atomic-insight-user-actions-timeline.js';
 export {AtomicInsightUserActionsToggle} from './atomic-insight-user-actions-toggle/atomic-insight-user-actions-toggle.js';
