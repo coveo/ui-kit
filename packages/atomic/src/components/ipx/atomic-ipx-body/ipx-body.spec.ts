@@ -42,122 +42,87 @@ describe('#renderIpxBody', () => {
     };
   };
 
-  describe('when rendering all parts', () => {
-    it('should render all 8 CSS parts correctly', async () => {
-      const {parts: allParts} = await renderComponent();
+  it('should render all required parts', async () => {
+    const {parts: allParts} = await renderComponent();
 
-      expect(allParts.container).toBeTruthy();
-      expect(allParts.headerWrapper).toBeTruthy();
-      expect(allParts.header).toBeTruthy();
-      expect(allParts.headerRuler).toBeTruthy();
-      expect(allParts.bodyWrapper).toBeTruthy();
-      expect(allParts.body).toBeTruthy();
-      expect(allParts.footerWrapper).toBeTruthy();
-      expect(allParts.footer).toBeTruthy();
-    });
-
-    it('should render header content in the correct part', async () => {
-      const {parts: allParts} = await renderComponent();
-
-      expect(allParts.header).toHaveTextContent('Header Content');
-    });
-
-    it('should render body content in the correct part', async () => {
-      const {parts: allParts} = await renderComponent();
-
-      expect(allParts.body).toHaveTextContent('Body Content');
-    });
-
-    it('should render footer content in the correct part', async () => {
-      const {parts: allParts} = await renderComponent();
-
-      expect(allParts.footer).toHaveTextContent('Footer Button');
-    });
+    expect(allParts.container).toBeInTheDocument();
+    expect(allParts.headerWrapper).toBeInTheDocument();
+    expect(allParts.header).toBeInTheDocument();
+    expect(allParts.headerRuler).toBeInTheDocument();
+    expect(allParts.bodyWrapper).toBeInTheDocument();
+    expect(allParts.body).toBeInTheDocument();
+    expect(allParts.footerWrapper).toBeInTheDocument();
+    expect(allParts.footer).toBeInTheDocument();
   });
 
-  describe('when visibility changes', () => {
-    it('should apply visible class when visibility is open', async () => {
-      const {parts: allParts} = await renderComponent({visibility: 'open'});
-      const container = allParts.container as HTMLElement;
+  it('should render header content', async () => {
+    const {parts: allParts} = await renderComponent();
 
-      expect(container.classList.contains('visible')).toBe(true);
-    });
-
-    it('should apply invisible class when visibility is closed', async () => {
-      const {parts: allParts} = await renderComponent({visibility: 'closed'});
-      const container = allParts.container as HTMLElement;
-
-      expect(container.classList.contains('invisible')).toBe(true);
-    });
-
-    it('should not apply any visibility class when visibility is embedded', async () => {
-      const {parts: allParts} = await renderComponent({visibility: 'embedded'});
-      const container = allParts.container as HTMLElement;
-
-      expect(container.classList.contains('visible')).toBe(false);
-      expect(container.classList.contains('invisible')).toBe(false);
-    });
-
-    it('should apply invisible class when visibility is undefined', async () => {
-      const {parts: allParts} = await renderComponent({visibility: undefined});
-      const container = allParts.container as HTMLElement;
-
-      expect(container.classList.contains('invisible')).toBe(true);
-    });
+    expect(allParts.header).toHaveTextContent('Header Content');
   });
 
-  describe('when footer slot is conditional', () => {
-    it('should render footer parts when displayFooterSlot is true', async () => {
-      const {parts: allParts} = await renderComponent({
-        displayFooterSlot: true,
-      });
+  it('should render body content', async () => {
+    const {parts: allParts} = await renderComponent();
 
-      expect(allParts.footerWrapper).toBeTruthy();
-      expect(allParts.footer).toBeTruthy();
-    });
-
-    it('should not render footer parts when displayFooterSlot is false', async () => {
-      const {parts: allParts} = await renderComponent({
-        displayFooterSlot: false,
-      });
-
-      expect(allParts.footerWrapper).toBeFalsy();
-      expect(allParts.footer).toBeFalsy();
-    });
-
-    it('should render footer parts when displayFooterSlot is undefined', async () => {
-      const {parts: allParts} = await renderComponent({
-        displayFooterSlot: undefined,
-      });
-
-      expect(allParts.footerWrapper).toBeTruthy();
-      expect(allParts.footer).toBeTruthy();
-    });
+    expect(allParts.body).toHaveTextContent('Body Content');
   });
 
-  describe('when animation ends', () => {
-    it('should call onAnimationEnd callback when animationend event fires', async () => {
+  it('should render footer content', async () => {
+    const {parts: allParts} = await renderComponent();
+
+    expect(allParts.footer).toHaveTextContent('Footer Button');
+  });
+
+  it('should apply visible class when visibility is open', async () => {
+    const {parts: allParts} = await renderComponent({visibility: 'open'});
+    const container = allParts.container as HTMLElement;
+
+    expect(container.classList.contains('visible')).toBe(true);
+  });
+
+  it('should apply invisible class when visibility is closed', async () => {
+    const {parts: allParts} = await renderComponent({visibility: 'closed'});
+    const container = allParts.container as HTMLElement;
+
+    expect(container.classList.contains('invisible')).toBe(true);
+  });
+
+  it('should not apply visibility class when visibility is embedded', async () => {
+    const {parts: allParts} = await renderComponent({visibility: 'embedded'});
+    const container = allParts.container as HTMLElement;
+
+    expect(container.classList.contains('visible')).toBe(false);
+    expect(container.classList.contains('invisible')).toBe(false);
+  });
+
+  it('should apply invisible class when visibility is undefined', async () => {
+    const {parts: allParts} = await renderComponent({visibility: undefined});
+    const container = allParts.container as HTMLElement;
+
+    expect(container.classList.contains('invisible')).toBe(true);
+  });
+
+  it('should not render footer parts when footer is disabled', async () => {
+    const {parts: allParts} = await renderComponent({
+      displayFooterSlot: false,
+    });
+
+    expect(allParts.footerWrapper).not.toBeInTheDocument();
+    expect(allParts.footer).not.toBeInTheDocument();
+  });
+
+  describe('when onAnimationEnd callback is provided', () => {
+    it('should call callback when animationend event fires', async () => {
       const onAnimationEnd = vi.fn();
       const {parts: allParts} = await renderComponent({onAnimationEnd});
       const container = allParts.container as HTMLElement;
 
       container.dispatchEvent(new AnimationEvent('animationend'));
 
-      expect(onAnimationEnd).toHaveBeenCalled();
+      expect(onAnimationEnd).toHaveBeenCalledOnce();
     });
 
-    it('should not call onAnimationEnd if callback is not provided', async () => {
-      const {parts: allParts} = await renderComponent({
-        onAnimationEnd: undefined,
-      });
-      const container = allParts.container as HTMLElement;
-
-      expect(() => {
-        container.dispatchEvent(new AnimationEvent('animationend'));
-      }).not.toThrow();
-    });
-
-    it('should call onAnimationEnd multiple times if animation ends multiple times', async () => {
+    it('should call callback multiple times for multiple animations', async () => {
       const onAnimationEnd = vi.fn();
       const {parts: allParts} = await renderComponent({onAnimationEnd});
       const container = allParts.container as HTMLElement;
@@ -169,55 +134,35 @@ describe('#renderIpxBody', () => {
     });
   });
 
-  describe('when content is conditional', () => {
-    it('should render nothing when header content is not provided', async () => {
-      const {parts: allParts} = await renderComponent({header: nothing});
-
-      expect(allParts.header?.textContent?.trim()).toBe('');
+  it('should not throw when animationend event fires without callback', async () => {
+    const {parts: allParts} = await renderComponent({
+      onAnimationEnd: undefined,
     });
+    const container = allParts.container as HTMLElement;
 
-    it('should render nothing when body content is not provided', async () => {
-      const {parts: allParts} = await renderComponent({body: nothing});
-
-      expect(allParts.body?.textContent?.trim()).toBe('');
-    });
-
-    it('should render nothing when footer content is not provided', async () => {
-      const {parts: allParts} = await renderComponent({footer: nothing});
-
-      expect(allParts.footer?.textContent?.trim()).toBe('');
-    });
+    expect(() => {
+      container.dispatchEvent(new AnimationEvent('animationend'));
+    }).not.toThrow();
   });
 
-  describe('when rendering with all features combined', () => {
-    it('should render correctly with open visibility and footer slot', async () => {
-      const onAnimationEnd = vi.fn();
-      const {parts: allParts} = await renderComponent({
-        visibility: 'open',
-        displayFooterSlot: true,
-        onAnimationEnd,
-      });
-      const container = allParts.container as HTMLElement;
+  it('should render empty header part when header content is nothing', async () => {
+    const {parts: allParts} = await renderComponent({header: nothing});
 
-      expect(container.classList.contains('visible')).toBe(true);
-      expect(allParts.footerWrapper).toBeTruthy();
-      expect(allParts.header).toHaveTextContent('Header Content');
-      expect(allParts.body).toHaveTextContent('Body Content');
-      expect(allParts.footer).toHaveTextContent('Footer Button');
-      container.dispatchEvent(new AnimationEvent('animationend'));
-      expect(onAnimationEnd).toHaveBeenCalled();
-    });
+    expect(allParts.header).toBeInTheDocument();
+    expect(allParts.header?.textContent?.trim()).toBe('');
+  });
 
-    it('should render correctly with closed visibility and no footer', async () => {
-      const {parts: allParts} = await renderComponent({
-        visibility: 'closed',
-        displayFooterSlot: false,
-      });
-      const container = allParts.container as HTMLElement;
+  it('should render empty body part when body content is nothing', async () => {
+    const {parts: allParts} = await renderComponent({body: nothing});
 
-      expect(container.classList.contains('invisible')).toBe(true);
-      expect(allParts.footerWrapper).toBeFalsy();
-      expect(allParts.footer).toBeFalsy();
-    });
+    expect(allParts.body).toBeInTheDocument();
+    expect(allParts.body?.textContent?.trim()).toBe('');
+  });
+
+  it('should render empty footer part when footer content is nothing', async () => {
+    const {parts: allParts} = await renderComponent({footer: nothing});
+
+    expect(allParts.footer).toBeInTheDocument();
+    expect(allParts.footer?.textContent?.trim()).toBe('');
   });
 });
