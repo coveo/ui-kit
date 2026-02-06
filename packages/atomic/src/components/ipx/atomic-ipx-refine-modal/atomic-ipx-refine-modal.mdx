@@ -1,0 +1,33 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicIpxRefineModalStories from './atomic-ipx-refine-modal.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicIpxRefineModalStories} />
+
+<AtomicDocTemplate
+  stories={AtomicIpxRefineModalStories}
+  githubPath="ipx/atomic-ipx-refine-modal/atomic-ipx-refine-modal.ts"
+  tagName="atomic-ipx-refine-modal"
+  className="AtomicIpxRefineModal"
+>
+
+This component should not be used directly. It is internally used by the `atomic-ipx-refine-toggle` component to display the refine modal within an In-Product Experience (IPX) context.
+
+To use the refine modal in IPX, you should use the `atomic-ipx-refine-toggle` component instead.
+
+```html
+<atomic-search-interface>
+  <atomic-ipx-refine-toggle></atomic-ipx-refine-toggle>
+  <!-- Facets defined here will be cloned into the modal when opened -->
+  <atomic-facet field="author" label="Authors"></atomic-facet>
+  <atomic-facet field="language" label="Language"></atomic-facet>
+</atomic-search-interface>
+```
+
+## Related Components
+
+- `atomic-ipx-refine-toggle`: The toggle button that opens the IPX refine modal
+- `atomic-ipx-modal`: The base modal component used for IPX interfaces
+- `atomic-facet`: Individual facet components that can be placed in the refine modal
+
+</AtomicDocTemplate>
