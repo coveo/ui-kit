@@ -15,6 +15,7 @@ export {AtomicInsightRefineModal} from './atomic-insight-refine-modal/atomic-ins
 export {AtomicInsightRefineToggle} from './atomic-insight-refine-toggle/atomic-insight-refine-toggle.js';
 export {AtomicInsightResult} from './atomic-insight-result/atomic-insight-result.js';
 export {AtomicInsightResultChildren} from './atomic-insight-result-children/atomic-insight-result-children.js';
+export {AtomicInsightResultQuickviewAction} from './atomic-insight-result-quickview-action/atomic-insight-result-quickview-action.js';
 export {AtomicInsightResultTemplate} from './atomic-insight-result-template/atomic-insight-result-template.js';
 export {AtomicInsightSearchBox} from './atomic-insight-search-box/atomic-insight-search-box.js';
 export {AtomicInsightSmartSnippetFeedbackModal} from './atomic-insight-smart-snippet-feedback-modal/atomic-insight-smart-snippet-feedback-modal.js';
