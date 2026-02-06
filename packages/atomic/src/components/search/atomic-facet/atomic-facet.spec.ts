@@ -59,6 +59,7 @@ describe('atomic-facet', () => {
       isCollapsed?: boolean;
       displayValuesAs?: 'checkbox' | 'link' | 'box';
       withSearch?: boolean;
+      noFacetSearch?: boolean;
       enableExclusion?: boolean;
       facetId?: string;
       headingLevel?: number;
@@ -82,6 +83,7 @@ describe('atomic-facet', () => {
         filter-facet-count=${ifDefined(props.filterFacetCount)}
         is-collapsed=${ifDefined(props.isCollapsed)}
         with-search=${ifDefined(props.withSearch)}
+        no-facet-search=${ifDefined(props.noFacetSearch)}
         enable-exclusion=${ifDefined(props.enableExclusion)}
       ></atomic-facet>`,
       selector: 'atomic-facet',
@@ -201,6 +203,30 @@ describe('atomic-facet', () => {
 
     it('should not render search parts when search is disabled', async () => {
       const {locators} = await setupElement({withSearch: false});
+      await expect.element(locators.searchWrapper).not.toBeInTheDocument();
+      await expect.element(locators.searchInput).not.toBeInTheDocument();
+    });
+
+    it('should not render search parts when noFacetSearch is true', async () => {
+      const {locators} = await setupElement({noFacetSearch: true});
+      await expect.element(locators.searchWrapper).not.toBeInTheDocument();
+      await expect.element(locators.searchInput).not.toBeInTheDocument();
+    });
+
+    it('should not render search parts when noFacetSearch is true even if withSearch is true', async () => {
+      const {locators} = await setupElement({
+        noFacetSearch: true,
+        withSearch: true,
+      });
+      await expect.element(locators.searchWrapper).not.toBeInTheDocument();
+      await expect.element(locators.searchInput).not.toBeInTheDocument();
+    });
+
+    it('should render search parts when both noFacetSearch and withSearch are false', async () => {
+      const {locators} = await setupElement({
+        noFacetSearch: false,
+        withSearch: false,
+      });
       await expect.element(locators.searchWrapper).not.toBeInTheDocument();
       await expect.element(locators.searchInput).not.toBeInTheDocument();
     });
