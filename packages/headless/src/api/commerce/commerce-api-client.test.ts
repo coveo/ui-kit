@@ -406,14 +406,10 @@ describe('commerce api client', () => {
 
       expect(platformCallMock).toHaveBeenCalled();
       const mockRequest = platformCallMock.mock.calls[0][0];
-
-      // The redirect API uses a different URL pattern: /api/v2/organizations/{orgId}/commerce/search/redirect
-      const expectedUrl = `https://${organizationId}.org.coveo.com/api/v2/organizations/${organizationId}/commerce/search/redirect`;
-
       expect(mockRequest).toMatchObject({
         method: 'POST',
         contentType: 'application/json',
-        url: expectedUrl,
+        url: `${getCommerceApiBaseUrl(organizationId)}/search/redirect`,
         accessToken: request.accessToken,
         origin: 'commerceApiFetch',
         requestParams: {

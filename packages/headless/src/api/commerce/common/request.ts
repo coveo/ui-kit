@@ -108,36 +108,5 @@ const buildUrlWithTrackingIdInPath = (
   if (trackingId && TRACKING_ID_IN_PATH_METHODS.includes(path)) {
     return `${baseUrl}/tracking-ids/${trackingId}/${path}`;
   }
-
-  // Special case: search/redirect uses a different URL pattern
-  // /rest/organizations/{orgId}/commerce/v2 -> /api/v2/organizations/{orgId}/commerce
-  if (path === 'search/redirect') {
-    return transformToRedirectApiUrl(baseUrl, path);
-  }
-
   return `${baseUrl}/${path}`;
-};
-
-/**
- * Transforms the base Commerce API URL to the redirect API URL pattern.
- * Converts: /rest/organizations/{orgId}/commerce/v2
- * To: /api/v2/organizations/{orgId}/commerce/search/redirect
- */
-const transformToRedirectApiUrl = (
-  baseUrl: string,
-  path: CommerceApiMethod
-): string => {
-  // Extract organization ID from the base URL
-  // Pattern: https://{domain}/rest/organizations/{orgId}/commerce/v2
-  const match = baseUrl.match(/\/rest\/organizations\/([^/]+)\/commerce\/v2$/);
-
-  if (!match) {
-    // Fallback to standard pattern if URL doesn't match expected format
-    return `${baseUrl}/${path}`;
-  }
-
-  const orgId = match[1];
-  const domain = baseUrl.substring(0, baseUrl.indexOf('/rest'));
-
-  return `${domain}/api/v2/organizations/${orgId}/commerce/${path}`;
 };
