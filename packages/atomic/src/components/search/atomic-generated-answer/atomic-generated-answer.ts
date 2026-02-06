@@ -437,10 +437,6 @@ export class AtomicGeneratedAnswer
     this.ariaMessage.message = this.controller.getGeneratedAnswerStatus();
   };
 
-  // private get hasRetryableError() {
-  //   return this.controller.hasRetryableError;
-  // }
-
   private get hasNoAnswerGenerated() {
     return this.controller.hasNoAnswerGenerated;
   }
