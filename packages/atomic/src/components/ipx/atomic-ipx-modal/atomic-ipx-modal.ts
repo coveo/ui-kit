@@ -1,5 +1,8 @@
 import {type CSSResultGroup, css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import type {AnyBindings} from '@/src/components/common/interface/bindings';
+import {renderIpxBody} from '@/src/components/ipx/atomic-ipx-body/ipx-body';
+import {ipxBodyStyles} from '@/src/components/ipx/atomic-ipx-body/ipx-body-styles';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
@@ -9,7 +12,6 @@ import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {buildCustomEvent} from '@/src/utils/event-utils';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils';
 import {once, randomID} from '@/src/utils/utils';
-import type {AnyBindings} from '../../common/interface/bindings';
 
 /**
  * The `atomic-ipx-modal` component is a modal component used for the In-Product Experience use case.
@@ -19,7 +21,14 @@ import type {AnyBindings} from '../../common/interface/bindings';
  *
  * @part atomic-ipx-modal - The main modal container.
  * @part backdrop - The backdrop behind the modal.
- * @part container - The modal's content container from atomic-ipx-body (via exportparts).
+ * @part container - The content container element.
+ * @part header-wrapper - The wrapper around the header section.
+ * @part header - The header content container.
+ * @part header-ruler - The horizontal rule separating header and body.
+ * @part body-wrapper - The wrapper around the body section (scrollable).
+ * @part body - The body content container.
+ * @part footer-wrapper - The wrapper around the footer section.
+ * @part footer - The footer content container.
  *
  * @slot header - The header content of the modal.
  * @slot body - The main body content of the modal.
@@ -34,7 +43,9 @@ import type {AnyBindings} from '../../common/interface/bindings';
 @bindings()
 @withTailwindStyles
 export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
-  static styles: CSSResultGroup = css`
+  static styles: CSSResultGroup = [
+    ipxBodyStyles,
+    css`
   @reference '../../../utils/tailwind.global.tw.css';
 
   atomic-focus-trap {
@@ -68,7 +79,8 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
     max-height: calc(100vh - 4.25rem);
   }
 }
-  `;
+  `,
+  ];
 
   @state()
   bindings!: AnyBindings;
@@ -163,16 +175,16 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
 
     return html`
       <div part="backdrop">
-        <atomic-ipx-body
-          .isOpen=${this.isOpen}
-          .displayFooterSlot=${this.hasFooterSlotElements}
-          exportparts="container"
-          @animationEnded=${this.handleAnimationEnded}
-        >
-          <slot name="header" slot="header"></slot>
-          <slot name="body" slot="body"></slot>
-          <slot name="footer" slot="footer"></slot>
-        </atomic-ipx-body>
+        ${renderIpxBody({
+          props: {
+            visibility: this.isOpen ? 'open' : 'closed',
+            displayFooterSlot: this.hasFooterSlotElements,
+            onAnimationEnd: this.handleAnimationEnded,
+            header: html`<slot name="header"></slot>`,
+            body: html`<slot name="body"></slot>`,
+            footer: html`<slot name="footer"></slot>`,
+          },
+        })}
       </div>
     `;
   }

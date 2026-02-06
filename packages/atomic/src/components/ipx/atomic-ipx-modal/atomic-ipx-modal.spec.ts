@@ -76,12 +76,11 @@ describe('atomic-ipx-modal', () => {
 
     return {
       element,
-      parts: {
-        backdrop: element.shadowRoot?.querySelector('[part="backdrop"]'),
-        body: element.shadowRoot?.querySelector(
-          'atomic-ipx-body'
-        ) as HTMLElement & {isOpen?: boolean; displayFooterSlot?: boolean},
-      },
+      parts: (el: AtomicIpxModal) => ({
+        backdrop: el.shadowRoot?.querySelector('[part="backdrop"]'),
+        container: el.shadowRoot?.querySelector('[part="container"]'),
+        footerWrapper: el.shadowRoot?.querySelector('[part="footer-wrapper"]'),
+      }),
     };
   };
 
@@ -90,8 +89,8 @@ describe('atomic-ipx-modal', () => {
       const {element, parts} = await renderIPXModal();
 
       expect(element).toBeInTheDocument();
-      expect(parts.backdrop).toBeInTheDocument();
-      expect(parts.body).toBeInTheDocument();
+      expect(parts(element).backdrop).toBeInTheDocument();
+      expect(parts(element).container).toBeInTheDocument();
     });
 
     it('should set part attribute on host element', async () => {
@@ -288,15 +287,25 @@ describe('atomic-ipx-modal', () => {
     });
   });
 
-  describe('when integrating with atomic-ipx-body', () => {
-    it('should pass isOpen to atomic-ipx-body', async () => {
-      const {parts} = await renderIPXModal({props: {isOpen: true}});
+  describe('when integrating with ipx-body functional component', () => {
+    it('should render container with visible class when isOpen=true', async () => {
+      const {element, parts} = await renderIPXModal({props: {isOpen: true}});
 
-      expect(parts.body?.isOpen).toBe(true);
+      await element.updateComplete;
+
+      expect(parts(element).container).toHaveClass('visible');
     });
 
-    it('should pass displayFooterSlot to atomic-ipx-body when footer exists', async () => {
-      const {parts} = await renderIPXModal({
+    it('should render container with invisible class when isOpen=false', async () => {
+      const {element, parts} = await renderIPXModal({props: {isOpen: false}});
+
+      await element.updateComplete;
+
+      expect(parts(element).container).toHaveClass('invisible');
+    });
+
+    it('should render footer wrapper when footer slot has content', async () => {
+      const {element, parts} = await renderIPXModal({
         slottedContent: {
           header: '',
           body: '',
@@ -304,10 +313,12 @@ describe('atomic-ipx-modal', () => {
         },
       });
 
-      expect(parts.body?.displayFooterSlot).toBe(true);
+      await element.updateComplete;
+
+      expect(parts(element).footerWrapper).toBeInTheDocument();
     });
 
-    it('should pass displayFooterSlot=false to atomic-ipx-body when footer is missing', async () => {
+    it('should not render footer wrapper when footer slot is empty', async () => {
       const {element, parts} = await renderIPXModal({
         slottedContent: {
           header: '',
@@ -318,13 +329,14 @@ describe('atomic-ipx-modal', () => {
 
       await element.updateComplete;
 
-      expect(parts.body?.displayFooterSlot).toBe(false);
+      expect(parts(element).footerWrapper).not.toBeInTheDocument();
     });
 
-    it('should export parts from atomic-ipx-body', async () => {
-      const {parts} = await renderIPXModal();
+    it('should expose container part', async () => {
+      const {element, parts} = await renderIPXModal();
 
-      expect(parts.body?.getAttribute('exportparts')).toBe('container');
+      expect(parts(element).container).toBeInTheDocument();
+      expect(parts(element).container?.getAttribute('part')).toBe('container');
     });
   });
 });
