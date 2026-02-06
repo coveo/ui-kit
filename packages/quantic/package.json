@@ -64,12 +64,12 @@
     "@octokit/graphql": "9.0.1",
     "@octokit/graphql-schema": "15.26.0",
     "@playwright/test": "catalog:",
-    "@salesforce/eslint-config-lwc": "3.7.2",
+    "@salesforce/eslint-config-lwc": "4.1.2",
     "@salesforce/sfdx-lwc-jest": "6.0.0",
     "@types/wait-on": "5.3.4",
     "@typescript-eslint/parser": "8.44.0",
     "dotenv": "17.2.1",
-    "eslint": "8.57",
+    "eslint": "9.39",
     "eslint-config-prettier": "10.1.8",
     "exponential-backoff": "catalog:",
     "jest": "catalog:",
@@ -78,7 +78,7 @@
     "jsdoc-tsimport-plugin": "1.0.5",
     "prettier-plugin-apex": "2.2.6",
     "ts-node": "10.9.2",
-    "wait-on": "8.0.4",
+    "wait-on": "9.0.3",
     "xml2js": "0.6.2"
   },
   "files": [
