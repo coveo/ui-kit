@@ -11,4 +11,4 @@ export const selectTimezone = (state: {configuration: ConfigurationState}) =>
  * Used for agent-based answer generation via the Agent API.
  */
 export const selectAgentId = (state: {configuration: ConfigurationState}) =>
-  state.configuration.knowledge.agentId;
+  state.configuration?.knowledge?.agentId;
