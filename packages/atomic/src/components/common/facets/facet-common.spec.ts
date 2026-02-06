@@ -156,6 +156,64 @@ describe('facet-common', () => {
       expect(result).toContain(facet2);
       expect(result).not.toContain(notFacet);
     });
+
+    it('should return facets nested within atomic-popover elements', () => {
+      const parent = document.createElement('div');
+      const facet1 = buildMockFacetElement({facetId: 'f1'});
+      const popover = document.createElement('atomic-popover');
+      const nestedFacet = buildMockFacetElement({facetId: 'f2'});
+
+      popover.appendChild(nestedFacet);
+      parent.appendChild(facet1);
+      parent.appendChild(popover);
+
+      const result = getFacetsInChildren(parent);
+
+      expect(result).toContain(facet1);
+      expect(result).toContain(nestedFacet);
+      expect(result).toHaveLength(2);
+    });
+
+    it('should not include atomic-popover element itself in results', () => {
+      const parent = document.createElement('div');
+      const popover = document.createElement('atomic-popover');
+      const nestedFacet = buildMockFacetElement({facetId: 'f1'});
+
+      popover.appendChild(nestedFacet);
+      parent.appendChild(popover);
+
+      const result = getFacetsInChildren(parent);
+
+      expect(result).not.toContain(popover);
+      expect(result).toContain(nestedFacet);
+    });
+
+    it('should handle empty atomic-popover elements', () => {
+      const parent = document.createElement('div');
+      const facet1 = buildMockFacetElement({facetId: 'f1'});
+      const emptyPopover = document.createElement('atomic-popover');
+
+      parent.appendChild(facet1);
+      parent.appendChild(emptyPopover);
+
+      const result = getFacetsInChildren(parent);
+
+      expect(result).toContain(facet1);
+      expect(result).toHaveLength(1);
+    });
+
+    it('should handle atomic-popover with non-facet children', () => {
+      const parent = document.createElement('div');
+      const popover = document.createElement('atomic-popover');
+      const notFacet = document.createElement('div');
+
+      popover.appendChild(notFacet);
+      parent.appendChild(popover);
+
+      const result = getFacetsInChildren(parent);
+
+      expect(result).toHaveLength(0);
+    });
   });
 
   describe('#getAutomaticFacetGenerator', () => {
