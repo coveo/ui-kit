@@ -49,8 +49,6 @@ export class AtomicResultLink
   @property({reflect: true, attribute: 'href-template'})
   public hrefTemplate?: string;
 
-  @state() public bindings!: Bindings;
-  @state() public error!: Error;
   @state() private linkAttributes?: Attr[];
   @state() private stopPropagation?: boolean;
   @state() private result!: Result;
@@ -60,6 +58,9 @@ export class AtomicResultLink
   private resultContext = createResultContextController(this);
   private interactiveResultContext =
     createInteractiveResultContextController(this);
+
+  @state() public bindings!: Bindings;
+  @state() public error!: Error;
 
   public initialize() {
     if (!this.result && this.resultContext.item) {
