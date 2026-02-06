@@ -34,6 +34,10 @@ export default {
     await import(
       './atomic-insight-query-summary/atomic-insight-query-summary.js'
     ),
+  'atomic-insight-refine-modal': async () =>
+    await import(
+      './atomic-insight-refine-modal/atomic-insight-refine-modal.js'
+    ),
   'atomic-insight-refine-toggle': async () =>
     await import(
       './atomic-insight-refine-toggle/atomic-insight-refine-toggle.js'
@@ -44,14 +48,20 @@ export default {
     await import(
       './atomic-insight-result-children/atomic-insight-result-children.js'
     ),
-  'atomic-insight-result-list': async () =>
-    await import('./atomic-insight-result-list/atomic-insight-result-list.js'),
+  'atomic-insight-result-quickview-action': async () =>
+    await import(
+      './atomic-insight-result-quickview-action/atomic-insight-result-quickview-action.js'
+    ),
   'atomic-insight-result-template': async () =>
     await import(
       './atomic-insight-result-template/atomic-insight-result-template.js'
     ),
   'atomic-insight-search-box': async () =>
     await import('./atomic-insight-search-box/atomic-insight-search-box.js'),
+  'atomic-insight-smart-snippet': async () =>
+    await import(
+      './atomic-insight-smart-snippet/atomic-insight-smart-snippet.js'
+    ),
   'atomic-insight-smart-snippet-feedback-modal': async () =>
     await import(
       './atomic-insight-smart-snippet-feedback-modal/atomic-insight-smart-snippet-feedback-modal.js'
@@ -60,6 +70,10 @@ export default {
     await import('./atomic-insight-tab/atomic-insight-tab.js'),
   'atomic-insight-tabs': async () =>
     await import('./atomic-insight-tabs/atomic-insight-tabs.js'),
+  'atomic-insight-user-actions-modal': async () =>
+    await import(
+      './atomic-insight-user-actions-modal/atomic-insight-user-actions-modal.js'
+    ),
   'atomic-insight-user-actions-toggle': async () =>
     await import(
       './atomic-insight-user-actions-toggle/atomic-insight-user-actions-toggle.js'

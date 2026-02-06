@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicInsightRefineModalStories from './atomic-insight-refine-modal.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+
+<Meta of={AtomicInsightRefineModalStories} />
+
+<AtomicDocTemplate
+  stories={AtomicInsightRefineModalStories}
+  githubPath="insight/atomic-insight-refine-modal/atomic-insight-refine-modal.ts"
+  tagName="atomic-insight-refine-modal"
+  className="AtomicInsightRefineModal"
+>
+
+This component should not be used directly. It is internally used by the `atomic-insight-refine-toggle` component to display the refine modal.
+To use the refine modal, you should use the `atomic-insight-refine-toggle` component instead. It usually is placed within the "status" section of the layout.
+```html
+<atomic-insight-interface>
+  ...
+  <atomic-insight-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+      <atomic-layout-section section="status">
+
+            <atomic-insight-refine-toggle></atomic-insight-refine-toggle>
+
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-insight-layout>
+</atomic-insight-interface>
+```
+
+## Related Components
+
+- `atomic-insight-refine-toggle`: The toggle button that opens the refine modal
+- `atomic-insight-facet`: Individual facet components that can be placed in the refine modal
+- `atomic-breadbox`: Shows active filters and can be used alongside the refine modal
+
+</AtomicDocTemplate>
