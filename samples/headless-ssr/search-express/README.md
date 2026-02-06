@@ -9,6 +9,8 @@ This sample demonstrates server-side rendering (SSR) with Coveo Headless search 
 - Implement a simple search interface with plain HTML/CSS/JS
 - Handle search state on both server and client sides
 
+> **Note:** This sample uses the latest SSR approach (next version, not yet published). It represents the future recommended way of implementing server-side rendering with Coveo Headless, featuring improved patterns and best practices that will be officially released in next major Headless version.
+
 ## Prerequisites
 
 - Node.js 22+ (LTS v22.18.0)
