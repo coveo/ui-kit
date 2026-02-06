@@ -195,6 +195,178 @@ describe('atomic-generated-answer', () => {
     expect(container).not.toBeInTheDocument();
   });
 
+  describe('when cannotAnswer is true with custom no-answer message', () => {
+    const renderGeneratedAnswerWithCustomMessage = async ({
+      props = {},
+      generatedAnswerState = {},
+    }: {
+      props?: Partial<AtomicGeneratedAnswer>;
+      generatedAnswerState?: Partial<GeneratedAnswerState>;
+    } = {}) => {
+      mockedGeneratedAnswer = buildFakeGeneratedAnswer({
+        answer: undefined,
+        cannotAnswer: true,
+        citations: [],
+        isVisible: true,
+        ...generatedAnswerState,
+      });
+
+      mockedSearchStatus = buildFakeSearchStatus({
+        hasError: false,
+        firstSearchExecuted: true,
+        isLoading: false,
+        hasResults: true,
+      });
+
+      mockedTabManager = buildFakeTabManager({
+        activeTab: 'All',
+      });
+
+      vi.mocked(buildGeneratedAnswer).mockReturnValue(mockedGeneratedAnswer);
+      vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
+      vi.mocked(buildTabManager).mockReturnValue(mockedTabManager);
+
+      const {element} =
+        await renderInAtomicSearchInterface<AtomicGeneratedAnswer>({
+          template: html`<atomic-generated-answer
+            .withToggle=${props.withToggle ?? false}
+            .collapsible=${props.collapsible ?? false}
+            .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
+            .answerConfigurationId=${props.answerConfigurationId}
+            fields-to-include-in-citations=${props.fieldsToIncludeInCitations}
+            .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
+            .tabsIncluded=${props.tabsIncluded ?? []}
+            .tabsExcluded=${props.tabsExcluded ?? []}
+          >
+            <div slot="no-answer-message">Sorry, no answer available.</div>
+          </atomic-generated-answer>`,
+          selector: 'atomic-generated-answer',
+          bindings: (bindings) => {
+            bindings.engine = mockedEngine;
+            return bindings;
+          },
+        });
+
+      return {
+        element,
+        get container() {
+          return element.shadowRoot?.querySelector('[part="container"]')!;
+        },
+        get headerLabel() {
+          return element.shadowRoot?.querySelector('[part="header-label"]')!;
+        },
+        get toggle() {
+          return element.shadowRoot?.querySelector('[part="toggle"]')!;
+        },
+        get generatedContent() {
+          return element.shadowRoot?.querySelector(
+            '[part="generated-content"]'
+          )!;
+        },
+        get generatedContainer() {
+          return element.shadowRoot?.querySelector(
+            '[part="generated-container"]'
+          );
+        },
+        get article() {
+          return element.shadowRoot?.querySelector('article')!;
+        },
+        get customMessageSlot() {
+          return element.shadowRoot?.querySelector(
+            'slot[name="no-answer-message"]'
+          )!;
+        },
+      };
+    };
+
+    it('should render the container with custom no-answer message', async () => {
+      const {container} = await renderGeneratedAnswerWithCustomMessage();
+      expect(container).toBeInTheDocument();
+    });
+
+    it('should render the card header', async () => {
+      const {headerLabel} = await renderGeneratedAnswerWithCustomMessage();
+      expect(headerLabel).toBeInTheDocument();
+    });
+
+    it('should render the generated content container', async () => {
+      const {generatedContent} = await renderGeneratedAnswerWithCustomMessage();
+      expect(generatedContent).toBeInTheDocument();
+    });
+
+    it('should render the custom no-answer message slot when visible', async () => {
+      const {customMessageSlot, article} =
+        await renderGeneratedAnswerWithCustomMessage({
+          generatedAnswerState: {isVisible: true},
+        });
+      expect(article).toBeInTheDocument();
+      expect(customMessageSlot).toBeInTheDocument();
+    });
+
+    it('should not render the custom no-answer message when hidden', async () => {
+      const {article} = await renderGeneratedAnswerWithCustomMessage({
+        generatedAnswerState: {isVisible: false},
+      });
+      expect(article).not.toBeInTheDocument();
+    });
+
+    describe('with toggle functionality', () => {
+      it('should render the toggle button when withToggle is true', async () => {
+        const {toggle} = await renderGeneratedAnswerWithCustomMessage({
+          props: {withToggle: true},
+        });
+        expect(toggle).toBeInTheDocument();
+        expect(toggle).not.toHaveClass('hidden');
+      });
+
+      it('should show custom message when toggle is checked', async () => {
+        const {article, toggle} = await renderGeneratedAnswerWithCustomMessage({
+          props: {withToggle: true},
+          generatedAnswerState: {isVisible: true},
+        });
+        expect(toggle).toBeChecked();
+        expect(article).toBeInTheDocument();
+      });
+
+      it('should call show() when toggle is checked', async () => {
+        const {element, toggle} = await renderGeneratedAnswerWithCustomMessage({
+          props: {withToggle: true},
+          generatedAnswerState: {isVisible: false},
+        });
+
+        const showSpy = vi.spyOn(element.generatedAnswer, 'show');
+
+        await userEvent.click(toggle);
+        await element.updateComplete;
+
+        expect(showSpy).toHaveBeenCalled();
+      });
+
+      it('should call hide() when toggle is unchecked', async () => {
+        const {element, toggle} = await renderGeneratedAnswerWithCustomMessage({
+          props: {withToggle: true},
+          generatedAnswerState: {isVisible: true},
+        });
+
+        const hideSpy = vi.spyOn(element.generatedAnswer, 'hide');
+
+        await userEvent.click(toggle);
+        await element.updateComplete;
+
+        expect(hideSpy).toHaveBeenCalled();
+      });
+    });
+
+    it('should render the generated-container part with custom message slot', async () => {
+      const {generatedContainer, customMessageSlot} =
+        await renderGeneratedAnswerWithCustomMessage();
+      expect(generatedContainer).toBeInTheDocument();
+      expect(generatedContainer).toContainElement(
+        customMessageSlot as HTMLElement
+      );
+    });
+  });
+
   describe('when withToggle is true', () => {
     it('should render the toggle button', async () => {
       const {toggle} = await renderGeneratedAnswer({
