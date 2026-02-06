@@ -12,8 +12,6 @@ import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insi
 import { DateFilterRange, DateRangeRequest, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { RangeFacetSortCriterion as InsightRangeFacetSortCriterion, UserAction as IUserAction } from "@coveo/headless/insight";
 import { AnyBindings } from "./components/common/interface/bindings";
-import { i18n } from "i18next";
-import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
@@ -21,8 +19,6 @@ export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insi
 export { DateFilterRange, DateRangeRequest, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { RangeFacetSortCriterion as InsightRangeFacetSortCriterion, UserAction as IUserAction } from "@coveo/headless/insight";
 export { AnyBindings } from "./components/common/interface/bindings";
-export { i18n } from "i18next";
-export { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
 export namespace Components {
     interface AtomicInsightFoldedResultList {
         /**
@@ -378,24 +374,6 @@ export namespace Components {
         "rangeGetter": () => DateFilterRange | undefined;
         "rangeSetter": (range: DateRangeRequest) => void;
     }
-    /**
-     * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
-     * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
-     * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
-     * use native Elements.
-     */
-    interface AtomicSuggestionRenderer {
-        "i18n": i18n;
-        "id": string;
-        "index": number;
-        "isDoubleList": boolean;
-        "isSelected": boolean;
-        "lastIndex": number;
-        "onClick"?: (e: Event) => void;
-        "onMouseEnter"?: (e: Event) => void;
-        "side": 'left' | 'right';
-        "suggestion": SearchBoxSuggestionElement;
-    }
 }
 export interface AtomicInsightResultActionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -598,18 +576,6 @@ declare global {
         prototype: HTMLAtomicStencilFacetDateInputElement;
         new (): HTMLAtomicStencilFacetDateInputElement;
     };
-    /**
-     * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
-     * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
-     * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
-     * use native Elements.
-     */
-    interface HTMLAtomicSuggestionRendererElement extends Components.AtomicSuggestionRenderer, HTMLStencilElement {
-    }
-    var HTMLAtomicSuggestionRendererElement: {
-        prototype: HTMLAtomicSuggestionRendererElement;
-        new (): HTMLAtomicSuggestionRendererElement;
-    };
     interface HTMLElementTagNameMap {
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
@@ -630,7 +596,6 @@ declare global {
         "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
-        "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
     }
 }
 declare namespace LocalJSX {
@@ -970,24 +935,6 @@ declare namespace LocalJSX {
         "rangeGetter": () => DateFilterRange | undefined;
         "rangeSetter": (range: DateRangeRequest) => void;
     }
-    /**
-     * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
-     * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
-     * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
-     * use native Elements.
-     */
-    interface AtomicSuggestionRenderer {
-        "i18n": i18n;
-        "id": string;
-        "index": number;
-        "isDoubleList": boolean;
-        "isSelected": boolean;
-        "lastIndex": number;
-        "onClick"?: (e: Event) => void;
-        "onMouseEnter"?: (e: Event) => void;
-        "side": 'left' | 'right';
-        "suggestion": SearchBoxSuggestionElement;
-    }
     interface IntrinsicElements {
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
@@ -1008,7 +955,6 @@ declare namespace LocalJSX {
         "atomic-ipx-result-link": AtomicIpxResultLink;
         "atomic-recs-list": AtomicRecsList;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
-        "atomic-suggestion-renderer": AtomicSuggestionRenderer;
     }
 }
 export { LocalJSX as JSX };
@@ -1059,13 +1005,6 @@ declare module "@stencil/core" {
              * Internal component made to be integrated in a TimeframeFacet.
              */
             "atomic-stencil-facet-date-input": LocalJSX.AtomicStencilFacetDateInput & JSXBase.HTMLAttributes<HTMLAtomicStencilFacetDateInputElement>;
-            /**
-             * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
-             * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
-             * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
-             * use native Elements.
-             */
-            "atomic-suggestion-renderer": LocalJSX.AtomicSuggestionRenderer & JSXBase.HTMLAttributes<HTMLAtomicSuggestionRendererElement>;
         }
     }
 }
