@@ -1,0 +1,63 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicRecsListStories from './atomic-recs-list.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicRecsListStories} />
+
+<AtomicDocTemplate
+  stories={AtomicRecsListStories}
+  githubPath="recommendations/atomic-recs-list/atomic-recs-list.ts"
+  tagName="atomic-recs-list"
+  className="AtomicRecsList"
+>
+
+The `atomic-recs-list` component displays recommendations by applying one or more result templates.
+
+```html
+<atomic-recs-interface>
+  <atomic-recs-list label="Recommended for you">
+    <atomic-recs-result-template>
+      <template>
+        <atomic-result-section-title>
+          <atomic-result-link></atomic-result-link>
+        </atomic-result-section-title>
+        <atomic-result-section-excerpt>
+          <atomic-result-text field="excerpt"></atomic-result-text>
+        </atomic-result-section-excerpt>
+      </template>
+    </atomic-recs-result-template>
+  </atomic-recs-list>
+</atomic-recs-interface>
+```
+
+## Carousel Mode
+
+Setting `number-of-recommendations-per-page` to a value greater than 0 and less than `number-of-recommendations` enables carousel mode, which allows users to navigate through pages of recommendations.
+
+```html
+<atomic-recs-list
+  number-of-recommendations="10"
+  number-of-recommendations-per-page="4"
+  label="Recommended for you"
+>
+  ...
+</atomic-recs-list>
+```
+
+## Customizing the Layout
+
+To modify the number of recommendations per row, use the `--atomic-recs-number-of-columns` CSS variable:
+
+```css
+atomic-recs-list {
+  --atomic-recs-number-of-columns: 3;
+}
+```
+
+## Related Components
+
+- `atomic-recs-interface`: The parent interface component required for recommendation functionality
+- `atomic-recs-result-template`: Defines the template for rendering individual recommendations
+- `atomic-recs-error`: Displays error messages when recommendations fail to load
+
+</AtomicDocTemplate>

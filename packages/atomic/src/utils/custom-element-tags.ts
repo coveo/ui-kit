@@ -130,6 +130,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-rating-range-facet',
   'atomic-recs-error',
   'atomic-recs-interface',
+  'atomic-recs-list',
   'atomic-recs-result',
   'atomic-recs-result-template',
   'atomic-refine-modal',
