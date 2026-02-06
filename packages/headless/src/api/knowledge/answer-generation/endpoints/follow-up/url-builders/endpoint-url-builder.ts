@@ -7,17 +7,17 @@ import type {AnswerGenerationApiState} from '../../../answer-generation-api-stat
 export const buildFollowUpEndpointUrl = (
   state: AnswerGenerationApiState
 ): string => {
-  const {configuration, generatedAnswer} = state;
-  const {organizationId, environment} = configuration;
+  const {configuration} = state;
+  const {
+    organizationId,
+    environment,
+    knowledge: {agentId},
+  } = configuration;
   const platformEndpoint = getOrganizationEndpoint(organizationId, environment);
 
-  if (
-    !platformEndpoint ||
-    !organizationId ||
-    !generatedAnswer.answerConfigurationId
-  ) {
+  if (!platformEndpoint || !organizationId || !agentId) {
     throw new Error('Missing required parameters for follow up endpoint');
   }
-  const basePath = `/rest/organizations/${organizationId}/answer/v1/configs`;
-  return `${platformEndpoint}${basePath}/${generatedAnswer.answerConfigurationId}/generate`;
+  const basePath = `/api/preview/organizations/${organizationId}/agents`;
+  return `${platformEndpoint}${basePath}/${agentId}/followup`;
 };
