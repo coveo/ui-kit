@@ -58,12 +58,12 @@
     "isomorphic-fetch": "3.0.0",
     "minimist": "1.2.8",
     "node-plop": "^0.32.0",
-    "plop": "4.0.1",
-    "yaml": "2.8.0"
+    "plop": "4.0.1"
   },
   "devDependencies": {
     "@types/node": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "yaml": "2.8.0"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0 || ^24.11.0"
