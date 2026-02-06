@@ -4,6 +4,10 @@ export default {
     await import('./atomic-insight-edit-toggle/atomic-insight-edit-toggle.js'),
   'atomic-insight-facet': async () =>
     await import('./atomic-insight-facet/atomic-insight-facet.js'),
+  'atomic-insight-folded-result-list': async () =>
+    await import(
+      './atomic-insight-folded-result-list/atomic-insight-folded-result-list.js'
+    ),
   'atomic-insight-full-search-button': async () =>
     await import(
       './atomic-insight-full-search-button/atomic-insight-full-search-button.js'
