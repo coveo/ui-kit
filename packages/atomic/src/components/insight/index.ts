@@ -14,10 +14,15 @@ export {AtomicInsightQuerySummary} from './atomic-insight-query-summary/atomic-i
 export {AtomicInsightRefineModal} from './atomic-insight-refine-modal/atomic-insight-refine-modal.js';
 export {AtomicInsightRefineToggle} from './atomic-insight-refine-toggle/atomic-insight-refine-toggle.js';
 export {AtomicInsightResult} from './atomic-insight-result/atomic-insight-result.js';
+export {AtomicInsightResultActionBar} from './atomic-insight-result-action-bar/atomic-insight-result-action-bar.js';
 export {AtomicInsightResultChildren} from './atomic-insight-result-children/atomic-insight-result-children.js';
+export {AtomicInsightResultList} from './atomic-insight-result-list/atomic-insight-result-list.js';
+export {AtomicInsightResultQuickviewAction} from './atomic-insight-result-quickview-action/atomic-insight-result-quickview-action.js';
 export {AtomicInsightResultTemplate} from './atomic-insight-result-template/atomic-insight-result-template.js';
 export {AtomicInsightSearchBox} from './atomic-insight-search-box/atomic-insight-search-box.js';
+export {AtomicInsightSmartSnippet} from './atomic-insight-smart-snippet/atomic-insight-smart-snippet.js';
 export {AtomicInsightSmartSnippetFeedbackModal} from './atomic-insight-smart-snippet-feedback-modal/atomic-insight-smart-snippet-feedback-modal.js';
 export {AtomicInsightTab} from './atomic-insight-tab/atomic-insight-tab.js';
 export {AtomicInsightTabs} from './atomic-insight-tabs/atomic-insight-tabs.js';
+export {AtomicInsightUserActionsModal} from './atomic-insight-user-actions-modal/atomic-insight-user-actions-modal.js';
 export {AtomicInsightUserActionsToggle} from './atomic-insight-user-actions-toggle/atomic-insight-user-actions-toggle.js';

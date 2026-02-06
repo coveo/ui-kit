@@ -87,6 +87,9 @@
       "ignore": ["**/*"],
       "ignoreDependencies": ["cypress-repeat"]
     },
+    "packages/atomic-legacy": {
+      "ignore": ["**/*"]
+    },
     "packages/create-atomic": {
       "ignore": ["**/*"]
     },
