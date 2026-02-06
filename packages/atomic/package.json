@@ -47,6 +47,7 @@
     "./dist/atomic/loader/index.js"
   ],
   "files": [
+    "custom-elements.json",
     "dist/",
     "docs/",
     "licenses/"
