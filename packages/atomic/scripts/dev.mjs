@@ -14,7 +14,9 @@ function tryBind(port, host) {
   return new Promise((resolve) => {
     const server = createServer();
     server.once('error', () => {
-      resolve(false);
+      server.close(() => {
+        resolve(false);
+      });
     });
     server.once('listening', () => {
       server.close(() => {
@@ -88,7 +90,10 @@ const DEFAULT_STORYBOOK_PORT = 4400;
  * Actual ports being used (may differ from defaults if ports were busy).
  * @type {{vite: number, storybook: number}}
  */
-let activePorts = {vite: DEFAULT_VITE_PORT, storybook: DEFAULT_STORYBOOK_PORT};
+const activePorts = {
+  vite: DEFAULT_VITE_PORT,
+  storybook: DEFAULT_STORYBOOK_PORT,
+};
 
 function createSpinner(text) {
   const frames = ['⚽  🐕  ', ' ⚽ 🐕  ', '  ⚽🐕  ', ' ⚽🐕   ', '⚽ 🐕   '];
@@ -250,7 +255,9 @@ async function startServers() {
   console.log(
     colors.cyan(`   Storybook: http://localhost:${activePorts.storybook}`)
   );
-  console.log(colors.cyan(`   Vite:      http://localhost:${activePorts.vite}`));
+  console.log(
+    colors.cyan(`   Vite:      http://localhost:${activePorts.vite}`)
+  );
 }
 
 // Get the stencil flag

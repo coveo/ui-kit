@@ -1,6 +1,10 @@
 import {expect, test} from '@playwright/test';
 
-const baseUrl = 'http://localhost:3333';
+const DEFAULT_VITE_PORT = 3333;
+const vitePort = process.env.VITE_PORT
+  ? parseInt(process.env.VITE_PORT, 10)
+  : DEFAULT_VITE_PORT;
+const baseUrl = `http://localhost:${vitePort}`;
 
 const urls = [
   '/',
@@ -85,7 +89,7 @@ test.describe('style encapsulation', () => {
 
 test.describe('theme customization', () => {
   test.beforeEach(async ({page}) => {
-    await page.goto('http://localhost:3333/themingTests.html#q=connect');
+    await page.goto(`${baseUrl}/themingTests.html#q=connect`);
     const resultTitle = page
       .locator('atomic-result')
       .first()
