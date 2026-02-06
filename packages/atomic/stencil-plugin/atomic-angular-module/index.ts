@@ -14,7 +14,7 @@ const dashToPascalCase = (str: string) =>
 const imports = `/* tslint:disable */
 /* auto-generated angular module */
 import {CommonModule} from '@angular/common';
-import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular/core';
+import {ModuleWithProviders, NgModule, Provider} from '@angular/core';
 `;
 
 const componentImports = (components: string[]) => `
@@ -29,41 +29,10 @@ ${components.join(',\n')}
 ]
 `;
 
-const shimTemplatesPrototype = `
-const shimTemplates = ()=> {
-  // Angular's renderer will add children to a <template> instead of to its
-  // content. This shim will force any children added to a <template> to be
-  // added to its content instead.
-  // https://github.com/angular/angular/issues/15557
-  const nativeAppend = HTMLTemplateElement && HTMLTemplateElement.prototype && HTMLTemplateElement.prototype.appendChild;
-  if(!nativeAppend) {
-    return;
-  }
-  HTMLTemplateElement.prototype.appendChild = function<T extends Node>(
-    childNode: T
-  ) {
-    if (this.content) {
-      return this.content.appendChild(childNode);
-    } else {
-      return <T>nativeAppend.apply(this, [childNode]);
-    }
-  };
-}
-`;
-
-const provider = `
-const SHIM_TEMPLATES_PROVIDER: Provider = {
-  provide: APP_INITIALIZER,
-  multi: true,
-  useValue: shimTemplates
-}
-`;
-
 const atomicAngularModule = `
 @NgModule({
   declarations: DECLARATIONS,
   exports: DECLARATIONS,
-  providers: [SHIM_TEMPLATES_PROVIDER],
   imports: [CommonModule],
 })
 export class AtomicAngularModule {
@@ -96,8 +65,6 @@ export function generateAngularModuleDefinition(options: {
         `${imports}
         ${componentImports(componentClassNames)}
         ${declarations(componentClassNames)}
-        ${shimTemplatesPrototype}
-        ${provider}
         ${atomicAngularModule}
         `
       );
