@@ -12,6 +12,10 @@ export default {
     await import(
       './atomic-insight-generate-answer-button/atomic-insight-generate-answer-button.js'
     ),
+  'atomic-insight-generated-answer': async () =>
+    await import(
+      './atomic-insight-generated-answer/atomic-insight-generated-answer.js'
+    ),
   'atomic-insight-history-toggle': async () =>
     await import(
       './atomic-insight-history-toggle/atomic-insight-history-toggle.js'

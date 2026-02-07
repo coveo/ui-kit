@@ -49,32 +49,6 @@ export namespace Components {
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
-    interface AtomicInsightGeneratedAnswer {
-        "answerConfigurationId"?: string;
-        /**
-          * Whether to allow the answer to be collapsed when the text is taller than 250px.
-          * @default false
-         */
-        "collapsible"?: boolean;
-        /**
-          * Option to disable citation anchoring.
-          * @default false
-         */
-        "disableCitationAnchoring"?: boolean;
-        /**
-          * A list of fields to include with the citations used to generate the answer.
-         */
-        "fieldsToIncludeInCitations"?: string;
-        /**
-          * The maximum height (in rem units) of the answer when collapsed.
-         */
-        "maxCollapsedHeight": number;
-        /**
-          * Whether to render a toggle button that lets the user hide or show the answer.
-          * @default false
-         */
-        "withToggle"?: boolean;
-    }
     interface AtomicInsightResultAction {
         /**
           * The type of action to perform when the result action is clicked. This will be sent along the event fired when the button is clicked.
@@ -379,12 +353,6 @@ declare global {
         prototype: HTMLAtomicInsightFoldedResultListElement;
         new (): HTMLAtomicInsightFoldedResultListElement;
     };
-    interface HTMLAtomicInsightGeneratedAnswerElement extends Components.AtomicInsightGeneratedAnswer, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightGeneratedAnswerElement: {
-        prototype: HTMLAtomicInsightGeneratedAnswerElement;
-        new (): HTMLAtomicInsightGeneratedAnswerElement;
-    };
     interface HTMLAtomicInsightResultActionElementEventMap {
         "atomicInsightResultActionClicked": InsightResultActionClickedEvent;
     }
@@ -541,7 +509,6 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
-        "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
         "atomic-insight-result-attach-to-case-action": HTMLAtomicInsightResultAttachToCaseActionElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
@@ -583,32 +550,6 @@ declare namespace LocalJSX {
           * @defaultValue `foldingparent`
          */
         "parentField"?: string;
-    }
-    interface AtomicInsightGeneratedAnswer {
-        "answerConfigurationId"?: string;
-        /**
-          * Whether to allow the answer to be collapsed when the text is taller than 250px.
-          * @default false
-         */
-        "collapsible"?: boolean;
-        /**
-          * Option to disable citation anchoring.
-          * @default false
-         */
-        "disableCitationAnchoring"?: boolean;
-        /**
-          * A list of fields to include with the citations used to generate the answer.
-         */
-        "fieldsToIncludeInCitations"?: string;
-        /**
-          * The maximum height (in rem units) of the answer when collapsed.
-         */
-        "maxCollapsedHeight"?: number;
-        /**
-          * Whether to render a toggle button that lets the user hide or show the answer.
-          * @default false
-         */
-        "withToggle"?: boolean;
     }
     interface AtomicInsightResultAction {
         /**
@@ -883,7 +824,6 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
-        "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
         "atomic-insight-result-action": AtomicInsightResultAction;
         "atomic-insight-result-attach-to-case-action": AtomicInsightResultAttachToCaseAction;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
@@ -905,7 +845,6 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
-            "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
             "atomic-insight-result-attach-to-case-action": LocalJSX.AtomicInsightResultAttachToCaseAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseActionElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
