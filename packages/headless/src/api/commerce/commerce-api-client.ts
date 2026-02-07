@@ -33,6 +33,11 @@ import {
 } from './recommendations/recommendations-request.js';
 import type {RecommendationsCommerceSuccessResponse} from './recommendations/recommendations-response.js';
 import {
+  type CommercePlanRequest,
+  getPlanRequestOptions,
+} from './search/plan/plan-request.js';
+import type {CommercePlanSuccessResponse} from './search/plan/plan-response.js';
+import {
   getQuerySuggestRequestOptions,
   type QuerySuggestRequest,
 } from './search/query-suggest/query-suggest-request.js';
@@ -171,13 +176,11 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
     });
   }
 
-  // eslint-disable-next-line @cspell/spellchecker
-  // TODO: CAPI-867 - Use Commerce API's equivalent of the /plan endpoint when it becomes available.
   async plan(
-    req: CommerceSearchRequest
-  ): Promise<CommerceAPIResponse<CommerceSuccessResponse>> {
-    const requestOptions = getRequestOptions(req, 'search');
-    return this.query({
+    req: CommercePlanRequest
+  ): Promise<CommerceAPIResponse<CommercePlanSuccessResponse>> {
+    const requestOptions = getPlanRequestOptions(req);
+    return this.query<CommercePlanSuccessResponse>({
       ...requestOptions,
       requestParams: {
         ...requestOptions.requestParams,
