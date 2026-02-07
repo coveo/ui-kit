@@ -89,517 +89,519 @@ import {
 import {createComponent} from '@lit/react';
 import React from 'react';
 
-export const AtomicAriaLive = createComponent({
+export const AtomicAriaLive = /*@__PURE__*/ createComponent({
   tagName: 'atomic-aria-live',
   react: React,
   elementClass: LitAtomicAriaLive,
 });
 
-export const AtomicAutomaticFacet = createComponent({
+export const AtomicAutomaticFacet = /*@__PURE__*/ createComponent({
   tagName: 'atomic-automatic-facet',
   react: React,
   elementClass: LitAtomicAutomaticFacet,
 });
 
-export const AtomicAutomaticFacetGenerator = createComponent({
+export const AtomicAutomaticFacetGenerator = /*@__PURE__*/ createComponent({
   tagName: 'atomic-automatic-facet-generator',
   react: React,
   elementClass: LitAtomicAutomaticFacetGenerator,
 });
 
-export const AtomicBreadbox = createComponent({
+export const AtomicBreadbox = /*@__PURE__*/ createComponent({
   tagName: 'atomic-breadbox',
   react: React,
   elementClass: LitAtomicBreadbox,
 });
 
-export const AtomicCategoryFacet = createComponent({
+export const AtomicCategoryFacet = /*@__PURE__*/ createComponent({
   tagName: 'atomic-category-facet',
   react: React,
   elementClass: LitAtomicCategoryFacet,
 });
 
-export const AtomicColorFacet = createComponent({
+export const AtomicColorFacet = /*@__PURE__*/ createComponent({
   tagName: 'atomic-color-facet',
   react: React,
   elementClass: LitAtomicColorFacet,
 });
 
-export const AtomicComponentError = createComponent({
+export const AtomicComponentError = /*@__PURE__*/ createComponent({
   tagName: 'atomic-component-error',
   react: React,
   elementClass: LitAtomicComponentError,
 });
 
-export const AtomicDidYouMean = createComponent({
+export const AtomicDidYouMean = /*@__PURE__*/ createComponent({
   tagName: 'atomic-did-you-mean',
   react: React,
   elementClass: LitAtomicDidYouMean,
 });
 
-export const AtomicExternal = createComponent({
+export const AtomicExternal = /*@__PURE__*/ createComponent({
   tagName: 'atomic-external',
   react: React,
   elementClass: LitAtomicExternal,
 });
 
-export const AtomicFacet = createComponent({
+export const AtomicFacet = /*@__PURE__*/ createComponent({
   tagName: 'atomic-facet',
   react: React,
   elementClass: LitAtomicFacet,
 });
 
-export const AtomicFacetManager = createComponent({
+export const AtomicFacetManager = /*@__PURE__*/ createComponent({
   tagName: 'atomic-facet-manager',
   react: React,
   elementClass: LitAtomicFacetManager,
 });
 
-export const AtomicFocusTrap = createComponent({
+export const AtomicFocusTrap = /*@__PURE__*/ createComponent({
   tagName: 'atomic-focus-trap',
   react: React,
   elementClass: LitAtomicFocusTrap,
 });
 
-export const AtomicFoldedResultList = createComponent({
+export const AtomicFoldedResultList = /*@__PURE__*/ createComponent({
   tagName: 'atomic-folded-result-list',
   react: React,
   elementClass: LitAtomicFoldedResultList,
 });
 
-export const AtomicFormatCurrency = createComponent({
+export const AtomicFormatCurrency = /*@__PURE__*/ createComponent({
   tagName: 'atomic-format-currency',
   react: React,
   elementClass: LitAtomicFormatCurrency,
 });
 
-export const AtomicFormatNumber = createComponent({
+export const AtomicFormatNumber = /*@__PURE__*/ createComponent({
   tagName: 'atomic-format-number',
   react: React,
   elementClass: LitAtomicFormatNumber,
 });
 
-export const AtomicFormatUnit = createComponent({
+export const AtomicFormatUnit = /*@__PURE__*/ createComponent({
   tagName: 'atomic-format-unit',
   react: React,
   elementClass: LitAtomicFormatUnit,
 });
 
-export const AtomicGeneratedAnswer = createComponent({
+export const AtomicGeneratedAnswer = /*@__PURE__*/ createComponent({
   tagName: 'atomic-generated-answer',
   react: React,
   elementClass: LitAtomicGeneratedAnswer,
 });
 
-export const AtomicGeneratedAnswerFeedbackModal = createComponent({
-  tagName: 'atomic-generated-answer-feedback-modal',
-  react: React,
-  elementClass: LitAtomicGeneratedAnswerFeedbackModal,
-});
+export const AtomicGeneratedAnswerFeedbackModal = /*@__PURE__*/ createComponent(
+  {
+    tagName: 'atomic-generated-answer-feedback-modal',
+    react: React,
+    elementClass: LitAtomicGeneratedAnswerFeedbackModal,
+  }
+);
 
-export const AtomicHtml = createComponent({
+export const AtomicHtml = /*@__PURE__*/ createComponent({
   tagName: 'atomic-html',
   react: React,
   elementClass: LitAtomicHtml,
 });
 
-export const AtomicIcon = createComponent({
+export const AtomicIcon = /*@__PURE__*/ createComponent({
   tagName: 'atomic-icon',
   react: React,
   elementClass: LitAtomicIcon,
 });
 
-export const AtomicLayoutSection = createComponent({
+export const AtomicLayoutSection = /*@__PURE__*/ createComponent({
   tagName: 'atomic-layout-section',
   react: React,
   elementClass: LitAtomicLayoutSection,
 });
 
-export const AtomicLoadMoreResults = createComponent({
+export const AtomicLoadMoreResults = /*@__PURE__*/ createComponent({
   tagName: 'atomic-load-more-results',
   react: React,
   elementClass: LitAtomicLoadMoreResults,
 });
 
-export const AtomicNoResults = createComponent({
+export const AtomicNoResults = /*@__PURE__*/ createComponent({
   tagName: 'atomic-no-results',
   react: React,
   elementClass: LitAtomicNoResults,
 });
 
-export const AtomicNotifications = createComponent({
+export const AtomicNotifications = /*@__PURE__*/ createComponent({
   tagName: 'atomic-notifications',
   react: React,
   elementClass: LitAtomicNotifications,
 });
 
-export const AtomicNumericFacet = createComponent({
+export const AtomicNumericFacet = /*@__PURE__*/ createComponent({
   tagName: 'atomic-numeric-facet',
   react: React,
   elementClass: LitAtomicNumericFacet,
 });
 
-export const AtomicNumericRange = createComponent({
+export const AtomicNumericRange = /*@__PURE__*/ createComponent({
   tagName: 'atomic-numeric-range',
   react: React,
   elementClass: LitAtomicNumericRange,
 });
 
-export const AtomicPager = createComponent({
+export const AtomicPager = /*@__PURE__*/ createComponent({
   tagName: 'atomic-pager',
   react: React,
   elementClass: LitAtomicPager,
 });
 
-export const AtomicPopover = createComponent({
+export const AtomicPopover = /*@__PURE__*/ createComponent({
   tagName: 'atomic-popover',
   react: React,
   elementClass: LitAtomicPopover,
 });
 
-export const AtomicQueryError = createComponent({
+export const AtomicQueryError = /*@__PURE__*/ createComponent({
   tagName: 'atomic-query-error',
   react: React,
   elementClass: LitAtomicQueryError,
 });
 
-export const AtomicQuerySummary = createComponent({
+export const AtomicQuerySummary = /*@__PURE__*/ createComponent({
   tagName: 'atomic-query-summary',
   react: React,
   elementClass: LitAtomicQuerySummary,
 });
 
-export const AtomicQuickview = createComponent({
+export const AtomicQuickview = /*@__PURE__*/ createComponent({
   tagName: 'atomic-quickview',
   react: React,
   elementClass: LitAtomicQuickview,
 });
 
-export const AtomicQuickviewModal = createComponent({
+export const AtomicQuickviewModal = /*@__PURE__*/ createComponent({
   tagName: 'atomic-quickview-modal',
   react: React,
   elementClass: LitAtomicQuickviewModal,
 });
 
-export const AtomicRatingFacet = createComponent({
+export const AtomicRatingFacet = /*@__PURE__*/ createComponent({
   tagName: 'atomic-rating-facet',
   react: React,
   elementClass: LitAtomicRatingFacet,
 });
 
-export const AtomicRatingRangeFacet = createComponent({
+export const AtomicRatingRangeFacet = /*@__PURE__*/ createComponent({
   tagName: 'atomic-rating-range-facet',
   react: React,
   elementClass: LitAtomicRatingRangeFacet,
 });
 
-export const AtomicRecsError = createComponent({
+export const AtomicRecsError = /*@__PURE__*/ createComponent({
   tagName: 'atomic-recs-error',
   react: React,
   elementClass: LitAtomicRecsError,
 });
 
-export const AtomicRecsInterface = createComponent({
+export const AtomicRecsInterface = /*@__PURE__*/ createComponent({
   tagName: 'atomic-recs-interface',
   react: React,
   elementClass: LitAtomicRecsInterface,
 });
 
-export const AtomicRecsResult = createComponent({
+export const AtomicRecsResult = /*@__PURE__*/ createComponent({
   tagName: 'atomic-recs-result',
   react: React,
   elementClass: LitAtomicRecsResult,
 });
 
-export const AtomicRefineModal = createComponent({
+export const AtomicRefineModal = /*@__PURE__*/ createComponent({
   tagName: 'atomic-refine-modal',
   react: React,
   elementClass: LitAtomicRefineModal,
 });
 
-export const AtomicRefineToggle = createComponent({
+export const AtomicRefineToggle = /*@__PURE__*/ createComponent({
   tagName: 'atomic-refine-toggle',
   react: React,
   elementClass: LitAtomicRefineToggle,
 });
 
-export const AtomicResult = createComponent({
+export const AtomicResult = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result',
   react: React,
   elementClass: LitAtomicResult,
 });
 
-export const AtomicResultBadge = createComponent({
+export const AtomicResultBadge = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-badge',
   react: React,
   elementClass: LitAtomicResultBadge,
 });
 
-export const AtomicResultChildren = createComponent({
+export const AtomicResultChildren = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-children',
   react: React,
   elementClass: LitAtomicResultChildren,
 });
 
-export const AtomicResultChildrenTemplate = createComponent({
+export const AtomicResultChildrenTemplate = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-children-template',
   react: React,
   elementClass: LitAtomicResultChildrenTemplate,
 });
 
-export const AtomicResultDate = createComponent({
+export const AtomicResultDate = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-date',
   react: React,
   elementClass: LitAtomicResultDate,
 });
 
-export const AtomicResultFieldsList = createComponent({
+export const AtomicResultFieldsList = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-fields-list',
   react: React,
   elementClass: LitAtomicResultFieldsList,
 });
 
-export const AtomicResultHtml = createComponent({
+export const AtomicResultHtml = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-html',
   react: React,
   elementClass: LitAtomicResultHtml,
 });
 
-export const AtomicResultIcon = createComponent({
+export const AtomicResultIcon = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-icon',
   react: React,
   elementClass: LitAtomicResultIcon,
 });
 
-export const AtomicResultImage = createComponent({
+export const AtomicResultImage = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-image',
   react: React,
   elementClass: LitAtomicResultImage,
 });
 
-export const AtomicResultLink = createComponent({
+export const AtomicResultLink = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-link',
   react: React,
   elementClass: LitAtomicResultLink,
 });
 
-export const AtomicResultList = createComponent({
+export const AtomicResultList = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-list',
   react: React,
   elementClass: LitAtomicResultList,
 });
 
-export const AtomicResultLocalizedText = createComponent({
+export const AtomicResultLocalizedText = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-localized-text',
   react: React,
   elementClass: LitAtomicResultLocalizedText,
 });
 
-export const AtomicResultMultiValueText = createComponent({
+export const AtomicResultMultiValueText = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-multi-value-text',
   react: React,
   elementClass: LitAtomicResultMultiValueText,
 });
 
-export const AtomicResultNumber = createComponent({
+export const AtomicResultNumber = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-number',
   react: React,
   elementClass: LitAtomicResultNumber,
 });
 
-export const AtomicResultPrintableUri = createComponent({
+export const AtomicResultPrintableUri = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-printable-uri',
   react: React,
   elementClass: LitAtomicResultPrintableUri,
 });
 
-export const AtomicResultRating = createComponent({
+export const AtomicResultRating = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-rating',
   react: React,
   elementClass: LitAtomicResultRating,
 });
 
-export const AtomicResultSectionActions = createComponent({
+export const AtomicResultSectionActions = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-section-actions',
   react: React,
   elementClass: LitAtomicResultSectionActions,
 });
 
-export const AtomicResultSectionBadges = createComponent({
+export const AtomicResultSectionBadges = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-section-badges',
   react: React,
   elementClass: LitAtomicResultSectionBadges,
 });
 
-export const AtomicResultSectionBottomMetadata = createComponent({
+export const AtomicResultSectionBottomMetadata = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-section-bottom-metadata',
   react: React,
   elementClass: LitAtomicResultSectionBottomMetadata,
 });
 
-export const AtomicResultSectionChildren = createComponent({
+export const AtomicResultSectionChildren = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-section-children',
   react: React,
   elementClass: LitAtomicResultSectionChildren,
 });
 
-export const AtomicResultSectionEmphasized = createComponent({
+export const AtomicResultSectionEmphasized = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-section-emphasized',
   react: React,
   elementClass: LitAtomicResultSectionEmphasized,
 });
 
-export const AtomicResultSectionExcerpt = createComponent({
+export const AtomicResultSectionExcerpt = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-section-excerpt',
   react: React,
   elementClass: LitAtomicResultSectionExcerpt,
 });
 
-export const AtomicResultSectionTitle = createComponent({
+export const AtomicResultSectionTitle = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-section-title',
   react: React,
   elementClass: LitAtomicResultSectionTitle,
 });
 
-export const AtomicResultSectionTitleMetadata = createComponent({
+export const AtomicResultSectionTitleMetadata = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-section-title-metadata',
   react: React,
   elementClass: LitAtomicResultSectionTitleMetadata,
 });
 
-export const AtomicResultSectionVisual = createComponent({
+export const AtomicResultSectionVisual = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-section-visual',
   react: React,
   elementClass: LitAtomicResultSectionVisual,
 });
 
-export const AtomicResultsPerPage = createComponent({
+export const AtomicResultsPerPage = /*@__PURE__*/ createComponent({
   tagName: 'atomic-results-per-page',
   react: React,
   elementClass: LitAtomicResultsPerPage,
 });
 
-export const AtomicResultText = createComponent({
+export const AtomicResultText = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-text',
   react: React,
   elementClass: LitAtomicResultText,
 });
 
-export const AtomicResultTimespan = createComponent({
+export const AtomicResultTimespan = /*@__PURE__*/ createComponent({
   tagName: 'atomic-result-timespan',
   react: React,
   elementClass: LitAtomicResultTimespan,
 });
 
-export const AtomicSearchBox = createComponent({
+export const AtomicSearchBox = /*@__PURE__*/ createComponent({
   tagName: 'atomic-search-box',
   react: React,
   elementClass: LitAtomicSearchBox,
 });
 
-export const AtomicSearchBoxInstantResults = createComponent({
+export const AtomicSearchBoxInstantResults = /*@__PURE__*/ createComponent({
   tagName: 'atomic-search-box-instant-results',
   react: React,
   elementClass: LitAtomicSearchBoxInstantResults,
 });
 
-export const AtomicSearchBoxQuerySuggestions = createComponent({
+export const AtomicSearchBoxQuerySuggestions = /*@__PURE__*/ createComponent({
   tagName: 'atomic-search-box-query-suggestions',
   react: React,
   elementClass: LitAtomicSearchBoxQuerySuggestions,
 });
 
-export const AtomicSearchBoxRecentQueries = createComponent({
+export const AtomicSearchBoxRecentQueries = /*@__PURE__*/ createComponent({
   tagName: 'atomic-search-box-recent-queries',
   react: React,
   elementClass: LitAtomicSearchBoxRecentQueries,
 });
 
-export const AtomicSearchInterface = createComponent({
+export const AtomicSearchInterface = /*@__PURE__*/ createComponent({
   tagName: 'atomic-search-interface',
   react: React,
   elementClass: LitAtomicSearchInterface,
 });
 
-export const AtomicSearchLayout = createComponent({
+export const AtomicSearchLayout = /*@__PURE__*/ createComponent({
   tagName: 'atomic-search-layout',
   react: React,
   elementClass: LitAtomicSearchLayout,
 });
 
-export const AtomicSegmentedFacet = createComponent({
+export const AtomicSegmentedFacet = /*@__PURE__*/ createComponent({
   tagName: 'atomic-segmented-facet',
   react: React,
   elementClass: LitAtomicSegmentedFacet,
 });
 
-export const AtomicSegmentedFacetScrollable = createComponent({
+export const AtomicSegmentedFacetScrollable = /*@__PURE__*/ createComponent({
   tagName: 'atomic-segmented-facet-scrollable',
   react: React,
   elementClass: LitAtomicSegmentedFacetScrollable,
 });
 
-export const AtomicSmartSnippet = createComponent({
+export const AtomicSmartSnippet = /*@__PURE__*/ createComponent({
   tagName: 'atomic-smart-snippet',
   react: React,
   elementClass: LitAtomicSmartSnippet,
 });
 
-export const AtomicSmartSnippetFeedbackModal = createComponent({
+export const AtomicSmartSnippetFeedbackModal = /*@__PURE__*/ createComponent({
   tagName: 'atomic-smart-snippet-feedback-modal',
   react: React,
   elementClass: LitAtomicSmartSnippetFeedbackModal,
 });
 
-export const AtomicSmartSnippetSuggestions = createComponent({
+export const AtomicSmartSnippetSuggestions = /*@__PURE__*/ createComponent({
   tagName: 'atomic-smart-snippet-suggestions',
   react: React,
   elementClass: LitAtomicSmartSnippetSuggestions,
 });
 
-export const AtomicSortDropdown = createComponent({
+export const AtomicSortDropdown = /*@__PURE__*/ createComponent({
   tagName: 'atomic-sort-dropdown',
   react: React,
   elementClass: LitAtomicSortDropdown,
 });
 
-export const AtomicSortExpression = createComponent({
+export const AtomicSortExpression = /*@__PURE__*/ createComponent({
   tagName: 'atomic-sort-expression',
   react: React,
   elementClass: LitAtomicSortExpression,
 });
 
-export const AtomicTab = createComponent({
+export const AtomicTab = /*@__PURE__*/ createComponent({
   tagName: 'atomic-tab',
   react: React,
   elementClass: LitAtomicTab,
 });
 
-export const AtomicTableElement = createComponent({
+export const AtomicTableElement = /*@__PURE__*/ createComponent({
   tagName: 'atomic-table-element',
   react: React,
   elementClass: LitAtomicTableElement,
 });
 
-export const AtomicTabManager = createComponent({
+export const AtomicTabManager = /*@__PURE__*/ createComponent({
   tagName: 'atomic-tab-manager',
   react: React,
   elementClass: LitAtomicTabManager,
 });
 
-export const AtomicText = createComponent({
+export const AtomicText = /*@__PURE__*/ createComponent({
   tagName: 'atomic-text',
   react: React,
   elementClass: LitAtomicText,
 });
 
-export const AtomicTimeframe = createComponent({
+export const AtomicTimeframe = /*@__PURE__*/ createComponent({
   tagName: 'atomic-timeframe',
   react: React,
   elementClass: LitAtomicTimeframe,
 });
 
-export const AtomicTimeframeFacet = createComponent({
+export const AtomicTimeframeFacet = /*@__PURE__*/ createComponent({
   tagName: 'atomic-timeframe-facet',
   react: React,
   elementClass: LitAtomicTimeframeFacet,

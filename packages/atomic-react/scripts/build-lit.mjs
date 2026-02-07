@@ -46,7 +46,7 @@ const declarationToLitImport = (declaration) =>
 
 const declarationToComponent = (declaration) =>
   `
-export const ${declaration.name} = createComponent({
+export const ${declaration.name} = /*@__PURE__*/ createComponent({
   tagName: '${declaration.tagName}',
   react: React,
   elementClass: Lit${declaration.name},
