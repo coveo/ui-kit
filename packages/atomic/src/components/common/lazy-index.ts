@@ -48,6 +48,8 @@ export default {
     await import('./atomic-tab-popover/atomic-tab-popover.js'),
   'atomic-timeframe': async () =>
     await import('./atomic-timeframe/atomic-timeframe.js'),
+  'generated-answers-thread': async () =>
+    await import('./generated-answers-thread/generated-answers-thread.js'),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';

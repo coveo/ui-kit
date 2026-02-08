@@ -100,6 +100,7 @@ export class AccordionItem extends LitElement {
           >
             ${this.title}
           </div>
+          <div><slot name="action"></slot></div>
         </div>
         <div class="item-body">
           <div class="line-container">

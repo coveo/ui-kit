@@ -7,6 +7,7 @@ import {
   type GeneratedAnswer,
   type GeneratedAnswerState,
   type GeneratedAnswerWithFollowUps,
+  type GeneratedAnswerWithFollowUpsState,
   type SearchStatus,
   type SearchStatusState,
   type TabManager,
@@ -14,8 +15,10 @@ import {
 } from '@coveo/headless';
 import {html, LitElement, nothing, type PropertyValueMap} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit-html/directives/when.js';
 import {GeneratedAnswerController} from '@/src/components/common/generated-answer/generated-answer-controller';
 import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
+import {renderCardHeader} from '@/src/components/common/generated-answer/render-card-header.js';
 import {renderCitations} from '@/src/components/common/generated-answer/render-citations';
 import {renderCustomNoAnswerMessage} from '@/src/components/common/generated-answer/render-custom-no-answer-message';
 import {renderDisclaimer} from '@/src/components/common/generated-answer/render-disclaimer';
@@ -36,11 +39,9 @@ import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {debounce} from '@/src/utils/debounce-utils';
 import {getNamedSlotContent} from '@/src/utils/slot-utils';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
-import {renderGeneratedContentContainer} from '../../common/generated-answer/generated-content-container.js';
-import {renderSourceCitations} from '../../common/generated-answer/source-citations.js';
-import {renderHeading} from '../../common/heading.js';
-import {renderSwitch} from '../../common/switch.js';
 import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
+import '../../common/generated-answers-thread/generated-answers-thread.js';
+import {renderAnswerHeader} from '../../common/generated-answer/render-answer-header.js';
 
 /**
  * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
@@ -236,7 +237,9 @@ export class AtomicGeneratedAnswer
     onUpdateCallbackMethod: 'onGeneratedAnswerStateUpdate',
   })
   @state()
-  private generatedAnswerState!: GeneratedAnswerState;
+  private generatedAnswerState!:
+    | GeneratedAnswerState
+    | GeneratedAnswerWithFollowUpsState;
   public generatedAnswer!: GeneratedAnswer | GeneratedAnswerWithFollowUps;
 
   @bindStateToController('searchStatus')
@@ -261,8 +264,8 @@ export class AtomicGeneratedAnswer
   @state()
   private followUpPending = false;
 
-  @state()
-  private showAllPreviousAnswers = false;
+  // @state()
+  // private showAllPreviousAnswers = false;
 
   @state()
   private initialQuery = '';
@@ -381,9 +384,9 @@ export class AtomicGeneratedAnswer
     this.followUpInputValue = value;
   };
 
-  private handleShowAllPreviousAnswers = () => {
-    this.showAllPreviousAnswers = true;
-  };
+  // private handleShowAllPreviousAnswers = () => {
+  //   this.showAllPreviousAnswers = true;
+  // };
 
   private handleAskFollowUp = async (query: string) => {
     if (this.canAskFollowUp()) {
@@ -439,7 +442,28 @@ export class AtomicGeneratedAnswer
               part="container"
               aria-label=${this.bindings.i18n.t('generated-answer-title')}
             >
-              <article>${this.renderCustomNoAnswerMessageWrapper()}</article>
+              <div part="generated-content">
+                ${renderCardHeader({
+                  props: {
+                    i18n: this.bindings.i18n,
+                    isAnswerVisible: this.isAnswerVisible,
+                    toggleTooltip: this.toggleTooltip,
+                    withToggle: this.withToggle,
+                    onToggle: (checked: boolean) => {
+                      checked
+                        ? this.generatedAnswer?.show()
+                        : this.generatedAnswer?.hide();
+                    },
+                  },
+                })}
+                ${when(
+                  this.isAnswerVisible,
+                  () =>
+                    html`<article>
+                      ${this.renderCustomNoAnswerMessageWrapper()}
+                    </article>`
+                )}
+              </div>
             </aside>
           </div>
         `;
@@ -454,15 +478,35 @@ export class AtomicGeneratedAnswer
           part="container"
           aria-label=${this.bindings.i18n.t('generated-answer-title')}
         >
-          <article>
-            <div part="generated-content">
-              ${this.renderCardHeader()}
-              ${this.isAnswerVisible ? this.renderContent() : nothing}
-              <!-- ${this.renderContent()} -->
-            </div>
-          </article>
-          ${this.isAnswerVisible ? this.renderFollowUpInput() : nothing}
-          ${this.isAnswerVisible ? this.renderDisclaimer() : nothing}
+          <div part="generated-content">
+            ${renderCardHeader({
+              props: {
+                i18n: this.bindings.i18n,
+                isAnswerVisible: this.isAnswerVisible,
+                toggleTooltip: this.toggleTooltip,
+                withToggle: this.withToggle,
+                onToggle: (checked: boolean) => {
+                  checked
+                    ? this.generatedAnswer?.show()
+                    : this.generatedAnswer?.hide();
+                },
+              },
+            })}
+            ${when(
+              this.isAnswerVisible,
+              () =>
+                html` <div part="generated-content-container" class="px-6 pb-6">
+                  <article>${this.renderAnswerContent()}</article>
+                  ${this.renderFollowUpInput()}
+                  ${renderDisclaimer({
+                    props: {
+                      i18n: this.bindings.i18n,
+                      isStreaming: !!this.generatedAnswerState.isStreaming,
+                    },
+                  })}
+                </div>`
+            )}
+          </div>
         </aside>
       </div>
     `;
@@ -492,10 +536,6 @@ export class AtomicGeneratedAnswer
 
     this.ariaMessage.message = this.controller.getGeneratedAnswerStatus();
   };
-
-  private get hasRetryableError() {
-    return this.controller.hasRetryableError;
-  }
 
   private get hasNoAnswerGenerated() {
     return this.controller.hasNoAnswerGenerated;
@@ -680,199 +720,85 @@ export class AtomicGeneratedAnswer
     });
   }
 
-  private renderCardHeader() {
-    return html` <div
-      part="header"
-      class="flex items-center ${
-        this.isAnswerVisible ? 'border-b-1 border-gray-200' : ''
-      } px-6 py-2"
-    >
-      <atomic-icon
-        part="header-icon"
-        class="text-primary h-4 w-4 fill-current"
-        .icon=${'assets://sparkles.svg'}
-      >
-      </atomic-icon>
-      ${renderHeading({
-        props: {
-          level: 0,
-          part: 'header-label',
-          class: 'text-primary inline-block rounded-md px-2.5 py-2 font-medium',
-        },
-      })(html`${this.bindings.i18n.t('generated-answer-title')}`)}
-      <div class="ml-auto flex h-9 items-center">
-        ${renderSwitch({
-          props: {
-            part: 'toggle',
-            checked: this.isAnswerVisible,
-            onToggle: (checked: boolean) => {
-              checked
-                ? this.generatedAnswer?.show()
-                : this.generatedAnswer?.hide();
-            },
-            ariaLabel: this.bindings.i18n.t('generated-answer-title'),
-            title: this.toggleTooltip,
-            withToggle: this.withToggle,
-            tabIndex: 0,
-          },
-        })}
-      </div>
-    </div>`;
-  }
+  private renderAnswerContent() {
+    const {
+      answerId,
+      isLoading,
+      isStreaming,
+      answer,
+      answerContentFormat,
+      citations,
+      error,
+      cannotAnswer,
+      liked,
+      disliked,
+      feedbackSubmitted,
+      expanded,
+    } = this.generatedAnswerState;
 
-  /**
-   * Renders answer content based on follow-up state.
-   *
-   * Cases:
-   * - No follow-ups:
-   *   Renders the default single answer view.
-   *
-   * - Follow-ups shown (all or only one):
-   *   Renders the original question and all follow-up Q&A as accordion items.
-   *   The latest follow-up is expanded and non-collapsible.
-   *
-   * - Follow-ups hidden (latest only):
-   *   Renders a "Show previous questions" control and only the latest follow-up,
-   *   expanded and non-collapsible.
-   */
-  private renderContent() {
-    const followUpAnswers = this.canAskFollowUp()
-      ? this.generatedAnswer.state.followUpAnswers
-      : undefined;
-    const hasFollowUps = !!this.agentId && !!followUpAnswers?.answers?.length;
+    const generatedAnswer = {
+      answerId,
+      isLoading,
+      isStreaming,
+      answer,
+      answerContentFormat,
+      citations,
+      error,
+      cannotAnswer,
+      isAnswerGenerated: !cannotAnswer,
+      liked,
+      disliked,
+      feedbackSubmitted,
+      question: this.bindings.engine.state.query?.q ?? '',
+      expanded,
+    };
 
-    const renderCitationsSlot = () => html`${this.renderCitationsList()}`;
+    const shouldDisplayAnswersInThread =
+      this.canAskFollowUp() &&
+      this.agentId &&
+      this.generatedAnswer.state.followUpAnswers.answers?.length;
 
-    if (!hasFollowUps) {
-      return renderAnswerContent({
+    if (shouldDisplayAnswersInThread) {
+      const allGeneratedAnswers = [
+        generatedAnswer,
+        ...this.generatedAnswer.state.followUpAnswers.answers,
+      ];
+
+      return html`<div>
+        <generated-answers-thread
+          .i18n=${this.bindings.i18n}
+          .generatedAnswers=${allGeneratedAnswers}
+          .renderCitationsSlot=${() => html`${this.renderCitationsList()}`}
+          .renderFeedbackAndCopyButtonsSlot=${() =>
+            this.renderFeedbackAndCopyButtonsWrapper()}
+          .onRetry=${() => this.generatedAnswer?.retry()}
+        ></generated-answers-thread>
+      </div>`;
+    }
+
+    return html`<div>
+      ${renderAnswerHeader({
         props: {
           i18n: this.bindings.i18n,
-          generatedAnswerState: this.generatedAnswerState,
-          isAnswerVisible: this.isAnswerVisible,
-          hasRetryableError: this.hasRetryableError,
-          toggleTooltip: this.toggleTooltip,
-          withToggle: this.withToggle,
+          generatedAnswer: generatedAnswer,
           collapsible: this.collapsible,
-          query: this.bindings.engine.state.query?.q ?? '',
-          initialQuery: this.initialQuery,
+          renderFeedbackAndCopyButtonsSlot: () =>
+            this.renderFeedbackAndCopyButtonsWrapper(),
+        },
+      })}
+      ${renderAnswerContent({
+        props: {
+          i18n: this.bindings.i18n,
+          generatedAnswer: generatedAnswer,
+          collapsible: this.collapsible,
           renderFeedbackAndCopyButtonsSlot: () =>
             this.renderFeedbackAndCopyButtonsWrapper(),
           renderCitationsSlot: () => html`${this.renderCitationsList()}`,
-          onToggle: (checked: boolean) => {
-            checked
-              ? this.generatedAnswer?.show()
-              : this.generatedAnswer?.hide();
-          },
           onRetry: () => this.generatedAnswer?.retry(),
           onClickShowButton: () => this.clickOnShowButton(),
         },
-      });
-    } else {
-      if (
-        this.showAllPreviousAnswers ||
-        followUpAnswers!.answers.length === 1
-      ) {
-        const {answer, citations, answerContentFormat, isStreaming} =
-          this.generatedAnswerState;
-        return html`<div class="p-6">
-          <accordion-item title=${this.bindings.engine.state.query?.q ?? ''}>
-            ${
-              !this.hasRetryableError
-                ? renderGeneratedContentContainer({
-                    props: {
-                      answer,
-                      answerContentFormat,
-                      isStreaming: !!isStreaming,
-                    },
-                  })(html`
-                  ${renderSourceCitations({
-                    props: {
-                      label: this.bindings.i18n.t('citations'),
-                      isVisible: !!citations?.length,
-                    },
-                  })(renderCitationsSlot())}
-                `)
-                : nothing
-            }
-          </accordion-item>
-          ${followUpAnswers?.answers.map(
-            (
-              {answer, question, isStreaming, answerContentFormat, citations},
-              index
-            ) => {
-              const isLastAnswer = index === followUpAnswers.answers.length - 1;
-              return html` <accordion-item
-                ?expanded=${isLastAnswer}
-                ?hidetimeline=${isLastAnswer}
-                ?nonCollapsible=${isLastAnswer}
-                title=${question}
-              >
-                ${renderGeneratedContentContainer({
-                  props: {
-                    answer,
-                    answerContentFormat,
-                    isStreaming: !!isStreaming,
-                  },
-                })(html`
-                  ${renderSourceCitations({
-                    props: {
-                      label: this.bindings.i18n.t('citations'),
-                      isVisible: !!citations?.length,
-                    },
-                  })(renderCitationsSlot())}
-                `)}
-              </accordion-item>`;
-            }
-          )}
-        </div>`;
-      }
-      const latestFollowUpAnswer = followUpAnswers!.answers.at(-1)!;
-      const {answer, question, isStreaming, answerContentFormat, citations} =
-        latestFollowUpAnswer;
-      return html`<div class="p-6">
-        <div>
-          <div class="item-header">
-            <div class="dot-container">
-              <div class="dot"></div>
-            </div>
-            <div
-              @click=${this.handleShowAllPreviousAnswers}
-              class="item-title bg-transparent"
-            >
-              Show previous questions
-            </div>
-          </div>
-          <div class="item-body">
-            <div class="line-container">
-              <div class="line"></div>
-            </div>
-            <div class="item-content">
-            </div>
-          </div>
-        </div>
-        <accordion-item
-          ?expanded=${true}
-          ?hidetimeline=${true}
-          ?nonCollapsible=${true}
-          title=${question}
-        >
-          ${renderGeneratedContentContainer({
-            props: {
-              answer,
-              answerContentFormat,
-              isStreaming: !!isStreaming,
-            },
-          })(html`
-            ${renderSourceCitations({
-              props: {
-                label: this.bindings.i18n.t('citations'),
-                isVisible: !!citations?.length,
-              },
-            })(renderCitationsSlot())}
-          `)}
-        </accordion-item>
-      </div>`;
-    }
+      })}
+    </div>`;
   }
 
   private renderFollowUpInput() {
@@ -885,7 +811,7 @@ export class AtomicGeneratedAnswer
       : '';
 
     return html`
-      <div class="px-6 ${stickyClasses}">
+      <div class="${stickyClasses}">
         ${renderFollowUpInput({
           props: {
             i18n: this.bindings.i18n,
@@ -898,23 +824,6 @@ export class AtomicGeneratedAnswer
               !!this.generatedAnswerState.isStreaming ||
               this.isAnyFollowUpAnswerStreaming() ||
               this.followUpPending,
-          },
-        })}
-      </div>
-    `;
-  }
-
-  private renderDisclaimer() {
-    if (this.hasRetryableError) {
-      return nothing;
-    }
-
-    return html`
-      <div class="flex justify-end px-6 pb-6">
-        ${renderDisclaimer({
-          props: {
-            i18n: this.bindings.i18n,
-            isStreaming: !!this.generatedAnswerState.isStreaming,
           },
         })}
       </div>

@@ -220,10 +220,13 @@ export type {
 export {buildFoldedResultList} from './controllers/folded-result-list/headless-folded-result-list.js';
 export type {
   GeneratedAnswer,
+  GeneratedAnswerBase,
   GeneratedAnswerCitation,
   GeneratedAnswerProps,
   GeneratedAnswerPropsInitialState,
   GeneratedAnswerState,
+  GeneratedAnswerWithFollowUps,
+  GeneratedAnswerWithFollowUpsState,
   GeneratedResponseFormat,
 } from './controllers/generated-answer/headless-generated-answer.js';
 export {buildGeneratedAnswer} from './controllers/generated-answer/headless-generated-answer.js';
@@ -251,7 +254,6 @@ export type {
   InstantResultsState,
 } from './controllers/instant-results/instant-results.js';
 export {buildInstantResults} from './controllers/instant-results/instant-results.js';
-export type {GeneratedAnswerWithFollowUps} from './controllers/knowledge/generated-answer/headless-generated-answer-with-follow-ups.js';
 export type {
   Pager,
   PagerInitialState,

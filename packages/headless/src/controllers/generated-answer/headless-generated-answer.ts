@@ -2,7 +2,10 @@ import type {GeneratedAnswerCitation} from '../../api/generated-answer/generated
 import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../app/engine.js';
 import type {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {generatedAnswerAnalyticsClient} from '../../features/generated-answer/generated-answer-analytics-actions.js';
-import type {GeneratedAnswerState} from '../../features/generated-answer/generated-answer-state.js';
+import type {
+  GeneratedAnswerBase,
+  GeneratedAnswerState,
+} from '../../features/generated-answer/generated-answer-state.js';
 import type {GeneratedResponseFormat} from '../../features/generated-answer/generated-response-format.js';
 import type {
   GeneratedAnswer,
@@ -14,15 +17,19 @@ import {buildAnswerApiGeneratedAnswer} from '../knowledge/generated-answer/headl
 import {
   buildGeneratedAnswerWithFollowUps,
   type GeneratedAnswerWithFollowUps,
+  type GeneratedAnswerWithFollowUpsState,
 } from '../knowledge/generated-answer/headless-generated-answer-with-follow-ups.js';
 
 export type {
   GeneratedAnswerCitation,
   GeneratedResponseFormat,
   GeneratedAnswerState,
+  GeneratedAnswerBase,
   GeneratedAnswer,
   GeneratedAnswerProps,
   GeneratedAnswerPropsInitialState,
+  GeneratedAnswerWithFollowUps,
+  GeneratedAnswerWithFollowUpsState,
 };
 
 /**
