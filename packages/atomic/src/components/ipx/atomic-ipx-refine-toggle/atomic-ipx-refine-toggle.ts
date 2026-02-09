@@ -12,7 +12,7 @@ import {ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
 import {renderIconButton} from '@/src/components/common/icon-button';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
-import {bindStateToController} from '@/src/decorators/bind-state-to-controller';
+import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindings} from '@/src/decorators/bindings';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
