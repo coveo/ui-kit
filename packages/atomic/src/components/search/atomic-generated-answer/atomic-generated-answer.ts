@@ -608,29 +608,6 @@ export class AtomicGeneratedAnswer
             isCollapsible: true,
             isExpanded: true,
             hideLine: false,
-            actions: html`<div class="flex items-center gap-2">
-              <button
-                type="button"
-                class="btn-text-primary p-1 bg-transparent border-0 rounded-md"
-                aria-label="Like"
-              >
-                👍
-              </button>
-              <button
-                type="button"
-                class="btn-text-primary p-1 bg-transparent border-0 rounded-md"
-                aria-label="Dislike"
-              >
-                👎
-              </button>
-              <button
-                type="button"
-                class="btn-text-primary p-1 bg-transparent border-0 rounded-md"
-                aria-label="Copy"
-              >
-                📋
-              </button>
-            </div>`,
           },
         })(html`
           <div class="text-on-background">

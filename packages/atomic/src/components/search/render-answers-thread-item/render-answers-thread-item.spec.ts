@@ -1,4 +1,4 @@
-import {html, nothing} from 'lit';
+import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {
@@ -33,7 +33,6 @@ describe('#renderAnswersThreadItem', () => {
         header: element.querySelector('[part="header"]'),
         title: element.querySelector('[part="title"]'),
         titleButton: element.querySelector('[part="title-button"]'),
-        actions: element.querySelector('[part="actions"]'),
         content: element.querySelector('[part="content"]'),
       }),
     };
@@ -78,15 +77,6 @@ describe('#renderAnswersThreadItem', () => {
     expect(parts().content).not.toHaveAttribute('hidden');
   });
 
-  it('should render actions when provided', async () => {
-    const {parts} = await renderComponent({
-      actions: html`<button>Action</button>`,
-    });
-
-    expect(parts().actions).toBeInTheDocument();
-    expect(parts().actions).toHaveTextContent('Action');
-  });
-
   it('should toggle expanded state when the title button is clicked', async () => {
     const onToggle = vi.fn();
     const {parts} = await renderComponent({
@@ -100,11 +90,5 @@ describe('#renderAnswersThreadItem', () => {
 
     expect(onToggle).toHaveBeenCalledWith(true);
     expect(parts().content).not.toHaveAttribute('hidden');
-  });
-
-  it('should render nothing for actions when not provided', async () => {
-    const {parts} = await renderComponent({actions: nothing});
-
-    expect(parts().actions).toBeNull();
   });
 });
