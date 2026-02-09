@@ -84,6 +84,10 @@ export default {
     await import(
       './atomic-insight-user-actions-modal/atomic-insight-user-actions-modal.js'
     ),
+  'atomic-insight-user-actions-session': async () =>
+    await import(
+      './atomic-insight-user-actions-session/atomic-insight-user-actions-session.js'
+    ),
   'atomic-insight-user-actions-timeline': async () =>
     await import(
       './atomic-insight-user-actions-timeline/atomic-insight-user-actions-timeline.js'
