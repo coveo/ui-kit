@@ -12,8 +12,6 @@ import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insi
 import { DateFilterRange, DateRangeRequest, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { RangeFacetSortCriterion as InsightRangeFacetSortCriterion, UserAction as IUserAction } from "@coveo/headless/insight";
 import { AnyBindings } from "./components/common/interface/bindings";
-import { i18n } from "i18next";
-import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
@@ -21,8 +19,6 @@ export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insi
 export { DateFilterRange, DateRangeRequest, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 export { RangeFacetSortCriterion as InsightRangeFacetSortCriterion, UserAction as IUserAction } from "@coveo/headless/insight";
 export { AnyBindings } from "./components/common/interface/bindings";
-export { i18n } from "i18next";
-export { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
 export namespace Components {
     interface AtomicInsightFoldedResultList {
         /**
@@ -97,11 +93,7 @@ export namespace Components {
          */
         "tooltipOnClick": string;
     }
-    interface AtomicInsightResultActionBar {
-    }
     interface AtomicInsightResultAttachToCaseAction {
-    }
-    interface AtomicInsightResultAttachToCaseIndicator {
     }
     interface AtomicInsightResultChildrenTemplate {
         /**
@@ -134,39 +126,6 @@ export namespace Components {
     string,
     string[]
   >;
-    }
-    interface AtomicInsightResultList {
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density": ItemDisplayDensity;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax such as React, Angular, or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-          * @param resultRenderingFunction
-         */
-        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
-    }
-    interface AtomicInsightSmartSnippet {
-        /**
-          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
-         */
-        "collapsedHeight": number;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
-         */
-        "headingLevel": number;
-        /**
-          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
-         */
-        "maximumHeight": number;
-        /**
-          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
     }
     interface AtomicInsightSmartSnippetSuggestions {
         /**
@@ -219,22 +178,6 @@ export namespace Components {
           * Whether this facet should contain a date picker allowing users to set custom ranges.
          */
         "withDatePicker": boolean;
-    }
-    interface AtomicInsightUserActionsModal {
-        /**
-          * The names of custom events to exclude.
-         */
-        "excludedCustomActions": string[];
-        "isOpen": boolean;
-        "openButton"?: HTMLElement;
-        /**
-          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
-         */
-        "ticketCreationDateTime": string;
-        /**
-          * The ID of the user whose actions are being displayed.
-         */
-        "userId": string;
     }
     /**
      * @category Insight Panel
@@ -412,24 +355,6 @@ export namespace Components {
         "rangeGetter": () => DateFilterRange | undefined;
         "rangeSetter": (range: DateRangeRequest) => void;
     }
-    /**
-     * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
-     * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
-     * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
-     * use native Elements.
-     */
-    interface AtomicSuggestionRenderer {
-        "i18n": i18n;
-        "id": string;
-        "index": number;
-        "isDoubleList": boolean;
-        "isSelected": boolean;
-        "lastIndex": number;
-        "onClick"?: (e: Event) => void;
-        "onMouseEnter"?: (e: Event) => void;
-        "side": 'left' | 'right';
-        "suggestion": SearchBoxSuggestionElement;
-    }
 }
 export interface AtomicInsightResultActionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -477,12 +402,6 @@ declare global {
         prototype: HTMLAtomicInsightResultActionElement;
         new (): HTMLAtomicInsightResultActionElement;
     };
-    interface HTMLAtomicInsightResultActionBarElement extends Components.AtomicInsightResultActionBar, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightResultActionBarElement: {
-        prototype: HTMLAtomicInsightResultActionBarElement;
-        new (): HTMLAtomicInsightResultActionBarElement;
-    };
     interface HTMLAtomicInsightResultAttachToCaseActionElementEventMap {
         "atomic/insight/attachToCase/attach": InsightResultAttachToCaseEvent;
         "atomic/insight/attachToCase/detach": InsightResultAttachToCaseEvent;
@@ -501,29 +420,11 @@ declare global {
         prototype: HTMLAtomicInsightResultAttachToCaseActionElement;
         new (): HTMLAtomicInsightResultAttachToCaseActionElement;
     };
-    interface HTMLAtomicInsightResultAttachToCaseIndicatorElement extends Components.AtomicInsightResultAttachToCaseIndicator, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightResultAttachToCaseIndicatorElement: {
-        prototype: HTMLAtomicInsightResultAttachToCaseIndicatorElement;
-        new (): HTMLAtomicInsightResultAttachToCaseIndicatorElement;
-    };
     interface HTMLAtomicInsightResultChildrenTemplateElement extends Components.AtomicInsightResultChildrenTemplate, HTMLStencilElement {
     }
     var HTMLAtomicInsightResultChildrenTemplateElement: {
         prototype: HTMLAtomicInsightResultChildrenTemplateElement;
         new (): HTMLAtomicInsightResultChildrenTemplateElement;
-    };
-    interface HTMLAtomicInsightResultListElement extends Components.AtomicInsightResultList, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightResultListElement: {
-        prototype: HTMLAtomicInsightResultListElement;
-        new (): HTMLAtomicInsightResultListElement;
-    };
-    interface HTMLAtomicInsightSmartSnippetElement extends Components.AtomicInsightSmartSnippet, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightSmartSnippetElement: {
-        prototype: HTMLAtomicInsightSmartSnippetElement;
-        new (): HTMLAtomicInsightSmartSnippetElement;
     };
     interface HTMLAtomicInsightSmartSnippetSuggestionsElement extends Components.AtomicInsightSmartSnippetSuggestions, HTMLStencilElement {
     }
@@ -536,12 +437,6 @@ declare global {
     var HTMLAtomicInsightTimeframeFacetElement: {
         prototype: HTMLAtomicInsightTimeframeFacetElement;
         new (): HTMLAtomicInsightTimeframeFacetElement;
-    };
-    interface HTMLAtomicInsightUserActionsModalElement extends Components.AtomicInsightUserActionsModal, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightUserActionsModalElement: {
-        prototype: HTMLAtomicInsightUserActionsModalElement;
-        new (): HTMLAtomicInsightUserActionsModalElement;
     };
     /**
      * @category Insight Panel
@@ -644,31 +539,14 @@ declare global {
         prototype: HTMLAtomicStencilFacetDateInputElement;
         new (): HTMLAtomicStencilFacetDateInputElement;
     };
-    /**
-     * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
-     * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
-     * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
-     * use native Elements.
-     */
-    interface HTMLAtomicSuggestionRendererElement extends Components.AtomicSuggestionRenderer, HTMLStencilElement {
-    }
-    var HTMLAtomicSuggestionRendererElement: {
-        prototype: HTMLAtomicSuggestionRendererElement;
-        new (): HTMLAtomicSuggestionRendererElement;
-    };
     interface HTMLElementTagNameMap {
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
-        "atomic-insight-result-action-bar": HTMLAtomicInsightResultActionBarElement;
         "atomic-insight-result-attach-to-case-action": HTMLAtomicInsightResultAttachToCaseActionElement;
-        "atomic-insight-result-attach-to-case-indicator": HTMLAtomicInsightResultAttachToCaseIndicatorElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
-        "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
-        "atomic-insight-smart-snippet": HTMLAtomicInsightSmartSnippetElement;
         "atomic-insight-smart-snippet-suggestions": HTMLAtomicInsightSmartSnippetSuggestionsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
-        "atomic-insight-user-actions-modal": HTMLAtomicInsightUserActionsModalElement;
         "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
         "atomic-insight-user-actions-timeline": HTMLAtomicInsightUserActionsTimelineElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
@@ -678,7 +556,6 @@ declare global {
         "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
-        "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
     }
 }
 declare namespace LocalJSX {
@@ -756,8 +633,6 @@ declare namespace LocalJSX {
          */
         "tooltipOnClick"?: string;
     }
-    interface AtomicInsightResultActionBar {
-    }
     interface AtomicInsightResultAttachToCaseAction {
         /**
           * @migration Stencil's
@@ -765,8 +640,6 @@ declare namespace LocalJSX {
          */
         "onAtomic/insight/attachToCase/attach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
         "onAtomic/insight/attachToCase/detach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
-    }
-    interface AtomicInsightResultAttachToCaseIndicator {
     }
     interface AtomicInsightResultChildrenTemplate {
         /**
@@ -795,34 +668,6 @@ declare namespace LocalJSX {
     string,
     string[]
   >;
-    }
-    interface AtomicInsightResultList {
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density"?: ItemDisplayDensity;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-    }
-    interface AtomicInsightSmartSnippet {
-        /**
-          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
-         */
-        "collapsedHeight"?: number;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
-         */
-        "headingLevel"?: number;
-        /**
-          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
-         */
-        "maximumHeight"?: number;
-        /**
-          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
     }
     interface AtomicInsightSmartSnippetSuggestions {
         /**
@@ -875,22 +720,6 @@ declare namespace LocalJSX {
           * Whether this facet should contain a date picker allowing users to set custom ranges.
          */
         "withDatePicker"?: boolean;
-    }
-    interface AtomicInsightUserActionsModal {
-        /**
-          * The names of custom events to exclude.
-         */
-        "excludedCustomActions"?: string[];
-        "isOpen"?: boolean;
-        "openButton"?: HTMLElement;
-        /**
-          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
-         */
-        "ticketCreationDateTime": string;
-        /**
-          * The ID of the user whose actions are being displayed.
-         */
-        "userId": string;
     }
     /**
      * @category Insight Panel
@@ -1052,37 +881,14 @@ declare namespace LocalJSX {
         "rangeGetter": () => DateFilterRange | undefined;
         "rangeSetter": (range: DateRangeRequest) => void;
     }
-    /**
-     * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
-     * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
-     * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
-     * use native Elements.
-     */
-    interface AtomicSuggestionRenderer {
-        "i18n": i18n;
-        "id": string;
-        "index": number;
-        "isDoubleList": boolean;
-        "isSelected": boolean;
-        "lastIndex": number;
-        "onClick"?: (e: Event) => void;
-        "onMouseEnter"?: (e: Event) => void;
-        "side": 'left' | 'right';
-        "suggestion": SearchBoxSuggestionElement;
-    }
     interface IntrinsicElements {
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
         "atomic-insight-result-action": AtomicInsightResultAction;
-        "atomic-insight-result-action-bar": AtomicInsightResultActionBar;
         "atomic-insight-result-attach-to-case-action": AtomicInsightResultAttachToCaseAction;
-        "atomic-insight-result-attach-to-case-indicator": AtomicInsightResultAttachToCaseIndicator;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
-        "atomic-insight-result-list": AtomicInsightResultList;
-        "atomic-insight-smart-snippet": AtomicInsightSmartSnippet;
         "atomic-insight-smart-snippet-suggestions": AtomicInsightSmartSnippetSuggestions;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
-        "atomic-insight-user-actions-modal": AtomicInsightUserActionsModal;
         "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
         "atomic-insight-user-actions-timeline": AtomicInsightUserActionsTimeline;
         "atomic-ipx-body": AtomicIpxBody;
@@ -1092,7 +898,6 @@ declare namespace LocalJSX {
         "atomic-ipx-result-link": AtomicIpxResultLink;
         "atomic-recs-list": AtomicRecsList;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
-        "atomic-suggestion-renderer": AtomicSuggestionRenderer;
     }
 }
 export { LocalJSX as JSX };
@@ -1102,15 +907,10 @@ declare module "@stencil/core" {
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
             "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
-            "atomic-insight-result-action-bar": LocalJSX.AtomicInsightResultActionBar & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionBarElement>;
             "atomic-insight-result-attach-to-case-action": LocalJSX.AtomicInsightResultAttachToCaseAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseActionElement>;
-            "atomic-insight-result-attach-to-case-indicator": LocalJSX.AtomicInsightResultAttachToCaseIndicator & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseIndicatorElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
-            "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
-            "atomic-insight-smart-snippet": LocalJSX.AtomicInsightSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetElement>;
             "atomic-insight-smart-snippet-suggestions": LocalJSX.AtomicInsightSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetSuggestionsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
-            "atomic-insight-user-actions-modal": LocalJSX.AtomicInsightUserActionsModal & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsModalElement>;
             /**
              * @category Insight Panel
              * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
@@ -1145,13 +945,6 @@ declare module "@stencil/core" {
              * Internal component made to be integrated in a TimeframeFacet.
              */
             "atomic-stencil-facet-date-input": LocalJSX.AtomicStencilFacetDateInput & JSXBase.HTMLAttributes<HTMLAtomicStencilFacetDateInputElement>;
-            /**
-             * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
-             * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
-             * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
-             * use native Elements.
-             */
-            "atomic-suggestion-renderer": LocalJSX.AtomicSuggestionRenderer & JSXBase.HTMLAttributes<HTMLAtomicSuggestionRendererElement>;
         }
     }
 }
