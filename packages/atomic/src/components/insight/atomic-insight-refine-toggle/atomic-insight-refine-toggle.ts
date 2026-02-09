@@ -18,6 +18,7 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import FilterIcon from '@/src/images/filter.svg';
 import {refineToggleGuard} from '../../common/refine-modal/guard';
 import type {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import type {AtomicInsightRefineModal} from '../atomic-insight-refine-modal/atomic-insight-refine-modal';
 
 /**
  * The `atomic-insight-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
@@ -54,7 +55,7 @@ export class AtomicInsightRefineToggle
   @state()
   private breadcrumbManagerState!: BreadcrumbManagerState;
 
-  private modalRef?: HTMLAtomicInsightRefineModalElement;
+  private modalRef?: AtomicInsightRefineModal;
   private buttonRef?: HTMLButtonElement;
 
   private get numberOfBreadcrumbs(): number {

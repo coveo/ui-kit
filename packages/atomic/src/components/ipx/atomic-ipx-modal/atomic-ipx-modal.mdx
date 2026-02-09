@@ -1,0 +1,41 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicIpxModalStories from './atomic-ipx-modal.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicIpxModalStories} />
+
+<AtomicDocTemplate
+  stories={AtomicIpxModalStories}
+  githubPath="ipx/atomic-ipx-modal/atomic-ipx-modal.ts"
+  tagName="atomic-ipx-modal"
+  className="AtomicIpxModal"
+  defaultStory="Default"
+>
+
+The `atomic-ipx-modal` component provides a modal dialog for displaying In-Product Experience (IPX) content.
+It manages the modal state, handles touch events to prevent scrolling when open, and provides slots for customizable header, body, and footer content.
+
+## Usage
+
+The modal can be controlled programmatically by setting the `is-open` property:
+
+```html
+<atomic-search-interface>
+  <atomic-ipx-modal is-open="false">
+    <div slot="header">
+      <h2>Modal Title</h2>
+      <button onclick="this.closest('atomic-ipx-modal').isOpen = false">
+        Close
+      </button>
+    </div>
+    <div slot="body">
+      <p>Modal content goes here.</p>
+    </div>
+    <div slot="footer">
+      <button>Action</button>
+    </div>
+  </atomic-ipx-modal>
+</atomic-search-interface>
+```
+
+</AtomicDocTemplate>

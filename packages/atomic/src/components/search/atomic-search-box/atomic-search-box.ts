@@ -50,6 +50,7 @@ import {
 } from '@/src/utils/utils';
 import '@/src/components/search/atomic-search-box-query-suggestions/atomic-search-box-query-suggestions';
 import '@/src/components/search/atomic-search-box-recent-queries/atomic-search-box-recent-queries';
+import '@coveo/atomic-legacy/atomic-suggestion-renderer';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -320,6 +321,9 @@ export class AtomicSearchBox
 
   @watch('redirectionUrl')
   watchRedirectionUrl() {
+    if (!this.searchBox) {
+      return;
+    }
     if (this.isStandaloneSearchBox(this.searchBox) && this.redirectionUrl) {
       this.searchBox.updateRedirectUrl(this.redirectionUrl);
     } else {
@@ -716,7 +720,7 @@ export class AtomicSearchBox
 
           this.isExpanded = false;
         }}
-        .onMouseOver=${async () => {
+        .onMouseEnter=${async () => {
           await this.suggestionManager.onSuggestionMouseOver(item, side, id);
         }}
       ></atomic-suggestion-renderer>

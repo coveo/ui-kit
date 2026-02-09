@@ -54,6 +54,8 @@ export class AtomicBreadbox
 {
   static styles: CSSResultGroup = [
     css`
+      @reference '../../../utils/tailwind.global.tw.css';
+
       [part='breadcrumb-label'].excluded,
       [part='breadcrumb-value'].excluded {
         text-decoration: line-through;

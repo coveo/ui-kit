@@ -1,3 +1,13 @@
+## <small>3.42.1 (2026-02-04)</small>
+
+* feat(headless commerce): implement events for Spotlight Content for Search COMHUB2-1374 (#7039) ([bcc6137](https://github.com/coveo/ui-kit/commits/bcc6137)), closes [#7039](https://github.com/coveo/ui-kit/issues/7039)
+* feat(headless): follow up endpoint created in the api client (#7043) ([0219414](https://github.com/coveo/ui-kit/commits/0219414)), closes [#7043](https://github.com/coveo/ui-kit/issues/7043)
+* feat(headless): follow up reducer created (#7020) ([1ffce62](https://github.com/coveo/ui-kit/commits/1ffce62)), closes [#7020](https://github.com/coveo/ui-kit/issues/7020)
+* feat(headless): generateHeadAnswer action introduced (#7022) ([7d139e4](https://github.com/coveo/ui-kit/commits/7d139e4)), closes [#7022](https://github.com/coveo/ui-kit/issues/7022)
+* feat(headless): support spotlight content for commerce's Search feature COMHUB2-1373 (#7003) ([ea325a7](https://github.com/coveo/ui-kit/commits/ea325a7)), closes [#7003](https://github.com/coveo/ui-kit/issues/7003)
+
+
+
 ## <small>3.41.1 (2026-01-28)</small>
 
 * feat(headless): follow up answers state created (#6970) ([2bcd422](https://github.com/coveo/ui-kit/commits/2bcd422)), closes [#6970](https://github.com/coveo/ui-kit/issues/6970)

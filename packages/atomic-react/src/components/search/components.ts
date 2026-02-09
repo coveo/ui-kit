@@ -16,6 +16,7 @@ import {
   AtomicFormatNumber as LitAtomicFormatNumber,
   AtomicFormatUnit as LitAtomicFormatUnit,
   AtomicGeneratedAnswer as LitAtomicGeneratedAnswer,
+  AtomicGeneratedAnswerFeedbackModal as LitAtomicGeneratedAnswerFeedbackModal,
   AtomicHtml as LitAtomicHtml,
   AtomicIcon as LitAtomicIcon,
   AtomicLayoutSection as LitAtomicLayoutSection,
@@ -188,6 +189,12 @@ export const AtomicGeneratedAnswer = createComponent({
   tagName: 'atomic-generated-answer',
   react: React,
   elementClass: LitAtomicGeneratedAnswer,
+});
+
+export const AtomicGeneratedAnswerFeedbackModal = createComponent({
+  tagName: 'atomic-generated-answer-feedback-modal',
+  react: React,
+  elementClass: LitAtomicGeneratedAnswerFeedbackModal,
 });
 
 export const AtomicHtml = createComponent({
