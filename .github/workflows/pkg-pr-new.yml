@@ -34,5 +34,4 @@ jobs:
             './packages/create-atomic-rollup-plugin' \
             './packages/headless' \
             './packages/headless-react' \
-            './packages/shopify' \
-            --template './samples/headless/search-react' './samples/headless/commerce-react'
+            './packages/shopify'
