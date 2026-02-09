@@ -1,29 +1,12 @@
 import {html} from 'lit';
-import {beforeAll, describe, expect, it} from 'vitest';
+import {describe, expect, it} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {
-  type RenderCustomNoAnswerMessageProps,
-  renderCustomNoAnswerMessage,
-} from './render-custom-no-answer-message';
+import {renderCustomNoAnswerMessage} from './render-custom-no-answer-message';
 
 describe('#renderCustomNoAnswerMessage', () => {
-  let i18n: Awaited<ReturnType<typeof createTestI18n>>;
-
-  beforeAll(async () => {
-    i18n = await createTestI18n();
-  });
-
-  const renderComponent = async (
-    overrides: Partial<RenderCustomNoAnswerMessageProps> = {}
-  ) => {
-    const defaultProps: RenderCustomNoAnswerMessageProps = {
-      i18n,
-      ...overrides,
-    };
-
+  const renderComponent = async () => {
     const element = await renderFunctionFixture(
-      html`${renderCustomNoAnswerMessage({props: defaultProps})}`
+      html`${renderCustomNoAnswerMessage()}`
     );
 
     return {
