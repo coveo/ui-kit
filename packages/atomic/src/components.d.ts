@@ -5,96 +5,21 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
-import { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, UserAction as IUserAction } from "@coveo/headless/insight";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
-import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
+import { DateFilterRange, DateRangeRequest, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+import { RangeFacetSortCriterion as InsightRangeFacetSortCriterion, UserAction as IUserAction } from "@coveo/headless/insight";
 import { AnyBindings } from "./components/common/interface/bindings";
-import { i18n } from "i18next";
-import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
-export { DateFilterRange, DateRangeRequest, FacetResultsMustMatch, GeneratedAnswer, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
-export { FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, UserAction as IUserAction } from "@coveo/headless/insight";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
-export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
+export { DateFilterRange, DateRangeRequest, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+export { RangeFacetSortCriterion as InsightRangeFacetSortCriterion, UserAction as IUserAction } from "@coveo/headless/insight";
 export { AnyBindings } from "./components/common/interface/bindings";
-export { i18n } from "i18next";
-export { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-types";
 export namespace Components {
-    /**
-     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
-     */
-    interface AtomicGeneratedAnswerFeedbackModal {
-        /**
-          * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
-         */
-        "generatedAnswer": GeneratedAnswer;
-        /**
-          * Indicates whether the answer was helpful or not.
-         */
-        "helpful": boolean;
-        /**
-          * Indicates whether the modal is open.
-         */
-        "isOpen": boolean;
-    }
-    interface AtomicInsightFacet {
-        /**
-          * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
-         */
-        "displayValuesAs": 'checkbox' | 'link' | 'box';
-        /**
-          * Whether to allow excluding values from the facet.
-         */
-        "enableExclusion": boolean;
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount": boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel": number;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth": number;
-        /**
-          * Specifies if the facet is collapsed.
-         */
-        "isCollapsed": boolean;
-        /**
-          * The non-localized label for the facet.
-         */
-        "label": string;
-        /**
-          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
-         */
-        "numberOfValues": number;
-        /**
-          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
-         */
-        "resultsMustMatch": FacetResultsMustMatch;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
-         */
-        "sortCriteria": InsightFacetSortCriterion;
-    }
     interface AtomicInsightFoldedResultList {
         /**
           * The name of the field that uniquely identifies a result within a collection.
@@ -150,99 +75,6 @@ export namespace Components {
          */
         "withToggle"?: boolean;
     }
-    interface AtomicInsightNumericFacet {
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc   ... ></atomic-insight-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc="doc"   ... ></atomic-insight-numeric-facet> ```
-         */
-        "dependsOn": Record<string, string>;
-        /**
-          * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
-         */
-        "displayValuesAs": 'checkbox' | 'link';
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount": boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel": number;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth": number;
-        /**
-          * Specifies if the facet is collapsed.
-         */
-        "isCollapsed": boolean;
-        /**
-          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label": string;
-        /**
-          * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
-         */
-        "numberOfValues": number;
-        /**
-          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
-         */
-        "rangeAlgorithm": InsightRangeFacetRangeAlgorithm;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
-         */
-        "sortCriteria": InsightRangeFacetSortCriterion;
-        /**
-          * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
-         */
-        "withInput"?: NumberInputType;
-    }
-    interface AtomicInsightRefineModal {
-        "isOpen": boolean;
-        "openButton"?: HTMLElement;
-    }
-    interface AtomicInsightResult {
-        /**
-          * The classes to add to the result element.
-         */
-        "classes": string;
-        /**
-          * The result content to display.
-         */
-        "content"?: ParentNode;
-        /**
-          * How large or small results should be.
-         */
-        "density": ItemDisplayDensity;
-        /**
-          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * The InteractiveResult item.
-         */
-        "interactiveResult": InsightInteractiveResult;
-        "loadingFlag"?: string;
-        /**
-          * The result item.
-         */
-        "result": InsightResult | InsightFoldedResult;
-        /**
-          * Whether an atomic-result-link inside atomic-insight-result should stop click event propagation.
-         */
-        "stopPropagation"?: boolean;
-        /**
-          * Global Atomic state.
-         */
-        "store"?: InsightStore;
-    }
     interface AtomicInsightResultAction {
         /**
           * The type of action to perform when the result action is clicked. This will be sent along the event fired when the button is clicked.
@@ -261,25 +93,7 @@ export namespace Components {
          */
         "tooltipOnClick": string;
     }
-    interface AtomicInsightResultActionBar {
-    }
     interface AtomicInsightResultAttachToCaseAction {
-    }
-    interface AtomicInsightResultAttachToCaseIndicator {
-    }
-    interface AtomicInsightResultChildren {
-        /**
-          * The expected size of the image displayed in the children results.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
-         */
-        "inheritTemplates": boolean;
-        /**
-          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
-         */
-        "noResultText": string;
     }
     interface AtomicInsightResultChildrenTemplate {
         /**
@@ -312,45 +126,6 @@ export namespace Components {
     string,
     string[]
   >;
-    }
-    interface AtomicInsightResultList {
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density": ItemDisplayDensity;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax such as React, Angular, or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-          * @param resultRenderingFunction
-         */
-        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
-    }
-    interface AtomicInsightResultQuickviewAction {
-        /**
-          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
-         */
-        "sandbox": string;
-    }
-    interface AtomicInsightSmartSnippet {
-        /**
-          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
-         */
-        "collapsedHeight": number;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
-         */
-        "headingLevel": number;
-        /**
-          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
-         */
-        "maximumHeight": number;
-        /**
-          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
     }
     interface AtomicInsightSmartSnippetSuggestions {
         /**
@@ -404,22 +179,6 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
-    interface AtomicInsightUserActionsModal {
-        /**
-          * The names of custom events to exclude.
-         */
-        "excludedCustomActions": string[];
-        "isOpen": boolean;
-        "openButton"?: HTMLElement;
-        /**
-          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
-         */
-        "ticketCreationDateTime": string;
-        /**
-          * The ID of the user whose actions are being displayed.
-         */
-        "userId": string;
-    }
     /**
      * @category Insight Panel
      * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
@@ -434,45 +193,9 @@ export namespace Components {
          */
         "userActions": Array<IUserAction>;
     }
-    /**
-     * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.
-     * This component displays all the actions performed by a user around the time they created a case.
-     * The actions are grouped into multiple sessions, including the session during which the case was created,
-     * the sessions preceding the case creation and the sessions following the case creation.
-     * @component 
-     * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
-     */
-    interface AtomicInsightUserActionsTimeline {
-        /**
-          * The names of custom events to exclude.
-         */
-        "excludedCustomActions": string[];
-        /**
-          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
-         */
-        "ticketCreationDateTime": string;
-        /**
-          * The ID of the user whose actions are being displayed. For example in email format "someone@company.com".
-         */
-        "userId": string;
-    }
     interface AtomicIpxBody {
         "displayFooterSlot": boolean;
         "isOpen"?: boolean;
-    }
-    interface AtomicIpxEmbedded {
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
-         */
-        "container"?: HTMLElement;
-    }
-    interface AtomicIpxModal {
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
-         */
-        "container"?: HTMLElement;
-        "isOpen": boolean;
-        "source"?: HTMLElement;
     }
     /**
      * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
@@ -542,19 +265,6 @@ export namespace Components {
         "hrefTemplate"?: string;
     }
     /**
-     * The modal opened when clicking a quickview button.
-     * Do not use this component directly; use `atomic-quickview` instead.
-     */
-    interface AtomicQuickviewModal {
-        "content"?: string;
-        "current"?: number;
-        "modalCloseCallback"?: () => void;
-        "reset": () => Promise<void>;
-        "result"?: Result;
-        "sandbox"?: string;
-        "total"?: number;
-    }
-    /**
      * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
      */
     interface AtomicRecsList {
@@ -617,28 +327,6 @@ export namespace Components {
         "rangeGetter": () => DateFilterRange | undefined;
         "rangeSetter": (range: DateRangeRequest) => void;
     }
-    /**
-     * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
-     * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
-     * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
-     * use native Elements.
-     */
-    interface AtomicSuggestionRenderer {
-        "i18n": i18n;
-        "id": string;
-        "index": number;
-        "isDoubleList": boolean;
-        "isSelected": boolean;
-        "lastIndex": number;
-        "onClick"?: (e: Event) => void;
-        "onMouseOver"?: (e: Event) => void;
-        "side": 'left' | 'right';
-        "suggestion": SearchBoxSuggestionElement;
-    }
-}
-export interface AtomicGeneratedAnswerFeedbackModalCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicGeneratedAnswerFeedbackModalElement;
 }
 export interface AtomicInsightResultActionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -652,49 +340,11 @@ export interface AtomicIpxBodyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicIpxBodyElement;
 }
-export interface AtomicIpxEmbeddedCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicIpxEmbeddedElement;
-}
-export interface AtomicIpxModalCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicIpxModalElement;
-}
-export interface AtomicQuickviewModalCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicQuickviewModalElement;
-}
 export interface AtomicStencilFacetDateInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicStencilFacetDateInputElement;
 }
 declare global {
-    interface HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap {
-        "feedbackSent": any;
-    }
-    /**
-     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
-     */
-    interface HTMLAtomicGeneratedAnswerFeedbackModalElement extends Components.AtomicGeneratedAnswerFeedbackModal, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicGeneratedAnswerFeedbackModalElement, ev: AtomicGeneratedAnswerFeedbackModalCustomEvent<HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap>(type: K, listener: (this: HTMLAtomicGeneratedAnswerFeedbackModalElement, ev: AtomicGeneratedAnswerFeedbackModalCustomEvent<HTMLAtomicGeneratedAnswerFeedbackModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicGeneratedAnswerFeedbackModalElement: {
-        prototype: HTMLAtomicGeneratedAnswerFeedbackModalElement;
-        new (): HTMLAtomicGeneratedAnswerFeedbackModalElement;
-    };
-    interface HTMLAtomicInsightFacetElement extends Components.AtomicInsightFacet, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightFacetElement: {
-        prototype: HTMLAtomicInsightFacetElement;
-        new (): HTMLAtomicInsightFacetElement;
-    };
     interface HTMLAtomicInsightFoldedResultListElement extends Components.AtomicInsightFoldedResultList, HTMLStencilElement {
     }
     var HTMLAtomicInsightFoldedResultListElement: {
@@ -706,24 +356,6 @@ declare global {
     var HTMLAtomicInsightGeneratedAnswerElement: {
         prototype: HTMLAtomicInsightGeneratedAnswerElement;
         new (): HTMLAtomicInsightGeneratedAnswerElement;
-    };
-    interface HTMLAtomicInsightNumericFacetElement extends Components.AtomicInsightNumericFacet, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightNumericFacetElement: {
-        prototype: HTMLAtomicInsightNumericFacetElement;
-        new (): HTMLAtomicInsightNumericFacetElement;
-    };
-    interface HTMLAtomicInsightRefineModalElement extends Components.AtomicInsightRefineModal, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightRefineModalElement: {
-        prototype: HTMLAtomicInsightRefineModalElement;
-        new (): HTMLAtomicInsightRefineModalElement;
-    };
-    interface HTMLAtomicInsightResultElement extends Components.AtomicInsightResult, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightResultElement: {
-        prototype: HTMLAtomicInsightResultElement;
-        new (): HTMLAtomicInsightResultElement;
     };
     interface HTMLAtomicInsightResultActionElementEventMap {
         "atomicInsightResultActionClicked": InsightResultActionClickedEvent;
@@ -741,12 +373,6 @@ declare global {
     var HTMLAtomicInsightResultActionElement: {
         prototype: HTMLAtomicInsightResultActionElement;
         new (): HTMLAtomicInsightResultActionElement;
-    };
-    interface HTMLAtomicInsightResultActionBarElement extends Components.AtomicInsightResultActionBar, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightResultActionBarElement: {
-        prototype: HTMLAtomicInsightResultActionBarElement;
-        new (): HTMLAtomicInsightResultActionBarElement;
     };
     interface HTMLAtomicInsightResultAttachToCaseActionElementEventMap {
         "atomic/insight/attachToCase/attach": InsightResultAttachToCaseEvent;
@@ -766,41 +392,11 @@ declare global {
         prototype: HTMLAtomicInsightResultAttachToCaseActionElement;
         new (): HTMLAtomicInsightResultAttachToCaseActionElement;
     };
-    interface HTMLAtomicInsightResultAttachToCaseIndicatorElement extends Components.AtomicInsightResultAttachToCaseIndicator, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightResultAttachToCaseIndicatorElement: {
-        prototype: HTMLAtomicInsightResultAttachToCaseIndicatorElement;
-        new (): HTMLAtomicInsightResultAttachToCaseIndicatorElement;
-    };
-    interface HTMLAtomicInsightResultChildrenElement extends Components.AtomicInsightResultChildren, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightResultChildrenElement: {
-        prototype: HTMLAtomicInsightResultChildrenElement;
-        new (): HTMLAtomicInsightResultChildrenElement;
-    };
     interface HTMLAtomicInsightResultChildrenTemplateElement extends Components.AtomicInsightResultChildrenTemplate, HTMLStencilElement {
     }
     var HTMLAtomicInsightResultChildrenTemplateElement: {
         prototype: HTMLAtomicInsightResultChildrenTemplateElement;
         new (): HTMLAtomicInsightResultChildrenTemplateElement;
-    };
-    interface HTMLAtomicInsightResultListElement extends Components.AtomicInsightResultList, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightResultListElement: {
-        prototype: HTMLAtomicInsightResultListElement;
-        new (): HTMLAtomicInsightResultListElement;
-    };
-    interface HTMLAtomicInsightResultQuickviewActionElement extends Components.AtomicInsightResultQuickviewAction, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightResultQuickviewActionElement: {
-        prototype: HTMLAtomicInsightResultQuickviewActionElement;
-        new (): HTMLAtomicInsightResultQuickviewActionElement;
-    };
-    interface HTMLAtomicInsightSmartSnippetElement extends Components.AtomicInsightSmartSnippet, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightSmartSnippetElement: {
-        prototype: HTMLAtomicInsightSmartSnippetElement;
-        new (): HTMLAtomicInsightSmartSnippetElement;
     };
     interface HTMLAtomicInsightSmartSnippetSuggestionsElement extends Components.AtomicInsightSmartSnippetSuggestions, HTMLStencilElement {
     }
@@ -814,12 +410,6 @@ declare global {
         prototype: HTMLAtomicInsightTimeframeFacetElement;
         new (): HTMLAtomicInsightTimeframeFacetElement;
     };
-    interface HTMLAtomicInsightUserActionsModalElement extends Components.AtomicInsightUserActionsModal, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightUserActionsModalElement: {
-        prototype: HTMLAtomicInsightUserActionsModalElement;
-        new (): HTMLAtomicInsightUserActionsModalElement;
-    };
     /**
      * @category Insight Panel
      * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
@@ -829,20 +419,6 @@ declare global {
     var HTMLAtomicInsightUserActionsSessionElement: {
         prototype: HTMLAtomicInsightUserActionsSessionElement;
         new (): HTMLAtomicInsightUserActionsSessionElement;
-    };
-    /**
-     * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.
-     * This component displays all the actions performed by a user around the time they created a case.
-     * The actions are grouped into multiple sessions, including the session during which the case was created,
-     * the sessions preceding the case creation and the sessions following the case creation.
-     * @component 
-     * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
-     */
-    interface HTMLAtomicInsightUserActionsTimelineElement extends Components.AtomicInsightUserActionsTimeline, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightUserActionsTimelineElement: {
-        prototype: HTMLAtomicInsightUserActionsTimelineElement;
-        new (): HTMLAtomicInsightUserActionsTimelineElement;
     };
     interface HTMLAtomicIpxBodyElementEventMap {
         "animationEnded": never;
@@ -860,40 +436,6 @@ declare global {
     var HTMLAtomicIpxBodyElement: {
         prototype: HTMLAtomicIpxBodyElement;
         new (): HTMLAtomicIpxBodyElement;
-    };
-    interface HTMLAtomicIpxEmbeddedElementEventMap {
-        "animationEnded": never;
-    }
-    interface HTMLAtomicIpxEmbeddedElement extends Components.AtomicIpxEmbedded, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicIpxEmbeddedElementEventMap>(type: K, listener: (this: HTMLAtomicIpxEmbeddedElement, ev: AtomicIpxEmbeddedCustomEvent<HTMLAtomicIpxEmbeddedElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicIpxEmbeddedElementEventMap>(type: K, listener: (this: HTMLAtomicIpxEmbeddedElement, ev: AtomicIpxEmbeddedCustomEvent<HTMLAtomicIpxEmbeddedElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicIpxEmbeddedElement: {
-        prototype: HTMLAtomicIpxEmbeddedElement;
-        new (): HTMLAtomicIpxEmbeddedElement;
-    };
-    interface HTMLAtomicIpxModalElementEventMap {
-        "animationEnded": never;
-    }
-    interface HTMLAtomicIpxModalElement extends Components.AtomicIpxModal, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicIpxModalElementEventMap>(type: K, listener: (this: HTMLAtomicIpxModalElement, ev: AtomicIpxModalCustomEvent<HTMLAtomicIpxModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicIpxModalElementEventMap>(type: K, listener: (this: HTMLAtomicIpxModalElement, ev: AtomicIpxModalCustomEvent<HTMLAtomicIpxModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicIpxModalElement: {
-        prototype: HTMLAtomicIpxModalElement;
-        new (): HTMLAtomicIpxModalElement;
     };
     /**
      * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
@@ -918,28 +460,6 @@ declare global {
     var HTMLAtomicIpxResultLinkElement: {
         prototype: HTMLAtomicIpxResultLinkElement;
         new (): HTMLAtomicIpxResultLinkElement;
-    };
-    interface HTMLAtomicQuickviewModalElementEventMap {
-        "atomic/quickview/next": any;
-        "atomic/quickview/previous": any;
-    }
-    /**
-     * The modal opened when clicking a quickview button.
-     * Do not use this component directly; use `atomic-quickview` instead.
-     */
-    interface HTMLAtomicQuickviewModalElement extends Components.AtomicQuickviewModal, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicQuickviewModalElementEventMap>(type: K, listener: (this: HTMLAtomicQuickviewModalElement, ev: AtomicQuickviewModalCustomEvent<HTMLAtomicQuickviewModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicQuickviewModalElementEventMap>(type: K, listener: (this: HTMLAtomicQuickviewModalElement, ev: AtomicQuickviewModalCustomEvent<HTMLAtomicQuickviewModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicQuickviewModalElement: {
-        prototype: HTMLAtomicQuickviewModalElement;
-        new (): HTMLAtomicQuickviewModalElement;
     };
     /**
      * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
@@ -971,121 +491,24 @@ declare global {
         prototype: HTMLAtomicStencilFacetDateInputElement;
         new (): HTMLAtomicStencilFacetDateInputElement;
     };
-    /**
-     * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
-     * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
-     * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
-     * use native Elements.
-     */
-    interface HTMLAtomicSuggestionRendererElement extends Components.AtomicSuggestionRenderer, HTMLStencilElement {
-    }
-    var HTMLAtomicSuggestionRendererElement: {
-        prototype: HTMLAtomicSuggestionRendererElement;
-        new (): HTMLAtomicSuggestionRendererElement;
-    };
     interface HTMLElementTagNameMap {
-        "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
-        "atomic-insight-facet": HTMLAtomicInsightFacetElement;
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
         "atomic-insight-generated-answer": HTMLAtomicInsightGeneratedAnswerElement;
-        "atomic-insight-numeric-facet": HTMLAtomicInsightNumericFacetElement;
-        "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
-        "atomic-insight-result": HTMLAtomicInsightResultElement;
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
-        "atomic-insight-result-action-bar": HTMLAtomicInsightResultActionBarElement;
         "atomic-insight-result-attach-to-case-action": HTMLAtomicInsightResultAttachToCaseActionElement;
-        "atomic-insight-result-attach-to-case-indicator": HTMLAtomicInsightResultAttachToCaseIndicatorElement;
-        "atomic-insight-result-children": HTMLAtomicInsightResultChildrenElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
-        "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
-        "atomic-insight-result-quickview-action": HTMLAtomicInsightResultQuickviewActionElement;
-        "atomic-insight-smart-snippet": HTMLAtomicInsightSmartSnippetElement;
         "atomic-insight-smart-snippet-suggestions": HTMLAtomicInsightSmartSnippetSuggestionsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
-        "atomic-insight-user-actions-modal": HTMLAtomicInsightUserActionsModalElement;
         "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
-        "atomic-insight-user-actions-timeline": HTMLAtomicInsightUserActionsTimelineElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
-        "atomic-ipx-embedded": HTMLAtomicIpxEmbeddedElement;
-        "atomic-ipx-modal": HTMLAtomicIpxModalElement;
         "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
-        "atomic-quickview-modal": HTMLAtomicQuickviewModalElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
-        "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
     }
 }
 declare namespace LocalJSX {
-    /**
-     * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
-     */
-    interface AtomicGeneratedAnswerFeedbackModal {
-        /**
-          * A `GeneratedAnswer` controller instance. It is used when the user interacts with the modal.
-         */
-        "generatedAnswer": GeneratedAnswer;
-        /**
-          * Indicates whether the answer was helpful or not.
-         */
-        "helpful"?: boolean;
-        /**
-          * Indicates whether the modal is open.
-         */
-        "isOpen"?: boolean;
-        "onFeedbackSent"?: (event: AtomicGeneratedAnswerFeedbackModalCustomEvent<any>) => void;
-    }
-    interface AtomicInsightFacet {
-        /**
-          * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
-         */
-        "displayValuesAs"?: 'checkbox' | 'link' | 'box';
-        /**
-          * Whether to allow excluding values from the facet.
-         */
-        "enableExclusion"?: boolean;
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount"?: boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel"?: number;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth"?: number;
-        /**
-          * Specifies if the facet is collapsed.
-         */
-        "isCollapsed"?: boolean;
-        /**
-          * The non-localized label for the facet.
-         */
-        "label"?: string;
-        /**
-          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
-         */
-        "numberOfValues"?: number;
-        /**
-          * Specifies how a result must match the selected facet values. Allowed values: - `atLeastOneValue`: A result will match if at least one of the corresponding facet values is selected. - `allValues`: A result will match if all corresponding facet values are selected.
-         */
-        "resultsMustMatch"?: FacetResultsMustMatch;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
-         */
-        "sortCriteria"?: InsightFacetSortCriterion;
-    }
     interface AtomicInsightFoldedResultList {
         /**
           * The name of the field that uniquely identifies a result within a collection.
@@ -1137,99 +560,6 @@ declare namespace LocalJSX {
          */
         "withToggle"?: boolean;
     }
-    interface AtomicInsightNumericFacet {
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc   ... ></atomic-insight-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc="doc"   ... ></atomic-insight-numeric-facet> ```
-         */
-        "dependsOn"?: Record<string, string>;
-        /**
-          * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
-         */
-        "displayValuesAs"?: 'checkbox' | 'link';
-        /**
-          * Specifies a unique identifier for the facet.
-         */
-        "facetId"?: string;
-        /**
-          * The field whose values you want to display in the facet.
-         */
-        "field": string;
-        /**
-          * Whether to exclude the parents of folded results when estimating the result count for each facet value.   Note: Resulting count is only an estimation, in some cases this value could be incorrect.
-         */
-        "filterFacetCount"?: boolean;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-         */
-        "headingLevel"?: number;
-        /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
-         */
-        "injectionDepth"?: number;
-        /**
-          * Specifies if the facet is collapsed.
-         */
-        "isCollapsed"?: boolean;
-        /**
-          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
-         */
-        "label"?: string;
-        /**
-          * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
-         */
-        "numberOfValues"?: number;
-        /**
-          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
-         */
-        "rangeAlgorithm"?: InsightRangeFacetRangeAlgorithm;
-        /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
-         */
-        "sortCriteria"?: InsightRangeFacetSortCriterion;
-        /**
-          * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
-         */
-        "withInput"?: NumberInputType;
-    }
-    interface AtomicInsightRefineModal {
-        "isOpen"?: boolean;
-        "openButton"?: HTMLElement;
-    }
-    interface AtomicInsightResult {
-        /**
-          * The classes to add to the result element.
-         */
-        "classes"?: string;
-        /**
-          * The result content to display.
-         */
-        "content"?: ParentNode;
-        /**
-          * How large or small results should be.
-         */
-        "density"?: ItemDisplayDensity;
-        /**
-          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * The InteractiveResult item.
-         */
-        "interactiveResult": InsightInteractiveResult;
-        "loadingFlag"?: string;
-        /**
-          * The result item.
-         */
-        "result": InsightResult | InsightFoldedResult;
-        /**
-          * Whether an atomic-result-link inside atomic-insight-result should stop click event propagation.
-         */
-        "stopPropagation"?: boolean;
-        /**
-          * Global Atomic state.
-         */
-        "store"?: InsightStore;
-    }
     interface AtomicInsightResultAction {
         /**
           * The type of action to perform when the result action is clicked. This will be sent along the event fired when the button is clicked.
@@ -1239,6 +569,10 @@ declare namespace LocalJSX {
           * Specify the result action icon to display.
          */
         "icon"?: string;
+        /**
+          * @migration Stencil's
+          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('atomicInsightResultActionClicked', { bubbles: true, composed: true, cancelable: true, detail: ... })`
+         */
         "onAtomicInsightResultActionClicked"?: (event: AtomicInsightResultActionCustomEvent<InsightResultActionClickedEvent>) => void;
         /**
           * The text tooltip to show on the result action icon.
@@ -1249,27 +583,13 @@ declare namespace LocalJSX {
          */
         "tooltipOnClick"?: string;
     }
-    interface AtomicInsightResultActionBar {
-    }
     interface AtomicInsightResultAttachToCaseAction {
+        /**
+          * @migration Stencil's
+          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('atomic/insight/attachToCase/attach', { bubbles: true, composed: true, cancelable: true, detail: ... })` `new CustomEvent('atomic/insight/attachToCase/detach', { bubbles: true, composed: true, cancelable: true, detail: ... })`
+         */
         "onAtomic/insight/attachToCase/attach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
         "onAtomic/insight/attachToCase/detach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
-    }
-    interface AtomicInsightResultAttachToCaseIndicator {
-    }
-    interface AtomicInsightResultChildren {
-        /**
-          * The expected size of the image displayed in the children results.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
-         */
-        "inheritTemplates"?: boolean;
-        /**
-          * The non-localized copy for an empty result state. An empty string will result in the component being hidden.
-         */
-        "noResultText"?: string;
     }
     interface AtomicInsightResultChildrenTemplate {
         /**
@@ -1298,40 +618,6 @@ declare namespace LocalJSX {
     string,
     string[]
   >;
-    }
-    interface AtomicInsightResultList {
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density"?: ItemDisplayDensity;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-    }
-    interface AtomicInsightResultQuickviewAction {
-        /**
-          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
-         */
-        "sandbox"?: string;
-    }
-    interface AtomicInsightSmartSnippet {
-        /**
-          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
-         */
-        "collapsedHeight"?: number;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
-         */
-        "headingLevel"?: number;
-        /**
-          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
-         */
-        "maximumHeight"?: number;
-        /**
-          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
     }
     interface AtomicInsightSmartSnippetSuggestions {
         /**
@@ -1385,22 +671,6 @@ declare namespace LocalJSX {
          */
         "withDatePicker"?: boolean;
     }
-    interface AtomicInsightUserActionsModal {
-        /**
-          * The names of custom events to exclude.
-         */
-        "excludedCustomActions"?: string[];
-        "isOpen"?: boolean;
-        "openButton"?: HTMLElement;
-        /**
-          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
-         */
-        "ticketCreationDateTime": string;
-        /**
-          * The ID of the user whose actions are being displayed.
-         */
-        "userId": string;
-    }
     /**
      * @category Insight Panel
      * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
@@ -1415,48 +685,14 @@ declare namespace LocalJSX {
          */
         "userActions": Array<IUserAction>;
     }
-    /**
-     * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.
-     * This component displays all the actions performed by a user around the time they created a case.
-     * The actions are grouped into multiple sessions, including the session during which the case was created,
-     * the sessions preceding the case creation and the sessions following the case creation.
-     * @component 
-     * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
-     */
-    interface AtomicInsightUserActionsTimeline {
-        /**
-          * The names of custom events to exclude.
-         */
-        "excludedCustomActions"?: string[];
-        /**
-          * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
-         */
-        "ticketCreationDateTime": string;
-        /**
-          * The ID of the user whose actions are being displayed. For example in email format "someone@company.com".
-         */
-        "userId": string;
-    }
     interface AtomicIpxBody {
         "displayFooterSlot"?: boolean;
         "isOpen"?: boolean;
+        /**
+          * @migration Stencil's
+          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('animationEnded', { bubbles: true, composed: true, cancelable: true })`
+         */
         "onAnimationEnded"?: (event: AtomicIpxBodyCustomEvent<never>) => void;
-    }
-    interface AtomicIpxEmbedded {
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
-         */
-        "container"?: HTMLElement;
-        "onAnimationEnded"?: (event: AtomicIpxEmbeddedCustomEvent<never>) => void;
-    }
-    interface AtomicIpxModal {
-        /**
-          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
-         */
-        "container"?: HTMLElement;
-        "isOpen"?: boolean;
-        "onAnimationEnded"?: (event: AtomicIpxModalCustomEvent<never>) => void;
-        "source"?: HTMLElement;
     }
     /**
      * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
@@ -1513,20 +749,6 @@ declare namespace LocalJSX {
         "hrefTemplate"?: string;
     }
     /**
-     * The modal opened when clicking a quickview button.
-     * Do not use this component directly; use `atomic-quickview` instead.
-     */
-    interface AtomicQuickviewModal {
-        "content"?: string;
-        "current"?: number;
-        "modalCloseCallback"?: () => void;
-        "onAtomic/quickview/next"?: (event: AtomicQuickviewModalCustomEvent<any>) => void;
-        "onAtomic/quickview/previous"?: (event: AtomicQuickviewModalCustomEvent<any>) => void;
-        "result"?: Result;
-        "sandbox"?: string;
-        "total"?: number;
-    }
-    /**
      * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
      */
     interface AtomicRecsList {
@@ -1573,105 +795,48 @@ declare namespace LocalJSX {
         "label": string;
         "max"?: string;
         "min"?: string;
+        /**
+          * @migration Stencil's
+          * @Event () decorator defaults to: bubbles=true, composed=true, cancelable=true. Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false. When migrating to Lit, explicitly set all three options to preserve behavior: `new CustomEvent('atomic/dateInputApply', { bubbles: true, composed: true, cancelable: true, detail: ... })`
+         */
         "onAtomic/dateInputApply"?: (event: AtomicStencilFacetDateInputCustomEvent<any>) => void;
         "rangeGetter": () => DateFilterRange | undefined;
         "rangeSetter": (range: DateRangeRequest) => void;
     }
-    /**
-     * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
-     * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
-     * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
-     * use native Elements.
-     */
-    interface AtomicSuggestionRenderer {
-        "i18n": i18n;
-        "id": string;
-        "index": number;
-        "isDoubleList": boolean;
-        "isSelected": boolean;
-        "lastIndex": number;
-        "onClick"?: (e: Event) => void;
-        "onMouseOver"?: (e: Event) => void;
-        "side": 'left' | 'right';
-        "suggestion": SearchBoxSuggestionElement;
-    }
     interface IntrinsicElements {
-        "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
-        "atomic-insight-facet": AtomicInsightFacet;
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
         "atomic-insight-generated-answer": AtomicInsightGeneratedAnswer;
-        "atomic-insight-numeric-facet": AtomicInsightNumericFacet;
-        "atomic-insight-refine-modal": AtomicInsightRefineModal;
-        "atomic-insight-result": AtomicInsightResult;
         "atomic-insight-result-action": AtomicInsightResultAction;
-        "atomic-insight-result-action-bar": AtomicInsightResultActionBar;
         "atomic-insight-result-attach-to-case-action": AtomicInsightResultAttachToCaseAction;
-        "atomic-insight-result-attach-to-case-indicator": AtomicInsightResultAttachToCaseIndicator;
-        "atomic-insight-result-children": AtomicInsightResultChildren;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
-        "atomic-insight-result-list": AtomicInsightResultList;
-        "atomic-insight-result-quickview-action": AtomicInsightResultQuickviewAction;
-        "atomic-insight-smart-snippet": AtomicInsightSmartSnippet;
         "atomic-insight-smart-snippet-suggestions": AtomicInsightSmartSnippetSuggestions;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
-        "atomic-insight-user-actions-modal": AtomicInsightUserActionsModal;
         "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
-        "atomic-insight-user-actions-timeline": AtomicInsightUserActionsTimeline;
         "atomic-ipx-body": AtomicIpxBody;
-        "atomic-ipx-embedded": AtomicIpxEmbedded;
-        "atomic-ipx-modal": AtomicIpxModal;
         "atomic-ipx-recs-list": AtomicIpxRecsList;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-result-link": AtomicIpxResultLink;
-        "atomic-quickview-modal": AtomicQuickviewModal;
         "atomic-recs-list": AtomicRecsList;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
-        "atomic-suggestion-renderer": AtomicSuggestionRenderer;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            /**
-             * Internal component, only to use through `atomic-generated-answer` or `atomic-insight-generated-answer`
-             */
-            "atomic-generated-answer-feedback-modal": LocalJSX.AtomicGeneratedAnswerFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicGeneratedAnswerFeedbackModalElement>;
-            "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;
             "atomic-insight-generated-answer": LocalJSX.AtomicInsightGeneratedAnswer & JSXBase.HTMLAttributes<HTMLAtomicInsightGeneratedAnswerElement>;
-            "atomic-insight-numeric-facet": LocalJSX.AtomicInsightNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightNumericFacetElement>;
-            "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
-            "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
-            "atomic-insight-result-action-bar": LocalJSX.AtomicInsightResultActionBar & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionBarElement>;
             "atomic-insight-result-attach-to-case-action": LocalJSX.AtomicInsightResultAttachToCaseAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseActionElement>;
-            "atomic-insight-result-attach-to-case-indicator": LocalJSX.AtomicInsightResultAttachToCaseIndicator & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseIndicatorElement>;
-            "atomic-insight-result-children": LocalJSX.AtomicInsightResultChildren & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
-            "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
-            "atomic-insight-result-quickview-action": LocalJSX.AtomicInsightResultQuickviewAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultQuickviewActionElement>;
-            "atomic-insight-smart-snippet": LocalJSX.AtomicInsightSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetElement>;
             "atomic-insight-smart-snippet-suggestions": LocalJSX.AtomicInsightSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetSuggestionsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
-            "atomic-insight-user-actions-modal": LocalJSX.AtomicInsightUserActionsModal & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsModalElement>;
             /**
              * @category Insight Panel
              * @example <atomic-insight-user-actions-session userActions={actions} startTimestamp={1723035731}></atomic-insight-user-actions-session>
              */
             "atomic-insight-user-actions-session": LocalJSX.AtomicInsightUserActionsSession & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsSessionElement>;
-            /**
-             * Internal component used by the `atomic-insight-user-actions-modal`. Do not use directly.
-             * This component displays all the actions performed by a user around the time they created a case.
-             * The actions are grouped into multiple sessions, including the session during which the case was created,
-             * the sessions preceding the case creation and the sessions following the case creation.
-             * @component 
-             * @example <AtomicInsightUserActionsTimeline userId={'123'} caseCreationDate={'2024-08-15T10:00:00Z'} />
-             */
-            "atomic-insight-user-actions-timeline": LocalJSX.AtomicInsightUserActionsTimeline & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsTimelineElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
-            "atomic-ipx-embedded": LocalJSX.AtomicIpxEmbedded & JSXBase.HTMLAttributes<HTMLAtomicIpxEmbeddedElement>;
-            "atomic-ipx-modal": LocalJSX.AtomicIpxModal & JSXBase.HTMLAttributes<HTMLAtomicIpxModalElement>;
             /**
              * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
              */
@@ -1682,11 +847,6 @@ declare module "@stencil/core" {
              */
             "atomic-ipx-result-link": LocalJSX.AtomicIpxResultLink & JSXBase.HTMLAttributes<HTMLAtomicIpxResultLinkElement>;
             /**
-             * The modal opened when clicking a quickview button.
-             * Do not use this component directly; use `atomic-quickview` instead.
-             */
-            "atomic-quickview-modal": LocalJSX.AtomicQuickviewModal & JSXBase.HTMLAttributes<HTMLAtomicQuickviewModalElement>;
-            /**
              * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
              */
             "atomic-recs-list": LocalJSX.AtomicRecsList & JSXBase.HTMLAttributes<HTMLAtomicRecsListElement>;
@@ -1695,13 +855,6 @@ declare module "@stencil/core" {
              * Internal component made to be integrated in a TimeframeFacet.
              */
             "atomic-stencil-facet-date-input": LocalJSX.AtomicStencilFacetDateInput & JSXBase.HTMLAttributes<HTMLAtomicStencilFacetDateInputElement>;
-            /**
-             * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
-             * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
-             * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
-             * use native Elements.
-             */
-            "atomic-suggestion-renderer": LocalJSX.AtomicSuggestionRenderer & JSXBase.HTMLAttributes<HTMLAtomicSuggestionRendererElement>;
         }
     }
 }

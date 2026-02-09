@@ -85,7 +85,7 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
       ...requestOptions,
       requestParams: {
         ...requestOptions.requestParams,
-        enableResults: req.enableResults,
+        enableResults: Boolean(req?.enableResults),
       },
       ...this.options,
     });
@@ -100,6 +100,7 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
       requestParams: {
         ...requestOptions.requestParams,
         query: req?.query,
+        enableResults: Boolean(req?.enableResults),
       },
       ...this.options,
     });

@@ -10,6 +10,7 @@ import {makeMatchConditions} from '@/src/components/common/template-controller/t
 import {arrayConverter} from '@/src/converters/array-converter';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {LitElementWithError} from '@/src/decorators/types';
+import '@/src/components/insight/atomic-insight-result/atomic-insight-result.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {mapProperty} from '@/src/utils/props-utils';
 

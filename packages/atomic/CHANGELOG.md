@@ -1,3 +1,35 @@
+## <small>3.47.1 (2026-02-04)</small>
+
+* fix(atomic): make standalone search box redirect event cancelable (#6982) ([965235b](https://github.com/coveo/ui-kit/commits/965235b)), closes [#6982](https://github.com/coveo/ui-kit/issues/6982)
+* fix(atomic): redirectionUrl attribute update listeners should exit early if ran prior to the initial ([d05d093](https://github.com/coveo/ui-kit/commits/d05d093)), closes [#7051](https://github.com/coveo/ui-kit/issues/7051)
+* fix(atomic): should bind checked to both prop & attr to ensure onChange correctly fire (#7049) ([5867477](https://github.com/coveo/ui-kit/commits/5867477)), closes [#7049](https://github.com/coveo/ui-kit/issues/7049)
+* fix(atomic): use mouseenter instead of mouseover for suggestion hover (#7048) ([89046bc](https://github.com/coveo/ui-kit/commits/89046bc)), closes [#7048](https://github.com/coveo/ui-kit/issues/7048)
+* chore(atomic): improve the test coverage to atomic-generated-answer public options (#7035) ([d820fc7](https://github.com/coveo/ui-kit/commits/d820fc7)), closes [#7035](https://github.com/coveo/ui-kit/issues/7035)
+* chore(atomic): migrate atomic-insight-result-children to Lit (#7030) ([6393e96](https://github.com/coveo/ui-kit/commits/6393e96)), closes [#7030](https://github.com/coveo/ui-kit/issues/7030)
+* chore(atomic): migrate atomic-ipx-embedded to Lit (#6968) ([24675cd](https://github.com/coveo/ui-kit/commits/24675cd)), closes [#6968](https://github.com/coveo/ui-kit/issues/6968)
+* test(atomic): fix flaky e2e tests (#7029) ([0fccf10](https://github.com/coveo/ui-kit/commits/0fccf10)), closes [#7029](https://github.com/coveo/ui-kit/issues/7029)
+* feat(headless): support spotlight content for commerce's Search feature COMHUB2-1373 (#7003) ([ea325a7](https://github.com/coveo/ui-kit/commits/ea325a7)), closes [#7003](https://github.com/coveo/ui-kit/issues/7003)
+
+
+
+## <small>3.46.1 (2026-01-28)</small>
+
+* refactor: Fix API response typing in mock implementations (Search, Commerce, Insight) (#6959) ([6611a47](https://github.com/coveo/ui-kit/commits/6611a47)), closes [#6959](https://github.com/coveo/ui-kit/issues/6959)
+* refactor(atomic): migrate atomic-insight-facet from Stencil to Lit (#6972) ([ca3e9b6](https://github.com/coveo/ui-kit/commits/ca3e9b6)), closes [#6972](https://github.com/coveo/ui-kit/issues/6972)
+* refactor(atomic): migrate atomic-insight-numeric-facet from Stencil to Lit (#6974) ([9f9af13](https://github.com/coveo/ui-kit/commits/9f9af13)), closes [#6974](https://github.com/coveo/ui-kit/issues/6974)
+* feat(atomic): Update layout of the Atomic Generated Answer component to prepare for Multi turn CRGA  ([23255d9](https://github.com/coveo/ui-kit/commits/23255d9)), closes [#6983](https://github.com/coveo/ui-kit/issues/6983)
+* chore: ensure wc-toolkit is used where it needs to be used (#6997) ([fb6e5d7](https://github.com/coveo/ui-kit/commits/fb6e5d7)), closes [#6997](https://github.com/coveo/ui-kit/issues/6997)
+* chore: remove outdated samples (Pages Router and Stencil) (#6958) ([76529fe](https://github.com/coveo/ui-kit/commits/76529fe)), closes [#6958](https://github.com/coveo/ui-kit/issues/6958)
+* chore: removing old atomic-ipx-button.tsx (#7004) ([fb5052e](https://github.com/coveo/ui-kit/commits/fb5052e)), closes [#7004](https://github.com/coveo/ui-kit/issues/7004)
+* chore(atomic): migrate atomic-insight-result to Lit (#6926) ([0f06893](https://github.com/coveo/ui-kit/commits/0f06893)), closes [#6926](https://github.com/coveo/ui-kit/issues/6926)
+* chore(atomic): migrate atomic-quickview-modal to Lit (#6949) ([222ce5f](https://github.com/coveo/ui-kit/commits/222ce5f)), closes [#6949](https://github.com/coveo/ui-kit/issues/6949)
+* fix: atomic Sort Expression not respecting tabs-included after Atomic version 3.39 (#6994) ([c8c8c44](https://github.com/coveo/ui-kit/commits/c8c8c44)), closes [#6994](https://github.com/coveo/ui-kit/issues/6994)
+* fix: ensure atomic-timeframe is loaded when querying its fields (#6998) ([ea12aa0](https://github.com/coveo/ui-kit/commits/ea12aa0)), closes [#6998](https://github.com/coveo/ui-kit/issues/6998)
+* fix: skip validation on hostConnect (#7005) ([ddc0ef6](https://github.com/coveo/ui-kit/commits/ddc0ef6)), closes [#7005](https://github.com/coveo/ui-kit/issues/7005)
+* docs(storybook): fix crawling page unreliability (#7006) ([2ba6d94](https://github.com/coveo/ui-kit/commits/2ba6d94)), closes [#7006](https://github.com/coveo/ui-kit/issues/7006)
+
+
+
 ## <small>3.45.1 (2026-01-21)</small>
 
 * fix: adjust css reference path (#6955) ([3ea4c20](https://github.com/coveo/ui-kit/commits/3ea4c20)), closes [#6955](https://github.com/coveo/ui-kit/issues/6955)

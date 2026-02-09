@@ -1,10 +1,10 @@
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {beforeAll, describe, expect, it, vi} from 'vitest';
+import type {HighlightKeywords} from '@/src/components/search/atomic-quickview-modal/highlight-keywords';
+import {QuickviewWordHighlight} from '@/src/components/search/result-template-components/quickview-word-highlight/quickview-word-highlight';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
-import {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
 import {renderQuickviewSidebar} from './atomic-quickview-sidebar';
 import {identifierKeywordsSection} from './keywords';
 

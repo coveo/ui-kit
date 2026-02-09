@@ -4,22 +4,16 @@ import {renderGeneratedContentContainer} from '@/src/components/common/generated
 import {renderRetryPrompt} from '@/src/components/common/generated-answer/retry-prompt';
 import {renderShowButton} from '@/src/components/common/generated-answer/show-button';
 import {renderSourceCitations} from '@/src/components/common/generated-answer/source-citations';
-import {renderHeading} from '@/src/components/common/heading';
-import {renderSwitch} from '@/src/components/common/switch';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {
   type RenderAnswerContentProps,
   renderAnswerContent,
 } from './render-answer-content';
-import {renderDisclaimer} from './render-disclaimer';
 import {renderGeneratingAnswerLabel} from './render-generating-answer-label';
 
-vi.mock('@/src/components/common/heading', {spy: true});
-vi.mock('@/src/components/common/switch', {spy: true});
 vi.mock('@/src/components/common/generated-answer/retry-prompt', {spy: true});
 vi.mock('@/src/components/common/generated-answer/show-button', {spy: true});
-vi.mock('./render-disclaimer', {spy: true});
 vi.mock('./render-generating-answer-label', {spy: true});
 vi.mock(
   '@/src/components/common/generated-answer/generated-content-container',
@@ -40,27 +34,33 @@ describe('#renderAnswerContent', () => {
     vi.clearAllMocks();
   });
 
+  const defaultGeneratedAnswer = {
+    isStreaming: false,
+    answer: 'Test answer',
+    citations: [],
+    answerContentFormat: 'text/markdown' as const,
+    expanded: true,
+    question: 'Test question',
+    liked: false,
+    disliked: false,
+    answerId: 'test-answer-id',
+    isLoading: false,
+    cannotAnswer: false,
+    feedbackSubmitted: false,
+  };
+
   const renderComponent = async (
     overrides: Partial<RenderAnswerContentProps> = {}
   ) => {
     const defaultProps: RenderAnswerContentProps = {
       i18n,
-      // @ts-expect-error Test fixture with partial mock
-      generatedAnswerState: {
-        isStreaming: false,
-        answer: 'Test answer',
-        citations: [],
-        answerContentFormat: 'text/plain',
-        expanded: true,
+      generatedAnswer: {
+        ...defaultGeneratedAnswer,
+        ...overrides.generatedAnswer,
       },
-      isAnswerVisible: true,
-      hasRetryableError: false,
-      toggleTooltip: 'Toggle answer',
-      withToggle: false,
       collapsible: false,
       renderFeedbackAndCopyButtonsSlot: () => html``,
       renderCitationsSlot: () => html``,
-      onToggle: vi.fn(),
       onRetry: vi.fn(),
       onClickShowButton: vi.fn(),
       ...overrides,
@@ -73,108 +73,95 @@ describe('#renderAnswerContent', () => {
     return {
       element,
       props: defaultProps,
+      questionText: element.querySelector('.question-text'),
+      feedbackAndCopyButtons: element.querySelector(
+        '[part="feedback-and-copy-buttons"]'
+      ),
+      footer: element.querySelector('[part="generated-answer-footer"]'),
     };
   };
 
-  it('should call renderHeading with correct arguments', async () => {
-    const {element} = await renderComponent();
-
-    expect(renderHeading).toHaveBeenCalledWith({
-      props: expect.objectContaining({
-        level: 0,
-        part: 'header-label',
-      }),
+  it('should display the question text', async () => {
+    const {questionText} = await renderComponent({
+      generatedAnswer: {
+        ...defaultGeneratedAnswer,
+        question: '  user query  ',
+      },
     });
 
-    const headerLabel = element.querySelector('[part="header-label"]');
-    expect(headerLabel?.textContent?.trim()).toBe(
-      i18n.t('generated-answer-title')
-    );
+    expect(questionText?.textContent?.trim()).toBe('user query');
   });
 
-  it('should call renderSwitch with correct arguments', async () => {
-    const onToggle = vi.fn();
+  describe('when there is a retryable error', () => {
+    it('should call renderRetryPrompt with correct arguments', async () => {
+      const onRetry = vi.fn();
 
-    await renderComponent({
-      isAnswerVisible: true,
-      withToggle: true,
-      toggleTooltip: 'Test tooltip',
-      onToggle,
+      await renderComponent({
+        generatedAnswer: {
+          ...defaultGeneratedAnswer,
+          error: {isRetryable: true},
+        },
+        onRetry,
+      });
+
+      expect(renderRetryPrompt).toHaveBeenCalledWith({
+        props: expect.objectContaining({
+          onClick: onRetry,
+          buttonLabel: i18n.t('retry'),
+          message: i18n.t('retry-stream-message'),
+        }),
+      });
     });
 
-    expect(renderSwitch).toHaveBeenCalledWith({
-      props: expect.objectContaining({
-        part: 'toggle',
-        checked: true,
-        onToggle,
-        ariaLabel: 'Generated answer',
-        title: 'Test tooltip',
-        withToggle: true,
-        tabIndex: 0,
-      }),
-    });
-  });
+    it('should not call renderGeneratedContentContainer', async () => {
+      await renderComponent({
+        generatedAnswer: {
+          ...defaultGeneratedAnswer,
+          error: {isRetryable: true},
+        },
+      });
 
-  it('should pass switch props when answer is hidden and withToggle is false', async () => {
-    const onToggle = vi.fn();
-
-    await renderComponent({
-      isAnswerVisible: false,
-      withToggle: false,
-      toggleTooltip: 'Another tooltip',
-      onToggle,
+      expect(renderGeneratedContentContainer).not.toHaveBeenCalled();
     });
 
-    expect(renderSwitch).toHaveBeenCalledWith({
-      props: expect.objectContaining({
-        part: 'toggle',
-        checked: false,
-        onToggle,
-        ariaLabel: 'Generated answer',
-        title: 'Another tooltip',
-        withToggle: false,
-        tabIndex: 0,
-      }),
-    });
-  });
+    it('should not render feedback and copy buttons', async () => {
+      const renderFeedbackAndCopyButtonsSlot = vi.fn(() => html``);
 
-  it('should call renderRetryPrompt with correct arguments', async () => {
-    const onRetry = vi.fn();
+      await renderComponent({
+        generatedAnswer: {
+          ...defaultGeneratedAnswer,
+          error: {isRetryable: true},
+        },
+        renderFeedbackAndCopyButtonsSlot,
+      });
 
-    await renderComponent({
-      hasRetryableError: true,
-      isAnswerVisible: true,
-      onRetry,
+      expect(renderFeedbackAndCopyButtonsSlot).not.toHaveBeenCalled();
     });
 
-    expect(renderRetryPrompt).toHaveBeenCalledWith({
-      props: expect.objectContaining({
-        onClick: onRetry,
-        buttonLabel: 'Retry',
-        message: expect.any(String),
-      }),
+    it('should not render the footer', async () => {
+      const {footer} = await renderComponent({
+        generatedAnswer: {
+          ...defaultGeneratedAnswer,
+          error: {isRetryable: true},
+        },
+      });
+
+      expect(footer).not.toBeInTheDocument();
     });
   });
 
-  it('should not call renderRetryPrompt when answer is not visible', async () => {
-    await renderComponent({
-      hasRetryableError: true,
-      isAnswerVisible: false,
+  describe('when there is no retryable error', () => {
+    it('should not call renderRetryPrompt', async () => {
+      await renderComponent();
+
+      expect(renderRetryPrompt).not.toHaveBeenCalled();
     });
 
-    expect(renderRetryPrompt).not.toHaveBeenCalled();
-  });
-
-  describe('when answer is visible and no retryable error', () => {
     it('should call renderGeneratedContentContainer with correct arguments', async () => {
       await renderComponent({
-        isAnswerVisible: true,
-        hasRetryableError: false,
-        // @ts-expect-error Test fixture with partial mock
-        generatedAnswerState: {
-          answer: 'Test answer',
+        generatedAnswer: {
+          ...defaultGeneratedAnswer,
           answerContentFormat: 'text/markdown',
-          isStreaming: false,
         },
       });
 
@@ -187,14 +174,51 @@ describe('#renderAnswerContent', () => {
       });
     });
 
-    it('should call renderFeedbackAndCopyButtonsSlot', async () => {
-      const renderFeedbackAndCopyButtonsSlot = vi.fn(() => html``);
-
+    it('should call renderSourceCitations with correct arguments when citations exist', async () => {
       await renderComponent({
-        renderFeedbackAndCopyButtonsSlot,
+        generatedAnswer: {
+          ...defaultGeneratedAnswer,
+          citations: [
+            {
+              title: 'citation 1',
+              id: '1',
+              uri: 'uri 1',
+              permanentid: '1',
+              source: 'source 1',
+            },
+            {
+              title: 'citation 2',
+              id: '2',
+              uri: 'uri 2',
+              permanentid: '2',
+              source: 'source 2',
+            },
+          ],
+        },
       });
 
-      expect(renderFeedbackAndCopyButtonsSlot).toHaveBeenCalled();
+      expect(renderSourceCitations).toHaveBeenCalledWith({
+        props: expect.objectContaining({
+          label: i18n.t('citations'),
+          isVisible: true,
+        }),
+      });
+    });
+
+    it('should call renderSourceCitations with isVisible false when citations are empty', async () => {
+      await renderComponent({
+        generatedAnswer: {
+          ...defaultGeneratedAnswer,
+          citations: [],
+        },
+      });
+
+      expect(renderSourceCitations).toHaveBeenCalledWith({
+        props: expect.objectContaining({
+          label: i18n.t('citations'),
+          isVisible: false,
+        }),
+      });
     });
 
     it('should call renderCitationsSlot', async () => {
@@ -207,106 +231,61 @@ describe('#renderAnswerContent', () => {
       expect(renderCitationsSlot).toHaveBeenCalled();
     });
 
-    it('should pass streaming plain text answer to renderGeneratedContentContainer', async () => {
-      await renderComponent({
-        isAnswerVisible: true,
-        hasRetryableError: false,
-        // @ts-expect-error Test fixture with partial mock
-        generatedAnswerState: {
-          answer: 'Another answer',
-          answerContentFormat: 'text/plain',
-          isStreaming: true,
-        },
+    describe('when expanded', () => {
+      it('should render feedback and copy buttons', async () => {
+        const renderFeedbackAndCopyButtonsSlot = vi.fn(() => html``);
+
+        await renderComponent({
+          renderFeedbackAndCopyButtonsSlot,
+          generatedAnswer: {
+            ...defaultGeneratedAnswer,
+            expanded: true,
+          },
+        });
+
+        expect(renderFeedbackAndCopyButtonsSlot).toHaveBeenCalled();
       });
 
-      expect(renderGeneratedContentContainer).toHaveBeenCalledWith({
-        props: expect.objectContaining({
-          answer: 'Another answer',
-          answerContentFormat: 'text/plain',
-          isStreaming: true,
-        }),
-      });
-    });
+      it('should render feedback and copy buttons when not collapsible', async () => {
+        const renderFeedbackAndCopyButtonsSlot = vi.fn(() => html``);
 
-    it('should call renderSourceCitations with correct arguments', async () => {
-      await renderComponent({
-        isAnswerVisible: true,
-        hasRetryableError: false,
-        generatedAnswerState: {
-          // @ts-expect-error Test fixture with partial mock
-          citations: [{id: '1'}, {id: '2'}],
-        },
-      });
+        await renderComponent({
+          collapsible: false,
+          renderFeedbackAndCopyButtonsSlot,
+        });
 
-      expect(renderSourceCitations).toHaveBeenCalledWith({
-        props: expect.objectContaining({
-          label: 'Citations',
-          isVisible: true,
-        }),
+        expect(renderFeedbackAndCopyButtonsSlot).toHaveBeenCalled();
       });
     });
 
-    it('should call renderSourceCitations with isVisible false when citations are empty', async () => {
-      await renderComponent({
-        isAnswerVisible: true,
-        hasRetryableError: false,
-        // @ts-expect-error Test fixture with partial mock
-        generatedAnswerState: {
-          citations: [],
-        },
-      });
+    describe('when collapsed', () => {
+      it('should not render feedback and copy buttons', async () => {
+        const renderFeedbackAndCopyButtonsSlot = vi.fn(() => html``);
 
-      expect(renderSourceCitations).toHaveBeenCalledWith({
-        props: expect.objectContaining({
-          label: 'Citations',
-          isVisible: false,
-        }),
-      });
-    });
+        await renderComponent({
+          collapsible: true,
+          renderFeedbackAndCopyButtonsSlot,
+          generatedAnswer: {
+            ...defaultGeneratedAnswer,
+            expanded: false,
+          },
+        });
 
-    it('should call renderDisclaimer with correct arguments when not streaming', async () => {
-      await renderComponent({
-        isAnswerVisible: true,
-        hasRetryableError: false,
-        // @ts-expect-error Test fixture with partial mock
-        generatedAnswerState: {
-          isStreaming: false,
-        },
-      });
-
-      expect(renderDisclaimer).toHaveBeenCalledWith({
-        props: expect.objectContaining({
-          i18n,
-          isStreaming: false,
-        }),
+        expect(renderFeedbackAndCopyButtonsSlot).not.toHaveBeenCalled();
       });
     });
 
-    it('should call renderDisclaimer with correct arguments when streaming', async () => {
-      await renderComponent({
-        isAnswerVisible: true,
-        hasRetryableError: false,
-        // @ts-expect-error Test fixture with partial mock
-        generatedAnswerState: {
-          isStreaming: true,
-        },
-      });
+    it('should render the footer', async () => {
+      const {footer} = await renderComponent();
 
-      expect(renderDisclaimer).toHaveBeenCalledWith({
-        props: expect.objectContaining({
-          i18n,
-          isStreaming: true,
-        }),
-      });
+      expect(footer).toBeInTheDocument();
     });
 
-    it('should call renderGeneratingAnswerLabel with correct arguments', async () => {
+    it('should call renderGeneratingAnswerLabel with correct arguments when streaming', async () => {
       await renderComponent({
-        isAnswerVisible: true,
-        hasRetryableError: false,
         collapsible: true,
-        // @ts-expect-error Test fixture with partial mock
-        generatedAnswerState: {
+        generatedAnswer: {
+          ...defaultGeneratedAnswer,
           isStreaming: true,
         },
       });
@@ -322,11 +301,9 @@ describe('#renderAnswerContent', () => {
 
     it('should call renderGeneratingAnswerLabel with correct arguments when not streaming', async () => {
       await renderComponent({
-        isAnswerVisible: true,
-        hasRetryableError: false,
         collapsible: false,
-        // @ts-expect-error Test fixture with partial mock
-        generatedAnswerState: {
+        generatedAnswer: {
+          ...defaultGeneratedAnswer,
           isStreaming: false,
         },
       });
@@ -340,95 +317,76 @@ describe('#renderAnswerContent', () => {
       });
     });
 
-    it('should not call renderShowButton when streaming', async () => {
-      await renderComponent({
-        collapsible: true,
-        // @ts-expect-error Test fixture with partial mock
-        generatedAnswerState: {
-          isStreaming: true,
-        },
-      });
-
-      expect(renderShowButton).not.toHaveBeenCalled();
-    });
-
-    describe('when collapsible is true and not streaming', () => {
-      it('should call renderShowButton when expanded is true', async () => {
-        const onClickShowButton = vi.fn();
-
+    describe('show button', () => {
+      it('should not call renderShowButton when streaming', async () => {
         await renderComponent({
           collapsible: true,
-          onClickShowButton,
-          // @ts-expect-error Test fixture with partial mock
-          generatedAnswerState: {
-            isStreaming: false,
-            expanded: true,
+          generatedAnswer: {
+            ...defaultGeneratedAnswer,
+            isStreaming: true,
           },
         });
 
-        expect(renderShowButton).toHaveBeenCalledWith({
-          props: expect.objectContaining({
-            i18n,
-            onClick: onClickShowButton,
-            isCollapsed: false,
-          }),
-        });
+        expect(renderShowButton).not.toHaveBeenCalled();
       });
 
-      it('should call renderShowButton when expanded is false', async () => {
+      it('should not call renderShowButton when not collapsible', async () => {
         await renderComponent({
-          collapsible: true,
-          // @ts-expect-error Test fixture with partial mock
-          generatedAnswerState: {
+          collapsible: false,
+          generatedAnswer: {
+            ...defaultGeneratedAnswer,
             isStreaming: false,
-            expanded: false,
           },
         });
 
-        expect(renderShowButton).toHaveBeenCalledWith({
-          props: expect.objectContaining({
-            isCollapsed: true,
-          }),
+        expect(renderShowButton).not.toHaveBeenCalled();
+      });
+
+      describe('when collapsible and not streaming', () => {
+        it('should call renderShowButton when expanded', async () => {
+          const onClickShowButton = vi.fn();
+
+          await renderComponent({
+            collapsible: true,
+            onClickShowButton,
+            generatedAnswer: {
+              ...defaultGeneratedAnswer,
+              isStreaming: false,
+              expanded: true,
+            },
+          });
+
+          expect(renderShowButton).toHaveBeenCalledWith({
+            props: expect.objectContaining({
+              i18n,
+              onClick: onClickShowButton,
+              isCollapsed: false,
+            }),
+          });
+        });
+
+        it('should call renderShowButton when collapsed', async () => {
+          const onClickShowButton = vi.fn();
+
+          await renderComponent({
+            collapsible: true,
+            onClickShowButton,
+            generatedAnswer: {
+              ...defaultGeneratedAnswer,
+              isStreaming: false,
+              expanded: false,
+            },
+          });
+
+          expect(renderShowButton).toHaveBeenCalledWith({
+            props: expect.objectContaining({
+              i18n,
+              onClick: onClickShowButton,
+              isCollapsed: true,
+            }),
+          });
         });
       });
-    });
-
-    it('should not call renderShowButton when not collapsible', async () => {
-      await renderComponent({
-        collapsible: false,
-        // @ts-expect-error Test fixture with partial mock
-        generatedAnswerState: {
-          isStreaming: false,
-        },
-      });
-
-      expect(renderShowButton).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('when answer is not visible', () => {
-    it('should not call renderGeneratedContentContainer', async () => {
-      await renderComponent({
-        isAnswerVisible: false,
-      });
-
-      expect(renderGeneratedContentContainer).not.toHaveBeenCalled();
-    });
-
-    it('should not call renderSourceCitations', async () => {
-      await renderComponent({
-        isAnswerVisible: false,
-      });
-
-      expect(renderSourceCitations).not.toHaveBeenCalled();
-    });
-
-    it('should not call renderDisclaimer', async () => {
-      await renderComponent({
-        isAnswerVisible: false,
-      });
-
-      expect(renderDisclaimer).not.toHaveBeenCalled();
     });
   });
 });

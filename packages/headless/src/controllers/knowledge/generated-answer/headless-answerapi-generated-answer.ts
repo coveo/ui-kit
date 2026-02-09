@@ -1,3 +1,4 @@
+import {skipToken} from '@reduxjs/toolkit/query';
 import type {GeneratedAnswerStream} from '../../../api/knowledge/generated-answer-stream.js';
 import {
   type AnswerEvaluationPOSTParams,
@@ -180,7 +181,7 @@ export function buildAnswerApiGeneratedAnswer(
     },
     retry() {
       const answerApiQueryParams = selectAnswerApiQueryParams(getState());
-      engine.dispatch(fetchAnswer(answerApiQueryParams));
+      engine.dispatch(fetchAnswer(answerApiQueryParams ?? skipToken));
     },
     reset() {
       engine.dispatch(resetAnswer());

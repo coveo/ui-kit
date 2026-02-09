@@ -1,12 +1,12 @@
 import type {HttpHandler} from 'msw';
 import {EndpointHarness, type MockApi} from '../_base.js';
 import type {APIErrorWithStatusCode} from '../_common/error.js';
-import {baseResponse as baseListingResponse} from './listing-response.js';
+import {richResponse as baseListingResponse} from './listing-response.js';
 import {baseResponse as baseProductSuggestResponse} from './productSuggest-response.js';
 import {baseResponse as baseQuerySuggestResponse} from './querySuggest-response.js';
 import {baseResponse as baseRecommendationResponse} from './recommendation-response.js';
 import {
-  baseResponse as baseSearchResponse,
+  richResponse as baseSearchResponse,
   type CommerceSearchResponse,
 } from './search-response.js';
 
@@ -55,5 +55,13 @@ export class MockCommerceApi implements MockApi {
       this.recommendationEndpoint.generateHandler(),
       this.productListingEndpoint.generateHandler(),
     ];
+  }
+
+  clearAll(): void {
+    this.searchEndpoint.clear();
+    this.recommendationEndpoint.clear();
+    this.querySuggestEndpoint.clear();
+    this.productSuggestEndpoint.clear();
+    this.productListingEndpoint.clear();
   }
 }

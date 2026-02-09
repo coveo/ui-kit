@@ -2,8 +2,10 @@
 export default {
   'atomic-ipx-button': async () =>
     await import('./atomic-ipx-button/atomic-ipx-button.js'),
-  'atomic-ipx-refine-toggle': async () =>
-    await import('./atomic-ipx-refine-toggle/atomic-ipx-refine-toggle.js'),
+  'atomic-ipx-embedded': async () =>
+    await import('./atomic-ipx-embedded/atomic-ipx-embedded.js'),
+  'atomic-ipx-modal': async () =>
+    await import('./atomic-ipx-modal/atomic-ipx-modal.js'),
   'atomic-ipx-tab': async () =>
     await import('./atomic-ipx-tab/atomic-ipx-tab.js'),
   'atomic-ipx-tabs': async () =>

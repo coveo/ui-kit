@@ -11,7 +11,6 @@ import {hasClipboardSupport} from './generated-answer-utils';
 export interface RenderFeedbackAndCopyButtonsProps {
   i18n: i18n;
   generatedAnswerState: GeneratedAnswerState | undefined;
-  withToggle?: boolean;
   copied: boolean;
   copyError: boolean;
   getCopyToClipboardTooltip: () => string;
@@ -29,7 +28,6 @@ export const renderFeedbackAndCopyButtons: FunctionalComponent<
   const {
     i18n,
     generatedAnswerState,
-    withToggle,
     copied,
     copyError,
     getCopyToClipboardTooltip,
@@ -45,9 +43,7 @@ export const renderFeedbackAndCopyButtons: FunctionalComponent<
     () => html`
       <div
         class="${classMap({
-          'feedback-buttons flex h-9 absolute top-6 shrink-0 gap-2': true,
-          'right-20': !!withToggle,
-          'right-6': !withToggle,
+          'feedback-buttons flex h-9 items-center shrink-0 gap-2': true,
         })}"
       >
         ${renderFeedbackButton({

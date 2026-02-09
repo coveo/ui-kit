@@ -44,6 +44,12 @@ export class AtomicInsightResultAction
   @ResultContext() private result!: Result;
   @State() public error!: Error;
 
+  /**
+   * @migration Stencil's @Event() decorator defaults to: bubbles=true, composed=true, cancelable=true.
+   * Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false.
+   * When migrating to Lit, explicitly set all three options to preserve behavior:
+   * `new CustomEvent('atomicInsightResultActionClicked', { bubbles: true, composed: true, cancelable: true, detail: ... })`
+   */
   @Event({
     eventName: 'atomicInsightResultActionClicked',
     composed: true,

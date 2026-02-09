@@ -16,6 +16,7 @@ import {
   AtomicFormatNumber as LitAtomicFormatNumber,
   AtomicFormatUnit as LitAtomicFormatUnit,
   AtomicGeneratedAnswer as LitAtomicGeneratedAnswer,
+  AtomicGeneratedAnswerFeedbackModal as LitAtomicGeneratedAnswerFeedbackModal,
   AtomicHtml as LitAtomicHtml,
   AtomicIcon as LitAtomicIcon,
   AtomicLayoutSection as LitAtomicLayoutSection,
@@ -29,6 +30,7 @@ import {
   AtomicQueryError as LitAtomicQueryError,
   AtomicQuerySummary as LitAtomicQuerySummary,
   AtomicQuickview as LitAtomicQuickview,
+  AtomicQuickviewModal as LitAtomicQuickviewModal,
   AtomicRatingFacet as LitAtomicRatingFacet,
   AtomicRatingRangeFacet as LitAtomicRatingRangeFacet,
   AtomicRecsError as LitAtomicRecsError,
@@ -189,6 +191,12 @@ export const AtomicGeneratedAnswer = createComponent({
   elementClass: LitAtomicGeneratedAnswer,
 });
 
+export const AtomicGeneratedAnswerFeedbackModal = createComponent({
+  tagName: 'atomic-generated-answer-feedback-modal',
+  react: React,
+  elementClass: LitAtomicGeneratedAnswerFeedbackModal,
+});
+
 export const AtomicHtml = createComponent({
   tagName: 'atomic-html',
   react: React,
@@ -265,6 +273,12 @@ export const AtomicQuickview = createComponent({
   tagName: 'atomic-quickview',
   react: React,
   elementClass: LitAtomicQuickview,
+});
+
+export const AtomicQuickviewModal = createComponent({
+  tagName: 'atomic-quickview-modal',
+  react: React,
+  elementClass: LitAtomicQuickviewModal,
 });
 
 export const AtomicRatingFacet = createComponent({

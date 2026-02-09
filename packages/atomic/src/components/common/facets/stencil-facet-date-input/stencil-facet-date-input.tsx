@@ -32,6 +32,12 @@ export class FacetDateInput {
   @Prop() public min?: string;
   @Prop() public max?: string = '9999-12-31';
 
+  /**
+   * @migration Stencil's @Event() decorator defaults to: bubbles=true, composed=true, cancelable=true.
+   * Native CustomEvent defaults to: bubbles=false, composed=false, cancelable=false.
+   * When migrating to Lit, explicitly set all three options to preserve behavior:
+   * `new CustomEvent('atomic/dateInputApply', { bubbles: true, composed: true, cancelable: true, detail: ... })`
+   */
   @Event({
     eventName: 'atomic/dateInputApply',
   })

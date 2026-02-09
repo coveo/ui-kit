@@ -1,0 +1,26 @@
+description: Root configuration files and CI/CD infrastructure
+file_patterns:
+  # Root configuration files
+  - CODEOWNERS
+  - knip.jsonc
+  - package.json
+  - renovate.json5
+  - tsconfig.json
+  - turbo.json
+  - vitest.config.js
+
+  # CI/CD infrastructure
+  - patches/**
+  - scripts/**
+  - utils/**
+
+  # New packages
+  - .areas/*
+  - packages/*
+
+reviewers:
+  dxui:
+    minimum_approvals: 1
+
+review_bypass:
+  integration/139346: exempt # Developer eXperience Bot. Important for releases

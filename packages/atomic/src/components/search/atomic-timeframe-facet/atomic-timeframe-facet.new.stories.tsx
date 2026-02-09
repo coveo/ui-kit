@@ -1,6 +1,5 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {getStorybookHelpers} from '@wc-toolkit/storybook-helpers';
-import {html, unsafeStatic} from 'lit/static-html.js';
 import {MockSearchApi} from '@/storybook-utils/api/search/mock';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {
@@ -78,38 +77,18 @@ const createDateFacetResponse = (
 
 const {decorator, play} = wrapInSearchInterface();
 
-const {events, argTypes} = getStorybookHelpers('atomic-timeframe-facet', {
-  excludeCategories: ['methods'],
-});
+const {events, args, argTypes, template} = getStorybookHelpers(
+  'atomic-timeframe-facet',
+  {
+    excludeCategories: ['methods'],
+  }
+);
 
 const meta: Meta = {
   component: 'atomic-timeframe-facet',
   title: 'Search/Facet (Timeframe)',
   id: 'atomic-timeframe-facet',
-  render: (args) => {
-    const {'default-slot': slot, ...props} = args;
-
-    // Build attribute string from props
-    const attributes = Object.entries(props)
-      .filter(([_key, value]) => {
-        // Skip undefined or null values
-        if (value === undefined || value === null) return false;
-        // For booleans, only include if true (attribute presence means true in HTML)
-        if (typeof value === 'boolean' && !value) return false;
-        return true;
-      })
-      .map(([key, value]) => {
-        if (typeof value === 'boolean') {
-          // For boolean attributes, just add the attribute name
-          return key;
-        }
-        return `${key}="${value}"`;
-      })
-      .join(' ');
-
-    const tag = unsafeStatic(`atomic-timeframe-facet ${attributes}`);
-    return html`<${tag}>${slot}</${unsafeStatic('atomic-timeframe-facet')}>`;
-  },
+  render: (args) => template(args),
   decorators: [facetDecorator, decorator],
   parameters: {
     ...parameters,
@@ -118,6 +97,7 @@ const meta: Meta = {
     },
     msw: {handlers: [...searchApiHarness.handlers]},
   },
+  args,
   argTypes,
   beforeEach: () => {
     searchApiHarness.searchEndpoint.clear();
@@ -129,7 +109,7 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'default-slot': html`
+    'default-slot': `
       <atomic-timeframe unit="hour"></atomic-timeframe>
       <atomic-timeframe unit="day"></atomic-timeframe>
       <atomic-timeframe unit="week"></atomic-timeframe>
@@ -154,7 +134,7 @@ export const Default: Story = {
 export const WithSelectedValue: Story = {
   name: 'With Selected Value',
   args: {
-    'default-slot': html`
+    'default-slot': `
       <atomic-timeframe unit="hour"></atomic-timeframe>
       <atomic-timeframe unit="day"></atomic-timeframe>
       <atomic-timeframe unit="week"></atomic-timeframe>
@@ -182,7 +162,7 @@ export const WithSelectedValue: Story = {
 export const WithDatePicker: Story = {
   name: 'With Date Picker',
   args: {
-    'default-slot': html`
+    'default-slot': `
       <atomic-timeframe unit="hour"></atomic-timeframe>
       <atomic-timeframe unit="day"></atomic-timeframe>
       <atomic-timeframe unit="week"></atomic-timeframe>
@@ -216,7 +196,7 @@ export const WithDependsOn: Story = {
     },
   },
   args: {
-    'default-slot': html`
+    'default-slot': `
       <atomic-timeframe unit="hour"></atomic-timeframe>
       <atomic-timeframe unit="day"></atomic-timeframe>
       <atomic-timeframe unit="week"></atomic-timeframe>
@@ -269,7 +249,7 @@ export const WithDependsOn: Story = {
 export const Collapsed: Story = {
   name: 'Collapsed',
   args: {
-    'default-slot': html`
+    'default-slot': `
       <atomic-timeframe unit="hour"></atomic-timeframe>
       <atomic-timeframe unit="day"></atomic-timeframe>
       <atomic-timeframe unit="week"></atomic-timeframe>
