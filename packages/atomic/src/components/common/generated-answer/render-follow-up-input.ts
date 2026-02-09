@@ -40,7 +40,7 @@ export const renderFollowUpInput: FunctionalComponent<
     if (!input || !button) return;
 
     const inputValue = input.value.trim();
-    if (!inputValue || button.disabled) {
+    if (!inputValue || submitButtonDisabled) {
       return;
     }
 

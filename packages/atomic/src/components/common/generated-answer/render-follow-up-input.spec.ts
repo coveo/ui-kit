@@ -204,7 +204,7 @@ describe('#renderFollowUpInput', () => {
       resolveSubmission!();
     });
 
-    it('should re-enable button after submission completes', async () => {
+    it('should re-enable button after submission completes if submitButtonDisabled is false', async () => {
       const askFollowUp = vi.fn().mockResolvedValue(undefined);
       const {input, submitButton} = await renderComponent({
         askFollowUp,
@@ -219,7 +219,7 @@ describe('#renderFollowUpInput', () => {
       });
     });
 
-    it('should keep button disabled after submission if submitButtonDisabled is true', async () => {
+    it('should keep button disabled when submitButtonDisabled is true', async () => {
       const askFollowUp = vi.fn().mockResolvedValue(undefined);
       const {input, submitButton} = await renderComponent({
         askFollowUp,
@@ -227,16 +227,10 @@ describe('#renderFollowUpInput', () => {
       });
 
       await input.fill('test question');
+      await userEvent.keyboard('{Enter}');
 
-      // Force enable to test the re-disable logic
-      const buttonElement = submitButton.element() as HTMLButtonElement;
-      buttonElement.disabled = false;
-
-      await submitButton.click();
-
-      await vi.waitFor(async () => {
-        await expect.element(submitButton).toBeDisabled();
-      });
+      await expect.element(submitButton).toBeDisabled();
+      expect(askFollowUp).not.toHaveBeenCalled();
     });
 
     it('should not call askFollowUp when button is already disabled', async () => {
