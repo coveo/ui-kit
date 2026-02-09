@@ -1,17 +1,17 @@
 import type {Locator, Page} from '@playwright/test';
 import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 
-export class AtomicAnswersThreadItemPageObject extends BasePageObject {
+export class RenderAnswersThreadItemPageObject extends BasePageObject {
   constructor(page: Page) {
-    super(page, 'atomic-answers-thread-item');
+    super(page, 'render-answers-thread-item');
   }
 
   get root(): Locator {
-    return this.page.locator(this.tag);
+    return this.page.locator('[data-testid="answers-thread-item"]');
   }
 
   get titleButton(): Locator {
-    return this.page.getByRole('button');
+    return this.root.getByRole('button', {name: 'what are they for'});
   }
 
   get content(): Locator {

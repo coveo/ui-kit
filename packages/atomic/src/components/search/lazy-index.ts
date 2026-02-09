@@ -1,7 +1,5 @@
 // Auto-generated file
 export default {
-  'atomic-answers-thread-item': async () =>
-    await import('./atomic-answers-thread-item/atomic-answers-thread-item.js'),
   'atomic-automatic-facet': async () =>
     await import('./atomic-automatic-facet/atomic-automatic-facet.js'),
   'atomic-automatic-facet-generator': async () =>
