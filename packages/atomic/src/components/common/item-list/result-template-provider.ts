@@ -9,6 +9,7 @@ import {
   TemplateProvider,
   type TemplateProviderProps,
 } from '../template-provider/template-provider';
+import '@/src/components/search/atomic-result-link/atomic-result-link';
 
 export class ResultTemplateProvider extends TemplateProvider<Result> {
   constructor(

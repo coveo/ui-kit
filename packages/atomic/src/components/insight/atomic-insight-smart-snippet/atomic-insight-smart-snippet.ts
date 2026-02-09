@@ -23,6 +23,7 @@ import '@/src/components/common/atomic-smart-snippet-expandable-answer/atomic-sm
 import '@/src/components/common/atomic-smart-snippet-source/atomic-smart-snippet-source';
 import {when} from 'lit/directives/when.js';
 import type {AtomicInsightSmartSnippetFeedbackModal} from '@/src/components/insight/atomic-insight-smart-snippet-feedback-modal/atomic-insight-smart-snippet-feedback-modal';
+import '@/src/components/insight/atomic-insight-smart-snippet-feedback-modal/atomic-insight-smart-snippet-feedback-modal';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import styles from './atomic-insight-smart-snippet.tw.css.js';
 
