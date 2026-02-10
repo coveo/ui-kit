@@ -49,6 +49,7 @@ import {
 } from '../../common/facets/facet-common';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import type {SortDropdownOption} from '../atomic-search-interface/store';
+import '@/src/components/search/atomic-automatic-facet-generator/atomic-automatic-facet-generator';
 
 /**
  * The `atomic-refine-modal` component is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
