@@ -31,6 +31,8 @@ export interface AtomicAnswersThreadItemProps {
  * The `atomic-answers-thread-item` component renders a generated answers
  * thread item with timeline visuals and collapsible content.
  *
+ * @internal
+ *
  * @part item - The root container for the thread item.
  * @part timeline - The timeline column containing the dot and line.
  * @part timeline-dot - The dot representing the thread item on the timeline.
