@@ -22,6 +22,20 @@ export class IpxRefineTogglePageObject extends BasePageObject {
     );
   }
 
+  get modal() {
+    return this.page.locator('atomic-ipx-refine-modal');
+  }
+
+  get modalExpandFacetButton() {
+    return this.modal
+      .getByRole('button', {name: /Expand the .* facet/})
+      .first();
+  }
+
+  get modalFirstCheckbox() {
+    return this.modal.getByRole('checkbox').first();
+  }
+
   async clickButton() {
     await this.button.click();
   }

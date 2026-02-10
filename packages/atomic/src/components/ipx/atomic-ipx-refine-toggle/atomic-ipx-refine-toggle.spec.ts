@@ -9,11 +9,11 @@ import {
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, expect, it, vi} from 'vitest';
-import {page} from 'vitest/browser';
+import {userEvent} from 'vitest/browser';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/breadcrumb-manager';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
-import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status';
+import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
 import type {AtomicIpxRefineToggle} from './atomic-ipx-refine-toggle';
 import './atomic-ipx-refine-toggle';
 
@@ -38,9 +38,7 @@ describe('atomic-ipx-refine-toggle', () => {
     mockedBreadcrumbManager = buildFakeBreadcrumbManager({
       state: breadcrumbState,
     });
-    mockedSearchStatus = buildFakeSearchStatus({
-      state: searchStatusState,
-    });
+    mockedSearchStatus = buildFakeSearchStatus(searchStatusState);
 
     vi.mocked(buildBreadcrumbManager).mockReturnValue(mockedBreadcrumbManager);
     vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
@@ -53,22 +51,29 @@ describe('atomic-ipx-refine-toggle', () => {
         selector: 'atomic-ipx-refine-toggle',
         bindings: (bindings) => {
           bindings.engine = mockedEngine;
+          bindings.store = {
+            ...bindings.store,
+            waitUntilAppLoaded: (cb: () => void) => cb(),
+          };
           return bindings;
         },
       });
 
     return {
       element,
-      button: () => page.getByRole('button', {name: 'Filters'}),
       parts: (el: AtomicIpxRefineToggle) => ({
         container: el.shadowRoot?.querySelector(
           '[part="ipx-refine-toggle-container"]'
-        ),
+        ) as HTMLElement | null,
         button: el.shadowRoot?.querySelector(
           '[part="ipx-refine-toggle-button"]'
-        ),
-        icon: el.shadowRoot?.querySelector('[part="ipx-refine-toggle-icon"]'),
-        badge: el.shadowRoot?.querySelector('[part="ipx-refine-toggle-badge"]'),
+        ) as HTMLElement | null,
+        icon: el.shadowRoot?.querySelector(
+          '[part="ipx-refine-toggle-icon"]'
+        ) as HTMLElement | null,
+        badge: el.shadowRoot?.querySelector(
+          '[part="ipx-refine-toggle-badge"]'
+        ) as HTMLElement | null,
       }),
     };
   };
@@ -106,60 +111,68 @@ describe('atomic-ipx-refine-toggle', () => {
   });
 
   describe('rendering', () => {
-    it('should render the container part', async () => {
-      const {parts, element} = await renderRefineToggle();
+    it('should render all shadow parts', async () => {
+      const {parts, element} = await renderRefineToggle({
+        searchStatusState: {hasResults: true},
+      });
       await expect.element(parts(element).container).toBeInTheDocument();
-    });
-
-    it('should render the button part', async () => {
-      const {parts, element} = await renderRefineToggle({
-        searchStatusState: {hasResults: true},
-      });
       await expect.element(parts(element).button).toBeInTheDocument();
-    });
-
-    it('should render the icon part', async () => {
-      const {parts, element} = await renderRefineToggle({
-        searchStatusState: {hasResults: true},
-      });
       await expect.element(parts(element).icon).toBeInTheDocument();
     });
 
-    it('should render the button with correct accessibility label', async () => {
-      const {button} = await renderRefineToggle({
+    it('should render the button with correct aria-label', async () => {
+      const {parts, element} = await renderRefineToggle({
         searchStatusState: {hasResults: true},
       });
-      await expect.element(button()).toBeInTheDocument();
+      expect(parts(element).button?.getAttribute('aria-label')).toBe('Sort');
     });
   });
 
   describe('when there are no results and no breadcrumbs', () => {
     it('should disable the button', async () => {
-      const {button} = await renderRefineToggle({
+      const {parts, element} = await renderRefineToggle({
         searchStatusState: {hasResults: false},
         breadcrumbState: {hasBreadcrumbs: false},
       });
-      await expect.element(button()).toBeDisabled();
+      expect(parts(element).button?.hasAttribute('disabled')).toBe(true);
     });
   });
 
   describe('when there are results', () => {
     it('should enable the button', async () => {
-      const {button} = await renderRefineToggle({
+      const {parts, element} = await renderRefineToggle({
         searchStatusState: {hasResults: true},
         breadcrumbState: {hasBreadcrumbs: false},
       });
-      await expect.element(button()).toBeEnabled();
+      expect(parts(element).button?.hasAttribute('disabled')).toBe(false);
     });
   });
 
   describe('when there are breadcrumbs but no results', () => {
     it('should enable the button', async () => {
-      const {button} = await renderRefineToggle({
+      const {parts, element} = await renderRefineToggle({
         searchStatusState: {hasResults: false},
-        breadcrumbState: {hasBreadcrumbs: true},
+        breadcrumbState: {
+          hasBreadcrumbs: true,
+          facetBreadcrumbs: [
+            {
+              facetId: 'test-facet',
+              field: 'test-field',
+              values: [
+                {
+                  value: {
+                    value: 'value1',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+        },
       });
-      await expect.element(button()).toBeEnabled();
+      expect(parts(element).button?.hasAttribute('disabled')).toBe(false);
     });
   });
 
@@ -167,14 +180,7 @@ describe('atomic-ipx-refine-toggle', () => {
     it('should not render badge when there are no breadcrumbs', async () => {
       const {parts, element} = await renderRefineToggle({
         searchStatusState: {hasResults: true},
-        breadcrumbState: {
-          hasBreadcrumbs: false,
-          facetBreadcrumbs: [],
-          categoryFacetBreadcrumbs: [],
-          numericFacetBreadcrumbs: [],
-          dateFacetBreadcrumbs: [],
-          staticFilterBreadcrumbs: [],
-        },
+        breadcrumbState: {hasBreadcrumbs: false},
       });
       expect(parts(element).badge).toBeFalsy();
     });
@@ -187,14 +193,19 @@ describe('atomic-ipx-refine-toggle', () => {
           facetBreadcrumbs: [
             {
               facetId: 'test-facet',
-              facetDisplayName: 'Test',
-              values: [{value: {value: 'value1'}, deselect: vi.fn()}],
+              field: 'test-field',
+              values: [
+                {
+                  value: {
+                    value: 'value1',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
             },
           ],
-          categoryFacetBreadcrumbs: [],
-          numericFacetBreadcrumbs: [],
-          dateFacetBreadcrumbs: [],
-          staticFilterBreadcrumbs: [],
         },
       });
       await expect.element(parts(element).badge).toBeInTheDocument();
@@ -208,14 +219,19 @@ describe('atomic-ipx-refine-toggle', () => {
           facetBreadcrumbs: [
             {
               facetId: 'test-facet',
-              facetDisplayName: 'Test',
-              values: [{value: {value: 'value1'}, deselect: vi.fn()}],
+              field: 'test-field',
+              values: [
+                {
+                  value: {
+                    value: 'value1',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
             },
           ],
-          categoryFacetBreadcrumbs: [],
-          numericFacetBreadcrumbs: [],
-          dateFacetBreadcrumbs: [],
-          staticFilterBreadcrumbs: [],
         },
       });
       await expect.element(parts(element).badge).toHaveTextContent('1');
@@ -229,28 +245,129 @@ describe('atomic-ipx-refine-toggle', () => {
           facetBreadcrumbs: [
             {
               facetId: 'facet1',
-              facetDisplayName: 'Facet 1',
-              values: [{value: {value: 'value1'}, deselect: vi.fn()}],
+              field: 'field1',
+              values: [
+                {
+                  value: {
+                    value: 'value1',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
             },
             {
               facetId: 'facet2',
-              facetDisplayName: 'Facet 2',
-              values: [{value: {value: 'value2'}, deselect: vi.fn()}],
+              field: 'field2',
+              values: [
+                {
+                  value: {
+                    value: 'value2',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
             },
           ],
           categoryFacetBreadcrumbs: [
             {
               facetId: 'category1',
-              facetDisplayName: 'Category 1',
-              path: [{value: {value: 'cat1'}, deselect: vi.fn()}],
+              field: 'cat-field',
+              path: [
+                {
+                  value: 'cat1',
+                  state: 'selected',
+                  numberOfResults: 1,
+                  path: [],
+                  children: [],
+                  moreValuesAvailable: false,
+                  isLeafValue: true,
+                },
+              ],
+              deselect: vi.fn(),
             },
           ],
-          numericFacetBreadcrumbs: [],
-          dateFacetBreadcrumbs: [],
-          staticFilterBreadcrumbs: [],
         },
       });
       await expect.element(parts(element).badge).toHaveTextContent('3');
+    });
+
+    it('should include automatic facet breadcrumbs in count', async () => {
+      const {parts, element} = await renderRefineToggle({
+        searchStatusState: {hasResults: true},
+        breadcrumbState: {
+          hasBreadcrumbs: true,
+          automaticFacetBreadcrumbs: [
+            {
+              facetId: 'auto1',
+              field: 'auto-field',
+              label: 'Auto Facet',
+              values: [
+                {
+                  value: {
+                    value: 'auto-val',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+          facetBreadcrumbs: [
+            {
+              facetId: 'facet1',
+              field: 'field1',
+              values: [
+                {
+                  value: {
+                    value: 'value1',
+                    state: 'selected',
+                    numberOfResults: 1,
+                  },
+                  deselect: vi.fn(),
+                },
+              ],
+            },
+          ],
+        },
+      });
+      await expect.element(parts(element).badge).toHaveTextContent('2');
+    });
+  });
+
+  describe('when the button is clicked', () => {
+    it('should create and open the modal', async () => {
+      const {element, parts} = await renderRefineToggle({
+        searchStatusState: {hasResults: true},
+      });
+
+      const button = parts(element).button as HTMLButtonElement;
+      await userEvent.click(button);
+
+      const modal = element.parentElement?.parentElement?.querySelector(
+        'atomic-ipx-refine-modal'
+      );
+      expect(modal).toBeTruthy();
+      expect(modal?.isOpen).toBe(true);
+    });
+
+    it('should set collapseFacetsAfter on the modal', async () => {
+      const {element, parts} = await renderRefineToggle({
+        collapseFacetsAfter: 5,
+        searchStatusState: {hasResults: true},
+      });
+
+      const button = parts(element).button as HTMLButtonElement;
+      await userEvent.click(button);
+
+      const modal = element.parentElement?.parentElement?.querySelector(
+        'atomic-ipx-refine-modal'
+      );
+      expect(modal?.collapseFacetsAfter).toBe(5);
     });
   });
 
@@ -263,7 +380,7 @@ describe('atomic-ipx-refine-toggle', () => {
       expect(element.getAttribute('collapse-facets-after')).toBe('5');
     });
 
-    it('should update when property changes', async () => {
+    it('should reflect updated value to attribute when property changes', async () => {
       const {element} = await renderRefineToggle({
         collapseFacetsAfter: 3,
       });

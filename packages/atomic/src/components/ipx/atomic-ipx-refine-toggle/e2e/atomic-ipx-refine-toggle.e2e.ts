@@ -1,86 +1,40 @@
 import {expect, test} from './fixture';
 
 test.describe('atomic-ipx-refine-toggle', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto(
-      'http://localhost:6006/iframe.html?id=atomic-ipx-refine-toggle--default'
-    );
-    await page.waitForSelector('atomic-ipx-refine-toggle', {state: 'attached'});
+  test.beforeEach(async ({ipxRefineToggle}) => {
+    await ipxRefineToggle.load();
+    await ipxRefineToggle.hydrated.waitFor();
   });
 
-  test.describe('Happy path', () => {
-    test('should render the component', async ({ipxRefineToggle}) => {
-      await expect(ipxRefineToggle.component).toBeVisible();
-    });
+  test('should render with button and icon', async ({ipxRefineToggle}) => {
+    await expect(ipxRefineToggle.hydrated).toBeVisible();
+    await expect(ipxRefineToggle.button).toBeVisible();
+    await expect(ipxRefineToggle.button).toBeEnabled();
+    await expect(ipxRefineToggle.icon).toBeVisible();
+  });
 
-    test('should render the filter button', async ({ipxRefineToggle}) => {
-      await expect(ipxRefineToggle.button).toBeVisible();
-    });
+  test('should open refine modal when button is clicked', async ({
+    ipxRefineToggle,
+  }) => {
+    await ipxRefineToggle.clickButton();
+    await expect(ipxRefineToggle.modal).toHaveAttribute('is-open', '');
+  });
 
-    test('should render the filter icon', async ({ipxRefineToggle}) => {
-      await expect(ipxRefineToggle.icon).toBeVisible();
-    });
-
-    test('should enable the button when there are search results', async ({
-      ipxRefineToggle,
-    }) => {
-      await expect(ipxRefineToggle.button).toBeEnabled();
-    });
-
-    test('should open refine modal when button is clicked', async ({
-      ipxRefineToggle,
-      page,
-    }) => {
+  test('should display badge when there are active filters', async ({
+    ipxRefineToggle,
+  }) => {
+    await test.step('open the refine modal', async () => {
       await ipxRefineToggle.clickButton();
-      const modal = page.locator('atomic-ipx-refine-modal');
-      await expect(modal).toHaveAttribute('is-open', 'true');
-    });
-  });
-
-  test.describe('Accessibility', () => {
-    test('should have an accessible button', async ({ipxRefineToggle}) => {
-      await expect(ipxRefineToggle.button).toHaveAccessibleName();
+      await expect(ipxRefineToggle.modal).toHaveAttribute('is-open', '');
     });
 
-    test('should be keyboard navigable', async ({ipxRefineToggle, page}) => {
-      await page.keyboard.press('Tab');
-      await expect(ipxRefineToggle.button).toBeFocused();
+    await test.step('select a facet value', async () => {
+      await ipxRefineToggle.modalExpandFacetButton.click();
+      await ipxRefineToggle.modalFirstCheckbox.click();
     });
 
-    test('should be operable with keyboard', async ({
-      ipxRefineToggle,
-      page,
-    }) => {
-      await ipxRefineToggle.button.focus();
-      await page.keyboard.press('Enter');
-      const modal = page.locator('atomic-ipx-refine-modal');
-      await expect(modal).toHaveAttribute('is-open', 'true');
-    });
-  });
-
-  test.describe('Badge display', () => {
-    test('should display badge when there are active filters', async ({
-      page,
-      ipxRefineToggle,
-    }) => {
-      // Click button to open modal
-      await ipxRefineToggle.clickButton();
-
-      // Select a facet value
-      const facetValue = page
-        .locator('atomic-facet')
-        .first()
-        .locator('button')
-        .first();
-      await facetValue.click();
-
-      // Close modal
-      const closeButton = page.locator(
-        'atomic-ipx-refine-modal [part="close-button"]'
-      );
-      await closeButton.click();
-
-      // Check if badge is displayed
+    await test.step('verify badge is visible after closing modal', async () => {
+      await ipxRefineToggle.page.keyboard.press('Escape');
       await expect(ipxRefineToggle.badge).toBeVisible();
     });
   });

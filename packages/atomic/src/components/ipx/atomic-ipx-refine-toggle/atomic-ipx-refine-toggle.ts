@@ -8,20 +8,19 @@ import {
 } from '@coveo/headless';
 import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
 import {renderIconButton} from '@/src/components/common/icon-button';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import FilterIcon from '../../../images/filter.svg';
 
 /**
  * The `atomic-ipx-refine-toggle` component is a button that toggles the refine modal in the In-Product Experience interface.
- *
- * @internal
  *
  * @part ipx-refine-toggle-container - The container div element.
  * @part ipx-refine-toggle-button - The button element.
@@ -76,16 +75,17 @@ export class AtomicIpxRefineToggle
   public searchStatus!: SearchStatus;
 
   private modalRef?: HTMLAtomicIpxRefineModalElement;
-  private buttonRef?: HTMLButtonElement;
 
   private get numberOfBreadcrumbs(): number {
-    return [
-      ...this.breadcrumbManagerState.facetBreadcrumbs,
-      ...this.breadcrumbManagerState.categoryFacetBreadcrumbs,
-      ...this.breadcrumbManagerState.numericFacetBreadcrumbs,
-      ...this.breadcrumbManagerState.dateFacetBreadcrumbs,
-      ...this.breadcrumbManagerState.staticFilterBreadcrumbs,
-    ].length;
+    const state = this.breadcrumbManagerState;
+    return (
+      state.facetBreadcrumbs.length +
+      state.categoryFacetBreadcrumbs.length +
+      state.numericFacetBreadcrumbs.length +
+      state.dateFacetBreadcrumbs.length +
+      state.staticFilterBreadcrumbs.length +
+      state.automaticFacetBreadcrumbs.length
+    );
   }
 
   public initialize() {
@@ -93,39 +93,46 @@ export class AtomicIpxRefineToggle
     this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
 
-  private enableModal() {
-    if (this.modalRef) {
-      this.modalRef.isOpen = true;
-    }
-  }
-
-  private loadModal() {
+  private ensureModal() {
     if (this.modalRef) {
       return;
     }
 
-    this.modalRef = document.createElement('atomic-ipx-refine-modal');
-    this.parentElement?.insertBefore(this.modalRef, this);
-    if (this.buttonRef) {
-      this.modalRef.openButton = this.buttonRef;
+    const existingModal =
+      this.parentElement?.querySelector<HTMLAtomicIpxRefineModalElement>(
+        'atomic-ipx-refine-modal'
+      );
+
+    if (existingModal) {
+      this.modalRef = existingModal;
+    } else {
+      this.modalRef = document.createElement('atomic-ipx-refine-modal');
+      this.parentElement?.parentElement?.insertBefore(
+        this.modalRef,
+        this.parentElement
+      );
+    }
+
+    if (!this.modalRef.openButton) {
+      const button = this.renderRoot.querySelector('button');
+      if (button) {
+        this.modalRef.openButton = button;
+      }
     }
     this.modalRef.collapseFacetsAfter = this.collapseFacetsAfter;
   }
 
-  private handleButtonRef(button?: Element) {
-    if (!button || !(button instanceof HTMLButtonElement)) {
-      return;
-    }
-    this.buttonRef = button;
-    this.loadModal();
-  }
-
   private handleClick() {
     this.bindings.store.waitUntilAppLoaded(() => {
-      this.enableModal();
+      this.ensureModal();
+      if (this.modalRef) {
+        this.modalRef.isOpen = true;
+      }
     });
   }
 
+  @errorGuard()
+  @bindingGuard()
   render() {
     return renderIconButton({
       props: {
@@ -138,7 +145,6 @@ export class AtomicIpxRefineToggle
           !this.searchStatusState.hasResults && !this.numberOfBreadcrumbs,
         ariaLabel: this.bindings.i18n.t('sort'),
         onClick: () => this.handleClick(),
-        buttonRef: ref((el) => this.handleButtonRef(el)),
         badge: when(
           this.breadcrumbManagerState.hasBreadcrumbs,
           () => html`<slot>${this.numberOfBreadcrumbs.toString()}</slot>`
