@@ -152,7 +152,7 @@ describe('atomic-insight-user-actions-session', () => {
 
     it('should display formatted session start date', async () => {
       const {sessionStartDateContainer} = await renderComponent({
-        startTimestamp: 1704067200000, // 2024-01-01 00:00:00 UTC
+        startTimestamp: 1704110400000, // 2024-01-01 12:00:00 UTC (midday to avoid timezone issues)
       });
 
       const text = sessionStartDateContainer()?.textContent || '';
@@ -338,13 +338,13 @@ describe('atomic-insight-user-actions-session', () => {
 
     it('should update displayed date when startTimestamp changes', async () => {
       const {element, sessionStartDateContainer} = await renderComponent({
-        startTimestamp: 1704067200000, // Jan 1, 2024 UTC
+        startTimestamp: 1704110400000, // Jan 1, 2024 12:00 UTC (midday to avoid timezone issues)
       });
 
       const originalText = sessionStartDateContainer()?.textContent;
       expect(originalText).toContain('2024');
 
-      element.startTimestamp = 1735689600000; // Jan 1, 2025 UTC
+      element.startTimestamp = 1735732800000; // Jan 1, 2025 12:00 UTC (midday to avoid timezone issues)
       await element.updateComplete;
 
       const newText = sessionStartDateContainer()?.textContent;
