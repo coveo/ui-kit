@@ -20,7 +20,7 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import FilterIcon from '../../../images/filter.svg';
 
 /**
- * The `atomic-ipx-refine-toggle` component is a button that toggles the refine modal in the In-Product Experience interface.
+ * The `atomic-ipx-refine-toggle` component displays a button that, when clicked, opens a refine modal containing facets.
  *
  * @part ipx-refine-toggle-container - The container div element.
  * @part ipx-refine-toggle-button - The button element.
