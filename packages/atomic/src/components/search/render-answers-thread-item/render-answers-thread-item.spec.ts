@@ -103,7 +103,7 @@ describe('#renderAnswersThreadItem', () => {
     titleButton.click();
 
     expect(onToggle).toHaveBeenCalledWith(true);
-    expect(parts().content).not.toHaveAttribute('hidden');
+    expect(parts().content).toHaveAttribute('hidden');
   });
 
   it('should update aria attributes when toggled', async () => {
@@ -117,8 +117,8 @@ describe('#renderAnswersThreadItem', () => {
 
     titleButton.click();
 
-    expect(titleButton).toHaveAttribute('aria-expanded', 'true');
-    expect(content).toHaveAttribute('aria-hidden', 'false');
-    expect(content).not.toHaveAttribute('hidden');
+    expect(titleButton).toHaveAttribute('aria-expanded', 'false');
+    expect(content).toHaveAttribute('aria-hidden', 'true');
+    expect(content).toHaveAttribute('hidden');
   });
 });

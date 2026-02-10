@@ -1,6 +1,5 @@
 import {html, nothing} from 'lit';
 import {classMap} from 'lit/directives/class-map.js';
-import {createRef, ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
 import type {FunctionalComponentWithOptionalChildren} from '@/src/utils/functional-component-utils';
 
@@ -50,32 +49,14 @@ export const renderAnswersThreadItem: FunctionalComponentWithOptionalChildren<
     const {title, isCollapsible, hideLine, isExpanded, onToggle} = props;
 
     const contentId = `answers-thread-item-content-${instanceCounter++}`;
-    const contentRef = createRef<HTMLDivElement>();
-    const buttonRef = createRef<HTMLButtonElement>();
-
-    const initialExpanded = isCollapsible ? isExpanded : true;
-    let expanded = initialExpanded;
+    const expanded = isCollapsible ? isExpanded : true;
 
     const toggle = () => {
       if (!isCollapsible) {
         return;
       }
 
-      expanded = !expanded;
-      if (buttonRef.value) {
-        buttonRef.value.setAttribute(
-          'aria-expanded',
-          expanded ? 'true' : 'false'
-        );
-      }
-      if (contentRef.value) {
-        contentRef.value.toggleAttribute('hidden', !expanded);
-        contentRef.value.setAttribute(
-          'aria-hidden',
-          expanded ? 'false' : 'true'
-        );
-      }
-      onToggle?.(expanded);
+      onToggle?.(!isExpanded);
     };
 
     const titleBaseClasses = {
@@ -103,9 +84,8 @@ export const renderAnswersThreadItem: FunctionalComponentWithOptionalChildren<
             () =>
               html`<button
                 part="title-button"
-                ${ref(buttonRef)}
                 type="button"
-                aria-expanded=${initialExpanded ? 'true' : 'false'}
+                aria-expanded=${expanded ? 'true' : 'false'}
                 aria-controls=${contentId}
                 class=${titleButtonClasses}
                 @click=${toggle}
@@ -133,9 +113,8 @@ export const renderAnswersThreadItem: FunctionalComponentWithOptionalChildren<
           id=${contentId}
           part="content"
           class="pl-2 py-2 ml-1"
-          ${ref(contentRef)}
-          ?hidden=${!initialExpanded}
-          aria-hidden=${initialExpanded ? 'false' : 'true'}
+          ?hidden=${!expanded}
+          aria-hidden=${expanded ? 'false' : 'true'}
         >
           ${children}
         </div>
