@@ -1,5 +1,4 @@
 import {
-  AtomicAnswersThreadItem as LitAtomicAnswersThreadItem,
   AtomicAriaLive as LitAtomicAriaLive,
   AtomicAutomaticFacet as LitAtomicAutomaticFacet,
   AtomicAutomaticFacetGenerator as LitAtomicAutomaticFacetGenerator,
@@ -89,12 +88,6 @@ import {
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
-
-export const AtomicAnswersThreadItem = createComponent({
-  tagName: 'atomic-answers-thread-item',
-  react: React,
-  elementClass: LitAtomicAnswersThreadItem,
-});
 
 export const AtomicAriaLive = createComponent({
   tagName: 'atomic-aria-live',
