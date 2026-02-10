@@ -258,7 +258,7 @@ describe('folding slice', () => {
         );
       });
 
-      it('when #querySyntax is enabled and #q is non empty, it build a proper query expression to get keywords highlighting', async () => {
+      it('when #querySyntax is enabled and #q is non empty, it builds a proper query expression to get keywords highlighting', async () => {
         mockEngine = buildMockSearchEngine({
           ...createMockState(),
           query: {enableQuerySyntax: true, q: 'hello'},
@@ -273,7 +273,7 @@ describe('folding slice', () => {
         );
       });
 
-      it('when #querySyntax is disabled and #q is non empty, it build a proper query expression to get keywords highlighting', async () => {
+      it('when #querySyntax is disabled and #q is non empty, it builds a proper query expression to get keywords highlighting', async () => {
         mockEngine = buildMockSearchEngine({
           ...createMockState(),
           query: {enableQuerySyntax: false, q: 'hello'},
@@ -281,7 +281,22 @@ describe('folding slice', () => {
         await doLoadCollection();
         expect(apiClient.search).toHaveBeenCalledWith(
           expect.objectContaining({
-            q: '( <@- hello -@> ) OR @uri',
+            q: 'hello OR @uri',
+            enableQuerySyntax: true,
+          }),
+          {origin: 'foldingCollection'}
+        );
+      });
+
+      it('when #q contains a field query, it preserves the field syntax', async () => {
+        mockEngine = buildMockSearchEngine({
+          ...createMockState(),
+          query: {enableQuerySyntax: false, q: '@field=value'},
+        });
+        await doLoadCollection();
+        expect(apiClient.search).toHaveBeenCalledWith(
+          expect.objectContaining({
+            q: '@field=value OR @uri',
             enableQuerySyntax: true,
           }),
           {origin: 'foldingCollection'}
