@@ -21,7 +21,10 @@ import * as HighlightUtils from './utils/highlight.js';
 
 export type {Relay} from '@coveo/relay';
 export type {Middleware, Unsubscribe} from '@reduxjs/toolkit';
-export {getCommerceApiBaseUrl} from './api/commerce/commerce-api-client.js';
+export {
+  getCommerceApiBaseUrl,
+  getCommerceRedirectApiBaseUrl,
+} from './api/commerce/commerce-api-client.js';
 export type {
   BaseProduct,
   ChildProduct,
@@ -33,6 +36,7 @@ export type {
   SpotlightContent,
 } from './api/commerce/common/result.js';
 export {ResultType} from './api/commerce/common/result.js';
+export type {CommerceSearchRedirectRequest} from './api/commerce/search/redirect-request.js';
 export {
   getAnalyticsNextApiBaseUrl,
   getOrganizationEndpoint,

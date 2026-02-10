@@ -354,7 +354,10 @@ export {buildResultTemplatesManager} from './features/result-templates/result-te
 
 //#endregion
 
-export {getCommerceApiBaseUrl} from './api/commerce/commerce-api-client.js';
+export {
+  getCommerceApiBaseUrl,
+  getCommerceRedirectApiBaseUrl,
+} from './api/commerce/commerce-api-client.js';
 // Types & Helpers
 // TODO KIT-3462: add export commerce SSR parameter serializer
 export type {
@@ -363,6 +366,7 @@ export type {
   Product,
 } from './api/commerce/common/product.js';
 export {ResultType} from './api/commerce/common/result.js';
+export type {CommerceSearchRedirectRequest} from './api/commerce/search/redirect-request.js';
 export {
   getAnalyticsNextApiBaseUrl,
   getOrganizationEndpoint,

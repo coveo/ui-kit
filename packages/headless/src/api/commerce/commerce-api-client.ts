@@ -37,6 +37,7 @@ import {
   type QuerySuggestRequest,
 } from './search/query-suggest/query-suggest-request.js';
 import type {QuerySuggestSuccessResponse} from './search/query-suggest/query-suggest-response.js';
+import type {CommerceSearchRedirectRequest} from './search/redirect-request.js';
 import type {CommerceSearchRequest} from './search/request.js';
 import type {SearchCommerceSuccessResponse} from './search/response.js';
 
@@ -101,6 +102,22 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
         ...requestOptions.requestParams,
         query: req?.query,
         enableResults: Boolean(req?.enableResults),
+      },
+      ...this.options,
+    });
+  }
+
+  async searchRedirect(
+    req: CommerceSearchRedirectRequest
+  ): Promise<CommerceAPIResponse<SearchCommerceSuccessResponse>> {
+    const requestOptions = getRequestOptions(req, 'search/redirect');
+    return this.query({
+      ...requestOptions,
+      requestParams: {
+        ...requestOptions.requestParams,
+        query: req?.query,
+        debug: req?.debug,
+        refreshCache: req?.refreshCache,
       },
       ...this.options,
     });
@@ -171,20 +188,20 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
     });
   }
 
-  // eslint-disable-next-line @cspell/spellchecker
-  // TODO: CAPI-867 - Use Commerce API's equivalent of the /plan endpoint when it becomes available.
   async plan(
     req: CommerceSearchRequest
   ): Promise<CommerceAPIResponse<CommerceSuccessResponse>> {
-    const requestOptions = getRequestOptions(req, 'search');
-    return this.query({
-      ...requestOptions,
-      requestParams: {
-        ...requestOptions.requestParams,
-        query: req?.query,
-      },
-      ...this.options,
-    });
+    const environment = extractEnvironmentFromUrl(req.url);
+
+    // Convert the regular search request to a redirect request with the correct URL
+    const redirectReq: CommerceSearchRedirectRequest = {
+      ...req,
+      // Replace the regular commerce API URL with the redirect API URL
+      url: getCommerceRedirectApiBaseUrl(req.organizationId, environment),
+      debug: false,
+      refreshCache: false,
+    };
+    return this.searchRedirect(redirectReq);
   }
 
   private async query<T = CommerceSuccessResponse>(
@@ -210,4 +227,21 @@ export function getCommerceApiBaseUrl(
   const platformEndpoint = getOrganizationEndpoint(organizationId, environment);
 
   return `${platformEndpoint}/rest/organizations/${organizationId}/commerce/v2`;
+}
+
+export function getCommerceRedirectApiBaseUrl(
+  organizationId: string,
+  environment: PlatformEnvironment = 'prod'
+) {
+  const platformEndpoint = getOrganizationEndpoint(organizationId, environment);
+
+  return `${platformEndpoint}/api/v2/organizations/${organizationId}/commerce/search/redirect`;
+}
+
+/**
+ * Helper function to extract the platform environment from a URL.
+ * Looks for 'dev' in the URL to determine if it's a dev environment.
+ */
+function extractEnvironmentFromUrl(url: string): PlatformEnvironment {
+  return url.includes('dev') ? 'dev' : 'prod';
 }
