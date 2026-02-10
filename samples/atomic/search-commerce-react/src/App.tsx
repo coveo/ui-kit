@@ -4,6 +4,7 @@ import {HeaderLink} from './components/HeaderLink';
 import {CommerceRecommendationPage} from './pages/CommerceRecommendationPage';
 import {CommerceSearchPage} from './pages/CommerceSearchPage';
 import {CommerceTableProductListPage} from './pages/CommerceTableProductListPage';
+import {FacetTabsMRE} from './pages/FacetTabsMRE';
 import {FoldedResultListPage} from './pages/FoldedResultListPage';
 import {InstantResultsPage} from './pages/InstantResultsPage';
 import {RecsPage} from './pages/RecsPage';
@@ -18,8 +19,10 @@ const RECS_PAGE = 'Recs Interface';
 const COMMERCE_SEARCH_PAGE = 'Commerce Search Page';
 const COMMERCE_RECOMMENDATIONS_PAGE = 'Commerce Recommendations Page';
 const COMMERCE_TABLE_PRODUCT_LIST_PAGE = 'Commerce Table Product List Page';
+const FACET_TABS_MRE_PAGE = 'Facet Tabs MRE';
 
 const pages = [
+  FACET_TABS_MRE_PAGE,
   LIST_PAGE,
   FOLDED_LIST_PAGE,
   INSTANT_RESULTS_PAGE,
@@ -40,6 +43,11 @@ function App() {
       <header>
         <span className="pageTitle">{page} example</span>
         <ul>
+          <HeaderLink
+            page={FACET_TABS_MRE_PAGE}
+            currentPage={page}
+            setPage={setPage}
+          />
           <HeaderLink page={LIST_PAGE} currentPage={page} setPage={setPage} />
           <HeaderLink
             page={FOLDED_LIST_PAGE}
@@ -74,6 +82,7 @@ function App() {
           />
         </ul>
       </header>
+      {page === FACET_TABS_MRE_PAGE && <FacetTabsMRE />}
       {page === LIST_PAGE && <ResultListPage />}
       {page === FOLDED_LIST_PAGE && <FoldedResultListPage />}
       {page === INSTANT_RESULTS_PAGE && <InstantResultsPage />}
