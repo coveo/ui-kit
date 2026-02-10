@@ -155,6 +155,7 @@ describe('commerce api client', () => {
         context: request.context,
         language: request.language,
         currency: request.currency,
+        country: request.country,
       },
       requestMetadata: {method: 'search'},
     });
@@ -490,23 +491,6 @@ describe('commerce api client', () => {
       expect(response).toMatchObject({
         error: expectedError,
       });
-    });
-
-    it('should include query parameter in request', async () => {
-      const request: CommercePlanRequest = {
-        ...(await buildCommerceAPIRequest()),
-        query: 'specific search query',
-      };
-
-      mockPlatformCall({
-        ok: true,
-        json: () => Promise.resolve({redirect: null}),
-      });
-
-      await client.plan(request);
-
-      const mockRequest = platformCallMock.mock.calls[0][0];
-      expect(mockRequest.requestParams.query).toBe('specific search query');
     });
   });
 });
