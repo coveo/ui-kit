@@ -1,7 +1,7 @@
 import type {Meta, StoryObj as Story} from '@storybook/web-components-vite';
 import {html} from 'lit';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderAnswersThreadItem} from './render-answers-thread-item';
+import '@/src/components/search/atomic-answers-thread-item/atomic-answers-thread-item';
 
 type StoryArgs = {
   title: string;
@@ -12,25 +12,23 @@ type StoryArgs = {
 
 const meta: Meta<StoryArgs> = {
   title: 'Search/Generated Answer Thread Item',
-  id: 'render-answers-thread-item',
-  render: (
-    args
-  ) => html`<div data-testid="answers-thread-item" class="max-w-3xl">
-    ${renderAnswersThreadItem({
-      props: {
-        title: args.title,
-        isCollapsible: args.isCollapsible,
-        isExpanded: args.isExpanded,
-        hideLine: args.hideLine,
-      },
-    })(html`
-      <div class="text-on-background">
-        Safeguards against misinformation and bias in AI-generated snippets
-        start with rigorous content validation and transparent source
-        attribution.
-      </div>
-    `)}
-  </div>`,
+  id: 'atomic-answers-thread-item',
+  render: (args) => html`
+    <div data-testid="answers-thread-item" class="max-w-3xl">
+      <atomic-answers-thread-item
+        .title=${args.title}
+        .isCollapsible=${args.isCollapsible}
+        .isExpanded=${args.isExpanded}
+        .hideLine=${args.hideLine}
+      >
+        <div class="text-on-background">
+          Safeguards against misinformation and bias in AI-generated snippets
+          start with rigorous content validation and transparent source
+          attribution.
+        </div>
+      </atomic-answers-thread-item>
+    </div>
+  `,
   parameters,
   argTypes: {
     title: {control: 'text'},

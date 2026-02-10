@@ -1,11 +1,10 @@
-import {html, nothing} from 'lit';
+import {html, LitElement, nothing, type PropertyValues} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {when} from 'lit/directives/when.js';
-import type {FunctionalComponentWithOptionalChildren} from '@/src/utils/functional-component-utils';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 
-let instanceCounter = 0;
-
-export interface RenderAnswersThreadItemProps {
+export interface AtomicAnswersThreadItemProps {
   /**
    * The title displayed for the thread item.
    */
@@ -19,7 +18,7 @@ export interface RenderAnswersThreadItemProps {
    */
   hideLine: boolean;
   /**
-   * Whether the thread item is currently expanded.
+   * Whether the thread item is initially expanded.
    */
   isExpanded: boolean;
   /**
@@ -29,8 +28,8 @@ export interface RenderAnswersThreadItemProps {
 }
 
 /**
- * Renders a generated answers thread item with timeline visuals and
- * collapsible content.
+ * The `atomic-answers-thread-item` component renders a generated answers
+ * thread item with timeline visuals and collapsible content.
  *
  * @part item - The root container for the thread item.
  * @part timeline - The timeline column containing the dot and line.
@@ -40,25 +39,64 @@ export interface RenderAnswersThreadItemProps {
  * @part title - The static title text when the item is not collapsible.
  * @part title-button - The title button when the item is collapsible.
  * @part content - The container for the slotted content.
+ * @slot (default) - The content rendered when the item is expanded.
  */
-export const renderAnswersThreadItem: FunctionalComponentWithOptionalChildren<
-  RenderAnswersThreadItemProps
-> =
-  ({props}) =>
-  (children = nothing) => {
-    const {title, isCollapsible, hideLine, isExpanded, onToggle} = props;
+@customElement('atomic-answers-thread-item')
+@withTailwindStyles
+export class AtomicAnswersThreadItem extends LitElement {
+  /**
+   * The title displayed for the thread item.
+   */
+  @property({type: String})
+  public title = '';
 
-    const contentId = `answers-thread-item-content-${instanceCounter++}`;
-    const expanded = isCollapsible ? isExpanded : true;
+  /**
+   * Whether the thread item can be expanded or collapsed.
+   */
+  @property({type: Boolean, attribute: 'is-collapsible'})
+  public isCollapsible = false;
 
-    const toggle = () => {
-      if (!isCollapsible) {
-        return;
-      }
+  /**
+   * Whether the timeline line should be hidden (e.g., for the last item).
+   */
+  @property({type: Boolean, attribute: 'hide-line'})
+  public hideLine = false;
 
-      onToggle?.(!isExpanded);
-    };
+  /**
+   * Whether the thread item is initially expanded.
+   */
+  @property({type: Boolean, attribute: 'is-expanded'})
+  public isExpanded = false;
 
+  /**
+   * Callback invoked when the expanded state changes.
+   */
+  @property({attribute: false})
+  public onToggle?: (expanded: boolean) => void;
+
+  @state()
+  private expanded = false;
+
+  protected willUpdate(changedProperties: PropertyValues<this>) {
+    if (
+      !this.hasUpdated &&
+      (changedProperties.has('isExpanded') ||
+        changedProperties.has('isCollapsible'))
+    ) {
+      this.expanded = this.isCollapsible ? this.isExpanded : true;
+    }
+  }
+
+  private toggle = () => {
+    if (!this.isCollapsible) {
+      return;
+    }
+
+    this.expanded = !this.expanded;
+    this.onToggle?.(this.expanded);
+  };
+
+  public render() {
     const titleBaseClasses = {
       'text-lg font-semibold text-on-background min-w-0 inline-flex text-left mr-auto': true,
     };
@@ -80,27 +118,26 @@ export const renderAnswersThreadItem: FunctionalComponentWithOptionalChildren<
         </div>
         <div part="header" class="flex items-center">
           ${when(
-            isCollapsible,
+            this.isCollapsible,
             () =>
               html`<button
                 part="title-button"
                 type="button"
-                aria-expanded=${expanded ? 'true' : 'false'}
-                aria-controls=${contentId}
+                aria-expanded=${this.expanded ? 'true' : 'false'}
                 class=${titleButtonClasses}
-                @click=${toggle}
+                @click=${this.toggle}
               >
-                ${title}
+                ${this.title}
               </button>`,
             () =>
               html`<span part="title" class=${titleTextClasses}
-                >${title}</span
+                >${this.title}</span
               >`
           )}
         </div>
         <div class="flex justify-center">
           ${when(
-            !hideLine,
+            !this.hideLine,
             () =>
               html`<span
                 part="timeline-line"
@@ -110,14 +147,20 @@ export const renderAnswersThreadItem: FunctionalComponentWithOptionalChildren<
           )}
         </div>
         <div
-          id=${contentId}
           part="content"
           class="pl-2 py-2 ml-1"
-          ?hidden=${!expanded}
-          aria-hidden=${expanded ? 'false' : 'true'}
+          ?hidden=${!this.expanded}
+          aria-hidden=${this.expanded ? 'false' : 'true'}
         >
-          ${children}
+          <slot></slot>
         </div>
       </div>
     `;
-  };
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-answers-thread-item': AtomicAnswersThreadItem;
+  }
+}

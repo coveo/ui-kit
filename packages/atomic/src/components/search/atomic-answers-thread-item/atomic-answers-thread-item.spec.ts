@@ -1,37 +1,44 @@
 import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import type {RenderAnswersThreadItemProps} from './render-answers-thread-item';
-import {renderAnswersThreadItem} from './render-answers-thread-item';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
+import type {
+  AtomicAnswersThreadItem,
+  AtomicAnswersThreadItemProps,
+} from './atomic-answers-thread-item';
+import '@/src/components/search/atomic-answers-thread-item/atomic-answers-thread-item';
 
-describe('#renderAnswersThreadItem', () => {
+describe('#AtomicAnswersThreadItem', () => {
   const renderComponent = async (
-    props: Partial<RenderAnswersThreadItemProps> = {},
+    props: Partial<AtomicAnswersThreadItemProps> = {},
     children = html`<div>Thread item content</div>`
   ) => {
-    const element = await renderFunctionFixture(
-      html`${renderAnswersThreadItem({
-        props: {
-          title: 'Title',
-          isCollapsible: false,
-          hideLine: false,
-          isExpanded: true,
-          ...props,
-        },
-      })(children)}`
-    );
+    const element = await fixture<AtomicAnswersThreadItem>(html`
+      <atomic-answers-thread-item
+        .title=${props.title ?? 'Title'}
+        .isCollapsible=${props.isCollapsible ?? false}
+        .hideLine=${props.hideLine ?? false}
+        .isExpanded=${props.isExpanded ?? true}
+        .onToggle=${props.onToggle}
+      >
+        ${children}
+      </atomic-answers-thread-item>
+    `);
 
     return {
       element,
       parts: () => ({
-        item: element.querySelector('[part="item"]'),
-        timeline: element.querySelector('[part="timeline"]'),
-        timelineDot: element.querySelector('[part="timeline-dot"]'),
-        timelineLine: element.querySelector('[part="timeline-line"]'),
-        header: element.querySelector('[part="header"]'),
-        title: element.querySelector('[part="title"]'),
-        titleButton: element.querySelector('[part="title-button"]'),
-        content: element.querySelector('[part="content"]'),
+        item: element.shadowRoot?.querySelector('[part="item"]') ?? null,
+        timeline:
+          element.shadowRoot?.querySelector('[part="timeline"]') ?? null,
+        timelineDot:
+          element.shadowRoot?.querySelector('[part="timeline-dot"]') ?? null,
+        timelineLine:
+          element.shadowRoot?.querySelector('[part="timeline-line"]') ?? null,
+        header: element.shadowRoot?.querySelector('[part="header"]') ?? null,
+        title: element.shadowRoot?.querySelector('[part="title"]') ?? null,
+        titleButton:
+          element.shadowRoot?.querySelector('[part="title-button"]') ?? null,
+        content: element.shadowRoot?.querySelector('[part="content"]') ?? null,
       }),
     };
   };
@@ -93,7 +100,7 @@ describe('#renderAnswersThreadItem', () => {
 
   it('should toggle expanded state when the title button is clicked', async () => {
     const onToggle = vi.fn();
-    const {parts} = await renderComponent({
+    const {element, parts} = await renderComponent({
       isCollapsible: true,
       isExpanded: false,
       onToggle,
@@ -101,13 +108,14 @@ describe('#renderAnswersThreadItem', () => {
 
     const titleButton = parts().titleButton as HTMLButtonElement;
     titleButton.click();
+    await element.updateComplete;
 
     expect(onToggle).toHaveBeenCalledWith(true);
-    expect(parts().content).toHaveAttribute('hidden');
+    expect(parts().content).not.toHaveAttribute('hidden');
   });
 
   it('should update aria attributes when toggled', async () => {
-    const {parts} = await renderComponent({
+    const {element, parts} = await renderComponent({
       isCollapsible: true,
       isExpanded: false,
     });
@@ -116,9 +124,10 @@ describe('#renderAnswersThreadItem', () => {
     const content = parts().content as HTMLElement;
 
     titleButton.click();
+    await element.updateComplete;
 
-    expect(titleButton).toHaveAttribute('aria-expanded', 'false');
-    expect(content).toHaveAttribute('aria-hidden', 'true');
-    expect(content).toHaveAttribute('hidden');
+    expect(titleButton).toHaveAttribute('aria-expanded', 'true');
+    expect(content).toHaveAttribute('aria-hidden', 'false');
+    expect(content).not.toHaveAttribute('hidden');
   });
 });
