@@ -11,6 +11,7 @@ import {change} from '../../history/history-actions.js';
 import {getHistoryInitialState} from '../../history/history-state.js';
 import {executeSearch, fetchFacetValues} from '../../search/search-actions.js';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions.js';
+import {updateActiveTab} from '../../tab-set/tab-set-actions.js';
 import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions.js';
 import type {FacetResponse} from '../facet-set/interfaces/response.js';
 import {updateFacetAutoSelection} from '../generic/facet-actions.js';
@@ -347,6 +348,112 @@ describe('category facet slice', () => {
       expect(
         finalState.geography?.request.currentValues[0].children.length
       ).toBe(0);
+    });
+
+    describe('with tab-managed facets', () => {
+      it('clears values for a facet with tabsIncluded when the active tab is not in the included list', () => {
+        const initialNumberOfValues = 5;
+        const request = buildMockCategoryFacetRequest();
+        request.currentValues = [
+          buildMockCategoryFacetValueRequest({value: 'a', state: 'selected'}),
+        ];
+
+        state.geography = buildMockCategoryFacetSlice({
+          request,
+          initialNumberOfValues,
+          tabs: {included: ['All', 'Downloads']},
+        });
+
+        const finalState = categoryFacetSetReducer(
+          state,
+          restoreSearchParameters({cf: {geography: ['a']}, tab: 'Products'})
+        );
+
+        expect(finalState.geography?.request.currentValues).toEqual([]);
+      });
+
+      it('restores values for a facet with tabsIncluded when the active tab is in the included list', () => {
+        const initialNumberOfValues = 5;
+        const request = buildMockCategoryFacetRequest();
+
+        state.geography = buildMockCategoryFacetSlice({
+          request,
+          initialNumberOfValues,
+          tabs: {included: ['All', 'Downloads']},
+        });
+
+        const cf = {geography: ['a']};
+        const finalState = categoryFacetSetReducer(
+          state,
+          restoreSearchParameters({cf, tab: 'All'})
+        );
+
+        expect(finalState.geography?.request.currentValues[0].value).toEqual(
+          'a'
+        );
+      });
+
+      it('clears values for a facet with tabsExcluded when the active tab is in the excluded list', () => {
+        const initialNumberOfValues = 5;
+        const request = buildMockCategoryFacetRequest();
+        request.currentValues = [
+          buildMockCategoryFacetValueRequest({value: 'a', state: 'selected'}),
+        ];
+
+        state.geography = buildMockCategoryFacetSlice({
+          request,
+          initialNumberOfValues,
+          tabs: {excluded: ['Products']},
+        });
+
+        const finalState = categoryFacetSetReducer(
+          state,
+          restoreSearchParameters({cf: {geography: ['a']}, tab: 'Products'})
+        );
+
+        expect(finalState.geography?.request.currentValues).toEqual([]);
+      });
+
+      it('restores values for a facet with tabsExcluded when the active tab is not in the excluded list', () => {
+        const initialNumberOfValues = 5;
+        const request = buildMockCategoryFacetRequest();
+
+        state.geography = buildMockCategoryFacetSlice({
+          request,
+          initialNumberOfValues,
+          tabs: {excluded: ['Products']},
+        });
+
+        const cf = {geography: ['a']};
+        const finalState = categoryFacetSetReducer(
+          state,
+          restoreSearchParameters({cf, tab: 'All'})
+        );
+
+        expect(finalState.geography?.request.currentValues[0].value).toEqual(
+          'a'
+        );
+      });
+
+      it('restores values for a facet without tabs configuration regardless of active tab', () => {
+        const initialNumberOfValues = 5;
+        const request = buildMockCategoryFacetRequest();
+
+        state.geography = buildMockCategoryFacetSlice({
+          request,
+          initialNumberOfValues,
+        });
+
+        const cf = {geography: ['a']};
+        const finalState = categoryFacetSetReducer(
+          state,
+          restoreSearchParameters({cf, tab: 'AnyTab'})
+        );
+
+        expect(finalState.geography?.request.currentValues[0].value).toEqual(
+          'a'
+        );
+      });
     });
   });
 
@@ -870,6 +977,74 @@ describe('category facet slice', () => {
       const finalState = categoryFacetSetReducer(state, action);
 
       expect(finalState[facetId]?.request.currentValues).toEqual(currentValues);
+    });
+  });
+
+  describe('#updateActiveTab', () => {
+    it('should deselect values for a facet with tabsIncluded when switching to a non-included tab', () => {
+      vi.spyOn(
+        CategoryFacetReducerHelpers,
+        'handleCategoryFacetDeselectAll'
+      ).mockReset();
+
+      state['facet1'] = buildMockCategoryFacetSlice({
+        tabs: {included: ['tab1', 'tab2']},
+      });
+
+      categoryFacetSetReducer(state, updateActiveTab('tab3'));
+
+      expect(
+        CategoryFacetReducerHelpers.handleCategoryFacetDeselectAll
+      ).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not deselect values for a facet with tabsIncluded when switching to an included tab', () => {
+      vi.spyOn(
+        CategoryFacetReducerHelpers,
+        'handleCategoryFacetDeselectAll'
+      ).mockReset();
+
+      state['facet1'] = buildMockCategoryFacetSlice({
+        tabs: {included: ['tab1', 'tab2']},
+      });
+
+      categoryFacetSetReducer(state, updateActiveTab('tab1'));
+
+      expect(
+        CategoryFacetReducerHelpers.handleCategoryFacetDeselectAll
+      ).not.toHaveBeenCalled();
+    });
+
+    it('should deselect values for a facet with tabsExcluded when switching to an excluded tab', () => {
+      vi.spyOn(
+        CategoryFacetReducerHelpers,
+        'handleCategoryFacetDeselectAll'
+      ).mockReset();
+
+      state['facet1'] = buildMockCategoryFacetSlice({
+        tabs: {excluded: ['tab3']},
+      });
+
+      categoryFacetSetReducer(state, updateActiveTab('tab3'));
+
+      expect(
+        CategoryFacetReducerHelpers.handleCategoryFacetDeselectAll
+      ).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not deselect values for a facet without tabs configuration', () => {
+      vi.spyOn(
+        CategoryFacetReducerHelpers,
+        'handleCategoryFacetDeselectAll'
+      ).mockReset();
+
+      state['facet1'] = buildMockCategoryFacetSlice();
+
+      categoryFacetSetReducer(state, updateActiveTab('anyTab'));
+
+      expect(
+        CategoryFacetReducerHelpers.handleCategoryFacetDeselectAll
+      ).not.toHaveBeenCalled();
     });
   });
 });
