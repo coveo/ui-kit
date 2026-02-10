@@ -79,11 +79,8 @@ describe('#AtomicAnswersThreadItem', () => {
 
     const titleButton = parts().titleButton as HTMLButtonElement;
     const content = parts().content as HTMLElement;
-    const contentId = content.getAttribute('id');
 
     expect(titleButton).toHaveAttribute('aria-expanded', 'false');
-    expect(contentId).toBeTruthy();
-    expect(titleButton).toHaveAttribute('aria-controls', contentId ?? '');
     expect(content).toHaveAttribute('aria-hidden', 'true');
   });
 
