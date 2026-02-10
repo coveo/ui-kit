@@ -57,7 +57,7 @@ export class UserActionsTimelinePageObject extends BasePageObject<'atomic-insigh
     // Determine which story to navigate to based on the number of actions
     let storyId: string;
     if (userActions.length === 0) {
-      storyId = 'atomic-insight-user-actions-timeline--default'; // Default story handles empty state
+      storyId = 'atomic-insight-user-actions-timeline--with-no-user-actions';
     } else if (userActions.length > 5) {
       storyId = 'atomic-insight-user-actions-timeline--with-many-user-actions';
     } else {

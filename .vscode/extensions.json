@@ -2,7 +2,6 @@
   "recommendations": [
     "biomejs.biome",
     "streetsidesoftware.code-spell-checker",
-    "github.copilot",
     "github.copilot-chat",
     "runem.lit-plugin",
     "unifiedjs.vscode-mdx",
