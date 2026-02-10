@@ -1,11 +1,10 @@
 import {
   buildSmartSnippetQuestionsList,
   type Result,
-  type SmartSnippetRelatedQuestion,
 } from '@coveo/headless/insight';
 import {html} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {renderInAtomicInsightInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-interface-fixture';
 import {buildFakeInsightEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/engine';
 import {
@@ -167,6 +166,25 @@ describe('atomic-insight-smart-snippet-suggestions', () => {
       expect(element.error).toBeUndefined();
     });
 
+    it('should not log a warning with valid props', async () => {
+      const consoleWarnSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+
+      await renderComponent({
+        props: {headingLevel: 2},
+      });
+
+      expect(consoleWarnSpy).not.toHaveBeenCalledWith(
+        expect.stringContaining(
+          'Prop validation failed for component atomic-insight-smart-snippet-suggestions'
+        ),
+        expect.anything()
+      );
+
+      consoleWarnSpy.mockRestore();
+    });
+
     it.each<{
       validValue: number;
       invalidValue: number;
@@ -311,12 +329,22 @@ describe('atomic-insight-smart-snippet-suggestions', () => {
           expect(answer).toBeInTheDocument();
         });
 
-        it('should render answer with correct html content', async () => {
+        it('should render answer with correct exportparts attribute', async () => {
           const {locators} = await renderComponent({
             controllerState: {questions: [question2]},
           });
           const answer = locators.smartSnippetAnswer();
           expect(answer?.getAttribute('exportparts')).toBe('answer');
+        });
+
+        it('should render answer with correct html content', async () => {
+          const {locators} = await renderComponent({
+            controllerState: {questions: [question2]},
+          });
+          const answer = locators.smartSnippetAnswer() as
+            | (HTMLElement & {htmlContent?: string})
+            | null;
+          expect(answer?.htmlContent).toBe(question2.answer);
         });
 
         it('should render source when available', async () => {
@@ -369,23 +397,185 @@ describe('atomic-insight-smart-snippet-suggestions', () => {
         const answer = locators.smartSnippetAnswer();
         expect(answer).toBeNull();
       });
+
+      it('should render the correct expanded/collapsed parts for mixed state', async () => {
+        const questions = [
+          buildFakeRelatedQuestion({questionAnswerId: 'q1', expanded: false}),
+          buildFakeRelatedQuestion({questionAnswerId: 'q2', expanded: true}),
+          buildFakeRelatedQuestion({questionAnswerId: 'q3', expanded: true}),
+        ];
+
+        const {locators} = await renderComponent({
+          controllerState: {questions},
+        });
+
+        expect(locators.questionAnswersExpanded().length).toBe(2);
+        expect(locators.questionButtonsExpanded().length).toBe(2);
+        expect(locators.questionIconsExpanded().length).toBe(2);
+        expect(locators.questionTextsExpanded().length).toBe(2);
+        expect(locators.answerAndSources().length).toBe(2);
+
+        expect(locators.questionAnswersCollapsed().length).toBe(1);
+        expect(locators.questionButtonsCollapsed().length).toBe(1);
+        expect(locators.questionIconsCollapsed().length).toBe(1);
+        expect(locators.questionTextsCollapsed().length).toBe(1);
+      });
+
+      it('should fallback to a div for the accessibility heading when heading-level is 0', async () => {
+        const question = buildFakeRelatedQuestion({questionAnswerId: 'q1'});
+        const {locators} = await renderComponent({
+          props: {headingLevel: 0},
+          controllerState: {questions: [question]},
+        });
+        const heading = locators.heading();
+        expect(heading?.tagName).toBe('DIV');
+      });
+
+      it('should fallback to a div for questions when heading-level is 0', async () => {
+        const question = buildFakeRelatedQuestion({questionAnswerId: 'q1'});
+        const {locators} = await renderComponent({
+          props: {headingLevel: 0},
+          controllerState: {questions: [question]},
+        });
+        const questionText = locators.questionTextCollapsed();
+        expect(questionText?.tagName).toBe('DIV');
+      });
+
+      it('should use the correct heading level for the accessibility heading', async () => {
+        const headingLevel = 5;
+        const question = buildFakeRelatedQuestion({questionAnswerId: 'q1'});
+        const {locators} = await renderComponent({
+          props: {headingLevel},
+          controllerState: {questions: [question]},
+        });
+        const heading = locators.heading();
+        expect(heading?.tagName).toBe(`H${headingLevel}`);
+      });
+
+      it('should use the correct heading level for the question', async () => {
+        const headingLevel = 5;
+        const question = buildFakeRelatedQuestion({questionAnswerId: 'q1'});
+        const {locators} = await renderComponent({
+          props: {headingLevel},
+          controllerState: {questions: [question]},
+        });
+        const questionText = locators.questionTextCollapsed();
+        expect(questionText?.tagName).toBe(`H${headingLevel + 1}`);
+      });
+
+      it('should use default heading level of 0', async () => {
+        const question = buildFakeRelatedQuestion();
+        const {element} = await renderComponent({
+          controllerState: {questions: [question]},
+        });
+        expect(element.headingLevel).toBe(0);
+      });
+
+      it('should use custom heading level', async () => {
+        const question = buildFakeRelatedQuestion();
+        const {element} = await renderComponent({
+          props: {headingLevel: 3},
+          controllerState: {questions: [question]},
+        });
+        expect(element.headingLevel).toBe(3);
+      });
+
+      it('should apply snippet style from prop', async () => {
+        const customStyle = 'b { color: red; }';
+        const question = buildFakeRelatedQuestion({
+          expanded: true,
+          answer: '<b>Test</b>',
+        });
+
+        const {locators} = await renderComponent({
+          props: {snippetStyle: customStyle},
+          controllerState: {questions: [question]},
+        });
+
+        const answer = locators.smartSnippetAnswer();
+        const typedAnswer = answer as
+          | (HTMLElement & {innerStyle?: string})
+          | null;
+        expect(typedAnswer).toBeInTheDocument();
+        expect(typedAnswer?.innerStyle).toBe(customStyle);
+      });
+
+      it('should extract style from template slot', async () => {
+        const question = buildFakeRelatedQuestion({
+          expanded: true,
+          answer: '<b>Test</b>',
+        });
+        const styleContent = 'b { color: blue; }';
+        const slottedContent = `<template><style>${styleContent}</style></template>`;
+
+        const {locators} = await renderComponent({
+          slottedContent,
+          controllerState: {questions: [question]},
+        });
+
+        const answer = locators.smartSnippetAnswer();
+        expect(answer).toBeInTheDocument();
+
+        const typedAnswer = answer as
+          | (HTMLElement & {innerStyle?: string})
+          | null;
+        expect(typedAnswer?.innerStyle).toBe(styleContent);
+      });
+
+      it('should pass down slotted source anchor attributes (@slot source-anchor-attributes)', async () => {
+        const questionWithSource = buildFakeRelatedQuestion({
+          questionAnswerId: 'q-source',
+          expanded: true,
+          source: {
+            title: 'Doc title',
+            uri: 'https://example.com/doc',
+            clickUri: 'https://example.com/doc',
+            uniqueId: 'doc-1',
+            raw: {},
+          } as unknown as Result,
+        });
+
+        const slottedContent =
+          '<a slot="source-anchor-attributes" target="_blank" rel="noopener" href="https://ignored.example.com"></a>';
+
+        const {locators} = await renderComponent({
+          slottedContent,
+          controllerState: {questions: [questionWithSource]},
+        });
+
+        const sourceEl = locators.smartSnippetSource() as
+          | (HTMLElement & {anchorAttributes?: Attr[]})
+          | null;
+
+        expect(sourceEl).toBeInTheDocument();
+        expect(sourceEl?.anchorAttributes).toBeDefined();
+
+        const attrs = sourceEl?.anchorAttributes?.reduce<
+          Record<string, string>
+        >((acc, attr) => {
+          acc[attr.name] = attr.value;
+          return acc;
+        }, {});
+
+        expect(attrs).toMatchObject({
+          target: '_blank',
+          rel: 'noopener',
+        });
+        expect(attrs?.href).toBeUndefined();
+        expect(attrs?.slot).toBeUndefined();
+      });
     });
   });
 
   describe('interactions', () => {
-    let question: SmartSnippetRelatedQuestion;
-
-    beforeEach(() => {
-      question = buildFakeRelatedQuestion({
+    it('should call expand when clicking collapsed question', async () => {
+      const expand = vi.fn();
+      const question = buildFakeRelatedQuestion({
         questionAnswerId: 'q1',
         question: 'Test question?',
         answer: 'Test answer',
         expanded: false,
       });
-    });
-
-    it('should call expand when clicking collapsed question', async () => {
-      const expand = vi.fn();
       const {locators} = await renderComponent({
         controllerImplementation: {expand},
         controllerState: {questions: [question]},
@@ -399,81 +589,21 @@ describe('atomic-insight-smart-snippet-suggestions', () => {
 
     it('should call collapse when clicking expanded question', async () => {
       const collapse = vi.fn();
-      const expandedQuestion = {...question, expanded: true};
+      const question = buildFakeRelatedQuestion({
+        questionAnswerId: 'q1',
+        question: 'Test question?',
+        answer: 'Test answer',
+        expanded: true,
+      });
       const {locators} = await renderComponent({
         controllerImplementation: {collapse},
-        controllerState: {questions: [expandedQuestion]},
+        controllerState: {questions: [question]},
       });
 
       const button = locators.questionButtonExpanded() as HTMLElement;
       await button.click();
 
       expect(collapse).toHaveBeenCalledWith('q1');
-    });
-
-    it('should fallback to a div for the accessibility heading when heading-level is 0', async () => {
-      const question = buildFakeRelatedQuestion({questionAnswerId: 'q1'});
-      const {locators} = await renderComponent({
-        props: {headingLevel: 0},
-        controllerState: {questions: [question]},
-      });
-      const heading = locators.heading();
-      expect(heading?.tagName).toBe('DIV');
-    });
-
-    it('should fallback to a div for questions when heading-level is 0', async () => {
-      const question = buildFakeRelatedQuestion({questionAnswerId: 'q1'});
-      const {locators} = await renderComponent({
-        props: {headingLevel: 0},
-        controllerState: {questions: [question]},
-      });
-      const questionText = locators.questionTextCollapsed();
-      expect(questionText?.tagName).toBe('DIV');
-    });
-
-    it('should use the correct heading level for the accessibility heading', async () => {
-      const headingLevel = 5;
-      const question = buildFakeRelatedQuestion({questionAnswerId: 'q1'});
-      const {locators} = await renderComponent({
-        props: {headingLevel},
-        controllerState: {questions: [question]},
-      });
-      const heading = locators.heading();
-      expect(heading?.tagName).toBe(`H${headingLevel}`);
-    });
-
-    it('should use the correct heading level for the question', async () => {
-      const headingLevel = 5;
-      const question = buildFakeRelatedQuestion({questionAnswerId: 'q1'});
-      const {locators} = await renderComponent({
-        props: {headingLevel},
-        controllerState: {questions: [question]},
-      });
-      const questionText = locators.questionTextCollapsed();
-      expect(questionText?.tagName).toBe(`H${headingLevel + 1}`);
-    });
-
-    it('should render the correct expanded/collapsed parts for mixed state', async () => {
-      const questions = [
-        buildFakeRelatedQuestion({questionAnswerId: 'q1', expanded: false}),
-        buildFakeRelatedQuestion({questionAnswerId: 'q2', expanded: true}),
-        buildFakeRelatedQuestion({questionAnswerId: 'q3', expanded: true}),
-      ];
-
-      const {locators} = await renderComponent({
-        controllerState: {questions},
-      });
-
-      expect(locators.questionAnswersExpanded().length).toBe(2);
-      expect(locators.questionButtonsExpanded().length).toBe(2);
-      expect(locators.questionIconsExpanded().length).toBe(2);
-      expect(locators.questionTextsExpanded().length).toBe(2);
-      expect(locators.answerAndSources().length).toBe(2);
-
-      expect(locators.questionAnswersCollapsed().length).toBe(1);
-      expect(locators.questionButtonsCollapsed().length).toBe(1);
-      expect(locators.questionIconsCollapsed().length).toBe(1);
-      expect(locators.questionTextsCollapsed().length).toBe(1);
     });
 
     it('should forward source selection events to the controller', async () => {
@@ -501,6 +631,66 @@ describe('atomic-insight-smart-snippet-suggestions', () => {
       );
 
       expect(selectSource).toHaveBeenCalledWith('q1');
+    });
+
+    it('should forward beginDelayedSelectSource events to the controller', async () => {
+      const beginDelayedSelectSource = vi.fn();
+      const question = buildFakeRelatedQuestion({
+        questionAnswerId: 'q1',
+        expanded: true,
+        source: {
+          title: 'Doc title',
+          uri: 'https://example.com/doc',
+          clickUri: 'https://example.com/doc',
+          uniqueId: 'doc-1',
+          raw: {},
+        } as unknown as Result,
+      });
+
+      const {locators} = await renderComponent({
+        controllerImplementation: {beginDelayedSelectSource},
+        controllerState: {questions: [question]},
+      });
+
+      const sourceEl = locators.smartSnippetSource();
+      sourceEl?.dispatchEvent(
+        new CustomEvent('beginDelayedSelectSource', {
+          bubbles: true,
+          composed: true,
+        })
+      );
+
+      expect(beginDelayedSelectSource).toHaveBeenCalledWith('q1');
+    });
+
+    it('should forward cancelPendingSelectSource events to the controller', async () => {
+      const cancelPendingSelectSource = vi.fn();
+      const question = buildFakeRelatedQuestion({
+        questionAnswerId: 'q1',
+        expanded: true,
+        source: {
+          title: 'Doc title',
+          uri: 'https://example.com/doc',
+          clickUri: 'https://example.com/doc',
+          uniqueId: 'doc-1',
+          raw: {},
+        } as unknown as Result,
+      });
+
+      const {locators} = await renderComponent({
+        controllerImplementation: {cancelPendingSelectSource},
+        controllerState: {questions: [question]},
+      });
+
+      const sourceEl = locators.smartSnippetSource();
+      sourceEl?.dispatchEvent(
+        new CustomEvent('cancelPendingSelectSource', {
+          bubbles: true,
+          composed: true,
+        })
+      );
+
+      expect(cancelPendingSelectSource).toHaveBeenCalledWith('q1');
     });
 
     it('should forward inline link selection events to the controller', async () => {
@@ -535,104 +725,69 @@ describe('atomic-insight-smart-snippet-suggestions', () => {
         linkURL: 'https://example.com/a',
       });
     });
-  });
 
-  it('should apply snippet style from prop', async () => {
-    const customStyle = 'b { color: red; }';
-    const question = buildFakeRelatedQuestion({
-      expanded: true,
-      answer: '<b>Test</b>',
+    it('should forward beginDelayedSelectInlineLink events to the controller', async () => {
+      const beginDelayedSelectInlineLink = vi.fn();
+      const question = buildFakeRelatedQuestion({
+        questionAnswerId: 'q1',
+        expanded: true,
+        answer: '<a href="https://example.com/a">Link A</a>',
+      });
+
+      const {locators} = await renderComponent({
+        controllerImplementation: {beginDelayedSelectInlineLink},
+        controllerState: {questions: [question]},
+      });
+
+      const answerEl = locators.smartSnippetAnswer();
+      answerEl?.dispatchEvent(
+        new CustomEvent('beginDelayedSelectInlineLink', {
+          bubbles: true,
+          composed: true,
+          detail: {
+            linkText: 'Link A',
+            linkURL: 'https://example.com/a',
+          },
+        })
+      );
+
+      expect(beginDelayedSelectInlineLink).toHaveBeenCalledTimes(1);
+      expect(beginDelayedSelectInlineLink).toHaveBeenCalledWith('q1', {
+        linkText: 'Link A',
+        linkURL: 'https://example.com/a',
+      });
     });
 
-    const {locators} = await renderComponent({
-      props: {snippetStyle: customStyle},
-      controllerState: {questions: [question]},
+    it('should forward cancelPendingSelectInlineLink events to the controller', async () => {
+      const cancelPendingSelectInlineLink = vi.fn();
+      const question = buildFakeRelatedQuestion({
+        questionAnswerId: 'q1',
+        expanded: true,
+        answer: '<a href="https://example.com/a">Link A</a>',
+      });
+
+      const {locators} = await renderComponent({
+        controllerImplementation: {cancelPendingSelectInlineLink},
+        controllerState: {questions: [question]},
+      });
+
+      const answerEl = locators.smartSnippetAnswer();
+      answerEl?.dispatchEvent(
+        new CustomEvent('cancelPendingSelectInlineLink', {
+          bubbles: true,
+          composed: true,
+          detail: {
+            linkText: 'Link A',
+            linkURL: 'https://example.com/a',
+          },
+        })
+      );
+
+      expect(cancelPendingSelectInlineLink).toHaveBeenCalledTimes(1);
+      expect(cancelPendingSelectInlineLink).toHaveBeenCalledWith('q1', {
+        linkText: 'Link A',
+        linkURL: 'https://example.com/a',
+      });
     });
-
-    const answer = locators.smartSnippetAnswer();
-    const typedAnswer = answer as (HTMLElement & {innerStyle?: string}) | null;
-    expect(typedAnswer).toBeInTheDocument();
-    expect(typedAnswer?.innerStyle).toBe(customStyle);
-  });
-
-  it('should extract style from template slot', async () => {
-    const question = buildFakeRelatedQuestion({
-      expanded: true,
-      answer: '<b>Test</b>',
-    });
-    const styleContent = 'b { color: blue; }';
-    const slottedContent = `<template><style>${styleContent}</style></template>`;
-
-    const {locators} = await renderComponent({
-      slottedContent,
-      controllerState: {questions: [question]},
-    });
-
-    const answer = locators.smartSnippetAnswer();
-    expect(answer).toBeInTheDocument();
-
-    const typedAnswer = answer as (HTMLElement & {innerStyle?: string}) | null;
-    expect(typedAnswer?.innerStyle).toBe(styleContent);
-  });
-
-  it('should pass down slotted source anchor attributes (@slot source-anchor-attributes)', async () => {
-    const questionWithSource = buildFakeRelatedQuestion({
-      questionAnswerId: 'q-source',
-      expanded: true,
-      source: {
-        title: 'Doc title',
-        uri: 'https://example.com/doc',
-        clickUri: 'https://example.com/doc',
-        uniqueId: 'doc-1',
-        raw: {},
-      } as unknown as Result,
-    });
-
-    const slottedContent =
-      '<a slot="source-anchor-attributes" target="_blank" rel="noopener" href="https://ignored.example.com"></a>';
-
-    const {locators} = await renderComponent({
-      slottedContent,
-      controllerState: {questions: [questionWithSource]},
-    });
-
-    const sourceEl = locators.smartSnippetSource() as
-      | (HTMLElement & {anchorAttributes?: Attr[]})
-      | null;
-
-    expect(sourceEl).toBeInTheDocument();
-    expect(sourceEl?.anchorAttributes).toBeDefined();
-
-    const attrs = sourceEl?.anchorAttributes?.reduce<Record<string, string>>(
-      (acc, attr) => {
-        acc[attr.name] = attr.value;
-        return acc;
-      },
-      {}
-    );
-
-    expect(attrs).toMatchObject({
-      target: '_blank',
-      rel: 'noopener',
-    });
-    expect(attrs?.href).toBeUndefined();
-    expect(attrs?.slot).toBeUndefined();
-  });
-
-  it('should use default heading level of 0', async () => {
-    const question = buildFakeRelatedQuestion();
-    const {element} = await renderComponent({
-      controllerState: {questions: [question]},
-    });
-    expect(element.headingLevel).toBe(0);
-  });
-
-  it('should use custom heading level', async () => {
-    const question = buildFakeRelatedQuestion();
-    const {element} = await renderComponent({
-      props: {headingLevel: 3},
-      controllerState: {questions: [question]},
-    });
-    expect(element.headingLevel).toBe(3);
   });
 });

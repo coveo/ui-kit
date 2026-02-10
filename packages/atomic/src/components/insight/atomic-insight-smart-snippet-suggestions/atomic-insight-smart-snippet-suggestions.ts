@@ -35,7 +35,7 @@ import styles from './atomic-insight-smart-snippet-suggestions.tw.css';
 /**
  * The `atomic-insight-smart-snippet-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
  *
- * You can style the snippets by inserting a template element like this:
+ * You can style the snippets either with the `snippetStyle` prop, or by inserting a template element like this:
  * ```html
  * <atomic-insight-smart-snippet-suggestions>
  *   <template>
