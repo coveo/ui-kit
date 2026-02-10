@@ -7,7 +7,7 @@ import {
   type RecommendationListState,
   type Result as RecsResult,
 } from '@coveo/headless/recommendation';
-import {type CSSResultGroup, html, LitElement, nothing} from 'lit';
+import {type CSSResultGroup, css, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
@@ -23,7 +23,6 @@ import {
   type ItemRenderingFunction,
 } from '@/src/components/common/item-list/item-list-common';
 import {ResultTemplateProvider} from '@/src/components/common/item-list/result-template-provider';
-import gridDisplayStyles from '@/src/components/common/item-list/styles/grid-display.tw.css';
 import placeholderStyles from '@/src/components/common/item-list/styles/placeholders.tw.css';
 import {
   getItemListDisplayClasses,
@@ -42,7 +41,6 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
-import recsListStyles from './atomic-recs-list.tw.css';
 import '../atomic-recs-result/atomic-recs-result';
 
 /**
@@ -68,8 +66,34 @@ export class AtomicRecsList
 {
   static styles: CSSResultGroup = [
     placeholderStyles,
-    gridDisplayStyles,
-    recsListStyles,
+    css`
+      @reference '../../common/item-list/styles/mixins.pcss';
+
+      :host {
+        @apply atomic-grid-clickable-elements;
+        @apply atomic-grid-display-common;
+        display: block;
+
+        /**
+         * @prop --atomic-recs-number-of-columns: Number of columns for the recommendation list.
+         */
+        .list-root {
+          @apply atomic-grid-with-cards;
+          grid-template-columns: repeat(
+            var(--atomic-recs-number-of-columns, 1),
+            minmax(0, 1fr)
+          );
+        }
+
+        [part='label'] {
+          @apply font-sans text-2xl font-bold;
+        }
+
+        atomic-result:not(.hydrated) {
+          visibility: hidden;
+        }
+      }
+    `,
   ];
 
   private static readonly propsSchema = new Schema({
