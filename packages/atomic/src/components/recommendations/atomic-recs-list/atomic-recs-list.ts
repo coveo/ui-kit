@@ -64,8 +64,8 @@ export class AtomicRecsList
   implements InitializableComponent<RecsBindings>
 {
   static styles: CSSResultGroup = css`
-  @reference '../../common/item-list/styles/mixins.tw.css';
   @reference '../../../utils/tailwind.global.tw.css';
+  
   @import '../../common/item-list/styles/mixins.pcss';
 @import '../../common/item-list/styles/placeholders.pcss';
 
