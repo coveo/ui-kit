@@ -1,3 +1,78 @@
+<script
+  type="module"
+  src="https://static.cloud.coveo.com/atomic/v3/atomic.esm.js"
+></script>
+<link
+  rel="stylesheet"
+  href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"
+/>
+<style>
+  /* Allow the toolbar to show the suggestions dropdown */
+  [data-test-id='sb-preview-toolbar'] {
+    overflow: visible !important;
+    height: 58px;
+    top: 3px;
+  }
+
+  [data-test-id='sb-preview-toolbar'] > div {
+    overflow: visible !important;
+  }
+
+  [data-test-id='sb-preview-toolbar'] > div > div {
+    overflow: visible !important;
+  }
+
+  #coveo-docs-search-container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    min-width: 280px;
+    max-width: 360px;
+    position: relative;
+  }
+
+  #coveo-docs-search-container atomic-search-interface {
+    width: 100%;
+  }
+
+  #coveo-docs-search-container atomic-search-box {
+    --atomic-search-box-height: 28px;
+    --atomic-search-box-border-radius: 14px;
+    --atomic-text-base: 12px;
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(wrapper) {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(wrapper):focus-within {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(input) {
+    color: #fff;
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(input)::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(submit-icon),
+  #coveo-docs-search-container atomic-search-box::part(clear-icon) {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(submit-button) {
+    width: 28px;
+    height: 28px;
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(suggestions-wrapper) {
+    z-index: 9999;
+  }
+</style>
 <script type="module">
   import {disableBlockedKeys, getOptanonConsentCookie, updateCookieSettings } from './cookieManager.js';
 

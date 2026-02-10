@@ -4,7 +4,7 @@ import {CogIcon} from '@storybook/icons';
 import {addons, types} from 'storybook/manager-api';
 import {themes} from 'storybook/theming';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 
 declare global {
   interface Window {
@@ -12,6 +12,54 @@ declare global {
       ToggleInfoDisplay: () => void;
     };
   }
+}
+
+function CoveoDocsSearchBox() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const initializedRef = useRef(false);
+
+  useEffect(() => {
+    if (initializedRef.current || !containerRef.current) {
+      return;
+    }
+    initializedRef.current = true;
+
+    const searchInterface = containerRef.current.querySelector(
+      'atomic-search-interface'
+    ) as HTMLElement & {
+      initialize: (options: Record<string, string>) => Promise<void>;
+    };
+
+    if (!searchInterface) {
+      return;
+    }
+
+    customElements.whenDefined('atomic-search-interface').then(() => {
+      searchInterface.initialize({
+        accessToken: 'xx6ac9d08f-eb9a-48d5-9240-d7c251470c93',
+        organizationId: 'coveosearch',
+      });
+    });
+  }, []);
+
+  return (
+    <div
+      id="coveo-docs-search-container"
+      ref={containerRef}
+      dangerouslySetInnerHTML={{
+        __html: `
+          <atomic-search-interface
+            analytics="false"
+            search-hub="Coveo Docs Unified Search"
+          >
+            <atomic-search-box
+              redirection-url="https://docs.coveo.com/en/search/"
+            ></atomic-search-box>
+          </atomic-search-interface>
+        `,
+      }}
+    />
+  );
 }
 
 addons.setConfig({
@@ -31,6 +79,15 @@ addons.register('SELECT-FIRST-STORY-BY-DEFAULT-ONCE', (api) => {
     // The first parameter expects the PascalCase story ID whereas the second expects the sluggified one.
     // See: https://github.com/storybookjs/storybook/blob/b0052ad9f71f5763dcb25af31bc8832097682d29/code/lib/manager-api/src/modules/stories.ts#L401
     api.selectStory(undefined, 'default');
+  });
+});
+
+addons.register('coveo-docs-search', () => {
+  addons.add('coveo-docs-search/toolbar', {
+    type: types.TOOL,
+    title: 'Search Coveo Docs',
+    match: () => true,
+    render: () => <CoveoDocsSearchBox />,
   });
 });
 

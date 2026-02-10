@@ -55,6 +55,9 @@ module.exports = {
       if (file.includes('/packages/samples/stencil/') && file.endsWith('.d.ts'))
         return false;
 
+      // Exclude .storybook HTML fragments (not full documents, Biome can't process them)
+      if (file.includes('/.storybook/') && file.endsWith('.html')) return false;
+
       // Exclude tailwind css files
       if (file.endsWith('.css')) return false;
 
