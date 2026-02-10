@@ -9,7 +9,8 @@ import {
   TemplateProvider,
   type TemplateProviderProps,
 } from '../template-provider/template-provider';
-import '@/src/components/search/atomic-result-link/atomic-result-link';
+// TODO: add this import once this class isn't used in Stencil components anymore
+// import '@/src/components/search/atomic-result-link/atomic-result-link';
 
 export class ResultTemplateProvider extends TemplateProvider<Result> {
   constructor(
