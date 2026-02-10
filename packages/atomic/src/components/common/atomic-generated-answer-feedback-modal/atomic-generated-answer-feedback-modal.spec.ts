@@ -10,7 +10,7 @@ import './atomic-generated-answer-feedback-modal';
 vi.mock('@/src/components/common/icon-button', {spy: true});
 
 // Feedback option values that users can select for each category
-const FEEDBACK_OPTIONS: string[] = ['yes', 'unknown', 'no'] as const;
+const FEEDBACK_OPTIONS = ['yes', 'unknown', 'no'] as const;
 
 // Feedback categories that are evaluated (matching AtomicGeneratedAnswerFeedbackModal.options)
 const FEEDBACK_CATEGORIES = [
