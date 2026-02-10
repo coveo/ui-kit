@@ -1,6 +1,7 @@
 import {html, nothing} from 'lit';
 import {classMap} from 'lit/directives/class-map.js';
 import {createRef, ref} from 'lit/directives/ref.js';
+import {when} from 'lit/directives/when.js';
 import type {FunctionalComponentWithOptionalChildren} from '@/src/utils/functional-component-utils';
 
 let instanceCounter = 0;
@@ -54,7 +55,6 @@ export const renderAnswersThreadItem: FunctionalComponentWithOptionalChildren<
 
     const initialExpanded = isCollapsible ? isExpanded : true;
     let expanded = initialExpanded;
-    const showLine = !hideLine;
 
     const toggle = () => {
       if (!isCollapsible) {
@@ -78,50 +78,56 @@ export const renderAnswersThreadItem: FunctionalComponentWithOptionalChildren<
       onToggle?.(expanded);
     };
 
-    const titleClasses = classMap({
-      'text-lg font-semibold text-on-background min-w-0': true,
-      'inline-flex text-left mr-auto': true,
-      'bg-transparent border-0 appearance-none ml-1 px-2 py-1.5 transition-colors':
-        isCollapsible,
-      'hover:bg-neutral-light rounded-md cursor-pointer': isCollapsible,
-      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2':
-        isCollapsible,
+    const titleBaseClasses = {
+      'text-lg font-semibold text-on-background min-w-0 inline-flex text-left mr-auto': true,
+    };
+    const titleButtonClasses = classMap({
+      ...titleBaseClasses,
+      'bg-transparent border-0 appearance-none ml-1 px-2 py-1.5 transition-colors': true,
+      'hover:bg-neutral-light rounded-md cursor-pointer': true,
+      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2': true,
     });
+    const titleTextClasses = classMap(titleBaseClasses);
 
     return html`
       <div part="item" class="grid grid-cols-[10px_1fr]">
         <div part="timeline" class="flex items-center justify-center">
           <span
             part="timeline-dot"
-            class="h-2 w-2 rounded-full bg-[#adb5bd]"
+            class="h-2 w-2 rounded-full bg-neutral-dim"
           ></span>
         </div>
         <div part="header" class="flex items-center">
-          ${
-            isCollapsible
-              ? html`<button
+          ${when(
+            isCollapsible,
+            () =>
+              html`<button
                 part="title-button"
                 ${ref(buttonRef)}
                 type="button"
                 aria-expanded=${initialExpanded ? 'true' : 'false'}
                 aria-controls=${contentId}
-                class=${titleClasses}
+                class=${titleButtonClasses}
                 @click=${toggle}
               >
                 ${title}
-              </button>`
-              : html`<span part="title" class=${titleClasses}>${title}</span>`
-          }
+              </button>`,
+            () =>
+              html`<span part="title" class=${titleTextClasses}
+                >${title}</span
+              >`
+          )}
         </div>
         <div class="flex justify-center">
-          ${
-            showLine
-              ? html`<span
+          ${when(
+            !hideLine,
+            () =>
+              html`<span
                 part="timeline-line"
-                class="w-px bg-[#e5e5e5] mt-[-4px]"
-              ></span>`
-              : nothing
-          }
+                class="w-px bg-neutral-lighter mt-[-6px]"
+              ></span>`,
+            () => nothing
+          )}
         </div>
         <div
           id=${contentId}
