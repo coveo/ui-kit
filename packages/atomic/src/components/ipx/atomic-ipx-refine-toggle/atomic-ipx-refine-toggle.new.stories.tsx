@@ -20,7 +20,7 @@ async function initializeInterface(canvasElement: HTMLElement) {
 
 const meta: Meta = {
   component: 'atomic-ipx-refine-toggle',
-  title: 'IPX/IpxRefineToggle',
+  title: 'IPX/Refine Toggle',
   id: 'atomic-ipx-refine-toggle',
   render: (args) => html`
     <atomic-search-interface>
@@ -51,23 +51,9 @@ export const Default: Story = {
   name: 'Default',
 };
 
-export const WithResults: Story = {
-  name: 'With search results',
-  play: async (context) => {
-    await initializeInterface(context.canvasElement);
-  },
-};
-
 export const WithCollapsedFacets: Story = {
   name: 'With collapsed facets after 2',
   args: {
     'collapse-facets-after': 2,
-  },
-};
-
-export const WithAllFacetsCollapsed: Story = {
-  name: 'With all facets collapsed',
-  args: {
-    'collapse-facets-after': 0,
   },
 };
