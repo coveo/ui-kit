@@ -246,20 +246,31 @@ describe('atomic-generated-answer-feedback-modal', () => {
       expect(secondRadioButton.className).not.toContain('active');
     });
 
+    // This test was added to catch a specific bug where toggling radio button selection would cause a DOMTokenList error due to class manipulation on the radio buttons.
     it('should not cause DOMTokenList error when toggling selection', async () => {
       const {element} = await renderFeedbackModal({isOpen: true});
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
 
       const radioButtons = element.shadowRoot?.querySelectorAll(
         'input[type="radio"]'
       ) as NodeListOf<HTMLInputElement>;
 
-      expect(() => {
-        const firstButton = radioButtons[0];
-        firstButton.click();
-        const secondButton = radioButtons[1];
-        secondButton.click();
-        firstButton.click();
-      }).not.toThrow();
+      const firstButton = radioButtons[0];
+      firstButton.click();
+      await element.updateComplete;
+
+      const secondButton = radioButtons[1];
+      secondButton.click();
+      await element.updateComplete;
+
+      firstButton.click();
+      await element.updateComplete;
+
+      expect(consoleErrorSpy).not.toHaveBeenCalled();
+
+      consoleErrorSpy.mockRestore();
     });
 
     it('should toggle active class when selecting different options in same category', async () => {
