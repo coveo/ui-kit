@@ -295,7 +295,9 @@ export class AtomicGeneratedAnswerFeedbackModal
         onChecked: () => {
           this.setCurrentAnswer(correspondingAnswer, option);
         },
-        class: `min-w-20 flex items-center justify-center px-3 py-1.5 mr-1 text-neutral-dark ${isSelected ? 'active' : undefined}`,
+        class: isSelected
+          ? 'min-w-20 flex items-center justify-center px-3 py-1.5 mr-1 text-neutral-dark active'
+          : 'min-w-20 flex items-center justify-center px-3 py-1.5 mr-1 text-neutral-dark',
         text: this.bindings.i18n.t(option),
       },
     });
