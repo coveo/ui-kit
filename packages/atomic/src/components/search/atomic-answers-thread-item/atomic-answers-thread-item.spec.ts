@@ -7,7 +7,7 @@ import type {
 } from './atomic-answers-thread-item';
 import '@/src/components/search/atomic-answers-thread-item/atomic-answers-thread-item';
 
-describe('#AtomicAnswersThreadItem', () => {
+describe('#atomic-answers-thread-item', () => {
   const renderComponent = async (
     props: Partial<AtomicAnswersThreadItemProps> = {},
     children = html`<div>Thread item content</div>`

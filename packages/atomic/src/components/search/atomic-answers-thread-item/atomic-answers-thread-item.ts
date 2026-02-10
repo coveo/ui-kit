@@ -1,4 +1,4 @@
-import {html, LitElement, nothing, type PropertyValues} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {when} from 'lit/directives/when.js';
@@ -79,12 +79,8 @@ export class AtomicAnswersThreadItem extends LitElement {
   @state()
   private expanded = false;
 
-  protected willUpdate(changedProperties: PropertyValues<this>) {
-    if (
-      !this.hasUpdated &&
-      (changedProperties.has('isExpanded') ||
-        changedProperties.has('isCollapsible'))
-    ) {
+  protected willUpdate() {
+    if (!this.hasUpdated) {
       this.expanded = this.isCollapsible ? this.isExpanded : true;
     }
   }
