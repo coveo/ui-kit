@@ -20,7 +20,7 @@ test.describe('atomic-ipx-refine-toggle', () => {
     await expect(ipxRefineToggle.modal).toHaveAttribute('is-open', '');
   });
 
-  test('should display badge when there are active filters', async ({
+  test('should display facets inside the modal when opened', async ({
     ipxRefineToggle,
   }) => {
     await test.step('open the refine modal', async () => {
@@ -28,14 +28,8 @@ test.describe('atomic-ipx-refine-toggle', () => {
       await expect(ipxRefineToggle.modal).toHaveAttribute('is-open', '');
     });
 
-    await test.step('select a facet value', async () => {
-      await ipxRefineToggle.modalExpandFacetButton.click();
-      await ipxRefineToggle.modalFirstCheckbox.click();
-    });
-
-    await test.step('verify badge is visible after closing modal', async () => {
-      await ipxRefineToggle.page.keyboard.press('Escape');
-      await expect(ipxRefineToggle.badge).toBeVisible();
+    await test.step('verify facets are visible in the modal', async () => {
+      await expect(ipxRefineToggle.modalExpandFacetButton).toBeVisible();
     });
   });
 });

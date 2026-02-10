@@ -98,8 +98,10 @@ export class AtomicIpxRefineToggle
       return;
     }
 
+    const searchRoot =
+      this.closest('atomic-search-interface') ?? this.parentElement;
     const existingModal =
-      this.parentElement?.querySelector<HTMLAtomicIpxRefineModalElement>(
+      searchRoot?.querySelector<HTMLAtomicIpxRefineModalElement>(
         'atomic-ipx-refine-modal'
       );
 
