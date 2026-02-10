@@ -19,40 +19,23 @@ export interface RenderFollowUpInputProps {
   askFollowUp: (query: string) => Promise<void>;
 }
 
-/**
- * Renders a follow-up question input field for the generated answer experience.
- *
- * @part input-container - The container wrapping the input and button
- * @part input-field - The text input element
- * @part submit-button - The submit button
- * @part submit-icon - The SVG arrow-up icon inside the submit button
- */
 export const renderFollowUpInput: FunctionalComponent<
   RenderFollowUpInputProps
 > = ({props}) => {
   const {submitButtonDisabled = false, askFollowUp} = props;
   const inputRef = createRef<HTMLInputElement>();
-  const buttonRef = createRef<HTMLButtonElement>();
 
   const handleSubmit = async () => {
     const input = inputRef.value;
-    const button = buttonRef.value;
-    if (!input || !button) return;
+    if (!input) return;
 
     const inputValue = input.value.trim();
     if (!inputValue || submitButtonDisabled) {
       return;
     }
 
-    try {
-      button.disabled = true;
-      await askFollowUp(inputValue);
-      input.value = '';
-    } catch (error) {
-      console.error('Error submitting follow-up question: ', error);
-    } finally {
-      button.disabled = submitButtonDisabled;
-    }
+    await askFollowUp(inputValue);
+    input.value = '';
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
@@ -82,7 +65,6 @@ export const renderFollowUpInput: FunctionalComponent<
           type: 'button',
           disabled: submitButtonDisabled,
           ariaLabel: props.i18n.t('submit-follow-up'),
-          ref: buttonRef,
           onClick: handleSubmit,
         },
       })(

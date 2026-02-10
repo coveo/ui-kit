@@ -188,37 +188,6 @@ describe('#renderFollowUpInput', () => {
       });
     });
 
-    it('should disable button during submission', async () => {
-      let resolveSubmission: () => void;
-      const submissionPromise = new Promise<void>((resolve) => {
-        resolveSubmission = resolve;
-      });
-      const askFollowUp = vi.fn().mockReturnValue(submissionPromise);
-      const {input, submitButton} = await renderComponent({askFollowUp});
-
-      await input.fill('test question');
-      await submitButton.click();
-
-      await expect.element(submitButton).toBeDisabled();
-
-      resolveSubmission!();
-    });
-
-    it('should re-enable button after submission completes if submitButtonDisabled is false', async () => {
-      const askFollowUp = vi.fn().mockResolvedValue(undefined);
-      const {input, submitButton} = await renderComponent({
-        askFollowUp,
-        submitButtonDisabled: false,
-      });
-
-      await input.fill('test question');
-      await submitButton.click();
-
-      await vi.waitFor(async () => {
-        await expect.element(submitButton).toBeEnabled();
-      });
-    });
-
     it('should keep button disabled when submitButtonDisabled is true', async () => {
       const askFollowUp = vi.fn().mockResolvedValue(undefined);
       const {input, submitButton} = await renderComponent({
@@ -280,46 +249,6 @@ describe('#renderFollowUpInput', () => {
       await userEvent.keyboard('{Enter}');
 
       expect(askFollowUp).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('error handling', () => {
-    it('should re-enable button even if askFollowUp throws an error', async () => {
-      const askFollowUp = vi.fn().mockRejectedValue(new Error('API error'));
-      const {input, submitButton} = await renderComponent({
-        askFollowUp,
-        submitButtonDisabled: false,
-      });
-
-      await input.fill('test question');
-      await submitButton.click();
-
-      // Wait for the error to be thrown and caught internally
-      await vi.waitFor(() => {
-        expect(askFollowUp).toHaveBeenCalledWith('test question');
-      });
-
-      await vi.waitFor(async () => {
-        await expect.element(submitButton).toBeEnabled();
-      });
-    });
-
-    it('should not clear input if askFollowUp throws an error', async () => {
-      const askFollowUp = vi.fn().mockRejectedValue(new Error('API error'));
-      const {input, submitButton} = await renderComponent({askFollowUp});
-
-      await input.fill('test question');
-      await submitButton.click();
-
-      // Wait for the error to be thrown and caught internally
-      await vi.waitFor(() => {
-        expect(askFollowUp).toHaveBeenCalledWith('test question');
-      });
-
-      await vi.waitFor(() => {
-        const inputElement = input.element() as HTMLInputElement;
-        expect(inputElement.value).toBe('test question');
-      });
     });
   });
 });
