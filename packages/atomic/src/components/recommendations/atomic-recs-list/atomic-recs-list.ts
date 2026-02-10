@@ -11,7 +11,6 @@ import {type CSSResultGroup, html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
-import {ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
 import {renderItemPlaceholders} from '@/src/components/common/atomic-result-placeholder/item-placeholders';
 import {renderCarousel} from '@/src/components/common/carousel';
@@ -273,7 +272,12 @@ export class AtomicRecsList
   @bindingGuard()
   @errorGuard()
   render() {
-    if (!this.resultTemplateRegistered || this.templateHasError || this.error) {
+    if (
+      !this.resultTemplateRegistered ||
+      this.templateHasError ||
+      this.error ||
+      this.recommendationListStateWithAugment.hasError
+    ) {
       return nothing;
     }
 

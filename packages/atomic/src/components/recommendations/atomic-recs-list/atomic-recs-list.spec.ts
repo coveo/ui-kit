@@ -1,7 +1,7 @@
 import {
   buildRecommendationList,
   buildInteractiveResult as buildRecsInteractiveResult,
-  type InteractiveResult,
+  loadConfigurationActions,
 } from '@coveo/headless/recommendation';
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
@@ -44,6 +44,19 @@ describe('atomic-recs-list', () => {
         return interactiveResult(props);
       }
     );
+
+    vi.mocked(loadConfigurationActions).mockImplementation(() => ({
+      setOriginLevel2: vi.fn().mockReturnValue({type: 'setOriginLevel2'}),
+      setOriginLevel3: vi.fn().mockReturnValue({type: 'setOriginLevel3'}),
+      disableAnalytics: vi.fn().mockReturnValue({type: 'disableAnalytics'}),
+      enableAnalytics: vi.fn().mockReturnValue({type: 'enableAnalytics'}),
+      updateAnalyticsConfiguration: vi
+        .fn()
+        .mockReturnValue({type: 'updateAnalyticsConfiguration'}),
+      updateBasicConfiguration: vi
+        .fn()
+        .mockReturnValue({type: 'updateBasicConfiguration'}),
+    }));
   });
 
   const mockRecommendationsWithCount = (count: number) => {
@@ -218,7 +231,15 @@ describe('atomic-recs-list', () => {
 
   it('should not render when there is an error', async () => {
     vi.mocked(buildRecommendationList).mockReturnValue(
-      buildFakeRecommendationList({state: {error: {message: 'Test error'}}})
+      buildFakeRecommendationList({
+        state: {
+          error: {
+            message: 'Test error',
+            statusCode: 500,
+            type: 'TestError',
+          },
+        },
+      })
     );
 
     const element = await setupElement();
@@ -522,6 +543,8 @@ describe('atomic-recs-list', () => {
           error: vi.fn(),
           warn: vi.fn(),
         } as never;
+        bindings.engine.dispatch = vi.fn();
+        bindings.engine.addReducers = vi.fn();
         return bindings;
       },
     });
