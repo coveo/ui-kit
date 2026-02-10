@@ -1,8 +1,10 @@
+import type {i18n} from 'i18next';
 import {html, nothing, type TemplateResult} from 'lit';
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 
 export interface IpxBodyProps {
-  visibility?: 'open' | 'closed' | 'embedded';
+  i18n: i18n;
+  visibility: 'open' | 'closed' | 'embedded';
   displayFooterSlot?: boolean;
   onAnimationEnd?: () => void;
   header?: TemplateResult | typeof nothing;
@@ -38,7 +40,7 @@ export const renderIpxBody: FunctionalComponent<IpxBodyProps> = ({props}) => {
         class="ipx-body-scrollbar flex w-full grow flex-col overflow-auto px-6 py-4"
         tabindex="0"
         role="region"
-        aria-label="Content area"
+        aria-label=${props.i18n.t('ipx-body-content')}
       >
         <div part="body" class="w-full">
           ${props.body ?? nothing}

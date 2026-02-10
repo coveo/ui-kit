@@ -1,9 +1,17 @@
+import type {i18n} from 'i18next';
 import {html, nothing} from 'lit';
-import {describe, expect, it, vi} from 'vitest';
+import {beforeAll, describe, expect, it, vi} from 'vitest';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {renderIpxBody} from './ipx-body.js';
 
 describe('#renderIpxBody', () => {
+  let i18n: i18n;
+
+  beforeAll(async () => {
+    i18n = await createTestI18n();
+  });
+
   const parts = (element: HTMLElement) => {
     const qs = (part: string) => element.querySelector(`[part="${part}"]`);
     return {
@@ -26,6 +34,7 @@ describe('#renderIpxBody', () => {
     const element = await renderFunctionFixture(
       html`${renderIpxBody({
         props: {
+          i18n,
           visibility: 'open',
           displayFooterSlot: true,
           header: headerContent,
@@ -95,13 +104,6 @@ describe('#renderIpxBody', () => {
     expect(container.classList.contains('invisible')).toBe(false);
   });
 
-  it('should apply invisible class when visibility is undefined', async () => {
-    const {parts: allParts} = await renderComponent({visibility: undefined});
-    const container = allParts.container as HTMLElement;
-
-    expect(container.classList.contains('invisible')).toBe(true);
-  });
-
   it('should not render footer parts when footer is disabled', async () => {
     const {parts: allParts} = await renderComponent({
       displayFooterSlot: false,
@@ -164,5 +166,14 @@ describe('#renderIpxBody', () => {
 
     expect(allParts.footer).toBeInTheDocument();
     expect(allParts.footer?.textContent?.trim()).toBe('');
+  });
+
+  it('should render localized aria-label on body-wrapper', async () => {
+    const {parts: allParts} = await renderComponent();
+    const bodyWrapper = allParts.bodyWrapper as HTMLElement;
+
+    expect(bodyWrapper.getAttribute('aria-label')).toBe(
+      i18n.t('ipx-body-content')
+    );
   });
 });

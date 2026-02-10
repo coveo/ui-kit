@@ -3,6 +3,7 @@ import {customElement, property, state} from 'lit/decorators.js';
 import type {AnyBindings} from '@/src/components/common/interface/bindings.js';
 import {renderIpxBody} from '@/src/components/ipx/atomic-ipx-body/ipx-body.js';
 import {ipxBodyStyles} from '@/src/components/ipx/atomic-ipx-body/ipx-body-styles.js';
+import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
@@ -84,6 +85,7 @@ export class AtomicIpxEmbedded
     }
   }
 
+  @bindingGuard()
   render() {
     this.updateBreakpoints();
 
@@ -91,6 +93,7 @@ export class AtomicIpxEmbedded
       <div part="backdrop">
         ${renderIpxBody({
           props: {
+            i18n: this.bindings.i18n,
             visibility: 'embedded',
             displayFooterSlot: this.hasFooterSlotElements,
             header: html`<slot name="header"></slot>`,

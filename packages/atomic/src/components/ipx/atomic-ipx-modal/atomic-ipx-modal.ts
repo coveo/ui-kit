@@ -4,6 +4,7 @@ import type {AnyBindings} from '@/src/components/common/interface/bindings';
 import {renderIpxBody} from '@/src/components/ipx/atomic-ipx-body/ipx-body';
 import {ipxBodyStyles} from '@/src/components/ipx/atomic-ipx-body/ipx-body-styles';
 import {booleanConverter} from '@/src/converters/boolean-converter';
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {watch} from '@/src/decorators/watch';
@@ -168,6 +169,7 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
     this.dispatchEvent(buildCustomEvent('animationEnded'));
   };
 
+  @bindingGuard()
   @errorGuard()
   render() {
     this.updateBreakpoints();
@@ -177,6 +179,7 @@ export class AtomicIpxModal extends InitializeBindingsMixin(LitElement) {
       <div part="backdrop">
         ${renderIpxBody({
           props: {
+            i18n: this.bindings.i18n,
             visibility: this.isOpen ? 'open' : 'closed',
             displayFooterSlot: this.hasFooterSlotElements,
             onAnimationEnd: this.handleAnimationEnded,
