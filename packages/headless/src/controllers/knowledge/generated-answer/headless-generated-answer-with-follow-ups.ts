@@ -1,13 +1,9 @@
 import {answerGenerationApi} from '../../../api/knowledge/answer-generation/answer-generation-api.js';
-import {
-  type AnswerEndpointArgs,
-  selectAnswer,
-} from '../../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
+import {setAgentId} from '../../../features/configuration/configuration-actions.js';
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
-import {selectAnswerApiQueryParams} from '../../../features/generated-answer/answer-api-selectors.js';
 import {generateHeadAnswer} from '../../../features/generated-answer/generated-answer-actions.js';
 import type {GeneratedAnswerState} from '../../../index.js';
 import type {
@@ -48,6 +44,9 @@ export function buildGeneratedAnswerWithFollowUps(
   analyticsClient: GeneratedAnswerAnalyticsClient,
   props: GeneratedAnswerProps = {}
 ): GeneratedAnswerWithFollowUps {
+  console.log(
+    'The `buildGeneratedAnswerWithFollowUps` controller is currently in an experimental stage. Please reach out to the Coveo team if you want to use or provide feedback on this controller.'
+  );
   if (!loadReducers(engine)) {
     throw loadReducerError;
   }
@@ -58,47 +57,14 @@ export function buildGeneratedAnswerWithFollowUps(
     props
   );
   const getState = () => engine.state;
-  // TODO SFINT-6583: dispatch action to set agentId when that prop is defined
-
+  engine.dispatch(setAgentId(props.agentId!));
   return {
     ...controller,
     get state() {
-      const clientState = getState().generatedAnswer;
-      const answerApiQueryParams =
-        selectAnswerApiQueryParams(engine.state) ?? {};
-      const headAnswerArgs: AnswerEndpointArgs = {
-        ...answerApiQueryParams,
-        strategyKey: 'head-answer',
-      };
-      const serverState = selectAnswer(headAnswerArgs, engine.state)?.data;
       const followUpAnswersState = getState().followUpAnswers;
 
       return {
-        /** Server-owned (RTK Query) */
-        answer: serverState?.answer,
-        answerContentFormat: serverState?.contentFormat ?? 'text/plain',
-        citations: serverState?.citations ?? [],
-        isLoading: serverState?.isLoading ?? false,
-        isStreaming: serverState?.isStreaming ?? false,
-        ...(serverState?.error && {error: serverState.error}),
-        answerId: serverState?.answerId,
-        isAnswerGenerated: Boolean(serverState?.generated),
-        cannotAnswer: serverState?.generated === false,
-
-        /** Client-owned (Redux) */
-        isVisible: clientState.isVisible,
-        expanded: clientState.expanded,
-        liked: clientState.liked,
-        disliked: clientState.disliked,
-        feedbackSubmitted: clientState.feedbackSubmitted,
-        feedbackModalOpen: clientState.feedbackModalOpen,
-        isEnabled: clientState.isEnabled,
-        responseFormat: clientState.responseFormat,
-        fieldsToIncludeInCitations: clientState.fieldsToIncludeInCitations,
-        answerGenerationMode: clientState.answerGenerationMode,
-        id: clientState.id,
-
-        /** Follow-up answers state */
+        ...getState().generatedAnswer,
         followUpAnswers: followUpAnswersState,
       };
     },
