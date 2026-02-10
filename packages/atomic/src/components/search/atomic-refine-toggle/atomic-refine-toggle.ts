@@ -15,6 +15,7 @@ import {renderRefineToggleButton} from '../../common/refine-modal/button';
 import {refineToggleGuard} from '../../common/refine-modal/guard';
 import type {AtomicRefineModal} from '../atomic-refine-modal/atomic-refine-modal';
 import type {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import '@/src/components/search/atomic-refine-modal/atomic-refine-modal';
 
 /**
  * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
