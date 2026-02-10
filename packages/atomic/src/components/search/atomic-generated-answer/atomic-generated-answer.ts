@@ -20,7 +20,6 @@ import {renderCustomNoAnswerMessage} from '@/src/components/common/generated-ans
 import {renderFeedbackAndCopyButtons} from '@/src/components/common/generated-answer/render-feedback-and-copy-buttons';
 import {ValidatePropsController} from '@/src/components/common/validate-props-controller/validate-props-controller';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
-import {renderAnswersThreadItem} from '@/src/components/search/render-answers-thread-item/render-answers-thread-item';
 import {arrayConverter} from '@/src/converters/array-converter';
 import {booleanConverter} from '@/src/converters/boolean-converter';
 import {createLegacyArrayStringConverter} from '@/src/converters/legacy-array-string-converter';
@@ -366,9 +365,7 @@ export class AtomicGeneratedAnswer
           part="container"
           aria-label=${this.bindings.i18n.t('generated-answer-title')}
         >
-          <article>
-            ${this.renderContent()}${this.renderThreadItemMock()}
-          </article>
+          <article>${this.renderContent()}</article>
         </aside>
       </div>
     `;
@@ -597,27 +594,6 @@ export class AtomicGeneratedAnswer
         onClickShowButton: () => this.clickOnShowButton(),
       },
     });
-  }
-
-  private renderThreadItemMock() {
-    return html`
-      <div class="px-6 py-2">
-        ${renderAnswersThreadItem({
-          props: {
-            title: 'what are they for',
-            isCollapsible: true,
-            isExpanded: true,
-            hideLine: false,
-          },
-        })(html`
-          <div class="text-on-background">
-            Safeguards against misinformation and bias in AI-generated snippets
-            start with rigorous content validation and transparent source
-            attribution.
-          </div>
-        `)}
-      </div>
-    `;
   }
 
   private renderCustomNoAnswerMessageWrapper() {
