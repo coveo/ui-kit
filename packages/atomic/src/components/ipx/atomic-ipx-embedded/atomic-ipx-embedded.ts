@@ -5,6 +5,7 @@ import {renderIpxBody} from '@/src/components/ipx/atomic-ipx-body/ipx-body.js';
 import {ipxBodyStyles} from '@/src/components/ipx/atomic-ipx-body/ipx-body-styles.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {bindings} from '@/src/decorators/bindings.js';
+import {errorGuard} from '@/src/decorators/error-guard.js';
 import type {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint-utils.js';
@@ -86,6 +87,7 @@ export class AtomicIpxEmbedded
   }
 
   @bindingGuard()
+  @errorGuard()
   render() {
     this.updateBreakpoints();
 
