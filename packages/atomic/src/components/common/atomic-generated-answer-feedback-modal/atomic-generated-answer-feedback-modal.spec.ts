@@ -9,6 +9,17 @@ import './atomic-generated-answer-feedback-modal';
 
 vi.mock('@/src/components/common/icon-button', {spy: true});
 
+// Feedback option values that users can select for each category
+const FEEDBACK_OPTIONS: string[] = ['yes', 'unknown', 'no'] as const;
+
+// Feedback categories that are evaluated (matching AtomicGeneratedAnswerFeedbackModal.options)
+const FEEDBACK_CATEGORIES = [
+  'correctTopic',
+  'hallucinationFree',
+  'documented',
+  'readable',
+] as const;
+
 describe('atomic-generated-answer-feedback-modal', () => {
   let mockedGeneratedAnswer: GeneratedAnswer;
 
@@ -181,6 +192,111 @@ describe('atomic-generated-answer-feedback-modal', () => {
 
       const successIcon = element.shadowRoot?.querySelector('atomic-icon');
       expect(successIcon).toBeTruthy();
+    });
+  });
+
+  describe('when selecting feedback options', () => {
+    it('should render radio buttons for each feedback category and option', async () => {
+      const {element} = await renderFeedbackModal({isOpen: true});
+
+      const radioButtons = element.shadowRoot?.querySelectorAll(
+        'input[type="radio"]'
+      );
+
+      const expectedCount =
+        FEEDBACK_CATEGORIES.length * FEEDBACK_OPTIONS.length;
+      expect(radioButtons?.length).toBe(expectedCount);
+
+      for (const category of FEEDBACK_CATEGORIES) {
+        const categoryButtons = element.shadowRoot?.querySelectorAll(
+          `input[type="radio"][name*="${category}"]`
+        );
+        expect(categoryButtons?.length).toBe(FEEDBACK_OPTIONS.length);
+      }
+    });
+
+    it('should apply active class to selected radio button', async () => {
+      const {element} = await renderFeedbackModal({isOpen: true});
+
+      const radioButtons = element.shadowRoot?.querySelectorAll(
+        'input[type="radio"]'
+      ) as NodeListOf<HTMLInputElement>;
+
+      const firstRadioButton = radioButtons[0];
+      firstRadioButton.click();
+      await element.updateComplete;
+
+      expect(firstRadioButton.className).toContain('active');
+    });
+
+    it('should not apply active class to unselected radio buttons', async () => {
+      const {element} = await renderFeedbackModal({isOpen: true});
+
+      const radioButtons = element.shadowRoot?.querySelectorAll(
+        'input[type="radio"]'
+      ) as NodeListOf<HTMLInputElement>;
+
+      const firstRadioButton = radioButtons[0];
+      const secondRadioButton = radioButtons[1];
+
+      firstRadioButton.click();
+      await element.updateComplete;
+
+      expect(firstRadioButton.className).toContain('active');
+      expect(secondRadioButton.className).not.toContain('active');
+    });
+
+    it('should not cause DOMTokenList error when toggling selection', async () => {
+      const {element} = await renderFeedbackModal({isOpen: true});
+
+      const radioButtons = element.shadowRoot?.querySelectorAll(
+        'input[type="radio"]'
+      ) as NodeListOf<HTMLInputElement>;
+
+      expect(() => {
+        const firstButton = radioButtons[0];
+        firstButton.click();
+        const secondButton = radioButtons[1];
+        secondButton.click();
+        firstButton.click();
+      }).not.toThrow();
+    });
+
+    it('should toggle active class when selecting different options in same category', async () => {
+      const {element} = await renderFeedbackModal({isOpen: true});
+
+      const radioButtons = element.shadowRoot?.querySelectorAll(
+        'input[type="radio"]'
+      ) as NodeListOf<HTMLInputElement>;
+
+      const firstOption = radioButtons[0];
+      firstOption.click();
+      await element.updateComplete;
+
+      expect(firstOption.className).toContain('active');
+
+      const secondOption = radioButtons[1];
+      secondOption.click();
+      await element.updateComplete;
+
+      expect(secondOption.className).toContain('active');
+      expect(firstOption.className).not.toContain('active');
+    });
+
+    it('should update currentAnswer state when radio button is clicked', async () => {
+      const {element} = await renderFeedbackModal({isOpen: true});
+
+      const radioButtons = element.shadowRoot?.querySelectorAll(
+        'input[type="radio"]'
+      ) as NodeListOf<HTMLInputElement>;
+
+      const firstRadioButton = radioButtons[0];
+      firstRadioButton.click();
+      await element.updateComplete;
+
+      // biome-ignore lint/suspicious/noExplicitAny: <>
+      const currentAnswer = (element as any).currentAnswer;
+      expect(Object.values(currentAnswer)).toContain('yes');
     });
   });
 
