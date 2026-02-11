@@ -1,0 +1,69 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicIpxRecsListStories from './atomic-ipx-recs-list.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicIpxRecsListStories} />
+
+<AtomicDocTemplate
+  stories={AtomicIpxRecsListStories}
+  githubPath="ipx/atomic-ipx-recs-list/atomic-ipx-recs-list.ts"
+  tagName="atomic-ipx-recs-list"
+  className="AtomicIpxRecsList"
+  defaultStory="Default"
+>
+
+The `atomic-ipx-recs-list` component displays recommendations for the In-Product Experience (IPX) use case by applying one or more result templates.
+It supports carousel pagination, customizable display layouts, and integrates with the IPX actions history for tracking user interactions.
+
+## Usage
+
+The component must be placed within an `atomic-recs-interface` and requires result templates to define how recommendations are displayed:
+
+```html
+<atomic-recs-interface>
+  <atomic-ipx-recs-list
+    recommendation="MyRecommendations"
+    label="Recommended for you"
+    heading-level="2"
+    number-of-recommendations="10"
+  >
+    <atomic-recs-result-template>
+      <template>
+        <atomic-result-section-title>
+          <atomic-result-link></atomic-result-link>
+        </atomic-result-section-title>
+        <atomic-result-section-excerpt>
+          <atomic-result-text field="excerpt"></atomic-result-text>
+        </atomic-result-section-excerpt>
+      </template>
+    </atomic-recs-result-template>
+  </atomic-ipx-recs-list>
+</atomic-recs-interface>
+```
+
+## Carousel Mode
+
+Enable carousel pagination by setting `number-of-recommendations-per-page` to a value less than `number-of-recommendations`:
+
+```html
+<atomic-ipx-recs-list
+  number-of-recommendations="12"
+  number-of-recommendations-per-page="4"
+>
+  <!-- templates -->
+</atomic-ipx-recs-list>
+```
+
+## Grid Layout
+
+Customize the number of columns using the `--atomic-recs-number-of-columns` CSS variable:
+
+```html
+<style>
+  atomic-ipx-recs-list {
+    --atomic-recs-number-of-columns: 3;
+  }
+</style>
+```
+
+</AtomicDocTemplate>

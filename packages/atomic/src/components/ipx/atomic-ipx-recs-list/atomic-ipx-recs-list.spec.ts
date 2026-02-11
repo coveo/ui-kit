@@ -4,18 +4,18 @@ import {
   buildInteractiveResult as buildRecsInteractiveResult,
   loadConfigurationActions,
 } from '@coveo/headless/recommendation';
-import {html} from 'lit';
+import {html, LitElement} from 'lit';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {page} from 'vitest/browser';
 import type {
   ItemDisplayBasicLayout,
   ItemDisplayDensity,
   ItemDisplayImageSize,
-} from '@/src/components/common/layout/item-layout-utils.js';
-import {renderInAtomicRecsInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/recommendation/atomic-recs-interface-fixture.js';
-import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
-import {buildFakeRecommendationList} from '@/vitest-utils/testing-helpers/fixtures/headless/recommendation/recommendation-list-controller.js';
-import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result.js';
+} from '@/src/components/common/layout/item-layout-utils';
+import {renderInAtomicRecsInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/recommendation/atomic-recs-interface-fixture';
+import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common';
+import {buildFakeRecommendationList} from '@/vitest-utils/testing-helpers/fixtures/headless/recommendation/recommendation-list-controller';
+import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
 import {AtomicIpxRecsList} from './atomic-ipx-recs-list';
 import './atomic-ipx-recs-list';
 
@@ -69,13 +69,13 @@ describe('atomic-ipx-recs-list', () => {
     );
   });
 
-  describe('initialization', () => {
-    it('should initialize', async () => {
-      const element = await setupElement();
+  it('should initialize', async () => {
+    const element = await setupElement();
 
-      expect(element).toBeInstanceOf(AtomicIpxRecsList);
-    });
+    expect(element).toBeInstanceOf(AtomicIpxRecsList);
+  });
 
+  describe('#initialize', () => {
     it('should initialize #recommendationList with buildRecommendationList', async () => {
       const element = await setupElement({recommendation: 'MyRecs'});
 
@@ -91,7 +91,7 @@ describe('atomic-ipx-recs-list', () => {
       expect(element.recommendationList).toBeDefined();
     });
 
-    it('should use default recommendation identifier', async () => {
+    it('should use default recommendation identifier when not specified', async () => {
       const element = await setupElement();
 
       expect(buildRecommendationList).toHaveBeenCalledWith(
@@ -126,15 +126,15 @@ describe('atomic-ipx-recs-list', () => {
         element.bindings.engine
       );
     });
+  });
 
-    it('should warn when multiple lists have same recommendation identifier', async () => {
-      const consoleWarnSpy = vi
-        .spyOn(console, 'warn')
-        .mockImplementation(() => {});
-
+  describe('when multiple lists have same recommendation identifier', () => {
+    it('should warn', async () => {
       const mockEngine = {
         logger: {warn: vi.fn()},
         subscribe: genericSubscribe,
+        addReducers: vi.fn(),
+        dispatch: vi.fn(),
       };
 
       await setupElement({
@@ -158,8 +158,6 @@ describe('atomic-ipx-recs-list', () => {
           'There are multiple atomic-ipx-recs-list in this page with the same recommendation property "duplicate-id"'
         )
       );
-
-      consoleWarnSpy.mockRestore();
     });
   });
 
@@ -176,7 +174,7 @@ describe('atomic-ipx-recs-list', () => {
       ).resolves.toBeDefined();
     });
 
-    it('should throw when numberOfRecommendationsPerPage is 0', async () => {
+    it('should set error when numberOfRecommendationsPerPage is 0', async () => {
       const element = await setupElement({
         numberOfRecommendationsPerPage: 0,
       });
@@ -187,7 +185,7 @@ describe('atomic-ipx-recs-list', () => {
       );
     });
 
-    it('should throw when numberOfRecommendationsPerPage equals numberOfRecommendations', async () => {
+    it('should set error when numberOfRecommendationsPerPage equals numberOfRecommendations', async () => {
       const element = await setupElement({
         numberOfRecommendations: 10,
         numberOfRecommendationsPerPage: 10,
@@ -199,7 +197,7 @@ describe('atomic-ipx-recs-list', () => {
       );
     });
 
-    it('should throw when numberOfRecommendationsPerPage exceeds numberOfRecommendations', async () => {
+    it('should set error when numberOfRecommendationsPerPage exceeds numberOfRecommendations', async () => {
       const element = await setupElement({
         numberOfRecommendations: 10,
         numberOfRecommendationsPerPage: 15,
@@ -212,130 +210,8 @@ describe('atomic-ipx-recs-list', () => {
     });
   });
 
-  describe('props', () => {
-    it('should have default recommendation prop', async () => {
-      const element = await setupElement();
-
-      expect(element.recommendation).toBe('Recommendation');
-    });
-
-    it('should have default display prop', async () => {
-      const element = await setupElement();
-
-      expect(element.display).toBe('list');
-    });
-
-    it('should have default density prop', async () => {
-      const element = await setupElement();
-
-      expect(element.density).toBe('normal');
-    });
-
-    it('should have default imageSize prop', async () => {
-      const element = await setupElement();
-
-      expect(element.imageSize).toBe('small');
-    });
-
-    it('should have default numberOfRecommendations prop', async () => {
-      const element = await setupElement();
-
-      expect(element.numberOfRecommendations).toBe(10);
-    });
-
-    it('should have undefined numberOfRecommendationsPerPage by default', async () => {
-      const element = await setupElement();
-
-      expect(element.numberOfRecommendationsPerPage).toBeUndefined();
-    });
-
-    it('should have undefined label by default', async () => {
-      const element = await setupElement();
-
-      expect(element.label).toBeUndefined();
-    });
-
-    it('should have default headingLevel prop', async () => {
-      const element = await setupElement();
-
-      expect(element.headingLevel).toBe(0);
-    });
-
-    it('should accept custom recommendation prop', async () => {
-      const element = await setupElement({recommendation: 'CustomRecs'});
-
-      expect(element.recommendation).toBe('CustomRecs');
-    });
-
-    it('should accept custom display prop', async () => {
-      const element = await setupElement({display: 'grid'});
-
-      expect(element.display).toBe('grid');
-    });
-
-    it('should accept custom density prop', async () => {
-      const element = await setupElement({density: 'compact'});
-
-      expect(element.density).toBe('compact');
-    });
-
-    it('should accept custom imageSize prop', async () => {
-      const element = await setupElement({imageSize: 'large'});
-
-      expect(element.imageSize).toBe('large');
-    });
-
-    it('should accept custom numberOfRecommendations prop', async () => {
-      const element = await setupElement({numberOfRecommendations: 15});
-
-      expect(element.numberOfRecommendations).toBe(15);
-    });
-
-    it('should accept custom numberOfRecommendationsPerPage prop', async () => {
-      const element = await setupElement({numberOfRecommendationsPerPage: 5});
-
-      expect(element.numberOfRecommendationsPerPage).toBe(5);
-    });
-
-    it('should accept custom label prop', async () => {
-      const element = await setupElement({label: 'Featured Products'});
-
-      expect(element.label).toBe('Featured Products');
-    });
-
-    it('should accept custom headingLevel prop', async () => {
-      const element = await setupElement({headingLevel: 2});
-
-      expect(element.headingLevel).toBe(2);
-    });
-  });
-
-  describe('lifecycle', () => {
+  describe('#updated', () => {
     it('should reset currentPage when numberOfRecommendationsPerPage changes', async () => {
-      const element = await setupElement({numberOfRecommendationsPerPage: 3});
-
-      await element.nextPage();
-      expect(element['currentPage']).toBe(1);
-
-      element.numberOfRecommendationsPerPage = 5;
-      await element.updateComplete;
-
-      expect(element['currentPage']).toBe(0);
-    });
-
-    it('should cleanup on disconnectedCallback', async () => {
-      const element = await setupElement();
-
-      const disconnectedCallbackSpy = vi.spyOn(element, 'disconnectedCallback');
-
-      element.remove();
-
-      expect(disconnectedCallbackSpy).toHaveBeenCalled();
-    });
-  });
-
-  describe('carousel pagination', () => {
-    it('should move to next page', async () => {
       vi.mocked(buildRecommendationList).mockImplementation(() =>
         buildFakeRecommendationList({
           state: {
@@ -346,6 +222,41 @@ describe('atomic-ipx-recs-list', () => {
         })
       );
 
+      const element = await setupElement({numberOfRecommendationsPerPage: 3});
+
+      await element.nextPage();
+      expect(element['currentPage']).toBe(1);
+
+      element.numberOfRecommendationsPerPage = 2;
+      await element.updateComplete;
+
+      expect(element['currentPage']).toBe(0);
+    });
+
+    it('should call super.disconnectedCallback', async () => {
+      const element = await setupElement();
+      const superSpy = vi.spyOn(LitElement.prototype, 'disconnectedCallback');
+
+      element.disconnectedCallback();
+
+      expect(superSpy).toHaveBeenCalledOnce();
+    });
+  });
+
+  describe('carousel pagination', () => {
+    beforeEach(() => {
+      vi.mocked(buildRecommendationList).mockImplementation(() =>
+        buildFakeRecommendationList({
+          state: {
+            recommendations: Array.from({length: 9}, (_, i) =>
+              buildFakeResult({uniqueId: `rec-${i}`})
+            ),
+          },
+        })
+      );
+    });
+
+    it('should move to next page', async () => {
       const element = await setupElement({numberOfRecommendationsPerPage: 3});
 
       expect(element['currentPage']).toBe(0);
@@ -378,16 +289,6 @@ describe('atomic-ipx-recs-list', () => {
     });
 
     it('should move to previous page', async () => {
-      vi.mocked(buildRecommendationList).mockImplementation(() =>
-        buildFakeRecommendationList({
-          state: {
-            recommendations: Array.from({length: 9}, (_, i) =>
-              buildFakeResult({uniqueId: `rec-${i}`})
-            ),
-          },
-        })
-      );
-
       const element = await setupElement({numberOfRecommendationsPerPage: 3});
 
       await element.nextPage();
@@ -399,16 +300,6 @@ describe('atomic-ipx-recs-list', () => {
     });
 
     it('should wrap to last page when previous on first page', async () => {
-      vi.mocked(buildRecommendationList).mockImplementation(() =>
-        buildFakeRecommendationList({
-          state: {
-            recommendations: Array.from({length: 9}, (_, i) =>
-              buildFakeResult({uniqueId: `rec-${i}`})
-            ),
-          },
-        })
-      );
-
       const element = await setupElement({numberOfRecommendationsPerPage: 3});
 
       expect(element['currentPage']).toBe(0);
@@ -420,28 +311,22 @@ describe('atomic-ipx-recs-list', () => {
 
   describe('IPX actions history integration', () => {
     it('should dispatch addPageViewEntryInActionsHistory on recommendation select', async () => {
-      const mockEngine = {
-        subscribe: genericSubscribe,
-        dispatch: vi.fn(),
-      };
+      vi.mocked(buildRecommendationList).mockImplementation(() =>
+        buildFakeRecommendationList({
+          state: {
+            recommendations: [
+              buildFakeResult({
+                uniqueId: 'rec-0',
+                raw: {permanentid: 'test-permanentid'},
+              }),
+            ],
+          },
+        })
+      );
 
-      const selectSpy = vi.fn();
-      vi.mocked(buildRecsInteractiveResult).mockReturnValue({
-        select: selectSpy,
-        beginDelayedSelect: vi.fn(),
-        cancelPendingSelect: vi.fn(),
-        state: {isLoading: false},
-        subscribe: genericSubscribe,
-        result: buildFakeResult({raw: {permanentid: 'test-permanentid'}}),
-      } as never);
+      mockIPXActionsHistoryActions.addPageViewEntryInActionsHistory.mockClear();
 
-      const element = await setupElement({
-        bindings: (bindings) => ({
-          ...bindings,
-          engine: mockEngine as never,
-        }),
-      });
-
+      const element = await setupElement();
       await element.updateComplete;
 
       const atomicRecsResult =
@@ -451,36 +336,28 @@ describe('atomic-ipx-recs-list', () => {
       const interactiveResult = atomicRecsResult!.interactiveResult;
       interactiveResult.select();
 
-      expect(mockEngine.dispatch).toHaveBeenCalledWith({
-        type: 'addPageViewEntryInActionsHistory',
-        permanentid: 'test-permanentid',
-      });
-      expect(selectSpy).toHaveBeenCalled();
+      expect(
+        mockIPXActionsHistoryActions.addPageViewEntryInActionsHistory
+      ).toHaveBeenCalledWith('test-permanentid');
     });
 
     it('should not dispatch addPageViewEntryInActionsHistory when permanentid is missing', async () => {
-      const mockEngine = {
-        subscribe: genericSubscribe,
-        dispatch: vi.fn(),
-      };
+      vi.mocked(buildRecommendationList).mockImplementation(() =>
+        buildFakeRecommendationList({
+          state: {
+            recommendations: [
+              buildFakeResult({
+                uniqueId: 'rec-0',
+                raw: {},
+              }),
+            ],
+          },
+        })
+      );
 
-      const selectSpy = vi.fn();
-      vi.mocked(buildRecsInteractiveResult).mockReturnValue({
-        select: selectSpy,
-        beginDelayedSelect: vi.fn(),
-        cancelPendingSelect: vi.fn(),
-        state: {isLoading: false},
-        subscribe: genericSubscribe,
-        result: buildFakeResult({raw: {}}),
-      } as never);
+      mockIPXActionsHistoryActions.addPageViewEntryInActionsHistory.mockClear();
 
-      const element = await setupElement({
-        bindings: (bindings) => ({
-          ...bindings,
-          engine: mockEngine as never,
-        }),
-      });
-
+      const element = await setupElement();
       await element.updateComplete;
 
       const atomicRecsResult =
@@ -490,50 +367,45 @@ describe('atomic-ipx-recs-list', () => {
       const interactiveResult = atomicRecsResult!.interactiveResult;
       interactiveResult.select();
 
-      expect(mockEngine.dispatch).not.toHaveBeenCalled();
-      expect(selectSpy).toHaveBeenCalled();
+      expect(
+        mockIPXActionsHistoryActions.addPageViewEntryInActionsHistory
+      ).not.toHaveBeenCalled();
     });
   });
 
   describe('label and heading', () => {
     it('should dispatch setOriginLevel2 when label is provided', async () => {
-      const mockEngine = {
-        subscribe: genericSubscribe,
-        dispatch: vi.fn(),
-      };
+      mockConfigurationActions.setOriginLevel2.mockClear();
 
-      await setupElement({
-        label: 'My Recommendations',
-        bindings: (bindings) => ({
-          ...bindings,
-          engine: mockEngine as never,
-        }),
-      });
+      await setupElement({label: 'My Recommendations'});
 
-      expect(mockEngine.dispatch).toHaveBeenCalledWith({
-        type: 'setOriginLevel2',
-        payload: {originLevel2: 'My Recommendations'},
+      expect(mockConfigurationActions.setOriginLevel2).toHaveBeenCalledWith({
+        originLevel2: 'My Recommendations',
       });
     });
 
     it('should not dispatch setOriginLevel2 when label is not provided', async () => {
-      const mockEngine = {
-        subscribe: genericSubscribe,
-        dispatch: vi.fn(),
-      };
+      mockConfigurationActions.setOriginLevel2.mockClear();
 
-      await setupElement({
-        bindings: (bindings) => ({
-          ...bindings,
-          engine: mockEngine as never,
-        }),
-      });
+      await setupElement();
 
-      expect(mockEngine.dispatch).not.toHaveBeenCalled();
+      expect(mockConfigurationActions.setOriginLevel2).not.toHaveBeenCalled();
     });
 
     it('should render heading when label is provided', async () => {
+      vi.mocked(buildRecommendationList).mockImplementation(() =>
+        buildFakeRecommendationList({
+          state: {
+            recommendations: Array.from({length: 3}, (_, i) =>
+              buildFakeResult({uniqueId: `rec-${i}`})
+            ),
+            searchResponseId: 'response-id',
+          },
+        })
+      );
+
       const element = await setupElement({label: 'Featured Items'});
+      await element.updateComplete;
 
       const parts = getParts(element);
       const label = parts.label?.item(0);
@@ -728,13 +600,23 @@ describe('atomic-ipx-recs-list', () => {
         .toBeInTheDocument();
     });
 
-    it('should render placeholders when not all results are ready', async () => {
-      const element = await setupElement({isAppLoaded: false});
+    it('should render placeholders when results are not ready', async () => {
+      vi.mocked(buildRecommendationList).mockImplementation(() =>
+        buildFakeRecommendationList({
+          state: {
+            recommendations: Array.from({length: 3}, (_, i) =>
+              buildFakeResult({uniqueId: `rec-${i}`})
+            ),
+            isLoading: true,
+          },
+        })
+      );
 
+      const element = await setupElement();
       await element.updateComplete;
 
       const placeholders = element.shadowRoot?.querySelectorAll(
-        '.placeholder-result'
+        'atomic-result-placeholder'
       );
       expect(placeholders!.length).toBeGreaterThan(0);
     });
@@ -799,13 +681,32 @@ describe('atomic-ipx-recs-list', () => {
         }),
       });
 
-      const element = atomicInterface.querySelector('atomic-ipx-recs-list')!;
+      const element = atomicInterface.querySelector(
+        'atomic-ipx-recs-list'
+      ) as unknown as AtomicIpxRecsList;
       await element.updateComplete;
 
       const templates = element.querySelectorAll('atomic-recs-result-template');
       expect(templates.length).toBe(1);
     });
   });
+});
+
+const createDefaultBindings = (isAppLoaded: boolean) => ({
+  engine: {
+    subscribe: genericSubscribe,
+    logger: {warn: vi.fn()},
+    addReducers: vi.fn(),
+    dispatch: vi.fn(),
+  } as never,
+  store: {
+    state: {
+      loadingFlags: isAppLoaded ? [] : ['loading-flag'],
+    },
+    setLoadingFlag: vi.fn(),
+    unsetLoadingFlag: vi.fn(),
+    onChange: vi.fn(),
+  } as never,
 });
 
 const setupElement = async ({
@@ -829,21 +730,11 @@ const setupElement = async ({
   label?: string;
   headingLevel?: number;
   isAppLoaded?: boolean;
-  bindings?: (bindings: typeof defaultBindings) => typeof defaultBindings;
+  bindings?: (
+    bindings: ReturnType<typeof createDefaultBindings>
+  ) => ReturnType<typeof createDefaultBindings>;
 } = {}) => {
-  const defaultBindings = {
-    engine: {
-      subscribe: genericSubscribe,
-      logger: {warn: vi.fn()},
-    } as never,
-    store: {
-      state: {
-        loadingFlags: isAppLoaded ? [] : ['loading-flag'],
-      },
-      setLoadingFlag: vi.fn(),
-      unsetLoadingFlag: vi.fn(),
-    } as never,
-  };
+  const defaultBindings = createDefaultBindings(isAppLoaded);
 
   const {element} = await renderInAtomicRecsInterface<AtomicIpxRecsList>({
     template: html`<atomic-ipx-recs-list

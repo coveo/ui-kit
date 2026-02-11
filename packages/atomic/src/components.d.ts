@@ -197,56 +197,6 @@ export namespace Components {
         "displayFooterSlot": boolean;
         "isOpen"?: boolean;
     }
-    /**
-     * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
-     */
-    interface AtomicIpxRecsList {
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density": ItemDisplayDensity;
-        /**
-          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
-         */
-        "display": ItemDisplayBasicLayout;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
-         */
-        "headingLevel": number;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * The non-localized label for the list of recommendations.
-         */
-        "label"?: string;
-        /**
-          * Moves to the next page, when the carousel is activated.
-         */
-        "nextPage": () => Promise<void>;
-        /**
-          * The total number of recommendations to display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
-         */
-        "numberOfRecommendations": number;
-        /**
-          * The number of recommendations to display, per page. Setting a value greater than and lower than the numberOfRecommendations value activates the carousel. This does not affect the display of the list itself, only the number of recommendation pages.
-         */
-        "numberOfRecommendationsPerPage"?: number;
-        /**
-          * Moves to the previous page, when the carousel is activated.
-         */
-        "previousPage": () => Promise<void>;
-        /**
-          * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-ipx-recs-list in your page.
-         */
-        "recommendation": string;
-        /**
-          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax such as React, Angular, or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-          * @param resultRenderingFunction
-         */
-        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
-    }
     interface AtomicIpxRefineModal {
         /**
           * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
@@ -443,15 +393,6 @@ declare global {
         prototype: HTMLAtomicIpxBodyElement;
         new (): HTMLAtomicIpxBodyElement;
     };
-    /**
-     * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
-     */
-    interface HTMLAtomicIpxRecsListElement extends Components.AtomicIpxRecsList, HTMLStencilElement {
-    }
-    var HTMLAtomicIpxRecsListElement: {
-        prototype: HTMLAtomicIpxRecsListElement;
-        new (): HTMLAtomicIpxRecsListElement;
-    };
     interface HTMLAtomicIpxRefineModalElement extends Components.AtomicIpxRefineModal, HTMLStencilElement {
     }
     var HTMLAtomicIpxRefineModalElement: {
@@ -513,7 +454,6 @@ declare global {
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
         "atomic-insight-user-actions-session": HTMLAtomicInsightUserActionsSessionElement;
         "atomic-ipx-body": HTMLAtomicIpxBodyElement;
-        "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
         "atomic-ipx-result-link": HTMLAtomicIpxResultLinkElement;
@@ -707,43 +647,6 @@ declare namespace LocalJSX {
          */
         "onAnimationEnded"?: (event: AtomicIpxBodyCustomEvent<never>) => void;
     }
-    /**
-     * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
-     */
-    interface AtomicIpxRecsList {
-        /**
-          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
-         */
-        "density"?: ItemDisplayDensity;
-        /**
-          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
-         */
-        "display"?: ItemDisplayBasicLayout;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
-         */
-        "headingLevel"?: number;
-        /**
-          * The expected size of the image displayed in the results.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * The non-localized label for the list of recommendations.
-         */
-        "label"?: string;
-        /**
-          * The total number of recommendations to display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
-         */
-        "numberOfRecommendations"?: number;
-        /**
-          * The number of recommendations to display, per page. Setting a value greater than and lower than the numberOfRecommendations value activates the carousel. This does not affect the display of the list itself, only the number of recommendation pages.
-         */
-        "numberOfRecommendationsPerPage"?: number;
-        /**
-          * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-ipx-recs-list in your page.
-         */
-        "recommendation"?: string;
-    }
     interface AtomicIpxRefineModal {
         /**
           * The number of expanded facets inside the refine modal. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets.
@@ -832,7 +735,6 @@ declare namespace LocalJSX {
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
         "atomic-insight-user-actions-session": AtomicInsightUserActionsSession;
         "atomic-ipx-body": AtomicIpxBody;
-        "atomic-ipx-recs-list": AtomicIpxRecsList;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
         "atomic-ipx-result-link": AtomicIpxResultLink;
@@ -857,10 +759,6 @@ declare module "@stencil/core" {
              */
             "atomic-insight-user-actions-session": LocalJSX.AtomicInsightUserActionsSession & JSXBase.HTMLAttributes<HTMLAtomicInsightUserActionsSessionElement>;
             "atomic-ipx-body": LocalJSX.AtomicIpxBody & JSXBase.HTMLAttributes<HTMLAtomicIpxBodyElement>;
-            /**
-             * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
-             */
-            "atomic-ipx-recs-list": LocalJSX.AtomicIpxRecsList & JSXBase.HTMLAttributes<HTMLAtomicIpxRecsListElement>;
             "atomic-ipx-refine-modal": LocalJSX.AtomicIpxRefineModal & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineModalElement>;
             "atomic-ipx-refine-toggle": LocalJSX.AtomicIpxRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineToggleElement>;
             /**

@@ -75,22 +75,30 @@ export class AtomicIpxRecsList
     placeholderStyles,
     css`
       @reference '../../../utils/tailwind.global.tw.css';
+      @import '../../common/item-list/styles/mixins.pcss';
+      @import '../../common/item-list/styles/placeholders.pcss';
 
-      :host {
-        @apply block;
+     :host {
+      @apply atomic-grid-clickable-elements;
+  @apply atomic-grid-display-common;
+  display: block;
 
-        .list-root {
-          display: grid;
-          grid-template-columns: repeat(
-            var(--atomic-recs-number-of-columns, 1),
-            minmax(0, 1fr)
-          );
-        }
+  /**
+ * @prop --atomic-recs-number-of-columns: Number of columns for the recommendation list.
+ */
+  .list-root {
+    @apply atomic-grid-with-cards;
+    grid-template-columns: repeat(var(--atomic-recs-number-of-columns, 1), minmax(0, 1fr));
+  }
 
-        [part='label'] {
-          @apply font-sans text-2xl font-bold;
-        }
-      }
+  [part='label'] {
+    @apply font-sans text-2xl font-bold;
+  }
+
+  atomic-result:not(.hydrated) {
+    visibility: hidden;
+  }
+}
     `,
   ];
 
@@ -600,9 +608,6 @@ export class AtomicIpxRecsList
                     nextPage: () => this.nextPage(),
                     numberOfPages: this.numberOfPages,
                     currentPage: this.currentPage,
-                    ariaLabel: this.label
-                      ? this.bindings.i18n.t(this.label)
-                      : undefined,
                   },
                 })(
                   html`<div class="px-3">${this.renderRecommendationList()}</div>`

@@ -12,7 +12,7 @@ export interface CarouselProps {
   nextPage(): void;
   numberOfPages: number;
   currentPage: number;
-  ariaLabel: string;
+  ariaLabel?: string;
 }
 
 const commonPaginationClasses =
