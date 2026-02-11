@@ -18,6 +18,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import FilterIcon from '../../../images/filter.svg';
+import '@/src/components/ipx/atomic-ipx-refine-modal/atomic-ipx-refine-modal';
 
 /**
  * The `atomic-ipx-refine-toggle` component displays a button that, when clicked, opens a refine modal containing facets.
