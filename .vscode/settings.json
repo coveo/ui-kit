@@ -1,3 +1,7 @@
 {
-    "chat.useAgentSkills": true
+    "chat.useAgentSkills": true,
+    "json.schemaDownload.trustedDomains": {
+        "https://opencode.ai/config.json": true,
+        "https://models.dev/model-schema.json": true
+    }
 }
