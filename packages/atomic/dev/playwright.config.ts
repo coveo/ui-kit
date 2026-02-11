@@ -6,6 +6,11 @@ import {defineConfig, devices} from '@playwright/test';
  */
 // require('dotenv').config();
 
+const DEFAULT_VITE_PORT = 3333;
+const vitePort = process.env.VITE_PORT
+  ? parseInt(process.env.VITE_PORT, 10)
+  : DEFAULT_VITE_PORT;
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -72,9 +77,9 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'pnpm run web:dev',
+    command: `pnpm run web:dev -- --port ${vitePort}`,
     timeout: 10 * 60e3,
-    port: 3333,
+    port: vitePort,
     reuseExistingServer: !process.env.CI,
     stdout: 'pipe',
     stderr: 'pipe',

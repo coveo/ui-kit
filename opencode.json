@@ -27,7 +27,14 @@
       "type": "local",
       "command": ["npx", "@playwright/mcp"],
       "enabled": true
+    },
+    "context7": {
+      "enabled": false
     }
+  },
+  "permission": {
+    "bash": "ask",
+    "webfetch": "ask"
   },
   "compaction": {
     "auto": true,
