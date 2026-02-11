@@ -10,12 +10,6 @@ export class IpxRefineTogglePageObject extends BasePageObject {
     return this.page.locator('atomic-ipx-refine-toggle').getByRole('button');
   }
 
-  get badge() {
-    return this.page.locator(
-      'atomic-ipx-refine-toggle [part="ipx-refine-toggle-badge"]'
-    );
-  }
-
   get icon() {
     return this.page.locator(
       'atomic-ipx-refine-toggle [part="ipx-refine-toggle-icon"]'
@@ -30,10 +24,6 @@ export class IpxRefineTogglePageObject extends BasePageObject {
     return this.modal
       .getByRole('button', {name: /Expand the .* facet/})
       .first();
-  }
-
-  get modalFirstCheckbox() {
-    return this.modal.getByRole('checkbox').first();
   }
 
   async clickButton() {
