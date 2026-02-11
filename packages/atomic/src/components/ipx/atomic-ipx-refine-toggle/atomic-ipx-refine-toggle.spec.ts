@@ -128,215 +128,207 @@ describe('atomic-ipx-refine-toggle', () => {
     });
   });
 
-  describe('when there are no results and no breadcrumbs', () => {
-    it('should disable the button', async () => {
-      const {parts, element} = await renderRefineToggle({
-        searchStatusState: {hasResults: false},
-        breadcrumbState: {hasBreadcrumbs: false},
-      });
-      expect(parts(element).button?.hasAttribute('disabled')).toBe(true);
+  it('should disable the button when there are no results and no breadcrumbs', async () => {
+    const {parts, element} = await renderRefineToggle({
+      searchStatusState: {hasResults: false},
+      breadcrumbState: {hasBreadcrumbs: false},
     });
+    expect(parts(element).button?.hasAttribute('disabled')).toBe(true);
   });
 
-  describe('when there are results', () => {
-    it('should enable the button', async () => {
-      const {parts, element} = await renderRefineToggle({
-        searchStatusState: {hasResults: true},
-        breadcrumbState: {hasBreadcrumbs: false},
-      });
-      expect(parts(element).button?.hasAttribute('disabled')).toBe(false);
+  it('should enable the button when there are results', async () => {
+    const {parts, element} = await renderRefineToggle({
+      searchStatusState: {hasResults: true},
+      breadcrumbState: {hasBreadcrumbs: false},
     });
+    expect(parts(element).button?.hasAttribute('disabled')).toBe(false);
   });
 
-  describe('when there are breadcrumbs but no results', () => {
-    it('should enable the button', async () => {
-      const {parts, element} = await renderRefineToggle({
-        searchStatusState: {hasResults: false},
-        breadcrumbState: {
-          hasBreadcrumbs: true,
-          facetBreadcrumbs: [
-            {
-              facetId: 'test-facet',
-              field: 'test-field',
-              values: [
-                {
-                  value: {
-                    value: 'value1',
-                    state: 'selected',
-                    numberOfResults: 1,
-                  },
-                  deselect: vi.fn(),
-                },
-              ],
-            },
-          ],
-        },
-      });
-      expect(parts(element).button?.hasAttribute('disabled')).toBe(false);
-    });
-  });
-
-  describe('badge rendering', () => {
-    it('should not render badge when there are no breadcrumbs', async () => {
-      const {parts, element} = await renderRefineToggle({
-        searchStatusState: {hasResults: true},
-        breadcrumbState: {hasBreadcrumbs: false},
-      });
-      expect(parts(element).badge).toBeFalsy();
-    });
-
-    it('should render badge when there are breadcrumbs', async () => {
-      const {parts, element} = await renderRefineToggle({
-        searchStatusState: {hasResults: true},
-        breadcrumbState: {
-          hasBreadcrumbs: true,
-          facetBreadcrumbs: [
-            {
-              facetId: 'test-facet',
-              field: 'test-field',
-              values: [
-                {
-                  value: {
-                    value: 'value1',
-                    state: 'selected',
-                    numberOfResults: 1,
-                  },
-                  deselect: vi.fn(),
-                },
-              ],
-            },
-          ],
-        },
-      });
-      await expect.element(parts(element).badge).toBeInTheDocument();
-    });
-
-    it('should display correct count when there is 1 facet breadcrumb', async () => {
-      const {parts, element} = await renderRefineToggle({
-        searchStatusState: {hasResults: true},
-        breadcrumbState: {
-          hasBreadcrumbs: true,
-          facetBreadcrumbs: [
-            {
-              facetId: 'test-facet',
-              field: 'test-field',
-              values: [
-                {
-                  value: {
-                    value: 'value1',
-                    state: 'selected',
-                    numberOfResults: 1,
-                  },
-                  deselect: vi.fn(),
-                },
-              ],
-            },
-          ],
-        },
-      });
-      await expect.element(parts(element).badge).toHaveTextContent('1');
-    });
-
-    it('should display correct count with multiple breadcrumb types', async () => {
-      const {parts, element} = await renderRefineToggle({
-        searchStatusState: {hasResults: true},
-        breadcrumbState: {
-          hasBreadcrumbs: true,
-          facetBreadcrumbs: [
-            {
-              facetId: 'facet1',
-              field: 'field1',
-              values: [
-                {
-                  value: {
-                    value: 'value1',
-                    state: 'selected',
-                    numberOfResults: 1,
-                  },
-                  deselect: vi.fn(),
-                },
-              ],
-            },
-            {
-              facetId: 'facet2',
-              field: 'field2',
-              values: [
-                {
-                  value: {
-                    value: 'value2',
-                    state: 'selected',
-                    numberOfResults: 1,
-                  },
-                  deselect: vi.fn(),
-                },
-              ],
-            },
-          ],
-          categoryFacetBreadcrumbs: [
-            {
-              facetId: 'category1',
-              field: 'cat-field',
-              path: [
-                {
-                  value: 'cat1',
+  it('should enable the button when there are breadcrumbs but no results', async () => {
+    const {parts, element} = await renderRefineToggle({
+      searchStatusState: {hasResults: false},
+      breadcrumbState: {
+        hasBreadcrumbs: true,
+        facetBreadcrumbs: [
+          {
+            facetId: 'test-facet',
+            field: 'test-field',
+            values: [
+              {
+                value: {
+                  value: 'value1',
                   state: 'selected',
                   numberOfResults: 1,
-                  path: [],
-                  children: [],
-                  moreValuesAvailable: false,
-                  isLeafValue: true,
                 },
-              ],
-              deselect: vi.fn(),
-            },
-          ],
-        },
-      });
-      await expect.element(parts(element).badge).toHaveTextContent('3');
+                deselect: vi.fn(),
+              },
+            ],
+          },
+        ],
+      },
     });
+    expect(parts(element).button?.hasAttribute('disabled')).toBe(false);
+  });
 
-    it('should include automatic facet breadcrumbs in count', async () => {
-      const {parts, element} = await renderRefineToggle({
-        searchStatusState: {hasResults: true},
-        breadcrumbState: {
-          hasBreadcrumbs: true,
-          automaticFacetBreadcrumbs: [
-            {
-              facetId: 'auto1',
-              field: 'auto-field',
-              label: 'Auto Facet',
-              values: [
-                {
-                  value: {
-                    value: 'auto-val',
-                    state: 'selected',
-                    numberOfResults: 1,
-                  },
-                  deselect: vi.fn(),
-                },
-              ],
-            },
-          ],
-          facetBreadcrumbs: [
-            {
-              facetId: 'facet1',
-              field: 'field1',
-              values: [
-                {
-                  value: {
-                    value: 'value1',
-                    state: 'selected',
-                    numberOfResults: 1,
-                  },
-                  deselect: vi.fn(),
-                },
-              ],
-            },
-          ],
-        },
-      });
-      await expect.element(parts(element).badge).toHaveTextContent('2');
+  it('should not render badge when there are no breadcrumbs', async () => {
+    const {parts, element} = await renderRefineToggle({
+      searchStatusState: {hasResults: true},
+      breadcrumbState: {hasBreadcrumbs: false},
     });
+    expect(parts(element).badge).toBeFalsy();
+  });
+
+  it('should render badge when there are breadcrumbs', async () => {
+    const {parts, element} = await renderRefineToggle({
+      searchStatusState: {hasResults: true},
+      breadcrumbState: {
+        hasBreadcrumbs: true,
+        facetBreadcrumbs: [
+          {
+            facetId: 'test-facet',
+            field: 'test-field',
+            values: [
+              {
+                value: {
+                  value: 'value1',
+                  state: 'selected',
+                  numberOfResults: 1,
+                },
+                deselect: vi.fn(),
+              },
+            ],
+          },
+        ],
+      },
+    });
+    await expect.element(parts(element).badge).toBeInTheDocument();
+  });
+
+  it('should display badge count of 1 when there is 1 facet breadcrumb', async () => {
+    const {parts, element} = await renderRefineToggle({
+      searchStatusState: {hasResults: true},
+      breadcrumbState: {
+        hasBreadcrumbs: true,
+        facetBreadcrumbs: [
+          {
+            facetId: 'test-facet',
+            field: 'test-field',
+            values: [
+              {
+                value: {
+                  value: 'value1',
+                  state: 'selected',
+                  numberOfResults: 1,
+                },
+                deselect: vi.fn(),
+              },
+            ],
+          },
+        ],
+      },
+    });
+    await expect.element(parts(element).badge).toHaveTextContent('1');
+  });
+
+  it('should display badge count of 3 with multiple breadcrumb types', async () => {
+    const {parts, element} = await renderRefineToggle({
+      searchStatusState: {hasResults: true},
+      breadcrumbState: {
+        hasBreadcrumbs: true,
+        facetBreadcrumbs: [
+          {
+            facetId: 'facet1',
+            field: 'field1',
+            values: [
+              {
+                value: {
+                  value: 'value1',
+                  state: 'selected',
+                  numberOfResults: 1,
+                },
+                deselect: vi.fn(),
+              },
+            ],
+          },
+          {
+            facetId: 'facet2',
+            field: 'field2',
+            values: [
+              {
+                value: {
+                  value: 'value2',
+                  state: 'selected',
+                  numberOfResults: 1,
+                },
+                deselect: vi.fn(),
+              },
+            ],
+          },
+        ],
+        categoryFacetBreadcrumbs: [
+          {
+            facetId: 'category1',
+            field: 'cat-field',
+            path: [
+              {
+                value: 'cat1',
+                state: 'selected',
+                numberOfResults: 1,
+                path: [],
+                children: [],
+                moreValuesAvailable: false,
+                isLeafValue: true,
+              },
+            ],
+            deselect: vi.fn(),
+          },
+        ],
+      },
+    });
+    await expect.element(parts(element).badge).toHaveTextContent('3');
+  });
+
+  it('should include automatic facet breadcrumbs in badge count', async () => {
+    const {parts, element} = await renderRefineToggle({
+      searchStatusState: {hasResults: true},
+      breadcrumbState: {
+        hasBreadcrumbs: true,
+        automaticFacetBreadcrumbs: [
+          {
+            facetId: 'auto1',
+            field: 'auto-field',
+            label: 'Auto Facet',
+            values: [
+              {
+                value: {
+                  value: 'auto-val',
+                  state: 'selected',
+                  numberOfResults: 1,
+                },
+                deselect: vi.fn(),
+              },
+            ],
+          },
+        ],
+        facetBreadcrumbs: [
+          {
+            facetId: 'facet1',
+            field: 'field1',
+            values: [
+              {
+                value: {
+                  value: 'value1',
+                  state: 'selected',
+                  numberOfResults: 1,
+                },
+                deselect: vi.fn(),
+              },
+            ],
+          },
+        ],
+      },
+    });
+    await expect.element(parts(element).badge).toHaveTextContent('2');
   });
 
   describe('when the button is clicked', () => {
@@ -371,25 +363,23 @@ describe('atomic-ipx-refine-toggle', () => {
     });
   });
 
-  describe('collapseFacetsAfter prop', () => {
-    it('should reflect to attribute', async () => {
-      const {element} = await renderRefineToggle({
-        collapseFacetsAfter: 5,
-      });
-
-      expect(element.getAttribute('collapse-facets-after')).toBe('5');
+  it('should reflect collapseFacetsAfter property to attribute', async () => {
+    const {element} = await renderRefineToggle({
+      collapseFacetsAfter: 5,
     });
 
-    it('should reflect updated value to attribute when property changes', async () => {
-      const {element} = await renderRefineToggle({
-        collapseFacetsAfter: 3,
-      });
+    expect(element.getAttribute('collapse-facets-after')).toBe('5');
+  });
 
-      element.collapseFacetsAfter = 7;
-      await element.updateComplete;
-
-      expect(element.collapseFacetsAfter).toBe(7);
-      expect(element.getAttribute('collapse-facets-after')).toBe('7');
+  it('should reflect updated collapseFacetsAfter value to attribute when property changes', async () => {
+    const {element} = await renderRefineToggle({
+      collapseFacetsAfter: 3,
     });
+
+    element.collapseFacetsAfter = 7;
+    await element.updateComplete;
+
+    expect(element.collapseFacetsAfter).toBe(7);
+    expect(element.getAttribute('collapse-facets-after')).toBe('7');
   });
 });
