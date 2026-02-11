@@ -39,7 +39,7 @@ export class FollowUpHttpAgent extends HttpAgent {
 /**
  * Creates an AgentSubscriber that handles follow-up answer streaming events
  */
-export const createFollowUpSubscriber = (
+export const createFollowUpStrategy = (
   dispatch: ThunkDispatch<{}, unknown, UnknownAction>
 ): AgentSubscriber => {
   let runId: string;
@@ -87,3 +87,8 @@ export const createFollowUpSubscriber = (
     },
   };
 };
+
+export const createFollowUpAgent = (organizationId: string, agentId: string) =>
+  new FollowUpHttpAgent({
+    url: `http://localhost:3000/orgs/${organizationId}/agents/${agentId}/follow-up`,
+  });

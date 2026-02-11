@@ -348,7 +348,11 @@ function createStore<
 ) {
   const {preloadedState, configuration} = options;
   const name = configuration.name || 'coveo-headless';
-  const middlewares = createMiddleware(options, thunkExtraArguments.logger);
+  const middlewares = createMiddleware(
+    options,
+    thunkExtraArguments.logger,
+    () => thunkExtraArguments.navigatorContext
+  );
 
   return configureStore({
     preloadedState,
@@ -361,14 +365,17 @@ function createStore<
 
 function createMiddleware<Reducers extends ReducersMapObject>(
   options: EngineOptions<Reducers>,
-  logger: Logger
+  logger: Logger,
+  getNavigatorContext: () => NavigatorContext
 ) {
   const {renewAccessToken} = options.configuration;
   const renewTokenMiddleware = createRenewAccessTokenMiddleware(
     logger,
     renewAccessToken
   );
-  const generateAnswerListener = createGenerateAnswerListener();
+  const generateAnswerListener = createGenerateAnswerListener({
+    getNavigatorContext,
+  });
 
   return [
     instantlyCallableThunkActionMiddleware,

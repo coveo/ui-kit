@@ -18,7 +18,7 @@ import {
  */
 export class AnswerHttpAgent extends HttpAgent {
   protected requestInit(input: RunAgentInput): RequestInit {
-    const {question, accessToken} = input.forwardedProps || {};
+    const {params, accessToken} = input.forwardedProps || {};
     return {
       method: 'POST',
       headers: {
@@ -27,9 +27,7 @@ export class AnswerHttpAgent extends HttpAgent {
         'Content-Type': 'application/json',
         Accept: 'text/event-stream',
       },
-      body: JSON.stringify({
-        q: question,
-      }),
+      body: JSON.stringify(params),
       signal: this.abortController.signal,
     };
   }
@@ -38,7 +36,7 @@ export class AnswerHttpAgent extends HttpAgent {
 /**
  * Creates an AgentSubscriber that handles answer streaming events
  */
-export const createAnswerSubscriber = (
+export const createHeadAnswerStrategy = (
   dispatch: ThunkDispatch<{}, unknown, UnknownAction>
 ): AgentSubscriber => {
   return {
@@ -70,3 +68,8 @@ export const createAnswerSubscriber = (
     },
   };
 };
+
+export const createAnswerAgent = (organizationId: string, agentId: string) =>
+  new AnswerHttpAgent({
+    url: `http://localhost:3000/orgs/${organizationId}/agents/${agentId}/answer`,
+  });
