@@ -146,7 +146,7 @@ export class AtomicIpxRefineToggle
         icon: FilterIcon,
         disabled:
           !this.searchStatusState.hasResults && !this.numberOfBreadcrumbs,
-        ariaLabel: this.bindings.i18n.t('sort'),
+        ariaLabel: this.bindings.i18n.t('filters'),
         onClick: () => this.handleClick(),
         badge: when(
           this.breadcrumbManagerState.hasBreadcrumbs,
