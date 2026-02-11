@@ -26,7 +26,7 @@ interface GeneratedAnswerWithFollowUpsState extends GeneratedAnswerState {
   followUpAnswers: FollowUpAnswersState;
 }
 
-interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
+export interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
   /**
    * The state of the GeneratedAnswer controller.
    */

@@ -7,6 +7,7 @@ import {
   type MockedSearchEngine,
 } from '../../test/mock-engine-v2.js';
 import {createMockState} from '../../test/mock-state.js';
+import {buildGeneratedAnswerWithFollowUps} from '../knowledge/generated-answer/headless-generated-answer-with-follow-ups.js';
 import {
   buildGeneratedAnswer,
   type GeneratedAnswerProps,
@@ -15,6 +16,12 @@ import {
 
 vi.mock('../../features/generated-answer/generated-answer-actions');
 vi.mock('../../features/search/search-actions');
+vi.mock(
+  '../knowledge/generated-answer/headless-generated-answer-with-follow-ups.js',
+  () => ({
+    buildGeneratedAnswerWithFollowUps: vi.fn(),
+  })
+);
 
 describe('generated answer', () => {
   let engine: MockedSearchEngine;
@@ -25,6 +32,10 @@ describe('generated answer', () => {
 
   beforeEach(() => {
     engine = buildMockSearchEngine(createMockState());
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
   it('initialize the format', () => {
@@ -86,6 +97,35 @@ describe('generated answer', () => {
     it('should not log a warning when the controller is used with the legacy analytics mode', () => {
       initGeneratedAnswer();
       expect(warnSpy).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('the agentId prop', () => {
+    describe('when building the controller with agentId', () => {
+      it('should call buildGeneratedAnswerWithFollowUps when agentId is present', () => {
+        const agentId = 'test-agent-id';
+        const props: GeneratedAnswerProps = {agentId};
+
+        initGeneratedAnswer(props);
+
+        expect(buildGeneratedAnswerWithFollowUps).toHaveBeenCalledWith(
+          engine,
+          expect.anything(),
+          props
+        );
+      });
+    });
+
+    describe('when building the controller without agentId', () => {
+      it('should not call buildGeneratedAnswerWithFollowUps when agentId is absent', () => {
+        const props: GeneratedAnswerProps = {
+          answerConfigurationId: 'test-answer-configuration-id',
+        };
+
+        initGeneratedAnswer(props);
+
+        expect(buildGeneratedAnswerWithFollowUps).not.toHaveBeenCalled();
+      });
     });
   });
 });
