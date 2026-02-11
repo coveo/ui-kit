@@ -1,7 +1,12 @@
+import {
+  createFollowUpSubscriber,
+  FollowUpHttpAgent,
+} from '../../../api/knowledge/answer-generation/agents/follow-up-answer-agent.js';
 import {answerGenerationApi} from '../../../api/knowledge/answer-generation/answer-generation-api.js';
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {setAgentId} from '../../../features/configuration/configuration-actions.js';
+import {createFollowUpAnswer} from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
 import {generateHeadAnswer} from '../../../features/generated-answer/generated-answer-actions.js';
@@ -18,15 +23,20 @@ import {
   type GeneratedAnswerProps,
 } from '../../core/generated-answer/headless-core-generated-answer.js';
 
-interface GeneratedAnswerWithFollowUpsState extends GeneratedAnswerState {
+export interface GeneratedAnswerWithFollowUpsState
+  extends GeneratedAnswerState {
   followUpAnswers: FollowUpAnswersState;
 }
 
-interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
+export interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
   /**
    * The state of the GeneratedAnswer controller.
    */
   state: GeneratedAnswerWithFollowUpsState;
+  /**
+   * Ask a follow-up question.
+   */
+  askFollowUp: (question: string) => void;
 }
 
 /**
@@ -58,6 +68,15 @@ export function buildGeneratedAnswerWithFollowUps(
   );
   const getState = () => engine.state;
   engine.dispatch(setAgentId(props.agentId!));
+
+  const {
+    configuration: {organizationId, accessToken},
+  } = engine.state;
+
+  const followUpAgent = new FollowUpHttpAgent({
+    url: `http://localhost:3000/orgs/${organizationId}/agents/${props.agentId}/follow-up`,
+  });
+
   return {
     ...controller,
     get state() {
@@ -70,6 +89,13 @@ export function buildGeneratedAnswerWithFollowUps(
     },
     retry() {
       engine.dispatch(generateHeadAnswer());
+    },
+    askFollowUp(question: string) {
+      engine.dispatch(createFollowUpAnswer({question}));
+      followUpAgent.runAgent(
+        {forwardedProps: {q: question, conversationId: '123', accessToken}},
+        createFollowUpSubscriber(engine.dispatch)
+      );
     },
   };
 }

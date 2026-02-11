@@ -12,18 +12,13 @@ import {
   setIsStreaming,
   updateMessage,
 } from '../../../../features/generated-answer/generated-answer-actions.js';
-import type {AnswerGenerationApiState} from '../answer-generation-api-state.js';
 
 /**
- * Custom HTTP Agent for head answer requests
+ * Custom HTTP Agent for answer requests
  */
-export class HeadAnswerHttpAgent extends HttpAgent {
+export class AnswerHttpAgent extends HttpAgent {
   protected requestInit(input: RunAgentInput): RequestInit {
-    const {
-      question,
-      state: {configuration: accessToken},
-    } = input.forwardedProps || {};
-
+    const {question, accessToken} = input.forwardedProps || {};
     return {
       method: 'POST',
       headers: {
@@ -41,16 +36,14 @@ export class HeadAnswerHttpAgent extends HttpAgent {
 }
 
 /**
- * Creates an AgentSubscriber that handles head answer streaming events
+ * Creates an AgentSubscriber that handles answer streaming events
  */
-const createHeadAnswerSubscriber = (
+export const createAnswerSubscriber = (
   dispatch: ThunkDispatch<{}, unknown, UnknownAction>
 ): AgentSubscriber => {
-  // let runId: string;
   return {
     onRunStartedEvent: ({event}) => {
       console.log('Head Answer Subscriber - Run Started', event);
-      // runId = event.runId;
       dispatch(setIsLoading(true));
       dispatch(setFollowUpAnswersConversationId(event.threadId));
     },
@@ -67,7 +60,6 @@ const createHeadAnswerSubscriber = (
     },
     onRunErrorEvent: (param) => {
       console.log('Head Answer Subscriber - Run Error', param);
-      // Handle error
     },
     onRunFinishedEvent: (param) => {
       console.log('Head Answer Subscriber - Run Finished', param);
@@ -78,37 +70,3 @@ const createHeadAnswerSubscriber = (
     },
   };
 };
-
-/**
- * Creates and configures a head answer agent
- */
-export function createHeadAnswerAgent(): HeadAnswerHttpAgent {
-  const agent = new HeadAnswerHttpAgent({
-    url: 'http://localhost:3000/answer',
-  });
-
-  return agent;
-}
-
-interface RunHeadAnswerInput {
-  question: string;
-}
-
-/**
- * Helper to run a head answer query
- */
-export async function runHeadAnswerAgent(
-  agent: HeadAnswerHttpAgent,
-  input: RunHeadAnswerInput,
-  state: AnswerGenerationApiState,
-  dispatch: ThunkDispatch<{}, unknown, UnknownAction>
-): Promise<void> {
-  const subscriber = createHeadAnswerSubscriber(dispatch);
-  agent.subscribe(subscriber);
-  await agent.runAgent({
-    forwardedProps: {
-      question: input.question,
-      state,
-    },
-  });
-}

@@ -12,7 +12,6 @@ import type {
 } from '@reduxjs/toolkit';
 import type {Logger} from 'pino';
 import {getRelayInstanceFromState} from '../api/analytics/analytics-relay-client.js';
-import {createHeadAnswerAgent} from '../api/knowledge/answer-generation/agents/head-answer-agent.js';
 import {answerGenerationApi} from '../api/knowledge/answer-generation/answer-generation-api.js';
 import {answerApi} from '../api/knowledge/stream-answer-api.js';
 import {
@@ -369,8 +368,7 @@ function createMiddleware<Reducers extends ReducersMapObject>(
     logger,
     renewAccessToken
   );
-  const headAnswerAgent = createHeadAnswerAgent();
-  const generateAnswerListener = createGenerateAnswerListener(headAnswerAgent);
+  const generateAnswerListener = createGenerateAnswerListener();
 
   return [
     instantlyCallableThunkActionMiddleware,
