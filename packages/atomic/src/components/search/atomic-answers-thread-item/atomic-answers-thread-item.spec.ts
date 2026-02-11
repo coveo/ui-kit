@@ -69,6 +69,8 @@ describe('#atomic-answers-thread-item', () => {
     const content = locators().content as HTMLElement;
 
     expect(titleButton).toHaveAttribute('aria-expanded', 'false');
+    expect(content).toHaveAttribute('id');
+    expect(titleButton).toHaveAttribute('aria-controls', content.id);
     expect(content).toHaveAttribute('aria-hidden', 'true');
   });
 

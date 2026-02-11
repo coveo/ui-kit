@@ -35,6 +35,12 @@ export interface AtomicAnswersThreadItemProps {
 @customElement('atomic-answers-thread-item')
 @withTailwindStyles
 export class AtomicAnswersThreadItem extends LitElement {
+  private readonly contentId = `atomic-answers-thread-item-content-${
+    typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? crypto.randomUUID()
+      : Math.random().toString(36).slice(2)
+  }`;
+
   /**
    * The title displayed for the thread item.
    */
@@ -133,6 +139,7 @@ export class AtomicAnswersThreadItem extends LitElement {
                 html`<button
                   type="button"
                   aria-expanded=${this.isExpanded ? 'true' : 'false'}
+                  aria-controls=${this.contentId}
                   class=${titleButtonClasses}
                   @click=${this.toggle}
                 >
@@ -157,6 +164,7 @@ export class AtomicAnswersThreadItem extends LitElement {
           </div>
         </div>
         <div
+          id=${this.contentId}
           class="pl-2 py-2 ml-1"
           ?hidden=${!this.isExpanded}
           aria-hidden=${this.isExpanded ? 'false' : 'true'}
