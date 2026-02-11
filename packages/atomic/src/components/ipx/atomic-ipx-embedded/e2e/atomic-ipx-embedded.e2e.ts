@@ -5,10 +5,10 @@ test.describe('atomic-ipx-embedded', () => {
     await ipxEmbedded.load();
   });
 
-  test('should render the backdrop and ipx-body elements', async ({
+  test('should render the backdrop and ipx-body container', async ({
     ipxEmbedded,
   }) => {
     await expect(ipxEmbedded.backdrop).toBeVisible();
-    await expect(ipxEmbedded.ipxBody).toBeVisible();
+    await expect(ipxEmbedded.container).toBeVisible();
   });
 });

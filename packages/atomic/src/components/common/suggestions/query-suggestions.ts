@@ -1,3 +1,4 @@
+import '@/src/components/common/atomic-icon/atomic-icon';
 import type {i18n} from 'i18next';
 import {html, nothing, render} from 'lit';
 import {encodeForDomAttribute} from '../../../utils/string-utils.js';

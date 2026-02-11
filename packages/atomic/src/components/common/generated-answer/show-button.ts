@@ -1,3 +1,4 @@
+import '@/src/components/common/atomic-icon/atomic-icon';
 import type {i18n} from 'i18next';
 import {html} from 'lit';
 import {when} from 'lit/directives/when.js';
