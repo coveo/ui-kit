@@ -1,8 +1,4 @@
-import {
-  createListenerMiddleware,
-  type ThunkDispatch,
-  type UnknownAction,
-} from '@reduxjs/toolkit';
+import {createListenerMiddleware, type Dispatch} from '@reduxjs/toolkit';
 import {
   createAnswerAgent,
   createHeadAnswerStrategy,
@@ -20,18 +16,13 @@ import {isGeneratedAnswerFeatureEnabledWithAnswerGenerationAPI} from '../../feat
 import {selectQuery} from '../../features/query/query-selectors.js';
 import {executeSearch} from '../../features/search/search-actions.js';
 import type {NavigatorContext} from '../navigator-context-provider.js';
-import type {SearchThunkExtraArguments} from '../search-thunk-extra-arguments.js';
 
 export const createGenerateAnswerListener = (extra: {
   getNavigatorContext: () => NavigatorContext;
 }) => {
   const generateAnswerListener = createListenerMiddleware<
     AnswerGenerationApiState,
-    ThunkDispatch<
-      AnswerGenerationApiState,
-      SearchThunkExtraArguments,
-      UnknownAction
-    >,
+    Dispatch,
     {getNavigatorContext: () => NavigatorContext}
   >({extra});
 

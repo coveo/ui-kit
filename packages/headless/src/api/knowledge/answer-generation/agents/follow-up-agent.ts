@@ -3,7 +3,7 @@ import {
   HttpAgent,
   type RunAgentInput,
 } from '@ag-ui/client';
-import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
+import type {Dispatch} from '@reduxjs/toolkit';
 import {
   followUpCompleted,
   followUpMessageChunkReceived,
@@ -39,9 +39,7 @@ export class FollowUpHttpAgent extends HttpAgent {
 /**
  * Creates an AgentSubscriber that handles follow-up answer streaming events
  */
-export const createFollowUpStrategy = (
-  dispatch: ThunkDispatch<{}, unknown, UnknownAction>
-): AgentSubscriber => {
+export const createFollowUpStrategy = (dispatch: Dispatch): AgentSubscriber => {
   let runId: string;
 
   return {

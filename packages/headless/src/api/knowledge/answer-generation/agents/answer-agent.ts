@@ -3,7 +3,7 @@ import {
   HttpAgent,
   type RunAgentInput,
 } from '@ag-ui/client';
-import type {ThunkDispatch, UnknownAction} from '@reduxjs/toolkit/react';
+import type {Dispatch} from '@reduxjs/toolkit/react';
 import {setFollowUpAnswersConversationId} from '../../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {
   setCannotAnswer,
@@ -37,7 +37,7 @@ export class AnswerHttpAgent extends HttpAgent {
  * Creates an AgentSubscriber that handles answer streaming events
  */
 export const createHeadAnswerStrategy = (
-  dispatch: ThunkDispatch<{}, unknown, UnknownAction>
+  dispatch: Dispatch
 ): AgentSubscriber => {
   return {
     onRunStartedEvent: ({event}) => {
