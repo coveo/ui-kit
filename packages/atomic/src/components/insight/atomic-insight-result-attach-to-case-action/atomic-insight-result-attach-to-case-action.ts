@@ -16,7 +16,7 @@ import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
-import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {LightDomMixin} from '@/src/mixins/light-dom';
 import AttachIcon from '../../../images/attach.svg';
 import DetachIcon from '../../../images/detach.svg';
 
@@ -33,10 +33,9 @@ export interface InsightResultAttachToCaseEvent {
  * @part result-action-icon - The result action icon
  */
 @customElement('atomic-insight-result-attach-to-case-action')
-@withTailwindStyles
 @bindings()
 export class AtomicInsightResultAttachToCaseAction
-  extends LitElement
+  extends LightDomMixin(LitElement)
   implements InitializableComponent<InsightBindings>
 {
   @state() public bindings!: InsightBindings;
