@@ -1,0 +1,31 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import * as AtomicInsightUserActionsTimelineStories from './atomic-insight-user-actions-timeline.new.stories';
+import { AtomicDocTemplate } from '@/storybook-utils/documentation/atomic-doc-template';
+
+<Meta of={AtomicInsightUserActionsTimelineStories} />
+
+<AtomicDocTemplate
+  stories={AtomicInsightUserActionsTimelineStories}
+  githubPath="insight/atomic-insight-user-actions-timeline/atomic-insight-user-actions-timeline.ts"
+  tagName="atomic-insight-user-actions-timeline"
+  className="AtomicInsightUserActionsTimeline"
+>
+
+## Behavior
+
+The component automatically organizes user actions into three session groups:
+
+1. **Active Session**: The session during which the case was created (always visible)
+2. **Following Sessions**: Sessions that occurred after the case creation (collapsed by default)
+3. **Preceding Sessions**: Sessions that occurred before the case creation (collapsed by default)
+
+Users can toggle the visibility of following and preceding sessions using the expand/collapse buttons.
+
+## Error States
+
+The component displays an error screen when:
+- No user actions are available for the specified user
+- The user actions fetch fails (e.g., access denied)
+- The timeline data is unavailable
+
+</AtomicDocTemplate>
