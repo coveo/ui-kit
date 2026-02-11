@@ -29,15 +29,6 @@ export interface AtomicAnswersThreadItemProps {
  *
  * @internal
  *
- * @part item - The root container for the thread item.
- * @part timeline - The timeline column containing the dot and line.
- * @part timeline-dot - The dot representing the thread item on the timeline.
- * @part timeline-line - The vertical line connecting thread items.
- * @part header - The header row containing the title.
- * @part title - The static title text when the item is not collapsible.
- * @part title-button - The title button when the item is collapsible.
- * @part status - The container for the status slot content.
- * @part content - The container for the slotted content.
  * @slot status - The status content (e.g., thinking/elapsed time) provided by the parent.
  * @slot (default) - The content rendered when the item is expanded.
  */
@@ -120,29 +111,26 @@ export class AtomicAnswersThreadItem extends LitElement {
     });
 
     return html`
-      <li part="item" class="grid grid-cols-[10px_1fr]">
-        <div part="timeline" class="flex flex-col items-center row-span-2">
+      <li class="grid grid-cols-[10px_1fr]">
+        <div class="flex flex-col items-center row-span-2">
           <span
-            part="timeline-dot"
             class=${timelineDotClasses}
           ></span>
           ${when(
             !this.hideLine,
             () =>
               html`<span
-                part="timeline-line"
                 class="w-px bg-neutral flex-1"
               ></span>`,
             () => nothing
           )}
         </div>
-        <div part="header" class="flex items-start">
+        <div class="flex items-start">
           <div class="flex min-w-0 flex-col">
             ${when(
               this.isCollapsible,
               () =>
                 html`<button
-                  part="title-button"
                   type="button"
                   aria-expanded=${this.isExpanded ? 'true' : 'false'}
                   class=${titleButtonClasses}
@@ -151,7 +139,7 @@ export class AtomicAnswersThreadItem extends LitElement {
                   ${this.title}
                 </button>`,
               () =>
-                html`<span part="title" class=${classMap({
+                html`<span class=${classMap({
                   ...titleBaseClasses,
                   'font-semibold': this.isExpanded,
                   'font-normal': !this.isExpanded,
@@ -160,7 +148,7 @@ export class AtomicAnswersThreadItem extends LitElement {
             ${when(
               this.isExpanded,
               () => html`
-                <span part="status" class="text-sm text-neutral-dark pl-2 ml-1">
+                <span class="text-sm text-neutral-dark pl-2 ml-1">
                   <slot name="status"></slot>
                 </span>
               `,
@@ -169,12 +157,11 @@ export class AtomicAnswersThreadItem extends LitElement {
           </div>
         </div>
         <div
-          part="content"
           class="pl-2 py-2 ml-1"
           ?hidden=${!this.isExpanded}
           aria-hidden=${this.isExpanded ? 'false' : 'true'}
         >
-          <slot name="content"></slot>
+          <slot></slot>
         </div>
       </li>
     `;

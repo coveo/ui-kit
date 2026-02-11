@@ -25,97 +25,84 @@ describe('#atomic-answers-thread-item', () => {
 
     return {
       element,
-      parts: () => ({
-        item: element.shadowRoot?.querySelector('[part="item"]') ?? null,
-        timeline:
-          element.shadowRoot?.querySelector('[part="timeline"]') ?? null,
-        timelineDot:
-          element.shadowRoot?.querySelector('[part="timeline-dot"]') ?? null,
-        timelineLine:
-          element.shadowRoot?.querySelector('[part="timeline-line"]') ?? null,
-        header: element.shadowRoot?.querySelector('[part="header"]') ?? null,
-        status: element.shadowRoot?.querySelector('[part="status"]') ?? null,
-        title: element.shadowRoot?.querySelector('[part="title"]') ?? null,
-        titleButton:
-          element.shadowRoot?.querySelector('[part="title-button"]') ?? null,
-        content: element.shadowRoot?.querySelector('[part="content"]') ?? null,
+      locators: () => ({
+        timelineDot: element.shadowRoot?.querySelector('span.h-2.w-2') ?? null,
+        timelineLine: element.shadowRoot?.querySelector('span.w-px') ?? null,
+        titleButton: element.shadowRoot?.querySelector('button') ?? null,
+        content: element.shadowRoot?.querySelector('div[aria-hidden]') ?? null,
+        statusSlot:
+          element.shadowRoot?.querySelector('slot[name="status"]') ?? null,
       }),
     };
   };
 
-  it('should render the thread item parts', async () => {
-    const {parts} = await renderComponent();
+  it('should render the timeline dot and content container', async () => {
+    const {locators} = await renderComponent();
 
-    expect(parts().item).toBeInTheDocument();
-    expect(parts().timeline).toBeInTheDocument();
-    expect(parts().timelineDot).toBeInTheDocument();
-    expect(parts().timelineLine).toBeInTheDocument();
-    expect(parts().header).toBeInTheDocument();
-    expect(parts().content).toBeInTheDocument();
+    expect(locators().timelineDot).toBeInTheDocument();
+    expect(locators().content).toBeInTheDocument();
   });
 
   it('should hide the timeline line when hideLine is true', async () => {
-    const {parts} = await renderComponent({hideLine: true});
+    const {locators} = await renderComponent({hideLine: true});
 
-    expect(parts().timelineLine).toBeNull();
+    expect(locators().timelineLine).toBeNull();
   });
 
   it('should render a title button when collapsible', async () => {
-    const {parts} = await renderComponent({
+    const {locators} = await renderComponent({
       isCollapsible: true,
       isExpanded: false,
     });
 
-    expect(parts().titleButton).toBeInTheDocument();
-    expect(parts().title).toBeNull();
-    expect(parts().content).toHaveAttribute('hidden');
+    expect(locators().titleButton).toBeInTheDocument();
+    expect(locators().content).toHaveAttribute('hidden');
   });
 
   it('should link the title button to the content region', async () => {
-    const {parts} = await renderComponent({
+    const {locators} = await renderComponent({
       isCollapsible: true,
       isExpanded: false,
     });
 
-    const titleButton = parts().titleButton as HTMLButtonElement;
-    const content = parts().content as HTMLElement;
+    const titleButton = locators().titleButton as HTMLButtonElement;
+    const content = locators().content as HTMLElement;
 
     expect(titleButton).toHaveAttribute('aria-expanded', 'false');
     expect(content).toHaveAttribute('aria-hidden', 'true');
   });
 
   it('should render a title span when not collapsible', async () => {
-    const {parts} = await renderComponent({
+    const {locators} = await renderComponent({
       isCollapsible: false,
       isExpanded: false,
     });
 
-    expect(parts().title).toBeInTheDocument();
-    expect(parts().titleButton).toBeNull();
-    expect(parts().content).not.toHaveAttribute('hidden');
+    expect(locators().titleButton).toBeNull();
+    expect(locators().content).not.toHaveAttribute('hidden');
   });
 
   it('should toggle expanded state when the title button is clicked', async () => {
-    const {element, parts} = await renderComponent({
+    const {element, locators} = await renderComponent({
       isCollapsible: true,
       isExpanded: false,
     });
 
-    const titleButton = parts().titleButton as HTMLButtonElement;
+    const titleButton = locators().titleButton as HTMLButtonElement;
     titleButton.click();
     await element.updateComplete;
 
-    expect(parts().content).not.toHaveAttribute('hidden');
+    expect(locators().content).not.toHaveAttribute('hidden');
   });
 
   it('should update aria attributes when toggled', async () => {
-    const {element, parts} = await renderComponent({
+    const {element, locators} = await renderComponent({
       isCollapsible: true,
       isExpanded: false,
     });
 
-    const titleButton = parts().titleButton as HTMLButtonElement;
-    const content = parts().content as HTMLElement;
+    const titleButton = locators().titleButton as HTMLButtonElement;
+    const content = locators().content as HTMLElement;
 
     titleButton.click();
     await element.updateComplete;
@@ -127,7 +114,7 @@ describe('#atomic-answers-thread-item', () => {
 
   it('should render status slot only when expanded', async () => {
     const statusSlot = html`<span slot="status">Thinking...</span>`;
-    const {parts: collapsedParts} = await renderComponent(
+    const {locators: collapsedLocators} = await renderComponent(
       {
         isCollapsible: true,
         isExpanded: false,
@@ -135,9 +122,9 @@ describe('#atomic-answers-thread-item', () => {
       statusSlot
     );
 
-    expect(collapsedParts().status).toBeNull();
+    expect(collapsedLocators().statusSlot).toBeNull();
 
-    const {parts: expandedParts} = await renderComponent(
+    const {locators: expandedLocators} = await renderComponent(
       {
         isCollapsible: true,
         isExpanded: true,
@@ -145,12 +132,12 @@ describe('#atomic-answers-thread-item', () => {
       statusSlot
     );
 
-    expect(expandedParts().status).toBeInTheDocument();
+    expect(expandedLocators().statusSlot).toBeInTheDocument();
   });
 
   it('should render content when content slot is provided', async () => {
-    const contentSlot = html`<div slot="content">Slotted content</div>`;
-    const {parts} = await renderComponent(
+    const contentSlot = html`<div>Slotted content</div>`;
+    const {locators} = await renderComponent(
       {
         isCollapsible: false,
         isExpanded: true,
@@ -158,8 +145,8 @@ describe('#atomic-answers-thread-item', () => {
       contentSlot
     );
 
-    const contentSlotElement = parts().content?.querySelector(
-      'slot[name="content"]'
+    const contentSlotElement = locators().content?.querySelector(
+      'slot'
     ) as HTMLSlotElement | null;
     const assignedElements = contentSlotElement?.assignedElements() ?? [];
 
