@@ -25,21 +25,28 @@ export const renderFollowUpInput: FunctionalComponent<
   const {submitButtonDisabled = false, askFollowUp} = props;
   const inputRef = createRef<HTMLInputElement>();
 
+  let isSubmitting = false;
+
   const handleSubmit = async () => {
     const input = inputRef.value;
-    if (!input) return;
+    if (!input || isSubmitting) return;
 
     const inputValue = input.value.trim();
     if (!inputValue || submitButtonDisabled) {
       return;
     }
 
-    await askFollowUp(inputValue);
-    input.value = '';
+    isSubmitting = true;
+    try {
+      await askFollowUp(inputValue);
+      input.value = '';
+    } finally {
+      isSubmitting = false;
+    }
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter') {
       e.preventDefault();
       handleSubmit();
     }
@@ -49,7 +56,7 @@ export const renderFollowUpInput: FunctionalComponent<
     <div class="relative" part="input-container">
       <input
         part="input-field"
-        class="w-full rounded-md border border-gray-300 px-4 py-2 pr-8 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
+        class="w-full rounded-md border border-neutral px-4 py-2 pr-8 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:bg-neutral-light disabled:text-neutral-dark disabled:cursor-not-allowed"
         ${ref(inputRef)}
         type="text"
         @keydown=${handleKeyDown}
@@ -61,7 +68,7 @@ export const renderFollowUpInput: FunctionalComponent<
           style: 'primary',
           part: 'submit-button',
           class:
-            'absolute right-1 top-1 bottom-1 flex w-8 items-center justify-center rounded-md disabled:!bg-primary/60 disabled:!opacity-100',
+            'absolute right-1 top-1 bottom-1 flex w-8 items-center justify-center rounded-md disabled:bg-primary/60 disabled:opacity-100',
           type: 'button',
           disabled: submitButtonDisabled,
           ariaLabel: props.i18n.t('submit-follow-up'),
