@@ -1,6 +1,7 @@
 import {answerGenerationApi} from '../../../api/knowledge/answer-generation/answer-generation-api.js';
 import type {AnswerGenerationApiState} from '../../../api/knowledge/answer-generation/answer-generation-api-state.js';
 import {selectAnswer} from '../../../api/knowledge/answer-generation/endpoints/answer/answer-endpoint.js';
+import {setAgentId} from '../../../features/configuration/configuration-actions.js';
 import {followUpAnswersReducer} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import {getFollowUpAnswersInitialState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
 import {selectAnswerApiQueryParams} from '../../../features/generated-answer/answer-api-selectors.js';
@@ -16,6 +17,8 @@ import type {GeneratedAnswerProps} from '../../generated-answer/headless-generat
 import {buildGeneratedAnswerWithFollowUps} from './headless-generated-answer-with-follow-ups.js';
 
 vi.mock('../../../features/generated-answer/generated-answer-actions');
+vi.mock('../../../features/configuration/configuration-actions.js');
+
 vi.mock(
   '../../../features/generated-answer/generated-answer-analytics-actions'
 );
@@ -98,6 +101,13 @@ describe('GeneratedAnswerWithFollowUps', () => {
       [answerGenerationApi.reducerPath]: answerGenerationApi.reducer,
       followUpAnswers: followUpAnswersReducer,
     });
+  });
+
+  it('should dispatch the setAgentId action', () => {
+    createGeneratedAnswerWithFollowUps({agentId: 'test-agent-id'});
+
+    expect(setAgentId).toHaveBeenCalledTimes(1);
+    expect(setAgentId).toHaveBeenCalledWith('test-agent-id');
   });
 
   describe('state getter', () => {
