@@ -1,0 +1,27 @@
+{
+  "_comment": "EXAMPLE — rename to delta-YYYY-MM-DD-<context>.json before use. Delete this _comment field.",
+  "date": "2026-01-15",
+  "pr": "12345",
+  "auditor": "Jane Doe",
+  "entries": [
+    {
+      "name": "atomic-commerce-facet",
+      "surface": "commerce",
+      "auditor": "Jane Doe",
+      "results": {
+        "keyboardNav": "pass",
+        "screenReader": "pass",
+        "focusManagement": "pass",
+        "wcag22Criteria": {
+          "2.4.11-focus-not-obscured": "pass",
+          "2.5.7-dragging-movements": "not-applicable",
+          "2.5.8-target-size": "pass",
+          "3.2.6-consistent-help": "not-applicable",
+          "3.3.7-redundant-entry": "not-applicable",
+          "3.3.8-accessible-auth": "not-applicable"
+        },
+        "notes": "Re-audited after PR #12345 increased icon button min-size to 24x24px. All interactive targets now meet WCAG 2.5.8 minimum."
+      }
+    }
+  ]
+}

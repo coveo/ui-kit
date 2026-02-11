@@ -1,0 +1,836 @@
+import {readFileSync} from 'node:fs';
+import {mkdir, writeFile} from 'node:fs/promises';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import type {AxeResults, Result as AxeRuleResult} from 'axe-core';
+import type {
+  Reporter,
+  SerializedError,
+  TestCase,
+  TestModule,
+  TestRunEndReason,
+} from 'vitest/node';
+
+export const DEFAULT_A11Y_REPORT_OUTPUT_DIR = 'a11y/reports';
+export const DEFAULT_A11Y_REPORT_FILENAME = 'a11y-report.json';
+export const DEFAULT_WCAG_22_AA_CRITERIA_COUNT = 50;
+
+const REPORTER_NAME = 'VitestA11yReporter';
+const UNKNOWN_CATEGORY = 'unknown';
+const UNKNOWN_FRAMEWORK = 'unknown';
+
+const ruleToWCAG: Record<string, readonly string[]> = {
+  'aria-input-field-name': ['1.3.1', '4.1.2'],
+  'aria-toggle-field-name': ['4.1.2'],
+  bypass: ['2.4.1'],
+  'button-name': ['4.1.2'],
+  'color-contrast': ['1.4.3'],
+  'document-title': ['2.4.2'],
+  'duplicate-id': ['4.1.1'],
+  'duplicate-id-aria': ['4.1.1', '4.1.2'],
+  'frame-title': ['2.4.1', '4.1.2'],
+  'html-has-lang': ['3.1.1'],
+  'html-lang-valid': ['3.1.1'],
+  'image-alt': ['1.1.1'],
+  'input-image-alt': ['1.1.1'],
+  label: ['1.3.1', '4.1.2'],
+  'link-in-text-block': ['1.4.1'],
+  'link-name': ['2.4.4', '4.1.2'],
+  list: ['1.3.1'],
+  listitem: ['1.3.1'],
+  'meta-refresh': ['2.2.1'],
+  'meta-viewport': ['1.4.4'],
+  'nested-interactive': ['4.1.2'],
+  'object-alt': ['1.1.1'],
+  'select-name': ['1.3.1', '4.1.2'],
+  'server-side-image-map': ['1.1.1', '2.1.1'],
+  'svg-img-alt': ['1.1.1'],
+  tabindex: ['2.4.3'],
+  'target-size': ['2.5.8'],
+  'touch-target-size': ['2.5.8'],
+  'valid-lang': ['3.1.1'],
+  'video-caption': ['1.2.2'],
+};
+
+type CriterionLevel = 'A' | 'AA' | 'AAA' | 'unknown';
+type WCAGVersion = '2.0' | '2.1' | '2.2' | 'unknown';
+
+interface CriterionMetadata {
+  name: string;
+  level: CriterionLevel;
+  wcagVersion: WCAGVersion;
+}
+
+const criterionMetadataMap: Record<string, CriterionMetadata> = {
+  '1.1.1': {
+    name: 'Non-text Content',
+    level: 'A',
+    wcagVersion: '2.0',
+  },
+  '1.2.2': {
+    name: 'Captions (Prerecorded)',
+    level: 'A',
+    wcagVersion: '2.0',
+  },
+  '1.3.1': {
+    name: 'Info and Relationships',
+    level: 'A',
+    wcagVersion: '2.0',
+  },
+  '1.3.5': {
+    name: 'Identify Input Purpose',
+    level: 'AA',
+    wcagVersion: '2.1',
+  },
+  '1.4.1': {
+    name: 'Use of Color',
+    level: 'A',
+    wcagVersion: '2.0',
+  },
+  '1.4.3': {
+    name: 'Contrast (Minimum)',
+    level: 'AA',
+    wcagVersion: '2.0',
+  },
+  '1.4.4': {
+    name: 'Resize Text',
+    level: 'AA',
+    wcagVersion: '2.0',
+  },
+  '2.1.1': {
+    name: 'Keyboard',
+    level: 'A',
+    wcagVersion: '2.0',
+  },
+  '2.2.1': {
+    name: 'Timing Adjustable',
+    level: 'A',
+    wcagVersion: '2.0',
+  },
+  '2.4.1': {
+    name: 'Bypass Blocks',
+    level: 'A',
+    wcagVersion: '2.0',
+  },
+  '2.4.2': {
+    name: 'Page Titled',
+    level: 'A',
+    wcagVersion: '2.0',
+  },
+  '2.4.3': {
+    name: 'Focus Order',
+    level: 'A',
+    wcagVersion: '2.0',
+  },
+  '2.4.4': {
+    name: 'Link Purpose (In Context)',
+    level: 'A',
+    wcagVersion: '2.0',
+  },
+  '2.5.8': {
+    name: 'Target Size (Minimum)',
+    level: 'AA',
+    wcagVersion: '2.2',
+  },
+  '3.1.1': {
+    name: 'Language of Page',
+    level: 'A',
+    wcagVersion: '2.0',
+  },
+  '4.1.1': {
+    name: 'Parsing',
+    level: 'A',
+    wcagVersion: '2.0',
+  },
+  '4.1.2': {
+    name: 'Name, Role, Value',
+    level: 'A',
+    wcagVersion: '2.0',
+  },
+};
+
+interface PackageMetadata {
+  version?: string;
+  dependencies?: Record<string, string>;
+  devDependencies?: Record<string, string>;
+}
+
+interface StorybookTaskMeta {
+  storyId?: unknown;
+  reports?: unknown;
+}
+
+interface StorybookReport {
+  type?: unknown;
+  result?: unknown;
+}
+
+interface ShardInfo {
+  index: number;
+  total: number;
+}
+
+type SupportedFramework = 'lit' | 'stencil' | 'unknown';
+
+export interface A11yReporterOptions {
+  outputDir?: string;
+  outputFilename?: string;
+  totalCriteria?: number;
+}
+
+export interface A11yIncompleteDetail {
+  ruleId: string;
+  impact: string;
+  wcagCriteria: string[];
+  nodes: number;
+  message: string;
+}
+
+export interface A11yAutomatedResults {
+  violations: number;
+  passes: number;
+  incomplete: number;
+  inapplicable: number;
+  criteriaCovered: string[];
+  incompleteDetails: A11yIncompleteDetail[];
+}
+
+export interface A11yComponentReport {
+  name: string;
+  category: string;
+  framework: SupportedFramework;
+  storyCount: number;
+  automated: A11yAutomatedResults;
+}
+
+export interface A11yCriterionReport {
+  id: string;
+  name: string;
+  level: CriterionLevel;
+  wcagVersion: WCAGVersion;
+  conformance:
+    | 'supports'
+    | 'partiallySupports'
+    | 'doesNotSupport'
+    | 'notApplicable'
+    | 'notEvaluated';
+  automatedCoverage: boolean;
+  manualVerified: boolean;
+  remarks: string;
+  affectedComponents: string[];
+}
+
+export interface A11ySummary {
+  totalComponents: number;
+  litComponents: number;
+  stencilComponents: number;
+  stencilExcluded: boolean;
+  storyCoverage: {
+    total: number;
+    withA11y: number;
+    excludedFromA11y: number;
+  };
+  totalCriteria: number;
+  supports: number;
+  partiallySupports: number;
+  doesNotSupport: number;
+  notApplicable: number;
+  notEvaluated: number;
+  automatedCoverage: string;
+  manualCoverage: string;
+}
+
+export interface A11yReport {
+  report: {
+    product: string;
+    version: string;
+    standard: string;
+    reportDate: string;
+    evaluationMethods: string[];
+    axeCoreVersion: string;
+    storybookVersion: string;
+  };
+  components: A11yComponentReport[];
+  criteria: A11yCriterionReport[];
+  summary: A11ySummary;
+}
+
+interface ComponentAccumulator {
+  name: string;
+  category: string;
+  framework: SupportedFramework;
+  storyIds: Set<string>;
+  automated: {
+    violations: number;
+    passes: number;
+    incomplete: number;
+    inapplicable: number;
+    criteriaCovered: Set<string>;
+    incompleteDetails: A11yIncompleteDetail[];
+  };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function isAxeResults(value: unknown): value is AxeResults {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  return (
+    Array.isArray(value.violations) &&
+    Array.isArray(value.passes) &&
+    Array.isArray(value.incomplete) &&
+    Array.isArray(value.inapplicable)
+  );
+}
+
+function normalizePath(filePath: string): string {
+  return filePath.replaceAll('\\', '/');
+}
+
+function parseShardDescriptor(
+  descriptor: string | undefined
+): ShardInfo | null {
+  if (!descriptor) {
+    return null;
+  }
+
+  const shardMatch = descriptor.match(/^(\d+)\/(\d+)$/);
+  if (!shardMatch) {
+    return null;
+  }
+
+  const [, rawIndex, rawTotal] = shardMatch;
+  const index = Number.parseInt(rawIndex, 10);
+  const total = Number.parseInt(rawTotal, 10);
+
+  if (Number.isNaN(index) || Number.isNaN(total) || total <= 0) {
+    return null;
+  }
+
+  return {index, total};
+}
+
+function extractCliShardDescriptor(argv: string[]): string | undefined {
+  for (let index = 0; index < argv.length; index += 1) {
+    const argument = argv[index];
+    if (argument.startsWith('--shard=')) {
+      return argument.slice('--shard='.length);
+    }
+
+    if (argument === '--shard') {
+      return argv[index + 1];
+    }
+  }
+
+  return undefined;
+}
+
+function resolveShardInfo(): ShardInfo | null {
+  const byDescriptor = [
+    process.env.A11Y_REPORT_SHARD,
+    process.env.VITEST_SHARD,
+    extractCliShardDescriptor(process.argv),
+  ]
+    .map((descriptor) => parseShardDescriptor(descriptor))
+    .find((parsed): parsed is ShardInfo => parsed !== null);
+
+  if (byDescriptor) {
+    return byDescriptor;
+  }
+
+  const rawIndex =
+    process.env.CI_NODE_INDEX ??
+    process.env.CIRCLE_NODE_INDEX ??
+    process.env.BUILDKITE_PARALLEL_JOB;
+  const rawTotal =
+    process.env.CI_NODE_TOTAL ??
+    process.env.CIRCLE_NODE_TOTAL ??
+    process.env.BUILDKITE_PARALLEL_JOB_COUNT;
+
+  if (!rawIndex || !rawTotal) {
+    return null;
+  }
+
+  const parsedIndex = Number.parseInt(rawIndex, 10);
+  const parsedTotal = Number.parseInt(rawTotal, 10);
+
+  if (
+    Number.isNaN(parsedIndex) ||
+    Number.isNaN(parsedTotal) ||
+    parsedTotal <= 0
+  ) {
+    return null;
+  }
+
+  const normalizedIndex =
+    parsedIndex >= 1 && parsedIndex <= parsedTotal
+      ? parsedIndex
+      : parsedIndex >= 0 && parsedIndex < parsedTotal
+        ? parsedIndex + 1
+        : parsedIndex;
+
+  if (normalizedIndex < 1 || normalizedIndex > parsedTotal) {
+    return null;
+  }
+
+  return {
+    index: normalizedIndex,
+    total: parsedTotal,
+  };
+}
+
+function readPackageMetadata(): PackageMetadata {
+  try {
+    const currentFilePath = fileURLToPath(import.meta.url);
+    const packageJsonPath = path.resolve(
+      path.dirname(currentFilePath),
+      '../../package.json'
+    );
+    const packageJsonContent = readFileSync(packageJsonPath, 'utf8');
+    return JSON.parse(packageJsonContent) as PackageMetadata;
+  } catch {
+    return {};
+  }
+}
+
+function extractComponentName(
+  modulePath: string,
+  storyId: string
+): string | null {
+  const componentPathMatch = modulePath.match(/\/((atomic-[a-z0-9-]+))\//i);
+  if (componentPathMatch?.[1]) {
+    return componentPathMatch[1].toLowerCase();
+  }
+
+  const storyPathMatch = modulePath.match(
+    /(atomic-[a-z0-9-]+)\.new\.stories\.[jt]sx?$/i
+  );
+  if (storyPathMatch?.[1]) {
+    return storyPathMatch[1].toLowerCase();
+  }
+
+  const storyIdMatch = storyId.match(/(atomic-[a-z0-9-]+)/i);
+  if (storyIdMatch?.[1]) {
+    return storyIdMatch[1].toLowerCase();
+  }
+
+  return null;
+}
+
+function extractCategory(modulePath: string, storyId: string): string {
+  const categoryFromPath = modulePath.match(
+    /components\/(commerce|search|insight|ipx|common|recommendations)\//i
+  );
+
+  if (categoryFromPath?.[1]) {
+    return categoryFromPath[1].toLowerCase();
+  }
+
+  const categoryFromStoryId = storyId.match(
+    /^(commerce|search|insight|ipx|common|recommendations)-/i
+  );
+
+  if (categoryFromStoryId?.[1]) {
+    return categoryFromStoryId[1].toLowerCase();
+  }
+
+  return UNKNOWN_CATEGORY;
+}
+
+function extractFramework(modulePath: string): SupportedFramework {
+  if (modulePath.endsWith('.new.stories.tsx')) {
+    return 'lit';
+  }
+
+  if (modulePath.endsWith('.stories.tsx')) {
+    return 'stencil';
+  }
+
+  return UNKNOWN_FRAMEWORK;
+}
+
+function extractCriteriaFromTags(tags: readonly string[]): string[] {
+  const criterionTagPattern = /^wcag(\d)(\d)(\d{1,2})$/;
+
+  return tags
+    .map((tag) => tag.match(criterionTagPattern))
+    .filter((match): match is RegExpMatchArray => match !== null)
+    .map((match) => `${match[1]}.${match[2]}.${match[3]}`);
+}
+
+function getCriteriaForRule(rule: AxeRuleResult): string[] {
+  const mappedFromRuleId = ruleToWCAG[rule.id] ?? [];
+  const mappedFromTags = extractCriteriaFromTags(rule.tags);
+
+  return [...new Set([...mappedFromRuleId, ...mappedFromTags])].sort((a, b) =>
+    a.localeCompare(b, 'en-US', {numeric: true})
+  );
+}
+
+function getIncompleteMessage(rule: AxeRuleResult): string {
+  const firstNode = rule.nodes[0];
+  const firstCheckMessage =
+    firstNode?.any[0]?.message ??
+    firstNode?.all[0]?.message ??
+    firstNode?.none[0]?.message;
+
+  return firstCheckMessage ?? rule.help;
+}
+
+function formatDate(date: Date): string {
+  return date.toISOString().slice(0, 10);
+}
+
+function getCriterionMetadata(criterionId: string): CriterionMetadata {
+  return (
+    criterionMetadataMap[criterionId] ?? {
+      name: criterionId,
+      level: 'unknown',
+      wcagVersion: 'unknown',
+    }
+  );
+}
+
+function getAutomationCoveragePercentage(
+  coveredCriteria: number,
+  totalCriteria: number
+): string {
+  if (totalCriteria <= 0) {
+    return '0%';
+  }
+
+  const percentage = Math.round((coveredCriteria / totalCriteria) * 100);
+  return `${percentage}%`;
+}
+
+export class VitestA11yReporter implements Reporter {
+  private readonly componentResults = new Map<string, ComponentAccumulator>();
+  private readonly criteriaToComponents = new Map<string, Set<string>>();
+  private readonly seenComponentStoryPairs = new Set<string>();
+  private hasCapturedA11yResult = false;
+  private readonly outputDir: string;
+  private readonly outputFilename: string;
+  private readonly totalCriteria: number;
+  private readonly shardInfo: ShardInfo | null;
+  private readonly packageMetadata: PackageMetadata;
+
+  public constructor(options: A11yReporterOptions = {}) {
+    this.outputDir = options.outputDir ?? DEFAULT_A11Y_REPORT_OUTPUT_DIR;
+    this.outputFilename =
+      options.outputFilename ?? DEFAULT_A11Y_REPORT_FILENAME;
+    this.totalCriteria =
+      options.totalCriteria ?? DEFAULT_WCAG_22_AA_CRITERIA_COUNT;
+    this.shardInfo = resolveShardInfo();
+    this.packageMetadata = readPackageMetadata();
+  }
+
+  public onTestCaseResult(testCase: TestCase): void {
+    this.onTestResult(testCase);
+  }
+
+  public onTestResult(testCase: TestCase): void {
+    try {
+      if (!testCase.project.name.startsWith('storybook')) {
+        return;
+      }
+
+      const meta = testCase.meta() as StorybookTaskMeta;
+      const reports = Array.isArray(meta.reports)
+        ? (meta.reports as StorybookReport[])
+        : [];
+      const a11yReport = reports.find((report) => report.type === 'a11y');
+
+      if (!a11yReport || !isAxeResults(a11yReport.result)) {
+        return;
+      }
+
+      const storyId =
+        typeof meta.storyId === 'string' ? meta.storyId : testCase.id;
+      const modulePath = normalizePath(
+        testCase.module.relativeModuleId || testCase.module.moduleId
+      );
+      const componentName = extractComponentName(modulePath, storyId);
+
+      if (!componentName) {
+        return;
+      }
+
+      const componentStoryKey = `${componentName}:${storyId}`;
+      if (this.seenComponentStoryPairs.has(componentStoryKey)) {
+        return;
+      }
+      this.seenComponentStoryPairs.add(componentStoryKey);
+
+      const category = extractCategory(modulePath, storyId);
+      const framework = extractFramework(modulePath);
+      const component = this.getOrCreateComponent(
+        componentName,
+        category,
+        framework
+      );
+      const axeResults = a11yReport.result;
+      this.hasCapturedA11yResult = true;
+
+      component.storyIds.add(storyId);
+      component.automated.violations += axeResults.violations.length;
+      component.automated.passes += axeResults.passes.length;
+      component.automated.incomplete += axeResults.incomplete.length;
+      component.automated.inapplicable += axeResults.inapplicable.length;
+
+      this.collectCriteria(component, axeResults.violations);
+      this.collectCriteria(component, axeResults.passes);
+      this.collectCriteria(component, axeResults.incomplete);
+      this.collectCriteria(component, axeResults.inapplicable);
+
+      for (const incompleteRule of axeResults.incomplete) {
+        component.automated.incompleteDetails.push({
+          ruleId: incompleteRule.id,
+          impact: incompleteRule.impact ?? 'unknown',
+          wcagCriteria: getCriteriaForRule(incompleteRule),
+          nodes: incompleteRule.nodes.length,
+          message: getIncompleteMessage(incompleteRule),
+        });
+      }
+    } catch (error) {
+      this.warn('Unable to process Storybook a11y test result.', error);
+    }
+  }
+
+  public async onTestRunEnd(
+    _testModules: ReadonlyArray<TestModule>,
+    _unhandledErrors: ReadonlyArray<SerializedError>,
+    _reason: TestRunEndReason
+  ): Promise<void> {
+    await this.onFinished();
+  }
+
+  public async onFinished(): Promise<void> {
+    try {
+      if (!this.hasCapturedA11yResult) {
+        return;
+      }
+
+      const report = this.buildReport();
+      const serializedReport = `${JSON.stringify(report, null, 2)}\n`;
+      const outputPaths = this.getOutputPaths();
+
+      await mkdir(this.outputDir, {recursive: true});
+      await Promise.all(
+        outputPaths.map((outputPath) =>
+          writeFile(outputPath, serializedReport, 'utf8')
+        )
+      );
+    } catch (error) {
+      this.warn('Unable to write the accessibility report JSON file.', error);
+    }
+  }
+
+  private getOrCreateComponent(
+    componentName: string,
+    category: string,
+    framework: SupportedFramework
+  ): ComponentAccumulator {
+    const existing = this.componentResults.get(componentName);
+    if (existing) {
+      if (
+        existing.category === UNKNOWN_CATEGORY &&
+        category !== UNKNOWN_CATEGORY
+      ) {
+        existing.category = category;
+      }
+
+      if (
+        existing.framework === UNKNOWN_FRAMEWORK &&
+        framework !== UNKNOWN_FRAMEWORK
+      ) {
+        existing.framework = framework;
+      }
+
+      return existing;
+    }
+
+    const component: ComponentAccumulator = {
+      name: componentName,
+      category,
+      framework,
+      storyIds: new Set<string>(),
+      automated: {
+        violations: 0,
+        passes: 0,
+        incomplete: 0,
+        inapplicable: 0,
+        criteriaCovered: new Set<string>(),
+        incompleteDetails: [],
+      },
+    };
+
+    this.componentResults.set(componentName, component);
+    return component;
+  }
+
+  private collectCriteria(
+    component: ComponentAccumulator,
+    rules: AxeRuleResult[]
+  ): void {
+    for (const rule of rules) {
+      const criteria = getCriteriaForRule(rule);
+
+      for (const criterion of criteria) {
+        component.automated.criteriaCovered.add(criterion);
+
+        const coveredComponents =
+          this.criteriaToComponents.get(criterion) ?? new Set<string>();
+        coveredComponents.add(component.name);
+        this.criteriaToComponents.set(criterion, coveredComponents);
+      }
+    }
+  }
+
+  private buildComponents(): A11yComponentReport[] {
+    return [...this.componentResults.values()]
+      .map((component): A11yComponentReport => {
+        return {
+          name: component.name,
+          category: component.category,
+          framework: component.framework,
+          storyCount: component.storyIds.size,
+          automated: {
+            violations: component.automated.violations,
+            passes: component.automated.passes,
+            incomplete: component.automated.incomplete,
+            inapplicable: component.automated.inapplicable,
+            criteriaCovered: [...component.automated.criteriaCovered].sort(
+              (a, b) => a.localeCompare(b, 'en-US', {numeric: true})
+            ),
+            incompleteDetails: component.automated.incompleteDetails,
+          },
+        };
+      })
+      .sort((first, second) => first.name.localeCompare(second.name, 'en-US'));
+  }
+
+  private buildCriteria(): A11yCriterionReport[] {
+    return [...this.criteriaToComponents.entries()]
+      .map(([criterionId, coveredComponents]): A11yCriterionReport => {
+        const metadata = getCriterionMetadata(criterionId);
+
+        return {
+          id: criterionId,
+          name: metadata.name,
+          level: metadata.level,
+          wcagVersion: metadata.wcagVersion,
+          conformance: 'notEvaluated',
+          automatedCoverage: true,
+          manualVerified: false,
+          remarks: '',
+          affectedComponents: [...coveredComponents].sort((a, b) =>
+            a.localeCompare(b, 'en-US')
+          ),
+        };
+      })
+      .sort((first, second) =>
+        first.id.localeCompare(second.id, 'en-US', {numeric: true})
+      );
+  }
+
+  private buildSummary(
+    components: A11yComponentReport[],
+    criteria: A11yCriterionReport[]
+  ): A11ySummary {
+    const litComponents = components.filter(
+      (component) => component.framework === 'lit'
+    ).length;
+    const stencilComponents = components.filter(
+      (component) => component.framework === 'stencil'
+    ).length;
+    const totalStories = components.reduce(
+      (total, component) => total + component.storyCount,
+      0
+    );
+
+    return {
+      totalComponents: components.length,
+      litComponents,
+      stencilComponents,
+      stencilExcluded: true,
+      storyCoverage: {
+        total: totalStories,
+        withA11y: totalStories,
+        excludedFromA11y: 0,
+      },
+      totalCriteria: this.totalCriteria,
+      supports: 0,
+      partiallySupports: 0,
+      doesNotSupport: 0,
+      notApplicable: 0,
+      notEvaluated: this.totalCriteria,
+      automatedCoverage: getAutomationCoveragePercentage(
+        criteria.length,
+        this.totalCriteria
+      ),
+      manualCoverage: '0%',
+    };
+  }
+
+  private buildReport(): A11yReport {
+    const components = this.buildComponents();
+    const criteria = this.buildCriteria();
+    const axeCoreVersion =
+      this.packageMetadata.devDependencies?.['axe-core'] ??
+      this.packageMetadata.dependencies?.['axe-core'] ??
+      '4.10.3';
+    const storybookVersion =
+      this.packageMetadata.devDependencies?.storybook ??
+      this.packageMetadata.dependencies?.storybook ??
+      '10.0.8';
+
+    return {
+      report: {
+        product: 'Coveo Atomic',
+        version: this.packageMetadata.version ?? '3.x.x',
+        standard: 'WCAG 2.2 AA',
+        reportDate: formatDate(new Date()),
+        evaluationMethods: [
+          `axe-core ${axeCoreVersion}`,
+          'Storybook addon-a11y',
+          'Manual audit',
+        ],
+        axeCoreVersion,
+        storybookVersion,
+      },
+      components,
+      criteria,
+      summary: this.buildSummary(components, criteria),
+    };
+  }
+
+  private getOutputPaths(): string[] {
+    const baseOutputPath = path.resolve(this.outputDir, this.outputFilename);
+
+    if (!this.shardInfo) {
+      return [baseOutputPath];
+    }
+
+    const shardOutputPath = path.resolve(
+      this.outputDir,
+      `a11y-report.shard-${this.shardInfo.index}.json`
+    );
+
+    return [baseOutputPath, shardOutputPath];
+  }
+
+  private warn(message: string, error?: unknown): void {
+    if (error) {
+      console.warn(`[${REPORTER_NAME}] ${message}`, error);
+      return;
+    }
+
+    console.warn(`[${REPORTER_NAME}] ${message}`);
+  }
+}
+
+export default VitestA11yReporter;

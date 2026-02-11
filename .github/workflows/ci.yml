@@ -1,6 +1,7 @@
 name: CI
 on:
   pull_request:
+    types: [opened, synchronize, reopened, labeled]
   merge_group:
 
 permissions:
@@ -381,6 +382,9 @@ jobs:
       - run: pnpm exec turbo chromatic --filter=@coveo/atomic -- --skip
         working-directory: packages/atomic
         if: steps.chromatic-run.outcome == 'skipped'
+      - run: pnpm exec turbo chromatic --filter=@coveo/atomic -- --only-changed --accessibility
+        id: chromatic-a11y-run
+        if: contains(needs.affected.outputs.projects, '@coveo/atomic') && github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'a11y-review')
   playwright-atomic:
     name: 'Run Playwright tests for Atomic'
     needs: prepare-playwright-atomic

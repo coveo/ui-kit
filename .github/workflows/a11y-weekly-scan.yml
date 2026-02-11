@@ -1,0 +1,55 @@
+name: Weekly A11y Scan
+
+on:
+  schedule:
+    # Every Monday at 9:00 AM UTC
+    - cron: '0 9 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  weekly-a11y-scan:
+    name: 'Weekly accessibility scan on main'
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --user 1001
+    env:
+      NODE_OPTIONS: --max_old_space_size=4096
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          ref: main
+
+      - uses: ./.github/actions/setup
+
+      - name: 'Run Storybook a11y tests'
+        run: pnpm run test:storybook
+        working-directory: packages/atomic
+
+      - name: 'Upload a11y report artifact'
+        if: always()
+        uses: actions/upload-artifact@3cea5372237819ed877d61da80e834577027b9e0 # v4
+        with:
+          name: a11y-weekly-report
+          path: packages/atomic/a11y/reports/a11y-report.json
+          retention-days: 30
+
+      - name: 'Summary comment (future Slack/GitHub integration)'
+        if: always()
+        run: |
+          echo "A11y scan completed on $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          if [ -f packages/atomic/a11y/reports/a11y-report.json ]; then
+            echo "Report artifact available: packages/atomic/a11y/reports/a11y-report.json"
+            echo ""
+            echo "Summary of results:"
+            jq '.summary | {totalComponents, litComponents, automatedCoverage}' packages/atomic/a11y/reports/a11y-report.json || echo "Unable to parse report"
+          else
+            echo "Warning: a11y report not generated"
+          fi

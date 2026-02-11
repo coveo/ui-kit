@@ -1,0 +1,942 @@
+[
+  {
+    "name": "atomic-commerce-breadbox",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "fail",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-breadbox--default) | Interactive targets: 29 | Focus stops detected: 14 | Focus obscured count: 0 | Target-size violations (<24x24): button[16x16], button[16x16], button[16x16], button[16x16], button[16x16] | AX name checks: pass | Audit outcome: fail"
+    }
+  },
+  {
+    "name": "atomic-commerce-category-facet",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-category-facet--default) | Interactive targets: 6 | Focus stops detected: 5 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-commerce-did-you-mean",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-did-you-mean--default) | Interactive targets: 0 | Focus stops detected: 1 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-commerce-facet",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "fail",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-facet--default) | Interactive targets: 11 | Focus stops detected: 12 | Focus obscured count: 0 | Target-size violations (<24x24): button[16x16], button[16x16], button[16x16], button[16x16], button[16x16] | AX name checks: pass | Audit outcome: fail"
+    }
+  },
+  {
+    "name": "atomic-commerce-facets",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "fail",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-facets--default) | Interactive targets: 42 | Focus stops detected: 14 | Focus obscured count: 0 | Target-size violations (<24x24): button[16x16], button[16x16], button[16x16], button[16x16], button[16x16] | AX name checks: pass | Audit outcome: fail"
+    }
+  },
+  {
+    "name": "atomic-commerce-interface",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-interface--default) | Interactive targets: 0 | Focus stops detected: 1 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-commerce-layout",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-layout--default) | Interactive targets: 0 | Focus stops detected: 1 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-commerce-load-more-products",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-load-more-products--default) | Interactive targets: 1 | Focus stops detected: 2 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-commerce-no-products",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-no-products--default) | Interactive targets: 2 | Focus stops detected: 3 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-commerce-numeric-facet",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "fail",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-numeric-facet--default) | Interactive targets: 9 | Focus stops detected: 10 | Focus obscured count: 0 | Target-size violations (<24x24): button[16x16], button[16x16], button[16x16], button[16x16], button[16x16] | AX name checks: pass | Audit outcome: fail"
+    }
+  },
+  {
+    "name": "atomic-commerce-pager",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-pager--default) | Interactive targets: 6 | Focus stops detected: 3 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-commerce-product-list",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Using grid display (atomic-commerce-product-list--default) | Interactive targets: 4 | Focus stops detected: 2 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-commerce-products-per-page",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-products-per-page--default) | Interactive targets: 4 | Focus stops detected: 2 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-commerce-query-error",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-query-error--default) | Interactive targets: 1 | Focus stops detected: 2 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-commerce-query-summary",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-query-summary--default) | Interactive targets: 0 | Focus stops detected: 1 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-commerce-recommendation-interface",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-recommendation-interface--default) | Interactive targets: 0 | Focus stops detected: 1 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-commerce-recommendation-list",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-recommendation-list--default) | Interactive targets: 8 | Focus stops detected: 4 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-commerce-refine-modal",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "fail",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default modal (atomic-commerce-refine-modal--default-modal) | Interactive targets: 13 | Focus stops detected: 6 | Focus obscured count: 0 | Target-size violations (<24x24): button[20x25.19] | AX name checks: pass | Audit outcome: fail"
+    }
+  },
+  {
+    "name": "atomic-commerce-refine-toggle",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-refine-toggle--default) | Interactive targets: 1 | Focus stops detected: 2 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-commerce-search-box",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-search-box--default) | Interactive targets: 2 | Focus stops detected: 3 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-commerce-search-box-instant-products",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-search-box-instant-products--default) | Interactive targets: 5 | Focus stops detected: 3 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-commerce-search-box-query-suggestions",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-search-box-query-suggestions--default) | Interactive targets: 2 | Focus stops detected: 3 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-commerce-search-box-recent-queries",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-search-box-recent-queries--default) | Interactive targets: 2 | Focus stops detected: 3 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-commerce-sort-dropdown",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-sort-dropdown--default) | Interactive targets: 1 | Focus stops detected: 2 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-commerce-text",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-text--default) | Interactive targets: 0 | Focus stops detected: 1 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-commerce-timeframe-facet",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-commerce-timeframe-facet--default) | Interactive targets: 8 | Focus stops detected: 6 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-product-children",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-product-children--default) | Interactive targets: 6 | Focus stops detected: 4 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-product-description",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "fail",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-product-description--default) | Interactive targets: 1 | Focus stops detected: 2 | Focus obscured count: 0 | Target-size violations (<24x24): button[90.39x23.98] | AX name checks: pass | Audit outcome: fail"
+    }
+  },
+  {
+    "name": "atomic-product-excerpt",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "fail",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-product-excerpt--default) | Interactive targets: 1 | Focus stops detected: 2 | Focus obscured count: 0 | Target-size violations (<24x24): button[90.39x23.98] | AX name checks: pass | Audit outcome: fail"
+    }
+  },
+  {
+    "name": "atomic-product-field-condition",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-product-field-condition--default) | Interactive targets: 0 | Focus stops detected: 1 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-product-image",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-product-image--default) | Interactive targets: 2 | Focus stops detected: 3 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-product-link",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-product-link--default) | Interactive targets: 1 | Focus stops detected: 2 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-product-multi-value-text",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-product-multi-value-text--default) | Interactive targets: 0 | Focus stops detected: 1 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-product-numeric-field-value",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-product-numeric-field-value--default) | Interactive targets: 0 | Focus stops detected: 1 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-product-price",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-product-price--default) | Interactive targets: 0 | Focus stops detected: 1 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-product-rating",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: Default (atomic-product-rating--default) | Interactive targets: 0 | Focus stops detected: 1 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-product-section-actions",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: atomic-product-section-actions (atomic-product-section-actions--default) | Interactive targets: 1 | Focus stops detected: 2 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-product-section-badges",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: atomic-product-section-badges (atomic-product-section-badges--default) | Interactive targets: 1 | Focus stops detected: 2 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-product-section-bottom-metadata",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: atomic-product-section-bottom-metadata (atomic-product-section-bottom-metadata--default) | Interactive targets: 1 | Focus stops detected: 2 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-product-section-children",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: atomic-product-section-children (atomic-product-section-children--default) | Interactive targets: 1 | Focus stops detected: 2 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-product-section-description",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: atomic-product-section-description (atomic-product-section-description--default) | Interactive targets: 1 | Focus stops detected: 2 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-product-section-emphasized",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: atomic-product-section-emphasized (atomic-product-section-emphasized--default) | Interactive targets: 1 | Focus stops detected: 2 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-product-section-metadata",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: atomic-product-section-metadata (atomic-product-section-metadata--default) | Interactive targets: 1 | Focus stops detected: 2 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-product-section-name",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: atomic-product-section-name (atomic-product-section-name--default) | Interactive targets: 1 | Focus stops detected: 2 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-product-section-visual",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: atomic-product-section-visual (atomic-product-section-visual--default) | Interactive targets: 1 | Focus stops detected: 2 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-product-template",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "pass",
+      "screenReader": "pass",
+      "focusManagement": "pass",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "pass",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "pass",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: In a product list (atomic-product-template--in-a-product-list) | Interactive targets: 28 | Focus stops detected: 4 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  },
+  {
+    "name": "atomic-product-text",
+    "category": "commerce",
+    "manual": {
+      "status": "complete",
+      "tier": 1,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story: atomic-product-text (atomic-product-text--default) | Interactive targets: 0 | Focus stops detected: 1 | Focus obscured count: 0 | Target-size violations: none | AX name checks: pass | Audit outcome: not-applicable"
+    }
+  }
+]

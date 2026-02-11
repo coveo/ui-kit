@@ -155,5 +155,8 @@ const atomicDefault = defineConfig({
 });
 
 export default mergeConfig(atomicDefault, {
-  test: {projects: [atomicDefault, storybook]},
+  test: {
+    projects: [atomicDefault, storybook],
+    reporters: ['default', ['./src/a11y-reporter/vitest-a11y-reporter.ts']],
+  },
 });

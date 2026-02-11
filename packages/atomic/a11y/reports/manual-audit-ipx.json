@@ -1,0 +1,62 @@
+[
+  {
+    "name": "atomic-ipx-button",
+    "category": "ipx",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-ipx-button--default; focusables=0; smallTargets=0."
+    }
+  },
+  {
+    "name": "atomic-ipx-embedded",
+    "category": "ipx",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "fail",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-ipx-embedded--default; focusables=0; smallTargets=1."
+    }
+  },
+  {
+    "name": "atomic-ipx-modal",
+    "category": "ipx",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-ipx-modal--default; focusables=0; smallTargets=0."
+    }
+  }
+]

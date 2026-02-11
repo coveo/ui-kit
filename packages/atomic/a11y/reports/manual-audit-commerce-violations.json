@@ -1,0 +1,51 @@
+[
+  {
+    "name": "atomic-commerce-breadbox",
+    "failures": [
+      "2.5.8-target-size=fail"
+    ],
+    "notes": "Story: Default (atomic-commerce-breadbox--default) | Interactive targets: 29 | Focus stops detected: 14 | Focus obscured count: 0 | Target-size violations (<24x24): button[16x16], button[16x16], button[16x16], button[16x16], button[16x16] | AX name checks: pass | Audit outcome: fail"
+  },
+  {
+    "name": "atomic-commerce-facet",
+    "failures": [
+      "2.5.8-target-size=fail"
+    ],
+    "notes": "Story: Default (atomic-commerce-facet--default) | Interactive targets: 11 | Focus stops detected: 12 | Focus obscured count: 0 | Target-size violations (<24x24): button[16x16], button[16x16], button[16x16], button[16x16], button[16x16] | AX name checks: pass | Audit outcome: fail"
+  },
+  {
+    "name": "atomic-commerce-facets",
+    "failures": [
+      "2.5.8-target-size=fail"
+    ],
+    "notes": "Story: Default (atomic-commerce-facets--default) | Interactive targets: 42 | Focus stops detected: 14 | Focus obscured count: 0 | Target-size violations (<24x24): button[16x16], button[16x16], button[16x16], button[16x16], button[16x16] | AX name checks: pass | Audit outcome: fail"
+  },
+  {
+    "name": "atomic-commerce-numeric-facet",
+    "failures": [
+      "2.5.8-target-size=fail"
+    ],
+    "notes": "Story: Default (atomic-commerce-numeric-facet--default) | Interactive targets: 9 | Focus stops detected: 10 | Focus obscured count: 0 | Target-size violations (<24x24): button[16x16], button[16x16], button[16x16], button[16x16], button[16x16] | AX name checks: pass | Audit outcome: fail"
+  },
+  {
+    "name": "atomic-commerce-refine-modal",
+    "failures": [
+      "2.5.8-target-size=fail"
+    ],
+    "notes": "Story: Default modal (atomic-commerce-refine-modal--default-modal) | Interactive targets: 13 | Focus stops detected: 6 | Focus obscured count: 0 | Target-size violations (<24x24): button[20x25.19] | AX name checks: pass | Audit outcome: fail"
+  },
+  {
+    "name": "atomic-product-description",
+    "failures": [
+      "2.5.8-target-size=fail"
+    ],
+    "notes": "Story: Default (atomic-product-description--default) | Interactive targets: 1 | Focus stops detected: 2 | Focus obscured count: 0 | Target-size violations (<24x24): button[90.39x23.98] | AX name checks: pass | Audit outcome: fail"
+  },
+  {
+    "name": "atomic-product-excerpt",
+    "failures": [
+      "2.5.8-target-size=fail"
+    ],
+    "notes": "Story: Default (atomic-product-excerpt--default) | Interactive targets: 1 | Focus stops detected: 2 | Focus obscured count: 0 | Target-size violations (<24x24): button[90.39x23.98] | AX name checks: pass | Audit outcome: fail"
+  }
+]

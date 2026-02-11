@@ -1,0 +1,362 @@
+[
+  {
+    "name": "atomic-insight-edit-toggle",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-insight-edit-toggle--default; focusables=0; smallTargets=0."
+    }
+  },
+  {
+    "name": "atomic-insight-facet",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-insight-facet--default; focusables=0; smallTargets=0."
+    }
+  },
+  {
+    "name": "atomic-insight-full-search-button",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-insight-full-search-button--default; focusables=0; smallTargets=0."
+    }
+  },
+  {
+    "name": "atomic-insight-generate-answer-button",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-insight-generate-answer-button--default; focusables=0; smallTargets=0."
+    }
+  },
+  {
+    "name": "atomic-insight-interface",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-insight-interface--default; focusables=0; smallTargets=0."
+    }
+  },
+  {
+    "name": "atomic-insight-layout",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-insight-layout--default; focusables=0; smallTargets=0."
+    }
+  },
+  {
+    "name": "atomic-insight-no-results",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-insight-no-results--default; focusables=0; smallTargets=0."
+    }
+  },
+  {
+    "name": "atomic-insight-numeric-facet",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-insight-numeric-facet--default; focusables=0; smallTargets=0."
+    }
+  },
+  {
+    "name": "atomic-insight-pager",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-insight-pager--default; focusables=0; smallTargets=0."
+    }
+  },
+  {
+    "name": "atomic-insight-query-error",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-insight-query-error--default; focusables=0; smallTargets=0."
+    }
+  },
+  {
+    "name": "atomic-insight-query-summary",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-insight-query-summary--default; focusables=0; smallTargets=0."
+    }
+  },
+  {
+    "name": "atomic-insight-refine-modal",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-insight-refine-modal--default; focusables=0; smallTargets=0."
+    }
+  },
+  {
+    "name": "atomic-insight-refine-toggle",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-insight-refine-toggle--default; focusables=0; smallTargets=0."
+    }
+  },
+  {
+    "name": "atomic-insight-result-children",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-insight-result-children--default; focusables=0; smallTargets=0."
+    }
+  },
+  {
+    "name": "atomic-insight-result-quickview-action",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-insight-result-quickview-action--default; focusables=0; smallTargets=0."
+    }
+  },
+  {
+    "name": "atomic-insight-result-template",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-insight-result-template--default; focusables=0; smallTargets=0."
+    }
+  },
+  {
+    "name": "atomic-insight-search-box",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-insight-search-box--default; focusables=0; smallTargets=0."
+    }
+  },
+  {
+    "name": "atomic-insight-user-actions-toggle",
+    "category": "insight",
+    "manual": {
+      "status": "complete",
+      "tier": 3,
+      "keyboardNav": "not-applicable",
+      "screenReader": "pass",
+      "focusManagement": "not-applicable",
+      "wcag22Criteria": {
+        "2.4.11-focus-not-obscured": "not-applicable",
+        "2.5.7-dragging-movements": "not-applicable",
+        "2.5.8-target-size": "not-applicable",
+        "3.2.6-consistent-help": "not-applicable",
+        "3.3.7-redundant-entry": "not-applicable",
+        "3.3.8-accessible-auth": "not-applicable"
+      },
+      "notes": "Story atomic-insight-user-actions-toggle--default; focusables=0; smallTargets=0."
+    }
+  }
+]
