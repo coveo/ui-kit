@@ -1,13 +1,13 @@
 import {test as base} from '@playwright/test';
-import {AtomicInsightFoldedResultListPageObject} from './page-object';
+import {InsightFoldedResultListPageObject} from './page-object';
 
-type InsightFoldedResultListFixtures = {
-  insightFoldedResultList: AtomicInsightFoldedResultListPageObject;
-};
+interface TestFixture {
+  foldedResultList: InsightFoldedResultListPageObject;
+}
 
-export const test = base.extend<InsightFoldedResultListFixtures>({
-  insightFoldedResultList: async ({page}, use) => {
-    await use(new AtomicInsightFoldedResultListPageObject(page));
+export const test = base.extend<TestFixture>({
+  foldedResultList: async ({page}, use) => {
+    await use(new InsightFoldedResultListPageObject(page));
   },
 });
 

@@ -25,7 +25,6 @@ import {
   type ItemRenderingFunction,
 } from '@/src/components/common/item-list/item-list-common';
 import {ResultTemplateProvider} from '@/src/components/common/item-list/result-template-provider';
-import listDisplayStyles from '@/src/components/common/item-list/styles/list-display.tw.css';
 import placeholderStyles from '@/src/components/common/item-list/styles/placeholders.tw.css';
 import {extractUnfoldedItem} from '@/src/components/common/item-list/unfolded-item';
 import {
@@ -47,6 +46,7 @@ import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
 import '@/src/components/insight/atomic-insight-result/atomic-insight-result';
 import '@/src/components/insight/atomic-insight-result-template/atomic-insight-result-template';
+import listDisplayStyles from '../atomic-insight-result-list/insight-list-display.tw.css';
 
 /**
  * The `atomic-insight-folded-result-list` component is responsible for displaying folded query results in an insight panel,
