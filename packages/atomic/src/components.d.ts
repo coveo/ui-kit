@@ -434,7 +434,6 @@ declare global {
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
         "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
-        "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-stencil-facet-date-input": HTMLAtomicStencilFacetDateInputElement;
     }
@@ -712,7 +711,6 @@ declare namespace LocalJSX {
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
         "atomic-ipx-recs-list": AtomicIpxRecsList;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
-        "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
         "atomic-recs-list": AtomicRecsList;
         "atomic-stencil-facet-date-input": AtomicStencilFacetDateInput;
     }
