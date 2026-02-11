@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import {describe, expect, it, vi} from 'vitest';
+import {describe, expect, it} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import type {
   AtomicAnswersThreadItem,
@@ -18,7 +18,6 @@ describe('#atomic-answers-thread-item', () => {
         .isCollapsible=${props.isCollapsible ?? false}
         .hideLine=${props.hideLine ?? false}
         .isExpanded=${props.isExpanded ?? true}
-        .onToggle=${props.onToggle}
       >
         ${children}
       </atomic-answers-thread-item>
@@ -35,6 +34,7 @@ describe('#atomic-answers-thread-item', () => {
         timelineLine:
           element.shadowRoot?.querySelector('[part="timeline-line"]') ?? null,
         header: element.shadowRoot?.querySelector('[part="header"]') ?? null,
+        status: element.shadowRoot?.querySelector('[part="status"]') ?? null,
         title: element.shadowRoot?.querySelector('[part="title"]') ?? null,
         titleButton:
           element.shadowRoot?.querySelector('[part="title-button"]') ?? null,
@@ -96,18 +96,15 @@ describe('#atomic-answers-thread-item', () => {
   });
 
   it('should toggle expanded state when the title button is clicked', async () => {
-    const onToggle = vi.fn();
     const {element, parts} = await renderComponent({
       isCollapsible: true,
       isExpanded: false,
-      onToggle,
     });
 
     const titleButton = parts().titleButton as HTMLButtonElement;
     titleButton.click();
     await element.updateComplete;
 
-    expect(onToggle).toHaveBeenCalledWith(true);
     expect(parts().content).not.toHaveAttribute('hidden');
   });
 
@@ -126,5 +123,47 @@ describe('#atomic-answers-thread-item', () => {
     expect(titleButton).toHaveAttribute('aria-expanded', 'true');
     expect(content).toHaveAttribute('aria-hidden', 'false');
     expect(content).not.toHaveAttribute('hidden');
+  });
+
+  it('should render status slot only when expanded', async () => {
+    const statusSlot = html`<span slot="status">Thinking...</span>`;
+    const {parts: collapsedParts} = await renderComponent(
+      {
+        isCollapsible: true,
+        isExpanded: false,
+      },
+      statusSlot
+    );
+
+    expect(collapsedParts().status).toBeNull();
+
+    const {parts: expandedParts} = await renderComponent(
+      {
+        isCollapsible: true,
+        isExpanded: true,
+      },
+      statusSlot
+    );
+
+    expect(expandedParts().status).toBeInTheDocument();
+  });
+
+  it('should render content when content slot is provided', async () => {
+    const contentSlot = html`<div slot="content">Slotted content</div>`;
+    const {parts} = await renderComponent(
+      {
+        isCollapsible: false,
+        isExpanded: true,
+      },
+      contentSlot
+    );
+
+    const contentSlotElement = parts().content?.querySelector(
+      'slot[name="content"]'
+    ) as HTMLSlotElement | null;
+    const assignedElements = contentSlotElement?.assignedElements() ?? [];
+
+    expect(assignedElements.length).toBe(1);
+    expect(assignedElements[0]).toHaveTextContent('Slotted content');
   });
 });

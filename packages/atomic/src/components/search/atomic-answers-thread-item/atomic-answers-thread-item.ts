@@ -1,5 +1,5 @@
 import {html, LitElement, nothing} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
+import {customElement, property} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {when} from 'lit/directives/when.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
@@ -14,17 +14,13 @@ export interface AtomicAnswersThreadItemProps {
    */
   isCollapsible: boolean;
   /**
-   * Whether the timeline line should be hidden (e.g., for the last item).
+   * Whether the timeline line should be hidden.
    */
   hideLine: boolean;
   /**
    * Whether the thread item is initially expanded.
    */
   isExpanded: boolean;
-  /**
-   * Callback invoked when the expanded state changes.
-   */
-  onToggle?(expanded: boolean): void;
 }
 
 /**
@@ -40,7 +36,9 @@ export interface AtomicAnswersThreadItemProps {
  * @part header - The header row containing the title.
  * @part title - The static title text when the item is not collapsible.
  * @part title-button - The title button when the item is collapsible.
+ * @part status - The container for the status slot content.
  * @part content - The container for the slotted content.
+ * @slot status - The status content (e.g., thinking/elapsed time) provided by the parent.
  * @slot (default) - The content rendered when the item is expanded.
  */
 @customElement('atomic-answers-thread-item')
@@ -70,18 +68,9 @@ export class AtomicAnswersThreadItem extends LitElement {
   @property({type: Boolean, attribute: 'is-expanded'})
   public isExpanded = false;
 
-  /**
-   * Callback invoked when the expanded state changes.
-   */
-  @property({attribute: false})
-  public onToggle?: (expanded: boolean) => void;
-
-  @state()
-  private expanded = false;
-
   protected willUpdate() {
     if (!this.hasUpdated) {
-      this.expanded = this.isCollapsible ? this.isExpanded : true;
+      this.isExpanded = this.isCollapsible ? this.isExpanded : true;
     }
   }
 
@@ -90,75 +79,104 @@ export class AtomicAnswersThreadItem extends LitElement {
       return;
     }
 
-    this.expanded = !this.expanded;
-    this.onToggle?.(this.expanded);
+    this.isExpanded = !this.isExpanded;
   };
 
   public render() {
     const titleBaseClasses = {
-      'text-lg font-semibold text-on-background min-w-0 inline-flex text-left mr-auto': true,
+      'text-on-background': true,
+      'text-base': true,
+      'min-w-0': true,
+      'inline-flex': true,
+      'text-left': true,
+      'mr-auto': true,
     };
     const titleButtonClasses = classMap({
       ...titleBaseClasses,
-      'bg-transparent border-0 appearance-none ml-1 px-2 py-1.5 transition-colors': true,
-      'hover:bg-neutral-light rounded-md cursor-pointer': true,
-      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2': true,
+      'font-semibold': this.isExpanded,
+      'font-normal': !this.isExpanded,
+      'bg-transparent': true,
+      'border-0': true,
+      'appearance-none': true,
+      'ml-1': true,
+      'px-2': true,
+      'py-1.5': true,
+      'transition-colors': true,
+      'hover:bg-neutral-light': true,
+      'rounded-md': true,
+      'cursor-pointer': true,
+      'focus-visible:outline-none': true,
+      'focus-visible:ring-2': true,
+      'focus-visible:ring-primary': true,
+      'focus-visible:ring-offset-2': true,
     });
-    const titleTextClasses = classMap(titleBaseClasses);
+    const timelineDotClasses = classMap({
+      'mt-3': true,
+      'h-2': true,
+      'w-2': true,
+      'rounded-full': true,
+      'bg-neutral-dark': this.isExpanded,
+      'bg-neutral-dim': !this.isExpanded,
+    });
 
     return html`
-      <div part="item" class="grid grid-cols-[10px_1fr]">
-        <div part="timeline" class="flex items-center justify-center">
+      <li part="item" class="grid grid-cols-[10px_1fr]">
+        <div part="timeline" class="flex flex-col items-center row-span-2">
           <span
             part="timeline-dot"
-            class="h-2 w-2 rounded-full bg-neutral-dim"
+            class=${timelineDotClasses}
           ></span>
-        </div>
-        <div part="header" class="flex items-center">
-          ${when(
-            this.isCollapsible,
-            () =>
-              html`<button
-                part="title-button"
-                type="button"
-                aria-expanded=${this.expanded ? 'true' : 'false'}
-                class=${titleButtonClasses}
-                @click=${this.toggle}
-              >
-                ${this.title}
-              </button>`,
-            () =>
-              html`<span part="title" class=${titleTextClasses}
-                >${this.title}</span
-              >`
-          )}
-        </div>
-        <div class="flex justify-center">
           ${when(
             !this.hideLine,
             () =>
               html`<span
                 part="timeline-line"
-                class="w-px bg-neutral-lighter mt-[-6px]"
+                class="w-px bg-neutral flex-1"
               ></span>`,
             () => nothing
           )}
         </div>
+        <div part="header" class="flex items-start">
+          <div class="flex min-w-0 flex-col">
+            ${when(
+              this.isCollapsible,
+              () =>
+                html`<button
+                  part="title-button"
+                  type="button"
+                  aria-expanded=${this.isExpanded ? 'true' : 'false'}
+                  class=${titleButtonClasses}
+                  @click=${this.toggle}
+                >
+                  ${this.title}
+                </button>`,
+              () =>
+                html`<span part="title" class=${classMap({
+                  ...titleBaseClasses,
+                  'font-semibold': this.isExpanded,
+                  'font-normal': !this.isExpanded,
+                })}>${this.title}</span>`
+            )}
+            ${when(
+              this.isExpanded,
+              () => html`
+                <span part="status" class="text-sm text-neutral-dark pl-2 ml-1">
+                  <slot name="status"></slot>
+                </span>
+              `,
+              () => nothing
+            )}
+          </div>
+        </div>
         <div
           part="content"
           class="pl-2 py-2 ml-1"
-          ?hidden=${!this.expanded}
-          aria-hidden=${this.expanded ? 'false' : 'true'}
+          ?hidden=${!this.isExpanded}
+          aria-hidden=${this.isExpanded ? 'false' : 'true'}
         >
-          <slot></slot>
+          <slot name="content"></slot>
         </div>
-      </div>
+      </li>
     `;
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'atomic-answers-thread-item': AtomicAnswersThreadItem;
   }
 }
