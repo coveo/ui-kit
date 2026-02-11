@@ -10,6 +10,10 @@ export class UserActionsTogglePageObject extends BasePageObject<'atomic-insight-
     return this.page.locator('button[title="User actions"]');
   }
 
+  get atomicInsightUserActionsModal() {
+    return this.page.getByRole('dialog', {name: 'User actions'});
+  }
+
   get atomicInsightUserActionsTimeline() {
     return this.page.locator('atomic-insight-user-actions-timeline');
   }

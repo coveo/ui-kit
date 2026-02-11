@@ -19,6 +19,7 @@ import {
 } from '@/src/utils/accessibility-utils';
 import QuickviewIcon from '../../../images/quickview.svg';
 import '@/src/components/common/atomic-icon/atomic-icon';
+import '@/src/components/search/atomic-quickview-modal/atomic-quickview-modal';
 import type {AtomicQuickviewModal} from '../atomic-quickview-modal/atomic-quickview-modal';
 
 /**

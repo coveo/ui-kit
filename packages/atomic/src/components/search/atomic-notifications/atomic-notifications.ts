@@ -1,3 +1,4 @@
+import '@/src/components/common/atomic-icon/atomic-icon';
 import {NumberValue, Schema} from '@coveo/bueno';
 import {
   buildNotifyTrigger,
