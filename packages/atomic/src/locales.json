@@ -8048,5 +8048,32 @@
     "zh": "用户操作时间线",
     "zh-CN": "用户操作时间线",
     "zh-TW": "使用者操作時間軸"
+  },
+  "ipx-body-content": {
+    "en": "Content area",
+    "fr": "Zone de contenu",
+    "cs": "Oblast obsahu",
+    "da": "Indholdsområde",
+    "de": "Inhaltsbereich",
+    "el": "Περιοχή περιεχομένου",
+    "es": "Área de contenido",
+    "fi": "Sisältöalue",
+    "hu": "Tartalomterület",
+    "id": "Area konten",
+    "it": "Area dei contenuti",
+    "ja": "コンテンツエリア",
+    "ko": "콘텐츠 영역",
+    "nl": "Inhoudsgebied",
+    "no": "Innholdsområde",
+    "pl": "Obszar treści",
+    "pt": "Área de conteúdo",
+    "pt-BR": "Área de conteúdo",
+    "ru": "Область содержимого",
+    "sv": "Innehållsområde",
+    "th": "พื้นที่เนื้อหา",
+    "tr": "İçerik alanı",
+    "zh": "内容区域",
+    "zh-CN": "内容区域",
+    "zh-TW": "內容區域"
   }
 }

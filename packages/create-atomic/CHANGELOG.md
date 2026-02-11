@@ -1,3 +1,9 @@
+## <small>1.41.8 (2026-02-11)</small>
+
+* fix(create-atomic): resolve workspace: and catalog: placeholders in template (#7079) ([ad7b703](https://github.com/coveo/ui-kit/commits/ad7b703)), closes [#7079](https://github.com/coveo/ui-kit/issues/7079)
+
+
+
 ## <small>1.41.7 (2026-01-07)</small>
 
 * [Version Bump][skip ci]: ui-kit publish ([b2a83c4](https://github.com/coveo/ui-kit/commits/b2a83c4))
