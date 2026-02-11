@@ -1,5 +1,10 @@
 import {
+  buildBreadcrumbManager,
+  buildFacetManager,
+  buildQuerySummary,
   buildSearchStatus,
+  buildSort,
+  buildTabManager,
   type SearchStatus,
   type SearchStatusState,
 } from '@coveo/headless';
@@ -7,8 +12,13 @@ import {html} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {userEvent} from 'vitest/browser';
 import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
+import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/breadcrumb-manager';
 import {buildFakeSearchEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/search/engine';
+import {buildFakeFacetManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/facet-manager';
 import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/search/search-status-controller';
+import {buildFakeSort} from '@/vitest-utils/testing-helpers/fixtures/headless/search/sort-controller';
+import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/search/summary-controller';
+import {buildFakeTabManager} from '@/vitest-utils/testing-helpers/fixtures/headless/search/tab-manager-controller';
 import type {AtomicRefineToggle} from './atomic-refine-toggle';
 import './atomic-refine-toggle';
 
@@ -34,7 +44,17 @@ describe('atomic-refine-toggle', () => {
       ...searchStatusState,
     });
 
+    // Mock controllers used by atomic-refine-toggle
     vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
+
+    // Mock controllers used by atomic-refine-modal (which is dynamically created)
+    vi.mocked(buildBreadcrumbManager).mockReturnValue(
+      buildFakeBreadcrumbManager()
+    );
+    vi.mocked(buildSort).mockReturnValue(buildFakeSort());
+    vi.mocked(buildQuerySummary).mockReturnValue(buildFakeSummary());
+    vi.mocked(buildFacetManager).mockReturnValue(buildFakeFacetManager());
+    vi.mocked(buildTabManager).mockReturnValue(buildFakeTabManager());
 
     const {element} = await renderInAtomicSearchInterface<AtomicRefineToggle>({
       template: html`<atomic-refine-toggle
@@ -43,6 +63,9 @@ describe('atomic-refine-toggle', () => {
       selector: 'atomic-refine-toggle',
       bindings: (bindings) => {
         bindings.engine = mockedEngine;
+        bindings.store.getFacetElements = () => [];
+        bindings.store.getAllFacets = () => ({});
+        bindings.store.state.sortOptions = [];
         return bindings;
       },
     });

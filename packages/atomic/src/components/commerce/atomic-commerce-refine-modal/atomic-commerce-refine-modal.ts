@@ -31,6 +31,7 @@ import {renderRefineModal} from '../../common/refine-modal/modal';
 import {renderRefineModalSortSection} from '../../common/refine-modal/sort';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {getSortByLabel, renderCommerceSortOption} from '../sort/option';
+import '@/src/components/commerce/atomic-commerce-facets/atomic-commerce-facets';
 
 /**
  * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.

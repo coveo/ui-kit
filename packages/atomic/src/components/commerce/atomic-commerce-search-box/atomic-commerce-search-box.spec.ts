@@ -575,6 +575,17 @@ describe('atomic-commerce-search-box', () => {
   });
 
   describe('when the search box is a standalone search box', () => {
+    it('should not throw when redirectionUrl changes before the search box initializes', async () => {
+      updateRedirectUrlMock.mockClear();
+      const element = document.createElement(
+        'atomic-commerce-search-box'
+      ) as AtomicCommerceSearchBox;
+
+      element.watchRedirectionUrl();
+
+      expect(updateRedirectUrlMock).not.toHaveBeenCalled();
+    });
+
     it('should initialize the standalone search box controller with the correct options', async () => {
       await renderSearchBox({
         searchBoxProps: {redirectionUrl: '/search'},

@@ -1,3 +1,10 @@
+## <small>3.36.3 (2026-02-04)</small>
+
+* docs(quantic): vale language fixes (#6857) ([26448b5](https://github.com/coveo/ui-kit/commits/26448b5)), closes [#6857](https://github.com/coveo/ui-kit/issues/6857)
+* doc(quantic): link fix (#7033) ([916308c](https://github.com/coveo/ui-kit/commits/916308c)), closes [#7033](https://github.com/coveo/ui-kit/issues/7033)
+
+
+
 ## <small>3.36.1 (2026-01-28)</small>
 
 * feat(quantic): Added properties and slot to quanticCitation for actionable citations (#6952) ([94c6df1](https://github.com/coveo/ui-kit/commits/94c6df1)), closes [#6952](https://github.com/coveo/ui-kit/issues/6952)

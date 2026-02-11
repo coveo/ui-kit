@@ -10,7 +10,7 @@ import {
   initialAnswerGenerationServerState,
 } from '../../answer-generation-api-state.js';
 import {streamAnswerWithStrategy} from '../../streaming/answer-streaming-runner.js';
-import {streamingStrategies} from '../../streaming/strategies/streaming-strategies.js';
+import {streamingStrategyCreators} from '../../streaming/strategies/streaming-strategy-creators.js';
 import {buildAnswerEndpointUrl} from './url-builders/endpoint-url-builder.js';
 
 /**
@@ -60,7 +60,7 @@ export const answerEndpoint = answerGenerationApi.injectEndpoints({
             updateCachedData,
             dispatch,
           },
-          streamingStrategies[strategyKey]
+          streamingStrategyCreators[strategyKey]?.()
         );
       },
     }),
@@ -72,4 +72,18 @@ export const answerEndpoint = answerGenerationApi.injectEndpoints({
  */
 export const initiateAnswerEndpoint = (args: AnswerEndpointArgs) => {
   return answerEndpoint.endpoints.generateAnswer.initiate(args);
+};
+
+/**
+ * Selects the cached answer generation data for the specified query parameters from the state.
+ *
+ * @param args - The answer endpoint arguments including strategy and parameters.
+ * @param state - The current answer generation API state.
+ * @returns The cached answer generation query result.
+ */
+export const selectAnswer = (
+  args: AnswerEndpointArgs,
+  state: AnswerGenerationApiState
+) => {
+  return answerEndpoint.endpoints.generateAnswer.select(args)(state);
 };

@@ -48,7 +48,11 @@ interface GeneratedAnswerCommonOptions {
 export class GeneratedAnswerCommon {
   private storage: SafeStorage = new SafeStorage();
   private _data: GeneratedAnswerData;
-  private modalRef?: HTMLAtomicGeneratedAnswerFeedbackModalElement;
+  private modalRef?: HTMLElement & {
+    generatedAnswer?: GeneratedAnswer;
+    isOpen?: boolean;
+    helpful?: boolean;
+  };
 
   constructor(private props: GeneratedAnswerCommonOptions) {
     this._data = this.readStoredData();
