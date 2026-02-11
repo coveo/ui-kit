@@ -2,6 +2,7 @@ import {
   type BreadcrumbManager,
   type BreadcrumbManagerState,
   buildBreadcrumbManager,
+  buildQuerySummary,
   buildSearchStatus,
   type SearchStatus,
   type SearchStatusState,
@@ -12,6 +13,7 @@ import {userEvent} from 'vitest/browser';
 import {renderInAtomicInsightInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/insight/atomic-insight-interface-fixture';
 import {buildFakeBreadcrumbManager} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/breadcrumb-manager';
 import {buildFakeInsightEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/engine';
+import {buildFakeQuerySummary} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/query-summary-controller';
 import {buildFakeSearchStatus} from '@/vitest-utils/testing-helpers/fixtures/headless/insight/search-status-controller';
 import type {AtomicInsightRefineToggle} from './atomic-insight-refine-toggle';
 import './atomic-insight-refine-toggle';
@@ -43,8 +45,12 @@ describe('atomic-insight-refine-toggle', () => {
       state: breadcrumbManagerState,
     });
 
+    // Mock controllers used by atomic-insight-refine-toggle
     vi.mocked(buildSearchStatus).mockReturnValue(mockedSearchStatus);
     vi.mocked(buildBreadcrumbManager).mockReturnValue(mockedBreadcrumbManager);
+
+    // Mock controllers used by atomic-insight-refine-modal (which is dynamically created)
+    vi.mocked(buildQuerySummary).mockReturnValue(buildFakeQuerySummary());
 
     const {element} =
       await renderInAtomicInsightInterface<AtomicInsightRefineToggle>({
@@ -52,6 +58,7 @@ describe('atomic-insight-refine-toggle', () => {
         selector: 'atomic-insight-refine-toggle',
         bindings: (bindings) => {
           bindings.engine = mockedEngine;
+          bindings.store.getFacetElements = () => [];
           return bindings;
         },
       });

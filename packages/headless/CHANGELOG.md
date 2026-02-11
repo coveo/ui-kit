@@ -1,3 +1,14 @@
+## 3.43.0 (2026-02-11)
+
+* fix(deps): update dependency @coveo/relay to v1.2.15 j:kit-282 (#7052) ([a614dca](https://github.com/coveo/ui-kit/commits/a614dca)), closes [#7052](https://github.com/coveo/ui-kit/issues/7052)
+* feat(atomic): made renderAnswerContent responsible of only displaying a single answer (#7077) ([4787a57](https://github.com/coveo/ui-kit/commits/4787a57)), closes [#7077](https://github.com/coveo/ui-kit/issues/7077)
+* feat(headless): added redux analytics actions for attach citations feature (#6805) ([1e19331](https://github.com/coveo/ui-kit/commits/1e19331)), closes [#6805](https://github.com/coveo/ui-kit/issues/6805)
+* feat(headless): creation of Generate Answer Listener Middleware (#7038) ([e2fa794](https://github.com/coveo/ui-kit/commits/e2fa794)), closes [#7038](https://github.com/coveo/ui-kit/issues/7038)
+* feat(headless): generated answer with follow ups controller created (#7037) ([3c4ef70](https://github.com/coveo/ui-kit/commits/3c4ef70)), closes [#7037](https://github.com/coveo/ui-kit/issues/7037)
+* feat(headless): implement Commerce Redirect endpoint for standalone search box COMHUB2-1211 (#7071) ([d0485ee](https://github.com/coveo/ui-kit/commits/d0485ee)), closes [#7071](https://github.com/coveo/ui-kit/issues/7071)
+
+
+
 ## <small>3.42.1 (2026-02-04)</small>
 
 * feat(headless commerce): implement events for Spotlight Content for Search COMHUB2-1374 (#7039) ([bcc6137](https://github.com/coveo/ui-kit/commits/bcc6137)), closes [#7039](https://github.com/coveo/ui-kit/issues/7039)
