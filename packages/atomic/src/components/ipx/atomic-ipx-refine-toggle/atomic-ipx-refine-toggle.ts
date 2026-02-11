@@ -8,7 +8,6 @@ import {
 } from '@coveo/headless';
 import {css, html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {when} from 'lit/directives/when.js';
 import {renderIconButton} from '@/src/components/common/icon-button';
 import type {Bindings} from '@/src/components/search/atomic-search-interface/atomic-search-interface';
 import {bindStateToController} from '@/src/decorators/bind-state';
@@ -18,7 +17,7 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import FilterIcon from '../../../images/filter.svg';
-import '@/src/components/ipx/atomic-ipx-refine-modal/atomic-ipx-refine-modal';
+// import '@/src/components/ipx/atomic-ipx-refine-modal/atomic-ipx-refine-modal'; // TODO: uncomment when KIT-5352 is done
 
 /**
  * The `atomic-ipx-refine-toggle` component displays a button that, when clicked, opens a refine modal containing facets.
@@ -76,6 +75,7 @@ export class AtomicIpxRefineToggle
   public searchStatus!: SearchStatus;
 
   private modalRef?: HTMLAtomicIpxRefineModalElement;
+  private buttonRef?: HTMLButtonElement;
 
   private get numberOfBreadcrumbs(): number {
     const state = this.breadcrumbManagerState;
@@ -116,12 +116,7 @@ export class AtomicIpxRefineToggle
       );
     }
 
-    if (!this.modalRef.openButton) {
-      const button = this.renderRoot.querySelector('button');
-      if (button) {
-        this.modalRef.openButton = button;
-      }
-    }
+    this.modalRef.openButton = this.buttonRef;
     this.modalRef.collapseFacetsAfter = this.collapseFacetsAfter;
   }
 
@@ -148,10 +143,15 @@ export class AtomicIpxRefineToggle
           !this.searchStatusState.hasResults && !this.numberOfBreadcrumbs,
         ariaLabel: this.bindings.i18n.t('filters'),
         onClick: () => this.handleClick(),
-        badge: when(
-          this.breadcrumbManagerState.hasBreadcrumbs,
-          () => html`<slot>${this.numberOfBreadcrumbs.toString()}</slot>`
-        ),
+        buttonRef: (button) => {
+          if (!button) {
+            return;
+          }
+          this.buttonRef = button as HTMLButtonElement;
+        },
+        badge: this.breadcrumbManagerState.hasBreadcrumbs
+          ? html`<slot>${this.numberOfBreadcrumbs}</slot>`
+          : undefined,
       },
     });
   }
