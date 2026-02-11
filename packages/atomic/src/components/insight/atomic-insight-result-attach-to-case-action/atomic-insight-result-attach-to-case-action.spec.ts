@@ -129,16 +129,16 @@ describe('atomic-insight-result-attach-to-case-action', () => {
   });
 
   describe('when not attached', () => {
-    it('should have attach-to-case as title', async () => {
+    it('should have "Attach to case" as title', async () => {
       const {button} = await renderComponent({isAttached: false});
-      await expect.element(button).toHaveAttribute('title', 'attach-to-case');
+      await expect.element(button).toHaveAttribute('title', 'Attach to case');
     });
 
-    it('should have attach-to-case as aria-label', async () => {
+    it('should have "Attach to case" as aria-label', async () => {
       const {button} = await renderComponent({isAttached: false});
       await expect
         .element(button)
-        .toHaveAttribute('aria-label', 'attach-to-case');
+        .toHaveAttribute('aria-label', 'Attach to case');
     });
 
     it('should emit atomic/insight/attachToCase/attach event when clicked', async () => {
@@ -166,16 +166,16 @@ describe('atomic-insight-result-attach-to-case-action', () => {
   });
 
   describe('when attached', () => {
-    it('should have detach-from-case as title', async () => {
+    it('should have "Detach from case" as title', async () => {
       const {button} = await renderComponent({isAttached: true});
-      await expect.element(button).toHaveAttribute('title', 'detach-from-case');
+      await expect.element(button).toHaveAttribute('title', 'Detach from case');
     });
 
-    it('should have detach-from-case as aria-label', async () => {
+    it('should have "Detach from case" as aria-label', async () => {
       const {button} = await renderComponent({isAttached: true});
       await expect
         .element(button)
-        .toHaveAttribute('aria-label', 'detach-from-case');
+        .toHaveAttribute('aria-label', 'Detach from case');
     });
 
     it('should emit atomic/insight/attachToCase/detach event when clicked', async () => {
