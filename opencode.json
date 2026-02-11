@@ -8,22 +8,8 @@
   ],
   "formatter": {
     "biome": {
-      "command": [
-        "pnpm",
-        "exec",
-        "biome",
-        "check",
-        "--write",
-        "$FILE"
-      ],
-      "extensions": [
-        ".js",
-        ".ts",
-        ".jsx",
-        ".tsx",
-        ".json",
-        ".jsonc"
-      ]
+      "command": ["pnpm", "exec", "biome", "check", "--write", "$FILE"],
+      "extensions": [".js", ".ts", ".jsx", ".tsx", ".json", ".jsonc"]
     }
   },
   "mcp": {
@@ -39,10 +25,7 @@
     },
     "playwright": {
       "type": "local",
-      "command": [
-        "npx",
-        "@playwright/mcp"
-      ],
+      "command": ["npx", "@playwright/mcp"],
       "enabled": true
     },
     "context7": {
