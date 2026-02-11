@@ -75,6 +75,7 @@ describe('atomic-generated-answer', () => {
           .collapsible=${props.collapsible ?? false}
           .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
           .answerConfigurationId=${props.answerConfigurationId}
+          .agentId=${props.agentId}
           fields-to-include-in-citations=${props.fieldsToIncludeInCitations}
           .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
           .tabsIncluded=${props.tabsIncluded ?? []}
@@ -105,6 +106,11 @@ describe('atomic-generated-answer', () => {
       },
       get generatedContent() {
         return element.shadowRoot?.querySelector('[part="generated-content"]')!;
+      },
+      get generatedContentContainer() {
+        return element.shadowRoot?.querySelector(
+          '[part="generated-content-container"]'
+        );
       },
       get feedbackButtons() {
         return element.shadowRoot?.querySelectorAll(
@@ -233,6 +239,7 @@ describe('atomic-generated-answer', () => {
             .collapsible=${props.collapsible ?? false}
             .disableCitationAnchoring=${props.disableCitationAnchoring ?? false}
             .answerConfigurationId=${props.answerConfigurationId}
+            .agentId=${props.agentId}
             fields-to-include-in-citations=${props.fieldsToIncludeInCitations}
             .maxCollapsedHeight=${props.maxCollapsedHeight ?? 16}
             .tabsIncluded=${props.tabsIncluded ?? []}
@@ -618,6 +625,32 @@ describe('atomic-generated-answer', () => {
     });
 
     await expect.element(showMoreButton).toBeInTheDocument();
+  });
+
+  describe('when agentId is provided', () => {
+    it('should render a scrollable content container', async () => {
+      const {generatedContentContainer} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123'},
+        generatedAnswerState: {
+          isVisible: true,
+          answer: 'Test answer',
+        },
+      });
+
+      expect(generatedContentContainer).toHaveClass('agent-scrollable');
+    });
+
+    it('should not render show more button even when collapsible is true', async () => {
+      const {showMoreButton} = await renderGeneratedAnswer({
+        props: {agentId: 'agent-123', collapsible: true},
+        generatedAnswerState: {
+          isVisible: true,
+          answer: 'A'.repeat(1000),
+        },
+      });
+
+      expect(showMoreButton).not.toBeInTheDocument();
+    });
   });
 
   it('should toggle visibility when toggle is clicked when toggle is activated and deactivated', async () => {

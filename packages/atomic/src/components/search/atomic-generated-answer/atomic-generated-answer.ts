@@ -13,6 +13,7 @@ import {
 } from '@coveo/headless';
 import {html, LitElement, nothing, type PropertyValueMap} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {classMap} from 'lit/directives/class-map.js';
 import {when} from 'lit/directives/when.js';
 import {GeneratedAnswerController} from '@/src/components/common/generated-answer/generated-answer-controller';
 import {renderAnswerContent} from '@/src/components/common/generated-answer/render-answer-content';
@@ -141,6 +142,12 @@ export class AtomicGeneratedAnswer
    */
   @property({type: String, attribute: 'answer-configuration-id'})
   answerConfigurationId?: string;
+
+  /**
+   * The unique identifier of the agent used to render the generated answer with a fixed height and scrollable content.
+   */
+  @property({type: String, attribute: 'agent-id'})
+  agentId?: string;
 
   /**
    * A list of fields to include with the citations used to generate the answer.
@@ -274,7 +281,7 @@ export class AtomicGeneratedAnswer
 
     this.controller.insertFeedbackModal();
 
-    if (window.ResizeObserver && this.collapsible) {
+    if (window.ResizeObserver && this.isCollapsibleEnabled) {
       const debouncedAdaptAnswerHeight = debounce(
         () => this.adaptAnswerHeight(),
         100
@@ -315,7 +322,8 @@ export class AtomicGeneratedAnswer
       ) as GeneratedAnswerState | undefined;
       if (
         oldState &&
-        this.generatedAnswerState?.expanded !== oldState?.expanded
+        this.generatedAnswerState?.expanded !== oldState?.expanded &&
+        this.isCollapsibleEnabled
       ) {
         const container = this.getAnswerContainer();
         if (container) {
@@ -326,6 +334,14 @@ export class AtomicGeneratedAnswer
           );
         }
       }
+    }
+
+    if (
+      (changedProperties.has('collapsible' as keyof this) ||
+        changedProperties.has('agentId' as keyof this)) &&
+      !this.isCollapsibleEnabled
+    ) {
+      this.resetCollapsibleStyles();
     }
   }
 
@@ -384,7 +400,14 @@ export class AtomicGeneratedAnswer
             ${when(
               this.isAnswerVisible,
               () =>
-                html` <div part="generated-content-container" class="px-6 pb-6">
+                html` <div
+                  part="generated-content-container"
+                  class=${classMap({
+                    'px-6': true,
+                    'pb-6': true,
+                    'agent-scrollable': this.hasAgentId,
+                  })}
+                >
                   <article>${this.renderAnswerContent()}</article>
                   ${renderDisclaimer({
                     props: {
@@ -494,6 +517,9 @@ export class AtomicGeneratedAnswer
   }
 
   private adaptAnswerHeight() {
+    if (!this.isCollapsibleEnabled) {
+      return;
+    }
     const answerHeight = this.shadowRoot
       ?.querySelector('[part="generated-text"]')
       ?.getBoundingClientRect().height;
@@ -525,6 +551,9 @@ export class AtomicGeneratedAnswer
   }
 
   private updateAnswerHeight() {
+    if (!this.isCollapsibleEnabled) {
+      return;
+    }
     const container = this.getAnswerContainer() as HTMLElement;
     const footer = this.getAnswerFooter();
     const maxHeight = this.validateMaxCollapsedHeight();
@@ -607,7 +636,7 @@ export class AtomicGeneratedAnswer
       props: {
         i18n: this.bindings.i18n,
         generatedAnswer: generatedAnswer,
-        collapsible: this.collapsible,
+        collapsible: this.isCollapsibleEnabled,
         renderFeedbackAndCopyButtonsSlot: () =>
           this.renderFeedbackAndCopyButtonsWrapper(),
         renderCitationsSlot: () => html`${this.renderCitationsList()}`,
@@ -615,6 +644,27 @@ export class AtomicGeneratedAnswer
         onClickShowButton: () => this.clickOnShowButton(),
       },
     });
+  }
+
+  private get hasAgentId() {
+    return Boolean(this.agentId?.trim());
+  }
+
+  private get isCollapsibleEnabled() {
+    return this.collapsible && !this.hasAgentId;
+  }
+
+  private resetCollapsibleStyles() {
+    const container = this.getAnswerContainer();
+    const footer = this.getAnswerFooter();
+
+    if (!container || !footer) {
+      return;
+    }
+
+    this.toggleClass(container, 'answer-collapsed', false);
+    this.toggleClass(footer, 'is-collapsible', false);
+    this.toggleClass(footer, 'generating-label-visible', false);
   }
 
   private renderCardHeaderWrapper() {
