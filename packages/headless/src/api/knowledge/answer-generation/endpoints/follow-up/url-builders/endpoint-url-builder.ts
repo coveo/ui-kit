@@ -15,9 +15,10 @@ export const buildFollowUpEndpointUrl = (
   } = configuration;
   const platformEndpoint = getOrganizationEndpoint(organizationId, environment);
 
-  if (!platformEndpoint || !organizationId || !agentId) {
+  const trimmedAgentId = agentId?.trim();
+  if (!platformEndpoint || !organizationId || !trimmedAgentId) {
     throw new Error('Missing required parameters for follow up endpoint');
   }
   const basePath = `/api/preview/organizations/${organizationId}/agents`;
-  return `${platformEndpoint}${basePath}/${agentId}/followup`;
+  return `${platformEndpoint}${basePath}/${trimmedAgentId}/followup`;
 };

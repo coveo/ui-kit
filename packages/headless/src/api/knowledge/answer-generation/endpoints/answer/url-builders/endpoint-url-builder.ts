@@ -15,9 +15,10 @@ export const buildAnswerEndpointUrl = (
   } = configuration;
   const platformEndpoint = getOrganizationEndpoint(organizationId, environment);
 
-  if (!platformEndpoint || !organizationId || !agentId) {
+  const trimmedAgentId = agentId?.trim();
+  if (!platformEndpoint || !organizationId || !trimmedAgentId) {
     throw new Error('Missing required parameters for answer endpoint');
   }
   const basePath = `/api/preview/organizations/${organizationId}/agents`;
-  return `${platformEndpoint}${basePath}/${agentId}/answer`;
+  return `${platformEndpoint}${basePath}/${trimmedAgentId}/answer`;
 };
