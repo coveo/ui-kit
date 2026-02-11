@@ -138,7 +138,7 @@ describe('atomic-ipx-refine-toggle', () => {
       const {parts, element} = await renderRefineToggle({
         searchStatusState: {hasResults: true},
       });
-      expect(parts(element).button?.getAttribute('aria-label')).toBe('Sort');
+      expect(parts(element).button?.getAttribute('aria-label')).toBe('Filters');
     });
 
     it('should render the button with correct title', async () => {
