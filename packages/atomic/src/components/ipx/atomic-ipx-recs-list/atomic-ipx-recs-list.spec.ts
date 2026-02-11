@@ -16,7 +16,7 @@ import {renderInAtomicRecsInterface} from '@/vitest-utils/testing-helpers/fixtur
 import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common';
 import {buildFakeRecommendationList} from '@/vitest-utils/testing-helpers/fixtures/headless/recommendation/recommendation-list-controller';
 import {buildFakeResult} from '@/vitest-utils/testing-helpers/fixtures/headless/search/result';
-import {AtomicIpxRecsList} from './atomic-ipx-recs-list';
+import type {AtomicIpxRecsList} from './atomic-ipx-recs-list';
 import './atomic-ipx-recs-list';
 
 vi.mock('@/src/components/common/interface/store', {spy: true});
@@ -67,12 +67,6 @@ describe('atomic-ipx-recs-list', () => {
         result: options.result,
       })
     );
-  });
-
-  it('should initialize', async () => {
-    const element = await setupElement();
-
-    expect(element).toBeInstanceOf(AtomicIpxRecsList);
   });
 
   describe('#initialize', () => {

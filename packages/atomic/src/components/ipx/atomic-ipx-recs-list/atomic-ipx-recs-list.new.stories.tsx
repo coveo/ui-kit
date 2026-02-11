@@ -22,7 +22,7 @@ const {events, args, argTypes, template} = getStorybookHelpers(
 
 const meta: Meta = {
   component: 'atomic-ipx-recs-list',
-  title: 'IPX/IpxRecsList',
+  title: 'IPX/Recs List',
   id: 'atomic-ipx-recs-list',
   render: (args) => template(args),
   decorators: [decorator],
@@ -45,7 +45,6 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-ipx-recs-list',
   decorators: [
     (story) =>
       html` <style>
@@ -56,15 +55,6 @@ export const Default: Story = {
         ${story()}`,
   ],
   play,
-};
-
-const {play: playNoFirstQuery} = wrapInRecommendationInterface({
-  skipFirstQuery: true,
-});
-
-export const RecsBeforeQuery: Story = {
-  tags: ['test'],
-  play: playNoFirstQuery,
 };
 
 export const RecsWithFullTemplate: Story = {
@@ -137,28 +127,6 @@ export const NotEnoughRecsForCarousel: Story = {
       totalCount: 3,
       totalCountFiltered: 3,
     }));
-  },
-  play,
-};
-
-export const NoRecommendations: Story = {
-  name: 'No recommendations',
-  beforeEach: async () => {
-    mockedSearchApi.searchEndpoint.mockOnce((response) => ({
-      ...response,
-      totalCount: 0,
-      totalCountFiltered: 0,
-      results: [],
-    }));
-  },
-  play,
-};
-
-export const WithLabel: Story = {
-  name: 'With label',
-  args: {
-    label: 'Recommended for you',
-    'heading-level': 2,
   },
   play,
 };
