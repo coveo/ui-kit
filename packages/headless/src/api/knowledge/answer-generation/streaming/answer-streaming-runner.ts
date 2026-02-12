@@ -50,6 +50,7 @@ export const streamAnswerWithStrategy = <
       Accept: 'text/event-stream',
       'Content-Type': 'application/json',
       'Accept-Encoding': '*',
+      'X-POC-INSTANCE': 'KEPLER',
     },
     fetch,
     onopen: async (response) => {
