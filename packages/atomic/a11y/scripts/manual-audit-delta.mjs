@@ -34,12 +34,23 @@ const VALID_SURFACES = new Set([
 const VALID_STATUSES = new Set(['pass', 'fail', 'partial', 'not-applicable']);
 
 const VALID_WCAG_KEYS = new Set([
+  // Evaluated by manual audit script (keyboard/focus/target-size tests)
   '2.4.11-focus-not-obscured',
   '2.5.7-dragging-movements',
   '2.5.8-target-size',
   '3.2.6-consistent-help',
   '3.3.7-redundant-entry',
   '3.3.8-accessible-auth',
+  // Evaluated by AI audit agent (ai-wcag-audit.mjs)
+  '1.3.2-meaningful-sequence',
+  '1.3.3-sensory-characteristics',
+  '1.3.4-orientation',
+  '1.4.5-images-of-text',
+  '1.4.10-reflow',
+  '1.4.11-non-text-contrast',
+  '1.4.13-content-on-hover-focus',
+  '3.3.3-error-suggestion',
+  '3.3.4-error-prevention',
 ]);
 
 function isRecord(value) {
