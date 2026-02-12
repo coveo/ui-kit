@@ -1,4 +1,3 @@
-import type {GeneratedAnswerState} from '@coveo/headless';
 import type {i18n} from 'i18next';
 import {html, nothing} from 'lit';
 import {classMap} from 'lit/directives/class-map.js';
@@ -8,9 +7,16 @@ import {renderFeedbackButton} from '@/src/components/common/generated-answer/fee
 import type {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {hasClipboardSupport} from './generated-answer-utils';
 
+interface GeneratedAnswerActionsState {
+  liked: boolean;
+  disliked: boolean;
+  isStreaming?: boolean;
+  answer?: string;
+}
+
 export interface RenderFeedbackAndCopyButtonsProps {
   i18n: i18n;
-  generatedAnswerState: GeneratedAnswerState | undefined;
+  generatedAnswerActionsState: GeneratedAnswerActionsState;
   copied: boolean;
   copyError: boolean;
   getCopyToClipboardTooltip: () => string;
@@ -27,7 +33,7 @@ export const renderFeedbackAndCopyButtons: FunctionalComponent<
 > = ({props}) => {
   const {
     i18n,
-    generatedAnswerState,
+    generatedAnswerActionsState,
     copied,
     copyError,
     getCopyToClipboardTooltip,
@@ -36,7 +42,8 @@ export const renderFeedbackAndCopyButtons: FunctionalComponent<
     onCopyToClipboard,
   } = props;
 
-  const {liked, disliked, answer, isStreaming} = generatedAnswerState ?? {};
+  const {liked, disliked, answer, isStreaming} =
+    generatedAnswerActionsState ?? {};
 
   return html`${when(
     !isStreaming,
