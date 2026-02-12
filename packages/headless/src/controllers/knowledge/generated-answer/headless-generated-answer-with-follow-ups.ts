@@ -6,11 +6,19 @@ import {
 import type {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import type {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {setAgentId} from '../../../features/configuration/configuration-actions.js';
-import {generateFollowUpAnswer} from '../../../features/follow-up-answers/follow-up-answers-actions.js';
+import {
+  dislikeFollowUp,
+  generateFollowUpAnswer,
+  likeFollowUp,
+} from '../../../features/follow-up-answers/follow-up-answers-actions.js';
 import {followUpAnswersReducer as followUpAnswers} from '../../../features/follow-up-answers/follow-up-answers-slice.js';
 import type {FollowUpAnswersState} from '../../../features/follow-up-answers/follow-up-answers-state.js';
 import {selectAnswerApiQueryParams} from '../../../features/generated-answer/answer-api-selectors.js';
-import {generateHeadAnswer} from '../../../features/generated-answer/generated-answer-actions.js';
+import {
+  dislikeGeneratedAnswer,
+  generateHeadAnswer,
+  likeGeneratedAnswer,
+} from '../../../features/generated-answer/generated-answer-actions.js';
 import type {GeneratedAnswerState} from '../../../index.js';
 import type {
   FollowUpAnswersSection,
@@ -38,6 +46,10 @@ export interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
    * @param question - The follow-up question to ask.
    */
   askFollowUp(question: string): void;
+  like(): void;
+  like(answerId: string): void;
+  dislike(): void;
+  dislike(answerId: string): void;
 }
 
 /**
@@ -114,6 +126,20 @@ export function buildGeneratedAnswerWithFollowUps(
     },
     askFollowUp(question: string) {
       engine.dispatch(generateFollowUpAnswer(question));
+    },
+    like(answerId?: string) {
+      if (!answerId || this.state.answerId === answerId) {
+        engine.dispatch(likeGeneratedAnswer());
+        return;
+      }
+      engine.dispatch(likeFollowUp({answerId: answerId}));
+    },
+    dislike(answerId?: string) {
+      if (!answerId || this.state.answerId === answerId) {
+        engine.dispatch(dislikeGeneratedAnswer());
+        return;
+      }
+      engine.dispatch(dislikeFollowUp({answerId: answerId}));
     },
   };
 }
