@@ -29,8 +29,7 @@ export interface AtomicAnswersThreadItemProps {
  *
  * @internal
  *
- * @slot status - The status content (e.g., thinking/elapsed time) provided by the parent.
- * @slot (default) - The content rendered when the item is expanded.
+ * @slot - The content rendered when the item is expanded.
  */
 @customElement('atomic-answers-thread-item')
 @withTailwindStyles
@@ -151,15 +150,6 @@ export class AtomicAnswersThreadItem extends LitElement {
                   'font-semibold': this.isExpanded,
                   'font-normal': !this.isExpanded,
                 })}>${this.title}</span>`
-            )}
-            ${when(
-              this.isExpanded,
-              () => html`
-                <span class="text-sm text-neutral-dark pl-2 ml-1">
-                  <slot name="status"></slot>
-                </span>
-              `,
-              () => nothing
             )}
           </div>
         </div>

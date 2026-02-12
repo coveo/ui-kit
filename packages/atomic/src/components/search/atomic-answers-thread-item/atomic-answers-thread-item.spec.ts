@@ -30,8 +30,6 @@ describe('#atomic-answers-thread-item', () => {
         timelineLine: element.shadowRoot?.querySelector('span.w-px') ?? null,
         titleButton: element.shadowRoot?.querySelector('button') ?? null,
         content: element.shadowRoot?.querySelector('div[aria-hidden]') ?? null,
-        statusSlot:
-          element.shadowRoot?.querySelector('slot[name="status"]') ?? null,
       }),
     };
   };
@@ -112,29 +110,6 @@ describe('#atomic-answers-thread-item', () => {
     expect(titleButton).toHaveAttribute('aria-expanded', 'true');
     expect(content).toHaveAttribute('aria-hidden', 'false');
     expect(content).not.toHaveAttribute('hidden');
-  });
-
-  it('should render status slot only when expanded', async () => {
-    const statusSlot = html`<span slot="status">Thinking...</span>`;
-    const {locators: collapsedLocators} = await renderComponent(
-      {
-        isCollapsible: true,
-        isExpanded: false,
-      },
-      statusSlot
-    );
-
-    expect(collapsedLocators().statusSlot).toBeNull();
-
-    const {locators: expandedLocators} = await renderComponent(
-      {
-        isCollapsible: true,
-        isExpanded: true,
-      },
-      statusSlot
-    );
-
-    expect(expandedLocators().statusSlot).toBeInTheDocument();
   });
 
   it('should render content when content slot is provided', async () => {
