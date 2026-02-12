@@ -49,7 +49,7 @@
   ],
   "scripts": {
     "clean": "node ../../utils/ci/rm-rf.mjs dist/* dist-storybook/* www/* docs/* playwright-report/*",
-    "build:storybook": "storybook build -o dist-storybook --stats-json",
+    "build:storybook": "storybook build -o dist-storybook --stats-json && node scripts/docs-wrapper/generate.mjs",
     "build:cem": "cem analyze",
     "build:stencil-lit": "pnpm exec node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json && node ./scripts/stencil-proxy.mjs && node ./scripts/build.mjs --config=tsconfig.lit.json && esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js && esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js && node ../../utils/ci/rm-rf.mjs ./dist/atomic/loader/package.json && tsc --project tsconfig.validate-types.json",
     "build:cdn": "rollup -c rollup.config.js",
