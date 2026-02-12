@@ -9,18 +9,13 @@ type PayloadType =
   | 'genqa.headerMessageType'
   | 'genqa.messageType'
   | 'genqa.citationsType'
-  | 'genqa.endOfStreamType';
-
-/**
- * Represents a streaming message from the answer generation endpoint.
- */
-export interface Message {
-  payloadType: PayloadType;
-  payload: string;
-  finishReason?: string;
-  errorMessage?: string;
-  code?: number;
-}
+  | 'genqa.endOfStreamType'
+  | 'agentInteraction.answerHeader'
+  | 'agentInteraction.answerHeader'
+  | 'generativeengines.messageType'
+  | 'agentInteraction.citations'
+  | 'generativeengines.headerMessageType'
+  | 'generativeengines.endOfStreamType';
 
 /**
  * Event types including standard payload types and error events.
@@ -36,12 +31,18 @@ export interface StreamPayload {
   answerGenerated?: boolean;
   contentFormat?: GeneratedContentFormat;
   citations?: GeneratedAnswerCitation[];
+  conversationId?: string;
+  followUpEnabled?: boolean;
 }
 
-/**
- * Strategy interface for handling application-specific streaming events.
- * Defines handlers for connection lifecycle and message processing.
- */
+export interface Message {
+  payloadType: PayloadType;
+  payload: StreamPayload;
+  finishReason?: string;
+  errorMessage?: string;
+  code?: number;
+}
+
 export interface StreamingStrategy<TState> {
   handleOpen: (
     response: Response,

@@ -1,12 +1,13 @@
 import type {AnswerGenerationApiState} from '../../api/knowledge/answer-generation/answer-generation-api-state.js';
 import type {
+  // StreamingStrategy,
   StreamingStrategy,
-  StreamPayload,
+  // StreamPayload,
 } from '../../api/knowledge/answer-generation/streaming/types.js';
 import {
   followUpCitationsReceived,
   followUpCompleted,
-  followUpFailed,
+  // followUpFailed,
   followUpMessageChunkReceived,
   setActiveFollowUpAnswerId,
   setFollowUpAnswerContentFormat,
@@ -18,11 +19,17 @@ export const createFollowUpAnswerStrategy =
     let answerId: string | null = null;
 
     return {
-      handleOpen: (response, dispatch) => {
-        answerId = response.headers.get('x-answer-id');
+      handleOpen: (_response, dispatch) => {
+        answerId = Math.random().toString(36).substring(2, 15);
         if (answerId) {
           dispatch(setActiveFollowUpAnswerId(answerId));
           dispatch(setFollowUpIsLoading({answerId, isLoading: true}));
+          dispatch(
+            setFollowUpAnswerContentFormat({
+              contentFormat: 'text/markdown',
+              answerId: answerId!,
+            })
+          );
         }
       },
 
@@ -31,78 +38,55 @@ export const createFollowUpAnswerStrategy =
       },
 
       handleMessage: {
-        'genqa.headerMessageType': (message, dispatch) => {
-          const payload = parsePayload(message.payload);
-          if (payload.contentFormat) {
-            dispatch(
-              setFollowUpAnswerContentFormat({
-                contentFormat: payload.contentFormat,
-                answerId: answerId!,
-              })
-            );
-          }
-        },
-
-        'genqa.messageType': (message, dispatch) => {
-          const payload = parsePayload(message.payload);
-          if (payload.textDelta) {
-            dispatch(
-              followUpMessageChunkReceived({
-                textDelta: payload.textDelta,
-                answerId: answerId!,
-              })
-            );
-          }
-        },
-
-        'genqa.citationsType': (message, dispatch) => {
-          const payload = parsePayload(message.payload);
-          if (payload.citations !== undefined) {
-            dispatch(
-              followUpCitationsReceived({
-                citations: payload.citations,
-                answerId: answerId!,
-              })
-            );
-          }
-        },
-
-        'genqa.endOfStreamType': (message, dispatch) => {
-          const payload = parsePayload(message.payload);
+        'agentInteraction.answerHeader': (_message, dispatch) => {
           dispatch(
-            followUpCompleted({
-              cannotAnswer: !payload.answerGenerated,
+            setFollowUpAnswerContentFormat({
+              contentFormat: 'text/markdown',
               answerId: answerId!,
             })
           );
         },
-        error: (message, dispatch) => {
-          if (message.finishReason === 'ERROR') {
+
+        'generativeengines.headerMessageType': (_message, dispatch) => {
+          dispatch(
+            setFollowUpAnswerContentFormat({
+              contentFormat: 'text/markdown',
+              answerId: answerId!,
+            })
+          );
+        },
+
+        'generativeengines.messageType': (message, dispatch) => {
+          if (message?.payload?.textDelta) {
             dispatch(
-              followUpFailed({
+              followUpMessageChunkReceived({
+                textDelta: message.payload.textDelta,
                 answerId: answerId!,
-                message: message.errorMessage,
-                code: message.code,
               })
             );
           }
         },
+
+        'agentInteraction.citations': (message, dispatch) => {
+          if (message?.payload?.citations !== undefined) {
+            dispatch(
+              followUpCitationsReceived({
+                citations: message.payload.citations,
+                answerId: answerId!,
+              })
+            );
+          }
+        },
+
+        'generativeengines.endOfStreamType': (message, dispatch) => {
+          const answerGenerated = message?.payload?.answerGenerated ?? false;
+          dispatch(
+            followUpCompleted({
+              cannotAnswer: !answerGenerated,
+              answerId: answerId!,
+            })
+          );
+        },
       },
     };
   };
-
-function parsePayload(payload?: string): StreamPayload {
-  if (!payload?.length) {
-    return {};
-  }
-
-  try {
-    return JSON.parse(payload) as StreamPayload;
-  } catch (err) {
-    console.warn('Failed to parse stream payload', {
-      payload,
-      error: err,
-    });
-    return {};
-  }
-}
