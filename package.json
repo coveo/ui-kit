@@ -31,5 +31,6 @@
     "typescript": "^5.9.3"
   },
   "name": "relay",
-  "packageManager": "pnpm@10.28.2"
+  "packageManager": "pnpm@10.28.2",
+  "version": "3.0.1"
 }
