@@ -37,6 +37,7 @@ import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {debounce} from '@/src/utils/debounce-utils';
 import {getNamedSlotContent} from '@/src/utils/slot-utils';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
+import {renderFollowUpInput} from '../../common/generated-answer/render-follow-up-input.js';
 import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
 
 /**
@@ -278,11 +279,6 @@ export class AtomicGeneratedAnswer
       }),
       fieldsToIncludeInCitations: this.getCitationFields(),
     });
-    if (this.hasFollowUpsCapability()) {
-      setTimeout(() => {
-        this.generatedAnswer.askFollowUp('what is Coveo');
-      }, 3000);
-    }
 
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.tabManager = buildTabManager(this.bindings.engine);
@@ -401,6 +397,19 @@ export class AtomicGeneratedAnswer
               () =>
                 html` <div part="generated-content-container" class="px-6 pb-6">
                   <article>${this.renderAnswerContent()}</article>
+                  <div>${renderFollowUpInput({
+                    props: {
+                      i18n: this.bindings.i18n,
+                      askFollowUp: async (question: string) => {
+                        if (!this.hasFollowUpsCapability()) {
+                          throw new Error(
+                            'Follow-up questions are not supported by this controller.'
+                          );
+                        }
+                        return await this.generatedAnswer.askFollowUp(question);
+                      },
+                    },
+                  })}</div>
                   ${renderDisclaimer({
                     props: {
                       i18n: this.bindings.i18n,
