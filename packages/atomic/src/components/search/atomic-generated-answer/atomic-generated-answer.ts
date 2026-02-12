@@ -6,6 +6,7 @@ import {
   buildTabManager,
   type GeneratedAnswer,
   type GeneratedAnswerState,
+  type GeneratedAnswerWithFollowUps,
   type SearchStatus,
   type SearchStatusState,
   type TabManager,
@@ -215,7 +216,7 @@ export class AtomicGeneratedAnswer
   })
   @state()
   private generatedAnswerState!: GeneratedAnswerState;
-  public generatedAnswer!: GeneratedAnswer;
+  public generatedAnswer!: GeneratedAnswer | GeneratedAnswerWithFollowUps;
 
   @bindStateToController('searchStatus')
   @state()
@@ -277,6 +278,12 @@ export class AtomicGeneratedAnswer
       }),
       fieldsToIncludeInCitations: this.getCitationFields(),
     });
+    if (this.hasFollowUpsCapability()) {
+      setTimeout(() => {
+        this.generatedAnswer.askFollowUp('what is Coveo');
+      }, 3000);
+    }
+
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.tabManager = buildTabManager(this.bindings.engine);
 
@@ -422,6 +429,12 @@ export class AtomicGeneratedAnswer
 
     this.ariaMessage.message = this.controller.getGeneratedAnswerStatus();
   };
+
+  private hasFollowUpsCapability(): this is this & {
+    generatedAnswer: GeneratedAnswerWithFollowUps;
+  } {
+    return 'askFollowUp' in this.generatedAnswer;
+  }
 
   private get hasNoAnswerGenerated() {
     return this.controller.hasNoAnswerGenerated;
@@ -595,7 +608,7 @@ export class AtomicGeneratedAnswer
     return renderFeedbackAndCopyButtons({
       props: {
         i18n: this.bindings.i18n,
-        generatedAnswerState: this.generatedAnswerState,
+        generatedAnswerActionsState: this.generatedAnswerState,
         copied: this.copied,
         copyError: this.copyError,
         getCopyToClipboardTooltip: () => this.copyToClipboardTooltip,
