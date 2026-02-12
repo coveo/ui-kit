@@ -35,6 +35,7 @@ export const renderAnswerContent: FunctionalComponent<
     i18n,
     generatedAnswer,
     collapsible,
+    renderFeedbackAndCopyButtonsSlot,
     renderCitationsSlot,
     onRetry,
     onClickShowButton,
@@ -59,20 +60,23 @@ export const renderAnswerContent: FunctionalComponent<
       }
       ${
         !hasRetryableError
-          ? renderGeneratedContentContainer({
+          ? html`<div>
+            ${renderGeneratedContentContainer({
               props: {
                 answer,
                 answerContentFormat,
                 isStreaming: !!isStreaming,
               },
             })(html`
-            ${renderSourceCitations({
-              props: {
-                label: i18n.t('citations'),
-                isVisible: !!citations?.length,
-              },
-            })(renderCitationsSlot())}
-          `)
+              ${renderSourceCitations({
+                props: {
+                  label: i18n.t('citations'),
+                  isVisible: !!citations?.length,
+                },
+              })(renderCitationsSlot())}
+            `)}
+            <div class="mt-6">${renderFeedbackAndCopyButtonsSlot()}</div>
+          </div>`
           : nothing
       }
       ${

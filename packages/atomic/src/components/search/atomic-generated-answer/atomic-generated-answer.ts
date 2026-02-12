@@ -5,6 +5,7 @@ import {
   buildSearchStatus,
   buildTabManager,
   type GeneratedAnswer,
+  type GeneratedAnswerCitation,
   type GeneratedAnswerState,
   type GeneratedAnswerWithFollowUps,
   type GeneratedAnswerWithFollowUpsState,
@@ -39,6 +40,7 @@ import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {debounce} from '@/src/utils/debounce-utils';
 import {getNamedSlotContent} from '@/src/utils/slot-utils';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
+import type {GeneratedAnswer as TGeneratedAnswer} from '../../common/generated-answers-thread/generated-answers-thread.js';
 import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
 import '../../common/generated-answers-thread/generated-answers-thread.js';
 import {renderAnswerHeader} from '../../common/generated-answer/render-answer-header.js';
@@ -683,9 +685,7 @@ export class AtomicGeneratedAnswer
     this.controller.clickLike();
   }
 
-  private renderCitationsList() {
-    const {citations} = this.generatedAnswerState ?? {};
-
+  private renderCitationsList(citations: GeneratedAnswerCitation[]) {
     return renderCitations({
       props: {
         citations,
@@ -705,11 +705,11 @@ export class AtomicGeneratedAnswer
     });
   }
 
-  private renderFeedbackAndCopyButtonsWrapper() {
+  private renderFeedbackAndCopyButtonsWrapper(answer: TGeneratedAnswer) {
     return renderFeedbackAndCopyButtons({
       props: {
         i18n: this.bindings.i18n,
-        generatedAnswerState: this.generatedAnswerState,
+        generatedAnswer: answer,
         copied: this.copied,
         copyError: this.copyError,
         getCopyToClipboardTooltip: () => this.copyToClipboardTooltip,
@@ -721,42 +721,12 @@ export class AtomicGeneratedAnswer
   }
 
   private renderAnswerContent() {
-    const {
-      answerId,
-      isLoading,
-      isStreaming,
-      answer,
-      answerContentFormat,
-      citations,
-      error,
-      cannotAnswer,
-      liked,
-      disliked,
-      feedbackSubmitted,
-      expanded,
-    } = this.generatedAnswerState;
-
     const generatedAnswer = {
-      answerId,
-      isLoading,
-      isStreaming,
-      answer,
-      answerContentFormat,
-      citations,
-      error,
-      cannotAnswer,
-      isAnswerGenerated: !cannotAnswer,
-      liked,
-      disliked,
-      feedbackSubmitted,
+      ...this.generatedAnswerState,
       question: this.bindings.engine.state.query?.q ?? '',
-      expanded,
     };
 
-    const shouldDisplayAnswersInThread =
-      this.canAskFollowUp() &&
-      this.agentId &&
-      this.generatedAnswer.state.followUpAnswers.answers?.length;
+    const shouldDisplayAnswersInThread = this.canAskFollowUp() && this.agentId;
 
     if (shouldDisplayAnswersInThread) {
       const allGeneratedAnswers = [
@@ -768,9 +738,10 @@ export class AtomicGeneratedAnswer
         <generated-answers-thread
           .i18n=${this.bindings.i18n}
           .generatedAnswers=${allGeneratedAnswers}
-          .renderCitationsSlot=${() => html`${this.renderCitationsList()}`}
-          .renderFeedbackAndCopyButtonsSlot=${() =>
-            this.renderFeedbackAndCopyButtonsWrapper()}
+          .renderCitationsSlot=${this.renderCitationsList.bind(this)}
+          .renderFeedbackAndCopyButtonsSlot=${this.renderFeedbackAndCopyButtonsWrapper.bind(
+            this
+          )}
           .onRetry=${() => this.generatedAnswer?.retry()}
         ></generated-answers-thread>
       </div>`;
@@ -783,7 +754,7 @@ export class AtomicGeneratedAnswer
           generatedAnswer: generatedAnswer,
           collapsible: this.collapsible,
           renderFeedbackAndCopyButtonsSlot: () =>
-            this.renderFeedbackAndCopyButtonsWrapper(),
+            this.renderFeedbackAndCopyButtonsWrapper(generatedAnswer),
         },
       })}
       ${renderAnswerContent({
@@ -793,7 +764,8 @@ export class AtomicGeneratedAnswer
           collapsible: this.collapsible,
           renderFeedbackAndCopyButtonsSlot: () =>
             this.renderFeedbackAndCopyButtonsWrapper(),
-          renderCitationsSlot: () => html`${this.renderCitationsList()}`,
+          renderCitationsSlot: () =>
+            html`${this.renderCitationsList(generatedAnswer.citations)}`,
           onRetry: () => this.generatedAnswer?.retry(),
           onClickShowButton: () => this.clickOnShowButton(),
         },

@@ -1,4 +1,7 @@
-import type {GeneratedAnswerBase} from '@coveo/headless';
+import type {
+  GeneratedAnswerBase,
+  GeneratedAnswerCitation,
+} from '@coveo/headless';
 import type {i18n} from 'i18next';
 import {html, LitElement, type nothing, type TemplateResult} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
@@ -7,7 +10,7 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import atomicGeneratedAnswerStyles from '../../search/atomic-generated-answer/atomic-generated-answer.tw.css';
 import {renderAnswerContent} from '../generated-answer/render-answer-content';
 
-interface GeneratedAnswer extends GeneratedAnswerBase {
+export interface GeneratedAnswer extends GeneratedAnswerBase {
   question: string;
   expanded?: boolean;
 }
@@ -16,7 +19,9 @@ export interface GeneratedAnswersThreadProps {
   i18n: i18n;
   generatedAnswer: GeneratedAnswer[];
   renderFeedbackAndCopyButtonsSlot: () => TemplateResult | typeof nothing;
-  renderCitationsSlot: () => TemplateResult | typeof nothing;
+  renderCitationsSlot: (
+    citations: GeneratedAnswerCitation[]
+  ) => TemplateResult | typeof nothing;
   onRetry: () => void;
 }
 
@@ -32,10 +37,14 @@ export class GeneratedAnswersThread extends LitElement {
   generatedAnswers: GeneratedAnswer[] = [];
 
   @property({attribute: false})
-  renderFeedbackAndCopyButtonsSlot!: () => TemplateResult | typeof nothing;
+  renderFeedbackAndCopyButtonsSlot!: (
+    generatedAnswer: GeneratedAnswer
+  ) => TemplateResult;
 
   @property({attribute: false})
-  renderCitationsSlot!: () => TemplateResult | typeof nothing;
+  renderCitationsSlot!: (
+    citations: GeneratedAnswerCitation[]
+  ) => TemplateResult;
 
   @property({attribute: false})
   onRetry!: () => void;
@@ -51,15 +60,15 @@ export class GeneratedAnswersThread extends LitElement {
             ?hideTimeline=${isLast}
             ?expanded=${isLast}
           >
-            <div slot="action">A</div>
             ${renderAnswerContent({
               props: {
                 i18n: this.i18n,
                 generatedAnswer: answer,
                 collapsible: false,
-                renderFeedbackAndCopyButtonsSlot:
-                  this.renderFeedbackAndCopyButtonsSlot,
-                renderCitationsSlot: this.renderCitationsSlot,
+                renderFeedbackAndCopyButtonsSlot: () =>
+                  this.renderFeedbackAndCopyButtonsSlot(answer),
+                renderCitationsSlot: () =>
+                  this.renderCitationsSlot(answer.citations),
                 onRetry: this.onRetry,
                 onClickShowButton: () => {},
               },
