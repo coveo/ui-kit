@@ -2,25 +2,25 @@ import {html} from 'lit';
 import {describe, expect, it} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import type {
-  AtomicAnswersThreadItem,
-  AtomicAnswersThreadItemProps,
-} from './atomic-answers-thread-item';
-import '@/src/components/search/atomic-answers-thread-item/atomic-answers-thread-item';
+  GeneratedAnswerThreadItem,
+  GeneratedAnswerThreadItemProps,
+} from './generated-answer-thread-item';
+import '@/src/components/search/generated-answer-thread-item/generated-answer-thread-item';
 
-describe('#atomic-answers-thread-item', () => {
+describe('generated-answer-thread-item', () => {
   const renderComponent = async (
-    props: Partial<AtomicAnswersThreadItemProps> = {},
+    props: Partial<GeneratedAnswerThreadItemProps> = {},
     children = html`<div>Thread item content</div>`
   ) => {
-    const element = await fixture<AtomicAnswersThreadItem>(html`
-      <atomic-answers-thread-item
+    const element = await fixture<GeneratedAnswerThreadItem>(html`
+      <generated-answer-thread-item
         .title=${props.title ?? 'Title'}
         .isCollapsible=${props.isCollapsible ?? false}
         .hideLine=${props.hideLine ?? false}
         .isExpanded=${props.isExpanded ?? true}
       >
         ${children}
-      </atomic-answers-thread-item>
+      </generated-answer-thread-item>
     `);
 
     return {
@@ -30,8 +30,6 @@ describe('#atomic-answers-thread-item', () => {
         timelineLine: element.shadowRoot?.querySelector('span.w-px') ?? null,
         titleButton: element.shadowRoot?.querySelector('button') ?? null,
         content: element.shadowRoot?.querySelector('div[aria-hidden]') ?? null,
-        statusSlot:
-          element.shadowRoot?.querySelector('slot[name="status"]') ?? null,
       }),
     };
   };
@@ -112,29 +110,6 @@ describe('#atomic-answers-thread-item', () => {
     expect(titleButton).toHaveAttribute('aria-expanded', 'true');
     expect(content).toHaveAttribute('aria-hidden', 'false');
     expect(content).not.toHaveAttribute('hidden');
-  });
-
-  it('should render status slot only when expanded', async () => {
-    const statusSlot = html`<span slot="status">Thinking...</span>`;
-    const {locators: collapsedLocators} = await renderComponent(
-      {
-        isCollapsible: true,
-        isExpanded: false,
-      },
-      statusSlot
-    );
-
-    expect(collapsedLocators().statusSlot).toBeNull();
-
-    const {locators: expandedLocators} = await renderComponent(
-      {
-        isCollapsible: true,
-        isExpanded: true,
-      },
-      statusSlot
-    );
-
-    expect(expandedLocators().statusSlot).toBeInTheDocument();
   });
 
   it('should render content when content slot is provided', async () => {

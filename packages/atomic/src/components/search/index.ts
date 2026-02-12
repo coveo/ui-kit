@@ -1,5 +1,4 @@
 // Auto-generated file
-export {AtomicAnswersThreadItem} from './atomic-answers-thread-item/atomic-answers-thread-item.js';
 export {AtomicAutomaticFacet} from './atomic-automatic-facet/atomic-automatic-facet.js';
 export {AtomicAutomaticFacetGenerator} from './atomic-automatic-facet-generator/atomic-automatic-facet-generator.js';
 export {AtomicBreadbox} from './atomic-breadbox/atomic-breadbox.js';
@@ -79,3 +78,4 @@ export {AtomicTabManager} from './atomic-tab-manager/atomic-tab-manager.js';
 export {AtomicTableElement} from './atomic-table-element/atomic-table-element.js';
 export {AtomicText} from './atomic-text/atomic-text.js';
 export {AtomicTimeframeFacet} from './atomic-timeframe-facet/atomic-timeframe-facet.js';
+export {GeneratedAnswerThreadItem} from './generated-answer-thread-item/generated-answer-thread-item.js';

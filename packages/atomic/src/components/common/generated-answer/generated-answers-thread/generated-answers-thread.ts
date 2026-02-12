@@ -2,7 +2,7 @@ import type {GeneratedAnswerBase} from '@coveo/headless';
 import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import '@/src/components/search/atomic-answers-thread-item/atomic-answers-thread-item';
+import '@/src/components/search/generated-answer-thread-item/generated-answer-thread-item';
 
 export interface GeneratedAnswer extends GeneratedAnswerBase {
   question: string;
@@ -27,14 +27,14 @@ export class GeneratedAnswersThread extends LitElement {
       <div class="mt-6">
         ${this.generatedAnswers.map((answer, index) => {
           const isLast = index === this.generatedAnswers.length - 1;
-          return html`<atomic-answers-thread-item
+          return html`<generated-answer-thread-item
             .title=${answer.question}
             .hideLine=${isLast}
             .isCollapsible=${!isLast}
             .isExpanded=${isLast}
           >
             ${answer.answer}
-          </atomic-answers-thread-item>`;
+          </generated-answer-thread-item>`;
         })}
       </div>
     `;
