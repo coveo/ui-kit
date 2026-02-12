@@ -7,7 +7,6 @@
  * Stencil components are excluded as they lazy-load.
  */
 export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
-  'atomic-answers-thread-item',
   'atomic-aria-live',
   'atomic-automatic-facet',
   'atomic-automatic-facet-generator',
@@ -190,6 +189,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-text',
   'atomic-timeframe',
   'atomic-timeframe-facet',
+  'generated-answer-thread-item',
 ]);
 
 /**

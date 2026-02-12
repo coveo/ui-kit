@@ -4,7 +4,7 @@ import {classMap} from 'lit/directives/class-map.js';
 import {when} from 'lit/directives/when.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 
-export interface AtomicAnswersThreadItemProps {
+export interface GeneratedAnswerThreadItemProps {
   /**
    * The title displayed for the thread item.
    */
@@ -24,17 +24,17 @@ export interface AtomicAnswersThreadItemProps {
 }
 
 /**
- * The `atomic-answers-thread-item` component renders a generated answers
+ * The `generated-answer-thread-item` component renders a generated answer
  * thread item with timeline visuals and collapsible content.
  *
  * @internal
  *
- * @slot - The content rendered when the item is expanded.
+ * @slot (default) - The content rendered when the item is expanded.
  */
-@customElement('atomic-answers-thread-item')
+@customElement('generated-answer-thread-item')
 @withTailwindStyles
-export class AtomicAnswersThreadItem extends LitElement {
-  private readonly contentId = `atomic-answers-thread-item-content-${
+export class GeneratedAnswerThreadItem extends LitElement {
+  private readonly contentId = `generated-answer-thread-item-content-${
     typeof crypto !== 'undefined' && 'randomUUID' in crypto
       ? crypto.randomUUID()
       : Math.random().toString(36).slice(2)
@@ -118,15 +118,10 @@ export class AtomicAnswersThreadItem extends LitElement {
     return html`
       <li class="grid grid-cols-[10px_1fr]">
         <div class="flex flex-col items-center row-span-2">
-          <span
-            class=${timelineDotClasses}
-          ></span>
+          <span class=${timelineDotClasses}></span>
           ${when(
             !this.hideLine,
-            () =>
-              html`<span
-                class="w-px bg-neutral flex-1"
-              ></span>`,
+            () => html`<span class="w-px bg-neutral flex-1"></span>`,
             () => nothing
           )}
         </div>
@@ -145,11 +140,22 @@ export class AtomicAnswersThreadItem extends LitElement {
                   ${this.title}
                 </button>`,
               () =>
-                html`<span class=${classMap({
-                  ...titleBaseClasses,
-                  'font-semibold': this.isExpanded,
-                  'font-normal': !this.isExpanded,
-                })}>${this.title}</span>`
+                html`<span
+                  class=${classMap({
+                    ...titleBaseClasses,
+                    'font-semibold': this.isExpanded,
+                    'font-normal': !this.isExpanded,
+                  })}
+                >${this.title}</span>`
+            )}
+            ${when(
+              this.isExpanded,
+              () => html`
+                <span class="text-sm text-neutral-dark pl-2 ml-1">
+                  <slot name="status"></slot>
+                </span>
+              `,
+              () => nothing
             )}
           </div>
         </div>

@@ -2,25 +2,25 @@ import {html} from 'lit';
 import {describe, expect, it} from 'vitest';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import type {
-  AtomicAnswersThreadItem,
-  AtomicAnswersThreadItemProps,
-} from './atomic-answers-thread-item';
-import '@/src/components/search/atomic-answers-thread-item/atomic-answers-thread-item';
+  GeneratedAnswerThreadItem,
+  GeneratedAnswerThreadItemProps,
+} from './generated-answer-thread-item';
+import '@/src/components/search/generated-answer-thread-item/generated-answer-thread-item';
 
-describe('#atomic-answers-thread-item', () => {
+describe('generated-answer-thread-item', () => {
   const renderComponent = async (
-    props: Partial<AtomicAnswersThreadItemProps> = {},
+    props: Partial<GeneratedAnswerThreadItemProps> = {},
     children = html`<div>Thread item content</div>`
   ) => {
-    const element = await fixture<AtomicAnswersThreadItem>(html`
-      <atomic-answers-thread-item
+    const element = await fixture<GeneratedAnswerThreadItem>(html`
+      <generated-answer-thread-item
         .title=${props.title ?? 'Title'}
         .isCollapsible=${props.isCollapsible ?? false}
         .hideLine=${props.hideLine ?? false}
         .isExpanded=${props.isExpanded ?? true}
       >
         ${children}
-      </atomic-answers-thread-item>
+      </generated-answer-thread-item>
     `);
 
     return {
