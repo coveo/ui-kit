@@ -1,3 +1,9 @@
+import '@/src/components/search/atomic-result-section-actions/atomic-result-section-actions';
+import '@/src/components/search/atomic-result-section-badges/atomic-result-section-badges';
+import '@/src/components/search/atomic-result-section-bottom-metadata/atomic-result-section-bottom-metadata';
+import '@/src/components/search/atomic-result-section-excerpt/atomic-result-section-excerpt';
+import '@/src/components/search/atomic-result-section-title/atomic-result-section-title';
+import '@/src/components/search/atomic-result-section-visual/atomic-result-section-visual';
 import type {TemplateResult} from 'lit';
 import {css, html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';

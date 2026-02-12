@@ -19,7 +19,7 @@ export const renderDisclaimer: FunctionalComponent<RenderDisclaimerProps> = ({
   return html`${when(
     !isStreaming,
     () => html`
-      <div class="text-neutral-dark text-xs/[1rem]">
+      <div class="flex justify-end text-neutral-dark text-xs/[1rem]">
         <slot name="disclaimer">${i18n.t('generated-answer-disclaimer')}</slot>
       </div>
     `

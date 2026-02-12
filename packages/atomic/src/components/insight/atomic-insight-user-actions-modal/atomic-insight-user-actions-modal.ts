@@ -1,4 +1,5 @@
 import '@/src/components/common/atomic-modal/atomic-modal';
+import '@/src/components/insight/atomic-insight-user-actions-timeline/atomic-insight-user-actions-timeline';
 import {css, html, LitElement, type PropertyValues} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';

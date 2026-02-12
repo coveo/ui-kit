@@ -64,6 +64,7 @@ describe('atomic-product-rating', () => {
       bindings: (bindings) => {
         bindings.interfaceElement.type = 'product-listing';
         bindings.i18n = i18n;
+        bindings.engine.logger = {warn: vi.fn()} as never;
         bindings.store = {
           ...bindings.store,
           onChange: vi.fn(),
