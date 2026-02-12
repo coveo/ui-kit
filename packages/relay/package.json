@@ -50,7 +50,7 @@
     "@rollup/plugin-terser": "^0.4.3",
     "@rollup/plugin-typescript": "^12.0.0",
     "@vitest/browser-playwright": "^4.0.17",
-    "jsdom": "^27.0.0",
+    "jsdom": "^28.0.0",
     "playwright": "^1.57.0",
     "rimraf": "6.1.2",
     "rollup": "^4.0.0",
