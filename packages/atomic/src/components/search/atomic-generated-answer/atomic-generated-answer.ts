@@ -39,6 +39,7 @@ import {getNamedSlotContent} from '@/src/utils/slot-utils';
 import {shouldDisplayOnCurrentTab} from '@/src/utils/tab-utils';
 import {renderFollowUpInput} from '../../common/generated-answer/render-follow-up-input.js';
 import atomicGeneratedAnswerStyles from './atomic-generated-answer.tw.css.js';
+import '@/src/components/common/generated-answer/generated-answers-thread/generated-answers-thread.js';
 
 /**
  * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
@@ -633,6 +634,16 @@ export class AtomicGeneratedAnswer
       ...this.generatedAnswerState,
       question: this.bindings.engine.state.query?.q ?? '',
     };
+
+    if (this.hasFollowUpsCapability()) {
+      const allGeneratedAnswer = [
+        generatedAnswer,
+        ...(this.generatedAnswer.state.followUpAnswers.followUpAnswers ?? []),
+      ];
+
+      return html`<generated-answers-thread .generatedAnswers=${allGeneratedAnswer}></generated-answers-thread>`;
+    }
+
     return renderAnswerContent({
       props: {
         i18n: this.bindings.i18n,

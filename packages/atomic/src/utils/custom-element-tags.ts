@@ -197,6 +197,7 @@ export const ATOMIC_CUSTOM_ELEMENT_TAGS = new Set<string>([
   'atomic-text',
   'atomic-timeframe',
   'atomic-timeframe-facet',
+  'generated-answers-thread',
 ]);
 
 /**
