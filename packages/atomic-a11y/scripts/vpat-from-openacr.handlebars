@@ -1,0 +1,38 @@
+# VPAT® 2.5 - {{product.name}}
+
+## Name of Product/Version
+{{product.name}}{{#if product.version}} {{product.version}}{{/if}}
+
+## Report Dates and Version
+- Report Date: {{report_date}}
+- Last Modified Date: {{last_modified_date}}
+- Version: {{product.name}}-{{product.version}}-{{version}}
+
+## Product Description
+{{product.description}}
+
+## Contact Information
+- Name: {{author.name}}
+- Company: {{author.company_name}}
+- Email: {{author.email}}
+- Website: {{author.website}}
+
+## Notes
+{{notes}}
+
+## Evaluation Methods Used
+{{evaluation_methods_used}}
+
+## WCAG 2.2 AA Conformance Table
+
+| Criteria | Conformance Level | Remarks and Explanations |
+| --- | --- | --- |
+{{#each standards}}
+{{#each chapters}}
+{{#with (lookup ../../chapters chapter_id)}}
+{{#each criteria}}
+| {{num}} {{handle}} ({{level}}) | {{conformance}} | {{remarks}} |
+{{/each}}
+{{/with}}
+{{/each}}
+{{/each}}
