@@ -1,3 +1,4 @@
+import '@/src/components/search/atomic-text/atomic-text';
 import {html, type TemplateResult} from 'lit';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
