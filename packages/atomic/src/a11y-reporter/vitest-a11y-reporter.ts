@@ -3,6 +3,7 @@ import {mkdir, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import type {AxeResults, Result as AxeRuleResult} from 'axe-core';
+import axeCore from 'axe-core';
 import type {
   Reporter,
   SerializedError,
@@ -18,6 +19,9 @@ export const DEFAULT_WCAG_22_AA_CRITERIA_COUNT = 50;
 const REPORTER_NAME = 'VitestA11yReporter';
 const UNKNOWN_CATEGORY = 'unknown';
 const UNKNOWN_FRAMEWORK = 'unknown';
+const AXE_RULE_URL_PATTERN = /rules\/axe\/[\d.]+\/([a-z0-9-]+)/gi;
+const AXE_RULE_TOKEN_PATTERN = /\(([a-z0-9-]+)\)/gi;
+const ANSI_ESCAPE_PATTERN = /\u001B\[[0-?]*[ -/]*[@-~]/g;
 
 const ruleToWCAG: Record<string, readonly string[]> = {
   'aria-input-field-name': ['1.3.1', '4.1.2'],
@@ -51,6 +55,31 @@ const ruleToWCAG: Record<string, readonly string[]> = {
   'valid-lang': ['3.1.1'],
   'video-caption': ['1.2.2'],
 };
+
+interface AxeRuleMetadata {
+  ruleId: string;
+  tags: string[];
+}
+
+function buildAxeRuleCriteriaMap(): Map<string, string[]> {
+  const criteriaByRuleId = new Map<string, string[]>();
+
+  for (const rule of axeCore.getRules() as AxeRuleMetadata[]) {
+    const mappedFromRuleId = ruleToWCAG[rule.ruleId] ?? [];
+    const mappedFromTags = extractCriteriaFromTags(rule.tags ?? []);
+    const criteria = [
+      ...new Set([...mappedFromRuleId, ...mappedFromTags]),
+    ].sort((a, b) => a.localeCompare(b, 'en-US', {numeric: true}));
+
+    if (criteria.length > 0) {
+      criteriaByRuleId.set(rule.ruleId, criteria);
+    }
+  }
+
+  return criteriaByRuleId;
+}
+
+const axeRuleCriteriaMap = buildAxeRuleCriteriaMap();
 
 type CriterionLevel = 'A' | 'AA' | 'AAA' | 'unknown';
 type WCAGVersion = '2.0' | '2.1' | '2.2' | 'unknown';
@@ -471,6 +500,87 @@ function getCriteriaForRule(rule: AxeRuleResult): string[] {
   );
 }
 
+function getCriteriaForRuleId(ruleId: string): string[] {
+  const mappedFromRuleId = ruleToWCAG[ruleId] ?? [];
+  const mappedFromAxeMetadata = axeRuleCriteriaMap.get(ruleId) ?? [];
+
+  return [...new Set([...mappedFromRuleId, ...mappedFromAxeMetadata])].sort(
+    (a, b) => a.localeCompare(b, 'en-US', {numeric: true})
+  );
+}
+
+function stripAnsiSequences(text: string): string {
+  return text.replace(ANSI_ESCAPE_PATTERN, '');
+}
+
+function extractErrorText(error: unknown): string {
+  if (typeof error === 'string') {
+    return error;
+  }
+
+  if (error instanceof Error) {
+    return `${error.message}\n${error.stack ?? ''}`;
+  }
+
+  if (!isRecord(error)) {
+    return '';
+  }
+
+  const message = typeof error.message === 'string' ? error.message : '';
+  const stack = typeof error.stack === 'string' ? error.stack : '';
+  return `${message}\n${stack}`;
+}
+
+function collectRuleIdMatches(
+  source: string,
+  matcher: RegExp,
+  target: Set<string>
+): void {
+  matcher.lastIndex = 0;
+  let match = matcher.exec(source);
+
+  while (match) {
+    const matchedRuleId = match[1]?.toLowerCase();
+    if (matchedRuleId && getCriteriaForRuleId(matchedRuleId).length > 0) {
+      target.add(matchedRuleId);
+    }
+
+    match = matcher.exec(source);
+  }
+}
+
+function extractA11yRuleIdsFromTestErrors(testCase: TestCase): string[] {
+  const errors = testCase.result().errors;
+  if (!errors || errors.length === 0) {
+    return [];
+  }
+
+  const extractedRuleIds = new Set<string>();
+
+  for (const error of errors) {
+    const errorText = stripAnsiSequences(extractErrorText(error));
+    if (!errorText) {
+      continue;
+    }
+
+    const normalizedErrorText = errorText.toLowerCase();
+    const appearsToBeA11yAssertionFailure =
+      normalizedErrorText.includes('tohavenoviolations') ||
+      normalizedErrorText.includes('application=axeapi');
+
+    if (!appearsToBeA11yAssertionFailure) {
+      continue;
+    }
+
+    collectRuleIdMatches(errorText, AXE_RULE_URL_PATTERN, extractedRuleIds);
+    collectRuleIdMatches(errorText, AXE_RULE_TOKEN_PATTERN, extractedRuleIds);
+  }
+
+  return [...extractedRuleIds].sort((a, b) =>
+    a.localeCompare(b, 'en-US', {numeric: true})
+  );
+}
+
 function getIncompleteMessage(rule: AxeRuleResult): string {
   const firstNode = rule.nodes[0];
   const firstCheckMessage =
@@ -543,8 +653,15 @@ export class VitestA11yReporter implements Reporter {
         ? (meta.reports as StorybookReport[])
         : [];
       const a11yReport = reports.find((report) => report.type === 'a11y');
+      const axeResults =
+        a11yReport && isAxeResults(a11yReport.result)
+          ? a11yReport.result
+          : null;
+      const failedRuleIds = axeResults
+        ? []
+        : extractA11yRuleIdsFromTestErrors(testCase);
 
-      if (!a11yReport || !isAxeResults(a11yReport.result)) {
+      if (!axeResults && failedRuleIds.length === 0) {
         return;
       }
 
@@ -572,29 +689,36 @@ export class VitestA11yReporter implements Reporter {
         category,
         framework
       );
-      const axeResults = a11yReport.result;
       this.hasCapturedA11yResult = true;
 
       component.storyIds.add(storyId);
-      component.automated.violations += axeResults.violations.length;
-      component.automated.passes += axeResults.passes.length;
-      component.automated.incomplete += axeResults.incomplete.length;
-      component.automated.inapplicable += axeResults.inapplicable.length;
 
-      this.collectCriteria(component, axeResults.violations);
-      this.collectCriteria(component, axeResults.passes);
-      this.collectCriteria(component, axeResults.incomplete);
-      this.collectCriteria(component, axeResults.inapplicable);
+      if (axeResults) {
+        component.automated.violations += axeResults.violations.length;
+        component.automated.passes += axeResults.passes.length;
+        component.automated.incomplete += axeResults.incomplete.length;
+        component.automated.inapplicable += axeResults.inapplicable.length;
 
-      for (const incompleteRule of axeResults.incomplete) {
-        component.automated.incompleteDetails.push({
-          ruleId: incompleteRule.id,
-          impact: incompleteRule.impact ?? 'unknown',
-          wcagCriteria: getCriteriaForRule(incompleteRule),
-          nodes: incompleteRule.nodes.length,
-          message: getIncompleteMessage(incompleteRule),
-        });
+        this.collectCriteria(component, axeResults.violations);
+        this.collectCriteria(component, axeResults.passes);
+        this.collectCriteria(component, axeResults.incomplete);
+        this.collectCriteria(component, axeResults.inapplicable);
+
+        for (const incompleteRule of axeResults.incomplete) {
+          component.automated.incompleteDetails.push({
+            ruleId: incompleteRule.id,
+            impact: incompleteRule.impact ?? 'unknown',
+            wcagCriteria: getCriteriaForRule(incompleteRule),
+            nodes: incompleteRule.nodes.length,
+            message: getIncompleteMessage(incompleteRule),
+          });
+        }
+
+        return;
       }
+
+      component.automated.violations += failedRuleIds.length;
+      this.collectCriteriaFromRuleIds(component, failedRuleIds);
     } catch (error) {
       this.warn('Unable to process Storybook a11y test result.', error);
     }
@@ -679,14 +803,32 @@ export class VitestA11yReporter implements Reporter {
     for (const rule of rules) {
       const criteria = getCriteriaForRule(rule);
 
-      for (const criterion of criteria) {
-        component.automated.criteriaCovered.add(criterion);
+      this.collectCriterionCoverage(component, criteria);
+    }
+  }
 
-        const coveredComponents =
-          this.criteriaToComponents.get(criterion) ?? new Set<string>();
-        coveredComponents.add(component.name);
-        this.criteriaToComponents.set(criterion, coveredComponents);
-      }
+  private collectCriteriaFromRuleIds(
+    component: ComponentAccumulator,
+    ruleIds: string[]
+  ): void {
+    for (const ruleId of ruleIds) {
+      const criteria = getCriteriaForRuleId(ruleId);
+
+      this.collectCriterionCoverage(component, criteria);
+    }
+  }
+
+  private collectCriterionCoverage(
+    component: ComponentAccumulator,
+    criteria: string[]
+  ): void {
+    for (const criterion of criteria) {
+      component.automated.criteriaCovered.add(criterion);
+
+      const coveredComponents =
+        this.criteriaToComponents.get(criterion) ?? new Set<string>();
+      coveredComponents.add(component.name);
+      this.criteriaToComponents.set(criterion, coveredComponents);
     }
   }
 

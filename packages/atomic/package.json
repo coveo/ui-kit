@@ -67,6 +67,7 @@
     "test:lit": "vitest run --project=atomic-default",
     "test:watch": "vitest --project=atomic-default",
     "test:storybook": "vitest run --project=storybook",
+    "a11y:vpat": "npx tsx src/a11y-reporter/json-to-openacr.ts && npx --yes @openacr/openacr output -f a11y/reports/openacr.yaml -o a11y/reports/vpat-2.5-coveo-atomic.md -t a11y/scripts/vpat-from-openacr.handlebars",
     "e2e": "cypress run --browser chrome",
     "e2e:firefox": "cypress run --browser firefox",
     "e2e:watch": "cypress open --browser chrome --e2e",

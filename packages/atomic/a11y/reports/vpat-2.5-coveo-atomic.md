@@ -1,80 +1,85 @@
 # VPAT® 2.5 - Coveo Atomic
 
+## Name of Product/Version
+Coveo Atomic 3.47.1
+
+## Report Dates and Version
+- Report Date: 2026-02-12
+- Last Modified Date: 2026-02-12
+- Version: Coveo Atomic-3.47.1-1
+
 ## Product Description
-- **Name**: Coveo Atomic
-- **Version**: 3.47.1
-- **Description**: Web component library for building search and commerce interfaces.
+Coveo Atomic is a web component library for building search and commerce interfaces.
 
-## Evaluation Methods
-- **Automated**: axe-core 4.10.3 via Storybook addon-a11y
-- **Manual**: Keyboard navigation, screen reader proxy (Playwright accessibility tree), target size measurement
-- **Scope**: 145 Lit components (20 Stencil excluded pending migration)
+## Contact Information
+- Name: Coveo Accessibility Team
+- Company: Coveo
+- Email: accessibility@coveo.com
+- Website: https://www.coveo.com
 
-## WCAG 2.2 Level A & AA Conformance
+## Notes
+Generated from a11y/reports/a11y-report.json. Automated statuses are derived from axe-core results, with manual placeholders for Phase 3.
 
-| Criterion | Conformance | Remarks and Explanations |
-|-----------|-------------|-------------------------|
-| [1.1.1 Non-text Content (A)](https://www.w3.org/TR/WCAG22/#non-text-content) | Supports | The product supports this criterion. Automated: 0 violations found across 1 components. Manual: Verified via Keyboard/SR audit of representative components. |
-| [1.2.1 Audio-only and Video-only (Prerecorded) (A)](https://www.w3.org/TR/WCAG22/#audio-only-and-video-only-(prerecorded)) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [1.2.2 Captions (Prerecorded) (A)](https://www.w3.org/TR/WCAG22/#captions-(prerecorded)) | Not Evaluated | Automated: 0 violations found across 1 components. Manual audit conducted via representative components. |
-| [1.2.3 Audio Description or Media Alternative (Prerecorded) (A)](https://www.w3.org/TR/WCAG22/#audio-description-or-media-alternative-(prerecorded)) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [1.2.4 Captions (Live) (AA)](https://www.w3.org/TR/WCAG22/#captions-(live)) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [1.2.5 Audio Description (Prerecorded) (AA)](https://www.w3.org/TR/WCAG22/#audio-description-(prerecorded)) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [1.3.1 Info and Relationships (A)](https://www.w3.org/TR/WCAG22/#info-and-relationships) | Supports | The product supports this criterion. Automated: 0 violations found across 1 components. Manual: Verified via Keyboard/SR audit of representative components. |
-| [1.3.2 Meaningful Sequence (A)](https://www.w3.org/TR/WCAG22/#meaningful-sequence) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [1.3.3 Sensory Characteristics (A)](https://www.w3.org/TR/WCAG22/#sensory-characteristics) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [1.3.4 Orientation (AA)](https://www.w3.org/TR/WCAG22/#orientation) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [1.3.5 Identify Input Purpose (AA)](https://www.w3.org/TR/WCAG22/#identify-input-purpose) | Supports | The product supports this criterion. Automated: 0 violations found across 1 components. Manual: Verified via Keyboard/SR audit of representative components. |
-| [1.4.1 Use of Color (A)](https://www.w3.org/TR/WCAG22/#use-of-color) | Not Evaluated | Automated: 0 violations found across 1 components. Manual audit conducted via representative components. |
-| [1.4.2 Audio Control (A)](https://www.w3.org/TR/WCAG22/#audio-control) | Not Evaluated | Automated: 0 violations found across 1 components. Manual audit conducted via representative components. |
-| [1.4.3 Contrast (Minimum) (AA)](https://www.w3.org/TR/WCAG22/#contrast-(minimum)) | Supports | The product supports this criterion. Automated: 0 violations found across 1 components. Manual: Verified via Keyboard/SR audit of representative components. |
-| [1.4.4 Resize Text (AA)](https://www.w3.org/TR/WCAG22/#resize-text) | Supports | The product supports this criterion. Automated: 0 violations found across 1 components. Manual: Verified via Keyboard/SR audit of representative components. |
-| [1.4.5 Images of Text (AA)](https://www.w3.org/TR/WCAG22/#images-of-text) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [1.4.10 Reflow (AA)](https://www.w3.org/TR/WCAG22/#reflow) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [1.4.11 Non-text Contrast (AA)](https://www.w3.org/TR/WCAG22/#non-text-contrast) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [1.4.12 Text Spacing (AA)](https://www.w3.org/TR/WCAG22/#text-spacing) | Supports | The product supports this criterion. Automated: 0 violations found across 1 components. Manual: Verified via Keyboard/SR audit of representative components. |
-| [1.4.13 Content on Hover or Focus (AA)](https://www.w3.org/TR/WCAG22/#content-on-hover-or-focus) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [2.1.1 Keyboard (A)](https://www.w3.org/TR/WCAG22/#keyboard) | Supports | The product supports this criterion. Automated: 0 violations found across 1 components. Manual audit conducted via representative components. |
-| [2.1.2 No Keyboard Trap (A)](https://www.w3.org/TR/WCAG22/#no-keyboard-trap) | Not Applicable | This criterion is not applicable to the product. |
-| [2.1.4 Character Key Shortcuts (A)](https://www.w3.org/TR/WCAG22/#character-key-shortcuts) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [2.2.1 Timing Adjustable (A)](https://www.w3.org/TR/WCAG22/#timing-adjustable) | Supports | The product supports this criterion. Automated: 0 violations found across 1 components. Manual audit conducted via representative components. |
-| [2.2.2 Pause, Stop, Hide (A)](https://www.w3.org/TR/WCAG22/#pause,-stop,-hide) | Supports | The product supports this criterion. Automated: 0 violations found across 1 components. Manual audit conducted via representative components. |
-| [2.3.1 Three Flashes or Below Threshold (A)](https://www.w3.org/TR/WCAG22/#three-flashes-or-below-threshold) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [2.4.1 Bypass Blocks (A)](https://www.w3.org/TR/WCAG22/#bypass-blocks) | Supports | The product supports this criterion. Automated: 0 violations found across 1 components. Manual audit conducted via representative components. |
-| [2.4.2 Page Titled (A)](https://www.w3.org/TR/WCAG22/#page-titled) | Supports | The product supports this criterion. Automated: 0 violations found across 1 components. Manual audit conducted via representative components. |
-| [2.4.3 Focus Order (A)](https://www.w3.org/TR/WCAG22/#focus-order) | Not Applicable | This criterion is not applicable to the product. |
-| [2.4.4 Link Purpose (In Context) (A)](https://www.w3.org/TR/WCAG22/#link-purpose-(in-context)) | Supports | The product supports this criterion. Automated: 0 violations found across 1 components. Manual: Verified via Keyboard/SR audit of representative components. |
-| [2.4.5 Multiple Ways (AA)](https://www.w3.org/TR/WCAG22/#multiple-ways) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [2.4.6 Headings and Labels (AA)](https://www.w3.org/TR/WCAG22/#headings-and-labels) | Supports | The product supports this criterion. Not covered by automated tools. Manual: Verified via Keyboard/SR audit of representative components. |
-| [2.4.7 Focus Visible (AA)](https://www.w3.org/TR/WCAG22/#focus-visible) | Not Applicable | This criterion is not applicable to the product. |
-| [2.4.11 Focus Not Obscured (Minimum) (AA)](https://www.w3.org/TR/WCAG22/#focus-not-obscured-(minimum)) | Not Applicable | This criterion is not applicable to the product. |
-| [2.5.1 Pointer Gestures (A)](https://www.w3.org/TR/WCAG22/#pointer-gestures) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [2.5.2 Pointer Cancellation (A)](https://www.w3.org/TR/WCAG22/#pointer-cancellation) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [2.5.3 Label in Name (A)](https://www.w3.org/TR/WCAG22/#label-in-name) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [2.5.4 Motion Actuation (A)](https://www.w3.org/TR/WCAG22/#motion-actuation) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [2.5.7 Dragging Movements (AA)](https://www.w3.org/TR/WCAG22/#dragging-movements) | Not Applicable | This criterion is not applicable to the product. |
-| [2.5.8 Target Size (Minimum) (AA)](https://www.w3.org/TR/WCAG22/#target-size-(minimum)) | Does Not Support | The product does not support this criterion. Automated: 0 violations found across 1 components. Manual: Verified via Keyboard/SR audit of representative components. |
-| [3.1.1 Language of Page (A)](https://www.w3.org/TR/WCAG22/#language-of-page) | Supports | The product supports this criterion. Automated: 0 violations found across 1 components. Manual: Verified via Keyboard/SR audit of representative components. |
-| [3.1.2 Language of Parts (AA)](https://www.w3.org/TR/WCAG22/#language-of-parts) | Supports | The product supports this criterion. Automated: 0 violations found across 1 components. Manual: Verified via Keyboard/SR audit of representative components. |
-| [3.2.1 On Focus (A)](https://www.w3.org/TR/WCAG22/#on-focus) | Not Applicable | This criterion is not applicable to the product. |
-| [3.2.2 On Input (A)](https://www.w3.org/TR/WCAG22/#on-input) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [3.2.3 Consistent Navigation (AA)](https://www.w3.org/TR/WCAG22/#consistent-navigation) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [3.2.4 Consistent Identification (AA)](https://www.w3.org/TR/WCAG22/#consistent-identification) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [3.2.6 Consistent Help (A)](https://www.w3.org/TR/WCAG22/#consistent-help) | Not Applicable | This criterion is not applicable to the product. |
-| [3.3.1 Error Identification (A)](https://www.w3.org/TR/WCAG22/#error-identification) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [3.3.2 Labels or Instructions (A)](https://www.w3.org/TR/WCAG22/#labels-or-instructions) | Supports | The product supports this criterion. Automated: 0 violations found across 1 components. Manual: Verified via Keyboard/SR audit of representative components. |
-| [3.3.3 Error Suggestion (AA)](https://www.w3.org/TR/WCAG22/#error-suggestion) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [3.3.4 Error Prevention (Legal, Financial, Data) (AA)](https://www.w3.org/TR/WCAG22/#error-prevention-(legal,-financial,-data)) | Not Evaluated | Not covered by automated tools. Manual audit conducted via representative components. |
-| [3.3.7 Redundant Entry (A)](https://www.w3.org/TR/WCAG22/#redundant-entry) | Not Applicable | This criterion is not applicable to the product. |
-| [3.3.8 Accessible Authentication (Minimum) (AA)](https://www.w3.org/TR/WCAG22/#accessible-authentication-(minimum)) | Not Applicable | This criterion is not applicable to the product. |
-| [4.1.1 Parsing (A)](https://www.w3.org/TR/WCAG22/#parsing) | Supports | The product supports this criterion. Automated: 0 violations found across 1 components. Manual: Verified via Keyboard/SR audit of representative components. |
-| [4.1.2 Name, Role, Value (A)](https://www.w3.org/TR/WCAG22/#name,-role,-value) | Supports | The product supports this criterion. Automated: 0 violations found across 1 components. Manual: Verified via Keyboard/SR audit of representative components. |
-| [4.1.3 Status Messages (AA)](https://www.w3.org/TR/WCAG22/#status-messages) | Supports | The product supports this criterion. Not covered by automated tools. Manual: Verified via Keyboard/SR audit of representative components. |
+## Evaluation Methods Used
+axe-core 4.10.3; Storybook addon-a11y; Manual audit
 
-## Known Limitations
-- **Stencil Components**: 20 legacy components are excluded from this report pending migration to Lit.
-- **Customer Content**: Content provided by customers (search results, metadata, custom styling) is out of scope.
-- **AAA Criteria**: The product was evaluated against Level A and AA only.
+## WCAG 2.2 AA Conformance Table
 
-## Legal Disclaimer
-Coveo provides this VPAT "as is" and for informational purposes only. The information contained in this document represents the current view of Coveo as of the date of publication. Coveo makes no warranties, express or implied, in this document.
+| Criteria | Conformance Level | Remarks and Explanations |
+| --- | --- | --- |
+| 1.1.1 Non-text Content (A) | supports | Automated testing found no axe-core violations for WCAG 1.1.1 across 154 mapped component(s). Manual audit pending. Phase 3 results will be merged into this report. |
+| 1.2.1 Audio-only and Video-only (Prerecorded) (A) | not-applicable | [Override] Atomic does not include audio-only or video-only media components. |
+| 1.2.2 Captions (Prerecorded) (A) | not-applicable | [Override] Atomic does not include synchronized media components requiring captions. |
+| 1.2.3 Audio Description or Media Alternative (Prerecorded) (A) | not-applicable | [Override] Atomic does not include synchronized media components requiring audio descriptions. |
+| 1.3.1 Info and Relationships (A) | partially-supports | Automated testing found violations for WCAG 1.3.1 in 1 of 155 mapped component(s). Manual audit pending. Phase 3 results will be merged into this report. |
+| 1.3.2 Meaningful Sequence (A) | not-evaluated | WCAG 1.3.2 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 1.3.3 Sensory Characteristics (A) | not-evaluated | WCAG 1.3.3 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 1.4.1 Use of Color (A) | supports | Automated testing found no axe-core violations for WCAG 1.4.1 across 154 mapped component(s). Manual audit pending. Phase 3 results will be merged into this report. |
+| 1.4.2 Audio Control (A) | not-applicable | [Override] Atomic does not include components that auto-play audio. |
+| 2.1.1 Keyboard (A) | supports | Automated testing found no axe-core violations for WCAG 2.1.1 across 154 mapped component(s). Manual audit pending. Phase 3 results will be merged into this report. |
+| 2.1.2 No Keyboard Trap (A) | not-evaluated | WCAG 2.1.2 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 2.1.4 Character Key Shortcuts (A) | not-evaluated | WCAG 2.1.4 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 2.2.1 Timing Adjustable (A) | not-applicable | [Override] No Atomic component enforces time limits on user interaction. |
+| 2.2.2 Pause, Stop, Hide (A) | not-applicable | [Override] Atomic does not include moving, blinking, scrolling, or auto-updating content that starts automatically and lasts more than five seconds. |
+| 2.3.1 Three Flashes or Below Threshold (A) | not-applicable | [Override] Atomic does not include content that flashes more than three times per second. |
+| 2.4.1 Bypass Blocks (A) | supports | Automated testing found no axe-core violations for WCAG 2.4.1 across 154 mapped component(s). Manual audit pending. Phase 3 results will be merged into this report. |
+| 2.4.2 Page Titled (A) | not-applicable | [Override] Page titles are a host application concern, not a component library concern. |
+| 2.4.3 Focus Order (A) | not-evaluated | WCAG 2.4.3 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 2.4.4 Link Purpose (In Context) (A) | supports | Automated testing found no axe-core violations for WCAG 2.4.4 across 154 mapped component(s). Manual audit pending. Phase 3 results will be merged into this report. |
+| 2.5.1 Pointer Gestures (A) | not-evaluated | WCAG 2.5.1 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 2.5.2 Pointer Cancellation (A) | not-evaluated | WCAG 2.5.2 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 2.5.3 Label in Name (A) | not-evaluated | WCAG 2.5.3 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 2.5.4 Motion Actuation (A) | not-applicable | [Override] Atomic does not include functionality operated by device or user motion. |
+| 3.1.1 Language of Page (A) | not-applicable | [Override] The lang attribute on the HTML element is a host application concern, not a component library concern. |
+| 3.2.1 On Focus (A) | not-evaluated | WCAG 3.2.1 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 3.2.2 On Input (A) | not-evaluated | WCAG 3.2.2 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 3.2.6 Consistent Help (A) | not-evaluated | WCAG 3.2.6 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 3.3.1 Error Identification (A) | not-evaluated | WCAG 3.3.1 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 3.3.2 Labels or Instructions (A) | supports | Automated testing found no axe-core violations for WCAG 3.3.2 across 154 mapped component(s). Manual audit pending. Phase 3 results will be merged into this report. |
+| 3.3.7 Redundant Entry (A) | not-applicable | [Override] Atomic does not include multi-step forms that require redundant data entry. |
+| 4.1.1 Parsing (A) | supports | Automated testing found no axe-core violations for WCAG 4.1.1 across 154 mapped component(s). Manual audit pending. Phase 3 results will be merged into this report. |
+| 4.1.2 Name, Role, Value (A) | supports | Automated testing found no axe-core violations for WCAG 4.1.2 across 154 mapped component(s). Manual audit pending. Phase 3 results will be merged into this report. |
+| 1.2.4 Captions (Live) (AA) | not-applicable | [Override] Atomic does not include live audio content. |
+| 1.2.5 Audio Description (Prerecorded) (AA) | not-applicable | [Override] Atomic does not include prerecorded video content requiring audio descriptions. |
+| 1.3.4 Orientation (AA) | not-evaluated | WCAG 1.3.4 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 1.3.5 Identify Input Purpose (AA) | supports | Automated testing found no axe-core violations for WCAG 1.3.5 across 154 mapped component(s). Manual audit pending. Phase 3 results will be merged into this report. |
+| 1.4.3 Contrast (Minimum) (AA) | partially-supports | Automated testing found violations for WCAG 1.4.3 in 1 of 155 mapped component(s). Manual audit pending. Phase 3 results will be merged into this report. |
+| 1.4.4 Resize Text (AA) | supports | Automated testing found no axe-core violations for WCAG 1.4.4 across 154 mapped component(s). Manual audit pending. Phase 3 results will be merged into this report. |
+| 1.4.5 Images of Text (AA) | not-evaluated | WCAG 1.4.5 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 1.4.10 Reflow (AA) | not-evaluated | WCAG 1.4.10 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 1.4.11 Non-text Contrast (AA) | not-evaluated | WCAG 1.4.11 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 1.4.12 Text Spacing (AA) | supports | Automated testing found no axe-core violations for WCAG 1.4.12 across 154 mapped component(s). Manual audit pending. Phase 3 results will be merged into this report. |
+| 1.4.13 Content on Hover or Focus (AA) | not-evaluated | WCAG 1.4.13 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 2.4.5 Multiple Ways (AA) | not-applicable | [Override] Multiple navigation ways are a host application concern, not a component library concern. |
+| 2.4.6 Headings and Labels (AA) | not-evaluated | WCAG 2.4.6 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 2.4.7 Focus Visible (AA) | not-evaluated | WCAG 2.4.7 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 2.4.11 Focus Not Obscured (Minimum) (AA) | not-evaluated | WCAG 2.4.11 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 2.5.7 Dragging Movements (AA) | not-evaluated | WCAG 2.5.7 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 2.5.8 Target Size (Minimum) (AA) | supports | Automated testing found no axe-core violations for WCAG 2.5.8 across 154 mapped component(s). Manual audit pending. Phase 3 results will be merged into this report. |
+| 3.1.2 Language of Parts (AA) | supports | Automated testing found no axe-core violations for WCAG 3.1.2 across 154 mapped component(s). Manual audit pending. Phase 3 results will be merged into this report. |
+| 3.2.3 Consistent Navigation (AA) | not-applicable | [Override] Consistent navigation ordering is a host application concern; Atomic components do not control page-level navigation. |
+| 3.2.4 Consistent Identification (AA) | not-applicable | [Override] Consistent identification across pages is a host application concern; individual Atomic components use consistent internal naming. |
+| 3.3.3 Error Suggestion (AA) | not-evaluated | WCAG 3.3.3 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 3.3.4 Error Prevention (Legal, Financial, Data) (AA) | not-evaluated | WCAG 3.3.4 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |
+| 3.3.8 Accessible Authentication (Minimum) (AA) | not-applicable | [Override] Atomic does not include authentication flows. |
+| 4.1.3 Status Messages (AA) | not-evaluated | WCAG 4.1.3 has no automated mapping evidence in the JSON report. Manual audit pending. Phase 3 results will be merged into this report. |

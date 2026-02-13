@@ -4,8 +4,12 @@
   "cache": {
     "useCache": true
   },
-  "ignorePaths": ["CHANGELOG.md"],
-  "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
+  "ignorePaths": [
+    "CHANGELOG.md"
+  ],
+  "import": [
+    "@cspell/dict-fr-fr/cspell-ext.json"
+  ],
   "words": [
     "adjustednumberoflikes",
     "agentic",
@@ -285,18 +289,18 @@
     "SVCC",
     "TDIDF",
     "Techzample",
-    "Triaging",
-    "Turborepo",
     "testid",
     "thisisanotherurl",
     "thisisaurl",
     "thisisnotadate",
     "tivo",
     "tolocalestring",
+    "Triaging",
     "trivago",
     "tryitnow",
     "tsdoc",
     "ttfb",
+    "Turborepo",
     "uikit",
     "unexclude",
     "unexcluded",
@@ -314,6 +318,7 @@
     "Vite",
     "Vitest",
     "vnode",
+    "VPAT",
     "vuejs",
     "WCAG",
     "ytlikecount",

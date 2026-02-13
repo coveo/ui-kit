@@ -168,9 +168,9 @@
       "storyCount": 4,
       "automated": {
         "violations": 0,
-        "passes": 64,
+        "passes": 56,
         "incomplete": 0,
-        "inapplicable": 180,
+        "inapplicable": 188,
         "criteriaCovered": [
           "1.1.1",
           "1.2.2",
@@ -242,9 +242,9 @@
       "storyCount": 3,
       "automated": {
         "violations": 0,
-        "passes": 46,
+        "passes": 47,
         "incomplete": 0,
-        "inapplicable": 137,
+        "inapplicable": 136,
         "criteriaCovered": [
           "1.1.1",
           "1.2.2",
@@ -499,7 +499,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-ib3k3-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-oxepn-popup\""
           },
           {
             "ruleId": "aria-valid-attr-value",
@@ -508,7 +508,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-np99t-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-lpd3q-popup\""
           }
         ]
       }
@@ -629,7 +629,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-2y0ji-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-8qe5a-popup\""
           }
         ]
       }
@@ -1046,7 +1046,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-wwxe8-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-y0spw-popup\""
           },
           {
             "ruleId": "aria-valid-attr-value",
@@ -1055,7 +1055,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-69omu-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-5z4es-popup\""
           },
           {
             "ruleId": "aria-valid-attr-value",
@@ -1064,7 +1064,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-gqs8g-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-1jhyr-popup\""
           },
           {
             "ruleId": "aria-valid-attr-value",
@@ -1073,7 +1073,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-6y1ts-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-r8ed5-popup\""
           },
           {
             "ruleId": "aria-valid-attr-value",
@@ -1082,7 +1082,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-v69sq-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-1d83u-popup\""
           },
           {
             "ruleId": "aria-valid-attr-value",
@@ -1091,7 +1091,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-xyx8m-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-wkq3a-popup\""
           }
         ]
       }
@@ -1147,7 +1147,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-s5xfa-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-2cvwv-popup\""
           },
           {
             "ruleId": "aria-prohibited-attr",
@@ -1165,7 +1165,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-ok6m0-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-9ynea-popup\""
           },
           {
             "ruleId": "aria-prohibited-attr",
@@ -1183,7 +1183,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-lprrv-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-3qeij-popup\""
           }
         ]
       }
@@ -1230,7 +1230,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-48gfg-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-60e05-popup\""
           }
         ]
       }
@@ -1277,7 +1277,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-819pl-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-9c1sv-popup\""
           }
         ]
       }
@@ -1509,7 +1509,7 @@
               "4.1.2"
             ],
             "nodes": 2,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-owf7g-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-tua5x-popup\""
           }
         ]
       }
@@ -1706,9 +1706,9 @@
       "storyCount": 4,
       "automated": {
         "violations": 0,
-        "passes": 25,
+        "passes": 14,
         "incomplete": 0,
-        "inapplicable": 219,
+        "inapplicable": 230,
         "criteriaCovered": [
           "1.1.1",
           "1.2.2",
@@ -1889,7 +1889,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-ww9o6-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-cn6fd-popup\""
           },
           {
             "ruleId": "aria-valid-attr-value",
@@ -1898,9 +1898,25 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-rvlb9-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-t796a-popup\""
           }
         ]
+      }
+    },
+    {
+      "name": "atomic-generated-answer-feedback-modal",
+      "category": "common",
+      "framework": "lit",
+      "storyCount": 1,
+      "automated": {
+        "violations": 1,
+        "passes": 0,
+        "incomplete": 0,
+        "inapplicable": 0,
+        "criteriaCovered": [
+          "1.4.3"
+        ],
+        "incompleteDetails": []
       }
     },
     {
@@ -2130,7 +2146,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-hehvq-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-t4zwu-popup\""
           }
         ]
       }
@@ -2179,9 +2195,9 @@
       "storyCount": 1,
       "automated": {
         "violations": 0,
-        "passes": 10,
+        "passes": 11,
         "incomplete": 0,
-        "inapplicable": 51,
+        "inapplicable": 50,
         "criteriaCovered": [
           "1.1.1",
           "1.2.2",
@@ -2475,9 +2491,9 @@
       "storyCount": 2,
       "automated": {
         "violations": 0,
-        "passes": 17,
-        "incomplete": 1,
-        "inapplicable": 105,
+        "passes": 12,
+        "incomplete": 0,
+        "inapplicable": 110,
         "criteriaCovered": [
           "1.1.1",
           "1.2.2",
@@ -2502,17 +2518,7 @@
           "4.1.1",
           "4.1.2"
         ],
-        "incompleteDetails": [
-          {
-            "ruleId": "color-contrast",
-            "impact": "serious",
-            "wcagCriteria": [
-              "1.4.3"
-            ],
-            "nodes": 3,
-            "message": "Element's background color could not be determined because it is overlapped by another element"
-          }
-        ]
+        "incompleteDetails": []
       }
     },
     {
@@ -2604,7 +2610,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-x9b6a-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-02ymu-popup\""
           },
           {
             "ruleId": "aria-valid-attr-value",
@@ -2613,7 +2619,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-3e62p-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-mx01n-popup\""
           }
         ]
       }
@@ -2884,9 +2890,9 @@
       "storyCount": 2,
       "automated": {
         "violations": 0,
-        "passes": 22,
+        "passes": 20,
         "incomplete": 0,
-        "inapplicable": 100,
+        "inapplicable": 102,
         "criteriaCovered": [
           "1.1.1",
           "1.2.2",
@@ -2921,9 +2927,9 @@
       "storyCount": 6,
       "automated": {
         "violations": 0,
-        "passes": 72,
+        "passes": 96,
         "incomplete": 0,
-        "inapplicable": 294,
+        "inapplicable": 270,
         "criteriaCovered": [
           "1.1.1",
           "1.2.2",
@@ -3807,7 +3813,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-w1ry0-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-commerce-search-box-yy97w-popup\""
           }
         ]
       }
@@ -4152,9 +4158,9 @@
       "storyCount": 7,
       "automated": {
         "violations": 0,
-        "passes": 7,
+        "passes": 8,
         "incomplete": 0,
-        "inapplicable": 420,
+        "inapplicable": 419,
         "criteriaCovered": [
           "1.1.1",
           "1.2.2",
@@ -4300,9 +4306,9 @@
       "storyCount": 3,
       "automated": {
         "violations": 0,
-        "passes": 7,
+        "passes": 6,
         "incomplete": 0,
-        "inapplicable": 176,
+        "inapplicable": 177,
         "criteriaCovered": [
           "1.1.1",
           "1.2.2",
@@ -4337,9 +4343,9 @@
       "storyCount": 2,
       "automated": {
         "violations": 0,
-        "passes": 12,
+        "passes": 8,
         "incomplete": 0,
-        "inapplicable": 110,
+        "inapplicable": 114,
         "criteriaCovered": [
           "1.1.1",
           "1.2.2",
@@ -4559,9 +4565,9 @@
       "storyCount": 3,
       "automated": {
         "violations": 0,
-        "passes": 8,
+        "passes": 7,
         "incomplete": 0,
-        "inapplicable": 175,
+        "inapplicable": 176,
         "criteriaCovered": [
           "1.1.1",
           "1.2.2",
@@ -4596,9 +4602,9 @@
       "storyCount": 4,
       "automated": {
         "violations": 0,
-        "passes": 16,
+        "passes": 10,
         "incomplete": 0,
-        "inapplicable": 228,
+        "inapplicable": 234,
         "criteriaCovered": [
           "1.1.1",
           "1.2.2",
@@ -5223,7 +5229,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-3vigq-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-hhjym-popup\""
           }
         ]
       }
@@ -5381,7 +5387,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-l4d3c-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-tpjua-popup\""
           },
           {
             "ruleId": "aria-valid-attr-value",
@@ -5390,7 +5396,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-7sem7-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-78ehw-popup\""
           },
           {
             "ruleId": "aria-valid-attr-value",
@@ -5399,7 +5405,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-zgb2d-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-j0ato-popup\""
           }
         ]
       }
@@ -5446,7 +5452,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-fw1uk-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-nopq6-popup\""
           }
         ]
       }
@@ -5493,7 +5499,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-wz14b-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-8fz73-popup\""
           }
         ]
       }
@@ -5540,7 +5546,7 @@
               "4.1.2"
             ],
             "nodes": 1,
-            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-696an-popup\""
+            "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"atomic-search-box-mamqu-popup\""
           }
         ]
       }
@@ -5821,9 +5827,9 @@
       "storyCount": 5,
       "automated": {
         "violations": 0,
-        "passes": 65,
+        "passes": 54,
         "incomplete": 0,
-        "inapplicable": 240,
+        "inapplicable": 251,
         "criteriaCovered": [
           "1.1.1",
           "1.2.2",
@@ -5884,6 +5890,22 @@
           "3.3.2",
           "4.1.1",
           "4.1.2"
+        ],
+        "incompleteDetails": []
+      }
+    },
+    {
+      "name": "atomic-tab-bar",
+      "category": "common",
+      "framework": "lit",
+      "storyCount": 3,
+      "automated": {
+        "violations": 3,
+        "passes": 0,
+        "incomplete": 0,
+        "inapplicable": 0,
+        "criteriaCovered": [
+          "1.3.1"
         ],
         "incompleteDetails": []
       }
@@ -6006,9 +6028,9 @@
       "storyCount": 5,
       "automated": {
         "violations": 0,
-        "passes": 58,
+        "passes": 38,
         "incomplete": 0,
-        "inapplicable": 247,
+        "inapplicable": 267,
         "criteriaCovered": [
           "1.1.1",
           "1.2.2",
@@ -6530,6 +6552,7 @@
         "atomic-sort-dropdown",
         "atomic-sort-expression",
         "atomic-tab",
+        "atomic-tab-bar",
         "atomic-tab-manager",
         "atomic-text",
         "atomic-timeframe",
@@ -7090,6 +7113,7 @@
         "atomic-format-number",
         "atomic-format-unit",
         "atomic-generated-answer",
+        "atomic-generated-answer-feedback-modal",
         "atomic-html",
         "atomic-insight-edit-toggle",
         "atomic-insight-facet",
@@ -9692,13 +9716,13 @@
     }
   ],
   "summary": {
-    "totalComponents": 154,
-    "litComponents": 154,
+    "totalComponents": 156,
+    "litComponents": 156,
     "stencilComponents": 0,
     "stencilExcluded": true,
     "storyCoverage": {
-      "total": 316,
-      "withA11y": 316,
+      "total": 320,
+      "withA11y": 320,
       "excludedFromA11y": 0
     },
     "totalCriteria": 50,
