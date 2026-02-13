@@ -1,9 +1,6 @@
 import '@coveo/atomic/themes/coveo.css';
 import type {Preview} from '@storybook/web-components-vite';
-import {
-  type Parameters,
-  setCustomElementsManifest,
-} from '@storybook/web-components-vite';
+import {setCustomElementsManifest} from '@storybook/web-components-vite';
 import {setStorybookHelpersConfig} from '@wc-toolkit/storybook-helpers';
 import {render} from 'lit';
 import {initialize, mswLoader} from 'msw-storybook-addon';
@@ -34,114 +31,6 @@ setStorybookHelpersConfig({
   hideArgRef: true,
 });
 
-export const loaders = [mswLoader];
-
-export const parameters: Parameters = {
-  options: {
-    storySort: (a, b) => {
-      const topOrder = [
-        'Introduction',
-        'Commerce',
-        'Search',
-        'Recommendations',
-        'Insight',
-        'Common',
-      ];
-
-      const getTopLevel = (story) => story.title.split('/')[0];
-
-      const aTop = getTopLevel(a);
-      const bTop = getTopLevel(b);
-
-      const aIndex = topOrder.indexOf(aTop);
-      const bIndex = topOrder.indexOf(bTop);
-
-      // Top-level order
-      if (aIndex !== bIndex) {
-        return aIndex - bIndex;
-      }
-
-      // Commerce subfolder custom ordering
-      if (aTop === 'Commerce' && bTop === 'Commerce') {
-        const aParts = a.title.split('/').slice(1); // skip top-level
-        const bParts = b.title.split('/').slice(1);
-
-        // Define subfolder priority: Introduction -> Example Pages -> others
-        const subPriority = ['Introduction', 'Example Pages'];
-
-        const aPriority = subPriority.indexOf(aParts[0]);
-        const bPriority = subPriority.indexOf(bParts[0]);
-
-        if (aPriority !== bPriority) {
-          // Introduction/Example Pages first, then others
-          return (
-            (aPriority === -1 ? subPriority.length : aPriority) -
-            (bPriority === -1 ? subPriority.length : bPriority)
-          );
-        }
-
-        // If same priority or both other folders, sort alphabetically
-        return aParts.join('/').localeCompare(bParts.join('/'), 'en-US');
-      }
-
-      // Fallback alphabetical for all other stories
-      return a.title.localeCompare(b.title, 'en-US');
-    },
-  },
-  controls: {
-    expanded: true,
-  },
-
-  a11y: {
-    // 'todo' - show a11y violations in the test UI only
-    // 'error' - fail CI on a11y violations
-    // 'off' - skip a11y checks entirely
-    test: 'error',
-  },
-  docs: {
-    theme: create({
-      base: 'light',
-      colorPrimary: '#1372ec',
-      colorSecondary: '#1372ec',
-      fontBase:
-        '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-      fontCode:
-        'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-      appBg: '#ffffff',
-      textColor: '#282829',
-    }),
-  },
-  chromatic: {disableSnapshot: true},
-};
-
-export const decorators = [
-  (Story) => {
-    const story = Story();
-
-    if (story?._$litType$) {
-      const container = document.createElement('div');
-
-      render(story, container);
-
-      const isTestMode =
-        typeof window !== 'undefined' &&
-        window.location.href.includes('localhost');
-
-      if (!isTestMode) {
-        disableAnalytics(container, [
-          'atomic-recs-interface',
-          'atomic-insight-interface',
-          'atomic-search-interface',
-          'atomic-commerce-interface',
-          'atomic-commerce-recommendation-interface',
-        ]);
-      }
-
-      return story;
-    }
-  },
-];
-
 function disableAnalytics(container, selectors) {
   selectors.forEach((selector) => {
     container.querySelectorAll(selector).forEach((element) => {
@@ -151,6 +40,77 @@ function disableAnalytics(container, selectors) {
 }
 
 const preview: Preview = {
+  loaders: [mswLoader],
+  parameters: {
+    options: {
+      storySort: {
+        order: [
+          'Coveo Atomic Storybook',
+          'Commerce',
+          ['Introduction', 'Example Pages', '*'],
+          'Search',
+          ['Introduction', 'Example Pages', '*'],
+          'Recommendations',
+          ['Introduction', 'Example Pages', '*'],
+          'Insight',
+          ['Introduction', 'Example Pages', '*'],
+          'Common',
+          ['Introduction', 'Example Pages', '*'],
+          '*',
+        ],
+      },
+    },
+    controls: {
+      expanded: true,
+    },
+    a11y: {
+      // 'todo' - show a11y violations in the test UI only
+      // 'error' - fail CI on a11y violations
+      // 'off' - skip a11y checks entirely
+      test: 'error',
+    },
+    docs: {
+      theme: create({
+        base: 'light',
+        colorPrimary: '#1372ec',
+        colorSecondary: '#1372ec',
+        fontBase:
+          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        fontCode:
+          'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+        appBg: '#ffffff',
+        textColor: '#282829',
+      }),
+    },
+    chromatic: {disableSnapshot: true},
+  },
+  decorators: [
+    (Story) => {
+      const story = Story();
+
+      if (story?._$litType$) {
+        const container = document.createElement('div');
+
+        render(story, container);
+
+        const isTestMode =
+          typeof window !== 'undefined' &&
+          window.location.href.includes('localhost');
+
+        if (!isTestMode) {
+          disableAnalytics(container, [
+            'atomic-recs-interface',
+            'atomic-insight-interface',
+            'atomic-search-interface',
+            'atomic-commerce-interface',
+            'atomic-commerce-recommendation-interface',
+          ]);
+        }
+
+        return story;
+      }
+    },
+  ],
   beforeEach({canvasElement, canvas}) {
     Object.assign(canvas, {...within(canvasElement)});
   },
