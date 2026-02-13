@@ -14,12 +14,15 @@
     align-items: center;
   }
 
+  section.sb-bar > div > div:first-child {
+    flex: 1;
+  }
+
   #coveo-docs-search-container {
     display: flex;
     align-items: center;
     height: 100%;
-    min-width: 280px;
-    max-width: 360px;
+    flex: 1;
     position: relative;
   }
 
@@ -34,6 +37,7 @@
     --atomic-search-box-border-radius: 17px;
     --atomic-text-base: 13px;
     height: 34px;
+    width: 100%;
   }
 
   #coveo-docs-search-container atomic-search-box::part(wrapper) {

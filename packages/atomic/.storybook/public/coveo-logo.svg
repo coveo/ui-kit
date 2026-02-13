@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 275">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 275">
   <g>
     <g>
       <path fill="#00ADFF" d="M193.5,88.7c-11.8-11.8-26.8-18.4-42.2-19.8c-1.9-0.2-2.9,2.1-1.6,3.4L174.5,97c0.2,0.2-0.1,0.4-0.2,0.3
@@ -44,5 +44,7 @@
       <polyline fill="white" points="618.9,108.9 616.3,108.9 611.5,119.4 606.5,108.9 603.9,108.9 603.9,125.8 606.5,125.8
         606.5,114.5 610.5,122.8 612.4,122.8 616.3,114.5 616.3,125.8 618.9,125.8 618.9,108.9"/>
     </g>
+    <text fill="white" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="60" font-weight="300" x="635" y="155">|</text>
+    <text fill="white" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="62" font-weight="400" x="670" y="155">Atomic</text>
   </g>
 </svg>
