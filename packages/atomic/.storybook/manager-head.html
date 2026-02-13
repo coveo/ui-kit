@@ -7,19 +7,11 @@
   href="https://static.cloud.coveo.com/atomic/v3/themes/coveo.css"
 />
 <style>
-  /* Allow the toolbar to show the suggestions dropdown */
-  [data-test-id='sb-preview-toolbar'] {
-    overflow: visible !important;
+  section.sb-bar {
+    overflow: visible;
     height: 58px;
-    top: 3px;
-  }
-
-  [data-test-id='sb-preview-toolbar'] > div {
-    overflow: visible !important;
-  }
-
-  [data-test-id='sb-preview-toolbar'] > div > div {
-    overflow: visible !important;
+    display: flex;
+    align-items: center;
   }
 
   #coveo-docs-search-container {
@@ -33,17 +25,27 @@
 
   #coveo-docs-search-container atomic-search-interface {
     width: 100%;
+    display: flex;
+    align-items: center;
   }
 
   #coveo-docs-search-container atomic-search-box {
-    --atomic-search-box-height: 28px;
-    --atomic-search-box-border-radius: 14px;
-    --atomic-text-base: 12px;
+    --atomic-search-box-height: 34px;
+    --atomic-search-box-border-radius: 17px;
+    --atomic-text-base: 13px;
+    height: 34px;
   }
 
   #coveo-docs-search-container atomic-search-box::part(wrapper) {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.2);
+    height: 34px;
+    align-items: center;
+  }
+
+  #coveo-docs-search-container atomic-search-box::part(textarea-expander)::after,
+  #coveo-docs-search-container atomic-search-box::part(textarea) {
+    color: rgba(255, 255, 255, 0.9);
   }
 
   #coveo-docs-search-container atomic-search-box::part(wrapper):focus-within {
@@ -53,10 +55,13 @@
 
   #coveo-docs-search-container atomic-search-box::part(input) {
     color: #fff;
+    line-height: 34px;
+    padding: 0 12px;
   }
 
-  #coveo-docs-search-container atomic-search-box::part(input)::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+  #coveo-docs-search-container atomic-search-box::part(input)::placeholder,
+  #coveo-docs-search-container atomic-search-box::part(textarea)::placeholder {
+    color: transparent;
   }
 
   #coveo-docs-search-container atomic-search-box::part(submit-icon),
@@ -65,8 +70,9 @@
   }
 
   #coveo-docs-search-container atomic-search-box::part(submit-button) {
-    width: 28px;
-    height: 28px;
+    width: 34px;
+    height: 34px;
+    background: transparent;
   }
 
   #coveo-docs-search-container atomic-search-box::part(suggestions-wrapper) {

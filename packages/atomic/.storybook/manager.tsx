@@ -2,7 +2,7 @@ import {IconButton} from 'storybook/internal/components';
 import {STORY_MISSING, STORY_RENDERED} from 'storybook/internal/core-events';
 import {CogIcon} from '@storybook/icons';
 import {addons, types} from 'storybook/manager-api';
-import {themes} from 'storybook/theming';
+import {create} from 'storybook/theming';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React, {useEffect, useRef} from 'react';
 
@@ -62,12 +62,51 @@ function CoveoDocsSearchBox() {
   );
 }
 
+const coveoTheme = create({
+  base: 'dark',
+
+  // Branding
+  brandTitle: 'Coveo Atomic',
+  brandUrl: '?path=/docs/introduction--docs',
+  brandTarget: '_self',
+  brandImage: '/coveo-logo.svg',
+
+  // Colors
+  colorPrimary: '#1372ec',
+  colorSecondary: '#1372ec',
+
+  // UI
+  appBg: '#1b2631',
+  appContentBg: '#1e2a35',
+  appPreviewBg: '#ffffff',
+  appBorderColor: '#3a4a5a',
+  appBorderRadius: 4,
+
+  // Typography
+  fontBase:
+    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  fontCode: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+
+  // Text
+  textColor: '#e8eaed',
+  textInverseColor: '#1b2631',
+  textMutedColor: '#9aa5b1',
+
+  // Toolbar
+  barBg: '#1b2631',
+  barTextColor: '#9aa5b1',
+  barSelectedColor: '#ffffff',
+  barHoverColor: '#e8eaed',
+
+  // Form
+  inputBg: '#263544',
+  inputBorder: '#3a4a5a',
+  inputTextColor: '#e8eaed',
+  inputBorderRadius: 4,
+});
+
 addons.setConfig({
-  theme: {
-    ...themes.dark,
-    brandUrl: '?path=/docs/introduction--default',
-    brandTarget: '_self',
-  },
+  theme: coveoTheme,
 });
 
 addons.register('SELECT-FIRST-STORY-BY-DEFAULT-ONCE', (api) => {

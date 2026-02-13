@@ -8,6 +8,7 @@ import {setStorybookHelpersConfig} from '@wc-toolkit/storybook-helpers';
 import {render} from 'lit';
 import {initialize, mswLoader} from 'msw-storybook-addon';
 import {within} from 'shadow-dom-testing-library';
+import {create} from 'storybook/theming';
 import customElements from '../custom-elements.json';
 import {defineCustomElements} from '../dist/atomic/loader/index.js';
 
@@ -96,6 +97,19 @@ export const parameters: Parameters = {
     // 'error' - fail CI on a11y violations
     // 'off' - skip a11y checks entirely
     test: 'error',
+  },
+  docs: {
+    theme: create({
+      base: 'light',
+      colorPrimary: '#1372ec',
+      colorSecondary: '#1372ec',
+      fontBase:
+        '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+      fontCode:
+        'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+      appBg: '#ffffff',
+      textColor: '#282829',
+    }),
   },
   chromatic: {disableSnapshot: true},
 };
