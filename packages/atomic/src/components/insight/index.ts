@@ -1,6 +1,7 @@
 // Auto-generated file
 export {AtomicInsightEditToggle} from './atomic-insight-edit-toggle/atomic-insight-edit-toggle.js';
 export {AtomicInsightFacet} from './atomic-insight-facet/atomic-insight-facet.js';
+export {AtomicInsightFoldedResultList} from './atomic-insight-folded-result-list/atomic-insight-folded-result-list.js';
 export {AtomicInsightFullSearchButton} from './atomic-insight-full-search-button/atomic-insight-full-search-button.js';
 export {AtomicInsightGenerateAnswerButton} from './atomic-insight-generate-answer-button/atomic-insight-generate-answer-button.js';
 export {AtomicInsightHistoryToggle} from './atomic-insight-history-toggle/atomic-insight-history-toggle.js';
