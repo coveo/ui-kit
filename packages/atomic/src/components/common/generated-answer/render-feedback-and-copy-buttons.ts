@@ -11,6 +11,7 @@ interface GeneratedAnswerActionsState {
   liked: boolean;
   disliked: boolean;
   isStreaming?: boolean;
+  isLoading?: boolean;
   answer?: string;
 }
 
@@ -42,11 +43,11 @@ export const renderFeedbackAndCopyButtons: FunctionalComponent<
     onCopyToClipboard,
   } = props;
 
-  const {liked, disliked, answer, isStreaming} =
+  const {liked, disliked, answer, isStreaming, isLoading} =
     generatedAnswerActionsState ?? {};
 
   return html`${when(
-    !isStreaming,
+    !isStreaming && !isLoading,
     () => html`
       <div
         class="${classMap({
