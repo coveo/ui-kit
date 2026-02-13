@@ -616,6 +616,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
         ),
       onKeyDown: (e: KeyboardEvent) => this.onKeyDown(e),
       onClear: () => {
+        this.announceClearSearchBoxToScreenReader();
         this.searchBox.clear();
         this.suggestionManager.clearSuggestions();
       },
@@ -684,6 +685,10 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     if (isMacOS() && ariaLabel) {
       this.suggestionsAriaMessage = ariaLabel;
     }
+  }
+
+  private announceClearSearchBoxToScreenReader() {
+    this.suggestionsAriaMessage = this.bindings.i18n.t('search-box-cleared');
   }
 
   private announceNewSuggestionsToScreenReader() {

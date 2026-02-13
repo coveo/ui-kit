@@ -1,7 +1,7 @@
 import {isMacOS} from '@/src/utils/device-utils';
 import {Component, Fragment, Host, Prop, VNode, h} from '@stencil/core';
 import {i18n} from 'i18next';
-import {SearchBoxSuggestionElement} from '../suggestions/suggestions-common';
+import {SearchBoxSuggestionElement} from '../suggestions/suggestions-types';
 
 /**
  * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
@@ -25,7 +25,7 @@ export class AtomicSuggestionRenderer {
   @Prop() public lastIndex!: number;
   @Prop() public isDoubleList!: boolean;
   @Prop() public onClick?: (e: Event) => void;
-  @Prop() public onMouseOver?: (e: Event) => void;
+  @Prop() public onMouseEnter?: (e: Event) => void;
 
   private get parts() {
     let part = 'suggestion';
@@ -106,14 +106,14 @@ export class AtomicSuggestionRenderer {
     return (
       <Host class="contents">
         {isButton ? (
-          <button
+          <div
             id={this.id}
             key={this.suggestion.key}
             part={this.parts}
             class={this.classes}
             onMouseDown={(e) => e.preventDefault()}
             onClick={(e: Event) => this.onClick?.(e)}
-            onMouseOver={(e: Event) => this.onMouseOver?.(e)}
+            onMouseEnter={(e: Event) => this.onMouseEnter?.(e)}
             data-query={this.suggestion.query}
             aria-label={this.ariaLabel(isButton)}
             ref={(el) => {
@@ -124,7 +124,7 @@ export class AtomicSuggestionRenderer {
             }}
           >
             {this.content}
-          </button>
+          </div>
         ) : (
           <span
             id={this.id}

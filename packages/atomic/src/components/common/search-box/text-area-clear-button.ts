@@ -28,7 +28,7 @@ export const renderTextAreaClearButton: FunctionalComponent<Props> = ({
           onClick?.();
           textAreaRef?.value?.focus();
         },
-        ariaLabel: i18n.t('clear'),
+        ariaLabel: i18n.t('clear-searchbox'),
       },
     })(
       html`<atomic-icon
