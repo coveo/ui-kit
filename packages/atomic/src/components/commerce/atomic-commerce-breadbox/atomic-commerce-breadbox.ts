@@ -25,7 +25,10 @@ import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import type {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {FocusTargetController} from '@/src/utils/accessibility-utils';
+import {
+  AriaLiveRegionController,
+  FocusTargetController,
+} from '@/src/utils/accessibility-utils';
 import {parseDate} from '@/src/utils/date-utils';
 import {getFieldValueCaption} from '@/src/utils/field-utils';
 import {renderBreadcrumbButton} from '../../common/breadbox/breadcrumb-button';
@@ -84,6 +87,10 @@ export class AtomicCommerceBreadbox
   private breadcrumbRemovedFocus!: FocusTargetController;
   private breadcrumbShowMoreFocus!: FocusTargetController;
   private breadcrumbShowLessFocus!: FocusTargetController;
+  private breadboxAriaMessage = new AriaLiveRegionController(
+    this,
+    'filter-removed'
+  );
 
   public bindings!: CommerceBindings;
   public breadcrumbManager!: BreadcrumbManager;
@@ -337,6 +344,7 @@ export class AtomicCommerceBreadbox
           pathLimit: this.pathLimit,
           breadcrumb,
           i18n: this.bindings.i18n,
+          ariaController: this.breadboxAriaMessage,
           onSelectBreadcrumb: () => {
             if (isLastBreadcrumb) {
               this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();

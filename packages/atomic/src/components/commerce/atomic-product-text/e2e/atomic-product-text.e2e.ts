@@ -8,7 +8,7 @@ test.describe('default', async () => {
 
   test('should be accessible', async ({makeAxeBuilder}) => {
     const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
   test.describe('when field has no value and default is set', async () => {

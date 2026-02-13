@@ -106,7 +106,7 @@ export class AtomicSuggestionRenderer {
     return (
       <Host class="contents">
         {isButton ? (
-          <button
+          <div
             id={this.id}
             key={this.suggestion.key}
             part={this.parts}
@@ -124,7 +124,7 @@ export class AtomicSuggestionRenderer {
             }}
           >
             {this.content}
-          </button>
+          </div>
         ) : (
           <span
             id={this.id}
