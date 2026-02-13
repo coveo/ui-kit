@@ -66,9 +66,9 @@ const coveoTheme = create({
   base: 'dark',
 
   // Branding
-  brandTitle: 'Coveo Atomic',
-  brandUrl: '?path=/docs/introduction--docs',
-  brandTarget: '_self',
+  brandTitle: 'Coveo Docs',
+  brandUrl: 'https://docs.coveo.com/en/0',
+  brandTarget: '_blank',
   brandImage: '/coveo-logo.svg',
 
   // Colors
