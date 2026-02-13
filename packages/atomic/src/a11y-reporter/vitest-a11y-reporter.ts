@@ -22,7 +22,7 @@ const UNKNOWN_FRAMEWORK = 'unknown';
 const AXE_RULE_URL_PATTERN = /rules\/axe\/[\d.]+\/([a-z0-9-]+)/gi;
 const AXE_RULE_TOKEN_PATTERN = /\(([a-z0-9-]+)\)/gi;
 // TODO: Consider using a more robust ANSI escape code parser if needed, such as the 'ansi-regex' package.
-// biome-ignore lint/suspicious/noControlCharactersInRegex: In progress
+// biome-ignore lint/suspicious/noControlCharactersInRegex: In progress...
 const ANSI_ESCAPE_PATTERN = /\u001B\[[0-?]*[ -/]*[@-~]/g;
 
 const ruleToWCAG: Record<string, readonly string[]> = {
