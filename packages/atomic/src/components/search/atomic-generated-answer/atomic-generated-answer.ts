@@ -641,7 +641,7 @@ export class AtomicGeneratedAnswer
         ...(this.generatedAnswer.state.followUpAnswers.followUpAnswers ?? []),
       ];
 
-      return html`<generated-answers-thread .generatedAnswers=${allGeneratedAnswer}></generated-answers-thread>`;
+      return html`<generated-answers-thread .generatedAnswers=${allGeneratedAnswer} .i18n=${this.bindings.i18n}></generated-answers-thread>`;
     }
 
     return renderAnswerContent({

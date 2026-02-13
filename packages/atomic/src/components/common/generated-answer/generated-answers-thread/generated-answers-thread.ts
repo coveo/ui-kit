@@ -3,6 +3,8 @@ import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import '@/src/components/search/generated-answer-thread-item/generated-answer-thread-item';
+import '@/src/components/common/generated-answer/answer-content/answer-content';
+import type {i18n} from 'i18next';
 
 export interface GeneratedAnswer extends GeneratedAnswerBase {
   question: string;
@@ -21,6 +23,8 @@ export class GeneratedAnswersThread extends LitElement {
    */
   @property({attribute: false})
   generatedAnswers: GeneratedAnswer[] = [];
+  @property({attribute: false})
+  i18n: i18n = {} as i18n;
 
   public render() {
     return html`
@@ -33,7 +37,7 @@ export class GeneratedAnswersThread extends LitElement {
             .isCollapsible=${!isLast}
             .isExpanded=${isLast}
           >
-            ${answer.answer}
+            <answer-content .generatedAnswer=${answer} .i18n=${this.i18n}></answer-content>
           </generated-answer-thread-item>`;
         })}
       </div>
