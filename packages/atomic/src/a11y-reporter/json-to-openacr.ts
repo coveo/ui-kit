@@ -1,4 +1,4 @@
-import {mkdir, readFile, writeFile, readdir} from 'node:fs/promises';
+import {mkdir, readdir, readFile, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import type {
@@ -107,7 +107,7 @@ interface OpenAcrCriterion {
     violating_components: string[];
   };
   manual_result: {
-    status: 'not-evaluated';
+    status: string;
     notes: string;
   };
   components: OpenAcrCriterionComponent[];
@@ -688,7 +688,9 @@ async function readOverridesFile(
   }
 }
 
-function isValidManualBaselineEntry(entry: unknown): entry is ManualAuditBaselineEntry {
+function isValidManualBaselineEntry(
+  entry: unknown
+): entry is ManualAuditBaselineEntry {
   return (
     isRecord(entry) &&
     typeof entry.name === 'string' &&
@@ -724,7 +726,10 @@ function parseManualBaseline(
 
   for (const entry of parsed) {
     if (!isValidManualBaselineEntry(entry)) {
-      console.warn(`[json-to-openacr] Skipping invalid manual baseline entry:`, entry);
+      console.warn(
+        `[json-to-openacr] Skipping invalid manual baseline entry:`,
+        entry
+      );
       continue;
     }
 
@@ -732,7 +737,9 @@ function parseManualBaseline(
       continue;
     }
 
-    for (const [criterionKey, statusValue] of Object.entries(entry.manual.wcag22Criteria)) {
+    for (const [criterionKey, statusValue] of Object.entries(
+      entry.manual.wcag22Criteria
+    )) {
       if (typeof statusValue !== 'string') {
         continue;
       }
@@ -776,7 +783,9 @@ async function readManualAuditBaselines(
 
   try {
     const files = await readdir(dirPath);
-    const baselineFiles = files.filter((file) => BASELINE_FILE_PATTERN.test(file));
+    const baselineFiles = files.filter((file) =>
+      BASELINE_FILE_PATTERN.test(file)
+    );
     fileCount = baselineFiles.length;
 
     for (const file of baselineFiles) {
@@ -828,13 +837,66 @@ async function readManualAuditBaselines(
   return allAggregates;
 }
 
+function resolveManualConformance(
+  manualAggregates: ManualAuditAggregate[] | undefined
+): OpenAcrConformance | undefined {
+  if (!manualAggregates || manualAggregates.length === 0) {
+    return undefined;
+  }
+
+  // Count conformances to apply precedence: fail > partial > pass > not-applicable
+  let failCount = 0;
+  let partialCount = 0;
+  let passCount = 0;
+  let notApplicableCount = 0;
+
+  for (const aggregate of manualAggregates) {
+    switch (aggregate.conformance) {
+      case 'does-not-support':
+        failCount++;
+        break;
+      case 'partially-supports':
+        partialCount++;
+        break;
+      case 'supports':
+        passCount++;
+        break;
+      case 'not-applicable':
+        notApplicableCount++;
+        break;
+    }
+  }
+
+  // Apply resolution precedence
+  if (failCount > 0) {
+    return 'does-not-support';
+  }
+  if (partialCount > 0) {
+    return 'partially-supports';
+  }
+  if (passCount > 0) {
+    return 'supports';
+  }
+  if (notApplicableCount > 0) {
+    return 'not-applicable';
+  }
+
+  return undefined;
+}
+
 function resolveConformance(
   criterion: A11yCriterionReport | undefined,
   aggregate: CriterionAggregate | undefined,
+  manualAggregate: ManualAuditAggregate[] | undefined,
   override: A11yOverrideEntry | undefined
 ): OpenAcrConformance {
   if (override) {
     return override.conformance;
+  }
+
+  const manualConformance = resolveManualConformance(manualAggregate);
+  if (manualConformance) {
+    return manualConformance;
   }
 
   const existingConformance = mapCriterionConformance(criterion);
@@ -851,10 +913,46 @@ function buildRemarks(
   conformance: OpenAcrConformance,
   coveredComponents: string[],
   violatingComponents: string[],
+  manualAggregates: ManualAuditAggregate[] | undefined,
   override: A11yOverrideEntry | undefined
 ): string {
   if (override) {
     return `[Override] ${override.reason}`;
+  }
+
+  if (manualAggregates && manualAggregates.length > 0) {
+    let passCount = 0;
+    let failCount = 0;
+    let partialCount = 0;
+    let notApplicableCount = 0;
+
+    for (const aggregate of manualAggregates) {
+      switch (aggregate.conformance) {
+        case 'supports':
+          passCount++;
+          break;
+        case 'does-not-support':
+          failCount++;
+          break;
+        case 'partially-supports':
+          partialCount++;
+          break;
+        case 'not-applicable':
+          notApplicableCount++;
+          break;
+      }
+    }
+
+    const componentsCount = manualAggregates.length;
+    const summaryParts: string[] = [];
+    if (passCount > 0) summaryParts.push(`${passCount} pass`);
+    if (failCount > 0) summaryParts.push(`${failCount} fail`);
+    if (partialCount > 0) summaryParts.push(`${partialCount} partial`);
+    if (notApplicableCount > 0)
+      summaryParts.push(`${notApplicableCount} not-applicable`);
+
+    const summary = summaryParts.join(', ');
+    return `Manual audit: ${summary} across ${componentsCount} component(s).`;
   }
 
   const coveredCount = coveredComponents.length;
@@ -909,7 +1007,8 @@ function buildCriterionComponents(
 
 function buildOpenAcrCriteria(
   report: A11yReport | null,
-  overrides: Map<string, A11yOverrideEntry>
+  overrides: Map<string, A11yOverrideEntry>,
+  manualAggregates: Map<string, ManualAuditAggregate[]>
 ): {
   success_criteria_level_a: OpenAcrCriterion[];
   success_criteria_level_aa: OpenAcrCriterion[];
@@ -937,9 +1036,17 @@ function buildOpenAcrCriteria(
     const violatingComponents = [
       ...(aggregate?.violatingComponents ?? []),
     ].sort(sortStrings);
+
+    const manualAggregatesForCriterion = Array.from(manualAggregates.entries())
+      .filter(([key]) => key.endsWith(`:${definition.id}`))
+      .flatMap(([, entries]) => entries);
+
     const conformance = resolveConformance(
       criterionFromReport,
       aggregate,
+      manualAggregatesForCriterion.length > 0
+        ? manualAggregatesForCriterion
+        : undefined,
       override
     );
     const remarks = buildRemarks(
@@ -947,8 +1054,18 @@ function buildOpenAcrCriteria(
       conformance,
       coveredComponents,
       violatingComponents,
+      manualAggregatesForCriterion.length > 0
+        ? manualAggregatesForCriterion
+        : undefined,
       override
     );
+
+    const manualResultStatus =
+      manualAggregatesForCriterion.length > 0 ? 'evaluated' : 'not-evaluated';
+    const manualResultNotes =
+      manualAggregatesForCriterion.length > 0
+        ? remarks
+        : DEFAULT_MANUAL_PLACEHOLDER_NOTE;
 
     criteriaByChapter[definition.chapterId].push({
       num: definition.id,
@@ -968,8 +1085,8 @@ function buildOpenAcrCriteria(
         violating_components: violatingComponents,
       },
       manual_result: {
-        status: 'not-evaluated',
-        notes: DEFAULT_MANUAL_PLACEHOLDER_NOTE,
+        status: manualResultStatus,
+        notes: manualResultNotes,
       },
       components: buildCriterionComponents(
         conformance,
@@ -1030,18 +1147,32 @@ function buildSummary(
 
 function buildOpenAcrReport(
   report: A11yReport | null,
-  overrides: Map<string, A11yOverrideEntry>
+  overrides: Map<string, A11yOverrideEntry>,
+  manualAggregates: Map<string, ManualAuditAggregate[]>
 ): OpenAcrReport {
   const reportDate = report?.report.reportDate ?? DEFAULT_REPORT_DATE;
   const reportProductName =
     report?.report.product ?? DEFAULT_REPORT_PRODUCT_NAME;
   const reportProductVersion =
     report?.report.version ?? DEFAULT_REPORT_PRODUCT_VERSION;
-  const evaluationMethods = report?.report.evaluationMethods?.length
-    ? report.report.evaluationMethods.join('; ')
-    : 'axe-core Storybook scans; manual audit placeholders pending';
 
-  const criteriaByChapter = buildOpenAcrCriteria(report, overrides);
+  let evaluationMethods = report?.report.evaluationMethods?.length
+    ? report.report.evaluationMethods.join('; ')
+    : 'axe-core Storybook scans';
+
+  if (manualAggregates.size > 0) {
+    if (!evaluationMethods.includes('Manual audit')) {
+      evaluationMethods += '; Manual audit';
+    }
+  } else {
+    evaluationMethods += '; manual audit placeholders pending';
+  }
+
+  const criteriaByChapter = buildOpenAcrCriteria(
+    report,
+    overrides,
+    manualAggregates
+  );
   const summary = buildSummary(
     criteriaByChapter.success_criteria_level_a,
     criteriaByChapter.success_criteria_level_aa
@@ -1288,7 +1419,11 @@ export async function transformJsonToOpenAcr(
     );
   }
 
-  const openAcrReport = buildOpenAcrReport(report, overrides);
+  const manualAggregates = await readManualAuditBaselines(
+    DEFAULT_MANUAL_AUDIT_DIR
+  );
+
+  const openAcrReport = buildOpenAcrReport(report, overrides, manualAggregates);
   const serialized = serializeToYaml(openAcrReport);
 
   await mkdir(path.dirname(outputFile), {recursive: true});
