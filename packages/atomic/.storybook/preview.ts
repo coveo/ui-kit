@@ -46,9 +46,9 @@ const preview: Preview = {
       storySort: {
         order: [
           'Coveo Atomic Storybook',
-          'Commerce',
-          ['Introduction', 'Example Pages', '*'],
           'Search',
+          ['Introduction', 'Example Pages', '*'],
+          'Commerce',
           ['Introduction', 'Example Pages', '*'],
           'Recommendations',
           ['Introduction', 'Example Pages', '*'],
