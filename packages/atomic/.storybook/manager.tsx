@@ -28,21 +28,35 @@ function CoveoDocsSearchBox() {
     const searchInterface = containerRef.current.querySelector(
       'atomic-search-interface'
     ) as HTMLElement & {
-      initialize: (options: Record<string, string>) => Promise<void>;
+      initialize: (options: {
+        accessToken: string;
+        organizationId: string;
+      }) => Promise<void>;
     };
 
     if (!searchInterface) {
       return;
     }
 
+    let cancelled = false;
+
     customElements.whenDefined('atomic-search-interface').then(() => {
-      searchInterface.initialize({
-        accessToken: 'xx6ac9d08f-eb9a-48d5-9240-d7c251470c93',
-        organizationId: 'coveosearch',
-      }).catch((err) => {
-        console.warn('Coveo Docs search initialization failed:', err);
-      });
+      if (cancelled) {
+        return;
+      }
+      searchInterface
+        .initialize({
+          accessToken: 'xx6ac9d08f-eb9a-48d5-9240-d7c251470c93',
+          organizationId: 'coveosearch',
+        })
+        .catch((err) => {
+          console.warn('Coveo Docs search initialization failed:', err);
+        });
     });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
