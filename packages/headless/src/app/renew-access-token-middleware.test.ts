@@ -224,6 +224,54 @@ describe('createRenewAccessTokenMiddleware', () => {
     });
   });
 
+  it('should only call renewToken once in the reactive path when a 401 is returned', async () => {
+    const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
+    (shouldRenewJWT as Mock).mockReturnValue(false);
+
+    const payload = buildExpiredTokenPayload();
+    const action = () => Promise.resolve(payload);
+    const renewFn = vi.fn().mockResolvedValue('newToken');
+    const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
+
+    await callMiddleware(middleware, action);
+
+    expect(renewFn).toHaveBeenCalledTimes(1);
+  });
+
+  it('should re-dispatch the action even when renewToken throws in the reactive path', async () => {
+    const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
+    (shouldRenewJWT as Mock).mockReturnValue(false);
+
+    const payload = buildExpiredTokenPayload();
+    const action = () => Promise.resolve(payload);
+    const renewFn = vi
+      .fn()
+      .mockRejectedValue(new Error('renewal service down'));
+    const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
+
+    await callMiddleware(middleware, action);
+
+    expect(store.dispatch).toHaveBeenCalledWith(action);
+  });
+
+  it('should not dispatch updateBasicConfiguration with an empty token when renewToken fails in the reactive path', async () => {
+    const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
+    (shouldRenewJWT as Mock).mockReturnValue(false);
+
+    const payload = buildExpiredTokenPayload();
+    const action = () => Promise.resolve(payload);
+    const renewFn = vi
+      .fn()
+      .mockRejectedValue(new Error('renewal service down'));
+    const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
+
+    await callMiddleware(middleware, action);
+
+    expect(store.dispatch).not.toHaveBeenCalledWith(
+      updateBasicConfiguration({accessToken: ''})
+    );
+  });
+
   it('should dispatch actions on the store on the third call when 500ms pass after the second call with no invocations', async () => {
     const payload = buildExpiredTokenPayload();
     const action = () => Promise.resolve(payload);

@@ -29,12 +29,12 @@ export function createRenewAccessTokenMiddleware(
     store: MiddlewareAPI,
     handleErrors = false
   ): Promise<string | null> => {
-    const isTokenRenewalPending = !pendingTokenRenewal;
+    const shouldDoInitiateRenewal = !pendingTokenRenewal;
 
-    if (isTokenRenewalPending && renewToken) {
+    if (shouldDoInitiateRenewal && renewToken) {
       pendingTokenRenewal = (async () => {
         if (handleErrors) {
-          attempt(renewToken);
+          return await attempt(renewToken);
         }
         return await renewToken();
       })().finally(() => {
@@ -44,7 +44,7 @@ export function createRenewAccessTokenMiddleware(
 
     const accessToken = await pendingTokenRenewal;
 
-    if (isTokenRenewalPending && accessToken) {
+    if (shouldDoInitiateRenewal && accessToken) {
       store.dispatch(updateBasicConfiguration({accessToken}));
     }
 
