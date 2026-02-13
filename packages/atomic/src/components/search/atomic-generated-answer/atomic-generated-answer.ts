@@ -648,6 +648,9 @@ export class AtomicGeneratedAnswer
         .generatedAnswers=${allGeneratedAnswer}
         .i18n=${this.bindings.i18n}
         .renderCitations=${this.renderCitationsList.bind(this)}
+        .onClickLike=${(answerId: string) => this.generatedAnswer.like(answerId)}
+        .onClickDislike=${(answerId: string) => this.generatedAnswer.dislike(answerId)}
+        .onCopyToClipboard=${(answerId: string) => this.generatedAnswer.logCopyToClipboard(answerId)}
       ></generated-answers-thread>`;
     }
 

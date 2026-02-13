@@ -31,6 +31,12 @@ export class GeneratedAnswersThread extends LitElement {
   @property({attribute: false})
   renderCitations: (citations: GeneratedAnswerCitation[]) => TemplateResult =
     () => html``;
+  @property({attribute: false})
+  onClickLike: (answerId: string) => void = () => {};
+  @property({attribute: false})
+  onClickDislike: (answerId: string) => void = () => {};
+  @property({attribute: false})
+  onCopyToClipboard: (answerId: string) => void = () => {};
 
   public render() {
     return html`
@@ -43,7 +49,14 @@ export class GeneratedAnswersThread extends LitElement {
             .isCollapsible=${!isLast}
             .isExpanded=${isLast}
           >
-            <answer-content .generatedAnswer=${answer} .i18n=${this.i18n} .renderCitations=${this.renderCitations}></answer-content>
+            <answer-content
+              .generatedAnswer=${answer}
+              .i18n=${this.i18n}
+              .renderCitations=${this.renderCitations}
+              .onClickLike=${this.onClickLike}
+              .onClickDislike=${this.onClickDislike}
+              .onCopyToClipboard=${this.onCopyToClipboard}
+            ></answer-content>
           </generated-answer-thread-item>`;
         })}
       </div>
