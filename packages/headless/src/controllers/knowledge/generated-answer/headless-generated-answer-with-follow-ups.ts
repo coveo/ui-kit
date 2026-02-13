@@ -50,6 +50,8 @@ export interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
   like(answerId: string): void;
   dislike(): void;
   dislike(answerId: string): void;
+  logCopyToClipboard(): void;
+  logCopyToClipboard(answerId: string): void;
 }
 
 /**
@@ -130,6 +132,7 @@ export function buildGeneratedAnswerWithFollowUps(
     like(answerId?: string) {
       if (!answerId || this.state.answerId === answerId) {
         engine.dispatch(likeGeneratedAnswer());
+        engine.dispatch(analyticsClient.logLikeGeneratedAnswer());
         return;
       }
       engine.dispatch(likeFollowUp({answerId: answerId}));
@@ -137,9 +140,17 @@ export function buildGeneratedAnswerWithFollowUps(
     dislike(answerId?: string) {
       if (!answerId || this.state.answerId === answerId) {
         engine.dispatch(dislikeGeneratedAnswer());
+        engine.dispatch(analyticsClient.logDislikeGeneratedAnswer());
         return;
       }
       engine.dispatch(dislikeFollowUp({answerId: answerId}));
+    },
+    logCopyToClipboard(answerId?: string) {
+      if (!answerId || this.state.answerId === answerId) {
+        engine.dispatch(analyticsClient.logCopyGeneratedAnswer());
+        return;
+      }
+      // Todo: implement logCopyFollowUp action and dispatch here
     },
   };
 }
