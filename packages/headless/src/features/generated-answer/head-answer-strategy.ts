@@ -22,8 +22,8 @@ import {
 export const createHeadAnswerStrategy =
   (): StreamingStrategy<AnswerGenerationApiState> => {
     return {
-      handleOpen: (response, dispatch) => {
-        const answerId = response.headers.get('x-request-id');
+      handleOpen: (_response, dispatch) => {
+        const answerId = Math.random().toString(36).substring(2, 15);
         if (answerId) {
           dispatch(setAnswerId(answerId));
         }

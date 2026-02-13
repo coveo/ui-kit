@@ -42,8 +42,9 @@ interface ServerStateEventHandler<TDraft = GeneratedAnswerServerState> {
  * Manages answer server state updates during answer generation streaming.
  */
 export const serverStateEventHandler: ServerStateEventHandler = {
-  handleOpen: (response, updateCachedData) => {
-    const answerId = response.headers.get('x-answer-id');
+  handleOpen: (_response, updateCachedData) => {
+    const answerId = Math.random().toString(36).substring(2, 15);
+
     if (answerId) {
       updateCachedData((draft) => {
         setAnswerId(draft, answerId);
