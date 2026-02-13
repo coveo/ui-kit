@@ -127,16 +127,6 @@ export namespace Components {
     string[]
   >;
     }
-    interface AtomicInsightSmartSnippetSuggestions {
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
-         */
-        "headingLevel": number;
-        /**
-          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
-    }
     interface AtomicInsightTimeframeFacet {
         /**
           * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc   ... ></atomic-insight-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc="doc"   ... ></atomic-insight-timeframe-facet> ```
@@ -373,12 +363,6 @@ declare global {
         prototype: HTMLAtomicInsightResultChildrenTemplateElement;
         new (): HTMLAtomicInsightResultChildrenTemplateElement;
     };
-    interface HTMLAtomicInsightSmartSnippetSuggestionsElement extends Components.AtomicInsightSmartSnippetSuggestions, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightSmartSnippetSuggestionsElement: {
-        prototype: HTMLAtomicInsightSmartSnippetSuggestionsElement;
-        new (): HTMLAtomicInsightSmartSnippetSuggestionsElement;
-    };
     interface HTMLAtomicInsightTimeframeFacetElement extends Components.AtomicInsightTimeframeFacet, HTMLStencilElement {
     }
     var HTMLAtomicInsightTimeframeFacetElement: {
@@ -442,7 +426,6 @@ declare global {
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
         "atomic-insight-result-attach-to-case-action": HTMLAtomicInsightResultAttachToCaseActionElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
-        "atomic-insight-smart-snippet-suggestions": HTMLAtomicInsightSmartSnippetSuggestionsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
         "atomic-ipx-recs-list": HTMLAtomicIpxRecsListElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
@@ -561,16 +544,6 @@ declare namespace LocalJSX {
     string,
     string[]
   >;
-    }
-    interface AtomicInsightSmartSnippetSuggestions {
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
-         */
-        "headingLevel"?: number;
-        /**
-          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
-         */
-        "snippetStyle"?: string;
     }
     interface AtomicInsightTimeframeFacet {
         /**
@@ -726,7 +699,6 @@ declare namespace LocalJSX {
         "atomic-insight-result-action": AtomicInsightResultAction;
         "atomic-insight-result-attach-to-case-action": AtomicInsightResultAttachToCaseAction;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
-        "atomic-insight-smart-snippet-suggestions": AtomicInsightSmartSnippetSuggestions;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
         "atomic-ipx-recs-list": AtomicIpxRecsList;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
@@ -744,7 +716,6 @@ declare module "@stencil/core" {
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
             "atomic-insight-result-attach-to-case-action": LocalJSX.AtomicInsightResultAttachToCaseAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseActionElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
-            "atomic-insight-smart-snippet-suggestions": LocalJSX.AtomicInsightSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetSuggestionsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
             /**
              * The `atomic-ipx-recs-list` component displays recommendations by applying one or more result templates.
