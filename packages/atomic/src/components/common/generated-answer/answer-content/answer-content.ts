@@ -50,7 +50,11 @@ export class AnswerContent extends LitElement {
       citations = [],
     } = this.generatedAnswer || {};
 
-    if (!this.generatedAnswer) {
+    if (this.generatedAnswer?.isLoading) {
+      return html`Loading...`;
+    }
+
+    if (!this.generatedAnswer?.answer) {
       return html``;
     }
 
