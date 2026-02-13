@@ -47,23 +47,30 @@ export function buildGeneratedAnswer(
   warnIfUsingNextAnalyticsModeForServiceFeature(
     engine.state.configuration.analytics.analyticsMode
   );
-  const controller = props.agentId
-    ? buildGeneratedAnswerWithFollowUps(
-        engine,
-        generatedAnswerAnalyticsClient,
-        props
-      )
-    : props.answerConfigurationId
-      ? buildAnswerApiGeneratedAnswer(
-          engine,
-          generatedAnswerAnalyticsClient,
-          props
-        )
-      : buildSearchAPIGeneratedAnswer(
-          engine,
-          generatedAnswerAnalyticsClient,
-          props
-        );
+
+  let controller: GeneratedAnswer | GeneratedAnswerWithFollowUps;
+  if (props.agentId && props.agentId.trim() !== '') {
+    controller = buildGeneratedAnswerWithFollowUps(
+      engine,
+      generatedAnswerAnalyticsClient,
+      {...props, agentId: props.agentId}
+    );
+  } else if (
+    props.answerConfigurationId &&
+    props.answerConfigurationId.trim() !== ''
+  ) {
+    controller = buildAnswerApiGeneratedAnswer(
+      engine,
+      generatedAnswerAnalyticsClient,
+      props
+    );
+  } else {
+    controller = buildSearchAPIGeneratedAnswer(
+      engine,
+      generatedAnswerAnalyticsClient,
+      props
+    );
+  }
 
   return {
     ...controller,

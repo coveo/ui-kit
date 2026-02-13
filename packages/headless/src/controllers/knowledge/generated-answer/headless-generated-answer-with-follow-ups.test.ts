@@ -13,11 +13,13 @@ import {
   type MockedSearchEngine,
 } from '../../../test/mock-engine-v2.js';
 import {createMockState} from '../../../test/mock-state.js';
-import type {GeneratedAnswerProps} from '../../generated-answer/headless-generated-answer.js';
-import {buildGeneratedAnswerWithFollowUps} from './headless-generated-answer-with-follow-ups.js';
+import {
+  buildGeneratedAnswerWithFollowUps,
+  type GeneratedAnswerWithFollowUpsProps,
+} from './headless-generated-answer-with-follow-ups.js';
 
 vi.mock('../../../features/generated-answer/generated-answer-actions');
-vi.mock('../../../features/configuration/configuration-actions.js');
+vi.mock('../../../features/configuration/configuration-actions');
 
 vi.mock(
   '../../../features/generated-answer/generated-answer-analytics-actions'
@@ -51,7 +53,7 @@ describe('GeneratedAnswerWithFollowUps', () => {
   const mockSelectAnswerApiQueryParams = vi.mocked(selectAnswerApiQueryParams);
 
   const createGeneratedAnswerWithFollowUps = (
-    props: GeneratedAnswerProps = {}
+    props: GeneratedAnswerWithFollowUpsProps = {agentId: 'default-agent-id'}
   ) =>
     buildGeneratedAnswerWithFollowUps(
       engine,
@@ -93,6 +95,24 @@ describe('GeneratedAnswerWithFollowUps', () => {
   it('initializes', () => {
     const controller = createGeneratedAnswerWithFollowUps();
     expect(controller).toBeTruthy();
+  });
+
+  it('throws an error when agentId is empty', () => {
+    expect(() => createGeneratedAnswerWithFollowUps({agentId: ''})).toThrow(
+      'agentId is required for GeneratedAnswerWithFollowUps'
+    );
+  });
+
+  it('throws an error when agentId is whitespace', () => {
+    expect(() => createGeneratedAnswerWithFollowUps({agentId: '  '})).toThrow(
+      'agentId is required for GeneratedAnswerWithFollowUps'
+    );
+  });
+
+  it('should not throw an error when agentId is valid', () => {
+    expect(() =>
+      createGeneratedAnswerWithFollowUps({agentId: 'valid-agent-id'})
+    ).not.toThrow();
   });
 
   it('adds the answerGenerationApi and followUpAnswers reducers to engine', () => {

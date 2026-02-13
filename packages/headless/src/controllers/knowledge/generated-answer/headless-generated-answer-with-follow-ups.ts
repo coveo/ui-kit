@@ -34,6 +34,9 @@ export interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
   state: GeneratedAnswerWithFollowUpsState;
 }
 
+export type GeneratedAnswerWithFollowUpsProps = GeneratedAnswerProps &
+  Required<Pick<GeneratedAnswerProps, 'agentId'>>;
+
 /**
  *
  * @internal
@@ -47,8 +50,12 @@ export interface GeneratedAnswerWithFollowUps extends GeneratedAnswer {
 export function buildGeneratedAnswerWithFollowUps(
   engine: SearchEngine | InsightEngine,
   analyticsClient: GeneratedAnswerAnalyticsClient,
-  props: GeneratedAnswerProps = {}
+  props: GeneratedAnswerWithFollowUpsProps
 ): GeneratedAnswerWithFollowUps {
+  if (!props.agentId || props.agentId.trim() === '') {
+    throw new Error('agentId is required for GeneratedAnswerWithFollowUps');
+  }
+
   if (!loadReducers(engine)) {
     throw loadReducerError;
   }
@@ -59,7 +66,7 @@ export function buildGeneratedAnswerWithFollowUps(
     props
   );
   const getState = () => engine.state;
-  engine.dispatch(setAgentId(props.agentId!));
+  engine.dispatch(setAgentId(props.agentId));
 
   return {
     ...controller,
