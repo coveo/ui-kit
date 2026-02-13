@@ -8,6 +8,7 @@ import {within} from 'shadow-dom-testing-library';
 import {create} from 'storybook/theming';
 import customElements from '../custom-elements.json';
 import {defineCustomElements} from '../dist/atomic/loader/index.js';
+import {COVEO_PRIMARY, FONT_BASE, FONT_CODE} from './theme';
 
 initialize(
   import.meta.env.DEV || import.meta.env.VITE_IS_CDN === 'true'
@@ -72,12 +73,10 @@ const preview: Preview = {
     docs: {
       theme: create({
         base: 'light',
-        colorPrimary: '#1372ec',
-        colorSecondary: '#1372ec',
-        fontBase:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-        fontCode:
-          'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+        colorPrimary: COVEO_PRIMARY,
+        colorSecondary: COVEO_PRIMARY,
+        fontBase: FONT_BASE,
+        fontCode: FONT_CODE,
         appBg: '#ffffff',
         textColor: '#282829',
       }),

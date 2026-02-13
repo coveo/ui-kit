@@ -3,6 +3,7 @@ import {STORY_MISSING, STORY_RENDERED} from 'storybook/internal/core-events';
 import {CogIcon} from '@storybook/icons';
 import {addons, types} from 'storybook/manager-api';
 import {create} from 'storybook/theming';
+import {COVEO_PRIMARY, FONT_BASE, FONT_CODE} from './theme';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React, {useEffect, useRef} from 'react';
 
@@ -38,6 +39,8 @@ function CoveoDocsSearchBox() {
       searchInterface.initialize({
         accessToken: 'xx6ac9d08f-eb9a-48d5-9240-d7c251470c93',
         organizationId: 'coveosearch',
+      }).catch((err) => {
+        console.warn('Coveo Docs search initialization failed:', err);
       });
     });
   }, []);
@@ -72,8 +75,8 @@ const coveoTheme = create({
   brandImage: '/coveo-logo.svg',
 
   // Colors
-  colorPrimary: '#1372ec',
-  colorSecondary: '#1372ec',
+  colorPrimary: COVEO_PRIMARY,
+  colorSecondary: COVEO_PRIMARY,
 
   // UI
   appBg: '#1b2631',
@@ -83,9 +86,8 @@ const coveoTheme = create({
   appBorderRadius: 4,
 
   // Typography
-  fontBase:
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-  fontCode: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+  fontBase: FONT_BASE,
+  fontCode: FONT_CODE,
 
   // Text
   textColor: '#e8eaed',
