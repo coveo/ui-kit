@@ -1,6 +1,6 @@
 import {html} from 'lit';
 import {beforeEach, describe, expect, it, type MockInstance, vi} from 'vitest';
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
+import {renderInAtomicSearchInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/search/atomic-search-interface-fixture';
 import type {AtomicIpxEmbedded} from './atomic-ipx-embedded';
 import './atomic-ipx-embedded';
 
@@ -10,29 +10,35 @@ vi.mock('@/src/utils/replace-breakpoint-utils.js', () => ({
 
 describe('atomic-ipx-embedded', () => {
   const renderEmbedded = async ({
+    id,
     container,
-    slottedContent,
+    slots,
   }: {
+    id?: string;
     container?: HTMLElement;
-    slottedContent?: string;
+    slots?: {
+      header?: string;
+      body?: string;
+      footer?: string;
+    };
   } = {}) => {
-    const element = await fixture<AtomicIpxEmbedded>(html`
-      <atomic-ipx-embedded .container=${container}>
-        ${
-          slottedContent
-            ? html`<div slot="header">Header</div>
-              <div slot="body">Body</div>
-              <div slot="footer">Footer</div>`
-            : ''
-        }
-      </atomic-ipx-embedded>
-    `);
+    const {element} = await renderInAtomicSearchInterface<AtomicIpxEmbedded>({
+      template: html`
+        <atomic-ipx-embedded id=${id ?? ''} .container=${container}>
+          ${slots?.header ? html`<div slot="header">${slots.header}</div>` : ''}
+          ${slots?.body ? html`<div slot="body">${slots.body}</div>` : ''}
+          ${slots?.footer ? html`<div slot="footer">${slots.footer}</div>` : ''}
+        </atomic-ipx-embedded>
+      `,
+      selector: 'atomic-ipx-embedded',
+    });
 
     return {
       element,
       parts: (el: AtomicIpxEmbedded) => ({
         backdrop: el.shadowRoot?.querySelector('[part="backdrop"]'),
-        body: el.shadowRoot?.querySelector('atomic-ipx-body'),
+        container: el.shadowRoot?.querySelector('[part="container"]'),
+        footerWrapper: el.shadowRoot?.querySelector('[part="footer-wrapper"]'),
       }),
     };
   };
@@ -45,9 +51,7 @@ describe('atomic-ipx-embedded', () => {
     });
 
     it('should preserve existing ID if provided', async () => {
-      const element = await fixture<AtomicIpxEmbedded>(html`
-        <atomic-ipx-embedded id="custom-id"></atomic-ipx-embedded>
-      `);
+      const {element} = await renderEmbedded({id: 'custom-id'});
       expect(element.id).toBe('custom-id');
     });
   });
@@ -63,15 +67,16 @@ describe('atomic-ipx-embedded', () => {
       expect(parts(element).backdrop).toBeTruthy();
     });
 
-    it('should render atomic-ipx-body element', async () => {
+    it('should render ipx-body container', async () => {
       const {element, parts} = await renderEmbedded();
-      expect(parts(element).body).toBeTruthy();
+      expect(parts(element).container).toBeTruthy();
     });
 
-    it('should pass displayFooterSlot prop to atomic-ipx-body when footer slot has content', async () => {
-      const {element, parts} = await renderEmbedded({slottedContent: 'yes'});
-      const body = parts(element).body;
-      expect(body?.displayFooterSlot).toBe(true);
+    it('should render footer wrapper when footer slot has content', async () => {
+      const {element, parts} = await renderEmbedded({
+        slots: {footer: 'Footer'},
+      });
+      expect(parts(element).footerWrapper).toBeTruthy();
     });
   });
 
@@ -89,22 +94,16 @@ describe('atomic-ipx-embedded', () => {
   });
 
   describe('when checking footer slot', () => {
-    it('should pass displayFooterSlot as true when footer slot has content', async () => {
-      const element = await fixture<AtomicIpxEmbedded>(html`
-        <atomic-ipx-embedded>
-          <div slot="footer">Footer content</div>
-        </atomic-ipx-embedded>
-      `);
-      const body = element.shadowRoot?.querySelector('atomic-ipx-body');
-      expect(body?.displayFooterSlot).toBe(true);
+    it('should render footer wrapper when footer slot has content', async () => {
+      const {element, parts} = await renderEmbedded({
+        slots: {footer: 'Footer content'},
+      });
+      expect(parts(element).footerWrapper).toBeTruthy();
     });
 
-    it('should pass displayFooterSlot as false when footer slot is empty', async () => {
-      const element = await fixture<AtomicIpxEmbedded>(html`
-        <atomic-ipx-embedded></atomic-ipx-embedded>
-      `);
-      const body = element.shadowRoot?.querySelector('atomic-ipx-body');
-      expect(body?.displayFooterSlot).toBe(false);
+    it('should not render footer wrapper when footer slot is empty', async () => {
+      const {element, parts} = await renderEmbedded();
+      expect(parts(element).footerWrapper).toBeFalsy();
     });
   });
 
@@ -135,31 +134,19 @@ describe('atomic-ipx-embedded', () => {
 
   describe('when using slots', () => {
     it('should support header slot', async () => {
-      const element = await fixture<AtomicIpxEmbedded>(html`
-        <atomic-ipx-embedded>
-          <div slot="header" id="test-header">Header</div>
-        </atomic-ipx-embedded>
-      `);
+      const {element} = await renderEmbedded({slots: {header: 'Header'}});
       const headerSlot = element.querySelector('[slot="header"]');
       expect(headerSlot?.textContent).toBe('Header');
     });
 
     it('should support body slot', async () => {
-      const element = await fixture<AtomicIpxEmbedded>(html`
-        <atomic-ipx-embedded>
-          <div slot="body" id="test-body">Body</div>
-        </atomic-ipx-embedded>
-      `);
+      const {element} = await renderEmbedded({slots: {body: 'Body'}});
       const bodySlot = element.querySelector('[slot="body"]');
       expect(bodySlot?.textContent).toBe('Body');
     });
 
     it('should support footer slot', async () => {
-      const element = await fixture<AtomicIpxEmbedded>(html`
-        <atomic-ipx-embedded>
-          <div slot="footer" id="test-footer">Footer</div>
-        </atomic-ipx-embedded>
-      `);
+      const {element} = await renderEmbedded({slots: {footer: 'Footer'}});
       const footerSlot = element.querySelector('[slot="footer"]');
       expect(footerSlot?.textContent).toBe('Footer');
     });

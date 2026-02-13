@@ -45,20 +45,6 @@ export const InsightPanelsSelectors = {
   layoutStyleTags: () =>
     InsightPanelsSelectors.interface().find('atomic-insight-layout > style'),
   topLevelStyleTags: () => cy.get('head > style'),
-  smartSnippet: () =>
-    InsightPanelsSelectors.interface().find('atomic-insight-smart-snippet'),
-  smartSnippetExpandableAnswer: () =>
-    InsightPanelsSelectors.smartSnippet()
-      .shadow()
-      .find('atomic-smart-snippet-expandable-answer'),
-  smartSnippetFeedbackNoButton: () =>
-    InsightPanelsSelectors.smartSnippet()
-      .shadow()
-      .find('[part="feedback-dislike-button"]'),
-  smartSnippetsExplainWhyButton: () =>
-    InsightPanelsSelectors.smartSnippet()
-      .shadow()
-      .find('[part="feedback-explain-why-button"]'),
   smartSnippetFeedbackModal: () =>
     InsightPanelsSelectors.interface().find(
       'atomic-insight-smart-snippet-feedback-modal'

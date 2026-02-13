@@ -4,6 +4,7 @@ export type CommerceApiMethod =
   | 'recommendations'
   | 'search/productSuggest'
   | 'search/querySuggest'
+  | 'search/redirect'
   | 'querySuggest'
   | 'facet'
   | 'badges';
