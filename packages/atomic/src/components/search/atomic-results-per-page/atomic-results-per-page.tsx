@@ -107,7 +107,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
         hasItems={this.searchStatusState.hasResults}
         isAppLoaded={this.isAppLoaded}
       >
-        <div class="flex items-center" role="toolbar" aria-label={this.label}>
+        <div class="flex items-center">
           <Label>{this.label}</Label>
           <FieldsetGroup label={this.label}>
             <Choices

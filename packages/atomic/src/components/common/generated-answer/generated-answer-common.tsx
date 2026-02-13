@@ -455,7 +455,13 @@ export class GeneratedAnswerCommon {
     if (this.hasNoAnswerGenerated) {
       return cannotAnswer && this.hasCustomNoAnswerMessage ? (
         <div>
-          <aside class={contentClasses} part="container">
+          <aside
+            class={contentClasses}
+            part="container"
+            aria-label={this.props
+              .getBindings()
+              .i18n.t('generated-answer-title')}
+          >
             <article>{this.renderCustomNoAnswerMessage()}</article>
           </aside>
         </div>
@@ -464,7 +470,11 @@ export class GeneratedAnswerCommon {
 
     return (
       <div>
-        <aside class={contentClasses} part="container">
+        <aside
+          class={contentClasses}
+          part="container"
+          aria-label={this.props.getBindings().i18n.t('generated-answer-title')}
+        >
           <article>{this.renderContent()}</article>
         </aside>
       </div>

@@ -11,6 +11,7 @@ export const SmartSnippetSuggestionsWrapper: FunctionalComponent<{
     <aside
       part="container"
       class="bg-background border-neutral text-on-background overflow-hidden rounded-lg border"
+      aria-label={i18n.t('smart-snippet-people-also-ask')}
     >
       <Heading
         level={headingLevel}
