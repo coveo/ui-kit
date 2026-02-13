@@ -1,4 +1,4 @@
-import {mkdir, readFile, writeFile} from 'node:fs/promises';
+import {mkdir, readFile, writeFile, readdir} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import type {
@@ -14,6 +14,7 @@ import {
 const DEFAULT_OPENACR_OUTPUT_FILENAME = 'openacr.yaml';
 const DEFAULT_OVERRIDES_FILENAME = 'a11y-overrides.json';
 const DEFAULT_OVERRIDES_DIR = 'a11y';
+const DEFAULT_MANUAL_AUDIT_DIR = 'a11y/reports';
 const DEFAULT_REPORT_TITLE = 'Coveo Accessibility Conformance Report';
 const DEFAULT_REPORT_PRODUCT_NAME = 'Coveo Atomic';
 const DEFAULT_REPORT_PRODUCT_VERSION = '3.x.x';
@@ -31,6 +32,16 @@ const VALID_OVERRIDE_CONFORMANCE_VALUES: ReadonlySet<OpenAcrConformance> =
     'not-applicable',
     'not-evaluated',
   ]);
+
+const BASELINE_FILE_PATTERN = /^manual-audit-(?!.*-violations)([\w-]+)\.json$/;
+const CRITERION_KEY_REGEX = /^(\d+(?:\.\d+)+)-/;
+
+const manualStatusToConformance: Record<string, OpenAcrConformance> = {
+  pass: 'supports',
+  fail: 'does-not-support',
+  partial: 'partially-supports',
+  'not-applicable': 'not-applicable',
+};
 
 type ChapterId = 'success_criteria_level_a' | 'success_criteria_level_aa';
 type CriterionLevel = 'A' | 'AA';
@@ -58,6 +69,21 @@ interface A11yOverrideEntry {
   criterion: string;
   conformance: OpenAcrConformance;
   reason: string;
+}
+
+interface ManualAuditBaselineEntry {
+  name: string;
+  category: string;
+  manual: {
+    status: string;
+    wcag22Criteria: Record<string, string>;
+  };
+}
+
+interface ManualAuditAggregate {
+  componentName: string;
+  criterionId: string;
+  conformance: OpenAcrConformance;
 }
 
 interface OpenAcrCriterionComponent {
@@ -662,6 +688,146 @@ async function readOverridesFile(
   }
 }
 
+function isValidManualBaselineEntry(entry: unknown): entry is ManualAuditBaselineEntry {
+  return (
+    isRecord(entry) &&
+    typeof entry.name === 'string' &&
+    entry.name.length > 0 &&
+    isRecord(entry.manual) &&
+    typeof entry.manual.status === 'string' &&
+    isRecord(entry.manual.wcag22Criteria)
+  );
+}
+
+function parseManualBaseline(
+  content: string,
+  filePath: string
+): Map<string, ManualAuditAggregate[]> {
+  const aggregates = new Map<string, ManualAuditAggregate[]>();
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(content);
+  } catch {
+    console.warn(
+      `[json-to-openacr] Unable to parse manual baseline file ${filePath} as JSON.`
+    );
+    return aggregates;
+  }
+
+  if (!Array.isArray(parsed)) {
+    console.warn(
+      `[json-to-openacr] Manual baseline file ${filePath} does not contain a valid array of entries.`
+    );
+    return aggregates;
+  }
+
+  for (const entry of parsed) {
+    if (!isValidManualBaselineEntry(entry)) {
+      console.warn(`[json-to-openacr] Skipping invalid manual baseline entry:`, entry);
+      continue;
+    }
+
+    if (entry.manual.status !== 'complete') {
+      continue;
+    }
+
+    for (const [criterionKey, statusValue] of Object.entries(entry.manual.wcag22Criteria)) {
+      if (typeof statusValue !== 'string') {
+        continue;
+      }
+
+      const match = criterionKey.match(CRITERION_KEY_REGEX);
+      if (!match) {
+        continue;
+      }
+
+      const criterionId = match[1];
+      const conformance = manualStatusToConformance[statusValue];
+
+      if (!conformance) {
+        console.warn(
+          `[json-to-openacr] Unknown manual status "${statusValue}" for criterion ${criterionId} in component ${entry.name}.`
+        );
+        continue;
+      }
+
+      const aggregate: ManualAuditAggregate = {
+        componentName: entry.name,
+        criterionId,
+        conformance,
+      };
+
+      const key = `${entry.name}:${criterionId}`;
+      const existing = aggregates.get(key) ?? [];
+      aggregates.set(key, [...existing, aggregate]);
+    }
+  }
+
+  return aggregates;
+}
+
+async function readManualAuditBaselines(
+  dirPath: string
+): Promise<Map<string, ManualAuditAggregate[]>> {
+  const allAggregates = new Map<string, ManualAuditAggregate[]>();
+  let loadedCount = 0;
+  let fileCount = 0;
+
+  try {
+    const files = await readdir(dirPath);
+    const baselineFiles = files.filter((file) => BASELINE_FILE_PATTERN.test(file));
+    fileCount = baselineFiles.length;
+
+    for (const file of baselineFiles) {
+      const filePath = path.join(dirPath, file);
+      try {
+        const content = await readFile(filePath, 'utf8');
+        const aggregates = parseManualBaseline(content, filePath);
+
+        for (const [key, entries] of aggregates) {
+          const existing = allAggregates.get(key) ?? [];
+          allAggregates.set(key, [...existing, ...entries]);
+          loadedCount += entries.length;
+        }
+      } catch (error) {
+        console.warn(
+          `[json-to-openacr] Unable to read manual baseline file ${filePath}.`,
+          error
+        );
+      }
+    }
+  } catch (error) {
+    const errorCode =
+      isRecord(error) && typeof error.code === 'string'
+        ? error.code
+        : undefined;
+
+    if (errorCode === 'ENOENT') {
+      return new Map();
+    }
+
+    console.warn(
+      `[json-to-openacr] Unable to read manual audit directory ${dirPath}.`,
+      error
+    );
+    return new Map();
+  }
+
+  if (loadedCount > 0) {
+    const criteriaSet = new Set<string>();
+    for (const key of allAggregates.keys()) {
+      const [, criterionId] = key.split(':');
+      criteriaSet.add(criterionId);
+    }
+    console.log(
+      `[json-to-openacr] Loaded ${loadedCount} manual audit entries across ${criteriaSet.size} criteria from ${fileCount} baseline file(s).`
+    );
+  }
+
+  return allAggregates;
+}
+
 function resolveConformance(
   criterion: A11yCriterionReport | undefined,
   aggregate: CriterionAggregate | undefined,
@@ -1087,6 +1253,7 @@ export interface JsonToOpenAcrOptions {
   inputFile?: string;
   outputFile?: string;
   overridesFile?: string;
+  manualAuditDir?: string;
 }
 
 /**
