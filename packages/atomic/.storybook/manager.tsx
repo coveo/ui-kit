@@ -134,7 +134,7 @@ addons.register('custom/onetrust-button', () => {
   addons.add('custom/onetrust-button/toolbar', {
     type: types.TOOL,
     title: 'Cookie Preferences',
-    match: ({viewMode}) => viewMode === 'story',
+    match: () => true,
     render: () => (
       <IconButton
         key="onetrust-button"
