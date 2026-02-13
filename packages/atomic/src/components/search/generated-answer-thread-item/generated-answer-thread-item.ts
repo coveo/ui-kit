@@ -12,9 +12,9 @@ export interface GeneratedAnswerThreadItemProps {
   /**
    * Whether the thread item can be expanded or collapsed.
    */
-  isCollapsible: boolean;
+  disableCollapse: boolean;
   /**
-   * Whether the timeline line should be hidden.
+   * Whether the thread line should be hidden.
    */
   hideLine: boolean;
   /**
@@ -34,11 +34,8 @@ export interface GeneratedAnswerThreadItemProps {
 @customElement('generated-answer-thread-item')
 @withTailwindStyles
 export class GeneratedAnswerThreadItem extends LitElement {
-  private readonly contentId = `generated-answer-thread-item-content-${
-    typeof crypto !== 'undefined' && 'randomUUID' in crypto
-      ? crypto.randomUUID()
-      : Math.random().toString(36).slice(2)
-  }`;
+  private readonly contentId =
+    `generated-answer-thread-item-content-${crypto.randomUUID()}`;
 
   /**
    * The title displayed for the thread item.
@@ -49,8 +46,8 @@ export class GeneratedAnswerThreadItem extends LitElement {
   /**
    * Whether the thread item can be expanded or collapsed.
    */
-  @property({type: Boolean, attribute: 'is-collapsible'})
-  public isCollapsible = false;
+  @property({type: Boolean, attribute: 'disable-collapse'})
+  public disableCollapse = false;
 
   /**
    * Whether the timeline line should be hidden (e.g., for the last item).
@@ -66,12 +63,12 @@ export class GeneratedAnswerThreadItem extends LitElement {
 
   protected willUpdate() {
     if (!this.hasUpdated) {
-      this.isExpanded = this.isCollapsible ? this.isExpanded : true;
+      this.isExpanded = !this.disableCollapse ? this.isExpanded : true;
     }
   }
 
   private toggle = () => {
-    if (!this.isCollapsible) {
+    if (this.disableCollapse) {
       return;
     }
 
@@ -128,7 +125,7 @@ export class GeneratedAnswerThreadItem extends LitElement {
         <div class="flex items-start">
           <div class="flex min-w-0 flex-col">
             ${when(
-              this.isCollapsible,
+              !this.disableCollapse,
               () =>
                 html`<button
                   type="button"
