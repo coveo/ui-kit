@@ -1380,6 +1380,15 @@ async function readInputReport(
   }
 }
 
+export const jsonToOpenAcrTestUtils = {
+  buildRemarks,
+  isValidManualBaselineEntry,
+  parseManualBaseline,
+  readManualAuditBaselines,
+  resolveConformance,
+  resolveManualConformance,
+};
+
 export interface JsonToOpenAcrOptions {
   inputFile?: string;
   outputFile?: string;

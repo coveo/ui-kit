@@ -249,6 +249,12 @@ function mergeCriteria(
     .sort((first, second) => sortByNumericIdentifier(first.id, second.id));
 }
 
+export const mergeShardsTestUtils = {
+  createSummary,
+  mergeComponents,
+  mergeCriteria,
+};
+
 export async function mergeA11yShardReports(
   options: MergeShardOptions = {}
 ): Promise<A11yReport | null> {

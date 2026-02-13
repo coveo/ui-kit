@@ -980,4 +980,15 @@ export class VitestA11yReporter implements Reporter {
   }
 }
 
+export const vitestA11yReporterTestUtils = {
+  extractCategory,
+  extractComponentName,
+  extractCriteriaFromTags,
+  extractFramework,
+  formatDate,
+  getAutomationCoveragePercentage,
+  getCriteriaForRule,
+  stripAnsiSequences,
+};
+
 export default VitestA11yReporter;
