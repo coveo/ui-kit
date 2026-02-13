@@ -5,6 +5,7 @@ import {
   buildSearchStatus,
   buildTabManager,
   type GeneratedAnswer,
+  type GeneratedAnswerCitation,
   type GeneratedAnswerState,
   type GeneratedAnswerWithFollowUps,
   type SearchStatus,
@@ -398,19 +399,23 @@ export class AtomicGeneratedAnswer
               () =>
                 html` <div part="generated-content-container" class="px-6 pb-6">
                   <article>${this.renderAnswerContent()}</article>
-                  <div>${renderFollowUpInput({
-                    props: {
-                      i18n: this.bindings.i18n,
-                      askFollowUp: async (question: string) => {
-                        if (!this.hasFollowUpsCapability()) {
-                          throw new Error(
-                            'Follow-up questions are not supported by this controller.'
+                  <div>
+                    ${renderFollowUpInput({
+                      props: {
+                        i18n: this.bindings.i18n,
+                        askFollowUp: async (question: string) => {
+                          if (!this.hasFollowUpsCapability()) {
+                            throw new Error(
+                              'Follow-up questions are not supported by this controller.'
+                            );
+                          }
+                          return await this.generatedAnswer.askFollowUp(
+                            question
                           );
-                        }
-                        return await this.generatedAnswer.askFollowUp(question);
+                        },
                       },
-                    },
-                  })}</div>
+                    })}
+                  </div>
                   ${renderDisclaimer({
                     props: {
                       i18n: this.bindings.i18n,
@@ -592,9 +597,7 @@ export class AtomicGeneratedAnswer
     this.controller.clickLike();
   }
 
-  private renderCitationsList() {
-    const {citations} = this.generatedAnswerState ?? {};
-
+  private renderCitationsList(citations: GeneratedAnswerCitation[]) {
     return renderCitations({
       props: {
         citations,
@@ -641,7 +644,11 @@ export class AtomicGeneratedAnswer
         ...(this.generatedAnswer.state.followUpAnswers.followUpAnswers ?? []),
       ];
 
-      return html`<generated-answers-thread .generatedAnswers=${allGeneratedAnswer} .i18n=${this.bindings.i18n}></generated-answers-thread>`;
+      return html`<generated-answers-thread
+        .generatedAnswers=${allGeneratedAnswer}
+        .i18n=${this.bindings.i18n}
+        .renderCitations=${this.renderCitationsList.bind(this)}
+      ></generated-answers-thread>`;
     }
 
     return renderAnswerContent({
@@ -651,7 +658,8 @@ export class AtomicGeneratedAnswer
         collapsible: this.collapsible,
         renderFeedbackAndCopyButtonsSlot: () =>
           this.renderFeedbackAndCopyButtonsWrapper(),
-        renderCitationsSlot: () => html`${this.renderCitationsList()}`,
+        renderCitationsSlot: () =>
+          html`${this.renderCitationsList(generatedAnswer.citations)}`,
         onRetry: () => this.generatedAnswer?.retry(),
         onClickShowButton: () => this.clickOnShowButton(),
       },

@@ -1,5 +1,8 @@
-import type {GeneratedAnswerBase} from '@coveo/headless';
-import {html, LitElement} from 'lit';
+import type {
+  GeneratedAnswerBase,
+  GeneratedAnswerCitation,
+} from '@coveo/headless';
+import {html, LitElement, type TemplateResult} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import '@/src/components/search/generated-answer-thread-item/generated-answer-thread-item';
@@ -25,6 +28,9 @@ export class GeneratedAnswersThread extends LitElement {
   generatedAnswers: GeneratedAnswer[] = [];
   @property({attribute: false})
   i18n: i18n = {} as i18n;
+  @property({attribute: false})
+  renderCitations: (citations: GeneratedAnswerCitation[]) => TemplateResult =
+    () => html``;
 
   public render() {
     return html`
@@ -37,7 +43,7 @@ export class GeneratedAnswersThread extends LitElement {
             .isCollapsible=${!isLast}
             .isExpanded=${isLast}
           >
-            <answer-content .generatedAnswer=${answer} .i18n=${this.i18n}></answer-content>
+            <answer-content .generatedAnswer=${answer} .i18n=${this.i18n} .renderCitations=${this.renderCitations}></answer-content>
           </generated-answer-thread-item>`;
         })}
       </div>
