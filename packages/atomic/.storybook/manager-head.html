@@ -38,7 +38,13 @@
     --atomic-search-box-border-radius: 17px;
     --atomic-text-base: 13px;
     height: 34px;
-    width: 50%;
+    width: min(380px, 100%);
+  }
+
+  @media (min-width: 1300px) {
+    #coveo-docs-search-container atomic-search-box {
+      width: 50%;
+    }
   }
 
   #coveo-docs-search-container atomic-search-box::part(wrapper) {
