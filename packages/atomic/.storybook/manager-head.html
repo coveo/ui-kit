@@ -83,6 +83,10 @@
   #coveo-docs-search-container atomic-search-box::part(suggestions-wrapper) {
     z-index: 9999;
   }
+
+  #coveo-docs-search-container atomic-search-box::part(suggestions-single-list) {
+    text-wrap: auto;
+  }
 </style>
 <script type="module">
   import {disableBlockedKeys, getOptanonConsentCookie, updateCookieSettings } from './cookieManager.js';
