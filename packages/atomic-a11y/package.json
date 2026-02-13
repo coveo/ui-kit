@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "version": "1.0.0",
+  "name": "@coveo/atomic-a11y",
+  "description": "Accessibility utilities and tools for Coveo Atomic components",
+  "type": "module",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "axe-core": "catalog:"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
