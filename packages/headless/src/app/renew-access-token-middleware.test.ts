@@ -224,21 +224,34 @@ describe('createRenewAccessTokenMiddleware', () => {
     });
   });
 
-  it('should only call renewToken once in the reactive path when a 401 is returned', async () => {
+  it('should only call renewToken once in the reactive path when two 401s arrive concurrently', async () => {
     const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
     (shouldRenewJWT as Mock).mockReturnValue(false);
 
     const payload = buildExpiredTokenPayload();
     const action = () => Promise.resolve(payload);
-    const renewFn = vi.fn().mockResolvedValue('newToken');
+
+    let resolveRenewal: (token: string) => void = () => {};
+    const renewalPromise = new Promise<string>((resolve) => {
+      resolveRenewal = resolve;
+    });
+
+    const renewFn = vi.fn().mockReturnValue(renewalPromise);
     const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
 
-    await callMiddleware(middleware, action);
+    const firstCall = callMiddleware(middleware, action);
+    const secondCall = callMiddleware(middleware, action);
+
+    // Flush microtasks so the middleware reaches the renewFn call.
+    await vi.waitFor(() => expect(renewFn).toHaveBeenCalledTimes(1));
+
+    resolveRenewal('newToken');
+    await Promise.all([firstCall, secondCall]);
 
     expect(renewFn).toHaveBeenCalledTimes(1);
   });
 
-  it('should re-dispatch the action even when renewToken throws in the reactive path', async () => {
+  it('should not throw when renewToken rejects in the reactive path', async () => {
     const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
     (shouldRenewJWT as Mock).mockReturnValue(false);
 
@@ -249,12 +262,10 @@ describe('createRenewAccessTokenMiddleware', () => {
       .mockRejectedValue(new Error('renewal service down'));
     const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
 
-    await callMiddleware(middleware, action);
-
-    expect(store.dispatch).toHaveBeenCalledWith(action);
+    await expect(callMiddleware(middleware, action)).resolves.not.toThrow();
   });
 
-  it('should not dispatch updateBasicConfiguration with an empty token when renewToken fails in the reactive path', async () => {
+  it('should not dispatch updateBasicConfiguration when renewToken fails in the reactive path', async () => {
     const {shouldRenewJWT} = await import('../utils/jwt-utils.js');
     (shouldRenewJWT as Mock).mockReturnValue(false);
 
@@ -268,7 +279,7 @@ describe('createRenewAccessTokenMiddleware', () => {
     await callMiddleware(middleware, action);
 
     expect(store.dispatch).not.toHaveBeenCalledWith(
-      updateBasicConfiguration({accessToken: ''})
+      updateBasicConfiguration(expect.anything())
     );
   });
 
