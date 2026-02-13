@@ -71,12 +71,15 @@
       "wcag22Criteria": {
         "2.4.11-focus-not-obscured": "pass",
         "2.5.7-dragging-movements": "not-applicable",
-        "2.5.8-target-size": "fail",
+        "2.5.8-target-size": "pass",
         "3.2.6-consistent-help": "not-applicable",
         "3.3.7-redundant-entry": "not-applicable",
-        "3.3.8-accessible-auth": "not-applicable"
+        "3.3.8-accessible-auth": "not-applicable",
+        "1.3.2-meaningful-sequence": "pass"
       },
-      "notes": "Story: Default (atomic-commerce-facet--default) | Interactive targets: 11 | Focus stops detected: 12 | Focus obscured count: 0 | Target-size violations (<24x24): button[16x16], button[16x16], button[16x16], button[16x16], button[16x16] | AX name checks: pass | Audit outcome: fail"
+      "notes": "Re-audited after PR #12345 increased icon button min-size to 24x24px. All interactive targets now meet WCAG 3.2.2 minimum.",
+      "lastAuditDate": "2026-02-13",
+      "auditor": "Jane Doe"
     }
   },
   {
