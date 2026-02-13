@@ -104,7 +104,6 @@ export class GeneratedAnswerThreadItem extends LitElement {
       'focus-visible:ring-offset-2': true,
     });
     const timelineDotClasses = classMap({
-      'mt-3': true,
       'h-2': true,
       'w-2': true,
       'rounded-full': true,
@@ -113,16 +112,15 @@ export class GeneratedAnswerThreadItem extends LitElement {
     });
 
     return html`
-      <li class="grid grid-cols-[10px_1fr]">
-        <div class="flex flex-col items-center row-span-2">
-          <span class=${timelineDotClasses}></span>
-          ${when(
-            !this.hideLine,
-            () => html`<span class="w-px bg-neutral flex-1"></span>`,
-            () => nothing
-          )}
-        </div>
-        <div class="flex items-start">
+      <li class="grid min-w-0">
+        <div class="flex min-w-0 items-center gap-3">
+          <div>
+            <span class="w-px bg-neutral h-full"></span>
+            <div class="flex w-3 justify-center items-center">
+              <span class=${timelineDotClasses}></span>
+            </div>
+            <span class="w-px bg-neutral h-full"></span>
+          </div>
           <div class="flex min-w-0 flex-col">
             ${when(
               !this.disableCollapse,
@@ -143,26 +141,27 @@ export class GeneratedAnswerThreadItem extends LitElement {
                     'font-semibold': this.isExpanded,
                     'font-normal': !this.isExpanded,
                   })}
-                >${this.title}</span>`
-            )}
-            ${when(
-              this.isExpanded,
-              () => html`
-                <span class="text-sm text-neutral-dark pl-2 ml-1">
-                  <slot name="status"></slot>
-                </span>
-              `,
-              () => nothing
+                  >${this.title}</span
+                >`
             )}
           </div>
         </div>
-        <div
-          id=${this.contentId}
-          class="pl-2 py-2 ml-1"
-          ?hidden=${!this.isExpanded}
-          aria-hidden=${this.isExpanded ? 'false' : 'true'}
-        >
-          <slot></slot>
+        <div class="flex min-w-0 gap-3">
+          <div class="flex w-3 justify-center">
+            ${when(
+              this.hideLine,
+              () => nothing,
+              () => html`<span class="w-px bg-neutral h-full"></span>`
+            )}
+          </div>
+          <div
+            id=${this.contentId}
+            class="pl-2 py-2 ml-1"
+            ?hidden=${!this.isExpanded}
+            aria-hidden=${this.isExpanded ? 'false' : 'true'}
+          >
+            <slot></slot>
+          </div>
         </div>
       </li>
     `;
