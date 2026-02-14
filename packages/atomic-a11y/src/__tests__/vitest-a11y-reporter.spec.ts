@@ -1,4 +1,6 @@
 import {describe, expect, it} from 'vitest';
+import {extractCriteriaFromTags} from '../reporter/axe-integration.js';
+import {stripAnsiSequences} from '../reporter/reporter-utils.js';
 import {
   type A11yReport,
   VitestA11yReporter,
@@ -91,20 +93,14 @@ describe('vitest-a11y-reporter test utilities', () => {
 
   it('extractCriteriaFromTags() parses wcag tags', () => {
     expect(
-      vitestA11yReporterTestUtils.extractCriteriaFromTags([
-        'wcag143',
-        'wcag412',
-        'best-practice',
-      ])
+      extractCriteriaFromTags(['wcag143', 'wcag412', 'best-practice'])
     ).toEqual(['1.4.3', '4.1.2']);
   });
 
   it('stripAnsiSequences() removes ANSI escape codes', () => {
-    expect(
-      vitestA11yReporterTestUtils.stripAnsiSequences(
-        '\u001B[31mError\u001B[39m occurred'
-      )
-    ).toBe('Error occurred');
+    expect(stripAnsiSequences('\u001B[31mError\u001B[39m occurred')).toBe(
+      'Error occurred'
+    );
   });
 
   it('formatDate() formats date as YYYY-MM-DD', () => {

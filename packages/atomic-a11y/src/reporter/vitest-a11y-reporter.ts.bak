@@ -23,14 +23,15 @@ import type {
   SupportedFramework,
 } from '../shared/types.js';
 import {
-  extractCriteriaFromTags,
   getCriteriaForRule,
   getCriteriaForRuleId,
   getIncompleteMessage,
   isAxeResults,
-} from './axe-integration.js';
+  extractCriteriaFromTags,} from './axe-integration.js';
 import {
   type ComponentAccumulator,
+  UNKNOWN_CATEGORY,
+  UNKNOWN_FRAMEWORK,
   extractA11yRuleIdsFromTestErrors,
   extractCategory,
   extractComponentName,
@@ -45,10 +46,8 @@ import {
   type ShardInfo,
   type StorybookReport,
   type StorybookTaskMeta,
-  UNKNOWN_CATEGORY,
-  UNKNOWN_FRAMEWORK,
 } from './reporter-utils.js';
-
+  stripAnsiSequences,
 export {
   DEFAULT_A11Y_REPORT_OUTPUT_DIR,
   DEFAULT_A11Y_REPORT_FILENAME,
@@ -436,11 +435,11 @@ export class VitestA11yReporter implements Reporter {
 export const vitestA11yReporterTestUtils = {
   extractCategory,
   extractComponentName,
-  extractCriteriaFromTags,
   extractFramework,
   formatDate,
   getAutomationCoveragePercentage,
   getCriteriaForRule,
+  extractCriteriaFromTags,
   stripAnsiSequences,
 };
 
