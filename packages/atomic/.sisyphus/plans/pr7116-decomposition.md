@@ -178,11 +178,11 @@ Verification Commands:
 
 Final Checklist:
 
-- [ ] Public API unchanged
-- [ ] No behavior changes, no new deps, no renamed exports
-- [ ] All tests pass
-- [ ] Build succeeds
-- [ ] No file over 400 lines
-- [ ] Zero code duplication for guards/types/constants
-- [ ] WCAG data in exactly 1 location per data type
-- [ ] All scripts converted from .mjs to .ts
+- [x] Public API unchanged
+- [x] No behavior changes, no new deps, no renamed exports
+- [x] All tests pass
+- [x] Build succeeds
+- [x] No file over 400 lines
+- [x] Zero code duplication for guards/types/constants
+- [x] WCAG data in exactly 1 location per data type
+- [x] All scripts converted from .mjs to .ts
