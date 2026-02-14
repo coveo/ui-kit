@@ -1,6 +1,7 @@
 import {mkdir, readdir, readFile, writeFile} from 'node:fs/promises';
 import path from 'node:path';
-import {fileURLToPath} from 'node:url';
+import {wasExecutedDirectly} from '../shared/file-utils.js';
+import {isA11yReport} from '../shared/guards.js';
 import type {
   A11yAutomatedResults,
   A11yComponentReport,
@@ -36,23 +37,6 @@ interface MutableComponentReport
 interface MutableCriterionReport
   extends Omit<A11yCriterionReport, 'affectedComponents'> {
   affectedComponents: Set<string>;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
-}
-
-function isA11yReport(value: unknown): value is A11yReport {
-  if (!isRecord(value)) {
-    return false;
-  }
-
-  return (
-    isRecord(value.report) &&
-    Array.isArray(value.components) &&
-    Array.isArray(value.criteria) &&
-    isRecord(value.summary)
-  );
 }
 
 function toMutableComponent(
@@ -323,17 +307,6 @@ export async function mergeA11yShardReports(
   );
 
   return mergedReport;
-}
-
-function wasExecutedDirectly(): boolean {
-  const currentFilePath = fileURLToPath(import.meta.url);
-  const entryFile = process.argv[1];
-
-  if (!entryFile) {
-    return false;
-  }
-
-  return path.resolve(entryFile) === currentFilePath;
 }
 
 async function runFromCli(): Promise<void> {

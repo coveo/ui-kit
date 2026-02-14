@@ -3,7 +3,6 @@ import {mkdir, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import type {AxeResults, Result as AxeRuleResult} from 'axe-core';
-import axeCore from 'axe-core';
 import type {
   Reporter,
   SerializedError,
@@ -11,10 +10,41 @@ import type {
   TestModule,
   TestRunEndReason,
 } from 'vitest/node';
+import {
+  buildAxeRuleCriteriaMap,
+  ruleToWCAG,
+} from '../data/axe-rule-mappings.js';
+import {criterionMetadataMap} from '../data/criterion-metadata.js';
+import {
+  DEFAULT_A11Y_REPORT_FILENAME,
+  DEFAULT_A11Y_REPORT_OUTPUT_DIR,
+  DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
+} from '../shared/constants.js';
+import {isRecord} from '../shared/guards.js';
+import type {
+  A11yAutomatedResults,
+  A11yComponentReport,
+  A11yCriterionReport,
+  A11yIncompleteDetail,
+  A11yReport,
+  A11ySummary,
+  CriterionMetadata,
+  SupportedFramework,
+} from '../shared/types.js';
 
-export const DEFAULT_A11Y_REPORT_OUTPUT_DIR = 'a11y/reports';
-export const DEFAULT_A11Y_REPORT_FILENAME = 'a11y-report.json';
-export const DEFAULT_WCAG_22_AA_CRITERIA_COUNT = 50;
+export {
+  DEFAULT_A11Y_REPORT_OUTPUT_DIR,
+  DEFAULT_A11Y_REPORT_FILENAME,
+  DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
+};
+export type {
+  A11yIncompleteDetail,
+  A11yAutomatedResults,
+  A11yComponentReport,
+  A11yCriterionReport,
+  A11ySummary,
+  A11yReport,
+};
 
 const REPORTER_NAME = 'VitestA11yReporter';
 const UNKNOWN_CATEGORY = 'unknown';
@@ -25,160 +55,7 @@ const AXE_RULE_TOKEN_PATTERN = /\(([a-z0-9-]+)\)/gi;
 // biome-ignore lint/suspicious/noControlCharactersInRegex: In progress...
 const ANSI_ESCAPE_PATTERN = /\u001B\[[0-?]*[ -/]*[@-~]/g;
 
-const ruleToWCAG: Record<string, readonly string[]> = {
-  'aria-input-field-name': ['1.3.1', '4.1.2'],
-  'aria-toggle-field-name': ['4.1.2'],
-  bypass: ['2.4.1'],
-  'button-name': ['4.1.2'],
-  'color-contrast': ['1.4.3'],
-  'document-title': ['2.4.2'],
-  'duplicate-id': ['4.1.1'],
-  'duplicate-id-aria': ['4.1.1', '4.1.2'],
-  'frame-title': ['2.4.1', '4.1.2'],
-  'html-has-lang': ['3.1.1'],
-  'html-lang-valid': ['3.1.1'],
-  'image-alt': ['1.1.1'],
-  'input-image-alt': ['1.1.1'],
-  label: ['1.3.1', '4.1.2'],
-  'link-in-text-block': ['1.4.1'],
-  'link-name': ['2.4.4', '4.1.2'],
-  list: ['1.3.1'],
-  listitem: ['1.3.1'],
-  'meta-refresh': ['2.2.1'],
-  'meta-viewport': ['1.4.4'],
-  'nested-interactive': ['4.1.2'],
-  'object-alt': ['1.1.1'],
-  'select-name': ['1.3.1', '4.1.2'],
-  'server-side-image-map': ['1.1.1', '2.1.1'],
-  'svg-img-alt': ['1.1.1'],
-  tabindex: ['2.4.3'],
-  'target-size': ['2.5.8'],
-  'touch-target-size': ['2.5.8'],
-  'valid-lang': ['3.1.1'],
-  'video-caption': ['1.2.2'],
-};
-
-interface AxeRuleMetadata {
-  ruleId: string;
-  tags: string[];
-}
-
-function buildAxeRuleCriteriaMap(): Map<string, string[]> {
-  const criteriaByRuleId = new Map<string, string[]>();
-
-  for (const rule of axeCore.getRules() as AxeRuleMetadata[]) {
-    const mappedFromRuleId = ruleToWCAG[rule.ruleId] ?? [];
-    const mappedFromTags = extractCriteriaFromTags(rule.tags ?? []);
-    const criteria = [
-      ...new Set([...mappedFromRuleId, ...mappedFromTags]),
-    ].sort((a, b) => a.localeCompare(b, 'en-US', {numeric: true}));
-
-    if (criteria.length > 0) {
-      criteriaByRuleId.set(rule.ruleId, criteria);
-    }
-  }
-
-  return criteriaByRuleId;
-}
-
 const axeRuleCriteriaMap = buildAxeRuleCriteriaMap();
-
-type CriterionLevel = 'A' | 'AA' | 'AAA' | 'unknown';
-type WCAGVersion = '2.0' | '2.1' | '2.2' | 'unknown';
-
-interface CriterionMetadata {
-  name: string;
-  level: CriterionLevel;
-  wcagVersion: WCAGVersion;
-}
-
-const criterionMetadataMap: Record<string, CriterionMetadata> = {
-  '1.1.1': {
-    name: 'Non-text Content',
-    level: 'A',
-    wcagVersion: '2.0',
-  },
-  '1.2.2': {
-    name: 'Captions (Prerecorded)',
-    level: 'A',
-    wcagVersion: '2.0',
-  },
-  '1.3.1': {
-    name: 'Info and Relationships',
-    level: 'A',
-    wcagVersion: '2.0',
-  },
-  '1.3.5': {
-    name: 'Identify Input Purpose',
-    level: 'AA',
-    wcagVersion: '2.1',
-  },
-  '1.4.1': {
-    name: 'Use of Color',
-    level: 'A',
-    wcagVersion: '2.0',
-  },
-  '1.4.3': {
-    name: 'Contrast (Minimum)',
-    level: 'AA',
-    wcagVersion: '2.0',
-  },
-  '1.4.4': {
-    name: 'Resize Text',
-    level: 'AA',
-    wcagVersion: '2.0',
-  },
-  '2.1.1': {
-    name: 'Keyboard',
-    level: 'A',
-    wcagVersion: '2.0',
-  },
-  '2.2.1': {
-    name: 'Timing Adjustable',
-    level: 'A',
-    wcagVersion: '2.0',
-  },
-  '2.4.1': {
-    name: 'Bypass Blocks',
-    level: 'A',
-    wcagVersion: '2.0',
-  },
-  '2.4.2': {
-    name: 'Page Titled',
-    level: 'A',
-    wcagVersion: '2.0',
-  },
-  '2.4.3': {
-    name: 'Focus Order',
-    level: 'A',
-    wcagVersion: '2.0',
-  },
-  '2.4.4': {
-    name: 'Link Purpose (In Context)',
-    level: 'A',
-    wcagVersion: '2.0',
-  },
-  '2.5.8': {
-    name: 'Target Size (Minimum)',
-    level: 'AA',
-    wcagVersion: '2.2',
-  },
-  '3.1.1': {
-    name: 'Language of Page',
-    level: 'A',
-    wcagVersion: '2.0',
-  },
-  '4.1.1': {
-    name: 'Parsing',
-    level: 'A',
-    wcagVersion: '2.0',
-  },
-  '4.1.2': {
-    name: 'Name, Role, Value',
-    level: 'A',
-    wcagVersion: '2.0',
-  },
-};
 
 interface PackageMetadata {
   version?: string;
@@ -201,90 +78,11 @@ interface ShardInfo {
   total: number;
 }
 
-type SupportedFramework = 'lit' | 'stencil' | 'unknown';
-
 export interface A11yReporterOptions {
   outputDir?: string;
   outputFilename?: string;
   totalCriteria?: number;
   packageJsonPath?: string;
-}
-
-export interface A11yIncompleteDetail {
-  ruleId: string;
-  impact: string;
-  wcagCriteria: string[];
-  nodes: number;
-  message: string;
-}
-
-export interface A11yAutomatedResults {
-  violations: number;
-  passes: number;
-  incomplete: number;
-  inapplicable: number;
-  criteriaCovered: string[];
-  incompleteDetails: A11yIncompleteDetail[];
-}
-
-export interface A11yComponentReport {
-  name: string;
-  category: string;
-  framework: SupportedFramework;
-  storyCount: number;
-  automated: A11yAutomatedResults;
-}
-
-export interface A11yCriterionReport {
-  id: string;
-  name: string;
-  level: CriterionLevel;
-  wcagVersion: WCAGVersion;
-  conformance:
-    | 'supports'
-    | 'partiallySupports'
-    | 'doesNotSupport'
-    | 'notApplicable'
-    | 'notEvaluated';
-  automatedCoverage: boolean;
-  manualVerified: boolean;
-  remarks: string;
-  affectedComponents: string[];
-}
-
-export interface A11ySummary {
-  totalComponents: number;
-  litComponents: number;
-  stencilComponents: number;
-  stencilExcluded: boolean;
-  storyCoverage: {
-    total: number;
-    withA11y: number;
-    excludedFromA11y: number;
-  };
-  totalCriteria: number;
-  supports: number;
-  partiallySupports: number;
-  doesNotSupport: number;
-  notApplicable: number;
-  notEvaluated: number;
-  automatedCoverage: string;
-  manualCoverage: string;
-}
-
-export interface A11yReport {
-  report: {
-    product: string;
-    version: string;
-    standard: string;
-    reportDate: string;
-    evaluationMethods: string[];
-    axeCoreVersion: string;
-    storybookVersion: string;
-  };
-  components: A11yComponentReport[];
-  criteria: A11yCriterionReport[];
-  summary: A11ySummary;
 }
 
 interface ComponentAccumulator {
@@ -300,10 +98,6 @@ interface ComponentAccumulator {
     criteriaCovered: Set<string>;
     incompleteDetails: A11yIncompleteDetail[];
   };
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
 }
 
 function isAxeResults(value: unknown): value is AxeResults {
