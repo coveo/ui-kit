@@ -63,7 +63,11 @@ export const streamAnswerWithStrategy = <
       strategy.handleError(error);
     },
     onmessage: (event) => {
-      const message: Message = JSON.parse(event.data);
+      const message: Message | null = parsePayload(event.data);
+      if (!message) {
+        return;
+      }
+
       serverStateEventHandler.handleMessage.error?.(message, updateCachedData);
       strategy.handleMessage.error?.(message, dispatch);
 
@@ -76,3 +80,19 @@ export const streamAnswerWithStrategy = <
     },
   });
 };
+
+function parsePayload(payload?: string): Message | null {
+  if (!payload?.length) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(payload) as Message;
+  } catch (err) {
+    console.warn('Failed to parse message', {
+      payload,
+      error: err,
+    });
+    return null;
+  }
+}
