@@ -1,8 +1,6 @@
-import {readFileSync} from 'node:fs';
 import {mkdir, writeFile} from 'node:fs/promises';
 import path from 'node:path';
-import {fileURLToPath} from 'node:url';
-import type {AxeResults, Result as AxeRuleResult} from 'axe-core';
+import type {Result as AxeRuleResult} from 'axe-core';
 import type {
   Reporter,
   SerializedError,
@@ -11,16 +9,10 @@ import type {
   TestRunEndReason,
 } from 'vitest/node';
 import {
-  buildAxeRuleCriteriaMap,
-  ruleToWCAG,
-} from '../data/axe-rule-mappings.js';
-import {criterionMetadataMap} from '../data/criterion-metadata.js';
-import {
   DEFAULT_A11Y_REPORT_FILENAME,
   DEFAULT_A11Y_REPORT_OUTPUT_DIR,
   DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
 } from '../shared/constants.js';
-import {isRecord} from '../shared/guards.js';
 import type {
   A11yAutomatedResults,
   A11yComponentReport,
@@ -28,9 +20,35 @@ import type {
   A11yIncompleteDetail,
   A11yReport,
   A11ySummary,
-  CriterionMetadata,
   SupportedFramework,
 } from '../shared/types.js';
+import {
+  extractCriteriaFromTags,
+  getCriteriaForRule,
+  getCriteriaForRuleId,
+  getIncompleteMessage,
+  isAxeResults,
+} from './axe-integration.js';
+import {
+  type ComponentAccumulator,
+  extractA11yRuleIdsFromTestErrors,
+  extractCategory,
+  extractComponentName,
+  extractFramework,
+  formatDate,
+  getAutomationCoveragePercentage,
+  getCriterionMetadata,
+  normalizePath,
+  type PackageMetadata,
+  readPackageMetadata,
+  resolveShardInfo,
+  type ShardInfo,
+  type StorybookReport,
+  type StorybookTaskMeta,
+  stripAnsiSequences,
+  UNKNOWN_CATEGORY,
+  UNKNOWN_FRAMEWORK,
+} from './reporter-utils.js';
 
 export {
   DEFAULT_A11Y_REPORT_OUTPUT_DIR,
@@ -47,370 +65,12 @@ export type {
 };
 
 const REPORTER_NAME = 'VitestA11yReporter';
-const UNKNOWN_CATEGORY = 'unknown';
-const UNKNOWN_FRAMEWORK = 'unknown';
-const AXE_RULE_URL_PATTERN = /rules\/axe\/[\d.]+\/([a-z0-9-]+)/gi;
-const AXE_RULE_TOKEN_PATTERN = /\(([a-z0-9-]+)\)/gi;
-// TODO: Consider using a more robust ANSI escape code parser if needed, such as the 'ansi-regex' package.
-// biome-ignore lint/suspicious/noControlCharactersInRegex: In progress...
-const ANSI_ESCAPE_PATTERN = /\u001B\[[0-?]*[ -/]*[@-~]/g;
-
-const axeRuleCriteriaMap = buildAxeRuleCriteriaMap();
-
-interface PackageMetadata {
-  version?: string;
-  dependencies?: Record<string, string>;
-  devDependencies?: Record<string, string>;
-}
-
-interface StorybookTaskMeta {
-  storyId?: unknown;
-  reports?: unknown;
-}
-
-interface StorybookReport {
-  type?: unknown;
-  result?: unknown;
-}
-
-interface ShardInfo {
-  index: number;
-  total: number;
-}
 
 export interface A11yReporterOptions {
   outputDir?: string;
   outputFilename?: string;
   totalCriteria?: number;
   packageJsonPath?: string;
-}
-
-interface ComponentAccumulator {
-  name: string;
-  category: string;
-  framework: SupportedFramework;
-  storyIds: Set<string>;
-  automated: {
-    violations: number;
-    passes: number;
-    incomplete: number;
-    inapplicable: number;
-    criteriaCovered: Set<string>;
-    incompleteDetails: A11yIncompleteDetail[];
-  };
-}
-
-function isAxeResults(value: unknown): value is AxeResults {
-  if (!isRecord(value)) {
-    return false;
-  }
-
-  return (
-    Array.isArray(value.violations) &&
-    Array.isArray(value.passes) &&
-    Array.isArray(value.incomplete) &&
-    Array.isArray(value.inapplicable)
-  );
-}
-
-function normalizePath(filePath: string): string {
-  return filePath.replaceAll('\\', '/');
-}
-
-function parseShardDescriptor(
-  descriptor: string | undefined
-): ShardInfo | null {
-  if (!descriptor) {
-    return null;
-  }
-
-  const shardMatch = descriptor.match(/^(\d+)\/(\d+)$/);
-  if (!shardMatch) {
-    return null;
-  }
-
-  const [, rawIndex, rawTotal] = shardMatch;
-  const index = Number.parseInt(rawIndex, 10);
-  const total = Number.parseInt(rawTotal, 10);
-
-  if (Number.isNaN(index) || Number.isNaN(total) || total <= 0) {
-    return null;
-  }
-
-  return {index, total};
-}
-
-function extractCliShardDescriptor(argv: string[]): string | undefined {
-  for (let index = 0; index < argv.length; index += 1) {
-    const argument = argv[index];
-    if (argument.startsWith('--shard=')) {
-      return argument.slice('--shard='.length);
-    }
-
-    if (argument === '--shard') {
-      return argv[index + 1];
-    }
-  }
-
-  return undefined;
-}
-
-function resolveShardInfo(): ShardInfo | null {
-  const byDescriptor = [
-    process.env.A11Y_REPORT_SHARD,
-    process.env.VITEST_SHARD,
-    extractCliShardDescriptor(process.argv),
-  ]
-    .map((descriptor) => parseShardDescriptor(descriptor))
-    .find((parsed): parsed is ShardInfo => parsed !== null);
-
-  if (byDescriptor) {
-    return byDescriptor;
-  }
-
-  const rawIndex =
-    process.env.CI_NODE_INDEX ??
-    process.env.CIRCLE_NODE_INDEX ??
-    process.env.BUILDKITE_PARALLEL_JOB;
-  const rawTotal =
-    process.env.CI_NODE_TOTAL ??
-    process.env.CIRCLE_NODE_TOTAL ??
-    process.env.BUILDKITE_PARALLEL_JOB_COUNT;
-
-  if (!rawIndex || !rawTotal) {
-    return null;
-  }
-
-  const parsedIndex = Number.parseInt(rawIndex, 10);
-  const parsedTotal = Number.parseInt(rawTotal, 10);
-
-  if (
-    Number.isNaN(parsedIndex) ||
-    Number.isNaN(parsedTotal) ||
-    parsedTotal <= 0
-  ) {
-    return null;
-  }
-
-  const normalizedIndex =
-    parsedIndex >= 1 && parsedIndex <= parsedTotal
-      ? parsedIndex
-      : parsedIndex >= 0 && parsedIndex < parsedTotal
-        ? parsedIndex + 1
-        : parsedIndex;
-
-  if (normalizedIndex < 1 || normalizedIndex > parsedTotal) {
-    return null;
-  }
-
-  return {
-    index: normalizedIndex,
-    total: parsedTotal,
-  };
-}
-
-function readPackageMetadata(packageJsonPath?: string): PackageMetadata {
-  try {
-    const currentFilePath = fileURLToPath(import.meta.url);
-    const resolvedPackageJsonPath =
-      packageJsonPath ??
-      path.resolve(path.dirname(currentFilePath), '../../package.json');
-    const packageJsonContent = readFileSync(resolvedPackageJsonPath, 'utf8');
-    return JSON.parse(packageJsonContent) as PackageMetadata;
-  } catch {
-    return {};
-  }
-}
-
-function extractComponentName(
-  modulePath: string,
-  storyId: string
-): string | null {
-  const componentPathMatch = modulePath.match(/\/((atomic-[a-z0-9-]+))\//i);
-  if (componentPathMatch?.[1]) {
-    return componentPathMatch[1].toLowerCase();
-  }
-
-  const storyPathMatch = modulePath.match(
-    /(atomic-[a-z0-9-]+)\.new\.stories\.[jt]sx?$/i
-  );
-  if (storyPathMatch?.[1]) {
-    return storyPathMatch[1].toLowerCase();
-  }
-
-  const storyIdMatch = storyId.match(/(atomic-[a-z0-9-]+)/i);
-  if (storyIdMatch?.[1]) {
-    return storyIdMatch[1].toLowerCase();
-  }
-
-  return null;
-}
-
-function extractCategory(modulePath: string, storyId: string): string {
-  const categoryFromPath = modulePath.match(
-    /components\/(commerce|search|insight|ipx|common|recommendations)\//i
-  );
-
-  if (categoryFromPath?.[1]) {
-    return categoryFromPath[1].toLowerCase();
-  }
-
-  const categoryFromStoryId = storyId.match(
-    /^(commerce|search|insight|ipx|common|recommendations)-/i
-  );
-
-  if (categoryFromStoryId?.[1]) {
-    return categoryFromStoryId[1].toLowerCase();
-  }
-
-  return UNKNOWN_CATEGORY;
-}
-
-function extractFramework(modulePath: string): SupportedFramework {
-  if (modulePath.endsWith('.new.stories.tsx')) {
-    return 'lit';
-  }
-
-  if (modulePath.endsWith('.stories.tsx')) {
-    return 'stencil';
-  }
-
-  return UNKNOWN_FRAMEWORK;
-}
-
-function extractCriteriaFromTags(tags: readonly string[]): string[] {
-  const criterionTagPattern = /^wcag(\d)(\d)(\d{1,2})$/;
-
-  return tags
-    .map((tag) => tag.match(criterionTagPattern))
-    .filter((match): match is RegExpMatchArray => match !== null)
-    .map((match) => `${match[1]}.${match[2]}.${match[3]}`);
-}
-
-function getCriteriaForRule(rule: AxeRuleResult): string[] {
-  const mappedFromRuleId = ruleToWCAG[rule.id] ?? [];
-  const mappedFromTags = extractCriteriaFromTags(rule.tags);
-
-  return [...new Set([...mappedFromRuleId, ...mappedFromTags])].sort((a, b) =>
-    a.localeCompare(b, 'en-US', {numeric: true})
-  );
-}
-
-function getCriteriaForRuleId(ruleId: string): string[] {
-  const mappedFromRuleId = ruleToWCAG[ruleId] ?? [];
-  const mappedFromAxeMetadata = axeRuleCriteriaMap.get(ruleId) ?? [];
-
-  return [...new Set([...mappedFromRuleId, ...mappedFromAxeMetadata])].sort(
-    (a, b) => a.localeCompare(b, 'en-US', {numeric: true})
-  );
-}
-
-function stripAnsiSequences(text: string): string {
-  return text.replace(ANSI_ESCAPE_PATTERN, '');
-}
-
-function extractErrorText(error: unknown): string {
-  if (typeof error === 'string') {
-    return error;
-  }
-
-  if (error instanceof Error) {
-    return `${error.message}\n${error.stack ?? ''}`;
-  }
-
-  if (!isRecord(error)) {
-    return '';
-  }
-
-  const message = typeof error.message === 'string' ? error.message : '';
-  const stack = typeof error.stack === 'string' ? error.stack : '';
-  return `${message}\n${stack}`;
-}
-
-function collectRuleIdMatches(
-  source: string,
-  matcher: RegExp,
-  target: Set<string>
-): void {
-  matcher.lastIndex = 0;
-  let match = matcher.exec(source);
-
-  while (match) {
-    const matchedRuleId = match[1]?.toLowerCase();
-    if (matchedRuleId && getCriteriaForRuleId(matchedRuleId).length > 0) {
-      target.add(matchedRuleId);
-    }
-
-    match = matcher.exec(source);
-  }
-}
-
-function extractA11yRuleIdsFromTestErrors(testCase: TestCase): string[] {
-  const errors = testCase.result().errors;
-  if (!errors || errors.length === 0) {
-    return [];
-  }
-
-  const extractedRuleIds = new Set<string>();
-
-  for (const error of errors) {
-    const errorText = stripAnsiSequences(extractErrorText(error));
-    if (!errorText) {
-      continue;
-    }
-
-    const normalizedErrorText = errorText.toLowerCase();
-    const appearsToBeA11yAssertionFailure =
-      normalizedErrorText.includes('tohavenoviolations') ||
-      normalizedErrorText.includes('application=axeapi');
-
-    if (!appearsToBeA11yAssertionFailure) {
-      continue;
-    }
-
-    collectRuleIdMatches(errorText, AXE_RULE_URL_PATTERN, extractedRuleIds);
-    collectRuleIdMatches(errorText, AXE_RULE_TOKEN_PATTERN, extractedRuleIds);
-  }
-
-  return [...extractedRuleIds].sort((a, b) =>
-    a.localeCompare(b, 'en-US', {numeric: true})
-  );
-}
-
-function getIncompleteMessage(rule: AxeRuleResult): string {
-  const firstNode = rule.nodes[0];
-  const firstCheckMessage =
-    firstNode?.any[0]?.message ??
-    firstNode?.all[0]?.message ??
-    firstNode?.none[0]?.message;
-
-  return firstCheckMessage ?? rule.help;
-}
-
-function formatDate(date: Date): string {
-  return date.toISOString().slice(0, 10);
-}
-
-function getCriterionMetadata(criterionId: string): CriterionMetadata {
-  return (
-    criterionMetadataMap[criterionId] ?? {
-      name: criterionId,
-      level: 'unknown',
-      wcagVersion: 'unknown',
-    }
-  );
-}
-
-function getAutomationCoveragePercentage(
-  coveredCriteria: number,
-  totalCriteria: number
-): string {
-  if (totalCriteria <= 0) {
-    return '0%';
-  }
-
-  const percentage = Math.round((coveredCriteria / totalCriteria) * 100);
-  return `${percentage}%`;
 }
 
 export class VitestA11yReporter implements Reporter {
@@ -455,7 +115,7 @@ export class VitestA11yReporter implements Reporter {
           : null;
       const failedRuleIds = axeResults
         ? []
-        : extractA11yRuleIdsFromTestErrors(testCase);
+        : extractA11yRuleIdsFromTestErrors(testCase, getCriteriaForRuleId);
 
       if (!axeResults && failedRuleIds.length === 0) {
         return;
@@ -580,18 +240,19 @@ export class VitestA11yReporter implements Reporter {
       name: componentName,
       category,
       framework,
-      storyIds: new Set<string>(),
+      storyIds: new Set(),
       automated: {
         violations: 0,
         passes: 0,
         incomplete: 0,
         inapplicable: 0,
-        criteriaCovered: new Set<string>(),
+        criteriaCovered: new Set(),
         incompleteDetails: [],
       },
     };
 
     this.componentResults.set(componentName, component);
+
     return component;
   }
 
@@ -601,8 +262,15 @@ export class VitestA11yReporter implements Reporter {
   ): void {
     for (const rule of rules) {
       const criteria = getCriteriaForRule(rule);
-
-      this.collectCriterionCoverage(component, criteria);
+      for (const criterion of criteria) {
+        component.automated.criteriaCovered.add(criterion);
+        const components = this.criteriaToComponents.get(criterion);
+        if (components) {
+          components.add(component.name);
+        } else {
+          this.criteriaToComponents.set(criterion, new Set([component.name]));
+        }
+      }
     }
   }
 
@@ -612,141 +280,86 @@ export class VitestA11yReporter implements Reporter {
   ): void {
     for (const ruleId of ruleIds) {
       const criteria = getCriteriaForRuleId(ruleId);
-
-      this.collectCriterionCoverage(component, criteria);
+      for (const criterion of criteria) {
+        component.automated.criteriaCovered.add(criterion);
+        const components = this.criteriaToComponents.get(criterion);
+        if (components) {
+          components.add(component.name);
+        } else {
+          this.criteriaToComponents.set(criterion, new Set([component.name]));
+        }
+      }
     }
-  }
-
-  private collectCriterionCoverage(
-    component: ComponentAccumulator,
-    criteria: string[]
-  ): void {
-    for (const criterion of criteria) {
-      component.automated.criteriaCovered.add(criterion);
-
-      const coveredComponents =
-        this.criteriaToComponents.get(criterion) ?? new Set<string>();
-      coveredComponents.add(component.name);
-      this.criteriaToComponents.set(criterion, coveredComponents);
-    }
-  }
-
-  private buildComponents(): A11yComponentReport[] {
-    return [...this.componentResults.values()]
-      .map((component): A11yComponentReport => {
-        return {
-          name: component.name,
-          category: component.category,
-          framework: component.framework,
-          storyCount: component.storyIds.size,
-          automated: {
-            violations: component.automated.violations,
-            passes: component.automated.passes,
-            incomplete: component.automated.incomplete,
-            inapplicable: component.automated.inapplicable,
-            criteriaCovered: [...component.automated.criteriaCovered].sort(
-              (a, b) => a.localeCompare(b, 'en-US', {numeric: true})
-            ),
-            incompleteDetails: component.automated.incompleteDetails,
-          },
-        };
-      })
-      .sort((first, second) => first.name.localeCompare(second.name, 'en-US'));
-  }
-
-  private buildCriteria(): A11yCriterionReport[] {
-    return [...this.criteriaToComponents.entries()]
-      .map(([criterionId, coveredComponents]): A11yCriterionReport => {
-        const metadata = getCriterionMetadata(criterionId);
-
-        return {
-          id: criterionId,
-          name: metadata.name,
-          level: metadata.level,
-          wcagVersion: metadata.wcagVersion,
-          conformance: 'notEvaluated',
-          automatedCoverage: true,
-          manualVerified: false,
-          remarks: '',
-          affectedComponents: [...coveredComponents].sort((a, b) =>
-            a.localeCompare(b, 'en-US')
-          ),
-        };
-      })
-      .sort((first, second) =>
-        first.id.localeCompare(second.id, 'en-US', {numeric: true})
-      );
-  }
-
-  private buildSummary(
-    components: A11yComponentReport[],
-    criteria: A11yCriterionReport[]
-  ): A11ySummary {
-    const litComponents = components.filter(
-      (component) => component.framework === 'lit'
-    ).length;
-    const stencilComponents = components.filter(
-      (component) => component.framework === 'stencil'
-    ).length;
-    const totalStories = components.reduce(
-      (total, component) => total + component.storyCount,
-      0
-    );
-
-    return {
-      totalComponents: components.length,
-      litComponents,
-      stencilComponents,
-      stencilExcluded: true,
-      storyCoverage: {
-        total: totalStories,
-        withA11y: totalStories,
-        excludedFromA11y: 0,
-      },
-      totalCriteria: this.totalCriteria,
-      supports: 0,
-      partiallySupports: 0,
-      doesNotSupport: 0,
-      notApplicable: 0,
-      notEvaluated: this.totalCriteria,
-      automatedCoverage: getAutomationCoveragePercentage(
-        criteria.length,
-        this.totalCriteria
-      ),
-      manualCoverage: '0%',
-    };
   }
 
   private buildReport(): A11yReport {
-    const components = this.buildComponents();
-    const criteria = this.buildCriteria();
-    const axeCoreVersion =
-      this.packageMetadata.devDependencies?.['axe-core'] ??
-      this.packageMetadata.dependencies?.['axe-core'] ??
-      '4.10.3';
-    const storybookVersion =
-      this.packageMetadata.devDependencies?.storybook ??
-      this.packageMetadata.dependencies?.storybook ??
-      '10.0.8';
+    const now = formatDate(new Date());
+    const components: Record<string, A11yComponentReport> = {};
 
-    return {
-      report: {
-        product: 'Coveo Atomic',
-        version: this.packageMetadata.version ?? '3.x.x',
-        standard: 'WCAG 2.2 AA',
-        reportDate: formatDate(new Date()),
-        evaluationMethods: [
-          `axe-core ${axeCoreVersion}`,
-          'Storybook addon-a11y',
-          'Manual audit',
-        ],
-        axeCoreVersion,
-        storybookVersion,
-      },
+    for (const component of this.componentResults.values()) {
+      const criteria: Record<string, A11yCriterionReport> = {};
+
+      for (const criterionId of component.automated.criteriaCovered) {
+        const metadata = getCriterionMetadata(criterionId);
+        criteria[criterionId] = {
+          wcagLevel: metadata.level,
+          wcagVersion: metadata.wcagVersion,
+          wcagCriterion: metadata.name,
+          automated: {
+            pass: 0,
+            fail: 0,
+            incomplete: 0,
+            inapplicable: 0,
+          },
+        };
+      }
+
+      components[component.name] = {
+        wcagCategory: component.category,
+        framework: component.framework,
+        storyIds: Array.from(component.storyIds),
+        automated: {
+          violations: component.automated.violations,
+          passes: component.automated.passes,
+          incomplete: component.automated.incomplete,
+          inapplicable: component.automated.inapplicable,
+          criteria,
+          incompleteDetails: component.automated.incompleteDetails,
+        },
+      };
+    }
+
+    const automatedResults: A11yAutomatedResults = {
+      date: now,
       components,
-      criteria,
-      summary: this.buildSummary(components, criteria),
     };
+
+    const summary: A11ySummary = {
+      automationCoveragePercentage: getAutomationCoveragePercentage(
+        this.criteriaToComponents.size,
+        this.totalCriteria
+      ),
+      criteriaCount: {
+        total: this.totalCriteria,
+        covered: this.criteriaToComponents.size,
+        uncovered: this.totalCriteria - this.criteriaToComponents.size,
+      },
+    };
+
+    const report: A11yReport = {
+      metadata: {
+        date: now,
+        packageVersion: this.packageMetadata.version ?? 'unknown',
+      },
+      automatedResults,
+      summary,
+    };
+
+    if (this.shardInfo) {
+      report.metadata.shard = this.shardInfo;
+    }
+
+    return report;
   }
 
   private getOutputPaths(): string[] {

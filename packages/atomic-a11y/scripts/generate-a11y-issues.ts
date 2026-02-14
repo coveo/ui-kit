@@ -1,5 +1,5 @@
 /**
- * generate-a11y-issues.mjs
+ * generate-a11y-issues.ts
  *
  * Reads manual audit JSON files, extracts actual failures, and generates
  * GitHub CLI commands to file issues. Supports dry-run (default) and
@@ -14,18 +14,24 @@
  */
 
 import {execSync} from 'node:child_process';
-import {readdir, readFile} from 'node:fs/promises';
+import {readdir} from 'node:fs/promises';
 import path from 'node:path';
+import {readJsonFile} from '../src/shared/file-utils.js';
 
 const REPORTS_DIR = 'a11y/reports';
 const DELTAS_DIR = path.join(REPORTS_DIR, 'deltas');
 const DELTA_PATTERN = /^delta-(\d{4}-\d{2}-\d{2})-([\w-]+)\.json$/;
-const _VIOLATIONS_FILE = 'manual-audit-commerce-violations.json';
 const AUDIT_FILE_PATTERN = /^manual-audit-(.+)\.json$/;
 const VIOLATIONS_FILE_PATTERN = /^manual-audit-(.+)-violations\.json$/;
 const REPO = 'coveo/ui-kit';
 
-const WCAG_CRITERIA_LABELS = {
+interface CriterionInfo {
+  criterion: string;
+  name: string;
+  level: string;
+}
+
+const WCAG_CRITERIA_LABELS: Record<string, CriterionInfo> = {
   '2.4.11-focus-not-obscured': {
     criterion: 'WCAG 2.4.11',
     name: 'Focus Not Obscured (Minimum)',
@@ -58,11 +64,7 @@ const WCAG_CRITERIA_LABELS = {
   },
 };
 
-/**
- * @param {string} criterionKey e.g. "2.5.8-target-size"
- * @returns {{ criterion: string, name: string, level: string }}
- */
-function getCriterionInfo(criterionKey) {
+function getCriterionInfo(criterionKey: string): CriterionInfo {
   const key = criterionKey.replace(/=.*$/, '');
   return (
     WCAG_CRITERIA_LABELS[key] ?? {
@@ -73,12 +75,7 @@ function getCriterionInfo(criterionKey) {
   );
 }
 
-/**
- * Extracts the surface name from a filename.
- * @param {string} filename
- * @returns {string}
- */
-function extractSurface(filename) {
+function extractSurface(filename: string): string {
   const violationsMatch = filename.match(VIOLATIONS_FILE_PATTERN);
   if (violationsMatch) {
     return violationsMatch[1];
@@ -92,31 +89,31 @@ function extractSurface(filename) {
   return 'unknown';
 }
 
-/**
- * Reads a JSON file and returns parsed content.
- * @param {string} filePath
- * @returns {Promise<unknown>}
- */
-async function readJsonFile(filePath) {
-  const content = await readFile(filePath, 'utf8');
-  return JSON.parse(content);
+interface Issue {
+  component: string;
+  surface: string;
+  criterion: string;
+  criterionName: string;
+  level: string;
+  notes: string;
 }
 
-/**
- * Extracts failures from a violations JSON file.
- * Each entry has { name, failures, notes }.
- *
- * @param {string} filePath
- * @param {string} surface
- * @returns {Promise<Array<{component: string, surface: string, criterion: string, criterionName: string, level: string, notes: string}>>}
- */
-async function extractFromViolationsFile(filePath, surface) {
-  const entries = await readJsonFile(filePath);
+interface ViolationEntry {
+  name: string;
+  failures?: string[];
+  notes?: string;
+}
+
+async function extractFromViolationsFile(
+  filePath: string,
+  surface: string
+): Promise<Issue[]> {
+  const entries = await readJsonFile<ViolationEntry[]>(filePath);
   if (!Array.isArray(entries)) {
     return [];
   }
 
-  const issues = [];
+  const issues: Issue[] = [];
 
   for (const entry of entries) {
     if (!entry.failures || !Array.isArray(entry.failures)) {
@@ -141,20 +138,29 @@ async function extractFromViolationsFile(filePath, surface) {
   return issues;
 }
 
-/**
- * Extracts failures from a delta file.
- * Delta entries have { name, surface, auditor, results: { keyboardNav, screenReader, focusManagement, wcag22Criteria, notes } }.
- *
- * @param {string} filePath
- * @returns {Promise<Array<{component: string, surface: string, criterion: string, criterionName: string, level: string, notes: string}>>}
- */
-async function extractFromDeltaFile(filePath) {
-  const content = await readJsonFile(filePath);
+interface DeltaEntry {
+  name: string;
+  surface: string;
+  results?: {
+    keyboardNav?: string;
+    screenReader?: string;
+    focusManagement?: string;
+    wcag22Criteria?: Record<string, string>;
+    notes?: string;
+  };
+}
+
+interface DeltaFile {
+  entries?: DeltaEntry[];
+}
+
+async function extractFromDeltaFile(filePath: string): Promise<Issue[]> {
+  const content = await readJsonFile<DeltaFile>(filePath);
   if (!content || !Array.isArray(content.entries)) {
     return [];
   }
 
-  const issues = [];
+  const issues: Issue[] = [];
 
   for (const entry of content.entries) {
     const results = entry.results;
@@ -214,21 +220,28 @@ async function extractFromDeltaFile(filePath) {
   return issues;
 }
 
-/**
- * Extracts failures from a full audit JSON file.
- * Each entry has { name, category, manual: { wcag22Criteria, keyboardNav, ... } }.
- *
- * @param {string} filePath
- * @param {string} surface
- * @returns {Promise<Array<{component: string, surface: string, criterion: string, criterionName: string, level: string, notes: string}>>}
- */
-async function extractFromAuditFile(filePath, surface) {
-  const entries = await readJsonFile(filePath);
+interface AuditEntry {
+  name: string;
+  category?: string;
+  manual?: {
+    keyboardNav?: string;
+    screenReader?: string;
+    focusManagement?: string;
+    wcag22Criteria?: Record<string, string>;
+    notes?: string;
+  };
+}
+
+async function extractFromAuditFile(
+  filePath: string,
+  surface: string
+): Promise<Issue[]> {
+  const entries = await readJsonFile<AuditEntry[]>(filePath);
   if (!Array.isArray(entries)) {
     return [];
   }
 
-  const issues = [];
+  const issues: Issue[] = [];
 
   for (const entry of entries) {
     const manual = entry.manual;
@@ -236,7 +249,6 @@ async function extractFromAuditFile(filePath, surface) {
       continue;
     }
 
-    // Check top-level fields
     if (manual.keyboardNav === 'fail') {
       issues.push({
         component: entry.name,
@@ -270,7 +282,6 @@ async function extractFromAuditFile(filePath, surface) {
       });
     }
 
-    // Check WCAG 2.2 criteria
     const wcag22 = manual.wcag22Criteria;
     if (!wcag22) {
       continue;
@@ -294,13 +305,8 @@ async function extractFromAuditFile(filePath, surface) {
   return issues;
 }
 
-/**
- * Deduplicates issues by component + criterion.
- * @param {Array<{component: string, criterion: string}>} issues
- * @returns {Array<{component: string, criterion: string}>}
- */
-function deduplicateIssues(issues) {
-  const seen = new Set();
+function deduplicateIssues(issues: Issue[]): Issue[] {
+  const seen = new Set<string>();
   return issues.filter((issue) => {
     const key = `${issue.component}:${issue.criterion}`;
     if (seen.has(key)) {
@@ -311,12 +317,7 @@ function deduplicateIssues(issues) {
   });
 }
 
-/**
- * Builds the GitHub issue body.
- * @param {object} issue
- * @returns {string}
- */
-function buildIssueBody(issue) {
+function buildIssueBody(issue: Issue): string {
   return [
     `## Accessibility Violation`,
     ``,
@@ -349,17 +350,11 @@ function buildIssueBody(issue) {
   ].join('\n');
 }
 
-/**
- * Builds the gh CLI command for an issue.
- * @param {object} issue
- * @returns {string}
- */
-function buildGhCommand(issue) {
+function buildGhCommand(issue: Issue): string {
   const title = `[a11y] ${issue.component}: ${issue.criterionName} (${issue.criterion})`;
   const body = buildIssueBody(issue);
   const labels = 'a11y';
 
-  // Use heredoc to avoid shell escaping issues
   return [
     `gh issue create \\`,
     `  --repo "${REPO}" \\`,
@@ -372,7 +367,7 @@ function buildGhCommand(issue) {
   ].join('\n');
 }
 
-async function main() {
+async function main(): Promise<void> {
   const args = process.argv.slice(2);
   const execute = args.includes('--execute');
   const jsonOutput = args.includes('--json');
@@ -383,11 +378,9 @@ async function main() {
       : '🔍 DRY RUN — Showing issues that would be created. Pass --execute to file them.\n'
   );
 
-  // Discover audit files
   const reportFiles = await readdir(REPORTS_DIR);
-  const allIssues = [];
+  const allIssues: Issue[] = [];
 
-  // First, check for dedicated violations files (more precise)
   const violationsFiles = reportFiles.filter((f) =>
     VIOLATIONS_FILE_PATTERN.test(f)
   );
@@ -399,7 +392,6 @@ async function main() {
     allIssues.push(...issues);
   }
 
-  // Then, check full audit files for surfaces without dedicated violations files
   const coveredSurfaces = new Set(
     violationsFiles.map((f) => extractSurface(f))
   );
@@ -417,8 +409,7 @@ async function main() {
     allIssues.push(...issues);
   }
 
-  // Then, check pending deltas for new failures
-  let deltaFiles = [];
+  let deltaFiles: string[] = [];
   try {
     deltaFiles = (await readdir(DELTAS_DIR)).filter((f) =>
       DELTA_PATTERN.test(f)
@@ -440,14 +431,13 @@ async function main() {
     return;
   }
 
-  // Group by criterion for summary
-  const byCriterion = new Map();
+  const byCriterion = new Map<string, Issue[]>();
   for (const issue of deduplicated) {
     const key = issue.criterion;
     if (!byCriterion.has(key)) {
       byCriterion.set(key, []);
     }
-    byCriterion.get(key).push(issue);
+    byCriterion.get(key)!.push(issue);
   }
 
   console.log(

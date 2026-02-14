@@ -3,6 +3,7 @@
 import {mkdir, readFile, rename, unlink, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {parseArgs as nodeParseArgs} from 'node:util';
+import {VALID_STATUSES} from '../src/shared/constants.js';
 
 const SYSTEM_PROMPT = `You are an accessibility expert evaluating WCAG 2.2 Level AA compliance for a web component rendered in isolation in Storybook. You will be shown screenshots and/or accessibility tree data captured from the component. Evaluate ONLY the specific criteria listed in each request. Respond ONLY with valid JSON matching the exact schema provided. Do not include markdown fences, explanations, or any text outside the JSON object.
 
@@ -42,9 +43,7 @@ const CALL1_KEYS = [
 
 const CALL2_KEYS = ['1.3.4-orientation', '1.4.10-reflow'];
 
-const VALID_STATUSES = new Set(['pass', 'fail', 'partial', 'not-applicable']);
-
-const SURFACE_PREFIXES = {
+const SURFACE_PREFIXES: Record<string, string> = {
   commerce: 'commerce',
   search: 'search',
   insight: 'insight',
@@ -57,20 +56,33 @@ const PROGRESS_FILE = 'a11y/reports/deltas/.ai-audit-progress.json';
 const PROGRESS_TMP = `${PROGRESS_FILE}.tmp`;
 
 class RateLimitExhaustedError extends Error {
-  constructor(message) {
+  constructor(message: string) {
     super(message);
     this.name = 'RateLimitExhaustedError';
   }
 }
 
 class LLMParseError extends Error {
-  constructor(message) {
+  constructor(message: string) {
     super(message);
     this.name = 'LLMParseError';
   }
 }
 
-function parseArgs() {
+interface Config {
+  surface: string;
+  component: string | null;
+  dryRun: boolean;
+  resume: boolean;
+  maxComponents: number;
+  model: string;
+  concurrency: number;
+  verbose: boolean;
+  storybookUrl: string;
+  help: boolean;
+}
+
+function parseArgs(): Config {
   const {values} = nodeParseArgs({
     options: {
       surface: {type: 'string', default: 'all'},
@@ -88,17 +100,17 @@ function parseArgs() {
     allowPositionals: false,
   });
 
-  const config = {
-    surface: values.surface,
+  const config: Config = {
+    surface: values.surface!,
     component: values.component || null,
-    dryRun: values['dry-run'],
-    resume: values.resume,
-    maxComponents: parseInt(values['max-components'], 10) || Infinity,
-    model: values.model,
-    concurrency: Math.max(1, parseInt(values.concurrency, 10) || 1),
-    verbose: values.verbose,
-    storybookUrl: values['storybook-url'].replace(/\/$/, ''),
-    help: values.help,
+    dryRun: values['dry-run']!,
+    resume: values.resume!,
+    maxComponents: parseInt(values['max-components']!, 10) || Infinity,
+    model: values.model!,
+    concurrency: Math.max(1, parseInt(values.concurrency!, 10) || 1),
+    verbose: values.verbose!,
+    storybookUrl: values['storybook-url']!.replace(/\/$/, ''),
+    help: values.help!,
   };
 
   const validSurfaces = [
@@ -119,7 +131,7 @@ function parseArgs() {
   return config;
 }
 
-function printHelp() {
+function printHelp(): void {
   console.log(`AI WCAG 2.2 Audit Agent
 Evaluates Storybook components against 9 WCAG 2.2 criteria using LLM vision analysis.
 
@@ -155,7 +167,7 @@ Output:
   process.exit(0);
 }
 
-async function validateEnvironment(config) {
+async function validateEnvironment(config: Config): Promise<void> {
   if (!process.env.GITHUB_TOKEN) {
     console.error(
       'Error: GITHUB_TOKEN environment variable is required.\n\n' +
@@ -179,7 +191,7 @@ async function validateEnvironment(config) {
       `Error: Cannot reach Storybook at ${config.storybookUrl}\n\n` +
         'Start Storybook first:\n' +
         '  pnpm storybook\n\n' +
-        `Details: ${error.message}`
+        `Details: ${(error as Error).message}`
     );
     process.exit(1);
   }
@@ -197,23 +209,36 @@ async function validateEnvironment(config) {
   }
 }
 
-async function fetchStoryIndex(storybookUrl) {
+interface StoryIndex {
+  entries?: Record<string, StoryEntry>;
+  [key: string]: unknown;
+}
+
+interface StoryEntry {
+  type: string;
+  title?: string;
+  name?: string;
+  importPath?: string;
+  [key: string]: unknown;
+}
+
+async function fetchStoryIndex(storybookUrl: string): Promise<StoryIndex> {
   const res = await fetch(`${storybookUrl}/index.json`, {
     signal: AbortSignal.timeout(10000),
   });
   if (!res.ok) {
     throw new Error(`Failed to fetch story index: HTTP ${res.status}`);
   }
-  return res.json();
+  return res.json() as Promise<StoryIndex>;
 }
 
-function detectSurface(storyTitle) {
+function detectSurface(storyTitle: string | undefined): string | null {
   if (!storyTitle) return null;
   const prefix = storyTitle.split('/')[0].toLowerCase();
   return SURFACE_PREFIXES[prefix] || null;
 }
 
-function extractComponentName(importPath) {
+function extractComponentName(importPath: string | undefined): string | null {
   if (!importPath) return null;
   const pattern =
     /\/src\/components\/(?:commerce|search|insight|ipx|recommendations)\/([^/]+)\//;
@@ -221,8 +246,19 @@ function extractComponentName(importPath) {
   return match ? match[1] : null;
 }
 
-function selectStories(indexEntries, config) {
-  const byComponent = new Map();
+interface Story {
+  storyId: string;
+  componentName: string;
+  surface: string;
+  storyTitle: string;
+  storyName: string;
+}
+
+function selectStories(
+  indexEntries: Record<string, StoryEntry>,
+  config: Config
+): Story[] {
+  const byComponent = new Map<string, Story>();
 
   for (const [storyId, entry] of Object.entries(indexEntries)) {
     if (entry.type !== 'story') continue;
@@ -244,8 +280,8 @@ function selectStories(indexEntries, config) {
         storyId,
         componentName,
         surface,
-        storyTitle: entry.title,
-        storyName: entry.name,
+        storyTitle: entry.title!,
+        storyName: entry.name!,
       });
     }
     if (entry.name?.toLowerCase() === 'default') {
@@ -253,8 +289,8 @@ function selectStories(indexEntries, config) {
         storyId,
         componentName,
         surface,
-        storyTitle: entry.title,
-        storyName: entry.name,
+        storyTitle: entry.title!,
+        storyName: entry.name!,
       });
     }
   }
@@ -270,12 +306,26 @@ function selectStories(indexEntries, config) {
   return stories;
 }
 
-async function loadProgress(config) {
+interface ProgressState {
+  startedAt: string;
+  model: string;
+  surface: string;
+  completedComponents: Set<string> | string[];
+  entries: DeltaEntry[];
+}
+
+async function loadProgress(config: Config): Promise<ProgressState | null> {
   if (!config.resume) return null;
 
   try {
     const content = await readFile(PROGRESS_FILE, 'utf8');
-    const data = JSON.parse(content);
+    const data = JSON.parse(content) as {
+      startedAt: string;
+      model: string;
+      surface: string;
+      completedComponents: string[];
+      entries: DeltaEntry[];
+    };
     console.log(
       `Resuming from previous run: ${data.completedComponents.length} components already completed.`
     );
@@ -289,7 +339,10 @@ async function loadProgress(config) {
   }
 }
 
-async function saveProgress(progressState, config) {
+async function saveProgress(
+  progressState: ProgressState,
+  config: Config
+): Promise<void> {
   const serializable = {
     startedAt: progressState.startedAt,
     model: config.model,
@@ -304,7 +357,7 @@ async function saveProgress(progressState, config) {
   await rename(PROGRESS_TMP, PROGRESS_FILE);
 }
 
-async function clearProgress() {
+async function clearProgress(): Promise<void> {
   try {
     await unlink(PROGRESS_FILE);
   } catch {
@@ -312,7 +365,18 @@ async function clearProgress() {
   }
 }
 
-function flattenTree(node, result = []) {
+interface AccessibilityNode {
+  role?: string;
+  name?: string;
+  value?: string;
+  description?: string;
+  children?: AccessibilityNode[];
+}
+
+function flattenTree(
+  node: AccessibilityNode | null,
+  result: AccessibilityNode[] = []
+): AccessibilityNode[] {
   if (!node) return result;
   result.push(node);
   for (const child of node.children || []) {
@@ -321,17 +385,24 @@ function flattenTree(node, result = []) {
   return result;
 }
 
-function nodeKey(node) {
+function nodeKey(node: AccessibilityNode): string {
   return `${node.role || ''}|${node.name || ''}|${node.value || ''}|${node.description || ''}`;
 }
 
-function diffAccessibilityTrees(before, after) {
+function diffAccessibilityTrees(
+  before: AccessibilityNode | null,
+  after: AccessibilityNode | null
+): AccessibilityNode[] {
   const beforeKeys = new Set(flattenTree(before).map(nodeKey));
   const afterNodes = flattenTree(after);
   return afterNodes.filter((node) => !beforeKeys.has(nodeKey(node)));
 }
 
-function pruneTree(node, maxDepth, currentDepth = 0) {
+function pruneTree(
+  node: AccessibilityNode | null,
+  maxDepth: number,
+  currentDepth: number = 0
+): AccessibilityNode | null {
   if (!node) return null;
 
   const result = {...node};
@@ -344,13 +415,16 @@ function pruneTree(node, maxDepth, currentDepth = 0) {
   } else if (node.children) {
     result.children = node.children
       .map((child) => pruneTree(child, maxDepth, currentDepth + 1))
-      .filter(Boolean);
+      .filter(Boolean) as AccessibilityNode[];
   }
 
   return result;
 }
 
-function truncateAccessibilityTree(tree, maxTokenEstimate) {
+function truncateAccessibilityTree(
+  tree: AccessibilityNode | null,
+  maxTokenEstimate: number
+): string {
   const fullJson = JSON.stringify(tree, null, 2);
   const estimatedTokens = Math.ceil(fullJson.length / 4);
 
@@ -369,7 +443,12 @@ function truncateAccessibilityTree(tree, maxTokenEstimate) {
   );
 }
 
-async function initBrowser() {
+interface BrowserContext {
+  browser: any;
+  page: any;
+}
+
+async function initBrowser(): Promise<BrowserContext> {
   const {chromium} = await import('playwright');
   const browser = await chromium.launch({headless: true});
   const page = await browser.newPage();
@@ -377,14 +456,23 @@ async function initBrowser() {
   return {browser, page};
 }
 
-async function navigateToStory(page, storybookUrl, storyId) {
+async function navigateToStory(
+  page: any,
+  storybookUrl: string,
+  storyId: string
+): Promise<void> {
   const url = `${storybookUrl}/iframe.html?id=${storyId}&viewMode=story`;
   await page.goto(url, {waitUntil: 'networkidle', timeout: 30000});
   // Wait for component to render
   await page.waitForTimeout(1000);
 }
 
-async function captureDefaultViewport(page) {
+interface CaptureResult {
+  screenshot: string;
+  accessibilityTree: AccessibilityNode | null;
+}
+
+async function captureDefaultViewport(page: any): Promise<CaptureResult> {
   await page.setViewportSize({width: 1024, height: 768});
   await page.waitForTimeout(300);
 
@@ -398,7 +486,13 @@ async function captureDefaultViewport(page) {
   return {screenshot, accessibilityTree};
 }
 
-async function captureHoverState(page) {
+interface HoverCaptureResult {
+  hoverDetected: boolean;
+  hoverScreenshot: string | null;
+  hoverDetails: string;
+}
+
+async function captureHoverState(page: any): Promise<HoverCaptureResult> {
   const treeBefore = await page.accessibility.snapshot({
     interestingOnly: false,
   });
@@ -421,7 +515,7 @@ async function captureHoverState(page) {
   const testCount = Math.min(totalCount, 5);
 
   let hoverDetected = false;
-  let hoverScreenshot = null;
+  let hoverScreenshot: string | null = null;
   let hoverDetails = '';
 
   for (let i = 0; i < testCount; i++) {
@@ -449,7 +543,9 @@ async function captureHoverState(page) {
           .slice(0, 5)
           .map((n) => `${n.role}${n.name ? `: "${n.name}"` : ''}`)
           .join(', ');
-        const tagName = await el.evaluate((e) => e.tagName.toLowerCase());
+        const tagName = await el.evaluate((e: Element) =>
+          e.tagName.toLowerCase()
+        );
         hoverDetails =
           `Hovering over interactive element ${i} (${tagName}) ` +
           `revealed ${newNodes.length} new accessibility node(s): ${newNodeDescriptions}`;
@@ -465,7 +561,13 @@ async function captureHoverState(page) {
   return {hoverDetected, hoverScreenshot, hoverDetails};
 }
 
-async function captureMultiViewport(page) {
+interface MultiViewportResult {
+  reflow: {screenshot: string; hasHorizontalScroll: boolean};
+  portrait: string;
+  landscape: string;
+}
+
+async function captureMultiViewport(page: any): Promise<MultiViewportResult> {
   // Reflow test - 320px wide (simulates 400% zoom on 1280px display)
   await page.setViewportSize({width: 320, height: 480});
   await page.waitForTimeout(500);
@@ -504,11 +606,11 @@ async function captureMultiViewport(page) {
 }
 
 function buildCall1UserPrompt(
-  componentName,
-  accessibilityTree,
-  hoverDetected,
-  hoverDetails
-) {
+  componentName: string,
+  accessibilityTree: AccessibilityNode | null,
+  hoverDetected: boolean,
+  hoverDetails: string
+): string {
   const truncatedTree = truncateAccessibilityTree(accessibilityTree, 2000);
 
   const hoverSection = hoverDetected
@@ -578,7 +680,10 @@ Respond with ONLY this JSON structure, no other text:
 }`;
 }
 
-function buildCall2UserPrompt(componentName, hasHorizontalScroll) {
+function buildCall2UserPrompt(
+  componentName: string,
+  hasHorizontalScroll: boolean
+): string {
   return `Evaluate the Storybook component "${componentName}" for viewport-dependent WCAG 2.2 Level AA criteria.
 
 ## Data Provided
@@ -617,14 +722,19 @@ Respond with ONLY this JSON structure, no other text:
 }`;
 }
 
-function sleep(ms) {
+function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function initLLMClient(config) {
+interface LLMClientWrapper {
+  getClient(): Promise<any>;
+  config: Config;
+}
+
+function initLLMClient(config: Config): LLMClientWrapper {
   // Dynamically import openai (already validated in validateEnvironment)
   // We'll store the promise and resolve it once
-  let clientPromise;
+  let clientPromise: Promise<any> | null = null;
   return {
     async getClient() {
       if (!clientPromise) {
@@ -641,14 +751,21 @@ function initLLMClient(config) {
   };
 }
 
+interface LLMMessage {
+  role: 'system' | 'user';
+  content:
+    | string
+    | Array<{type: string; text?: string; image_url?: {url: string}}>;
+}
+
 async function callLLMWithRetry(
-  clientWrapper,
-  messages,
-  config,
-  maxRetries = 5
-) {
+  clientWrapper: LLMClientWrapper,
+  messages: LLMMessage[],
+  config: Config,
+  maxRetries: number = 5
+): Promise<any> {
   const client = await clientWrapper.getClient();
-  let lastError = null;
+  let lastError: Error | null = null;
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
@@ -672,7 +789,7 @@ async function callLLMWithRetry(
       }
 
       return JSON.parse(content);
-    } catch (error) {
+    } catch (error: any) {
       lastError = error;
 
       if (error?.status === 429 || error?.code === 'rate_limit_exceeded') {
@@ -734,13 +851,13 @@ async function callLLMWithRetry(
 }
 
 function buildCall1Messages(
-  componentName,
-  defaultScreenshot,
-  accessibilityTree,
-  hoverDetected,
-  hoverScreenshot,
-  hoverDetails
-) {
+  componentName: string,
+  defaultScreenshot: string,
+  accessibilityTree: AccessibilityNode | null,
+  hoverDetected: boolean,
+  hoverScreenshot: string | null,
+  hoverDetails: string
+): LLMMessage[] {
   const userText = buildCall1UserPrompt(
     componentName,
     accessibilityTree,
@@ -748,7 +865,11 @@ function buildCall1Messages(
     hoverDetails
   );
 
-  const imageContent = [
+  const imageContent: Array<{
+    type: string;
+    text?: string;
+    image_url?: {url: string};
+  }> = [
     {
       type: 'image_url',
       image_url: {url: `data:image/png;base64,${defaultScreenshot}`},
@@ -772,12 +893,12 @@ function buildCall1Messages(
 }
 
 function buildCall2Messages(
-  componentName,
-  reflowScreenshot,
-  hasHorizontalScroll,
-  portraitScreenshot,
-  landscapeScreenshot
-) {
+  componentName: string,
+  reflowScreenshot: string,
+  hasHorizontalScroll: boolean,
+  portraitScreenshot: string,
+  landscapeScreenshot: string
+): LLMMessage[] {
   const userText = buildCall2UserPrompt(componentName, hasHorizontalScroll);
 
   return [
@@ -803,9 +924,21 @@ function buildCall2Messages(
   ];
 }
 
-function validateLLMResponse(parsed, expectedKeys) {
+interface CriteriaResult {
+  status: string;
+  evidence: string;
+}
+
+interface LLMValidatedResponse {
+  criteria: Record<string, CriteriaResult>;
+}
+
+function validateLLMResponse(
+  parsed: any,
+  expectedKeys: string[]
+): LLMValidatedResponse {
   if (!parsed || typeof parsed !== 'object' || !parsed.criteria) {
-    const result = {};
+    const result: Record<string, CriteriaResult> = {};
     for (const key of expectedKeys) {
       result[key] = {
         status: 'not-applicable',
@@ -815,7 +948,7 @@ function validateLLMResponse(parsed, expectedKeys) {
     return {criteria: result};
   }
 
-  const result = {};
+  const result: Record<string, CriteriaResult> = {};
   for (const key of expectedKeys) {
     const entry = parsed.criteria[key];
     if (!entry || !VALID_STATUSES.has(entry.status)) {
@@ -836,9 +969,17 @@ function validateLLMResponse(parsed, expectedKeys) {
   return {criteria: result};
 }
 
-function mergeResults(call1Result, call2Result) {
-  const wcag22Criteria = {};
-  const evidenceParts = [];
+interface MergedResults {
+  wcag22Criteria: Record<string, string>;
+  evidenceParts: string[];
+}
+
+function mergeResults(
+  call1Result: LLMValidatedResponse,
+  call2Result: LLMValidatedResponse
+): MergedResults {
+  const wcag22Criteria: Record<string, string> = {};
+  const evidenceParts: string[] = [];
 
   const allCriteria = {...call1Result.criteria, ...call2Result.criteria};
 
@@ -857,7 +998,22 @@ function mergeResults(call1Result, call2Result) {
   return {wcag22Criteria, evidenceParts};
 }
 
-function buildDeltaEntry(componentName, surface, model, mergedResults) {
+interface DeltaEntry {
+  name: string;
+  surface: string;
+  auditor: string;
+  results: {
+    wcag22Criteria: Record<string, string>;
+    notes: string;
+  };
+}
+
+function buildDeltaEntry(
+  componentName: string,
+  surface: string,
+  model: string,
+  mergedResults: MergedResults
+): DeltaEntry {
   const date = new Date().toISOString().slice(0, 10);
   const auditor = `AI Agent (${model})`;
 
@@ -877,9 +1033,9 @@ function buildDeltaEntry(componentName, surface, model, mergedResults) {
   };
 }
 
-function buildFallbackEntry(story, model) {
+function buildFallbackEntry(story: Story, model: string): DeltaEntry {
   const date = new Date().toISOString().slice(0, 10);
-  const wcag22Criteria = {};
+  const wcag22Criteria: Record<string, string> = {};
   for (const key of ALL_AI_CRITERIA) {
     wcag22Criteria[key] = 'not-applicable';
   }
@@ -894,20 +1050,23 @@ function buildFallbackEntry(story, model) {
   };
 }
 
-async function writeDeltaFiles(entries, config) {
+async function writeDeltaFiles(
+  entries: DeltaEntry[],
+  config: Config
+): Promise<string[]> {
   const date = new Date().toISOString().slice(0, 10);
   const auditor = `AI Agent (${config.model})`;
 
-  const bySurface = new Map();
+  const bySurface = new Map<string, DeltaEntry[]>();
   for (const entry of entries) {
     const surface = entry.surface;
     if (!bySurface.has(surface)) {
       bySurface.set(surface, []);
     }
-    bySurface.get(surface).push(entry);
+    bySurface.get(surface)!.push(entry);
   }
 
-  const writtenFiles = [];
+  const writtenFiles: string[] = [];
 
   for (const [surface, surfaceEntries] of bySurface) {
     const delta = {
@@ -930,7 +1089,12 @@ async function writeDeltaFiles(entries, config) {
   return writtenFiles;
 }
 
-async function evaluateComponent(page, clientWrapper, story, config) {
+async function evaluateComponent(
+  page: any,
+  clientWrapper: LLMClientWrapper,
+  story: Story,
+  config: Config
+): Promise<DeltaEntry> {
   await navigateToStory(page, config.storybookUrl, story.storyId);
 
   const {screenshot: defaultScreenshot, accessibilityTree} =
@@ -980,7 +1144,16 @@ async function evaluateComponent(page, clientWrapper, story, config) {
   );
 }
 
-function summarizeCriteria(wcag22Criteria) {
+interface CriteriaCounts {
+  pass: number;
+  fail: number;
+  partial: number;
+  na: number;
+}
+
+function summarizeCriteria(
+  wcag22Criteria: Record<string, string>
+): CriteriaCounts {
   const values = Object.values(wcag22Criteria);
   return {
     pass: values.filter((v) => v === 'pass').length,
@@ -990,11 +1163,11 @@ function summarizeCriteria(wcag22Criteria) {
   };
 }
 
-function pct(n, total) {
+function pct(n: number, total: number): string {
   return total === 0 ? '0%' : `${((n / total) * 100).toFixed(1)}%`;
 }
 
-async function main() {
+async function main(): Promise<void> {
   const config = parseArgs();
   if (config.help) printHelp();
 
@@ -1002,7 +1175,7 @@ async function main() {
   console.log('='.repeat(50));
 
   // Fetch story index (needed for both dry-run and real run)
-  let index;
+  let index: StoryIndex;
   try {
     index = await fetchStoryIndex(config.storybookUrl);
   } catch (error) {
@@ -1010,7 +1183,7 @@ async function main() {
       console.error(
         `Warning: Cannot reach Storybook at ${config.storybookUrl}. ` +
           'Dry-run requires a running Storybook instance to discover stories.\n' +
-          `Details: ${error.message}`
+          `Details: ${(error as Error).message}`
       );
       process.exit(1);
     }
@@ -1031,7 +1204,10 @@ async function main() {
   const existingProgress = await loadProgress(config);
   const alreadyDone = existingProgress?.completedComponents?.size ?? 0;
   const remaining = stories.filter(
-    (s) => !existingProgress?.completedComponents?.has(s.componentName)
+    (s) =>
+      !(existingProgress?.completedComponents as Set<string> | undefined)?.has(
+        s.componentName
+      )
   );
   const estimatedCalls = remaining.length * 2;
 
@@ -1055,9 +1231,9 @@ async function main() {
   if (config.dryRun) {
     console.log('[DRY RUN] Components that would be audited:\n');
     for (const story of stories) {
-      const done = existingProgress?.completedComponents?.has(
-        story.componentName
-      );
+      const done = (
+        existingProgress?.completedComponents as Set<string> | undefined
+      )?.has(story.componentName);
       console.log(
         `  ${done ? 'done' : '    '} ${story.componentName} (${story.surface}) - ${story.storyTitle}`
       );
@@ -1071,12 +1247,12 @@ async function main() {
   const {browser, page} = await initBrowser();
   const clientWrapper = initLLMClient(config);
 
-  const progressState = {
+  const progressState: ProgressState = {
     startedAt: existingProgress?.startedAt ?? new Date().toISOString(),
     model: config.model,
     surface: config.surface,
     completedComponents: existingProgress
-      ? [...existingProgress.completedComponents]
+      ? [...(existingProgress.completedComponents as Set<string>)]
       : [],
     entries: existingProgress?.entries ?? [],
   };
@@ -1087,7 +1263,11 @@ async function main() {
   for (let i = 0; i < stories.length; i++) {
     const story = stories[i];
 
-    if (existingProgress?.completedComponents?.has(story.componentName)) {
+    if (
+      (existingProgress?.completedComponents as Set<string> | undefined)?.has(
+        story.componentName
+      )
+    ) {
       console.log(
         `[${String(i + 1).padStart(pad)}/${stories.length}] ` +
           `${story.componentName} ` +
@@ -1099,7 +1279,7 @@ async function main() {
     try {
       const entry = await evaluateComponent(page, clientWrapper, story, config);
       progressState.entries.push(entry);
-      progressState.completedComponents.push(story.componentName);
+      (progressState.completedComponents as string[]).push(story.componentName);
       await saveProgress(progressState, config);
 
       const counts = summarizeCriteria(entry.results.wcag22Criteria);
@@ -1114,7 +1294,7 @@ async function main() {
       if (error instanceof RateLimitExhaustedError) {
         console.log(`\n${error.message}`);
         console.log(
-          `Progress saved: ${progressState.completedComponents.length} of ${stories.length} components completed.`
+          `Progress saved: ${(progressState.completedComponents as string[]).length} of ${stories.length} components completed.`
         );
         console.log(
           `Resume with: node a11y/scripts/ai-wcag-audit.mjs` +
@@ -1135,7 +1315,9 @@ async function main() {
         );
         const fallback = buildFallbackEntry(story, config.model);
         progressState.entries.push(fallback);
-        progressState.completedComponents.push(story.componentName);
+        (progressState.completedComponents as string[]).push(
+          story.componentName
+        );
         await saveProgress(progressState, config);
         continue;
       }
@@ -1144,7 +1326,7 @@ async function main() {
         `[${String(i + 1).padStart(pad)}/${stories.length}] ` +
           `${story.componentName} ` +
           `${'·'.repeat(maxNameLen - story.componentName.length + 2)} ` +
-          `Error: ${error.message}`
+          `Error: ${(error as Error).message}`
       );
     }
   }
@@ -1196,6 +1378,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error(`Fatal error: ${error.message}`);
+  console.error(`Fatal error: ${(error as Error).message}`);
   process.exit(1);
 });

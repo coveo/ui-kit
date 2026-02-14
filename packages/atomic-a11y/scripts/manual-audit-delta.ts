@@ -1,5 +1,5 @@
 /**
- * manual-audit-delta.mjs
+ * manual-audit-delta.ts
  *
  * QA workflow tool for maintaining manual accessibility audits.
  *
@@ -17,12 +17,17 @@
 
 import {mkdir, readdir, readFile, rename, writeFile} from 'node:fs/promises';
 import path from 'node:path';
+import {
+  BASELINE_FILE_PATTERN,
+  DELTA_PATTERN,
+  VALID_STATUSES,
+} from '../src/shared/constants.js';
+import {readJsonFile} from '../src/shared/file-utils.js';
+import {isRecord} from '../src/shared/guards.js';
 
 const REPORTS_DIR = 'a11y/reports';
 const DELTAS_DIR = path.join(REPORTS_DIR, 'deltas');
 const ARCHIVE_DIR = path.join(DELTAS_DIR, 'archived');
-const BASELINE_PATTERN = /^manual-audit-(?!.*-violations)([\w-]+)\.json$/;
-const DELTA_PATTERN = /^delta-(\d{4}-\d{2}-\d{2})-([\w-]+)\.json$/;
 
 const VALID_SURFACES = new Set([
   'commerce',
@@ -33,17 +38,13 @@ const VALID_SURFACES = new Set([
   'recommendations',
 ]);
 
-const VALID_STATUSES = new Set(['pass', 'fail', 'partial', 'not-applicable']);
-
 const VALID_WCAG_KEYS = new Set([
-  // Evaluated by manual audit script (keyboard/focus/target-size tests)
   '2.4.11-focus-not-obscured',
   '2.5.7-dragging-movements',
   '2.5.8-target-size',
   '3.2.6-consistent-help',
   '3.3.7-redundant-entry',
   '3.3.8-accessible-auth',
-  // Evaluated by AI audit agent (ai-wcag-audit.mjs)
   '1.3.2-meaningful-sequence',
   '1.3.3-sensory-characteristics',
   '1.3.4-orientation',
@@ -55,19 +56,34 @@ const VALID_WCAG_KEYS = new Set([
   '3.3.4-error-prevention',
 ]);
 
-function isRecord(value) {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
+interface DeltaEntry {
+  name: string;
+  surface: string;
+  auditor: string;
+  auditDate?: string;
+  results: {
+    keyboardNav?: string;
+    screenReader?: string;
+    focusManagement?: string;
+    wcag22Criteria?: Record<string, string>;
+    notes: string;
+  };
 }
 
-function validateDeltaEntry(entry, index) {
-  const errors = [];
+function validateDeltaEntry(entry: unknown, index: number): string[] {
+  const errors: string[] = [];
   const prefix = `entries[${index}]`;
+
+  if (!isRecord(entry)) {
+    errors.push(`${prefix}: must be an object`);
+    return errors;
+  }
 
   if (typeof entry.name !== 'string' || entry.name.length === 0) {
     errors.push(`${prefix}.name: must be a non-empty string`);
   }
 
-  if (!VALID_SURFACES.has(entry.surface)) {
+  if (!VALID_SURFACES.has(entry.surface as string)) {
     errors.push(
       `${prefix}.surface: must be one of: ${[...VALID_SURFACES].join(', ')} (got "${entry.surface}")`
     );
@@ -84,10 +100,13 @@ function validateDeltaEntry(entry, index) {
     return errors;
   }
 
-  const {results} = entry;
+  const results = entry.results as Record<string, unknown>;
 
   for (const field of ['keyboardNav', 'screenReader', 'focusManagement']) {
-    if (results[field] !== undefined && !VALID_STATUSES.has(results[field])) {
+    if (
+      results[field] !== undefined &&
+      !VALID_STATUSES.has(results[field] as string)
+    ) {
       errors.push(
         `${prefix}.results.${field}: must be one of: ${[...VALID_STATUSES].join(', ')} (got "${results[field]}")`
       );
@@ -101,7 +120,7 @@ function validateDeltaEntry(entry, index) {
           `${prefix}.results.wcag22Criteria.${key}: unknown criterion key`
         );
       }
-      if (!VALID_STATUSES.has(value)) {
+      if (!VALID_STATUSES.has(value as string)) {
         errors.push(
           `${prefix}.results.wcag22Criteria.${key}: must be one of: ${[...VALID_STATUSES].join(', ')} (got "${value}")`
         );
@@ -118,10 +137,10 @@ function validateDeltaEntry(entry, index) {
   return errors;
 }
 
-function validateDeltaFile(content, filePath) {
-  const errors = [];
+function validateDeltaFile(content: string, filePath: string): string[] {
+  const errors: string[] = [];
 
-  let parsed;
+  let parsed: unknown;
   try {
     parsed = JSON.parse(content);
   } catch {
@@ -166,22 +185,38 @@ function validateDeltaFile(content, filePath) {
   return errors;
 }
 
-async function readJsonFile(filePath) {
-  const content = await readFile(filePath, 'utf8');
-  return JSON.parse(content);
+interface BaselineEntry {
+  name: string;
+  category: string;
+  manual: {
+    status: string;
+    tier: number;
+    keyboardNav: string;
+    screenReader: string;
+    focusManagement: string;
+    wcag22Criteria: Record<string, string>;
+    notes: string;
+    lastAuditDate?: string;
+    auditor?: string;
+  };
 }
 
-async function loadBaselines() {
+interface Baseline {
+  filePath: string;
+  entries: BaselineEntry[];
+}
+
+async function loadBaselines(): Promise<Map<string, Baseline>> {
   const files = await readdir(REPORTS_DIR);
-  const baselines = new Map();
+  const baselines = new Map<string, Baseline>();
 
   for (const file of files) {
-    const match = file.match(BASELINE_PATTERN);
+    const match = file.match(BASELINE_FILE_PATTERN);
     if (!match) continue;
 
     const surface = match[1];
     const filePath = path.join(REPORTS_DIR, file);
-    const entries = await readJsonFile(filePath);
+    const entries = await readJsonFile<BaselineEntry[]>(filePath);
     if (!Array.isArray(entries)) continue;
 
     baselines.set(surface, {filePath, entries});
@@ -190,15 +225,26 @@ async function loadBaselines() {
   return baselines;
 }
 
-async function loadDeltas() {
-  let files;
+interface DeltaFile {
+  file: string;
+  filePath: string;
+  data: {
+    date: string;
+    pr: string | number;
+    auditor: string;
+    entries: DeltaEntry[];
+  };
+}
+
+async function loadDeltas(): Promise<DeltaFile[]> {
+  let files: string[];
   try {
     files = await readdir(DELTAS_DIR);
   } catch {
     return [];
   }
 
-  const deltas = [];
+  const deltas: DeltaFile[] = [];
   for (const file of files) {
     if (!DELTA_PATTERN.test(file)) continue;
 
@@ -214,14 +260,17 @@ async function loadDeltas() {
       continue;
     }
 
-    const parsed = JSON.parse(content);
+    const parsed = JSON.parse(content) as DeltaFile['data'];
     deltas.push({file, filePath, data: parsed});
   }
 
   return deltas.sort((a, b) => a.data.date.localeCompare(b.data.date));
 }
 
-function applyDelta(baseline, deltaEntry) {
+function applyDelta(
+  baseline: BaselineEntry[],
+  deltaEntry: DeltaEntry
+): 'updated' | 'added' {
   const existing = baseline.find((entry) => entry.name === deltaEntry.name);
   const {results} = deltaEntry;
 
@@ -242,7 +291,7 @@ function applyDelta(baseline, deltaEntry) {
     }
     existing.manual.notes = results.notes;
     existing.manual.status = 'complete';
-    existing.manual.lastAuditDate = deltaEntry.auditDate ?? results.auditDate;
+    existing.manual.lastAuditDate = deltaEntry.auditDate ?? results.notes;
     existing.manual.auditor = deltaEntry.auditor;
     return 'updated';
   }
@@ -266,14 +315,14 @@ function applyDelta(baseline, deltaEntry) {
         ...(results.wcag22Criteria ?? {}),
       },
       notes: results.notes,
-      lastAuditDate: deltaEntry.auditDate ?? results.auditDate,
+      lastAuditDate: deltaEntry.auditDate ?? results.notes,
       auditor: deltaEntry.auditor,
     },
   });
   return 'added';
 }
 
-async function runValidate(filePath) {
+async function runValidate(filePath: string | undefined): Promise<void> {
   if (!filePath) {
     console.error(
       'Usage: node a11y/scripts/manual-audit-delta.mjs validate <delta-file>'
@@ -286,7 +335,7 @@ async function runValidate(filePath) {
 
   if (errors.length === 0) {
     console.log(`✅ ${filePath} is valid`);
-    const parsed = JSON.parse(content);
+    const parsed = JSON.parse(content) as DeltaFile['data'];
     console.log(
       `   ${parsed.entries.length} component(s), auditor: ${parsed.auditor}, date: ${parsed.date}`
     );
@@ -299,7 +348,14 @@ async function runValidate(filePath) {
   }
 }
 
-async function runMerge(dryRun) {
+interface Change {
+  component: string;
+  surface: string;
+  action: 'added' | 'updated';
+  delta: string;
+}
+
+async function runMerge(dryRun: boolean): Promise<void> {
   const baselines = await loadBaselines();
   const deltas = await loadDeltas();
 
@@ -312,7 +368,7 @@ async function runMerge(dryRun) {
 
   console.log(`Found ${deltas.length} delta file(s) to merge.\n`);
 
-  const changes = [];
+  const changes: Change[] = [];
 
   for (const delta of deltas) {
     console.log(
@@ -333,7 +389,7 @@ async function runMerge(dryRun) {
         console.log(`  Creating new baseline: manual-audit-${surface}.json`);
       }
 
-      const entryWithMeta = {
+      const entryWithMeta: DeltaEntry = {
         ...entry,
         auditDate: delta.data.date,
         auditor: entry.auditor || delta.data.auditor,
@@ -382,7 +438,7 @@ async function runMerge(dryRun) {
   console.log('\n✅ Merge complete.');
 }
 
-async function runStatus() {
+async function runStatus(): Promise<void> {
   const baselines = await loadBaselines();
   const deltas = await loadDeltas();
 
