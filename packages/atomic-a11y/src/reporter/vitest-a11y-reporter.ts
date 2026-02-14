@@ -1,67 +1,14 @@
 import {mkdir, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import type {Result as AxeRuleResult} from 'axe-core';
-import type {
-  Reporter,
-  SerializedError,
-  TestCase,
-  TestModule,
-  TestRunEndReason,
-} from 'vitest/node';
-import {
-  DEFAULT_A11Y_REPORT_FILENAME,
-  DEFAULT_A11Y_REPORT_OUTPUT_DIR,
-  DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
-} from '../shared/constants.js';
-import type {
-  A11yAutomatedResults,
-  A11yComponentReport,
-  A11yCriterionReport,
-  A11yIncompleteDetail,
-  A11yReport,
-  A11ySummary,
-  SupportedFramework,
-} from '../shared/types.js';
-import {
-  extractCriteriaFromTags,
-  getCriteriaForRule,
-  getCriteriaForRuleId,
-  getIncompleteMessage,
-  isAxeResults,
-} from './axe-integration.js';
-import {
-  type ComponentAccumulator,
-  extractA11yRuleIdsFromTestErrors,
-  extractCategory,
-  extractComponentName,
-  extractFramework,
-  formatDate,
-  getAutomationCoveragePercentage,
-  getCriterionMetadata,
-  normalizePath,
-  type PackageMetadata,
-  readPackageMetadata,
-  resolveShardInfo,
-  type ShardInfo,
-  type StorybookReport,
-  type StorybookTaskMeta,
-  UNKNOWN_CATEGORY,
-  UNKNOWN_FRAMEWORK,
-} from './reporter-utils.js';
+import type {Reporter, SerializedError, TestCase, TestModule, TestRunEndReason} from 'vitest/node';
+import {DEFAULT_A11Y_REPORT_FILENAME, DEFAULT_A11Y_REPORT_OUTPUT_DIR, DEFAULT_WCAG_22_AA_CRITERIA_COUNT} from '../shared/constants.js';
+import type {A11yAutomatedResults, A11yComponentReport, A11yCriterionReport, A11yIncompleteDetail, A11yReport, A11ySummary, SupportedFramework} from '../shared/types.js';
+import {getCriteriaForRule, getCriteriaForRuleId, getIncompleteMessage, isAxeResults} from './axe-integration.js';
+import {type ComponentAccumulator, UNKNOWN_CATEGORY, UNKNOWN_FRAMEWORK, extractA11yRuleIdsFromTestErrors, extractCategory, extractComponentName, extractFramework, formatDate, getAutomationCoveragePercentage, getCriterionMetadata, normalizePath, type PackageMetadata, readPackageMetadata, resolveShardInfo, type ShardInfo, type StorybookReport, type StorybookTaskMeta} from './reporter-utils.js';
 
-export {
-  DEFAULT_A11Y_REPORT_OUTPUT_DIR,
-  DEFAULT_A11Y_REPORT_FILENAME,
-  DEFAULT_WCAG_22_AA_CRITERIA_COUNT,
-};
-export type {
-  A11yIncompleteDetail,
-  A11yAutomatedResults,
-  A11yComponentReport,
-  A11yCriterionReport,
-  A11ySummary,
-  A11yReport,
-};
+export {DEFAULT_A11Y_REPORT_OUTPUT_DIR, DEFAULT_A11Y_REPORT_FILENAME, DEFAULT_WCAG_22_AA_CRITERIA_COUNT};
+export type {A11yIncompleteDetail, A11yAutomatedResults, A11yComponentReport, A11yCriterionReport, A11ySummary, A11yReport};
 
 const REPORTER_NAME = 'VitestA11yReporter';
 
@@ -436,12 +383,10 @@ export class VitestA11yReporter implements Reporter {
 export const vitestA11yReporterTestUtils = {
   extractCategory,
   extractComponentName,
-  extractCriteriaFromTags,
   extractFramework,
   formatDate,
   getAutomationCoveragePercentage,
   getCriteriaForRule,
-  stripAnsiSequences,
 };
 
 export default VitestA11yReporter;
